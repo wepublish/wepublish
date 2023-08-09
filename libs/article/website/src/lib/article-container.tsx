@@ -1,7 +1,8 @@
-import {useArticleQuery, ArticleQuery} from '@wepublish/website/api'
 import {QueryResult} from '@apollo/client'
-import {useEffect} from 'react'
+import {PollBlockProvider} from '@wepublish/block-content/website'
+import {ArticleQuery, useArticleQuery} from '@wepublish/website/api'
 import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {useEffect} from 'react'
 
 type IdOrSlug = {id: string; slug?: never} | {id?: never; slug: string}
 
@@ -24,5 +25,9 @@ export function ArticleContainer({onQuery, id, slug, className}: ArticleContaine
     onQuery?.({data, loading, error, refetch})
   }, [data, loading, error, refetch, onQuery])
 
-  return <Article data={data} loading={loading} error={error} className={className} />
+  return (
+    <PollBlockProvider>
+      <Article data={data} loading={loading} error={error} className={className} />
+    </PollBlockProvider>
+  )
 }

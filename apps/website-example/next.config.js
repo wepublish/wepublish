@@ -18,6 +18,7 @@ const nextConfig = {
   compiler: {
     // This is needed so that we can use components as selectors in Emotion
     emotion: {
+      sourceMap: true,
       importMap: {
         '@mui/material': {
           styled: {
@@ -37,7 +38,7 @@ const nextConfig = {
   // Not needed for the monorepository but for demo purposes.
   // @wepublish/ui and @wepublish/website are ES Modules which Next does not support yet.
   // This will transpile the ES Modules to CommonJS
-  transpilePackages: ['@wepublish/ui', '@wepublish/website']
+  transpilePackages: ['@wepublish/ui', '@wepublish/website', 'react-tweet']
 }
 
 const plugins = [

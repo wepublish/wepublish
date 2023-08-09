@@ -34,13 +34,13 @@ export const GraphQLPaymentState = new GraphQLEnumType({
 export const GraphQLPublicPayment = new GraphQLObjectType<Payment, Context>({
   name: 'Payment',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLID)},
 
     intentSecret: {type: GraphQLString},
-    state: {type: GraphQLNonNull(GraphQLPaymentState)},
+    state: {type: new GraphQLNonNull(GraphQLPaymentState)},
 
     paymentMethod: {
-      type: GraphQLNonNull(GraphQLPublicPaymentMethod),
+      type: new GraphQLNonNull(GraphQLPublicPaymentMethod),
       resolve: createProxyingResolver(({paymentMethodID}, _, {loaders}) => {
         return loaders.paymentMethodsByID.load(paymentMethodID)
       })
@@ -51,23 +51,23 @@ export const GraphQLPublicPayment = new GraphQLObjectType<Payment, Context>({
 export const GraphQLPayment = new GraphQLObjectType<Payment, Context>({
   name: 'Payment',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLID)},
 
-    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
+    modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
 
     intentID: {type: GraphQLString},
     intentSecret: {type: GraphQLString},
-    state: {type: GraphQLNonNull(GraphQLPaymentState)},
+    state: {type: new GraphQLNonNull(GraphQLPaymentState)},
     invoice: {
-      type: GraphQLNonNull(GraphQLInvoice),
+      type: new GraphQLNonNull(GraphQLInvoice),
       resolve: createProxyingResolver(({invoiceID}, _, {loaders}) => {
         return loaders.invoicesByID.load(invoiceID)
       })
     },
     intentData: {type: GraphQLString},
     paymentMethod: {
-      type: GraphQLNonNull(GraphQLPaymentMethod),
+      type: new GraphQLNonNull(GraphQLPaymentMethod),
       resolve: createProxyingResolver(({paymentMethodID}, _, {loaders}) => {
         return loaders.paymentMethodsByID.load(paymentMethodID)
       })
@@ -94,16 +94,16 @@ export const GraphQLPaymentSort = new GraphQLEnumType({
 export const GraphQLPaymentConnection = new GraphQLObjectType<any, Context>({
   name: 'PaymentConnection',
   fields: {
-    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPayment)))},
-    pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)},
-    totalCount: {type: GraphQLNonNull(GraphQLInt)}
+    nodes: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPayment)))},
+    pageInfo: {type: new GraphQLNonNull(GraphQLPageInfo)},
+    totalCount: {type: new GraphQLNonNull(GraphQLInt)}
   }
 })
 
 export const GraphQLPaymentFromInvoiceInput = new GraphQLInputObjectType({
   name: 'PaymentFromInvoiceInput',
   fields: {
-    invoiceID: {type: GraphQLNonNull(GraphQLString)},
+    invoiceID: {type: new GraphQLNonNull(GraphQLString)},
     paymentMethodID: {type: GraphQLID},
     paymentMethodSlug: {type: GraphQLSlug},
     successURL: {type: GraphQLString},

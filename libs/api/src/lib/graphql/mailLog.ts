@@ -29,15 +29,15 @@ export const GraphQLMailLogState = new GraphQLEnumType({
 export const GraphQLMailLog = new GraphQLObjectType<MailLog, Context>({
   name: 'MailLog',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLID)},
 
-    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
+    modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
 
-    recipient: {type: GraphQLNonNull(GraphQLString)},
-    subject: {type: GraphQLNonNull(GraphQLString)},
-    state: {type: GraphQLNonNull(GraphQLMailLogState)},
-    mailProviderID: {type: GraphQLNonNull(GraphQLString)},
+    recipient: {type: new GraphQLNonNull(GraphQLString)},
+    subject: {type: new GraphQLNonNull(GraphQLString)},
+    state: {type: new GraphQLNonNull(GraphQLMailLogState)},
+    mailProviderID: {type: new GraphQLNonNull(GraphQLString)},
     mailData: {type: GraphQLString}
   }
 })
@@ -60,8 +60,8 @@ export const GraphQLMailLogSort = new GraphQLEnumType({
 export const GraphQLMailLogConnection = new GraphQLObjectType<any, Context>({
   name: 'MailLogConnection',
   fields: {
-    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMailLog)))},
-    pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)},
-    totalCount: {type: GraphQLNonNull(GraphQLInt)}
+    nodes: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLMailLog)))},
+    pageInfo: {type: new GraphQLNonNull(GraphQLPageInfo)},
+    totalCount: {type: new GraphQLNonNull(GraphQLInt)}
   }
 })

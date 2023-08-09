@@ -20,6 +20,15 @@ fragment FullParentComment on Comment {
   modifiedAt
 }
 
+fragment FullCommentUser on User {
+  id
+  name
+  firstName
+  preferredName
+  flair
+  email
+}
+
 fragment FullComment on Comment {
   id
   state
@@ -35,6 +44,9 @@ fragment FullComment on Comment {
     ...CommentRevision
   }
   source
+  user {
+    ...FullCommentUser
+  }
   createdAt
   modifiedAt
   itemID

@@ -2,15 +2,15 @@ import {GraphQLNonNull, GraphQLObjectType, GraphQLString} from 'graphql'
 export const GraphQLAuthProvider = new GraphQLObjectType({
   name: 'AuthProvider',
   fields: {
-    name: {type: GraphQLNonNull(GraphQLString)},
-    url: {type: GraphQLNonNull(GraphQLString)}
+    name: {type: new GraphQLNonNull(GraphQLString)},
+    url: {type: new GraphQLNonNull(GraphQLString)}
   }
 })
 
 export const GraphQLJWTToken = new GraphQLObjectType({
   name: 'JWTToken',
   fields: {
-    token: {type: GraphQLNonNull(GraphQLString)},
-    expiresAt: {type: GraphQLNonNull(GraphQLString)}
+    token: {type: new GraphQLNonNull(GraphQLString)},
+    expiresAt: {type: new GraphQLNonNull(GraphQLString)}
   }
 })

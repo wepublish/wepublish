@@ -11,7 +11,13 @@ import {
   useTheme
 } from '@mui/material'
 import {theme} from '@wepublish/ui'
-import {ApiV1, FooterContainer, WebsiteBuilderProvider, WebsiteProvider} from '@wepublish/website'
+import {
+  ApiV1,
+  FooterContainer,
+  NavbarContainer,
+  WebsiteBuilderProvider,
+  WebsiteProvider
+} from '@wepublish/website'
 import {setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
 import i18next from 'i18next'
@@ -79,6 +85,10 @@ const LogoWrapper = styled(Logo)`
   height: 40px;
 `
 
+const NavBar = styled(NavbarContainer)`
+  background-color: ${({theme}) => theme.palette.common.white};
+`
+
 function CustomApp({Component, pageProps}: AppProps) {
   const theme = useTheme()
   const globalStyles = useMemo(() => tsriArticleStyles(theme), [theme])
@@ -94,6 +104,11 @@ function CustomApp({Component, pageProps}: AppProps) {
             <Head>
               <title>We.Publish</title>
 
+              {/* Feeds */}
+              <link rel="alternate" type="application/rss+xml" href="/api/rss-feed" />
+              <link rel="alternate" type="application/atom+xml" href="/api/atom-feed" />
+              <link rel="alternate" type="application/feed+json" href="/api/json-feed" />
+
               {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
               <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
               <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
@@ -105,7 +120,7 @@ function CustomApp({Component, pageProps}: AppProps) {
             </Head>
 
             <Spacer>
-              <div></div>
+              <NavBar categorySlugs={['categories']} slug="main" />
 
               <main>
                 <MainSpacer>

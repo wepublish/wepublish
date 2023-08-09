@@ -9,19 +9,50 @@ import {
   useContext
 } from 'react'
 import {PartialDeep} from 'type-fest'
-import {BuilderArticleProps} from './article.interface'
-import {BuilderLoginFormProps, BuilderRegistrationFormProps} from './authentication.interface'
-import {BuilderAuthorChipProps, BuilderAuthorProps} from './author.interface'
 import {
+  BuilderArticleProps,
+  BuilderArticleSEOProps,
+  BuilderArticleListProps,
+  BuilderArticleListItemProps
+} from './article.interface'
+import {BuilderLoginFormProps, BuilderRegistrationFormProps} from './authentication.interface'
+import {
+  BuilderAuthorChipProps,
+  BuilderAuthorListItemProps,
+  BuilderAuthorListProps,
+  BuilderAuthorProps
+} from './author.interface'
+import {
+  BuilderBildwurfAdBlockProps,
   BuilderBlockRendererProps,
+  BuilderEmbedBlockProps,
+  BuilderFacebookPostBlockProps,
+  BuilderFacebookVideoBlockProps,
   BuilderHTMLBlockProps,
   BuilderImageBlockProps,
+  BuilderImageGalleryBlockProps,
+  BuilderInstagramPostBlockProps,
+  BuilderPolisConversationBlockProps,
+  BuilderEventBlockProps,
+  BuilderPollBlockProps,
+  BuilderListicleBlockProps,
   BuilderQuoteBlockProps,
   BuilderRichTextBlockProps,
+  BuilderSoundCloudTrackBlockProps,
+  BuilderTeaserGridBlockProps,
   BuilderTeaserGridFlexBlockProps,
   BuilderTeaserProps,
-  BuilderTitleBlockProps
+  BuilderTikTokVideoBlockProps,
+  BuilderTitleBlockProps,
+  BuilderTwitterTweetBlockProps,
+  BuilderVimeoVideoBlockProps,
+  BuilderYouTubeVideoBlockProps
 } from './blocks.interface'
+import {
+  BuilderCommentEditorProps,
+  BuilderCommentListItemProps,
+  BuilderCommentListProps
+} from './comment.interface'
 import {
   BuilderEventListItemProps,
   BuilderEventListProps,
@@ -37,31 +68,47 @@ import {
 } from './lists.interface'
 import {BuilderMemberPlansProps} from './member-plans.interface'
 import {BuilderNavbarProps} from './navbar.interface'
-import {BuilderPageProps} from './page.interface'
+import {BuilderPageProps, BuilderPageSEOProps} from './page.interface'
 import {BuilderPayInvoicesProps} from './pay-invoices.interface'
+import {BuilderPeerProps} from './peer.interface'
 import {BuilderRenderElementProps, BuilderRenderLeafProps} from './richText.interface'
 import {BuilderSubscribeProps} from './subscribe.interface'
 import {BuilderHeadingProps, BuilderLinkProps, BuilderParagraphProps} from './typography.interface'
-import {BuilderAlertProps, BuilderButtonProps, BuilderTextFieldProps} from './ui.interface'
+import {
+  BuilderAlertProps,
+  BuilderButtonProps,
+  BuilderIconButtonProps,
+  BuilderTextFieldProps
+} from './ui.interface'
 
 const NoComponent = () => null
 
 export type WebsiteBuilderComponents = {
   Head: ComponentType<{children: ReactNode}>
-  Script: ComponentType<{children: ReactNode} & ScriptHTMLAttributes<HTMLScriptElement>>
+  Script: ComponentType<{children?: ReactNode} & ScriptHTMLAttributes<HTMLScriptElement>>
   Navbar: ComponentType<BuilderNavbarProps>
   Footer: ComponentType<BuilderFooterProps>
   MemberPlans: ComponentType<BuilderMemberPlansProps>
   Subscribe: ComponentType<BuilderSubscribeProps>
   PayInvoices: ComponentType<BuilderPayInvoicesProps>
   Page: ComponentType<BuilderPageProps>
+  PageSEO: ComponentType<BuilderPageSEOProps>
   Article: ComponentType<BuilderArticleProps>
+  ArticleSEO: ComponentType<BuilderArticleSEOProps>
+  PeerInformation: ComponentType<BuilderPeerProps>
   Author: ComponentType<BuilderAuthorProps>
   AuthorChip: ComponentType<BuilderAuthorChipProps>
+  AuthorListItem: ComponentType<BuilderAuthorListItemProps>
+  AuthorList: ComponentType<BuilderAuthorListProps>
+  ArticleListItem: ComponentType<BuilderArticleListItemProps>
+  ArticleList: ComponentType<BuilderArticleListProps>
   Event: ComponentType<BuilderEventProps>
   EventSEO: ComponentType<BuilderEventSEOProps>
   EventList: ComponentType<BuilderEventListProps>
   EventListItem: ComponentType<BuilderEventListItemProps>
+  CommentList: ComponentType<BuilderCommentListProps>
+  CommentListItem: ComponentType<BuilderCommentListItemProps>
+  CommentEditor: ComponentType<BuilderCommentEditorProps>
   LoginForm: ComponentType<BuilderLoginFormProps>
   RegistrationForm: ComponentType<BuilderRegistrationFormProps>
 
@@ -69,6 +116,7 @@ export type WebsiteBuilderComponents = {
     Alert: ComponentType<BuilderAlertProps>
     TextField: ComponentType<BuilderTextFieldProps>
     Button: ComponentType<BuilderButtonProps>
+    IconButton: ComponentType<BuilderIconButtonProps>
     H1: ComponentType<BuilderHeadingProps>
     H2: ComponentType<BuilderHeadingProps>
     H3: ComponentType<BuilderHeadingProps>
@@ -92,10 +140,26 @@ export type WebsiteBuilderComponents = {
     Renderer: ComponentType<BuilderBlockRendererProps>
     Title: ComponentType<BuilderTitleBlockProps>
     Image: ComponentType<BuilderImageBlockProps>
+    ImageGallery: ComponentType<BuilderImageGalleryBlockProps>
     Quote: ComponentType<BuilderQuoteBlockProps>
     RichText: ComponentType<BuilderRichTextBlockProps>
     HTML: ComponentType<BuilderHTMLBlockProps>
+    FacebookPost: ComponentType<BuilderFacebookPostBlockProps>
+    FacebookVideo: ComponentType<BuilderFacebookVideoBlockProps>
+    InstagramPost: ComponentType<BuilderInstagramPostBlockProps>
+    TwitterTweet: ComponentType<BuilderTwitterTweetBlockProps>
+    VimeoVideo: ComponentType<BuilderVimeoVideoBlockProps>
+    YouTubeVideo: ComponentType<BuilderYouTubeVideoBlockProps>
+    SoundCloudTrack: ComponentType<BuilderSoundCloudTrackBlockProps>
+    PolisConversation: ComponentType<BuilderPolisConversationBlockProps>
+    TikTokVideo: ComponentType<BuilderTikTokVideoBlockProps>
+    BildwurfAd: ComponentType<BuilderBildwurfAdBlockProps>
+    Embed: ComponentType<BuilderEmbedBlockProps>
+    Event: ComponentType<BuilderEventBlockProps>
+    Poll: ComponentType<BuilderPollBlockProps>
+    Listicle: ComponentType<BuilderListicleBlockProps>
     TeaserGridFlex: ComponentType<BuilderTeaserGridFlexBlockProps>
+    TeaserGrid: ComponentType<BuilderTeaserGridBlockProps>
     Teaser: ComponentType<BuilderTeaserProps>
   }
 
@@ -113,13 +177,23 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
   Subscribe: NoComponent,
   PayInvoices: NoComponent,
   Page: NoComponent,
+  PageSEO: NoComponent,
   Article: NoComponent,
+  ArticleSEO: NoComponent,
+  PeerInformation: NoComponent,
   Author: NoComponent,
   AuthorChip: NoComponent,
+  AuthorList: NoComponent,
+  AuthorListItem: NoComponent,
   Event: NoComponent,
   EventSEO: NoComponent,
   EventList: NoComponent,
   EventListItem: NoComponent,
+  ArticleList: NoComponent,
+  ArticleListItem: NoComponent,
+  CommentList: NoComponent,
+  CommentListItem: NoComponent,
+  CommentEditor: NoComponent,
   LoginForm: NoComponent,
   RegistrationForm: NoComponent,
 
@@ -127,6 +201,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
     Alert: NoComponent,
     TextField: NoComponent,
     Button: NoComponent,
+    IconButton: NoComponent,
     H1: NoComponent,
     H2: NoComponent,
     H3: NoComponent,
@@ -150,10 +225,26 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
     Renderer: NoComponent,
     Title: NoComponent,
     Image: NoComponent,
+    ImageGallery: NoComponent,
     Quote: NoComponent,
     RichText: NoComponent,
     HTML: NoComponent,
+    FacebookPost: NoComponent,
+    FacebookVideo: NoComponent,
+    InstagramPost: NoComponent,
+    TwitterTweet: NoComponent,
+    VimeoVideo: NoComponent,
+    YouTubeVideo: NoComponent,
+    SoundCloudTrack: NoComponent,
+    PolisConversation: NoComponent,
+    TikTokVideo: NoComponent,
+    BildwurfAd: NoComponent,
+    Embed: NoComponent,
+    Event: NoComponent,
+    Poll: NoComponent,
+    Listicle: NoComponent,
     TeaserGridFlex: NoComponent,
+    TeaserGrid: NoComponent,
     Teaser: NoComponent
   },
 

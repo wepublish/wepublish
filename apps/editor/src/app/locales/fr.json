@@ -1069,7 +1069,8 @@
       "peerArticles": "Articles pairables",
       "subscriptions": "Abonnements",
       "consents": "Consentement",
-      "userConsents": "Consentement de l'utilisateur"
+      "userConsents": "Consentement de l'utilisateur",
+      "importableEvents": "Importable Events"
     },
     "navigation": {
       "overview": {
@@ -1335,6 +1336,7 @@
       "form": {
         "name": "Name",
         "location": "Location",
+        "externalSource": "External source (for imported events)",
         "status": "Status",
         "startsAt": "Starts at",
         "endsAt": "Ends at",
@@ -1351,6 +1353,12 @@
         "body": "Do you really want to delete the event \"{{name}}\"?",
         "delete": "Yes, delete the event"
       }
+    },
+    "importableEvent": {
+      "title": "Importable events",
+      "editTitle": "Edit importable event",
+      "import": "Import",
+      "imported": "Imported"
     },
     "general": {
       "deletedSuccess": "Supprimé avec succès",

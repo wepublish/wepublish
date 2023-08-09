@@ -38,14 +38,14 @@ export const GraphQLPageFilter = new GraphQLInputObjectType({
     publicationDateTo: {type: GraphQLDateFilter},
     published: {type: GraphQLBoolean},
     pending: {type: GraphQLBoolean},
-    tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
+    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))}
   }
 })
 
 export const GraphQLPublishedPageFilter = new GraphQLInputObjectType({
   name: 'PublishedPageFilter',
   fields: {
-    tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
+    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))}
   }
 })
 
@@ -71,13 +71,15 @@ export const GraphQLPublishedPageSort = new GraphQLEnumType({
 export const GraphQLPageInput = new GraphQLInputObjectType({
   name: 'PageInput',
   fields: () => ({
-    slug: {type: GraphQLNonNull(GraphQLSlug)},
+    slug: {type: new GraphQLNonNull(GraphQLSlug)},
 
-    title: {type: GraphQLNonNull(GraphQLString)},
+    title: {type: new GraphQLNonNull(GraphQLString)},
     description: {type: GraphQLString},
-    tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+    tags: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLString)))},
 
-    properties: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataPropertyInput)))},
+    properties: {
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLMetadataPropertyInput)))
+    },
 
     imageID: {type: GraphQLID},
 
@@ -86,7 +88,7 @@ export const GraphQLPageInput = new GraphQLInputObjectType({
     socialMediaImageID: {type: GraphQLID},
 
     blocks: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLBlockInput)))
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLBlockInput)))
     }
   })
 })
@@ -94,9 +96,9 @@ export const GraphQLPageInput = new GraphQLInputObjectType({
 export const GraphQLPageRevision = new GraphQLObjectType<PageRevision, Context>({
   name: 'PageRevision',
   fields: () => ({
-    revision: {type: GraphQLNonNull(GraphQLInt)},
+    revision: {type: new GraphQLNonNull(GraphQLInt)},
 
-    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     publishAt: {type: GraphQLDateTime},
 
     updatedAt: {type: GraphQLDateTime},
@@ -106,12 +108,14 @@ export const GraphQLPageRevision = new GraphQLObjectType<PageRevision, Context>(
 
     title: {type: GraphQLString},
     description: {type: GraphQLString},
-    tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+    tags: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLString)))},
 
-    properties: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataProperty)))},
+    properties: {
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLMetadataProperty)))
+    },
 
     url: {
-      type: GraphQLNonNull(GraphQLString),
+      type: new GraphQLNonNull(GraphQLString),
       resolve: createProxyingResolver((pageRevision, args, {urlAdapter}, info) => {
         // The URLAdapter expects a public page to generate the public page URL.
         // The URL should never be created with values from the updatedAt and
@@ -141,18 +145,18 @@ export const GraphQLPageRevision = new GraphQLObjectType<PageRevision, Context>(
       })
     },
 
-    blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLBlock)))}
+    blocks: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLBlock)))}
   })
 })
 
 export const GraphQLPage = new GraphQLObjectType<Page, Context>({
   name: 'Page',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
-    shared: {type: GraphQLNonNull(GraphQLBoolean)},
+    id: {type: new GraphQLNonNull(GraphQLID)},
+    shared: {type: new GraphQLNonNull(GraphQLBoolean)},
 
-    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
+    modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
 
     draft: {
       type: GraphQLPageRevision
@@ -167,48 +171,48 @@ export const GraphQLPage = new GraphQLObjectType<Page, Context>({
     },
 
     latest: {
-      type: GraphQLNonNull(GraphQLPageRevision),
+      type: new GraphQLNonNull(GraphQLPageRevision),
       resolve: createProxyingResolver(({draft, pending, published}) => {
         return draft ?? pending ?? published
       })
     }
   }
   // TODO: Implement page history
-  // history: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPageRevision)))}
+  // history: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPageRevision)))}
 })
 
 export const GraphQLPageConnection = new GraphQLObjectType({
   name: 'PageConnection',
   fields: {
-    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPage)))},
-    pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)},
-    totalCount: {type: GraphQLNonNull(GraphQLInt)}
+    nodes: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPage)))},
+    pageInfo: {type: new GraphQLNonNull(GraphQLPageInfo)},
+    totalCount: {type: new GraphQLNonNull(GraphQLInt)}
   }
 })
 
 export const GraphQLPublicPage = new GraphQLObjectType<PublicPage, Context>({
   name: 'Page',
   fields: () => ({
-    id: {type: GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLID)},
 
-    updatedAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    publishedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    updatedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
+    publishedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
 
-    slug: {type: GraphQLNonNull(GraphQLSlug)},
+    slug: {type: new GraphQLNonNull(GraphQLSlug)},
 
     url: {
-      type: GraphQLNonNull(GraphQLString),
+      type: new GraphQLNonNull(GraphQLString),
       resolve: createProxyingResolver((page, _, {urlAdapter}) => {
         return urlAdapter.getPublicPageURL(page)
       })
     },
 
-    title: {type: GraphQLNonNull(GraphQLString)},
+    title: {type: new GraphQLNonNull(GraphQLString)},
     description: {type: GraphQLString},
-    tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+    tags: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLString)))},
 
     properties: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataPropertyPublic))),
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLMetadataPropertyPublic))),
       resolve: ({properties}) => {
         return properties.filter(property => property.public).map(({key, value}) => ({key, value}))
       }
@@ -230,15 +234,15 @@ export const GraphQLPublicPage = new GraphQLObjectType<PublicPage, Context>({
       })
     },
 
-    blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicBlock)))}
+    blocks: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPublicBlock)))}
   })
 })
 
 export const GraphQLPublicPageConnection = new GraphQLObjectType({
   name: 'PageConnection',
   fields: {
-    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicPage)))},
-    pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)},
-    totalCount: {type: GraphQLNonNull(GraphQLInt)}
+    nodes: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPublicPage)))},
+    pageInfo: {type: new GraphQLNonNull(GraphQLPageInfo)},
+    totalCount: {type: new GraphQLNonNull(GraphQLInt)}
   }
 })

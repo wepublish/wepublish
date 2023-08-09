@@ -1,7 +1,8 @@
-import {usePageQuery, PageQuery} from '@wepublish/website/api'
 import {QueryResult} from '@apollo/client'
-import {useEffect} from 'react'
+import {PollBlockProvider} from '@wepublish/block-content/website'
+import {PageQuery, usePageQuery} from '@wepublish/website/api'
 import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {useEffect} from 'react'
 
 type IdOrSlug = {id: string; slug?: never} | {id?: never; slug: string}
 
@@ -24,5 +25,9 @@ export function PageContainer({onQuery, id, slug, className}: PageContainerProps
     onQuery?.({data, loading, error, refetch})
   }, [data, loading, error, refetch, onQuery])
 
-  return <Page data={data} loading={loading} error={error} className={className} />
+  return (
+    <PollBlockProvider>
+      <Page data={data} loading={loading} error={error} className={className} />
+    </PollBlockProvider>
+  )
 }

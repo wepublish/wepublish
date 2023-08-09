@@ -36,17 +36,8 @@
         "assets": ["libs/api/*.md", "libs/api/prisma/**/*"],
         "external": "all",
         "buildableProjectDepsInPackageJsonType": "dependencies",
-        "rootDir": "."
-      }
-    },
-    "generate-api": {
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": [
-          {
-            "command": "npx graphql-codegen -r dotenv/config --config codegen.yml"
-          }
-        ]
+        "rootDir": ".",
+        "updateBuildableProjectDepsInPackageJson": true
       }
     }
   },

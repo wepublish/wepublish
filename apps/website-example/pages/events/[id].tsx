@@ -1,23 +1,14 @@
-import {ApiV1, EventContainer, EventSEO} from '@wepublish/website'
+import {ApiV1, EventContainer} from '@wepublish/website'
 import {GetStaticPaths, GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 
-type EventByIdProps = {
-  event?: ApiV1.Event
-}
-
-export default function EventById({event}: EventByIdProps) {
+export default function EventById() {
   const {
     query: {id}
   } = useRouter()
 
-  return (
-    <>
-      {event && <EventSEO event={event} />}
-      <EventContainer id={id as string} />
-    </>
-  )
+  return <EventContainer id={id as string} />
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
@@ -32,17 +23,17 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
   const {publicRuntimeConfig} = getConfig()
 
   const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
-  const data = await client.query({
+  await client.query({
     query: ApiV1.EventDocument,
     variables: {
       id
     }
   })
 
+  const props = ApiV1.addClientCacheToV1Props(client, {})
+
   return {
-    props: {
-      event: data?.data?.event
-    },
+    props,
     revalidate: 60 // every 60 seconds
   }
 }

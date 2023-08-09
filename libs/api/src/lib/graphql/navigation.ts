@@ -24,7 +24,7 @@ import {createProxyingResolver, createProxyingIsTypeOf} from '../utility'
 export const GraphQLBaseNavigationLink = new GraphQLInterfaceType({
   name: 'BaseNavigationLink',
   fields: {
-    label: {type: GraphQLNonNull(GraphQLString)}
+    label: {type: new GraphQLNonNull(GraphQLString)}
   }
 })
 
@@ -32,7 +32,7 @@ export const GraphQLPageNavigationLink = new GraphQLObjectType<PageNavigationLin
   name: 'PageNavigationLink',
   interfaces: [GraphQLBaseNavigationLink],
   fields: {
-    label: {type: GraphQLNonNull(GraphQLString)},
+    label: {type: new GraphQLNonNull(GraphQLString)},
     page: {
       type: GraphQLPage,
       resolve: createProxyingResolver(({pageID}, _args, {loaders}) => {
@@ -49,7 +49,7 @@ export const GraphQLArticleNavigationLink = new GraphQLObjectType<ArticleNavigat
   name: 'ArticleNavigationLink',
   interfaces: [GraphQLBaseNavigationLink],
   fields: {
-    label: {type: GraphQLNonNull(GraphQLString)},
+    label: {type: new GraphQLNonNull(GraphQLString)},
     article: {
       type: GraphQLArticle,
       resolve: createProxyingResolver(({articleID}, _args, {loaders}) => {
@@ -67,8 +67,8 @@ export const GraphQLExternalNavigationLink = new GraphQLObjectType<ExternalNavig
     name: 'ExternalNavigationLink',
     interfaces: [GraphQLBaseNavigationLink],
     fields: {
-      label: {type: GraphQLNonNull(GraphQLString)},
-      url: {type: GraphQLNonNull(GraphQLString)}
+      label: {type: new GraphQLNonNull(GraphQLString)},
+      url: {type: new GraphQLNonNull(GraphQLString)}
     },
     isTypeOf: createProxyingIsTypeOf(value => {
       return value.type === NavigationLinkType.External
@@ -84,10 +84,10 @@ export const GraphQLNavigationLink = new GraphQLUnionType({
 export const GraphQLNavigation = new GraphQLObjectType({
   name: 'Navigation',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
-    key: {type: GraphQLNonNull(GraphQLString)},
-    name: {type: GraphQLNonNull(GraphQLString)},
-    links: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLNavigationLink)))}
+    id: {type: new GraphQLNonNull(GraphQLID)},
+    key: {type: new GraphQLNonNull(GraphQLString)},
+    name: {type: new GraphQLNonNull(GraphQLString)},
+    links: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLNavigationLink)))}
   }
 })
 
@@ -95,7 +95,7 @@ export const GraphQLPublicPageNavigationLink = new GraphQLObjectType<PageNavigat
   name: 'PageNavigationLink',
   interfaces: [GraphQLBaseNavigationLink],
   fields: {
-    label: {type: GraphQLNonNull(GraphQLString)},
+    label: {type: new GraphQLNonNull(GraphQLString)},
     page: {
       type: GraphQLPublicPage,
       resolve: createProxyingResolver(({pageID}, _args, {loaders}) => {
@@ -115,7 +115,7 @@ export const GraphQLPublicArticleNavigationLink = new GraphQLObjectType<
   name: 'ArticleNavigationLink',
   interfaces: [GraphQLBaseNavigationLink],
   fields: {
-    label: {type: GraphQLNonNull(GraphQLString)},
+    label: {type: new GraphQLNonNull(GraphQLString)},
     article: {
       type: GraphQLPublicArticle,
       resolve: createProxyingResolver(({articleID}, _args, {loaders}) => {
@@ -140,34 +140,36 @@ export const GraphQLPublicNavigationLink = new GraphQLUnionType({
 export const GraphQLPublicNavigation = new GraphQLObjectType({
   name: 'Navigation',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
-    key: {type: GraphQLNonNull(GraphQLString)},
-    name: {type: GraphQLNonNull(GraphQLString)},
-    links: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicNavigationLink)))}
+    id: {type: new GraphQLNonNull(GraphQLID)},
+    key: {type: new GraphQLNonNull(GraphQLString)},
+    name: {type: new GraphQLNonNull(GraphQLString)},
+    links: {
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPublicNavigationLink)))
+    }
   }
 })
 
 export const GraphQLArticleNavigationLinkInput = new GraphQLInputObjectType({
   name: 'ArticleNavigationLinkInput',
   fields: {
-    label: {type: GraphQLNonNull(GraphQLString)},
-    articleID: {type: GraphQLNonNull(GraphQLID)}
+    label: {type: new GraphQLNonNull(GraphQLString)},
+    articleID: {type: new GraphQLNonNull(GraphQLID)}
   }
 })
 
 export const GraphQLPageNavigationLinkInput = new GraphQLInputObjectType({
   name: 'PageNavigationLinkInput',
   fields: {
-    label: {type: GraphQLNonNull(GraphQLString)},
-    pageID: {type: GraphQLNonNull(GraphQLID)}
+    label: {type: new GraphQLNonNull(GraphQLString)},
+    pageID: {type: new GraphQLNonNull(GraphQLID)}
   }
 })
 
 export const GraphQLExternalNavigationLinkInput = new GraphQLInputObjectType({
   name: 'ExternalNavigationLinkInput',
   fields: {
-    label: {type: GraphQLNonNull(GraphQLString)},
-    url: {type: GraphQLNonNull(GraphQLString)}
+    label: {type: new GraphQLNonNull(GraphQLString)},
+    url: {type: new GraphQLNonNull(GraphQLString)}
   }
 })
 
@@ -183,8 +185,10 @@ export const GraphQLNavigationLinkInput = new GraphQLInputObjectType({
 export const GraphQLNavigationInput = new GraphQLInputObjectType({
   name: 'NavigationInput',
   fields: {
-    key: {type: GraphQLNonNull(GraphQLString)},
-    name: {type: GraphQLNonNull(GraphQLString)},
-    links: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLNavigationLinkInput)))}
+    key: {type: new GraphQLNonNull(GraphQLString)},
+    name: {type: new GraphQLNonNull(GraphQLString)},
+    links: {
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLNavigationLinkInput)))
+    }
   }
 })

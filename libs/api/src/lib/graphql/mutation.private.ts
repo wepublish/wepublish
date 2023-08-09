@@ -118,7 +118,7 @@ import {
   deletePollExternalVoteSource,
   updatePoll
 } from './poll/poll.private-mutation'
-import {GraphQLRichText} from './richText'
+import {GraphQLRichText} from '@wepublish/richtext/api'
 import {GraphQLSession, GraphQLSessionWithToken} from './session'
 import {
   createJWTSession,
@@ -248,24 +248,24 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     // =======
 
     updatePeerProfile: {
-      type: GraphQLNonNull(GraphQLPeerProfile),
-      args: {input: {type: GraphQLNonNull(GraphQLPeerProfileInput)}},
+      type: new GraphQLNonNull(GraphQLPeerProfile),
+      args: {input: {type: new GraphQLNonNull(GraphQLPeerProfileInput)}},
       resolve: (root, {input}, {hostURL, authenticate, prisma: {peerProfile}}) =>
         upsertPeerProfile(input, hostURL, authenticate, peerProfile)
     },
 
     createPeer: {
-      type: GraphQLNonNull(GraphQLPeer),
-      args: {input: {type: GraphQLNonNull(GraphQLCreatePeerInput)}},
+      type: new GraphQLNonNull(GraphQLPeer),
+      args: {input: {type: new GraphQLNonNull(GraphQLCreatePeerInput)}},
       resolve: (root, {input}, {authenticate, prisma: {peer}}) =>
         createPeer(input, authenticate, peer)
     },
 
     updatePeer: {
-      type: GraphQLNonNull(GraphQLPeer),
+      type: new GraphQLNonNull(GraphQLPeer),
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
-        input: {type: GraphQLNonNull(GraphQLUpdatePeerInput)}
+        id: {type: new GraphQLNonNull(GraphQLID)},
+        input: {type: new GraphQLNonNull(GraphQLUpdatePeerInput)}
       },
       resolve: (root, {id, input}, {authenticate, prisma: {peer}}) =>
         updatePeer(id, input, authenticate, peer)
@@ -273,7 +273,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
     deletePeer: {
       type: GraphQLPeer,
-      args: {id: {type: GraphQLNonNull(GraphQLID)}},
+      args: {id: {type: new GraphQLNonNull(GraphQLID)}},
       resolve: (root, {id}, {authenticate, prisma: {peer}}) =>
         deletePeerById(id, authenticate, peer)
     },
@@ -282,30 +282,30 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     // =======
 
     createSession: {
-      type: GraphQLNonNull(GraphQLSessionWithToken),
+      type: new GraphQLNonNull(GraphQLSessionWithToken),
       args: {
-        email: {type: GraphQLNonNull(GraphQLString)},
-        password: {type: GraphQLNonNull(GraphQLString)}
+        email: {type: new GraphQLNonNull(GraphQLString)},
+        password: {type: new GraphQLNonNull(GraphQLString)}
       },
       resolve: (root, {email, password}, {sessionTTL, prisma}) =>
         createSession(email, password, sessionTTL, prisma.session, prisma.user, prisma.userRole)
     },
 
     createSessionWithJWT: {
-      type: GraphQLNonNull(GraphQLSessionWithToken),
+      type: new GraphQLNonNull(GraphQLSessionWithToken),
       args: {
-        jwt: {type: GraphQLNonNull(GraphQLString)}
+        jwt: {type: new GraphQLNonNull(GraphQLString)}
       },
       resolve: (root, {jwt}, {sessionTTL, prisma, verifyJWT}) =>
         createJWTSession(jwt, sessionTTL, verifyJWT, prisma.session, prisma.user, prisma.userRole)
     },
 
     createSessionWithOAuth2Code: {
-      type: GraphQLNonNull(GraphQLSessionWithToken),
+      type: new GraphQLNonNull(GraphQLSessionWithToken),
       args: {
-        name: {type: GraphQLNonNull(GraphQLString)},
-        code: {type: GraphQLNonNull(GraphQLString)},
-        redirectUri: {type: GraphQLNonNull(GraphQLString)}
+        name: {type: new GraphQLNonNull(GraphQLString)},
+        code: {type: new GraphQLNonNull(GraphQLString)},
+        redirectUri: {type: new GraphQLNonNull(GraphQLString)}
       },
       resolve: (root, {name, code, redirectUri}, {sessionTTL, prisma, oauth2Providers}) =>
         createOAuth2Session(
@@ -321,31 +321,31 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     },
 
     revokeSession: {
-      type: GraphQLNonNull(GraphQLBoolean),
-      args: {id: {type: GraphQLNonNull(GraphQLID)}},
+      type: new GraphQLNonNull(GraphQLBoolean),
+      args: {id: {type: new GraphQLNonNull(GraphQLID)}},
       resolve: (root, {id}, {authenticateUser, prisma: {session}}) =>
         revokeSessionById(id, authenticateUser, session)
     },
 
     revokeActiveSession: {
-      type: GraphQLNonNull(GraphQLBoolean),
+      type: new GraphQLNonNull(GraphQLBoolean),
       args: {},
       resolve: (root, _, {authenticateUser, prisma: {session}}) =>
         revokeSessionByToken(authenticateUser, session)
     },
 
     sessions: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLSession))),
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLSession))),
       args: {},
       resolve: (root, _, {authenticateUser, prisma: {session, userRole}}) =>
         getSessionsForUser(authenticateUser, session, userRole)
     },
 
     sendJWTLogin: {
-      type: GraphQLNonNull(GraphQLString),
+      type: new GraphQLNonNull(GraphQLString),
       args: {
-        url: {type: GraphQLNonNull(GraphQLString)},
-        email: {type: GraphQLNonNull(GraphQLString)}
+        url: {type: new GraphQLNonNull(GraphQLString)},
+        email: {type: new GraphQLNonNull(GraphQLString)}
       },
       async resolve(root, {url, email}, {authenticate, prisma, generateJWT, mailContext}) {
         const {roles} = authenticate()
@@ -390,9 +390,9 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     },
 
     sendWebsiteLogin: {
-      type: GraphQLNonNull(GraphQLString),
+      type: new GraphQLNonNull(GraphQLString),
       args: {
-        email: {type: GraphQLNonNull(GraphQLString)}
+        email: {type: new GraphQLNonNull(GraphQLString)}
       },
       async resolve(
         root,
@@ -442,15 +442,15 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     // =====
 
     createToken: {
-      type: GraphQLNonNull(GraphQLCreatedToken),
-      args: {input: {type: GraphQLNonNull(GraphQLTokenInput)}},
+      type: new GraphQLNonNull(GraphQLCreatedToken),
+      args: {input: {type: new GraphQLNonNull(GraphQLTokenInput)}},
       resolve: (root, {input}, {authenticate, prisma: {token}}) =>
         createToken({...input, roleIDs: ['peer']}, authenticate, token)
     },
 
     deleteToken: {
       type: GraphQLCreatedToken,
-      args: {id: {type: GraphQLNonNull(GraphQLID)}},
+      args: {id: {type: new GraphQLNonNull(GraphQLID)}},
       resolve: (root, {id}, {authenticate, prisma: {token}}) =>
         deleteTokenById(id, authenticate, token)
     },
@@ -461,8 +461,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createUser: {
       type: GraphQLUser,
       args: {
-        input: {type: GraphQLNonNull(GraphQLUserInput)},
-        password: {type: GraphQLNonNull(GraphQLString)}
+        input: {type: new GraphQLNonNull(GraphQLUserInput)},
+        password: {type: new GraphQLNonNull(GraphQLString)}
       },
       resolve: (root, {input, password}, {hashCostFactor, authenticate, prisma: {user}}) =>
         createAdminUser({...input, password}, authenticate, hashCostFactor, user)
@@ -471,8 +471,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     updateUser: {
       type: GraphQLUser,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
-        input: {type: GraphQLNonNull(GraphQLUserInput)}
+        id: {type: new GraphQLNonNull(GraphQLID)},
+        input: {type: new GraphQLNonNull(GraphQLUserInput)}
       },
       resolve: (root, {id, input}, {authenticate, prisma: {user}}) =>
         updateAdminUser(id, input, authenticate, user)
@@ -481,8 +481,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     resetUserPassword: {
       type: GraphQLUser,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
-        password: {type: GraphQLNonNull(GraphQLString)},
+        id: {type: new GraphQLNonNull(GraphQLID)},
+        password: {type: new GraphQLNonNull(GraphQLString)},
         sendMail: {type: GraphQLBoolean}
       },
       resolve: (
@@ -496,7 +496,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     deleteUser: {
       type: GraphQLUser,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLID)}
       },
       resolve: (root, {id}, {authenticate, prisma: {user}}) =>
         deleteUserById(id, authenticate, user)
@@ -508,7 +508,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createSubscription: {
       type: GraphQLSubscription,
       args: {
-        input: {type: GraphQLNonNull(GraphQLSubscriptionInput)}
+        input: {type: new GraphQLNonNull(GraphQLSubscriptionInput)}
       },
       resolve: (root, {input}, {authenticate, prisma: {subscription}, memberContext}) =>
         createSubscription(input, authenticate, memberContext, subscription)
@@ -517,8 +517,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     updateSubscription: {
       type: GraphQLSubscription,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
-        input: {type: GraphQLNonNull(GraphQLSubscriptionInput)}
+        id: {type: new GraphQLNonNull(GraphQLID)},
+        input: {type: new GraphQLNonNull(GraphQLSubscriptionInput)}
       },
       resolve: (root, {id, input}, {authenticate, prisma, memberContext}) =>
         updateAdminSubscription(
@@ -534,7 +534,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     deleteSubscription: {
       type: GraphQLSubscription,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLID)}
       },
       resolve: (root, {id}, {authenticate, prisma: {subscription}}) =>
         deleteSubscriptionById(id, authenticate, subscription)
@@ -545,7 +545,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
     createUserRole: {
       type: GraphQLUserRole,
-      args: {input: {type: GraphQLNonNull(GraphQLUserRoleInput)}},
+      args: {input: {type: new GraphQLNonNull(GraphQLUserRoleInput)}},
       resolve: (root, {input}, {authenticate, prisma: {userRole}}) =>
         createUserRole(input, authenticate, userRole)
     },
@@ -553,8 +553,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     updateUserRole: {
       type: GraphQLUserRole,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
-        input: {type: GraphQLNonNull(GraphQLUserRoleInput)}
+        id: {type: new GraphQLNonNull(GraphQLID)},
+        input: {type: new GraphQLNonNull(GraphQLUserRoleInput)}
       },
       resolve: (root, {id, input}, {authenticate, prisma: {userRole}}) =>
         updateUserRole(id, input, authenticate, userRole)
@@ -563,7 +563,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     deleteUserRole: {
       type: GraphQLUserRole,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLID)}
       },
       resolve: (root, {id}, {authenticate, prisma: {userRole}}) =>
         deleteUserRoleById(id, authenticate, userRole)
@@ -574,7 +574,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
     createNavigation: {
       type: GraphQLNavigation,
-      args: {input: {type: GraphQLNonNull(GraphQLNavigationInput)}},
+      args: {input: {type: new GraphQLNonNull(GraphQLNavigationInput)}},
       resolve: (root, {input}, {authenticate, prisma: {navigation}}) =>
         createNavigation(
           {
@@ -589,8 +589,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     updateNavigation: {
       type: GraphQLNavigation,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
-        input: {type: GraphQLNonNull(GraphQLNavigationInput)}
+        id: {type: new GraphQLNonNull(GraphQLID)},
+        input: {type: new GraphQLNonNull(GraphQLNavigationInput)}
       },
       resolve: (root, {id, input}, {authenticate, prisma: {navigation}}) =>
         updateNavigation(
@@ -604,7 +604,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     deleteNavigation: {
       type: GraphQLNavigation,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLID)}
       },
       resolve: (root, {id}, {authenticate, prisma: {navigation}}) =>
         deleteNavigationById(id, authenticate, navigation)
@@ -615,7 +615,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
     createAuthor: {
       type: GraphQLAuthor,
-      args: {input: {type: GraphQLNonNull(GraphQLAuthorInput)}},
+      args: {input: {type: new GraphQLNonNull(GraphQLAuthorInput)}},
       resolve: (root, {input}, {authenticate, prisma: {author}}) =>
         createAuthor(input, authenticate, author)
     },
@@ -623,8 +623,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     updateAuthor: {
       type: GraphQLAuthor,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
-        input: {type: GraphQLNonNull(GraphQLAuthorInput)}
+        id: {type: new GraphQLNonNull(GraphQLID)},
+        input: {type: new GraphQLNonNull(GraphQLAuthorInput)}
       },
       resolve: (root, {id, input}, {authenticate, prisma: {author}}) =>
         updateAuthor(id, input, authenticate, author)
@@ -633,7 +633,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     deleteAuthor: {
       type: GraphQLAuthor,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLID)}
       },
       resolve: (root, {id}, {authenticate, prisma: {author}}) =>
         deleteAuthorById(id, authenticate, author)
@@ -644,7 +644,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
     uploadImage: {
       type: GraphQLImage,
-      args: {input: {type: GraphQLNonNull(GraphQLUploadImageInput)}},
+      args: {input: {type: new GraphQLNonNull(GraphQLUploadImageInput)}},
       resolve: (root, {input}, {authenticate, mediaAdapter, prisma: {image}}) =>
         createImage(input, authenticate, mediaAdapter, image)
     },
@@ -652,8 +652,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     updateImage: {
       type: GraphQLImage,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
-        input: {type: GraphQLNonNull(GraphQLUpdateImageInput)}
+        id: {type: new GraphQLNonNull(GraphQLID)},
+        input: {type: new GraphQLNonNull(GraphQLUpdateImageInput)}
       },
       resolve: (root, {id, input}, {authenticate, prisma: {image}}) =>
         updateImage(id, input, authenticate, image)
@@ -661,7 +661,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
     deleteImage: {
       type: GraphQLImage,
-      args: {id: {type: GraphQLNonNull(GraphQLID)}},
+      args: {id: {type: new GraphQLNonNull(GraphQLID)}},
       resolve: (root, {id}, {authenticate, mediaAdapter, prisma: {image}}) =>
         deleteImageById(id, authenticate, image, mediaAdapter)
     },
@@ -670,8 +670,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     // =======
 
     createArticle: {
-      type: GraphQLNonNull(GraphQLArticle),
-      args: {input: {type: GraphQLNonNull(GraphQLArticleInput)}},
+      type: new GraphQLNonNull(GraphQLArticle),
+      args: {input: {type: new GraphQLNonNull(GraphQLArticleInput)}},
       resolve: (root, {input}, {authenticate, prisma: {article}}) =>
         createArticle({...input, blocks: input.blocks.map(mapBlockUnionMap)}, authenticate, article)
     },
@@ -679,8 +679,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     updateArticle: {
       type: GraphQLArticle,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
-        input: {type: GraphQLNonNull(GraphQLArticleInput)}
+        id: {type: new GraphQLNonNull(GraphQLID)},
+        input: {type: new GraphQLNonNull(GraphQLArticleInput)}
       },
       resolve: (root, {id, input}, {authenticate, prisma: {article}}) =>
         updateArticle(
@@ -693,14 +693,14 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
     deleteArticle: {
       type: GraphQLArticle,
-      args: {id: {type: GraphQLNonNull(GraphQLID)}},
+      args: {id: {type: new GraphQLNonNull(GraphQLID)}},
       resolve: (root, {id}, {authenticate, prisma}) => deleteArticleById(id, authenticate, prisma)
     },
 
     publishArticle: {
       type: GraphQLArticle,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
+        id: {type: new GraphQLNonNull(GraphQLID)},
         publishAt: {type: GraphQLDateTime},
         updatedAt: {type: GraphQLDateTime},
         publishedAt: {type: GraphQLDateTime}
@@ -711,15 +711,15 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
     unpublishArticle: {
       type: GraphQLArticle,
-      args: {id: {type: GraphQLNonNull(GraphQLID)}},
+      args: {id: {type: new GraphQLNonNull(GraphQLID)}},
       resolve: (root, {id}, {authenticate, prisma: {article}}) =>
         unpublishArticle(id, authenticate, article)
     },
 
     duplicateArticle: {
-      type: GraphQLNonNull(GraphQLArticle),
+      type: new GraphQLNonNull(GraphQLArticle),
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLID)}
       },
       resolve: (root, {id}, {authenticate, prisma: {article}, loaders: {articles}}) =>
         duplicateArticle(id, authenticate, articles, article)
@@ -729,8 +729,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     // =======
 
     createPage: {
-      type: GraphQLNonNull(GraphQLPage),
-      args: {input: {type: GraphQLNonNull(GraphQLPageInput)}},
+      type: new GraphQLNonNull(GraphQLPage),
+      args: {input: {type: new GraphQLNonNull(GraphQLPageInput)}},
       resolve: (root, {input}, {authenticate, prisma: {page}}) =>
         createPage({...input, blocks: input.blocks.map(mapBlockUnionMap)}, authenticate, page)
     },
@@ -738,8 +738,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     updatePage: {
       type: GraphQLPage,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
-        input: {type: GraphQLNonNull(GraphQLPageInput)}
+        id: {type: new GraphQLNonNull(GraphQLID)},
+        input: {type: new GraphQLNonNull(GraphQLPageInput)}
       },
       resolve: (root, {id, input}, {authenticate, prisma: {page}}) =>
         updatePage(id, {...input, blocks: input.blocks.map(mapBlockUnionMap)}, authenticate, page)
@@ -747,14 +747,14 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
     deletePage: {
       type: GraphQLPage,
-      args: {id: {type: GraphQLNonNull(GraphQLID)}},
+      args: {id: {type: new GraphQLNonNull(GraphQLID)}},
       resolve: (root, {id}, {authenticate, prisma}) => deletePageById(id, authenticate, prisma)
     },
 
     publishPage: {
       type: GraphQLPage,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
+        id: {type: new GraphQLNonNull(GraphQLID)},
         publishAt: {type: GraphQLDateTime},
         updatedAt: {type: GraphQLDateTime},
         publishedAt: {type: GraphQLDateTime}
@@ -765,14 +765,14 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
     unpublishPage: {
       type: GraphQLPage,
-      args: {id: {type: GraphQLNonNull(GraphQLID)}},
+      args: {id: {type: new GraphQLNonNull(GraphQLID)}},
       resolve: (root, {id}, {authenticate, prisma: {page}}) => unpublishPage(id, authenticate, page)
     },
 
     duplicatePage: {
-      type: GraphQLNonNull(GraphQLPage),
+      type: new GraphQLNonNull(GraphQLPage),
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLID)}
       },
       resolve: (root, {id}, {prisma: {page}, loaders: {pages}, authenticate}) =>
         duplicatePage(id, authenticate, pages, page)
@@ -783,7 +783,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
     createMemberPlan: {
       type: GraphQLMemberPlan,
-      args: {input: {type: GraphQLNonNull(GraphQLMemberPlanInput)}},
+      args: {input: {type: new GraphQLNonNull(GraphQLMemberPlanInput)}},
       resolve: (root, {input}, {authenticate, prisma: {memberPlan}}) =>
         createMemberPlan(input, authenticate, memberPlan)
     },
@@ -791,8 +791,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     updateMemberPlan: {
       type: GraphQLMemberPlan,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
-        input: {type: GraphQLNonNull(GraphQLMemberPlanInput)}
+        id: {type: new GraphQLNonNull(GraphQLID)},
+        input: {type: new GraphQLNonNull(GraphQLMemberPlanInput)}
       },
       resolve: (root, {id, input}, {authenticate, prisma: {memberPlan}}) =>
         updateMemberPlan(id, input, authenticate, memberPlan)
@@ -801,7 +801,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     deleteMemberPlan: {
       type: GraphQLMemberPlan,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLID)}
       },
       resolve: (root, {id}, {authenticate, prisma: {memberPlan}}) =>
         deleteMemberPlanById(id, authenticate, memberPlan)
@@ -813,7 +813,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createPaymentMethod: {
       type: GraphQLPaymentMethod,
       args: {
-        input: {type: GraphQLNonNull(GraphQLPaymentMethodInput)}
+        input: {type: new GraphQLNonNull(GraphQLPaymentMethodInput)}
       },
       resolve: (root, {input}, {authenticate, prisma: {paymentMethod}}) =>
         createPaymentMethod(input, authenticate, paymentMethod)
@@ -822,8 +822,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     updatePaymentMethod: {
       type: GraphQLPaymentMethod,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
-        input: {type: GraphQLNonNull(GraphQLPaymentMethodInput)}
+        id: {type: new GraphQLNonNull(GraphQLID)},
+        input: {type: new GraphQLNonNull(GraphQLPaymentMethodInput)}
       },
       resolve: (root, {id, input}, {authenticate, prisma: {paymentMethod}}) =>
         updatePaymentMethod(id, input, authenticate, paymentMethod)
@@ -832,7 +832,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     deletePaymentMethod: {
       type: GraphQLPaymentMethod,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLID)}
       },
       resolve: (root, {id}, {authenticate, prisma: {paymentMethod}}) =>
         deletePaymentMethodById(id, authenticate, paymentMethod)
@@ -843,14 +843,14 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
     createInvoice: {
       type: GraphQLInvoice,
-      args: {input: {type: GraphQLNonNull(GraphQLInvoiceInput)}},
+      args: {input: {type: new GraphQLNonNull(GraphQLInvoiceInput)}},
       resolve: (root, {input}, {authenticate, prisma: {invoice}}) =>
         createInvoice(input, authenticate, invoice)
     },
 
     createPaymentFromInvoice: {
       type: GraphQLPayment,
-      args: {input: {type: GraphQLNonNull(GraphQLPaymentFromInvoiceInput)}},
+      args: {input: {type: new GraphQLNonNull(GraphQLPaymentFromInvoiceInput)}},
       resolve: (root, {input}, {authenticate, loaders, paymentProviders, prisma: {payment}}) =>
         createPaymentFromInvoice(
           input,
@@ -865,8 +865,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     updateInvoice: {
       type: GraphQLInvoice,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
-        input: {type: GraphQLNonNull(GraphQLInvoiceInput)}
+        id: {type: new GraphQLNonNull(GraphQLID)},
+        input: {type: new GraphQLNonNull(GraphQLInvoiceInput)}
       },
       resolve: (root, {id, input}, {authenticate, prisma: {invoice}}) =>
         updateInvoice(id, input, authenticate, invoice)
@@ -875,7 +875,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     deleteInvoice: {
       type: GraphQLInvoice,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLID)}
       },
       resolve: (root, {id}, {authenticate, prisma: {invoice}}) =>
         deleteInvoiceById(id, authenticate, invoice)
@@ -884,7 +884,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     markInvoiceAsPaid: {
       type: GraphQLInvoice,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLID)}
       },
       resolve: (root, {id}, {authenticate, prisma, authenticateUser}) =>
         markInvoiceAsPaid(id, authenticate, authenticateUser, prisma)
@@ -893,17 +893,17 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     // Comment
     // ======
     updateComment: {
-      type: GraphQLNonNull(GraphQLComment),
+      type: new GraphQLNonNull(GraphQLComment),
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
+        id: {type: new GraphQLNonNull(GraphQLID)},
         revision: {type: GraphQLCommentRevisionUpdateInput},
         userID: {type: GraphQLID},
         guestUsername: {type: GraphQLString},
         guestUserImageID: {type: GraphQLID},
         source: {type: GraphQLString},
-        tagIds: {type: GraphQLList(GraphQLNonNull(GraphQLID))},
+        tagIds: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
         ratingOverrides: {
-          type: GraphQLList(GraphQLNonNull(GraphQLCommentRatingOverrideUpdateInput))
+          type: new GraphQLList(new GraphQLNonNull(GraphQLCommentRatingOverrideUpdateInput))
         }
       },
       resolve: (
@@ -927,14 +927,14 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     },
 
     createComment: {
-      type: GraphQLNonNull(GraphQLComment),
+      type: new GraphQLNonNull(GraphQLComment),
       args: {
         text: {type: GraphQLRichText},
-        tagIds: {type: GraphQLList(GraphQLNonNull(GraphQLID))},
-        itemID: {type: GraphQLNonNull(GraphQLID)},
+        tagIds: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
+        itemID: {type: new GraphQLNonNull(GraphQLID)},
         parentID: {type: GraphQLID},
         itemType: {
-          type: GraphQLNonNull(GraphQLCommentItemType)
+          type: new GraphQLNonNull(GraphQLCommentItemType)
         }
       },
       resolve: (
@@ -945,18 +945,18 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     },
 
     approveComment: {
-      type: GraphQLNonNull(GraphQLComment),
+      type: new GraphQLNonNull(GraphQLComment),
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLID)}
       },
       resolve: (root, {id}, {authenticate, prisma: {comment}}) =>
         takeActionOnComment(id, {state: CommentState.approved}, authenticate, comment)
     },
 
     rejectComment: {
-      type: GraphQLNonNull(GraphQLComment),
+      type: new GraphQLNonNull(GraphQLComment),
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
+        id: {type: new GraphQLNonNull(GraphQLID)},
         rejectionReason: {type: GraphQLCommentRejectionReason}
       },
       resolve: (root, {id, rejectionReason}, {authenticate, prisma: {comment}}) =>
@@ -969,10 +969,10 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     },
 
     requestChangesOnComment: {
-      type: GraphQLNonNull(GraphQLComment),
+      type: new GraphQLNonNull(GraphQLComment),
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
-        rejectionReason: {type: GraphQLNonNull(GraphQLCommentRejectionReason)}
+        id: {type: new GraphQLNonNull(GraphQLID)},
+        rejectionReason: {type: new GraphQLNonNull(GraphQLCommentRejectionReason)}
       },
       resolve: (root, {id, rejectionReason}, {authenticate, prisma: {comment}}) =>
         takeActionOnComment(
@@ -984,9 +984,9 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     },
 
     deleteComment: {
-      type: GraphQLNonNull(GraphQLComment),
+      type: new GraphQLNonNull(GraphQLComment),
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLID)}
       },
       resolve: (root, {id}, {authenticate, prisma: {comment}}) =>
         deleteComment(id, authenticate, comment)
@@ -996,9 +996,9 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     // ==========
 
     updateSettingList: {
-      type: GraphQLList(GraphQLSetting),
+      type: new GraphQLList(GraphQLSetting),
       args: {
-        value: {type: GraphQLList(GraphQLUpdateSettingArgs)}
+        value: {type: new GraphQLList(GraphQLUpdateSettingArgs)}
       },
       resolve: (root, {value}, {authenticate, prisma}) =>
         updateSettings(value, authenticate, prisma)
@@ -1008,9 +1008,9 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     // ==========
 
     createRatingSystemAnswer: {
-      type: GraphQLNonNull(GraphQLCommentRatingSystemAnswer),
+      type: new GraphQLNonNull(GraphQLCommentRatingSystemAnswer),
       args: {
-        ratingSystemId: {type: GraphQLNonNull(GraphQLID)},
+        ratingSystemId: {type: new GraphQLNonNull(GraphQLID)},
         type: {type: GraphQLRatingSystemType, defaultValue: RatingSystemType.star},
         answer: {type: GraphQLString}
       },
@@ -1029,11 +1029,11 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     },
 
     updateRatingSystem: {
-      type: GraphQLNonNull(GraphQLFullCommentRatingSystem),
+      type: new GraphQLNonNull(GraphQLFullCommentRatingSystem),
       args: {
-        ratingSystemId: {type: GraphQLNonNull(GraphQLID)},
+        ratingSystemId: {type: new GraphQLNonNull(GraphQLID)},
         name: {type: GraphQLString},
-        answers: {type: GraphQLList(GraphQLNonNull(GraphQLUpdateCommentRatingSystemAnswer))}
+        answers: {type: new GraphQLList(new GraphQLNonNull(GraphQLUpdateCommentRatingSystemAnswer))}
       },
       resolve: (
         root,
@@ -1043,9 +1043,9 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     },
 
     deleteRatingSystemAnswer: {
-      type: GraphQLNonNull(GraphQLCommentRatingSystemAnswer),
+      type: new GraphQLNonNull(GraphQLCommentRatingSystemAnswer),
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLID)}
       },
       resolve: (root, {id}, {authenticate, prisma: {commentRatingSystemAnswer}}) =>
         deleteCommentRatingAnswer(id, authenticate, commentRatingSystemAnswer)
@@ -1068,7 +1068,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createPollAnswer: {
       type: GraphQLPollAnswer,
       args: {
-        pollId: {type: GraphQLNonNull(GraphQLID)},
+        pollId: {type: new GraphQLNonNull(GraphQLID)},
         answer: {type: GraphQLString}
       },
       resolve: (
@@ -1081,7 +1081,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createPollExternalVoteSource: {
       type: GraphQLPollExternalVoteSource,
       args: {
-        pollId: {type: GraphQLNonNull(GraphQLID)},
+        pollId: {type: new GraphQLNonNull(GraphQLID)},
         source: {type: GraphQLString}
       },
       resolve: (
@@ -1101,14 +1101,14 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     updatePoll: {
       type: GraphQLFullPoll,
       args: {
-        pollId: {type: GraphQLNonNull(GraphQLID)},
+        pollId: {type: new GraphQLNonNull(GraphQLID)},
         opensAt: {type: GraphQLDateTime},
         closedAt: {type: GraphQLDateTime},
         question: {type: GraphQLString},
         infoText: {type: GraphQLRichText},
-        answers: {type: GraphQLList(GraphQLNonNull(GraphQLUpdatePollAnswer))},
+        answers: {type: new GraphQLList(new GraphQLNonNull(GraphQLUpdatePollAnswer))},
         externalVoteSources: {
-          type: GraphQLList(GraphQLNonNull(GraphQLUpdatePollExternalVoteSources))
+          type: new GraphQLList(new GraphQLNonNull(GraphQLUpdatePollExternalVoteSources))
         }
       },
       resolve: (
@@ -1121,7 +1121,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     deletePoll: {
       type: GraphQLFullPoll,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLID)}
       },
       resolve: (root, {id}, {authenticate, prisma: {poll}}) => deletePoll(id, authenticate, poll)
     },
@@ -1129,7 +1129,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     deletePollAnswer: {
       type: GraphQLPollAnswerWithVoteCount,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLID)}
       },
       resolve: (root, {id}, {authenticate, prisma: {pollAnswer}}) =>
         deletePollAnswer(id, authenticate, pollAnswer)
@@ -1138,7 +1138,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     deletePollExternalVoteSource: {
       type: GraphQLPollExternalVoteSource,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLID)}
       },
       resolve: (root, {id}, {authenticate, prisma: {pollExternalVoteSource}}) =>
         deletePollExternalVoteSource(id, authenticate, pollExternalVoteSource)
@@ -1151,7 +1151,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       type: GraphQLTag,
       args: {
         tag: {type: GraphQLString},
-        type: {type: GraphQLNonNull(GraphQLTagType)}
+        type: {type: new GraphQLNonNull(GraphQLTagType)}
       },
       resolve: (root, {tag, type}, {authenticate, prisma}) =>
         createTag(tag, type, authenticate, prisma.tag)
@@ -1160,7 +1160,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     updateTag: {
       type: GraphQLTag,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
+        id: {type: new GraphQLNonNull(GraphQLID)},
         tag: {type: GraphQLString}
       },
       resolve: (root, {id, tag}, {authenticate, prisma}) =>
@@ -1170,7 +1170,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     deleteTag: {
       type: GraphQLTag,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLID)}
       },
       resolve: (root, {id}, {authenticate, prisma: {tag}}) => deleteTag(id, authenticate, tag)
     },
@@ -1181,13 +1181,15 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     createEvent: {
       type: GraphQLEvent,
       args: {
-        name: {type: GraphQLNonNull(GraphQLString)},
+        name: {type: new GraphQLNonNull(GraphQLString)},
         description: {type: GraphQLRichText},
         location: {type: GraphQLString},
-        startsAt: {type: GraphQLNonNull(GraphQLDateTime)},
+        startsAt: {type: new GraphQLNonNull(GraphQLDateTime)},
         endsAt: {type: GraphQLDateTime},
         imageId: {type: GraphQLID},
-        tagIds: {type: GraphQLList(GraphQLNonNull(GraphQLID))}
+        externalSourceId: {type: GraphQLString},
+        externalSourceName: {type: GraphQLString},
+        tagIds: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))}
       },
       resolve: (root, {tagIds, ...input}, {authenticate, prisma: {event}}) =>
         createEvent(
@@ -1201,7 +1203,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     updateEvent: {
       type: GraphQLEvent,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)},
+        id: {type: new GraphQLNonNull(GraphQLID)},
         name: {type: GraphQLString},
         description: {type: GraphQLRichText},
         status: {type: GraphQLEventStatus},
@@ -1209,7 +1211,9 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         startsAt: {type: GraphQLDateTime},
         endsAt: {type: GraphQLDateTime},
         imageId: {type: GraphQLID},
-        tagIds: {type: GraphQLList(GraphQLNonNull(GraphQLID))}
+        externalSourceId: {type: GraphQLString},
+        externalSourceName: {type: GraphQLString},
+        tagIds: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))}
       },
       resolve: (root, {id, tagIds, ...input}, {authenticate, prisma: {event}}) =>
         updateEvent(
@@ -1224,7 +1228,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
     deleteEvent: {
       type: GraphQLEvent,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLID)}
       },
       resolve: (root, {id}, {authenticate, prisma: {event}}) => deleteEvent(id, authenticate, event)
     }

@@ -1,5 +1,5 @@
 import {PollAnswer, Prisma} from '@prisma/client'
-import {RichTextNode} from '../graphql/richText'
+import {RichTextNode} from '@wepublish/richtext/api'
 import {MapDiscriminatedUnion} from '../utility'
 
 export interface MetadataProperty {
