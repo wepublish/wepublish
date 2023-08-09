@@ -3,32 +3,33 @@
 exports[`Break Block should render Default 1`] = `
 <DocumentFragment>
   <div
-    class="css-2iryc4 e2qlf240"
+    class="css-1hmsqcp eg4920z0"
   >
     <div
-      class="css-1nww0tx e2qlf241"
+      class="css-rym9rp eg4920z1"
     >
       <img
         alt="DSC07717"
         class="css-1a2v9hb e1nfkf2e0"
         height="6000"
         loading="lazy"
-        srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+        srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
         title=""
         width="4000"
       />
     </div>
     <div
-      class="css-1nww0tx e2qlf241"
+      class="css-rym9rp eg4920z1"
     >
-      <h4
-        class="MuiTypography-root MuiTypography-h4 css-kogsit-MuiTypography-root-BreakBlock"
+      <div
+        class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+        role="heading"
       >
         Break block test
-      </h4>
+      </div>
       <div
         class="css-0 e1e9qmuq0"
       >
@@ -160,32 +161,33 @@ https://unsplash.it/200/200 200w"
 exports[`Break Block should render ImageRight 1`] = `
 <DocumentFragment>
   <div
-    class="css-1hvish2 e2qlf240"
+    class="css-dt2k4c eg4920z0"
   >
     <div
-      class="css-1dltqk9 e2qlf241"
+      class="css-16scpt9 eg4920z1"
     >
       <img
         alt="DSC07717"
         class="css-1a2v9hb e1nfkf2e0"
         height="6000"
         loading="lazy"
-        srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+        srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
         title=""
         width="4000"
       />
     </div>
     <div
-      class="css-1nww0tx e2qlf241"
+      class="css-rym9rp eg4920z1"
     >
-      <h4
-        class="MuiTypography-root MuiTypography-h4 css-kogsit-MuiTypography-root-BreakBlock"
+      <div
+        class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+        role="heading"
       >
         Break block test
-      </h4>
+      </div>
       <div
         class="css-0 e1e9qmuq0"
       >
@@ -317,32 +319,33 @@ https://unsplash.it/200/200 200w"
 exports[`Break Block should render WithClassName 1`] = `
 <DocumentFragment>
   <div
-    class="extra-classname css-2iryc4 e2qlf240"
+    class="extra-classname css-1hmsqcp eg4920z0"
   >
     <div
-      class="css-1nww0tx e2qlf241"
+      class="css-rym9rp eg4920z1"
     >
       <img
         alt="DSC07717"
         class="css-1a2v9hb e1nfkf2e0"
         height="6000"
         loading="lazy"
-        srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+        srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
         title=""
         width="4000"
       />
     </div>
     <div
-      class="css-1nww0tx e2qlf241"
+      class="css-rym9rp eg4920z1"
     >
-      <h4
-        class="MuiTypography-root MuiTypography-h4 css-kogsit-MuiTypography-root-BreakBlock"
+      <div
+        class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+        role="heading"
       >
         Break block test
-      </h4>
+      </div>
       <div
         class="css-0 e1e9qmuq0"
       >
@@ -474,32 +477,33 @@ https://unsplash.it/200/200 200w"
 exports[`Break Block should render WithEmotion 1`] = `
 <DocumentFragment>
   <div
-    class="css-2iryc4 e2qlf240"
+    class="css-1hmsqcp eg4920z0"
   >
     <div
-      class="css-1nww0tx e2qlf241"
+      class="css-rym9rp eg4920z1"
     >
       <img
         alt="DSC07717"
         class="css-1a2v9hb e1nfkf2e0"
         height="6000"
         loading="lazy"
-        srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
+        srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
         title=""
         width="4000"
       />
     </div>
     <div
-      class="css-1nww0tx e2qlf241"
+      class="css-rym9rp eg4920z1"
     >
-      <h4
-        class="MuiTypography-root MuiTypography-h4 css-kogsit-MuiTypography-root-BreakBlock"
+      <div
+        class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+        role="heading"
       >
         Break block test
-      </h4>
+      </div>
       <div
         class="css-0 e1e9qmuq0"
       >
@@ -631,19 +635,20 @@ https://unsplash.it/200/200 200w"
 exports[`Break Block should render WithoutImage 1`] = `
 <DocumentFragment>
   <div
-    class="css-2iryc4 e2qlf240"
+    class="css-1hmsqcp eg4920z0"
   >
     <div
-      class="css-1nww0tx e2qlf241"
+      class="css-rym9rp eg4920z1"
     />
     <div
-      class="css-1nww0tx e2qlf241"
+      class="css-rym9rp eg4920z1"
     >
-      <h4
-        class="MuiTypography-root MuiTypography-h4 css-kogsit-MuiTypography-root-BreakBlock"
+      <div
+        class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+        role="heading"
       >
         Break block test
-      </h4>
+      </div>
       <div
         class="css-0 e1e9qmuq0"
       >
