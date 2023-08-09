@@ -379,10 +379,10 @@ exports[`Blocks should render Default 1`] = `
     </div>
   </div>
   <div
-    class="css-1hmsqcp e16ofgi50"
+    class="css-1hmsqcp elyvxql0"
   >
     <div
-      class="css-rym9rp e16ofgi51"
+      class="css-rym9rp elyvxql1"
     >
       <img
         alt="DSC07717"
@@ -398,7 +398,7 @@ https://unsplash.it/200/100 200w"
       />
     </div>
     <div
-      class="css-rym9rp e16ofgi51"
+      class="css-rym9rp elyvxql1"
     >
       <div
         class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
@@ -2148,10 +2148,10 @@ exports[`Blocks should render WithLayout 1`] = `
       </div>
     </div>
     <div
-      class="css-1hmsqcp e16ofgi50"
+      class="css-1hmsqcp elyvxql0"
     >
       <div
-        class="css-rym9rp e16ofgi51"
+        class="css-rym9rp elyvxql1"
       >
         <img
           alt="DSC07717"
@@ -2167,7 +2167,7 @@ https://unsplash.it/200/100 200w"
         />
       </div>
       <div
-        class="css-rym9rp e16ofgi51"
+        class="css-rym9rp elyvxql1"
       >
         <div
           class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"

@@ -1,4 +1,4 @@
-import {css, styled} from '@mui/material'
+import {css, styled, useMediaQuery, useTheme} from '@mui/material'
 import {BuilderBreakBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {Block, LinkPageBreakBlock as LinkPageBreakBlockType} from '@wepublish/website/api'
 
@@ -41,11 +41,15 @@ export const BreakBlock = ({
     blocks: {RichText}
   } = useWebsiteBuilder()
 
+  const theme = useTheme()
+  const squareImage = useMediaQuery(theme.breakpoints.up('md'))
   const reverse = layoutOption === 'image-right'
 
   return (
     <BreakBlockWrapper className={className}>
-      <BreakBlockSegment reverse={reverse}>{image && <Image image={image} />}</BreakBlockSegment>
+      <BreakBlockSegment reverse={reverse}>
+        {image && <Image image={image} square={squareImage} />}
+      </BreakBlockSegment>
 
       <BreakBlockSegment>
         <H4 component="div" role="heading">
