@@ -5,7 +5,7 @@ import {Block, LinkPageBreakBlock as LinkPageBreakBlockType} from '@wepublish/we
 export const isBreakBlock = (block: Block): block is LinkPageBreakBlockType =>
   block.__typename === 'LinkPageBreakBlock'
 
-export const BreakBlockWrapper = styled('div')`
+export const BreakBlockWrapper = styled('div')<{reverse?: boolean}>`
   display: grid;
   gap: ${({theme}) => theme.spacing(2)};
   justify-content: center;
@@ -13,6 +13,14 @@ export const BreakBlockWrapper = styled('div')`
   ${({theme}) => theme.breakpoints.up('md')} {
     grid-template-columns: 1fr 2fr;
   }
+
+  ${({theme, reverse}) =>
+    reverse &&
+    css`
+      ${theme.breakpoints.up('md')} {
+        grid-template-columns: 2fr 1fr;
+      }
+    `}
 `
 
 export const BreakBlockSegment = styled('div')<{reverse?: boolean}>`
@@ -46,7 +54,7 @@ export const BreakBlock = ({
   const reverse = layoutOption === 'image-right'
 
   return (
-    <BreakBlockWrapper className={className}>
+    <BreakBlockWrapper className={className} reverse={reverse}>
       <BreakBlockSegment reverse={reverse}>
         {image && <Image image={image} square={squareImage} />}
       </BreakBlockSegment>
