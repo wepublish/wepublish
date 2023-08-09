@@ -9,7 +9,7 @@ on:
 
 jobs:
   deployment:
-    runs-on: ubuntu-latest
+    runs-on: alpine/helm
     permissions:
       contents: 'read'
       id-token: 'write'
@@ -23,58 +23,20 @@ jobs:
           cache: npm
 
       - name: Authenticate kubectl
-        uses: 'google-github-actions/auth@v0'
+        uses: 'google-github-actions/auth@v1'
         with:
           workload_identity_provider: ${{ secrets.GCLOUD_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}
 
       - name: Prepare kubectl
-        uses: 'google-github-actions/get-gke-credentials@v0'
+        uses: 'google-github-actions/get-gke-credentials@v1'
         with:
           project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
           cluster_name: production
           location: europe-west6
 
       - name: Helm Deploy
-        uses: 'deliverybot/helm@v1'
-        with:
-          release: 'dev-app-pr${{ github.event.pull_request.number }}'
-          namespace: 'dev'
-          helm: helm3
-          chart: 'helm/charts/wepublish'
-          token: '${{ github.token }}'
-          values: |
-            deployment:
-              image: ${{ inputs.image }}
-              imagePullPolicy: Always
-              env:
-                API_URL: https://api-${{ github.event.pull_request.number }}.dev.wepublish.media
-                EDITOR_URL: https://editor-${{ github.event.pull_request.number }}.dev.wepublish.media
-                WEBSITE_URL: https://website-${{ github.event.pull_request.number }}.dev.wepublish.media
-                MEDIA_SERVER_URL: https://media-${{ github.event.pull_request.number }}.dev.wepublish.media
-                NODE_ENV: production
-            api:
-              env:
-                GOOGLE_APPLICATION_CREDENTIALS: /var/secrets/google/key.json
-                DATABASE_URL: 'postgresql://admin:postgres/wepublish-dev?schema=public'
-                MEDIA_SERVER_TOKEN: media-token
-                JWT_SECRET_KEY: jwt-secret-key
-              envFromSecretRefName:
-              properties: {}
-              replicaCount: 1
-            editor:
-              env:
-                PEER_BY_DEFAULT: "true"
-              properties: {}
-              replicaCount: 1
-            website:
-              enabled: true
-              env:
-                ALLOWED_HOSTS: website-${{ github.event.pull_request.number }}.dev.wepublish.media
-              envFromSecretRefName:
-              properties: {}
-              replicaCount: 1
-            labels: {}
+        run: helm upgrade dev-app-pr${{ github.event.pull_request.number }} helm/charts/wepublish
         env:
           KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
 
