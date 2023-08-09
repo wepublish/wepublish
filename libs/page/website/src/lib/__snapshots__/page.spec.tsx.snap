@@ -717,14 +717,29 @@ https://unsplash.it/200/100 200w"
     >
       <div
         class="css-rym9rp eg4920z1"
-      />
+      >
+        <img
+          alt="DSC07717"
+          class="css-1a2v9hb e1nfkf2e0"
+          height="6000"
+          loading="lazy"
+          srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+          title=""
+          width="4000"
+        />
+      </div>
       <div
         class="css-rym9rp eg4920z1"
       >
         <div
           class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
           role="heading"
-        />
+        >
+          Break block test
+        </div>
         <div
           class="css-0 e1e9qmuq0"
         >
@@ -742,12 +757,108 @@ https://unsplash.it/200/100 200w"
                 data-slate-node="text"
               >
                 <span
+                  data-slate-string="true"
+                >
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                </span>
+              </span>
+            </p>
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+              data-slate-node="element"
+            >
+              <span
+                data-slate-node="text"
+              >
+                <span
                   data-slate-length="0"
                   data-slate-zero-width="n"
                 >
                   ﻿
                   <br />
                 </span>
+              </span>
+            </p>
+            <h4
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+              data-slate-node="element"
+            >
+              <span
+                data-slate-node="text"
+              >
+                <span
+                  data-slate-string="true"
+                >
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                </span>
+              </span>
+            </h4>
+            <h4
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+              data-slate-node="element"
+            >
+              <span
+                data-slate-node="text"
+              >
+                <span
+                  data-slate-length="0"
+                  data-slate-zero-width="n"
+                >
+                  ﻿
+                  <br />
+                </span>
+              </span>
+            </h4>
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+              data-slate-node="element"
+            >
+              <span
+                data-slate-node="text"
+              >
+                <em
+                  data-slate-leaf="true"
+                >
+                  <strong
+                    data-slate-leaf="true"
+                  >
+                    <span
+                      data-slate-string="true"
+                    >
+                       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                    </span>
+                  </strong>
+                </em>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <em
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                  </span>
+                </em>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <u
+                  data-slate-leaf="true"
+                >
+                  <em
+                    data-slate-leaf="true"
+                  >
+                    <span
+                      data-slate-string="true"
+                    >
+                      Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    </span>
+                  </em>
+                </u>
               </span>
             </p>
           </div>
@@ -2434,14 +2545,29 @@ https://unsplash.it/200/100 200w"
     >
       <div
         class="css-rym9rp eg4920z1"
-      />
+      >
+        <img
+          alt="DSC07717"
+          class="css-1a2v9hb e1nfkf2e0"
+          height="6000"
+          loading="lazy"
+          srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+          title=""
+          width="4000"
+        />
+      </div>
       <div
         class="css-rym9rp eg4920z1"
       >
         <div
           class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
           role="heading"
-        />
+        >
+          Break block test
+        </div>
         <div
           class="css-0 e1e9qmuq0"
         >
@@ -2459,12 +2585,108 @@ https://unsplash.it/200/100 200w"
                 data-slate-node="text"
               >
                 <span
+                  data-slate-string="true"
+                >
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                </span>
+              </span>
+            </p>
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+              data-slate-node="element"
+            >
+              <span
+                data-slate-node="text"
+              >
+                <span
                   data-slate-length="0"
                   data-slate-zero-width="n"
                 >
                   ﻿
                   <br />
                 </span>
+              </span>
+            </p>
+            <h4
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+              data-slate-node="element"
+            >
+              <span
+                data-slate-node="text"
+              >
+                <span
+                  data-slate-string="true"
+                >
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                </span>
+              </span>
+            </h4>
+            <h4
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+              data-slate-node="element"
+            >
+              <span
+                data-slate-node="text"
+              >
+                <span
+                  data-slate-length="0"
+                  data-slate-zero-width="n"
+                >
+                  ﻿
+                  <br />
+                </span>
+              </span>
+            </h4>
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+              data-slate-node="element"
+            >
+              <span
+                data-slate-node="text"
+              >
+                <em
+                  data-slate-leaf="true"
+                >
+                  <strong
+                    data-slate-leaf="true"
+                  >
+                    <span
+                      data-slate-string="true"
+                    >
+                       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                    </span>
+                  </strong>
+                </em>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <em
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                  </span>
+                </em>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <u
+                  data-slate-leaf="true"
+                >
+                  <em
+                    data-slate-leaf="true"
+                  >
+                    <span
+                      data-slate-string="true"
+                    >
+                      Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    </span>
+                  </em>
+                </u>
               </span>
             </p>
           </div>
@@ -4162,14 +4384,29 @@ https://unsplash.it/200/100 200w"
     >
       <div
         class="css-rym9rp eg4920z1"
-      />
+      >
+        <img
+          alt="DSC07717"
+          class="css-1a2v9hb e1nfkf2e0"
+          height="6000"
+          loading="lazy"
+          srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+          title=""
+          width="4000"
+        />
+      </div>
       <div
         class="css-rym9rp eg4920z1"
       >
         <div
           class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
           role="heading"
-        />
+        >
+          Break block test
+        </div>
         <div
           class="css-0 e1e9qmuq0"
         >
@@ -4187,12 +4424,108 @@ https://unsplash.it/200/100 200w"
                 data-slate-node="text"
               >
                 <span
+                  data-slate-string="true"
+                >
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                </span>
+              </span>
+            </p>
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+              data-slate-node="element"
+            >
+              <span
+                data-slate-node="text"
+              >
+                <span
                   data-slate-length="0"
                   data-slate-zero-width="n"
                 >
                   ﻿
                   <br />
                 </span>
+              </span>
+            </p>
+            <h4
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+              data-slate-node="element"
+            >
+              <span
+                data-slate-node="text"
+              >
+                <span
+                  data-slate-string="true"
+                >
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                </span>
+              </span>
+            </h4>
+            <h4
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+              data-slate-node="element"
+            >
+              <span
+                data-slate-node="text"
+              >
+                <span
+                  data-slate-length="0"
+                  data-slate-zero-width="n"
+                >
+                  ﻿
+                  <br />
+                </span>
+              </span>
+            </h4>
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+              data-slate-node="element"
+            >
+              <span
+                data-slate-node="text"
+              >
+                <em
+                  data-slate-leaf="true"
+                >
+                  <strong
+                    data-slate-leaf="true"
+                  >
+                    <span
+                      data-slate-string="true"
+                    >
+                       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                    </span>
+                  </strong>
+                </em>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <em
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                  </span>
+                </em>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <u
+                  data-slate-leaf="true"
+                >
+                  <em
+                    data-slate-leaf="true"
+                  >
+                    <span
+                      data-slate-string="true"
+                    >
+                      Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    </span>
+                  </em>
+                </u>
               </span>
             </p>
           </div>
@@ -5882,14 +6215,29 @@ https://unsplash.it/200/100 200w"
     >
       <div
         class="css-rym9rp eg4920z1"
-      />
+      >
+        <img
+          alt="DSC07717"
+          class="css-1a2v9hb e1nfkf2e0"
+          height="6000"
+          loading="lazy"
+          srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+          title=""
+          width="4000"
+        />
+      </div>
       <div
         class="css-rym9rp eg4920z1"
       >
         <div
           class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
           role="heading"
-        />
+        >
+          Break block test
+        </div>
         <div
           class="css-0 e1e9qmuq0"
         >
@@ -5907,12 +6255,108 @@ https://unsplash.it/200/100 200w"
                 data-slate-node="text"
               >
                 <span
+                  data-slate-string="true"
+                >
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                </span>
+              </span>
+            </p>
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+              data-slate-node="element"
+            >
+              <span
+                data-slate-node="text"
+              >
+                <span
                   data-slate-length="0"
                   data-slate-zero-width="n"
                 >
                   ﻿
                   <br />
                 </span>
+              </span>
+            </p>
+            <h4
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+              data-slate-node="element"
+            >
+              <span
+                data-slate-node="text"
+              >
+                <span
+                  data-slate-string="true"
+                >
+                  Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                </span>
+              </span>
+            </h4>
+            <h4
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+              data-slate-node="element"
+            >
+              <span
+                data-slate-node="text"
+              >
+                <span
+                  data-slate-length="0"
+                  data-slate-zero-width="n"
+                >
+                  ﻿
+                  <br />
+                </span>
+              </span>
+            </h4>
+            <p
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+              data-slate-node="element"
+            >
+              <span
+                data-slate-node="text"
+              >
+                <em
+                  data-slate-leaf="true"
+                >
+                  <strong
+                    data-slate-leaf="true"
+                  >
+                    <span
+                      data-slate-string="true"
+                    >
+                       Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+                    </span>
+                  </strong>
+                </em>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <em
+                  data-slate-leaf="true"
+                >
+                  <span
+                    data-slate-string="true"
+                  >
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit
+                  </span>
+                </em>
+              </span>
+              <span
+                data-slate-node="text"
+              >
+                <u
+                  data-slate-leaf="true"
+                >
+                  <em
+                    data-slate-leaf="true"
+                  >
+                    <span
+                      data-slate-string="true"
+                    >
+                      Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                    </span>
+                  </em>
+                </u>
               </span>
             </p>
           </div>
