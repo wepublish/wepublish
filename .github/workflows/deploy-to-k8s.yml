@@ -9,7 +9,7 @@ on:
 
 jobs:
   deployment:
-    runs-on: alpine/helm
+    runs-on: alpine/helm:3.11.1
     permissions:
       contents: 'read'
       id-token: 'write'
