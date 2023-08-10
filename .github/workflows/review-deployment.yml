@@ -33,7 +33,7 @@ jobs:
         uses: 'google-github-actions/get-gke-credentials@v1'
         with:
           project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
-          cluster_name: production
+          cluster_name: funiciello-dev-cluster
           location: europe-west6
 
       - name: Ensure namespace exists
