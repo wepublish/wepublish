@@ -1,9 +1,33 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Comments can be created with bare minimum 1`] = `
+{
+  "data": {
+    "addComment": {
+      "id": Any<String>,
+      "itemID": Any<String>,
+      "itemType": "Article",
+      "parentID": null,
+      "state": "Approved",
+      "text": Any<Object>,
+      "user": Any<Object>,
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": {
+    "headers": Headers {
+      Symbol(map): {},
+    },
+  },
+}
+`;
+
 exports[`Comments create authorize permissions Public: comment from a user with approval permission is approved 1`] = `
 {
   "data": {
     "addComment": {
+      "id": "cll51obcx000rc9mkxetzi6qs",
       "itemID": "d",
       "itemType": "Article",
       "parentID": null,
@@ -21,16 +45,6 @@ exports[`Comments create authorize permissions Public: comment from a user with 
       "user": {
         "id": "authorizedUser",
       },
-exports[`Comments can be created with bare minimum 1`] = `
-{
-  "data": {
-    "addComment": {
-      "id": Any<String>,
-      "itemID": Any<String>,
-      "itemType": "Article",
-      "parentID": null,
-      "text": Any<Object>,
-      "user": Any<Object>,
     },
   },
   "errors": undefined,
@@ -47,6 +61,7 @@ exports[`Comments create authorize permissions Public: comment from a user witho
 {
   "data": {
     "addComment": {
+      "id": "cll51obq8000vc9mk1fp2eon3",
       "itemID": "d",
       "itemType": "Article",
       "parentID": null,
@@ -178,6 +193,9 @@ exports[`Comments create can be created 1`] = `
       Symbol(map): {},
     },
   },
+}
+`;
+
 exports[`Comments sensitive data of the user associated with the comment is hidden if the user is not me 1`] = `
 {
   "email": "",

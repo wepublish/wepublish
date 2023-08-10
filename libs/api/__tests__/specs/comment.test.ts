@@ -15,7 +15,6 @@ import {createGraphQLTestClientWithPrisma, generateRandomString} from '../utilit
 import {AddComment, CommentInput, Comments} from '../api/public'
 
 let clientPrivateAsAdmin: ApolloServer
-let clientPublicAsAdmin: ApolloServer
 let clientPublicAsUser: ApolloServer
 let clientPublicAsModerator: ApolloServer
 let clientPrivateAsUser: ApolloServer
@@ -28,66 +27,10 @@ let itemID = ''
 let commentID = ''
 
 beforeAll(async () => {
-  // create Article that our Comment will relate to
-  const articleInput: ArticleInput = {
-    title: 'This is the best test article',
-    slug: generateRandomString(),
-    shared: false,
-    tags: ['testing', 'awesome'],
-    breaking: true,
-    lead: 'This article will rock your world. Never has there been a better article',
-    preTitle: 'Testing GraphQL',
-    hideAuthor: false,
-    properties: [
-      {key: 'testingKey', value: 'testingValue', public: true},
-      {key: 'privateTestingKey', value: 'privateTestingValue', public: false}
-    ],
-    authorIDs: [],
-    socialMediaTitle: 'A social media title',
-    socialMediaAuthorIDs: [],
-    socialMediaDescription: 'A social media description',
-    socialMediaImageID: null,
-    blocks: []
-  }
-  const articleRes = await testServerPrivate.executeOperation({
-    query: CreateArticle,
-    variables: {
-      input: articleInput
-    }
-  })
-
-  itemID = articleRes.data?.createArticle.id
-
-  // create Comment and pass created Article ID
-  const input: CommentInput = {
-    itemID: articleRes.data?.createArticle.id,
-    itemType: CommentItemType.Article,
-    text: richTextNodes
-  }
-  const commentRes = await testServerPublic.executeOperation({
-    query: AddComment,
-    variables: {
-      input
-    }
-  })
-
-  commentID = commentRes.data.addComment.id
-
-  // approve Comment by id so it can be retrieved
-  await testServerPrivate.executeOperation({
-    query: ApproveComment,
-    variables: {
-      id: commentID
-    }
-  })
-})
-
-beforeAll(async () => {
   try {
     const clientAsAdmin = await createGraphQLTestClientWithPrisma()
     const setupClient = await createGraphQLTestClientWithPrisma()
     clientPrivateAsAdmin = clientAsAdmin.testServerPrivate
-    clientPublicAsAdmin = clientAsAdmin.testServerPublic
     testServerPrivate = setupClient.testServerPrivate
     testServerPublic = setupClient.testServerPublic
 
@@ -161,6 +104,57 @@ beforeAll(async () => {
     } as any)
     clientPrivateAsModerator = clientAsModerator.testServerPrivate
     clientPublicAsModerator = clientAsModerator.testServerPublic
+    const articleInput: ArticleInput = {
+      title: 'This is the best test article',
+      slug: generateRandomString(),
+      shared: false,
+      tags: ['testing', 'awesome'],
+      breaking: true,
+      lead: 'This article will rock your world. Never has there been a better article',
+      preTitle: 'Testing GraphQL',
+      hideAuthor: false,
+      properties: [
+        {key: 'testingKey', value: 'testingValue', public: true},
+        {key: 'privateTestingKey', value: 'privateTestingValue', public: false}
+      ],
+      authorIDs: [],
+      socialMediaTitle: 'A social media title',
+      socialMediaAuthorIDs: [],
+      socialMediaDescription: 'A social media description',
+      socialMediaImageID: null,
+      blocks: []
+    }
+    const articleRes = await testServerPrivate.executeOperation({
+      query: CreateArticle,
+      variables: {
+        input: articleInput
+      }
+    })
+
+    itemID = articleRes.data?.createArticle.id
+
+    // create Comment and pass created Article ID
+    const input: CommentInput = {
+      itemID: articleRes.data?.createArticle.id,
+      itemType: CommentItemType.Article,
+      text: richTextNodes
+    }
+    const commentRes = await testServerPublic.executeOperation({
+      query: AddComment,
+      variables: {
+        input
+      }
+    })
+
+    commentID = commentRes.data.addComment.id
+
+    // approve Comment by id so it can be retrieved
+    await testServerPrivate.executeOperation({
+      query: ApproveComment,
+      variables: {
+        id: commentID
+      }
+    })
   } catch (error) {
     console.log('Error', error)
     throw new Error('Error during test setup')
@@ -209,7 +203,6 @@ describe('Comments', () => {
         }
       })
       expect(res.data.createComment.state).toBe('Approved')
-      // expect(res?.data?.AddComment?.authorType).toContain(CommentAuthorType.Author)
     })
 
     describe('authorize permissions', () => {
