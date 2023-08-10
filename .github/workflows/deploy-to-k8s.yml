@@ -9,7 +9,7 @@ on:
 
 jobs:
   deployment:
-    runs-on: alpine/helm:3.11.1
+    runs-on: ubuntu-latest
     permissions:
       contents: 'read'
       id-token: 'write'
@@ -35,10 +35,18 @@ jobs:
           cluster_name: production
           location: europe-west6
 
+      - name: Set up Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: '3.4.1'
+
       - name: Helm Deploy
-        run: helm upgrade dev-app-pr${{ github.event.pull_request.number }} helm/charts/wepublish
         env:
           KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
+        run: |
+          echo "$KUBECONFIG_FILE" > kubeconfig
+          export KUBECONFIG=kubeconfig
+          helm upgrade dev-app-pr${{ github.event.pull_request.number }} helm/charts/wepublish --namespace demo
 
   notify:
     needs: deployment
