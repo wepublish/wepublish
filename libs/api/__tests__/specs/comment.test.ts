@@ -287,7 +287,21 @@ describe('Comments', () => {
           }
         })
 
-        expect(res).toMatchSnapshot()
+        expect(res).toMatchSnapshot({
+          data: {
+            addComment: {
+              id: expect.any(String),
+              itemID: 'd',
+              itemType: CommentItemType.Article,
+              text: [
+                {
+                  type: 'paragraph',
+                  children: [{text: 'hello'}]
+                }
+              ]
+            }
+          }
+        })
         expect(res.data.addComment.state).toBe('Approved')
       })
       test('Public: comment from a user without approval permission is pending approval', async () => {
@@ -307,7 +321,21 @@ describe('Comments', () => {
           }
         })
 
-        expect(res).toMatchSnapshot()
+        expect(res).toMatchSnapshot({
+          data: {
+            addComment: {
+              id: expect.any(String),
+              itemID: 'd',
+              itemType: CommentItemType.Article,
+              text: [
+                {
+                  type: 'paragraph',
+                  children: [{text: 'hello'}]
+                }
+              ]
+            }
+          }
+        })
         expect(res.data.addComment.state).toBe('PendingApproval')
       })
     })

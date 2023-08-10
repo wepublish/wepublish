@@ -27,7 +27,7 @@ exports[`Comments create authorize permissions Public: comment from a user with 
 {
   "data": {
     "addComment": {
-      "id": "cll51obcx000rc9mkxetzi6qs",
+      "id": Any<String>,
       "itemID": "d",
       "itemType": "Article",
       "parentID": null,
@@ -61,7 +61,7 @@ exports[`Comments create authorize permissions Public: comment from a user witho
 {
   "data": {
     "addComment": {
-      "id": "cll51obq8000vc9mk1fp2eon3",
+      "id": Any<String>,
       "itemID": "d",
       "itemType": "Article",
       "parentID": null,
