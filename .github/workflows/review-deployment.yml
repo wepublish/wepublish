@@ -38,11 +38,11 @@ jobs:
 
       - name: Ensure namespace exists
         run: |
-          kubectl create namespace dev --dry-run=client -o yaml | kubectl apply -f -
+          kubectl create namespace reviews --dry-run=client -o yaml | kubectl apply -f -
 
       - name: Helm Deploy
         run: |
-          helm upgrade --install dev-app-pr${{ github.event.pull_request.number }} ./helm/charts/wepublish --namespace dev
+          helm upgrade --install review-${{ github.event.pull_request.number }} ./helm/charts/wepublish --namespace reviews
           
 
   notify:

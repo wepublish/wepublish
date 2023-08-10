@@ -32,11 +32,7 @@ jobs:
           cluster_name: production
           location: europe-west6
 
-      - name: Ensure namespace exists
-        run: |
-          kubectl create namespace dev --dry-run=client -o yaml | kubectl apply -f -
-
       - name: Delete review environment
         run: |
-          helm uninstall dev-app-pr${{ github.event.pull_request.number }} --namespace dev
+          helm uninstall review-${{ github.event.pull_request.number }} --namespace reviews
           
