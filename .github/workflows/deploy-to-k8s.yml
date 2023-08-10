@@ -10,21 +10,19 @@ on:
 jobs:
   deployment:
     runs-on: ubuntu-latest
-    permissions:
-      contents: 'read'
-      id-token: 'write'
 
     steps:
       - uses: actions/checkout@v3
 
-      - uses: actions/setup-node@v3
+      - name: Set up Helm
+        uses: azure/setup-helm@v1
         with:
-          node-version: '16'
-          cache: npm
+          version: '3.4.1'
 
       - name: Authenticate kubectl
         uses: 'google-github-actions/auth@v1'
         with:
+          project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
           workload_identity_provider: ${{ secrets.GCLOUD_WORKLOAD_IDENTITY_PROVIDER }}
           service_account: ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}
 
@@ -35,18 +33,13 @@ jobs:
           cluster_name: production
           location: europe-west6
 
-      - name: Set up Helm
-        uses: azure/setup-helm@v1
-        with:
-          version: '3.4.1'
+      - name: Ensure namespace exists
+        run: |
+          kubectl create namespace dev --dry-run=client -o yaml | kubectl apply -f -
 
       - name: Helm Deploy
-        env:
-          KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
         run: |
-          echo "$KUBECONFIG_FILE" > kubeconfig
-          export KUBECONFIG=kubeconfig
-          helm upgrade dev-app-pr${{ github.event.pull_request.number }} helm/charts/wepublish --namespace demo
+          helm upgrade dev-app-pr${{ github.event.pull_request.number }} ./helm/charts/wepublish --namespace dev
 
   notify:
     needs: deployment
