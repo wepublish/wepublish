@@ -26,7 +26,8 @@ jobs:
         uses: 'google-github-actions/auth@v1'
         with:
           project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
-          credentials_json: ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}
+          workload_identity_provider: ${{ secrets.GCLOUD_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}
 
       - name: Prepare kubectl
         uses: 'google-github-actions/get-gke-credentials@v1'
