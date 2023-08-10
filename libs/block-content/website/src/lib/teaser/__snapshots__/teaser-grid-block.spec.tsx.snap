@@ -3,10 +3,10 @@
 exports[`Teaser Grid Block should render OneColumn 1`] = `
 <DocumentFragment>
   <div
-    class="css-1levw0h e1v93h7b0"
+    class="css-141ngmm-TeaserGridBlockWrapper e1xnbuxv0"
   >
     <article
-      class="css-1w4vbdl e58tik10"
+      class="css-kwjsb9-TeaserWrapper e18of27r2"
       x="0"
       y="0"
     >
@@ -15,11 +15,11 @@ exports[`Teaser Grid Block should render OneColumn 1`] = `
         href="https://example.com"
       >
         <div
-          class="css-16lxa1r e58tik11"
+          class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
         >
           <img
             alt="An image description"
-            class="css-1opieq8-Teaser e1nfkf2e0"
+            class="css-78zlx2-ImageWrapper-Teaser e1shv2yg0"
             height="500"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
@@ -30,7 +30,7 @@ https://unsplash.it/200/200 200w"
             width="500"
           />
           <header
-            class="css-0 e58tik12"
+            class="css-imydry-TeaserTitleWrapper e18of27r0"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -42,7 +42,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-kxq09b e58tik10"
+      class="css-7cwrqf-TeaserWrapper e18of27r2"
       x="0"
       y="1"
     >
@@ -51,11 +51,11 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-16lxa1r e58tik11"
+          class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
         >
           <img
             alt="An image description"
-            class="css-1opieq8-Teaser e1nfkf2e0"
+            class="css-78zlx2-ImageWrapper-Teaser e1shv2yg0"
             height="500"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
@@ -66,7 +66,7 @@ https://unsplash.it/200/200 200w"
             width="500"
           />
           <header
-            class="css-0 e58tik12"
+            class="css-imydry-TeaserTitleWrapper e18of27r0"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -78,7 +78,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-1mvpedp e58tik10"
+      class="css-jmrnei-TeaserWrapper e18of27r2"
       x="0"
       y="2"
     >
@@ -87,11 +87,11 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-16lxa1r e58tik11"
+          class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
         >
           <img
             alt="An image description"
-            class="css-1opieq8-Teaser e1nfkf2e0"
+            class="css-78zlx2-ImageWrapper-Teaser e1shv2yg0"
             height="500"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
@@ -102,7 +102,7 @@ https://unsplash.it/200/200 200w"
             width="500"
           />
           <header
-            class="css-0 e58tik12"
+            class="css-imydry-TeaserTitleWrapper e18of27r0"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -120,10 +120,10 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Grid Block should render ThreeColumns 1`] = `
 <DocumentFragment>
   <div
-    class="css-1cvxa09 e1v93h7b0"
+    class="css-uum656-TeaserGridBlockWrapper e1xnbuxv0"
   >
     <article
-      class="css-13hhtda e58tik10"
+      class="css-1up672i-TeaserWrapper e18of27r2"
       x="0"
       y="0"
     >
@@ -132,11 +132,11 @@ exports[`Teaser Grid Block should render ThreeColumns 1`] = `
         href="https://example.com"
       >
         <div
-          class="css-16lxa1r e58tik11"
+          class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
         >
           <img
             alt="An image description"
-            class="css-1opieq8-Teaser e1nfkf2e0"
+            class="css-78zlx2-ImageWrapper-Teaser e1shv2yg0"
             height="500"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
@@ -147,7 +147,7 @@ https://unsplash.it/200/200 200w"
             width="500"
           />
           <header
-            class="css-0 e58tik12"
+            class="css-imydry-TeaserTitleWrapper e18of27r0"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -159,7 +159,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-1sdku99 e58tik10"
+      class="css-1jkqbsa-TeaserWrapper e18of27r2"
       x="4"
       y="0"
     >
@@ -168,11 +168,11 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-16lxa1r e58tik11"
+          class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
         >
           <img
             alt="An image description"
-            class="css-1opieq8-Teaser e1nfkf2e0"
+            class="css-78zlx2-ImageWrapper-Teaser e1shv2yg0"
             height="500"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
@@ -183,7 +183,7 @@ https://unsplash.it/200/200 200w"
             width="500"
           />
           <header
-            class="css-0 e58tik12"
+            class="css-imydry-TeaserTitleWrapper e18of27r0"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -195,7 +195,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-ciulb1 e58tik10"
+      class="css-so0sc6-TeaserWrapper e18of27r2"
       x="8"
       y="0"
     >
@@ -204,11 +204,11 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-16lxa1r e58tik11"
+          class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
         >
           <img
             alt="An image description"
-            class="css-1opieq8-Teaser e1nfkf2e0"
+            class="css-78zlx2-ImageWrapper-Teaser e1shv2yg0"
             height="500"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
@@ -219,7 +219,7 @@ https://unsplash.it/200/200 200w"
             width="500"
           />
           <header
-            class="css-0 e58tik12"
+            class="css-imydry-TeaserTitleWrapper e18of27r0"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -237,10 +237,10 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Grid Block should render WithClassName 1`] = `
 <DocumentFragment>
   <div
-    class="extra-classname css-1cvxa09 e1v93h7b0"
+    class="extra-classname css-uum656-TeaserGridBlockWrapper e1xnbuxv0"
   >
     <article
-      class="css-13hhtda e58tik10"
+      class="css-1up672i-TeaserWrapper e18of27r2"
       x="0"
       y="0"
     >
@@ -249,11 +249,11 @@ exports[`Teaser Grid Block should render WithClassName 1`] = `
         href="https://example.com"
       >
         <div
-          class="css-16lxa1r e58tik11"
+          class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
         >
           <img
             alt="An image description"
-            class="css-1opieq8-Teaser e1nfkf2e0"
+            class="css-78zlx2-ImageWrapper-Teaser e1shv2yg0"
             height="500"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
@@ -264,7 +264,7 @@ https://unsplash.it/200/200 200w"
             width="500"
           />
           <header
-            class="css-0 e58tik12"
+            class="css-imydry-TeaserTitleWrapper e18of27r0"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -276,7 +276,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-1sdku99 e58tik10"
+      class="css-1jkqbsa-TeaserWrapper e18of27r2"
       x="4"
       y="0"
     >
@@ -285,11 +285,11 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-16lxa1r e58tik11"
+          class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
         >
           <img
             alt="An image description"
-            class="css-1opieq8-Teaser e1nfkf2e0"
+            class="css-78zlx2-ImageWrapper-Teaser e1shv2yg0"
             height="500"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
@@ -300,7 +300,7 @@ https://unsplash.it/200/200 200w"
             width="500"
           />
           <header
-            class="css-0 e58tik12"
+            class="css-imydry-TeaserTitleWrapper e18of27r0"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -312,7 +312,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-ciulb1 e58tik10"
+      class="css-so0sc6-TeaserWrapper e18of27r2"
       x="8"
       y="0"
     >
@@ -321,11 +321,11 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-16lxa1r e58tik11"
+          class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
         >
           <img
             alt="An image description"
-            class="css-1opieq8-Teaser e1nfkf2e0"
+            class="css-78zlx2-ImageWrapper-Teaser e1shv2yg0"
             height="500"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
@@ -336,7 +336,7 @@ https://unsplash.it/200/200 200w"
             width="500"
           />
           <header
-            class="css-0 e58tik12"
+            class="css-imydry-TeaserTitleWrapper e18of27r0"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -354,10 +354,10 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Grid Block should render WithEmotion 1`] = `
 <DocumentFragment>
   <div
-    class="css-1cvxa09 e1v93h7b0"
+    class="css-uum656-TeaserGridBlockWrapper e1xnbuxv0"
   >
     <article
-      class="css-13hhtda e58tik10"
+      class="css-1up672i-TeaserWrapper e18of27r2"
       x="0"
       y="0"
     >
@@ -366,11 +366,11 @@ exports[`Teaser Grid Block should render WithEmotion 1`] = `
         href="https://example.com"
       >
         <div
-          class="css-16lxa1r e58tik11"
+          class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
         >
           <img
             alt="An image description"
-            class="css-1opieq8-Teaser e1nfkf2e0"
+            class="css-78zlx2-ImageWrapper-Teaser e1shv2yg0"
             height="500"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
@@ -381,7 +381,7 @@ https://unsplash.it/200/200 200w"
             width="500"
           />
           <header
-            class="css-0 e58tik12"
+            class="css-imydry-TeaserTitleWrapper e18of27r0"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -393,7 +393,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-1sdku99 e58tik10"
+      class="css-1jkqbsa-TeaserWrapper e18of27r2"
       x="4"
       y="0"
     >
@@ -402,11 +402,11 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-16lxa1r e58tik11"
+          class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
         >
           <img
             alt="An image description"
-            class="css-1opieq8-Teaser e1nfkf2e0"
+            class="css-78zlx2-ImageWrapper-Teaser e1shv2yg0"
             height="500"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
@@ -417,7 +417,7 @@ https://unsplash.it/200/200 200w"
             width="500"
           />
           <header
-            class="css-0 e58tik12"
+            class="css-imydry-TeaserTitleWrapper e18of27r0"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -429,7 +429,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-ciulb1 e58tik10"
+      class="css-so0sc6-TeaserWrapper e18of27r2"
       x="8"
       y="0"
     >
@@ -438,11 +438,11 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-16lxa1r e58tik11"
+          class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
         >
           <img
             alt="An image description"
-            class="css-1opieq8-Teaser e1nfkf2e0"
+            class="css-78zlx2-ImageWrapper-Teaser e1shv2yg0"
             height="500"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
@@ -453,7 +453,7 @@ https://unsplash.it/200/200 200w"
             width="500"
           />
           <header
-            class="css-0 e58tik12"
+            class="css-imydry-TeaserTitleWrapper e18of27r0"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -471,10 +471,10 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Grid Block should render WithShowLoad 1`] = `
 <DocumentFragment>
   <div
-    class="css-1cvxa09 e1v93h7b0"
+    class="css-uum656-TeaserGridBlockWrapper e1xnbuxv0"
   >
     <article
-      class="css-13hhtda e58tik10"
+      class="css-1up672i-TeaserWrapper e18of27r2"
       x="0"
       y="0"
     >
@@ -483,11 +483,11 @@ exports[`Teaser Grid Block should render WithShowLoad 1`] = `
         href="https://example.com"
       >
         <div
-          class="css-16lxa1r e58tik11"
+          class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
         >
           <img
             alt="An image description"
-            class="css-1opieq8-Teaser e1nfkf2e0"
+            class="css-78zlx2-ImageWrapper-Teaser e1shv2yg0"
             height="500"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
@@ -498,7 +498,7 @@ https://unsplash.it/200/200 200w"
             width="500"
           />
           <header
-            class="css-0 e58tik12"
+            class="css-imydry-TeaserTitleWrapper e18of27r0"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -515,7 +515,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-1sdku99 e58tik10"
+      class="css-1jkqbsa-TeaserWrapper e18of27r2"
       x="4"
       y="0"
     >
@@ -524,11 +524,11 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-16lxa1r e58tik11"
+          class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
         >
           <img
             alt="An image description"
-            class="css-1opieq8-Teaser e1nfkf2e0"
+            class="css-78zlx2-ImageWrapper-Teaser e1shv2yg0"
             height="500"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
@@ -539,7 +539,7 @@ https://unsplash.it/200/200 200w"
             width="500"
           />
           <header
-            class="css-0 e58tik12"
+            class="css-imydry-TeaserTitleWrapper e18of27r0"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -556,7 +556,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-ciulb1 e58tik10"
+      class="css-so0sc6-TeaserWrapper e18of27r2"
       x="8"
       y="0"
     >
@@ -565,11 +565,11 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-16lxa1r e58tik11"
+          class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
         >
           <img
             alt="An image description"
-            class="css-1opieq8-Teaser e1nfkf2e0"
+            class="css-78zlx2-ImageWrapper-Teaser e1shv2yg0"
             height="500"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
@@ -580,7 +580,7 @@ https://unsplash.it/200/200 200w"
             width="500"
           />
           <header
-            class="css-0 e58tik12"
+            class="css-imydry-TeaserTitleWrapper e18of27r0"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"

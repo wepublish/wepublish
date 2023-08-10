@@ -7,11 +7,11 @@ exports[`AuthorList Item should render Default 1`] = `
     href="slug"
   >
     <div
-      class="css-1dskvzn eyyziki0"
+      class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
     >
       <img
         alt="DSC07717"
-        class="css-10xre0n-AuthorListItem e1nfkf2e0"
+        class="css-1wiojmo-ImageWrapper-AuthorListItem e1shv2yg0"
         height="6000"
         loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
@@ -23,7 +23,7 @@ https://unsplash.it/200/200 200w"
       />
     </div>
     <div
-      class="css-0 eyyziki1"
+      class="css-1f3530-AuthorListItemContent ersskp40"
     >
       <h6
         class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
@@ -47,11 +47,11 @@ exports[`AuthorList Item should render WithClassName 1`] = `
     href="slug"
   >
     <div
-      class="css-1dskvzn eyyziki0"
+      class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
     >
       <img
         alt="DSC07717"
-        class="css-10xre0n-AuthorListItem e1nfkf2e0"
+        class="css-1wiojmo-ImageWrapper-AuthorListItem e1shv2yg0"
         height="6000"
         loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
@@ -63,7 +63,7 @@ https://unsplash.it/200/200 200w"
       />
     </div>
     <div
-      class="css-0 eyyziki1"
+      class="css-1f3530-AuthorListItemContent ersskp40"
     >
       <h6
         class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
@@ -87,11 +87,11 @@ exports[`AuthorList Item should render WithEmotion 1`] = `
     href="slug"
   >
     <div
-      class="css-1dskvzn eyyziki0"
+      class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
     >
       <img
         alt="DSC07717"
-        class="css-10xre0n-AuthorListItem e1nfkf2e0"
+        class="css-1wiojmo-ImageWrapper-AuthorListItem e1shv2yg0"
         height="6000"
         loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
@@ -103,7 +103,7 @@ https://unsplash.it/200/200 200w"
       />
     </div>
     <div
-      class="css-0 eyyziki1"
+      class="css-1f3530-AuthorListItemContent ersskp40"
     >
       <h6
         class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
@@ -127,10 +127,10 @@ exports[`AuthorList Item should render WithoutImage 1`] = `
     href="slug"
   >
     <div
-      class="css-1dskvzn eyyziki0"
+      class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
     />
     <div
-      class="css-0 eyyziki1"
+      class="css-1f3530-AuthorListItemContent ersskp40"
     >
       <h6
         class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
@@ -154,11 +154,11 @@ exports[`AuthorList Item should render WithoutJobTitle 1`] = `
     href="slug"
   >
     <div
-      class="css-1dskvzn eyyziki0"
+      class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
     >
       <img
         alt="DSC07717"
-        class="css-10xre0n-AuthorListItem e1nfkf2e0"
+        class="css-1wiojmo-ImageWrapper-AuthorListItem e1shv2yg0"
         height="6000"
         loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
@@ -170,7 +170,7 @@ https://unsplash.it/200/200 200w"
       />
     </div>
     <div
-      class="css-0 eyyziki1"
+      class="css-1f3530-AuthorListItemContent ersskp40"
     >
       <h6
         class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"

@@ -3,7 +3,7 @@
 exports[`PeerArticle Container should render ById 1`] = `
 <DocumentFragment>
   <article
-    class="css-13dpkcn e10wc33z0"
+    class="css-u0t3o7-ArticleWrapper es3d6yl1"
   />
 </DocumentFragment>
 `;
@@ -11,7 +11,7 @@ exports[`PeerArticle Container should render ById 1`] = `
 exports[`PeerArticle Container should render BySlug 1`] = `
 <DocumentFragment>
   <article
-    class="css-13dpkcn e10wc33z0"
+    class="css-u0t3o7-ArticleWrapper es3d6yl1"
   />
 </DocumentFragment>
 `;
@@ -19,7 +19,7 @@ exports[`PeerArticle Container should render BySlug 1`] = `
 exports[`PeerArticle Container should render WithClassName 1`] = `
 <DocumentFragment>
   <article
-    class="css-13dpkcn e10wc33z0"
+    class="css-u0t3o7-ArticleWrapper es3d6yl1"
   />
 </DocumentFragment>
 `;
@@ -27,7 +27,7 @@ exports[`PeerArticle Container should render WithClassName 1`] = `
 exports[`PeerArticle Container should render WithEmotion 1`] = `
 <DocumentFragment>
   <article
-    class="css-13dpkcn e10wc33z0"
+    class="css-u0t3o7-ArticleWrapper es3d6yl1"
   />
 </DocumentFragment>
 `;
