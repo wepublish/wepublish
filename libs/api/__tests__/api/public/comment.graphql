@@ -15,6 +15,7 @@ fragment MutationComment on Comment {
   id
   itemID
   itemType
+  state
   user {
     id
   }
