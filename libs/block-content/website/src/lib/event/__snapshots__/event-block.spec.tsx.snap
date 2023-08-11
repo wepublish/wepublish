@@ -3,21 +3,21 @@
 exports[`Event Block should render Default 1`] = `
 <DocumentFragment>
   <aside
-    class="css-19lpgrl e19zbbjs0"
+    class="css-1rwno3v-EventBlockWrapper ea1goei0"
   >
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-191jqm4-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
-        class="css-2y38b5 ezogaq70"
+        class="css-ki8is6-EventListItemWrapper ehub4u74"
       >
         <div
-          class="css-0 ezogaq74"
+          class="css-13xyioz-EventListItemImage ehub4u70"
         >
           <img
             alt="DSC07717"
-            class="css-1a2v9hb e1nfkf2e0"
+            class="css-10ctmcf-ImageWrapper e1shv2yg0"
             height="6000"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
@@ -29,13 +29,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-yr5cju ezogaq71"
+          class="css-13m43v7-EventListItemContent ehub4u73"
         >
           <div
-            class="css-17musyg ezogaq72"
+            class="css-3m8h5i-EventListItemMeta ehub4u72"
           >
             <div
-              class="css-12bfk4x ezogaq73"
+              class="css-kd9ikn-EventListItemDate ehub4u71"
             >
               <svg
                 fill="currentColor"
@@ -69,7 +69,7 @@ https://unsplash.it/200/100 200w"
             Cool concert
           </h1>
           <div
-            class="css-0 e1e9qmuq0"
+            class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
           >
             <div
               data-gramm="false"
@@ -172,14 +172,14 @@ https://unsplash.it/200/100 200w"
       href="https://example.com"
     >
       <article
-        class="css-2y38b5 ezogaq70"
+        class="css-ki8is6-EventListItemWrapper ehub4u74"
       >
         <div
-          class="css-0 ezogaq74"
+          class="css-13xyioz-EventListItemImage ehub4u70"
         >
           <img
             alt="DSC07717"
-            class="css-1a2v9hb e1nfkf2e0"
+            class="css-10ctmcf-ImageWrapper e1shv2yg0"
             height="6000"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
@@ -191,13 +191,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-yr5cju ezogaq71"
+          class="css-13m43v7-EventListItemContent ehub4u73"
         >
           <div
-            class="css-17musyg ezogaq72"
+            class="css-3m8h5i-EventListItemMeta ehub4u72"
           >
             <div
-              class="css-12bfk4x ezogaq73"
+              class="css-kd9ikn-EventListItemDate ehub4u71"
             >
               <svg
                 fill="currentColor"
@@ -231,7 +231,7 @@ https://unsplash.it/200/100 200w"
             Cool concert
           </h1>
           <div
-            class="css-0 e1e9qmuq0"
+            class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
           >
             <div
               data-gramm="false"
@@ -334,14 +334,14 @@ https://unsplash.it/200/100 200w"
       href="https://example.com"
     >
       <article
-        class="css-2y38b5 ezogaq70"
+        class="css-ki8is6-EventListItemWrapper ehub4u74"
       >
         <div
-          class="css-0 ezogaq74"
+          class="css-13xyioz-EventListItemImage ehub4u70"
         >
           <img
             alt="DSC07717"
-            class="css-1a2v9hb e1nfkf2e0"
+            class="css-10ctmcf-ImageWrapper e1shv2yg0"
             height="6000"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
@@ -353,13 +353,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-yr5cju ezogaq71"
+          class="css-13m43v7-EventListItemContent ehub4u73"
         >
           <div
-            class="css-17musyg ezogaq72"
+            class="css-3m8h5i-EventListItemMeta ehub4u72"
           >
             <div
-              class="css-12bfk4x ezogaq73"
+              class="css-kd9ikn-EventListItemDate ehub4u71"
             >
               <svg
                 fill="currentColor"
@@ -393,7 +393,7 @@ https://unsplash.it/200/100 200w"
             Cool concert
           </h1>
           <div
-            class="css-0 e1e9qmuq0"
+            class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
           >
             <div
               data-gramm="false"
@@ -496,14 +496,14 @@ https://unsplash.it/200/100 200w"
       href="https://example.com"
     >
       <article
-        class="css-2y38b5 ezogaq70"
+        class="css-ki8is6-EventListItemWrapper ehub4u74"
       >
         <div
-          class="css-0 ezogaq74"
+          class="css-13xyioz-EventListItemImage ehub4u70"
         >
           <img
             alt="DSC07717"
-            class="css-1a2v9hb e1nfkf2e0"
+            class="css-10ctmcf-ImageWrapper e1shv2yg0"
             height="6000"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
@@ -515,13 +515,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-yr5cju ezogaq71"
+          class="css-13m43v7-EventListItemContent ehub4u73"
         >
           <div
-            class="css-17musyg ezogaq72"
+            class="css-3m8h5i-EventListItemMeta ehub4u72"
           >
             <div
-              class="css-12bfk4x ezogaq73"
+              class="css-kd9ikn-EventListItemDate ehub4u71"
             >
               <svg
                 fill="currentColor"
@@ -555,7 +555,7 @@ https://unsplash.it/200/100 200w"
             Cool concert
           </h1>
           <div
-            class="css-0 e1e9qmuq0"
+            class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
           >
             <div
               data-gramm="false"
@@ -658,14 +658,14 @@ https://unsplash.it/200/100 200w"
       href="https://example.com"
     >
       <article
-        class="css-2y38b5 ezogaq70"
+        class="css-ki8is6-EventListItemWrapper ehub4u74"
       >
         <div
-          class="css-0 ezogaq74"
+          class="css-13xyioz-EventListItemImage ehub4u70"
         >
           <img
             alt="DSC07717"
-            class="css-1a2v9hb e1nfkf2e0"
+            class="css-10ctmcf-ImageWrapper e1shv2yg0"
             height="6000"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
@@ -677,13 +677,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-yr5cju ezogaq71"
+          class="css-13m43v7-EventListItemContent ehub4u73"
         >
           <div
-            class="css-17musyg ezogaq72"
+            class="css-3m8h5i-EventListItemMeta ehub4u72"
           >
             <div
-              class="css-12bfk4x ezogaq73"
+              class="css-kd9ikn-EventListItemDate ehub4u71"
             >
               <svg
                 fill="currentColor"
@@ -717,7 +717,7 @@ https://unsplash.it/200/100 200w"
             Cool concert
           </h1>
           <div
-            class="css-0 e1e9qmuq0"
+            class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
           >
             <div
               data-gramm="false"
@@ -820,14 +820,14 @@ https://unsplash.it/200/100 200w"
       href="https://example.com"
     >
       <article
-        class="css-2y38b5 ezogaq70"
+        class="css-ki8is6-EventListItemWrapper ehub4u74"
       >
         <div
-          class="css-0 ezogaq74"
+          class="css-13xyioz-EventListItemImage ehub4u70"
         >
           <img
             alt="DSC07717"
-            class="css-1a2v9hb e1nfkf2e0"
+            class="css-10ctmcf-ImageWrapper e1shv2yg0"
             height="6000"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
@@ -839,13 +839,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-yr5cju ezogaq71"
+          class="css-13m43v7-EventListItemContent ehub4u73"
         >
           <div
-            class="css-17musyg ezogaq72"
+            class="css-3m8h5i-EventListItemMeta ehub4u72"
           >
             <div
-              class="css-12bfk4x ezogaq73"
+              class="css-kd9ikn-EventListItemDate ehub4u71"
             >
               <svg
                 fill="currentColor"
@@ -879,7 +879,7 @@ https://unsplash.it/200/100 200w"
             Cool concert
           </h1>
           <div
-            class="css-0 e1e9qmuq0"
+            class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
           >
             <div
               data-gramm="false"
@@ -984,21 +984,21 @@ https://unsplash.it/200/100 200w"
 exports[`Event Block should render WithClassName 1`] = `
 <DocumentFragment>
   <aside
-    class="extra-classname css-19lpgrl e19zbbjs0"
+    class="extra-classname css-1rwno3v-EventBlockWrapper ea1goei0"
   >
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-191jqm4-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
-        class="css-2y38b5 ezogaq70"
+        class="css-ki8is6-EventListItemWrapper ehub4u74"
       >
         <div
-          class="css-0 ezogaq74"
+          class="css-13xyioz-EventListItemImage ehub4u70"
         >
           <img
             alt="DSC07717"
-            class="css-1a2v9hb e1nfkf2e0"
+            class="css-10ctmcf-ImageWrapper e1shv2yg0"
             height="6000"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
@@ -1010,13 +1010,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-yr5cju ezogaq71"
+          class="css-13m43v7-EventListItemContent ehub4u73"
         >
           <div
-            class="css-17musyg ezogaq72"
+            class="css-3m8h5i-EventListItemMeta ehub4u72"
           >
             <div
-              class="css-12bfk4x ezogaq73"
+              class="css-kd9ikn-EventListItemDate ehub4u71"
             >
               <svg
                 fill="currentColor"
@@ -1050,7 +1050,7 @@ https://unsplash.it/200/100 200w"
             Cool concert
           </h1>
           <div
-            class="css-0 e1e9qmuq0"
+            class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
           >
             <div
               data-gramm="false"
@@ -1153,14 +1153,14 @@ https://unsplash.it/200/100 200w"
       href="https://example.com"
     >
       <article
-        class="css-2y38b5 ezogaq70"
+        class="css-ki8is6-EventListItemWrapper ehub4u74"
       >
         <div
-          class="css-0 ezogaq74"
+          class="css-13xyioz-EventListItemImage ehub4u70"
         >
           <img
             alt="DSC07717"
-            class="css-1a2v9hb e1nfkf2e0"
+            class="css-10ctmcf-ImageWrapper e1shv2yg0"
             height="6000"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
@@ -1172,13 +1172,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-yr5cju ezogaq71"
+          class="css-13m43v7-EventListItemContent ehub4u73"
         >
           <div
-            class="css-17musyg ezogaq72"
+            class="css-3m8h5i-EventListItemMeta ehub4u72"
           >
             <div
-              class="css-12bfk4x ezogaq73"
+              class="css-kd9ikn-EventListItemDate ehub4u71"
             >
               <svg
                 fill="currentColor"
@@ -1212,7 +1212,7 @@ https://unsplash.it/200/100 200w"
             Cool concert
           </h1>
           <div
-            class="css-0 e1e9qmuq0"
+            class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
           >
             <div
               data-gramm="false"
@@ -1315,14 +1315,14 @@ https://unsplash.it/200/100 200w"
       href="https://example.com"
     >
       <article
-        class="css-2y38b5 ezogaq70"
+        class="css-ki8is6-EventListItemWrapper ehub4u74"
       >
         <div
-          class="css-0 ezogaq74"
+          class="css-13xyioz-EventListItemImage ehub4u70"
         >
           <img
             alt="DSC07717"
-            class="css-1a2v9hb e1nfkf2e0"
+            class="css-10ctmcf-ImageWrapper e1shv2yg0"
             height="6000"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
@@ -1334,13 +1334,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-yr5cju ezogaq71"
+          class="css-13m43v7-EventListItemContent ehub4u73"
         >
           <div
-            class="css-17musyg ezogaq72"
+            class="css-3m8h5i-EventListItemMeta ehub4u72"
           >
             <div
-              class="css-12bfk4x ezogaq73"
+              class="css-kd9ikn-EventListItemDate ehub4u71"
             >
               <svg
                 fill="currentColor"
@@ -1374,7 +1374,7 @@ https://unsplash.it/200/100 200w"
             Cool concert
           </h1>
           <div
-            class="css-0 e1e9qmuq0"
+            class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
           >
             <div
               data-gramm="false"
@@ -1477,14 +1477,14 @@ https://unsplash.it/200/100 200w"
       href="https://example.com"
     >
       <article
-        class="css-2y38b5 ezogaq70"
+        class="css-ki8is6-EventListItemWrapper ehub4u74"
       >
         <div
-          class="css-0 ezogaq74"
+          class="css-13xyioz-EventListItemImage ehub4u70"
         >
           <img
             alt="DSC07717"
-            class="css-1a2v9hb e1nfkf2e0"
+            class="css-10ctmcf-ImageWrapper e1shv2yg0"
             height="6000"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
@@ -1496,13 +1496,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-yr5cju ezogaq71"
+          class="css-13m43v7-EventListItemContent ehub4u73"
         >
           <div
-            class="css-17musyg ezogaq72"
+            class="css-3m8h5i-EventListItemMeta ehub4u72"
           >
             <div
-              class="css-12bfk4x ezogaq73"
+              class="css-kd9ikn-EventListItemDate ehub4u71"
             >
               <svg
                 fill="currentColor"
@@ -1536,7 +1536,7 @@ https://unsplash.it/200/100 200w"
             Cool concert
           </h1>
           <div
-            class="css-0 e1e9qmuq0"
+            class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
           >
             <div
               data-gramm="false"
@@ -1639,14 +1639,14 @@ https://unsplash.it/200/100 200w"
       href="https://example.com"
     >
       <article
-        class="css-2y38b5 ezogaq70"
+        class="css-ki8is6-EventListItemWrapper ehub4u74"
       >
         <div
-          class="css-0 ezogaq74"
+          class="css-13xyioz-EventListItemImage ehub4u70"
         >
           <img
             alt="DSC07717"
-            class="css-1a2v9hb e1nfkf2e0"
+            class="css-10ctmcf-ImageWrapper e1shv2yg0"
             height="6000"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
@@ -1658,13 +1658,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-yr5cju ezogaq71"
+          class="css-13m43v7-EventListItemContent ehub4u73"
         >
           <div
-            class="css-17musyg ezogaq72"
+            class="css-3m8h5i-EventListItemMeta ehub4u72"
           >
             <div
-              class="css-12bfk4x ezogaq73"
+              class="css-kd9ikn-EventListItemDate ehub4u71"
             >
               <svg
                 fill="currentColor"
@@ -1698,7 +1698,7 @@ https://unsplash.it/200/100 200w"
             Cool concert
           </h1>
           <div
-            class="css-0 e1e9qmuq0"
+            class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
           >
             <div
               data-gramm="false"
@@ -1801,14 +1801,14 @@ https://unsplash.it/200/100 200w"
       href="https://example.com"
     >
       <article
-        class="css-2y38b5 ezogaq70"
+        class="css-ki8is6-EventListItemWrapper ehub4u74"
       >
         <div
-          class="css-0 ezogaq74"
+          class="css-13xyioz-EventListItemImage ehub4u70"
         >
           <img
             alt="DSC07717"
-            class="css-1a2v9hb e1nfkf2e0"
+            class="css-10ctmcf-ImageWrapper e1shv2yg0"
             height="6000"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
@@ -1820,13 +1820,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-yr5cju ezogaq71"
+          class="css-13m43v7-EventListItemContent ehub4u73"
         >
           <div
-            class="css-17musyg ezogaq72"
+            class="css-3m8h5i-EventListItemMeta ehub4u72"
           >
             <div
-              class="css-12bfk4x ezogaq73"
+              class="css-kd9ikn-EventListItemDate ehub4u71"
             >
               <svg
                 fill="currentColor"
@@ -1860,7 +1860,7 @@ https://unsplash.it/200/100 200w"
             Cool concert
           </h1>
           <div
-            class="css-0 e1e9qmuq0"
+            class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
           >
             <div
               data-gramm="false"
@@ -1965,21 +1965,21 @@ https://unsplash.it/200/100 200w"
 exports[`Event Block should render WithEmotion 1`] = `
 <DocumentFragment>
   <aside
-    class="css-19lpgrl e19zbbjs0"
+    class="css-1rwno3v-EventBlockWrapper ea1goei0"
   >
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-191jqm4-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
-        class="css-2y38b5 ezogaq70"
+        class="css-ki8is6-EventListItemWrapper ehub4u74"
       >
         <div
-          class="css-0 ezogaq74"
+          class="css-13xyioz-EventListItemImage ehub4u70"
         >
           <img
             alt="DSC07717"
-            class="css-1a2v9hb e1nfkf2e0"
+            class="css-10ctmcf-ImageWrapper e1shv2yg0"
             height="6000"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
@@ -1991,13 +1991,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-yr5cju ezogaq71"
+          class="css-13m43v7-EventListItemContent ehub4u73"
         >
           <div
-            class="css-17musyg ezogaq72"
+            class="css-3m8h5i-EventListItemMeta ehub4u72"
           >
             <div
-              class="css-12bfk4x ezogaq73"
+              class="css-kd9ikn-EventListItemDate ehub4u71"
             >
               <svg
                 fill="currentColor"
@@ -2031,7 +2031,7 @@ https://unsplash.it/200/100 200w"
             Cool concert
           </h1>
           <div
-            class="css-0 e1e9qmuq0"
+            class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
           >
             <div
               data-gramm="false"
@@ -2134,14 +2134,14 @@ https://unsplash.it/200/100 200w"
       href="https://example.com"
     >
       <article
-        class="css-2y38b5 ezogaq70"
+        class="css-ki8is6-EventListItemWrapper ehub4u74"
       >
         <div
-          class="css-0 ezogaq74"
+          class="css-13xyioz-EventListItemImage ehub4u70"
         >
           <img
             alt="DSC07717"
-            class="css-1a2v9hb e1nfkf2e0"
+            class="css-10ctmcf-ImageWrapper e1shv2yg0"
             height="6000"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
@@ -2153,13 +2153,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-yr5cju ezogaq71"
+          class="css-13m43v7-EventListItemContent ehub4u73"
         >
           <div
-            class="css-17musyg ezogaq72"
+            class="css-3m8h5i-EventListItemMeta ehub4u72"
           >
             <div
-              class="css-12bfk4x ezogaq73"
+              class="css-kd9ikn-EventListItemDate ehub4u71"
             >
               <svg
                 fill="currentColor"
@@ -2193,7 +2193,7 @@ https://unsplash.it/200/100 200w"
             Cool concert
           </h1>
           <div
-            class="css-0 e1e9qmuq0"
+            class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
           >
             <div
               data-gramm="false"
@@ -2296,14 +2296,14 @@ https://unsplash.it/200/100 200w"
       href="https://example.com"
     >
       <article
-        class="css-2y38b5 ezogaq70"
+        class="css-ki8is6-EventListItemWrapper ehub4u74"
       >
         <div
-          class="css-0 ezogaq74"
+          class="css-13xyioz-EventListItemImage ehub4u70"
         >
           <img
             alt="DSC07717"
-            class="css-1a2v9hb e1nfkf2e0"
+            class="css-10ctmcf-ImageWrapper e1shv2yg0"
             height="6000"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
@@ -2315,13 +2315,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-yr5cju ezogaq71"
+          class="css-13m43v7-EventListItemContent ehub4u73"
         >
           <div
-            class="css-17musyg ezogaq72"
+            class="css-3m8h5i-EventListItemMeta ehub4u72"
           >
             <div
-              class="css-12bfk4x ezogaq73"
+              class="css-kd9ikn-EventListItemDate ehub4u71"
             >
               <svg
                 fill="currentColor"
@@ -2355,7 +2355,7 @@ https://unsplash.it/200/100 200w"
             Cool concert
           </h1>
           <div
-            class="css-0 e1e9qmuq0"
+            class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
           >
             <div
               data-gramm="false"
@@ -2458,14 +2458,14 @@ https://unsplash.it/200/100 200w"
       href="https://example.com"
     >
       <article
-        class="css-2y38b5 ezogaq70"
+        class="css-ki8is6-EventListItemWrapper ehub4u74"
       >
         <div
-          class="css-0 ezogaq74"
+          class="css-13xyioz-EventListItemImage ehub4u70"
         >
           <img
             alt="DSC07717"
-            class="css-1a2v9hb e1nfkf2e0"
+            class="css-10ctmcf-ImageWrapper e1shv2yg0"
             height="6000"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
@@ -2477,13 +2477,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-yr5cju ezogaq71"
+          class="css-13m43v7-EventListItemContent ehub4u73"
         >
           <div
-            class="css-17musyg ezogaq72"
+            class="css-3m8h5i-EventListItemMeta ehub4u72"
           >
             <div
-              class="css-12bfk4x ezogaq73"
+              class="css-kd9ikn-EventListItemDate ehub4u71"
             >
               <svg
                 fill="currentColor"
@@ -2517,7 +2517,7 @@ https://unsplash.it/200/100 200w"
             Cool concert
           </h1>
           <div
-            class="css-0 e1e9qmuq0"
+            class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
           >
             <div
               data-gramm="false"
@@ -2620,14 +2620,14 @@ https://unsplash.it/200/100 200w"
       href="https://example.com"
     >
       <article
-        class="css-2y38b5 ezogaq70"
+        class="css-ki8is6-EventListItemWrapper ehub4u74"
       >
         <div
-          class="css-0 ezogaq74"
+          class="css-13xyioz-EventListItemImage ehub4u70"
         >
           <img
             alt="DSC07717"
-            class="css-1a2v9hb e1nfkf2e0"
+            class="css-10ctmcf-ImageWrapper e1shv2yg0"
             height="6000"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
@@ -2639,13 +2639,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-yr5cju ezogaq71"
+          class="css-13m43v7-EventListItemContent ehub4u73"
         >
           <div
-            class="css-17musyg ezogaq72"
+            class="css-3m8h5i-EventListItemMeta ehub4u72"
           >
             <div
-              class="css-12bfk4x ezogaq73"
+              class="css-kd9ikn-EventListItemDate ehub4u71"
             >
               <svg
                 fill="currentColor"
@@ -2679,7 +2679,7 @@ https://unsplash.it/200/100 200w"
             Cool concert
           </h1>
           <div
-            class="css-0 e1e9qmuq0"
+            class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
           >
             <div
               data-gramm="false"
@@ -2782,14 +2782,14 @@ https://unsplash.it/200/100 200w"
       href="https://example.com"
     >
       <article
-        class="css-2y38b5 ezogaq70"
+        class="css-ki8is6-EventListItemWrapper ehub4u74"
       >
         <div
-          class="css-0 ezogaq74"
+          class="css-13xyioz-EventListItemImage ehub4u70"
         >
           <img
             alt="DSC07717"
-            class="css-1a2v9hb e1nfkf2e0"
+            class="css-10ctmcf-ImageWrapper e1shv2yg0"
             height="6000"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
@@ -2801,13 +2801,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-yr5cju ezogaq71"
+          class="css-13m43v7-EventListItemContent ehub4u73"
         >
           <div
-            class="css-17musyg ezogaq72"
+            class="css-3m8h5i-EventListItemMeta ehub4u72"
           >
             <div
-              class="css-12bfk4x ezogaq73"
+              class="css-kd9ikn-EventListItemDate ehub4u71"
             >
               <svg
                 fill="currentColor"
@@ -2841,7 +2841,7 @@ https://unsplash.it/200/100 200w"
             Cool concert
           </h1>
           <div
-            class="css-0 e1e9qmuq0"
+            class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
           >
             <div
               data-gramm="false"

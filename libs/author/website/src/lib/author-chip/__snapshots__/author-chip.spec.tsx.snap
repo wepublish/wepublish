@@ -3,14 +3,14 @@
 exports[`Author Chip should render Default 1`] = `
 <DocumentFragment>
   <aside
-    class="css-1qi9kls ewiwnhk0"
+    class="css-11wsbvp-AuthorChipWrapper e1jhd13z2"
   >
     <div
-      class="css-lgj0h8 ewiwnhk1"
+      class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z1"
     >
       <img
         alt="DSC07717"
-        class="css-1w3f93h-AuthorChip e1nfkf2e0"
+        class="css-1paxd2s-ImageWrapper-AuthorChip e1shv2yg0"
         height="6000"
         loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
@@ -22,7 +22,7 @@ https://unsplash.it/200/200 200w"
       />
     </div>
     <div
-      class="css-lgj0h8 ewiwnhk2"
+      class="css-dpf16q-AuthorChipContentWrapper e1jhd13z0"
     >
       <p
         class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -50,14 +50,14 @@ https://unsplash.it/200/200 200w"
 exports[`Author Chip should render WithClassName 1`] = `
 <DocumentFragment>
   <aside
-    class="extra-classname css-1qi9kls ewiwnhk0"
+    class="extra-classname css-11wsbvp-AuthorChipWrapper e1jhd13z2"
   >
     <div
-      class="css-lgj0h8 ewiwnhk1"
+      class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z1"
     >
       <img
         alt="DSC07717"
-        class="css-1w3f93h-AuthorChip e1nfkf2e0"
+        class="css-1paxd2s-ImageWrapper-AuthorChip e1shv2yg0"
         height="6000"
         loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
@@ -69,7 +69,7 @@ https://unsplash.it/200/200 200w"
       />
     </div>
     <div
-      class="css-lgj0h8 ewiwnhk2"
+      class="css-dpf16q-AuthorChipContentWrapper e1jhd13z0"
     >
       <p
         class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -97,14 +97,14 @@ https://unsplash.it/200/200 200w"
 exports[`Author Chip should render WithEmotion 1`] = `
 <DocumentFragment>
   <aside
-    class="css-1qi9kls ewiwnhk0"
+    class="css-11wsbvp-AuthorChipWrapper e1jhd13z2"
   >
     <div
-      class="css-lgj0h8 ewiwnhk1"
+      class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z1"
     >
       <img
         alt="DSC07717"
-        class="css-1w3f93h-AuthorChip e1nfkf2e0"
+        class="css-1paxd2s-ImageWrapper-AuthorChip e1shv2yg0"
         height="6000"
         loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
@@ -116,7 +116,7 @@ https://unsplash.it/200/200 200w"
       />
     </div>
     <div
-      class="css-lgj0h8 ewiwnhk2"
+      class="css-dpf16q-AuthorChipContentWrapper e1jhd13z0"
     >
       <p
         class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -144,13 +144,13 @@ https://unsplash.it/200/200 200w"
 exports[`Author Chip should render WithoutImage 1`] = `
 <DocumentFragment>
   <aside
-    class="css-1qi9kls ewiwnhk0"
+    class="css-11wsbvp-AuthorChipWrapper e1jhd13z2"
   >
     <div
-      class="css-lgj0h8 ewiwnhk1"
+      class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z1"
     />
     <div
-      class="css-lgj0h8 ewiwnhk2"
+      class="css-dpf16q-AuthorChipContentWrapper e1jhd13z0"
     >
       <p
         class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -178,14 +178,14 @@ exports[`Author Chip should render WithoutImage 1`] = `
 exports[`Author Chip should render WithoutJobTitle 1`] = `
 <DocumentFragment>
   <aside
-    class="css-1qi9kls ewiwnhk0"
+    class="css-11wsbvp-AuthorChipWrapper e1jhd13z2"
   >
     <div
-      class="css-lgj0h8 ewiwnhk1"
+      class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z1"
     >
       <img
         alt="DSC07717"
-        class="css-1w3f93h-AuthorChip e1nfkf2e0"
+        class="css-1paxd2s-ImageWrapper-AuthorChip e1shv2yg0"
         height="6000"
         loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
@@ -197,7 +197,7 @@ https://unsplash.it/200/200 200w"
       />
     </div>
     <div
-      class="css-lgj0h8 ewiwnhk2"
+      class="css-dpf16q-AuthorChipContentWrapper e1jhd13z0"
     >
       <p
         class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
