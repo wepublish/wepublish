@@ -40,9 +40,13 @@ jobs:
         run: |
           kubectl create namespace reviews --dry-run=client -o yaml | kubectl apply -f -
 
-      - name: Helm Deploy
+      - name: Helm deploy application
         run: |
-          helm upgrade --install review-${{ github.event.pull_request.number }} ./helm/charts/wepublish --namespace reviews
+          helm upgrade --install review-${{ github.event.pull_request.number }}-app ./helm/charts/wepublish --namespace reviews
+
+      - name: Helm deploy media server
+        run: |
+          helm upgrade --install review-${{ github.event.pull_request.number }}-media-server karma-media-server --repo https://gitlab.com/api/v4/projects/38941346/packages/helm/stable --namespace reviews
           
 
   notify:
