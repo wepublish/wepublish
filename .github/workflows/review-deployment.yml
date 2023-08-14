@@ -41,7 +41,7 @@ jobs:
           kubectl create namespace reviews --dry-run=client -o yaml | kubectl apply -f -
 
       - name: Deploy helm
-        uses: deliverybot/helm@v1
+        uses: vimeda/helm@v1.7.0
         with:
           release: review-${{ github.event.pull_request.number }}-app
           namespace: reviews
