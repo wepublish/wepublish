@@ -36,4 +36,5 @@ jobs:
         run: |
           helm uninstall review-${{ github.event.pull_request.number }}-app --namespace reviews
           helm uninstall review-${{ github.event.pull_request.number }}-media-server --namespace reviews
+          helm uninstall review-${{ github.event.pull_request.number }}-postgres --namespace reviews
           
