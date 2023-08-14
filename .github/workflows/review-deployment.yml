@@ -40,10 +40,10 @@ jobs:
         run: |
           kubectl create namespace reviews --dry-run=client -o yaml | kubectl apply -f -
 
-      - name: Helm deploy postgres
+      - name: Helm deploy database
         uses: vimeda/helm@v1.7.0
         with:
-          release: review-${{ github.event.pull_request.number }}-postgres
+          release: review-${{ github.event.pull_request.number }}-database
           namespace: reviews
           chart: oci://registry-1.docker.io/bitnamicharts/postgresql
 
