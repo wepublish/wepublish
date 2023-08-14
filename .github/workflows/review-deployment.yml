@@ -84,9 +84,7 @@ jobs:
           timeout: '30s'
           values: |
             deployment:
-              image: ghcr.io/wepublish/wepublish
-              imagePullPolicy: Always
-              imagePullSecret:
+              image: ghcr.io/wepublish/wepublish:master-1691754692-797b6bc9fed5589fb2bbd2c4fe9d0930d7d2e929
               env:
                 API_URL: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.media
                 EDITOR_URL: https://editor-${{ github.event.pull_request.number }}.reviews.wepublish.media
