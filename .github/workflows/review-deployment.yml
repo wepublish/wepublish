@@ -52,7 +52,7 @@ jobs:
               username: wepublish
               password: foo
               postgresPassword: bar
-              enablePostgresUser
+              enablePostgresUser: true
 
       - name: Helm deploy media server
         uses: vimeda/helm@v1.7.0
