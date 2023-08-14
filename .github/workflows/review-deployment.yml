@@ -46,7 +46,6 @@ jobs:
           release: review-${{ github.event.pull_request.number }}-postgres
           namespace: reviews
           chart: oci://registry-1.docker.io/bitnamicharts/postgresql
-          timeout: '30s'
 
       - name: Helm deploy app
         uses: vimeda/helm@v1.7.0
