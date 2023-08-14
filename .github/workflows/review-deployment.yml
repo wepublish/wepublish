@@ -74,36 +74,6 @@ jobs:
               storage: 20Gi
             labels: { }
 
-      - name: Helm deploy app
-        uses: vimeda/helm@v1.7.0
-        with:
-          release: review-${{ github.event.pull_request.number }}-app
-          namespace: reviews
-          chart: ./helm/charts/wepublish
-          token: '${{ github.token }}'
-          timeout: '30s'
-          values: |
-            deployment:
-              image: ghcr.io/wepublish/wepublish
-              imagePullPolicy: Always
-              imagePullSecret:
-              env:
-                API_URL: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.media
-                EDITOR_URL: https://editor-${{ github.event.pull_request.number }}.reviews.wepublish.media
-                WEBSITE_URL: https://website-${{ github.event.pull_request.number }}.reviews.wepublish.media
-                MEDIA_SERVER_URL: https://media-${{ github.event.pull_request.number }}.reviews.wepublish.media
-            api:
-              env:
-                GOOGLE_APPLICATION_CREDENTIALS: /var/secrets/google/key.json
-                DATABASE_URL: postgres://
-                MEDIA_SERVER_TOKEN: 'media-token'
-                JWT_SECRET_KEY: 'jwt-token'
-            editor:
-              env:
-                PEER_BY_DEFAULT: "true"
-            website:
-              enabled: false
-
   notify:
     needs: deployment
     if: ${{ needs.deployment.result == 'success' }}
