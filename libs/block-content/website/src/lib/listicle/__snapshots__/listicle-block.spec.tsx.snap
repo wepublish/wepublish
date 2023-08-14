@@ -3,13 +3,13 @@
 exports[`Listicle Block should render Default 1`] = `
 <DocumentFragment>
   <div
-    class="css-5ednon e1iakh080"
+    class="css-dyjcj9-ListicleBlockWrapper e1pxt35p2"
   >
     <div
-      class="css-1egb6s2 e1iakh081"
+      class="css-6lnx2c-ListicleBlockItem e1pxt35p1"
     >
       <div
-        class="css-1lfpiq0 e1iakh082"
+        class="css-2thz4l-ListicleBlockItemCounter e1pxt35p0"
       >
         1
       </div>
@@ -20,7 +20,7 @@ exports[`Listicle Block should render Default 1`] = `
       </h3>
       <img
         alt="DSC07717"
-        class="css-1a2v9hb e1nfkf2e0"
+        class="css-10ctmcf-ImageWrapper e1shv2yg0"
         height="6000"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
@@ -31,7 +31,7 @@ https://unsplash.it/200/100 200w"
         width="4000"
       />
       <div
-        class="css-0 e1e9qmuq0"
+        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
       >
         <div
           data-gramm="false"
@@ -57,10 +57,10 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-1egb6s2 e1iakh081"
+      class="css-6lnx2c-ListicleBlockItem e1pxt35p1"
     >
       <div
-        class="css-1lfpiq0 e1iakh082"
+        class="css-2thz4l-ListicleBlockItemCounter e1pxt35p0"
       >
         2
       </div>
@@ -71,7 +71,7 @@ https://unsplash.it/200/100 200w"
       </h3>
       <img
         alt="DSC07717"
-        class="css-1a2v9hb e1nfkf2e0"
+        class="css-10ctmcf-ImageWrapper e1shv2yg0"
         height="6000"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
@@ -82,7 +82,7 @@ https://unsplash.it/200/100 200w"
         width="4000"
       />
       <div
-        class="css-0 e1e9qmuq0"
+        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
       >
         <div
           data-gramm="false"
@@ -108,10 +108,10 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-1egb6s2 e1iakh081"
+      class="css-6lnx2c-ListicleBlockItem e1pxt35p1"
     >
       <div
-        class="css-1lfpiq0 e1iakh082"
+        class="css-2thz4l-ListicleBlockItemCounter e1pxt35p0"
       >
         3
       </div>
@@ -122,7 +122,7 @@ https://unsplash.it/200/100 200w"
       </h3>
       <img
         alt="DSC07717"
-        class="css-1a2v9hb e1nfkf2e0"
+        class="css-10ctmcf-ImageWrapper e1shv2yg0"
         height="6000"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
@@ -133,7 +133,7 @@ https://unsplash.it/200/100 200w"
         width="4000"
       />
       <div
-        class="css-0 e1e9qmuq0"
+        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
       >
         <div
           data-gramm="false"
@@ -159,10 +159,10 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-1egb6s2 e1iakh081"
+      class="css-6lnx2c-ListicleBlockItem e1pxt35p1"
     >
       <div
-        class="css-1lfpiq0 e1iakh082"
+        class="css-2thz4l-ListicleBlockItemCounter e1pxt35p0"
       >
         4
       </div>
@@ -173,7 +173,7 @@ https://unsplash.it/200/100 200w"
       </h3>
       <img
         alt="DSC07717"
-        class="css-1a2v9hb e1nfkf2e0"
+        class="css-10ctmcf-ImageWrapper e1shv2yg0"
         height="6000"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
@@ -184,7 +184,7 @@ https://unsplash.it/200/100 200w"
         width="4000"
       />
       <div
-        class="css-0 e1e9qmuq0"
+        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
       >
         <div
           data-gramm="false"
@@ -216,13 +216,13 @@ https://unsplash.it/200/100 200w"
 exports[`Listicle Block should render WithClassName 1`] = `
 <DocumentFragment>
   <div
-    class="extra-classname css-5ednon e1iakh080"
+    class="extra-classname css-dyjcj9-ListicleBlockWrapper e1pxt35p2"
   >
     <div
-      class="css-1egb6s2 e1iakh081"
+      class="css-6lnx2c-ListicleBlockItem e1pxt35p1"
     >
       <div
-        class="css-1lfpiq0 e1iakh082"
+        class="css-2thz4l-ListicleBlockItemCounter e1pxt35p0"
       >
         1
       </div>
@@ -233,7 +233,7 @@ exports[`Listicle Block should render WithClassName 1`] = `
       </h3>
       <img
         alt="DSC07717"
-        class="css-1a2v9hb e1nfkf2e0"
+        class="css-10ctmcf-ImageWrapper e1shv2yg0"
         height="6000"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
@@ -244,7 +244,7 @@ https://unsplash.it/200/100 200w"
         width="4000"
       />
       <div
-        class="css-0 e1e9qmuq0"
+        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
       >
         <div
           data-gramm="false"
@@ -270,10 +270,10 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-1egb6s2 e1iakh081"
+      class="css-6lnx2c-ListicleBlockItem e1pxt35p1"
     >
       <div
-        class="css-1lfpiq0 e1iakh082"
+        class="css-2thz4l-ListicleBlockItemCounter e1pxt35p0"
       >
         2
       </div>
@@ -284,7 +284,7 @@ https://unsplash.it/200/100 200w"
       </h3>
       <img
         alt="DSC07717"
-        class="css-1a2v9hb e1nfkf2e0"
+        class="css-10ctmcf-ImageWrapper e1shv2yg0"
         height="6000"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
@@ -295,7 +295,7 @@ https://unsplash.it/200/100 200w"
         width="4000"
       />
       <div
-        class="css-0 e1e9qmuq0"
+        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
       >
         <div
           data-gramm="false"
@@ -321,10 +321,10 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-1egb6s2 e1iakh081"
+      class="css-6lnx2c-ListicleBlockItem e1pxt35p1"
     >
       <div
-        class="css-1lfpiq0 e1iakh082"
+        class="css-2thz4l-ListicleBlockItemCounter e1pxt35p0"
       >
         3
       </div>
@@ -335,7 +335,7 @@ https://unsplash.it/200/100 200w"
       </h3>
       <img
         alt="DSC07717"
-        class="css-1a2v9hb e1nfkf2e0"
+        class="css-10ctmcf-ImageWrapper e1shv2yg0"
         height="6000"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
@@ -346,7 +346,7 @@ https://unsplash.it/200/100 200w"
         width="4000"
       />
       <div
-        class="css-0 e1e9qmuq0"
+        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
       >
         <div
           data-gramm="false"
@@ -372,10 +372,10 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-1egb6s2 e1iakh081"
+      class="css-6lnx2c-ListicleBlockItem e1pxt35p1"
     >
       <div
-        class="css-1lfpiq0 e1iakh082"
+        class="css-2thz4l-ListicleBlockItemCounter e1pxt35p0"
       >
         4
       </div>
@@ -386,7 +386,7 @@ https://unsplash.it/200/100 200w"
       </h3>
       <img
         alt="DSC07717"
-        class="css-1a2v9hb e1nfkf2e0"
+        class="css-10ctmcf-ImageWrapper e1shv2yg0"
         height="6000"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
@@ -397,7 +397,7 @@ https://unsplash.it/200/100 200w"
         width="4000"
       />
       <div
-        class="css-0 e1e9qmuq0"
+        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
       >
         <div
           data-gramm="false"
@@ -429,13 +429,13 @@ https://unsplash.it/200/100 200w"
 exports[`Listicle Block should render WithEmotion 1`] = `
 <DocumentFragment>
   <div
-    class="css-5ednon e1iakh080"
+    class="css-dyjcj9-ListicleBlockWrapper e1pxt35p2"
   >
     <div
-      class="css-1egb6s2 e1iakh081"
+      class="css-6lnx2c-ListicleBlockItem e1pxt35p1"
     >
       <div
-        class="css-1lfpiq0 e1iakh082"
+        class="css-2thz4l-ListicleBlockItemCounter e1pxt35p0"
       >
         1
       </div>
@@ -446,7 +446,7 @@ exports[`Listicle Block should render WithEmotion 1`] = `
       </h3>
       <img
         alt="DSC07717"
-        class="css-1a2v9hb e1nfkf2e0"
+        class="css-10ctmcf-ImageWrapper e1shv2yg0"
         height="6000"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
@@ -457,7 +457,7 @@ https://unsplash.it/200/100 200w"
         width="4000"
       />
       <div
-        class="css-0 e1e9qmuq0"
+        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
       >
         <div
           data-gramm="false"
@@ -483,10 +483,10 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-1egb6s2 e1iakh081"
+      class="css-6lnx2c-ListicleBlockItem e1pxt35p1"
     >
       <div
-        class="css-1lfpiq0 e1iakh082"
+        class="css-2thz4l-ListicleBlockItemCounter e1pxt35p0"
       >
         2
       </div>
@@ -497,7 +497,7 @@ https://unsplash.it/200/100 200w"
       </h3>
       <img
         alt="DSC07717"
-        class="css-1a2v9hb e1nfkf2e0"
+        class="css-10ctmcf-ImageWrapper e1shv2yg0"
         height="6000"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
@@ -508,7 +508,7 @@ https://unsplash.it/200/100 200w"
         width="4000"
       />
       <div
-        class="css-0 e1e9qmuq0"
+        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
       >
         <div
           data-gramm="false"
@@ -534,10 +534,10 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-1egb6s2 e1iakh081"
+      class="css-6lnx2c-ListicleBlockItem e1pxt35p1"
     >
       <div
-        class="css-1lfpiq0 e1iakh082"
+        class="css-2thz4l-ListicleBlockItemCounter e1pxt35p0"
       >
         3
       </div>
@@ -548,7 +548,7 @@ https://unsplash.it/200/100 200w"
       </h3>
       <img
         alt="DSC07717"
-        class="css-1a2v9hb e1nfkf2e0"
+        class="css-10ctmcf-ImageWrapper e1shv2yg0"
         height="6000"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
@@ -559,7 +559,7 @@ https://unsplash.it/200/100 200w"
         width="4000"
       />
       <div
-        class="css-0 e1e9qmuq0"
+        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
       >
         <div
           data-gramm="false"
@@ -585,10 +585,10 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-1egb6s2 e1iakh081"
+      class="css-6lnx2c-ListicleBlockItem e1pxt35p1"
     >
       <div
-        class="css-1lfpiq0 e1iakh082"
+        class="css-2thz4l-ListicleBlockItemCounter e1pxt35p0"
       >
         4
       </div>
@@ -599,7 +599,7 @@ https://unsplash.it/200/100 200w"
       </h3>
       <img
         alt="DSC07717"
-        class="css-1a2v9hb e1nfkf2e0"
+        class="css-10ctmcf-ImageWrapper e1shv2yg0"
         height="6000"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
@@ -610,7 +610,7 @@ https://unsplash.it/200/100 200w"
         width="4000"
       />
       <div
-        class="css-0 e1e9qmuq0"
+        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
       >
         <div
           data-gramm="false"
@@ -642,13 +642,13 @@ https://unsplash.it/200/100 200w"
 exports[`Listicle Block should render WithoutImage 1`] = `
 <DocumentFragment>
   <div
-    class="css-5ednon e1iakh080"
+    class="css-dyjcj9-ListicleBlockWrapper e1pxt35p2"
   >
     <div
-      class="css-1egb6s2 e1iakh081"
+      class="css-6lnx2c-ListicleBlockItem e1pxt35p1"
     >
       <div
-        class="css-1lfpiq0 e1iakh082"
+        class="css-2thz4l-ListicleBlockItemCounter e1pxt35p0"
       >
         1
       </div>
@@ -659,7 +659,7 @@ exports[`Listicle Block should render WithoutImage 1`] = `
       </h3>
       <img
         alt="DSC07717"
-        class="css-1a2v9hb e1nfkf2e0"
+        class="css-10ctmcf-ImageWrapper e1shv2yg0"
         height="6000"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
@@ -670,7 +670,7 @@ https://unsplash.it/200/100 200w"
         width="4000"
       />
       <div
-        class="css-0 e1e9qmuq0"
+        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
       >
         <div
           data-gramm="false"
@@ -696,10 +696,10 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-1egb6s2 e1iakh081"
+      class="css-6lnx2c-ListicleBlockItem e1pxt35p1"
     >
       <div
-        class="css-1lfpiq0 e1iakh082"
+        class="css-2thz4l-ListicleBlockItemCounter e1pxt35p0"
       >
         2
       </div>
@@ -709,7 +709,7 @@ https://unsplash.it/200/100 200w"
         Foobar
       </h3>
       <div
-        class="css-0 e1e9qmuq0"
+        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
       >
         <div
           data-gramm="false"
@@ -735,10 +735,10 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-1egb6s2 e1iakh081"
+      class="css-6lnx2c-ListicleBlockItem e1pxt35p1"
     >
       <div
-        class="css-1lfpiq0 e1iakh082"
+        class="css-2thz4l-ListicleBlockItemCounter e1pxt35p0"
       >
         3
       </div>
@@ -749,7 +749,7 @@ https://unsplash.it/200/100 200w"
       </h3>
       <img
         alt="DSC07717"
-        class="css-1a2v9hb e1nfkf2e0"
+        class="css-10ctmcf-ImageWrapper e1shv2yg0"
         height="6000"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
@@ -760,7 +760,7 @@ https://unsplash.it/200/100 200w"
         width="4000"
       />
       <div
-        class="css-0 e1e9qmuq0"
+        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
       >
         <div
           data-gramm="false"
@@ -786,10 +786,10 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-1egb6s2 e1iakh081"
+      class="css-6lnx2c-ListicleBlockItem e1pxt35p1"
     >
       <div
-        class="css-1lfpiq0 e1iakh082"
+        class="css-2thz4l-ListicleBlockItemCounter e1pxt35p0"
       >
         4
       </div>
@@ -799,7 +799,7 @@ https://unsplash.it/200/100 200w"
         Foobar
       </h3>
       <div
-        class="css-0 e1e9qmuq0"
+        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
       >
         <div
           data-gramm="false"

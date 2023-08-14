@@ -30,6 +30,7 @@ import {
   BuilderFacebookVideoBlockProps,
   BuilderHTMLBlockProps,
   BuilderImageBlockProps,
+  BuilderBreakBlockProps,
   BuilderImageGalleryBlockProps,
   BuilderInstagramPostBlockProps,
   BuilderPolisConversationBlockProps,
@@ -140,6 +141,7 @@ export type WebsiteBuilderComponents = {
     Renderer: ComponentType<BuilderBlockRendererProps>
     Title: ComponentType<BuilderTitleBlockProps>
     Image: ComponentType<BuilderImageBlockProps>
+    Break: ComponentType<BuilderBreakBlockProps>
     ImageGallery: ComponentType<BuilderImageGalleryBlockProps>
     Quote: ComponentType<BuilderQuoteBlockProps>
     RichText: ComponentType<BuilderRichTextBlockProps>
@@ -245,7 +247,8 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
     Listicle: NoComponent,
     TeaserGridFlex: NoComponent,
     TeaserGrid: NoComponent,
-    Teaser: NoComponent
+    Teaser: NoComponent,
+    Break: NoComponent
   },
 
   date: {

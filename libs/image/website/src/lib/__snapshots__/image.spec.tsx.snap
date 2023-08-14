@@ -4,7 +4,7 @@ exports[`Image should render Default 1`] = `
 <DocumentFragment>
   <img
     alt="An image description"
-    class="css-1a2v9hb e1nfkf2e0"
+    class="css-10ctmcf-ImageWrapper e1shv2yg0"
     height="500"
     loading="lazy"
     srcset="https://unsplash.it/800/400 800w,
@@ -21,7 +21,7 @@ exports[`Image should render Square 1`] = `
 <DocumentFragment>
   <img
     alt="An image description"
-    class="css-1a2v9hb e1nfkf2e0"
+    class="css-10ctmcf-ImageWrapper e1shv2yg0"
     height="500"
     loading="lazy"
     srcset="https://unsplash.it/800/800 800w,
@@ -38,7 +38,7 @@ exports[`Image should render WithoutDescription 1`] = `
 <DocumentFragment>
   <img
     alt="An image title"
-    class="css-1a2v9hb e1nfkf2e0"
+    class="css-10ctmcf-ImageWrapper e1shv2yg0"
     height="500"
     loading="lazy"
     srcset="https://unsplash.it/800/400 800w,
@@ -55,7 +55,7 @@ exports[`Image should render WithoutTitle 1`] = `
 <DocumentFragment>
   <img
     alt="An image description"
-    class="css-1a2v9hb e1nfkf2e0"
+    class="css-10ctmcf-ImageWrapper e1shv2yg0"
     height="500"
     loading="lazy"
     srcset="https://unsplash.it/800/400 800w,

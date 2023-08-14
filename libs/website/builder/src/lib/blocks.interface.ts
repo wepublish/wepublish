@@ -23,11 +23,13 @@ import {
   EmbedBlock,
   ListicleBlock,
   TeaserGridFlexBlock,
-  TitleBlock
+  TitleBlock,
+  LinkPageBreakBlock
 } from '@wepublish/website/api'
 
 export type BuilderBlockRendererProps = {block: Block}
 export type BuilderTitleBlockProps = TitleBlock & {className?: string}
+export type BuilderBreakBlockProps = LinkPageBreakBlock & {className?: string}
 export type BuilderImageBlockProps = ImageBlock & {className?: string}
 export type BuilderImageGalleryBlockProps = ImageGalleryBlock & {className?: string}
 export type BuilderQuoteBlockProps = QuoteBlock & {className?: string}

@@ -23,6 +23,7 @@ import {isPollBlock} from './poll/poll-block'
 import {isListicleBlock} from './listicle/listicle-block'
 import {isEventBlock} from './event/event-block'
 import {isPolisConversationBlock} from './polis-conversation/polis-conversation-block'
+import {isBreakBlock} from './break/break-block'
 
 export const BlockRenderer = ({block}: BuilderBlockRendererProps) => {
   const {blocks} = useWebsiteBuilder()
@@ -62,6 +63,7 @@ export const BlockRenderer = ({block}: BuilderBlockRendererProps) => {
     cond([
       [isTitleBlock, block => <blocks.Title {...block} />],
       [isQuoteBlock, block => <blocks.Quote {...block} />],
+      [isBreakBlock, block => <blocks.Break {...block} />],
       [isRichTextBlock, block => <blocks.RichText {...block} />],
       [isHtmlBlock, block => <blocks.HTML {...block} />],
       [isEventBlock, block => <blocks.Event {...block} />],

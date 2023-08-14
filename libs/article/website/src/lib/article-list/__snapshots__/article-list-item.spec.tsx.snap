@@ -7,11 +7,11 @@ exports[`ArticleList Item should render Default 1`] = `
     href="https://example.com"
   >
     <div
-      class="css-yzkyje e3btzd50"
+      class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
     >
       <img
         alt="DSC07717"
-        class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+        class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
         height="6000"
         loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
@@ -23,7 +23,7 @@ https://unsplash.it/200/200 200w"
       />
     </div>
     <div
-      class="css-0 e3btzd51"
+      class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
     >
       <p
         class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -52,11 +52,11 @@ exports[`ArticleList Item should render WithClassName 1`] = `
     href="https://example.com"
   >
     <div
-      class="css-yzkyje e3btzd50"
+      class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
     >
       <img
         alt="DSC07717"
-        class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+        class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
         height="6000"
         loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
@@ -68,7 +68,7 @@ https://unsplash.it/200/200 200w"
       />
     </div>
     <div
-      class="css-0 e3btzd51"
+      class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
     >
       <p
         class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -97,11 +97,11 @@ exports[`ArticleList Item should render WithEmotion 1`] = `
     href="https://example.com"
   >
     <div
-      class="css-yzkyje e3btzd50"
+      class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
     >
       <img
         alt="DSC07717"
-        class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+        class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
         height="6000"
         loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
@@ -113,7 +113,7 @@ https://unsplash.it/200/200 200w"
       />
     </div>
     <div
-      class="css-0 e3btzd51"
+      class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
     >
       <p
         class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -142,10 +142,10 @@ exports[`ArticleList Item should render WithoutImage 1`] = `
     href="https://example.com"
   >
     <div
-      class="css-yzkyje e3btzd50"
+      class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
     />
     <div
-      class="css-0 e3btzd51"
+      class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
     >
       <p
         class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -174,11 +174,11 @@ exports[`ArticleList Item should render WithoutTitle 1`] = `
     href="https://example.com"
   >
     <div
-      class="css-yzkyje e3btzd50"
+      class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
     >
       <img
         alt="DSC07717"
-        class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+        class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
         height="6000"
         loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
@@ -190,7 +190,7 @@ https://unsplash.it/200/200 200w"
       />
     </div>
     <div
-      class="css-0 e3btzd51"
+      class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
     >
       <p
         class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"

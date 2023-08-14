@@ -3,7 +3,7 @@
 exports[`Teaser Article should render Default 1`] = `
 <DocumentFragment>
   <article
-    class="css-1c7yv3i e58tik10"
+    class="css-13hki03-TeaserWrapper e18of27r2"
     x="0"
     y="0"
   >
@@ -12,11 +12,11 @@ exports[`Teaser Article should render Default 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-16lxa1r e58tik11"
+        class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
       >
         <img
           alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
+          class="css-78zlx2-ImageWrapper-Teaser e1shv2yg0"
           height="500"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -27,7 +27,7 @@ https://unsplash.it/200/200 200w"
           width="500"
         />
         <header
-          class="css-0 e58tik12"
+          class="css-imydry-TeaserTitleWrapper e18of27r0"
         >
           <h1
             class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -44,7 +44,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Article should render WithShowLead 1`] = `
 <DocumentFragment>
   <article
-    class="css-1c7yv3i e58tik10"
+    class="css-13hki03-TeaserWrapper e18of27r2"
     x="0"
     y="0"
   >
@@ -53,11 +53,11 @@ exports[`Teaser Article should render WithShowLead 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-16lxa1r e58tik11"
+        class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
       >
         <img
           alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
+          class="css-78zlx2-ImageWrapper-Teaser e1shv2yg0"
           height="500"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -68,7 +68,7 @@ https://unsplash.it/200/200 200w"
           width="500"
         />
         <header
-          class="css-0 e58tik12"
+          class="css-imydry-TeaserTitleWrapper e18of27r0"
         >
           <h1
             class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -90,7 +90,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Article should render WithoutImage 1`] = `
 <DocumentFragment>
   <article
-    class="css-1c7yv3i e58tik10"
+    class="css-13hki03-TeaserWrapper e18of27r2"
     x="0"
     y="0"
   >
@@ -99,11 +99,11 @@ exports[`Teaser Article should render WithoutImage 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-16lxa1r e58tik11"
+        class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
       >
         <img
           alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
+          class="css-78zlx2-ImageWrapper-Teaser e1shv2yg0"
           height="500"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -114,7 +114,7 @@ https://unsplash.it/200/200 200w"
           width="500"
         />
         <header
-          class="css-0 e58tik12"
+          class="css-imydry-TeaserTitleWrapper e18of27r0"
         >
           <h1
             class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -131,7 +131,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Article should render WithoutImageWithoutBlock 1`] = `
 <DocumentFragment>
   <article
-    class="css-1c7yv3i e58tik10"
+    class="css-13hki03-TeaserWrapper e18of27r2"
     x="0"
     y="0"
   >
@@ -140,10 +140,10 @@ exports[`Teaser Article should render WithoutImageWithoutBlock 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-16lxa1r e58tik11"
+        class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
       >
         <header
-          class="css-0 e58tik12"
+          class="css-imydry-TeaserTitleWrapper e18of27r0"
         >
           <h1
             class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -160,7 +160,7 @@ exports[`Teaser Article should render WithoutImageWithoutBlock 1`] = `
 exports[`Teaser Article should render WithoutLead 1`] = `
 <DocumentFragment>
   <article
-    class="css-1c7yv3i e58tik10"
+    class="css-13hki03-TeaserWrapper e18of27r2"
     x="0"
     y="0"
   >
@@ -169,11 +169,11 @@ exports[`Teaser Article should render WithoutLead 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-16lxa1r e58tik11"
+        class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
       >
         <img
           alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
+          class="css-78zlx2-ImageWrapper-Teaser e1shv2yg0"
           height="500"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -184,7 +184,7 @@ https://unsplash.it/200/200 200w"
           width="500"
         />
         <header
-          class="css-0 e58tik12"
+          class="css-imydry-TeaserTitleWrapper e18of27r0"
         >
           <h1
             class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -206,7 +206,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Article should render WithoutLeadWithoutBlock 1`] = `
 <DocumentFragment>
   <article
-    class="css-1c7yv3i e58tik10"
+    class="css-13hki03-TeaserWrapper e18of27r2"
     x="0"
     y="0"
   >
@@ -215,11 +215,11 @@ exports[`Teaser Article should render WithoutLeadWithoutBlock 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-16lxa1r e58tik11"
+        class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
       >
         <img
           alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
+          class="css-78zlx2-ImageWrapper-Teaser e1shv2yg0"
           height="500"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -230,7 +230,7 @@ https://unsplash.it/200/200 200w"
           width="500"
         />
         <header
-          class="css-0 e58tik12"
+          class="css-imydry-TeaserTitleWrapper e18of27r0"
         >
           <h1
             class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -252,7 +252,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Article should render WithoutPreTitle 1`] = `
 <DocumentFragment>
   <article
-    class="css-1c7yv3i e58tik10"
+    class="css-13hki03-TeaserWrapper e18of27r2"
     x="0"
     y="0"
   >
@@ -261,11 +261,11 @@ exports[`Teaser Article should render WithoutPreTitle 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-16lxa1r e58tik11"
+        class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
       >
         <img
           alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
+          class="css-78zlx2-ImageWrapper-Teaser e1shv2yg0"
           height="500"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -276,7 +276,7 @@ https://unsplash.it/200/200 200w"
           width="500"
         />
         <header
-          class="css-0 e58tik12"
+          class="css-imydry-TeaserTitleWrapper e18of27r0"
         >
           <h1
             class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -293,7 +293,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Article should render WithoutTitle 1`] = `
 <DocumentFragment>
   <article
-    class="css-1c7yv3i e58tik10"
+    class="css-13hki03-TeaserWrapper e18of27r2"
     x="0"
     y="0"
   >
@@ -302,11 +302,11 @@ exports[`Teaser Article should render WithoutTitle 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-16lxa1r e58tik11"
+        class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
       >
         <img
           alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
+          class="css-78zlx2-ImageWrapper-Teaser e1shv2yg0"
           height="500"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -317,7 +317,7 @@ https://unsplash.it/200/200 200w"
           width="500"
         />
         <header
-          class="css-0 e58tik12"
+          class="css-imydry-TeaserTitleWrapper e18of27r0"
         >
           <h1
             class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -334,7 +334,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Custom should render Default 1`] = `
 <DocumentFragment>
   <article
-    class="css-1c7yv3i e58tik10"
+    class="css-13hki03-TeaserWrapper e18of27r2"
     x="0"
     y="0"
   >
@@ -343,11 +343,11 @@ exports[`Teaser Custom should render Default 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-16lxa1r e58tik11"
+        class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
       >
         <img
           alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
+          class="css-78zlx2-ImageWrapper-Teaser e1shv2yg0"
           height="500"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -358,7 +358,7 @@ https://unsplash.it/200/200 200w"
           width="500"
         />
         <header
-          class="css-0 e58tik12"
+          class="css-imydry-TeaserTitleWrapper e18of27r0"
         >
           <h1
             class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -375,7 +375,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Custom should render WithShowLead 1`] = `
 <DocumentFragment>
   <article
-    class="css-1c7yv3i e58tik10"
+    class="css-13hki03-TeaserWrapper e18of27r2"
     x="0"
     y="0"
   >
@@ -384,11 +384,11 @@ exports[`Teaser Custom should render WithShowLead 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-16lxa1r e58tik11"
+        class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
       >
         <img
           alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
+          class="css-78zlx2-ImageWrapper-Teaser e1shv2yg0"
           height="500"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -399,7 +399,7 @@ https://unsplash.it/200/200 200w"
           width="500"
         />
         <header
-          class="css-0 e58tik12"
+          class="css-imydry-TeaserTitleWrapper e18of27r0"
         >
           <h1
             class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -421,7 +421,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Custom should render WithoutImage 1`] = `
 <DocumentFragment>
   <article
-    class="css-1c7yv3i e58tik10"
+    class="css-13hki03-TeaserWrapper e18of27r2"
     x="0"
     y="0"
   >
@@ -430,10 +430,10 @@ exports[`Teaser Custom should render WithoutImage 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-16lxa1r e58tik11"
+        class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
       >
         <header
-          class="css-0 e58tik12"
+          class="css-imydry-TeaserTitleWrapper e18of27r0"
         >
           <h1
             class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -450,7 +450,7 @@ exports[`Teaser Custom should render WithoutImage 1`] = `
 exports[`Teaser Custom should render WithoutLead 1`] = `
 <DocumentFragment>
   <article
-    class="css-1c7yv3i e58tik10"
+    class="css-13hki03-TeaserWrapper e18of27r2"
     x="0"
     y="0"
   >
@@ -459,11 +459,11 @@ exports[`Teaser Custom should render WithoutLead 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-16lxa1r e58tik11"
+        class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
       >
         <img
           alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
+          class="css-78zlx2-ImageWrapper-Teaser e1shv2yg0"
           height="500"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -474,7 +474,7 @@ https://unsplash.it/200/200 200w"
           width="500"
         />
         <header
-          class="css-0 e58tik12"
+          class="css-imydry-TeaserTitleWrapper e18of27r0"
         >
           <h1
             class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -494,7 +494,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Custom should render WithoutPreTitle 1`] = `
 <DocumentFragment>
   <article
-    class="css-1c7yv3i e58tik10"
+    class="css-13hki03-TeaserWrapper e18of27r2"
     x="0"
     y="0"
   >
@@ -503,11 +503,11 @@ exports[`Teaser Custom should render WithoutPreTitle 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-16lxa1r e58tik11"
+        class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
       >
         <img
           alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
+          class="css-78zlx2-ImageWrapper-Teaser e1shv2yg0"
           height="500"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -518,7 +518,7 @@ https://unsplash.it/200/200 200w"
           width="500"
         />
         <header
-          class="css-0 e58tik12"
+          class="css-imydry-TeaserTitleWrapper e18of27r0"
         >
           <h1
             class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -535,7 +535,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Custom should render WithoutTitle 1`] = `
 <DocumentFragment>
   <article
-    class="css-1c7yv3i e58tik10"
+    class="css-13hki03-TeaserWrapper e18of27r2"
     x="0"
     y="0"
   >
@@ -544,11 +544,11 @@ exports[`Teaser Custom should render WithoutTitle 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-16lxa1r e58tik11"
+        class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
       >
         <img
           alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
+          class="css-78zlx2-ImageWrapper-Teaser e1shv2yg0"
           height="500"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -559,7 +559,7 @@ https://unsplash.it/200/200 200w"
           width="500"
         />
         <header
-          class="css-0 e58tik12"
+          class="css-imydry-TeaserTitleWrapper e18of27r0"
         >
           <h1
             class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -576,7 +576,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Page should render Default 1`] = `
 <DocumentFragment>
   <article
-    class="css-1c7yv3i e58tik10"
+    class="css-13hki03-TeaserWrapper e18of27r2"
     x="0"
     y="0"
   >
@@ -585,11 +585,11 @@ exports[`Teaser Page should render Default 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-16lxa1r e58tik11"
+        class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
       >
         <img
           alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
+          class="css-78zlx2-ImageWrapper-Teaser e1shv2yg0"
           height="500"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -600,7 +600,7 @@ https://unsplash.it/200/200 200w"
           width="500"
         />
         <header
-          class="css-0 e58tik12"
+          class="css-imydry-TeaserTitleWrapper e18of27r0"
         >
           <h1
             class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -617,7 +617,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Page should render WithShowLead 1`] = `
 <DocumentFragment>
   <article
-    class="css-1c7yv3i e58tik10"
+    class="css-13hki03-TeaserWrapper e18of27r2"
     x="0"
     y="0"
   >
@@ -626,11 +626,11 @@ exports[`Teaser Page should render WithShowLead 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-16lxa1r e58tik11"
+        class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
       >
         <img
           alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
+          class="css-78zlx2-ImageWrapper-Teaser e1shv2yg0"
           height="500"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -641,7 +641,7 @@ https://unsplash.it/200/200 200w"
           width="500"
         />
         <header
-          class="css-0 e58tik12"
+          class="css-imydry-TeaserTitleWrapper e18of27r0"
         >
           <h1
             class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -663,7 +663,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Page should render WithoutImage 1`] = `
 <DocumentFragment>
   <article
-    class="css-1c7yv3i e58tik10"
+    class="css-13hki03-TeaserWrapper e18of27r2"
     x="0"
     y="0"
   >
@@ -672,11 +672,11 @@ exports[`Teaser Page should render WithoutImage 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-16lxa1r e58tik11"
+        class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
       >
         <img
           alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
+          class="css-78zlx2-ImageWrapper-Teaser e1shv2yg0"
           height="500"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -687,7 +687,7 @@ https://unsplash.it/200/200 200w"
           width="500"
         />
         <header
-          class="css-0 e58tik12"
+          class="css-imydry-TeaserTitleWrapper e18of27r0"
         >
           <h1
             class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -704,7 +704,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Page should render WithoutImageWithoutBlock 1`] = `
 <DocumentFragment>
   <article
-    class="css-1c7yv3i e58tik10"
+    class="css-13hki03-TeaserWrapper e18of27r2"
     x="0"
     y="0"
   >
@@ -713,11 +713,11 @@ exports[`Teaser Page should render WithoutImageWithoutBlock 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-16lxa1r e58tik11"
+        class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
       >
         <img
           alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
+          class="css-78zlx2-ImageWrapper-Teaser e1shv2yg0"
           height="500"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -728,7 +728,7 @@ https://unsplash.it/200/200 200w"
           width="500"
         />
         <header
-          class="css-0 e58tik12"
+          class="css-imydry-TeaserTitleWrapper e18of27r0"
         >
           <h1
             class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -745,7 +745,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Page should render WithoutLead 1`] = `
 <DocumentFragment>
   <article
-    class="css-1c7yv3i e58tik10"
+    class="css-13hki03-TeaserWrapper e18of27r2"
     x="0"
     y="0"
   >
@@ -754,11 +754,11 @@ exports[`Teaser Page should render WithoutLead 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-16lxa1r e58tik11"
+        class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
       >
         <img
           alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
+          class="css-78zlx2-ImageWrapper-Teaser e1shv2yg0"
           height="500"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -769,7 +769,7 @@ https://unsplash.it/200/200 200w"
           width="500"
         />
         <header
-          class="css-0 e58tik12"
+          class="css-imydry-TeaserTitleWrapper e18of27r0"
         >
           <h1
             class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -791,7 +791,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Page should render WithoutLeadWithoutBlock 1`] = `
 <DocumentFragment>
   <article
-    class="css-1c7yv3i e58tik10"
+    class="css-13hki03-TeaserWrapper e18of27r2"
     x="0"
     y="0"
   >
@@ -800,11 +800,11 @@ exports[`Teaser Page should render WithoutLeadWithoutBlock 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-16lxa1r e58tik11"
+        class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
       >
         <img
           alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
+          class="css-78zlx2-ImageWrapper-Teaser e1shv2yg0"
           height="500"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -815,7 +815,7 @@ https://unsplash.it/200/200 200w"
           width="500"
         />
         <header
-          class="css-0 e58tik12"
+          class="css-imydry-TeaserTitleWrapper e18of27r0"
         >
           <h1
             class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -837,7 +837,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Page should render WithoutPreTitle 1`] = `
 <DocumentFragment>
   <article
-    class="css-1c7yv3i e58tik10"
+    class="css-13hki03-TeaserWrapper e18of27r2"
     x="0"
     y="0"
   >
@@ -846,11 +846,11 @@ exports[`Teaser Page should render WithoutPreTitle 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-16lxa1r e58tik11"
+        class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
       >
         <img
           alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
+          class="css-78zlx2-ImageWrapper-Teaser e1shv2yg0"
           height="500"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -861,7 +861,7 @@ https://unsplash.it/200/200 200w"
           width="500"
         />
         <header
-          class="css-0 e58tik12"
+          class="css-imydry-TeaserTitleWrapper e18of27r0"
         >
           <h1
             class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -878,7 +878,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Page should render WithoutTitle 1`] = `
 <DocumentFragment>
   <article
-    class="css-1c7yv3i e58tik10"
+    class="css-13hki03-TeaserWrapper e18of27r2"
     x="0"
     y="0"
   >
@@ -887,11 +887,11 @@ exports[`Teaser Page should render WithoutTitle 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-16lxa1r e58tik11"
+        class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
       >
         <img
           alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
+          class="css-78zlx2-ImageWrapper-Teaser e1shv2yg0"
           height="500"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -902,7 +902,7 @@ https://unsplash.it/200/200 200w"
           width="500"
         />
         <header
-          class="css-0 e58tik12"
+          class="css-imydry-TeaserTitleWrapper e18of27r0"
         >
           <h1
             class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -919,7 +919,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser should render WithClassName 1`] = `
 <DocumentFragment>
   <article
-    class="css-1c7yv3i e58tik10"
+    class="css-13hki03-TeaserWrapper e18of27r2"
     x="0"
     y="0"
   >
@@ -928,11 +928,11 @@ exports[`Teaser should render WithClassName 1`] = `
       href="https://example.com"
     >
       <div
-        class="extra-classname css-16lxa1r e58tik11"
+        class="extra-classname css-1xecuhw-TeaserInnerWrapper e18of27r1"
       >
         <img
           alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
+          class="css-78zlx2-ImageWrapper-Teaser e1shv2yg0"
           height="500"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -943,7 +943,7 @@ https://unsplash.it/200/200 200w"
           width="500"
         />
         <header
-          class="css-0 e58tik12"
+          class="css-imydry-TeaserTitleWrapper e18of27r0"
         >
           <h1
             class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
@@ -960,7 +960,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser should render WithEmotion 1`] = `
 <DocumentFragment>
   <article
-    class="css-1c7yv3i e58tik10"
+    class="css-13hki03-TeaserWrapper e18of27r2"
     x="0"
     y="0"
   >
@@ -969,11 +969,11 @@ exports[`Teaser should render WithEmotion 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-16lxa1r e58tik11"
+        class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
       >
         <img
           alt="An image description"
-          class="css-1opieq8-Teaser e1nfkf2e0"
+          class="css-78zlx2-ImageWrapper-Teaser e1shv2yg0"
           height="500"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -984,7 +984,7 @@ https://unsplash.it/200/200 200w"
           width="500"
         />
         <header
-          class="css-0 e58tik12"
+          class="css-imydry-TeaserTitleWrapper e18of27r0"
         >
           <h1
             class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"

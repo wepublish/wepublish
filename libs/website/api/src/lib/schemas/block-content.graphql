@@ -60,6 +60,15 @@ fragment BlockWithoutTeaser on Block {
       }
     }
   }
+
+  ... on LinkPageBreakBlock {
+    text
+    richText
+    layoutOption
+    image {
+      ...FullImage
+    }
+  }
 }
 
 fragment FullTeaser on Teaser {

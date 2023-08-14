@@ -3,7 +3,7 @@
 exports[`Login Form Container should render WithClassName 1`] = `
 <DocumentFragment>
   <div
-    class="extra-classname css-1lk2np6 e13l1q4k0"
+    class="extra-classname css-v72p96-LoginFormWrapper e85oeuu1"
   >
     <label
       class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
@@ -38,7 +38,7 @@ exports[`Login Form Container should render WithClassName 1`] = `
       </span>
     </label>
     <form
-      class="css-taqjlb e13l1q4k1"
+      class="css-sunyqu-LoginFormForm e85oeuu0"
     >
       <div
         class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -46,8 +46,8 @@ exports[`Login Form Container should render WithClassName 1`] = `
         <label
           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
           data-shrink="false"
-          for=":r3:"
-          id=":r3:-label"
+          for=":r0:"
+          id=":r0:-label"
         >
           Email
         </label>
@@ -57,7 +57,7 @@ exports[`Login Form Container should render WithClassName 1`] = `
           <input
             aria-invalid="false"
             class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-            id=":r3:"
+            id=":r0:"
             name="email"
             type="email"
             value=""
@@ -230,15 +230,15 @@ exports[`Login Form Container should render WithEmail 1`] = `
 -           data-shrink="false"
 +           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 +           data-shrink="true"
-            for=":r0:"
-            id=":r0:-label"
+            for=":r3:"
+            id=":r3:-label"
           >
             Email
           </label>
 @@ -55,34 +55,57 @@
               aria-invalid="false"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r0:"
+              id=":r3:"
               name="email"
               type="email"
 -             value=""
@@ -306,7 +306,7 @@ exports[`Login Form Container should render WithEmail 1`] = `
 exports[`Login Form Container should render WithEmotion 1`] = `
 <DocumentFragment>
   <div
-    class="css-1lk2np6 e13l1q4k0"
+    class="css-v72p96-LoginFormWrapper e85oeuu1"
   >
     <label
       class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
@@ -341,7 +341,7 @@ exports[`Login Form Container should render WithEmotion 1`] = `
       </span>
     </label>
     <form
-      class="css-taqjlb e13l1q4k1"
+      class="css-sunyqu-LoginFormForm e85oeuu0"
     >
       <div
         class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
