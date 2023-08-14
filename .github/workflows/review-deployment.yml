@@ -40,9 +40,15 @@ jobs:
         run: |
           kubectl create namespace reviews --dry-run=client -o yaml | kubectl apply -f -
 
-      - name: Helm deploy application
-        run: |
-          helm upgrade --install review-${{ github.event.pull_request.number }}-app ./helm/charts/wepublish --namespace reviews
+      - name: Deploy helm
+        uses: deliverybot/helm@v1
+        with:
+          release: review-${{ github.event.pull_request.number }}-app
+          namespace: reviews
+          chart: ./helm/charts/wepublish
+          token: '${{ github.token }}'
+          values: |
+            name: foobar
 
       - name: Helm deploy media server
         run: |
