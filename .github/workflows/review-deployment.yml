@@ -80,8 +80,9 @@ jobs:
           release: review-${{ github.event.pull_request.number }}-app
           namespace: reviews
           chart: ./helm/charts/wepublish
-          token: '${{ github.token }}'
-          timeout: '30s'
+          token: ${{ github.token }}
+          timeout: 120s
+          atomic: false
           values: |
             deployment:
               image: ghcr.io/wepublish/wepublish:master-1691754692-797b6bc9fed5589fb2bbd2c4fe9d0930d7d2e929
