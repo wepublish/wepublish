@@ -40,7 +40,15 @@ jobs:
         run: |
           kubectl create namespace reviews --dry-run=client -o yaml | kubectl apply -f -
 
-      - name: Deploy helm
+      - name: Helm deploy postgres
+        uses: vimeda/helm@v1.7.0
+        with:
+          release: review-${{ github.event.pull_request.number }}-postgres
+          namespace: reviews
+          chart: oci://registry-1.docker.io/bitnamicharts/postgresql
+          timeout: '30s'
+
+      - name: Helm deploy app
         uses: vimeda/helm@v1.7.0
         with:
           release: review-${{ github.event.pull_request.number }}-app
@@ -71,9 +79,14 @@ jobs:
               enabled: false
 
       - name: Helm deploy media server
-        run: |
-          helm upgrade --install review-${{ github.event.pull_request.number }}-media-server karma-media-server --repo https://gitlab.com/api/v4/projects/38941346/packages/helm/stable --namespace reviews
-          
+        uses: vimeda/helm@v1.7.0
+        with:
+          release: review-${{ github.event.pull_request.number }}-media-server
+          namespace: reviews
+          repo: https://gitlab.com/api/v4/projects/38941346/packages/helm/stable
+          chart: karma-media-server
+          token: '${{ github.token }}'
+          timeout: '30s'
 
   notify:
     needs: deployment
