@@ -47,6 +47,28 @@ jobs:
           namespace: reviews
           chart: oci://registry-1.docker.io/bitnamicharts/postgresql
 
+      - name: Helm deploy media server
+        uses: vimeda/helm@v1.7.0
+        with:
+          release: review-${{ github.event.pull_request.number }}-media-server
+          namespace: reviews
+          repo: https://gitlab.com/api/v4/projects/38941346/packages/helm/stable
+          chart: karma-media-server
+          values: |
+            deployment:
+              image: ghcr.io/wepublish/karma-media-server:latest
+              env:
+                TOKEN: media-token
+                DEBUG: 'false'
+                NUM_CLUSTERS: '1'
+              replicaCount: 1
+            ingress:
+              enabled: true
+              host: media-${{ github.event.pull_request.number }}.reviews.wepublish.media
+              path: /
+            pvc:
+              storage: 2Gi
+
       - name: Helm deploy app
         uses: vimeda/helm@v1.7.0
         with:
@@ -76,16 +98,6 @@ jobs:
                 PEER_BY_DEFAULT: "true"
             website:
               enabled: false
-
-      - name: Helm deploy media server
-        uses: vimeda/helm@v1.7.0
-        with:
-          release: review-${{ github.event.pull_request.number }}-media-server
-          namespace: reviews
-          repo: https://gitlab.com/api/v4/projects/38941346/packages/helm/stable
-          chart: karma-media-server
-          token: '${{ github.token }}'
-          timeout: '30s'
 
   notify:
     needs: deployment
