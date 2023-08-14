@@ -47,7 +47,7 @@ jobs:
           namespace: reviews
           chart: ./helm/charts/wepublish
           token: '${{ github.token }}'
-          timeout: 30
+          timeout: '30s'
           values: |
             deployment:
               image: ghcr.io/wepublish/wepublish
