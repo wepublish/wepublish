@@ -63,12 +63,16 @@ jobs:
                 DEBUG: 'false'
                 NUM_CLUSTERS: '1'
               replicaCount: 1
+            service:
+              type: ClusterIP
+              port: 80
             ingress:
               enabled: true
               host: media-${{ github.event.pull_request.number }}.reviews.wepublish.media
               path: /
             pvc:
-              storage: 2Gi
+              storage: 20Gi
+            labels: { }
 
       - name: Helm deploy app
         uses: vimeda/helm@v1.7.0
