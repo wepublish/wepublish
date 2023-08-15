@@ -41,73 +41,62 @@ jobs:
           kubectl create namespace reviews --dry-run=client -o yaml | kubectl apply -f -
 
       - name: Helm deploy database
-        uses: vimeda/helm@v1.7.0
-        with:
-          release: review-${{ github.event.pull_request.number }}-database
-          namespace: reviews
-          chart: oci://registry-1.docker.io/bitnamicharts/postgresql
-          values: |
-            auth:
-              enablePostgresUser: true
-              postgresPassword: ""
-              database: "wepublish"
+        run: |
+          cat > values.yaml <<EOF
+          auth:
+            enablePostgresUser: true
+            postgresPassword: ""
+            database: "wepublish"
+          EOF
+          helm upgrade --install review-${{ github.event.pull_request.number }}-database oci://registry-1.docker.io/bitnamicharts/postgresql -n reviews -f values.yaml --wait
 
-      - name: Helm deploy media server
-        uses: vimeda/helm@v1.7.0
-        with:
-          release: review-${{ github.event.pull_request.number }}-media-server
-          namespace: reviews
-          repo: https://gitlab.com/api/v4/projects/38941346/packages/helm/stable
-          repo-alias: wepublish
-          chart: wepublish/karma-media-server
-          atomic: false
-          values: |
-            deployment:
-              image: ghcr.io/wepublish/karma-media-server:latest
-              env:
-                TOKEN: media-token
-                DEBUG: 'false'
-                NUM_CLUSTERS: '1'
-              replicaCount: 1
-            service:
-              type: ClusterIP
-              port: 80
-            ingress:
-              enabled: true
-              host: media-${{ github.event.pull_request.number }}.reviews.wepublish.media
-              path: /
-            pvc:
-              storage: 20Gi
-            labels: { }
+      - name: Helm deploy media-server
+        run: |
+          cat > values.yaml <<EOF
+          deployment:
+            image: ghcr.io/wepublish/karma-media-server:latest
+            env:
+              TOKEN: media-token
+              DEBUG: 'false'
+              NUM_CLUSTERS: '1'
+            replicaCount: 1
+          service:
+            type: ClusterIP
+            port: 80
+          ingress:
+            enabled: true
+            host: media-${{ github.event.pull_request.number }}.reviews.wepublish.media
+            path: /
+          pvc:
+            storage: 20Gi
+          labels: { }
+          EOF
+          helm upgrade --install review-${{ github.event.pull_request.number }}-media-server wepublish/karma-media-server --repo https://gitlab.com/api/v4/projects/38941346/packages/helm/stable -n reviews -f values.yaml
 
       - name: Helm deploy app
-        uses: vimeda/helm@v1.7.0
-        with:
-          release: review-${{ github.event.pull_request.number }}-app
-          namespace: reviews
-          chart: ./helm/charts/wepublish
-          token: ${{ github.token }}
-          timeout: 120s
-          atomic: false
-          values: |
-            deployment:
-              image: ghcr.io/wepublish/wepublish:master-1691754692-797b6bc9fed5589fb2bbd2c4fe9d0930d7d2e929
-              env:
-                API_URL: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.media
-                EDITOR_URL: https://editor-${{ github.event.pull_request.number }}.reviews.wepublish.media
-                WEBSITE_URL: https://website-${{ github.event.pull_request.number }}.reviews.wepublish.media
-                MEDIA_SERVER_URL: https://media-${{ github.event.pull_request.number }}.reviews.wepublish.media
-            api:
-              env:
-                GOOGLE_APPLICATION_CREDENTIALS: /var/secrets/google/key.json
-                DATABASE_URL: 'postgres://postgres@review-${{ github.event.pull_request.number }}-database-postgresql.reviews.svc.cluster.local:5432/wepublish?schema=public'
-                MEDIA_SERVER_TOKEN: 'media-token'
-                JWT_SECRET_KEY: 'jwt-token'
-            editor:
-              env:
-                PEER_BY_DEFAULT: "true"
-            website:
-              enabled: false
+        run: |
+          cat > values.yaml <<EOF
+          deployment:
+            image: ghcr.io/wepublish/wepublish:master-1691754692-797b6bc9fed5589fb2bbd2c4fe9d0930d7d2e929
+            env:
+              API_URL: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.media
+              EDITOR_URL: https://editor-${{ github.event.pull_request.number }}.reviews.wepublish.media
+              WEBSITE_URL: https://website-${{ github.event.pull_request.number }}.reviews.wepublish.media
+              MEDIA_SERVER_URL: https://media-${{ github.event.pull_request.number }}.reviews.wepublish.media
+          api:
+            env:
+              GOOGLE_APPLICATION_CREDENTIALS: /var/secrets/google/key.json
+              DATABASE_URL: 'postgres://@review-${{ github.event.pull_request.number }}-database-postgresql.reviews.svc.cluster.local:5432/wepublish?schema=public'
+              MEDIA_SERVER_TOKEN: 'media-token'
+              JWT_SECRET_KEY: 'jwt-token'
+          editor:
+            env:
+              PEER_BY_DEFAULT: "true"
+          website:
+            enabled: false
+          EOF
+          helm upgrade --install review-${{ github.event.pull_request.number }}-app ./helm/charts/wepublish -n reviews -f values.yaml
+          
 
   notify:
     needs: deployment
