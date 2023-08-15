@@ -49,12 +49,8 @@ jobs:
           values: |
             auth:
               enablePostgresUser: true
-              postgresPassword: "admin321"
-              username: "wepublish"
-              password: "wepublish"
+              postgresPassword: ""
               database: "wepublish"
-              replicationUsername: repl_user
-              replicationPassword: "repl_pass"
 
       - name: Helm deploy media server
         uses: vimeda/helm@v1.7.0
@@ -104,7 +100,7 @@ jobs:
             api:
               env:
                 GOOGLE_APPLICATION_CREDENTIALS: /var/secrets/google/key.json
-                DATABASE_URL: 'postgres://postgres:admin321@review-${{ github.event.pull_request.number }}-database-postgresql.reviews.svc.cluster.local:5432/wepublish?schema=public'
+                DATABASE_URL: 'postgres://postgres@review-${{ github.event.pull_request.number }}-database-postgresql.reviews.svc.cluster.local:5432/wepublish?schema=public'
                 MEDIA_SERVER_TOKEN: 'media-token'
                 JWT_SECRET_KEY: 'jwt-token'
             editor:
