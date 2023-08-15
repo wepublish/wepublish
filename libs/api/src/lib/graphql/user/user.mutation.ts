@@ -38,7 +38,10 @@ export const createUser = async (
   })
 
   // send register mail
-  const externalMailTemplateId = await mailContext.getUserTemplateName(UserEvent.ACCOUNT_CREATION)
+  const externalMailTemplateId = await mailContext.getUserTemplateName(
+    UserEvent.ACCOUNT_CREATION,
+    false
+  )
   await mailContext.sendMail({
     externalMailTemplateId,
     recipient,

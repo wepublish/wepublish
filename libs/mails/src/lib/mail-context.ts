@@ -69,8 +69,9 @@ export class MailContext implements MailContextInterface {
       templateData: data
     })
   }
-
-  async getUserTemplateName(event: UserEvent): Promise<string> {
+  async getUserTemplateName(event: UserEvent, throwOnMissing: true): Promise<string>
+  async getUserTemplateName(event: UserEvent, throwOnMissing?: false): Promise<string | null>
+  async getUserTemplateName(event: UserEvent, throwOnMissing = true): Promise<string | null> {
     const userFlowMail = await this.prisma.userFlowMail.findUnique({
       where: {
         event
@@ -80,10 +81,16 @@ export class MailContext implements MailContextInterface {
       }
     })
     if (!userFlowMail) {
-      throw new Error(`No UserFlowMail defined for event ${event}`)
+      if (throwOnMissing) {
+        throw new Error(`No UserFlowMail defined for event ${event}`)
+      }
+      return null
     }
     if (!userFlowMail.mailTemplate) {
-      throw new Error(`No email template defined for event ${event}`)
+      if (throwOnMissing) {
+        throw new Error(`No email template defined for event ${event}`)
+      }
+      return null
     }
     return userFlowMail.mailTemplate.externalMailTemplateId
   }
