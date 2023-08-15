@@ -80,18 +80,20 @@ export class MailContext implements MailContextInterface {
         mailTemplate: true
       }
     })
+
+    // Return null if no mailtemplete is defined and function is not called "throwOnMissing"
+    if (!throwOnMissing) {
+      return userFlowMail?.mailTemplate?.externalMailTemplateId || null
+    }
+
     if (!userFlowMail) {
-      if (throwOnMissing) {
-        throw new Error(`No UserFlowMail defined for event ${event}`)
-      }
-      return null
+      throw new Error(`No UserFlowMail defined for event ${event}`)
     }
+
     if (!userFlowMail.mailTemplate) {
-      if (throwOnMissing) {
-        throw new Error(`No email template defined for event ${event}`)
-      }
-      return null
+      throw new Error(`No email template defined for event ${event}`)
     }
+
     return userFlowMail.mailTemplate.externalMailTemplateId
   }
 
