@@ -20,7 +20,7 @@ jobs:
       - name: Set up Helm
         uses: azure/setup-helm@v1
         with:
-          version: '3.4.1'
+          version: '3.12.3'
 
       - name: Authenticate kubectl
         uses: 'google-github-actions/auth@v1'
@@ -48,7 +48,6 @@ jobs:
             postgresPassword: ""
             database: "wepublish"
           EOF
-          helm repo update
           helm upgrade --install review-${{ github.event.pull_request.number }}-database oci://registry-1.docker.io/bitnamicharts/postgresql -n reviews -f values.yaml --wait
 
       - name: Helm deploy media-server
