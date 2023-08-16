@@ -20,6 +20,7 @@ import {MailContext, MailController, mailLogType} from '@wepublish/mails'
 import {Action} from '../subscription-event-dictionary/subscription-event-dictionary.type'
 import {SubscriptionController} from '../subscription/subscription.controller'
 import {PaymentsService} from '@wepublish/payments'
+import {inspect} from 'util'
 
 const FIVE_MINUTES_IN_MS = 5 * 60 * 1000
 
@@ -73,14 +74,23 @@ export class PeriodicJobController {
         await this.markJobStarted(periodicJobRunObject.date)
       }
       try {
+        this.logger.log('Executing periodic job...')
+        this.logger.log('Processing custom mails...')
         await this.findAndSendCustomMails(periodicJobRunObject)
+        this.logger.log('Processing invoice creation...')
         await this.findAndCreateInvoices(periodicJobRunObject)
+        this.logger.log('Processing charge of invoices...')
         await this.findAndChargeDueInvoices(periodicJobRunObject)
+        this.logger.log('Processing deactivation of subscriptions with unpaid invoice...')
         await this.findAndDeactivateSubscriptions(periodicJobRunObject)
+        this.logger.log(
+          'Processing deactivation of subscriptions with which are not auto renewed...'
+        )
         await this.findAndDeactivateExpiredNotAutoRenewSubscription(periodicJobRunObject)
+        this.logger.log('Periodic job successfully finished.')
       } catch (e) {
-        await this.markJobFailed((e as Error).toString())
-        throw e
+        await this.markJobFailed(inspect(e))
+        throw new Error(inspect(e))
       }
       await this.markJobSuccessful()
     }
