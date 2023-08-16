@@ -1,0 +1,16 @@
+{
+  "name": "user-website",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/user/website/src",
+  "projectType": "library",
+  "tags": [],
+  "targets": {
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["libs/user/website/**/*.{ts,tsx,js,jsx}"]
+      }
+    }
+  }
+}
