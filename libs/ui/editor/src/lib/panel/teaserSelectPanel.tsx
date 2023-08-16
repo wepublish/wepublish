@@ -141,7 +141,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
-  const [filter, setFilter] = useState<ArticleFilter>({title: '', published: true})
+  const [filter, setFilter] = useState<ArticleFilter>({title: ''})
   const [eventFilter, setEventFilter] = useState<boolean>(true)
   const [metaDataProperties, setMetadataProperties] = useState<ListValue<TeaserMetadataProperty>[]>(
     initialTeaser.type === TeaserType.Custom && initialTeaser.properties
