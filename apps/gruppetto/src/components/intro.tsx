@@ -33,7 +33,7 @@ const Intro = () => {
 
   return (
     <IntroWrapper>
-      <H3 component="h1">Abonniere das Magazin für Radsport und Velokultur</H3>
+      <H3 component="h1">Abonniere das neue Velomagazin aus der Schweiz</H3>
 
       <Paragraph>
         Das «Gruppetto»-Magazin erzählt packende Radsport-Geschichten, beleuchtet weniger bekannte
@@ -41,13 +41,15 @@ const Intro = () => {
       </Paragraph>
 
       <Paragraph>
-        Wer das «Gruppetto» abonnieren möchte, kann dies hier auf der Website tun. Werden mindestens
-        3000 Abos abgeschlossen, erscheint das «Gruppetto» ab 2024 viermal jährlich.
+        Es ist diesen Sommer zum allerersten Mal gedruckt worden. Finden wir 3000 Abonnent:innen,
+        erscheint das «Gruppetto» ab 2024 viermal jährlich. Klappt das nicht, bleibt es bei der
+        einen Ausgabe und wir zahlen die Abogebühren zurück. Wer das «Gruppetto» abonnieren möchte,
+        kann dies hier auf der Website tun.
       </Paragraph>
 
       <Paragraph>
-        Du hast das Crowdfunding und damit die erste Ausgabe verpasst? Löse ein Ticket für den
-        Besenwagen und wir schicken dir die Nummer 1 noch per Post nachhause.
+        Du hast das Crowdfunding und damit die erste Ausgabe verpasst? Löse gleich hier unten ein
+        Ticket für den «Besenwagen» und wir schicken dir die Nummer 1 noch per Post nachhause.
       </Paragraph>
 
       <Paragraph>
