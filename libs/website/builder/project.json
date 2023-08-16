@@ -6,25 +6,26 @@
   "tags": [],
   "targets": {
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": ["libs/website/builder/**/*.{ts,tsx,js,jsx}"]
       }
     },
     "build": {
-      "executor": "@nrwl/js:tsc",
+      "executor": "@nx/js:tsc",
       "outputs": ["{options.outputPath}"],
       "options": {
         "outputPath": "dist/libs/website-builder",
         "tsConfig": "libs/website/builder/tsconfig.lib.json",
         "packageJson": "libs/website/builder/package.json",
         "main": "libs/website/builder/src/index.ts",
-        "assets": ["libs/website/builder/*.md"]
+        "assets": ["libs/website/builder/*.md"],
+        "updateBuildableProjectDepsInPackageJson": true
       }
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
         "jestConfig": "libs/website/builder/jest.config.ts",
