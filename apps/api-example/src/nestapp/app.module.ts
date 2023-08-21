@@ -27,11 +27,8 @@ import {JobsModule} from '@wepublish/jobs'
       autoSchemaFile: './apps/api-example/schema-v2.graphql',
       sortSchema: true,
       path: 'v2',
-      cors: {
-        credentials: true,
-        origin: true
-      },
-      cache: 'bounded'
+      cache: 'bounded',
+      playground: process.env.NODE_ENV === 'development'
     }),
     ApiModule,
     DashboardModule,

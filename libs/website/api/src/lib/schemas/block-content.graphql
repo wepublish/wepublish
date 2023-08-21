@@ -34,6 +34,41 @@ fragment BlockWithoutTeaser on Block {
   ... on HTMLBlock {
     html
   }
+
+  ... on BildwurfAdBlock {
+    zoneID
+  }
+
+  ... on EventBlock {
+    events {
+      ...FullEvent
+    }
+  }
+
+  ... on PollBlock {
+    poll {
+      ...FullPoll
+    }
+  }
+
+  ... on ListicleBlock {
+    items {
+      title
+      richText
+      image {
+        ...FullImage
+      }
+    }
+  }
+
+  ... on LinkPageBreakBlock {
+    text
+    richText
+    layoutOption
+    image {
+      ...FullImage
+    }
+  }
 }
 
 fragment FullTeaser on Teaser {
@@ -47,6 +82,30 @@ fragment FullTeaser on Teaser {
     preTitle
     title
     lead
+
+    article {
+      ...ArticleWithoutBlocks
+
+      blocks {
+        ...BlockWithoutTeaser
+      }
+    }
+  }
+
+  ... on PeerArticleTeaser {
+    style
+
+    image {
+      ...FullImage
+    }
+
+    preTitle
+    title
+    lead
+
+    peer {
+      ...FullPeer
+    }
 
     article {
       ...ArticleWithoutBlocks

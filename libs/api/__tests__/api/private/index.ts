@@ -626,9 +626,9 @@ export type FullCommentRatingSystem = {
 
 export type FullPoll = {
   __typename?: 'FullPoll';
-  answers?: Maybe<Array<PollAnswerWithVoteCount>>;
+  answers: Array<PollAnswerWithVoteCount>;
   closedAt?: Maybe<Scalars['DateTime']>;
-  externalVoteSources?: Maybe<Array<PollExternalVoteSource>>;
+  externalVoteSources: Array<PollExternalVoteSource>;
   id: Scalars['ID'];
   infoText?: Maybe<Scalars['RichText']>;
   opensAt: Scalars['DateTime'];
@@ -1826,7 +1826,7 @@ export type PollConnection = {
 
 export type PollExternalVote = {
   __typename?: 'PollExternalVote';
-  amount?: Maybe<Scalars['VoteValue']>;
+  amount: Scalars['VoteValue'];
   answerId: Scalars['ID'];
   id: Scalars['ID'];
 };
@@ -1835,7 +1835,7 @@ export type PollExternalVoteSource = {
   __typename?: 'PollExternalVoteSource';
   id: Scalars['ID'];
   source?: Maybe<Scalars['String']>;
-  voteAmounts?: Maybe<Array<PollExternalVote>>;
+  voteAmounts: Array<PollExternalVote>;
 };
 
 export type PollFilter = {
@@ -2910,9 +2910,32 @@ type FullBlock_YouTubeVideoBlock_Fragment = { __typename: 'YouTubeVideoBlock', v
 
 export type FullBlockFragment = FullBlock_BildwurfAdBlock_Fragment | FullBlock_CommentBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_EventBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_HtmlBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_PollBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_RichTextBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_TeaserGridFlexBlock_Fragment | FullBlock_TikTokVideoBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment;
 
+export type CommentRevisionFragment = { __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string };
+
+export type FullParentCommentFragment = { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }> };
+
 export type FullCommentUserFragment = { __typename?: 'User', id: string, name: string, firstName?: string | null, preferredName?: string | null, flair?: string | null, email: string };
 
-export type FullCommentFragment = { __typename?: 'Comment', id: string, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, user?: { __typename?: 'User', id: string, name: string, firstName?: string | null, preferredName?: string | null, flair?: string | null, email: string } | null };
+export type FullCommentFragment = { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, guestUserImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, user?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, firstName?: string | null, preferredName?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }>, parentComment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }> } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null, overriddenRatings?: Array<{ __typename?: 'overriddenRating', answerId: string, value?: number | null }> | null };
+
+export type CommentListQueryVariables = Exact<{
+  filter?: InputMaybe<CommentFilter>;
+  cursor?: InputMaybe<Scalars['ID']>;
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  order?: InputMaybe<SortOrder>;
+  sort?: InputMaybe<CommentSort>;
+}>;
+
+
+export type CommentListQuery = { __typename?: 'Query', comments: { __typename?: 'CommentConnection', totalCount: number, nodes: Array<{ __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, guestUserImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, user?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, firstName?: string | null, preferredName?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }>, parentComment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }> } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null, overriddenRatings?: Array<{ __typename?: 'overriddenRating', answerId: string, value?: number | null }> | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+
+export type CommentQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type CommentQuery = { __typename?: 'Query', comment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, guestUserImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, user?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, firstName?: string | null, preferredName?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }>, parentComment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }> } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null, overriddenRatings?: Array<{ __typename?: 'overriddenRating', answerId: string, value?: number | null }> | null } | null };
 
 export type ApproveCommentMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -2920,6 +2943,22 @@ export type ApproveCommentMutationVariables = Exact<{
 
 
 export type ApproveCommentMutation = { __typename?: 'Mutation', approveComment: { __typename?: 'Comment', state: CommentState } };
+
+export type RejectCommentMutationVariables = Exact<{
+  id: Scalars['ID'];
+  rejectionReason?: InputMaybe<CommentRejectionReason>;
+}>;
+
+
+export type RejectCommentMutation = { __typename?: 'Mutation', rejectComment: { __typename?: 'Comment', state: CommentState, rejectionReason?: CommentRejectionReason | null } };
+
+export type RequestChangesOnCommentMutationVariables = Exact<{
+  id: Scalars['ID'];
+  rejectionReason: CommentRejectionReason;
+}>;
+
+
+export type RequestChangesOnCommentMutation = { __typename?: 'Mutation', requestChangesOnComment: { __typename?: 'Comment', state: CommentState, rejectionReason?: CommentRejectionReason | null } };
 
 export type UpdateCommentMutationVariables = Exact<{
   id: Scalars['ID'];
@@ -2933,7 +2972,25 @@ export type UpdateCommentMutationVariables = Exact<{
 }>;
 
 
-export type UpdateCommentMutation = { __typename?: 'Mutation', updateComment: { __typename?: 'Comment', id: string, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, user?: { __typename?: 'User', id: string, name: string, firstName?: string | null, preferredName?: string | null, flair?: string | null, email: string } | null } };
+export type UpdateCommentMutation = { __typename?: 'Mutation', updateComment: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, guestUserImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, user?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, firstName?: string | null, preferredName?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }>, parentComment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }> } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null, overriddenRatings?: Array<{ __typename?: 'overriddenRating', answerId: string, value?: number | null }> | null } };
+
+export type CreateCommentMutationVariables = Exact<{
+  itemID: Scalars['ID'];
+  itemType: CommentItemType;
+  parentID?: InputMaybe<Scalars['ID']>;
+  text?: InputMaybe<Scalars['RichText']>;
+  tagIds?: InputMaybe<Array<Scalars['ID']> | Scalars['ID']>;
+}>;
+
+
+export type CreateCommentMutation = { __typename?: 'Mutation', createComment: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, source?: string | null, createdAt: string, modifiedAt: string, itemID: string, itemType: CommentItemType, guestUserImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, user?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, firstName?: string | null, preferredName?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }>, parentComment?: { __typename?: 'Comment', id: string, state: CommentState, rejectionReason?: CommentRejectionReason | null, guestUsername?: string | null, createdAt: string, modifiedAt: string, user?: { __typename?: 'User', id: string, name: string, email: string, emailVerifiedAt?: string | null, flair?: string | null, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }> } | null, revisions: Array<{ __typename?: 'CommentRevision', text?: Node[] | null, title?: string | null, lead?: string | null, createdAt: string }> } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null, overriddenRatings?: Array<{ __typename?: 'overriddenRating', answerId: string, value?: number | null }> | null } };
+
+export type DeleteCommentMutationVariables = Exact<{
+  deleteCommentId: Scalars['ID'];
+}>;
+
+
+export type DeleteCommentMutation = { __typename?: 'Mutation', deleteComment: { __typename?: 'Comment', id: string } };
 
 export type EventRefFragment = { __typename?: 'Event', id: string, name: string, description?: Node[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null };
 
@@ -3416,6 +3473,44 @@ export const FullAuthor = gql`
   ...AuthorRef
 }
     ${AuthorRef}`;
+export const FullPermission = gql`
+    fragment FullPermission on Permission {
+  id
+  description
+  deprecated
+}
+    `;
+export const FullUserRole = gql`
+    fragment FullUserRole on UserRole {
+  id
+  name
+  description
+  systemRole
+  permissions {
+    ...FullPermission
+  }
+}
+    ${FullPermission}`;
+export const FullUser = gql`
+    fragment FullUser on User {
+  id
+  name
+  email
+  emailVerifiedAt
+  flair
+  roles {
+    ...FullUserRole
+  }
+}
+    ${FullUserRole}`;
+export const CommentRevision = gql`
+    fragment CommentRevision on CommentRevision {
+  text
+  title
+  lead
+  createdAt
+}
+    `;
 export const FullCommentUser = gql`
     fragment FullCommentUser on User {
   id
@@ -3426,9 +3521,39 @@ export const FullCommentUser = gql`
   email
 }
     `;
+export const FullParentComment = gql`
+    fragment FullParentComment on Comment {
+  id
+  state
+  rejectionReason
+  user {
+    ...FullUser
+  }
+  guestUsername
+  revisions {
+    ...CommentRevision
+  }
+  createdAt
+  modifiedAt
+}
+    ${FullUser}
+${CommentRevision}`;
 export const FullComment = gql`
     fragment FullComment on Comment {
   id
+  state
+  rejectionReason
+  guestUsername
+  guestUserImage {
+    ...ImageRef
+  }
+  user {
+    ...FullUser
+  }
+  revisions {
+    ...CommentRevision
+  }
+  source
   user {
     ...FullCommentUser
   }
@@ -3436,8 +3561,23 @@ export const FullComment = gql`
   modifiedAt
   itemID
   itemType
+  parentComment {
+    ...FullParentComment
+  }
+  tags {
+    id
+    tag
+  }
+  overriddenRatings {
+    answerId
+    value
+  }
 }
-    ${FullCommentUser}`;
+    ${ImageRef}
+${FullUser}
+${CommentRevision}
+${FullCommentUser}
+${FullParentComment}`;
 export const FullImage = gql`
     fragment FullImage on Image {
   id
@@ -3779,36 +3919,6 @@ export const MutationPage = gql`
 }
     ${ImageRef}
 ${FullBlock}`;
-export const FullPermission = gql`
-    fragment FullPermission on Permission {
-  id
-  description
-  deprecated
-}
-    `;
-export const FullUserRole = gql`
-    fragment FullUserRole on UserRole {
-  id
-  name
-  description
-  systemRole
-  permissions {
-    ...FullPermission
-  }
-}
-    ${FullPermission}`;
-export const FullUser = gql`
-    fragment FullUser on User {
-  id
-  name
-  email
-  emailVerifiedAt
-  flair
-  roles {
-    ...FullUserRole
-  }
-}
-    ${FullUserRole}`;
 export const ArticleList = gql`
     query ArticleList($filter: String, $cursor: ID, $take: Int) {
   articles(take: $take, cursor: $cursor, filter: {title: $filter}) {
@@ -3980,10 +4090,56 @@ export const DeleteAuthor = gql`
   }
 }
     ${FullAuthor}`;
+export const CommentList = gql`
+    query CommentList($filter: CommentFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: CommentSort) {
+  comments(
+    filter: $filter
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...FullComment
+    }
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+    totalCount
+  }
+}
+    ${FullComment}`;
+export const Comment = gql`
+    query Comment($id: ID!) {
+  comment(id: $id) {
+    ...FullComment
+  }
+}
+    ${FullComment}`;
 export const ApproveComment = gql`
     mutation ApproveComment($id: ID!) {
   approveComment(id: $id) {
     state
+  }
+}
+    `;
+export const RejectComment = gql`
+    mutation RejectComment($id: ID!, $rejectionReason: CommentRejectionReason) {
+  rejectComment(id: $id, rejectionReason: $rejectionReason) {
+    state
+    rejectionReason
+  }
+}
+    `;
+export const RequestChangesOnComment = gql`
+    mutation RequestChangesOnComment($id: ID!, $rejectionReason: CommentRejectionReason!) {
+  requestChangesOnComment(id: $id, rejectionReason: $rejectionReason) {
+    state
+    rejectionReason
   }
 }
     `;
@@ -4003,6 +4159,26 @@ export const UpdateComment = gql`
   }
 }
     ${FullComment}`;
+export const CreateComment = gql`
+    mutation createComment($itemID: ID!, $itemType: CommentItemType!, $parentID: ID, $text: RichText, $tagIds: [ID!]) {
+  createComment(
+    itemID: $itemID
+    itemType: $itemType
+    parentID: $parentID
+    text: $text
+    tagIds: $tagIds
+  ) {
+    ...FullComment
+  }
+}
+    ${FullComment}`;
+export const DeleteComment = gql`
+    mutation DeleteComment($deleteCommentId: ID!) {
+  deleteComment(id: $deleteCommentId) {
+    id
+  }
+}
+    `;
 export const EventList = gql`
     query EventList($filter: EventFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: EventSort) {
   events(

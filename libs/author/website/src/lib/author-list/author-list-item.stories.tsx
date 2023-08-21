@@ -252,30 +252,32 @@ const author = {
     squareLargeURL: 'https://unsplash.it/500/500',
     squareMediumURL: 'https://unsplash.it/300/300',
     squareSmallURL: 'https://unsplash.it/200/200'
-  }
-} as Exclude<AuthorQuery['author'], undefined | null>
+  },
+  createdAt: '2023-01-01',
+  modifiedAt: '2023-01-01'
+} as NonNullable<AuthorQuery['author']>
 
 export default {
   component: AuthorListItem,
-  title: 'Components/AuthorListItem'
+  title: 'Components/AuthorList/Item'
 } as Meta
 
 export const Default = {
   args: {
-    author
+    ...author
   }
 }
 
 export const WithClassName = {
   args: {
-    author,
+    ...author,
     className: 'extra-classname'
   }
 }
 
 export const WithEmotion = {
   args: {
-    author,
+    ...author,
     css: css`
       background-color: #eee;
     `
@@ -284,18 +286,14 @@ export const WithEmotion = {
 
 export const WithoutJobTitle = {
   args: {
-    author: {
-      ...author,
-      jobTitle: null
-    }
+    ...author,
+    jobTitle: null
   }
 }
 
 export const WithoutImage = {
   args: {
-    author: {
-      ...author,
-      image: null
-    }
+    ...author,
+    image: null
   }
 }

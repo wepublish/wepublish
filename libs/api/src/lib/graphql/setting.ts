@@ -46,7 +46,15 @@ export const GraphQLSettingName = new GraphQLEnumType({
 export const GraphQLAllowedSettingVals = new GraphQLObjectType({
   name: 'AllowedSettingVals',
   fields: {
-    stringChoice: {type: GraphQLList(GraphQLString)},
+    stringChoice: {type: new GraphQLList(GraphQLString)},
+    boolChoice: {type: GraphQLBoolean}
+  }
+})
+
+export const GraphQLInputAllowedSettingVals = new GraphQLInputObjectType({
+  name: 'AllowedSettingValsInput',
+  fields: {
+    stringChoice: {type: new GraphQLList(GraphQLString)},
     boolChoice: {type: GraphQLBoolean}
   }
 })
@@ -67,7 +75,7 @@ export const GraphQLSettingRestrictionInput = new GraphQLInputObjectType({
     maxValue: {type: GraphQLInt},
     minValue: {type: GraphQLInt},
     inputLength: {type: GraphQLInt},
-    allowedValues: {type: GraphQLList(GraphQLAllowedSettingVals)}
+    allowedValues: {type: new GraphQLList(GraphQLInputAllowedSettingVals)}
   }
 })
 
@@ -81,24 +89,24 @@ export const GraphQLSettingInput = new GraphQLInputObjectType({
 export const GraphQLUpdateSettingArgs = new GraphQLInputObjectType({
   name: 'UpdateSettingArgs',
   fields: {
-    name: {type: GraphQLNonNull(GraphQLSettingName)},
-    value: {type: GraphQLNonNull(GraphQLSettingValueType)}
+    name: {type: new GraphQLNonNull(GraphQLSettingName)},
+    value: {type: new GraphQLNonNull(GraphQLSettingValueType)}
   }
 })
 
 export const GraphQLSettingsInput = new GraphQLInputObjectType({
   name: 'SettingsInput',
   fields: {
-    value: {type: GraphQLList(GraphQLUpdateSettingArgs)}
+    value: {type: new GraphQLList(GraphQLUpdateSettingArgs)}
   }
 })
 
 export const GraphQLSetting = new GraphQLObjectType<Setting, Context>({
   name: 'Setting',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
-    name: {type: GraphQLNonNull(GraphQLSettingName)},
-    value: {type: GraphQLNonNull(GraphQLSettingValueType)},
+    id: {type: new GraphQLNonNull(GraphQLID)},
+    name: {type: new GraphQLNonNull(GraphQLSettingName)},
+    value: {type: new GraphQLNonNull(GraphQLSettingValueType)},
     settingRestriction: {type: GraphQLSettingRestriction}
   }
 })

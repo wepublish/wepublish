@@ -3,7 +3,7 @@
 exports[`Event should render Default 1`] = `
 <DocumentFragment>
   <article
-    class="css-sxg9br"
+    class="css-uh6yvp-EventWrapper ec2zadl3"
   >
     <div
       data-testid="fake-head"
@@ -49,7 +49,7 @@ exports[`Event should render Default 1`] = `
     </script>
     <img
       alt="DSC07717"
-      class="css-1qnf57e"
+      class="css-1q15kr5-ImageWrapper-Event e1shv2yg0"
       height="6000"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
@@ -60,13 +60,13 @@ https://unsplash.it/200/100 200w"
       width="4000"
     />
     <div
-      class="css-64g2ef"
+      class="css-1wax86k-EventMeta ec2zadl2"
     >
       <div
-        class="css-whbs21"
+        class="css-10k8kcv-MetaWrapper ec2zadl1"
       >
         <div
-          class="css-1vfcp9h"
+          class="css-j7qr3l-EventStart ec2zadl0"
         >
           <svg
             fill="currentColor"
@@ -93,7 +93,7 @@ https://unsplash.it/200/100 200w"
          25.02.2023 07:30
       </div>
       <div
-        class="css-whbs21"
+        class="css-10k8kcv-MetaWrapper ec2zadl1"
       >
         <svg
           fill="currentColor"
@@ -116,7 +116,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-1gn0lpx"
+      class="css-6jfyyt-TitleBlockWrapper ek0hk6a0"
     >
       <h1
         class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
@@ -125,7 +125,7 @@ https://unsplash.it/200/100 200w"
       </h1>
     </div>
     <div
-      class="css-0"
+      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
     >
       <div
         data-gramm="false"
@@ -478,7 +478,7 @@ https://unsplash.it/200/100 200w"
 exports[`Event should render WithClassName 1`] = `
 <DocumentFragment>
   <article
-    class="extra-classname css-sxg9br"
+    class="extra-classname css-uh6yvp-EventWrapper ec2zadl3"
   >
     <div
       data-testid="fake-head"
@@ -524,7 +524,7 @@ exports[`Event should render WithClassName 1`] = `
     </script>
     <img
       alt="DSC07717"
-      class="css-1qnf57e"
+      class="css-1q15kr5-ImageWrapper-Event e1shv2yg0"
       height="6000"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
@@ -535,13 +535,13 @@ https://unsplash.it/200/100 200w"
       width="4000"
     />
     <div
-      class="css-64g2ef"
+      class="css-1wax86k-EventMeta ec2zadl2"
     >
       <div
-        class="css-whbs21"
+        class="css-10k8kcv-MetaWrapper ec2zadl1"
       >
         <div
-          class="css-1vfcp9h"
+          class="css-j7qr3l-EventStart ec2zadl0"
         >
           <svg
             fill="currentColor"
@@ -568,7 +568,7 @@ https://unsplash.it/200/100 200w"
          25.02.2023 07:30
       </div>
       <div
-        class="css-whbs21"
+        class="css-10k8kcv-MetaWrapper ec2zadl1"
       >
         <svg
           fill="currentColor"
@@ -591,7 +591,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-1gn0lpx"
+      class="css-6jfyyt-TitleBlockWrapper ek0hk6a0"
     >
       <h1
         class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
@@ -600,7 +600,7 @@ https://unsplash.it/200/100 200w"
       </h1>
     </div>
     <div
-      class="css-0"
+      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
     >
       <div
         data-gramm="false"
@@ -953,7 +953,7 @@ https://unsplash.it/200/100 200w"
 exports[`Event should render WithEmotion 1`] = `
 <DocumentFragment>
   <article
-    class="css-sxg9br"
+    class="css-uh6yvp-EventWrapper ec2zadl3"
   >
     <div
       data-testid="fake-head"
@@ -999,7 +999,7 @@ exports[`Event should render WithEmotion 1`] = `
     </script>
     <img
       alt="DSC07717"
-      class="css-1qnf57e"
+      class="css-1q15kr5-ImageWrapper-Event e1shv2yg0"
       height="6000"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
@@ -1010,13 +1010,13 @@ https://unsplash.it/200/100 200w"
       width="4000"
     />
     <div
-      class="css-64g2ef"
+      class="css-1wax86k-EventMeta ec2zadl2"
     >
       <div
-        class="css-whbs21"
+        class="css-10k8kcv-MetaWrapper ec2zadl1"
       >
         <div
-          class="css-1vfcp9h"
+          class="css-j7qr3l-EventStart ec2zadl0"
         >
           <svg
             fill="currentColor"
@@ -1043,7 +1043,7 @@ https://unsplash.it/200/100 200w"
          25.02.2023 07:30
       </div>
       <div
-        class="css-whbs21"
+        class="css-10k8kcv-MetaWrapper ec2zadl1"
       >
         <svg
           fill="currentColor"
@@ -1066,7 +1066,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-1gn0lpx"
+      class="css-6jfyyt-TitleBlockWrapper ek0hk6a0"
     >
       <h1
         class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
@@ -1075,7 +1075,7 @@ https://unsplash.it/200/100 200w"
       </h1>
     </div>
     <div
-      class="css-0"
+      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
     >
       <div
         data-gramm="false"
@@ -1428,17 +1428,17 @@ https://unsplash.it/200/100 200w"
 exports[`Event should render WithError 1`] = `
 <DocumentFragment>
   <article
-    class="css-sxg9br"
+    class="css-uh6yvp-EventWrapper ec2zadl3"
   >
     <div
-      class="css-1gn0lpx"
+      class="css-6jfyyt-TitleBlockWrapper ek0hk6a0"
     >
       <h1
         class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
       />
     </div>
     <div
-      class="css-0"
+      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
     >
       <div
         data-gramm="false"
@@ -1454,17 +1454,17 @@ exports[`Event should render WithError 1`] = `
 exports[`Event should render WithLoading 1`] = `
 <DocumentFragment>
   <article
-    class="css-sxg9br"
+    class="css-uh6yvp-EventWrapper ec2zadl3"
   >
     <div
-      class="css-1gn0lpx"
+      class="css-6jfyyt-TitleBlockWrapper ek0hk6a0"
     >
       <h1
         class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
       />
     </div>
     <div
-      class="css-0"
+      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
     >
       <div
         data-gramm="false"
@@ -1480,7 +1480,7 @@ exports[`Event should render WithLoading 1`] = `
 exports[`Event should render WithoutImage 1`] = `
 <DocumentFragment>
   <article
-    class="css-sxg9br"
+    class="css-uh6yvp-EventWrapper ec2zadl3"
   >
     <div
       data-testid="fake-head"
@@ -1521,13 +1521,13 @@ exports[`Event should render WithoutImage 1`] = `
       {"@context":"http://schema.org","@type":"Event","startDate":"2023-02-24T09:00:00Z","endDate":"2023-02-25T07:30:00Z","duration":"P0Y0M0DT22H30M0S","keywords":"Concert","eventStatus":"SCHEDULED","location":"Basel","name":"Cool concert","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
     </script>
     <div
-      class="css-64g2ef"
+      class="css-1wax86k-EventMeta ec2zadl2"
     >
       <div
-        class="css-whbs21"
+        class="css-10k8kcv-MetaWrapper ec2zadl1"
       >
         <div
-          class="css-1vfcp9h"
+          class="css-j7qr3l-EventStart ec2zadl0"
         >
           <svg
             fill="currentColor"
@@ -1554,7 +1554,7 @@ exports[`Event should render WithoutImage 1`] = `
          25.02.2023 07:30
       </div>
       <div
-        class="css-whbs21"
+        class="css-10k8kcv-MetaWrapper ec2zadl1"
       >
         <svg
           fill="currentColor"
@@ -1577,7 +1577,7 @@ exports[`Event should render WithoutImage 1`] = `
       </div>
     </div>
     <div
-      class="css-1gn0lpx"
+      class="css-6jfyyt-TitleBlockWrapper ek0hk6a0"
     >
       <h1
         class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
@@ -1586,7 +1586,7 @@ exports[`Event should render WithoutImage 1`] = `
       </h1>
     </div>
     <div
-      class="css-0"
+      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
     >
       <div
         data-gramm="false"

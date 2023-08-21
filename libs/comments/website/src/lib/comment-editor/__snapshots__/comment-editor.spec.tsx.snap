@@ -3,7 +3,7 @@
 exports[`CommentEditor should render Anonymous 1`] = `
 <DocumentFragment>
   <form
-    class="css-2klgun"
+    class="css-1bvtu7-CommentEditorWrapper eip3wac3"
   >
     <div
       class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -106,7 +106,7 @@ exports[`CommentEditor should render Anonymous 1`] = `
           aria-hidden="true"
           class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline css-1sqnrkk-MuiInputBase-input-MuiOutlinedInput-input"
           readonly=""
-          style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding: 0px; width: 100%;"
+          style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding-top: 0px; padding-bottom: 0px; width: 100%;"
           tabindex="-1"
         />
         <fieldset
@@ -130,10 +130,10 @@ exports[`CommentEditor should render Anonymous 1`] = `
       </p>
     </div>
     <div
-      class="css-qxt11j"
+      class="css-1cg3x35-CommentEditorChallengeWrapper eip3wac1"
     >
       <div
-        class="css-zxc9jp"
+        class="css-14ia1kp-CommentEditorChallenge eip3wac0"
       >
         <svg
           viewBox="0,0,200,200"
@@ -229,7 +229,7 @@ exports[`CommentEditor should render Anonymous 1`] = `
       </div>
     </div>
     <div
-      class="css-ja06uy"
+      class="css-1xzu5ii-CommentEditorActions eip3wac2"
     >
       <button
         class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall css-11qr2p8-MuiButtonBase-root-MuiButton-root"
@@ -280,7 +280,7 @@ exports[`CommentEditor should render Anonymous 1`] = `
 exports[`CommentEditor should render AnonymousFilled 1`] = `
 <DocumentFragment>
   <form
-    class="css-2klgun"
+    class="css-1bvtu7-CommentEditorWrapper eip3wac3"
   >
     <div
       class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -383,7 +383,7 @@ exports[`CommentEditor should render AnonymousFilled 1`] = `
           aria-hidden="true"
           class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline css-1sqnrkk-MuiInputBase-input-MuiOutlinedInput-input"
           readonly=""
-          style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding: 0px; width: 100%;"
+          style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding-top: 0px; padding-bottom: 0px; width: 100%;"
           tabindex="-1"
         />
         <fieldset
@@ -407,10 +407,10 @@ exports[`CommentEditor should render AnonymousFilled 1`] = `
       </p>
     </div>
     <div
-      class="css-qxt11j"
+      class="css-1cg3x35-CommentEditorChallengeWrapper eip3wac1"
     >
       <div
-        class="css-zxc9jp"
+        class="css-14ia1kp-CommentEditorChallenge eip3wac0"
       >
         <svg
           viewBox="0,0,200,200"
@@ -506,7 +506,7 @@ exports[`CommentEditor should render AnonymousFilled 1`] = `
       </div>
     </div>
     <div
-      class="css-ja06uy"
+      class="css-1xzu5ii-CommentEditorActions eip3wac2"
     >
       <button
         class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall css-11qr2p8-MuiButtonBase-root-MuiButton-root"
@@ -557,7 +557,7 @@ exports[`CommentEditor should render AnonymousFilled 1`] = `
 exports[`CommentEditor should render AnonymousInvalid 1`] = `
 <DocumentFragment>
   <form
-    class="css-2klgun"
+    class="css-1bvtu7-CommentEditorWrapper eip3wac3"
   >
     <div
       class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -660,7 +660,7 @@ exports[`CommentEditor should render AnonymousInvalid 1`] = `
           aria-hidden="true"
           class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline css-1sqnrkk-MuiInputBase-input-MuiOutlinedInput-input"
           readonly=""
-          style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding: 0px; width: 100%;"
+          style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding-top: 0px; padding-bottom: 0px; width: 100%;"
           tabindex="-1"
         />
         <fieldset
@@ -684,10 +684,10 @@ exports[`CommentEditor should render AnonymousInvalid 1`] = `
       </p>
     </div>
     <div
-      class="css-qxt11j"
+      class="css-1cg3x35-CommentEditorChallengeWrapper eip3wac1"
     >
       <div
-        class="css-zxc9jp"
+        class="css-14ia1kp-CommentEditorChallenge eip3wac0"
       >
         <svg
           viewBox="0,0,200,200"
@@ -783,7 +783,7 @@ exports[`CommentEditor should render AnonymousInvalid 1`] = `
       </div>
     </div>
     <div
-      class="css-ja06uy"
+      class="css-1xzu5ii-CommentEditorActions eip3wac2"
     >
       <button
         class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall css-11qr2p8-MuiButtonBase-root-MuiButton-root"
@@ -834,7 +834,7 @@ exports[`CommentEditor should render AnonymousInvalid 1`] = `
 exports[`CommentEditor should render Cancel 1`] = `
 <DocumentFragment>
   <form
-    class="css-2klgun"
+    class="css-1bvtu7-CommentEditorWrapper eip3wac3"
   >
     <div
       class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -842,8 +842,8 @@ exports[`CommentEditor should render Cancel 1`] = `
       <label
         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
         data-shrink="false"
-        for=":ri:"
-        id=":ri:-label"
+        for=":rc:"
+        id=":rc:-label"
       >
         Name
       </label>
@@ -853,7 +853,7 @@ exports[`CommentEditor should render Cancel 1`] = `
         <input
           aria-invalid="false"
           class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-          id=":ri:"
+          id=":rc:"
           name="guestUsername"
           placeholder="Dein Name"
           type="text"
@@ -879,8 +879,8 @@ exports[`CommentEditor should render Cancel 1`] = `
       <label
         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
         data-shrink="false"
-        for=":rj:"
-        id=":rj:-label"
+        for=":rd:"
+        id=":rd:-label"
       >
         Titel
       </label>
@@ -890,7 +890,7 @@ exports[`CommentEditor should render Cancel 1`] = `
         <input
           aria-invalid="false"
           class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-          id=":rj:"
+          id=":rd:"
           name="title"
           placeholder="Gib Deinem Beitrag einen Titel."
           type="text"
@@ -916,8 +916,8 @@ exports[`CommentEditor should render Cancel 1`] = `
       <label
         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
         data-shrink="false"
-        for=":rk:"
-        id=":rk:-label"
+        for=":re:"
+        id=":re:-label"
       >
         Kommentar
       </label>
@@ -925,10 +925,10 @@ exports[`CommentEditor should render Cancel 1`] = `
         class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-multiline css-8ewcdo-MuiInputBase-root-MuiOutlinedInput-root"
       >
         <textarea
-          aria-describedby=":rk:-helper-text"
+          aria-describedby=":re:-helper-text"
           aria-invalid="false"
           class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline css-1sqnrkk-MuiInputBase-input-MuiOutlinedInput-input"
-          id=":rk:"
+          id=":re:"
           name="comment"
           placeholder="Beitrag verfassen"
           style="height: 0px; overflow: hidden;"
@@ -937,7 +937,7 @@ exports[`CommentEditor should render Cancel 1`] = `
           aria-hidden="true"
           class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline css-1sqnrkk-MuiInputBase-input-MuiOutlinedInput-input"
           readonly=""
-          style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding: 0px; width: 100%;"
+          style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding-top: 0px; padding-bottom: 0px; width: 100%;"
           tabindex="-1"
         />
         <fieldset
@@ -955,16 +955,16 @@ exports[`CommentEditor should render Cancel 1`] = `
       </div>
       <p
         class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-contained css-1wc848c-MuiFormHelperText-root"
-        id=":rk:-helper-text"
+        id=":re:-helper-text"
       >
         0 / 1000 Zeichen
       </p>
     </div>
     <div
-      class="css-qxt11j"
+      class="css-1cg3x35-CommentEditorChallengeWrapper eip3wac1"
     >
       <div
-        class="css-zxc9jp"
+        class="css-14ia1kp-CommentEditorChallenge eip3wac0"
       >
         <svg
           viewBox="0,0,200,200"
@@ -1028,8 +1028,8 @@ exports[`CommentEditor should render Cancel 1`] = `
         <label
           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
           data-shrink="false"
-          for=":rl:"
-          id=":rl:-label"
+          for=":rf:"
+          id=":rf:-label"
         >
           Captcha
         </label>
@@ -1039,7 +1039,7 @@ exports[`CommentEditor should render Cancel 1`] = `
           <input
             aria-invalid="false"
             class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-            id=":rl:"
+            id=":rf:"
             name="challenge.challengeSolution"
             type="text"
             value=""
@@ -1060,7 +1060,7 @@ exports[`CommentEditor should render Cancel 1`] = `
       </div>
     </div>
     <div
-      class="css-ja06uy"
+      class="css-1xzu5ii-CommentEditorActions eip3wac2"
     >
       <button
         class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall css-11qr2p8-MuiButtonBase-root-MuiButton-root"
@@ -1111,289 +1111,7 @@ exports[`CommentEditor should render Cancel 1`] = `
 exports[`CommentEditor should render LoggedIn 1`] = `
 <DocumentFragment>
   <form
-    class="css-2klgun"
-  >
-    <div
-      class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
-    >
-      <label
-        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
-        data-shrink="false"
-        for=":rc:"
-        id=":rc:-label"
-      >
-        Titel
-      </label>
-      <div
-        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl css-md26zr-MuiInputBase-root-MuiOutlinedInput-root"
-      >
-        <input
-          aria-invalid="false"
-          class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-          id=":rc:"
-          name="title"
-          placeholder="Gib Deinem Beitrag einen Titel."
-          type="text"
-          value=""
-        />
-        <fieldset
-          aria-hidden="true"
-          class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
-        >
-          <legend
-            class="css-yjsfm1"
-          >
-            <span>
-              Titel
-            </span>
-          </legend>
-        </fieldset>
-      </div>
-    </div>
-    <div
-      class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
-    >
-      <label
-        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
-        data-shrink="false"
-        for=":rd:"
-        id=":rd:-label"
-      >
-        Kommentar
-      </label>
-      <div
-        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-multiline css-8ewcdo-MuiInputBase-root-MuiOutlinedInput-root"
-      >
-        <textarea
-          aria-describedby=":rd:-helper-text"
-          aria-invalid="false"
-          class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline css-1sqnrkk-MuiInputBase-input-MuiOutlinedInput-input"
-          id=":rd:"
-          name="comment"
-          placeholder="Beitrag verfassen"
-          style="height: 0px; overflow: hidden;"
-        />
-        <textarea
-          aria-hidden="true"
-          class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline css-1sqnrkk-MuiInputBase-input-MuiOutlinedInput-input"
-          readonly=""
-          style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding: 0px; width: 100%;"
-          tabindex="-1"
-        />
-        <fieldset
-          aria-hidden="true"
-          class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
-        >
-          <legend
-            class="css-yjsfm1"
-          >
-            <span>
-              Kommentar
-            </span>
-          </legend>
-        </fieldset>
-      </div>
-      <p
-        class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-contained css-1wc848c-MuiFormHelperText-root"
-        id=":rd:-helper-text"
-      >
-        0 / 1000 Zeichen
-      </p>
-    </div>
-    <div
-      class="css-ja06uy"
-    >
-      <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall css-11qr2p8-MuiButtonBase-root-MuiButton-root"
-        tabindex="0"
-        type="submit"
-      >
-        Kommentieren
-        <span
-          class="MuiButton-endIcon MuiButton-iconSizeSmall css-155nyw6-MuiButton-endIcon"
-        >
-          <svg
-            fill="currentColor"
-            height="1em"
-            stroke="currentColor"
-            stroke-width="0"
-            viewBox="0 0 24 24"
-            width="1em"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M0 0h24v24H0z"
-              fill="none"
-            />
-            <path
-              d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"
-            />
-          </svg>
-        </span>
-        <span
-          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-        />
-      </button>
-      <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeSmall MuiButton-textSizeSmall css-uak1h2-MuiButtonBase-root-MuiButton-root"
-        tabindex="0"
-        type="reset"
-      >
-        Abbrechen
-        <span
-          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-        />
-      </button>
-    </div>
-  </form>
-</DocumentFragment>
-`;
-
-exports[`CommentEditor should render LoggedInFilled 1`] = `
-<DocumentFragment>
-  <form
-    class="css-2klgun"
-  >
-    <div
-      class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
-    >
-      <label
-        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
-        data-shrink="false"
-        for=":re:"
-        id=":re:-label"
-      >
-        Titel
-      </label>
-      <div
-        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl css-md26zr-MuiInputBase-root-MuiOutlinedInput-root"
-      >
-        <input
-          aria-invalid="false"
-          class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-          id=":re:"
-          name="title"
-          placeholder="Gib Deinem Beitrag einen Titel."
-          type="text"
-          value=""
-        />
-        <fieldset
-          aria-hidden="true"
-          class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
-        >
-          <legend
-            class="css-yjsfm1"
-          >
-            <span>
-              Titel
-            </span>
-          </legend>
-        </fieldset>
-      </div>
-    </div>
-    <div
-      class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
-    >
-      <label
-        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
-        data-shrink="false"
-        for=":rf:"
-        id=":rf:-label"
-      >
-        Kommentar
-      </label>
-      <div
-        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-multiline css-8ewcdo-MuiInputBase-root-MuiOutlinedInput-root"
-      >
-        <textarea
-          aria-describedby=":rf:-helper-text"
-          aria-invalid="false"
-          class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline css-1sqnrkk-MuiInputBase-input-MuiOutlinedInput-input"
-          id=":rf:"
-          name="comment"
-          placeholder="Beitrag verfassen"
-          style="height: 0px; overflow: hidden;"
-        />
-        <textarea
-          aria-hidden="true"
-          class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline css-1sqnrkk-MuiInputBase-input-MuiOutlinedInput-input"
-          readonly=""
-          style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding: 0px; width: 100%;"
-          tabindex="-1"
-        />
-        <fieldset
-          aria-hidden="true"
-          class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
-        >
-          <legend
-            class="css-yjsfm1"
-          >
-            <span>
-              Kommentar
-            </span>
-          </legend>
-        </fieldset>
-      </div>
-      <p
-        class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-contained css-1wc848c-MuiFormHelperText-root"
-        id=":rf:-helper-text"
-      >
-        0 / 1000 Zeichen
-      </p>
-    </div>
-    <div
-      class="css-ja06uy"
-    >
-      <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall css-11qr2p8-MuiButtonBase-root-MuiButton-root"
-        tabindex="0"
-        type="submit"
-      >
-        Kommentieren
-        <span
-          class="MuiButton-endIcon MuiButton-iconSizeSmall css-155nyw6-MuiButton-endIcon"
-        >
-          <svg
-            fill="currentColor"
-            height="1em"
-            stroke="currentColor"
-            stroke-width="0"
-            viewBox="0 0 24 24"
-            width="1em"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M0 0h24v24H0z"
-              fill="none"
-            />
-            <path
-              d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"
-            />
-          </svg>
-        </span>
-        <span
-          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-        />
-      </button>
-      <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeSmall MuiButton-textSizeSmall css-uak1h2-MuiButtonBase-root-MuiButton-root"
-        tabindex="0"
-        type="reset"
-      >
-        Abbrechen
-        <span
-          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-        />
-      </button>
-    </div>
-  </form>
-</DocumentFragment>
-`;
-
-exports[`CommentEditor should render LoggedInInvalid 1`] = `
-<DocumentFragment>
-  <form
-    class="css-2klgun"
+    class="css-1bvtu7-CommentEditorWrapper eip3wac3"
   >
     <div
       class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -1459,7 +1177,7 @@ exports[`CommentEditor should render LoggedInInvalid 1`] = `
           aria-hidden="true"
           class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline css-1sqnrkk-MuiInputBase-input-MuiOutlinedInput-input"
           readonly=""
-          style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding: 0px; width: 100%;"
+          style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding-top: 0px; padding-bottom: 0px; width: 100%;"
           tabindex="-1"
         />
         <fieldset
@@ -1483,7 +1201,289 @@ exports[`CommentEditor should render LoggedInInvalid 1`] = `
       </p>
     </div>
     <div
-      class="css-ja06uy"
+      class="css-1xzu5ii-CommentEditorActions eip3wac2"
+    >
+      <button
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall css-11qr2p8-MuiButtonBase-root-MuiButton-root"
+        tabindex="0"
+        type="submit"
+      >
+        Kommentieren
+        <span
+          class="MuiButton-endIcon MuiButton-iconSizeSmall css-155nyw6-MuiButton-endIcon"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"
+            />
+          </svg>
+        </span>
+        <span
+          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+        />
+      </button>
+      <button
+        class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeSmall MuiButton-textSizeSmall css-uak1h2-MuiButtonBase-root-MuiButton-root"
+        tabindex="0"
+        type="reset"
+      >
+        Abbrechen
+        <span
+          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+        />
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`CommentEditor should render LoggedInFilled 1`] = `
+<DocumentFragment>
+  <form
+    class="css-1bvtu7-CommentEditorWrapper eip3wac3"
+  >
+    <div
+      class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
+    >
+      <label
+        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
+        data-shrink="false"
+        for=":ri:"
+        id=":ri:-label"
+      >
+        Titel
+      </label>
+      <div
+        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl css-md26zr-MuiInputBase-root-MuiOutlinedInput-root"
+      >
+        <input
+          aria-invalid="false"
+          class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
+          id=":ri:"
+          name="title"
+          placeholder="Gib Deinem Beitrag einen Titel."
+          type="text"
+          value=""
+        />
+        <fieldset
+          aria-hidden="true"
+          class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
+        >
+          <legend
+            class="css-yjsfm1"
+          >
+            <span>
+              Titel
+            </span>
+          </legend>
+        </fieldset>
+      </div>
+    </div>
+    <div
+      class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
+    >
+      <label
+        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
+        data-shrink="false"
+        for=":rj:"
+        id=":rj:-label"
+      >
+        Kommentar
+      </label>
+      <div
+        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-multiline css-8ewcdo-MuiInputBase-root-MuiOutlinedInput-root"
+      >
+        <textarea
+          aria-describedby=":rj:-helper-text"
+          aria-invalid="false"
+          class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline css-1sqnrkk-MuiInputBase-input-MuiOutlinedInput-input"
+          id=":rj:"
+          name="comment"
+          placeholder="Beitrag verfassen"
+          style="height: 0px; overflow: hidden;"
+        />
+        <textarea
+          aria-hidden="true"
+          class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline css-1sqnrkk-MuiInputBase-input-MuiOutlinedInput-input"
+          readonly=""
+          style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding-top: 0px; padding-bottom: 0px; width: 100%;"
+          tabindex="-1"
+        />
+        <fieldset
+          aria-hidden="true"
+          class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
+        >
+          <legend
+            class="css-yjsfm1"
+          >
+            <span>
+              Kommentar
+            </span>
+          </legend>
+        </fieldset>
+      </div>
+      <p
+        class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-contained css-1wc848c-MuiFormHelperText-root"
+        id=":rj:-helper-text"
+      >
+        0 / 1000 Zeichen
+      </p>
+    </div>
+    <div
+      class="css-1xzu5ii-CommentEditorActions eip3wac2"
+    >
+      <button
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall css-11qr2p8-MuiButtonBase-root-MuiButton-root"
+        tabindex="0"
+        type="submit"
+      >
+        Kommentieren
+        <span
+          class="MuiButton-endIcon MuiButton-iconSizeSmall css-155nyw6-MuiButton-endIcon"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"
+            />
+          </svg>
+        </span>
+        <span
+          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+        />
+      </button>
+      <button
+        class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeSmall MuiButton-textSizeSmall css-uak1h2-MuiButtonBase-root-MuiButton-root"
+        tabindex="0"
+        type="reset"
+      >
+        Abbrechen
+        <span
+          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+        />
+      </button>
+    </div>
+  </form>
+</DocumentFragment>
+`;
+
+exports[`CommentEditor should render LoggedInInvalid 1`] = `
+<DocumentFragment>
+  <form
+    class="css-1bvtu7-CommentEditorWrapper eip3wac3"
+  >
+    <div
+      class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
+    >
+      <label
+        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
+        data-shrink="false"
+        for=":rk:"
+        id=":rk:-label"
+      >
+        Titel
+      </label>
+      <div
+        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl css-md26zr-MuiInputBase-root-MuiOutlinedInput-root"
+      >
+        <input
+          aria-invalid="false"
+          class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
+          id=":rk:"
+          name="title"
+          placeholder="Gib Deinem Beitrag einen Titel."
+          type="text"
+          value=""
+        />
+        <fieldset
+          aria-hidden="true"
+          class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
+        >
+          <legend
+            class="css-yjsfm1"
+          >
+            <span>
+              Titel
+            </span>
+          </legend>
+        </fieldset>
+      </div>
+    </div>
+    <div
+      class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
+    >
+      <label
+        class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
+        data-shrink="false"
+        for=":rl:"
+        id=":rl:-label"
+      >
+        Kommentar
+      </label>
+      <div
+        class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-multiline css-8ewcdo-MuiInputBase-root-MuiOutlinedInput-root"
+      >
+        <textarea
+          aria-describedby=":rl:-helper-text"
+          aria-invalid="false"
+          class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline css-1sqnrkk-MuiInputBase-input-MuiOutlinedInput-input"
+          id=":rl:"
+          name="comment"
+          placeholder="Beitrag verfassen"
+          style="height: 0px; overflow: hidden;"
+        />
+        <textarea
+          aria-hidden="true"
+          class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline css-1sqnrkk-MuiInputBase-input-MuiOutlinedInput-input"
+          readonly=""
+          style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding-top: 0px; padding-bottom: 0px; width: 100%;"
+          tabindex="-1"
+        />
+        <fieldset
+          aria-hidden="true"
+          class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
+        >
+          <legend
+            class="css-yjsfm1"
+          >
+            <span>
+              Kommentar
+            </span>
+          </legend>
+        </fieldset>
+      </div>
+      <p
+        class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-contained css-1wc848c-MuiFormHelperText-root"
+        id=":rl:-helper-text"
+      >
+        0 / 1000 Zeichen
+      </p>
+    </div>
+    <div
+      class="css-1xzu5ii-CommentEditorActions eip3wac2"
     >
       <button
         class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall css-11qr2p8-MuiButtonBase-root-MuiButton-root"
@@ -1534,7 +1534,7 @@ exports[`CommentEditor should render LoggedInInvalid 1`] = `
 exports[`CommentEditor should render WithChallengeError 1`] = `
 <DocumentFragment>
   <form
-    class="css-2klgun"
+    class="css-1bvtu7-CommentEditorWrapper eip3wac3"
   >
     <div
       class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -1637,7 +1637,7 @@ exports[`CommentEditor should render WithChallengeError 1`] = `
           aria-hidden="true"
           class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline css-1sqnrkk-MuiInputBase-input-MuiOutlinedInput-input"
           readonly=""
-          style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding: 0px; width: 100%;"
+          style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding-top: 0px; padding-bottom: 0px; width: 100%;"
           tabindex="-1"
         />
         <fieldset
@@ -1686,7 +1686,7 @@ exports[`CommentEditor should render WithChallengeError 1`] = `
       </div>
     </div>
     <div
-      class="css-ja06uy"
+      class="css-1xzu5ii-CommentEditorActions eip3wac2"
     >
       <button
         class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall css-11qr2p8-MuiButtonBase-root-MuiButton-root"
@@ -1737,7 +1737,7 @@ exports[`CommentEditor should render WithChallengeError 1`] = `
 exports[`CommentEditor should render WithError 1`] = `
 <DocumentFragment>
   <form
-    class="css-2klgun"
+    class="css-1bvtu7-CommentEditorWrapper eip3wac3"
   >
     <div
       class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -1840,7 +1840,7 @@ exports[`CommentEditor should render WithError 1`] = `
           aria-hidden="true"
           class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline css-1sqnrkk-MuiInputBase-input-MuiOutlinedInput-input"
           readonly=""
-          style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding: 0px; width: 100%;"
+          style="visibility: hidden; position: absolute; overflow: hidden; height: 0px; top: 0px; left: 0px; transform: translateZ(0); padding-top: 0px; padding-bottom: 0px; width: 100%;"
           tabindex="-1"
         />
         <fieldset
@@ -1864,10 +1864,10 @@ exports[`CommentEditor should render WithError 1`] = `
       </p>
     </div>
     <div
-      class="css-qxt11j"
+      class="css-1cg3x35-CommentEditorChallengeWrapper eip3wac1"
     >
       <div
-        class="css-zxc9jp"
+        class="css-14ia1kp-CommentEditorChallenge eip3wac0"
       >
         <svg
           viewBox="0,0,200,200"
@@ -1988,7 +1988,7 @@ exports[`CommentEditor should render WithError 1`] = `
       </div>
     </div>
     <div
-      class="css-ja06uy"
+      class="css-1xzu5ii-CommentEditorActions eip3wac2"
     >
       <button
         class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeSmall MuiButton-containedSizeSmall css-11qr2p8-MuiButtonBase-root-MuiButton-root"

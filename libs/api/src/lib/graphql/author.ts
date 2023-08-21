@@ -22,28 +22,28 @@ import {createProxyingResolver} from '../utility'
 export const GraphQLAuthorLink = new GraphQLObjectType<Author, Context>({
   name: 'AuthorLink',
   fields: {
-    title: {type: GraphQLNonNull(GraphQLString)},
-    url: {type: GraphQLNonNull(GraphQLString)}
+    title: {type: new GraphQLNonNull(GraphQLString)},
+    url: {type: new GraphQLNonNull(GraphQLString)}
   }
 })
 
 export const GraphQLAuthor = new GraphQLObjectType<Author, Context>({
   name: 'Author',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLID)},
 
-    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
+    modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
 
-    name: {type: GraphQLNonNull(GraphQLString)},
-    slug: {type: GraphQLNonNull(GraphQLSlug)},
+    name: {type: new GraphQLNonNull(GraphQLString)},
+    slug: {type: new GraphQLNonNull(GraphQLSlug)},
     url: {
-      type: GraphQLNonNull(GraphQLString),
+      type: new GraphQLNonNull(GraphQLString),
       resolve: createProxyingResolver((author, _, {urlAdapter}) => {
         return urlAdapter.getAuthorURL(author)
       })
     },
-    links: {type: GraphQLList(GraphQLNonNull(GraphQLAuthorLink))},
+    links: {type: new GraphQLList(new GraphQLNonNull(GraphQLAuthorLink))},
     bio: {type: GraphQLRichText},
     jobTitle: {type: GraphQLString},
     image: {
@@ -74,26 +74,26 @@ export const GraphQLAuthorSort = new GraphQLEnumType({
 export const GraphQLAuthorConnection = new GraphQLObjectType<any, Context>({
   name: 'AuthorConnection',
   fields: {
-    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAuthor)))},
-    pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)},
-    totalCount: {type: GraphQLNonNull(GraphQLInt)}
+    nodes: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLAuthor)))},
+    pageInfo: {type: new GraphQLNonNull(GraphQLPageInfo)},
+    totalCount: {type: new GraphQLNonNull(GraphQLInt)}
   }
 })
 
 export const GraphQLAuthorLinkInput = new GraphQLInputObjectType({
   name: 'AuthorLinkInput',
   fields: {
-    title: {type: GraphQLNonNull(GraphQLString)},
-    url: {type: GraphQLNonNull(GraphQLString)}
+    title: {type: new GraphQLNonNull(GraphQLString)},
+    url: {type: new GraphQLNonNull(GraphQLString)}
   }
 })
 
 export const GraphQLAuthorInput = new GraphQLInputObjectType({
   name: 'AuthorInput',
   fields: {
-    name: {type: GraphQLNonNull(GraphQLString)},
-    slug: {type: GraphQLNonNull(GraphQLSlug)},
-    links: {type: GraphQLList(GraphQLNonNull(GraphQLAuthorLinkInput))},
+    name: {type: new GraphQLNonNull(GraphQLString)},
+    slug: {type: new GraphQLNonNull(GraphQLSlug)},
+    links: {type: new GraphQLList(new GraphQLNonNull(GraphQLAuthorLinkInput))},
     bio: {type: GraphQLRichText},
     jobTitle: {type: GraphQLString},
     imageID: {type: GraphQLID}

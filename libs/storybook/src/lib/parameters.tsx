@@ -1,7 +1,22 @@
-import {InMemoryCache} from '@apollo/client'
+import {DefaultOptions, InMemoryCache} from '@apollo/client'
 import {MockedProvider} from '@apollo/client/testing'
 import {Preview} from '@storybook/react'
 import {possibleTypes} from '@wepublish/website/api'
+
+const defaultOptions: DefaultOptions = {
+  watchQuery: {
+    fetchPolicy: 'no-cache',
+    errorPolicy: 'all'
+  },
+  query: {
+    fetchPolicy: 'no-cache',
+    errorPolicy: 'all'
+  },
+  mutate: {
+    fetchPolicy: 'no-cache',
+    errorPolicy: 'all'
+  }
+}
 
 const cache = new InMemoryCache({
   possibleTypes: possibleTypes.possibleTypes,
@@ -15,7 +30,9 @@ export const parameters = {
   apolloClient: {
     MockedProvider,
     cache,
-    showWarnings: false
+    showWarnings: false,
+    assumeImmutableResults: true,
+    defaultOptions
   },
   options: {
     storySort: {

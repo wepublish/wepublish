@@ -1,6 +1,13 @@
 import {ApolloError} from '@apollo/client'
 import {Meta} from '@storybook/react'
-import {FullAuthorFragment, FullImageFragment, PageQuery} from '@wepublish/website/api'
+import {
+  Event,
+  EventStatus,
+  FullAuthorFragment,
+  FullImageFragment,
+  FullPollFragment,
+  PageQuery
+} from '@wepublish/website/api'
 import {Page} from './page'
 
 const image = {
@@ -36,6 +43,147 @@ const image = {
   squareSmallURL: 'https://unsplash.it/200/200'
 } as FullImageFragment
 
+const event = {
+  id: '16ca80ce-a2d0-44dc-8c87-b735e4b08877',
+  name: 'Cool concert',
+  description: [
+    {
+      type: 'paragraph',
+      children: [
+        {
+          text: 'Lorem ipsum dolor sit amet, '
+        },
+        {
+          text: 'consectetur adipiscing elit, ',
+          bold: true
+        },
+        {
+          text: 'sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ',
+          italic: true
+        },
+        {
+          text: 'Ut enim ad minim veniam, ',
+          underline: true
+        },
+        {
+          text: 'quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ',
+          strikethrough: true
+        },
+        {
+          text: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. '
+        },
+        {
+          text: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+        }
+      ]
+    },
+    {
+      type: 'paragraph',
+      children: [
+        {
+          text: 'Lorem ipsum dolor sit amet, '
+        },
+        {
+          text: 'consectetur adipiscing elit, ',
+          bold: true
+        },
+        {
+          text: 'sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ',
+          italic: true
+        },
+        {
+          text: 'Ut enim ad minim veniam, ',
+          underline: true
+        },
+        {
+          text: 'quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ',
+          strikethrough: true
+        },
+        {
+          text: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. '
+        },
+        {
+          text: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+        }
+      ]
+    },
+    {
+      type: 'paragraph',
+      children: [
+        {
+          text: 'Lorem ipsum dolor sit amet, '
+        },
+        {
+          text: 'consectetur adipiscing elit, ',
+          bold: true
+        },
+        {
+          text: 'sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ',
+          italic: true
+        },
+        {
+          text: 'Ut enim ad minim veniam, ',
+          underline: true
+        },
+        {
+          text: 'quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ',
+          strikethrough: true
+        },
+        {
+          text: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. '
+        },
+        {
+          text: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+        }
+      ]
+    },
+    {
+      type: 'paragraph',
+      children: [
+        {
+          text: 'Lorem ipsum dolor sit amet, '
+        },
+        {
+          text: 'consectetur adipiscing elit, ',
+          bold: true
+        },
+        {
+          text: 'sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ',
+          italic: true
+        },
+        {
+          text: 'Ut enim ad minim veniam, ',
+          underline: true
+        },
+        {
+          text: 'quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. ',
+          strikethrough: true
+        },
+        {
+          text: 'Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. '
+        },
+        {
+          text: 'Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+        }
+      ]
+    }
+  ],
+  status: EventStatus.Scheduled,
+  location: 'Basel',
+  image,
+  tags: [
+    {
+      id: 'cldwtndha026601nui49kyxrk',
+      tag: 'Concert',
+      __typename: 'Tag'
+    }
+  ],
+  startsAt: '2023-02-24T09:00:00.000Z',
+  endsAt: '2023-02-25T07:30:00.000Z',
+  url: 'https://example.com',
+  __typename: 'Event'
+} as Event
+
 const author = {
   __typename: 'Author',
   id: 'clgp1hfio50331801rejmrk6sj3',
@@ -70,8 +218,61 @@ const author = {
       __typename: 'AuthorLink'
     }
   ],
-  image
+  image,
+  createdAt: '2023-01-01',
+  modifiedAt: '2023-01-01'
 } as FullAuthorFragment
+
+const poll = {
+  __typename: 'FullPoll',
+  id: '1234',
+  question: 'Question',
+  infoText: [
+    {
+      type: 'paragraph',
+      children: [
+        {
+          text: 'Normal text,'
+        }
+      ]
+    }
+  ],
+  externalVoteSources: [
+    {
+      id: '1234',
+      voteAmounts: [
+        {
+          id: '1',
+          __typename: 'PollExternalVote',
+          amount: 10,
+          answerId: '1234'
+        },
+        {
+          id: '2',
+          __typename: 'PollExternalVote',
+          amount: 5,
+          answerId: '1234-1234'
+        }
+      ]
+    }
+  ],
+  opensAt: '2023-01-01',
+  closedAt: '2033-01-01',
+  answers: [
+    {
+      id: '1234',
+      pollId: '1234',
+      votes: 1,
+      answer: 'Ja'
+    },
+    {
+      id: '1234-1234',
+      pollId: '1234',
+      votes: 5,
+      answer: 'Nein'
+    }
+  ]
+} as FullPollFragment
 
 const page = {
   __typename: 'Page',
@@ -311,7 +512,51 @@ const page = {
       ]
     },
     {
-      __typename: 'ListicleBlock'
+      __typename: 'ListicleBlock',
+      items: [
+        {
+          title: 'Foobar',
+          richText: [
+            {
+              type: 'paragraph',
+              children: [
+                {
+                  text: 'Lorem Ipsum'
+                }
+              ]
+            }
+          ],
+          image
+        },
+        {
+          title: 'Foobar',
+          richText: [
+            {
+              type: 'paragraph',
+              children: [
+                {
+                  text: 'Lorem Ipsum'
+                }
+              ]
+            }
+          ],
+          image
+        },
+        {
+          title: 'Foobar',
+          richText: [
+            {
+              type: 'paragraph',
+              children: [
+                {
+                  text: 'Lorem Ipsum'
+                }
+              ]
+            }
+          ],
+          image
+        }
+      ]
     },
     {
       __typename: 'QuoteBlock',
@@ -319,10 +564,122 @@ const page = {
       author: 'By an Author'
     },
     {
-      __typename: 'LinkPageBreakBlock'
+      __typename: 'LinkPageBreakBlock',
+      text: 'Break block test',
+      linkText: null,
+      linkURL: null,
+      styleOption: 'default',
+      richText: [
+        {
+          type: 'paragraph',
+          children: [
+            {
+              text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
+            }
+          ]
+        },
+        {
+          type: 'paragraph',
+          children: [
+            {
+              text: ''
+            }
+          ]
+        },
+        {
+          type: 'heading-three',
+          children: [
+            {
+              text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit'
+            }
+          ]
+        },
+        {
+          type: 'heading-three',
+          children: [
+            {
+              text: ''
+            }
+          ]
+        },
+        {
+          type: 'paragraph',
+          children: [
+            {
+              bold: true,
+              text: ' Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.',
+              italic: true
+            },
+            {
+              text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit',
+              italic: true
+            },
+            {
+              text: 'Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.',
+              italic: true,
+              underline: true
+            }
+          ]
+        }
+      ],
+      linkTarget: null,
+      hideButton: false,
+      templateOption: 'none',
+      layoutOption: 'image-left',
+      image
     },
     {
-      __typename: 'EmbedBlock'
+      __typename: 'EmbedBlock',
+      url: 'https://www.example.com',
+      title: 'Title',
+      width: 560,
+      height: 314,
+      styleCustom: '',
+      sandbox: ''
+    },
+    {
+      __typename: 'BildwurfAdBlock',
+      zoneID: '77348'
+    },
+    {
+      __typename: 'FacebookPostBlock',
+      userID: 'ladolcekita',
+      postID: 'pfbid02JcJeoMg7KasRL8dNjgRJJDFiU8YzeBzEeGeXtqpsE2bnTmeH2y6LRsu7RnmhkPxel'
+    },
+    {
+      __typename: 'FacebookVideoBlock',
+      userID: '100064959061177',
+      videoID: '1310370486335266'
+    },
+    {
+      __typename: 'InstagramPostBlock',
+      postID: 'CvACOxxIqT2'
+    },
+    {
+      __typename: 'PolisConversationBlock',
+      conversationID: '744469711'
+    },
+    {
+      __typename: 'SoundCloudTrackBlock',
+      trackID: '744469711'
+    },
+    {
+      __typename: 'TikTokVideoBlock',
+      userID: 'scout2015',
+      videoID: '6718335390845095173'
+    },
+    {
+      __typename: 'TwitterTweetBlock',
+      userID: 'WePublish_media',
+      tweetID: '1600079498845863937'
+    },
+    {
+      __typename: 'VimeoVideoBlock',
+      videoID: '104626862'
+    },
+    {
+      __typename: 'YouTubeVideoBlock',
+      videoID: 'CCOdQsZa15o'
     },
     {
       __typename: 'TeaserGridBlock',
@@ -1917,16 +2274,18 @@ const page = {
       html: '<div>Some HTML embed</div>\n<script>console.log("Some HTML embed")</script>'
     },
     {
-      __typename: 'PollBlock'
+      __typename: 'PollBlock',
+      poll
     },
     {
       __typename: 'CommentBlock'
     },
     {
-      __typename: 'EventBlock'
+      __typename: 'EventBlock',
+      events: [event]
     }
   ]
-} as Exclude<PageQuery['page'], undefined | null>
+} as NonNullable<PageQuery['page']>
 
 export default {
   component: Page,

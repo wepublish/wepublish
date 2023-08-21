@@ -18,14 +18,14 @@ import {GraphQLPageInfo} from './common'
 export const GraphQLInvoiceItem = new GraphQLObjectType<InvoiceItem, Context>({
   name: 'InvoiceItem',
   fields: {
-    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    name: {type: GraphQLNonNull(GraphQLString)},
+    createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
+    modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
+    name: {type: new GraphQLNonNull(GraphQLString)},
     description: {type: GraphQLString},
-    quantity: {type: GraphQLNonNull(GraphQLInt)},
-    amount: {type: GraphQLNonNull(GraphQLInt)},
+    quantity: {type: new GraphQLNonNull(GraphQLInt)},
+    amount: {type: new GraphQLNonNull(GraphQLInt)},
     total: {
-      type: GraphQLNonNull(GraphQLInt),
+      type: new GraphQLNonNull(GraphQLInt),
       resolve: createProxyingResolver(({amount, quantity}) => {
         return amount * quantity
       })
@@ -36,19 +36,19 @@ export const GraphQLInvoiceItem = new GraphQLObjectType<InvoiceItem, Context>({
 export const GraphQLInvoice = new GraphQLObjectType<InvoiceWithItems, Context>({
   name: 'Invoice',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLID)},
 
-    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
+    modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
 
-    mail: {type: GraphQLNonNull(GraphQLString)},
+    mail: {type: new GraphQLNonNull(GraphQLString)},
     description: {type: GraphQLString},
     paidAt: {type: GraphQLDateTime},
     manuallySetAsPaidByUserId: {type: GraphQLID},
-    items: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLInvoiceItem)))},
+    items: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLInvoiceItem)))},
     canceledAt: {type: GraphQLDateTime},
     total: {
-      type: GraphQLNonNull(GraphQLInt),
+      type: new GraphQLNonNull(GraphQLInt),
       resolve: createProxyingResolver(({items}) => {
         return (items || []).reduce((previousValue, currentValue) => {
           return previousValue + currentValue.quantity * currentValue.amount
@@ -61,20 +61,20 @@ export const GraphQLInvoice = new GraphQLObjectType<InvoiceWithItems, Context>({
 export const GraphQLPublicInvoice = new GraphQLObjectType<InvoiceWithItems, Context>({
   name: 'Invoice',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLID)},
 
-    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
+    modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
 
-    mail: {type: GraphQLNonNull(GraphQLString)},
+    mail: {type: new GraphQLNonNull(GraphQLString)},
 
     description: {type: GraphQLString},
     paidAt: {type: GraphQLDateTime},
     canceledAt: {type: GraphQLDateTime},
-    items: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLInvoiceItem)))},
-    subscriptionID: {type: GraphQLNonNull(GraphQLID)},
+    items: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLInvoiceItem)))},
+    subscriptionID: {type: new GraphQLNonNull(GraphQLID)},
     total: {
-      type: GraphQLNonNull(GraphQLInt),
+      type: new GraphQLNonNull(GraphQLInt),
       resolve: createProxyingResolver(({items}) => {
         return (items || []).reduce((previousValue, currentValue) => {
           return previousValue + currentValue.quantity * currentValue.amount
@@ -107,32 +107,32 @@ export const GraphQLInvoiceSort = new GraphQLEnumType({
 export const GraphQLInvoiceConnection = new GraphQLObjectType<any, Context>({
   name: 'InvoiceConnection',
   fields: {
-    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLInvoice)))},
-    pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)},
-    totalCount: {type: GraphQLNonNull(GraphQLInt)}
+    nodes: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLInvoice)))},
+    pageInfo: {type: new GraphQLNonNull(GraphQLPageInfo)},
+    totalCount: {type: new GraphQLNonNull(GraphQLInt)}
   }
 })
 
 export const GraphQLInvoiceItemInput = new GraphQLInputObjectType({
   name: 'InvoiceItemInput',
   fields: {
-    name: {type: GraphQLNonNull(GraphQLString)},
+    name: {type: new GraphQLNonNull(GraphQLString)},
     description: {type: GraphQLString},
-    quantity: {type: GraphQLNonNull(GraphQLInt)},
-    amount: {type: GraphQLNonNull(GraphQLInt)},
-    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)}
+    quantity: {type: new GraphQLNonNull(GraphQLInt)},
+    amount: {type: new GraphQLNonNull(GraphQLInt)},
+    createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
+    modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)}
   }
 })
 
 export const GraphQLInvoiceInput = new GraphQLInputObjectType({
   name: 'InvoiceInput',
   fields: {
-    mail: {type: GraphQLNonNull(GraphQLString)},
+    mail: {type: new GraphQLNonNull(GraphQLString)},
     description: {type: GraphQLString},
     paidAt: {type: GraphQLDateTime},
     subscriptionID: {type: GraphQLID},
     manuallySetAsPaidByUserId: {type: GraphQLID},
-    items: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLInvoiceItemInput)))}
+    items: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLInvoiceItemInput)))}
   }
 })

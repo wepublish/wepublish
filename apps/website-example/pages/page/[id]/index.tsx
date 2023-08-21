@@ -1,29 +1,20 @@
-import {ApiV1, PageContainer, PageSEO} from '@wepublish/website'
+import {ApiV1, PageContainer} from '@wepublish/website'
 import {GetStaticPaths, GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 
-type PageByIdProps = {
-  page?: ApiV1.Page
-}
-
-export default function PageById({page}: PageByIdProps) {
+export default function PageById() {
   const {
     query: {id}
   } = useRouter()
 
-  return (
-    <>
-      {page && <PageSEO page={page} />}
-      <PageContainer id={id as string} />
-    </>
-  )
+  return <PageContainer id={id as string} />
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
   return {
     paths: [],
-    fallback: true
+    fallback: 'blocking'
   }
 }
 
@@ -32,17 +23,17 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
   const {publicRuntimeConfig} = getConfig()
 
   const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
-  const data = await client.query({
+  await client.query({
     query: ApiV1.PageDocument,
     variables: {
       id
     }
   })
 
+  const props = ApiV1.addClientCacheToV1Props(client, {})
+
   return {
-    props: {
-      page: data?.data?.page
-    },
+    props,
     revalidate: 60 // every 60 seconds
   }
 }

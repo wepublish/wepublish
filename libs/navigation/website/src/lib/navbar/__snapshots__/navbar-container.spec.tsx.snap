@@ -3,16 +3,16 @@
 exports[`Navbar Container should render Default 1`] = `
 <DocumentFragment>
   <nav
-    class="css-4i0nrb"
+    class="css-1xe741k-NavbarWrapper ei6evl28"
   >
     <header
-      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-pivuyh-MuiPaper-root-MuiAppBar-root"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular css-1ahoq89-MuiToolbar-root"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl27 css-1jnr00-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
-          class="css-1hacyix"
+          class="css-1mutcct-NavbarMain ei6evl26"
         >
           <button
             aria-label="Menu"
@@ -42,8 +42,27 @@ exports[`Navbar Container should render Default 1`] = `
             />
           </button>
           <div
-            class="css-xqufyo"
-          />
+            class="css-zom751-NavbarMainItems ei6evl25"
+          >
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+              href="/"
+            >
+              Home
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+              href="/a/abcd"
+            >
+              Artikel
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+              href="https://google.com"
+            >
+              Google
+            </a>
+          </div>
         </div>
       </div>
     </header>
@@ -54,16 +73,16 @@ exports[`Navbar Container should render Default 1`] = `
 exports[`Navbar Container should render WithClassName 1`] = `
 <DocumentFragment>
   <nav
-    class="extra-classname css-4i0nrb"
+    class="extra-classname css-1xe741k-NavbarWrapper ei6evl28"
   >
     <header
-      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-pivuyh-MuiPaper-root-MuiAppBar-root"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular css-1ahoq89-MuiToolbar-root"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl27 css-1jnr00-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
-          class="css-1hacyix"
+          class="css-1mutcct-NavbarMain ei6evl26"
         >
           <button
             aria-label="Menu"
@@ -93,8 +112,27 @@ exports[`Navbar Container should render WithClassName 1`] = `
             />
           </button>
           <div
-            class="css-xqufyo"
-          />
+            class="css-zom751-NavbarMainItems ei6evl25"
+          >
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+              href="/"
+            >
+              Home
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+              href="/a/abcd"
+            >
+              Artikel
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+              href="https://google.com"
+            >
+              Google
+            </a>
+          </div>
         </div>
       </div>
     </header>
@@ -105,16 +143,16 @@ exports[`Navbar Container should render WithClassName 1`] = `
 exports[`Navbar Container should render WithEmotion 1`] = `
 <DocumentFragment>
   <nav
-    class="css-4i0nrb"
+    class="css-1xe741k-NavbarWrapper ei6evl28"
   >
     <header
-      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-pivuyh-MuiPaper-root-MuiAppBar-root"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular css-1ahoq89-MuiToolbar-root"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl27 css-1jnr00-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
-          class="css-1hacyix"
+          class="css-1mutcct-NavbarMain ei6evl26"
         >
           <button
             aria-label="Menu"
@@ -144,8 +182,27 @@ exports[`Navbar Container should render WithEmotion 1`] = `
             />
           </button>
           <div
-            class="css-xqufyo"
-          />
+            class="css-zom751-NavbarMainItems ei6evl25"
+          >
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+              href="/"
+            >
+              Home
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+              href="/a/abcd"
+            >
+              Artikel
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+              href="https://google.com"
+            >
+              Google
+            </a>
+          </div>
         </div>
       </div>
     </header>
