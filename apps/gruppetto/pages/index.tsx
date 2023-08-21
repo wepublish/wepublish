@@ -34,6 +34,12 @@ export function Index() {
         </WebsiteBuilderProvider>
       </SubscriptionWrapper>
 
+      <iframe
+        src="https://api.tiun.store/store_api/v1/store/gruppetto/snippets/button?color=black&border=false&language=de"
+        width="151px"
+        height="50px"
+        frameBorder="0"></iframe>
+
       <BreakImage id={'ueber-uns'}>
         <div>
           <Typography component="h2" variant="h4" marginBottom={3}>
