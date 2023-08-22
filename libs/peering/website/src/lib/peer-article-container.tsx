@@ -1,28 +1,21 @@
-import {QueryResult} from '@apollo/client'
 import {ArticleWrapper} from '@wepublish/article/website'
-import {PeerArticleQuery, usePeerArticleQuery, usePeerQuery} from '@wepublish/website/api'
+import {usePeerArticleQuery, usePeerQuery} from '@wepublish/website/api'
 import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {useEffect} from 'react'
 
 type PeerIdOrSlug =
   | {articleId: string; peerId?: string; peerSlug?: never}
   | {articleId: string; peerId?: never; peerSlug: string}
 
-export type PeerArticleContainerProps = PeerIdOrSlug & {
-  onQuery?: (
-    queryResult: Pick<QueryResult<PeerArticleQuery>, 'data' | 'loading' | 'error' | 'refetch'>
-  ) => void
-} & BuilderContainerProps
+export type PeerArticleContainerProps = PeerIdOrSlug & BuilderContainerProps
 
 export function PeerArticleContainer({
-  onQuery,
   peerId,
   peerSlug,
   articleId,
   className
 }: PeerArticleContainerProps) {
   const {Article, PeerInformation} = useWebsiteBuilder()
-  const {data, loading, error, refetch} = usePeerArticleQuery({
+  const {data, loading, error} = usePeerArticleQuery({
     variables: {
       peerId,
       peerSlug,
@@ -36,10 +29,6 @@ export function PeerArticleContainer({
       slug: peerSlug
     }
   })
-
-  useEffect(() => {
-    onQuery?.({data, loading, error, refetch})
-  }, [data, loading, error, refetch, onQuery])
 
   return (
     <ArticleWrapper>

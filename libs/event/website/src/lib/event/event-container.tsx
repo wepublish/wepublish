@@ -1,6 +1,5 @@
-import {useEventQuery, EventQuery} from '@wepublish/website/api'
 import {QueryResult} from '@apollo/client'
-import {useEffect} from 'react'
+import {EventQuery, useEventQuery} from '@wepublish/website/api'
 import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
 export type EventContainerProps = {
@@ -10,17 +9,13 @@ export type EventContainerProps = {
   ) => void
 } & BuilderContainerProps
 
-export function EventContainer({onQuery, id, className}: EventContainerProps) {
+export function EventContainer({id, className}: EventContainerProps) {
   const {Event} = useWebsiteBuilder()
-  const {data, loading, error, refetch} = useEventQuery({
+  const {data, loading, error} = useEventQuery({
     variables: {
       id
     }
   })
-
-  useEffect(() => {
-    onQuery?.({data, loading, error, refetch})
-  }, [data, loading, error, refetch, onQuery])
 
   return <Event data={data} loading={loading} error={error} className={className} />
 }

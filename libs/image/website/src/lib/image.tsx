@@ -10,24 +10,26 @@ declare module 'react' {
 
 type ImageItem = {size: number; url: string | null | undefined}
 
-const imageToImageItems = (image: FullImageFragment): ImageItem[] => [
+export const imageToImageItems = (image: FullImageFragment): ImageItem[] => [
   {url: image.bigURL, size: 800},
   {url: image.largeURL, size: 500},
   {url: image.mediumURL, size: 300},
   {url: image.smallURL, size: 200}
 ]
 
-const imageToSquareImageItems = (image: FullImageFragment): ImageItem[] => [
+export const imageToSquareImageItems = (image: FullImageFragment): ImageItem[] => [
   {url: image.squareBigURL, size: 800},
   {url: image.squareLargeURL, size: 500},
   {url: image.squareMediumURL, size: 300},
   {url: image.squareSmallURL, size: 200}
 ]
 
-const ImageWrapper = styled('img')`
+export const ImageWrapper = styled('img')`
   max-width: 100%;
+  width: 100%;
   height: auto;
 `
+
 export function Image({
   image,
   square,

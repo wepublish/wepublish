@@ -1,4 +1,3 @@
-import {action} from '@storybook/addon-actions'
 import {Meta} from '@storybook/react'
 import {
   Event,
@@ -2243,7 +2242,6 @@ export default {
 
 export const ById = {
   args: {
-    onQuery: action('onQuery'),
     id: page.id
   },
 
@@ -2270,7 +2268,6 @@ export const ById = {
 
 export const BySlug = {
   args: {
-    onQuery: action('onQuery'),
     slug: page.slug
   },
 
@@ -2297,7 +2294,6 @@ export const BySlug = {
 
 export const WithClassName = {
   args: {
-    onQuery: action('onQuery'),
     id: page.id,
     className: 'extra-classname'
   },
@@ -2325,7 +2321,6 @@ export const WithClassName = {
 
 export const WithEmotion = {
   args: {
-    onQuery: action('onQuery'),
     id: page.id,
     css: css`
       background-color: #eee;

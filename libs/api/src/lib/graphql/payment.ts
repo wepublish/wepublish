@@ -103,7 +103,7 @@ export const GraphQLPaymentConnection = new GraphQLObjectType<any, Context>({
 export const GraphQLPaymentFromInvoiceInput = new GraphQLInputObjectType({
   name: 'PaymentFromInvoiceInput',
   fields: {
-    invoiceID: {type: new GraphQLNonNull(GraphQLString)},
+    invoiceID: {type: new GraphQLNonNull(GraphQLID)},
     paymentMethodID: {type: GraphQLID},
     paymentMethodSlug: {type: GraphQLSlug},
     successURL: {type: GraphQLString},

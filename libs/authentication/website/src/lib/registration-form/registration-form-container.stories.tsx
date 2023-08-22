@@ -46,8 +46,7 @@ export const Filled: StoryObj = {
     )
   },
   args: {
-    onRegister: action('onRegister'),
-    onChallengeQuery: action('onChallengeQuery')
+    onRegister: action('onRegister')
   },
   play: async ctx => {
     const canvas = within(ctx.canvasElement)
@@ -99,8 +98,7 @@ export const Filled: StoryObj = {
 
 export const WithChallengeError: StoryObj = {
   args: {
-    onRegister: action('onRegister'),
-    onChallengeQuery: action('onChallengeQuery')
+    onRegister: action('onRegister')
   },
   parameters: {
     apolloClient: {
@@ -128,8 +126,7 @@ export const WithChallengeError: StoryObj = {
 
 export const WithRegisterError: StoryObj = {
   args: {
-    onRegister: action('onRegister'),
-    onChallengeQuery: action('onChallengeQuery')
+    onRegister: action('onRegister')
   },
   play: Filled.play,
   parameters: {
@@ -173,7 +170,6 @@ export const WithRegisterError: StoryObj = {
 export const WithClassName: StoryObj = {
   args: {
     onRegister: action('onRegister'),
-    onChallengeQuery: action('onChallengeQuery'),
     className: 'extra-classname'
   },
   parameters: {
@@ -195,7 +191,6 @@ export const WithClassName: StoryObj = {
 export const WithEmotion: StoryObj = {
   args: {
     onRegister: action('onRegister'),
-    onChallengeQuery: action('onChallengeQuery'),
     css: css`
       background-color: #eee;
     `

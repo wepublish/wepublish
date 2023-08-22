@@ -89,12 +89,16 @@ const NavBar = styled(NavbarContainer)`
   background-color: ${({theme}) => theme.palette.common.white};
 `
 
-function CustomApp({Component, pageProps}: AppProps) {
+type CustonAppProps = AppProps<{
+  sessionToken?: ApiV1.UserSession
+}>
+
+function CustomApp({Component, pageProps}: CustonAppProps) {
   const theme = useTheme()
   const globalStyles = useMemo(() => tsriArticleStyles(theme), [theme])
 
   return (
-    <SessionProvider sessionToken={null}>
+    <SessionProvider sessionToken={pageProps.sessionToken ?? null}>
       <WebsiteProvider>
         <WebsiteBuilderProvider Head={Head} Script={Script} elements={{Link: NextWepublishLink}}>
           <ThemeProvider theme={websiteExampleTheme}>

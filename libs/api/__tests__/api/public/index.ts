@@ -484,11 +484,13 @@ export type Invoice = {
   canceledAt?: Maybe<Scalars['DateTime']>;
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
+  dueAt: Scalars['DateTime'];
   id: Scalars['ID'];
   items: Array<InvoiceItem>;
   mail: Scalars['String'];
   modifiedAt: Scalars['DateTime'];
   paidAt?: Maybe<Scalars['DateTime']>;
+  subscription?: Maybe<Subscription>;
   subscriptionID: Scalars['ID'];
   total: Scalars['Int'];
 };
@@ -568,6 +570,8 @@ export type Mutation = {
   cancelUserSubscription?: Maybe<Subscription>;
   /** This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput. */
   createPaymentFromInvoice?: Maybe<Payment>;
+  /** This mutation allows to create payment by referencing a subscription. */
+  createPaymentFromSubscription?: Maybe<Payment>;
   createSession: SessionWithToken;
   createSessionWithJWT: SessionWithToken;
   createSessionWithOAuth2Code: SessionWithToken;
@@ -617,6 +621,13 @@ export type MutationCreatePaymentFromInvoiceArgs = {
 };
 
 
+export type MutationCreatePaymentFromSubscriptionArgs = {
+  failureURL?: InputMaybe<Scalars['String']>;
+  subscriptionId?: InputMaybe<Scalars['ID']>;
+  successURL?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationCreateSessionArgs = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -651,7 +662,7 @@ export type MutationCreateSubscriptionArgs = {
 
 export type MutationExtendSubscriptionArgs = {
   failureURL?: InputMaybe<Scalars['String']>;
-  subscriptionId: Scalars['String'];
+  subscriptionId: Scalars['ID'];
   successURL?: InputMaybe<Scalars['String']>;
 };
 
@@ -812,7 +823,7 @@ export type Payment = {
 
 export type PaymentFromInvoiceInput = {
   failureURL?: InputMaybe<Scalars['String']>;
-  invoiceID: Scalars['String'];
+  invoiceID: Scalars['ID'];
   paymentMethodID?: InputMaybe<Scalars['ID']>;
   paymentMethodSlug?: InputMaybe<Scalars['Slug']>;
   successURL?: InputMaybe<Scalars['String']>;
@@ -1274,6 +1285,7 @@ export type Subscription = {
   paymentPeriodicity: PaymentPeriodicity;
   properties: Array<PublicProperties>;
   startsAt: Scalars['DateTime'];
+  url: Scalars['String'];
 };
 
 export type SubscriptionDeactivation = {

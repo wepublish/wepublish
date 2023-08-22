@@ -1,4 +1,6 @@
 import {SubscriptionDeactivationReason} from '@prisma/client'
+import {SettingName} from '@wepublish/settings/api'
+import {unselectPassword} from '@wepublish/user/api'
 import * as crypto from 'crypto'
 import {
   GraphQLBoolean,
@@ -10,8 +12,7 @@ import {
   GraphQLString
 } from 'graphql'
 import {Context} from '../context'
-import {SettingName} from '@wepublish/settings/api'
-import {unselectPassword} from '@wepublish/user/api'
+import {SubscriptionWithRelations} from '../db/subscription'
 import {
   AlreadyUnpaidInvoices,
   CommentAuthenticationError,
@@ -28,6 +29,8 @@ import {SendMailType} from '../mails/mailContext'
 import {logger} from '../server'
 import {FIFTEEN_MINUTES_IN_MILLISECONDS, USER_PROPERTY_LAST_LOGIN_LINK_SEND} from '../utility'
 import {Validator} from '../validator'
+import {GraphQLCommentRating} from './comment-rating/comment-rating'
+import {rateComment} from './comment-rating/comment-rating.public-mutation'
 import {
   GraphQLChallengeInput,
   GraphQLPublicComment,
@@ -36,6 +39,7 @@ import {
 } from './comment/comment'
 import {addPublicComment, updatePublicComment} from './comment/comment.public-mutation'
 import {GraphQLMetadataPropertyPublicInput} from './common'
+import {GraphQLUploadImageInput} from './image'
 import {GraphQLPaymentPeriodicity} from './memberPlan'
 import {GraphQLPaymentFromInvoiceInput, GraphQLPublicPayment} from './payment'
 import {GraphQLPollVote} from './poll/poll'
@@ -49,7 +53,7 @@ import {
   revokeSessionByToken
 } from './session/session.mutation'
 import {GraphQLSlug} from './slug'
-import {GraphQLPublicSubscription, GraphQLPublicSubscriptionInput} from './subscription'
+import {GraphQLPublicSubscription, GraphQLPublicSubscriptionInput} from './subscription-public'
 import {updatePublicSubscription} from './subscription/subscription.public-mutation'
 import {
   GraphQLMemberRegistration,
@@ -61,16 +65,12 @@ import {
   GraphQLUserAddressInput
 } from './user'
 import {createUser} from './user/user.mutation'
-import {GraphQLCommentRating} from './comment-rating/comment-rating'
 import {
   updatePaymentProviderCustomers,
   updatePublicUser,
   updateUserPassword,
   uploadPublicUserProfileImage
 } from './user/user.public-mutation'
-import {rateComment} from './comment-rating/comment-rating.public-mutation'
-import {SubscriptionWithRelations} from '../db/subscription'
-import {GraphQLUploadImageInput} from './image'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -518,7 +518,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
     extendSubscription: {
       type: new GraphQLNonNull(GraphQLPublicPayment),
       args: {
-        subscriptionId: {type: new GraphQLNonNull(GraphQLString)},
+        subscriptionId: {type: new GraphQLNonNull(GraphQLID)},
         successURL: {type: GraphQLString},
         failureURL: {type: GraphQLString}
       },
@@ -917,6 +917,51 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
 
         return await createPaymentWithProvider({
           paymentMethodID: paymentMethod.id,
+          invoice,
+          saveCustomer: false,
+          successURL,
+          failureURL
+        })
+      }
+    },
+
+    createPaymentFromSubscription: {
+      type: GraphQLPublicPayment,
+      args: {
+        subscriptionId: {type: GraphQLID},
+        successURL: {type: GraphQLString},
+        failureURL: {type: GraphQLString}
+      },
+      description: 'This mutation allows to create payment by referencing a subscription.',
+      async resolve(
+        root,
+        {subscriptionId, successURL, failureURL},
+        {authenticateUser, createPaymentWithProvider, prisma}
+      ) {
+        const {user} = authenticateUser()
+
+        const invoice = await prisma.invoice.findFirst({
+          where: {
+            subscriptionID: subscriptionId,
+            paidAt: null,
+            canceledAt: null
+          },
+          include: {
+            items: true,
+            subscription: true
+          }
+        })
+
+        if (!invoice) {
+          throw new NotFound('Unpaid Invoice', subscriptionId)
+        }
+
+        if (invoice.subscription.userID !== user.id) {
+          throw new NotFound('Subscription', subscriptionId)
+        }
+
+        return await createPaymentWithProvider({
+          paymentMethodID: invoice.subscription.paymentMethodID,
           invoice,
           saveCustomer: false,
           successURL,
