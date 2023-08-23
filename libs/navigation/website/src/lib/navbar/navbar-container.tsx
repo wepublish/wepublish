@@ -1,33 +1,18 @@
-import {useNavigationListQuery, NavigationListQuery} from '@wepublish/website/api'
-import {QueryResult} from '@apollo/client'
-import {PropsWithChildren, useEffect} from 'react'
+import {useNavigationListQuery} from '@wepublish/website/api'
 import {
   BuilderContainerProps,
   BuilderNavbarProps,
   useWebsiteBuilder
 } from '@wepublish/website/builder'
+import {PropsWithChildren} from 'react'
 
 export type NavbarContainerProps = PropsWithChildren<
-  Pick<BuilderNavbarProps, 'categorySlugs' | 'slug'> & {
-    onQuery?: (
-      queryResult: Pick<QueryResult<NavigationListQuery>, 'data' | 'loading' | 'error' | 'refetch'>
-    ) => void
-  } & BuilderContainerProps
+  Pick<BuilderNavbarProps, 'categorySlugs' | 'slug'> & BuilderContainerProps
 >
 
-export function NavbarContainer({
-  onQuery,
-  className,
-  categorySlugs,
-  slug,
-  children
-}: NavbarContainerProps) {
+export function NavbarContainer({className, categorySlugs, slug, children}: NavbarContainerProps) {
   const {Navbar} = useWebsiteBuilder()
-  const {data, loading, error, refetch} = useNavigationListQuery()
-
-  useEffect(() => {
-    onQuery?.({data, loading, error, refetch})
-  }, [data, loading, error, refetch, onQuery])
+  const {data, loading, error} = useNavigationListQuery()
 
   return (
     <Navbar

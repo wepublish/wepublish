@@ -1,4 +1,3 @@
-import {action} from '@storybook/addon-actions'
 import {Meta} from '@storybook/react'
 import {Navigation, NavigationDocument} from '@wepublish/website/api'
 import {FooterContainer} from './footer-container'
@@ -58,7 +57,6 @@ export default {
 
 export const Default = {
   args: {
-    onQuery: action('onQuery'),
     slug: 'footer',
     children
   },
@@ -86,7 +84,6 @@ export const Default = {
 
 export const WithClassName = {
   args: {
-    onQuery: action('onQuery'),
     slug: 'footer',
     children,
     className: 'extra-classname'
@@ -115,7 +112,6 @@ export const WithClassName = {
 
 export const WithEmotion = {
   args: {
-    onQuery: action('onQuery'),
     slug: 'footer',
     children,
     css: css`

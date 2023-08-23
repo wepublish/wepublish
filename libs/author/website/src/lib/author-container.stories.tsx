@@ -1,4 +1,3 @@
-import {action} from '@storybook/addon-actions'
 import {Meta} from '@storybook/react'
 import {AuthorDocument, AuthorQuery} from '@wepublish/website/api'
 import {AuthorContainer} from './author-container'
@@ -265,7 +264,6 @@ export default {
 
 export const ById = {
   args: {
-    onQuery: action('onQuery'),
     id: author.id
   },
 
@@ -292,7 +290,6 @@ export const ById = {
 
 export const BySlug = {
   args: {
-    onQuery: action('onQuery'),
     slug: author.slug
   },
 
@@ -319,7 +316,6 @@ export const BySlug = {
 
 export const WithClassName = {
   args: {
-    onQuery: action('onQuery'),
     id: author.id,
     className: 'extra-classname'
   },
@@ -347,7 +343,6 @@ export const WithClassName = {
 
 export const WithEmotion = {
   args: {
-    onQuery: action('onQuery'),
     id: author.id,
     css: css`
       background-color: #eee;

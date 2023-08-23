@@ -1,29 +1,10 @@
-import {MutationResult, QueryResult} from '@apollo/client'
-import {
-  ChallengeQuery,
-  RegisterMutation,
-  useChallengeQuery,
-  useRegisterMutation
-} from '@wepublish/website/api'
+import {useChallengeQuery, useRegisterMutation} from '@wepublish/website/api'
 import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {useEffect} from 'react'
 import {useUser} from '../session.context'
 
-export type RegistrationFormContainerProps = {
-  onChallengeQuery?: (
-    queryResult: Pick<QueryResult<ChallengeQuery>, 'data' | 'loading' | 'error' | 'refetch'>
-  ) => void
+export type RegistrationFormContainerProps = BuilderContainerProps
 
-  onRegister?: (
-    mutationResult: Pick<MutationResult<RegisterMutation>, 'data' | 'loading' | 'error'>
-  ) => void
-} & BuilderContainerProps
-
-export function RegistrationFormContainer({
-  onRegister,
-  onChallengeQuery,
-  className
-}: RegistrationFormContainerProps) {
+export function RegistrationFormContainer({className}: RegistrationFormContainerProps) {
   const {RegistrationForm} = useWebsiteBuilder()
   const {setToken} = useUser()
   const [register, registerData] = useRegisterMutation({
@@ -37,16 +18,6 @@ export function RegistrationFormContainer({
     }
   })
   const challenge = useChallengeQuery()
-
-  useEffect(() => {
-    if (registerData.called) {
-      onRegister?.(registerData)
-    }
-  }, [registerData, onRegister])
-
-  useEffect(() => {
-    onChallengeQuery?.(challenge)
-  }, [challenge, onChallengeQuery])
 
   return (
     <RegistrationForm

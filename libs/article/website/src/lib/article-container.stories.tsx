@@ -1,5 +1,4 @@
 import {css} from '@emotion/react'
-import {action} from '@storybook/addon-actions'
 import {Meta} from '@storybook/react'
 import {
   ArticleDocument,
@@ -2297,7 +2296,6 @@ export default {
 
 export const ById = {
   args: {
-    onQuery: action('onQuery'),
     id: article.id
   },
 
@@ -2324,7 +2322,6 @@ export const ById = {
 
 export const BySlug = {
   args: {
-    onQuery: action('onQuery'),
     slug: article.slug
   },
 
@@ -2349,9 +2346,35 @@ export const BySlug = {
   }
 }
 
+export const WithChildren = {
+  args: {
+    id: article.id,
+    children: <div>Children</div>
+  },
+
+  parameters: {
+    apolloClient: {
+      mocks: [
+        {
+          request: {
+            query: ArticleDocument,
+            variables: {
+              id: article.id
+            }
+          },
+          result: {
+            data: {
+              article
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
 export const WithClassName = {
   args: {
-    onQuery: action('onQuery'),
     id: article.id,
     className: 'extra-classname'
   },
@@ -2379,7 +2402,6 @@ export const WithClassName = {
 
 export const WithEmotion = {
   args: {
-    onQuery: action('onQuery'),
     id: article.id,
     css: css`
       background-color: #eee;

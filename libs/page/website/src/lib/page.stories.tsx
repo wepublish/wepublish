@@ -9,6 +9,7 @@ import {
   PageQuery
 } from '@wepublish/website/api'
 import {Page} from './page'
+import {css} from '@emotion/react'
 
 const image = {
   __typename: 'Image',
@@ -2317,6 +2318,29 @@ export const WithError = {
     error: new ApolloError({
       errorMessage: 'Foobar'
     })
+  }
+}
+
+export const WithChildren = {
+  args: {
+    data: {page},
+    children: <div>Children</div>
+  }
+}
+
+export const WithClassName = {
+  args: {
+    data: {page},
+    className: 'extra-classname'
+  }
+}
+
+export const WithEmotion = {
+  args: {
+    data: {page},
+    css: css`
+      background-color: #eee;
+    `
   }
 }
 
