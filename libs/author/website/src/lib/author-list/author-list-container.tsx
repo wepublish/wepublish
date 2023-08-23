@@ -1,34 +1,22 @@
-import {AuthorListQuery} from '@wepublish/website/api'
-import {QueryResult} from '@apollo/client'
-import {useEffect} from 'react'
 import {useAuthorListQuery} from '@wepublish/website/api'
 import {
+  BuilderAuthorListProps,
   BuilderContainerProps,
-  useWebsiteBuilder,
-  BuilderAuthorListProps
+  useWebsiteBuilder
 } from '@wepublish/website/builder'
 
-export type AuthorListContainerProps = {
-  onQuery?: (
-    queryResult: Pick<QueryResult<AuthorListQuery>, 'data' | 'loading' | 'error' | 'fetchMore'>
-  ) => void
-} & BuilderContainerProps &
+export type AuthorListContainerProps = BuilderContainerProps &
   Pick<BuilderAuthorListProps, 'variables' | 'onVariablesChange'>
 
 export function AuthorListContainer({
-  onQuery,
   className,
   variables,
   onVariablesChange
 }: AuthorListContainerProps) {
   const {AuthorList} = useWebsiteBuilder()
-  const {data, loading, error, fetchMore} = useAuthorListQuery({
+  const {data, loading, error} = useAuthorListQuery({
     variables
   })
-
-  useEffect(() => {
-    onQuery?.({data, loading, error, fetchMore})
-  }, [data, loading, error, fetchMore, onQuery])
 
   return (
     <AuthorList

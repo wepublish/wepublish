@@ -5,10 +5,13 @@ import {
   ArticleListQuery,
   ArticleListQueryVariables
 } from '@wepublish/website/api'
+import {PropsWithChildren} from 'react'
 
-export type BuilderArticleProps = Pick<QueryResult<ArticleQuery>, 'data' | 'loading' | 'error'> & {
-  className?: string
-}
+export type BuilderArticleProps = PropsWithChildren<
+  Pick<QueryResult<ArticleQuery>, 'data' | 'loading' | 'error'> & {
+    className?: string
+  }
+>
 
 export type BuilderArticleSEOProps = {
   article: Article

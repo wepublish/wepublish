@@ -1,5 +1,4 @@
 import {AuthorListDocument, AuthorQuery} from '@wepublish/website/api'
-import {action} from '@storybook/addon-actions'
 import {Meta} from '@storybook/react'
 import {AuthorListContainer} from './author-list-container'
 import {css} from '@emotion/react'
@@ -264,9 +263,7 @@ export default {
 } as Meta
 
 export const Default = {
-  args: {
-    onQuery: action('onQuery')
-  },
+  args: {},
 
   parameters: {
     apolloClient: {
@@ -298,7 +295,6 @@ export const Default = {
 
 export const WithClassName = {
   args: {
-    onQuery: action('onQuery'),
     className: 'extra-classname'
   },
 
@@ -332,7 +328,6 @@ export const WithClassName = {
 
 export const WithEmotion = {
   args: {
-    onQuery: action('onQuery'),
     css: css`
       background-color: #eee;
     `

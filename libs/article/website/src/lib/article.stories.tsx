@@ -2775,6 +2775,13 @@ export const WithError = {
   }
 }
 
+export const WithChildren = {
+  args: {
+    data: {article},
+    children: <div>Children</div>
+  }
+}
+
 export const WithClassName = {
   args: {
     data: {article},

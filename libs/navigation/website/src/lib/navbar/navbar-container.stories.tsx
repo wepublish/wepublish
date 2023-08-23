@@ -1,4 +1,3 @@
-import {action} from '@storybook/addon-actions'
 import {Meta} from '@storybook/react'
 import {FullNavigationFragment, Navigation, NavigationListDocument} from '@wepublish/website/api'
 import {NavbarContainer} from './navbar-container'
@@ -54,7 +53,6 @@ export default {
 
 export const Default = {
   args: {
-    onQuery: action('onQuery'),
     slug: 'main',
     categorySlugs: ['categories', 'about']
   },
@@ -79,7 +77,6 @@ export const Default = {
 
 export const WithClassName = {
   args: {
-    onQuery: action('onQuery'),
     slug: 'main',
     categorySlugs: ['categories', 'about'],
     className: 'extra-classname'
@@ -105,7 +102,6 @@ export const WithClassName = {
 
 export const WithEmotion = {
   args: {
-    onQuery: action('onQuery'),
     css: css`
       background-color: #eee;
     `,

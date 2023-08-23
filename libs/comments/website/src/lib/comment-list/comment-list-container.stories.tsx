@@ -250,12 +250,7 @@ export const Default: StoryObj = {
   args: {
     id: '1234',
     type: CommentItemType.Article,
-    onChallengeQuery: action('onChallengeQuery'),
-    onSettingListQuery: action('onSettingListQuery'),
-    onCommentListQuery: action('onCommentListQuery'),
-    onVariablesChange: action('onVariablesChange'),
-    onAddComment: action('onAddComment'),
-    onEditComment: action('onEditComment')
+    onVariablesChange: action('onVariablesChange')
   },
 
   parameters: {

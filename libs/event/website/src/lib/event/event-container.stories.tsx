@@ -1,5 +1,4 @@
 import {css} from '@emotion/react'
-import {action} from '@storybook/addon-actions'
 import {Meta} from '@storybook/react'
 import {EventDocument, EventQuery, EventStatus} from '@wepublish/website/api'
 import {EventContainer} from './event-container'
@@ -183,7 +182,6 @@ export default {
 
 export const Default = {
   args: {
-    onQuery: action('onQuery'),
     id: event.id
   },
 
@@ -210,7 +208,6 @@ export const Default = {
 
 export const WithClassName = {
   args: {
-    onQuery: action('onQuery'),
     id: event.id,
     className: 'extra-classname'
   },
@@ -238,7 +235,6 @@ export const WithClassName = {
 
 export const WithEmotion = {
   args: {
-    onQuery: action('onQuery'),
     id: event.id,
     css: css`
       background-color: #eee;
