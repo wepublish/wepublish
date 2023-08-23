@@ -1,5 +1,4 @@
 import {css} from '@emotion/react'
-import {action} from '@storybook/addon-actions'
 import {StoryObj} from '@storybook/react'
 import {Challenge, ChallengeDocument, RegisterDocument} from '@wepublish/website/api'
 import {RegistrationFormContainer} from './registration-form-container'
@@ -45,9 +44,7 @@ export const Filled: StoryObj = {
       </>
     )
   },
-  args: {
-    onRegister: action('onRegister')
-  },
+  args: {},
   play: async ctx => {
     const canvas = within(ctx.canvasElement)
     await waitFor(() => canvas.getByLabelText('Captcha'))
@@ -97,9 +94,7 @@ export const Filled: StoryObj = {
 }
 
 export const WithChallengeError: StoryObj = {
-  args: {
-    onRegister: action('onRegister')
-  },
+  args: {},
   parameters: {
     apolloClient: {
       mocks: [
@@ -125,9 +120,7 @@ export const WithChallengeError: StoryObj = {
 }
 
 export const WithRegisterError: StoryObj = {
-  args: {
-    onRegister: action('onRegister')
-  },
+  args: {},
   play: Filled.play,
   parameters: {
     apolloClient: {
@@ -169,7 +162,6 @@ export const WithRegisterError: StoryObj = {
 
 export const WithClassName: StoryObj = {
   args: {
-    onRegister: action('onRegister'),
     className: 'extra-classname'
   },
   parameters: {
@@ -190,7 +182,6 @@ export const WithClassName: StoryObj = {
 
 export const WithEmotion: StoryObj = {
   args: {
-    onRegister: action('onRegister'),
     css: css`
       background-color: #eee;
     `

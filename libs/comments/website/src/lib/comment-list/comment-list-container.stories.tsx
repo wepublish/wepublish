@@ -250,9 +250,7 @@ export const Default: StoryObj = {
   args: {
     id: '1234',
     type: CommentItemType.Article,
-    onVariablesChange: action('onVariablesChange'),
-    onAddComment: action('onAddComment'),
-    onEditComment: action('onEditComment')
+    onVariablesChange: action('onVariablesChange')
   },
 
   parameters: {

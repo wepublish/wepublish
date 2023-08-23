@@ -16,8 +16,8 @@ export const ArticleInfoWrapper = styled('section')`
   justify-self: center;
 `
 
-export function Article({className, data, loading, error}: BuilderArticleProps) {
-  const {AuthorChip, ArticleSEO} = useWebsiteBuilder()
+export function Article({className, data, children, loading, error}: BuilderArticleProps) {
+  const {AuthorChip, ArticleSEO, date} = useWebsiteBuilder()
 
   return (
     <ArticleWrapper className={className}>
@@ -29,7 +29,13 @@ export function Article({className, data, loading, error}: BuilderArticleProps) 
         {data?.article?.authors.map(author => (
           <AuthorChip key={author.id} author={author} />
         ))}
+
+        {data?.article?.publishedAt && (
+          <time>{date.format(new Date(data.article.publishedAt))}</time>
+        )}
       </ArticleInfoWrapper>
+
+      {children}
     </ArticleWrapper>
   )
 }

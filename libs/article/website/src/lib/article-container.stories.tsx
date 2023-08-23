@@ -2346,6 +2346,33 @@ export const BySlug = {
   }
 }
 
+export const WithChildren = {
+  args: {
+    id: article.id,
+    children: <div>Children</div>
+  },
+
+  parameters: {
+    apolloClient: {
+      mocks: [
+        {
+          request: {
+            query: ArticleDocument,
+            variables: {
+              id: article.id
+            }
+          },
+          result: {
+            data: {
+              article
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
 export const WithClassName = {
   args: {
     id: article.id,

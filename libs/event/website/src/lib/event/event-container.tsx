@@ -1,12 +1,8 @@
-import {QueryResult} from '@apollo/client'
-import {EventQuery, useEventQuery} from '@wepublish/website/api'
+import {useEventQuery} from '@wepublish/website/api'
 import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
 export type EventContainerProps = {
   id: string
-  onQuery?: (
-    queryResult: Pick<QueryResult<EventQuery>, 'data' | 'loading' | 'error' | 'refetch'>
-  ) => void
 } & BuilderContainerProps
 
 export function EventContainer({id, className}: EventContainerProps) {

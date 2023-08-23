@@ -10,7 +10,6 @@ import {commentListReducer} from './comment-list.state'
 import {ApolloError} from '@apollo/client'
 import {userEvent, waitFor, within} from '@storybook/testing-library'
 import {LoggedInFilled} from '../comment-editor/comment-editor.stories'
-import {action} from '@storybook/addon-actions'
 
 const image = {
   __typename: 'Image',
@@ -371,8 +370,7 @@ export const Commenting: StoryObj = {
     challenge: {
       data: {challenge}
     },
-    maxCommentLength: 2000,
-    onAddComment: action('onAddComment')
+    maxCommentLength: 2000
   },
   decorators: [WithUserDecorator]
 }
@@ -385,8 +383,7 @@ export const AnonymousCommenting: StoryObj = {
       data: {challenge}
     },
     maxCommentLength: 2000,
-    anonymousCanComment: true,
-    onAddComment: action('onAddComment')
+    anonymousCanComment: true
   }
 }
 
@@ -414,8 +411,7 @@ export const Editing: StoryObj = {
       data: {challenge}
     },
     maxCommentLength: 2000,
-    userCanEdit: true,
-    onEditComment: action('onEditComment')
+    userCanEdit: true
   },
   decorators: [WithUserDecorator]
 }
