@@ -26,6 +26,7 @@ export const BreakBlockWrapper = styled('div')<{reverse?: boolean}>`
 export const BreakBlockSegment = styled('div')<{reverse?: boolean}>`
   display: grid;
   align-items: center;
+  grid-auto-rows: max-content;
   gap: ${({theme}) => theme.spacing(2)};
 
   ${({theme, reverse}) =>
