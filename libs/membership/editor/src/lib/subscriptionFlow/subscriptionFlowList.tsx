@@ -126,7 +126,7 @@ function SubscriptionFlowList() {
    ******************************************/
   const client: ApolloClient<NormalizedCacheObject> = useMemo(() => getApiClientV2(), [])
 
-  const {data: memberPlans} = useMemberPlanListQuery({})
+  const {data: memberPlans} = useMemberPlanListQuery({variables: {take: 100}})
 
   const memberPlan = useMemo(() => {
     return memberPlans && memberPlans.memberPlans.nodes.find(p => p.id === memberPlanId)
