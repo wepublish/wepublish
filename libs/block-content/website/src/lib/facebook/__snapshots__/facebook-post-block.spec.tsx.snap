@@ -3,7 +3,7 @@
 exports[`Facebook Post Block should render Default 1`] = `
 <DocumentFragment>
   <div
-    class="css-0 e1q11atd0"
+    class="css-1jn5h8s-FacebookPostBlockWrapper e2wfn2e0"
   />
 </DocumentFragment>
 `;
@@ -11,7 +11,7 @@ exports[`Facebook Post Block should render Default 1`] = `
 exports[`Facebook Post Block should render WithClassName 1`] = `
 <DocumentFragment>
   <div
-    class="extra-classname css-0 e1q11atd0"
+    class="extra-classname css-1jn5h8s-FacebookPostBlockWrapper e2wfn2e0"
   />
 </DocumentFragment>
 `;

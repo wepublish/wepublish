@@ -3,11 +3,11 @@
 exports[`Embed Block should render Default 1`] = `
 <DocumentFragment>
   <div
-    class="css-0 ez7jpgq0"
+    class="css-1tmmrj4-EmbedBlockWrapper e1t445oh1"
   >
     <iframe
       allowfullscreen=""
-      class="css-1ispk5u-EmbedBlock ez7jpgq1"
+      class="css-1wlgbuj-EmbedBlockIframe-styleCustomCss e1t445oh0"
       sandbox=""
       src="https://www.example.com"
       title="Title"
@@ -19,11 +19,11 @@ exports[`Embed Block should render Default 1`] = `
 exports[`Embed Block should render WithClassName 1`] = `
 <DocumentFragment>
   <div
-    class="extra-classname css-0 ez7jpgq0"
+    class="extra-classname css-1tmmrj4-EmbedBlockWrapper e1t445oh1"
   >
     <iframe
       allowfullscreen=""
-      class="css-1ispk5u-EmbedBlock ez7jpgq1"
+      class="css-1wlgbuj-EmbedBlockIframe-styleCustomCss e1t445oh0"
       sandbox=""
       src="https://www.example.com"
       title="Title"

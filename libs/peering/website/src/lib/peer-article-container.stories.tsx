@@ -1,5 +1,4 @@
 import {css} from '@emotion/react'
-import {action} from '@storybook/addon-actions'
 import {Meta} from '@storybook/react'
 import {
   Event,
@@ -2272,7 +2271,6 @@ export default {
 
 export const ById = {
   args: {
-    onQuery: action('onQuery'),
     articleId: article.id,
     peerId: peer.id
   },
@@ -2314,7 +2312,6 @@ export const ById = {
 
 export const BySlug = {
   args: {
-    onQuery: action('onQuery'),
     articleId: article.id,
     peerSlug: peer.slug
   },

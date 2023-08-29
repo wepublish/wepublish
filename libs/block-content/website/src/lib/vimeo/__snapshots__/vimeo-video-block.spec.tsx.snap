@@ -3,10 +3,10 @@
 exports[`Vimeo Video Block should render Default 1`] = `
 <DocumentFragment>
   <div
-    class="css-0 e1rtj5rq0"
+    class="css-xttaxc-VimeoVideoBlockWrapper e1wyl54e1"
   >
     <div
-      class="css-zqjcpl e1rtj5rq1"
+      class="css-9cey06-VimeoVideoBlockPlayer e1wyl54e0"
       style="width: auto; height: auto;"
     />
   </div>
@@ -16,10 +16,10 @@ exports[`Vimeo Video Block should render Default 1`] = `
 exports[`Vimeo Video Block should render WithClassName 1`] = `
 <DocumentFragment>
   <div
-    class="extra-classname css-0 e1rtj5rq0"
+    class="extra-classname css-xttaxc-VimeoVideoBlockWrapper e1wyl54e1"
   >
     <div
-      class="css-zqjcpl e1rtj5rq1"
+      class="css-9cey06-VimeoVideoBlockPlayer e1wyl54e0"
       style="width: auto; height: auto;"
     >
       <div

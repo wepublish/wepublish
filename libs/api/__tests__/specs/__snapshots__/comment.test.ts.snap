@@ -8,8 +8,182 @@ exports[`Comments can be created with bare minimum 1`] = `
       "itemID": Any<String>,
       "itemType": "Article",
       "parentID": null,
+      "state": "Approved",
       "text": Any<Object>,
       "user": Any<Object>,
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": {
+    "headers": Headers {
+      Symbol(map): {},
+    },
+  },
+}
+`;
+
+exports[`Comments create authorize permissions Public: comment from a user with approval permission is approved 1`] = `
+{
+  "data": {
+    "addComment": {
+      "id": Any<String>,
+      "itemID": "d",
+      "itemType": "Article",
+      "parentID": null,
+      "state": "Approved",
+      "text": [
+        {
+          "children": [
+            {
+              "text": "hello",
+            },
+          ],
+          "type": "paragraph",
+        },
+      ],
+      "user": {
+        "id": "authorizedUser",
+      },
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": {
+    "headers": Headers {
+      Symbol(map): {},
+    },
+  },
+}
+`;
+
+exports[`Comments create authorize permissions Public: comment from a user without approval permission is pending approval 1`] = `
+{
+  "data": {
+    "addComment": {
+      "id": Any<String>,
+      "itemID": "d",
+      "itemType": "Article",
+      "parentID": null,
+      "state": "PendingApproval",
+      "text": [
+        {
+          "children": [
+            {
+              "text": "hello",
+            },
+          ],
+          "type": "paragraph",
+        },
+      ],
+      "user": {
+        "id": "unauthorizedUser",
+      },
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": {
+    "headers": Headers {
+      Symbol(map): {},
+    },
+  },
+}
+`;
+
+exports[`Comments create authorize permissions comment from a user with approval permission is approved 1`] = `
+{
+  "data": {
+    "createComment": {
+      "createdAt": Any<Date>,
+      "guestUserImage": null,
+      "guestUsername": null,
+      "id": Any<String>,
+      "itemID": "d",
+      "itemType": "Article",
+      "modifiedAt": Any<Date>,
+      "overriddenRatings": null,
+      "parentComment": null,
+      "rejectionReason": null,
+      "revisions": ArrayContaining [
+        ObjectContaining {
+          "createdAt": Any<Date>,
+        },
+      ],
+      "source": null,
+      "state": "Approved",
+      "tags": [],
+      "user": null,
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": {
+    "headers": Headers {
+      Symbol(map): {},
+    },
+  },
+}
+`;
+
+exports[`Comments create authorize permissions comment from a user without approval permission is pending approval 1`] = `
+{
+  "data": {
+    "createComment": {
+      "createdAt": Any<Date>,
+      "guestUserImage": null,
+      "guestUsername": null,
+      "id": Any<String>,
+      "itemID": "d",
+      "itemType": "Article",
+      "modifiedAt": Any<Date>,
+      "overriddenRatings": null,
+      "parentComment": null,
+      "rejectionReason": null,
+      "revisions": ArrayContaining [
+        ObjectContaining {
+          "createdAt": Any<Date>,
+        },
+      ],
+      "source": null,
+      "state": "PendingApproval",
+      "tags": [],
+      "user": null,
+    },
+  },
+  "errors": undefined,
+  "extensions": undefined,
+  "http": {
+    "headers": Headers {
+      Symbol(map): {},
+    },
+  },
+}
+`;
+
+exports[`Comments create can be created 1`] = `
+{
+  "data": {
+    "createComment": {
+      "createdAt": Any<Date>,
+      "guestUserImage": null,
+      "guestUsername": null,
+      "id": Any<String>,
+      "itemID": "d",
+      "itemType": "Article",
+      "modifiedAt": Any<Date>,
+      "overriddenRatings": null,
+      "parentComment": null,
+      "rejectionReason": null,
+      "revisions": ArrayContaining [
+        ObjectContaining {
+          "createdAt": Any<Date>,
+        },
+      ],
+      "source": null,
+      "state": "Approved",
+      "tags": [],
+      "user": null,
     },
   },
   "errors": undefined,

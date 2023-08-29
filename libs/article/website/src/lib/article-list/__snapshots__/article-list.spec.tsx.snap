@@ -3,18 +3,18 @@
 exports[`ArticleList should render Default 1`] = `
 <DocumentFragment>
   <article
-    class="css-51sx1c e1svm5jf0"
+    class="css-dp8k64-ArticleListWrapper ei1ca8h0"
   >
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       >
         <img
           alt="DSC07717"
-          class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+          class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -26,7 +26,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -50,11 +50,11 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       >
         <img
           alt="DSC07717"
-          class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+          class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -66,7 +66,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -90,11 +90,11 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       >
         <img
           alt="DSC07717"
-          class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+          class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -106,7 +106,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -130,11 +130,11 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       >
         <img
           alt="DSC07717"
-          class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+          class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -146,7 +146,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -170,11 +170,11 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       >
         <img
           alt="DSC07717"
-          class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+          class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -186,7 +186,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -210,11 +210,11 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       >
         <img
           alt="DSC07717"
-          class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+          class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -226,7 +226,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -250,11 +250,11 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       >
         <img
           alt="DSC07717"
-          class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+          class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -266,7 +266,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -290,11 +290,11 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       >
         <img
           alt="DSC07717"
-          class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+          class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -306,7 +306,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -330,11 +330,11 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       >
         <img
           alt="DSC07717"
-          class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+          class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -346,7 +346,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -370,11 +370,11 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       >
         <img
           alt="DSC07717"
-          class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+          class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -386,7 +386,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -410,11 +410,11 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       >
         <img
           alt="DSC07717"
-          class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+          class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -426,7 +426,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -452,18 +452,18 @@ https://unsplash.it/200/200 200w"
 exports[`ArticleList should render WithClassName 1`] = `
 <DocumentFragment>
   <article
-    class="extra-classname css-51sx1c e1svm5jf0"
+    class="extra-classname css-dp8k64-ArticleListWrapper ei1ca8h0"
   >
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       >
         <img
           alt="DSC07717"
-          class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+          class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -475,7 +475,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -499,11 +499,11 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       >
         <img
           alt="DSC07717"
-          class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+          class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -515,7 +515,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -539,11 +539,11 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       >
         <img
           alt="DSC07717"
-          class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+          class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -555,7 +555,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -579,11 +579,11 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       >
         <img
           alt="DSC07717"
-          class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+          class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -595,7 +595,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -619,11 +619,11 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       >
         <img
           alt="DSC07717"
-          class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+          class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -635,7 +635,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -659,11 +659,11 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       >
         <img
           alt="DSC07717"
-          class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+          class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -675,7 +675,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -699,11 +699,11 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       >
         <img
           alt="DSC07717"
-          class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+          class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -715,7 +715,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -739,11 +739,11 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       >
         <img
           alt="DSC07717"
-          class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+          class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -755,7 +755,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -779,11 +779,11 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       >
         <img
           alt="DSC07717"
-          class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+          class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -795,7 +795,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -819,11 +819,11 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       >
         <img
           alt="DSC07717"
-          class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+          class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -835,7 +835,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -859,11 +859,11 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       >
         <img
           alt="DSC07717"
-          class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+          class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -875,7 +875,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -901,18 +901,18 @@ https://unsplash.it/200/200 200w"
 exports[`ArticleList should render WithEmotion 1`] = `
 <DocumentFragment>
   <article
-    class="css-51sx1c e1svm5jf0"
+    class="css-dp8k64-ArticleListWrapper ei1ca8h0"
   >
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       >
         <img
           alt="DSC07717"
-          class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+          class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -924,7 +924,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -948,11 +948,11 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       >
         <img
           alt="DSC07717"
-          class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+          class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -964,7 +964,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -988,11 +988,11 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       >
         <img
           alt="DSC07717"
-          class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+          class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -1004,7 +1004,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -1028,11 +1028,11 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       >
         <img
           alt="DSC07717"
-          class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+          class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -1044,7 +1044,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -1068,11 +1068,11 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       >
         <img
           alt="DSC07717"
-          class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+          class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -1084,7 +1084,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -1108,11 +1108,11 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       >
         <img
           alt="DSC07717"
-          class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+          class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -1124,7 +1124,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -1148,11 +1148,11 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       >
         <img
           alt="DSC07717"
-          class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+          class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -1164,7 +1164,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -1188,11 +1188,11 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       >
         <img
           alt="DSC07717"
-          class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+          class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -1204,7 +1204,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -1228,11 +1228,11 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       >
         <img
           alt="DSC07717"
-          class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+          class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -1244,7 +1244,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -1268,11 +1268,11 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       >
         <img
           alt="DSC07717"
-          class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+          class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -1284,7 +1284,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -1308,11 +1308,11 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       >
         <img
           alt="DSC07717"
-          class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+          class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -1324,7 +1324,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -1350,7 +1350,7 @@ https://unsplash.it/200/200 200w"
 exports[`ArticleList should render WithError 1`] = `
 <DocumentFragment>
   <article
-    class="css-51sx1c e1svm5jf0"
+    class="css-dp8k64-ArticleListWrapper ei1ca8h0"
   />
 </DocumentFragment>
 `;
@@ -1358,7 +1358,7 @@ exports[`ArticleList should render WithError 1`] = `
 exports[`ArticleList should render WithLoading 1`] = `
 <DocumentFragment>
   <article
-    class="css-51sx1c e1svm5jf0"
+    class="css-dp8k64-ArticleListWrapper ei1ca8h0"
   />
 </DocumentFragment>
 `;
@@ -1366,18 +1366,18 @@ exports[`ArticleList should render WithLoading 1`] = `
 exports[`ArticleList should render WithoutImage 1`] = `
 <DocumentFragment>
   <article
-    class="css-51sx1c e1svm5jf0"
+    class="css-dp8k64-ArticleListWrapper ei1ca8h0"
   >
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       >
         <img
           alt="DSC07717"
-          class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+          class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -1389,7 +1389,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -1413,10 +1413,10 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       />
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -1440,11 +1440,11 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       >
         <img
           alt="DSC07717"
-          class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+          class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -1456,7 +1456,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -1480,10 +1480,10 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       />
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -1507,10 +1507,10 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       />
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -1534,11 +1534,11 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       >
         <img
           alt="DSC07717"
-          class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+          class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -1550,7 +1550,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -1574,11 +1574,11 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       >
         <img
           alt="DSC07717"
-          class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+          class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -1590,7 +1590,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -1614,11 +1614,11 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       >
         <img
           alt="DSC07717"
-          class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+          class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -1630,7 +1630,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -1654,10 +1654,10 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       />
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -1681,10 +1681,10 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       />
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -1708,11 +1708,11 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-yzkyje e3btzd50"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
       >
         <img
           alt="DSC07717"
-          class="css-1mtcrkq-ArticleListItem e1nfkf2e0"
+          class="css-q22r0e-ImageWrapper-ArticleListItem e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
@@ -1724,7 +1724,7 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-0 e3btzd51"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
       >
         <p
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"

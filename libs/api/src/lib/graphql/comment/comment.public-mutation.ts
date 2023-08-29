@@ -20,6 +20,7 @@ import {
   UserInputError
 } from '../../error'
 import {countRichtextChars} from '../../utility'
+import {CanCreateApprovedComment, hasPermission} from '@wepublish/permissions/api'
 
 export const addPublicComment = async (
   input: {
@@ -47,6 +48,8 @@ export const addPublicComment = async (
   if (commentLength > maxCommentLength) {
     throw new CommentLengthError(+maxCommentLength)
   }
+
+  const canSkipApproval = hasPermission(CanCreateApprovedComment, user.roles)
 
   // Challenge
   if (!user) {
@@ -92,7 +95,7 @@ export const addPublicComment = async (
       },
       userID: user?.user.id,
       authorType,
-      state: CommentState.pendingApproval
+      state: canSkipApproval ? CommentState.approved : CommentState.pendingApproval
     },
     include: {revisions: {orderBy: {createdAt: 'asc'}}}
   })
@@ -105,7 +108,9 @@ export const updatePublicComment = async (
   commentClient: PrismaClient['comment'],
   settingsClient: PrismaClient['setting']
 ) => {
-  const {user} = authenticateUser()
+  const {user, roles} = authenticateUser()
+
+  const canSkipApproval = hasPermission(CanCreateApprovedComment, roles)
 
   const comment = await commentClient.findUnique({
     where: {
@@ -144,7 +149,7 @@ export const updatePublicComment = async (
           lead: lead ?? comment?.revisions.at(-1)?.lead
         }
       },
-      state: CommentState.pendingApproval
+      state: canSkipApproval ? CommentState.approved : CommentState.pendingApproval
     },
     include: {revisions: {orderBy: {createdAt: 'asc'}}}
   })

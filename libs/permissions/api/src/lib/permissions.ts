@@ -130,6 +130,12 @@ export const CanDeleteArticle: Permission = {
   deprecated: false
 }
 
+export const CanCreateApprovedComment: Permission = {
+  id: 'CAN_CREATE_APPROVED_COMMENT',
+  description: 'Allows to leave comment without pending approval',
+  deprecated: false
+}
+
 export const CanGetArticlePreviewLink: Permission = {
   id: 'CAN_GET_ARTICLE_PREVIEW_LINK',
   description: 'Allows to get preview links for articles',
@@ -704,7 +710,8 @@ export const AllPermissions: Permission[] = [
   CanCreateEvent,
   CanCreateConsent,
   CanUpdateConsent,
-  CanDeleteConsent
+  CanDeleteConsent,
+  CanCreateApprovedComment
 ]
 
 export const EditorPermissions: Permission[] = [
@@ -750,7 +757,8 @@ export const EditorPermissions: Permission[] = [
   CanCreateEvent,
   CanCreateConsent,
   CanUpdateConsent,
-  CanDeleteConsent
+  CanDeleteConsent,
+  CanCreateApprovedComment
 ]
 
 export const PeerPermissions: Permission[] = [

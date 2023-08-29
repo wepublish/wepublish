@@ -3,7 +3,7 @@
 exports[`Author should render Default 1`] = `
 <DocumentFragment>
   <article
-    class="css-13dpkcn e1pwndow0"
+    class="css-15it3wn-AuthorWrapper e18ssx8j1"
   >
     <header>
       <h1
@@ -19,7 +19,7 @@ exports[`Author should render Default 1`] = `
     </header>
     <img
       alt="DSC07717"
-      class="css-1a2v9hb e1nfkf2e0"
+      class="css-10ctmcf-ImageWrapper e1shv2yg0"
       height="6000"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
@@ -30,7 +30,7 @@ https://unsplash.it/200/100 200w"
       width="4000"
     />
     <aside
-      class="css-y1qgjo e1pwndow1"
+      class="css-xraw1t-AuthorLinksWrapper e18ssx8j0"
     >
       <a
         class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
@@ -55,7 +55,7 @@ https://unsplash.it/200/100 200w"
       </a>
     </aside>
     <div
-      class="css-0 e1e9qmuq0"
+      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
     >
       <div
         data-gramm="false"
@@ -423,7 +423,7 @@ https://unsplash.it/200/100 200w"
 exports[`Author should render WithClassName 1`] = `
 <DocumentFragment>
   <article
-    class="extra-classname css-13dpkcn e1pwndow0"
+    class="extra-classname css-15it3wn-AuthorWrapper e18ssx8j1"
   >
     <header>
       <h1
@@ -439,7 +439,7 @@ exports[`Author should render WithClassName 1`] = `
     </header>
     <img
       alt="DSC07717"
-      class="css-1a2v9hb e1nfkf2e0"
+      class="css-10ctmcf-ImageWrapper e1shv2yg0"
       height="6000"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
@@ -450,7 +450,7 @@ https://unsplash.it/200/100 200w"
       width="4000"
     />
     <aside
-      class="css-y1qgjo e1pwndow1"
+      class="css-xraw1t-AuthorLinksWrapper e18ssx8j0"
     >
       <a
         class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
@@ -475,7 +475,7 @@ https://unsplash.it/200/100 200w"
       </a>
     </aside>
     <div
-      class="css-0 e1e9qmuq0"
+      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
     >
       <div
         data-gramm="false"
@@ -843,7 +843,7 @@ https://unsplash.it/200/100 200w"
 exports[`Author should render WithCustomAuthorLinks 1`] = `
 <DocumentFragment>
   <article
-    class="css-13dpkcn e1pwndow0"
+    class="css-15it3wn-AuthorWrapper e18ssx8j1"
   >
     <header>
       <h1
@@ -859,7 +859,7 @@ exports[`Author should render WithCustomAuthorLinks 1`] = `
     </header>
     <img
       alt="DSC07717"
-      class="css-1a2v9hb e1nfkf2e0"
+      class="css-10ctmcf-ImageWrapper e1shv2yg0"
       height="6000"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
@@ -937,7 +937,7 @@ https://unsplash.it/200/100 200w"
       </a>
     </div>
     <div
-      class="css-0 e1e9qmuq0"
+      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
     >
       <div
         data-gramm="false"
@@ -1305,7 +1305,7 @@ https://unsplash.it/200/100 200w"
 exports[`Author should render WithEmotion 1`] = `
 <DocumentFragment>
   <article
-    class="css-13dpkcn e1pwndow0"
+    class="css-15it3wn-AuthorWrapper e18ssx8j1"
   >
     <header>
       <h1
@@ -1321,7 +1321,7 @@ exports[`Author should render WithEmotion 1`] = `
     </header>
     <img
       alt="DSC07717"
-      class="css-1a2v9hb e1nfkf2e0"
+      class="css-10ctmcf-ImageWrapper e1shv2yg0"
       height="6000"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
@@ -1332,7 +1332,7 @@ https://unsplash.it/200/100 200w"
       width="4000"
     />
     <aside
-      class="css-y1qgjo e1pwndow1"
+      class="css-xraw1t-AuthorLinksWrapper e18ssx8j0"
     >
       <a
         class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
@@ -1357,7 +1357,7 @@ https://unsplash.it/200/100 200w"
       </a>
     </aside>
     <div
-      class="css-0 e1e9qmuq0"
+      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
     >
       <div
         data-gramm="false"
@@ -1729,7 +1729,7 @@ exports[`Author should render WithLoading 1`] = `<DocumentFragment />`;
 exports[`Author should render WithoutBio 1`] = `
 <DocumentFragment>
   <article
-    class="css-13dpkcn e1pwndow0"
+    class="css-15it3wn-AuthorWrapper e18ssx8j1"
   >
     <header>
       <h1
@@ -1745,7 +1745,7 @@ exports[`Author should render WithoutBio 1`] = `
     </header>
     <img
       alt="DSC07717"
-      class="css-1a2v9hb e1nfkf2e0"
+      class="css-10ctmcf-ImageWrapper e1shv2yg0"
       height="6000"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
@@ -1756,7 +1756,7 @@ https://unsplash.it/200/100 200w"
       width="4000"
     />
     <aside
-      class="css-y1qgjo e1pwndow1"
+      class="css-xraw1t-AuthorLinksWrapper e18ssx8j0"
     >
       <a
         class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
@@ -1781,7 +1781,7 @@ https://unsplash.it/200/100 200w"
       </a>
     </aside>
     <div
-      class="css-0 e1e9qmuq0"
+      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
     >
       <div
         data-gramm="false"
@@ -1797,7 +1797,7 @@ https://unsplash.it/200/100 200w"
 exports[`Author should render WithoutImage 1`] = `
 <DocumentFragment>
   <article
-    class="css-13dpkcn e1pwndow0"
+    class="css-15it3wn-AuthorWrapper e18ssx8j1"
   >
     <header>
       <h1
@@ -1812,7 +1812,7 @@ exports[`Author should render WithoutImage 1`] = `
       </aside>
     </header>
     <aside
-      class="css-y1qgjo e1pwndow1"
+      class="css-xraw1t-AuthorLinksWrapper e18ssx8j0"
     >
       <a
         class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
@@ -1837,7 +1837,7 @@ exports[`Author should render WithoutImage 1`] = `
       </a>
     </aside>
     <div
-      class="css-0 e1e9qmuq0"
+      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
     >
       <div
         data-gramm="false"
@@ -2205,7 +2205,7 @@ exports[`Author should render WithoutImage 1`] = `
 exports[`Author should render WithoutJobTitle 1`] = `
 <DocumentFragment>
   <article
-    class="css-13dpkcn e1pwndow0"
+    class="css-15it3wn-AuthorWrapper e18ssx8j1"
   >
     <header>
       <h1
@@ -2216,7 +2216,7 @@ exports[`Author should render WithoutJobTitle 1`] = `
     </header>
     <img
       alt="DSC07717"
-      class="css-1a2v9hb e1nfkf2e0"
+      class="css-10ctmcf-ImageWrapper e1shv2yg0"
       height="6000"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
@@ -2227,7 +2227,7 @@ https://unsplash.it/200/100 200w"
       width="4000"
     />
     <aside
-      class="css-y1qgjo e1pwndow1"
+      class="css-xraw1t-AuthorLinksWrapper e18ssx8j0"
     >
       <a
         class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
@@ -2252,7 +2252,7 @@ https://unsplash.it/200/100 200w"
       </a>
     </aside>
     <div
-      class="css-0 e1e9qmuq0"
+      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
     >
       <div
         data-gramm="false"
@@ -2620,7 +2620,7 @@ https://unsplash.it/200/100 200w"
 exports[`Author should render WithoutLinks 1`] = `
 <DocumentFragment>
   <article
-    class="css-13dpkcn e1pwndow0"
+    class="css-15it3wn-AuthorWrapper e18ssx8j1"
   >
     <header>
       <h1
@@ -2636,7 +2636,7 @@ exports[`Author should render WithoutLinks 1`] = `
     </header>
     <img
       alt="DSC07717"
-      class="css-1a2v9hb e1nfkf2e0"
+      class="css-10ctmcf-ImageWrapper e1shv2yg0"
       height="6000"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
@@ -2647,7 +2647,7 @@ https://unsplash.it/200/100 200w"
       width="4000"
     />
     <div
-      class="css-0 e1e9qmuq0"
+      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
     >
       <div
         data-gramm="false"

@@ -1,6 +1,4 @@
-import {useAuthorQuery, AuthorQuery} from '@wepublish/website/api'
-import {QueryResult} from '@apollo/client'
-import {useEffect} from 'react'
+import {useAuthorQuery} from '@wepublish/website/api'
 import {
   BuilderAuthorProps,
   BuilderContainerProps,
@@ -10,24 +8,17 @@ import {
 type IdOrSlug = {id: string; slug?: never} | {id?: never; slug: string}
 
 export type AuthorContainerProps = IdOrSlug &
-  Pick<BuilderAuthorProps, 'authorLinks'> & {
-    onQuery?: (
-      queryResult: Pick<QueryResult<AuthorQuery>, 'data' | 'loading' | 'error' | 'refetch'>
-    ) => void
-  } & BuilderContainerProps
+  Pick<BuilderAuthorProps, 'authorLinks'> &
+  BuilderContainerProps
 
-export function AuthorContainer({onQuery, id, slug, authorLinks, className}: AuthorContainerProps) {
+export function AuthorContainer({id, slug, authorLinks, className}: AuthorContainerProps) {
   const {Author} = useWebsiteBuilder()
-  const {data, loading, error, refetch} = useAuthorQuery({
+  const {data, loading, error} = useAuthorQuery({
     variables: {
       id,
       slug
     }
   })
-
-  useEffect(() => {
-    onQuery?.({data, loading, error, refetch})
-  }, [data, loading, error, refetch, onQuery])
 
   return (
     <Author
