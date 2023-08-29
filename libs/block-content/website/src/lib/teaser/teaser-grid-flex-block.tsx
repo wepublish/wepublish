@@ -33,11 +33,7 @@ const sortTeasersByYAndX = sortWith<FlexTeaser>([
   ascend(teaser => teaser.alignment.x)
 ])
 
-export const TeaserGridFlexBlock = ({
-  flexTeasers,
-  showLead,
-  className
-}: BuilderTeaserGridFlexBlockProps) => {
+export const TeaserGridFlexBlock = ({flexTeasers, className}: BuilderTeaserGridFlexBlockProps) => {
   const {
     blocks: {Teaser}
   } = useWebsiteBuilder()
@@ -50,7 +46,7 @@ export const TeaserGridFlexBlock = ({
   return (
     <TeaserGridFlexBlockWrapper className={className}>
       {sortedTeasers.map((teaser, index) => (
-        <Teaser key={index} showLead={showLead} {...teaser} />
+        <Teaser key={index} {...teaser} />
       ))}
     </TeaserGridFlexBlockWrapper>
   )

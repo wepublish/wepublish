@@ -1,5 +1,5 @@
 import {Meta} from '@storybook/react'
-import {FullImageFragment, PageTeaser} from '@wepublish/website/api'
+import {FullImageFragment, PageTeaser, TeaserStyle} from '@wepublish/website/api'
 import {Teaser} from './teaser'
 
 export default {
@@ -9,8 +9,8 @@ export default {
 
 const image = {
   id: '1234',
-  createdAt: new Date().toDateString(),
-  modifiedAt: new Date().toDateString(),
+  createdAt: new Date('2023-01-01').toDateString(),
+  modifiedAt: new Date('2023-01-01').toDateString(),
   extension: '.jpg',
   fileSize: 1,
   format: '',
@@ -68,21 +68,7 @@ export const Default = {
   }
 }
 
-export const WithShowLead = {
-  args: {
-    alignment: {
-      x: 0,
-      y: 0,
-      w: 3,
-      h: 4,
-      __typename: 'FlexAlignment'
-    },
-    teaser: pageTeaser,
-    showLead: true
-  }
-}
-
-export const WithoutLead = {
+export const WithLightStyle = {
   args: {
     alignment: {
       x: 0,
@@ -93,13 +79,12 @@ export const WithoutLead = {
     },
     teaser: {
       ...pageTeaser,
-      lead: null
-    },
-    showLead: true
+      style: TeaserStyle.Light
+    }
   }
 }
 
-export const WithoutLeadWithoutBlock = {
+export const WithoutBlockWithLightStyle = {
   args: {
     alignment: {
       x: 0,
@@ -110,13 +95,13 @@ export const WithoutLeadWithoutBlock = {
     },
     teaser: {
       ...pageTeaser,
+      style: TeaserStyle.Light,
       lead: null,
       page: {
         ...pageTeaser.page,
         blocks: []
       }
-    },
-    showLead: true
+    }
   }
 }
 

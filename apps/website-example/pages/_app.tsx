@@ -15,10 +15,11 @@ import {
   ApiV1,
   FooterContainer,
   NavbarContainer,
+  NavbarInnerWrapper,
   WebsiteBuilderProvider,
   WebsiteProvider
 } from '@wepublish/website'
-import {setDefaultOptions} from 'date-fns'
+import {format, setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
 import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
@@ -37,6 +38,9 @@ import {ReactComponent as Logo} from '../src/logo.svg'
 import {NextWepublishLink} from '../src/next-wepublish-link'
 import {SessionProvider} from '../src/session.provider'
 import {tsriArticleStyles} from '../src/styles/tsri-article.styles'
+import {TsriButton} from '../src/tsri-button'
+import {TsriParagraph} from '../src/tsri-paragraph'
+import {NavBarProfile} from '../src/navbar-profile'
 
 setDefaultOptions({
   locale: de
@@ -55,7 +59,13 @@ i18next
   })
 z.setErrorMap(zodI18nMap)
 
-const websiteExampleTheme = createTheme(theme, {} as PartialDeep<Theme> | ThemeOptions)
+const websiteExampleTheme = createTheme(theme, {
+  breakpoints: {
+    values: {
+      lg: 1310
+    }
+  }
+} as PartialDeep<Theme> | ThemeOptions)
 
 const Spacer = styled('div')`
   display: grid;
@@ -76,27 +86,55 @@ const MainSpacer = styled(Container)`
   `}
 `
 
-const UnstyledLink = styled(NextWepublishLink)`
+const LogoLink = styled(NextWepublishLink)`
   color: unset;
+  display: grid;
+  align-items: center;
+  justify-items: center;
 `
 
 const LogoWrapper = styled(Logo)`
   fill: currentColor;
-  height: 40px;
+  height: 30px;
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    height: 45px;
+  }
 `
 
 const NavBar = styled(NavbarContainer)`
   background-color: ${({theme}) => theme.palette.common.white};
+  margin-bottom: ${({theme}) => theme.spacing(3)};
+
+  ${NavbarInnerWrapper} {
+    width: 100%;
+    max-width: ${({theme}) => `${theme.breakpoints.values['lg']}${theme.breakpoints.unit}`};
+    align-self: center;
+  }
 `
+
+const dateFormatter = (date: Date, includeTime = true) =>
+  includeTime
+    ? `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
+    : format(date, 'dd. MMMM yyyy')
 
 function CustomApp({Component, pageProps}: AppProps) {
   const theme = useTheme()
-  const globalStyles = useMemo(() => tsriArticleStyles(theme), [theme])
+  const globalStyles = useMemo(
+    () => css`
+      ${tsriArticleStyles(theme)}
+    `,
+    [theme]
+  )
 
   return (
     <SessionProvider sessionToken={null}>
       <WebsiteProvider>
-        <WebsiteBuilderProvider Head={Head} Script={Script} elements={{Link: NextWepublishLink}}>
+        <WebsiteBuilderProvider
+          Head={Head}
+          Script={Script}
+          elements={{Link: NextWepublishLink, Button: TsriButton, Paragraph: TsriParagraph}}
+          date={{format: dateFormatter}}>
           <ThemeProvider theme={websiteExampleTheme}>
             <GlobalStyles styles={globalStyles} />
             <CssBaseline />
@@ -120,18 +158,24 @@ function CustomApp({Component, pageProps}: AppProps) {
             </Head>
 
             <Spacer>
-              <NavBar categorySlugs={['categories']} slug="main" />
+              <NavBar categorySlugs={['categories', 'about-us']} slug="main">
+                <LogoLink href="/">
+                  <LogoWrapper />
+                </LogoLink>
+
+                <NavBarProfile />
+              </NavBar>
 
               <main>
-                <MainSpacer>
+                <MainSpacer maxWidth="lg">
                   <Component {...pageProps} />
                 </MainSpacer>
               </main>
 
               <FooterContainer slug="footer">
-                <UnstyledLink href="/">
+                <LogoLink href="/">
                   <LogoWrapper />
-                </UnstyledLink>
+                </LogoLink>
               </FooterContainer>
             </Spacer>
           </ThemeProvider>

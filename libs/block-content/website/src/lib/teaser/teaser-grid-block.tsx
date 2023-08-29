@@ -36,12 +36,7 @@ const alignmentForTeaserBlock = (index: number, numColumns: number): FlexAlignme
   }
 }
 
-export const TeaserGridBlock = ({
-  numColumns,
-  teasers,
-  showLead,
-  className
-}: BuilderTeaserGridBlockProps) => {
+export const TeaserGridBlock = ({numColumns, teasers, className}: BuilderTeaserGridBlockProps) => {
   const {
     blocks: {Teaser}
   } = useWebsiteBuilder()
@@ -51,7 +46,6 @@ export const TeaserGridBlock = ({
       {teasers?.map((teaser, index) => (
         <Teaser
           key={index}
-          showLead={showLead}
           teaser={teaser}
           alignment={alignmentForTeaserBlock(index, numColumns)}
         />

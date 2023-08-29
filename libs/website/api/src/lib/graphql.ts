@@ -1891,21 +1891,21 @@ export const FullOAuth2AccountFragmentDoc = gql`
 export const ImageUrLsFragmentDoc = gql`
     fragment ImageURLs on Image {
   url
-  bigURL: transformURL(input: {width: 800, output: WEBP, quality: 1})
-  largeURL: transformURL(input: {width: 500, output: WEBP, quality: 1})
-  mediumURL: transformURL(input: {width: 300, output: WEBP, quality: 1})
-  smallURL: transformURL(input: {width: 200, output: WEBP, quality: 1})
+  bigURL: transformURL(input: {width: 800, output: PNG, quality: 1})
+  largeURL: transformURL(input: {width: 500, output: PNG, quality: 1})
+  mediumURL: transformURL(input: {width: 300, output: PNG, quality: 1})
+  smallURL: transformURL(input: {width: 200, output: PNG, quality: 1})
   squareBigURL: transformURL(
-    input: {width: 800, height: 800, output: WEBP, quality: 1}
+    input: {width: 800, height: 800, output: PNG, quality: 1}
   )
   squareLargeURL: transformURL(
-    input: {width: 500, height: 500, output: WEBP, quality: 1}
+    input: {width: 500, height: 500, output: PNG, quality: 1}
   )
   squareMediumURL: transformURL(
-    input: {width: 300, height: 300, output: WEBP, quality: 1}
+    input: {width: 300, height: 300, output: PNG, quality: 1}
   )
   squareSmallURL: transformURL(
-    input: {width: 200, height: 200, output: WEBP, quality: 1}
+    input: {width: 200, height: 200, output: PNG, quality: 1}
   )
 }
     `;

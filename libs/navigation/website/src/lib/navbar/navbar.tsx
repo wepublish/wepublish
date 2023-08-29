@@ -3,7 +3,7 @@ import AppBar from '@mui/material/AppBar'
 import Toolbar from '@mui/material/Toolbar'
 import {FullNavigationFragment} from '@wepublish/website/api'
 import {BuilderNavbarProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {Reducer, useReducer} from 'react'
+import {useCallback, useState} from 'react'
 import {MdClose, MdMenu} from 'react-icons/md'
 import {navigationLinkToUrl} from '../link-to-url'
 
@@ -24,15 +24,25 @@ const appBarStyles = (theme: Theme, isMenuOpen: boolean) =>
     : undefined
 
 export const NavbarInnerWrapper = styled(Toolbar)`
-  display: flex;
-  flex-flow: row wrap;
+  display: grid;
+  align-items: center;
+  grid-auto-flow: column;
   justify-content: space-between;
+  justify-items: center;
+
+  ${({theme}) => css`
+    ${theme.breakpoints.up('md')} {
+      grid-auto-columns: 1fr;
+    }
+  `}
 `
 
 export const NavbarMain = styled('div')`
   display: flex;
   flex-flow: row wrap;
   align-items: center;
+  justify-self: start;
+  gap: ${({theme}) => theme.spacing(2)};
 `
 
 export const NavbarMainItems = styled('div')`
@@ -43,7 +53,6 @@ export const NavbarMainItems = styled('div')`
   font-weight: ${({theme}) => theme.typography.fontWeightMedium};
   font-size: 1.125rem;
   text-transform: uppercase;
-  margin-left: ${({theme}) => theme.spacing(2)};
 
   ${({theme}) => css`
     ${theme.breakpoints.up('sm')} {
@@ -65,7 +74,8 @@ export function Navbar({
   const {
     elements: {IconButton, Link}
   } = useWebsiteBuilder()
-  const [isMenuOpen, toggleMenu] = useReducer<Reducer<boolean, void>>(state => !state, false)
+  const [isMenuOpen, setMenuOpen] = useState(false)
+  const toggleMenu = useCallback(() => setMenuOpen(isOpen => !isOpen), [])
 
   const mainItems = data?.navigations?.find(({key}) => key === slug)
   const categories = categorySlugs.reduce((navigations, categorySlug) => {
@@ -102,7 +112,12 @@ export function Navbar({
                 const url = navigationLinkToUrl(link)
 
                 return (
-                  <Link href={url} key={index} color="inherit" underline="none">
+                  <Link
+                    href={url}
+                    key={index}
+                    color="inherit"
+                    underline="none"
+                    onClick={() => setMenuOpen(false)}>
                     {link.label}
                   </Link>
                 )
@@ -115,7 +130,7 @@ export function Navbar({
       </AppBar>
 
       {isMenuOpen && Boolean(mainItems || categories?.length) && (
-        <NavPaper main={mainItems} categories={categories} />
+        <NavPaper main={mainItems} categories={categories} closeMenu={toggleMenu} />
       )}
     </NavbarWrapper>
   )
@@ -177,10 +192,12 @@ export const NavPaperMainLinks = styled(NavPaperCategoryLinks)`
 
 const NavPaper = ({
   main,
-  categories
+  categories,
+  closeMenu
 }: {
   main: FullNavigationFragment | null | undefined
   categories: FullNavigationFragment[]
+  closeMenu: () => void
 }) => {
   const {
     elements: {Link, H5}
@@ -195,7 +212,7 @@ const NavPaper = ({
             const url = navigationLinkToUrl(link)
 
             return (
-              <Link href={url} key={index} color="inherit" underline="none">
+              <Link href={url} key={index} color="inherit" underline="none" onClick={closeMenu}>
                 {link.label}
               </Link>
             )
@@ -219,7 +236,8 @@ const NavPaper = ({
                       key={index}
                       color="inherit"
                       underline="none"
-                      css={navPaperLinkStyling(theme)}>
+                      css={navPaperLinkStyling(theme)}
+                      onClick={closeMenu}>
                       {link.label}
                     </Link>
                   )

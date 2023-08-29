@@ -21,19 +21,15 @@ export class ExampleURLAdapter implements URLAdapter {
   }
 
   getPublicPageURL(page: PublicPage): string {
-    if (['', '/'].includes(page.slug)) {
-      return this.websiteURL
-    }
-
-    return `${this.websiteURL}/page/${page.id}/${page.slug}`
+    return `${this.websiteURL}/${page.slug}`
   }
 
   getAuthorURL(author: Author): string {
-    return `${this.websiteURL}/author/${author.slug || author.id}`
+    return `${this.websiteURL}/author/${author.slug}`
   }
 
   getEventURL(event: Event): string {
-    return `${this.websiteURL}/events/${event.id}`
+    return `${this.websiteURL}/event/${event.id}`
   }
 
   getCommentURL(item: PublicArticle | PublicPage, comment: PublicComment, peer?: Peer) {

@@ -49,15 +49,13 @@ exports[`Event should render Default 1`] = `
     </script>
     <img
       alt="DSC07717"
-      class="css-1q15kr5-ImageWrapper-Event e1shv2yg0"
-      height="6000"
+      class="css-xp961x-ImageWrapper-Event e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
       title=""
-      width="4000"
     />
     <div
       class="css-1wax86k-EventMeta ec2zadl2"
@@ -524,15 +522,13 @@ exports[`Event should render WithClassName 1`] = `
     </script>
     <img
       alt="DSC07717"
-      class="css-1q15kr5-ImageWrapper-Event e1shv2yg0"
-      height="6000"
+      class="css-xp961x-ImageWrapper-Event e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
       title=""
-      width="4000"
     />
     <div
       class="css-1wax86k-EventMeta ec2zadl2"
@@ -999,15 +995,13 @@ exports[`Event should render WithEmotion 1`] = `
     </script>
     <img
       alt="DSC07717"
-      class="css-1q15kr5-ImageWrapper-Event e1shv2yg0"
-      height="6000"
+      class="css-xp961x-ImageWrapper-Event e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
       title=""
-      width="4000"
     />
     <div
       class="css-1wax86k-EventMeta ec2zadl2"

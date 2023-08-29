@@ -1,6 +1,7 @@
 import {
   ApiV1,
   ArticleContainer,
+  ArticleListContainer,
   ArticleWrapper,
   CommentListContainer,
   useWebsiteBuilder
@@ -14,15 +15,29 @@ export default function ArticleBySlug() {
     query: {id, slug}
   } = useRouter()
   const {
-    elements: {H5}
+    elements: {H3}
   } = useWebsiteBuilder()
+
+  const {data} = ApiV1.useArticleQuery({
+    fetchPolicy: 'cache-only',
+    variables: {
+      slug: slug as string
+    }
+  })
 
   return (
     <>
       <ArticleContainer slug={slug as string} />
 
+      {data?.article && (
+        <ArticleWrapper>
+          <H3 component={'h2'}>Das könnte dich auch interessieren</H3>
+          <ArticleListContainer variables={{filter: {tags: data.article.tags}}} />
+        </ArticleWrapper>
+      )}
+
       <ArticleWrapper>
-        <H5 component={'h2'}>Kommentare</H5>
+        <H3 component={'h2'}>Kommentare</H3>
         <CommentListContainer id={id as string} type={ApiV1.CommentItemType.Article} />
       </ArticleWrapper>
     </>
@@ -42,7 +57,7 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
 
   const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
 
-  await Promise.all([
+  const [article] = await Promise.all([
     client.query({
       query: ApiV1.ArticleDocument,
       variables: {
@@ -56,6 +71,15 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
       }
     })
   ])
+
+  await client.query({
+    query: ApiV1.ArticleListDocument,
+    variables: {
+      filter: {
+        tags: article.data.article.tags
+      }
+    }
+  })
 
   const props = ApiV1.addClientCacheToV1Props(client, {})
 

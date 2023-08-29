@@ -166,7 +166,7 @@ export type WebsiteBuilderComponents = {
   }
 
   date: {
-    format: (date: Date) => string
+    format: (date: Date, includeTime?: boolean) => string
   }
 }
 

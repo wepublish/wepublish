@@ -16,8 +16,8 @@ export default {
 
 const image = {
   id: '1234',
-  createdAt: new Date().toDateString(),
-  modifiedAt: new Date().toDateString(),
+  createdAt: new Date('2023-01-01').toDateString(),
+  modifiedAt: new Date('2023-01-01').toDateString(),
   extension: '.jpg',
   fileSize: 1,
   format: '',
@@ -70,7 +70,16 @@ const articleTeaser = {
         caption: null,
         image
       }
-    ]
+    ],
+    authors: [],
+    publishedAt: new Date('2023-01-01').toISOString(),
+    updatedAt: new Date('2023-01-01').toISOString(),
+    breaking: false,
+    comments: [],
+    properties: [],
+    slug: '',
+    socialMediaAuthors: [],
+    tags: []
   }
 } as ArticleTeaser
 
@@ -117,13 +126,6 @@ export const OneColumn = {
 export const ThreeColumns = {
   args: {
     ...flexTeaser
-  }
-}
-
-export const WithShowLoad = {
-  args: {
-    ...flexTeaser,
-    showLead: true
   }
 }
 

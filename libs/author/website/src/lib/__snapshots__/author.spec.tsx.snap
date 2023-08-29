@@ -19,15 +19,13 @@ exports[`Author should render Default 1`] = `
     </header>
     <img
       alt="DSC07717"
-      class="css-10ctmcf-ImageWrapper e1shv2yg0"
-      height="6000"
+      class="css-6vhkmc-ImageWrapper e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
       title=""
-      width="4000"
     />
     <aside
       class="css-xraw1t-AuthorLinksWrapper e18ssx8j0"
@@ -439,15 +437,13 @@ exports[`Author should render WithClassName 1`] = `
     </header>
     <img
       alt="DSC07717"
-      class="css-10ctmcf-ImageWrapper e1shv2yg0"
-      height="6000"
+      class="css-6vhkmc-ImageWrapper e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
       title=""
-      width="4000"
     />
     <aside
       class="css-xraw1t-AuthorLinksWrapper e18ssx8j0"
@@ -859,15 +855,13 @@ exports[`Author should render WithCustomAuthorLinks 1`] = `
     </header>
     <img
       alt="DSC07717"
-      class="css-10ctmcf-ImageWrapper e1shv2yg0"
-      height="6000"
+      class="css-6vhkmc-ImageWrapper e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
       title=""
-      width="4000"
     />
     <div
       class="MuiBox-root css-13333fs"
@@ -1321,15 +1315,13 @@ exports[`Author should render WithEmotion 1`] = `
     </header>
     <img
       alt="DSC07717"
-      class="css-10ctmcf-ImageWrapper e1shv2yg0"
-      height="6000"
+      class="css-6vhkmc-ImageWrapper e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
       title=""
-      width="4000"
     />
     <aside
       class="css-xraw1t-AuthorLinksWrapper e18ssx8j0"
@@ -1745,15 +1737,13 @@ exports[`Author should render WithoutBio 1`] = `
     </header>
     <img
       alt="DSC07717"
-      class="css-10ctmcf-ImageWrapper e1shv2yg0"
-      height="6000"
+      class="css-6vhkmc-ImageWrapper e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
       title=""
-      width="4000"
     />
     <aside
       class="css-xraw1t-AuthorLinksWrapper e18ssx8j0"
@@ -2216,15 +2206,13 @@ exports[`Author should render WithoutJobTitle 1`] = `
     </header>
     <img
       alt="DSC07717"
-      class="css-10ctmcf-ImageWrapper e1shv2yg0"
-      height="6000"
+      class="css-6vhkmc-ImageWrapper e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
       title=""
-      width="4000"
     />
     <aside
       class="css-xraw1t-AuthorLinksWrapper e18ssx8j0"
@@ -2636,15 +2624,13 @@ exports[`Author should render WithoutLinks 1`] = `
     </header>
     <img
       alt="DSC07717"
-      class="css-10ctmcf-ImageWrapper e1shv2yg0"
-      height="6000"
+      class="css-6vhkmc-ImageWrapper e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
       title=""
-      width="4000"
     />
     <div
       class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"

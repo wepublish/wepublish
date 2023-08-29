@@ -26,7 +26,7 @@ const imageStyles = css`
 
 export function AuthorListItem({
   className,
-  slug,
+  url,
   image,
   name,
   jobTitle
@@ -37,7 +37,7 @@ export function AuthorListItem({
   } = useWebsiteBuilder()
 
   return (
-    <Link css={wrapperStyles(theme)} className={className} href={slug}>
+    <Link css={wrapperStyles(theme)} className={className} href={url}>
       <AuthorListItemImageWrapper>
         {image && <Image image={image} square css={imageStyles} />}
       </AuthorListItemImageWrapper>

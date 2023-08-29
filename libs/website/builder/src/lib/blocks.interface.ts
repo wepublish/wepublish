@@ -51,15 +51,12 @@ export type BuilderPollBlockProps = PollBlock & {className?: string}
 export type BuilderListicleBlockProps = ListicleBlock & {className?: string}
 export type BuilderTeaserGridFlexBlockProps = TeaserGridFlexBlock & {
   className?: string
-  showLead?: boolean
 }
 export type BuilderTeaserGridBlockProps = TeaserGridBlock & {
   className?: string
-  showLead?: boolean
 }
 
 export type BuilderTeaserProps = {
   teaser?: Teaser | null
   alignment: FlexAlignment
-  showLead?: boolean
 } & {className?: string}

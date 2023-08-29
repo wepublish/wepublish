@@ -62,7 +62,12 @@ exports[`Poll Block should render AlreadyVoted 1`] = `
     <div
       class="css-nh52ap-PollBlockMeta ecm33wf0"
     >
-      21 Stimmen – Schliesst am 01.01.2033 00:00
+      21 Stimmen – Schliesst am 
+      <time
+        datetime="2033-01-01"
+      >
+        01.01.2033 00:00
+      </time>
     </div>
   </article>
 </DocumentFragment>
@@ -170,7 +175,12 @@ exports[`Poll Block should render AnonymousAlreadyVoted 1`] = `
     <div
       class="css-nh52ap-PollBlockMeta ecm33wf0"
     >
-      21 Stimmen – Schliesst am 01.01.2033 00:00
+      21 Stimmen – Schliesst am 
+      <time
+        datetime="2033-01-01"
+      >
+        01.01.2033 00:00
+      </time>
     </div>
   </article>
 </DocumentFragment>
@@ -238,7 +248,12 @@ exports[`Poll Block should render AnonymousVoting 1`] = `
     <div
       class="css-nh52ap-PollBlockMeta ecm33wf0"
     >
-      21 Stimmen – Schliesst am 01.01.2033 00:00
+      21 Stimmen – Schliesst am 
+      <time
+        datetime="2033-01-01"
+      >
+        01.01.2033 00:00
+      </time>
     </div>
   </article>
 </DocumentFragment>
@@ -249,7 +264,7 @@ exports[`Poll Block should render AnonymousVotingPlay 1`] = `
 - First value
 + Second value
 
-@@ -31,35 +31,75 @@
+@@ -31,37 +31,77 @@
             </span>
           </p>
         </div>
@@ -336,11 +351,13 @@ exports[`Poll Block should render AnonymousVotingPlay 1`] = `
       <div
         class="css-nh52ap-PollBlockMeta ecm33wf0"
       >
--       21 Stimmen – Schliesst am 01.01.2033 00:00
-+       22 Stimmen – Schliesst am 01.01.2033 00:00
-      </div>
-    </article>
-  </DocumentFragment>"
+-       21 Stimmen – Schliesst am 
++       22 Stimmen – Schliesst am 
+        <time
+          datetime="2033-01-01"
+        >
+          01.01.2033 00:00
+        </time>"
 `;
 
 exports[`Poll Block should render Default 1`] = `
@@ -445,7 +462,12 @@ exports[`Poll Block should render Default 1`] = `
     <div
       class="css-nh52ap-PollBlockMeta ecm33wf0"
     >
-      21 Stimmen – Schliesst am 01.01.2033 00:00
+      21 Stimmen – Schliesst am 
+      <time
+        datetime="2033-01-01"
+      >
+        01.01.2033 00:00
+      </time>
     </div>
   </article>
 </DocumentFragment>
@@ -513,7 +535,12 @@ exports[`Poll Block should render Voting 1`] = `
     <div
       class="css-nh52ap-PollBlockMeta ecm33wf0"
     >
-      21 Stimmen – Schliesst am 01.01.2033 00:00
+      21 Stimmen – Schliesst am 
+      <time
+        datetime="2033-01-01"
+      >
+        01.01.2033 00:00
+      </time>
     </div>
   </article>
 </DocumentFragment>
@@ -632,7 +659,7 @@ exports[`Poll Block should render VotingPlay 1`] = `
 - First value
 + Second value
 
-@@ -31,35 +31,75 @@
+@@ -31,37 +31,77 @@
             </span>
           </p>
         </div>
@@ -719,11 +746,13 @@ exports[`Poll Block should render VotingPlay 1`] = `
       <div
         class="css-nh52ap-PollBlockMeta ecm33wf0"
       >
--       21 Stimmen – Schliesst am 01.01.2033 00:00
-+       22 Stimmen – Schliesst am 01.01.2033 00:00
-      </div>
-    </article>
-  </DocumentFragment>"
+-       21 Stimmen – Schliesst am 
++       22 Stimmen – Schliesst am 
+        <time
+          datetime="2033-01-01"
+        >
+          01.01.2033 00:00
+        </time>"
 `;
 
 exports[`Poll Block should render WihtoutPoll 1`] = `<DocumentFragment />`;
@@ -830,7 +859,12 @@ exports[`Poll Block should render WithClassName 1`] = `
     <div
       class="css-nh52ap-PollBlockMeta ecm33wf0"
     >
-      21 Stimmen – Schliesst am 01.01.2033 00:00
+      21 Stimmen – Schliesst am 
+      <time
+        datetime="2033-01-01"
+      >
+        01.01.2033 00:00
+      </time>
     </div>
   </article>
 </DocumentFragment>
@@ -938,7 +972,12 @@ exports[`Poll Block should render WithEmotion 1`] = `
     <div
       class="css-nh52ap-PollBlockMeta ecm33wf0"
     >
-      21 Stimmen – Schliesst am 01.01.2033 00:00
+      21 Stimmen – Schliesst am 
+      <time
+        datetime="2033-01-01"
+      >
+        01.01.2033 00:00
+      </time>
     </div>
   </article>
 </DocumentFragment>

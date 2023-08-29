@@ -3,22 +3,20 @@
 exports[`Break Block should render Default 1`] = `
 <DocumentFragment>
   <div
-    class="css-1jysk7t-BreakBlockWrapper e11xbw3q1"
+    class="css-1k98guj-BreakBlockWrapper e11xbw3q1"
   >
     <div
       class="css-ywr472-BreakBlockSegment e11xbw3q0"
     >
       <img
         alt="DSC07717"
-        class="css-10ctmcf-ImageWrapper e1shv2yg0"
-        height="6000"
+        class="css-6vhkmc-ImageWrapper e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
         title=""
-        width="4000"
       />
     </div>
     <div
@@ -161,22 +159,20 @@ https://unsplash.it/200/100 200w"
 exports[`Break Block should render ImageRight 1`] = `
 <DocumentFragment>
   <div
-    class="css-1kxa575-BreakBlockWrapper e11xbw3q1"
+    class="css-1k98guj-BreakBlockWrapper e11xbw3q1"
   >
     <div
       class="css-17wr6dm-BreakBlockSegment e11xbw3q0"
     >
       <img
         alt="DSC07717"
-        class="css-10ctmcf-ImageWrapper e1shv2yg0"
-        height="6000"
+        class="css-6vhkmc-ImageWrapper e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
         title=""
-        width="4000"
       />
     </div>
     <div
@@ -319,22 +315,20 @@ https://unsplash.it/200/100 200w"
 exports[`Break Block should render WithClassName 1`] = `
 <DocumentFragment>
   <div
-    class="extra-classname css-1jysk7t-BreakBlockWrapper e11xbw3q1"
+    class="extra-classname css-1k98guj-BreakBlockWrapper e11xbw3q1"
   >
     <div
       class="css-ywr472-BreakBlockSegment e11xbw3q0"
     >
       <img
         alt="DSC07717"
-        class="css-10ctmcf-ImageWrapper e1shv2yg0"
-        height="6000"
+        class="css-6vhkmc-ImageWrapper e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
         title=""
-        width="4000"
       />
     </div>
     <div
@@ -477,22 +471,20 @@ https://unsplash.it/200/100 200w"
 exports[`Break Block should render WithEmotion 1`] = `
 <DocumentFragment>
   <div
-    class="css-1jysk7t-BreakBlockWrapper e11xbw3q1"
+    class="css-1k98guj-BreakBlockWrapper e11xbw3q1"
   >
     <div
       class="css-ywr472-BreakBlockSegment e11xbw3q0"
     >
       <img
         alt="DSC07717"
-        class="css-10ctmcf-ImageWrapper e1shv2yg0"
-        height="6000"
+        class="css-6vhkmc-ImageWrapper e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
         title=""
-        width="4000"
       />
     </div>
     <div
@@ -635,7 +627,7 @@ https://unsplash.it/200/100 200w"
 exports[`Break Block should render WithoutImage 1`] = `
 <DocumentFragment>
   <div
-    class="css-1jysk7t-BreakBlockWrapper e11xbw3q1"
+    class="css-1k98guj-BreakBlockWrapper e11xbw3q1"
   >
     <div
       class="css-ywr472-BreakBlockSegment e11xbw3q0"

@@ -71,8 +71,8 @@ export const Filled: StoryObj = {
             data: {
               registerMember: {
                 session: {
-                  createdAt: new Date(),
-                  expiresAt: new Date(),
+                  createdAt: new Date('2023-01-01'),
+                  expiresAt: new Date('2023-01-01'),
                   token: '1234-1234'
                 },
                 user: {

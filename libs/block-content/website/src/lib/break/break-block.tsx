@@ -9,18 +9,12 @@ export const BreakBlockWrapper = styled('div')<{reverse?: boolean}>`
   display: grid;
   gap: ${({theme}) => theme.spacing(2)};
   justify-content: center;
+  align-items: center;
 
   ${({theme}) => theme.breakpoints.up('md')} {
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: 1fr 1fr;
+    gap: ${({theme}) => theme.spacing(5)};
   }
-
-  ${({theme, reverse}) =>
-    reverse &&
-    css`
-      ${theme.breakpoints.up('md')} {
-        grid-template-columns: 2fr 1fr;
-      }
-    `}
 `
 
 export const BreakBlockSegment = styled('div')<{reverse?: boolean}>`
