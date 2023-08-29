@@ -4,3 +4,4 @@ dist
 .changelog
 coverage
 .env
+Dockerfile
