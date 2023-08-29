@@ -3,10 +3,10 @@
 exports[`Author Chip should render Default 1`] = `
 <DocumentFragment>
   <aside
-    class="css-11wsbvp-AuthorChipWrapper e1jhd13z2"
+    class="css-11wsbvp-AuthorChipWrapper e1jhd13z4"
   >
     <div
-      class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z1"
+      class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z3"
     >
       <img
         alt="DSC07717"
@@ -20,10 +20,10 @@ https://unsplash.it/200/200 200w"
       />
     </div>
     <div
-      class="css-dpf16q-AuthorChipContentWrapper e1jhd13z0"
+      class="css-dpf16q-AuthorChipContentWrapper e1jhd13z2"
     >
-      <p
-        class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+      <div
+        class="css-ohez13-AuthorChipName e1jhd13z0"
       >
         <strong>
           Von 
@@ -34,12 +34,12 @@ https://unsplash.it/200/200 200w"
             Foobar
           </a>
         </strong>
-      </p>
-      <p
-        class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+      </div>
+      <div
+        class="css-1hxmk8r-AuthorChipJobTitle e1jhd13z1"
       >
         Editor
-      </p>
+      </div>
     </div>
   </aside>
 </DocumentFragment>
@@ -48,10 +48,10 @@ https://unsplash.it/200/200 200w"
 exports[`Author Chip should render WithClassName 1`] = `
 <DocumentFragment>
   <aside
-    class="extra-classname css-11wsbvp-AuthorChipWrapper e1jhd13z2"
+    class="extra-classname css-11wsbvp-AuthorChipWrapper e1jhd13z4"
   >
     <div
-      class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z1"
+      class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z3"
     >
       <img
         alt="DSC07717"
@@ -65,10 +65,10 @@ https://unsplash.it/200/200 200w"
       />
     </div>
     <div
-      class="css-dpf16q-AuthorChipContentWrapper e1jhd13z0"
+      class="css-dpf16q-AuthorChipContentWrapper e1jhd13z2"
     >
-      <p
-        class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+      <div
+        class="css-ohez13-AuthorChipName e1jhd13z0"
       >
         <strong>
           Von 
@@ -79,12 +79,12 @@ https://unsplash.it/200/200 200w"
             Foobar
           </a>
         </strong>
-      </p>
-      <p
-        class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+      </div>
+      <div
+        class="css-1hxmk8r-AuthorChipJobTitle e1jhd13z1"
       >
         Editor
-      </p>
+      </div>
     </div>
   </aside>
 </DocumentFragment>
@@ -93,10 +93,10 @@ https://unsplash.it/200/200 200w"
 exports[`Author Chip should render WithEmotion 1`] = `
 <DocumentFragment>
   <aside
-    class="css-11wsbvp-AuthorChipWrapper e1jhd13z2"
+    class="css-11wsbvp-AuthorChipWrapper e1jhd13z4"
   >
     <div
-      class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z1"
+      class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z3"
     >
       <img
         alt="DSC07717"
@@ -110,10 +110,10 @@ https://unsplash.it/200/200 200w"
       />
     </div>
     <div
-      class="css-dpf16q-AuthorChipContentWrapper e1jhd13z0"
+      class="css-dpf16q-AuthorChipContentWrapper e1jhd13z2"
     >
-      <p
-        class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+      <div
+        class="css-ohez13-AuthorChipName e1jhd13z0"
       >
         <strong>
           Von 
@@ -124,12 +124,12 @@ https://unsplash.it/200/200 200w"
             Foobar
           </a>
         </strong>
-      </p>
-      <p
-        class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+      </div>
+      <div
+        class="css-1hxmk8r-AuthorChipJobTitle e1jhd13z1"
       >
         Editor
-      </p>
+      </div>
     </div>
   </aside>
 </DocumentFragment>
@@ -138,16 +138,16 @@ https://unsplash.it/200/200 200w"
 exports[`Author Chip should render WithoutImage 1`] = `
 <DocumentFragment>
   <aside
-    class="css-11wsbvp-AuthorChipWrapper e1jhd13z2"
+    class="css-11wsbvp-AuthorChipWrapper e1jhd13z4"
   >
     <div
-      class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z1"
+      class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z3"
     />
     <div
-      class="css-dpf16q-AuthorChipContentWrapper e1jhd13z0"
+      class="css-dpf16q-AuthorChipContentWrapper e1jhd13z2"
     >
-      <p
-        class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+      <div
+        class="css-ohez13-AuthorChipName e1jhd13z0"
       >
         <strong>
           Von 
@@ -158,12 +158,12 @@ exports[`Author Chip should render WithoutImage 1`] = `
             Foobar
           </a>
         </strong>
-      </p>
-      <p
-        class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+      </div>
+      <div
+        class="css-1hxmk8r-AuthorChipJobTitle e1jhd13z1"
       >
         Editor
-      </p>
+      </div>
     </div>
   </aside>
 </DocumentFragment>
@@ -172,10 +172,10 @@ exports[`Author Chip should render WithoutImage 1`] = `
 exports[`Author Chip should render WithoutJobTitle 1`] = `
 <DocumentFragment>
   <aside
-    class="css-11wsbvp-AuthorChipWrapper e1jhd13z2"
+    class="css-11wsbvp-AuthorChipWrapper e1jhd13z4"
   >
     <div
-      class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z1"
+      class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z3"
     >
       <img
         alt="DSC07717"
@@ -189,10 +189,10 @@ https://unsplash.it/200/200 200w"
       />
     </div>
     <div
-      class="css-dpf16q-AuthorChipContentWrapper e1jhd13z0"
+      class="css-dpf16q-AuthorChipContentWrapper e1jhd13z2"
     >
-      <p
-        class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+      <div
+        class="css-ohez13-AuthorChipName e1jhd13z0"
       >
         <strong>
           Von 
@@ -203,7 +203,7 @@ https://unsplash.it/200/200 200w"
             Foobar
           </a>
         </strong>
-      </p>
+      </div>
     </div>
   </aside>
 </DocumentFragment>

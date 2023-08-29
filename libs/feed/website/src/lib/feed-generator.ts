@@ -15,11 +15,11 @@ export const generateFeed =
     },
     'generator'
   >) =>
-  (articles: Article[]) => {
-    const items = articles.map(article => {
+  async (articles: Article[]) => {
+    const items = articles.map(async article => {
       const seo = getArticleSEO(article)
 
-      const content = toHtml(
+      const content = await toHtml(
         article.blocks.reduce((acc, curr) => {
           if (isRichTextBlock(curr)) {
             acc.push(...curr.richText)
@@ -55,7 +55,7 @@ export const generateFeed =
     })
 
     for (const item of items) {
-      feed.addItem(item)
+      feed.addItem(await item)
     }
 
     for (const category of categories) {

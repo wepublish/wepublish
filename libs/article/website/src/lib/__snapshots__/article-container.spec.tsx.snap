@@ -1958,10 +1958,10 @@ https://unsplash.it/200/100 200w"
       class="css-1u4aasf-ArticleInfoWrapper es3d6yl0"
     >
       <aside
-        class="css-11wsbvp-AuthorChipWrapper e1jhd13z2"
+        class="css-11wsbvp-AuthorChipWrapper e1jhd13z4"
       >
         <div
-          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z1"
+          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z3"
         >
           <img
             alt="DSC07717"
@@ -1975,10 +1975,10 @@ https://unsplash.it/200/200 200w"
           />
         </div>
         <div
-          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z0"
+          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z2"
         >
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          <div
+            class="css-ohez13-AuthorChipName e1jhd13z0"
           >
             <strong>
               Von 
@@ -1989,19 +1989,19 @@ https://unsplash.it/200/200 200w"
                 Foobar
               </a>
             </strong>
-          </p>
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          </div>
+          <div
+            class="css-1hxmk8r-AuthorChipJobTitle e1jhd13z1"
           >
             Editor
-          </p>
+          </div>
         </div>
       </aside>
       <aside
-        class="css-11wsbvp-AuthorChipWrapper e1jhd13z2"
+        class="css-11wsbvp-AuthorChipWrapper e1jhd13z4"
       >
         <div
-          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z1"
+          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z3"
         >
           <img
             alt="DSC07717"
@@ -2015,10 +2015,10 @@ https://unsplash.it/200/200 200w"
           />
         </div>
         <div
-          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z0"
+          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z2"
         >
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          <div
+            class="css-ohez13-AuthorChipName e1jhd13z0"
           >
             <strong>
               Von 
@@ -2029,12 +2029,12 @@ https://unsplash.it/200/200 200w"
                 Foobar
               </a>
             </strong>
-          </p>
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          </div>
+          <div
+            class="css-1hxmk8r-AuthorChipJobTitle e1jhd13z1"
           >
             Editor
-          </p>
+          </div>
         </div>
       </aside>
       <time
@@ -4005,10 +4005,10 @@ https://unsplash.it/200/100 200w"
       class="css-1u4aasf-ArticleInfoWrapper es3d6yl0"
     >
       <aside
-        class="css-11wsbvp-AuthorChipWrapper e1jhd13z2"
+        class="css-11wsbvp-AuthorChipWrapper e1jhd13z4"
       >
         <div
-          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z1"
+          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z3"
         >
           <img
             alt="DSC07717"
@@ -4022,10 +4022,10 @@ https://unsplash.it/200/200 200w"
           />
         </div>
         <div
-          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z0"
+          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z2"
         >
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          <div
+            class="css-ohez13-AuthorChipName e1jhd13z0"
           >
             <strong>
               Von 
@@ -4036,19 +4036,19 @@ https://unsplash.it/200/200 200w"
                 Foobar
               </a>
             </strong>
-          </p>
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          </div>
+          <div
+            class="css-1hxmk8r-AuthorChipJobTitle e1jhd13z1"
           >
             Editor
-          </p>
+          </div>
         </div>
       </aside>
       <aside
-        class="css-11wsbvp-AuthorChipWrapper e1jhd13z2"
+        class="css-11wsbvp-AuthorChipWrapper e1jhd13z4"
       >
         <div
-          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z1"
+          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z3"
         >
           <img
             alt="DSC07717"
@@ -4062,10 +4062,10 @@ https://unsplash.it/200/200 200w"
           />
         </div>
         <div
-          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z0"
+          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z2"
         >
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          <div
+            class="css-ohez13-AuthorChipName e1jhd13z0"
           >
             <strong>
               Von 
@@ -4076,12 +4076,12 @@ https://unsplash.it/200/200 200w"
                 Foobar
               </a>
             </strong>
-          </p>
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          </div>
+          <div
+            class="css-1hxmk8r-AuthorChipJobTitle e1jhd13z1"
           >
             Editor
-          </p>
+          </div>
         </div>
       </aside>
       <time
@@ -6052,10 +6052,10 @@ https://unsplash.it/200/100 200w"
       class="css-1u4aasf-ArticleInfoWrapper es3d6yl0"
     >
       <aside
-        class="css-11wsbvp-AuthorChipWrapper e1jhd13z2"
+        class="css-11wsbvp-AuthorChipWrapper e1jhd13z4"
       >
         <div
-          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z1"
+          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z3"
         >
           <img
             alt="DSC07717"
@@ -6069,10 +6069,10 @@ https://unsplash.it/200/200 200w"
           />
         </div>
         <div
-          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z0"
+          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z2"
         >
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          <div
+            class="css-ohez13-AuthorChipName e1jhd13z0"
           >
             <strong>
               Von 
@@ -6083,19 +6083,19 @@ https://unsplash.it/200/200 200w"
                 Foobar
               </a>
             </strong>
-          </p>
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          </div>
+          <div
+            class="css-1hxmk8r-AuthorChipJobTitle e1jhd13z1"
           >
             Editor
-          </p>
+          </div>
         </div>
       </aside>
       <aside
-        class="css-11wsbvp-AuthorChipWrapper e1jhd13z2"
+        class="css-11wsbvp-AuthorChipWrapper e1jhd13z4"
       >
         <div
-          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z1"
+          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z3"
         >
           <img
             alt="DSC07717"
@@ -6109,10 +6109,10 @@ https://unsplash.it/200/200 200w"
           />
         </div>
         <div
-          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z0"
+          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z2"
         >
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          <div
+            class="css-ohez13-AuthorChipName e1jhd13z0"
           >
             <strong>
               Von 
@@ -6123,12 +6123,12 @@ https://unsplash.it/200/200 200w"
                 Foobar
               </a>
             </strong>
-          </p>
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          </div>
+          <div
+            class="css-1hxmk8r-AuthorChipJobTitle e1jhd13z1"
           >
             Editor
-          </p>
+          </div>
         </div>
       </aside>
       <time
@@ -8102,10 +8102,10 @@ https://unsplash.it/200/100 200w"
       class="css-1u4aasf-ArticleInfoWrapper es3d6yl0"
     >
       <aside
-        class="css-11wsbvp-AuthorChipWrapper e1jhd13z2"
+        class="css-11wsbvp-AuthorChipWrapper e1jhd13z4"
       >
         <div
-          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z1"
+          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z3"
         >
           <img
             alt="DSC07717"
@@ -8119,10 +8119,10 @@ https://unsplash.it/200/200 200w"
           />
         </div>
         <div
-          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z0"
+          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z2"
         >
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          <div
+            class="css-ohez13-AuthorChipName e1jhd13z0"
           >
             <strong>
               Von 
@@ -8133,19 +8133,19 @@ https://unsplash.it/200/200 200w"
                 Foobar
               </a>
             </strong>
-          </p>
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          </div>
+          <div
+            class="css-1hxmk8r-AuthorChipJobTitle e1jhd13z1"
           >
             Editor
-          </p>
+          </div>
         </div>
       </aside>
       <aside
-        class="css-11wsbvp-AuthorChipWrapper e1jhd13z2"
+        class="css-11wsbvp-AuthorChipWrapper e1jhd13z4"
       >
         <div
-          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z1"
+          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z3"
         >
           <img
             alt="DSC07717"
@@ -8159,10 +8159,10 @@ https://unsplash.it/200/200 200w"
           />
         </div>
         <div
-          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z0"
+          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z2"
         >
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          <div
+            class="css-ohez13-AuthorChipName e1jhd13z0"
           >
             <strong>
               Von 
@@ -8173,12 +8173,12 @@ https://unsplash.it/200/200 200w"
                 Foobar
               </a>
             </strong>
-          </p>
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          </div>
+          <div
+            class="css-1hxmk8r-AuthorChipJobTitle e1jhd13z1"
           >
             Editor
-          </p>
+          </div>
         </div>
       </aside>
       <time
@@ -10149,10 +10149,10 @@ https://unsplash.it/200/100 200w"
       class="css-1u4aasf-ArticleInfoWrapper es3d6yl0"
     >
       <aside
-        class="css-11wsbvp-AuthorChipWrapper e1jhd13z2"
+        class="css-11wsbvp-AuthorChipWrapper e1jhd13z4"
       >
         <div
-          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z1"
+          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z3"
         >
           <img
             alt="DSC07717"
@@ -10166,10 +10166,10 @@ https://unsplash.it/200/200 200w"
           />
         </div>
         <div
-          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z0"
+          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z2"
         >
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          <div
+            class="css-ohez13-AuthorChipName e1jhd13z0"
           >
             <strong>
               Von 
@@ -10180,19 +10180,19 @@ https://unsplash.it/200/200 200w"
                 Foobar
               </a>
             </strong>
-          </p>
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          </div>
+          <div
+            class="css-1hxmk8r-AuthorChipJobTitle e1jhd13z1"
           >
             Editor
-          </p>
+          </div>
         </div>
       </aside>
       <aside
-        class="css-11wsbvp-AuthorChipWrapper e1jhd13z2"
+        class="css-11wsbvp-AuthorChipWrapper e1jhd13z4"
       >
         <div
-          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z1"
+          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z3"
         >
           <img
             alt="DSC07717"
@@ -10206,10 +10206,10 @@ https://unsplash.it/200/200 200w"
           />
         </div>
         <div
-          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z0"
+          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z2"
         >
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          <div
+            class="css-ohez13-AuthorChipName e1jhd13z0"
           >
             <strong>
               Von 
@@ -10220,12 +10220,12 @@ https://unsplash.it/200/200 200w"
                 Foobar
               </a>
             </strong>
-          </p>
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          </div>
+          <div
+            class="css-1hxmk8r-AuthorChipJobTitle e1jhd13z1"
           >
             Editor
-          </p>
+          </div>
         </div>
       </aside>
       <time

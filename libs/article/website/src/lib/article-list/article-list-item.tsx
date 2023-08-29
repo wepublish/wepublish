@@ -38,7 +38,7 @@ export function ArticleListItem({className, ...data}: Article & {className?: str
       </ArticleListItemImageWrapper>
 
       <ArticleListItemContent>
-        <Paragraph gutterBottom={false}>{format(new Date(data.publishedAt))}</Paragraph>
+        <time dateTime={data.publishedAt}>{format(new Date(data.publishedAt), false)}</time>
 
         {data.title && <H5 component="h1">{data.title}</H5>}
         {data.authors && <Paragraph>von {data.authors.map(a => a.name).join(', ')}</Paragraph>}

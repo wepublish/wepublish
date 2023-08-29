@@ -1,7 +1,10 @@
 //@ts-check
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const {composePlugins, withNx} = require('@nx/next')
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: false,
+  openAnalyzer: false
+})
 
 /**
  * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
@@ -10,6 +13,8 @@ const nextConfig = {
   nx: {
     svgr: true
   },
+  poweredByHeader: false,
+  reactStrictMode: true,
   publicRuntimeConfig: {
     env: {
       API_URL: process.env.API_URL || ''
@@ -43,7 +48,8 @@ const nextConfig = {
 
 const plugins = [
   // Add more Next.js plugins to this list if needed.
-  withNx
+  withNx,
+  withBundleAnalyzer
 ]
 
 module.exports = composePlugins(...plugins)(nextConfig)
