@@ -19,7 +19,7 @@ COPY --from=dependencies /dependencies .
 RUN npm run build --prod
 
 
-FROM node:16-alpine3.17
+FROM node:16-alpine3.17 as runtime
 WORKDIR /app
 COPY --chown=node:node --from=builder /build/node_modules ./node_modules
 COPY --chown=node:node --from=builder /build/dist ./dist
