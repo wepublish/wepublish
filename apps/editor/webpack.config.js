@@ -7,5 +7,6 @@ module.exports = composePlugins(withNx(), withReact(), (config, {options, contex
   // e.g. config.plugins.push(new MyPlugin())
   // For more information on webpack config and Nx see:
   // https://nx.dev/packages/webpack/documents/webpack-config-setup
+  config.devServer.client.overlay.runtimeErrors = false
   return config
 })
