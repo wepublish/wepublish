@@ -31,6 +31,7 @@ import {
 } from '@wepublish/block-content/website'
 import {CommentEditor, CommentList, CommentListItem} from '@wepublish/comments/website'
 import {Event, EventList, EventListItem, EventSEO} from '@wepublish/event/website'
+import {PersonalDataForm} from '@wepublish/user/website'
 import {Image} from '@wepublish/image/website'
 import {Footer, Navbar} from '@wepublish/navigation/website'
 import {Page, PageSEO} from '@wepublish/page/website'
@@ -51,6 +52,7 @@ import {
   OrderedList,
   Paragraph,
   UnorderedList,
+  ImageUpload,
   theme
 } from '@wepublish/ui'
 import {WebsiteBuilderProvider} from '@wepublish/website/builder'
@@ -113,6 +115,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
         PageSEO={PageSEO}
         LoginForm={LoginForm}
         RegistrationForm={RegistrationForm}
+        PersonalDataForm={PersonalDataForm}
         elements={{
           TextField,
           Alert,
@@ -127,6 +130,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           Paragraph,
           Link,
           UnorderedList,
+          ImageUpload,
           OrderedList,
           ListItem,
           Image

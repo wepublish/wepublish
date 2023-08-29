@@ -1,63 +1,102 @@
-import {MutationResult, QueryResult} from '@apollo/client'
+import {MutationResult} from '@apollo/client'
+import {useUser} from '@wepublish/authentication/website'
 import {
-  ChallengeQuery,
-  RegisterMutation,
-  useChallengeQuery,
-  useRegisterMutation
+  FullImageFragment,
+  UpdatePasswordMutation,
+  UpdatePasswordMutationVariables,
+  UpdateUserMutation,
+  UpdateUserMutationVariables,
+  UploadImageInput,
+  UploadImageMutation,
+  useUpdatePasswordMutation,
+  useUpdateUserMutation,
+  useUploadImageMutation
 } from '@wepublish/website/api'
 import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {useEffect} from 'react'
-import {useUser} from '../session.context'
 
 export type PersonalDataFormContainerProps = {
-  onChallengeQuery?: (
-    queryResult: Pick<QueryResult<ChallengeQuery>, 'data' | 'loading' | 'error' | 'refetch'>
-  ) => void
-
-  onRegister?: (
-    mutationResult: Pick<MutationResult<RegisterMutation>, 'data' | 'loading' | 'error'>
+  onUpdate?: (
+    mutationResult: Pick<MutationResult<UpdateUserMutation>, 'data' | 'loading' | 'error'> &
+      Pick<MutationResult<UpdatePasswordMutation>, 'data' | 'loading' | 'error'> &
+      Pick<MutationResult<UploadImageMutation>, 'data' | 'loading' | 'error'>
   ) => void
 } & BuilderContainerProps
 
-export function PersonalDataFormContainer({
-  onRegister,
-  onChallengeQuery,
-  className
-}: PersonalDataFormContainerProps) {
+export function PersonalDataFormContainer({onUpdate, className}: PersonalDataFormContainerProps) {
   const {PersonalDataForm} = useWebsiteBuilder()
-  const {setToken} = useUser()
-  const [register, registerData] = useRegisterMutation({
-    onError: () => challenge.refetch(),
+  const {user} = useUser()
+
+  const [uploadImage, uploadImageData] = useUploadImageMutation({
     onCompleted(data) {
-      setToken({
-        createdAt: data.registerMember.session.createdAt,
-        expiresAt: data.registerMember.session.expiresAt,
-        token: data.registerMember.session.token
-      })
+      console.log('data', data)
     }
   })
-  const challenge = useChallengeQuery()
 
-  useEffect(() => {
-    if (registerData.called) {
-      onRegister?.(registerData)
+  const [updatePassword, updatePasswordData] = useUpdatePasswordMutation({
+    onCompleted(data) {
+      console.log('data', data)
     }
-  }, [registerData, onRegister])
+  })
+
+  const [updateUser, updateUserData] = useUpdateUserMutation({
+    onCompleted(data) {
+      console.log('data', data)
+    }
+  })
 
   useEffect(() => {
-    onChallengeQuery?.(challenge)
-  }, [challenge, onChallengeQuery])
+    if (updateUserData.called || updatePasswordData.called || uploadImageData.called) {
+      onUpdate?.(updateUserData)
+      onUpdate?.(updatePasswordData)
+      onUpdate?.(uploadImageData)
+    }
+  }, [updateUserData, updatePasswordData, uploadImageData, onUpdate])
+
+  const handleOnImageUpload = (input: UploadImageInput) => {
+    uploadImage({
+      variables: {
+        uploadImageInput: input
+      }
+    })
+  }
+
+  const handleOnUpdate = (
+    variables: UpdateUserMutationVariables['input'] & Partial<UpdatePasswordMutationVariables>
+  ) => {
+    const {password, passwordRepeated, ...userInput} = variables
+
+    try {
+      if (password && passwordRepeated) {
+        updatePassword({
+          variables: {
+            password,
+            passwordRepeated
+          }
+        })
+      }
+
+      updateUser({
+        variables: {
+          input: userInput
+        }
+      })
+    } catch (err) {
+      console.log('err', err)
+    }
+  }
+
+  if (!user) {
+    return
+  }
 
   return (
     <PersonalDataForm
       className={className}
-      challenge={challenge}
-      register={registerData}
-      onRegister={variables =>
-        register({
-          variables
-        })
-      }
+      initialUser={user as UpdateUserMutationVariables['input'] & {image?: FullImageFragment}}
+      update={updateUserData}
+      onImageUpload={handleOnImageUpload}
+      onUpdate={handleOnUpdate}
     />
   )
 }

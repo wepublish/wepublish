@@ -1,8 +1,11 @@
 import {zodResolver} from '@hookform/resolvers/zod'
-import {IconButton, InputAdornment, css, styled} from '@mui/material'
-import {RegisterMutationVariables} from '@wepublish/website/api'
-import {BuilderPersonalDataFormProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {useEffect, useReducer} from 'react'
+import {IconButton, InputAdornment, Theme, css, styled, useTheme} from '@mui/material'
+import {
+  BuilderPersonalDataFormProps,
+  PersonalDataFormFields,
+  useWebsiteBuilder
+} from '@wepublish/website/builder'
+import {useReducer} from 'react'
 import {Controller, useForm} from 'react-hook-form'
 import {MdVisibility, MdVisibilityOff} from 'react-icons/md'
 import {OptionalKeysOf} from 'type-fest'
@@ -24,7 +27,47 @@ export const PersonalDataAddressWrapper = styled('div')`
   grid-column-end: 3;
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};
-  grid-template-columns: repeat(1fr, 3);
+  grid-template-columns: repeat(1fr, 4);
+`
+
+const postCodeStyles = css`
+  grid-column-start: 1;
+  grid-column-end: 2;
+`
+
+const cityStyles = css`
+  grid-column-start: 2;
+  grid-column-end: 4;
+`
+
+const PasswordWrapper = styled('div')`
+  position: relative;
+  margin-top: 12px;
+  grid-column-start: 1;
+  grid-column-end: 3;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: ${({theme}) => theme.spacing(3)};
+`
+
+const passwordNoteStyles = (theme: Theme) => css`
+  font-size: ${theme.typography.caption.fontSize};
+  position: absolute;
+  top: -18px;
+`
+
+const emailStyles = (theme: Theme) => css`
+  grid-column-start: 1;
+  grid-column-end: 3;
+  ${theme.breakpoints.up('sm')} {
+    grid-column-start: 1;
+    grid-column-end: 2;
+  }
+`
+
+const flairStyles = css`
+  grid-column-start: 1;
+  grid-column-end: 3;
 `
 
 const addressStyles = css`
@@ -32,101 +75,121 @@ const addressStyles = css`
   grid-column-end: 4;
 `
 
-export const PersonalDataChallengeWrapper = styled('div')`
-  display: grid;
-  grid-template-columns: minmax(max-content, 200px) 200px;
-  align-items: center;
-  gap: ${({theme}) => theme.spacing(3)};
-  justify-content: flex-start;
-`
-
-export const PersonalDataChallenge = styled('div')`
-  height: 100%;
-  display: grid;
-
-  svg {
-    height: 100%;
-  }
-`
-
 const buttonStyles = css`
   justify-self: flex-end;
 `
 
 const requiredSchema = z.object({
-  name: z.string().nonempty(),
   email: z.string().email().nonempty(),
-  challengeAnswer: z.object({
-    challengeSolution: z.string().nonempty(),
-    challengeID: z.string().nonempty()
-  })
+  name: z.string().nonempty()
 })
 
 const defaultSchema = z.object({
+  firstName: z.string().optional(),
   preferredName: z.string().optional(),
-  firstName: z.string().nonempty(),
+  flair: z.string().optional(),
   address: z.object({
     streetAddress: z.string().nonempty(),
     zipCode: z.string().nonempty(),
     city: z.string().nonempty(),
     country: z.string().nonempty()
   }),
-  password: z.string().min(8)
+  password: z.string().min(8).optional(),
+  passwordRepeated: z.string().min(8).optional(),
+  uploadImageInput: z.object({
+    description: z.string().optional(),
+    file: z.any(),
+    filename: z.string().optional(),
+    focalPoint: z.object({x: z.string(), y: z.string()}),
+    license: z.string().optional(),
+    link: z.string().optional(),
+    source: z.string().optional(),
+    tags: z.array(z.string()).optional(),
+    title: z.string().optional()
+  })
 })
 
-export function PersonalDataForm<T extends OptionalKeysOf<RegisterMutationVariables>>({
-  challenge,
-  fields = ['firstName', 'address', 'password'] as T[],
-  register,
+export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields>>({
+  fields = [
+    'firstName',
+    'name',
+    'flair',
+    'address',
+    'password',
+    'passwordRepeated',
+    'preferredName',
+    'image'
+  ] as T[],
+  update,
   className,
+  initialUser,
   schema = defaultSchema,
-  onRegister
+  onUpdate,
+  onImageUpload
 }: BuilderPersonalDataFormProps<T>) {
+  const theme = useTheme()
   const [showPassword, togglePassword] = useReducer(state => !state, false)
+  const [showRepeatPassword, toggleRepeatPassword] = useReducer(state => !state, false)
 
   const fieldsToDisplay = fields.reduce(
     (obj, field) => ({...obj, [field]: true}),
-    {} as Record<OptionalKeysOf<RegisterMutationVariables>, true>
+    {} as Record<OptionalKeysOf<PersonalDataFormFields>, true>
   )
 
-  const validationSchema = requiredSchema.merge(schema.pick(fieldsToDisplay))
+  console.log('fieldsToDisplay', fieldsToDisplay)
 
-  const {handleSubmit, control, setValue} = useForm<RegisterMutationVariables>({
+  const validationSchema = requiredSchema
+    .merge(schema.pick(fieldsToDisplay))
+    .refine(data => data.password === data.passwordRepeated, {
+      message: "Passwords don't match",
+      path: ['passwordRepeated']
+    })
+
+  const {handleSubmit, control} = useForm<PersonalDataFormFields>({
     resolver: zodResolver(validationSchema),
     defaultValues: {
-      challengeAnswer: {
-        challengeID: '',
-        challengeSolution: ''
-      },
       address: {
-        city: '',
-        country: '',
-        streetAddress: '',
-        zipCode: ''
+        city: initialUser.address?.city || '',
+        country: initialUser.address?.country || '',
+        streetAddress: initialUser.address?.streetAddress || '',
+        zipCode: initialUser.address?.zipCode || ''
       },
-      email: '',
-      name: '',
-      firstName: '',
+      email: initialUser.email || '',
+      firstName: initialUser.firstName || '',
+      preferredName: initialUser.preferredName || '',
+      name: initialUser.name || '',
+      flair: initialUser.flair || '',
       password: '',
-      preferredName: ''
+      passwordRepeated: '',
+      uploadImageInput: initialUser.uploadImageInput || {}
     },
     mode: 'onTouched',
     reValidateMode: 'onChange'
   })
 
   const {
-    elements: {TextField, Alert, Button}
+    elements: {TextField, Alert, Button, Paragraph, ImageUpload}
   } = useWebsiteBuilder()
 
-  const onSubmit = handleSubmit(data => onRegister?.(data))
+  const onSubmit = handleSubmit(data => onUpdate?.(data))
 
-  useEffect(() => {
-    setValue('challengeAnswer.challengeID', challenge.data?.challenge.challengeID ?? '')
-  }, [challenge, setValue])
+  console.log('initialUser', initialUser)
 
   return (
     <PersonalDataFormWrapper className={className} onSubmit={onSubmit}>
       <PersonalDataInputForm>
+        {fieldsToDisplay.image && (
+          <PersonalDataAddressWrapper>
+            <Controller
+              name={'uploadImageInput'}
+              control={control}
+              render={({field, fieldState: {error}}) => (
+                <ImageUpload {...field} image={initialUser.image} onUpload={onImageUpload} />
+              )}
+            />
+          </PersonalDataAddressWrapper>
+        )}
+
         {fieldsToDisplay.firstName && (
           <Controller
             name={'firstName'}
@@ -136,7 +199,13 @@ export function PersonalDataForm<T extends OptionalKeysOf<RegisterMutationVariab
             )}
           />
         )}
-
+        <Controller
+          name={'name'}
+          control={control}
+          render={({field, fieldState: {error}}) => (
+            <TextField {...field} label={'Nachname'} error={!!error} helperText={error?.message} />
+          )}
+        />
         {fieldsToDisplay.preferredName && (
           <Controller
             name={'preferredName'}
@@ -151,59 +220,21 @@ export function PersonalDataForm<T extends OptionalKeysOf<RegisterMutationVariab
             )}
           />
         )}
-
-        <Controller
-          name={'name'}
-          control={control}
-          render={({field, fieldState: {error}}) => (
-            <TextField {...field} label={'Nachname'} error={!!error} helperText={error?.message} />
-          )}
-        />
-
-        <Controller
-          name={'email'}
-          control={control}
-          render={({field, fieldState: {error}}) => (
-            <TextField
-              {...field}
-              type={'email'}
-              fullWidth
-              label={'Email'}
-              error={!!error}
-              helperText={error?.message}
-            />
-          )}
-        />
-
-        {fieldsToDisplay.password && (
+        {fieldsToDisplay.flair && (
           <Controller
-            name={'password'}
+            name={'flair'}
             control={control}
             render={({field, fieldState: {error}}) => (
               <TextField
                 {...field}
-                type={showPassword ? 'text' : 'password'}
-                fullWidth
-                label={'Passwort'}
+                css={flairStyles}
+                label={'Function/Profession'}
                 error={!!error}
                 helperText={error?.message}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        onClick={togglePassword}
-                        onMouseDown={event => event.preventDefault()}
-                        edge="end">
-                        {showPassword ? <MdVisibilityOff /> : <MdVisibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  )
-                }}
               />
             )}
           />
         )}
-
         {fieldsToDisplay.address && (
           <PersonalDataAddressWrapper>
             <Controller
@@ -228,6 +259,7 @@ export function PersonalDataForm<T extends OptionalKeysOf<RegisterMutationVariab
                 <TextField
                   {...field}
                   fullWidth
+                  css={postCodeStyles}
                   label={'Postleitzahl'}
                   error={!!error}
                   helperText={error?.message}
@@ -242,6 +274,7 @@ export function PersonalDataForm<T extends OptionalKeysOf<RegisterMutationVariab
                 <TextField
                   {...field}
                   fullWidth
+                  css={cityStyles}
                   label={'Stadt'}
                   error={!!error}
                   helperText={error?.message}
@@ -255,6 +288,7 @@ export function PersonalDataForm<T extends OptionalKeysOf<RegisterMutationVariab
               render={({field, fieldState: {error}}) => (
                 <TextField
                   {...field}
+                  css={addressStyles}
                   fullWidth
                   label={'Land'}
                   error={!!error}
@@ -264,35 +298,88 @@ export function PersonalDataForm<T extends OptionalKeysOf<RegisterMutationVariab
             />
           </PersonalDataAddressWrapper>
         )}
+        {fieldsToDisplay.password && (
+          <PasswordWrapper>
+            <Controller
+              name={'password'}
+              control={control}
+              render={({field, fieldState: {error}}) => (
+                <>
+                  <Paragraph css={() => passwordNoteStyles(theme)}>
+                    Fill in only if you want to change password. Otherwise leave blank.
+                  </Paragraph>
+                  <TextField
+                    {...field}
+                    type={showPassword ? 'text' : 'password'}
+                    fullWidth
+                    label={'Passwort'}
+                    error={!!error}
+                    helperText={error?.message}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <IconButton
+                            onClick={togglePassword}
+                            onMouseDown={event => event.preventDefault()}
+                            edge="end">
+                            {showPassword ? <MdVisibilityOff /> : <MdVisibility />}
+                          </IconButton>
+                        </InputAdornment>
+                      )
+                    }}
+                  />
+                </>
+              )}
+            />
+            <Controller
+              name={'passwordRepeated'}
+              control={control}
+              render={({field, fieldState: {error}}) => (
+                <TextField
+                  {...field}
+                  type={showRepeatPassword ? 'text' : 'password'}
+                  fullWidth
+                  label={'Repeat Passwort'}
+                  error={!!error}
+                  helperText={error?.message}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">
+                        <IconButton
+                          onClick={toggleRepeatPassword}
+                          onMouseDown={event => event.preventDefault()}
+                          edge="end">
+                          {showRepeatPassword ? <MdVisibilityOff /> : <MdVisibility />}
+                        </IconButton>
+                      </InputAdornment>
+                    )
+                  }}
+                />
+              )}
+            />
+          </PasswordWrapper>
+        )}
+        <Controller
+          name={'email'}
+          control={control}
+          render={({field, fieldState: {error}}) => (
+            <TextField
+              {...field}
+              css={() => emailStyles(theme)}
+              type={'email'}
+              fullWidth
+              disabled
+              label={'Email (not editable)'}
+              error={!!error}
+              helperText={error?.message}
+            />
+          )}
+        />
       </PersonalDataInputForm>
+      {update.error && <Alert severity="error">{update.error.message}</Alert>}
 
-      {challenge.data && (
-        <PersonalDataChallengeWrapper>
-          <PersonalDataChallenge
-            dangerouslySetInnerHTML={{
-              __html:
-                challenge.data.challenge.challenge
-                  ?.replace('#ffffff', 'transparent')
-                  .replace('width="200"', '')
-                  .replace('height="200"', '') ?? ''
-            }}
-          />
-
-          <Controller
-            name={'challengeAnswer.challengeSolution'}
-            control={control}
-            render={({field, fieldState: {error}}) => (
-              <TextField {...field} label={'Captcha'} error={!!error} helperText={error?.message} />
-            )}
-          />
-        </PersonalDataChallengeWrapper>
-      )}
-
-      {challenge.error && <Alert severity="error">{challenge.error.message}</Alert>}
-      {register.error && <Alert severity="error">{register.error.message}</Alert>}
-
-      <Button css={buttonStyles} disabled={register.loading || challenge.loading} type="submit">
-        Registrieren
+      <Button css={buttonStyles} disabled={update.loading} type="submit">
+        Save
       </Button>
     </PersonalDataFormWrapper>
   )

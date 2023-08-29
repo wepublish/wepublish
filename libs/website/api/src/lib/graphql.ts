@@ -1673,7 +1673,16 @@ export type EventQuery = { __typename?: 'Query', event: { __typename?: 'Event', 
 
 export type ImageUrLsFragment = { __typename?: 'Image', url?: string | null, bigURL?: string | null, largeURL?: string | null, mediumURL?: string | null, smallURL?: string | null, squareBigURL?: string | null, squareLargeURL?: string | null, squareMediumURL?: string | null, squareSmallURL?: string | null };
 
+export type ImageRefFragment = { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, bigURL?: string | null, largeURL?: string | null, mediumURL?: string | null, smallURL?: string | null, squareBigURL?: string | null, squareLargeURL?: string | null, squareMediumURL?: string | null, squareSmallURL?: string | null };
+
 export type FullImageFragment = { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, bigURL?: string | null, largeURL?: string | null, mediumURL?: string | null, smallURL?: string | null, squareBigURL?: string | null, squareLargeURL?: string | null, squareMediumURL?: string | null, squareSmallURL?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null };
+
+export type UploadImageMutationVariables = Exact<{
+  uploadImageInput: UploadImageInput;
+}>;
+
+
+export type UploadImageMutation = { __typename?: 'Mutation', uploadUserProfileImage?: { __typename?: 'User', id: string, name: string, firstName?: string | null, preferredName?: string | null, flair?: string | null, email: string, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, paymentProviderCustomers: Array<{ __typename?: 'PaymentProviderCustomer', paymentProviderID: string, customerID: string }>, oauth2Accounts: Array<{ __typename?: 'OAuth2Account', type: string, provider: string, scope: string }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, bigURL?: string | null, largeURL?: string | null, mediumURL?: string | null, smallURL?: string | null, squareBigURL?: string | null, squareLargeURL?: string | null, squareMediumURL?: string | null, squareSmallURL?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'PublicProperties', key: string, value: string }> } | null };
 
 export type MemberPlanListQueryVariables = Exact<{
   take?: InputMaybe<Scalars['Int']>;
@@ -1857,6 +1866,21 @@ export type RegisterMutationVariables = Exact<{
 
 
 export type RegisterMutation = { __typename?: 'Mutation', registerMember: { __typename?: 'Registration', user: { __typename?: 'User', id: string, name: string, firstName?: string | null, preferredName?: string | null, flair?: string | null, email: string, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, paymentProviderCustomers: Array<{ __typename?: 'PaymentProviderCustomer', paymentProviderID: string, customerID: string }>, oauth2Accounts: Array<{ __typename?: 'OAuth2Account', type: string, provider: string, scope: string }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, bigURL?: string | null, largeURL?: string | null, mediumURL?: string | null, smallURL?: string | null, squareBigURL?: string | null, squareLargeURL?: string | null, squareMediumURL?: string | null, squareSmallURL?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'PublicProperties', key: string, value: string }> }, session: { __typename?: 'UserSession', token: string, expiresAt: string, createdAt: string } } };
+
+export type UpdateUserMutationVariables = Exact<{
+  input: UserInput;
+}>;
+
+
+export type UpdateUserMutation = { __typename?: 'Mutation', updateUser?: { __typename?: 'User', id: string, name: string, firstName?: string | null, preferredName?: string | null, flair?: string | null, email: string, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, paymentProviderCustomers: Array<{ __typename?: 'PaymentProviderCustomer', paymentProviderID: string, customerID: string }>, oauth2Accounts: Array<{ __typename?: 'OAuth2Account', type: string, provider: string, scope: string }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, bigURL?: string | null, largeURL?: string | null, mediumURL?: string | null, smallURL?: string | null, squareBigURL?: string | null, squareLargeURL?: string | null, squareMediumURL?: string | null, squareSmallURL?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'PublicProperties', key: string, value: string }> } | null };
+
+export type UpdatePasswordMutationVariables = Exact<{
+  password: Scalars['String'];
+  passwordRepeated: Scalars['String'];
+}>;
+
+
+export type UpdatePasswordMutation = { __typename?: 'Mutation', updatePassword?: { __typename?: 'User', id: string, name: string, firstName?: string | null, preferredName?: string | null, flair?: string | null, email: string, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, paymentProviderCustomers: Array<{ __typename?: 'PaymentProviderCustomer', paymentProviderID: string, customerID: string }>, oauth2Accounts: Array<{ __typename?: 'OAuth2Account', type: string, provider: string, scope: string }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, bigURL?: string | null, largeURL?: string | null, mediumURL?: string | null, smallURL?: string | null, squareBigURL?: string | null, squareLargeURL?: string | null, squareMediumURL?: string | null, squareSmallURL?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'PublicProperties', key: string, value: string }> } | null };
 
 export const FullTagFragmentDoc = gql`
     fragment FullTag on Tag {
@@ -2051,6 +2075,18 @@ export const FullCommentFragmentDoc = gql`
   }
 }
     ${CommentWithoutNestingFragmentDoc}`;
+export const ImageRefFragmentDoc = gql`
+    fragment ImageRef on Image {
+  id
+  filename
+  extension
+  title
+  description
+  width
+  height
+  ...ImageURLs
+}
+    ${ImageUrLsFragmentDoc}`;
 export const PageWithoutBlocksFragmentDoc = gql`
     fragment PageWithoutBlocks on Page {
   id
@@ -2874,6 +2910,39 @@ export function useEventLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Even
 export type EventQueryHookResult = ReturnType<typeof useEventQuery>;
 export type EventLazyQueryHookResult = ReturnType<typeof useEventLazyQuery>;
 export type EventQueryResult = Apollo.QueryResult<EventQuery, EventQueryVariables>;
+export const UploadImageDocument = gql`
+    mutation UploadImage($uploadImageInput: UploadImageInput!) {
+  uploadUserProfileImage(uploadImageInput: $uploadImageInput) {
+    ...FullUser
+  }
+}
+    ${FullUserFragmentDoc}`;
+export type UploadImageMutationFn = Apollo.MutationFunction<UploadImageMutation, UploadImageMutationVariables>;
+
+/**
+ * __useUploadImageMutation__
+ *
+ * To run a mutation, you first call `useUploadImageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUploadImageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [uploadImageMutation, { data, loading, error }] = useUploadImageMutation({
+ *   variables: {
+ *      uploadImageInput: // value for 'uploadImageInput'
+ *   },
+ * });
+ */
+export function useUploadImageMutation(baseOptions?: Apollo.MutationHookOptions<UploadImageMutation, UploadImageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UploadImageMutation, UploadImageMutationVariables>(UploadImageDocument, options);
+      }
+export type UploadImageMutationHookResult = ReturnType<typeof useUploadImageMutation>;
+export type UploadImageMutationResult = Apollo.MutationResult<UploadImageMutation>;
+export type UploadImageMutationOptions = Apollo.BaseMutationOptions<UploadImageMutation, UploadImageMutationVariables>;
 export const MemberPlanListDocument = gql`
     query MemberPlanList($take: Int, $skip: Int) {
   memberPlans(filter: {active: true}, take: $take, skip: $skip) {
@@ -3633,6 +3702,73 @@ export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<Reg
 export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
 export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
 export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const UpdateUserDocument = gql`
+    mutation UpdateUser($input: UserInput!) {
+  updateUser(input: $input) {
+    ...FullUser
+  }
+}
+    ${FullUserFragmentDoc}`;
+export type UpdateUserMutationFn = Apollo.MutationFunction<UpdateUserMutation, UpdateUserMutationVariables>;
+
+/**
+ * __useUpdateUserMutation__
+ *
+ * To run a mutation, you first call `useUpdateUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateUserMutation, { data, loading, error }] = useUpdateUserMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateUserMutation(baseOptions?: Apollo.MutationHookOptions<UpdateUserMutation, UpdateUserMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateUserMutation, UpdateUserMutationVariables>(UpdateUserDocument, options);
+      }
+export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutation>;
+export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>;
+export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;
+export const UpdatePasswordDocument = gql`
+    mutation UpdatePassword($password: String!, $passwordRepeated: String!) {
+  updatePassword(password: $password, passwordRepeated: $passwordRepeated) {
+    ...FullUser
+  }
+}
+    ${FullUserFragmentDoc}`;
+export type UpdatePasswordMutationFn = Apollo.MutationFunction<UpdatePasswordMutation, UpdatePasswordMutationVariables>;
+
+/**
+ * __useUpdatePasswordMutation__
+ *
+ * To run a mutation, you first call `useUpdatePasswordMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePasswordMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePasswordMutation, { data, loading, error }] = useUpdatePasswordMutation({
+ *   variables: {
+ *      password: // value for 'password'
+ *      passwordRepeated: // value for 'passwordRepeated'
+ *   },
+ * });
+ */
+export function useUpdatePasswordMutation(baseOptions?: Apollo.MutationHookOptions<UpdatePasswordMutation, UpdatePasswordMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdatePasswordMutation, UpdatePasswordMutationVariables>(UpdatePasswordDocument, options);
+      }
+export type UpdatePasswordMutationHookResult = ReturnType<typeof useUpdatePasswordMutation>;
+export type UpdatePasswordMutationResult = Apollo.MutationResult<UpdatePasswordMutation>;
+export type UpdatePasswordMutationOptions = Apollo.BaseMutationOptions<UpdatePasswordMutation, UpdatePasswordMutationVariables>;
 
       export interface PossibleTypesResultData {
         possibleTypes: {
