@@ -22,8 +22,8 @@ jobs:
 
       - uses: docker/build-push-action@v2
         with:
-          cache-to: type=gha
           cache-from: type=gha
+          cache-to: type=gha,mode=max
           push: true
           tags: |
             ${{ inputs.tags }}
