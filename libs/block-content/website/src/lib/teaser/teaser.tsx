@@ -4,7 +4,7 @@ import {BuilderTeaserProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {isImageBlock} from '../image/image-block'
 import {isTitleBlock} from '../title/title-block'
 
-const TeaserWrapper = styled('article')<FlexAlignment>`
+export const TeaserWrapper = styled('article')<FlexAlignment>`
   display: grid;
 
   ${({theme, h, w, x, y}) => css`
@@ -17,7 +17,7 @@ const TeaserWrapper = styled('article')<FlexAlignment>`
   `}
 `
 
-const TeaserInnerWrapper = styled('div')`
+export const TeaserInnerWrapper = styled('div')`
   display: grid;
   gap: ${({theme}) => theme.spacing(1)};
   grid-template-rows: auto;

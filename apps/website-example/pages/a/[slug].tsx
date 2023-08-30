@@ -52,7 +52,10 @@ export default function ArticleBySlug() {
         <>
           <ArticleWrapper>
             <H3 component={'h2'}>Das könnte dich auch interessieren</H3>
-            <ArticleListContainer variables={{filter: {tags: data.article.tags}}} />
+            <ArticleListContainer
+              variables={{filter: {tags: data.article.tags}}}
+              filter={articles => articles.filter(article => article.id !== data.article?.id)}
+            />
           </ArticleWrapper>
 
           <ArticleWrapper>

@@ -44,7 +44,9 @@ export const BreakBlock = ({
   } = useWebsiteBuilder()
 
   const theme = useTheme()
-  const squareImage = useMediaQuery(theme.breakpoints.up('md'))
+  const squareImage = useMediaQuery(theme.breakpoints.up('md'), {
+    noSsr: true
+  })
   const reverse = layoutOption === 'image-right'
 
   return (
