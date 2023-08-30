@@ -1,57 +1,26 @@
-import {MutationResult} from '@apollo/client'
 import {useUser} from '@wepublish/authentication/website'
 import {
   FullImageFragment,
-  UpdatePasswordMutation,
   UpdatePasswordMutationVariables,
-  UpdateUserMutation,
   UpdateUserMutationVariables,
   UploadImageInput,
-  UploadImageMutation,
   useUpdatePasswordMutation,
   useUpdateUserMutation,
   useUploadImageMutation
 } from '@wepublish/website/api'
 import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {useEffect} from 'react'
 
 export type PersonalDataFormContainerProps = {
-  onUpdate?: (
-    mutationResult: Pick<MutationResult<UpdateUserMutation>, 'data' | 'loading' | 'error'> &
-      Pick<MutationResult<UpdatePasswordMutation>, 'data' | 'loading' | 'error'> &
-      Pick<MutationResult<UploadImageMutation>, 'data' | 'loading' | 'error'>
-  ) => void
+  mediaEmail?: string
 } & BuilderContainerProps
 
-export function PersonalDataFormContainer({onUpdate, className}: PersonalDataFormContainerProps) {
+export function PersonalDataFormContainer({className, mediaEmail}: PersonalDataFormContainerProps) {
   const {PersonalDataForm} = useWebsiteBuilder()
   const {user} = useUser()
 
-  const [uploadImage, uploadImageData] = useUploadImageMutation({
-    onCompleted(data) {
-      console.log('data', data)
-    }
-  })
-
-  const [updatePassword, updatePasswordData] = useUpdatePasswordMutation({
-    onCompleted(data) {
-      console.log('data', data)
-    }
-  })
-
-  const [updateUser, updateUserData] = useUpdateUserMutation({
-    onCompleted(data) {
-      console.log('data', data)
-    }
-  })
-
-  useEffect(() => {
-    if (updateUserData.called || updatePasswordData.called || uploadImageData.called) {
-      onUpdate?.(updateUserData)
-      onUpdate?.(updatePasswordData)
-      onUpdate?.(uploadImageData)
-    }
-  }, [updateUserData, updatePasswordData, uploadImageData, onUpdate])
+  const [uploadImage] = useUploadImageMutation()
+  const [updatePassword] = useUpdatePasswordMutation()
+  const [updateUser, updateUserData] = useUpdateUserMutation()
 
   const handleOnImageUpload = (input: UploadImageInput) => {
     uploadImage({
@@ -97,6 +66,7 @@ export function PersonalDataFormContainer({onUpdate, className}: PersonalDataFor
       update={updateUserData}
       onImageUpload={handleOnImageUpload}
       onUpdate={handleOnUpdate}
+      mediaEmail={mediaEmail}
     />
   )
 }

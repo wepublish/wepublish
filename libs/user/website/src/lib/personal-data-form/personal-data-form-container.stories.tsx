@@ -83,29 +83,6 @@ const onUpdateVariables = {
   password: '12345678'
 }
 
-// todo?
-// const onImageUploadVariables = {
-//   id: '7GMQjdJFo1hFTfV',
-//   title: null,
-//   description: null,
-//   tags: [],
-//   source: null,
-//   license: null,
-//   fileSize: 241657,
-//   extension: '.jpeg',
-//   mimeType: 'image/jpeg',
-//   format: 'jpeg',
-//   width: 700,
-//   height: 1517,
-//   focalPoint: null,
-//   url: 'https://bajour-media01.wepublish.cloud/7GMQjdJFo1hFTfV/wallpaper_small.jpeg',
-//   xsUrl: 'https://bajour-media01.wepublish.cloud/7GMQjdJFo1hFTfV/t/w_1500/wallpaper_small.jpeg',
-//   smUrl: 'https://bajour-media01.wepublish.cloud/7GMQjdJFo1hFTfV/t/w_2000/wallpaper_small.jpeg',
-//   mdAndUpUrl:
-//     'https://bajour-media01.wepublish.cloud/7GMQjdJFo1hFTfV/t/w_2500/wallpaper_small.jpeg',
-//   __typename: 'Image'
-// }
-
 export const Default: StoryObj = {
   render: function Render(args) {
     const {user} = useUser()

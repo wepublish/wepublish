@@ -41,4 +41,5 @@ export type BuilderPersonalDataFormProps<
     data: UpdateUserMutationVariables['input'] & Partial<UpdatePasswordMutationVariables>
   ) => void
   onImageUpload: (image: UploadImageInput) => void
+  mediaEmail?: string
 }

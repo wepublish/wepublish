@@ -47,3 +47,12 @@ export const Default = {
     }
   } as ImageUploadProps
 }
+
+export const NoImage = {
+  render: Template,
+  args: {
+    label: 'Label',
+    onUpload: input => console.log('input', input),
+    image: null
+  } as ImageUploadProps
+}

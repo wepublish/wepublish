@@ -261,6 +261,14 @@ export const Default: StoryObj = {
   }
 }
 
+export const WithMediaEmail: StoryObj = {
+  args: {
+    onUpdate: action('onUpdate'),
+    update: {},
+    mediaEmail: 'some@email.com'
+  }
+}
+
 export const Filled: StoryObj = {
   ...Default,
   play: async ctx => {

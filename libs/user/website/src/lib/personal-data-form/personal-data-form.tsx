@@ -79,6 +79,17 @@ const buttonStyles = css`
   justify-self: flex-end;
 `
 
+const requestEmailStyles = (theme: Theme) => css`
+  grid-column-start: 1;
+  grid-column-end: 3;
+  ${theme.breakpoints.up('sm')} {
+    grid-column-start: 2;
+    grid-column-end: 3;
+  }
+`
+
+const RequestEmail = styled('div')``
+
 const requiredSchema = z.object({
   email: z.string().email().nonempty(),
   name: z.string().nonempty()
@@ -125,7 +136,8 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
   initialUser,
   schema = defaultSchema,
   onUpdate,
-  onImageUpload
+  onImageUpload,
+  mediaEmail
 }: BuilderPersonalDataFormProps<T>) {
   const theme = useTheme()
   const [showPassword, togglePassword] = useReducer(state => !state, false)
@@ -135,8 +147,6 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
     (obj, field) => ({...obj, [field]: true}),
     {} as Record<OptionalKeysOf<PersonalDataFormFields>, true>
   )
-
-  console.log('fieldsToDisplay', fieldsToDisplay)
 
   const validationSchema = requiredSchema
     .merge(schema.pick(fieldsToDisplay))
@@ -173,8 +183,6 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
 
   const onSubmit = handleSubmit(data => onUpdate?.(data))
 
-  console.log('initialUser', initialUser)
-
   return (
     <PersonalDataFormWrapper className={className} onSubmit={onSubmit}>
       <PersonalDataInputForm>
@@ -183,8 +191,12 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
             <Controller
               name={'uploadImageInput'}
               control={control}
-              render={({field, fieldState: {error}}) => (
-                <ImageUpload {...field} image={initialUser.image} onUpload={onImageUpload} />
+              render={({field}) => (
+                <ImageUpload
+                  {...field}
+                  image={initialUser.image || null}
+                  onUpload={onImageUpload}
+                />
               )}
             />
           </PersonalDataAddressWrapper>
@@ -306,7 +318,7 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
               render={({field, fieldState: {error}}) => (
                 <>
                   <Paragraph css={() => passwordNoteStyles(theme)}>
-                    Fill in only if you want to change password. Otherwise leave blank.
+                    Nur ausfüllen, wenn Sie das Passwort ändern möchten. Ansonsten leer lassen.
                   </Paragraph>
                   <TextField
                     {...field}
@@ -375,6 +387,15 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
             />
           )}
         />
+
+        {mediaEmail && (
+          <RequestEmail css={() => requestEmailStyles(theme)}>
+            <a
+              href={`mailto:${mediaEmail}&subject=Email Änderung&body=Guten Tag, %0D%0A. Ich würde gerne meine Email von ${initialUser.email} zu  >>Neue Email hier einfügen<< %0D%0A Liebe Grüsse`}>
+              Klicke hier um deine Email zu ändern
+            </a>
+          </RequestEmail>
+        )}
       </PersonalDataInputForm>
       {update.error && <Alert severity="error">{update.error.message}</Alert>}
 

@@ -7,7 +7,7 @@ exports[`ImageUpload should render Default 1`] = `
   >
     <img
       alt="user-avatar"
-      class="css-1jpv6hy"
+      class="css-1l08m68"
       src="https://unsplash.it/300/200"
     />
     <input
