@@ -2,8 +2,9 @@ FROM node:16-alpine3.17 as builder
 
 WORKDIR /build
 
-RUN apk update
-RUN apk add python3 gcc g++ make --update-cache
+RUN apk upgrade --update-cache --available && \
+    apk add python3 gcc g++ make openssl && \
+    rm -rf /var/cache/apk/*
 
 WORKDIR /dependencies
 COPY libs/api/prisma/schema.prisma ./libs/api/prisma/schema.prisma
