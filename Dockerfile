@@ -6,7 +6,6 @@ RUN apk upgrade --update-cache --available && \
     apk add python3 gcc g++ make openssl && \
     rm -rf /var/cache/apk/*
 
-WORKDIR /dependencies
 COPY libs/api/prisma/schema.prisma ./libs/api/prisma/schema.prisma
 COPY .npmrc package.json package-lock.json ./
 RUN npm ci
