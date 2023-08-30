@@ -12,7 +12,7 @@ export type ImageUploadProps = {
 const Avatar = styled.img`
   width: 150px;
   height: 150px;
-  border-radius: 150px;
+  border-radius: 100%;
 `
 
 const Wrapper = styled.div`
