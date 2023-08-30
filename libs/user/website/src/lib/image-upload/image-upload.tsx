@@ -1,12 +1,11 @@
-import styled from '@emotion/styled'
-import {FormEvent, useId, useRef} from 'react'
+import {ChangeEvent, useId, useRef} from 'react'
 import {MdDelete, MdEdit} from 'react-icons/md'
-import {IconButton} from '@mui/material'
+import {IconButton, styled} from '@mui/material'
 import placeholderImg from './placeholder.svg'
 
 export type ImageUploadProps = {
-  image?: {url: string} | null
-  onUpload: (image: FormEvent<HTMLInputElement> | null) => void
+  image?: {url?: string | null | undefined}
+  onUpload: (image: ChangeEvent<HTMLInputElement> | null) => void
   className?: string
 }
 
@@ -19,7 +18,7 @@ export const ContentWrapper = styled('div')`
   justify-content: flex-start;
 `
 
-const Avatar = styled.img`
+const Avatar = styled('img')`
   width: 150px;
   height: 150px;
   border-radius: 100%;

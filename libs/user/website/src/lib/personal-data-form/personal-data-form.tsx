@@ -194,7 +194,7 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
               render={({field}) => (
                 <ImageUpload
                   {...field}
-                  image={initialUser.image || null}
+                  image={{url: initialUser.image?.url || null}}
                   onUpload={onImageUpload}
                 />
               )}

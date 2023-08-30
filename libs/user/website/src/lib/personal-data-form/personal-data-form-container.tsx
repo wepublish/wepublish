@@ -3,12 +3,12 @@ import {
   FullImageFragment,
   UpdatePasswordMutationVariables,
   UpdateUserMutationVariables,
-  UploadImageInput,
   useUpdatePasswordMutation,
   useUpdateUserMutation,
   useUploadImageMutation
 } from '@wepublish/website/api'
 import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {ChangeEvent} from 'react'
 
 export type PersonalDataFormContainerProps = {
   mediaEmail?: string
@@ -22,10 +22,10 @@ export function PersonalDataFormContainer({className, mediaEmail}: PersonalDataF
   const [updatePassword] = useUpdatePasswordMutation()
   const [updateUser, updateUserData] = useUpdateUserMutation()
 
-  const handleOnImageUpload = (input: UploadImageInput) => {
+  const handleOnImageUpload = (input: ChangeEvent<HTMLInputElement> | null) => {
     uploadImage({
       variables: {
-        uploadImageInput: input
+        uploadImageInput: {file: input?.target?.files![0] as File} || null
       }
     })
   }

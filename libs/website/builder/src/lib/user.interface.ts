@@ -3,9 +3,9 @@ import {
   FullImageFragment,
   UpdatePasswordMutationVariables,
   UpdateUserMutation,
-  UpdateUserMutationVariables,
-  UploadImageInput
+  UpdateUserMutationVariables
 } from '@wepublish/website/api'
+import {ChangeEvent} from 'react'
 import {OptionalKeysOf} from 'type-fest'
 import z from 'zod'
 
@@ -40,6 +40,6 @@ export type BuilderPersonalDataFormProps<
   onUpdate?: (
     data: UpdateUserMutationVariables['input'] & Partial<UpdatePasswordMutationVariables>
   ) => void
-  onImageUpload: (image: UploadImageInput) => void
+  onImageUpload: (image: ChangeEvent<HTMLInputElement> | null) => void
   mediaEmail?: string
 }
