@@ -23,6 +23,7 @@ jobs:
       - uses: docker/build-push-action@v2
         with:
           target: runtime
+          cache-from: type=gha
           push: true
           tags: |
             ${{ inputs.tags }}
