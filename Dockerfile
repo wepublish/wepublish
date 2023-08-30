@@ -1,6 +1,6 @@
-FROM node:16-alpine3.17 as dependencies
+FROM node:16-alpine3.17 as builder
 
-WORKDIR /dependencies
+WORKDIR /build
 
 RUN apk update
 RUN apk add python3 gcc g++ make --update-cache
@@ -10,18 +10,16 @@ COPY libs/api/prisma/schema.prisma ./libs/api/prisma/schema.prisma
 COPY .npmrc package.json package-lock.json ./
 RUN npm ci
 
-
-FROM node:16-alpine3.17 as builder
-WORKDIR /build
 COPY . .
 RUN rm -rf .env*
-COPY --from=dependencies /dependencies .
 RUN npm run build --prod
 
 
 FROM node:16-alpine3.17 as runtime
 WORKDIR /app
 COPY --chown=node:node --from=builder /build/dist ./dist
+COPY --chown=node:node --from=builder /build/node_modules/.prisma/client ./dist/apps
+
 USER node
 ENV ADDRESS=0.0.0.0
 ENV PORT=8000
