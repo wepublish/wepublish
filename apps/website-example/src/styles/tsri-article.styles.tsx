@@ -1,8 +1,13 @@
 import {css} from '@emotion/react'
 import {Theme} from '@mui/material'
 import {ArticleInfoWrapper, ArticleWrapper, TitleBlockWrapper} from '@wepublish/website'
+import {ArticleTagList} from '../../pages/a/[slug]'
 
 export const tsriArticleStyles = (theme: Theme) => css`
+  ${ArticleWrapper} {
+    align-items: start;
+  }
+
   ${ArticleWrapper} > * {
     grid-column-start: 1;
     grid-column-end: 12;
@@ -35,6 +40,22 @@ export const tsriArticleStyles = (theme: Theme) => css`
     }
   }
 
+  ${ArticleWrapper} ${ArticleTagList} {
+    grid-row: 3;
+    margin-top: -${theme.spacing(1)};
+    padding-top: ${theme.spacing(2)};
+    position: relative;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 1px;
+      background-color: #000;
+    }
+  }
+
   ${theme.breakpoints.up('md')} {
     ${ArticleWrapper} {
       align-items: flex-start;
@@ -42,7 +63,8 @@ export const tsriArticleStyles = (theme: Theme) => css`
 
     ${ArticleWrapper} > * {
       &:is(${TitleBlockWrapper}):first-of-type {
-        grid-row: 1;
+        grid-row-start: 1;
+        grid-row-end: 3;
         grid-column-start: 3;
         grid-column-end: 12;
       }
@@ -59,6 +81,16 @@ export const tsriArticleStyles = (theme: Theme) => css`
           top: -${theme.spacing(2)};
           width: 40px;
         }
+      }
+    }
+
+    ${ArticleWrapper} ${ArticleTagList} {
+      grid-row: 2;
+      grid-column-start: 1;
+      grid-column-end: 3;
+
+      &::before {
+        width: 40px;
       }
     }
   }

@@ -13,7 +13,7 @@ export class ExampleURLAdapter implements URLAdapter {
   }
 
   getPublicArticleURL(article: PublicArticle): string {
-    return `${this.websiteURL}/a/${article.id}/${article.slug}`
+    return `${this.websiteURL}/a/${article.slug}`
   }
 
   getPeeredArticleURL(peer: Peer, article: PublicArticle): string {

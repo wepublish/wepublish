@@ -1,5 +1,7 @@
 import {Typography, styled} from '@mui/material'
-import {RegistrationFormContainer, useUser, useWebsiteBuilder} from '@wepublish/website'
+import {ApiV1, RegistrationFormContainer, useUser, useWebsiteBuilder} from '@wepublish/website'
+import {GetStaticProps} from 'next'
+import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {useEffect} from 'react'
 
@@ -32,4 +34,26 @@ export default function SignUp() {
       <RegistrationFormContainer />
     </SignupWrapper>
   )
+}
+
+export const getStaticProps: GetStaticProps = async () => {
+  const {publicRuntimeConfig} = getConfig()
+
+  if (!publicRuntimeConfig.env.API_URL) {
+    return {props: {}, revalidate: 1}
+  }
+
+  const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL, [])
+  await Promise.all([
+    client.query({
+      query: ApiV1.NavigationListDocument
+    })
+  ])
+
+  const props = ApiV1.addClientCacheToV1Props(client, {})
+
+  return {
+    props,
+    revalidate: 60 // every 60 seconds
+  }
 }
