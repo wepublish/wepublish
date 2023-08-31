@@ -27,7 +27,7 @@ import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
 import Script from 'next/script'
-import {useEffect, useMemo, useState, useTransition} from 'react'
+import {useMemo} from 'react'
 import {initReactI18next} from 'react-i18next'
 import {PartialDeep} from 'type-fest'
 import {z} from 'zod'
@@ -42,7 +42,6 @@ import {TsriButton} from '../src/tsri-button'
 import {TsriParagraph} from '../src/tsri-paragraph'
 import {NavBarProfile} from '../src/navbar-profile'
 import {TsriBreakBlock} from '../src/tsri-break-block'
-import {useRouter} from 'next/router'
 
 setDefaultOptions({
   locale: de
