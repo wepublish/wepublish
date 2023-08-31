@@ -53,7 +53,7 @@ const PasswordWrapper = styled('div')`
 const passwordNoteStyles = (theme: Theme) => css`
   font-size: ${theme.typography.caption.fontSize};
   position: absolute;
-  top: -18px;
+  top: -24px;
 `
 
 const emailStyles = (theme: Theme) => css`
@@ -105,8 +105,8 @@ const defaultSchema = z.object({
     city: z.string().nonempty(),
     country: z.string().nonempty()
   }),
-  password: z.string().min(8).optional(),
-  passwordRepeated: z.string().min(8).optional(),
+  password: z.string().min(8).optional().or(z.literal('')),
+  passwordRepeated: z.string().min(8).optional().or(z.literal('')),
   uploadImageInput: z.object({
     description: z.string().optional(),
     file: z.any(),

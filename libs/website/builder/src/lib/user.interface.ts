@@ -25,8 +25,8 @@ export type BuilderPersonalDataFormProps<
   fields?: T[]
   schema?: z.ZodObject<
     Partial<{
-      password: z.ZodString | z.ZodOptional<z.ZodString>
-      passwordRepeated: z.ZodString | z.ZodOptional<z.ZodString>
+      password: z.ZodUnion<[z.ZodOptional<z.ZodString>, z.ZodLiteral<''>]>
+      passwordRepeated: z.ZodUnion<[z.ZodOptional<z.ZodString>, z.ZodLiteral<''>]>
       preferredName: z.ZodString | z.ZodOptional<z.ZodString>
       firstName: z.ZodString | z.ZodOptional<z.ZodString>
       lastName: z.ZodString | z.ZodOptional<z.ZodString>

@@ -1,6 +1,6 @@
-import {ChangeEvent, useId, useRef} from 'react'
-import {MdDelete, MdEdit} from 'react-icons/md'
 import {IconButton, styled} from '@mui/material'
+import {ChangeEvent, useId, useRef} from 'react'
+import {MdDelete, MdEdit, MdOutlineUploadFile} from 'react-icons/md'
 import placeholderImg from './placeholder.svg'
 
 export type ImageUploadProps = {
@@ -22,6 +22,7 @@ const Avatar = styled('img')`
   width: 150px;
   height: 150px;
   border-radius: 100%;
+  object-fit: cover;
 `
 
 const Wrapper = styled('div')`
@@ -38,10 +39,6 @@ const Wrapper = styled('div')`
   }
 `
 
-const ActionButton = styled(IconButton)`
-  margin-left: 10px;
-`
-
 export function ImageUpload({image, onUpload, className}: ImageUploadProps) {
   const fileInputRef = useRef<HTMLInputElement>(null)
 
@@ -52,12 +49,20 @@ export function ImageUpload({image, onUpload, className}: ImageUploadProps) {
         <input type="file" accept="image/*" onChange={onUpload} id={useId()} ref={fileInputRef} />
       </ImageWrapper>
       <ContentWrapper>
-        <ActionButton color="error" onClick={() => onUpload(null)}>
-          <MdDelete />
-        </ActionButton>
-        <ActionButton color="primary" onClick={() => fileInputRef.current!.click()}>
-          <MdEdit />
-        </ActionButton>
+        {image ? (
+          <>
+            <IconButton color="error" onClick={() => onUpload(null)}>
+              <MdDelete />
+            </IconButton>
+            <IconButton color="primary" onClick={() => fileInputRef.current!.click()}>
+              <MdEdit />
+            </IconButton>
+          </>
+        ) : (
+          <IconButton color="primary" onClick={() => fileInputRef.current!.click()}>
+            <MdOutlineUploadFile />
+          </IconButton>
+        )}
       </ContentWrapper>
     </Wrapper>
   )
