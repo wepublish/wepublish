@@ -65,6 +65,12 @@ fragment BlockWithoutTeaser on Block {
     text
     richText
     layoutOption
+    hideButton
+    linkTarget
+    linkText
+    linkURL
+    styleOption
+    templateOption
     image {
       ...FullImage
     }

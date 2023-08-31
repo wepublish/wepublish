@@ -93,24 +93,26 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
     })
   ])
 
-  await Promise.all([
-    client.query({
-      query: ApiV1.ArticleListDocument,
-      variables: {
-        filter: {
-          tags: article.data.article.tags
+  if (article.data.article) {
+    await Promise.all([
+      client.query({
+        query: ApiV1.ArticleListDocument,
+        variables: {
+          filter: {
+            tags: article.data.article.tags
+          }
         }
-      }
-    }),
-    client.query({
-      query: ApiV1.CommentListDocument,
-      variables: {
-        filter: {
-          itemId: article.data.article.id
+      }),
+      client.query({
+        query: ApiV1.CommentListDocument,
+        variables: {
+          filter: {
+            itemId: article.data.article.id
+          }
         }
-      }
-    })
-  ])
+      })
+    ])
+  }
 
   const props = ApiV1.addClientCacheToV1Props(client, {})
 

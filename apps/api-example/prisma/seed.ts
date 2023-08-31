@@ -1,11 +1,18 @@
 import {faker} from '@faker-js/faker'
-import {Prisma, PrismaClient} from '@prisma/client'
+import {
+  CommentAuthorType,
+  CommentItemType,
+  CommentState,
+  Prisma,
+  PrismaClient
+} from '@prisma/client'
 import {createReadStream} from 'fs'
 import {Node} from 'slate'
 import {seed as rootSeed} from '../../../libs/api/prisma/seed'
 import {NavigationLinkType} from '../../../libs/api/src/lib/db/navigation'
 import {hashPassword} from '../../../libs/api/src/lib/db/user'
 import {KarmaMediaAdapter} from '../../../libs/api/src/lib/media/karmaMediaAdapter'
+import {capitalize} from '@mui/material'
 import {
   BlockType,
   LinkPageBreakBlock,
@@ -13,11 +20,38 @@ import {
   ImageBlock,
   TeaserGridFlexBlock,
   TeaserStyle,
-  TeaserType
+  TeaserType,
+  TeaserGridBlock,
+  RichTextBlock,
+  QuoteBlock,
+  PollBlock,
+  EventBlock
 } from '../../../libs/api/src/lib/db/block'
-import {replace, toUpper} from 'ramda'
 
-const capitalize = replace(/^./, toUpper)
+const shuffle = <T>(list: T[]): T[] => {
+  var idx = -1
+  var len = list.length
+  var position
+  var result = []
+
+  while (++idx < len) {
+    position = Math.floor((idx + 1) * Math.random())
+    result[idx] = result[position]
+    result[position] = list[idx]
+  }
+
+  return result
+}
+
+const pickRandom = <T>(value: T, chance = 0.5): T[] | never[] => {
+  const seed = Math.random()
+
+  if (seed > chance) {
+    return []
+  }
+
+  return [value]
+}
 
 function getText(min = 1, max = 10) {
   const text: Node[] = Array.from({length: faker.number.int({min, max})}, () => ({
@@ -69,11 +103,11 @@ async function seedImages(prisma: PrismaClient) {
     mediaAdapter.uploadImage(
       new Promise(resolve => {
         resolve({
-          filename: 'News Header',
+          filename: 'News',
           mimetype: 'image/jpg',
           encoding: '',
           createReadStream() {
-            return createReadStream(__dirname + '/seed/news-header.jpg') as any
+            return createReadStream(__dirname + '/seed/news.jpg') as any
           }
         })
       })
@@ -81,11 +115,71 @@ async function seedImages(prisma: PrismaClient) {
     mediaAdapter.uploadImage(
       new Promise(resolve => {
         resolve({
-          filename: 'Article Header',
+          filename: 'Office',
           mimetype: 'image/jpg',
           encoding: '',
           createReadStream() {
-            return createReadStream(__dirname + '/seed/article-header.jpg') as any
+            return createReadStream(__dirname + '/seed/office.jpg') as any
+          }
+        })
+      })
+    ),
+    mediaAdapter.uploadImage(
+      new Promise(resolve => {
+        resolve({
+          filename: 'bicycling',
+          mimetype: 'image/jpg',
+          encoding: '',
+          createReadStream() {
+            return createReadStream(__dirname + '/seed/bicycling.jpg') as any
+          }
+        })
+      })
+    ),
+    mediaAdapter.uploadImage(
+      new Promise(resolve => {
+        resolve({
+          filename: 'Car Accident',
+          mimetype: 'image/jpg',
+          encoding: '',
+          createReadStream() {
+            return createReadStream(__dirname + '/seed/car-accident.jpg') as any
+          }
+        })
+      })
+    ),
+    mediaAdapter.uploadImage(
+      new Promise(resolve => {
+        resolve({
+          filename: 'Parlament',
+          mimetype: 'image/jpg',
+          encoding: '',
+          createReadStream() {
+            return createReadStream(__dirname + '/seed/parlament.jpg') as any
+          }
+        })
+      })
+    ),
+    mediaAdapter.uploadImage(
+      new Promise(resolve => {
+        resolve({
+          filename: 'Science',
+          mimetype: 'image/jpg',
+          encoding: '',
+          createReadStream() {
+            return createReadStream(__dirname + '/seed/science.jpg') as any
+          }
+        })
+      })
+    ),
+    mediaAdapter.uploadImage(
+      new Promise(resolve => {
+        resolve({
+          filename: 'World Map',
+          mimetype: 'image/jpg',
+          encoding: '',
+          createReadStream() {
+            return createReadStream(__dirname + '/seed/world-map.jpg') as any
           }
         })
       })
@@ -183,7 +277,7 @@ async function seedPoll(prisma: PrismaClient) {
   return [past, future]
 }
 
-async function seedNavigation(prisma: PrismaClient) {
+async function seedNavigation(prisma: PrismaClient, tags: string[] = []) {
   const [navbar, categories, aboutUs, footer] = await Promise.all([
     prisma.navigation.create({
       data: {
@@ -213,23 +307,11 @@ async function seedNavigation(prisma: PrismaClient) {
         name: 'Rubriken',
         links: {
           createMany: {
-            data: [
-              {
-                type: NavigationLinkType.External,
-                label: faker.word.noun(),
-                url: `/a/tag/${faker.word.noun().toLowerCase()}`
-              },
-              {
-                type: NavigationLinkType.External,
-                label: faker.word.noun(),
-                url: `/a/tag/${faker.word.noun().toLowerCase()}`
-              },
-              {
-                type: NavigationLinkType.External,
-                label: faker.word.noun(),
-                url: `/a/tag/${faker.word.noun().toLowerCase()}`
-              }
-            ]
+            data: tags.map(tag => ({
+              type: NavigationLinkType.External,
+              label: capitalize(tag),
+              url: `/a/tag/${tag}`
+            }))
           }
         }
       }
@@ -310,7 +392,7 @@ async function seedAuthor(prisma: PrismaClient, imageIds: string[] = []) {
           ...nameAndSlug(),
           bio: getText(4, 9),
           jobTitle: faker.person.jobTitle(),
-          imageID: imageIds[Math.floor(Math.random() * imageIds.length)]
+          imageID: shuffle(imageIds).at(0)
         }
       })
     )
@@ -328,7 +410,7 @@ async function seedEvent(prisma: PrismaClient, imageIds: string[] = []) {
           description: getText(4, 12) as any,
           startsAt: future,
           endsAt: faker.date.past({refDate: future}),
-          imageId: imageIds[Math.floor(Math.random() * imageIds.length)]
+          imageId: shuffle(imageIds).at(0)
         }
       })
     )
@@ -366,7 +448,7 @@ async function seedPages(prisma: PrismaClient, imageIds: string[] = [], articleI
                       imageID: null,
                       title: null,
                       lead: null,
-                      articleID: articleIds[Math.floor(Math.random() * articleIds.length)]
+                      articleID: shuffle(articleIds).at(0)
                     }
                   },
                   {
@@ -384,7 +466,7 @@ async function seedPages(prisma: PrismaClient, imageIds: string[] = [], articleI
                       imageID: null,
                       title: null,
                       lead: null,
-                      articleID: articleIds[Math.floor(Math.random() * articleIds.length)]
+                      articleID: shuffle(articleIds).at(0)
                     }
                   },
                   {
@@ -402,33 +484,129 @@ async function seedPages(prisma: PrismaClient, imageIds: string[] = [], articleI
                       imageID: null,
                       title: null,
                       lead: null,
-                      articleID: articleIds[Math.floor(Math.random() * articleIds.length)]
+                      articleID: shuffle(articleIds).at(0)
                     }
                   }
                 ]
               } as TeaserGridFlexBlock,
               {
+                type: BlockType.TeaserGrid,
+                teasers: [
+                  {
+                    type: TeaserType.Article,
+                    style: TeaserStyle.Light,
+                    imageID: null,
+                    title: null,
+                    lead: null,
+                    articleID: shuffle(articleIds).at(0)
+                  },
+                  {
+                    type: TeaserType.Article,
+                    style: TeaserStyle.Light,
+                    imageID: null,
+                    title: null,
+                    lead: null,
+                    articleID: shuffle(articleIds).at(0)
+                  },
+                  {
+                    type: TeaserType.Article,
+                    style: TeaserStyle.Light,
+                    imageID: null,
+                    title: null,
+                    lead: null,
+                    articleID: shuffle(articleIds).at(0)
+                  }
+                ],
+                numColumns: 3
+              } as TeaserGridBlock,
+              {
                 type: BlockType.LinkPageBreak,
-                imageID: imageIds[Math.floor(Math.random() * imageIds.length)],
+                imageID: null,
                 hideButton: false,
                 linkTarget: '',
-                linkText: '',
-                linkURL: '',
-                richText: getText() as any,
-                text: capitalize(faker.lorem.words({min: 3, max: 8})),
+                linkText: capitalize(faker.lorem.words({min: 2, max: 4})),
+                linkURL: faker.internet.url(),
+                richText: getText(1, 2) as any,
+                text: capitalize(faker.lorem.words({min: 8, max: 12})),
                 layoutOption: 'image-left'
               } as LinkPageBreakBlock,
               {
-                type: BlockType.LinkPageBreak,
-                imageID: imageIds[Math.floor(Math.random() * imageIds.length)],
-                hideButton: false,
-                linkTarget: '',
-                linkText: '',
-                linkURL: '',
-                richText: getText() as any,
-                text: capitalize(faker.lorem.words({min: 3, max: 8})),
-                layoutOption: 'image-right'
-              } as LinkPageBreakBlock
+                type: BlockType.TeaserGridFlex,
+                flexTeasers: [
+                  {
+                    alignment: {
+                      i: '0',
+                      x: 0,
+                      y: 0,
+                      w: 4,
+                      h: 3,
+                      static: false
+                    },
+                    teaser: {
+                      type: TeaserType.Article,
+                      style: TeaserStyle.Light,
+                      imageID: null,
+                      title: null,
+                      lead: null,
+                      articleID: shuffle(articleIds).at(0)
+                    }
+                  },
+                  {
+                    alignment: {
+                      i: '0',
+                      x: 0,
+                      y: 3,
+                      w: 4,
+                      h: 3,
+                      static: false
+                    },
+                    teaser: {
+                      type: TeaserType.Article,
+                      style: TeaserStyle.Light,
+                      imageID: null,
+                      title: null,
+                      lead: null,
+                      articleID: shuffle(articleIds).at(0)
+                    }
+                  },
+                  {
+                    alignment: {
+                      i: '1',
+                      x: 4,
+                      y: 0,
+                      w: 4,
+                      h: 6,
+                      static: false
+                    },
+                    teaser: {
+                      type: TeaserType.Article,
+                      style: TeaserStyle.Light,
+                      imageID: null,
+                      title: null,
+                      lead: null,
+                      articleID: shuffle(articleIds).at(0)
+                    }
+                  },
+                  {
+                    alignment: {
+                      i: '2',
+                      x: 8,
+                      y: 0,
+                      w: 4,
+                      h: 6,
+                      static: false
+                    },
+                    teaser: {
+                      type: TeaserType.Article,
+                      style: TeaserStyle.Light,
+                      imageID: null,
+                      title: null,
+                      lead: null,
+                      articleID: shuffle(articleIds).at(0)
+                    }
+                  }
+                ]
+              } as TeaserGridFlexBlock
             ] as any,
             publishedAt: new Date(),
             updatedAt: new Date(),
@@ -445,7 +623,10 @@ async function seedPages(prisma: PrismaClient, imageIds: string[] = [], articleI
 async function seedArticles(
   prisma: PrismaClient,
   imageIds: string[] = [],
-  authorIds: string[] = []
+  authorIds: string[] = [],
+  tags: string[] = [],
+  pollIds: string[] = [],
+  eventIds: string[] = []
 ) {
   const articles = await Promise.all(
     Array.from({length: faker.number.int({min: 10, max: 20})}, () =>
@@ -468,15 +649,96 @@ async function seedArticles(
                 } as TitleBlock,
                 {
                   type: BlockType.Image,
-                  imageID: imageIds[Math.floor(Math.random() * imageIds.length)],
+                  imageID: shuffle(imageIds).at(0),
                   caption: capitalize(faker.lorem.words({min: 3, max: 8}))
-                } as ImageBlock
+                } as ImageBlock,
+                ...shuffle([
+                  ...pickRandom(
+                    {
+                      type: BlockType.RichText,
+                      richText: getText(3, 10) as any
+                    } as RichTextBlock,
+                    0.7
+                  ),
+                  ...pickRandom(
+                    {
+                      type: BlockType.Quote,
+                      author: faker.person.fullName(),
+                      quote: faker.lorem.sentences({min: 1, max: 2})
+                    } as QuoteBlock,
+                    0.8
+                  ),
+                  ...pickRandom(
+                    {
+                      type: BlockType.RichText,
+                      richText: getText(3, 10) as any
+                    } as RichTextBlock,
+                    0.5
+                  ),
+                  ...pickRandom(
+                    {
+                      type: BlockType.Image,
+                      imageID: shuffle(imageIds).at(0),
+                      caption: capitalize(faker.lorem.words({min: 3, max: 8}))
+                    } as ImageBlock,
+                    0.5
+                  ),
+                  ...pickRandom(
+                    {
+                      type: BlockType.RichText,
+                      richText: getText(3, 10) as any
+                    } as RichTextBlock,
+                    0.3
+                  ),
+                  ...pickRandom(
+                    {
+                      type: BlockType.Poll,
+                      pollId: shuffle(pollIds).at(0)
+                    } as PollBlock,
+                    0.2
+                  ),
+                  ...pickRandom(
+                    {
+                      type: BlockType.Event,
+                      filter: {
+                        events: [
+                          shuffle(eventIds).at(0),
+                          ...pickRandom(shuffle(eventIds).at(0)),
+                          ...pickRandom(shuffle(eventIds).at(0)),
+                          ...pickRandom(shuffle(eventIds).at(0)),
+                          ...pickRandom(shuffle(eventIds).at(0)),
+                          ...pickRandom(shuffle(eventIds).at(0))
+                        ]
+                      }
+                    } as EventBlock,
+                    0.3
+                  ),
+                  ...pickRandom(
+                    {
+                      type: BlockType.LinkPageBreak,
+                      imageID: null,
+                      hideButton: false,
+                      linkTarget: '',
+                      linkText: capitalize(faker.lorem.words({min: 2, max: 4})),
+                      linkURL: faker.internet.url(),
+                      richText: getText(1, 1) as any,
+                      text: capitalize(faker.lorem.words({min: 8, max: 12})),
+                      layoutOption: 'image-left'
+                    } as LinkPageBreakBlock,
+                    0.7
+                  )
+                ])
               ] as any,
               breaking: false,
               hideAuthor: false,
               publishedAt: new Date(),
               updatedAt: new Date(),
-              createdAt: new Date()
+              createdAt: new Date(),
+              tags: [
+                shuffle(tags).at(0),
+                ...pickRandom(shuffle(tags).at(0), 0.2),
+                ...pickRandom(shuffle(tags).at(0), 0.1)
+              ]
             }
           }
         }
@@ -488,7 +750,7 @@ async function seedArticles(
     articles.map(({publishedId}) =>
       prisma.articleRevisionAuthor.create({
         data: {
-          authorId: authorIds[Math.floor(Math.random() * authorIds.length)],
+          authorId: shuffle(authorIds).at(0),
           revisionId: publishedId
         }
       })
@@ -496,6 +758,38 @@ async function seedArticles(
   )
 
   return articles
+}
+
+async function seedComments(prisma: PrismaClient, articleIds: string[], imageIds: string[] = []) {
+  const comments = await Promise.all(
+    articleIds.flatMap(articleId =>
+      Array.from({length: faker.number.int({min: 0, max: 20})}, () =>
+        prisma.comment.create({
+          data: {
+            itemID: articleId,
+            itemType: CommentItemType.article,
+            authorType: CommentAuthorType.guestUser,
+            source: capitalize(faker.lorem.words({min: 3, max: 8})),
+            state: shuffle([
+              CommentState.approved,
+              CommentState.pendingApproval,
+              CommentState.rejected
+            ]).at(0),
+            guestUsername: faker.person.fullName(),
+            guestUserImageID: shuffle(imageIds).at(0),
+            revisions: {
+              create: {
+                title: capitalize(faker.lorem.words({min: 3, max: 8})),
+                text: getText()
+              }
+            }
+          }
+        })
+      )
+    )
+  )
+
+  return comments
 }
 
 async function seed() {
@@ -509,30 +803,38 @@ async function seed() {
       throw new Error('@wepublish/api seeding has not been done')
     }
 
-    const hasUsers = await prisma.user.count({})
+    const hasUsers = await prisma.user.count()
 
     if (hasUsers) {
       throw 'Website Example seeding has already been done. Skipping'
     }
 
-    const [womanProfilePhoto, manProfilePhoto, news, article] = await seedImages(prisma)
+    const [womanProfilePhoto, manProfilePhoto, ...teaserImages] = await seedImages(prisma)
 
-    const [pastPoll, futurePoll] = await seedPoll(prisma)
-    const [navbarNavigation, categoriesNavigation, aboutUsNavigation, footerNavigation] =
-      await seedNavigation(prisma)
-
+    const tags = Array.from({length: 5}, () => faker.word.noun().toLowerCase())
+    const polls = await seedPoll(prisma)
+    const navigations = await seedNavigation(prisma, tags)
     const authors = await seedAuthor(prisma, [womanProfilePhoto.id, manProfilePhoto.id])
+    const events = await seedEvent(
+      prisma,
+      teaserImages.map(({id}) => id)
+    )
     const articles = await seedArticles(
       prisma,
-      [news.id, article.id],
-      authors.map(({id}) => id)
+      teaserImages.map(({id}) => id),
+      authors.map(({id}) => id),
+      tags,
+      polls.map(({id}) => id),
+      events.map(({id}) => id)
     )
-
-    const events = await seedEvent(prisma, [news.id, article.id])
-
-    await seedPages(
+    const comments = await seedComments(
       prisma,
-      [news.id, article.id],
+      articles.map(({id}) => id),
+      [womanProfilePhoto.id, manProfilePhoto.id]
+    )
+    const pages = await seedPages(
+      prisma,
+      teaserImages.map(({id}) => id),
       articles.map(({id}) => id)
     )
 

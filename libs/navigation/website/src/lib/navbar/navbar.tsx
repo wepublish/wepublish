@@ -164,6 +164,7 @@ export const NavPaperCategoryList = styled('div')`
 export const NavPaperCategory = styled('div')`
   display: grid;
   gap: ${({theme}) => theme.spacing(2)};
+  grid-auto-rows: max-content;
 `
 
 const navPaperLinkStyling = (theme: Theme) => css`

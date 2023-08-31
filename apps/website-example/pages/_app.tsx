@@ -27,7 +27,7 @@ import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
 import Script from 'next/script'
-import {useMemo} from 'react'
+import {useEffect, useMemo, useState, useTransition} from 'react'
 import {initReactI18next} from 'react-i18next'
 import {PartialDeep} from 'type-fest'
 import {z} from 'zod'
@@ -41,6 +41,8 @@ import {tsriArticleStyles} from '../src/styles/tsri-article.styles'
 import {TsriButton} from '../src/tsri-button'
 import {TsriParagraph} from '../src/tsri-paragraph'
 import {NavBarProfile} from '../src/navbar-profile'
+import {TsriBreakBlock} from '../src/tsri-break-block'
+import {useRouter} from 'next/router'
 
 setDefaultOptions({
   locale: de
@@ -60,6 +62,14 @@ i18next
 z.setErrorMap(zodI18nMap)
 
 const websiteExampleTheme = createTheme(theme, {
+  typography: {
+    h1: {
+      fontWeight: theme.typography.fontWeightMedium
+    },
+    h2: {
+      fontWeight: theme.typography.fontWeightMedium
+    }
+  },
   breakpoints: {
     values: {
       lg: 1310
@@ -134,7 +144,8 @@ function CustomApp({Component, pageProps}: AppProps) {
           Head={Head}
           Script={Script}
           elements={{Link: NextWepublishLink, Button: TsriButton, Paragraph: TsriParagraph}}
-          date={{format: dateFormatter}}>
+          date={{format: dateFormatter}}
+          blocks={{Break: TsriBreakBlock}}>
           <ThemeProvider theme={websiteExampleTheme}>
             <GlobalStyles styles={globalStyles} />
             <CssBaseline />

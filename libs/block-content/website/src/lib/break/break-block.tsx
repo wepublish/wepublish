@@ -36,10 +36,16 @@ export const BreakBlock = ({
   text,
   image,
   richText,
-  layoutOption
+  layoutOption,
+  hideButton,
+  linkTarget,
+  linkText,
+  linkURL,
+  styleOption,
+  templateOption
 }: BuilderBreakBlockProps) => {
   const {
-    elements: {H4, Image},
+    elements: {H4, Image, Button, Link},
     blocks: {RichText}
   } = useWebsiteBuilder()
 
@@ -52,15 +58,29 @@ export const BreakBlock = ({
   return (
     <BreakBlockWrapper className={className} reverse={reverse}>
       <BreakBlockSegment reverse={reverse}>
+        {!image && (
+          <H4 component="div" role="heading">
+            {text}
+          </H4>
+        )}
+
         {image && <Image image={image} square={squareImage} />}
       </BreakBlockSegment>
 
       <BreakBlockSegment>
-        <H4 component="div" role="heading">
-          {text}
-        </H4>
+        {image && (
+          <H4 component="div" role="heading">
+            {text}
+          </H4>
+        )}
 
         <RichText richText={richText} />
+
+        {!hideButton && (
+          <Button variant="contained" color="secondary" LinkComponent={Link} href={linkURL ?? ''}>
+            {linkText}
+          </Button>
+        )}
       </BreakBlockSegment>
     </BreakBlockWrapper>
   )
