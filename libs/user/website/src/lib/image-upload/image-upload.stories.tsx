@@ -1,18 +1,17 @@
-import {Meta} from '@storybook/react'
-import {ImageUpload, ImageUploadProps} from './image-upload'
+import {Meta, StoryObj} from '@storybook/react'
+import {ImageUpload} from './image-upload'
+import {ComponentProps} from 'react'
+import {action} from '@storybook/addon-actions'
+import {FullImageFragment} from '@wepublish/website/api'
 
 export default {
   component: ImageUpload,
-  title: 'UI/ImageUpload'
+  title: 'Components/Image Upload'
 } as Meta<typeof ImageUpload>
 
-const Template = (args: ImageUploadProps) => <ImageUpload {...args} />
-
-export const Default = {
-  render: Template,
+export const Default: StoryObj<ComponentProps<typeof ImageUpload>> = {
   args: {
-    label: 'Label',
-    onUpload: input => console.log('input', input),
+    onUpload: action('onUpload'),
     image: {
       __typename: 'Image',
       id: 'ljh9FHAvHAs0AxC',
@@ -44,15 +43,14 @@ export const Default = {
       squareLargeURL: 'https://unsplash.it/500/500',
       squareMediumURL: 'https://unsplash.it/300/300',
       squareSmallURL: 'https://unsplash.it/200/200'
-    }
-  } as ImageUploadProps
+    } as FullImageFragment
+  }
 }
 
-export const NoImage = {
-  render: Template,
+export const NoImage: StoryObj<ComponentProps<typeof ImageUpload>> = {
+  ...Default,
   args: {
-    label: 'Label',
-    onUpload: input => console.log('input', input),
+    ...Default.args,
     image: null
-  } as ImageUploadProps
+  }
 }

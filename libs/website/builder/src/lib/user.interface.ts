@@ -1,13 +1,21 @@
 import {MutationResult} from '@apollo/client'
 import {
   FullImageFragment,
+  Image,
   UpdatePasswordMutationVariables,
   UpdateUserMutation,
-  UpdateUserMutationVariables
+  UpdateUserMutationVariables,
+  User
 } from '@wepublish/website/api'
 import {ChangeEvent} from 'react'
 import {OptionalKeysOf} from 'type-fest'
 import z from 'zod'
+
+export type BuilderImageUploadProps = {
+  image?: Image | null
+  onUpload: (image: ChangeEvent<HTMLInputElement> | null) => void
+  className?: string
+}
 
 type AddressShape = z.ZodObject<{
   streetAddress: z.ZodString | z.ZodOptional<z.ZodString>
@@ -34,7 +42,7 @@ export type BuilderPersonalDataFormProps<
       address: AddressShape | z.ZodOptional<AddressShape>
     }>
   >
-  initialUser: UpdateUserMutationVariables['input'] & {image?: FullImageFragment}
+  initialUser: User
   update: Pick<MutationResult<UpdateUserMutation>, 'data' | 'loading' | 'error'>
   className?: string
   onUpdate?: (

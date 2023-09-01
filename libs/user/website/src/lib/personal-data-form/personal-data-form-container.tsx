@@ -1,6 +1,5 @@
 import {useUser} from '@wepublish/authentication/website'
 import {
-  FullImageFragment,
   UpdatePasswordMutationVariables,
   UpdateUserMutationVariables,
   useUpdatePasswordMutation,
@@ -22,7 +21,7 @@ export function PersonalDataFormContainer({className, mediaEmail}: PersonalDataF
   const [updatePassword] = useUpdatePasswordMutation()
   const [updateUser, updateUserData] = useUpdateUserMutation()
 
-  const handleOnImageUpload = (input: ChangeEvent<HTMLInputElement> | null) => {
+  const handleOnImageUpload = async (input: ChangeEvent<HTMLInputElement> | null) => {
     uploadImage({
       variables: {
         uploadImageInput: {file: input?.target?.files![0] as File} || null
@@ -30,29 +29,26 @@ export function PersonalDataFormContainer({className, mediaEmail}: PersonalDataF
     })
   }
 
-  const handleOnUpdate = (
+  const handleOnUpdate = async (
     variables: UpdateUserMutationVariables['input'] & Partial<UpdatePasswordMutationVariables>
   ) => {
     const {password, passwordRepeated, ...userInput} = variables
 
-    try {
-      if (password && passwordRepeated) {
-        updatePassword({
-          variables: {
-            password,
-            passwordRepeated
-          }
-        })
-      }
-
+    await Promise.all([
+      password && passwordRepeated
+        ? updatePassword({
+            variables: {
+              password,
+              passwordRepeated
+            }
+          })
+        : Promise.resolve(),
       updateUser({
         variables: {
           input: userInput
         }
       })
-    } catch (err) {
-      console.log('err', err)
-    }
+    ])
   }
 
   if (!user) {
@@ -62,7 +58,7 @@ export function PersonalDataFormContainer({className, mediaEmail}: PersonalDataF
   return (
     <PersonalDataForm
       className={className}
-      initialUser={user as UpdateUserMutationVariables['input'] & {image?: FullImageFragment}}
+      initialUser={user}
       update={updateUserData}
       onImageUpload={handleOnImageUpload}
       onUpdate={handleOnUpdate}
