@@ -1,9 +1,6 @@
-import {MutationResult} from '@apollo/client'
 import {
-  FullImageFragment,
   Image,
   UpdatePasswordMutationVariables,
-  UpdateUserMutation,
   UpdateUserMutationVariables,
   User
 } from '@wepublish/website/api'
@@ -25,7 +22,7 @@ type AddressShape = z.ZodObject<{
 }>
 
 export type PersonalDataFormFields = UpdateUserMutationVariables['input'] &
-  Partial<UpdatePasswordMutationVariables> & {image?: FullImageFragment}
+  Partial<UpdatePasswordMutationVariables> & {image?: Image}
 
 export type BuilderPersonalDataFormProps<
   T extends OptionalKeysOf<PersonalDataFormFields> = OptionalKeysOf<PersonalDataFormFields>
@@ -43,11 +40,10 @@ export type BuilderPersonalDataFormProps<
     }>
   >
   initialUser: User
-  update: Pick<MutationResult<UpdateUserMutation>, 'data' | 'loading' | 'error'>
   className?: string
   onUpdate?: (
     data: UpdateUserMutationVariables['input'] & Partial<UpdatePasswordMutationVariables>
-  ) => void
-  onImageUpload: (image: ChangeEvent<HTMLInputElement> | null) => void
+  ) => Promise<void>
+  onImageUpload: (image: ChangeEvent<HTMLInputElement> | null) => Promise<void>
   mediaEmail?: string
 }

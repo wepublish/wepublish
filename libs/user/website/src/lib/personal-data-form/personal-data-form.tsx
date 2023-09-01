@@ -5,7 +5,7 @@ import {
   PersonalDataFormFields,
   useWebsiteBuilder
 } from '@wepublish/website/builder'
-import {useReducer} from 'react'
+import {useCallback, useReducer, useState} from 'react'
 import {Controller, useForm} from 'react-hook-form'
 import {MdVisibility, MdVisibilityOff} from 'react-icons/md'
 import {OptionalKeysOf} from 'type-fest'
@@ -132,7 +132,6 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
     'preferredName',
     'image'
   ] as T[],
-  update,
   className,
   initialUser,
   schema = defaultSchema,
@@ -159,6 +158,26 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
       path: ['passwordRepeated']
     })
 
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<Error>()
+  const callAction = useCallback(
+    (action: (...args: any[]) => Promise<void>) =>
+      async (...args: any[]) => {
+        try {
+          setError(undefined)
+          setLoading(true)
+          await action(...args)
+        } catch (e) {
+          if (e instanceof Error) {
+            setError(e)
+          }
+        } finally {
+          setLoading(false)
+        }
+      },
+    []
+  )
+
   const {handleSubmit, control} = useForm<PersonalDataFormFields>({
     resolver: zodResolver(validationSchema),
     defaultValues: {
@@ -181,7 +200,7 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
     reValidateMode: 'onChange'
   })
 
-  const onSubmit = handleSubmit(data => onUpdate?.(data))
+  const onSubmit = handleSubmit(data => onUpdate && callAction(onUpdate)(data))
 
   return (
     <PersonalDataFormWrapper className={className} onSubmit={onSubmit}>
@@ -192,7 +211,11 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
               name={'uploadImageInput'}
               control={control}
               render={({field}) => (
-                <ImageUpload {...field} image={initialUser.image} onUpload={onImageUpload} />
+                <ImageUpload
+                  {...field}
+                  image={initialUser.image}
+                  onUpload={callAction(onImageUpload)}
+                />
               )}
             />
           </PersonalDataAddressWrapper>
@@ -353,7 +376,7 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
                   {...field}
                   type={showRepeatPassword ? 'text' : 'password'}
                   fullWidth
-                  label={'Repeat Passwort'}
+                  label={'Passwort wiederholen'}
                   error={!!error}
                   helperText={error?.message}
                   InputProps={{
@@ -401,9 +424,9 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
         )}
       </PersonalDataInputForm>
 
-      {update.error && <Alert severity="error">{update.error.message}</Alert>}
+      {error && <Alert severity="error">{error.message}</Alert>}
 
-      <Button css={buttonStyles} disabled={update.loading} type="submit">
+      <Button css={buttonStyles} disabled={loading} type="submit">
         Save
       </Button>
     </PersonalDataFormWrapper>

@@ -39,6 +39,7 @@ export function ImageUpload({image, onUpload, className}: BuilderImageUploadProp
   const {
     elements: {Image, IconButton}
   } = useWebsiteBuilder()
+  const inputId = useId()
 
   return (
     <ImageUploadWrapper className={className}>
@@ -54,24 +55,30 @@ export function ImageUpload({image, onUpload, className}: BuilderImageUploadProp
           type="file"
           accept="image/*"
           onChange={onUpload}
-          id={useId()}
           ref={fileInputRef}
+          id={inputId}
         />
       </ImageUploadImageWrapper>
 
       <ImageUploadContent>
         {image ? (
           <>
-            <IconButton color="error" onClick={() => onUpload(null)}>
+            <IconButton color="error" onClick={() => onUpload(null)} title="Bild löschen">
               <MdDelete />
             </IconButton>
 
-            <IconButton color="primary" onClick={() => fileInputRef.current?.click()}>
+            <IconButton
+              color="primary"
+              onClick={() => fileInputRef.current?.click()}
+              title="Neues Bild hochladen">
               <MdEdit />
             </IconButton>
           </>
         ) : (
-          <IconButton color="primary" onClick={() => fileInputRef.current?.click()}>
+          <IconButton
+            color="primary"
+            onClick={() => fileInputRef.current?.click()}
+            title="Bild hochladen">
             <MdOutlineUploadFile />
           </IconButton>
         )}

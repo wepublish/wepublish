@@ -1,16 +1,21 @@
-import {ApolloError} from '@apollo/client'
 import {css} from '@emotion/react'
 import {action} from '@storybook/addon-actions'
 import {StoryObj} from '@storybook/react'
-import {SessionTokenContext, useUser} from '@wepublish/authentication/website'
-import {FullImageFragment, UpdateUserDocument, User} from '@wepublish/website/api'
+import {userEvent, within} from '@storybook/testing-library'
+import {SessionTokenContext} from '@wepublish/authentication/website'
+import {
+  FullImageFragment,
+  UpdatePasswordDocument,
+  UpdateUserDocument,
+  User
+} from '@wepublish/website/api'
 import {PersonalDataFormFields} from '@wepublish/website/builder'
 import {ComponentType} from 'react'
 import {PersonalDataFormContainer} from './personal-data-form-container'
 import * as personalDataFormStories from './personal-data-form.stories'
 
 export default {
-  title: 'Container/PersonalData Form',
+  title: 'Container/Personal Data Form',
   component: PersonalDataFormContainer
 }
 
@@ -76,24 +81,24 @@ const mockUser: PersonalDataFormFields = {
 }
 
 const onUpdateVariables = {
-  name: 'Bar',
-  email: 'foobar@email.com',
-  firstName: 'Foo',
-  address: {streetAddress: 'Musterstrasse 1', zipCode: '8047', city: 'Zürich', country: 'Schweiz'},
-  password: '12345678'
+  input: {
+    email: 'some-example@mail.com',
+    name: 'WasylBar',
+    firstName: 'KamilFoo',
+    flair: 'Financial Advisor & CEO',
+    address: {
+      streetAddress: 'Cool StreetMusterstrasse 1',
+      zipCode: '123458047',
+      city: 'Surfers ParadiseZürich',
+      country: 'AustraliaSchweiz'
+    },
+    preferredName: ''
+  }
 }
 
-export const Default: StoryObj = {
-  render: function Render(args) {
-    const {user} = useUser()
+const onUpdatePasswordVariables = {password: '12345678', passwordRepeated: '12345678'}
 
-    return (
-      <>
-        {user && <div>Logged in as {user?.firstName}</div>}
-        <PersonalDataFormContainer {...args} />
-      </>
-    )
-  },
+export const Default: StoryObj = {
   args: {
     onUpdate: action('onUpdate')
   },
@@ -108,6 +113,58 @@ export const Default: StoryObj = {
           result: {
             data: {
               updateUser: {
+                id: 'cllpd43yf11301882sfrvd9qom0w',
+                name: 'Gojny',
+                firstName: 'Emil',
+                email: 'emilgojny69@gmail.com',
+                preferredName: null,
+                address: {
+                  company: null,
+                  streetAddress: 'street',
+                  streetAddress2: null,
+                  zipCode: '12345',
+                  city: 'asdf',
+                  country: 'Australia',
+                  __typename: 'UserAddress'
+                },
+                flair: 'CEO & Advisor',
+                paymentProviderCustomers: [],
+                image: {
+                  id: '7GMQjdJFo1hFTfV',
+                  title: null,
+                  description: null,
+                  tags: [],
+                  source: null,
+                  license: null,
+                  fileSize: 241657,
+                  extension: '.jpeg',
+                  mimeType: 'image/jpeg',
+                  format: 'jpeg',
+                  width: 700,
+                  height: 1517,
+                  focalPoint: null,
+                  url: 'https://bajour-media01.wepublish.cloud/7GMQjdJFo1hFTfV/wallpaper_small.jpeg',
+                  xsUrl:
+                    'https://bajour-media01.wepublish.cloud/7GMQjdJFo1hFTfV/t/w_1500/wallpaper_small.jpeg',
+                  smUrl:
+                    'https://bajour-media01.wepublish.cloud/7GMQjdJFo1hFTfV/t/w_2000/wallpaper_small.jpeg',
+                  mdAndUpUrl:
+                    'https://bajour-media01.wepublish.cloud/7GMQjdJFo1hFTfV/t/w_2500/wallpaper_small.jpeg',
+                  __typename: 'Image'
+                },
+                __typename: 'User'
+              }
+            }
+          }
+        },
+        {
+          request: {
+            query: UpdatePasswordDocument,
+            variables: onUpdatePasswordVariables
+          },
+          result: {
+            data: {
+              updatePassword: {
                 id: 'cllpd43yf11301882sfrvd9qom0w',
                 name: 'Gojny',
                 firstName: 'Emil',
@@ -159,256 +216,42 @@ export const Default: StoryObj = {
 }
 
 export const Filled: StoryObj = {
-  render: function Render(args) {
-    const {user} = useUser()
-
-    return (
-      <>
-        {user && <div>Logged in as {user?.firstName}</div>}
-        <PersonalDataFormContainer {...args} />
-      </>
-    )
-  },
+  ...Default,
   args: {
-    onUpdate: action('onUpdate')
+    ...Default.args
   },
   play: async ctx => {
     await personalDataFormStories.Filled.play?.(ctx)
-  },
-  parameters: {
-    apolloClient: {
-      mocks: [
-        {
-          request: {
-            query: UpdateUserDocument,
-            variables: onUpdateVariables
-          },
-          result: {
-            data: {
-              updateUser: {
-                id: 'cllpd43yf11301882sfrvd9qom0w',
-                name: 'Gojny',
-                firstName: 'Emil',
-                email: 'emilgojny69@gmail.com',
-                preferredName: null,
-                address: {
-                  company: null,
-                  streetAddress: 'street',
-                  streetAddress2: null,
-                  zipCode: '12345',
-                  city: 'asdf',
-                  country: 'Australia',
-                  __typename: 'UserAddress'
-                },
-                flair: 'CEO & Advisor',
-                paymentProviderCustomers: [],
-                image: {
-                  id: '7GMQjdJFo1hFTfV',
-                  title: null,
-                  description: null,
-                  tags: [],
-                  source: null,
-                  license: null,
-                  fileSize: 241657,
-                  extension: '.jpeg',
-                  mimeType: 'image/jpeg',
-                  format: 'jpeg',
-                  width: 700,
-                  height: 1517,
-                  focalPoint: null,
-                  url: 'https://bajour-media01.wepublish.cloud/7GMQjdJFo1hFTfV/wallpaper_small.jpeg',
-                  xsUrl:
-                    'https://bajour-media01.wepublish.cloud/7GMQjdJFo1hFTfV/t/w_1500/wallpaper_small.jpeg',
-                  smUrl:
-                    'https://bajour-media01.wepublish.cloud/7GMQjdJFo1hFTfV/t/w_2000/wallpaper_small.jpeg',
-                  mdAndUpUrl:
-                    'https://bajour-media01.wepublish.cloud/7GMQjdJFo1hFTfV/t/w_2500/wallpaper_small.jpeg',
-                  __typename: 'Image'
-                },
-                __typename: 'User'
-              }
-            }
-          }
-        }
-      ]
-    }
-  },
-  decorators: [WithUserDecorator]
+  }
 }
 
-export const WithUpdateError: StoryObj = {
-  args: {
-    onUpdate: action('onUpdate')
-  },
-  play: Filled.play,
-  parameters: {
-    apolloClient: {
-      mocks: [
-        {
-          request: {
-            query: UpdateUserDocument,
-            variables: onUpdateVariables
-          },
-          result: {
-            errors: [new ApolloError({errorMessage: 'Incorrect data provided.'})]
-          }
-        }
-      ]
-    }
-  },
-  decorators: [WithUserDecorator]
+export const DeleteImage: StoryObj = {
+  ...Default,
+  play: async ({canvasElement, step}) => {
+    const canvas = within(canvasElement)
+
+    const button = canvas.getByTitle('Bild löschen')
+
+    await step('Click delete image', async () => {
+      await userEvent.click(button)
+    })
+  }
 }
 
 export const WithClassName: StoryObj = {
-  render: function Render(args) {
-    const {user} = useUser()
-
-    return (
-      <>
-        {user && <div>Logged in as {user?.firstName}</div>}
-        <PersonalDataFormContainer {...args} />
-      </>
-    )
-  },
+  ...Default,
   args: {
-    onUpdate: action('onUpdate'),
+    ...Default.args,
     className: 'extra-classname'
-  },
-  parameters: {
-    apolloClient: {
-      mocks: [
-        {
-          request: {
-            query: UpdateUserDocument,
-            variables: onUpdateVariables
-          },
-          result: {
-            data: {
-              updateUser: {
-                id: 'cllpd43yf11301882sfrvd9qom0w',
-                name: 'Gojny',
-                firstName: 'Emil',
-                email: 'emilgojny69@gmail.com',
-                preferredName: null,
-                address: {
-                  company: null,
-                  streetAddress: 'street',
-                  streetAddress2: null,
-                  zipCode: '12345',
-                  city: 'asdf',
-                  country: 'Australia',
-                  __typename: 'UserAddress'
-                },
-                flair: 'CEO & Advisor',
-                paymentProviderCustomers: [],
-                image: {
-                  id: '7GMQjdJFo1hFTfV',
-                  title: null,
-                  description: null,
-                  tags: [],
-                  source: null,
-                  license: null,
-                  fileSize: 241657,
-                  extension: '.jpeg',
-                  mimeType: 'image/jpeg',
-                  format: 'jpeg',
-                  width: 700,
-                  height: 1517,
-                  focalPoint: null,
-                  url: 'https://bajour-media01.wepublish.cloud/7GMQjdJFo1hFTfV/wallpaper_small.jpeg',
-                  xsUrl:
-                    'https://bajour-media01.wepublish.cloud/7GMQjdJFo1hFTfV/t/w_1500/wallpaper_small.jpeg',
-                  smUrl:
-                    'https://bajour-media01.wepublish.cloud/7GMQjdJFo1hFTfV/t/w_2000/wallpaper_small.jpeg',
-                  mdAndUpUrl:
-                    'https://bajour-media01.wepublish.cloud/7GMQjdJFo1hFTfV/t/w_2500/wallpaper_small.jpeg',
-                  __typename: 'Image'
-                },
-                __typename: 'User'
-              }
-            }
-          }
-        }
-      ]
-    }
-  },
-  decorators: [WithUserDecorator]
+  }
 }
 
 export const WithEmotion: StoryObj = {
-  render: function Render(args) {
-    const {user} = useUser()
-
-    return (
-      <>
-        {user && <div>Logged in as {user?.firstName}</div>}
-        <PersonalDataFormContainer {...args} />
-      </>
-    )
-  },
+  ...Default,
   args: {
-    onUpdate: action('onUpdate'),
+    ...Default.args,
     css: css`
       background-color: #eee;
     `
-  },
-  parameters: {
-    apolloClient: {
-      mocks: [
-        {
-          request: {
-            query: UpdateUserDocument,
-            variables: onUpdateVariables
-          },
-          result: {
-            data: {
-              updateUser: {
-                id: 'cllpd43yf11301882sfrvd9qom0w',
-                name: 'Gojny',
-                firstName: 'Emil',
-                email: 'emilgojny69@gmail.com',
-                preferredName: null,
-                address: {
-                  company: null,
-                  streetAddress: 'street',
-                  streetAddress2: null,
-                  zipCode: '12345',
-                  city: 'asdf',
-                  country: 'Australia',
-                  __typename: 'UserAddress'
-                },
-                flair: 'CEO & Advisor',
-                paymentProviderCustomers: [],
-                image: {
-                  id: '7GMQjdJFo1hFTfV',
-                  title: null,
-                  description: null,
-                  tags: [],
-                  source: null,
-                  license: null,
-                  fileSize: 241657,
-                  extension: '.jpeg',
-                  mimeType: 'image/jpeg',
-                  format: 'jpeg',
-                  width: 700,
-                  height: 1517,
-                  focalPoint: null,
-                  url: 'https://bajour-media01.wepublish.cloud/7GMQjdJFo1hFTfV/wallpaper_small.jpeg',
-                  xsUrl:
-                    'https://bajour-media01.wepublish.cloud/7GMQjdJFo1hFTfV/t/w_1500/wallpaper_small.jpeg',
-                  smUrl:
-                    'https://bajour-media01.wepublish.cloud/7GMQjdJFo1hFTfV/t/w_2000/wallpaper_small.jpeg',
-                  mdAndUpUrl:
-                    'https://bajour-media01.wepublish.cloud/7GMQjdJFo1hFTfV/t/w_2500/wallpaper_small.jpeg',
-                  __typename: 'Image'
-                },
-                __typename: 'User'
-              }
-            }
-          }
-        }
-      ]
-    }
-  },
-  decorators: [WithUserDecorator]
+  }
 }

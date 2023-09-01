@@ -19,12 +19,12 @@ export function PersonalDataFormContainer({className, mediaEmail}: PersonalDataF
 
   const [uploadImage] = useUploadImageMutation()
   const [updatePassword] = useUpdatePasswordMutation()
-  const [updateUser, updateUserData] = useUpdateUserMutation()
+  const [updateUser] = useUpdateUserMutation()
 
   const handleOnImageUpload = async (input: ChangeEvent<HTMLInputElement> | null) => {
-    uploadImage({
+    await uploadImage({
       variables: {
-        uploadImageInput: {file: input?.target?.files![0] as File} || null
+        uploadImageInput: input ? {file: input.target?.files![0] as File} : null
       }
     })
   }
@@ -33,22 +33,28 @@ export function PersonalDataFormContainer({className, mediaEmail}: PersonalDataF
     variables: UpdateUserMutationVariables['input'] & Partial<UpdatePasswordMutationVariables>
   ) => {
     const {password, passwordRepeated, ...userInput} = variables
-
-    await Promise.all([
-      password && passwordRepeated
-        ? updatePassword({
-            variables: {
-              password,
-              passwordRepeated
-            }
-          })
-        : Promise.resolve(),
+    const updates = [
       updateUser({
         variables: {
           input: userInput
         }
       })
-    ])
+    ] as Promise<unknown>[]
+
+    console.log(password, passwordRepeated, userInput)
+
+    if (password && passwordRepeated) {
+      updates.push(
+        updatePassword({
+          variables: {
+            password,
+            passwordRepeated
+          }
+        })
+      )
+    }
+
+    await Promise.all(updates)
   }
 
   if (!user) {
@@ -59,7 +65,6 @@ export function PersonalDataFormContainer({className, mediaEmail}: PersonalDataF
     <PersonalDataForm
       className={className}
       initialUser={user}
-      update={updateUserData}
       onImageUpload={handleOnImageUpload}
       onUpdate={handleOnUpdate}
       mediaEmail={mediaEmail}
