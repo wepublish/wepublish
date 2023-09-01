@@ -1,7 +1,7 @@
-import {EventListDocument, EventQuery, EventStatus} from '@wepublish/website/api'
-import {Meta} from '@storybook/react'
-import {EventListContainer} from './event-list-container'
 import {css} from '@emotion/react'
+import {Meta} from '@storybook/react'
+import {EventListDocument, EventQuery, EventStatus} from '@wepublish/website/api'
+import {EventListContainer} from './event-list-container'
 
 const event = {
   id: '16ca80ce-a2d0-44dc-8c87-b735e4b08877',

@@ -5,7 +5,6 @@ import {
   CommentListDocument,
   CommentListQuery,
   CommentListQueryVariables,
-  CommentState,
   SettingName,
   useAddCommentMutation,
   useChallengeLazyQuery,
@@ -85,30 +84,24 @@ export function CommentListContainer({
     }
   )
 
-  const [editComment, edit] = useEditCommentMutationWithCacheUpdate(
-    {
-      ...variables,
-      itemId: id
-    },
-    {
-      onCompleted: async data => {
-        dispatch({
-          type: 'edit',
-          action: 'close',
-          commentId: data.updateComment.id
-        })
+  const [editComment, edit] = useEditCommentMutation({
+    onCompleted: async data => {
+      dispatch({
+        type: 'edit',
+        action: 'close',
+        commentId: data.updateComment.id
+      })
 
-        if (!hasUser) {
-          challenge.refetch()
-        }
-      },
-      onError: () => {
-        if (!hasUser) {
-          challenge.refetch()
-        }
+      if (!hasUser) {
+        challenge.refetch()
+      }
+    },
+    onError: () => {
+      if (!hasUser) {
+        challenge.refetch()
       }
     }
-  )
+  })
 
   useEffect(() => {
     if (!hasUser) {
@@ -207,45 +200,6 @@ const useAddCommentMutationWithCacheUpdate = (
           parentComment.children.unshift(data.addComment as Comment)
         } else {
           comments.unshift(data.addComment)
-        }
-      })
-
-      cache.writeQuery<CommentListQuery>({
-        query: CommentListDocument,
-        data: {
-          comments: updatedComments
-        },
-        variables
-      })
-    }
-  })
-
-const useEditCommentMutationWithCacheUpdate = (
-  variables: CommentListQueryVariables,
-  ...params: Parameters<typeof useEditCommentMutation>
-) =>
-  useEditCommentMutation({
-    ...params[0],
-    update: (cache, {data}) => {
-      const query = cache.readQuery<CommentListQuery>({
-        query: CommentListDocument,
-        variables
-      })
-
-      if (!query || !data?.updateComment) {
-        return
-      }
-
-      const updatedComments = produce(query.comments, comments => {
-        const allComments = extractAllComments(comments)
-
-        const oldComment = allComments.find(comment => comment.id === data.updateComment.id)
-
-        if (oldComment) {
-          oldComment.title = data.updateComment.title
-          oldComment.lead = data.updateComment.lead
-          oldComment.text = data.updateComment.text
-          oldComment.state = CommentState.PendingApproval
         }
       })
 

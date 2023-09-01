@@ -14,6 +14,7 @@ import {Context} from '../context'
 import {InvoiceSort, InvoiceWithItems} from '../db/invoice'
 import {createProxyingResolver} from '../utility'
 import {GraphQLPageInfo} from './common'
+import {GraphQLPublicSubscription} from './subscription-public'
 
 export const GraphQLInvoiceItem = new GraphQLObjectType<InvoiceItem, Context>({
   name: 'InvoiceItem',
@@ -70,9 +71,16 @@ export const GraphQLPublicInvoice = new GraphQLObjectType<InvoiceWithItems, Cont
 
     description: {type: GraphQLString},
     paidAt: {type: GraphQLDateTime},
+    dueAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     canceledAt: {type: GraphQLDateTime},
     items: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLInvoiceItem)))},
     subscriptionID: {type: new GraphQLNonNull(GraphQLID)},
+    subscription: {
+      type: GraphQLPublicSubscription,
+      resolve({subscriptionID}, args, {loaders}) {
+        return loaders.subscriptionsById.load(subscriptionID)
+      }
+    },
     total: {
       type: new GraphQLNonNull(GraphQLInt),
       resolve: createProxyingResolver(({items}) => {
