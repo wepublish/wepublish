@@ -1,7 +1,8 @@
 import {css} from '@emotion/react'
 import {Meta} from '@storybook/react'
 import {ArticleListItem} from './article-list-item'
-import {ArticleQuery, FullAuthorFragment, FullImageFragment} from '@wepublish/website/api'
+import {ArticleQuery, Block, FullAuthorFragment, FullImageFragment} from '@wepublish/website/api'
+import {isImageBlock} from '@wepublish/block-content/website'
 
 const image = {
   __typename: 'Image',
@@ -2476,5 +2477,13 @@ export const WithoutImage = {
   args: {
     ...article,
     image: null
+  }
+}
+
+export const WithoutImageWithoutImageBlock = {
+  args: {
+    ...article,
+    image: null,
+    blocks: article.blocks.filter(block => !isImageBlock(block as Block))
   }
 }

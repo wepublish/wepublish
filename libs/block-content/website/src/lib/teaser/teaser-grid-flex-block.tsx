@@ -13,7 +13,8 @@ export const isTeaserGridFlexBlock = (block: Block): block is TeaserGridFlexBloc
 
 export const TeaserGridFlexBlockWrapper = styled('div')`
   display: grid;
-  gap: ${({theme}) => theme.spacing(2)};
+  column-gap: ${({theme}) => theme.spacing(2)};
+  row-gap: ${({theme}) => theme.spacing(5)};
   grid-template-columns: 1fr;
   align-items: stretch;
 

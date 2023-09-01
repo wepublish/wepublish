@@ -3,7 +3,7 @@
 exports[`Teaser Grid Flex Block should render Default 1`] = `
 <DocumentFragment>
   <div
-    class="css-muwn7e-TeaserGridFlexBlockWrapper e1je8zv30"
+    class="css-1iy4fdm-TeaserGridFlexBlockWrapper e1je8zv30"
   >
     <article
       class="css-pcebg7-TeaserWrapper e18of27r4"
@@ -258,7 +258,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Grid Flex Block should render WithClassName 1`] = `
 <DocumentFragment>
   <div
-    class="extra-classname css-muwn7e-TeaserGridFlexBlockWrapper e1je8zv30"
+    class="extra-classname css-1iy4fdm-TeaserGridFlexBlockWrapper e1je8zv30"
   >
     <article
       class="css-pcebg7-TeaserWrapper e18of27r4"
@@ -513,7 +513,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Grid Flex Block should render WithEmotion 1`] = `
 <DocumentFragment>
   <div
-    class="css-muwn7e-TeaserGridFlexBlockWrapper e1je8zv30"
+    class="css-1iy4fdm-TeaserGridFlexBlockWrapper e1je8zv30"
   >
     <article
       class="css-pcebg7-TeaserWrapper e18of27r4"

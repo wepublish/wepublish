@@ -7,7 +7,8 @@ export const isTeaserGridBlock = (block: Block): block is TeaserGridBlockType =>
 
 export const TeaserGridBlockWrapper = styled('div')<Pick<TeaserGridBlockType, 'numColumns'>>`
   display: grid;
-  gap: ${({theme}) => theme.spacing(2)};
+  column-gap: ${({theme}) => theme.spacing(2)};
+  row-gap: ${({theme}) => theme.spacing(5)};
   grid-template-columns: 1fr;
   align-items: stretch;
 
