@@ -1,19 +1,21 @@
 import {GlobalStyles, TextField, Theme, ThemeProvider, css} from '@mui/material'
-import {Article, ArticleSEO, ArticleList, ArticleListItem} from '@wepublish/article/website'
+import {Article, ArticleList, ArticleListItem, ArticleSEO} from '@wepublish/article/website'
 import {LoginForm, RegistrationForm} from '@wepublish/authentication/website'
 import {Author, AuthorChip, AuthorList, AuthorListItem} from '@wepublish/author/website'
 import {
   BildwurfAdBlock,
   BlockRenderer,
+  BreakBlock,
   EmbedBlock,
+  EventBlock,
   FacebookPostBlock,
   FacebookVideoBlock,
+  HtmlBlock,
   ImageBlock,
   ImageGalleryBlock,
   InstagramPostBlock,
+  ListicleBlock,
   PolisConversationBlock,
-  EventBlock,
-  HtmlBlock,
   PollBlock,
   QuoteBlock,
   RichTextBlock,
@@ -22,17 +24,21 @@ import {
   TeaserGridBlock,
   TeaserGridFlexBlock,
   TikTokVideoBlock,
+  TitleBlock,
   TwitterTweetBlock,
   VimeoVideoBlock,
-  YouTubeVideoBlock,
-  ListicleBlock,
-  TitleBlock,
-  BreakBlock
+  YouTubeVideoBlock
 } from '@wepublish/block-content/website'
 import {CommentEditor, CommentList, CommentListItem} from '@wepublish/comments/website'
 import {Event, EventList, EventListItem, EventSEO} from '@wepublish/event/website'
 import {PersonalDataForm, ImageUpload} from '@wepublish/user/website'
 import {Image} from '@wepublish/image/website'
+import {
+  SubscriptionList,
+  SubscriptionListItem,
+  InvoiceListItem,
+  InvoiceList
+} from '@wepublish/membership/website'
 import {Footer, Navbar} from '@wepublish/navigation/website'
 import {Page, PageSEO} from '@wepublish/page/website'
 import {PeerInformation} from '@wepublish/peering/website'
@@ -115,6 +121,10 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
         LoginForm={LoginForm}
         RegistrationForm={RegistrationForm}
         PersonalDataForm={PersonalDataForm}
+        SubscriptionList={SubscriptionList}
+        SubscriptionListItem={SubscriptionListItem}
+        InvoiceList={InvoiceList}
+        InvoiceListItem={InvoiceListItem}
         elements={{
           TextField,
           Alert,

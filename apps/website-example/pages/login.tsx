@@ -6,11 +6,12 @@ import {
   useUser,
   useWebsiteBuilder
 } from '@wepublish/website'
-import {setCookie} from 'cookies-next'
+import {deleteCookie, getCookie, setCookie} from 'cookies-next'
 import {GetServerSideProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {useEffect} from 'react'
+import {IntendedRouteStorageKey} from '../src/auth-guard'
 
 const LoginWrapper = styled('div')`
   display: grid;
@@ -32,7 +33,11 @@ export default function Login({sessionToken}: LoginProps) {
     }
 
     if (hasUser) {
-      router.push('/')
+      const intendedRoute = getCookie(IntendedRouteStorageKey)?.toString()
+      deleteCookie(IntendedRouteStorageKey)
+      const route = intendedRoute ?? '/'
+
+      router.push(route)
     }
   }, [router, hasUser, sessionToken, setToken])
 
