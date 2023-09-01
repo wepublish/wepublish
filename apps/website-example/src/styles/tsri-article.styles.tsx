@@ -6,6 +6,10 @@ import {ArticleTagList} from '../../pages/a/[slug]'
 export const tsriArticleStyles = (theme: Theme) => css`
   ${ArticleWrapper} {
     align-items: start;
+
+    ${theme.breakpoints.up('lg')} {
+      padding-right: ${theme.spacing(26)};
+    }
   }
 
   ${ArticleWrapper} > * {
