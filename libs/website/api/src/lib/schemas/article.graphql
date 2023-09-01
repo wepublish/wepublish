@@ -12,10 +12,6 @@ fragment ArticleWithoutBlocks on Article {
   tags
   title
   url
-  properties {
-    key
-    value
-  }
 
   authors {
     ...FullAuthor
@@ -29,6 +25,10 @@ fragment ArticleWithoutBlocks on Article {
   socialMediaTitle
   socialMediaImage {
     ...FullImage
+  }
+
+  properties {
+    ...FullProperty
   }
 }
 

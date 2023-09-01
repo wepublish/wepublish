@@ -19,7 +19,7 @@ exports[`Author should render Default 1`] = `
     </header>
     <img
       alt="DSC07717"
-      class="css-10ctmcf-ImageWrapper e1shv2yg0"
+      class="css-hha8hw-ImageWrapper e1shv2yg0"
       height="6000"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
@@ -439,7 +439,7 @@ exports[`Author should render WithClassName 1`] = `
     </header>
     <img
       alt="DSC07717"
-      class="css-10ctmcf-ImageWrapper e1shv2yg0"
+      class="css-hha8hw-ImageWrapper e1shv2yg0"
       height="6000"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
@@ -859,7 +859,7 @@ exports[`Author should render WithCustomAuthorLinks 1`] = `
     </header>
     <img
       alt="DSC07717"
-      class="css-10ctmcf-ImageWrapper e1shv2yg0"
+      class="css-hha8hw-ImageWrapper e1shv2yg0"
       height="6000"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
@@ -1321,7 +1321,7 @@ exports[`Author should render WithEmotion 1`] = `
     </header>
     <img
       alt="DSC07717"
-      class="css-10ctmcf-ImageWrapper e1shv2yg0"
+      class="css-hha8hw-ImageWrapper e1shv2yg0"
       height="6000"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
@@ -1745,7 +1745,7 @@ exports[`Author should render WithoutBio 1`] = `
     </header>
     <img
       alt="DSC07717"
-      class="css-10ctmcf-ImageWrapper e1shv2yg0"
+      class="css-hha8hw-ImageWrapper e1shv2yg0"
       height="6000"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
@@ -2216,7 +2216,7 @@ exports[`Author should render WithoutJobTitle 1`] = `
     </header>
     <img
       alt="DSC07717"
-      class="css-10ctmcf-ImageWrapper e1shv2yg0"
+      class="css-hha8hw-ImageWrapper e1shv2yg0"
       height="6000"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
@@ -2636,7 +2636,7 @@ exports[`Author should render WithoutLinks 1`] = `
     </header>
     <img
       alt="DSC07717"
-      class="css-10ctmcf-ImageWrapper e1shv2yg0"
+      class="css-hha8hw-ImageWrapper e1shv2yg0"
       height="6000"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,

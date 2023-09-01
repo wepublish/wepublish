@@ -1632,7 +1632,7 @@ export type PaymentFilter = {
 
 export type PaymentFromInvoiceInput = {
   failureURL?: InputMaybe<Scalars['String']>;
-  invoiceID: Scalars['String'];
+  invoiceID: Scalars['ID'];
   paymentMethodID?: InputMaybe<Scalars['ID']>;
   paymentMethodSlug?: InputMaybe<Scalars['Slug']>;
   successURL?: InputMaybe<Scalars['String']>;

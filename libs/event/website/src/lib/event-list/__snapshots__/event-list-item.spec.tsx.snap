@@ -14,7 +14,7 @@ exports[`EventListItem should render Default 1`] = `
       >
         <img
           alt="DSC07717"
-          class="css-10ctmcf-ImageWrapper e1shv2yg0"
+          class="css-hha8hw-ImageWrapper e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
@@ -432,7 +432,7 @@ exports[`EventListItem should render WithClassName 1`] = `
       >
         <img
           alt="DSC07717"
-          class="css-10ctmcf-ImageWrapper e1shv2yg0"
+          class="css-hha8hw-ImageWrapper e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
@@ -850,7 +850,7 @@ exports[`EventListItem should render WithEmotion 1`] = `
       >
         <img
           alt="DSC07717"
-          class="css-10ctmcf-ImageWrapper e1shv2yg0"
+          class="css-hha8hw-ImageWrapper e1shv2yg0"
           height="6000"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
