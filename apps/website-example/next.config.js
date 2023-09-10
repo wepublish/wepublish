@@ -2,7 +2,7 @@
 
 const {composePlugins, withNx} = require('@nx/next')
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: false,
+  enabled: process.env.NODE_ENV === 'production',
   openAnalyzer: false
 })
 
@@ -19,11 +19,6 @@ const nextConfig = {
     env: {
       API_URL: process.env.API_URL || ''
     }
-  },
-  // This adds the language attribute to the HTML element
-  i18n: {
-    locales: ['gsw-CH'],
-    defaultLocale: 'gsw-CH'
   },
   compiler: {
     // This is needed so that we can use components as selectors in Emotion

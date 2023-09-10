@@ -1,5 +1,5 @@
 import {Article} from '@wepublish/website/api'
-import {Feed, Item} from 'feed'
+import type {Feed, Item} from 'feed'
 import {getArticleSEO} from '@wepublish/article/website'
 import {Node} from 'slate'
 import {isRichTextBlock} from '@wepublish/block-content/website'
@@ -48,6 +48,7 @@ export const generateFeed =
       } as Item
     })
 
+    const Feed = (await import('feed')).Feed
     const feed = new Feed({
       language: 'de',
       ...config,

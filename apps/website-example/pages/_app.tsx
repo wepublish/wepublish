@@ -151,6 +151,8 @@ function CustomApp({Component, pageProps}: AppProps) {
 
             <Head>
               <title>We.Publish</title>
+              <meta httpEquiv="content-language" content="ch-GSW" />
+              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
               {/* Feeds */}
               <link rel="alternate" type="application/rss+xml" href="/api/rss-feed" />
