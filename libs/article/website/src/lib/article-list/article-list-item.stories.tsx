@@ -2441,7 +2441,7 @@ const article = {
 
 export default {
   component: ArticleListItem,
-  title: 'Components/ArticleListItem'
+  title: 'Components/ArticleList/Item'
 } as Meta
 
 export const Default = {

@@ -43,26 +43,7 @@ exports[`Navbar Container should render Default 1`] = `
           </button>
           <div
             class="css-pd0s4t-NavbarMainItems ei6evl25"
-          >
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
-              href="/"
-            >
-              Home
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
-              href="/a/abcd"
-            >
-              Artikel
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
-              href="https://google.com"
-            >
-              Google
-            </a>
-          </div>
+          />
         </div>
       </div>
     </header>
@@ -113,26 +94,7 @@ exports[`Navbar Container should render WithClassName 1`] = `
           </button>
           <div
             class="css-pd0s4t-NavbarMainItems ei6evl25"
-          >
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
-              href="/"
-            >
-              Home
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
-              href="/a/abcd"
-            >
-              Artikel
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
-              href="https://google.com"
-            >
-              Google
-            </a>
-          </div>
+          />
         </div>
       </div>
     </header>
@@ -183,26 +145,7 @@ exports[`Navbar Container should render WithEmotion 1`] = `
           </button>
           <div
             class="css-pd0s4t-NavbarMainItems ei6evl25"
-          >
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
-              href="/"
-            >
-              Home
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
-              href="/a/abcd"
-            >
-              Artikel
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
-              href="https://google.com"
-            >
-              Google
-            </a>
-          </div>
+          />
         </div>
       </div>
     </header>

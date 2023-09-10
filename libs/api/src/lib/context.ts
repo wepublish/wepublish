@@ -10,8 +10,7 @@ import {
   PrismaClient,
   User,
   UserRole,
-  Comment,
-  Subscription
+  Comment
 } from '@prisma/client'
 import {
   AuthenticationService,
@@ -60,6 +59,7 @@ import {PaymentProvider} from './payments/paymentProvider'
 import {logger} from './server'
 import {URLAdapter} from './urlAdapter'
 import {SettingName} from '@wepublish/settings/api'
+import {SubscriptionWithRelations} from './db/subscription'
 
 /**
  * Peered article cache configuration and setup
@@ -115,7 +115,7 @@ export interface DataLoaderContext {
   readonly eventById: DataLoader<string, Event | null>
 
   readonly commentsById: DataLoader<string, Comment | null>
-  readonly subscriptionsById: DataLoader<string, Subscription | null>
+  readonly subscriptionsById: DataLoader<string, SubscriptionWithRelations | null>
   readonly usersById: DataLoader<string, User | null>
 }
 
@@ -843,8 +843,9 @@ export async function contextFromRequest(
             }
           },
           include: {
-            memberPlan: true,
-            user: true
+            periods: true,
+            properties: true,
+            deactivation: true
           }
         }),
         'id'

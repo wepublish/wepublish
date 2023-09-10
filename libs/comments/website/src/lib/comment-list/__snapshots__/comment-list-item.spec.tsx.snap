@@ -10,7 +10,7 @@ exports[`Comment List Item should render AnonymousCommenting 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-7wuecn-ImageWrapper-avatarStyles e1shv2yg0"
+        class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -142,7 +142,7 @@ exports[`Comment List Item should render AnonymousUser 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-7wuecn-ImageWrapper-avatarStyles e1shv2yg0"
+        class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -215,7 +215,7 @@ exports[`Comment List Item should render Commenting 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-7wuecn-ImageWrapper-avatarStyles e1shv2yg0"
+        class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -347,7 +347,7 @@ exports[`Comment List Item should render Editing 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-7wuecn-ImageWrapper-avatarStyles e1shv2yg0"
+        class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -510,7 +510,7 @@ exports[`Comment List Item should render Nested 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-7wuecn-ImageWrapper-avatarStyles e1shv2yg0"
+        class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -604,7 +604,7 @@ https://unsplash.it/200/200 200w"
         >
           <img
             alt="DSC07717"
-            class="css-7wuecn-ImageWrapper-avatarStyles e1shv2yg0"
+            class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -698,7 +698,7 @@ https://unsplash.it/200/200 200w"
             >
               <img
                 alt="DSC07717"
-                class="css-7wuecn-ImageWrapper-avatarStyles e1shv2yg0"
+                class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
                 loading="lazy"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -792,7 +792,7 @@ https://unsplash.it/200/200 200w"
         >
           <img
             alt="DSC07717"
-            class="css-7wuecn-ImageWrapper-avatarStyles e1shv2yg0"
+            class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -862,7 +862,7 @@ https://unsplash.it/200/200 200w"
             >
               <img
                 alt="DSC07717"
-                class="css-7wuecn-ImageWrapper-avatarStyles e1shv2yg0"
+                class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
                 loading="lazy"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -963,7 +963,7 @@ exports[`Comment List Item should render PendingApproval 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-7wuecn-ImageWrapper-avatarStyles e1shv2yg0"
+        class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1085,7 +1085,7 @@ exports[`Comment List Item should render PendingUserChanges 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-7wuecn-ImageWrapper-avatarStyles e1shv2yg0"
+        class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1273,7 +1273,7 @@ exports[`Comment List Item should render Rejected 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-7wuecn-ImageWrapper-avatarStyles e1shv2yg0"
+        class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1395,7 +1395,7 @@ exports[`Comment List Item should render VerifiedUser 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-7wuecn-ImageWrapper-avatarStyles e1shv2yg0"
+        class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1492,7 +1492,7 @@ exports[`Comment List Item should render WithClassName 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-7wuecn-ImageWrapper-avatarStyles e1shv2yg0"
+        class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1589,7 +1589,7 @@ exports[`Comment List Item should render WithEmotion 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-7wuecn-ImageWrapper-avatarStyles e1shv2yg0"
+        class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1686,7 +1686,7 @@ exports[`Comment List Item should render WithoutFlair 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-7wuecn-ImageWrapper-avatarStyles e1shv2yg0"
+        class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1888,7 +1888,7 @@ exports[`Comment List Item should render WithoutPreferredName 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-7wuecn-ImageWrapper-avatarStyles e1shv2yg0"
+        class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1985,7 +1985,7 @@ exports[`Comment List Item should render WithoutSource 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-7wuecn-ImageWrapper-avatarStyles e1shv2yg0"
+        class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,

@@ -35,13 +35,13 @@ import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 import {authLink} from '../src/auth-link'
 import {ReactComponent as Logo} from '../src/logo.svg'
+import {NavBarProfile} from '../src/navbar-profile'
 import {NextWepublishLink} from '../src/next-wepublish-link'
 import {SessionProvider} from '../src/session.provider'
 import {tsriArticleStyles} from '../src/styles/tsri-article.styles'
+import {TsriBreakBlock} from '../src/tsri-break-block'
 import {TsriButton} from '../src/tsri-button'
 import {TsriParagraph} from '../src/tsri-paragraph'
-import {NavBarProfile} from '../src/navbar-profile'
-import {TsriBreakBlock} from '../src/tsri-break-block'
 
 setDefaultOptions({
   locale: de
@@ -127,7 +127,11 @@ const dateFormatter = (date: Date, includeTime = true) =>
     ? `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
     : format(date, 'dd. MMMM yyyy')
 
-function CustomApp({Component, pageProps}: AppProps) {
+type CustomAppProps = AppProps<{
+  sessionToken?: ApiV1.UserSession
+}>
+
+function CustomApp({Component, pageProps}: CustomAppProps) {
   const theme = useTheme()
   const globalStyles = useMemo(
     () => css`
@@ -137,7 +141,7 @@ function CustomApp({Component, pageProps}: AppProps) {
   )
 
   return (
-    <SessionProvider sessionToken={null}>
+    <SessionProvider sessionToken={pageProps.sessionToken ?? null}>
       <WebsiteProvider>
         <WebsiteBuilderProvider
           Head={Head}

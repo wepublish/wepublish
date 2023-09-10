@@ -19,7 +19,7 @@ exports[`Author Container should render ById 1`] = `
     </header>
     <img
       alt="DSC07717"
-      class="css-11iwplm-ImageWrapper-Author e1shv2yg0"
+      class="css-128ccri-ImageWrapper-Author e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -437,7 +437,7 @@ exports[`Author Container should render BySlug 1`] = `
     </header>
     <img
       alt="DSC07717"
-      class="css-11iwplm-ImageWrapper-Author e1shv2yg0"
+      class="css-128ccri-ImageWrapper-Author e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -855,7 +855,7 @@ exports[`Author Container should render WithClassName 1`] = `
     </header>
     <img
       alt="DSC07717"
-      class="css-11iwplm-ImageWrapper-Author e1shv2yg0"
+      class="css-128ccri-ImageWrapper-Author e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1273,7 +1273,7 @@ exports[`Author Container should render WithEmotion 1`] = `
     </header>
     <img
       alt="DSC07717"
-      class="css-11iwplm-ImageWrapper-Author e1shv2yg0"
+      class="css-128ccri-ImageWrapper-Author e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,

@@ -14,7 +14,7 @@ exports[`AuthorList Container should render Default 1`] = `
       >
         <img
           alt="DSC07717"
-          class="css-1e3uhby-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -47,7 +47,7 @@ https://unsplash.it/200/200 200w"
       >
         <img
           alt="DSC07717"
-          class="css-1e3uhby-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -80,7 +80,7 @@ https://unsplash.it/200/200 200w"
       >
         <img
           alt="DSC07717"
-          class="css-1e3uhby-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -122,7 +122,7 @@ exports[`AuthorList Container should render WithClassName 1`] = `
       >
         <img
           alt="DSC07717"
-          class="css-1e3uhby-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -155,7 +155,7 @@ https://unsplash.it/200/200 200w"
       >
         <img
           alt="DSC07717"
-          class="css-1e3uhby-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -188,7 +188,7 @@ https://unsplash.it/200/200 200w"
       >
         <img
           alt="DSC07717"
-          class="css-1e3uhby-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -230,7 +230,7 @@ exports[`AuthorList Container should render WithEmotion 1`] = `
       >
         <img
           alt="DSC07717"
-          class="css-1e3uhby-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -263,7 +263,7 @@ https://unsplash.it/200/200 200w"
       >
         <img
           alt="DSC07717"
-          class="css-1e3uhby-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -296,7 +296,7 @@ https://unsplash.it/200/200 200w"
       >
         <img
           alt="DSC07717"
-          class="css-1e3uhby-ImageWrapper-AuthorListItem e1shv2yg0"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,

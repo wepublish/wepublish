@@ -5,15 +5,15 @@ import {possibleTypes} from '@wepublish/website/api'
 
 const defaultOptions: DefaultOptions = {
   watchQuery: {
-    fetchPolicy: 'no-cache',
+    fetchPolicy: 'network-only',
     errorPolicy: 'all'
   },
   query: {
-    fetchPolicy: 'no-cache',
+    fetchPolicy: 'network-only',
     errorPolicy: 'all'
   },
   mutate: {
-    fetchPolicy: 'no-cache',
+    fetchPolicy: 'network-only',
     errorPolicy: 'all'
   }
 }
@@ -21,7 +21,7 @@ const defaultOptions: DefaultOptions = {
 const cache = new InMemoryCache({
   possibleTypes: possibleTypes.possibleTypes,
   resultCaching: false,
-  addTypename: false,
+  addTypename: true,
   canonizeResults: true,
   resultCacheMaxSize: 0
 })

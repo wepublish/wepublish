@@ -316,61 +316,14 @@ export const WithError = {
 
 export const WithClassName = {
   args: {
-    data: {
-      events: {
-        nodes: [
-          author,
-          {...author, id: '2'},
-          {...author, id: '3'},
-          {...author, id: '4'},
-          {...author, id: '5'},
-          {...author, id: '6'},
-          {...author, id: '7'},
-          {...author, id: '8'},
-          {...author, id: '9'},
-          {...author, id: '10'},
-          {...author, id: '11'}
-        ],
-        pageInfo: {
-          hasNextPage: false,
-          hasPreviousPage: false,
-          endCursor: null,
-          startCursor: null
-        },
-        totalCount: 5
-      }
-    },
-    className: 'extra-classname',
-    onVariablesChange: action('onVariablesChange')
+    ...Default.args,
+    className: 'extra-classname'
   }
 }
 
 export const WithEmotion = {
   args: {
-    data: {
-      events: {
-        nodes: [
-          author,
-          {...author, id: '2'},
-          {...author, id: '3'},
-          {...author, id: '4'},
-          {...author, id: '5'},
-          {...author, id: '6'},
-          {...author, id: '7'},
-          {...author, id: '8'},
-          {...author, id: '9'},
-          {...author, id: '10'},
-          {...author, id: '11'}
-        ],
-        pageInfo: {
-          hasNextPage: false,
-          hasPreviousPage: false,
-          endCursor: null,
-          startCursor: null
-        },
-        totalCount: 5
-      }
-    },
+    ...Default.args,
     css: css`
       background-color: #eee;
     `,
