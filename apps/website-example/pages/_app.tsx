@@ -169,7 +169,7 @@ function CustomApp({Component, pageProps}: AppProps) {
 
             <Spacer>
               <NavBar categorySlugs={['categories', 'about-us']} slug="main">
-                <LogoLink href="/">
+                <LogoLink href="/" aria-label="Startseite">
                   <LogoWrapper />
                 </LogoLink>
 
@@ -183,7 +183,7 @@ function CustomApp({Component, pageProps}: AppProps) {
               </main>
 
               <FooterContainer slug="footer">
-                <LogoLink href="/">
+                <LogoLink href="/" aria-label="Startseite">
                   <LogoWrapper />
                 </LogoLink>
               </FooterContainer>

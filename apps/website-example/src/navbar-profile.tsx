@@ -42,7 +42,7 @@ export const NavBarProfile = () => {
   return (
     <NavBarProfileWrapper>
       {!hasUser && (
-        <Link href="/login">
+        <Link href="/login" aria-label="Login">
           <IconButton sx={{fontSize: '2em'}} color="secondary">
             <MdAccountCircle />
           </IconButton>
@@ -59,6 +59,7 @@ export const NavBarProfile = () => {
             id="basic-button"
             sx={{fontSize: '2em'}}
             color="secondary"
+            aria-label="Benutzer Menu"
             aria-controls={isMenuOpen ? 'basic-menu' : undefined}
             aria-haspopup="true"
             aria-expanded={isMenuOpen ? 'true' : undefined}
