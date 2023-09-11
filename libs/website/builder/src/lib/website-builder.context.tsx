@@ -10,10 +10,10 @@ import {
 } from 'react'
 import {PartialDeep} from 'type-fest'
 import {
-  BuilderArticleProps,
-  BuilderArticleSEOProps,
+  BuilderArticleListItemProps,
   BuilderArticleListProps,
-  BuilderArticleListItemProps
+  BuilderArticleProps,
+  BuilderArticleSEOProps
 } from './article.interface'
 import {BuilderLoginFormProps, BuilderRegistrationFormProps} from './authentication.interface'
 import {
@@ -25,18 +25,18 @@ import {
 import {
   BuilderBildwurfAdBlockProps,
   BuilderBlockRendererProps,
+  BuilderBreakBlockProps,
   BuilderEmbedBlockProps,
+  BuilderEventBlockProps,
   BuilderFacebookPostBlockProps,
   BuilderFacebookVideoBlockProps,
   BuilderHTMLBlockProps,
   BuilderImageBlockProps,
-  BuilderBreakBlockProps,
   BuilderImageGalleryBlockProps,
   BuilderInstagramPostBlockProps,
-  BuilderPolisConversationBlockProps,
-  BuilderEventBlockProps,
-  BuilderPollBlockProps,
   BuilderListicleBlockProps,
+  BuilderPolisConversationBlockProps,
+  BuilderPollBlockProps,
   BuilderQuoteBlockProps,
   BuilderRichTextBlockProps,
   BuilderSoundCloudTrackBlockProps,
@@ -84,6 +84,7 @@ import {
   BuilderIconButtonProps,
   BuilderTextFieldProps
 } from './ui.interface'
+import {BuilderPersonalDataFormProps, BuilderImageUploadProps} from './user.interface'
 
 const NoComponent = () => null
 
@@ -112,6 +113,7 @@ export type WebsiteBuilderProps = {
   CommentEditor: ComponentType<BuilderCommentEditorProps>
   LoginForm: ComponentType<BuilderLoginFormProps>
   RegistrationForm: ComponentType<BuilderRegistrationFormProps>
+  PersonalDataForm: ComponentType<BuilderPersonalDataFormProps>
   SubscriptionList: ComponentType<BuilderSubscriptionListProps>
   SubscriptionListItem: ComponentType<BuilderSubscriptionListItemProps>
   InvoiceList: ComponentType<BuilderInvoiceListProps>
@@ -134,6 +136,7 @@ export type WebsiteBuilderProps = {
     UnorderedList: ComponentType<BuilderUnorderedListProps>
     ListItem: ComponentType<BuilderListItemProps>
     Image: ComponentType<BuilderImageProps>
+    ImageUpload: ComponentType<BuilderImageUploadProps>
   }
 
   richtext: {
@@ -205,6 +208,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   CommentEditor: NoComponent,
   LoginForm: NoComponent,
   RegistrationForm: NoComponent,
+  PersonalDataForm: NoComponent,
 
   elements: {
     Alert: NoComponent,
@@ -222,7 +226,8 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     OrderedList: NoComponent,
     UnorderedList: NoComponent,
     ListItem: NoComponent,
-    Image: NoComponent
+    Image: NoComponent,
+    ImageUpload: NoComponent
   },
 
   richtext: {

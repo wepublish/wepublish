@@ -31,6 +31,7 @@ import {
 } from '@wepublish/block-content/website'
 import {CommentEditor, CommentList, CommentListItem} from '@wepublish/comments/website'
 import {Event, EventList, EventListItem, EventSEO} from '@wepublish/event/website'
+import {PersonalDataForm, ImageUpload} from '@wepublish/user/website'
 import {Image} from '@wepublish/image/website'
 import {
   SubscriptionList,
@@ -120,6 +121,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
         PageSEO={PageSEO}
         LoginForm={LoginForm}
         RegistrationForm={RegistrationForm}
+        PersonalDataForm={PersonalDataForm}
         SubscriptionList={SubscriptionList}
         SubscriptionListItem={SubscriptionListItem}
         InvoiceList={InvoiceList}
@@ -138,6 +140,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           Paragraph,
           Link,
           UnorderedList,
+          ImageUpload,
           OrderedList,
           ListItem,
           Image

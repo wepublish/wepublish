@@ -117,7 +117,9 @@ exports[`Blocks should render Default 1`] = `
           </span>
         </span>
       </p>
-      <table>
+      <table
+        class="css-114kdox-RenderElement"
+      >
         <tbody
           data-slate-node="element"
         >
@@ -125,6 +127,7 @@ exports[`Blocks should render Default 1`] = `
             data-slate-node="element"
           >
             <td
+              class="css-9lag45-RenderElement"
               data-slate-node="element"
             >
               <p
@@ -143,6 +146,7 @@ exports[`Blocks should render Default 1`] = `
               </p>
             </td>
             <td
+              class="css-9lag45-RenderElement"
               data-slate-node="element"
             >
               <p
@@ -165,6 +169,7 @@ exports[`Blocks should render Default 1`] = `
             data-slate-node="element"
           >
             <td
+              class="css-9lag45-RenderElement"
               data-slate-node="element"
             >
               <p
@@ -183,6 +188,7 @@ exports[`Blocks should render Default 1`] = `
               </p>
             </td>
             <td
+              class="css-9lag45-RenderElement"
               data-slate-node="element"
             >
               <p
@@ -1989,7 +1995,9 @@ exports[`Blocks should render WithLayout 1`] = `
             </span>
           </span>
         </p>
-        <table>
+        <table
+          class="css-114kdox-RenderElement"
+        >
           <tbody
             data-slate-node="element"
           >
@@ -1997,6 +2005,7 @@ exports[`Blocks should render WithLayout 1`] = `
               data-slate-node="element"
             >
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -2015,6 +2024,7 @@ exports[`Blocks should render WithLayout 1`] = `
                 </p>
               </td>
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -2037,6 +2047,7 @@ exports[`Blocks should render WithLayout 1`] = `
               data-slate-node="element"
             >
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -2055,6 +2066,7 @@ exports[`Blocks should render WithLayout 1`] = `
                 </p>
               </td>
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p

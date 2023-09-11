@@ -162,7 +162,9 @@ exports[`Page Container should render ById 1`] = `
             </span>
           </span>
         </p>
-        <table>
+        <table
+          class="css-114kdox-RenderElement"
+        >
           <tbody
             data-slate-node="element"
           >
@@ -170,6 +172,7 @@ exports[`Page Container should render ById 1`] = `
               data-slate-node="element"
             >
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -188,6 +191,7 @@ exports[`Page Container should render ById 1`] = `
                 </p>
               </td>
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -210,6 +214,7 @@ exports[`Page Container should render ById 1`] = `
               data-slate-node="element"
             >
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -228,6 +233,7 @@ exports[`Page Container should render ById 1`] = `
                 </p>
               </td>
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -1990,7 +1996,9 @@ exports[`Page Container should render BySlug 1`] = `
             </span>
           </span>
         </p>
-        <table>
+        <table
+          class="css-114kdox-RenderElement"
+        >
           <tbody
             data-slate-node="element"
           >
@@ -1998,6 +2006,7 @@ exports[`Page Container should render BySlug 1`] = `
               data-slate-node="element"
             >
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -2016,6 +2025,7 @@ exports[`Page Container should render BySlug 1`] = `
                 </p>
               </td>
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -2038,6 +2048,7 @@ exports[`Page Container should render BySlug 1`] = `
               data-slate-node="element"
             >
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -2056,6 +2067,7 @@ exports[`Page Container should render BySlug 1`] = `
                 </p>
               </td>
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -3818,7 +3830,9 @@ exports[`Page Container should render WithChildren 1`] = `
             </span>
           </span>
         </p>
-        <table>
+        <table
+          class="css-114kdox-RenderElement"
+        >
           <tbody
             data-slate-node="element"
           >
@@ -3826,6 +3840,7 @@ exports[`Page Container should render WithChildren 1`] = `
               data-slate-node="element"
             >
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -3844,6 +3859,7 @@ exports[`Page Container should render WithChildren 1`] = `
                 </p>
               </td>
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -3866,6 +3882,7 @@ exports[`Page Container should render WithChildren 1`] = `
               data-slate-node="element"
             >
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -3884,6 +3901,7 @@ exports[`Page Container should render WithChildren 1`] = `
                 </p>
               </td>
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -5649,7 +5667,9 @@ exports[`Page Container should render WithClassName 1`] = `
             </span>
           </span>
         </p>
-        <table>
+        <table
+          class="css-114kdox-RenderElement"
+        >
           <tbody
             data-slate-node="element"
           >
@@ -5657,6 +5677,7 @@ exports[`Page Container should render WithClassName 1`] = `
               data-slate-node="element"
             >
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -5675,6 +5696,7 @@ exports[`Page Container should render WithClassName 1`] = `
                 </p>
               </td>
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -5697,6 +5719,7 @@ exports[`Page Container should render WithClassName 1`] = `
               data-slate-node="element"
             >
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -5715,6 +5738,7 @@ exports[`Page Container should render WithClassName 1`] = `
                 </p>
               </td>
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -7477,7 +7501,9 @@ exports[`Page Container should render WithEmotion 1`] = `
             </span>
           </span>
         </p>
-        <table>
+        <table
+          class="css-114kdox-RenderElement"
+        >
           <tbody
             data-slate-node="element"
           >
@@ -7485,6 +7511,7 @@ exports[`Page Container should render WithEmotion 1`] = `
               data-slate-node="element"
             >
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -7503,6 +7530,7 @@ exports[`Page Container should render WithEmotion 1`] = `
                 </p>
               </td>
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -7525,6 +7553,7 @@ exports[`Page Container should render WithEmotion 1`] = `
               data-slate-node="element"
             >
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -7543,6 +7572,7 @@ exports[`Page Container should render WithEmotion 1`] = `
                 </p>
               </td>
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
