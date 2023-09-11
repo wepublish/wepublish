@@ -1,7 +1,6 @@
 import {css} from '@emotion/react'
 import {action} from '@storybook/addon-actions'
 import {Meta, StoryObj} from '@storybook/react'
-import {SessionTokenContext} from '@wepublish/authentication/website'
 import {
   Challenge,
   ChallengeDocument,
@@ -11,7 +10,6 @@ import {
   FullImageFragment,
   SettingListDocument
 } from '@wepublish/website/api'
-import {ComponentType} from 'react'
 import {Node} from 'slate'
 import {CommentListContainer} from './comment-list-container'
 
@@ -225,21 +223,6 @@ const comments = [
   {...anonymousComment, children: nestedChildren('4'), id: '4'},
   {...verifiedUserComment, children: nestedChildren('5'), id: '5'}
 ] as CommentListQuery['comments']
-
-const WithUserDecorator = (Story: ComponentType) => {
-  return (
-    <SessionTokenContext.Provider
-      value={[
-        verifiedUserComment.user ?? null,
-        true,
-        () => {
-          /* do nothing */
-        }
-      ]}>
-      <Story />
-    </SessionTokenContext.Provider>
-  )
-}
 
 export default {
   component: CommentListContainer,

@@ -54,6 +54,8 @@
       "@wepublish/ui": ["libs/ui/src/index.ts"],
       "@wepublish/ui/editor": ["libs/ui/editor/src/index.ts"],
       "@wepublish/user/api": ["libs/user/api/src/index.ts"],
+      "@wepublish/user/website": ["libs/user/website/src/index.ts"],
+      "@wepublish/user/website/server": ["libs/user/website/src/server.ts"],
       "@wepublish/website": ["libs/website/src/index.ts"],
       "@wepublish/website/api": ["libs/website/api/src/index.ts"],
       "@wepublish/website/api-v2": ["libs/website/api-v2/src/index.ts"],

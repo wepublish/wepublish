@@ -117,3 +117,15 @@ mutation Register(
     }
   }
 }
+
+mutation UpdateUser($input: UserInput!) {
+  updateUser(input: $input) {
+    ...FullUser
+  }
+}
+
+mutation UpdatePassword($password: String!, $passwordRepeated: String!) {
+  updatePassword(password: $password, passwordRepeated: $passwordRepeated) {
+    ...FullUser
+  }
+}
