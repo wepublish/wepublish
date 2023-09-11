@@ -34,7 +34,7 @@ export function EventEndsAtView({endsAt}: {endsAt: string | null | undefined}) {
   const {t} = useTranslation()
 
   if (endsAtDate) {
-    return <span>{formatDate(endsAtDate, 'PPP p')}</span>
+    return <time dateTime={endsAtDate}>{formatDate(endsAtDate, 'PPP p')}</time>
   }
   return <>{t('event.list.endsAtNone')}</>
 }
