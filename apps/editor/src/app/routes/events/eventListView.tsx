@@ -26,7 +26,7 @@ const {Column, HeaderCell, Cell} = RTable
 
 export function EventStartsAtView({startsAt}: {startsAt: string}) {
   const startsAtDate = new Date(startsAt)
-  return <span>{formatDate(startsAtDate, 'PPP p')}</span>
+  return <time dateTime={startsAtDate}>{formatDate(startsAtDate, 'PPP p')}</time>
 }
 
 export function EventEndsAtView({endsAt}: {endsAt: string | null | undefined}) {
