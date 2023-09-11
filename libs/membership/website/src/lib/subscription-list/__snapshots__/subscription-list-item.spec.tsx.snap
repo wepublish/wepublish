@@ -7,15 +7,13 @@ exports[`Subscription Item should render DeactivatedCancelled 1`] = `
   >
     <img
       alt="DSC07717"
-      class="css-hha8hw-ImageWrapper e1shv2yg0"
-      height="6000"
+      class="css-1sg8o3u-ImageWrapper e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
       title=""
-      width="4000"
     />
     <div
       class="css-6l2m0q-SubscriptionListItemContent eere75z3"
@@ -200,15 +198,13 @@ exports[`Subscription Item should render DeactivatedUnknown 1`] = `
   >
     <img
       alt="DSC07717"
-      class="css-hha8hw-ImageWrapper e1shv2yg0"
-      height="6000"
+      class="css-1sg8o3u-ImageWrapper e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
       title=""
-      width="4000"
     />
     <div
       class="css-6l2m0q-SubscriptionListItemContent eere75z3"
@@ -415,15 +411,13 @@ exports[`Subscription Item should render DeactivatedUnpaid 1`] = `
   >
     <img
       alt="DSC07717"
-      class="css-hha8hw-ImageWrapper e1shv2yg0"
-      height="6000"
+      class="css-1sg8o3u-ImageWrapper e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
       title=""
-      width="4000"
     />
     <div
       class="css-6l2m0q-SubscriptionListItemContent eere75z3"
@@ -630,15 +624,13 @@ exports[`Subscription Item should render Default 1`] = `
   >
     <img
       alt="DSC07717"
-      class="css-hha8hw-ImageWrapper e1shv2yg0"
-      height="6000"
+      class="css-1sg8o3u-ImageWrapper e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
       title=""
-      width="4000"
     />
     <div
       class="css-6l2m0q-SubscriptionListItemContent eere75z3"
@@ -818,15 +810,13 @@ exports[`Subscription Item should render RenewBianual 1`] = `
   >
     <img
       alt="DSC07717"
-      class="css-hha8hw-ImageWrapper e1shv2yg0"
-      height="6000"
+      class="css-1sg8o3u-ImageWrapper e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
       title=""
-      width="4000"
     />
     <div
       class="css-6l2m0q-SubscriptionListItemContent eere75z3"
@@ -1006,15 +996,13 @@ exports[`Subscription Item should render RenewBianualManually 1`] = `
   >
     <img
       alt="DSC07717"
-      class="css-hha8hw-ImageWrapper e1shv2yg0"
-      height="6000"
+      class="css-1sg8o3u-ImageWrapper e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
       title=""
-      width="4000"
     />
     <div
       class="css-6l2m0q-SubscriptionListItemContent eere75z3"
@@ -1194,15 +1182,13 @@ exports[`Subscription Item should render RenewMonthly 1`] = `
   >
     <img
       alt="DSC07717"
-      class="css-hha8hw-ImageWrapper e1shv2yg0"
-      height="6000"
+      class="css-1sg8o3u-ImageWrapper e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
       title=""
-      width="4000"
     />
     <div
       class="css-6l2m0q-SubscriptionListItemContent eere75z3"
@@ -1382,15 +1368,13 @@ exports[`Subscription Item should render RenewMonthlyManually 1`] = `
   >
     <img
       alt="DSC07717"
-      class="css-hha8hw-ImageWrapper e1shv2yg0"
-      height="6000"
+      class="css-1sg8o3u-ImageWrapper e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
       title=""
-      width="4000"
     />
     <div
       class="css-6l2m0q-SubscriptionListItemContent eere75z3"
@@ -1570,15 +1554,13 @@ exports[`Subscription Item should render RenewQuarterly 1`] = `
   >
     <img
       alt="DSC07717"
-      class="css-hha8hw-ImageWrapper e1shv2yg0"
-      height="6000"
+      class="css-1sg8o3u-ImageWrapper e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
       title=""
-      width="4000"
     />
     <div
       class="css-6l2m0q-SubscriptionListItemContent eere75z3"
@@ -1758,15 +1740,13 @@ exports[`Subscription Item should render RenewQuarterlyManually 1`] = `
   >
     <img
       alt="DSC07717"
-      class="css-hha8hw-ImageWrapper e1shv2yg0"
-      height="6000"
+      class="css-1sg8o3u-ImageWrapper e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
       title=""
-      width="4000"
     />
     <div
       class="css-6l2m0q-SubscriptionListItemContent eere75z3"
@@ -1946,15 +1926,13 @@ exports[`Subscription Item should render RenewYearly 1`] = `
   >
     <img
       alt="DSC07717"
-      class="css-hha8hw-ImageWrapper e1shv2yg0"
-      height="6000"
+      class="css-1sg8o3u-ImageWrapper e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
       title=""
-      width="4000"
     />
     <div
       class="css-6l2m0q-SubscriptionListItemContent eere75z3"
@@ -2134,15 +2112,13 @@ exports[`Subscription Item should render RenewYearlyManually 1`] = `
   >
     <img
       alt="DSC07717"
-      class="css-hha8hw-ImageWrapper e1shv2yg0"
-      height="6000"
+      class="css-1sg8o3u-ImageWrapper e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
       title=""
-      width="4000"
     />
     <div
       class="css-6l2m0q-SubscriptionListItemContent eere75z3"
@@ -2322,15 +2298,13 @@ exports[`Subscription Item should render Unpaid 1`] = `
   >
     <img
       alt="DSC07717"
-      class="css-hha8hw-ImageWrapper e1shv2yg0"
-      height="6000"
+      class="css-1sg8o3u-ImageWrapper e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
       title=""
-      width="4000"
     />
     <div
       class="css-6l2m0q-SubscriptionListItemContent eere75z3"
@@ -2501,7 +2475,7 @@ exports[`Subscription Item should render WithCancelError 1`] = `
 - First value
 + Second value
 
-@@ -148,10 +148,35 @@
+@@ -146,10 +146,35 @@
               Details & Zahlungen
             </a>
           </li>
@@ -2544,7 +2518,7 @@ exports[`Subscription Item should render WithCancelLoading 1`] = `
 - First value
 + Second value
 
-@@ -151,28 +151,24 @@
+@@ -149,28 +149,24 @@
         </ul>
         <div
           class="css-1fn3y2c-SubscriptionListItemActions eere75z0"
@@ -2588,15 +2562,13 @@ exports[`Subscription Item should render WithClassName 1`] = `
   >
     <img
       alt="DSC07717"
-      class="css-hha8hw-ImageWrapper e1shv2yg0"
-      height="6000"
+      class="css-1sg8o3u-ImageWrapper e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
       title=""
-      width="4000"
     />
     <div
       class="css-6l2m0q-SubscriptionListItemContent eere75z3"
@@ -2776,15 +2748,13 @@ exports[`Subscription Item should render WithEmotion 1`] = `
   >
     <img
       alt="DSC07717"
-      class="css-hha8hw-ImageWrapper e1shv2yg0"
-      height="6000"
+      class="css-1sg8o3u-ImageWrapper e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
       title=""
-      width="4000"
     />
     <div
       class="css-6l2m0q-SubscriptionListItemContent eere75z3"
@@ -2962,7 +2932,7 @@ exports[`Subscription Item should render WithExtendError 1`] = `
 - First value
 + Second value
 
-@@ -155,10 +155,35 @@
+@@ -153,10 +153,35 @@
               Details & Zahlungen
             </a>
           </li>
@@ -3005,7 +2975,7 @@ exports[`Subscription Item should render WithExtendLoading 1`] = `
 - First value
 + Second value
 
-@@ -158,28 +158,24 @@
+@@ -156,28 +156,24 @@
         </ul>
         <div
           class="css-1fn3y2c-SubscriptionListItemActions eere75z0"
@@ -3047,7 +3017,7 @@ exports[`Subscription Item should render WithPayError 1`] = `
 - First value
 + Second value
 
-@@ -148,10 +148,35 @@
+@@ -146,10 +146,35 @@
               Details & Zahlungen
             </a>
           </li>
@@ -3090,7 +3060,7 @@ exports[`Subscription Item should render WithPayLoading 1`] = `
 - First value
 + Second value
 
-@@ -151,28 +151,24 @@
+@@ -149,28 +149,24 @@
         </ul>
         <div
           class="css-1fn3y2c-SubscriptionListItemActions eere75z0"

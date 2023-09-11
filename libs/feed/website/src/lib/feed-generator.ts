@@ -1,5 +1,5 @@
 import {Article} from '@wepublish/website/api'
-import {Feed, Item} from 'feed'
+import type {Feed, Item} from 'feed'
 import {getArticleSEO} from '@wepublish/article/website'
 import {Node} from 'slate'
 import {isRichTextBlock} from '@wepublish/block-content/website'
@@ -15,11 +15,11 @@ export const generateFeed =
     },
     'generator'
   >) =>
-  (articles: Article[]) => {
-    const items = articles.map(article => {
+  async (articles: Article[]) => {
+    const items = articles.map(async article => {
       const seo = getArticleSEO(article)
 
-      const content = toHtml(
+      const content = await toHtml(
         article.blocks.reduce((acc, curr) => {
           if (isRichTextBlock(curr)) {
             acc.push(...curr.richText)
@@ -48,6 +48,7 @@ export const generateFeed =
       } as Item
     })
 
+    const Feed = (await import('feed')).Feed
     const feed = new Feed({
       language: 'de',
       ...config,
@@ -55,7 +56,7 @@ export const generateFeed =
     })
 
     for (const item of items) {
-      feed.addItem(item)
+      feed.addItem(await item)
     }
 
     for (const category of categories) {

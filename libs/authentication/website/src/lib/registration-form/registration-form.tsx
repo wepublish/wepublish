@@ -166,6 +166,7 @@ export function RegistrationForm<T extends OptionalKeysOf<RegisterMutationVariab
           render={({field, fieldState: {error}}) => (
             <TextField
               {...field}
+              autoComplete="email"
               type={'email'}
               fullWidth
               label={'Email'}
@@ -182,6 +183,7 @@ export function RegistrationForm<T extends OptionalKeysOf<RegisterMutationVariab
             render={({field, fieldState: {error}}) => (
               <TextField
                 {...field}
+                autoComplete="new-password"
                 type={showPassword ? 'text' : 'password'}
                 fullWidth
                 label={'Passwort'}

@@ -6,7 +6,7 @@ import getConfig from 'next/config'
 export const getFeed = async (req: NextApiRequest) => {
   const siteUrl = `https://${req.headers['host']}`
 
-  const generate = generateFeed({
+  const generate = await generateFeed({
     id: `${siteUrl + req.url}`,
     link: `${siteUrl + req.url}`,
     title: 'We.Publish',

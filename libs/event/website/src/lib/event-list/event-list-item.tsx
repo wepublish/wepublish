@@ -67,12 +67,12 @@ export const EventListItem = ({
           <EventListItemMeta>
             <EventListItemDate>
               <MdDateRange />
-              <span>{date.format(new Date(startsAt))}</span>
+              <time dateTime={startsAt}>{date.format(new Date(startsAt))}</time>
             </EventListItemDate>
 
             {endsAt && (
               <>
-                &ndash; <span>{date.format(new Date(endsAt))}</span>
+                &ndash; <time dateTime={endsAt}>{date.format(new Date(endsAt))}</time>
               </>
             )}
           </EventListItemMeta>

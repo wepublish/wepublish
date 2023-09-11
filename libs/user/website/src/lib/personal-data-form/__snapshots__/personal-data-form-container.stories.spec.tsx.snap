@@ -19,15 +19,13 @@ exports[`Personal Data Form Container should render Default 1`] = `
           >
             <img
               alt="DSC07717"
-              class="css-rvex9b-ImageWrapper-ImageUpload e1shv2yg0"
-              height="6000"
+              class="css-1lykaea-ImageWrapper-ImageUpload e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <input
               accept="image/*"
@@ -586,7 +584,7 @@ exports[`Personal Data Form Container should render DeleteImage 1`] = `
 - First value
 + Second value
 
-@@ -562,10 +562,148 @@
+@@ -560,10 +560,148 @@
               </legend>
             </fieldset>
           </div>
@@ -742,7 +740,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
 - First value
 + Second value
 
-@@ -111,11 +111,11 @@
+@@ -109,11 +109,11 @@
               aria-invalid="false"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":rp:"
@@ -755,7 +753,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
               aria-hidden="true"
               class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
             >
-@@ -147,11 +147,11 @@
+@@ -145,11 +145,11 @@
               aria-invalid="false"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":rq:"
@@ -768,7 +766,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
               aria-hidden="true"
               class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
             >
-@@ -258,11 +258,11 @@
+@@ -256,11 +256,11 @@
                 aria-invalid="false"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":rt:"
@@ -781,7 +779,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
               >
-@@ -294,11 +294,11 @@
+@@ -292,11 +292,11 @@
                 aria-invalid="false"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":ru:"
@@ -794,7 +792,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
               >
-@@ -330,11 +330,11 @@
+@@ -328,11 +328,11 @@
                 aria-invalid="false"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":rv:"
@@ -807,7 +805,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
               >
-@@ -366,11 +366,11 @@
+@@ -364,11 +364,11 @@
                 aria-invalid="false"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r10:"
@@ -820,7 +818,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
               >
-@@ -395,12 +395,12 @@
+@@ -393,12 +393,12 @@
           </p>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -835,7 +833,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
             >
               Passwort
             </label>
-@@ -411,11 +411,11 @@
+@@ -409,11 +409,11 @@
                 aria-invalid="false"
                 class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r11:"
@@ -848,7 +846,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
                 class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1laqsz7-MuiInputAdornment-root"
               >
                 <button
-@@ -448,11 +448,11 @@
+@@ -446,11 +446,11 @@
               <fieldset
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
@@ -861,7 +859,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
                     Passwort
                   </span>
                 </legend>
-@@ -461,12 +461,12 @@
+@@ -459,12 +459,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -876,7 +874,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
             >
               Passwort wiederholen
             </label>
-@@ -477,11 +477,11 @@
+@@ -475,11 +475,11 @@
                 aria-invalid="false"
                 class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r12:"
@@ -889,7 +887,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
                 class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1laqsz7-MuiInputAdornment-root"
               >
                 <button
-@@ -514,11 +514,11 @@
+@@ -512,11 +512,11 @@
               <fieldset
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
@@ -923,15 +921,13 @@ exports[`Personal Data Form Container should render WithClassName 1`] = `
           >
             <img
               alt="DSC07717"
-              class="css-rvex9b-ImageWrapper-ImageUpload e1shv2yg0"
-              height="6000"
+              class="css-1lykaea-ImageWrapper-ImageUpload e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <input
               accept="image/*"
@@ -1504,15 +1500,13 @@ exports[`Personal Data Form Container should render WithEmotion 1`] = `
           >
             <img
               alt="DSC07717"
-              class="css-rvex9b-ImageWrapper-ImageUpload e1shv2yg0"
-              height="6000"
+              class="css-1lykaea-ImageWrapper-ImageUpload e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <input
               accept="image/*"
