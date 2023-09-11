@@ -3,71 +3,143 @@
 exports[`ImageUpload should render Default 1`] = `
 <DocumentFragment>
   <div
-    class="css-64noit"
+    class="css-lb7gkq-ImageUploadWrapper e99ll9v2"
   >
-    <img
-      alt="user-avatar"
-      class="css-1l08m68"
-      src="https://unsplash.it/300/200"
-    />
-    <input
-      accept="image/*"
-      id="image-upload-input"
-      style="display: none;"
-      type="file"
-    />
-    <button
-      class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeMedium css-d7xlrq-MuiButtonBase-root-MuiIconButton-root"
-      tabindex="0"
-      type="button"
+    <div
+      class="css-1j2cxhx-ImageUploadImageWrapper e99ll9v1"
+    >
+      <img
+        alt="DSC07717"
+        class="css-rvex9b-ImageWrapper-ImageUpload e1shv2yg0"
+        height="6000"
+        loading="lazy"
+        srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+        title=""
+        width="4000"
+      />
+      <input
+        accept="image/*"
+        class="css-16z49pk-ImageUpload"
+        id=":r0:"
+        type="file"
+      />
+    </div>
+    <div
+      class="css-1g6s5rh-ImageUploadContent e99ll9v0"
+    >
+      <button
+        class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeMedium css-1jo1f9u-MuiButtonBase-root-MuiIconButton-root"
+        tabindex="0"
+        title="Bild löschen"
+        type="button"
+      >
+        <svg
+          fill="currentColor"
+          height="1em"
+          stroke="currentColor"
+          stroke-width="0"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0 0h24v24H0z"
+            fill="none"
+          />
+          <path
+            d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"
+          />
+        </svg>
+        <span
+          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+        />
+      </button>
+      <button
+        class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium css-1kuq5xv-MuiButtonBase-root-MuiIconButton-root"
+        tabindex="0"
+        title="Neues Bild hochladen"
+        type="button"
+      >
+        <svg
+          fill="currentColor"
+          height="1em"
+          stroke="currentColor"
+          stroke-width="0"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0 0h24v24H0z"
+            fill="none"
+          />
+          <path
+            d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 000-1.41l-2.34-2.34a.996.996 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+          />
+        </svg>
+        <span
+          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+        />
+      </button>
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`ImageUpload should render NoImage 1`] = `
+<DocumentFragment>
+  <div
+    class="css-lb7gkq-ImageUploadWrapper e99ll9v2"
+  >
+    <div
+      class="css-1j2cxhx-ImageUploadImageWrapper e99ll9v1"
     >
       <svg
-        fill="currentColor"
-        height="1em"
-        stroke="currentColor"
-        stroke-width="0"
-        viewBox="0 0 24 24"
-        width="1em"
-        xmlns="http://www.w3.org/2000/svg"
+        class="css-1a3fenb-ImageUpload"
       >
-        <path
-          d="M0 0h24v24H0z"
-          fill="none"
-        />
-        <path
-          d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"
-        />
+        placeholder.svg
       </svg>
-      <span
-        class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+      <input
+        accept="image/*"
+        class="css-16z49pk-ImageUpload"
+        id=":r1:"
+        type="file"
       />
-    </button>
-    <button
-      class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium css-1hd2dpd-MuiButtonBase-root-MuiIconButton-root"
-      tabindex="0"
-      type="button"
+    </div>
+    <div
+      class="css-1g6s5rh-ImageUploadContent e99ll9v0"
     >
-      <svg
-        fill="currentColor"
-        height="1em"
-        stroke="currentColor"
-        stroke-width="0"
-        viewBox="0 0 24 24"
-        width="1em"
-        xmlns="http://www.w3.org/2000/svg"
+      <button
+        class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium css-1kuq5xv-MuiButtonBase-root-MuiIconButton-root"
+        tabindex="0"
+        title="Bild hochladen"
+        type="button"
       >
-        <path
-          d="M0 0h24v24H0z"
-          fill="none"
+        <svg
+          fill="currentColor"
+          height="1em"
+          stroke="currentColor"
+          stroke-width="0"
+          viewBox="0 0 24 24"
+          width="1em"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M0 0h24v24H0z"
+            fill="none"
+          />
+          <path
+            d="M14 2H6c-1.1 0-1.99.9-1.99 2L4 20c0 1.1.89 2 1.99 2H18c1.1 0 2-.9 2-2V8l-6-6zm4 18H6V4h7v5h5v11zM8 15.01l1.41 1.41L11 14.84V19h2v-4.16l1.59 1.59L16 15.01 12.01 11 8 15.01z"
+          />
+        </svg>
+        <span
+          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
         />
-        <path
-          d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 000-1.41l-2.34-2.34a.996.996 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
-        />
-      </svg>
-      <span
-        class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-      />
-    </button>
+      </button>
+    </div>
   </div>
 </DocumentFragment>
 `;

@@ -3,13 +3,13 @@ import {action} from '@storybook/addon-actions'
 import {useArgs} from '@storybook/preview-api'
 import {Meta, StoryObj} from '@storybook/react'
 import {userEvent, within} from '@storybook/testing-library'
-import {FullImageFragment} from '@wepublish/website/api'
-import {PersonalDataFormFields} from '@wepublish/website/builder'
+import {FullImageFragment, User} from '@wepublish/website/api'
 import {ComponentProps} from 'react'
 import z from 'zod'
 import {PersonalDataForm} from './personal-data-form'
 
-const mockUser: PersonalDataFormFields = {
+const mockUser = {
+  id: '1234-1234',
   firstName: 'Kamil',
   name: 'Wasyl',
   email: 'some-example@mail.com',
@@ -52,8 +52,11 @@ const mockUser: PersonalDataFormFields = {
     squareLargeURL: 'https://unsplash.it/500/500',
     squareMediumURL: 'https://unsplash.it/300/300',
     squareSmallURL: 'https://unsplash.it/200/200'
-  } as FullImageFragment
-}
+  } as FullImageFragment,
+  oauth2Accounts: [],
+  paymentProviderCustomers: [],
+  properties: []
+} as User
 
 const Render = () => {
   const [args, updateArgs] = useArgs()
@@ -63,7 +66,7 @@ const Render = () => {
     <PersonalDataForm
       {...props}
       initialUser={mockUser}
-      onUpdate={data => {
+      onUpdate={async data => {
         args.onUpdate(data)
         updateArgs({
           update: {
@@ -137,7 +140,7 @@ const fillName: StoryObj['play'] = async ({canvasElement, step}) => {
 const fillEmail: StoryObj['play'] = async ({canvasElement, step}) => {
   const canvas = within(canvasElement)
 
-  const input = canvas.getByLabelText('Email (not editable)', {
+  const input = canvas.getByLabelText('Email (nicht bearbeitbar)', {
     selector: 'input'
   })
 
@@ -163,7 +166,7 @@ const fillPassword: StoryObj['play'] = async ({canvasElement, step}) => {
 const fillRepeatPassword: StoryObj['play'] = async ({canvasElement, step}) => {
   const canvas = within(canvasElement)
 
-  const input = canvas.getByLabelText('Repeat Passwort', {
+  const input = canvas.getByLabelText('Passwort wiederholen', {
     selector: 'input'
   })
 
@@ -251,6 +254,15 @@ const fillAddress: StoryObj['play'] = async ctx => {
     await fillZip(ctx)
     await fillCity(ctx)
     await fillCountry(ctx)
+  })
+}
+
+const deleteImage: StoryObj['play'] = async ({canvasElement, step}) => {
+  const canvas = within(canvasElement)
+  const button = canvas.getByTitle('Bild löschen')
+
+  await step('Click delete image', async () => {
+    await userEvent.click(button)
   })
 }
 
@@ -446,18 +458,52 @@ export const WithCustomValidation: StoryObj = {
 
 export const WithUpdateError: StoryObj = {
   args: {
-    onUpdate: action('onUpdate'),
-    update: {
-      error: new ApolloError({errorMessage: 'Email already in use.'})
+    onUpdate: (...args: unknown[]) => {
+      action('onUpdate')(args)
+
+      throw new ApolloError({
+        errorMessage: 'Foobar'
+      })
     }
-  }
+  },
+  play: Filled.play
 }
 
 export const WithUpdateLoading: StoryObj = {
   args: {
-    onUpdate: action('onUpdate'),
-    update: {
-      loading: true
+    onUpdate: (...args: unknown[]) => {
+      action('onUpdate')(args)
+
+      return new Promise(() => {
+        // never resolve
+      })
     }
-  }
+  },
+  play: Filled.play
+}
+
+export const WithImageActionError: StoryObj = {
+  args: {
+    onImageUpload: (...args: unknown[]) => {
+      action('onImageUpload')(args)
+
+      throw new ApolloError({
+        errorMessage: 'Foobar'
+      })
+    }
+  },
+  play: deleteImage
+}
+
+export const WithImageActionLoading: StoryObj = {
+  args: {
+    onImageUpload: (...args: unknown[]) => {
+      action('onImageUpload')(args)
+
+      return new Promise(() => {
+        // never resolve
+      })
+    }
+  },
+  play: deleteImage
 }

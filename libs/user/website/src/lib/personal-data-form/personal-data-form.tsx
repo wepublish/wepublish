@@ -1,11 +1,11 @@
 import {zodResolver} from '@hookform/resolvers/zod'
-import {IconButton, InputAdornment, Theme, css, styled, useTheme} from '@mui/material'
+import {InputAdornment, Theme, css, styled, useTheme} from '@mui/material'
 import {
   BuilderPersonalDataFormProps,
   PersonalDataFormFields,
   useWebsiteBuilder
 } from '@wepublish/website/builder'
-import {useReducer} from 'react'
+import {useCallback, useReducer, useState} from 'react'
 import {Controller, useForm} from 'react-hook-form'
 import {MdVisibility, MdVisibilityOff} from 'react-icons/md'
 import {OptionalKeysOf} from 'type-fest'
@@ -82,6 +82,7 @@ const buttonStyles = css`
 const requestEmailStyles = (theme: Theme) => css`
   grid-column-start: 1;
   grid-column-end: 3;
+
   ${theme.breakpoints.up('sm')} {
     grid-column-start: 2;
     grid-column-end: 3;
@@ -131,7 +132,6 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
     'preferredName',
     'image'
   ] as T[],
-  update,
   className,
   initialUser,
   schema = defaultSchema,
@@ -139,6 +139,9 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
   onImageUpload,
   mediaEmail
 }: BuilderPersonalDataFormProps<T>) {
+  const {
+    elements: {TextField, Alert, Button, Paragraph, ImageUpload, Link, IconButton}
+  } = useWebsiteBuilder()
   const theme = useTheme()
   const [showPassword, togglePassword] = useReducer(state => !state, false)
   const [showRepeatPassword, toggleRepeatPassword] = useReducer(state => !state, false)
@@ -154,6 +157,26 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
       message: "Passwords don't match",
       path: ['passwordRepeated']
     })
+
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<Error>()
+  const callAction = useCallback(
+    (action: (...args: any[]) => Promise<void>) =>
+      async (...args: any[]) => {
+        try {
+          setError(undefined)
+          setLoading(true)
+          await action(...args)
+        } catch (e) {
+          if (e instanceof Error) {
+            setError(e)
+          }
+        } finally {
+          setLoading(false)
+        }
+      },
+    []
+  )
 
   const {handleSubmit, control} = useForm<PersonalDataFormFields>({
     resolver: zodResolver(validationSchema),
@@ -171,17 +194,13 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
       flair: initialUser.flair || '',
       password: '',
       passwordRepeated: '',
-      uploadImageInput: initialUser.uploadImageInput || {}
+      uploadImageInput: initialUser.image || {}
     },
     mode: 'onTouched',
     reValidateMode: 'onChange'
   })
 
-  const {
-    elements: {TextField, Alert, Button, Paragraph, ImageUpload}
-  } = useWebsiteBuilder()
-
-  const onSubmit = handleSubmit(data => onUpdate?.(data))
+  const onSubmit = handleSubmit(data => onUpdate && callAction(onUpdate)(data))
 
   return (
     <PersonalDataFormWrapper className={className} onSubmit={onSubmit}>
@@ -194,8 +213,8 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
               render={({field}) => (
                 <ImageUpload
                   {...field}
-                  image={{url: initialUser.image?.url || null}}
-                  onUpload={onImageUpload}
+                  image={initialUser.image}
+                  onUpload={callAction(onImageUpload)}
                 />
               )}
             />
@@ -211,6 +230,7 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
             )}
           />
         )}
+
         <Controller
           name={'name'}
           control={control}
@@ -218,6 +238,7 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
             <TextField {...field} label={'Nachname'} error={!!error} helperText={error?.message} />
           )}
         />
+
         {fieldsToDisplay.preferredName && (
           <Controller
             name={'preferredName'}
@@ -232,6 +253,7 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
             )}
           />
         )}
+
         {fieldsToDisplay.flair && (
           <Controller
             name={'flair'}
@@ -247,6 +269,7 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
             )}
           />
         )}
+
         {fieldsToDisplay.address && (
           <PersonalDataAddressWrapper>
             <Controller
@@ -310,6 +333,7 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
             />
           </PersonalDataAddressWrapper>
         )}
+
         {fieldsToDisplay.password && (
           <PasswordWrapper>
             <Controller
@@ -343,6 +367,7 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
                 </>
               )}
             />
+
             <Controller
               name={'passwordRepeated'}
               control={control}
@@ -351,7 +376,7 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
                   {...field}
                   type={showRepeatPassword ? 'text' : 'password'}
                   fullWidth
-                  label={'Repeat Passwort'}
+                  label={'Passwort wiederholen'}
                   error={!!error}
                   helperText={error?.message}
                   InputProps={{
@@ -371,6 +396,7 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
             />
           </PasswordWrapper>
         )}
+
         <Controller
           name={'email'}
           control={control}
@@ -381,7 +407,7 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
               type={'email'}
               fullWidth
               disabled
-              label={'Email (not editable)'}
+              label={'Email (nicht bearbeitbar)'}
               error={!!error}
               helperText={error?.message}
             />
@@ -390,16 +416,17 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
 
         {mediaEmail && (
           <RequestEmail css={() => requestEmailStyles(theme)}>
-            <a
+            <Link
               href={`mailto:${mediaEmail}&subject=Email Änderung&body=Guten Tag, %0D%0A. Ich würde gerne meine Email von ${initialUser.email} zu  >>Neue Email hier einfügen<< %0D%0A Liebe Grüsse`}>
               Klicke hier um deine Email zu ändern
-            </a>
+            </Link>
           </RequestEmail>
         )}
       </PersonalDataInputForm>
-      {update.error && <Alert severity="error">{update.error.message}</Alert>}
 
-      <Button css={buttonStyles} disabled={update.loading} type="submit">
+      {error && <Alert severity="error">{error.message}</Alert>}
+
+      <Button css={buttonStyles} disabled={loading} type="submit">
         Save
       </Button>
     </PersonalDataFormWrapper>

@@ -1,6 +1,5 @@
 import {useUser} from '@wepublish/authentication/website'
 import {
-  FullImageFragment,
   UpdatePasswordMutationVariables,
   UpdateUserMutationVariables,
   useUpdatePasswordMutation,
@@ -20,39 +19,42 @@ export function PersonalDataFormContainer({className, mediaEmail}: PersonalDataF
 
   const [uploadImage] = useUploadImageMutation()
   const [updatePassword] = useUpdatePasswordMutation()
-  const [updateUser, updateUserData] = useUpdateUserMutation()
+  const [updateUser] = useUpdateUserMutation()
 
-  const handleOnImageUpload = (input: ChangeEvent<HTMLInputElement> | null) => {
-    uploadImage({
+  const handleOnImageUpload = async (input: ChangeEvent<HTMLInputElement> | null) => {
+    await uploadImage({
       variables: {
-        uploadImageInput: {file: input?.target?.files![0] as File} || null
+        uploadImageInput: input ? {file: input.target?.files![0] as File} : null
       }
     })
   }
 
-  const handleOnUpdate = (
+  const handleOnUpdate = async (
     variables: UpdateUserMutationVariables['input'] & Partial<UpdatePasswordMutationVariables>
   ) => {
     const {password, passwordRepeated, ...userInput} = variables
+    const updates = [
+      updateUser({
+        variables: {
+          input: userInput
+        }
+      })
+    ] as Promise<unknown>[]
 
-    try {
-      if (password && passwordRepeated) {
+    console.log(password, passwordRepeated, userInput)
+
+    if (password && passwordRepeated) {
+      updates.push(
         updatePassword({
           variables: {
             password,
             passwordRepeated
           }
         })
-      }
-
-      updateUser({
-        variables: {
-          input: userInput
-        }
-      })
-    } catch (err) {
-      console.log('err', err)
+      )
     }
+
+    await Promise.all(updates)
   }
 
   if (!user) {
@@ -62,8 +64,7 @@ export function PersonalDataFormContainer({className, mediaEmail}: PersonalDataF
   return (
     <PersonalDataForm
       className={className}
-      initialUser={user as UpdateUserMutationVariables['input'] & {image?: FullImageFragment}}
-      update={updateUserData}
+      initialUser={user}
       onImageUpload={handleOnImageUpload}
       onUpdate={handleOnUpdate}
       mediaEmail={mediaEmail}

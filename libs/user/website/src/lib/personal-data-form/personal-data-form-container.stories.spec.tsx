@@ -2,8 +2,8 @@ import {MockedProvider} from '@apollo/client/testing'
 import {composeStories} from '@storybook/react'
 import {act, render} from '@testing-library/react'
 import {actWait} from '@wepublish/testing'
-import * as stories from './registration-form-container.stories'
 import snapshotDiff from 'snapshot-diff'
+import * as stories from './personal-data-form-container.stories'
 
 const storiesCmp = composeStories(stories)
 

@@ -53,7 +53,7 @@ fragment FullImage on Image {
   ...ImageURLs
 }
 
-mutation UploadImage($uploadImageInput: UploadImageInput!) {
+mutation UploadImage($uploadImageInput: UploadImageInput) {
   uploadUserProfileImage(uploadImageInput: $uploadImageInput) {
     ...FullUser
   }

@@ -1690,7 +1690,7 @@ export type ImageRefFragment = { __typename?: 'Image', id: string, filename?: st
 export type FullImageFragment = { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, bigURL?: string | null, largeURL?: string | null, mediumURL?: string | null, smallURL?: string | null, squareBigURL?: string | null, squareLargeURL?: string | null, squareMediumURL?: string | null, squareSmallURL?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null };
 
 export type UploadImageMutationVariables = Exact<{
-  uploadImageInput: UploadImageInput;
+  uploadImageInput?: InputMaybe<UploadImageInput>;
 }>;
 
 
@@ -3070,7 +3070,7 @@ export type EventQueryHookResult = ReturnType<typeof useEventQuery>;
 export type EventLazyQueryHookResult = ReturnType<typeof useEventLazyQuery>;
 export type EventQueryResult = Apollo.QueryResult<EventQuery, EventQueryVariables>;
 export const UploadImageDocument = gql`
-    mutation UploadImage($uploadImageInput: UploadImageInput!) {
+    mutation UploadImage($uploadImageInput: UploadImageInput) {
   uploadUserProfileImage(uploadImageInput: $uploadImageInput) {
     ...FullUser
   }

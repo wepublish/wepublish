@@ -61,7 +61,6 @@ import {
   BuilderEventSEOProps
 } from './event.interface'
 import {BuilderFooterProps} from './footer.interface'
-import {BuilderImageUploadProps} from './image-upload.interface'
 import {BuilderImageProps} from './image.interface'
 import {
   BuilderListItemProps,
@@ -85,7 +84,7 @@ import {
   BuilderIconButtonProps,
   BuilderTextFieldProps
 } from './ui.interface'
-import {BuilderPersonalDataFormProps} from './user.interface'
+import {BuilderPersonalDataFormProps, BuilderImageUploadProps} from './user.interface'
 
 const NoComponent = () => null
 

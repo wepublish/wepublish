@@ -1,69 +1,88 @@
-import {IconButton, styled} from '@mui/material'
-import {ChangeEvent, useId, useRef} from 'react'
+import {css, styled} from '@mui/material'
+import {BuilderImageUploadProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {useId, useRef} from 'react'
 import {MdDelete, MdEdit, MdOutlineUploadFile} from 'react-icons/md'
-import placeholderImg from './placeholder.svg'
+import {ReactComponent as PlaceholderImage} from './placeholder.svg'
 
-export type ImageUploadProps = {
-  image?: {url?: string | null | undefined}
-  onUpload: (image: ChangeEvent<HTMLInputElement> | null) => void
-  className?: string
-}
+export const ImageUploadWrapper = styled('div')`
+  display: grid;
+  gap: ${({theme}) => theme.spacing(2)};
+  grid-template-columns: max-content 1fr;
+  align-items: center;
+`
 
-export const ImageWrapper = styled('div')`
+export const ImageUploadImageWrapper = styled('div')`
   display: grid;
 `
 
-export const ContentWrapper = styled('div')`
+export const ImageUploadContent = styled('div')`
   display: grid;
   justify-content: flex-start;
 `
 
-const Avatar = styled('img')`
+const hiddenInputStyles = css`
+  opacity: 0;
+  visibility: none;
+  width: 0;
+  height: 0;
+`
+
+const avatarStyles = css`
   width: 150px;
   height: 150px;
   border-radius: 100%;
-  object-fit: cover;
+  overflow: hidden;
 `
 
-const Wrapper = styled('div')`
-  display: grid;
-  gap: ${({theme}) => theme.spacing(2)};
-  grid-template-columns: 150px 1fr;
-  align-items: center;
-
-  input {
-    opacity: 0;
-    visibility: none;
-    width: 1px;
-    height: 1px;
-  }
-`
-
-export function ImageUpload({image, onUpload, className}: ImageUploadProps) {
+export function ImageUpload({image, onUpload, className}: BuilderImageUploadProps) {
   const fileInputRef = useRef<HTMLInputElement>(null)
+  const {
+    elements: {Image, IconButton}
+  } = useWebsiteBuilder()
+  const inputId = useId()
 
   return (
-    <Wrapper className={className}>
-      <ImageWrapper>
-        <Avatar src={image?.url || placeholderImg} alt="user-avatar" />
-        <input type="file" accept="image/*" onChange={onUpload} id={useId()} ref={fileInputRef} />
-      </ImageWrapper>
-      <ContentWrapper>
+    <ImageUploadWrapper className={className}>
+      <ImageUploadImageWrapper>
+        {image ? (
+          <Image css={avatarStyles} image={image} />
+        ) : (
+          <PlaceholderImage css={avatarStyles} />
+        )}
+
+        <input
+          css={hiddenInputStyles}
+          type="file"
+          accept="image/*"
+          onChange={onUpload}
+          ref={fileInputRef}
+          id={inputId}
+        />
+      </ImageUploadImageWrapper>
+
+      <ImageUploadContent>
         {image ? (
           <>
-            <IconButton color="error" onClick={() => onUpload(null)}>
+            <IconButton color="error" onClick={() => onUpload(null)} title="Bild löschen">
               <MdDelete />
             </IconButton>
-            <IconButton color="primary" onClick={() => fileInputRef.current!.click()}>
+
+            <IconButton
+              color="primary"
+              onClick={() => fileInputRef.current?.click()}
+              title="Neues Bild hochladen">
               <MdEdit />
             </IconButton>
           </>
         ) : (
-          <IconButton color="primary" onClick={() => fileInputRef.current!.click()}>
+          <IconButton
+            color="primary"
+            onClick={() => fileInputRef.current?.click()}
+            title="Bild hochladen">
             <MdOutlineUploadFile />
           </IconButton>
         )}
-      </ContentWrapper>
-    </Wrapper>
+      </ImageUploadContent>
+    </ImageUploadWrapper>
   )
 }
