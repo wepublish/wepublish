@@ -1,33 +1,42 @@
-import {ApiV1, ArticleListContainer, AuthorContainer, useWebsiteBuilder} from '@wepublish/website'
+import {capitalize} from '@mui/material'
+import {ApiV1, ArticleListContainer, useWebsiteBuilder} from '@wepublish/website'
 import {GetStaticPaths, GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 
-export default function AuthorBySlug() {
+export default function ArticleListByTag() {
   const {
-    query: {slug}
-  } = useRouter()
-  const {
-    elements: {H3}
+    elements: {H3, Alert}
   } = useWebsiteBuilder()
 
-  const {data} = ApiV1.useAuthorQuery({
+  const {
+    query: {tag}
+  } = useRouter()
+
+  const {data, loading} = ApiV1.useArticleListQuery({
     fetchPolicy: 'cache-only',
     variables: {
-      slug: slug as string
+      filter: {
+        tags: [tag as string]
+      }
     }
   })
 
   return (
     <>
-      <AuthorContainer slug={slug as string} />
+      <H3 component="h1">{capitalize(tag as string)}</H3>
 
-      {data?.author && (
-        <>
-          <H3 component={'h2'}>Alle Artikel von {data.author.name}</H3>
-          <ArticleListContainer variables={{filter: {authors: [data.author.id]}}} />
-        </>
+      {!loading && !data?.articles.nodes.length && (
+        <Alert severity="info">Keine Artikel vorhanden</Alert>
       )}
+
+      <ArticleListContainer
+        variables={{
+          filter: {
+            tags: [tag as string]
+          }
+        }}
+      />
     </>
   )
 }
@@ -40,16 +49,17 @@ export const getStaticPaths: GetStaticPaths = async () => {
 }
 
 export const getStaticProps: GetStaticProps = async ({params}) => {
-  const {slug} = params || {}
+  const {tag} = params || {}
   const {publicRuntimeConfig} = getConfig()
 
   const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
-
-  const data = await Promise.all([
+  await Promise.all([
     client.query({
-      query: ApiV1.AuthorDocument,
+      query: ApiV1.ArticleListDocument,
       variables: {
-        slug
+        filter: {
+          tags: [tag]
+        }
       }
     }),
     client.query({

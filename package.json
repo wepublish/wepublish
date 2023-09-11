@@ -43,6 +43,7 @@
     "@graphql-codegen/typescript-document-nodes": "^2.3.8",
     "@graphql-codegen/typescript-operations": "^2.5.8",
     "@graphql-codegen/typescript-react-apollo": "^3.3.7",
+    "@mui/x-date-pickers": "^6.11.2",
     "@nestjs/cli": "^10.1.11",
     "@nestjs/schematics": "^10.0.1",
     "@nestjs/testing": "^10.1.0",

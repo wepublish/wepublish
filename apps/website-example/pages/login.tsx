@@ -1,4 +1,5 @@
 import styled from '@emotion/styled'
+import {Typography} from '@mui/material'
 import {
   ApiV1,
   AuthTokenStorageKey,
@@ -23,7 +24,7 @@ type LoginProps = {sessionToken?: ApiV1.UserSession}
 export default function Login({sessionToken}: LoginProps) {
   const {hasUser, setToken} = useUser()
   const {
-    elements: {H3, Link, Paragraph}
+    elements: {H3, Link}
   } = useWebsiteBuilder()
   const router = useRouter()
 
@@ -45,9 +46,9 @@ export default function Login({sessionToken}: LoginProps) {
     <LoginWrapper>
       <H3 component="h1">Login für Abonnent*innen</H3>
 
-      <Paragraph>
-        (Falls du ein Abo lösen willst, <Link href={'/'}>klicke hier.</Link>)
-      </Paragraph>
+      <Typography variant="body1" paragraph>
+        (Falls du noch keinen Account hast, <Link href={'/signup'}>klicke hier.</Link>)
+      </Typography>
 
       <LoginFormContainer />
     </LoginWrapper>

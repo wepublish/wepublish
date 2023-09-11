@@ -665,7 +665,9 @@ const blocks = [
             {
               __typename: 'RichTextBlock'
             }
-          ]
+          ],
+          authors: [],
+          publishedAt: new Date('2023-01-01').toISOString()
         }
       },
       {
@@ -695,7 +697,9 @@ const blocks = [
             {
               __typename: 'RichTextBlock'
             }
-          ]
+          ],
+          authors: [],
+          publishedAt: new Date('2023-01-01').toISOString()
         }
       },
       {
@@ -917,7 +921,9 @@ const blocks = [
             {
               __typename: 'RichTextBlock'
             }
-          ]
+          ],
+          authors: [],
+          publishedAt: new Date('2023-01-01').toISOString()
         }
       },
       {
@@ -947,7 +953,9 @@ const blocks = [
             {
               __typename: 'RichTextBlock'
             }
-          ]
+          ],
+          authors: [],
+          publishedAt: new Date('2023-01-01').toISOString()
         }
       },
       {
@@ -1175,7 +1183,9 @@ const blocks = [
               {
                 __typename: 'RichTextBlock'
               }
-            ]
+            ],
+            authors: [],
+            publishedAt: new Date('2023-01-01').toISOString()
           }
         }
       },
@@ -1213,7 +1223,9 @@ const blocks = [
               {
                 __typename: 'RichTextBlock'
               }
-            ]
+            ],
+            authors: [],
+            publishedAt: new Date('2023-01-01').toISOString()
           }
         }
       },

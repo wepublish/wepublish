@@ -17,7 +17,7 @@ export class ExampleURLAdapter implements URLAdapter {
   }
 
   getPublicArticleURL(article: PublicArticle): string {
-    return `${this.websiteURL}/a/${article.id}/${article.slug}`
+    return `${this.websiteURL}/a/${article.slug}`
   }
 
   getPeeredArticleURL(peer: Peer, article: PublicArticle): string {
@@ -25,15 +25,11 @@ export class ExampleURLAdapter implements URLAdapter {
   }
 
   getPublicPageURL(page: PublicPage): string {
-    if (['', '/'].includes(page.slug)) {
-      return this.websiteURL
-    }
-
-    return `${this.websiteURL}/page/${page.id}/${page.slug}`
+    return `${this.websiteURL}/${page.slug}`
   }
 
   getAuthorURL(author: Author): string {
-    return `${this.websiteURL}/author/${author.slug || author.id}`
+    return `${this.websiteURL}/author/${author.slug}`
   }
 
   getEventURL(event: Event): string {

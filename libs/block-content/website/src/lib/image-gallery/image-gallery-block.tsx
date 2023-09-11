@@ -19,8 +19,12 @@ export const ImageGalleryBlock = ({images, className}: BuilderImageGalleryBlockP
     elements: {Image}
   } = useWebsiteBuilder()
   const theme = useTheme()
-  const medium = useMediaQuery(theme.breakpoints.up('sm'))
-  const big = useMediaQuery(theme.breakpoints.up('md'))
+  const medium = useMediaQuery(theme.breakpoints.up('sm'), {
+    noSsr: true
+  })
+  const big = useMediaQuery(theme.breakpoints.up('md'), {
+    noSsr: true
+  })
   const cols = big ? 3 : medium ? 2 : 1
 
   const nonEmptyImages = images.filter(image => image.image)

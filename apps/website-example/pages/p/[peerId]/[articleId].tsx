@@ -15,7 +15,7 @@ export function PeerArticleById() {
   } = useRouter()
 
   const {
-    elements: {H5}
+    elements: {H3}
   } = useWebsiteBuilder()
 
   return (
@@ -23,7 +23,7 @@ export function PeerArticleById() {
       <PeerArticleContainer peerId={peerId as string} articleId={articleId as string} />
 
       <ArticleWrapper>
-        <H5 component={'h2'}>Kommentare</H5>
+        <H3 component={'h2'}>Kommentare</H3>
 
         <CommentListContainer
           id={articleId as string}

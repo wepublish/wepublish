@@ -752,7 +752,9 @@ const article = {
               {
                 __typename: 'RichTextBlock'
               }
-            ]
+            ],
+            authors: [author],
+            publishedAt: new Date('2023-01-01').toISOString()
           }
         },
         {
@@ -807,7 +809,9 @@ const article = {
               {
                 __typename: 'RichTextBlock'
               }
-            ]
+            ],
+            authors: [author],
+            publishedAt: new Date('2023-01-01').toISOString()
           }
         },
         {
@@ -1379,7 +1383,9 @@ const article = {
               {
                 __typename: 'RichTextBlock'
               }
-            ]
+            ],
+            authors: [author],
+            publishedAt: new Date('2023-01-01').toISOString()
           }
         },
         {
@@ -1434,7 +1440,9 @@ const article = {
               {
                 __typename: 'RichTextBlock'
               }
-            ]
+            ],
+            authors: [author],
+            publishedAt: new Date('2023-01-01').toISOString()
           }
         },
         {

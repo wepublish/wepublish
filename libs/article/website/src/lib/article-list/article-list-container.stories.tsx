@@ -1,12 +1,13 @@
+import {css} from '@emotion/react'
+import {Meta} from '@storybook/react'
 import {
+  Article,
   ArticleListDocument,
   ArticleQuery,
   FullAuthorFragment,
   FullImageFragment
 } from '@wepublish/website/api'
-import {Meta} from '@storybook/react'
 import {ArticleListContainer} from './article-list-container'
-import {css} from '@emotion/react'
 
 const image = {
   __typename: 'Image',
@@ -447,7 +448,9 @@ const article = {
               {
                 __typename: 'RichTextBlock'
               }
-            ]
+            ],
+            authors: [author],
+            publishedAt: new Date('2023-01-01').toISOString()
           }
         },
         {
@@ -502,7 +505,9 @@ const article = {
               {
                 __typename: 'RichTextBlock'
               }
-            ]
+            ],
+            authors: [author],
+            publishedAt: new Date('2023-01-01').toISOString()
           }
         },
         {
@@ -1074,7 +1079,9 @@ const article = {
               {
                 __typename: 'RichTextBlock'
               }
-            ]
+            ],
+            authors: [author],
+            publishedAt: new Date('2023-01-01').toISOString()
           }
         },
         {
@@ -1129,7 +1136,9 @@ const article = {
               {
                 __typename: 'RichTextBlock'
               }
-            ]
+            ],
+            authors: [author],
+            publishedAt: new Date('2023-01-01').toISOString()
           }
         },
         {
@@ -2471,70 +2480,27 @@ export const Default = {
   }
 }
 
-export const WithClassName = {
+export const WithFilter = {
+  ...Default,
   args: {
-    className: 'extra-classname'
-  },
+    filter: (articles: Article[]) => articles.filter(a => a.id !== article.id)
+  }
+}
 
-  parameters: {
-    apolloClient: {
-      mocks: [
-        {
-          request: {
-            query: ArticleListDocument,
-            variables: {}
-          },
-          result: {
-            data: {
-              articles: {
-                nodes: [article, {...article, id: '2'}, {...article, id: '3'}],
-                totalCount: 3,
-                pageInfo: {
-                  hasNextPage: false,
-                  hasPreviousPage: false,
-                  endCursor: null,
-                  startCursor: null
-                }
-              }
-            }
-          }
-        }
-      ]
-    }
+export const WithClassName = {
+  ...Default,
+  args: {
+    ...Default.args,
+    className: 'extra-classname'
   }
 }
 
 export const WithEmotion = {
+  ...Default,
   args: {
+    ...Default.args,
     css: css`
       background-color: #eee;
     `
-  },
-
-  parameters: {
-    apolloClient: {
-      mocks: [
-        {
-          request: {
-            query: ArticleListDocument,
-            variables: {}
-          },
-          result: {
-            data: {
-              articles: {
-                nodes: [article, {...article, id: '2'}, {...article, id: '3'}],
-                totalCount: 3,
-                pageInfo: {
-                  hasNextPage: false,
-                  hasPreviousPage: false,
-                  endCursor: null,
-                  startCursor: null
-                }
-              }
-            }
-          }
-        }
-      ]
-    }
   }
 }

@@ -44,8 +44,8 @@ const image = {
 const breakBlock = {
   __typename: 'LinkPageBreakBlock',
   text: 'Break block test',
-  linkText: null,
-  linkURL: null,
+  linkText: 'Link Text',
+  linkURL: 'Link URL',
   styleOption: 'default',
   richText: [
     {
@@ -101,7 +101,7 @@ const breakBlock = {
     }
   ],
   linkTarget: null,
-  hideButton: false,
+  hideButton: true,
   templateOption: 'none',
   layoutOption: 'image-left',
   image
@@ -117,6 +117,13 @@ export const ImageRight = {
   args: {
     ...breakBlock,
     layoutOption: 'image-right'
+  }
+}
+
+export const WithButton = {
+  args: {
+    ...breakBlock,
+    hideButton: false
   }
 }
 
@@ -140,5 +147,13 @@ export const WithoutImage = {
   args: {
     ...breakBlock,
     image: null
+  }
+}
+
+export const WithoutImageRight = {
+  args: {
+    ...breakBlock,
+    image: null,
+    layoutOption: 'image-right'
   }
 }

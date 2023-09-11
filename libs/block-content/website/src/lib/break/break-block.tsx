@@ -9,18 +9,12 @@ export const BreakBlockWrapper = styled('div')<{reverse?: boolean}>`
   display: grid;
   gap: ${({theme}) => theme.spacing(2)};
   justify-content: center;
+  align-items: center;
 
   ${({theme}) => theme.breakpoints.up('md')} {
-    grid-template-columns: 1fr 2fr;
+    grid-template-columns: 1fr 1fr;
+    gap: ${({theme}) => theme.spacing(5)};
   }
-
-  ${({theme, reverse}) =>
-    reverse &&
-    css`
-      ${theme.breakpoints.up('md')} {
-        grid-template-columns: 2fr 1fr;
-      }
-    `}
 `
 
 export const BreakBlockSegment = styled('div')<{reverse?: boolean}>`
@@ -42,29 +36,51 @@ export const BreakBlock = ({
   text,
   image,
   richText,
-  layoutOption
+  layoutOption,
+  hideButton,
+  linkTarget,
+  linkText,
+  linkURL,
+  styleOption,
+  templateOption
 }: BuilderBreakBlockProps) => {
   const {
-    elements: {H4, Image},
+    elements: {H4, Image, Button, Link},
     blocks: {RichText}
   } = useWebsiteBuilder()
 
   const theme = useTheme()
-  const squareImage = useMediaQuery(theme.breakpoints.up('md'))
+  const squareImage = useMediaQuery(theme.breakpoints.up('md'), {
+    noSsr: true
+  })
   const reverse = layoutOption === 'image-right'
 
   return (
     <BreakBlockWrapper className={className} reverse={reverse}>
       <BreakBlockSegment reverse={reverse}>
+        {!image && (
+          <H4 component="div" role="heading">
+            {text}
+          </H4>
+        )}
+
         {image && <Image image={image} square={squareImage} />}
       </BreakBlockSegment>
 
       <BreakBlockSegment>
-        <H4 component="div" role="heading">
-          {text}
-        </H4>
+        {image && (
+          <H4 component="div" role="heading">
+            {text}
+          </H4>
+        )}
 
         <RichText richText={richText} />
+
+        {!hideButton && (
+          <Button variant="contained" color="secondary" LinkComponent={Link} href={linkURL ?? ''}>
+            {linkText}
+          </Button>
+        )}
       </BreakBlockSegment>
     </BreakBlockWrapper>
   )

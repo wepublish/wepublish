@@ -1,4 +1,4 @@
-import {useArticleListQuery} from '@wepublish/website/api'
+import {FullArticleFragment, useArticleListQuery} from '@wepublish/website/api'
 import {
   BuilderArticleListProps,
   BuilderContainerProps,
@@ -6,12 +6,15 @@ import {
 } from '@wepublish/website/builder'
 
 export type ArticleListContainerProps = BuilderContainerProps &
-  Pick<BuilderArticleListProps, 'variables' | 'onVariablesChange'>
+  Pick<BuilderArticleListProps, 'variables' | 'onVariablesChange'> & {
+    filter?: (articles: FullArticleFragment[]) => FullArticleFragment[]
+  }
 
 export function ArticleListContainer({
   className,
   variables,
-  onVariablesChange
+  onVariablesChange,
+  filter
 }: ArticleListContainerProps) {
   const {ArticleList} = useWebsiteBuilder()
   const {data, loading, error} = useArticleListQuery({
@@ -20,7 +23,18 @@ export function ArticleListContainer({
 
   return (
     <ArticleList
-      data={data}
+      data={
+        filter && data?.articles
+          ? {
+              ...data,
+              articles: {
+                pageInfo: data.articles.pageInfo,
+                totalCount: data.articles.totalCount,
+                nodes: filter(data.articles.nodes)
+              }
+            }
+          : data
+      }
       loading={loading}
       error={error}
       className={className}
