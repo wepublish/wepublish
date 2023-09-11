@@ -11,7 +11,7 @@ In that space you can add the path to the schema and seeding that should be exec
 ```json
 "prisma": {
   "schema": "@wepublish/api/prisma/schema.prisma",
-  "seed": "npx ts-node seed.ts"
+  "seed": "npx tsx seed.ts"
 },
 ```
 

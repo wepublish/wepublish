@@ -49,7 +49,7 @@ export const addPublicComment = async (
     throw new CommentLengthError(+maxCommentLength)
   }
 
-  const canSkipApproval = hasPermission(CanCreateApprovedComment, user.roles)
+  const canSkipApproval = hasPermission(CanCreateApprovedComment, user?.roles ?? [])
 
   // Challenge
   if (!user) {

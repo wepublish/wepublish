@@ -57,7 +57,7 @@ spec:
           image: {{ .Values.deployment.image }}
           imagePullPolicy: {{ .Values.deployment.imagePullPolicy }}
           command: ['/bin/sh']
-          args: ['-c', 'npx prisma migrate deploy && npx ts-node libs/api/prisma/run-seed.ts && node dist/apps/api-example/main.js']
+          args: ['-c', 'npx prisma migrate deploy && npx tsx libs/api/prisma/run-seed.ts && node dist/apps/api-example/main.js']
           ports:
             - name: http
               containerPort: 8000
