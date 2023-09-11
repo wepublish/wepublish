@@ -20,6 +20,11 @@ const nextConfig = {
       API_URL: process.env.API_URL || ''
     }
   },
+  // Adds the language attribute to the HTML
+  i18n: {
+    locales: ['gsw-CH'],
+    defaultLocale: 'gsw-CH'
+  },
   compiler: {
     // This is needed so that we can use components as selectors in Emotion
     emotion: {
