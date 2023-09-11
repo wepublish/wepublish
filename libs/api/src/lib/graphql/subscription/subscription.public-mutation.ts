@@ -1,5 +1,5 @@
-import {Context} from '../../context'
 import {PaymentPeriodicity, Prisma, PrismaClient} from '@prisma/client'
+import {Context} from '../../context'
 import {MonthlyAmountNotEnough, NotFound, PaymentConfigurationNotAllowed} from '../../error'
 
 export const updatePublicSubscription = async (
@@ -33,7 +33,7 @@ export const updatePublicSubscription = async (
   const paymentMethod = await activePaymentMethodsByID.load(paymentMethodID as string)
   if (!paymentMethod) throw new NotFound('PaymentMethod', paymentMethodID as string)
 
-  if (!monthlyAmount || monthlyAmount < memberPlan.amountPerMonthMin)
+  if (!monthlyAmount || (monthlyAmount as number) < memberPlan.amountPerMonthMin)
     throw new MonthlyAmountNotEnough()
 
   if (
