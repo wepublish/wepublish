@@ -3,18 +3,19 @@ import {
   ArticleFilter,
   AuthorRefFragment,
   DateFilterComparison,
+  EventFilter,
   FullUserRoleFragment,
   PageFilter,
   usePeerListLazyQuery,
   UserFilter,
   useUserRoleListLazyQuery
 } from '@wepublish/editor/api'
-import {useEffect, useState} from 'react'
+import {useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdClose} from 'react-icons/md'
 import {
   Button,
-  CheckPicker,
+  CheckPicker as RCheckPicker,
   DateRangePicker,
   Form as RForm,
   Input,
@@ -23,6 +24,8 @@ import {
 } from 'rsuite'
 
 import {AuthorCheckPicker} from '../panel/authorCheckPicker'
+import {InputMaybe, Scalars, useProvidersLazyQuery} from '@wepublish/editor/api-v2'
+import {getApiClientV2} from '../utility'
 
 const {Group} = RForm
 
@@ -38,6 +41,10 @@ const CloseIcon = styled(MdClose)`
 
 const SelectPicker = styled(RSelectPicker)`
   width: 150px;
+`
+
+const CheckPicker = styled(RCheckPicker)`
+  width: 200px;
 `
 
 const Toggle = styled(RToggle)`
@@ -70,14 +77,24 @@ type Field =
   | 'authors'
   | 'peer'
   | 'publicationDate'
+  | 'dates'
+  | 'providers'
   | 'userRole'
   | 'text'
 
+export type ImportableEventFilter = {
+  startsAt?: InputMaybe<Scalars['String']>
+  endsAt?: InputMaybe<Scalars['String']>
+  providers?: InputMaybe<Array<InputMaybe<Scalars['String']>>>
+}
+
+type Filter = ArticleFilter & PageFilter & UserFilter & EventFilter & ImportableEventFilter
+
 export interface ListViewFiltersProps {
   fields: Field[]
-  filter: Partial<ArticleFilter & PageFilter & UserFilter>
+  filter: Partial<Filter>
   isLoading: boolean
-  onSetFilter(filter: ArticleFilter & PageFilter & UserFilter): void
+  onSetFilter(filter: Filter): void
   className?: string
 
   // optional setters for filters
@@ -91,10 +108,15 @@ export function ListViewFilters({
   setPeerFilter,
   className
 }: ListViewFiltersProps) {
+  const client = useMemo(() => getApiClientV2(), [])
   const {t} = useTranslation()
   const [resetFilterKey, setResetFilterkey] = useState<string>(new Date().getTime().toString())
   const [userRoles, setUserRoles] = useState<FullUserRoleFragment[]>([])
-  const isUserRoleFilter = fields.includes('userRole')
+
+  const [providersFetch, {data: providersData}] = useProvidersLazyQuery({
+    client,
+    fetchPolicy: 'network-only'
+  })
 
   const [userRoleFetch, {data: userRoleData}] = useUserRoleListLazyQuery({
     fetchPolicy: 'network-only',
@@ -103,12 +125,16 @@ export function ListViewFilters({
     }
   })
 
-  const isPeerFilter = fields.includes('peer') && !!setPeerFilter
-
   const [peerListFetch, {data: peerListData}] = usePeerListLazyQuery({
     fetchPolicy: 'network-only'
   })
 
+  // check whether or not we need to get some data based on which filters are required
+  const isProviderFilter = fields.includes('providers')
+  const isUserRoleFilter = fields.includes('userRole')
+  const isPeerFilter = fields.includes('peer') && !!setPeerFilter
+
+  // conditionally get some additional data
   useEffect(() => {
     if (isPeerFilter) {
       peerListFetch()
@@ -120,6 +146,12 @@ export function ListViewFilters({
       userRoleFetch()
     }
   }, [isUserRoleFilter, userRoleFetch])
+
+  useEffect(() => {
+    if (isProviderFilter) {
+      providersFetch()
+    }
+  }, [isProviderFilter, providersFetch])
 
   /**
    * Setup user roles, whenever user role data object changes
@@ -147,7 +179,7 @@ export function ListViewFilters({
     setResetFilterkey(new Date().getTime().toString())
   }
 
-  const updateFilter = (value: Partial<ArticleFilter & PageFilter & UserFilter>) => {
+  const updateFilter = (value: Partial<Filter>) => {
     if (value.authors && !value.authors.length) {
       value = {authors: null}
     }
@@ -271,6 +303,35 @@ export function ListViewFilters({
           </Group>
         )}
 
+        {fields.includes('providers') && (
+          <Group style={formInputStyle}>
+            <CheckPicker
+              disabled={false}
+              searchable={false}
+              virtualized
+              cleanable
+              value={filter.providers || []}
+              data={
+                providersData
+                  ? providersData?.providers.map(provider => ({
+                      value: provider,
+                      label: provider
+                    }))
+                  : [{value: undefined, label: undefined}]
+              }
+              placeholder={t('articleList.filter.providers')}
+              onChange={providers => {
+                updateFilter({
+                  providers: providers.length
+                    ? (providers.filter(p => p !== '') as string[])
+                    : undefined
+                })
+              }}
+              block
+            />
+          </Group>
+        )}
+
         {fields.includes('draft') && (
           <Group style={formInputStyle}>
             <Toggle
@@ -328,6 +389,26 @@ export function ListViewFilters({
               onClean={() =>
                 updateFilter({publicationDateFrom: undefined, publicationDateTo: undefined})
               }
+            />
+          </Group>
+        )}
+
+        {fields.includes('dates') && (
+          <Group style={formInputStyle}>
+            <DateRangePicker
+              key={`dates-${resetFilterKey}`}
+              placeholder={t('articleList.filter.dates')}
+              block
+              placement="auto"
+              onChange={value => {
+                if (value && value[0] && value[1]) {
+                  updateFilter({
+                    from: value[0]?.toISOString(),
+                    to: value[1]?.toISOString()
+                  })
+                }
+              }}
+              onClean={() => updateFilter({from: undefined, to: undefined})}
             />
           </Group>
         )}

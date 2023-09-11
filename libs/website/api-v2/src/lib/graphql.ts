@@ -91,7 +91,10 @@ export enum EventStatus {
 }
 
 export type ImportedEventFilter = {
+  from?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
+  providers?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  to?: InputMaybe<Scalars['String']>;
 };
 
 export enum ImportedEventSort {
@@ -240,7 +243,7 @@ export type Query = {
   expectedRevenue: Array<DashboardInvoice>;
   /**
    *
-   *       Returns a more detailed version of a single importable event, by id and source (e.g. AgendaBasel).
+   *       Returns a more detailed version of a single importable event, by id and source.
    *
    */
   importedEvent: Event;
@@ -270,6 +273,12 @@ export type Query = {
    *
    */
   newSubscribers: Array<DashboardSubscription>;
+  /**
+   *
+   *       Returns a list of Importable Event Providers
+   *
+   */
+  providers: Array<Scalars['String']>;
   /**
    *
    *       Returns all renewing subscribers in a given timeframe.

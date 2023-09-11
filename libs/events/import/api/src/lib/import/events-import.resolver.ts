@@ -32,7 +32,7 @@ export class EventsImportResolver {
   @Query(returns => Event, {
     name: 'importedEvent',
     description: `
-      Returns a more detailed version of a single importable event, by id and source (e.g. AgendaBasel).
+      Returns a more detailed version of a single importable event, by id and source.
     `
   })
   importedEvent(@Args('filter') filter: SingleEventFilter) {
@@ -47,6 +47,16 @@ export class EventsImportResolver {
   })
   importedEventsIds() {
     return this.events.importedEventsIds()
+  }
+
+  @Query(returns => [String], {
+    name: 'providers',
+    description: `
+      Returns a list of Importable Event Providers
+    `
+  })
+  providers() {
+    return this.events.getProviders()
   }
 
   /*

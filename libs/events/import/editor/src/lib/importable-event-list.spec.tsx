@@ -57,6 +57,7 @@ const mocks = [
     request: {
       query: ImportedEventListDocument,
       variables: {
+        filter: {},
         take: 10,
         skip: 0
       }

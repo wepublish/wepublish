@@ -5,10 +5,10 @@ import {ImageFetcherService, MediaAdapterService} from '@wepublish/image/api'
 import {Cache} from 'cache-manager'
 import {Event} from './events-import.model'
 import {CreateEventParams, EventsProvider, ImportedEventParams} from './events-import.service'
-import {fetchAndParseKulturagenda} from './kulturagenda-parser'
+import {fetchAndParseKulturzueri} from './kulturzueri-parser'
 
 @Injectable()
-export class AgendaBaselService implements EventsProvider {
+export class KulturZueriService implements EventsProvider {
   constructor(
     @Inject(CACHE_MANAGER) private cacheManager: Cache,
     private prisma: PrismaClient,
@@ -16,20 +16,20 @@ export class AgendaBaselService implements EventsProvider {
     private imageFetcher: ImageFetcherService
   ) {}
 
-  readonly name = 'AgendaBasel'
-  readonly url = 'https://www.agendabasel.ch/xmlexport/kzexport-basel.xml'
+  readonly name = 'KulturZueri'
+  readonly url = 'https://www.kulturzueri.ch/xmlexport/kzexport.xml'
 
   private async getEvents() {
-    const cachedEvents = await this.cacheManager.get<Event[]>('agenda-basel-events')
+    const cachedEvents = await this.cacheManager.get<Event[]>('kultur-zueri-events')
 
     if (cachedEvents) {
       return cachedEvents
     }
 
-    const events = await fetchAndParseKulturagenda(this.url, this.name)
+    const events = await fetchAndParseKulturzueri(this.url, this.name)
     const ttl = 8 * 60 * 60 * 1000 // 8 hours
 
-    await this.cacheManager.set('agenda-basel-events', events, ttl)
+    await this.cacheManager.set('kultur-zueri-events', events, ttl)
 
     return events
   }

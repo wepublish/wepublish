@@ -1015,7 +1015,9 @@
         "isDraft": "Draft",
         "isPending": "Pending",
         "isPublished": "Published",
-        "publicationDate": "Publication Date"
+        "publicationDate": "Publication Date",
+        "dates": "Dates",
+        "providers": "Providers"
       }
     },
     "userList": {
@@ -1349,6 +1351,8 @@
         "edit": "Edit",
         "delete": "Delete",
         "create": "Create new event",
+        "startsAtHeader": "Starts at",
+        "endsAtHeader": "Ends at",
         "startsAt": "Starts at {{startsAt, ccc PP p}}",
         "endsAt": "Ends at {{endsAt, ccc PP p}}",
         "endsAtNone": "Open ended",

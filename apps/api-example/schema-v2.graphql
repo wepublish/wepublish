@@ -74,7 +74,10 @@ enum EventStatus {
 }
 
 input ImportedEventFilter {
+  from: String
   name: String
+  providers: [String]
+  to: String
 }
 
 enum ImportedEventSort {
@@ -140,7 +143,7 @@ type Query {
   "\n      Returns the expected revenue for the time period given.\n      Excludes cancelled or manually set as paid invoices.\n    "
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
 
-  "\n      Returns a more detailed version of a single importable event, by id and source (e.g. AgendaBasel).\n    "
+  "\n      Returns a more detailed version of a single importable event, by id and source.\n    "
   importedEvent(filter: SingleEventFilter!): Event!
 
   "\n      Returns a list of imported events from external sources, transformed to match our model.\n    "
@@ -154,6 +157,9 @@ type Query {
 
   "\n      Returns all new subscribers in a given timeframe.\n      Includes already deactivated ones.\n    "
   newSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
+
+  "\n      Returns a list of Importable Event Providers\n    "
+  providers: [String!]!
 
   "\n      Returns all renewing subscribers in a given timeframe.\n    "
   renewingSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
