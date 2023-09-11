@@ -6,6 +6,7 @@ import {AgendaBaselService} from './agenda-basel.service'
 import {Event, EventStatus, ImportedEventSort} from './events-import.model'
 import {Cache} from 'cache-manager'
 import {Node} from 'slate'
+import {KulturZueriService} from './kultur-zueri.service'
 
 describe('EventsImportService', () => {
   let service: EventsImportService
@@ -17,7 +18,7 @@ describe('EventsImportService', () => {
         EventsImportService,
         {
           provide: EVENT_IMPORT_PROVIDER,
-          useValue: [AgendaBaselService]
+          useValue: [AgendaBaselService, KulturZueriService]
         },
         {
           provide: CACHE_MANAGER,
@@ -82,8 +83,23 @@ describe('EventsImportService', () => {
       expect(result).toEqual(mockEventsDocument)
     })
 
-    test('importedEvent should return the imported event by ID from the corresponding provider', async () => {
+    test('importedEvent should return the imported event by ID from AgendaBasel', async () => {
       const source = 'AgendaBasel'
+      const id = '1'
+
+      jest.spyOn(service, 'importedEvent').mockResolvedValueOnce(mockEvent)
+
+      const result = await service.importedEvent({id, source})
+
+      expect(service.importedEvent).toBeCalledWith({
+        source,
+        id: '1'
+      })
+      expect(result).toEqual(mockEvent)
+    })
+
+    test('importedEvent should return the imported event by ID from KulturZueri', async () => {
+      const source = 'KulturZueri'
       const id = '1'
 
       jest.spyOn(service, 'importedEvent').mockResolvedValueOnce(mockEvent)

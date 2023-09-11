@@ -26,7 +26,9 @@ const {Column, HeaderCell, Cell} = RTable
 
 export function EventStartsAtView({startsAt}: {startsAt: string}) {
   const startsAtDate = new Date(startsAt)
-  return <time dateTime={startsAtDate}>{formatDate(startsAtDate, 'PPP p')}</time>
+  return (
+    <time dateTime={formatDate(startsAtDate, 'PPP p')}>{formatDate(startsAtDate, 'PPP p')}</time>
+  )
 }
 
 export function EventEndsAtView({endsAt}: {endsAt: string | null | undefined}) {
@@ -34,7 +36,7 @@ export function EventEndsAtView({endsAt}: {endsAt: string | null | undefined}) {
   const {t} = useTranslation()
 
   if (endsAtDate) {
-    return <time dateTime={endsAtDate}>{formatDate(endsAtDate, 'PPP p')}</time>
+    return <time dateTime={formatDate(endsAtDate, 'PPP p')}>{formatDate(endsAtDate, 'PPP p')}</time>
   }
   return <>{t('event.list.endsAtNone')}</>
 }
