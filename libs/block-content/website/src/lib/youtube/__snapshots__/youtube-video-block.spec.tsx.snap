@@ -8,7 +8,13 @@ exports[`YouTube Video Block should render Default 1`] = `
     <div
       class="css-1bkzc1-YouTubeVideoBlockPlayer eap2o310"
       style="width: auto; height: auto;"
-    />
+    >
+      <div
+        style="width: 100%; height: 100%;"
+      >
+        <div />
+      </div>
+    </div>
   </div>
 </DocumentFragment>
 `;

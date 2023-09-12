@@ -96,6 +96,7 @@ exports[`Registration Form should render Default 1`] = `
         >
           <input
             aria-invalid="false"
+            autocomplete="email"
             class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
             id=":r2:"
             name="email"
@@ -132,6 +133,7 @@ exports[`Registration Form should render Default 1`] = `
         >
           <input
             aria-invalid="false"
+            autocomplete="new-password"
             class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
             id=":r3:"
             name="password"
@@ -536,8 +538,8 @@ exports[`Registration Form should render Filled 1`] = `
           >
             Email
           </label>
-@@ -95,18 +95,18 @@
-              aria-invalid="false"
+@@ -96,18 +96,18 @@
+              autocomplete="email"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":rb:"
               name="email"
@@ -557,7 +559,7 @@ exports[`Registration Form should render Filled 1`] = `
                   Email
                 </span>
               </legend>
-@@ -115,12 +115,12 @@
+@@ -116,12 +116,12 @@
         </div>
         <div
           class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -572,8 +574,8 @@ exports[`Registration Form should render Filled 1`] = `
           >
             Passwort
           </label>
-@@ -131,11 +131,11 @@
-              aria-invalid="false"
+@@ -133,11 +133,11 @@
+              autocomplete="new-password"
               class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
               id=":rc:"
               name="password"
@@ -585,7 +587,7 @@ exports[`Registration Form should render Filled 1`] = `
               class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1laqsz7-MuiInputAdornment-root"
             >
               <button
-@@ -168,11 +168,11 @@
+@@ -170,11 +170,11 @@
             <fieldset
               aria-hidden="true"
               class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
@@ -598,7 +600,7 @@ exports[`Registration Form should render Filled 1`] = `
                   Passwort
                 </span>
               </legend>
-@@ -184,12 +184,12 @@
+@@ -186,12 +186,12 @@
         >
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-10b0ed7-MuiFormControl-root-MuiTextField-root"
@@ -613,7 +615,7 @@ exports[`Registration Form should render Filled 1`] = `
             >
               Address
             </label>
-@@ -200,18 +200,18 @@
+@@ -202,18 +202,18 @@
                 aria-invalid="false"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":rd:"
@@ -634,7 +636,7 @@ exports[`Registration Form should render Filled 1`] = `
                     Address
                   </span>
                 </legend>
-@@ -220,12 +220,12 @@
+@@ -222,12 +222,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -649,7 +651,7 @@ exports[`Registration Form should render Filled 1`] = `
             >
               Postleitzahl
             </label>
-@@ -236,18 +236,18 @@
+@@ -238,18 +238,18 @@
                 aria-invalid="false"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":re:"
@@ -670,7 +672,7 @@ exports[`Registration Form should render Filled 1`] = `
                     Postleitzahl
                   </span>
                 </legend>
-@@ -256,12 +256,12 @@
+@@ -258,12 +258,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -685,7 +687,7 @@ exports[`Registration Form should render Filled 1`] = `
             >
               Stadt
             </label>
-@@ -272,18 +272,18 @@
+@@ -274,18 +274,18 @@
                 aria-invalid="false"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":rf:"
@@ -706,7 +708,7 @@ exports[`Registration Form should render Filled 1`] = `
                     Stadt
                   </span>
                 </legend>
-@@ -292,12 +292,12 @@
+@@ -294,12 +294,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -721,7 +723,7 @@ exports[`Registration Form should render Filled 1`] = `
             >
               Land
             </label>
-@@ -308,18 +308,18 @@
+@@ -310,18 +310,18 @@
                 aria-invalid="false"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":rg:"
@@ -742,7 +744,7 @@ exports[`Registration Form should render Filled 1`] = `
                     Land
                   </span>
                 </legend>
-@@ -392,12 +392,12 @@
+@@ -394,12 +394,12 @@
         </div>
         <div
           class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -757,7 +759,7 @@ exports[`Registration Form should render Filled 1`] = `
           >
             Captcha
           </label>
-@@ -408,18 +408,18 @@
+@@ -410,18 +410,18 @@
               aria-invalid="false"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":rh:"
@@ -883,12 +885,12 @@ exports[`Registration Form should render Invalid 1`] = `
 -             aria-invalid="false"
 +             aria-describedby=":rk:-helper-text"
 +             aria-invalid="true"
+              autocomplete="email"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":rk:"
               name="email"
               type="email"
-              value=""
-@@ -110,27 +125,34 @@
+@@ -111,27 +126,34 @@
                   Email
                 </span>
               </legend>
@@ -921,12 +923,12 @@ exports[`Registration Form should render Invalid 1`] = `
 -             aria-invalid="false"
 +             aria-describedby=":rl:-helper-text"
 +             aria-invalid="true"
+              autocomplete="new-password"
               class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
               id=":rl:"
               name="password"
               type="password"
-              value=""
-@@ -176,30 +198,37 @@
+@@ -178,30 +200,37 @@
                   Passwort
                 </span>
               </legend>
@@ -967,7 +969,7 @@ exports[`Registration Form should render Invalid 1`] = `
                 name="address.streetAddress"
                 type="text"
                 value=""
-@@ -215,27 +244,34 @@
+@@ -217,27 +246,34 @@
                     Address
                   </span>
                 </legend>
@@ -1005,7 +1007,7 @@ exports[`Registration Form should render Invalid 1`] = `
                 name="address.zipCode"
                 type="text"
                 value=""
-@@ -251,27 +287,34 @@
+@@ -253,27 +289,34 @@
                     Postleitzahl
                   </span>
                 </legend>
@@ -1043,7 +1045,7 @@ exports[`Registration Form should render Invalid 1`] = `
                 name="address.city"
                 type="text"
                 value=""
-@@ -287,27 +330,34 @@
+@@ -289,27 +332,34 @@
                     Stadt
                   </span>
                 </legend>
@@ -1081,7 +1083,7 @@ exports[`Registration Form should render Invalid 1`] = `
                 name="address.country"
                 type="text"
                 value=""
-@@ -323,10 +373,16 @@
+@@ -325,10 +375,16 @@
                     Land
                   </span>
                 </legend>
@@ -1098,7 +1100,7 @@ exports[`Registration Form should render Invalid 1`] = `
       </div>
       <div
         class="css-ag4f2t-RegistrationChallengeWrapper elv4f71"
-@@ -392,22 +448,23 @@
+@@ -394,22 +450,23 @@
         </div>
         <div
           class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -1125,7 +1127,7 @@ exports[`Registration Form should render Invalid 1`] = `
               name="challengeAnswer.challengeSolution"
               type="text"
               value=""
-@@ -423,10 +480,16 @@
+@@ -425,10 +482,16 @@
                   Captcha
                 </span>
               </legend>
@@ -1204,6 +1206,7 @@ exports[`Registration Form should render OnlyAddress 1`] = `
         >
           <input
             aria-invalid="false"
+            autocomplete="email"
             class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
             id=":rs:"
             name="email"
@@ -1542,8 +1545,8 @@ exports[`Registration Form should render OnlyAddressFilled 1`] = `
           >
             Email
           </label>
-@@ -59,18 +59,18 @@
-              aria-invalid="false"
+@@ -60,18 +60,18 @@
+              autocomplete="email"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r13:"
               name="email"
@@ -1563,7 +1566,7 @@ exports[`Registration Form should render OnlyAddressFilled 1`] = `
                   Email
                 </span>
               </legend>
-@@ -82,12 +82,12 @@
+@@ -83,12 +83,12 @@
         >
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-10b0ed7-MuiFormControl-root-MuiTextField-root"
@@ -1578,7 +1581,7 @@ exports[`Registration Form should render OnlyAddressFilled 1`] = `
             >
               Address
             </label>
-@@ -98,18 +98,18 @@
+@@ -99,18 +99,18 @@
                 aria-invalid="false"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r14:"
@@ -1599,7 +1602,7 @@ exports[`Registration Form should render OnlyAddressFilled 1`] = `
                     Address
                   </span>
                 </legend>
-@@ -118,12 +118,12 @@
+@@ -119,12 +119,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -1614,7 +1617,7 @@ exports[`Registration Form should render OnlyAddressFilled 1`] = `
             >
               Postleitzahl
             </label>
-@@ -134,18 +134,18 @@
+@@ -135,18 +135,18 @@
                 aria-invalid="false"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r15:"
@@ -1635,7 +1638,7 @@ exports[`Registration Form should render OnlyAddressFilled 1`] = `
                     Postleitzahl
                   </span>
                 </legend>
-@@ -154,12 +154,12 @@
+@@ -155,12 +155,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -1650,7 +1653,7 @@ exports[`Registration Form should render OnlyAddressFilled 1`] = `
             >
               Stadt
             </label>
-@@ -170,18 +170,18 @@
+@@ -171,18 +171,18 @@
                 aria-invalid="false"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r16:"
@@ -1671,7 +1674,7 @@ exports[`Registration Form should render OnlyAddressFilled 1`] = `
                     Stadt
                   </span>
                 </legend>
-@@ -190,12 +190,12 @@
+@@ -191,12 +191,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -1686,7 +1689,7 @@ exports[`Registration Form should render OnlyAddressFilled 1`] = `
             >
               Land
             </label>
-@@ -206,18 +206,18 @@
+@@ -207,18 +207,18 @@
                 aria-invalid="false"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r17:"
@@ -1707,7 +1710,7 @@ exports[`Registration Form should render OnlyAddressFilled 1`] = `
                     Land
                   </span>
                 </legend>
-@@ -290,12 +290,12 @@
+@@ -291,12 +291,12 @@
         </div>
         <div
           class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -1722,7 +1725,7 @@ exports[`Registration Form should render OnlyAddressFilled 1`] = `
           >
             Captcha
           </label>
-@@ -306,18 +306,18 @@
+@@ -307,18 +307,18 @@
               aria-invalid="false"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r18:"
@@ -1810,12 +1813,12 @@ exports[`Registration Form should render OnlyAddressInvalid 1`] = `
 -             aria-invalid="false"
 +             aria-describedby=":r1a:-helper-text"
 +             aria-invalid="true"
+              autocomplete="email"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r1a:"
               name="email"
               type="email"
-              value=""
-@@ -74,30 +82,37 @@
+@@ -75,30 +83,37 @@
                   Email
                 </span>
               </legend>
@@ -1856,7 +1859,7 @@ exports[`Registration Form should render OnlyAddressInvalid 1`] = `
                 name="address.streetAddress"
                 type="text"
                 value=""
-@@ -113,27 +128,34 @@
+@@ -114,27 +129,34 @@
                     Address
                   </span>
                 </legend>
@@ -1894,7 +1897,7 @@ exports[`Registration Form should render OnlyAddressInvalid 1`] = `
                 name="address.zipCode"
                 type="text"
                 value=""
-@@ -149,27 +171,34 @@
+@@ -150,27 +172,34 @@
                     Postleitzahl
                   </span>
                 </legend>
@@ -1932,7 +1935,7 @@ exports[`Registration Form should render OnlyAddressInvalid 1`] = `
                 name="address.city"
                 type="text"
                 value=""
-@@ -185,27 +214,34 @@
+@@ -186,27 +215,34 @@
                     Stadt
                   </span>
                 </legend>
@@ -1970,7 +1973,7 @@ exports[`Registration Form should render OnlyAddressInvalid 1`] = `
                 name="address.country"
                 type="text"
                 value=""
-@@ -221,10 +257,16 @@
+@@ -222,10 +258,16 @@
                     Land
                   </span>
                 </legend>
@@ -1987,7 +1990,7 @@ exports[`Registration Form should render OnlyAddressInvalid 1`] = `
       </div>
       <div
         class="css-ag4f2t-RegistrationChallengeWrapper elv4f71"
-@@ -290,22 +332,23 @@
+@@ -291,22 +333,23 @@
         </div>
         <div
           class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -2014,7 +2017,7 @@ exports[`Registration Form should render OnlyAddressInvalid 1`] = `
               name="challengeAnswer.challengeSolution"
               type="text"
               value=""
-@@ -321,10 +364,16 @@
+@@ -322,10 +365,16 @@
                   Captcha
                 </span>
               </legend>
@@ -2129,6 +2132,7 @@ exports[`Registration Form should render OnlyFirstName 1`] = `
         >
           <input
             aria-invalid="false"
+            autocomplete="email"
             class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
             id=":r1i:"
             name="email"
@@ -2355,8 +2359,8 @@ exports[`Registration Form should render OnlyFirstNameFilled 1`] = `
           >
             Email
           </label>
-@@ -95,18 +95,18 @@
-              aria-invalid="false"
+@@ -96,18 +96,18 @@
+              autocomplete="email"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r1m:"
               name="email"
@@ -2376,7 +2380,7 @@ exports[`Registration Form should render OnlyFirstNameFilled 1`] = `
                   Email
                 </span>
               </legend>
-@@ -178,12 +178,12 @@
+@@ -179,12 +179,12 @@
         </div>
         <div
           class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -2391,7 +2395,7 @@ exports[`Registration Form should render OnlyFirstNameFilled 1`] = `
           >
             Captcha
           </label>
-@@ -194,18 +194,18 @@
+@@ -195,18 +195,18 @@
               aria-invalid="false"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r1n:"
@@ -2517,12 +2521,12 @@ exports[`Registration Form should render OnlyFirstNameInvalid 1`] = `
 -             aria-invalid="false"
 +             aria-describedby=":r1q:-helper-text"
 +             aria-invalid="true"
+              autocomplete="email"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r1q:"
               name="email"
               type="email"
-              value=""
-@@ -110,10 +125,16 @@
+@@ -111,10 +126,16 @@
                   Email
                 </span>
               </legend>
@@ -2539,7 +2543,7 @@ exports[`Registration Form should render OnlyFirstNameInvalid 1`] = `
       <div
         class="css-ag4f2t-RegistrationChallengeWrapper elv4f71"
       >
-@@ -178,22 +199,23 @@
+@@ -179,22 +200,23 @@
         </div>
         <div
           class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -2566,7 +2570,7 @@ exports[`Registration Form should render OnlyFirstNameInvalid 1`] = `
               name="challengeAnswer.challengeSolution"
               type="text"
               value=""
-@@ -209,10 +231,16 @@
+@@ -210,10 +232,16 @@
                   Captcha
                 </span>
               </legend>
@@ -2645,6 +2649,7 @@ exports[`Registration Form should render OnlyPassword 1`] = `
         >
           <input
             aria-invalid="false"
+            autocomplete="email"
             class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
             id=":r1t:"
             name="email"
@@ -2681,6 +2686,7 @@ exports[`Registration Form should render OnlyPassword 1`] = `
         >
           <input
             aria-invalid="false"
+            autocomplete="new-password"
             class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
             id=":r1u:"
             name="password"
@@ -2901,8 +2907,8 @@ exports[`Registration Form should render OnlyPasswordFilled 1`] = `
           >
             Email
           </label>
-@@ -59,18 +59,18 @@
-              aria-invalid="false"
+@@ -60,18 +60,18 @@
+              autocomplete="email"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r21:"
               name="email"
@@ -2922,7 +2928,7 @@ exports[`Registration Form should render OnlyPasswordFilled 1`] = `
                   Email
                 </span>
               </legend>
-@@ -79,12 +79,12 @@
+@@ -80,12 +80,12 @@
         </div>
         <div
           class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -2937,8 +2943,8 @@ exports[`Registration Form should render OnlyPasswordFilled 1`] = `
           >
             Passwort
           </label>
-@@ -95,11 +95,11 @@
-              aria-invalid="false"
+@@ -97,11 +97,11 @@
+              autocomplete="new-password"
               class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r22:"
               name="password"
@@ -2950,7 +2956,7 @@ exports[`Registration Form should render OnlyPasswordFilled 1`] = `
               class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1laqsz7-MuiInputAdornment-root"
             >
               <button
-@@ -132,11 +132,11 @@
+@@ -134,11 +134,11 @@
             <fieldset
               aria-hidden="true"
               class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
@@ -2963,7 +2969,7 @@ exports[`Registration Form should render OnlyPasswordFilled 1`] = `
                   Passwort
                 </span>
               </legend>
-@@ -208,12 +208,12 @@
+@@ -210,12 +210,12 @@
         </div>
         <div
           class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -2978,7 +2984,7 @@ exports[`Registration Form should render OnlyPasswordFilled 1`] = `
           >
             Captcha
           </label>
-@@ -224,18 +224,18 @@
+@@ -226,18 +226,18 @@
               aria-invalid="false"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r23:"
@@ -3066,12 +3072,12 @@ exports[`Registration Form should render OnlyPasswordInvalid 1`] = `
 -             aria-invalid="false"
 +             aria-describedby=":r25:-helper-text"
 +             aria-invalid="true"
+              autocomplete="email"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r25:"
               name="email"
               type="email"
-              value=""
-@@ -74,27 +82,34 @@
+@@ -75,27 +83,34 @@
                   Email
                 </span>
               </legend>
@@ -3104,12 +3110,12 @@ exports[`Registration Form should render OnlyPasswordInvalid 1`] = `
 -             aria-invalid="false"
 +             aria-describedby=":r26:-helper-text"
 +             aria-invalid="true"
+              autocomplete="new-password"
               class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r26:"
               name="password"
               type="password"
-              value=""
-@@ -140,10 +155,16 @@
+@@ -142,10 +157,16 @@
                   Passwort
                 </span>
               </legend>
@@ -3126,7 +3132,7 @@ exports[`Registration Form should render OnlyPasswordInvalid 1`] = `
       <div
         class="css-ag4f2t-RegistrationChallengeWrapper elv4f71"
       >
-@@ -208,22 +229,23 @@
+@@ -210,22 +231,23 @@
         </div>
         <div
           class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -3153,7 +3159,7 @@ exports[`Registration Form should render OnlyPasswordInvalid 1`] = `
               name="challengeAnswer.challengeSolution"
               type="text"
               value=""
-@@ -239,10 +261,16 @@
+@@ -241,10 +263,16 @@
                   Captcha
                 </span>
               </legend>
@@ -3268,6 +3274,7 @@ exports[`Registration Form should render OnlyPreferredName 1`] = `
         >
           <input
             aria-invalid="false"
+            autocomplete="email"
             class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
             id=":r2a:"
             name="email"
@@ -3494,8 +3501,8 @@ exports[`Registration Form should render OnlyPreferredNameFilled 1`] = `
           >
             Email
           </label>
-@@ -95,18 +95,18 @@
-              aria-invalid="false"
+@@ -96,18 +96,18 @@
+              autocomplete="email"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r2e:"
               name="email"
@@ -3515,7 +3522,7 @@ exports[`Registration Form should render OnlyPreferredNameFilled 1`] = `
                   Email
                 </span>
               </legend>
-@@ -178,12 +178,12 @@
+@@ -179,12 +179,12 @@
         </div>
         <div
           class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -3530,7 +3537,7 @@ exports[`Registration Form should render OnlyPreferredNameFilled 1`] = `
           >
             Captcha
           </label>
-@@ -194,18 +194,18 @@
+@@ -195,18 +195,18 @@
               aria-invalid="false"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r2f:"
@@ -3618,12 +3625,12 @@ exports[`Registration Form should render OnlyPreferredNameInvalid 1`] = `
 -             aria-invalid="false"
 +             aria-describedby=":r2i:-helper-text"
 +             aria-invalid="true"
+              autocomplete="email"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r2i:"
               name="email"
               type="email"
-              value=""
-@@ -110,10 +118,16 @@
+@@ -111,10 +119,16 @@
                   Email
                 </span>
               </legend>
@@ -3640,7 +3647,7 @@ exports[`Registration Form should render OnlyPreferredNameInvalid 1`] = `
       <div
         class="css-ag4f2t-RegistrationChallengeWrapper elv4f71"
       >
-@@ -178,22 +192,23 @@
+@@ -179,22 +193,23 @@
         </div>
         <div
           class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -3667,7 +3674,7 @@ exports[`Registration Form should render OnlyPreferredNameInvalid 1`] = `
               name="challengeAnswer.challengeSolution"
               type="text"
               value=""
-@@ -209,10 +224,16 @@
+@@ -210,10 +225,16 @@
                   Captcha
                 </span>
               </legend>
@@ -3746,6 +3753,7 @@ exports[`Registration Form should render OnlyRequired 1`] = `
         >
           <input
             aria-invalid="false"
+            autocomplete="email"
             class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
             id=":r2l:"
             name="email"
@@ -3936,8 +3944,8 @@ exports[`Registration Form should render OnlyRequiredFilled 1`] = `
           >
             Email
           </label>
-@@ -59,18 +59,18 @@
-              aria-invalid="false"
+@@ -60,18 +60,18 @@
+              autocomplete="email"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r2o:"
               name="email"
@@ -3957,7 +3965,7 @@ exports[`Registration Form should render OnlyRequiredFilled 1`] = `
                   Email
                 </span>
               </legend>
-@@ -142,12 +142,12 @@
+@@ -143,12 +143,12 @@
         </div>
         <div
           class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -3972,7 +3980,7 @@ exports[`Registration Form should render OnlyRequiredFilled 1`] = `
           >
             Captcha
           </label>
-@@ -158,18 +158,18 @@
+@@ -159,18 +159,18 @@
               aria-invalid="false"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r2p:"
@@ -4060,12 +4068,12 @@ exports[`Registration Form should render OnlyRequiredInvalid 1`] = `
 -             aria-invalid="false"
 +             aria-describedby=":r2r:-helper-text"
 +             aria-invalid="true"
+              autocomplete="email"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r2r:"
               name="email"
               type="email"
-              value=""
-@@ -74,10 +82,16 @@
+@@ -75,10 +83,16 @@
                   Email
                 </span>
               </legend>
@@ -4082,7 +4090,7 @@ exports[`Registration Form should render OnlyRequiredInvalid 1`] = `
       <div
         class="css-ag4f2t-RegistrationChallengeWrapper elv4f71"
       >
-@@ -142,22 +156,23 @@
+@@ -143,22 +157,23 @@
         </div>
         <div
           class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -4109,7 +4117,7 @@ exports[`Registration Form should render OnlyRequiredInvalid 1`] = `
               name="challengeAnswer.challengeSolution"
               type="text"
               value=""
-@@ -173,10 +188,16 @@
+@@ -174,10 +189,16 @@
                   Captcha
                 </span>
               </legend>
@@ -4224,6 +4232,7 @@ exports[`Registration Form should render WithChallengeError 1`] = `
         >
           <input
             aria-invalid="false"
+            autocomplete="email"
             class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
             id=":r2v:"
             name="email"
@@ -4260,6 +4269,7 @@ exports[`Registration Form should render WithChallengeError 1`] = `
         >
           <input
             aria-invalid="false"
+            autocomplete="new-password"
             class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
             id=":r30:"
             name="password"
@@ -4594,6 +4604,7 @@ exports[`Registration Form should render WithChallengeLoading 1`] = `
         >
           <input
             aria-invalid="false"
+            autocomplete="email"
             class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
             id=":r37:"
             name="email"
@@ -4630,6 +4641,7 @@ exports[`Registration Form should render WithChallengeLoading 1`] = `
         >
           <input
             aria-invalid="false"
+            autocomplete="new-password"
             class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
             id=":r38:"
             name="password"
@@ -4906,12 +4918,12 @@ exports[`Registration Form should render WithCustomValidation 1`] = `
 -             aria-invalid="false"
 +             aria-describedby=":r3e:-helper-text"
 +             aria-invalid="true"
+              autocomplete="email"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r3e:"
               name="email"
               type="email"
-              value=""
-@@ -74,27 +82,34 @@
+@@ -75,27 +83,34 @@
                   Email
                 </span>
               </legend>
@@ -4944,12 +4956,12 @@ exports[`Registration Form should render WithCustomValidation 1`] = `
 -             aria-invalid="false"
 +             aria-describedby=":r3f:-helper-text"
 +             aria-invalid="true"
+              autocomplete="new-password"
               class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r3f:"
               name="password"
               type="password"
-              value=""
-@@ -140,10 +155,16 @@
+@@ -142,10 +157,16 @@
                   Passwort
                 </span>
               </legend>
@@ -4966,7 +4978,7 @@ exports[`Registration Form should render WithCustomValidation 1`] = `
       <div
         class="css-ag4f2t-RegistrationChallengeWrapper elv4f71"
       >
-@@ -208,22 +229,23 @@
+@@ -210,22 +231,23 @@
         </div>
         <div
           class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -4993,7 +5005,7 @@ exports[`Registration Form should render WithCustomValidation 1`] = `
               name="challengeAnswer.challengeSolution"
               type="text"
               value=""
-@@ -239,10 +261,16 @@
+@@ -241,10 +263,16 @@
                   Captcha
                 </span>
               </legend>
@@ -5108,6 +5120,7 @@ exports[`Registration Form should render WithRegisterError 1`] = `
         >
           <input
             aria-invalid="false"
+            autocomplete="email"
             class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
             id=":r3j:"
             name="email"
@@ -5144,6 +5157,7 @@ exports[`Registration Form should render WithRegisterError 1`] = `
         >
           <input
             aria-invalid="false"
+            autocomplete="new-password"
             class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
             id=":r3k:"
             name="password"
@@ -5577,6 +5591,7 @@ exports[`Registration Form should render WithRegisterLoading 1`] = `
         >
           <input
             aria-invalid="false"
+            autocomplete="email"
             class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
             id=":r3s:"
             name="email"
@@ -5613,6 +5628,7 @@ exports[`Registration Form should render WithRegisterLoading 1`] = `
         >
           <input
             aria-invalid="false"
+            autocomplete="new-password"
             class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
             id=":r3t:"
             name="password"

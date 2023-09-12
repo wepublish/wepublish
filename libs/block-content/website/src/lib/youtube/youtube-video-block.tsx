@@ -1,7 +1,7 @@
 import {styled} from '@mui/material'
 import {Block, YouTubeVideoBlock as YouTubeVideoBlockType} from '@wepublish/website/api'
 import {BuilderYouTubeVideoBlockProps} from '@wepublish/website/builder'
-import ReactPlayer from 'react-player'
+import ReactPlayer from 'react-player/youtube'
 
 export const isYouTubeVideoBlock = (block: Block): block is YouTubeVideoBlockType =>
   block.__typename === 'YouTubeVideoBlock'
