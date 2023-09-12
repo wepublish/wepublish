@@ -5,7 +5,7 @@ exports[`SubscriptionList Container should render Cancel 1`] = `
 - First value
 + Second value
 
-@@ -72,21 +72,43 @@
+@@ -70,21 +70,43 @@
                 <path
                   d="M0 0h24v24H0z"
                   fill="none"
@@ -53,7 +53,7 @@ exports[`SubscriptionList Container should render Cancel 1`] = `
               class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
             >
               <svg
-@@ -157,33 +179,9 @@
+@@ -155,33 +177,9 @@
               >
                 Details & Zahlungen
               </a>
@@ -94,7 +94,7 @@ exports[`SubscriptionList Container should render CancelWithInvoiceList 1`] = `
 - First value
 + Second value
 
-@@ -72,21 +72,43 @@
+@@ -70,21 +70,43 @@
                 <path
                   d="M0 0h24v24H0z"
                   fill="none"
@@ -142,7 +142,7 @@ exports[`SubscriptionList Container should render CancelWithInvoiceList 1`] = `
               class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
             >
               <svg
-@@ -157,34 +179,10 @@
+@@ -155,34 +177,10 @@
               >
                 Details & Zahlungen
               </a>
@@ -177,7 +177,7 @@ exports[`SubscriptionList Container should render CancelWithInvoiceList 1`] = `
     </article>
     <article
       class="css-1cqlm8-InvoiceListWrapper eae5n870"
-@@ -196,11 +194,11 @@
+@@ -194,11 +192,11 @@
           class="css-kkg48e-InvoiceListItemContent e7di52m3"
         >
           <h6
@@ -190,7 +190,7 @@ exports[`SubscriptionList Container should render CancelWithInvoiceList 1`] = `
             class="css-579onz-InvoiceListItemMeta e7di52m2"
           >
             <li
-@@ -300,23 +298,17 @@
+@@ -298,23 +296,17 @@
                 />
               </svg>
                Betrag von CHF 500.-
@@ -233,15 +233,13 @@ exports[`SubscriptionList Container should render Default 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-hha8hw-ImageWrapper e1shv2yg0"
-        height="6000"
+        class="css-1sg8o3u-ImageWrapper e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
         title=""
-        width="4000"
       />
       <div
         class="css-6l2m0q-SubscriptionListItemContent eere75z3"
@@ -435,15 +433,13 @@ exports[`SubscriptionList Container should render Unpaid 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-hha8hw-ImageWrapper e1shv2yg0"
-        height="6000"
+        class="css-1sg8o3u-ImageWrapper e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
         title=""
-        width="4000"
       />
       <div
         class="css-6l2m0q-SubscriptionListItemContent eere75z3"
@@ -620,15 +616,13 @@ exports[`SubscriptionList Container should render WithClassName 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-hha8hw-ImageWrapper e1shv2yg0"
-        height="6000"
+        class="css-1sg8o3u-ImageWrapper e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
         title=""
-        width="4000"
       />
       <div
         class="css-6l2m0q-SubscriptionListItemContent eere75z3"
@@ -812,15 +806,13 @@ exports[`SubscriptionList Container should render WithEmotion 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-hha8hw-ImageWrapper e1shv2yg0"
-        height="6000"
+        class="css-1sg8o3u-ImageWrapper e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
         title=""
-        width="4000"
       />
       <div
         class="css-6l2m0q-SubscriptionListItemContent eere75z3"

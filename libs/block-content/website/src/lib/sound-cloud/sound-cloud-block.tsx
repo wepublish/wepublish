@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import {Block, SoundCloudTrackBlock as SoundCloudTrackBlockType} from '@wepublish/website/api'
 import {BuilderSoundCloudTrackBlockProps} from '@wepublish/website/builder'
-import ReactPlayer from 'react-player'
+import ReactPlayer from 'react-player/soundcloud'
 
 export const isSoundCloudTrackBlock = (block: Block): block is SoundCloudTrackBlockType =>
   block.__typename === 'SoundCloudTrackBlock'

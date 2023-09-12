@@ -10,15 +10,13 @@ exports[`ImageUpload should render Default 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-rvex9b-ImageWrapper-ImageUpload e1shv2yg0"
-        height="6000"
+        class="css-1lykaea-ImageWrapper-ImageUpload e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
         title=""
-        width="4000"
       />
       <input
         accept="image/*"

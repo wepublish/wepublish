@@ -24,10 +24,11 @@ export const imageToSquareImageItems = (image: FullImageFragment): ImageItem[] =
   {url: image.squareSmallURL, size: 200}
 ]
 
-export const ImageWrapper = styled('img')`
+export const ImageWrapper = styled('img')<{aspectRatio: number}>`
   max-width: 100%;
   width: 100%;
   height: auto;
+  aspect-ratio: auto ${({aspectRatio}) => aspectRatio};
 `
 
 export function Image({
@@ -52,8 +53,7 @@ export function Image({
       {...props}
       alt={image.description ?? image.title ?? image.filename ?? ''}
       title={image.title ?? ''}
-      width={image.width}
-      height={image.height}
+      aspectRatio={image.width / image.height}
       srcSet={imageArray.join(',\n')}
       loading={loading}
       fetchPriority={fetchPriority}

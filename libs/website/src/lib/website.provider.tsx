@@ -67,7 +67,8 @@ import {IconContext} from 'react-icons'
 
 export type WebsiteProps = PropsWithChildren
 
-const dateFormatter = (date: Date) => format(date, 'dd.MM.yyyy HH:mm')
+const dateFormatter = (date: Date, includeTime = true) =>
+  includeTime ? format(date, 'dd.MM.yyyy HH:mm') : format(date, 'dd.MM.yyyy')
 
 const styles = (theme: Theme) => css`
   html {
