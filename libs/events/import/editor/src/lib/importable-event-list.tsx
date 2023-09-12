@@ -37,7 +37,7 @@ const Cell = styled(RCell)`
 
 export function EventStartsAtView({startsAt}: {startsAt: string}) {
   const startsAtDate = new Date(startsAt)
-  return <span>{formatDate(startsAtDate, 'PPP p')}</span>
+  return <time dateTime={startsAtDate.toISOString()}>{formatDate(startsAtDate, 'PPP p')}</time>
 }
 
 export function EventEndsAtView({endsAt}: {endsAt: string | null | undefined}) {
@@ -45,7 +45,7 @@ export function EventEndsAtView({endsAt}: {endsAt: string | null | undefined}) {
   const {t} = useTranslation()
 
   if (endsAtDate) {
-    return <span>{formatDate(endsAtDate, 'PPP p')}</span>
+    return <time dateTime={endsAtDate.toISOString()}>{formatDate(endsAtDate, 'PPP p')}</time>
   }
   return <>{t('event.list.endsAtNone')}</>
 }
