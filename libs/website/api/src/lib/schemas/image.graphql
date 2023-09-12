@@ -12,17 +12,6 @@ fragment ImageURLs on Image {
   squareSmallURL: transformURL(input: {width: 200, height: 200, output: WEBP, quality: 1})
 }
 
-fragment ImageRef on Image {
-  id
-  filename
-  extension
-  title
-  description
-  width
-  height
-  ...ImageURLs
-}
-
 fragment FullImage on Image {
   id
 

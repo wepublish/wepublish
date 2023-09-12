@@ -194,7 +194,9 @@ exports[`Article Container should render ById 1`] = `
             </span>
           </span>
         </p>
-        <table>
+        <table
+          class="css-114kdox-RenderElement"
+        >
           <tbody
             data-slate-node="element"
           >
@@ -202,6 +204,7 @@ exports[`Article Container should render ById 1`] = `
               data-slate-node="element"
             >
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -220,6 +223,7 @@ exports[`Article Container should render ById 1`] = `
                 </p>
               </td>
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -242,6 +246,7 @@ exports[`Article Container should render ById 1`] = `
               data-slate-node="element"
             >
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -260,6 +265,7 @@ exports[`Article Container should render ById 1`] = `
                 </p>
               </td>
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -473,11 +479,11 @@ https://unsplash.it/200/100 200w"
       </figcaption>
     </figure>
     <figure
-      class="css-14rquhl-ImageGalleryBlockWrapper e5naayd0"
+      class="css-1b0x59d-ImageGalleryBlockWrapper e5naayd1"
     >
       <ul
-        class="MuiImageList-root MuiImageList-standard css-rvv586-MuiImageList-root"
-        style="grid-template-columns: repeat(1, 1fr); gap: 8px;"
+        class="MuiImageList-root MuiImageList-standard e5naayd0 css-eeca2y-MuiImageList-root-ImageGalleryBlockImageList"
+        style="grid-template-columns: repeat(0, 1fr); gap: 8px;"
       >
         <li
           class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -731,14 +737,14 @@ https://unsplash.it/200/100 200w"
       </cite>
     </blockquote>
     <div
-      class="css-1jysk7t-BreakBlockWrapper e11xbw3q1"
+      class="css-1k98guj-BreakBlockWrapper e11xbw3q1"
     >
       <div
         class="css-ywr472-BreakBlockSegment e11xbw3q0"
       >
         <img
           alt="DSC07717"
-          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
+          class="css-16m3onx-ImageWrapper-BreakBlock e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -879,6 +885,16 @@ https://unsplash.it/200/100 200w"
             </p>
           </div>
         </div>
+        <button
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1epge1b-MuiButtonBase-root-MuiButton-root"
+          href=""
+          tabindex="0"
+          type="button"
+        >
+          <span
+            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+          />
+        </button>
       </div>
     </div>
     <div
@@ -1008,23 +1024,23 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-141ngmm-TeaserGridBlockWrapper e1xnbuxv0"
+      class="css-1ek02iu-TeaserGridBlockWrapper e1xnbuxv0"
     >
       <article
-        class="css-kwjsb9-TeaserWrapper e18of27r2"
+        class="css-1m26q3d-TeaserWrapper e18of27r4"
         x="0"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1032,33 +1048,49 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
             />
+            <time
+              class="css-3uu3f-TeaserDate e18of27r1"
+              datetime="2023-01-01T00:00:00.000Z"
+            >
+              01.01.2023
+            </time>
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
+            <div
+              class="css-hg1qbe-TeaserAuthors e18of27r0"
+            >
+              Foobar
+            </div>
           </div>
         </a>
       </article>
       <article
-        class="css-7cwrqf-TeaserWrapper e18of27r2"
+        class="css-aym45s-TeaserWrapper e18of27r4"
         x="0"
         y="1"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
-              class="css-1rxidca-ImageWrapper-Teaser e1shv2yg0"
+              class="css-bckqha-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1066,33 +1098,49 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
             />
+            <time
+              class="css-3uu3f-TeaserDate e18of27r1"
+              datetime="2023-01-01T00:00:00.000Z"
+            >
+              01.01.2023
+            </time>
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                 Chur solidarisiert sich mit der Ukraine
+                Chur solidarisiert sich mit der Ukraine
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
+            </p>
+            <div
+              class="css-hg1qbe-TeaserAuthors e18of27r0"
+            >
+              Foobar
+            </div>
           </div>
         </a>
       </article>
       <article
-        class="css-jmrnei-TeaserWrapper e18of27r2"
+        class="css-kw5wmk-TeaserWrapper e18of27r4"
         x="0"
         y="2"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1101,32 +1149,37 @@ https://unsplash.it/200/200 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
           </div>
         </a>
       </article>
       <article
-        class="css-vtdgr9-TeaserWrapper e18of27r2"
+        class="css-muu2ql-TeaserWrapper e18of27r4"
         x="0"
         y="3"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1135,32 +1188,35 @@ https://unsplash.it/200/100 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                 Das ist ein Titel
+                Das ist ein Titel
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            />
           </div>
         </a>
       </article>
       <article
-        class="css-ptsr05-TeaserWrapper e18of27r2"
+        class="css-e0clch-TeaserWrapper e18of27r4"
         x="0"
         y="4"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://google.com"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1169,36 +1225,41 @@ https://unsplash.it/200/200 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
           </div>
         </a>
       </article>
     </div>
     <div
-      class="css-uum656-TeaserGridBlockWrapper e1xnbuxv0"
+      class="css-hw4wfz-TeaserGridBlockWrapper e1xnbuxv0"
     >
       <article
-        class="css-1up672i-TeaserWrapper e18of27r2"
+        class="css-6fi153-TeaserWrapper e18of27r4"
         x="0"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1206,33 +1267,49 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
             />
+            <time
+              class="css-3uu3f-TeaserDate e18of27r1"
+              datetime="2023-01-01T00:00:00.000Z"
+            >
+              01.01.2023
+            </time>
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
+            <div
+              class="css-hg1qbe-TeaserAuthors e18of27r0"
+            >
+              Foobar
+            </div>
           </div>
         </a>
       </article>
       <article
-        class="css-1jkqbsa-TeaserWrapper e18of27r2"
+        class="css-1x7gr0z-TeaserWrapper e18of27r4"
         x="4"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
-              class="css-1rxidca-ImageWrapper-Teaser e1shv2yg0"
+              class="css-bckqha-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1240,33 +1317,49 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
             />
+            <time
+              class="css-3uu3f-TeaserDate e18of27r1"
+              datetime="2023-01-01T00:00:00.000Z"
+            >
+              01.01.2023
+            </time>
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                 Chur solidarisiert sich mit der Ukraine
+                Chur solidarisiert sich mit der Ukraine
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
+            </p>
+            <div
+              class="css-hg1qbe-TeaserAuthors e18of27r0"
+            >
+              Foobar
+            </div>
           </div>
         </a>
       </article>
       <article
-        class="css-so0sc6-TeaserWrapper e18of27r2"
+        class="css-5dkcjt-TeaserWrapper e18of27r4"
         x="8"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1275,32 +1368,37 @@ https://unsplash.it/200/200 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
           </div>
         </a>
       </article>
       <article
-        class="css-mtpdrk-TeaserWrapper e18of27r2"
+        class="css-muiekm-TeaserWrapper e18of27r4"
         x="0"
         y="1"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1309,32 +1407,35 @@ https://unsplash.it/200/100 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                 Das ist ein Titel
+                Das ist ein Titel
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            />
           </div>
         </a>
       </article>
       <article
-        class="css-hzwakl-TeaserWrapper e18of27r2"
+        class="css-152otji-TeaserWrapper e18of27r4"
         x="4"
         y="1"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://google.com"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1343,36 +1444,41 @@ https://unsplash.it/200/200 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
           </div>
         </a>
       </article>
     </div>
     <div
-      class="css-muwn7e-TeaserGridFlexBlockWrapper e1je8zv30"
+      class="css-1iy4fdm-TeaserGridFlexBlockWrapper e1je8zv30"
     >
       <article
-        class="css-zn6q5j-TeaserWrapper e18of27r2"
+        class="css-bnjmtx-TeaserWrapper e18of27r4"
         x="0"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://example.com"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1380,33 +1486,49 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
             />
+            <time
+              class="css-3uu3f-TeaserDate e18of27r1"
+              datetime="2023-01-01T00:00:00.000Z"
+            >
+              01.01.2023
+            </time>
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
+            <div
+              class="css-hg1qbe-TeaserAuthors e18of27r0"
+            >
+              Foobar, Foobar
+            </div>
           </div>
         </a>
       </article>
       <article
-        class="css-1bh8gga-TeaserWrapper e18of27r2"
+        class="css-1fhd31c-TeaserWrapper e18of27r4"
         x="3"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://example.com"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1414,67 +1536,49 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
             />
+            <time
+              class="css-3uu3f-TeaserDate e18of27r1"
+              datetime="2023-01-01T00:00:00.000Z"
+            >
+              01.01.2023
+            </time>
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                 Chur solidarisiert sich mit der Ukraine
+                Chur solidarisiert sich mit der Ukraine
               </h1>
             </header>
-          </div>
-        </a>
-      </article>
-      <article
-        class="css-iqdmr4-TeaserWrapper e18of27r2"
-        x="3"
-        y="3"
-      >
-        <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
-          href="https://example.com"
-        >
-          <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
-          >
-            <img
-              alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
-              loading="lazy"
-              srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-              title=""
-            />
-            <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
-              >
-                Pre Title:  Title
-              </h1>
-            </header>
+              Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
+            </p>
+            <div
+              class="css-hg1qbe-TeaserAuthors e18of27r0"
+            >
+              Foobar, Foobar
+            </div>
           </div>
         </a>
       </article>
       <article
-        class="css-10vbmdd-TeaserWrapper e18of27r2"
+        class="css-1rk4bh7-TeaserWrapper e18of27r4"
         x="8"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://example.com"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1483,32 +1587,35 @@ https://unsplash.it/200/100 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                 Das ist ein Titel
+                Das ist ein Titel
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            />
           </div>
         </a>
       </article>
       <article
-        class="css-4i0tqv-TeaserWrapper e18of27r2"
-        x="0"
-        y="6"
+        class="css-dadzk0-TeaserWrapper e18of27r4"
+        x="3"
+        y="3"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
-          href="https://google.com"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
+          href="https://example.com"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1517,14 +1624,58 @@ https://unsplash.it/200/100 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
+          </div>
+        </a>
+      </article>
+      <article
+        class="css-8eq9md-TeaserWrapper e18of27r4"
+        x="0"
+        y="6"
+      >
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
+          href="https://google.com"
+        >
+          <div
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
+          >
+            <img
+              alt="DSC07717"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
+              loading="lazy"
+              srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+              title=""
+            />
+            <header
+              class="css-4se2pd-TeaserTitle e18of27r2"
+            >
+              <h1
+                class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+              >
+                Pre Title: Title
+              </h1>
+            </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
           </div>
         </a>
       </article>
@@ -1643,7 +1794,12 @@ https://unsplash.it/200/100 200w"
       <div
         class="css-nh52ap-PollBlockMeta ecm33wf0"
       >
-        21 Stimmen – Schliesst am 01.01.2033 00:00
+        21 Stimmen – Schliesst am 
+        <time
+          datetime="2033-01-01"
+        >
+          01.01.2033 00:00
+        </time>
       </div>
     </article>
     <aside
@@ -1818,10 +1974,10 @@ https://unsplash.it/200/100 200w"
       class="css-1u4aasf-ArticleInfoWrapper es3d6yl0"
     >
       <aside
-        class="css-11wsbvp-AuthorChipWrapper e1jhd13z2"
+        class="css-11wsbvp-AuthorChipWrapper e1jhd13z4"
       >
         <div
-          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z1"
+          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z3"
         >
           <img
             alt="DSC07717"
@@ -1835,10 +1991,10 @@ https://unsplash.it/200/200 200w"
           />
         </div>
         <div
-          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z0"
+          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z2"
         >
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          <div
+            class="css-ohez13-AuthorChipName e1jhd13z0"
           >
             <strong>
               Von 
@@ -1849,19 +2005,19 @@ https://unsplash.it/200/200 200w"
                 Foobar
               </a>
             </strong>
-          </p>
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          </div>
+          <div
+            class="css-1hxmk8r-AuthorChipJobTitle e1jhd13z1"
           >
             Editor
-          </p>
+          </div>
         </div>
       </aside>
       <aside
-        class="css-11wsbvp-AuthorChipWrapper e1jhd13z2"
+        class="css-11wsbvp-AuthorChipWrapper e1jhd13z4"
       >
         <div
-          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z1"
+          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z3"
         >
           <img
             alt="DSC07717"
@@ -1875,10 +2031,10 @@ https://unsplash.it/200/200 200w"
           />
         </div>
         <div
-          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z0"
+          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z2"
         >
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          <div
+            class="css-ohez13-AuthorChipName e1jhd13z0"
           >
             <strong>
               Von 
@@ -1889,15 +2045,17 @@ https://unsplash.it/200/200 200w"
                 Foobar
               </a>
             </strong>
-          </p>
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          </div>
+          <div
+            class="css-1hxmk8r-AuthorChipJobTitle e1jhd13z1"
           >
             Editor
-          </p>
+          </div>
         </div>
       </aside>
-      <time>
+      <time
+        datetime="2023-01-01T00:00:00.000Z"
+      >
         01.01.2023 00:00
       </time>
     </section>
@@ -2099,7 +2257,9 @@ exports[`Article Container should render BySlug 1`] = `
             </span>
           </span>
         </p>
-        <table>
+        <table
+          class="css-114kdox-RenderElement"
+        >
           <tbody
             data-slate-node="element"
           >
@@ -2107,6 +2267,7 @@ exports[`Article Container should render BySlug 1`] = `
               data-slate-node="element"
             >
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -2125,6 +2286,7 @@ exports[`Article Container should render BySlug 1`] = `
                 </p>
               </td>
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -2147,6 +2309,7 @@ exports[`Article Container should render BySlug 1`] = `
               data-slate-node="element"
             >
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -2165,6 +2328,7 @@ exports[`Article Container should render BySlug 1`] = `
                 </p>
               </td>
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -2378,11 +2542,11 @@ https://unsplash.it/200/100 200w"
       </figcaption>
     </figure>
     <figure
-      class="css-14rquhl-ImageGalleryBlockWrapper e5naayd0"
+      class="css-1b0x59d-ImageGalleryBlockWrapper e5naayd1"
     >
       <ul
-        class="MuiImageList-root MuiImageList-standard css-rvv586-MuiImageList-root"
-        style="grid-template-columns: repeat(1, 1fr); gap: 8px;"
+        class="MuiImageList-root MuiImageList-standard e5naayd0 css-eeca2y-MuiImageList-root-ImageGalleryBlockImageList"
+        style="grid-template-columns: repeat(0, 1fr); gap: 8px;"
       >
         <li
           class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -2636,14 +2800,14 @@ https://unsplash.it/200/100 200w"
       </cite>
     </blockquote>
     <div
-      class="css-1jysk7t-BreakBlockWrapper e11xbw3q1"
+      class="css-1k98guj-BreakBlockWrapper e11xbw3q1"
     >
       <div
         class="css-ywr472-BreakBlockSegment e11xbw3q0"
       >
         <img
           alt="DSC07717"
-          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
+          class="css-16m3onx-ImageWrapper-BreakBlock e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -2784,6 +2948,16 @@ https://unsplash.it/200/100 200w"
             </p>
           </div>
         </div>
+        <button
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1epge1b-MuiButtonBase-root-MuiButton-root"
+          href=""
+          tabindex="0"
+          type="button"
+        >
+          <span
+            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+          />
+        </button>
       </div>
     </div>
     <div
@@ -2913,23 +3087,23 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-141ngmm-TeaserGridBlockWrapper e1xnbuxv0"
+      class="css-1ek02iu-TeaserGridBlockWrapper e1xnbuxv0"
     >
       <article
-        class="css-kwjsb9-TeaserWrapper e18of27r2"
+        class="css-1m26q3d-TeaserWrapper e18of27r4"
         x="0"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -2937,33 +3111,49 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
             />
+            <time
+              class="css-3uu3f-TeaserDate e18of27r1"
+              datetime="2023-01-01T00:00:00.000Z"
+            >
+              01.01.2023
+            </time>
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
+            <div
+              class="css-hg1qbe-TeaserAuthors e18of27r0"
+            >
+              Foobar
+            </div>
           </div>
         </a>
       </article>
       <article
-        class="css-7cwrqf-TeaserWrapper e18of27r2"
+        class="css-aym45s-TeaserWrapper e18of27r4"
         x="0"
         y="1"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
-              class="css-1rxidca-ImageWrapper-Teaser e1shv2yg0"
+              class="css-bckqha-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -2971,33 +3161,49 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
             />
+            <time
+              class="css-3uu3f-TeaserDate e18of27r1"
+              datetime="2023-01-01T00:00:00.000Z"
+            >
+              01.01.2023
+            </time>
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                 Chur solidarisiert sich mit der Ukraine
+                Chur solidarisiert sich mit der Ukraine
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
+            </p>
+            <div
+              class="css-hg1qbe-TeaserAuthors e18of27r0"
+            >
+              Foobar
+            </div>
           </div>
         </a>
       </article>
       <article
-        class="css-jmrnei-TeaserWrapper e18of27r2"
+        class="css-kw5wmk-TeaserWrapper e18of27r4"
         x="0"
         y="2"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -3006,32 +3212,37 @@ https://unsplash.it/200/200 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
           </div>
         </a>
       </article>
       <article
-        class="css-vtdgr9-TeaserWrapper e18of27r2"
+        class="css-muu2ql-TeaserWrapper e18of27r4"
         x="0"
         y="3"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -3040,32 +3251,35 @@ https://unsplash.it/200/100 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                 Das ist ein Titel
+                Das ist ein Titel
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            />
           </div>
         </a>
       </article>
       <article
-        class="css-ptsr05-TeaserWrapper e18of27r2"
+        class="css-e0clch-TeaserWrapper e18of27r4"
         x="0"
         y="4"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://google.com"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -3074,36 +3288,41 @@ https://unsplash.it/200/200 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
           </div>
         </a>
       </article>
     </div>
     <div
-      class="css-uum656-TeaserGridBlockWrapper e1xnbuxv0"
+      class="css-hw4wfz-TeaserGridBlockWrapper e1xnbuxv0"
     >
       <article
-        class="css-1up672i-TeaserWrapper e18of27r2"
+        class="css-6fi153-TeaserWrapper e18of27r4"
         x="0"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -3111,33 +3330,49 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
             />
+            <time
+              class="css-3uu3f-TeaserDate e18of27r1"
+              datetime="2023-01-01T00:00:00.000Z"
+            >
+              01.01.2023
+            </time>
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
+            <div
+              class="css-hg1qbe-TeaserAuthors e18of27r0"
+            >
+              Foobar
+            </div>
           </div>
         </a>
       </article>
       <article
-        class="css-1jkqbsa-TeaserWrapper e18of27r2"
+        class="css-1x7gr0z-TeaserWrapper e18of27r4"
         x="4"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
-              class="css-1rxidca-ImageWrapper-Teaser e1shv2yg0"
+              class="css-bckqha-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -3145,33 +3380,49 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
             />
+            <time
+              class="css-3uu3f-TeaserDate e18of27r1"
+              datetime="2023-01-01T00:00:00.000Z"
+            >
+              01.01.2023
+            </time>
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                 Chur solidarisiert sich mit der Ukraine
+                Chur solidarisiert sich mit der Ukraine
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
+            </p>
+            <div
+              class="css-hg1qbe-TeaserAuthors e18of27r0"
+            >
+              Foobar
+            </div>
           </div>
         </a>
       </article>
       <article
-        class="css-so0sc6-TeaserWrapper e18of27r2"
+        class="css-5dkcjt-TeaserWrapper e18of27r4"
         x="8"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -3180,32 +3431,37 @@ https://unsplash.it/200/200 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
           </div>
         </a>
       </article>
       <article
-        class="css-mtpdrk-TeaserWrapper e18of27r2"
+        class="css-muiekm-TeaserWrapper e18of27r4"
         x="0"
         y="1"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -3214,32 +3470,35 @@ https://unsplash.it/200/100 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                 Das ist ein Titel
+                Das ist ein Titel
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            />
           </div>
         </a>
       </article>
       <article
-        class="css-hzwakl-TeaserWrapper e18of27r2"
+        class="css-152otji-TeaserWrapper e18of27r4"
         x="4"
         y="1"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://google.com"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -3248,36 +3507,41 @@ https://unsplash.it/200/200 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
           </div>
         </a>
       </article>
     </div>
     <div
-      class="css-muwn7e-TeaserGridFlexBlockWrapper e1je8zv30"
+      class="css-1iy4fdm-TeaserGridFlexBlockWrapper e1je8zv30"
     >
       <article
-        class="css-zn6q5j-TeaserWrapper e18of27r2"
+        class="css-bnjmtx-TeaserWrapper e18of27r4"
         x="0"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://example.com"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -3285,33 +3549,49 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
             />
+            <time
+              class="css-3uu3f-TeaserDate e18of27r1"
+              datetime="2023-01-01T00:00:00.000Z"
+            >
+              01.01.2023
+            </time>
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
+            <div
+              class="css-hg1qbe-TeaserAuthors e18of27r0"
+            >
+              Foobar, Foobar
+            </div>
           </div>
         </a>
       </article>
       <article
-        class="css-1bh8gga-TeaserWrapper e18of27r2"
+        class="css-1fhd31c-TeaserWrapper e18of27r4"
         x="3"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://example.com"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -3319,67 +3599,49 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
             />
+            <time
+              class="css-3uu3f-TeaserDate e18of27r1"
+              datetime="2023-01-01T00:00:00.000Z"
+            >
+              01.01.2023
+            </time>
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                 Chur solidarisiert sich mit der Ukraine
+                Chur solidarisiert sich mit der Ukraine
               </h1>
             </header>
-          </div>
-        </a>
-      </article>
-      <article
-        class="css-iqdmr4-TeaserWrapper e18of27r2"
-        x="3"
-        y="3"
-      >
-        <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
-          href="https://example.com"
-        >
-          <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
-          >
-            <img
-              alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
-              loading="lazy"
-              srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-              title=""
-            />
-            <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
-              >
-                Pre Title:  Title
-              </h1>
-            </header>
+              Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
+            </p>
+            <div
+              class="css-hg1qbe-TeaserAuthors e18of27r0"
+            >
+              Foobar, Foobar
+            </div>
           </div>
         </a>
       </article>
       <article
-        class="css-10vbmdd-TeaserWrapper e18of27r2"
+        class="css-1rk4bh7-TeaserWrapper e18of27r4"
         x="8"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://example.com"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -3388,32 +3650,35 @@ https://unsplash.it/200/100 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                 Das ist ein Titel
+                Das ist ein Titel
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            />
           </div>
         </a>
       </article>
       <article
-        class="css-4i0tqv-TeaserWrapper e18of27r2"
-        x="0"
-        y="6"
+        class="css-dadzk0-TeaserWrapper e18of27r4"
+        x="3"
+        y="3"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
-          href="https://google.com"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
+          href="https://example.com"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -3422,14 +3687,58 @@ https://unsplash.it/200/100 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
+          </div>
+        </a>
+      </article>
+      <article
+        class="css-8eq9md-TeaserWrapper e18of27r4"
+        x="0"
+        y="6"
+      >
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
+          href="https://google.com"
+        >
+          <div
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
+          >
+            <img
+              alt="DSC07717"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
+              loading="lazy"
+              srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+              title=""
+            />
+            <header
+              class="css-4se2pd-TeaserTitle e18of27r2"
+            >
+              <h1
+                class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+              >
+                Pre Title: Title
+              </h1>
+            </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
           </div>
         </a>
       </article>
@@ -3548,7 +3857,12 @@ https://unsplash.it/200/100 200w"
       <div
         class="css-nh52ap-PollBlockMeta ecm33wf0"
       >
-        21 Stimmen – Schliesst am 01.01.2033 00:00
+        21 Stimmen – Schliesst am 
+        <time
+          datetime="2033-01-01"
+        >
+          01.01.2033 00:00
+        </time>
       </div>
     </article>
     <aside
@@ -3723,10 +4037,10 @@ https://unsplash.it/200/100 200w"
       class="css-1u4aasf-ArticleInfoWrapper es3d6yl0"
     >
       <aside
-        class="css-11wsbvp-AuthorChipWrapper e1jhd13z2"
+        class="css-11wsbvp-AuthorChipWrapper e1jhd13z4"
       >
         <div
-          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z1"
+          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z3"
         >
           <img
             alt="DSC07717"
@@ -3740,10 +4054,10 @@ https://unsplash.it/200/200 200w"
           />
         </div>
         <div
-          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z0"
+          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z2"
         >
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          <div
+            class="css-ohez13-AuthorChipName e1jhd13z0"
           >
             <strong>
               Von 
@@ -3754,19 +4068,19 @@ https://unsplash.it/200/200 200w"
                 Foobar
               </a>
             </strong>
-          </p>
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          </div>
+          <div
+            class="css-1hxmk8r-AuthorChipJobTitle e1jhd13z1"
           >
             Editor
-          </p>
+          </div>
         </div>
       </aside>
       <aside
-        class="css-11wsbvp-AuthorChipWrapper e1jhd13z2"
+        class="css-11wsbvp-AuthorChipWrapper e1jhd13z4"
       >
         <div
-          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z1"
+          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z3"
         >
           <img
             alt="DSC07717"
@@ -3780,10 +4094,10 @@ https://unsplash.it/200/200 200w"
           />
         </div>
         <div
-          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z0"
+          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z2"
         >
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          <div
+            class="css-ohez13-AuthorChipName e1jhd13z0"
           >
             <strong>
               Von 
@@ -3794,15 +4108,17 @@ https://unsplash.it/200/200 200w"
                 Foobar
               </a>
             </strong>
-          </p>
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          </div>
+          <div
+            class="css-1hxmk8r-AuthorChipJobTitle e1jhd13z1"
           >
             Editor
-          </p>
+          </div>
         </div>
       </aside>
-      <time>
+      <time
+        datetime="2023-01-01T00:00:00.000Z"
+      >
         01.01.2023 00:00
       </time>
     </section>
@@ -4004,7 +4320,9 @@ exports[`Article Container should render WithChildren 1`] = `
             </span>
           </span>
         </p>
-        <table>
+        <table
+          class="css-114kdox-RenderElement"
+        >
           <tbody
             data-slate-node="element"
           >
@@ -4012,6 +4330,7 @@ exports[`Article Container should render WithChildren 1`] = `
               data-slate-node="element"
             >
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -4030,6 +4349,7 @@ exports[`Article Container should render WithChildren 1`] = `
                 </p>
               </td>
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -4052,6 +4372,7 @@ exports[`Article Container should render WithChildren 1`] = `
               data-slate-node="element"
             >
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -4070,6 +4391,7 @@ exports[`Article Container should render WithChildren 1`] = `
                 </p>
               </td>
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -4283,11 +4605,11 @@ https://unsplash.it/200/100 200w"
       </figcaption>
     </figure>
     <figure
-      class="css-14rquhl-ImageGalleryBlockWrapper e5naayd0"
+      class="css-1b0x59d-ImageGalleryBlockWrapper e5naayd1"
     >
       <ul
-        class="MuiImageList-root MuiImageList-standard css-rvv586-MuiImageList-root"
-        style="grid-template-columns: repeat(1, 1fr); gap: 8px;"
+        class="MuiImageList-root MuiImageList-standard e5naayd0 css-eeca2y-MuiImageList-root-ImageGalleryBlockImageList"
+        style="grid-template-columns: repeat(0, 1fr); gap: 8px;"
       >
         <li
           class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -4541,14 +4863,14 @@ https://unsplash.it/200/100 200w"
       </cite>
     </blockquote>
     <div
-      class="css-1jysk7t-BreakBlockWrapper e11xbw3q1"
+      class="css-1k98guj-BreakBlockWrapper e11xbw3q1"
     >
       <div
         class="css-ywr472-BreakBlockSegment e11xbw3q0"
       >
         <img
           alt="DSC07717"
-          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
+          class="css-16m3onx-ImageWrapper-BreakBlock e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -4689,6 +5011,16 @@ https://unsplash.it/200/100 200w"
             </p>
           </div>
         </div>
+        <button
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1epge1b-MuiButtonBase-root-MuiButton-root"
+          href=""
+          tabindex="0"
+          type="button"
+        >
+          <span
+            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+          />
+        </button>
       </div>
     </div>
     <div
@@ -4818,23 +5150,23 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-141ngmm-TeaserGridBlockWrapper e1xnbuxv0"
+      class="css-1ek02iu-TeaserGridBlockWrapper e1xnbuxv0"
     >
       <article
-        class="css-kwjsb9-TeaserWrapper e18of27r2"
+        class="css-1m26q3d-TeaserWrapper e18of27r4"
         x="0"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -4842,33 +5174,49 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
             />
+            <time
+              class="css-3uu3f-TeaserDate e18of27r1"
+              datetime="2023-01-01T00:00:00.000Z"
+            >
+              01.01.2023
+            </time>
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
+            <div
+              class="css-hg1qbe-TeaserAuthors e18of27r0"
+            >
+              Foobar
+            </div>
           </div>
         </a>
       </article>
       <article
-        class="css-7cwrqf-TeaserWrapper e18of27r2"
+        class="css-aym45s-TeaserWrapper e18of27r4"
         x="0"
         y="1"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
-              class="css-1rxidca-ImageWrapper-Teaser e1shv2yg0"
+              class="css-bckqha-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -4876,33 +5224,49 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
             />
+            <time
+              class="css-3uu3f-TeaserDate e18of27r1"
+              datetime="2023-01-01T00:00:00.000Z"
+            >
+              01.01.2023
+            </time>
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                 Chur solidarisiert sich mit der Ukraine
+                Chur solidarisiert sich mit der Ukraine
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
+            </p>
+            <div
+              class="css-hg1qbe-TeaserAuthors e18of27r0"
+            >
+              Foobar
+            </div>
           </div>
         </a>
       </article>
       <article
-        class="css-jmrnei-TeaserWrapper e18of27r2"
+        class="css-kw5wmk-TeaserWrapper e18of27r4"
         x="0"
         y="2"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -4911,32 +5275,37 @@ https://unsplash.it/200/200 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
           </div>
         </a>
       </article>
       <article
-        class="css-vtdgr9-TeaserWrapper e18of27r2"
+        class="css-muu2ql-TeaserWrapper e18of27r4"
         x="0"
         y="3"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -4945,32 +5314,35 @@ https://unsplash.it/200/100 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                 Das ist ein Titel
+                Das ist ein Titel
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            />
           </div>
         </a>
       </article>
       <article
-        class="css-ptsr05-TeaserWrapper e18of27r2"
+        class="css-e0clch-TeaserWrapper e18of27r4"
         x="0"
         y="4"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://google.com"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -4979,36 +5351,41 @@ https://unsplash.it/200/200 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
           </div>
         </a>
       </article>
     </div>
     <div
-      class="css-uum656-TeaserGridBlockWrapper e1xnbuxv0"
+      class="css-hw4wfz-TeaserGridBlockWrapper e1xnbuxv0"
     >
       <article
-        class="css-1up672i-TeaserWrapper e18of27r2"
+        class="css-6fi153-TeaserWrapper e18of27r4"
         x="0"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -5016,33 +5393,49 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
             />
+            <time
+              class="css-3uu3f-TeaserDate e18of27r1"
+              datetime="2023-01-01T00:00:00.000Z"
+            >
+              01.01.2023
+            </time>
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
+            <div
+              class="css-hg1qbe-TeaserAuthors e18of27r0"
+            >
+              Foobar
+            </div>
           </div>
         </a>
       </article>
       <article
-        class="css-1jkqbsa-TeaserWrapper e18of27r2"
+        class="css-1x7gr0z-TeaserWrapper e18of27r4"
         x="4"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
-              class="css-1rxidca-ImageWrapper-Teaser e1shv2yg0"
+              class="css-bckqha-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -5050,33 +5443,49 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
             />
+            <time
+              class="css-3uu3f-TeaserDate e18of27r1"
+              datetime="2023-01-01T00:00:00.000Z"
+            >
+              01.01.2023
+            </time>
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                 Chur solidarisiert sich mit der Ukraine
+                Chur solidarisiert sich mit der Ukraine
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
+            </p>
+            <div
+              class="css-hg1qbe-TeaserAuthors e18of27r0"
+            >
+              Foobar
+            </div>
           </div>
         </a>
       </article>
       <article
-        class="css-so0sc6-TeaserWrapper e18of27r2"
+        class="css-5dkcjt-TeaserWrapper e18of27r4"
         x="8"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -5085,32 +5494,37 @@ https://unsplash.it/200/200 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
           </div>
         </a>
       </article>
       <article
-        class="css-mtpdrk-TeaserWrapper e18of27r2"
+        class="css-muiekm-TeaserWrapper e18of27r4"
         x="0"
         y="1"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -5119,32 +5533,35 @@ https://unsplash.it/200/100 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                 Das ist ein Titel
+                Das ist ein Titel
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            />
           </div>
         </a>
       </article>
       <article
-        class="css-hzwakl-TeaserWrapper e18of27r2"
+        class="css-152otji-TeaserWrapper e18of27r4"
         x="4"
         y="1"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://google.com"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -5153,36 +5570,41 @@ https://unsplash.it/200/200 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
           </div>
         </a>
       </article>
     </div>
     <div
-      class="css-muwn7e-TeaserGridFlexBlockWrapper e1je8zv30"
+      class="css-1iy4fdm-TeaserGridFlexBlockWrapper e1je8zv30"
     >
       <article
-        class="css-zn6q5j-TeaserWrapper e18of27r2"
+        class="css-bnjmtx-TeaserWrapper e18of27r4"
         x="0"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://example.com"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -5190,33 +5612,49 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
             />
+            <time
+              class="css-3uu3f-TeaserDate e18of27r1"
+              datetime="2023-01-01T00:00:00.000Z"
+            >
+              01.01.2023
+            </time>
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
+            <div
+              class="css-hg1qbe-TeaserAuthors e18of27r0"
+            >
+              Foobar, Foobar
+            </div>
           </div>
         </a>
       </article>
       <article
-        class="css-1bh8gga-TeaserWrapper e18of27r2"
+        class="css-1fhd31c-TeaserWrapper e18of27r4"
         x="3"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://example.com"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -5224,67 +5662,49 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
             />
+            <time
+              class="css-3uu3f-TeaserDate e18of27r1"
+              datetime="2023-01-01T00:00:00.000Z"
+            >
+              01.01.2023
+            </time>
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                 Chur solidarisiert sich mit der Ukraine
+                Chur solidarisiert sich mit der Ukraine
               </h1>
             </header>
-          </div>
-        </a>
-      </article>
-      <article
-        class="css-iqdmr4-TeaserWrapper e18of27r2"
-        x="3"
-        y="3"
-      >
-        <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
-          href="https://example.com"
-        >
-          <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
-          >
-            <img
-              alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
-              loading="lazy"
-              srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-              title=""
-            />
-            <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
-              >
-                Pre Title:  Title
-              </h1>
-            </header>
+              Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
+            </p>
+            <div
+              class="css-hg1qbe-TeaserAuthors e18of27r0"
+            >
+              Foobar, Foobar
+            </div>
           </div>
         </a>
       </article>
       <article
-        class="css-10vbmdd-TeaserWrapper e18of27r2"
+        class="css-1rk4bh7-TeaserWrapper e18of27r4"
         x="8"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://example.com"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -5293,32 +5713,35 @@ https://unsplash.it/200/100 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                 Das ist ein Titel
+                Das ist ein Titel
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            />
           </div>
         </a>
       </article>
       <article
-        class="css-4i0tqv-TeaserWrapper e18of27r2"
-        x="0"
-        y="6"
+        class="css-dadzk0-TeaserWrapper e18of27r4"
+        x="3"
+        y="3"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
-          href="https://google.com"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
+          href="https://example.com"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -5327,14 +5750,58 @@ https://unsplash.it/200/100 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
+          </div>
+        </a>
+      </article>
+      <article
+        class="css-8eq9md-TeaserWrapper e18of27r4"
+        x="0"
+        y="6"
+      >
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
+          href="https://google.com"
+        >
+          <div
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
+          >
+            <img
+              alt="DSC07717"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
+              loading="lazy"
+              srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+              title=""
+            />
+            <header
+              class="css-4se2pd-TeaserTitle e18of27r2"
+            >
+              <h1
+                class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+              >
+                Pre Title: Title
+              </h1>
+            </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
           </div>
         </a>
       </article>
@@ -5453,7 +5920,12 @@ https://unsplash.it/200/100 200w"
       <div
         class="css-nh52ap-PollBlockMeta ecm33wf0"
       >
-        21 Stimmen – Schliesst am 01.01.2033 00:00
+        21 Stimmen – Schliesst am 
+        <time
+          datetime="2033-01-01"
+        >
+          01.01.2033 00:00
+        </time>
       </div>
     </article>
     <aside
@@ -5628,10 +6100,10 @@ https://unsplash.it/200/100 200w"
       class="css-1u4aasf-ArticleInfoWrapper es3d6yl0"
     >
       <aside
-        class="css-11wsbvp-AuthorChipWrapper e1jhd13z2"
+        class="css-11wsbvp-AuthorChipWrapper e1jhd13z4"
       >
         <div
-          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z1"
+          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z3"
         >
           <img
             alt="DSC07717"
@@ -5645,10 +6117,10 @@ https://unsplash.it/200/200 200w"
           />
         </div>
         <div
-          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z0"
+          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z2"
         >
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          <div
+            class="css-ohez13-AuthorChipName e1jhd13z0"
           >
             <strong>
               Von 
@@ -5659,19 +6131,19 @@ https://unsplash.it/200/200 200w"
                 Foobar
               </a>
             </strong>
-          </p>
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          </div>
+          <div
+            class="css-1hxmk8r-AuthorChipJobTitle e1jhd13z1"
           >
             Editor
-          </p>
+          </div>
         </div>
       </aside>
       <aside
-        class="css-11wsbvp-AuthorChipWrapper e1jhd13z2"
+        class="css-11wsbvp-AuthorChipWrapper e1jhd13z4"
       >
         <div
-          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z1"
+          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z3"
         >
           <img
             alt="DSC07717"
@@ -5685,10 +6157,10 @@ https://unsplash.it/200/200 200w"
           />
         </div>
         <div
-          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z0"
+          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z2"
         >
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          <div
+            class="css-ohez13-AuthorChipName e1jhd13z0"
           >
             <strong>
               Von 
@@ -5699,15 +6171,17 @@ https://unsplash.it/200/200 200w"
                 Foobar
               </a>
             </strong>
-          </p>
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          </div>
+          <div
+            class="css-1hxmk8r-AuthorChipJobTitle e1jhd13z1"
           >
             Editor
-          </p>
+          </div>
         </div>
       </aside>
-      <time>
+      <time
+        datetime="2023-01-01T00:00:00.000Z"
+      >
         01.01.2023 00:00
       </time>
     </section>
@@ -5912,7 +6386,9 @@ exports[`Article Container should render WithClassName 1`] = `
             </span>
           </span>
         </p>
-        <table>
+        <table
+          class="css-114kdox-RenderElement"
+        >
           <tbody
             data-slate-node="element"
           >
@@ -5920,6 +6396,7 @@ exports[`Article Container should render WithClassName 1`] = `
               data-slate-node="element"
             >
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -5938,6 +6415,7 @@ exports[`Article Container should render WithClassName 1`] = `
                 </p>
               </td>
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -5960,6 +6438,7 @@ exports[`Article Container should render WithClassName 1`] = `
               data-slate-node="element"
             >
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -5978,6 +6457,7 @@ exports[`Article Container should render WithClassName 1`] = `
                 </p>
               </td>
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -6191,11 +6671,11 @@ https://unsplash.it/200/100 200w"
       </figcaption>
     </figure>
     <figure
-      class="css-14rquhl-ImageGalleryBlockWrapper e5naayd0"
+      class="css-1b0x59d-ImageGalleryBlockWrapper e5naayd1"
     >
       <ul
-        class="MuiImageList-root MuiImageList-standard css-rvv586-MuiImageList-root"
-        style="grid-template-columns: repeat(1, 1fr); gap: 8px;"
+        class="MuiImageList-root MuiImageList-standard e5naayd0 css-eeca2y-MuiImageList-root-ImageGalleryBlockImageList"
+        style="grid-template-columns: repeat(0, 1fr); gap: 8px;"
       >
         <li
           class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -6449,14 +6929,14 @@ https://unsplash.it/200/100 200w"
       </cite>
     </blockquote>
     <div
-      class="css-1jysk7t-BreakBlockWrapper e11xbw3q1"
+      class="css-1k98guj-BreakBlockWrapper e11xbw3q1"
     >
       <div
         class="css-ywr472-BreakBlockSegment e11xbw3q0"
       >
         <img
           alt="DSC07717"
-          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
+          class="css-16m3onx-ImageWrapper-BreakBlock e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -6597,6 +7077,16 @@ https://unsplash.it/200/100 200w"
             </p>
           </div>
         </div>
+        <button
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1epge1b-MuiButtonBase-root-MuiButton-root"
+          href=""
+          tabindex="0"
+          type="button"
+        >
+          <span
+            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+          />
+        </button>
       </div>
     </div>
     <div
@@ -6726,23 +7216,23 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-141ngmm-TeaserGridBlockWrapper e1xnbuxv0"
+      class="css-1ek02iu-TeaserGridBlockWrapper e1xnbuxv0"
     >
       <article
-        class="css-kwjsb9-TeaserWrapper e18of27r2"
+        class="css-1m26q3d-TeaserWrapper e18of27r4"
         x="0"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -6750,33 +7240,49 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
             />
+            <time
+              class="css-3uu3f-TeaserDate e18of27r1"
+              datetime="2023-01-01T00:00:00.000Z"
+            >
+              01.01.2023
+            </time>
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
+            <div
+              class="css-hg1qbe-TeaserAuthors e18of27r0"
+            >
+              Foobar
+            </div>
           </div>
         </a>
       </article>
       <article
-        class="css-7cwrqf-TeaserWrapper e18of27r2"
+        class="css-aym45s-TeaserWrapper e18of27r4"
         x="0"
         y="1"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
-              class="css-1rxidca-ImageWrapper-Teaser e1shv2yg0"
+              class="css-bckqha-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -6784,33 +7290,49 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
             />
+            <time
+              class="css-3uu3f-TeaserDate e18of27r1"
+              datetime="2023-01-01T00:00:00.000Z"
+            >
+              01.01.2023
+            </time>
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                 Chur solidarisiert sich mit der Ukraine
+                Chur solidarisiert sich mit der Ukraine
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
+            </p>
+            <div
+              class="css-hg1qbe-TeaserAuthors e18of27r0"
+            >
+              Foobar
+            </div>
           </div>
         </a>
       </article>
       <article
-        class="css-jmrnei-TeaserWrapper e18of27r2"
+        class="css-kw5wmk-TeaserWrapper e18of27r4"
         x="0"
         y="2"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -6819,32 +7341,37 @@ https://unsplash.it/200/200 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
           </div>
         </a>
       </article>
       <article
-        class="css-vtdgr9-TeaserWrapper e18of27r2"
+        class="css-muu2ql-TeaserWrapper e18of27r4"
         x="0"
         y="3"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -6853,32 +7380,35 @@ https://unsplash.it/200/100 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                 Das ist ein Titel
+                Das ist ein Titel
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            />
           </div>
         </a>
       </article>
       <article
-        class="css-ptsr05-TeaserWrapper e18of27r2"
+        class="css-e0clch-TeaserWrapper e18of27r4"
         x="0"
         y="4"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://google.com"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -6887,36 +7417,41 @@ https://unsplash.it/200/200 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
           </div>
         </a>
       </article>
     </div>
     <div
-      class="css-uum656-TeaserGridBlockWrapper e1xnbuxv0"
+      class="css-hw4wfz-TeaserGridBlockWrapper e1xnbuxv0"
     >
       <article
-        class="css-1up672i-TeaserWrapper e18of27r2"
+        class="css-6fi153-TeaserWrapper e18of27r4"
         x="0"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -6924,33 +7459,49 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
             />
+            <time
+              class="css-3uu3f-TeaserDate e18of27r1"
+              datetime="2023-01-01T00:00:00.000Z"
+            >
+              01.01.2023
+            </time>
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
+            <div
+              class="css-hg1qbe-TeaserAuthors e18of27r0"
+            >
+              Foobar
+            </div>
           </div>
         </a>
       </article>
       <article
-        class="css-1jkqbsa-TeaserWrapper e18of27r2"
+        class="css-1x7gr0z-TeaserWrapper e18of27r4"
         x="4"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
-              class="css-1rxidca-ImageWrapper-Teaser e1shv2yg0"
+              class="css-bckqha-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -6958,33 +7509,49 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
             />
+            <time
+              class="css-3uu3f-TeaserDate e18of27r1"
+              datetime="2023-01-01T00:00:00.000Z"
+            >
+              01.01.2023
+            </time>
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                 Chur solidarisiert sich mit der Ukraine
+                Chur solidarisiert sich mit der Ukraine
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
+            </p>
+            <div
+              class="css-hg1qbe-TeaserAuthors e18of27r0"
+            >
+              Foobar
+            </div>
           </div>
         </a>
       </article>
       <article
-        class="css-so0sc6-TeaserWrapper e18of27r2"
+        class="css-5dkcjt-TeaserWrapper e18of27r4"
         x="8"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -6993,32 +7560,37 @@ https://unsplash.it/200/200 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
           </div>
         </a>
       </article>
       <article
-        class="css-mtpdrk-TeaserWrapper e18of27r2"
+        class="css-muiekm-TeaserWrapper e18of27r4"
         x="0"
         y="1"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -7027,32 +7599,35 @@ https://unsplash.it/200/100 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                 Das ist ein Titel
+                Das ist ein Titel
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            />
           </div>
         </a>
       </article>
       <article
-        class="css-hzwakl-TeaserWrapper e18of27r2"
+        class="css-152otji-TeaserWrapper e18of27r4"
         x="4"
         y="1"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://google.com"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -7061,36 +7636,41 @@ https://unsplash.it/200/200 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
           </div>
         </a>
       </article>
     </div>
     <div
-      class="css-muwn7e-TeaserGridFlexBlockWrapper e1je8zv30"
+      class="css-1iy4fdm-TeaserGridFlexBlockWrapper e1je8zv30"
     >
       <article
-        class="css-zn6q5j-TeaserWrapper e18of27r2"
+        class="css-bnjmtx-TeaserWrapper e18of27r4"
         x="0"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://example.com"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -7098,33 +7678,49 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
             />
+            <time
+              class="css-3uu3f-TeaserDate e18of27r1"
+              datetime="2023-01-01T00:00:00.000Z"
+            >
+              01.01.2023
+            </time>
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
+            <div
+              class="css-hg1qbe-TeaserAuthors e18of27r0"
+            >
+              Foobar, Foobar
+            </div>
           </div>
         </a>
       </article>
       <article
-        class="css-1bh8gga-TeaserWrapper e18of27r2"
+        class="css-1fhd31c-TeaserWrapper e18of27r4"
         x="3"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://example.com"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -7132,67 +7728,49 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
             />
+            <time
+              class="css-3uu3f-TeaserDate e18of27r1"
+              datetime="2023-01-01T00:00:00.000Z"
+            >
+              01.01.2023
+            </time>
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                 Chur solidarisiert sich mit der Ukraine
+                Chur solidarisiert sich mit der Ukraine
               </h1>
             </header>
-          </div>
-        </a>
-      </article>
-      <article
-        class="css-iqdmr4-TeaserWrapper e18of27r2"
-        x="3"
-        y="3"
-      >
-        <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
-          href="https://example.com"
-        >
-          <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
-          >
-            <img
-              alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
-              loading="lazy"
-              srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-              title=""
-            />
-            <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
-              >
-                Pre Title:  Title
-              </h1>
-            </header>
+              Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
+            </p>
+            <div
+              class="css-hg1qbe-TeaserAuthors e18of27r0"
+            >
+              Foobar, Foobar
+            </div>
           </div>
         </a>
       </article>
       <article
-        class="css-10vbmdd-TeaserWrapper e18of27r2"
+        class="css-1rk4bh7-TeaserWrapper e18of27r4"
         x="8"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://example.com"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -7201,32 +7779,35 @@ https://unsplash.it/200/100 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                 Das ist ein Titel
+                Das ist ein Titel
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            />
           </div>
         </a>
       </article>
       <article
-        class="css-4i0tqv-TeaserWrapper e18of27r2"
-        x="0"
-        y="6"
+        class="css-dadzk0-TeaserWrapper e18of27r4"
+        x="3"
+        y="3"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
-          href="https://google.com"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
+          href="https://example.com"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -7235,14 +7816,58 @@ https://unsplash.it/200/100 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
+          </div>
+        </a>
+      </article>
+      <article
+        class="css-8eq9md-TeaserWrapper e18of27r4"
+        x="0"
+        y="6"
+      >
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
+          href="https://google.com"
+        >
+          <div
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
+          >
+            <img
+              alt="DSC07717"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
+              loading="lazy"
+              srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+              title=""
+            />
+            <header
+              class="css-4se2pd-TeaserTitle e18of27r2"
+            >
+              <h1
+                class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+              >
+                Pre Title: Title
+              </h1>
+            </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
           </div>
         </a>
       </article>
@@ -7361,7 +7986,12 @@ https://unsplash.it/200/100 200w"
       <div
         class="css-nh52ap-PollBlockMeta ecm33wf0"
       >
-        21 Stimmen – Schliesst am 01.01.2033 00:00
+        21 Stimmen – Schliesst am 
+        <time
+          datetime="2033-01-01"
+        >
+          01.01.2033 00:00
+        </time>
       </div>
     </article>
     <aside
@@ -7536,10 +8166,10 @@ https://unsplash.it/200/100 200w"
       class="css-1u4aasf-ArticleInfoWrapper es3d6yl0"
     >
       <aside
-        class="css-11wsbvp-AuthorChipWrapper e1jhd13z2"
+        class="css-11wsbvp-AuthorChipWrapper e1jhd13z4"
       >
         <div
-          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z1"
+          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z3"
         >
           <img
             alt="DSC07717"
@@ -7553,10 +8183,10 @@ https://unsplash.it/200/200 200w"
           />
         </div>
         <div
-          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z0"
+          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z2"
         >
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          <div
+            class="css-ohez13-AuthorChipName e1jhd13z0"
           >
             <strong>
               Von 
@@ -7567,19 +8197,19 @@ https://unsplash.it/200/200 200w"
                 Foobar
               </a>
             </strong>
-          </p>
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          </div>
+          <div
+            class="css-1hxmk8r-AuthorChipJobTitle e1jhd13z1"
           >
             Editor
-          </p>
+          </div>
         </div>
       </aside>
       <aside
-        class="css-11wsbvp-AuthorChipWrapper e1jhd13z2"
+        class="css-11wsbvp-AuthorChipWrapper e1jhd13z4"
       >
         <div
-          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z1"
+          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z3"
         >
           <img
             alt="DSC07717"
@@ -7593,10 +8223,10 @@ https://unsplash.it/200/200 200w"
           />
         </div>
         <div
-          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z0"
+          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z2"
         >
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          <div
+            class="css-ohez13-AuthorChipName e1jhd13z0"
           >
             <strong>
               Von 
@@ -7607,15 +8237,17 @@ https://unsplash.it/200/200 200w"
                 Foobar
               </a>
             </strong>
-          </p>
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          </div>
+          <div
+            class="css-1hxmk8r-AuthorChipJobTitle e1jhd13z1"
           >
             Editor
-          </p>
+          </div>
         </div>
       </aside>
-      <time>
+      <time
+        datetime="2023-01-01T00:00:00.000Z"
+      >
         01.01.2023 00:00
       </time>
     </section>
@@ -7817,7 +8449,9 @@ exports[`Article Container should render WithEmotion 1`] = `
             </span>
           </span>
         </p>
-        <table>
+        <table
+          class="css-114kdox-RenderElement"
+        >
           <tbody
             data-slate-node="element"
           >
@@ -7825,6 +8459,7 @@ exports[`Article Container should render WithEmotion 1`] = `
               data-slate-node="element"
             >
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -7843,6 +8478,7 @@ exports[`Article Container should render WithEmotion 1`] = `
                 </p>
               </td>
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -7865,6 +8501,7 @@ exports[`Article Container should render WithEmotion 1`] = `
               data-slate-node="element"
             >
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -7883,6 +8520,7 @@ exports[`Article Container should render WithEmotion 1`] = `
                 </p>
               </td>
               <td
+                class="css-9lag45-RenderElement"
                 data-slate-node="element"
               >
                 <p
@@ -8096,11 +8734,11 @@ https://unsplash.it/200/100 200w"
       </figcaption>
     </figure>
     <figure
-      class="css-14rquhl-ImageGalleryBlockWrapper e5naayd0"
+      class="css-1b0x59d-ImageGalleryBlockWrapper e5naayd1"
     >
       <ul
-        class="MuiImageList-root MuiImageList-standard css-rvv586-MuiImageList-root"
-        style="grid-template-columns: repeat(1, 1fr); gap: 8px;"
+        class="MuiImageList-root MuiImageList-standard e5naayd0 css-eeca2y-MuiImageList-root-ImageGalleryBlockImageList"
+        style="grid-template-columns: repeat(0, 1fr); gap: 8px;"
       >
         <li
           class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -8354,14 +8992,14 @@ https://unsplash.it/200/100 200w"
       </cite>
     </blockquote>
     <div
-      class="css-1jysk7t-BreakBlockWrapper e11xbw3q1"
+      class="css-1k98guj-BreakBlockWrapper e11xbw3q1"
     >
       <div
         class="css-ywr472-BreakBlockSegment e11xbw3q0"
       >
         <img
           alt="DSC07717"
-          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
+          class="css-16m3onx-ImageWrapper-BreakBlock e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -8502,6 +9140,16 @@ https://unsplash.it/200/100 200w"
             </p>
           </div>
         </div>
+        <button
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1epge1b-MuiButtonBase-root-MuiButton-root"
+          href=""
+          tabindex="0"
+          type="button"
+        >
+          <span
+            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+          />
+        </button>
       </div>
     </div>
     <div
@@ -8631,23 +9279,23 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-141ngmm-TeaserGridBlockWrapper e1xnbuxv0"
+      class="css-1ek02iu-TeaserGridBlockWrapper e1xnbuxv0"
     >
       <article
-        class="css-kwjsb9-TeaserWrapper e18of27r2"
+        class="css-1m26q3d-TeaserWrapper e18of27r4"
         x="0"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -8655,33 +9303,49 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
             />
+            <time
+              class="css-3uu3f-TeaserDate e18of27r1"
+              datetime="2023-01-01T00:00:00.000Z"
+            >
+              01.01.2023
+            </time>
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
+            <div
+              class="css-hg1qbe-TeaserAuthors e18of27r0"
+            >
+              Foobar
+            </div>
           </div>
         </a>
       </article>
       <article
-        class="css-7cwrqf-TeaserWrapper e18of27r2"
+        class="css-aym45s-TeaserWrapper e18of27r4"
         x="0"
         y="1"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
-              class="css-1rxidca-ImageWrapper-Teaser e1shv2yg0"
+              class="css-bckqha-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -8689,33 +9353,49 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
             />
+            <time
+              class="css-3uu3f-TeaserDate e18of27r1"
+              datetime="2023-01-01T00:00:00.000Z"
+            >
+              01.01.2023
+            </time>
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                 Chur solidarisiert sich mit der Ukraine
+                Chur solidarisiert sich mit der Ukraine
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
+            </p>
+            <div
+              class="css-hg1qbe-TeaserAuthors e18of27r0"
+            >
+              Foobar
+            </div>
           </div>
         </a>
       </article>
       <article
-        class="css-jmrnei-TeaserWrapper e18of27r2"
+        class="css-kw5wmk-TeaserWrapper e18of27r4"
         x="0"
         y="2"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -8724,32 +9404,37 @@ https://unsplash.it/200/200 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
           </div>
         </a>
       </article>
       <article
-        class="css-vtdgr9-TeaserWrapper e18of27r2"
+        class="css-muu2ql-TeaserWrapper e18of27r4"
         x="0"
         y="3"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -8758,32 +9443,35 @@ https://unsplash.it/200/100 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                 Das ist ein Titel
+                Das ist ein Titel
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            />
           </div>
         </a>
       </article>
       <article
-        class="css-ptsr05-TeaserWrapper e18of27r2"
+        class="css-e0clch-TeaserWrapper e18of27r4"
         x="0"
         y="4"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://google.com"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -8792,36 +9480,41 @@ https://unsplash.it/200/200 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
           </div>
         </a>
       </article>
     </div>
     <div
-      class="css-uum656-TeaserGridBlockWrapper e1xnbuxv0"
+      class="css-hw4wfz-TeaserGridBlockWrapper e1xnbuxv0"
     >
       <article
-        class="css-1up672i-TeaserWrapper e18of27r2"
+        class="css-6fi153-TeaserWrapper e18of27r4"
         x="0"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -8829,33 +9522,49 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
             />
+            <time
+              class="css-3uu3f-TeaserDate e18of27r1"
+              datetime="2023-01-01T00:00:00.000Z"
+            >
+              01.01.2023
+            </time>
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
+            <div
+              class="css-hg1qbe-TeaserAuthors e18of27r0"
+            >
+              Foobar
+            </div>
           </div>
         </a>
       </article>
       <article
-        class="css-1jkqbsa-TeaserWrapper e18of27r2"
+        class="css-1x7gr0z-TeaserWrapper e18of27r4"
         x="4"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
-              class="css-1rxidca-ImageWrapper-Teaser e1shv2yg0"
+              class="css-bckqha-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -8863,33 +9572,49 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
             />
+            <time
+              class="css-3uu3f-TeaserDate e18of27r1"
+              datetime="2023-01-01T00:00:00.000Z"
+            >
+              01.01.2023
+            </time>
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                 Chur solidarisiert sich mit der Ukraine
+                Chur solidarisiert sich mit der Ukraine
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
+            </p>
+            <div
+              class="css-hg1qbe-TeaserAuthors e18of27r0"
+            >
+              Foobar
+            </div>
           </div>
         </a>
       </article>
       <article
-        class="css-so0sc6-TeaserWrapper e18of27r2"
+        class="css-5dkcjt-TeaserWrapper e18of27r4"
         x="8"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -8898,32 +9623,37 @@ https://unsplash.it/200/200 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
           </div>
         </a>
       </article>
       <article
-        class="css-mtpdrk-TeaserWrapper e18of27r2"
+        class="css-muiekm-TeaserWrapper e18of27r4"
         x="0"
         y="1"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -8932,32 +9662,35 @@ https://unsplash.it/200/100 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                 Das ist ein Titel
+                Das ist ein Titel
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            />
           </div>
         </a>
       </article>
       <article
-        class="css-hzwakl-TeaserWrapper e18of27r2"
+        class="css-152otji-TeaserWrapper e18of27r4"
         x="4"
         y="1"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://google.com"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -8966,36 +9699,41 @@ https://unsplash.it/200/200 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
           </div>
         </a>
       </article>
     </div>
     <div
-      class="css-muwn7e-TeaserGridFlexBlockWrapper e1je8zv30"
+      class="css-1iy4fdm-TeaserGridFlexBlockWrapper e1je8zv30"
     >
       <article
-        class="css-zn6q5j-TeaserWrapper e18of27r2"
+        class="css-bnjmtx-TeaserWrapper e18of27r4"
         x="0"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://example.com"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -9003,33 +9741,49 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
             />
+            <time
+              class="css-3uu3f-TeaserDate e18of27r1"
+              datetime="2023-01-01T00:00:00.000Z"
+            >
+              01.01.2023
+            </time>
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
+            <div
+              class="css-hg1qbe-TeaserAuthors e18of27r0"
+            >
+              Foobar, Foobar
+            </div>
           </div>
         </a>
       </article>
       <article
-        class="css-1bh8gga-TeaserWrapper e18of27r2"
+        class="css-1fhd31c-TeaserWrapper e18of27r4"
         x="3"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://example.com"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -9037,67 +9791,49 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
             />
+            <time
+              class="css-3uu3f-TeaserDate e18of27r1"
+              datetime="2023-01-01T00:00:00.000Z"
+            >
+              01.01.2023
+            </time>
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                 Chur solidarisiert sich mit der Ukraine
+                Chur solidarisiert sich mit der Ukraine
               </h1>
             </header>
-          </div>
-        </a>
-      </article>
-      <article
-        class="css-iqdmr4-TeaserWrapper e18of27r2"
-        x="3"
-        y="3"
-      >
-        <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
-          href="https://example.com"
-        >
-          <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
-          >
-            <img
-              alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
-              loading="lazy"
-              srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-              title=""
-            />
-            <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
-              >
-                Pre Title:  Title
-              </h1>
-            </header>
+              Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
+            </p>
+            <div
+              class="css-hg1qbe-TeaserAuthors e18of27r0"
+            >
+              Foobar, Foobar
+            </div>
           </div>
         </a>
       </article>
       <article
-        class="css-10vbmdd-TeaserWrapper e18of27r2"
+        class="css-1rk4bh7-TeaserWrapper e18of27r4"
         x="8"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
           href="https://example.com"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -9106,32 +9842,35 @@ https://unsplash.it/200/100 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                 Das ist ein Titel
+                Das ist ein Titel
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            />
           </div>
         </a>
       </article>
       <article
-        class="css-4i0tqv-TeaserWrapper e18of27r2"
-        x="0"
-        y="6"
+        class="css-dadzk0-TeaserWrapper e18of27r4"
+        x="3"
+        y="3"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
-          href="https://google.com"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
+          href="https://example.com"
         >
           <div
-            class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
           >
             <img
               alt="DSC07717"
-              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -9140,14 +9879,58 @@ https://unsplash.it/200/100 200w"
               title=""
             />
             <header
-              class="css-imydry-TeaserTitleWrapper e18of27r0"
+              class="css-4se2pd-TeaserTitle e18of27r2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
               >
-                Pre Title:  Title
+                Pre Title: Title
               </h1>
             </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
+          </div>
+        </a>
+      </article>
+      <article
+        class="css-8eq9md-TeaserWrapper e18of27r4"
+        x="0"
+        y="6"
+      >
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
+          href="https://google.com"
+        >
+          <div
+            class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
+          >
+            <img
+              alt="DSC07717"
+              class="css-lg75jg-ImageWrapper-Teaser e1shv2yg0"
+              loading="lazy"
+              srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+              title=""
+            />
+            <header
+              class="css-4se2pd-TeaserTitle e18of27r2"
+            >
+              <h1
+                class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+              >
+                Pre Title: Title
+              </h1>
+            </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            >
+              Lead
+            </p>
           </div>
         </a>
       </article>
@@ -9266,7 +10049,12 @@ https://unsplash.it/200/100 200w"
       <div
         class="css-nh52ap-PollBlockMeta ecm33wf0"
       >
-        21 Stimmen – Schliesst am 01.01.2033 00:00
+        21 Stimmen – Schliesst am 
+        <time
+          datetime="2033-01-01"
+        >
+          01.01.2033 00:00
+        </time>
       </div>
     </article>
     <aside
@@ -9441,10 +10229,10 @@ https://unsplash.it/200/100 200w"
       class="css-1u4aasf-ArticleInfoWrapper es3d6yl0"
     >
       <aside
-        class="css-11wsbvp-AuthorChipWrapper e1jhd13z2"
+        class="css-11wsbvp-AuthorChipWrapper e1jhd13z4"
       >
         <div
-          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z1"
+          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z3"
         >
           <img
             alt="DSC07717"
@@ -9458,10 +10246,10 @@ https://unsplash.it/200/200 200w"
           />
         </div>
         <div
-          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z0"
+          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z2"
         >
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          <div
+            class="css-ohez13-AuthorChipName e1jhd13z0"
           >
             <strong>
               Von 
@@ -9472,19 +10260,19 @@ https://unsplash.it/200/200 200w"
                 Foobar
               </a>
             </strong>
-          </p>
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          </div>
+          <div
+            class="css-1hxmk8r-AuthorChipJobTitle e1jhd13z1"
           >
             Editor
-          </p>
+          </div>
         </div>
       </aside>
       <aside
-        class="css-11wsbvp-AuthorChipWrapper e1jhd13z2"
+        class="css-11wsbvp-AuthorChipWrapper e1jhd13z4"
       >
         <div
-          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z1"
+          class="css-1rqnsx9-AuthorChipImageWrapper e1jhd13z3"
         >
           <img
             alt="DSC07717"
@@ -9498,10 +10286,10 @@ https://unsplash.it/200/200 200w"
           />
         </div>
         <div
-          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z0"
+          class="css-dpf16q-AuthorChipContentWrapper e1jhd13z2"
         >
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          <div
+            class="css-ohez13-AuthorChipName e1jhd13z0"
           >
             <strong>
               Von 
@@ -9512,15 +10300,17 @@ https://unsplash.it/200/200 200w"
                 Foobar
               </a>
             </strong>
-          </p>
-          <p
-            class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          </div>
+          <div
+            class="css-1hxmk8r-AuthorChipJobTitle e1jhd13z1"
           >
             Editor
-          </p>
+          </div>
         </div>
       </aside>
-      <time>
+      <time
+        datetime="2023-01-01T00:00:00.000Z"
+      >
         01.01.2023 00:00
       </time>
     </section>

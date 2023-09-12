@@ -1685,8 +1685,6 @@ export type EventQuery = { __typename?: 'Query', event: { __typename?: 'Event', 
 
 export type ImageUrLsFragment = { __typename?: 'Image', url?: string | null, bigURL?: string | null, largeURL?: string | null, mediumURL?: string | null, smallURL?: string | null, squareBigURL?: string | null, squareLargeURL?: string | null, squareMediumURL?: string | null, squareSmallURL?: string | null };
 
-export type ImageRefFragment = { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, bigURL?: string | null, largeURL?: string | null, mediumURL?: string | null, smallURL?: string | null, squareBigURL?: string | null, squareLargeURL?: string | null, squareMediumURL?: string | null, squareSmallURL?: string | null };
-
 export type FullImageFragment = { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, bigURL?: string | null, largeURL?: string | null, mediumURL?: string | null, smallURL?: string | null, squareBigURL?: string | null, squareLargeURL?: string | null, squareMediumURL?: string | null, squareSmallURL?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null };
 
 export type UploadImageMutationVariables = Exact<{
@@ -2121,18 +2119,6 @@ export const FullCommentFragmentDoc = gql`
   }
 }
     ${CommentWithoutNestingFragmentDoc}`;
-export const ImageRefFragmentDoc = gql`
-    fragment ImageRef on Image {
-  id
-  filename
-  extension
-  title
-  description
-  width
-  height
-  ...ImageURLs
-}
-    ${ImageUrLsFragmentDoc}`;
 export const FullPaymentMethodFragmentDoc = gql`
     fragment FullPaymentMethod on PaymentMethod {
   id

@@ -1,10 +1,10 @@
 import {Meta} from '@storybook/react'
-import {FullImageFragment, PageTeaser, TeaserStyle} from '@wepublish/website/api'
+import {EventStatus, EventTeaser, FullImageFragment, TeaserStyle} from '@wepublish/website/api'
 import {Teaser} from './teaser'
 
 export default {
   component: Teaser,
-  title: 'Blocks/Teaser/Page'
+  title: 'Blocks/Teaser/Event'
 } as Meta
 
 const image = {
@@ -28,32 +28,33 @@ const image = {
   smallURL: 'https://unsplash.it/200/200'
 } as FullImageFragment
 
-const pageTeaser = {
-  __typename: 'PageTeaser',
+const eventTeaser = {
+  __typename: 'EventTeaser',
   style: 'DEFAULT',
   image,
   preTitle: 'Pre Title',
   title: 'Title',
   lead: 'Lead',
-  page: {
+  event: {
+    __typename: 'Event',
     id: 'cl95fumlq261901phgrctx4mz',
-    title: 'Title on the page',
-    description: 'Description on the page',
+    name: 'Name of Event',
+    image,
     url: 'https://example.com',
-    blocks: [
+    startsAt: new Date('2023-01-01').toISOString(),
+    status: EventStatus.Scheduled,
+    description: [
       {
-        __typename: 'TitleBlock',
-        title: 'Title from block',
-        lead: 'Lead from block'
-      },
-      {
-        __typename: 'ImageBlock',
-        caption: null,
-        image
+        type: 'paragraph',
+        children: [
+          {
+            text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+          }
+        ]
       }
     ]
   }
-} as PageTeaser
+} as EventTeaser
 
 export const Default = {
   args: {
@@ -64,7 +65,7 @@ export const Default = {
       h: 4,
       __typename: 'FlexAlignment'
     },
-    teaser: pageTeaser
+    teaser: eventTeaser
   }
 }
 
@@ -78,13 +79,13 @@ export const WithLightStyle = {
       __typename: 'FlexAlignment'
     },
     teaser: {
-      ...pageTeaser,
+      ...eventTeaser,
       style: TeaserStyle.Light
     }
   }
 }
 
-export const WithoutBlockWithLightStyle = {
+export const WithoutDescription = {
   args: {
     alignment: {
       x: 0,
@@ -94,12 +95,28 @@ export const WithoutBlockWithLightStyle = {
       __typename: 'FlexAlignment'
     },
     teaser: {
-      ...pageTeaser,
+      ...eventTeaser,
+      lead: null
+    }
+  }
+}
+
+export const WithoutDescriptionWithLightStyle = {
+  args: {
+    alignment: {
+      x: 0,
+      y: 0,
+      w: 3,
+      h: 4,
+      __typename: 'FlexAlignment'
+    },
+    teaser: {
+      ...eventTeaser,
       style: TeaserStyle.Light,
       lead: null,
-      page: {
-        ...pageTeaser.page,
-        blocks: []
+      event: {
+        ...eventTeaser.event,
+        description: []
       }
     }
   }
@@ -115,7 +132,7 @@ export const WithoutPreTitle = {
       __typename: 'FlexAlignment'
     },
     teaser: {
-      ...pageTeaser,
+      ...eventTeaser,
       preTitle: null
     }
   }
@@ -131,24 +148,8 @@ export const WithoutTitle = {
       __typename: 'FlexAlignment'
     },
     teaser: {
-      ...pageTeaser,
+      ...eventTeaser,
       title: null
-    }
-  }
-}
-
-export const WithoutLead = {
-  args: {
-    alignment: {
-      x: 0,
-      y: 0,
-      w: 3,
-      h: 4,
-      __typename: 'FlexAlignment'
-    },
-    teaser: {
-      ...pageTeaser,
-      lead: null
     }
   }
 }
@@ -163,13 +164,13 @@ export const WithoutImage = {
       __typename: 'FlexAlignment'
     },
     teaser: {
-      ...pageTeaser,
+      ...eventTeaser,
       image: null
     }
   }
 }
 
-export const WithoutImageWithoutBlock = {
+export const WithoutImageWithoutEventImage = {
   args: {
     alignment: {
       x: 0,
@@ -179,11 +180,11 @@ export const WithoutImageWithoutBlock = {
       __typename: 'FlexAlignment'
     },
     teaser: {
-      ...pageTeaser,
+      ...eventTeaser,
       image: null,
-      Page: {
-        ...pageTeaser.page,
-        blocks: []
+      event: {
+        ...eventTeaser.event,
+        image: null
       }
     }
   }

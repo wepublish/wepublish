@@ -1,4 +1,5 @@
 import {css, styled} from '@mui/material'
+import {firstParagraphToPlaintext} from '@wepublish/richtext'
 import {FlexAlignment, TeaserStyle, Teaser as TeaserType} from '@wepublish/website/api'
 import {BuilderTeaserProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {isImageBlock} from '../image/image-block'
@@ -31,10 +32,14 @@ const teaserTitle = (teaser: TeaserType) => {
       return teaser.title || titleBlock?.title || teaser.page?.title
     }
 
+    case 'PeerArticleTeaser':
     case 'ArticleTeaser': {
       const titleBlock = teaser.article?.blocks.find(isTitleBlock)
       return teaser.title || titleBlock?.title || teaser.article?.title
     }
+
+    case 'EventTeaser':
+      return teaser.title ?? teaser.event?.name
 
     case 'CustomTeaser':
       return teaser.title
@@ -43,10 +48,11 @@ const teaserTitle = (teaser: TeaserType) => {
 
 const teaserPreTitle = (teaser: TeaserType) => {
   switch (teaser.__typename) {
-    case 'PageTeaser':
-      return teaser.preTitle
+    case 'PeerArticleTeaser':
     case 'ArticleTeaser':
       return teaser.preTitle || teaser.article?.preTitle
+    case 'EventTeaser':
+    case 'PageTeaser':
     case 'CustomTeaser':
       return teaser.preTitle
   }
@@ -59,10 +65,14 @@ const teaserLead = (teaser: TeaserType) => {
       return teaser.lead || titleBlock?.lead || teaser.page?.description
     }
 
+    case 'PeerArticleTeaser':
     case 'ArticleTeaser': {
       const titleBlock = teaser.article?.blocks.find(isTitleBlock)
       return teaser.lead || titleBlock?.lead || teaser.article?.lead
     }
+
+    case 'EventTeaser':
+      return teaser.lead ?? firstParagraphToPlaintext(teaser.event?.description)?.substring(0, 225)
 
     case 'CustomTeaser':
       return teaser.lead
@@ -75,9 +85,12 @@ const teaserUrl = (teaser: TeaserType) => {
       return teaser.page?.url
     }
 
-    case 'ArticleTeaser': {
+    case 'PeerArticleTeaser':
+    case 'ArticleTeaser':
       return teaser.article?.url
-    }
+
+    case 'EventTeaser':
+      return teaser.event?.url
 
     case 'CustomTeaser':
       return teaser.contentUrl
@@ -91,10 +104,14 @@ const teaserImage = (teaser: TeaserType) => {
       return teaser.image ?? imageBlock?.image
     }
 
+    case 'PeerArticleTeaser':
     case 'ArticleTeaser': {
       const imageBlock = teaser.article?.blocks.find(isImageBlock)
       return teaser.image ?? imageBlock?.image
     }
+
+    case 'EventTeaser':
+      return teaser.image ?? teaser.event?.image
 
     case 'CustomTeaser':
       return teaser.image
@@ -109,6 +126,10 @@ const teaserDate = (teaser: TeaserType) => {
 
     case 'ArticleTeaser': {
       return teaser.article?.publishedAt
+    }
+
+    case 'EventTeaser': {
+      return teaser.event?.startsAt
     }
 
     case 'CustomTeaser':
@@ -126,6 +147,7 @@ const teaserAuthors = (teaser: TeaserType) => {
       return teaser.article?.authors.map(author => author.name)
     }
 
+    case 'EventTeaser':
     case 'CustomTeaser':
       return null
   }

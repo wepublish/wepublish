@@ -1,4 +1,4 @@
-import {Menu, MenuItem, css, styled} from '@mui/material'
+import {ClickAwayListener, Menu, MenuItem, css, styled} from '@mui/material'
 import {useUser, useWebsiteBuilder} from '@wepublish/website'
 import {useState} from 'react'
 import {MdAccountCircle} from 'react-icons/md'
@@ -50,43 +50,55 @@ export const NavBarProfile = () => {
       )}
 
       {hasUser && (
-        <>
-          <Name>
-            {user?.firstName} {user?.name}
-          </Name>
+        <ClickAwayListener onClickAway={handleClose}>
+          <>
+            <Name>
+              {user?.firstName} {user?.name}
+            </Name>
 
-          <IconButton
-            id="basic-button"
-            sx={{fontSize: '2em'}}
-            color="secondary"
-            aria-label="Benutzer Menu"
-            aria-controls={isMenuOpen ? 'basic-menu' : undefined}
-            aria-haspopup="true"
-            aria-expanded={isMenuOpen ? 'true' : undefined}
-            onClick={handleClick}>
-            {!user?.image && <MdAccountCircle />}
-            {user?.image && <Image css={avataStyles} image={user.image} square />}
-          </IconButton>
+            <IconButton
+              id="basic-button"
+              sx={{fontSize: '2em'}}
+              color="secondary"
+              aria-label="Benutzer Menu"
+              aria-controls={isMenuOpen ? 'basic-menu' : undefined}
+              aria-haspopup="true"
+              aria-expanded={isMenuOpen ? 'true' : undefined}
+              onClick={handleClick}>
+              {!user?.image && <MdAccountCircle />}
+              {user?.image && <Image css={avataStyles} image={user.image} square />}
+            </IconButton>
 
-          <Menu
-            id="basic-menu"
-            anchorEl={anchorEl}
-            open={isMenuOpen}
-            onClose={handleClose}
-            MenuListProps={{
-              'aria-labelledby': 'basic-button'
-            }}>
-            <MenuItem onClick={handleClose}>Profile</MenuItem>
-            <MenuItem onClick={handleClose}>My account</MenuItem>
-            <MenuItem
-              onClick={() => {
-                handleClose()
-                logout()
+            <Menu
+              id="basic-menu"
+              anchorEl={anchorEl}
+              open={isMenuOpen}
+              onClose={handleClose}
+              MenuListProps={{
+                'aria-labelledby': 'basic-button'
               }}>
-              Logout
-            </MenuItem>
-          </Menu>
-        </>
+              <MenuItem onClick={handleClose}>
+                <Link href="/profile" color={'inherit'} underline={'none'}>
+                  Mein Profil
+                </Link>
+              </MenuItem>
+
+              <MenuItem onClick={handleClose}>
+                <Link href="/profile/subscription" color={'inherit'} underline={'none'}>
+                  Abonnemente
+                </Link>
+              </MenuItem>
+
+              <MenuItem
+                onClick={() => {
+                  handleClose()
+                  logout()
+                }}>
+                Ausloggen
+              </MenuItem>
+            </Menu>
+          </>
+        </ClickAwayListener>
       )}
 
       <SignupWrapper>

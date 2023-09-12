@@ -10,7 +10,7 @@ exports[`ArticleList should render Default 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
       >
         <img
           alt="DSC07717"
@@ -24,23 +24,23 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
         >
-          01.01.2023 00:00
-        </p>
+          01.01.2023
+        </time>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
         </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
         >
-          von Foobar, Foobar
-        </p>
+          Foobar, Foobar
+        </div>
       </div>
     </a>
     <a
@@ -48,7 +48,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
       >
         <img
           alt="DSC07717"
@@ -62,23 +62,23 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
         >
-          01.01.2023 00:00
-        </p>
+          01.01.2023
+        </time>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           Some longer article title: How will it look like?
         </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
         >
-          von Foobar, Foobar
-        </p>
+          Foobar, Foobar
+        </div>
       </div>
     </a>
     <a
@@ -86,7 +86,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
       >
         <img
           alt="DSC07717"
@@ -100,23 +100,23 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
         >
-          01.01.2023 00:00
-        </p>
+          01.01.2023
+        </time>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
         </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
         >
-          von Foobar, Foobar
-        </p>
+          Foobar, Foobar
+        </div>
       </div>
     </a>
     <a
@@ -124,7 +124,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
       >
         <img
           alt="DSC07717"
@@ -138,23 +138,23 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
         >
-          01.01.2023 00:00
-        </p>
+          01.01.2023
+        </time>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
         </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
         >
-          von Foobar, Foobar
-        </p>
+          Foobar, Foobar
+        </div>
       </div>
     </a>
     <a
@@ -162,7 +162,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
       >
         <img
           alt="DSC07717"
@@ -176,23 +176,23 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
         >
-          01.01.2023 00:00
-        </p>
+          01.01.2023
+        </time>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
         </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
         >
-          von Foobar, Foobar
-        </p>
+          Foobar, Foobar
+        </div>
       </div>
     </a>
     <a
@@ -200,7 +200,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
       >
         <img
           alt="DSC07717"
@@ -214,23 +214,23 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
         >
-          01.01.2023 00:00
-        </p>
+          01.01.2023
+        </time>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
         </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
         >
-          von Foobar, Foobar
-        </p>
+          Foobar, Foobar
+        </div>
       </div>
     </a>
     <a
@@ -238,7 +238,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
       >
         <img
           alt="DSC07717"
@@ -252,23 +252,23 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
         >
-          01.01.2023 00:00
-        </p>
+          01.01.2023
+        </time>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
         </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
         >
-          von Foobar, Foobar
-        </p>
+          Foobar, Foobar
+        </div>
       </div>
     </a>
     <a
@@ -276,7 +276,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
       >
         <img
           alt="DSC07717"
@@ -290,23 +290,23 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
         >
-          01.01.2023 00:00
-        </p>
+          01.01.2023
+        </time>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
         </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
         >
-          von Foobar, Foobar
-        </p>
+          Foobar, Foobar
+        </div>
       </div>
     </a>
     <a
@@ -314,7 +314,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
       >
         <img
           alt="DSC07717"
@@ -328,23 +328,23 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
         >
-          01.01.2023 00:00
-        </p>
+          01.01.2023
+        </time>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
         </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
         >
-          von Foobar, Foobar
-        </p>
+          Foobar, Foobar
+        </div>
       </div>
     </a>
     <a
@@ -352,7 +352,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
       >
         <img
           alt="DSC07717"
@@ -366,23 +366,23 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
         >
-          01.01.2023 00:00
-        </p>
+          01.01.2023
+        </time>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
         </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
         >
-          von Foobar, Foobar
-        </p>
+          Foobar, Foobar
+        </div>
       </div>
     </a>
     <a
@@ -390,7 +390,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
       >
         <img
           alt="DSC07717"
@@ -404,23 +404,23 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
         >
-          01.01.2023 00:00
-        </p>
+          01.01.2023
+        </time>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
         </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
         >
-          von Foobar, Foobar
-        </p>
+          Foobar, Foobar
+        </div>
       </div>
     </a>
   </article>
@@ -437,7 +437,7 @@ exports[`ArticleList should render WithClassName 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
       >
         <img
           alt="DSC07717"
@@ -451,23 +451,23 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
         >
-          01.01.2023 00:00
-        </p>
+          01.01.2023
+        </time>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
         </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
         >
-          von Foobar, Foobar
-        </p>
+          Foobar, Foobar
+        </div>
       </div>
     </a>
     <a
@@ -475,7 +475,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
       >
         <img
           alt="DSC07717"
@@ -489,23 +489,23 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
         >
-          01.01.2023 00:00
-        </p>
+          01.01.2023
+        </time>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           Some longer article title: How will it look like?
         </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
         >
-          von Foobar, Foobar
-        </p>
+          Foobar, Foobar
+        </div>
       </div>
     </a>
     <a
@@ -513,7 +513,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
       >
         <img
           alt="DSC07717"
@@ -527,23 +527,23 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
         >
-          01.01.2023 00:00
-        </p>
+          01.01.2023
+        </time>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
         </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
         >
-          von Foobar, Foobar
-        </p>
+          Foobar, Foobar
+        </div>
       </div>
     </a>
     <a
@@ -551,7 +551,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
       >
         <img
           alt="DSC07717"
@@ -565,23 +565,23 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
         >
-          01.01.2023 00:00
-        </p>
+          01.01.2023
+        </time>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
         </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
         >
-          von Foobar, Foobar
-        </p>
+          Foobar, Foobar
+        </div>
       </div>
     </a>
     <a
@@ -589,7 +589,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
       >
         <img
           alt="DSC07717"
@@ -603,23 +603,23 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
         >
-          01.01.2023 00:00
-        </p>
+          01.01.2023
+        </time>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
         </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
         >
-          von Foobar, Foobar
-        </p>
+          Foobar, Foobar
+        </div>
       </div>
     </a>
     <a
@@ -627,7 +627,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
       >
         <img
           alt="DSC07717"
@@ -641,23 +641,23 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
         >
-          01.01.2023 00:00
-        </p>
+          01.01.2023
+        </time>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
         </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
         >
-          von Foobar, Foobar
-        </p>
+          Foobar, Foobar
+        </div>
       </div>
     </a>
     <a
@@ -665,7 +665,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
       >
         <img
           alt="DSC07717"
@@ -679,23 +679,23 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
         >
-          01.01.2023 00:00
-        </p>
+          01.01.2023
+        </time>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
         </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
         >
-          von Foobar, Foobar
-        </p>
+          Foobar, Foobar
+        </div>
       </div>
     </a>
     <a
@@ -703,7 +703,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
       >
         <img
           alt="DSC07717"
@@ -717,23 +717,23 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
         >
-          01.01.2023 00:00
-        </p>
+          01.01.2023
+        </time>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
         </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
         >
-          von Foobar, Foobar
-        </p>
+          Foobar, Foobar
+        </div>
       </div>
     </a>
     <a
@@ -741,7 +741,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
       >
         <img
           alt="DSC07717"
@@ -755,23 +755,23 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
         >
-          01.01.2023 00:00
-        </p>
+          01.01.2023
+        </time>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
         </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
         >
-          von Foobar, Foobar
-        </p>
+          Foobar, Foobar
+        </div>
       </div>
     </a>
     <a
@@ -779,7 +779,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
       >
         <img
           alt="DSC07717"
@@ -793,23 +793,23 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
         >
-          01.01.2023 00:00
-        </p>
+          01.01.2023
+        </time>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
         </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
         >
-          von Foobar, Foobar
-        </p>
+          Foobar, Foobar
+        </div>
       </div>
     </a>
     <a
@@ -817,7 +817,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
       >
         <img
           alt="DSC07717"
@@ -831,23 +831,23 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
         >
-          01.01.2023 00:00
-        </p>
+          01.01.2023
+        </time>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
         </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
         >
-          von Foobar, Foobar
-        </p>
+          Foobar, Foobar
+        </div>
       </div>
     </a>
   </article>
@@ -864,7 +864,7 @@ exports[`ArticleList should render WithEmotion 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
       >
         <img
           alt="DSC07717"
@@ -878,23 +878,23 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
         >
-          01.01.2023 00:00
-        </p>
+          01.01.2023
+        </time>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
         </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
         >
-          von Foobar, Foobar
-        </p>
+          Foobar, Foobar
+        </div>
       </div>
     </a>
     <a
@@ -902,7 +902,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
       >
         <img
           alt="DSC07717"
@@ -916,23 +916,23 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
         >
-          01.01.2023 00:00
-        </p>
+          01.01.2023
+        </time>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           Some longer article title: How will it look like?
         </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
         >
-          von Foobar, Foobar
-        </p>
+          Foobar, Foobar
+        </div>
       </div>
     </a>
     <a
@@ -940,7 +940,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
       >
         <img
           alt="DSC07717"
@@ -954,23 +954,23 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
         >
-          01.01.2023 00:00
-        </p>
+          01.01.2023
+        </time>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
         </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
         >
-          von Foobar, Foobar
-        </p>
+          Foobar, Foobar
+        </div>
       </div>
     </a>
     <a
@@ -978,7 +978,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
       >
         <img
           alt="DSC07717"
@@ -992,23 +992,23 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
         >
-          01.01.2023 00:00
-        </p>
+          01.01.2023
+        </time>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
         </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
         >
-          von Foobar, Foobar
-        </p>
+          Foobar, Foobar
+        </div>
       </div>
     </a>
     <a
@@ -1016,7 +1016,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
       >
         <img
           alt="DSC07717"
@@ -1030,23 +1030,23 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
         >
-          01.01.2023 00:00
-        </p>
+          01.01.2023
+        </time>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
         </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
         >
-          von Foobar, Foobar
-        </p>
+          Foobar, Foobar
+        </div>
       </div>
     </a>
     <a
@@ -1054,7 +1054,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
       >
         <img
           alt="DSC07717"
@@ -1068,23 +1068,23 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
         >
-          01.01.2023 00:00
-        </p>
+          01.01.2023
+        </time>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
         </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
         >
-          von Foobar, Foobar
-        </p>
+          Foobar, Foobar
+        </div>
       </div>
     </a>
     <a
@@ -1092,7 +1092,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
       >
         <img
           alt="DSC07717"
@@ -1106,23 +1106,23 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
         >
-          01.01.2023 00:00
-        </p>
+          01.01.2023
+        </time>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
         </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
         >
-          von Foobar, Foobar
-        </p>
+          Foobar, Foobar
+        </div>
       </div>
     </a>
     <a
@@ -1130,7 +1130,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
       >
         <img
           alt="DSC07717"
@@ -1144,23 +1144,23 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
         >
-          01.01.2023 00:00
-        </p>
+          01.01.2023
+        </time>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
         </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
         >
-          von Foobar, Foobar
-        </p>
+          Foobar, Foobar
+        </div>
       </div>
     </a>
     <a
@@ -1168,7 +1168,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
       >
         <img
           alt="DSC07717"
@@ -1182,23 +1182,23 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
         >
-          01.01.2023 00:00
-        </p>
+          01.01.2023
+        </time>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
         </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
         >
-          von Foobar, Foobar
-        </p>
+          Foobar, Foobar
+        </div>
       </div>
     </a>
     <a
@@ -1206,7 +1206,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
       >
         <img
           alt="DSC07717"
@@ -1220,23 +1220,23 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
         >
-          01.01.2023 00:00
-        </p>
+          01.01.2023
+        </time>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
         </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
         >
-          von Foobar, Foobar
-        </p>
+          Foobar, Foobar
+        </div>
       </div>
     </a>
     <a
@@ -1244,7 +1244,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
       >
         <img
           alt="DSC07717"
@@ -1258,23 +1258,23 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
         >
-          01.01.2023 00:00
-        </p>
+          01.01.2023
+        </time>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
         </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
         >
-          von Foobar, Foobar
-        </p>
+          Foobar, Foobar
+        </div>
       </div>
     </a>
   </article>
@@ -1307,7 +1307,7 @@ exports[`ArticleList should render WithoutImage 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
       >
         <img
           alt="DSC07717"
@@ -1321,23 +1321,23 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
         >
-          01.01.2023 00:00
-        </p>
+          01.01.2023
+        </time>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
         </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
         >
-          von Foobar, Foobar
-        </p>
+          Foobar, Foobar
+        </div>
       </div>
     </a>
     <a
@@ -1345,34 +1345,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
-      />
-      <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
-      >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-        >
-          01.01.2023 00:00
-        </p>
-        <h1
-          class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
-        >
-          title
-        </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-        >
-          von Foobar, Foobar
-        </p>
-      </div>
-    </a>
-    <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
-      href="https://example.com"
-    >
-      <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
       >
         <img
           alt="DSC07717"
@@ -1386,23 +1359,23 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
         >
-          01.01.2023 00:00
-        </p>
+          01.01.2023
+        </time>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
         </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
         >
-          von Foobar, Foobar
-        </p>
+          Foobar, Foobar
+        </div>
       </div>
     </a>
     <a
@@ -1410,61 +1383,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
-      />
-      <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
-      >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-        >
-          01.01.2023 00:00
-        </p>
-        <h1
-          class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
-        >
-          title
-        </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-        >
-          von Foobar, Foobar
-        </p>
-      </div>
-    </a>
-    <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
-      href="https://example.com"
-    >
-      <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
-      />
-      <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
-      >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-        >
-          01.01.2023 00:00
-        </p>
-        <h1
-          class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
-        >
-          title
-        </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-        >
-          von Foobar, Foobar
-        </p>
-      </div>
-    </a>
-    <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
-      href="https://example.com"
-    >
-      <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
       >
         <img
           alt="DSC07717"
@@ -1478,23 +1397,23 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
         >
-          01.01.2023 00:00
-        </p>
+          01.01.2023
+        </time>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
         </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
         >
-          von Foobar, Foobar
-        </p>
+          Foobar, Foobar
+        </div>
       </div>
     </a>
     <a
@@ -1502,7 +1421,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
       >
         <img
           alt="DSC07717"
@@ -1516,23 +1435,23 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
         >
-          01.01.2023 00:00
-        </p>
+          01.01.2023
+        </time>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
         </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
         >
-          von Foobar, Foobar
-        </p>
+          Foobar, Foobar
+        </div>
       </div>
     </a>
     <a
@@ -1540,7 +1459,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
       >
         <img
           alt="DSC07717"
@@ -1554,23 +1473,23 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
         >
-          01.01.2023 00:00
-        </p>
+          01.01.2023
+        </time>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
         </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
         >
-          von Foobar, Foobar
-        </p>
+          Foobar, Foobar
+        </div>
       </div>
     </a>
     <a
@@ -1578,61 +1497,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
-      />
-      <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
-      >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-        >
-          01.01.2023 00:00
-        </p>
-        <h1
-          class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
-        >
-          title
-        </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-        >
-          von Foobar, Foobar
-        </p>
-      </div>
-    </a>
-    <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
-      href="https://example.com"
-    >
-      <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
-      />
-      <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
-      >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-        >
-          01.01.2023 00:00
-        </p>
-        <h1
-          class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
-        >
-          title
-        </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-        >
-          von Foobar, Foobar
-        </p>
-      </div>
-    </a>
-    <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
-      href="https://example.com"
-    >
-      <div
-        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn1"
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
       >
         <img
           alt="DSC07717"
@@ -1646,23 +1511,213 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1w8pg9w-ArticleListItemContent e1tp74qn0"
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
         >
-          01.01.2023 00:00
-        </p>
+          01.01.2023
+        </time>
         <h1
           class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
         >
           title
         </h1>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
         >
-          von Foobar, Foobar
-        </p>
+          Foobar, Foobar
+        </div>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
+      href="https://example.com"
+    >
+      <div
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
+      >
+        <img
+          alt="DSC07717"
+          class="css-v2aane-ImageWrapper-ArticleListItem e1shv2yg0"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title=""
+        />
+      </div>
+      <div
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
+      >
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
+        >
+          01.01.2023
+        </time>
+        <h1
+          class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+        >
+          title
+        </h1>
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
+        >
+          Foobar, Foobar
+        </div>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
+      href="https://example.com"
+    >
+      <div
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
+      >
+        <img
+          alt="DSC07717"
+          class="css-v2aane-ImageWrapper-ArticleListItem e1shv2yg0"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title=""
+        />
+      </div>
+      <div
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
+      >
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
+        >
+          01.01.2023
+        </time>
+        <h1
+          class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+        >
+          title
+        </h1>
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
+        >
+          Foobar, Foobar
+        </div>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
+      href="https://example.com"
+    >
+      <div
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
+      >
+        <img
+          alt="DSC07717"
+          class="css-v2aane-ImageWrapper-ArticleListItem e1shv2yg0"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title=""
+        />
+      </div>
+      <div
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
+      >
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
+        >
+          01.01.2023
+        </time>
+        <h1
+          class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+        >
+          title
+        </h1>
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
+        >
+          Foobar, Foobar
+        </div>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
+      href="https://example.com"
+    >
+      <div
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
+      >
+        <img
+          alt="DSC07717"
+          class="css-v2aane-ImageWrapper-ArticleListItem e1shv2yg0"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title=""
+        />
+      </div>
+      <div
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
+      >
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
+        >
+          01.01.2023
+        </time>
+        <h1
+          class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+        >
+          title
+        </h1>
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
+        >
+          Foobar, Foobar
+        </div>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
+      href="https://example.com"
+    >
+      <div
+        class="css-14c86dg-ArticleListItemImageWrapper e1tp74qn2"
+      >
+        <img
+          alt="DSC07717"
+          class="css-v2aane-ImageWrapper-ArticleListItem e1shv2yg0"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title=""
+        />
+      </div>
+      <div
+        class="css-1w8pg9w-ArticleListItemContent e1tp74qn1"
+      >
+        <time
+          datetime="2023-01-01T00:00:00.000Z"
+        >
+          01.01.2023
+        </time>
+        <h1
+          class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+        >
+          title
+        </h1>
+        <div
+          class="css-1o8pv0h-ArticleListItemAuthors e1tp74qn0"
+        >
+          Foobar, Foobar
+        </div>
       </div>
     </a>
   </article>

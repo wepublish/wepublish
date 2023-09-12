@@ -1,15 +1,15 @@
 import {Meta} from '@storybook/react'
 import {
-  ArticleTeaser,
   FullAuthorFragment,
   FullImageFragment,
+  PeerArticleTeaser,
   TeaserStyle
 } from '@wepublish/website/api'
 import {Teaser} from './teaser'
 
 export default {
   component: Teaser,
-  title: 'Blocks/Teaser/Article'
+  title: 'Blocks/Teaser/Peer Article'
 } as Meta
 
 const image = {
@@ -48,13 +48,14 @@ const author = {
 } as FullAuthorFragment
 
 const articleTeaser = {
-  __typename: 'ArticleTeaser',
+  __typename: 'PeerArticleTeaser',
   style: 'DEFAULT',
   image,
   preTitle: 'Pre Title',
   title: 'Title',
   lead: 'Lead',
   article: {
+    __typename: 'Article',
     id: 'clg2cxnig57497901rej8i9ubj1',
     title: 'Title on the article',
     preTitle: 'Pre Title on the article',
@@ -76,7 +77,7 @@ const articleTeaser = {
       }
     ]
   }
-} as ArticleTeaser
+} as PeerArticleTeaser
 
 export const Default = {
   args: {
@@ -156,22 +157,6 @@ export const WithoutTitle = {
     teaser: {
       ...articleTeaser,
       title: null
-    }
-  }
-}
-
-export const WithoutLead = {
-  args: {
-    alignment: {
-      x: 0,
-      y: 0,
-      w: 3,
-      h: 4,
-      __typename: 'FlexAlignment'
-    },
-    teaser: {
-      ...articleTeaser,
-      lead: null
     }
   }
 }

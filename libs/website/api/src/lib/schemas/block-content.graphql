@@ -72,7 +72,7 @@ fragment BlockWithoutTeaser on Block {
     }
   }
 
-    ... on FacebookPostBlock {
+  ... on FacebookPostBlock {
     userID
     postID
   }
@@ -188,6 +188,22 @@ fragment FullTeaser on Teaser {
       blocks {
         ...BlockWithoutTeaser
       }
+    }
+  }
+
+  ... on EventTeaser {
+    style
+
+    image {
+      ...FullImage
+    }
+
+    preTitle
+    title
+    lead
+
+    event {
+      ...FullEvent
     }
   }
 

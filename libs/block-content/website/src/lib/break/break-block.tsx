@@ -1,6 +1,6 @@
-import {css, styled, useMediaQuery, useTheme} from '@mui/material'
-import {BuilderBreakBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {Theme, css, styled, useTheme} from '@mui/material'
 import {Block, LinkPageBreakBlock as LinkPageBreakBlockType} from '@wepublish/website/api'
+import {BuilderBreakBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
 export const isBreakBlock = (block: Block): block is LinkPageBreakBlockType =>
   block.__typename === 'LinkPageBreakBlock'
@@ -31,6 +31,12 @@ export const BreakBlockSegment = styled('div')<{reverse?: boolean}>`
     `}
 `
 
+const imageStyles = (theme: Theme) => css`
+  ${theme.breakpoints.down('md')} {
+    aspect-ratio: 1;
+  }
+`
+
 export const BreakBlock = ({
   className,
   text,
@@ -50,9 +56,6 @@ export const BreakBlock = ({
   } = useWebsiteBuilder()
 
   const theme = useTheme()
-  const squareImage = useMediaQuery(theme.breakpoints.up('md'), {
-    noSsr: true
-  })
   const reverse = layoutOption === 'image-right'
 
   return (
@@ -64,7 +67,7 @@ export const BreakBlock = ({
           </H4>
         )}
 
-        {image && <Image image={image} square={squareImage} />}
+        {image && <Image image={image} css={imageStyles(theme)} />}
       </BreakBlockSegment>
 
       <BreakBlockSegment>
