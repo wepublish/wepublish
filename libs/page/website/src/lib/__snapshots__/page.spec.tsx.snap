@@ -428,15 +428,13 @@ exports[`Page should render Default 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-hha8hw-ImageWrapper e1shv2yg0"
-        height="6000"
+        class="css-1sg8o3u-ImageWrapper e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
         title=""
-        width="4000"
       />
       <figcaption>
         Caption
@@ -455,15 +453,13 @@ https://unsplash.it/200/100 200w"
         >
           <img
             alt="DSC07717"
-            class="css-hha8hw-ImageWrapper e1shv2yg0"
-            height="6000"
+            class="css-1sg8o3u-ImageWrapper e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
-            width="4000"
           />
           <div
             class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1yzxjgd-MuiImageListItemBar-root"
@@ -485,15 +481,13 @@ https://unsplash.it/200/100 200w"
         >
           <img
             alt="DSC07717"
-            class="css-hha8hw-ImageWrapper e1shv2yg0"
-            height="6000"
+            class="css-1sg8o3u-ImageWrapper e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
-            width="4000"
           />
           <div
             class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1yzxjgd-MuiImageListItemBar-root"
@@ -515,15 +509,13 @@ https://unsplash.it/200/100 200w"
         >
           <img
             alt="DSC07717"
-            class="css-hha8hw-ImageWrapper e1shv2yg0"
-            height="6000"
+            class="css-1sg8o3u-ImageWrapper e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
-            width="4000"
           />
           <div
             class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1yzxjgd-MuiImageListItemBar-root"
@@ -559,15 +551,13 @@ https://unsplash.it/200/100 200w"
         </h3>
         <img
           alt="DSC07717"
-          class="css-hha8hw-ImageWrapper e1shv2yg0"
-          height="6000"
+          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
-          width="4000"
         />
         <div
           class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
@@ -610,15 +600,13 @@ https://unsplash.it/200/100 200w"
         </h3>
         <img
           alt="DSC07717"
-          class="css-hha8hw-ImageWrapper e1shv2yg0"
-          height="6000"
+          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
-          width="4000"
         />
         <div
           class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
@@ -661,15 +649,13 @@ https://unsplash.it/200/100 200w"
         </h3>
         <img
           alt="DSC07717"
-          class="css-hha8hw-ImageWrapper e1shv2yg0"
-          height="6000"
+          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
-          width="4000"
         />
         <div
           class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
@@ -720,15 +706,13 @@ https://unsplash.it/200/100 200w"
       >
         <img
           alt="DSC07717"
-          class="css-hha8hw-ImageWrapper e1shv2yg0"
-          height="6000"
+          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
-          width="4000"
         />
       </div>
       <div
@@ -898,7 +882,17 @@ https://unsplash.it/200/100 200w"
       <div
         class="css-1pe9yew-FacebookVideoBlockPlayer eet15gy0"
         style="width: auto; height: auto;"
-      />
+      >
+        <div
+          class="fb-video"
+          data-allowfullscreen="true"
+          data-autoplay="false"
+          data-controls="true"
+          data-href="https://www.facebook.com/100064959061177/videos/1310370486335266/"
+          id=":r0:"
+          style="width: 100%; height: 100%;"
+        />
+      </div>
     </div>
     <div
       class="css-1j8we49-InstagramBlockWrapper e1drqanf0"
@@ -912,7 +906,14 @@ https://unsplash.it/200/100 200w"
       <div
         class="css-1jb7p9d-SoundCloudTrackBlockPlayer eukdme90"
         style="width: auto; height: auto;"
-      />
+      >
+        <iframe
+          allow="autoplay"
+          frameborder="0"
+          src="https://w.soundcloud.com/player/?url=https%3A%2F%2Fapi.soundcloud.com%2Ftracks%2F744469711"
+          style="width: 100%; height: 100%;"
+        />
+      </div>
     </div>
     <div
       class="css-194r89g-TikTokVideoBlockWrapper e1wv6cj81"
@@ -963,7 +964,11 @@ https://unsplash.it/200/100 200w"
       <div
         class="css-9cey06-VimeoVideoBlockPlayer e1wyl54e0"
         style="width: auto; height: auto;"
-      />
+      >
+        <div
+          style="width: 100%; height: 100%; overflow: hidden;"
+        />
+      </div>
     </div>
     <div
       class="css-1yzi1gx-YouTubeVideoBlockWrapper eap2o311"
@@ -971,7 +976,13 @@ https://unsplash.it/200/100 200w"
       <div
         class="css-1bkzc1-YouTubeVideoBlockPlayer eap2o310"
         style="width: auto; height: auto;"
-      />
+      >
+        <div
+          style="width: 100%; height: 100%;"
+        >
+          <div />
+        </div>
+      </div>
     </div>
     <div
       class="css-141ngmm-TeaserGridBlockWrapper e1xnbuxv0"
@@ -990,15 +1001,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -1026,15 +1035,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="2667"
+              class="css-1rxidca-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -1062,15 +1069,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -1098,15 +1103,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -1134,15 +1137,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -1174,15 +1175,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -1210,15 +1209,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="2667"
+              class="css-1rxidca-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -1246,15 +1243,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -1282,15 +1277,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -1318,15 +1311,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -1358,15 +1349,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -1394,15 +1383,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -1430,15 +1417,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -1466,15 +1451,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -1502,15 +1485,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -1657,15 +1638,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-hha8hw-ImageWrapper e1shv2yg0"
-              height="6000"
+              class="css-1sg8o3u-ImageWrapper e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
           </div>
           <div
@@ -1694,14 +1673,18 @@ https://unsplash.it/200/100 200w"
                     d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
                   />
                 </svg>
-                <span>
+                <time
+                  datetime="2023-02-24T09:00:00.000Z"
+                >
                   24.02.2023 09:00
-                </span>
+                </time>
               </div>
               – 
-              <span>
+              <time
+                datetime="2023-02-25T07:30:00.000Z"
+              >
                 25.02.2023 07:30
-              </span>
+              </time>
             </div>
             <h1
               class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
@@ -2240,15 +2223,13 @@ exports[`Page should render WithChildren 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-hha8hw-ImageWrapper e1shv2yg0"
-        height="6000"
+        class="css-1sg8o3u-ImageWrapper e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
         title=""
-        width="4000"
       />
       <figcaption>
         Caption
@@ -2267,15 +2248,13 @@ https://unsplash.it/200/100 200w"
         >
           <img
             alt="DSC07717"
-            class="css-hha8hw-ImageWrapper e1shv2yg0"
-            height="6000"
+            class="css-1sg8o3u-ImageWrapper e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
-            width="4000"
           />
           <div
             class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1yzxjgd-MuiImageListItemBar-root"
@@ -2297,15 +2276,13 @@ https://unsplash.it/200/100 200w"
         >
           <img
             alt="DSC07717"
-            class="css-hha8hw-ImageWrapper e1shv2yg0"
-            height="6000"
+            class="css-1sg8o3u-ImageWrapper e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
-            width="4000"
           />
           <div
             class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1yzxjgd-MuiImageListItemBar-root"
@@ -2327,15 +2304,13 @@ https://unsplash.it/200/100 200w"
         >
           <img
             alt="DSC07717"
-            class="css-hha8hw-ImageWrapper e1shv2yg0"
-            height="6000"
+            class="css-1sg8o3u-ImageWrapper e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
-            width="4000"
           />
           <div
             class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1yzxjgd-MuiImageListItemBar-root"
@@ -2371,15 +2346,13 @@ https://unsplash.it/200/100 200w"
         </h3>
         <img
           alt="DSC07717"
-          class="css-hha8hw-ImageWrapper e1shv2yg0"
-          height="6000"
+          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
-          width="4000"
         />
         <div
           class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
@@ -2422,15 +2395,13 @@ https://unsplash.it/200/100 200w"
         </h3>
         <img
           alt="DSC07717"
-          class="css-hha8hw-ImageWrapper e1shv2yg0"
-          height="6000"
+          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
-          width="4000"
         />
         <div
           class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
@@ -2473,15 +2444,13 @@ https://unsplash.it/200/100 200w"
         </h3>
         <img
           alt="DSC07717"
-          class="css-hha8hw-ImageWrapper e1shv2yg0"
-          height="6000"
+          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
-          width="4000"
         />
         <div
           class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
@@ -2532,15 +2501,13 @@ https://unsplash.it/200/100 200w"
       >
         <img
           alt="DSC07717"
-          class="css-hha8hw-ImageWrapper e1shv2yg0"
-          height="6000"
+          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
-          width="4000"
         />
       </div>
       <div
@@ -2829,15 +2796,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -2865,15 +2830,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="2667"
+              class="css-1rxidca-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -2901,15 +2864,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -2937,15 +2898,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -2973,15 +2932,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -3013,15 +2970,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -3049,15 +3004,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="2667"
+              class="css-1rxidca-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -3085,15 +3038,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -3121,15 +3072,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -3157,15 +3106,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -3197,15 +3144,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -3233,15 +3178,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -3269,15 +3212,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -3305,15 +3246,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -3341,15 +3280,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -3496,15 +3433,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-hha8hw-ImageWrapper e1shv2yg0"
-              height="6000"
+              class="css-1sg8o3u-ImageWrapper e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
           </div>
           <div
@@ -3533,14 +3468,18 @@ https://unsplash.it/200/100 200w"
                     d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
                   />
                 </svg>
-                <span>
+                <time
+                  datetime="2023-02-24T09:00:00.000Z"
+                >
                   24.02.2023 09:00
-                </span>
+                </time>
               </div>
               – 
-              <span>
+              <time
+                datetime="2023-02-25T07:30:00.000Z"
+              >
                 25.02.2023 07:30
-              </span>
+              </time>
             </div>
             <h1
               class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
@@ -4082,15 +4021,13 @@ exports[`Page should render WithClassName 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-hha8hw-ImageWrapper e1shv2yg0"
-        height="6000"
+        class="css-1sg8o3u-ImageWrapper e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
         title=""
-        width="4000"
       />
       <figcaption>
         Caption
@@ -4109,15 +4046,13 @@ https://unsplash.it/200/100 200w"
         >
           <img
             alt="DSC07717"
-            class="css-hha8hw-ImageWrapper e1shv2yg0"
-            height="6000"
+            class="css-1sg8o3u-ImageWrapper e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
-            width="4000"
           />
           <div
             class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1yzxjgd-MuiImageListItemBar-root"
@@ -4139,15 +4074,13 @@ https://unsplash.it/200/100 200w"
         >
           <img
             alt="DSC07717"
-            class="css-hha8hw-ImageWrapper e1shv2yg0"
-            height="6000"
+            class="css-1sg8o3u-ImageWrapper e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
-            width="4000"
           />
           <div
             class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1yzxjgd-MuiImageListItemBar-root"
@@ -4169,15 +4102,13 @@ https://unsplash.it/200/100 200w"
         >
           <img
             alt="DSC07717"
-            class="css-hha8hw-ImageWrapper e1shv2yg0"
-            height="6000"
+            class="css-1sg8o3u-ImageWrapper e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
-            width="4000"
           />
           <div
             class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1yzxjgd-MuiImageListItemBar-root"
@@ -4213,15 +4144,13 @@ https://unsplash.it/200/100 200w"
         </h3>
         <img
           alt="DSC07717"
-          class="css-hha8hw-ImageWrapper e1shv2yg0"
-          height="6000"
+          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
-          width="4000"
         />
         <div
           class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
@@ -4264,15 +4193,13 @@ https://unsplash.it/200/100 200w"
         </h3>
         <img
           alt="DSC07717"
-          class="css-hha8hw-ImageWrapper e1shv2yg0"
-          height="6000"
+          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
-          width="4000"
         />
         <div
           class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
@@ -4315,15 +4242,13 @@ https://unsplash.it/200/100 200w"
         </h3>
         <img
           alt="DSC07717"
-          class="css-hha8hw-ImageWrapper e1shv2yg0"
-          height="6000"
+          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
-          width="4000"
         />
         <div
           class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
@@ -4374,15 +4299,13 @@ https://unsplash.it/200/100 200w"
       >
         <img
           alt="DSC07717"
-          class="css-hha8hw-ImageWrapper e1shv2yg0"
-          height="6000"
+          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
-          width="4000"
         />
       </div>
       <div
@@ -4671,15 +4594,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -4707,15 +4628,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="2667"
+              class="css-1rxidca-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -4743,15 +4662,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -4779,15 +4696,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -4815,15 +4730,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -4855,15 +4768,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -4891,15 +4802,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="2667"
+              class="css-1rxidca-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -4927,15 +4836,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -4963,15 +4870,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -4999,15 +4904,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -5039,15 +4942,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -5075,15 +4976,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -5111,15 +5010,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -5147,15 +5044,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -5183,15 +5078,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -5338,15 +5231,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-hha8hw-ImageWrapper e1shv2yg0"
-              height="6000"
+              class="css-1sg8o3u-ImageWrapper e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
           </div>
           <div
@@ -5375,14 +5266,18 @@ https://unsplash.it/200/100 200w"
                     d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
                   />
                 </svg>
-                <span>
+                <time
+                  datetime="2023-02-24T09:00:00.000Z"
+                >
                   24.02.2023 09:00
-                </span>
+                </time>
               </div>
               – 
-              <span>
+              <time
+                datetime="2023-02-25T07:30:00.000Z"
+              >
                 25.02.2023 07:30
-              </span>
+              </time>
             </div>
             <h1
               class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
@@ -5921,15 +5816,13 @@ exports[`Page should render WithEmotion 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-hha8hw-ImageWrapper e1shv2yg0"
-        height="6000"
+        class="css-1sg8o3u-ImageWrapper e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
         title=""
-        width="4000"
       />
       <figcaption>
         Caption
@@ -5948,15 +5841,13 @@ https://unsplash.it/200/100 200w"
         >
           <img
             alt="DSC07717"
-            class="css-hha8hw-ImageWrapper e1shv2yg0"
-            height="6000"
+            class="css-1sg8o3u-ImageWrapper e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
-            width="4000"
           />
           <div
             class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1yzxjgd-MuiImageListItemBar-root"
@@ -5978,15 +5869,13 @@ https://unsplash.it/200/100 200w"
         >
           <img
             alt="DSC07717"
-            class="css-hha8hw-ImageWrapper e1shv2yg0"
-            height="6000"
+            class="css-1sg8o3u-ImageWrapper e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
-            width="4000"
           />
           <div
             class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1yzxjgd-MuiImageListItemBar-root"
@@ -6008,15 +5897,13 @@ https://unsplash.it/200/100 200w"
         >
           <img
             alt="DSC07717"
-            class="css-hha8hw-ImageWrapper e1shv2yg0"
-            height="6000"
+            class="css-1sg8o3u-ImageWrapper e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
-            width="4000"
           />
           <div
             class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1yzxjgd-MuiImageListItemBar-root"
@@ -6052,15 +5939,13 @@ https://unsplash.it/200/100 200w"
         </h3>
         <img
           alt="DSC07717"
-          class="css-hha8hw-ImageWrapper e1shv2yg0"
-          height="6000"
+          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
-          width="4000"
         />
         <div
           class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
@@ -6103,15 +5988,13 @@ https://unsplash.it/200/100 200w"
         </h3>
         <img
           alt="DSC07717"
-          class="css-hha8hw-ImageWrapper e1shv2yg0"
-          height="6000"
+          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
-          width="4000"
         />
         <div
           class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
@@ -6154,15 +6037,13 @@ https://unsplash.it/200/100 200w"
         </h3>
         <img
           alt="DSC07717"
-          class="css-hha8hw-ImageWrapper e1shv2yg0"
-          height="6000"
+          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
-          width="4000"
         />
         <div
           class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
@@ -6213,15 +6094,13 @@ https://unsplash.it/200/100 200w"
       >
         <img
           alt="DSC07717"
-          class="css-hha8hw-ImageWrapper e1shv2yg0"
-          height="6000"
+          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
-          width="4000"
         />
       </div>
       <div
@@ -6510,15 +6389,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -6546,15 +6423,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="2667"
+              class="css-1rxidca-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -6582,15 +6457,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -6618,15 +6491,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -6654,15 +6525,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -6694,15 +6563,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -6730,15 +6597,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="2667"
+              class="css-1rxidca-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -6766,15 +6631,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -6802,15 +6665,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -6838,15 +6699,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -6878,15 +6737,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -6914,15 +6771,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -6950,15 +6805,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -6986,15 +6839,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -7022,15 +6873,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -7177,15 +7026,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-hha8hw-ImageWrapper e1shv2yg0"
-              height="6000"
+              class="css-1sg8o3u-ImageWrapper e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
           </div>
           <div
@@ -7214,14 +7061,18 @@ https://unsplash.it/200/100 200w"
                     d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
                   />
                 </svg>
-                <span>
+                <time
+                  datetime="2023-02-24T09:00:00.000Z"
+                >
                   24.02.2023 09:00
-                </span>
+                </time>
               </div>
               – 
-              <span>
+              <time
+                datetime="2023-02-25T07:30:00.000Z"
+              >
                 25.02.2023 07:30
-              </span>
+              </time>
             </div>
             <h1
               class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
@@ -7776,15 +7627,13 @@ exports[`Page should render WithoutDescription 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-hha8hw-ImageWrapper e1shv2yg0"
-        height="6000"
+        class="css-1sg8o3u-ImageWrapper e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
         title=""
-        width="4000"
       />
       <figcaption>
         Caption
@@ -7803,15 +7652,13 @@ https://unsplash.it/200/100 200w"
         >
           <img
             alt="DSC07717"
-            class="css-hha8hw-ImageWrapper e1shv2yg0"
-            height="6000"
+            class="css-1sg8o3u-ImageWrapper e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
-            width="4000"
           />
           <div
             class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1yzxjgd-MuiImageListItemBar-root"
@@ -7833,15 +7680,13 @@ https://unsplash.it/200/100 200w"
         >
           <img
             alt="DSC07717"
-            class="css-hha8hw-ImageWrapper e1shv2yg0"
-            height="6000"
+            class="css-1sg8o3u-ImageWrapper e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
-            width="4000"
           />
           <div
             class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1yzxjgd-MuiImageListItemBar-root"
@@ -7863,15 +7708,13 @@ https://unsplash.it/200/100 200w"
         >
           <img
             alt="DSC07717"
-            class="css-hha8hw-ImageWrapper e1shv2yg0"
-            height="6000"
+            class="css-1sg8o3u-ImageWrapper e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
-            width="4000"
           />
           <div
             class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1yzxjgd-MuiImageListItemBar-root"
@@ -7907,15 +7750,13 @@ https://unsplash.it/200/100 200w"
         </h3>
         <img
           alt="DSC07717"
-          class="css-hha8hw-ImageWrapper e1shv2yg0"
-          height="6000"
+          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
-          width="4000"
         />
         <div
           class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
@@ -7958,15 +7799,13 @@ https://unsplash.it/200/100 200w"
         </h3>
         <img
           alt="DSC07717"
-          class="css-hha8hw-ImageWrapper e1shv2yg0"
-          height="6000"
+          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
-          width="4000"
         />
         <div
           class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
@@ -8009,15 +7848,13 @@ https://unsplash.it/200/100 200w"
         </h3>
         <img
           alt="DSC07717"
-          class="css-hha8hw-ImageWrapper e1shv2yg0"
-          height="6000"
+          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
-          width="4000"
         />
         <div
           class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
@@ -8068,15 +7905,13 @@ https://unsplash.it/200/100 200w"
       >
         <img
           alt="DSC07717"
-          class="css-hha8hw-ImageWrapper e1shv2yg0"
-          height="6000"
+          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
-          width="4000"
         />
       </div>
       <div
@@ -8365,15 +8200,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -8401,15 +8234,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="2667"
+              class="css-1rxidca-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -8437,15 +8268,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -8473,15 +8302,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -8509,15 +8336,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -8549,15 +8374,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -8585,15 +8408,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="2667"
+              class="css-1rxidca-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -8621,15 +8442,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -8657,15 +8476,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -8693,15 +8510,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -8733,15 +8548,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -8769,15 +8582,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -8805,15 +8616,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -8841,15 +8650,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -8877,15 +8684,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -9032,15 +8837,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-hha8hw-ImageWrapper e1shv2yg0"
-              height="6000"
+              class="css-1sg8o3u-ImageWrapper e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
           </div>
           <div
@@ -9069,14 +8872,18 @@ https://unsplash.it/200/100 200w"
                     d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
                   />
                 </svg>
-                <span>
+                <time
+                  datetime="2023-02-24T09:00:00.000Z"
+                >
                   24.02.2023 09:00
-                </span>
+                </time>
               </div>
               – 
-              <span>
+              <time
+                datetime="2023-02-25T07:30:00.000Z"
+              >
                 25.02.2023 07:30
-              </span>
+              </time>
             </div>
             <h1
               class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
@@ -9615,15 +9422,13 @@ exports[`Page should render WithoutImageMetadata 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-hha8hw-ImageWrapper e1shv2yg0"
-        height="6000"
+        class="css-1sg8o3u-ImageWrapper e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
         title=""
-        width="4000"
       />
       <figcaption>
         Caption
@@ -9642,15 +9447,13 @@ https://unsplash.it/200/100 200w"
         >
           <img
             alt="DSC07717"
-            class="css-hha8hw-ImageWrapper e1shv2yg0"
-            height="6000"
+            class="css-1sg8o3u-ImageWrapper e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
-            width="4000"
           />
           <div
             class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1yzxjgd-MuiImageListItemBar-root"
@@ -9672,15 +9475,13 @@ https://unsplash.it/200/100 200w"
         >
           <img
             alt="DSC07717"
-            class="css-hha8hw-ImageWrapper e1shv2yg0"
-            height="6000"
+            class="css-1sg8o3u-ImageWrapper e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
-            width="4000"
           />
           <div
             class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1yzxjgd-MuiImageListItemBar-root"
@@ -9702,15 +9503,13 @@ https://unsplash.it/200/100 200w"
         >
           <img
             alt="DSC07717"
-            class="css-hha8hw-ImageWrapper e1shv2yg0"
-            height="6000"
+            class="css-1sg8o3u-ImageWrapper e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
-            width="4000"
           />
           <div
             class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1yzxjgd-MuiImageListItemBar-root"
@@ -9746,15 +9545,13 @@ https://unsplash.it/200/100 200w"
         </h3>
         <img
           alt="DSC07717"
-          class="css-hha8hw-ImageWrapper e1shv2yg0"
-          height="6000"
+          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
-          width="4000"
         />
         <div
           class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
@@ -9797,15 +9594,13 @@ https://unsplash.it/200/100 200w"
         </h3>
         <img
           alt="DSC07717"
-          class="css-hha8hw-ImageWrapper e1shv2yg0"
-          height="6000"
+          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
-          width="4000"
         />
         <div
           class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
@@ -9848,15 +9643,13 @@ https://unsplash.it/200/100 200w"
         </h3>
         <img
           alt="DSC07717"
-          class="css-hha8hw-ImageWrapper e1shv2yg0"
-          height="6000"
+          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
-          width="4000"
         />
         <div
           class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
@@ -9907,15 +9700,13 @@ https://unsplash.it/200/100 200w"
       >
         <img
           alt="DSC07717"
-          class="css-hha8hw-ImageWrapper e1shv2yg0"
-          height="6000"
+          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
-          width="4000"
         />
       </div>
       <div
@@ -10204,15 +9995,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -10240,15 +10029,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="2667"
+              class="css-1rxidca-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -10276,15 +10063,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -10312,15 +10097,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -10348,15 +10131,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -10388,15 +10169,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -10424,15 +10203,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="2667"
+              class="css-1rxidca-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -10460,15 +10237,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -10496,15 +10271,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -10532,15 +10305,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -10572,15 +10343,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -10608,15 +10377,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -10644,15 +10411,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -10680,15 +10445,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -10716,15 +10479,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -10871,15 +10632,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-hha8hw-ImageWrapper e1shv2yg0"
-              height="6000"
+              class="css-1sg8o3u-ImageWrapper e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
           </div>
           <div
@@ -10908,14 +10667,18 @@ https://unsplash.it/200/100 200w"
                     d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
                   />
                 </svg>
-                <span>
+                <time
+                  datetime="2023-02-24T09:00:00.000Z"
+                >
                   24.02.2023 09:00
-                </span>
+                </time>
               </div>
               – 
-              <span>
+              <time
+                datetime="2023-02-25T07:30:00.000Z"
+              >
                 25.02.2023 07:30
-              </span>
+              </time>
             </div>
             <h1
               class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
@@ -11446,15 +11209,13 @@ exports[`Page should render WithoutSocialMedia 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-hha8hw-ImageWrapper e1shv2yg0"
-        height="6000"
+        class="css-1sg8o3u-ImageWrapper e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
         title=""
-        width="4000"
       />
       <figcaption>
         Caption
@@ -11473,15 +11234,13 @@ https://unsplash.it/200/100 200w"
         >
           <img
             alt="DSC07717"
-            class="css-hha8hw-ImageWrapper e1shv2yg0"
-            height="6000"
+            class="css-1sg8o3u-ImageWrapper e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
-            width="4000"
           />
           <div
             class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1yzxjgd-MuiImageListItemBar-root"
@@ -11503,15 +11262,13 @@ https://unsplash.it/200/100 200w"
         >
           <img
             alt="DSC07717"
-            class="css-hha8hw-ImageWrapper e1shv2yg0"
-            height="6000"
+            class="css-1sg8o3u-ImageWrapper e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
-            width="4000"
           />
           <div
             class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1yzxjgd-MuiImageListItemBar-root"
@@ -11533,15 +11290,13 @@ https://unsplash.it/200/100 200w"
         >
           <img
             alt="DSC07717"
-            class="css-hha8hw-ImageWrapper e1shv2yg0"
-            height="6000"
+            class="css-1sg8o3u-ImageWrapper e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
             title=""
-            width="4000"
           />
           <div
             class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1yzxjgd-MuiImageListItemBar-root"
@@ -11577,15 +11332,13 @@ https://unsplash.it/200/100 200w"
         </h3>
         <img
           alt="DSC07717"
-          class="css-hha8hw-ImageWrapper e1shv2yg0"
-          height="6000"
+          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
-          width="4000"
         />
         <div
           class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
@@ -11628,15 +11381,13 @@ https://unsplash.it/200/100 200w"
         </h3>
         <img
           alt="DSC07717"
-          class="css-hha8hw-ImageWrapper e1shv2yg0"
-          height="6000"
+          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
-          width="4000"
         />
         <div
           class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
@@ -11679,15 +11430,13 @@ https://unsplash.it/200/100 200w"
         </h3>
         <img
           alt="DSC07717"
-          class="css-hha8hw-ImageWrapper e1shv2yg0"
-          height="6000"
+          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
-          width="4000"
         />
         <div
           class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
@@ -11738,15 +11487,13 @@ https://unsplash.it/200/100 200w"
       >
         <img
           alt="DSC07717"
-          class="css-hha8hw-ImageWrapper e1shv2yg0"
-          height="6000"
+          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
           title=""
-          width="4000"
         />
       </div>
       <div
@@ -12035,15 +11782,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -12071,15 +11816,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="2667"
+              class="css-1rxidca-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -12107,15 +11850,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -12143,15 +11884,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -12179,15 +11918,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -12219,15 +11956,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -12255,15 +11990,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="2667"
+              class="css-1rxidca-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -12291,15 +12024,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -12327,15 +12058,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -12363,15 +12092,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -12403,15 +12130,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -12439,15 +12164,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -12475,15 +12198,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -12511,15 +12232,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -12547,15 +12266,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-s4ex62-ImageWrapper-Teaser e1shv2yg0"
-              height="6000"
+              class="css-1x2agam-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
             <header
               class="css-imydry-TeaserTitleWrapper e18of27r0"
@@ -12702,15 +12419,13 @@ https://unsplash.it/200/100 200w"
           >
             <img
               alt="DSC07717"
-              class="css-hha8hw-ImageWrapper e1shv2yg0"
-              height="6000"
+              class="css-1sg8o3u-ImageWrapper e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
-              width="4000"
             />
           </div>
           <div
@@ -12739,14 +12454,18 @@ https://unsplash.it/200/100 200w"
                     d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
                   />
                 </svg>
-                <span>
+                <time
+                  datetime="2023-02-24T09:00:00.000Z"
+                >
                   24.02.2023 09:00
-                </span>
+                </time>
               </div>
               – 
-              <span>
+              <time
+                datetime="2023-02-25T07:30:00.000Z"
+              >
                 25.02.2023 07:30
-              </span>
+              </time>
             </div>
             <h1
               class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"

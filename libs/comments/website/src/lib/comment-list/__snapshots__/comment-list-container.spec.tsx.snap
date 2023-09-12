@@ -13,15 +13,13 @@ exports[`CommentList Container should render Default 1`] = `
       >
         <img
           alt="DSC07717"
-          class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-          height="6000"
+          class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
         <div
           class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -107,15 +105,13 @@ https://unsplash.it/200/200 200w"
       >
         <img
           alt="DSC07717"
-          class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-          height="6000"
+          class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
         <div
           class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -203,15 +199,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-              height="6000"
+              class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <div
               class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -299,15 +293,13 @@ https://unsplash.it/200/200 200w"
               >
                 <img
                   alt="DSC07717"
-                  class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-                  height="6000"
+                  class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
                   loading="lazy"
                   srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
                   title=""
-                  width="4000"
                 />
                 <div
                   class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -395,15 +387,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-              height="6000"
+              class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <div
               class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -467,15 +457,13 @@ https://unsplash.it/200/200 200w"
               >
                 <img
                   alt="DSC07717"
-                  class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-                  height="6000"
+                  class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
                   loading="lazy"
                   srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
                   title=""
-                  width="4000"
                 />
                 <div
                   class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -565,15 +553,13 @@ https://unsplash.it/200/200 200w"
       >
         <img
           alt="DSC07717"
-          class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-          height="6000"
+          class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
         <div
           class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -637,15 +623,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-              height="6000"
+              class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <div
               class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -733,15 +717,13 @@ https://unsplash.it/200/200 200w"
               >
                 <img
                   alt="DSC07717"
-                  class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-                  height="6000"
+                  class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
                   loading="lazy"
                   srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
                   title=""
-                  width="4000"
                 />
                 <div
                   class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -829,15 +811,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-              height="6000"
+              class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <div
               class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -901,15 +881,13 @@ https://unsplash.it/200/200 200w"
               >
                 <img
                   alt="DSC07717"
-                  class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-                  height="6000"
+                  class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
                   loading="lazy"
                   srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
                   title=""
-                  width="4000"
                 />
                 <div
                   class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -999,15 +977,13 @@ https://unsplash.it/200/200 200w"
       >
         <img
           alt="DSC07717"
-          class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-          height="6000"
+          class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
         <div
           class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -1093,15 +1069,13 @@ https://unsplash.it/200/200 200w"
       >
         <img
           alt="DSC07717"
-          class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-          height="6000"
+          class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
         <div
           class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -1165,15 +1139,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-              height="6000"
+              class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <div
               class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -1261,15 +1233,13 @@ https://unsplash.it/200/200 200w"
               >
                 <img
                   alt="DSC07717"
-                  class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-                  height="6000"
+                  class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
                   loading="lazy"
                   srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
                   title=""
-                  width="4000"
                 />
                 <div
                   class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -1357,15 +1327,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-              height="6000"
+              class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <div
               class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -1429,15 +1397,13 @@ https://unsplash.it/200/200 200w"
               >
                 <img
                   alt="DSC07717"
-                  class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-                  height="6000"
+                  class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
                   loading="lazy"
                   srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
                   title=""
-                  width="4000"
                 />
                 <div
                   class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -1527,15 +1493,13 @@ https://unsplash.it/200/200 200w"
       >
         <img
           alt="DSC07717"
-          class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-          height="6000"
+          class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
         <div
           class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -1623,15 +1587,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-              height="6000"
+              class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <div
               class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -1719,15 +1681,13 @@ https://unsplash.it/200/200 200w"
               >
                 <img
                   alt="DSC07717"
-                  class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-                  height="6000"
+                  class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
                   loading="lazy"
                   srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
                   title=""
-                  width="4000"
                 />
                 <div
                   class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -1815,15 +1775,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-              height="6000"
+              class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <div
               class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -1887,15 +1845,13 @@ https://unsplash.it/200/200 200w"
               >
                 <img
                   alt="DSC07717"
-                  class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-                  height="6000"
+                  class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
                   loading="lazy"
                   srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
                   title=""
-                  width="4000"
                 />
                 <div
                   class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -1994,15 +1950,13 @@ exports[`CommentList Container should render WithClassName 1`] = `
       >
         <img
           alt="DSC07717"
-          class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-          height="6000"
+          class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
         <div
           class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -2088,15 +2042,13 @@ https://unsplash.it/200/200 200w"
       >
         <img
           alt="DSC07717"
-          class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-          height="6000"
+          class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
         <div
           class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -2184,15 +2136,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-              height="6000"
+              class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <div
               class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -2280,15 +2230,13 @@ https://unsplash.it/200/200 200w"
               >
                 <img
                   alt="DSC07717"
-                  class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-                  height="6000"
+                  class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
                   loading="lazy"
                   srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
                   title=""
-                  width="4000"
                 />
                 <div
                   class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -2376,15 +2324,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-              height="6000"
+              class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <div
               class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -2448,15 +2394,13 @@ https://unsplash.it/200/200 200w"
               >
                 <img
                   alt="DSC07717"
-                  class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-                  height="6000"
+                  class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
                   loading="lazy"
                   srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
                   title=""
-                  width="4000"
                 />
                 <div
                   class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -2546,15 +2490,13 @@ https://unsplash.it/200/200 200w"
       >
         <img
           alt="DSC07717"
-          class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-          height="6000"
+          class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
         <div
           class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -2618,15 +2560,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-              height="6000"
+              class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <div
               class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -2714,15 +2654,13 @@ https://unsplash.it/200/200 200w"
               >
                 <img
                   alt="DSC07717"
-                  class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-                  height="6000"
+                  class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
                   loading="lazy"
                   srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
                   title=""
-                  width="4000"
                 />
                 <div
                   class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -2810,15 +2748,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-              height="6000"
+              class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <div
               class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -2882,15 +2818,13 @@ https://unsplash.it/200/200 200w"
               >
                 <img
                   alt="DSC07717"
-                  class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-                  height="6000"
+                  class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
                   loading="lazy"
                   srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
                   title=""
-                  width="4000"
                 />
                 <div
                   class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -2980,15 +2914,13 @@ https://unsplash.it/200/200 200w"
       >
         <img
           alt="DSC07717"
-          class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-          height="6000"
+          class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
         <div
           class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -3074,15 +3006,13 @@ https://unsplash.it/200/200 200w"
       >
         <img
           alt="DSC07717"
-          class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-          height="6000"
+          class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
         <div
           class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -3146,15 +3076,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-              height="6000"
+              class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <div
               class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -3242,15 +3170,13 @@ https://unsplash.it/200/200 200w"
               >
                 <img
                   alt="DSC07717"
-                  class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-                  height="6000"
+                  class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
                   loading="lazy"
                   srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
                   title=""
-                  width="4000"
                 />
                 <div
                   class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -3338,15 +3264,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-              height="6000"
+              class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <div
               class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -3410,15 +3334,13 @@ https://unsplash.it/200/200 200w"
               >
                 <img
                   alt="DSC07717"
-                  class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-                  height="6000"
+                  class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
                   loading="lazy"
                   srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
                   title=""
-                  width="4000"
                 />
                 <div
                   class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -3508,15 +3430,13 @@ https://unsplash.it/200/200 200w"
       >
         <img
           alt="DSC07717"
-          class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-          height="6000"
+          class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
         <div
           class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -3604,15 +3524,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-              height="6000"
+              class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <div
               class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -3700,15 +3618,13 @@ https://unsplash.it/200/200 200w"
               >
                 <img
                   alt="DSC07717"
-                  class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-                  height="6000"
+                  class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
                   loading="lazy"
                   srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
                   title=""
-                  width="4000"
                 />
                 <div
                   class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -3796,15 +3712,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-              height="6000"
+              class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <div
               class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -3868,15 +3782,13 @@ https://unsplash.it/200/200 200w"
               >
                 <img
                   alt="DSC07717"
-                  class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-                  height="6000"
+                  class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
                   loading="lazy"
                   srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
                   title=""
-                  width="4000"
                 />
                 <div
                   class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -3975,15 +3887,13 @@ exports[`CommentList Container should render WithEmotion 1`] = `
       >
         <img
           alt="DSC07717"
-          class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-          height="6000"
+          class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
         <div
           class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -4069,15 +3979,13 @@ https://unsplash.it/200/200 200w"
       >
         <img
           alt="DSC07717"
-          class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-          height="6000"
+          class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
         <div
           class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -4165,15 +4073,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-              height="6000"
+              class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <div
               class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -4261,15 +4167,13 @@ https://unsplash.it/200/200 200w"
               >
                 <img
                   alt="DSC07717"
-                  class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-                  height="6000"
+                  class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
                   loading="lazy"
                   srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
                   title=""
-                  width="4000"
                 />
                 <div
                   class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -4357,15 +4261,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-              height="6000"
+              class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <div
               class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -4429,15 +4331,13 @@ https://unsplash.it/200/200 200w"
               >
                 <img
                   alt="DSC07717"
-                  class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-                  height="6000"
+                  class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
                   loading="lazy"
                   srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
                   title=""
-                  width="4000"
                 />
                 <div
                   class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -4527,15 +4427,13 @@ https://unsplash.it/200/200 200w"
       >
         <img
           alt="DSC07717"
-          class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-          height="6000"
+          class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
         <div
           class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -4599,15 +4497,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-              height="6000"
+              class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <div
               class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -4695,15 +4591,13 @@ https://unsplash.it/200/200 200w"
               >
                 <img
                   alt="DSC07717"
-                  class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-                  height="6000"
+                  class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
                   loading="lazy"
                   srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
                   title=""
-                  width="4000"
                 />
                 <div
                   class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -4791,15 +4685,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-              height="6000"
+              class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <div
               class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -4863,15 +4755,13 @@ https://unsplash.it/200/200 200w"
               >
                 <img
                   alt="DSC07717"
-                  class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-                  height="6000"
+                  class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
                   loading="lazy"
                   srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
                   title=""
-                  width="4000"
                 />
                 <div
                   class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -4961,15 +4851,13 @@ https://unsplash.it/200/200 200w"
       >
         <img
           alt="DSC07717"
-          class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-          height="6000"
+          class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
         <div
           class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -5055,15 +4943,13 @@ https://unsplash.it/200/200 200w"
       >
         <img
           alt="DSC07717"
-          class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-          height="6000"
+          class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
         <div
           class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -5127,15 +5013,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-              height="6000"
+              class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <div
               class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -5223,15 +5107,13 @@ https://unsplash.it/200/200 200w"
               >
                 <img
                   alt="DSC07717"
-                  class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-                  height="6000"
+                  class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
                   loading="lazy"
                   srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
                   title=""
-                  width="4000"
                 />
                 <div
                   class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -5319,15 +5201,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-              height="6000"
+              class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <div
               class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -5391,15 +5271,13 @@ https://unsplash.it/200/200 200w"
               >
                 <img
                   alt="DSC07717"
-                  class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-                  height="6000"
+                  class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
                   loading="lazy"
                   srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
                   title=""
-                  width="4000"
                 />
                 <div
                   class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -5489,15 +5367,13 @@ https://unsplash.it/200/200 200w"
       >
         <img
           alt="DSC07717"
-          class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-          height="6000"
+          class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
         <div
           class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -5585,15 +5461,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-              height="6000"
+              class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <div
               class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -5681,15 +5555,13 @@ https://unsplash.it/200/200 200w"
               >
                 <img
                   alt="DSC07717"
-                  class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-                  height="6000"
+                  class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
                   loading="lazy"
                   srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
                   title=""
-                  width="4000"
                 />
                 <div
                   class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -5777,15 +5649,13 @@ https://unsplash.it/200/200 200w"
           >
             <img
               alt="DSC07717"
-              class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-              height="6000"
+              class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
-              width="4000"
             />
             <div
               class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"
@@ -5849,15 +5719,13 @@ https://unsplash.it/200/200 200w"
               >
                 <img
                   alt="DSC07717"
-                  class="css-vwv9iv-ImageWrapper-avatarStyles e1shv2yg0"
-                  height="6000"
+                  class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
                   loading="lazy"
                   srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
                   title=""
-                  width="4000"
                 />
                 <div
                   class="css-1w0qznb-CommentListItemHeaderContent ew53o3y6"

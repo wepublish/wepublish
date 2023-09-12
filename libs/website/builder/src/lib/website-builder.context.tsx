@@ -173,7 +173,7 @@ export type WebsiteBuilderProps = {
   }
 
   date: {
-    format: (date: Date) => string
+    format: (date: Date, includeTime?: boolean) => string
   }
 
   locale: string

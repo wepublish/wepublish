@@ -1,11 +1,12 @@
 import {Node} from 'slate'
-import {slateToDomConfig, slateToHtml} from 'slate-serializers'
 import {BlockFormat} from './block-format'
 import {InlineFormat} from './inline-format'
 import {TextFormat} from './text-format'
 
-export const toHtml = (nodes: Node[]) =>
-  slateToHtml(nodes, {
+export const toHtml = async (nodes: Node[]) => {
+  const {slateToHtml, slateToDomConfig} = await import('slate-serializers')
+
+  return slateToHtml(nodes, {
     ...slateToDomConfig,
     elementMap: {
       ...slateToDomConfig.elementMap,
@@ -28,3 +29,4 @@ export const toHtml = (nodes: Node[]) =>
       [TextFormat.Strikethrough]: ['del']
     }
   })
+}
