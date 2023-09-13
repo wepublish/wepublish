@@ -50,7 +50,7 @@ export class EventsImportResolver {
   }
 
   @Query(returns => [String], {
-    name: 'providers',
+    name: 'eventProviders',
     description: `
       Returns a list of Importable Event Providers
     `

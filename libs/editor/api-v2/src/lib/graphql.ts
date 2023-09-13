@@ -236,6 +236,12 @@ export type Query = {
   consents: Array<Consent>;
   /**
    *
+   *       Returns a list of Importable Event Providers
+   *
+   */
+  eventProviders: Array<Scalars['String']>;
+  /**
+   *
    *       Returns the expected revenue for the time period given.
    *       Excludes cancelled or manually set as paid invoices.
    *
@@ -273,12 +279,6 @@ export type Query = {
    *
    */
   newSubscribers: Array<DashboardSubscription>;
-  /**
-   *
-   *       Returns a list of Importable Event Providers
-   *
-   */
-  providers: Array<Scalars['String']>;
   /**
    *
    *       Returns all renewing subscribers in a given timeframe.
@@ -523,10 +523,10 @@ export type ImportedEventsIdsQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type ImportedEventsIdsQuery = { __typename?: 'Query', importedEventsIds: Array<string> };
 
-export type ProvidersQueryVariables = Exact<{ [key: string]: never; }>;
+export type EventProvidersQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type ProvidersQuery = { __typename?: 'Query', providers: Array<string> };
+export type EventProvidersQuery = { __typename?: 'Query', eventProviders: Array<string> };
 
 export type CreateEventMutationVariables = Exact<{
   filter: CreateEventArgs;
@@ -1076,38 +1076,38 @@ export function useImportedEventsIdsLazyQuery(baseOptions?: Apollo.LazyQueryHook
 export type ImportedEventsIdsQueryHookResult = ReturnType<typeof useImportedEventsIdsQuery>;
 export type ImportedEventsIdsLazyQueryHookResult = ReturnType<typeof useImportedEventsIdsLazyQuery>;
 export type ImportedEventsIdsQueryResult = Apollo.QueryResult<ImportedEventsIdsQuery, ImportedEventsIdsQueryVariables>;
-export const ProvidersDocument = gql`
-    query Providers {
-  providers
+export const EventProvidersDocument = gql`
+    query EventProviders {
+  eventProviders
 }
     `;
 
 /**
- * __useProvidersQuery__
+ * __useEventProvidersQuery__
  *
- * To run a query within a React component, call `useProvidersQuery` and pass it any options that fit your needs.
- * When your component renders, `useProvidersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useEventProvidersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useEventProvidersQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useProvidersQuery({
+ * const { data, loading, error } = useEventProvidersQuery({
  *   variables: {
  *   },
  * });
  */
-export function useProvidersQuery(baseOptions?: Apollo.QueryHookOptions<ProvidersQuery, ProvidersQueryVariables>) {
+export function useEventProvidersQuery(baseOptions?: Apollo.QueryHookOptions<EventProvidersQuery, EventProvidersQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ProvidersQuery, ProvidersQueryVariables>(ProvidersDocument, options);
+        return Apollo.useQuery<EventProvidersQuery, EventProvidersQueryVariables>(EventProvidersDocument, options);
       }
-export function useProvidersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProvidersQuery, ProvidersQueryVariables>) {
+export function useEventProvidersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<EventProvidersQuery, EventProvidersQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ProvidersQuery, ProvidersQueryVariables>(ProvidersDocument, options);
+          return Apollo.useLazyQuery<EventProvidersQuery, EventProvidersQueryVariables>(EventProvidersDocument, options);
         }
-export type ProvidersQueryHookResult = ReturnType<typeof useProvidersQuery>;
-export type ProvidersLazyQueryHookResult = ReturnType<typeof useProvidersLazyQuery>;
-export type ProvidersQueryResult = Apollo.QueryResult<ProvidersQuery, ProvidersQueryVariables>;
+export type EventProvidersQueryHookResult = ReturnType<typeof useEventProvidersQuery>;
+export type EventProvidersLazyQueryHookResult = ReturnType<typeof useEventProvidersLazyQuery>;
+export type EventProvidersQueryResult = Apollo.QueryResult<EventProvidersQuery, EventProvidersQueryVariables>;
 export const CreateEventDocument = gql`
     mutation createEvent($filter: CreateEventArgs!) {
   createEvent(filter: $filter)

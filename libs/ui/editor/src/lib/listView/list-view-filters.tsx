@@ -24,7 +24,7 @@ import {
 } from 'rsuite'
 
 import {AuthorCheckPicker} from '../panel/authorCheckPicker'
-import {InputMaybe, Scalars, useProvidersLazyQuery} from '@wepublish/editor/api-v2'
+import {InputMaybe, Scalars, useEventProvidersLazyQuery} from '@wepublish/editor/api-v2'
 import {getApiClientV2} from '../utility'
 
 const {Group} = RForm
@@ -113,7 +113,7 @@ export function ListViewFilters({
   const [resetFilterKey, setResetFilterkey] = useState<string>(new Date().getTime().toString())
   const [userRoles, setUserRoles] = useState<FullUserRoleFragment[]>([])
 
-  const [providersFetch, {data: providersData}] = useProvidersLazyQuery({
+  const [providersFetch, {data: providersData}] = useEventProvidersLazyQuery({
     client,
     fetchPolicy: 'network-only'
   })
@@ -313,7 +313,7 @@ export function ListViewFilters({
               value={filter.providers || []}
               data={
                 providersData
-                  ? providersData?.providers.map(provider => ({
+                  ? providersData?.eventProviders.map(provider => ({
                       value: provider,
                       label: provider
                     }))

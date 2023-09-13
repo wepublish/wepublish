@@ -236,6 +236,12 @@ export type Query = {
   consents: Array<Consent>;
   /**
    *
+   *       Returns a list of Importable Event Providers
+   *
+   */
+  eventProviders: Array<Scalars['String']>;
+  /**
+   *
    *       Returns the expected revenue for the time period given.
    *       Excludes cancelled or manually set as paid invoices.
    *
@@ -273,12 +279,6 @@ export type Query = {
    *
    */
   newSubscribers: Array<DashboardSubscription>;
-  /**
-   *
-   *       Returns a list of Importable Event Providers
-   *
-   */
-  providers: Array<Scalars['String']>;
   /**
    *
    *       Returns all renewing subscribers in a given timeframe.

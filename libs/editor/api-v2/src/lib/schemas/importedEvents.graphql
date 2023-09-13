@@ -45,8 +45,8 @@ query ImportedEventsIds {
   importedEventsIds
 }
 
-query Providers {
-  providers
+query EventProviders {
+  eventProviders
 }
 
 # mutations
