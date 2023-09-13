@@ -2,13 +2,13 @@ import {Test, TestingModule} from '@nestjs/testing'
 import {CACHE_MANAGER} from '@nestjs/cache-manager'
 import {PrismaClient} from '@prisma/client'
 import {EVENT_IMPORT_PROVIDER} from './events-import.service'
-import {AgendaBaselService} from './agenda-basel.service'
+import {KulturZueriService} from './kultur-zueri.service'
 import {Cache} from 'cache-manager'
 import {HttpService} from '@nestjs/axios'
 import {ImageFetcherService, MediaAdapterService} from '@wepublish/image/api'
 
-describe('AgendaBaselService', () => {
-  let service: AgendaBaselService
+describe('KulturZueriService', () => {
+  let service: KulturZueriService
   let prismaClient: PrismaClient
   let cacheManager: Cache
   let httpClient: HttpService
@@ -16,10 +16,10 @@ describe('AgendaBaselService', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
-        AgendaBaselService,
+        KulturZueriService,
         {
           provide: EVENT_IMPORT_PROVIDER,
-          useValue: [AgendaBaselService]
+          useValue: [KulturZueriService]
         },
         {
           provide: HttpService,
@@ -67,7 +67,7 @@ describe('AgendaBaselService', () => {
       ]
     }).compile()
 
-    service = module.get<AgendaBaselService>(AgendaBaselService)
+    service = module.get<KulturZueriService>(KulturZueriService)
     cacheManager = module.get<Cache>(CACHE_MANAGER)
     prismaClient = module.get<PrismaClient>(PrismaClient)
     httpClient = module.get<HttpService>(HttpService)
@@ -77,7 +77,7 @@ describe('AgendaBaselService', () => {
     jest.clearAllMocks()
   })
 
-  describe('AgendaBaselService', () => {
+  describe('KulturZueriService', () => {
     test('importedEvents() method returns the correct paginated events.', async () => {
       const importedEvents = await service.importedEvents()
 

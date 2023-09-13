@@ -22,14 +22,6 @@ export interface ImportedEventResolverParams {
   id: string
 }
 
-export interface ImportedEventsParams {
-  filter: ImportedEventFilter
-  order: 1 | -1
-  skip: number
-  take: number
-  sort: string
-}
-
 export interface ImportedEventParams {
   id: string
 }
@@ -40,13 +32,7 @@ export interface CreateEventParams {
 
 export interface EventsProvider {
   name: string
-  importedEvents({
-    filter,
-    order,
-    skip,
-    take,
-    sort
-  }: ImportedEventsResolverParams): Promise<ImportedEventsDocument>
+  importedEvents(): Promise<Event[]>
 
   importedEvent({id}: ImportedEventResolverParams): Promise<Event>
 
@@ -62,25 +48,57 @@ export class EventsImportService {
     private prisma: PrismaClient
   ) {}
 
-  async importedEvents({filter, order, skip, take, sort}: ImportedEventsResolverParams) {
+  async importedEvents({
+    filter,
+    skip,
+    take
+  }: ImportedEventsResolverParams): Promise<ImportedEventsDocument> {
     const importableEvents = Promise.all(
-      this.providers.map(provider =>
-        provider.importedEvents({
-          filter,
-          order,
-          skip,
-          take,
-          sort
-        })
-      )
+      this.providers.map(async provider => await provider.importedEvents())
     )
 
     try {
-      const values = await importableEvents
-      // for now we have only one provider, to be extended in the future when needed
-      return values[0]
+      const events = await importableEvents
+      const flattened = events.flat()
+
+      // sort events
+      let sortedEvents = flattened.sort((a, b) => {
+        // by startsAt date by default
+        return +a.startsAt - +b.startsAt
+      })
+
+      // apply filters to events
+      if (filter.providers && filter.providers.length) {
+        sortedEvents = sortedEvents.filter(e => filter?.providers?.includes(e.externalSourceName))
+      }
+      if (filter.from) {
+        sortedEvents = sortedEvents.filter(e => e.startsAt > new Date(filter.from as string))
+      }
+      if (filter.to) {
+        sortedEvents = sortedEvents
+          .filter(e => e.endsAt)
+          .filter(e => e.endsAt! < new Date(filter.to as string))
+      }
+
+      // apply pagination
+      const paginatedEvents = sortedEvents.slice(skip, skip + take)
+
+      const firstEvent = sortedEvents[0]
+      const lastEvent = sortedEvents[sortedEvents.length - 1]
+      const aggregated = {
+        nodes: paginatedEvents,
+        totalCount: sortedEvents.length,
+        pageInfo: {
+          hasPreviousPage: false,
+          hasNextPage: false,
+          startCursor: firstEvent?.id,
+          endCursor: lastEvent?.id
+        }
+      }
+
+      return aggregated
     } catch (e) {
-      console.error(e)
+      throw new Error(e as string)
     }
   }
 
@@ -105,5 +123,9 @@ export class EventsImportService {
       .then(res => res.map(single => single.externalSourceId))
 
     return externalEventsIds
+  }
+
+  async getProviders() {
+    return this.providers.map(provider => provider.name)
   }
 }

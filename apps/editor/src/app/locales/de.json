@@ -1001,7 +1001,9 @@
         "isPending": "Geplant",
         "isDraft": "Entwurf",
         "isPublished": "Publiziert",
-        "publicationDate": "Publikationsdatum"
+        "publicationDate": "Publikationsdatum",
+        "dates": "Daten",
+        "providers": "Anbieter"
       }
     },
     "userList": {

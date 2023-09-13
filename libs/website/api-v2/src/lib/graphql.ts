@@ -91,7 +91,10 @@ export enum EventStatus {
 }
 
 export type ImportedEventFilter = {
+  from?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
+  providers?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  to?: InputMaybe<Scalars['String']>;
 };
 
 export enum ImportedEventSort {
@@ -233,6 +236,12 @@ export type Query = {
   consents: Array<Consent>;
   /**
    *
+   *       Returns a list of Importable Event Providers
+   *
+   */
+  eventProviders: Array<Scalars['String']>;
+  /**
+   *
    *       Returns the expected revenue for the time period given.
    *       Excludes cancelled or manually set as paid invoices.
    *
@@ -240,7 +249,7 @@ export type Query = {
   expectedRevenue: Array<DashboardInvoice>;
   /**
    *
-   *       Returns a more detailed version of a single importable event, by id and source (e.g. AgendaBasel).
+   *       Returns a more detailed version of a single importable event, by id and source.
    *
    */
   importedEvent: Event;
