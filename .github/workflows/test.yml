@@ -18,17 +18,17 @@ jobs:
         ports:
           - 5432:5432
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - uses: actions/setup-node@v3
         with:
           node-version: '16'
+          cache: 'npm'
       - run: npm ci
-      - run: npx nx affected:test --base ${GITHUB_BASE_REF:-master} --code-coverage
+      - run: npm run test-all -- --code-coverage
         env:
           NODE_OPTIONS: "--max-old-space-size=4096"
           JWT_SECRET_KEY: 'ThisIsSuperSecret'
           DATABASE_URL: 'postgresql://postgres@localhost:5432/wepublish_test?schema=public'
-
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
