@@ -5,18 +5,18 @@ on:
     types: [ opened, synchronize, reopened, closed ]
 
 jobs:
-#  publish-docker-image:
-#  if: github.event.action != 'closed'
-#    uses: ./.github/workflows/publish-docker-image.yml
-#    with:
-#      tags: |
-#        ghcr.io/wepublish/wepublish:${{ github.sha }}
-#    secrets: inherit
+  publish-docker-image:
+    if: github.event.action != 'closed'
+    uses: ./.github/workflows/publish-docker-image.yml
+    with:
+      tags: |
+        ghcr.io/wepublish/wepublish:${{ github.sha }}
+    secrets: inherit
 
   review_deployment:
     if: github.event.action != 'closed'
     uses: ./.github/workflows/review-deployment.yml
-#    needs: publish-docker-image
+    needs: publish-docker-image
     with:
       image: ghcr.io/wepublish/wepublish:${{ github.sha }}
     secrets: inherit

@@ -81,7 +81,7 @@ jobs:
         run: |
           cat > values.yaml <<EOF
           deployment:
-            image: ghcr.io/wepublish/wepublish:master-1691754692-797b6bc9fed5589fb2bbd2c4fe9d0930d7d2e929
+            image: ${{ inputs.image }}
             env:
               API_URL: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.media
               EDITOR_URL: https://editor-${{ github.event.pull_request.number }}.reviews.wepublish.media
