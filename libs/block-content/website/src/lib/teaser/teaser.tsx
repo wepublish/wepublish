@@ -8,6 +8,12 @@ import {isTitleBlock} from '../title/title-block'
 export const TeaserWrapper = styled('article')<FlexAlignment>`
   display: grid;
 
+  ${({w}) =>
+    w > 6 &&
+    css`
+      grid-column: 1 / -1;
+    `}
+
   ${({theme, h, w, x, y}) => css`
     ${theme.breakpoints.up('md')} {
       grid-column-start: ${x + 1};

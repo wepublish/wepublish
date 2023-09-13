@@ -6,7 +6,7 @@ exports[`Teaser Grid Flex Block should render Default 1`] = `
     class="css-1iy4fdm-TeaserGridFlexBlockWrapper e1je8zv30"
   >
     <article
-      class="css-pcebg7-TeaserWrapper e18of27r4"
+      class="css-8ks3rt-TeaserWrapper e18of27r4"
       x="0"
       y="0"
     >
@@ -45,7 +45,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-p69bnl-TeaserWrapper e18of27r4"
+      class="css-xuej0q-TeaserWrapper e18of27r4"
       x="3"
       y="0"
     >
@@ -90,7 +90,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-z0ynxb-TeaserWrapper e18of27r4"
+      class="css-txjzxm-TeaserWrapper e18of27r4"
       x="7"
       y="0"
     >
@@ -129,7 +129,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-1iz7ted-TeaserWrapper e18of27r4"
+      class="css-5j6lc2-TeaserWrapper e18of27r4"
       x="0"
       y="4"
     >
@@ -174,7 +174,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-19umbl0-TeaserWrapper e18of27r4"
+      class="css-1cnueki-TeaserWrapper e18of27r4"
       x="3"
       y="6"
     >
@@ -213,7 +213,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-1x96ts6-TeaserWrapper e18of27r4"
+      class="css-1mkilt3-TeaserWrapper e18of27r4"
       x="7"
       y="8"
     >
@@ -261,7 +261,7 @@ exports[`Teaser Grid Flex Block should render WithClassName 1`] = `
     class="extra-classname css-1iy4fdm-TeaserGridFlexBlockWrapper e1je8zv30"
   >
     <article
-      class="css-pcebg7-TeaserWrapper e18of27r4"
+      class="css-8ks3rt-TeaserWrapper e18of27r4"
       x="0"
       y="0"
     >
@@ -300,7 +300,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-p69bnl-TeaserWrapper e18of27r4"
+      class="css-xuej0q-TeaserWrapper e18of27r4"
       x="3"
       y="0"
     >
@@ -345,7 +345,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-z0ynxb-TeaserWrapper e18of27r4"
+      class="css-txjzxm-TeaserWrapper e18of27r4"
       x="7"
       y="0"
     >
@@ -384,7 +384,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-1iz7ted-TeaserWrapper e18of27r4"
+      class="css-5j6lc2-TeaserWrapper e18of27r4"
       x="0"
       y="4"
     >
@@ -429,7 +429,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-19umbl0-TeaserWrapper e18of27r4"
+      class="css-1cnueki-TeaserWrapper e18of27r4"
       x="3"
       y="6"
     >
@@ -468,7 +468,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-1x96ts6-TeaserWrapper e18of27r4"
+      class="css-1mkilt3-TeaserWrapper e18of27r4"
       x="7"
       y="8"
     >
@@ -516,7 +516,7 @@ exports[`Teaser Grid Flex Block should render WithEmotion 1`] = `
     class="css-1iy4fdm-TeaserGridFlexBlockWrapper e1je8zv30"
   >
     <article
-      class="css-pcebg7-TeaserWrapper e18of27r4"
+      class="css-8ks3rt-TeaserWrapper e18of27r4"
       x="0"
       y="0"
     >
@@ -555,7 +555,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-p69bnl-TeaserWrapper e18of27r4"
+      class="css-xuej0q-TeaserWrapper e18of27r4"
       x="3"
       y="0"
     >
@@ -600,7 +600,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-z0ynxb-TeaserWrapper e18of27r4"
+      class="css-txjzxm-TeaserWrapper e18of27r4"
       x="7"
       y="0"
     >
@@ -639,7 +639,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-1iz7ted-TeaserWrapper e18of27r4"
+      class="css-5j6lc2-TeaserWrapper e18of27r4"
       x="0"
       y="4"
     >
@@ -684,7 +684,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-19umbl0-TeaserWrapper e18of27r4"
+      class="css-1cnueki-TeaserWrapper e18of27r4"
       x="3"
       y="6"
     >
@@ -723,7 +723,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-1x96ts6-TeaserWrapper e18of27r4"
+      class="css-1mkilt3-TeaserWrapper e18of27r4"
       x="7"
       y="8"
     >

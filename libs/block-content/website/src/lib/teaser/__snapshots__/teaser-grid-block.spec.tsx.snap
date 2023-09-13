@@ -6,7 +6,7 @@ exports[`Teaser Grid Block should render OneColumn 1`] = `
     class="css-1ek02iu-TeaserGridBlockWrapper e1xnbuxv0"
   >
     <article
-      class="css-1m26q3d-TeaserWrapper e18of27r4"
+      class="css-13bgdik-TeaserWrapper e18of27r4"
       x="0"
       y="0"
     >
@@ -51,7 +51,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-aym45s-TeaserWrapper e18of27r4"
+      class="css-jx9mmb-TeaserWrapper e18of27r4"
       x="0"
       y="1"
     >
@@ -90,7 +90,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-kw5wmk-TeaserWrapper e18of27r4"
+      class="css-1ml5tfp-TeaserWrapper e18of27r4"
       x="0"
       y="2"
     >
@@ -138,7 +138,7 @@ exports[`Teaser Grid Block should render ThreeColumns 1`] = `
     class="css-hw4wfz-TeaserGridBlockWrapper e1xnbuxv0"
   >
     <article
-      class="css-6fi153-TeaserWrapper e18of27r4"
+      class="css-8p11sj-TeaserWrapper e18of27r4"
       x="0"
       y="0"
     >
@@ -183,7 +183,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-1x7gr0z-TeaserWrapper e18of27r4"
+      class="css-z4j0q-TeaserWrapper e18of27r4"
       x="4"
       y="0"
     >
@@ -222,7 +222,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-5dkcjt-TeaserWrapper e18of27r4"
+      class="css-wylm69-TeaserWrapper e18of27r4"
       x="8"
       y="0"
     >
@@ -270,7 +270,7 @@ exports[`Teaser Grid Block should render WithClassName 1`] = `
     class="extra-classname css-hw4wfz-TeaserGridBlockWrapper e1xnbuxv0"
   >
     <article
-      class="css-6fi153-TeaserWrapper e18of27r4"
+      class="css-8p11sj-TeaserWrapper e18of27r4"
       x="0"
       y="0"
     >
@@ -315,7 +315,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-1x7gr0z-TeaserWrapper e18of27r4"
+      class="css-z4j0q-TeaserWrapper e18of27r4"
       x="4"
       y="0"
     >
@@ -354,7 +354,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-5dkcjt-TeaserWrapper e18of27r4"
+      class="css-wylm69-TeaserWrapper e18of27r4"
       x="8"
       y="0"
     >
@@ -402,7 +402,7 @@ exports[`Teaser Grid Block should render WithEmotion 1`] = `
     class="css-hw4wfz-TeaserGridBlockWrapper e1xnbuxv0"
   >
     <article
-      class="css-6fi153-TeaserWrapper e18of27r4"
+      class="css-8p11sj-TeaserWrapper e18of27r4"
       x="0"
       y="0"
     >
@@ -447,7 +447,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-1x7gr0z-TeaserWrapper e18of27r4"
+      class="css-z4j0q-TeaserWrapper e18of27r4"
       x="4"
       y="0"
     >
@@ -486,7 +486,7 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-5dkcjt-TeaserWrapper e18of27r4"
+      class="css-wylm69-TeaserWrapper e18of27r4"
       x="8"
       y="0"
     >
