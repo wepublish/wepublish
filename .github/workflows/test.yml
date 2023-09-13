@@ -23,7 +23,7 @@ jobs:
         with:
           node-version: '16'
       - run: npm ci
-      - run: npm run test -- --code-coverage
+      - run: npx nx affected:test --base ${GITHUB_BASE_REF:-master} --code-coverage
         env:
           NODE_OPTIONS: "--max-old-space-size=4096"
           JWT_SECRET_KEY: 'ThisIsSuperSecret'
