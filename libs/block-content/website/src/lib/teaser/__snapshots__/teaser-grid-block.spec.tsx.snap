@@ -3,23 +3,23 @@
 exports[`Teaser Grid Block should render OneColumn 1`] = `
 <DocumentFragment>
   <div
-    class="css-141ngmm-TeaserGridBlockWrapper e1xnbuxv0"
+    class="css-1ek02iu-TeaserGridBlockWrapper e1xnbuxv0"
   >
     <article
-      class="css-kwjsb9-TeaserWrapper e18of27r2"
+      class="css-13bgdik-TeaserWrapper e18of27r4"
       x="0"
       y="0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
-          class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+          class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
         >
           <img
             alt="An image description"
-            class="css-1xcw0pq-ImageWrapper-Teaser e1shv2yg0"
+            class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -27,33 +27,44 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
             title="An image title"
           />
+          <time
+            class="css-3uu3f-TeaserDate e18of27r1"
+            datetime="2023-01-01T00:00:00.000Z"
+          >
+            01.01.2023
+          </time>
           <header
-            class="css-imydry-TeaserTitleWrapper e18of27r0"
+            class="css-4se2pd-TeaserTitle e18of27r2"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
             >
-              Pre Title:  Title
+              Pre Title: Title
             </h1>
           </header>
+          <p
+            class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+          >
+            Lead
+          </p>
         </div>
       </a>
     </article>
     <article
-      class="css-7cwrqf-TeaserWrapper e18of27r2"
+      class="css-jx9mmb-TeaserWrapper e18of27r4"
       x="0"
       y="1"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
-          class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+          class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
         >
           <img
             alt="An image description"
-            class="css-1xcw0pq-ImageWrapper-Teaser e1shv2yg0"
+            class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -62,32 +73,37 @@ https://unsplash.it/200/200 200w"
             title="An image title"
           />
           <header
-            class="css-imydry-TeaserTitleWrapper e18of27r0"
+            class="css-4se2pd-TeaserTitle e18of27r2"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
             >
-              Pre Title:  Title
+              Pre Title: Title
             </h1>
           </header>
+          <p
+            class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+          >
+            Lead
+          </p>
         </div>
       </a>
     </article>
     <article
-      class="css-jmrnei-TeaserWrapper e18of27r2"
+      class="css-1ml5tfp-TeaserWrapper e18of27r4"
       x="0"
       y="2"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
-          class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+          class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
         >
           <img
             alt="An image description"
-            class="css-1xcw0pq-ImageWrapper-Teaser e1shv2yg0"
+            class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -96,14 +112,19 @@ https://unsplash.it/200/200 200w"
             title="An image title"
           />
           <header
-            class="css-imydry-TeaserTitleWrapper e18of27r0"
+            class="css-4se2pd-TeaserTitle e18of27r2"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
             >
-               Teambesprechung vom 23.05.
+              Teambesprechung vom 23.05.
             </h1>
           </header>
+          <p
+            class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+          >
+            Lead
+          </p>
         </div>
       </a>
     </article>
@@ -114,23 +135,23 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Grid Block should render ThreeColumns 1`] = `
 <DocumentFragment>
   <div
-    class="css-uum656-TeaserGridBlockWrapper e1xnbuxv0"
+    class="css-hw4wfz-TeaserGridBlockWrapper e1xnbuxv0"
   >
     <article
-      class="css-1up672i-TeaserWrapper e18of27r2"
+      class="css-8p11sj-TeaserWrapper e18of27r4"
       x="0"
       y="0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
-          class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+          class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
         >
           <img
             alt="An image description"
-            class="css-1xcw0pq-ImageWrapper-Teaser e1shv2yg0"
+            class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -138,33 +159,44 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
             title="An image title"
           />
+          <time
+            class="css-3uu3f-TeaserDate e18of27r1"
+            datetime="2023-01-01T00:00:00.000Z"
+          >
+            01.01.2023
+          </time>
           <header
-            class="css-imydry-TeaserTitleWrapper e18of27r0"
+            class="css-4se2pd-TeaserTitle e18of27r2"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
             >
-              Pre Title:  Title
+              Pre Title: Title
             </h1>
           </header>
+          <p
+            class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+          >
+            Lead
+          </p>
         </div>
       </a>
     </article>
     <article
-      class="css-1jkqbsa-TeaserWrapper e18of27r2"
+      class="css-z4j0q-TeaserWrapper e18of27r4"
       x="4"
       y="0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
-          class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+          class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
         >
           <img
             alt="An image description"
-            class="css-1xcw0pq-ImageWrapper-Teaser e1shv2yg0"
+            class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -173,32 +205,37 @@ https://unsplash.it/200/200 200w"
             title="An image title"
           />
           <header
-            class="css-imydry-TeaserTitleWrapper e18of27r0"
+            class="css-4se2pd-TeaserTitle e18of27r2"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
             >
-              Pre Title:  Title
+              Pre Title: Title
             </h1>
           </header>
+          <p
+            class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+          >
+            Lead
+          </p>
         </div>
       </a>
     </article>
     <article
-      class="css-so0sc6-TeaserWrapper e18of27r2"
+      class="css-wylm69-TeaserWrapper e18of27r4"
       x="8"
       y="0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
-          class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+          class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
         >
           <img
             alt="An image description"
-            class="css-1xcw0pq-ImageWrapper-Teaser e1shv2yg0"
+            class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -207,14 +244,19 @@ https://unsplash.it/200/200 200w"
             title="An image title"
           />
           <header
-            class="css-imydry-TeaserTitleWrapper e18of27r0"
+            class="css-4se2pd-TeaserTitle e18of27r2"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
             >
-               Teambesprechung vom 23.05.
+              Teambesprechung vom 23.05.
             </h1>
           </header>
+          <p
+            class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+          >
+            Lead
+          </p>
         </div>
       </a>
     </article>
@@ -225,23 +267,23 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Grid Block should render WithClassName 1`] = `
 <DocumentFragment>
   <div
-    class="extra-classname css-uum656-TeaserGridBlockWrapper e1xnbuxv0"
+    class="extra-classname css-hw4wfz-TeaserGridBlockWrapper e1xnbuxv0"
   >
     <article
-      class="css-1up672i-TeaserWrapper e18of27r2"
+      class="css-8p11sj-TeaserWrapper e18of27r4"
       x="0"
       y="0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
-          class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+          class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
         >
           <img
             alt="An image description"
-            class="css-1xcw0pq-ImageWrapper-Teaser e1shv2yg0"
+            class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -249,33 +291,44 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
             title="An image title"
           />
+          <time
+            class="css-3uu3f-TeaserDate e18of27r1"
+            datetime="2023-01-01T00:00:00.000Z"
+          >
+            01.01.2023
+          </time>
           <header
-            class="css-imydry-TeaserTitleWrapper e18of27r0"
+            class="css-4se2pd-TeaserTitle e18of27r2"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
             >
-              Pre Title:  Title
+              Pre Title: Title
             </h1>
           </header>
+          <p
+            class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+          >
+            Lead
+          </p>
         </div>
       </a>
     </article>
     <article
-      class="css-1jkqbsa-TeaserWrapper e18of27r2"
+      class="css-z4j0q-TeaserWrapper e18of27r4"
       x="4"
       y="0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
-          class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+          class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
         >
           <img
             alt="An image description"
-            class="css-1xcw0pq-ImageWrapper-Teaser e1shv2yg0"
+            class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -284,32 +337,37 @@ https://unsplash.it/200/200 200w"
             title="An image title"
           />
           <header
-            class="css-imydry-TeaserTitleWrapper e18of27r0"
+            class="css-4se2pd-TeaserTitle e18of27r2"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
             >
-              Pre Title:  Title
+              Pre Title: Title
             </h1>
           </header>
+          <p
+            class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+          >
+            Lead
+          </p>
         </div>
       </a>
     </article>
     <article
-      class="css-so0sc6-TeaserWrapper e18of27r2"
+      class="css-wylm69-TeaserWrapper e18of27r4"
       x="8"
       y="0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
-          class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+          class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
         >
           <img
             alt="An image description"
-            class="css-1xcw0pq-ImageWrapper-Teaser e1shv2yg0"
+            class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -318,14 +376,19 @@ https://unsplash.it/200/200 200w"
             title="An image title"
           />
           <header
-            class="css-imydry-TeaserTitleWrapper e18of27r0"
+            class="css-4se2pd-TeaserTitle e18of27r2"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
             >
-               Teambesprechung vom 23.05.
+              Teambesprechung vom 23.05.
             </h1>
           </header>
+          <p
+            class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+          >
+            Lead
+          </p>
         </div>
       </a>
     </article>
@@ -336,23 +399,23 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Grid Block should render WithEmotion 1`] = `
 <DocumentFragment>
   <div
-    class="css-uum656-TeaserGridBlockWrapper e1xnbuxv0"
+    class="css-hw4wfz-TeaserGridBlockWrapper e1xnbuxv0"
   >
     <article
-      class="css-1up672i-TeaserWrapper e18of27r2"
+      class="css-8p11sj-TeaserWrapper e18of27r4"
       x="0"
       y="0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
-          class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+          class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
         >
           <img
             alt="An image description"
-            class="css-1xcw0pq-ImageWrapper-Teaser e1shv2yg0"
+            class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -360,124 +423,19 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
             title="An image title"
           />
+          <time
+            class="css-3uu3f-TeaserDate e18of27r1"
+            datetime="2023-01-01T00:00:00.000Z"
+          >
+            01.01.2023
+          </time>
           <header
-            class="css-imydry-TeaserTitleWrapper e18of27r0"
+            class="css-4se2pd-TeaserTitle e18of27r2"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
             >
-              Pre Title:  Title
-            </h1>
-          </header>
-        </div>
-      </a>
-    </article>
-    <article
-      class="css-1jkqbsa-TeaserWrapper e18of27r2"
-      x="4"
-      y="0"
-    >
-      <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
-        href="https://example.com"
-      >
-        <div
-          class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
-        >
-          <img
-            alt="An image description"
-            class="css-1xcw0pq-ImageWrapper-Teaser e1shv2yg0"
-            loading="lazy"
-            srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-            title="An image title"
-          />
-          <header
-            class="css-imydry-TeaserTitleWrapper e18of27r0"
-          >
-            <h1
-              class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
-            >
-              Pre Title:  Title
-            </h1>
-          </header>
-        </div>
-      </a>
-    </article>
-    <article
-      class="css-so0sc6-TeaserWrapper e18of27r2"
-      x="8"
-      y="0"
-    >
-      <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
-        href="https://example.com"
-      >
-        <div
-          class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
-        >
-          <img
-            alt="An image description"
-            class="css-1xcw0pq-ImageWrapper-Teaser e1shv2yg0"
-            loading="lazy"
-            srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-            title="An image title"
-          />
-          <header
-            class="css-imydry-TeaserTitleWrapper e18of27r0"
-          >
-            <h1
-              class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
-            >
-               Teambesprechung vom 23.05.
-            </h1>
-          </header>
-        </div>
-      </a>
-    </article>
-  </div>
-</DocumentFragment>
-`;
-
-exports[`Teaser Grid Block should render WithShowLoad 1`] = `
-<DocumentFragment>
-  <div
-    class="css-uum656-TeaserGridBlockWrapper e1xnbuxv0"
-  >
-    <article
-      class="css-1up672i-TeaserWrapper e18of27r2"
-      x="0"
-      y="0"
-    >
-      <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
-        href="https://example.com"
-      >
-        <div
-          class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
-        >
-          <img
-            alt="An image description"
-            class="css-1xcw0pq-ImageWrapper-Teaser e1shv2yg0"
-            loading="lazy"
-            srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-            title="An image title"
-          />
-          <header
-            class="css-imydry-TeaserTitleWrapper e18of27r0"
-          >
-            <h1
-              class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
-            >
-              Pre Title:  Title
+              Pre Title: Title
             </h1>
           </header>
           <p
@@ -489,20 +447,20 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-1jkqbsa-TeaserWrapper e18of27r2"
+      class="css-z4j0q-TeaserWrapper e18of27r4"
       x="4"
       y="0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
-          class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+          class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
         >
           <img
             alt="An image description"
-            class="css-1xcw0pq-ImageWrapper-Teaser e1shv2yg0"
+            class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -511,12 +469,12 @@ https://unsplash.it/200/200 200w"
             title="An image title"
           />
           <header
-            class="css-imydry-TeaserTitleWrapper e18of27r0"
+            class="css-4se2pd-TeaserTitle e18of27r2"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
             >
-              Pre Title:  Title
+              Pre Title: Title
             </h1>
           </header>
           <p
@@ -528,20 +486,20 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-so0sc6-TeaserWrapper e18of27r2"
+      class="css-wylm69-TeaserWrapper e18of27r4"
       x="8"
       y="0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
-          class="css-1xecuhw-TeaserInnerWrapper e18of27r1"
+          class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
         >
           <img
             alt="An image description"
-            class="css-1xcw0pq-ImageWrapper-Teaser e1shv2yg0"
+            class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -550,12 +508,12 @@ https://unsplash.it/200/200 200w"
             title="An image title"
           />
           <header
-            class="css-imydry-TeaserTitleWrapper e18of27r0"
+            class="css-4se2pd-TeaserTitle e18of27r2"
           >
             <h1
               class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
             >
-               Teambesprechung vom 23.05.
+              Teambesprechung vom 23.05.
             </h1>
           </header>
           <p

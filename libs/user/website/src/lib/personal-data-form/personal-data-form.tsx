@@ -1,6 +1,7 @@
 import {zodResolver} from '@hookform/resolvers/zod'
 import {InputAdornment, Theme, css, styled, useTheme} from '@mui/material'
 import {
+  BuilderPersonalDataFormFields,
   BuilderPersonalDataFormProps,
   PersonalDataFormFields,
   useWebsiteBuilder
@@ -19,74 +20,70 @@ export const PersonalDataFormWrapper = styled('form')`
 export const PersonalDataInputForm = styled('div')`
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    grid-template-columns: 1fr 1fr;
+  }
 `
 
 export const PersonalDataAddressWrapper = styled('div')`
-  grid-column-start: 1;
-  grid-column-end: 3;
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};
-  grid-template-columns: repeat(1fr, 4);
+  grid-template-columns: repeat(2, 1fr);
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-template-columns: repeat(3, 1fr);
+  }
 `
 
-const postCodeStyles = css`
-  grid-column-start: 1;
-  grid-column-end: 2;
-`
-
-const cityStyles = css`
-  grid-column-start: 2;
-  grid-column-end: 4;
-`
-
-const PasswordWrapper = styled('div')`
-  position: relative;
-  margin-top: 12px;
+const addressStyles = (theme: Theme) => css`
   grid-column-start: 1;
   grid-column-end: 3;
+
+  ${theme.breakpoints.up('md')} {
+    grid-column-start: 1;
+    grid-column-end: 4;
+  }
+`
+
+const countryStyles = (theme: Theme) => css`
+  ${theme.breakpoints.down('md')} {
+    grid-column-start: 1;
+    grid-column-end: 3;
+  }
+`
+
+export const PersonalDataPasswordWrapper = styled('div')`
+  position: relative;
+  padding-top: ${({theme}) => theme.spacing(3)};
+  margin-top: -${({theme}) => theme.spacing(2)};
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: ${({theme}) => theme.spacing(3)};
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    grid-column-start: 1;
+    grid-column-end: 3;
+  }
 `
 
 const passwordNoteStyles = (theme: Theme) => css`
   font-size: ${theme.typography.caption.fontSize};
   position: absolute;
-  top: -24px;
+  top: 0;
 `
 
-const emailStyles = (theme: Theme) => css`
-  grid-column-start: 1;
-  grid-column-end: 3;
-  ${theme.breakpoints.up('sm')} {
-    grid-column-start: 1;
-    grid-column-end: 2;
-  }
-`
-
-const flairStyles = css`
-  grid-column-start: 1;
-  grid-column-end: 3;
-`
-
-const addressStyles = css`
-  grid-column-start: 1;
-  grid-column-end: 4;
+export const PersonalDataEmailWrapper = styled('div')`
+  grid-column: 1 / -1;
+  display: grid;
+  gap: ${({theme}) => theme.spacing(1)};
 `
 
 const buttonStyles = css`
   justify-self: flex-end;
-`
-
-const requestEmailStyles = (theme: Theme) => css`
-  grid-column-start: 1;
-  grid-column-end: 3;
-
-  ${theme.breakpoints.up('sm')} {
-    grid-column-start: 2;
-    grid-column-end: 3;
-  }
 `
 
 const RequestEmail = styled('div')``
@@ -121,17 +118,8 @@ const defaultSchema = z.object({
   })
 })
 
-export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields>>({
-  fields = [
-    'firstName',
-    'name',
-    'flair',
-    'address',
-    'password',
-    'passwordRepeated',
-    'preferredName',
-    'image'
-  ] as T[],
+export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
+  fields = ['firstName', 'name', 'flair', 'address', 'password', 'preferredName', 'image'] as T[],
   className,
   initialUser,
   schema = defaultSchema,
@@ -154,7 +142,7 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
   const validationSchema = requiredSchema
     .merge(schema.pick(fieldsToDisplay))
     .refine(data => data.password === data.passwordRepeated, {
-      message: "Passwords don't match",
+      message: 'Passwörter stimmen nicht überein.',
       path: ['passwordRepeated']
     })
 
@@ -226,7 +214,13 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
             name={'firstName'}
             control={control}
             render={({field, fieldState: {error}}) => (
-              <TextField {...field} label={'Vorname'} error={!!error} helperText={error?.message} />
+              <TextField
+                {...field}
+                label={'Vorname'}
+                autoComplete="firstname"
+                error={!!error}
+                helperText={error?.message}
+              />
             )}
           />
         )}
@@ -235,7 +229,13 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
           name={'name'}
           control={control}
           render={({field, fieldState: {error}}) => (
-            <TextField {...field} label={'Nachname'} error={!!error} helperText={error?.message} />
+            <TextField
+              {...field}
+              label={'Nachname'}
+              autoComplete="name"
+              error={!!error}
+              helperText={error?.message}
+            />
           )}
         />
 
@@ -247,6 +247,7 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
               <TextField
                 {...field}
                 label={'Bevorzugter Name'}
+                autoComplete="preferred-name"
                 error={!!error}
                 helperText={error?.message}
               />
@@ -261,8 +262,7 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
             render={({field, fieldState: {error}}) => (
               <TextField
                 {...field}
-                css={flairStyles}
-                label={'Function/Profession'}
+                label={'Funktion / Beruf'}
                 error={!!error}
                 helperText={error?.message}
               />
@@ -278,9 +278,10 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
               render={({field, fieldState: {error}}) => (
                 <TextField
                   {...field}
-                  css={addressStyles}
+                  css={addressStyles(theme)}
                   fullWidth
-                  label={'Address'}
+                  autoComplete="address"
+                  label={'Adresse'}
                   error={!!error}
                   helperText={error?.message}
                 />
@@ -294,8 +295,8 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
                 <TextField
                   {...field}
                   fullWidth
-                  css={postCodeStyles}
-                  label={'Postleitzahl'}
+                  autoComplete="zip"
+                  label={'PLZ'}
                   error={!!error}
                   helperText={error?.message}
                 />
@@ -309,8 +310,8 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
                 <TextField
                   {...field}
                   fullWidth
-                  css={cityStyles}
-                  label={'Stadt'}
+                  autoComplete="city"
+                  label={'Ort / Stadt'}
                   error={!!error}
                   helperText={error?.message}
                 />
@@ -323,8 +324,9 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
               render={({field, fieldState: {error}}) => (
                 <TextField
                   {...field}
-                  css={addressStyles}
+                  css={countryStyles(theme)}
                   fullWidth
+                  autoComplete="country"
                   label={'Land'}
                   error={!!error}
                   helperText={error?.message}
@@ -335,19 +337,21 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
         )}
 
         {fieldsToDisplay.password && (
-          <PasswordWrapper>
+          <PersonalDataPasswordWrapper>
             <Controller
               name={'password'}
               control={control}
               render={({field, fieldState: {error}}) => (
                 <>
-                  <Paragraph css={() => passwordNoteStyles(theme)}>
+                  <Paragraph css={passwordNoteStyles(theme)}>
                     Nur ausfüllen, wenn Sie das Passwort ändern möchten. Ansonsten leer lassen.
                   </Paragraph>
+
                   <TextField
                     {...field}
                     type={showPassword ? 'text' : 'password'}
                     fullWidth
+                    autoComplete="new-password"
                     label={'Passwort'}
                     error={!!error}
                     helperText={error?.message}
@@ -375,6 +379,7 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
                 <TextField
                   {...field}
                   type={showRepeatPassword ? 'text' : 'password'}
+                  autoComplete="new-password"
                   fullWidth
                   label={'Passwort wiederholen'}
                   error={!!error}
@@ -394,34 +399,35 @@ export function PersonalDataForm<T extends OptionalKeysOf<PersonalDataFormFields
                 />
               )}
             />
-          </PasswordWrapper>
+          </PersonalDataPasswordWrapper>
         )}
 
-        <Controller
-          name={'email'}
-          control={control}
-          render={({field, fieldState: {error}}) => (
-            <TextField
-              {...field}
-              css={() => emailStyles(theme)}
-              type={'email'}
-              fullWidth
-              disabled
-              label={'Email (nicht bearbeitbar)'}
-              error={!!error}
-              helperText={error?.message}
-            />
+        <PersonalDataEmailWrapper>
+          <Controller
+            name={'email'}
+            control={control}
+            render={({field, fieldState: {error}}) => (
+              <TextField
+                {...field}
+                type={'email'}
+                fullWidth
+                disabled
+                label={'Email (nicht bearbeitbar)'}
+                error={!!error}
+                helperText={error?.message}
+              />
+            )}
+          />
+
+          {mediaEmail && (
+            <RequestEmail>
+              <Link
+                href={`mailto:${mediaEmail}&subject=Email Änderung&body=Guten Tag, %0D%0A. Ich würde gerne meine Email von ${initialUser.email} zu  >>Neue Email hier einfügen<< %0D%0A Liebe Grüsse`}>
+                Klicke hier um deine Email zu ändern
+              </Link>
+            </RequestEmail>
           )}
-        />
-
-        {mediaEmail && (
-          <RequestEmail css={() => requestEmailStyles(theme)}>
-            <Link
-              href={`mailto:${mediaEmail}&subject=Email Änderung&body=Guten Tag, %0D%0A. Ich würde gerne meine Email von ${initialUser.email} zu  >>Neue Email hier einfügen<< %0D%0A Liebe Grüsse`}>
-              Klicke hier um deine Email zu ändern
-            </Link>
-          </RequestEmail>
-        )}
+        </PersonalDataEmailWrapper>
       </PersonalDataInputForm>
 
       {error && <Alert severity="error">{error.message}</Alert>}

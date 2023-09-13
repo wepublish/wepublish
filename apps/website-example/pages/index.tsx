@@ -1,30 +1,63 @@
-import {ApiV1, PageContainer, useUser, useWebsiteBuilder} from '@wepublish/website'
+import {css, styled} from '@mui/material'
+import {
+  ApiV1,
+  PageContainer,
+  TeaserDate,
+  TeaserGridFlexBlockWrapper,
+  TeaserWrapper
+} from '@wepublish/website'
+import {GetStaticProps} from 'next'
+import getConfig from 'next/config'
 
-type IndexProps = {
-  page?: ApiV1.Page
+const Frontpage = styled(PageContainer)`
+  ${TeaserGridFlexBlockWrapper}:first-of-type ${TeaserWrapper}:first-of-type {
+    ${TeaserDate} {
+      font-size: ${({theme}) => theme.typography.h6.fontSize};
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: ${({theme}) => theme.typography.h4.fontSize};
+      font-weight: ${({theme}) => theme.typography.h4.fontWeight};
+
+      ${({theme}) => css`
+        ${theme.breakpoints.up('md')} {
+          font-size: ${theme.typography.h3.fontSize};
+          font-weight: ${theme.typography.h3.fontWeight};
+        }
+      `}
+    }
+  }
+`
+
+export default function Index() {
+  return <Frontpage slug={''} />
 }
 
-export default function Index({page}: IndexProps) {
-  const {logout, user, hasUser} = useUser()
-  const {
-    elements: {H3, Button, Link},
-    PageSEO
-  } = useWebsiteBuilder()
+export const getStaticProps: GetStaticProps = async () => {
+  const {publicRuntimeConfig} = getConfig()
 
-  return (
-    <>
-      {page && <PageSEO page={page} />}
+  if (!publicRuntimeConfig.env.API_URL) {
+    return {props: {}, revalidate: 1}
+  }
 
-      {user && (
-        <div>
-          <H3 component="h3">👋 {user?.firstName}</H3>
-          <Button onClick={logout}>Logout</Button>
-        </div>
-      )}
+  const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL, [])
+  await Promise.all([
+    client.query({
+      query: ApiV1.PageDocument,
+      variables: {
+        slug: ''
+      }
+    }),
+    client.query({
+      query: ApiV1.NavigationListDocument
+    })
+  ])
 
-      {!hasUser && <Link href="/login">Login</Link>}
+  const props = ApiV1.addClientCacheToV1Props(client, {})
 
-      <PageContainer slug="" />
-    </>
-  )
+  return {
+    props,
+    revalidate: 60 // every 60 seconds
+  }
 }

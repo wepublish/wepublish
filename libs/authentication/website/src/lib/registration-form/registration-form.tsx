@@ -1,5 +1,5 @@
 import {zodResolver} from '@hookform/resolvers/zod'
-import {IconButton, InputAdornment, css, styled} from '@mui/material'
+import {IconButton, InputAdornment, Theme, css, styled} from '@mui/material'
 import {RegisterMutationVariables} from '@wepublish/website/api'
 import {BuilderRegistrationFormProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {useEffect, useReducer} from 'react'
@@ -16,20 +16,40 @@ export const RegistrationFormWrapper = styled('form')`
 export const RegistrationInputForm = styled('div')`
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    grid-template-columns: 1fr 1fr;
+  }
 `
 
 export const RegistrationAddressWrapper = styled('div')`
-  grid-column-start: 1;
-  grid-column-end: 3;
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};
-  grid-template-columns: repeat(1fr, 3);
+  grid-template-columns: repeat(2, 1fr);
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    grid-template-columns: repeat(3, 1fr);
+  }
 `
 
-const addressStyles = css`
+const addressStyles = (theme: Theme) => css`
   grid-column-start: 1;
-  grid-column-end: 4;
+  grid-column-end: 3;
+
+  ${theme.breakpoints.up('md')} {
+    grid-column-start: 1;
+    grid-column-end: 4;
+  }
+`
+
+const countryStyles = (theme: Theme) => css`
+  ${theme.breakpoints.down('md')} {
+    grid-column-start: 1;
+    grid-column-end: 3;
+  }
 `
 
 export const RegistrationChallengeWrapper = styled('div')`
@@ -214,9 +234,9 @@ export function RegistrationForm<T extends OptionalKeysOf<RegisterMutationVariab
               render={({field, fieldState: {error}}) => (
                 <TextField
                   {...field}
-                  css={addressStyles}
+                  css={theme => addressStyles(theme as Theme)}
                   fullWidth
-                  label={'Address'}
+                  label={'Adresse'}
                   error={!!error}
                   helperText={error?.message}
                 />
@@ -230,7 +250,7 @@ export function RegistrationForm<T extends OptionalKeysOf<RegisterMutationVariab
                 <TextField
                   {...field}
                   fullWidth
-                  label={'Postleitzahl'}
+                  label={'PLZ'}
                   error={!!error}
                   helperText={error?.message}
                 />
@@ -244,7 +264,7 @@ export function RegistrationForm<T extends OptionalKeysOf<RegisterMutationVariab
                 <TextField
                   {...field}
                   fullWidth
-                  label={'Stadt'}
+                  label={'Ort / Stadt'}
                   error={!!error}
                   helperText={error?.message}
                 />
@@ -258,6 +278,7 @@ export function RegistrationForm<T extends OptionalKeysOf<RegisterMutationVariab
                 <TextField
                   {...field}
                   fullWidth
+                  css={theme => countryStyles(theme as Theme)}
                   label={'Land'}
                   error={!!error}
                   helperText={error?.message}

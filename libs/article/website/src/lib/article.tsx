@@ -31,7 +31,9 @@ export function Article({className, data, children, loading, error}: BuilderArti
         ))}
 
         {data?.article?.publishedAt && (
-          <time>{date.format(new Date(data.article.publishedAt))}</time>
+          <time dateTime={data.article.publishedAt}>
+            {date.format(new Date(data.article.publishedAt))}
+          </time>
         )}
       </ArticleInfoWrapper>
 

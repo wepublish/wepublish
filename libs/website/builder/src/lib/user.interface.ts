@@ -24,8 +24,12 @@ type AddressShape = z.ZodObject<{
 export type PersonalDataFormFields = UpdateUserMutationVariables['input'] &
   Partial<UpdatePasswordMutationVariables> & {image?: Image}
 
+export type BuilderPersonalDataFormFields = OptionalKeysOf<
+  Omit<PersonalDataFormFields, 'uploadImageInput' | 'passwordRepeated'>
+>
+
 export type BuilderPersonalDataFormProps<
-  T extends OptionalKeysOf<PersonalDataFormFields> = OptionalKeysOf<PersonalDataFormFields>
+  T extends BuilderPersonalDataFormFields = BuilderPersonalDataFormFields
 > = {
   fields?: T[]
   schema?: z.ZodObject<

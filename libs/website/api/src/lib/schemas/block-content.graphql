@@ -35,10 +35,6 @@ fragment BlockWithoutTeaser on Block {
     html
   }
 
-  ... on BildwurfAdBlock {
-    zoneID
-  }
-
   ... on EventBlock {
     events {
       ...FullEvent
@@ -65,9 +61,68 @@ fragment BlockWithoutTeaser on Block {
     text
     richText
     layoutOption
+    hideButton
+    linkTarget
+    linkText
+    linkURL
+    styleOption
+    templateOption
     image {
       ...FullImage
     }
+  }
+
+  ... on FacebookPostBlock {
+    userID
+    postID
+  }
+
+  ... on FacebookVideoBlock {
+    userID
+    videoID
+  }
+
+  ... on InstagramPostBlock {
+    postID
+  }
+
+  ... on TwitterTweetBlock {
+    userID
+    tweetID
+  }
+
+  ... on VimeoVideoBlock {
+    videoID
+  }
+
+  ... on YouTubeVideoBlock {
+    videoID
+  }
+
+  ... on SoundCloudTrackBlock {
+    trackID
+  }
+
+  ... on PolisConversationBlock {
+    conversationID
+  }
+
+  ... on TikTokVideoBlock {
+    userID
+    videoID
+  }
+
+  ... on BildwurfAdBlock {
+    zoneID
+  }
+
+  ... on EmbedBlock {
+    url
+    title
+    width
+    height
+    styleCustom
+    sandbox
   }
 }
 
@@ -133,6 +188,22 @@ fragment FullTeaser on Teaser {
       blocks {
         ...BlockWithoutTeaser
       }
+    }
+  }
+
+  ... on EventTeaser {
+    style
+
+    image {
+      ...FullImage
+    }
+
+    preTitle
+    title
+    lead
+
+    event {
+      ...FullEvent
     }
   }
 

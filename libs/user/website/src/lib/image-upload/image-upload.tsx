@@ -1,6 +1,6 @@
 import {css, styled} from '@mui/material'
 import {BuilderImageUploadProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {useId, useRef} from 'react'
+import {useId, useRef, forwardRef, useImperativeHandle} from 'react'
 import {MdDelete, MdEdit, MdOutlineUploadFile} from 'react-icons/md'
 import {ReactComponent as PlaceholderImage} from './placeholder.svg'
 
@@ -34,55 +34,59 @@ const avatarStyles = css`
   overflow: hidden;
 `
 
-export function ImageUpload({image, onUpload, className}: BuilderImageUploadProps) {
-  const fileInputRef = useRef<HTMLInputElement>(null)
-  const {
-    elements: {Image, IconButton}
-  } = useWebsiteBuilder()
-  const inputId = useId()
+export const ImageUpload = forwardRef<HTMLInputElement | null, BuilderImageUploadProps>(
+  function ImageUpload({image, onUpload, className}, parentRef) {
+    const fileInputRef = useRef<HTMLInputElement>(null)
+    const {
+      elements: {Image, IconButton}
+    } = useWebsiteBuilder()
+    const inputId = useId()
 
-  return (
-    <ImageUploadWrapper className={className}>
-      <ImageUploadImageWrapper>
-        {image ? (
-          <Image css={avatarStyles} image={image} />
-        ) : (
-          <PlaceholderImage css={avatarStyles} />
-        )}
+    useImperativeHandle(parentRef, () => fileInputRef.current!, [])
 
-        <input
-          css={hiddenInputStyles}
-          type="file"
-          accept="image/*"
-          onChange={onUpload}
-          ref={fileInputRef}
-          id={inputId}
-        />
-      </ImageUploadImageWrapper>
+    return (
+      <ImageUploadWrapper className={className}>
+        <ImageUploadImageWrapper>
+          {image ? (
+            <Image css={avatarStyles} image={image} />
+          ) : (
+            <PlaceholderImage css={avatarStyles} />
+          )}
 
-      <ImageUploadContent>
-        {image ? (
-          <>
-            <IconButton color="error" onClick={() => onUpload(null)} title="Bild löschen">
-              <MdDelete />
-            </IconButton>
+          <input
+            css={hiddenInputStyles}
+            type="file"
+            accept="image/*"
+            onChange={onUpload}
+            ref={fileInputRef}
+            id={inputId}
+          />
+        </ImageUploadImageWrapper>
 
+        <ImageUploadContent>
+          {image ? (
+            <>
+              <IconButton color="error" onClick={() => onUpload(null)} title="Bild löschen">
+                <MdDelete />
+              </IconButton>
+
+              <IconButton
+                color="primary"
+                onClick={() => fileInputRef.current?.click()}
+                title="Neues Bild hochladen">
+                <MdEdit />
+              </IconButton>
+            </>
+          ) : (
             <IconButton
               color="primary"
               onClick={() => fileInputRef.current?.click()}
-              title="Neues Bild hochladen">
-              <MdEdit />
+              title="Bild hochladen">
+              <MdOutlineUploadFile />
             </IconButton>
-          </>
-        ) : (
-          <IconButton
-            color="primary"
-            onClick={() => fileInputRef.current?.click()}
-            title="Bild hochladen">
-            <MdOutlineUploadFile />
-          </IconButton>
-        )}
-      </ImageUploadContent>
-    </ImageUploadWrapper>
-  )
-}
+          )}
+        </ImageUploadContent>
+      </ImageUploadWrapper>
+    )
+  }
+)

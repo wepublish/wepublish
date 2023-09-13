@@ -1,7 +1,16 @@
 import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {BuilderRenderElementProps} from '@wepublish/website/builder'
-import {Link} from '@mui/material'
+import {Link, css} from '@mui/material'
 import {BlockFormat, InlineFormat} from '@wepublish/richtext'
+
+const tableStyles = css`
+  border-collapse: collapse;
+`
+
+const tableCellStyles = (borderColor?: string) => css`
+  border-collapse: collapse;
+  border: 1px solid ${borderColor ?? 'transparent'};
+`
 
 export function RenderElement({
   attributes,
@@ -45,7 +54,7 @@ export function RenderElement({
 
     case BlockFormat.Table:
       return (
-        <table>
+        <table css={tableStyles}>
           <tbody {...attributes}>{children}</tbody>
         </table>
       )
@@ -54,7 +63,11 @@ export function RenderElement({
       return <tr {...attributes}>{children}</tr>
 
     case BlockFormat.TableCell:
-      return <td {...attributes}>{children}</td>
+      return (
+        <td {...attributes} css={tableCellStyles(element.borderColor as string)}>
+          {children}
+        </td>
+      )
 
     case InlineFormat.Link:
       return (

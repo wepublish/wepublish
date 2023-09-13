@@ -6,14 +6,27 @@ import {
   useUpdateUserMutation,
   useUploadImageMutation
 } from '@wepublish/website/api'
-import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {
+  BuilderContainerProps,
+  BuilderPersonalDataFormFields,
+  BuilderPersonalDataFormProps,
+  useWebsiteBuilder
+} from '@wepublish/website/builder'
 import {ChangeEvent} from 'react'
 
-export type PersonalDataFormContainerProps = {
+export type PersonalDataFormContainerProps<
+  T extends BuilderPersonalDataFormFields = BuilderPersonalDataFormFields
+> = {
   mediaEmail?: string
-} & BuilderContainerProps
+} & BuilderContainerProps &
+  Pick<BuilderPersonalDataFormProps<T>, 'fields' | 'schema'>
 
-export function PersonalDataFormContainer({className, mediaEmail}: PersonalDataFormContainerProps) {
+export function PersonalDataFormContainer<T extends BuilderPersonalDataFormFields>({
+  className,
+  mediaEmail,
+  schema,
+  fields
+}: PersonalDataFormContainerProps<T>) {
   const {PersonalDataForm} = useWebsiteBuilder()
   const {user} = useUser()
 
@@ -41,8 +54,6 @@ export function PersonalDataFormContainer({className, mediaEmail}: PersonalDataF
       })
     ] as Promise<unknown>[]
 
-    console.log(password, passwordRepeated, userInput)
-
     if (password && passwordRepeated) {
       updates.push(
         updatePassword({
@@ -58,7 +69,7 @@ export function PersonalDataFormContainer({className, mediaEmail}: PersonalDataF
   }
 
   if (!user) {
-    return
+    return null
   }
 
   return (
@@ -68,6 +79,8 @@ export function PersonalDataFormContainer({className, mediaEmail}: PersonalDataF
       onImageUpload={handleOnImageUpload}
       onUpdate={handleOnUpdate}
       mediaEmail={mediaEmail}
+      fields={fields}
+      schema={schema}
     />
   )
 }

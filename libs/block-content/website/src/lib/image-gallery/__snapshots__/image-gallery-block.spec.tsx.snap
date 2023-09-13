@@ -3,11 +3,11 @@
 exports[`Image Gallery Block should render Default 1`] = `
 <DocumentFragment>
   <figure
-    class="css-14rquhl-ImageGalleryBlockWrapper e5naayd0"
+    class="css-1b0x59d-ImageGalleryBlockWrapper e5naayd1"
   >
     <ul
-      class="MuiImageList-root MuiImageList-standard css-rvv586-MuiImageList-root"
-      style="grid-template-columns: repeat(1, 1fr); gap: 8px;"
+      class="MuiImageList-root MuiImageList-standard e5naayd0 css-eeca2y-MuiImageList-root-ImageGalleryBlockImageList"
+      style="grid-template-columns: repeat(0, 1fr); gap: 8px;"
     >
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -325,11 +325,11 @@ https://unsplash.it/200/200?10 200w"
 exports[`Image Gallery Block should render WithClassName 1`] = `
 <DocumentFragment>
   <figure
-    class="extra-classname css-14rquhl-ImageGalleryBlockWrapper e5naayd0"
+    class="extra-classname css-1b0x59d-ImageGalleryBlockWrapper e5naayd1"
   >
     <ul
-      class="MuiImageList-root MuiImageList-standard css-rvv586-MuiImageList-root"
-      style="grid-template-columns: repeat(1, 1fr); gap: 8px;"
+      class="MuiImageList-root MuiImageList-standard e5naayd0 css-eeca2y-MuiImageList-root-ImageGalleryBlockImageList"
+      style="grid-template-columns: repeat(0, 1fr); gap: 8px;"
     >
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -647,11 +647,11 @@ https://unsplash.it/200/200?10 200w"
 exports[`Image Gallery Block should render WithEmotion 1`] = `
 <DocumentFragment>
   <figure
-    class="css-14rquhl-ImageGalleryBlockWrapper e5naayd0"
+    class="css-1b0x59d-ImageGalleryBlockWrapper e5naayd1"
   >
     <ul
-      class="MuiImageList-root MuiImageList-standard css-rvv586-MuiImageList-root"
-      style="grid-template-columns: repeat(1, 1fr); gap: 8px;"
+      class="MuiImageList-root MuiImageList-standard e5naayd0 css-eeca2y-MuiImageList-root-ImageGalleryBlockImageList"
+      style="grid-template-columns: repeat(0, 1fr); gap: 8px;"
     >
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -969,11 +969,11 @@ https://unsplash.it/200/200?10 200w"
 exports[`Image Gallery Block should render WithoutCaption 1`] = `
 <DocumentFragment>
   <figure
-    class="css-14rquhl-ImageGalleryBlockWrapper e5naayd0"
+    class="css-1b0x59d-ImageGalleryBlockWrapper e5naayd1"
   >
     <ul
-      class="MuiImageList-root MuiImageList-standard css-rvv586-MuiImageList-root"
-      style="grid-template-columns: repeat(1, 1fr); gap: 8px;"
+      class="MuiImageList-root MuiImageList-standard e5naayd0 css-eeca2y-MuiImageList-root-ImageGalleryBlockImageList"
+      style="grid-template-columns: repeat(0, 1fr); gap: 8px;"
     >
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"

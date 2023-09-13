@@ -1,33 +1,36 @@
-import {
-  styled,
-  ImageList,
-  ImageListItem,
-  ImageListItemBar,
-  useMediaQuery,
-  useTheme
-} from '@mui/material'
-import {BuilderImageGalleryBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {ImageList, ImageListItem, ImageListItemBar, styled} from '@mui/material'
 import {Block, ImageGalleryBlock as ImageGalleryBlockType} from '@wepublish/website/api'
+import {BuilderImageGalleryBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
 export const isImageGalleryBlock = (block: Block): block is ImageGalleryBlockType =>
   block.__typename === 'ImageGalleryBlock'
 
-export const ImageGalleryBlockWrapper = styled('figure')``
+export const ImageGalleryBlockWrapper = styled('figure')`
+  margin: 0;
+`
+
+export const ImageGalleryBlockImageList = styled(ImageList)`
+  margin: 0;
+  grid-template-columns: repeat(1, 1fr);
+
+  ${({theme}) => theme.breakpoints.up('sm')} {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    grid-template-columns: repeat(3, 1fr);
+  }
+`
 
 export const ImageGalleryBlock = ({images, className}: BuilderImageGalleryBlockProps) => {
   const {
     elements: {Image}
   } = useWebsiteBuilder()
-  const theme = useTheme()
-  const medium = useMediaQuery(theme.breakpoints.up('sm'))
-  const big = useMediaQuery(theme.breakpoints.up('md'))
-  const cols = big ? 3 : medium ? 2 : 1
-
   const nonEmptyImages = images.filter(image => image.image)
 
   return (
     <ImageGalleryBlockWrapper className={className}>
-      <ImageList cols={cols} gap={8}>
+      <ImageGalleryBlockImageList cols={0} gap={8}>
         {nonEmptyImages.map((image, index) => (
           <ImageListItem key={index}>
             <Image image={image.image!} />
@@ -35,7 +38,7 @@ export const ImageGalleryBlock = ({images, className}: BuilderImageGalleryBlockP
             <ImageListItemBar title={image.caption ?? image.image?.title} position="below" />
           </ImageListItem>
         ))}
-      </ImageList>
+      </ImageGalleryBlockImageList>
     </ImageGalleryBlockWrapper>
   )
 }

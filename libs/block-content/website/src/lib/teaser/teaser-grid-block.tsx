@@ -7,7 +7,8 @@ export const isTeaserGridBlock = (block: Block): block is TeaserGridBlockType =>
 
 export const TeaserGridBlockWrapper = styled('div')<Pick<TeaserGridBlockType, 'numColumns'>>`
   display: grid;
-  gap: ${({theme}) => theme.spacing(2)};
+  column-gap: ${({theme}) => theme.spacing(2)};
+  row-gap: ${({theme}) => theme.spacing(5)};
   grid-template-columns: 1fr;
   align-items: stretch;
 
@@ -36,12 +37,7 @@ const alignmentForTeaserBlock = (index: number, numColumns: number): FlexAlignme
   }
 }
 
-export const TeaserGridBlock = ({
-  numColumns,
-  teasers,
-  showLead,
-  className
-}: BuilderTeaserGridBlockProps) => {
+export const TeaserGridBlock = ({numColumns, teasers, className}: BuilderTeaserGridBlockProps) => {
   const {
     blocks: {Teaser}
   } = useWebsiteBuilder()
@@ -51,7 +47,6 @@ export const TeaserGridBlock = ({
       {teasers?.map((teaser, index) => (
         <Teaser
           key={index}
-          showLead={showLead}
           teaser={teaser}
           alignment={alignmentForTeaserBlock(index, numColumns)}
         />

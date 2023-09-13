@@ -14,7 +14,7 @@ exports[`Registration Form Container should render Filled 1`] = `
       class="css-1uw3gxg-RegistrationFormWrapper elv4f74"
     >
       <div
-        class="css-1ub8p57-RegistrationInputForm elv4f73"
+        class="css-m3or9s-RegistrationInputForm elv4f73"
       >
         <div
           class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -166,7 +166,7 @@ exports[`Registration Form Container should render Filled 1`] = `
 @@ -186,12 +189,12 @@
         >
           <div
-            class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-10b0ed7-MuiFormControl-root-MuiTextField-root"
+            class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-r5y13t-MuiFormControl-root-MuiTextField-root"
           >
             <label
 -             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
@@ -176,7 +176,7 @@ exports[`Registration Form Container should render Filled 1`] = `
               for=":r4:"
               id=":r4:-label"
             >
-              Address
+              Adresse
             </label>
 @@ -202,18 +205,18 @@
                 aria-invalid="false"
@@ -196,7 +196,7 @@ exports[`Registration Form Container should render Filled 1`] = `
 +                 class="css-14lo706"
                 >
                   <span>
-                    Address
+                    Adresse
                   </span>
                 </legend>
 @@ -222,12 +225,12 @@
@@ -212,7 +212,7 @@ exports[`Registration Form Container should render Filled 1`] = `
               for=":r5:"
               id=":r5:-label"
             >
-              Postleitzahl
+              PLZ
             </label>
 @@ -238,18 +241,18 @@
                 aria-invalid="false"
@@ -232,7 +232,7 @@ exports[`Registration Form Container should render Filled 1`] = `
 +                 class="css-14lo706"
                 >
                   <span>
-                    Postleitzahl
+                    PLZ
                   </span>
                 </legend>
 @@ -258,12 +261,12 @@
@@ -248,7 +248,7 @@ exports[`Registration Form Container should render Filled 1`] = `
               for=":r6:"
               id=":r6:-label"
             >
-              Stadt
+              Ort / Stadt
             </label>
 @@ -274,18 +277,18 @@
                 aria-invalid="false"
@@ -268,13 +268,13 @@ exports[`Registration Form Container should render Filled 1`] = `
 +                 class="css-14lo706"
                 >
                   <span>
-                    Stadt
+                    Ort / Stadt
                   </span>
                 </legend>
 @@ -294,12 +297,12 @@
           </div>
           <div
-            class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
+            class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-ansmzu-MuiFormControl-root-MuiTextField-root"
           >
             <label
 -             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
@@ -351,7 +351,7 @@ exports[`Registration Form Container should render WithChallengeError 1`] = `
     class="css-1uw3gxg-RegistrationFormWrapper elv4f74"
   >
     <div
-      class="css-1ub8p57-RegistrationInputForm elv4f73"
+      class="css-m3or9s-RegistrationInputForm elv4f73"
     >
       <div
         class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -530,10 +530,10 @@ exports[`Registration Form Container should render WithChallengeError 1`] = `
         </div>
       </div>
       <div
-        class="css-9li2u0-RegistrationAddressWrapper elv4f72"
+        class="css-jblnqb-RegistrationAddressWrapper elv4f72"
       >
         <div
-          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-10b0ed7-MuiFormControl-root-MuiTextField-root"
+          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-r5y13t-MuiFormControl-root-MuiTextField-root"
         >
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
@@ -541,7 +541,7 @@ exports[`Registration Form Container should render WithChallengeError 1`] = `
             for=":rd:"
             id=":rd:-label"
           >
-            Address
+            Adresse
           </label>
           <div
             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl css-md26zr-MuiInputBase-root-MuiOutlinedInput-root"
@@ -562,7 +562,7 @@ exports[`Registration Form Container should render WithChallengeError 1`] = `
                 class="css-yjsfm1"
               >
                 <span>
-                  Address
+                  Adresse
                 </span>
               </legend>
             </fieldset>
@@ -577,7 +577,7 @@ exports[`Registration Form Container should render WithChallengeError 1`] = `
             for=":re:"
             id=":re:-label"
           >
-            Postleitzahl
+            PLZ
           </label>
           <div
             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl css-md26zr-MuiInputBase-root-MuiOutlinedInput-root"
@@ -598,7 +598,7 @@ exports[`Registration Form Container should render WithChallengeError 1`] = `
                 class="css-yjsfm1"
               >
                 <span>
-                  Postleitzahl
+                  PLZ
                 </span>
               </legend>
             </fieldset>
@@ -613,7 +613,7 @@ exports[`Registration Form Container should render WithChallengeError 1`] = `
             for=":rf:"
             id=":rf:-label"
           >
-            Stadt
+            Ort / Stadt
           </label>
           <div
             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl css-md26zr-MuiInputBase-root-MuiOutlinedInput-root"
@@ -634,14 +634,14 @@ exports[`Registration Form Container should render WithChallengeError 1`] = `
                 class="css-yjsfm1"
               >
                 <span>
-                  Stadt
+                  Ort / Stadt
                 </span>
               </legend>
             </fieldset>
           </div>
         </div>
         <div
-          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
+          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-ansmzu-MuiFormControl-root-MuiTextField-root"
         >
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
@@ -723,7 +723,7 @@ exports[`Registration Form Container should render WithClassName 1`] = `
     class="extra-classname css-1uw3gxg-RegistrationFormWrapper elv4f74"
   >
     <div
-      class="css-1ub8p57-RegistrationInputForm elv4f73"
+      class="css-m3or9s-RegistrationInputForm elv4f73"
     >
       <div
         class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -902,10 +902,10 @@ exports[`Registration Form Container should render WithClassName 1`] = `
         </div>
       </div>
       <div
-        class="css-9li2u0-RegistrationAddressWrapper elv4f72"
+        class="css-jblnqb-RegistrationAddressWrapper elv4f72"
       >
         <div
-          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-10b0ed7-MuiFormControl-root-MuiTextField-root"
+          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-r5y13t-MuiFormControl-root-MuiTextField-root"
         >
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
@@ -913,7 +913,7 @@ exports[`Registration Form Container should render WithClassName 1`] = `
             for=":rl:"
             id=":rl:-label"
           >
-            Address
+            Adresse
           </label>
           <div
             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl css-md26zr-MuiInputBase-root-MuiOutlinedInput-root"
@@ -934,7 +934,7 @@ exports[`Registration Form Container should render WithClassName 1`] = `
                 class="css-yjsfm1"
               >
                 <span>
-                  Address
+                  Adresse
                 </span>
               </legend>
             </fieldset>
@@ -949,7 +949,7 @@ exports[`Registration Form Container should render WithClassName 1`] = `
             for=":rm:"
             id=":rm:-label"
           >
-            Postleitzahl
+            PLZ
           </label>
           <div
             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl css-md26zr-MuiInputBase-root-MuiOutlinedInput-root"
@@ -970,7 +970,7 @@ exports[`Registration Form Container should render WithClassName 1`] = `
                 class="css-yjsfm1"
               >
                 <span>
-                  Postleitzahl
+                  PLZ
                 </span>
               </legend>
             </fieldset>
@@ -985,7 +985,7 @@ exports[`Registration Form Container should render WithClassName 1`] = `
             for=":rn:"
             id=":rn:-label"
           >
-            Stadt
+            Ort / Stadt
           </label>
           <div
             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl css-md26zr-MuiInputBase-root-MuiOutlinedInput-root"
@@ -1006,14 +1006,14 @@ exports[`Registration Form Container should render WithClassName 1`] = `
                 class="css-yjsfm1"
               >
                 <span>
-                  Stadt
+                  Ort / Stadt
                 </span>
               </legend>
             </fieldset>
           </div>
         </div>
         <div
-          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
+          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-ansmzu-MuiFormControl-root-MuiTextField-root"
         >
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
@@ -1169,7 +1169,7 @@ exports[`Registration Form Container should render WithEmotion 1`] = `
     class="css-1uw3gxg-RegistrationFormWrapper elv4f74"
   >
     <div
-      class="css-1ub8p57-RegistrationInputForm elv4f73"
+      class="css-m3or9s-RegistrationInputForm elv4f73"
     >
       <div
         class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -1348,10 +1348,10 @@ exports[`Registration Form Container should render WithEmotion 1`] = `
         </div>
       </div>
       <div
-        class="css-9li2u0-RegistrationAddressWrapper elv4f72"
+        class="css-jblnqb-RegistrationAddressWrapper elv4f72"
       >
         <div
-          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-10b0ed7-MuiFormControl-root-MuiTextField-root"
+          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-r5y13t-MuiFormControl-root-MuiTextField-root"
         >
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
@@ -1359,7 +1359,7 @@ exports[`Registration Form Container should render WithEmotion 1`] = `
             for=":ru:"
             id=":ru:-label"
           >
-            Address
+            Adresse
           </label>
           <div
             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl css-md26zr-MuiInputBase-root-MuiOutlinedInput-root"
@@ -1380,7 +1380,7 @@ exports[`Registration Form Container should render WithEmotion 1`] = `
                 class="css-yjsfm1"
               >
                 <span>
-                  Address
+                  Adresse
                 </span>
               </legend>
             </fieldset>
@@ -1395,7 +1395,7 @@ exports[`Registration Form Container should render WithEmotion 1`] = `
             for=":rv:"
             id=":rv:-label"
           >
-            Postleitzahl
+            PLZ
           </label>
           <div
             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl css-md26zr-MuiInputBase-root-MuiOutlinedInput-root"
@@ -1416,7 +1416,7 @@ exports[`Registration Form Container should render WithEmotion 1`] = `
                 class="css-yjsfm1"
               >
                 <span>
-                  Postleitzahl
+                  PLZ
                 </span>
               </legend>
             </fieldset>
@@ -1431,7 +1431,7 @@ exports[`Registration Form Container should render WithEmotion 1`] = `
             for=":r10:"
             id=":r10:-label"
           >
-            Stadt
+            Ort / Stadt
           </label>
           <div
             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl css-md26zr-MuiInputBase-root-MuiOutlinedInput-root"
@@ -1452,14 +1452,14 @@ exports[`Registration Form Container should render WithEmotion 1`] = `
                 class="css-yjsfm1"
               >
                 <span>
-                  Stadt
+                  Ort / Stadt
                 </span>
               </legend>
             </fieldset>
           </div>
         </div>
         <div
-          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
+          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-ansmzu-MuiFormControl-root-MuiTextField-root"
         >
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
@@ -1766,7 +1766,7 @@ exports[`Registration Form Container should render WithRegisterError 1`] = `
 @@ -186,12 +186,12 @@
         >
           <div
-            class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-10b0ed7-MuiFormControl-root-MuiTextField-root"
+            class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-r5y13t-MuiFormControl-root-MuiTextField-root"
           >
             <label
 -             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
@@ -1776,7 +1776,7 @@ exports[`Registration Form Container should render WithRegisterError 1`] = `
               for=":r17:"
               id=":r17:-label"
             >
-              Address
+              Adresse
             </label>
 @@ -202,18 +202,18 @@
                 aria-invalid="false"
@@ -1796,7 +1796,7 @@ exports[`Registration Form Container should render WithRegisterError 1`] = `
 +                 class="css-14lo706"
                 >
                   <span>
-                    Address
+                    Adresse
                   </span>
                 </legend>
 @@ -222,12 +222,12 @@
@@ -1812,7 +1812,7 @@ exports[`Registration Form Container should render WithRegisterError 1`] = `
               for=":r18:"
               id=":r18:-label"
             >
-              Postleitzahl
+              PLZ
             </label>
 @@ -238,18 +238,18 @@
                 aria-invalid="false"
@@ -1832,7 +1832,7 @@ exports[`Registration Form Container should render WithRegisterError 1`] = `
 +                 class="css-14lo706"
                 >
                   <span>
-                    Postleitzahl
+                    PLZ
                   </span>
                 </legend>
 @@ -258,12 +258,12 @@
@@ -1848,7 +1848,7 @@ exports[`Registration Form Container should render WithRegisterError 1`] = `
               for=":r19:"
               id=":r19:-label"
             >
-              Stadt
+              Ort / Stadt
             </label>
 @@ -274,18 +274,18 @@
                 aria-invalid="false"
@@ -1868,13 +1868,13 @@ exports[`Registration Form Container should render WithRegisterError 1`] = `
 +                 class="css-14lo706"
                 >
                   <span>
-                    Stadt
+                    Ort / Stadt
                   </span>
                 </legend>
 @@ -294,12 +294,12 @@
           </div>
           <div
-            class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
+            class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-ansmzu-MuiFormControl-root-MuiTextField-root"
           >
             <label
 -             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
