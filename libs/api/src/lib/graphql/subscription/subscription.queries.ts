@@ -209,17 +209,6 @@ const createHasAddressFilter = (
   return {}
 }
 
-const createUserFilter = (filter: Partial<SubscriptionFilter>): Prisma.SubscriptionWhereInput => {
-  if (filter?.userID) {
-    return {
-      user: {
-        id: filter.userID
-      }
-    }
-  }
-  return {}
-}
-
 export const createSubscriptionFilter = (
   filter: Partial<SubscriptionFilter>
 ): Prisma.SubscriptionWhereInput => ({
@@ -235,8 +224,7 @@ export const createSubscriptionFilter = (
     createPaymentPeriodicityFilter(filter),
     createPaymentMethodFilter(filter),
     createMemberPlanFilter(filter),
-    createHasAddressFilter(filter),
-    createUserFilter(filter)
+    createHasAddressFilter(filter)
   ]
 })
 

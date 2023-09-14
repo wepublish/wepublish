@@ -1,5 +1,5 @@
 {
-  "version": "10.0.0-experimental-subs.1",
+  "version": "9.2.0",
   "changelog": {
     "repo": "wepublish/wepublish",
     "cacheDir": ".changelog",

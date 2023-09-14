@@ -17,19 +17,23 @@ export interface DeactivateSubscription {
 }
 
 export interface SubscriptionDeactivatePanelProps {
+  isDeactivated: boolean
   displayName: string
   userEmail: string
   paidUntil?: Date
 
   onDeactivate(data: DeactivateSubscription): void
+  onReactivate(): void
   onClose(): void
 }
 
 function UserSubscriptionDeactivatePanel({
+  isDeactivated,
   displayName,
   userEmail,
   paidUntil,
   onDeactivate,
+  onReactivate,
   onClose
 }: SubscriptionDeactivatePanelProps) {
   const {t} = useTranslation()
@@ -43,64 +47,82 @@ function UserSubscriptionDeactivatePanel({
   return (
     <>
       <Modal.Header>
-        <Modal.Title>{t('userSubscriptionEdit.deactivation.modalTitle.activated')}</Modal.Title>
+        <Modal.Title>
+          {t(
+            isDeactivated
+              ? 'userSubscriptionEdit.deactivation.modalTitle.deactivated'
+              : 'userSubscriptionEdit.deactivation.modalTitle.activated'
+          )}
+        </Modal.Title>
       </Modal.Header>
 
       <Modal.Body>
         <p>
-          {t('userSubscriptionEdit.deactivation.modalMessage.activated', {
-            userName: displayName,
-            userEmail
-          })}
+          {t(
+            isDeactivated
+              ? 'userSubscriptionEdit.deactivation.modalMessage.deactivated'
+              : 'userSubscriptionEdit.deactivation.modalMessage.activated',
+            {userName: displayName, userEmail}
+          )}
         </p>
-        <Form fluid>
-          <Group controlId="deactivationDate">
-            <ControlLabel>{t('userSubscriptionEdit.deactivation.date')}</ControlLabel>
-            <DatePicker
-              block
-              placement="auto"
-              value={deactivationDate}
-              onChange={value => setDeactivationDate(value)}
-            />
-          </Group>
+        {!isDeactivated && (
+          <Form fluid>
+            <Group controlId="deactivationDate">
+              <ControlLabel>{t('userSubscriptionEdit.deactivation.date')}</ControlLabel>
+              <DatePicker
+                block
+                placement="auto"
+                value={deactivationDate}
+                onChange={value => setDeactivationDate(value)}
+              />
+            </Group>
 
-          <Group controlId="deactivationReason">
-            <ControlLabel>{t('userSubscriptionEdit.deactivation.reason')}</ControlLabel>
-            <SelectPicker
-              virtualized
-              searchable={false}
-              data={[
-                {
-                  value: SubscriptionDeactivationReason.None,
-                  label: t('userSubscriptionEdit.deactivation.reasonNone')
-                },
-                {
-                  value: SubscriptionDeactivationReason.UserSelfDeactivated,
-                  label: t('userSubscriptionEdit.deactivation.reasonUserSelfDeactivated')
-                },
-                {
-                  value: SubscriptionDeactivationReason.InvoiceNotPaid,
-                  label: t('userSubscriptionEdit.deactivation.reasonInvoiceNotPaid')
-                }
-              ]}
-              value={deactivationReason}
-              block
-              placement="auto"
-              onChange={value => setDeactivationReason(value)}
-            />
-          </Group>
-          <Message showIcon type="info">
-            {t('userSubscriptionEdit.deactivation.help')}
-          </Message>
-        </Form>
+            <Group controlId="deactivationReason">
+              <ControlLabel>{t('userSubscriptionEdit.deactivation.reason')}</ControlLabel>
+              <SelectPicker
+                virtualized
+                searchable={false}
+                data={[
+                  {
+                    value: SubscriptionDeactivationReason.None,
+                    label: t('userSubscriptionEdit.deactivation.reasonNone')
+                  },
+                  {
+                    value: SubscriptionDeactivationReason.UserSelfDeactivated,
+                    label: t('userSubscriptionEdit.deactivation.reasonUserSelfDeactivated')
+                  },
+                  {
+                    value: SubscriptionDeactivationReason.InvoiceNotPaid,
+                    label: t('userSubscriptionEdit.deactivation.reasonInvoiceNotPaid')
+                  }
+                ]}
+                value={deactivationReason}
+                block
+                placement="auto"
+                onChange={value => setDeactivationReason(value)}
+              />
+            </Group>
+            <Message showIcon type="info">
+              {t('userSubscriptionEdit.deactivation.help')}
+            </Message>
+          </Form>
+        )}
       </Modal.Body>
 
       <Modal.Footer>
         <Button
-          disabled={!deactivationDate || !deactivationReason}
+          disabled={isDeactivated ? false : !deactivationDate || !deactivationReason}
           appearance="primary"
-          onClick={() => onDeactivate({date: deactivationDate!, reason: deactivationReason!})}>
-          {t('userSubscriptionEdit.deactivation.action.activated')}
+          onClick={() =>
+            isDeactivated
+              ? onReactivate()
+              : onDeactivate({date: deactivationDate!, reason: deactivationReason!})
+          }>
+          {t(
+            isDeactivated
+              ? 'userSubscriptionEdit.deactivation.action.deactivated'
+              : 'userSubscriptionEdit.deactivation.action.activated'
+          )}
         </Button>
         <Button appearance="subtle" onClick={() => onClose()}>
           {t('articleEditor.panels.close')}

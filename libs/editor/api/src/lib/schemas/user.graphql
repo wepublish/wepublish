@@ -119,8 +119,8 @@ mutation UpdateUser($id: ID!, $input: UserInput!) {
   }
 }
 
-mutation ResetUserPassword($id: ID!, $password: String!, $sendMail: Boolean) {
-  resetUserPassword(id: $id, password: $password, sendMail: $sendMail) {
+mutation ResetUserPassword($id: ID!, $password: String!) {
+  resetUserPassword(id: $id, password: $password) {
     ...FullUser
   }
 }

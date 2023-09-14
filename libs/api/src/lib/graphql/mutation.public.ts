@@ -1,4 +1,4 @@
-import {SubscriptionDeactivationReason, UserEvent} from '@prisma/client'
+import {SubscriptionDeactivationReason} from '@prisma/client'
 import {SettingName} from '@wepublish/settings/api'
 import {unselectPassword} from '@wepublish/user/api'
 import * as crypto from 'crypto'
@@ -25,7 +25,8 @@ import {
   UserInputError,
   UserSubscriptionAlreadyDeactivated
 } from '../error'
-import {logger} from '@wepublish/utils'
+import {SendMailType} from '../mails/mailContext'
+import {logger} from '../server'
 import {FIFTEEN_MINUTES_IN_MILLISECONDS, USER_PROPERTY_LAST_LOGIN_LINK_SEND} from '../utility'
 import {Validator} from '../validator'
 import {GraphQLCommentRating} from './comment-rating/comment-rating'
@@ -70,8 +71,6 @@ import {
   updateUserPassword,
   uploadPublicUserProfileImage
 } from './user/user.public-mutation'
-
-import {mailLogType} from '@wepublish/mails'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -189,7 +188,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       async resolve(
         root,
         {name, firstName, preferredName, email, address, password, challengeAnswer},
-        {sessionTTL, hashCostFactor, prisma, challenge, mailContext}
+        {sessionTTL, hashCostFactor, prisma, challenge}
       ) {
         email = email.toLowerCase()
         await Validator.createUser().parse({name, email, firstName, preferredName})
@@ -231,8 +230,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             password
           },
           hashCostFactor,
-          prisma,
-          mailContext
+          prisma.user
         )
 
         if (!user) {
@@ -304,8 +302,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           loaders,
           memberContext,
           challenge,
-          createPaymentWithProvider,
-          mailContext
+          createPaymentWithProvider
         }
       ) {
         email = email.toLowerCase()
@@ -370,8 +367,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             password
           },
           hashCostFactor,
-          prisma,
-          mailContext
+          prisma.user
         )
 
         if (!user) {
@@ -382,16 +378,21 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         const session = await createUserSession(user, sessionTTL, prisma.session, prisma.userRole)
         const properties = await memberContext.processSubscriptionProperties(subscriptionProperties)
 
-        const {subscription, invoice} = await memberContext.createSubscription(
+        const subscription = await memberContext.createSubscription(
           prisma.subscription,
           user.id,
-          paymentMethod.id,
+          paymentMethod,
           paymentPeriodicity,
           monthlyAmount,
-          memberPlan.id,
+          memberPlan,
           properties,
           autoRenew
         )
+
+        // Create Periods, Invoices and Payment
+        const invoice = await memberContext.renewSubscriptionForUser({
+          subscription
+        })
 
         if (!invoice) {
           logger('mutation.public').error(
@@ -480,16 +481,21 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
 
         const properties = await memberContext.processSubscriptionProperties(subscriptionProperties)
 
-        const {subscription, invoice} = await memberContext.createSubscription(
+        const subscription = await memberContext.createSubscription(
           prisma.subscription,
           user.id,
-          paymentMethod.id,
+          paymentMethod,
           paymentPeriodicity,
           monthlyAmount,
-          memberPlan.id,
+          memberPlan,
           properties,
           autoRenew
         )
+
+        // Create Periods, Invoices and Payment
+        const invoice = await memberContext.renewSubscriptionForUser({
+          subscription
+        })
 
         if (!invoice) {
           logger('mutation.public').error(
@@ -692,12 +698,18 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           throw new Error('No value set for RESET_PASSWORD_JWT_EXPIRES_MIN')
         }
 
-        const remoteTemplate = await mailContext.getUserTemplateName(UserEvent.LOGIN_LINK)
+        const token = generateJWT({
+          id: user.id,
+          expiresInMinutes: resetPwd
+        })
+
         await mailContext.sendMail({
-          externalMailTemplateId: remoteTemplate,
-          recipient: user,
-          optionalData: {},
-          mailType: mailLogType.UserFlow
+          type: SendMailType.LoginLink,
+          recipient: user.email,
+          data: {
+            url: urlAdapter.getLoginURL(token),
+            user
+          }
         })
 
         try {
@@ -775,7 +787,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       resolve: (
         root,
         {id, input},
-        {authenticateUser, prisma: {subscription}, loaders, memberContext, paymentProviders}
+        {authenticateUser, prisma: {subscription}, loaders, memberContext}
       ) =>
         updatePublicSubscription(
           id,
@@ -784,8 +796,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           memberContext,
           loaders.activeMemberPlansByID,
           loaders.activePaymentMethodsByID,
-          subscription,
-          paymentProviders
+          subscription
         )
     },
 
@@ -809,13 +820,20 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           }
         })
 
-        if (!subscription || subscription.userID !== user.id) throw new NotFound('subscription', id)
+        if (!subscription) throw new NotFound('subscription', id)
 
         if (subscription.deactivation)
           throw new UserSubscriptionAlreadyDeactivated(subscription.deactivation.date)
 
-        await memberContext.deactivateSubscription({
-          subscription,
+        const now = new Date()
+        const deactivationDate =
+          subscription.paidUntil !== null && subscription.paidUntil > now
+            ? subscription.paidUntil
+            : now
+
+        await memberContext.deactivateSubscriptionForUser({
+          subscriptionID: subscription.id,
+          deactivationDate,
           deactivationReason: SubscriptionDeactivationReason.userSelfDeactivated
         })
 

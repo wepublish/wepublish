@@ -181,13 +181,6 @@ You can reset the database by running the following command:
 npx prisma migrate reset
 ```
 
-## Prototype Prisma schema
-```sh
-npx prisma db push
-```
-
-Also see https://www.prisma.io/docs/concepts/components/prisma-migrate/db-push
-
 This will completely wipe the database, migrate and seed it.
 
 ## See more

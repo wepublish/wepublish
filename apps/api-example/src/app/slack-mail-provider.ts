@@ -1,9 +1,7 @@
-import { MailTemplate } from '@prisma/client'
 import {
   BaseMailProvider,
   MailLogStatus,
   MailProviderProps,
-  MailProviderTemplate,
   SendMailProps,
   WebhookForSendMailProps
 } from '@wepublish/api'
@@ -45,20 +43,5 @@ export class SlackMailProvider extends BaseMailProvider {
       },
       body: JSON.stringify(message)
     })
-  }
-
-  async getTemplates(): Promise<MailProviderTemplate[]> {
-    return [
-      {
-        name: 'SlackEmptyTemplate',
-        uniqueIdentifier: 'slack-empty',
-        createdAt: new Date(),
-        updatedAt: new Date()
-      }
-    ]
-  }
-
-  getTemplateUrl(template: MailTemplate): string {
-    return "http://example.com/"
   }
 }

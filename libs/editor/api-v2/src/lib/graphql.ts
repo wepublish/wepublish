@@ -111,34 +111,6 @@ export type ImportedEventsDocument = {
   totalCount: Scalars['Int'];
 };
 
-export type MailProviderModel = {
-  __typename?: 'MailProviderModel';
-  name: Scalars['String'];
-};
-
-export type MailTemplateRef = {
-  __typename?: 'MailTemplateRef';
-  id: Scalars['String'];
-  name: Scalars['String'];
-};
-
-export type MailTemplateWithUrlAndStatusModel = {
-  __typename?: 'MailTemplateWithUrlAndStatusModel';
-  description?: Maybe<Scalars['String']>;
-  externalMailTemplateId: Scalars['String'];
-  id: Scalars['String'];
-  name: Scalars['String'];
-  remoteMissing: Scalars['Boolean'];
-  status: Scalars['String'];
-  url: Scalars['String'];
-};
-
-export type MemberPlanRef = {
-  __typename?: 'MemberPlanRef';
-  id: Scalars['String'];
-  name: Scalars['String'];
-};
-
 export type Mutation = {
   __typename?: 'Mutation';
   /**
@@ -154,8 +126,6 @@ export type Mutation = {
    *
    */
   createEvent: Scalars['String'];
-  createSubscriptionFlow: Array<SubscriptionFlowModel>;
-  createSubscriptionInterval: Array<SubscriptionFlowModel>;
   /**
    *
    *       Creates a new userConsent based on input.
@@ -169,8 +139,6 @@ export type Mutation = {
    *
    */
   deleteConsent: Consent;
-  deleteSubscriptionFlow: Array<SubscriptionFlowModel>;
-  deleteSubscriptionInterval: Array<SubscriptionFlowModel>;
   /**
    *
    *       Delete an existing userConsent by id.
@@ -178,18 +146,12 @@ export type Mutation = {
    *
    */
   deleteUserConsent: UserConsent;
-  syncTemplates?: Maybe<Scalars['Boolean']>;
-  testSystemMail: Array<SystemMailModel>;
   /**
    *
    *       Updates an existing consent.
    *
    */
   updateConsent: Consent;
-  updateSubscriptionFlow: Array<SubscriptionFlowModel>;
-  updateSubscriptionInterval: Array<SubscriptionFlowModel>;
-  updateSubscriptionIntervals: Array<SubscriptionFlowModel>;
-  updateSystemMail: Array<SystemMailModel>;
   /**
    *
    *       Updates an existing userConsent based on input.
@@ -210,16 +172,6 @@ export type MutationCreateEventArgs = {
 };
 
 
-export type MutationCreateSubscriptionFlowArgs = {
-  subscriptionFlow: SubscriptionFlowModelCreateInput;
-};
-
-
-export type MutationCreateSubscriptionIntervalArgs = {
-  subscriptionInterval: SubscriptionIntervalCreateInput;
-};
-
-
 export type MutationCreateUserConsentArgs = {
   userConsent: UserConsentInput;
 };
@@ -230,49 +182,14 @@ export type MutationDeleteConsentArgs = {
 };
 
 
-export type MutationDeleteSubscriptionFlowArgs = {
-  subscriptionFlowId: Scalars['String'];
-};
-
-
-export type MutationDeleteSubscriptionIntervalArgs = {
-  subscriptionInterval: SubscriptionIntervalDeleteInput;
-};
-
-
 export type MutationDeleteUserConsentArgs = {
   id: Scalars['String'];
-};
-
-
-export type MutationTestSystemMailArgs = {
-  systemMail: SystemMailTestInput;
 };
 
 
 export type MutationUpdateConsentArgs = {
   consent: ConsentInput;
   id: Scalars['String'];
-};
-
-
-export type MutationUpdateSubscriptionFlowArgs = {
-  subscriptionFlow: SubscriptionFlowModelUpdateInput;
-};
-
-
-export type MutationUpdateSubscriptionIntervalArgs = {
-  subscriptionInterval: SubscriptionIntervalUpdateInput;
-};
-
-
-export type MutationUpdateSubscriptionIntervalsArgs = {
-  subscriptionIntervals: Array<SubscriptionIntervalUpdateInput>;
-};
-
-
-export type MutationUpdateSystemMailArgs = {
-  systemMail: SystemMailUpdateInput;
 };
 
 
@@ -287,12 +204,6 @@ export type PageInfo = {
   hasNextPage: Scalars['Boolean'];
   hasPreviousPage: Scalars['Boolean'];
   startCursor: Scalars['String'];
-};
-
-export type PaymentMethodRef = {
-  __typename?: 'PaymentMethodRef';
-  id: Scalars['String'];
-  name: Scalars['String'];
 };
 
 export enum PaymentPeriodicity {
@@ -336,7 +247,6 @@ export type Query = {
    *
    */
   expectedRevenue: Array<DashboardInvoice>;
-  getSystemMails: Array<SystemMailModel>;
   /**
    *
    *       Returns a more detailed version of a single importable event, by id and source.
@@ -355,7 +265,6 @@ export type Query = {
    *
    */
   importedEventsIds: Array<Scalars['String']>;
-  mailTemplates: Array<MailTemplateWithUrlAndStatusModel>;
   /**
    *
    *       Returns all new deactivations in a given timeframe.
@@ -370,8 +279,6 @@ export type Query = {
    *
    */
   newSubscribers: Array<DashboardSubscription>;
-  paymentMethods: Array<PaymentMethodRef>;
-  provider: MailProviderModel;
   /**
    *
    *       Returns all renewing subscribers in a given timeframe.
@@ -385,7 +292,6 @@ export type Query = {
    *
    */
   revenue: Array<DashboardInvoice>;
-  subscriptionFlows: Array<SubscriptionFlowModel>;
   /**
    *
    *       Returns a single userConsent by id.
@@ -456,12 +362,6 @@ export type QueryRevenueArgs = {
 };
 
 
-export type QuerySubscriptionFlowsArgs = {
-  defaultFlowOnly: Scalars['Boolean'];
-  memberPlanId?: InputMaybe<Scalars['String']>;
-};
-
-
 export type QueryUserConsentArgs = {
   id: Scalars['String'];
 };
@@ -481,82 +381,6 @@ export enum SubscriptionDeactivationReason {
   None = 'none',
   UserSelfDeactivated = 'userSelfDeactivated'
 }
-
-export enum SubscriptionEvent {
-  Custom = 'CUSTOM',
-  DeactivationByUser = 'DEACTIVATION_BY_USER',
-  DeactivationUnpaid = 'DEACTIVATION_UNPAID',
-  InvoiceCreation = 'INVOICE_CREATION',
-  RenewalFailed = 'RENEWAL_FAILED',
-  RenewalSuccess = 'RENEWAL_SUCCESS',
-  Subscribe = 'SUBSCRIBE'
-}
-
-export type SubscriptionFlowModel = {
-  __typename?: 'SubscriptionFlowModel';
-  autoRenewal: Array<Scalars['Boolean']>;
-  default: Scalars['Boolean'];
-  id: Scalars['String'];
-  intervals: Array<SubscriptionInterval>;
-  memberPlan?: Maybe<MemberPlanRef>;
-  numberOfSubscriptions: Scalars['Int'];
-  paymentMethods: Array<PaymentMethodRef>;
-  periodicities: Array<PaymentPeriodicity>;
-};
-
-export type SubscriptionFlowModelCreateInput = {
-  autoRenewal: Array<Scalars['Boolean']>;
-  memberPlanId: Scalars['String'];
-  paymentMethodIds: Array<Scalars['String']>;
-  periodicities: Array<PaymentPeriodicity>;
-};
-
-export type SubscriptionFlowModelUpdateInput = {
-  autoRenewal: Array<Scalars['Boolean']>;
-  id: Scalars['String'];
-  paymentMethodIds: Array<Scalars['String']>;
-  periodicities: Array<PaymentPeriodicity>;
-};
-
-export type SubscriptionInterval = {
-  __typename?: 'SubscriptionInterval';
-  daysAwayFromEnding?: Maybe<Scalars['Int']>;
-  event: SubscriptionEvent;
-  id: Scalars['String'];
-  mailTemplate?: Maybe<MailTemplateRef>;
-};
-
-export type SubscriptionIntervalCreateInput = {
-  daysAwayFromEnding?: InputMaybe<Scalars['Int']>;
-  event: SubscriptionEvent;
-  mailTemplateId?: InputMaybe<Scalars['String']>;
-  subscriptionFlowId: Scalars['String'];
-};
-
-export type SubscriptionIntervalDeleteInput = {
-  id: Scalars['String'];
-};
-
-export type SubscriptionIntervalUpdateInput = {
-  daysAwayFromEnding?: InputMaybe<Scalars['Int']>;
-  id: Scalars['String'];
-  mailTemplateId?: InputMaybe<Scalars['String']>;
-};
-
-export type SystemMailModel = {
-  __typename?: 'SystemMailModel';
-  event: UserEvent;
-  mailTemplate?: Maybe<MailTemplateRef>;
-};
-
-export type SystemMailTestInput = {
-  event: UserEvent;
-};
-
-export type SystemMailUpdateInput = {
-  event: UserEvent;
-  mailTemplateId: Scalars['String'];
-};
 
 export type UpdateUserConsentInput = {
   value: Scalars['Boolean'];
@@ -600,13 +424,6 @@ export type UserConsentInput = {
   userId: Scalars['String'];
   value: Scalars['Boolean'];
 };
-
-export enum UserEvent {
-  AccountCreation = 'ACCOUNT_CREATION',
-  LoginLink = 'LOGIN_LINK',
-  PasswordReset = 'PASSWORD_RESET',
-  TestMail = 'TEST_MAIL'
-}
 
 export type VersionInformation = {
   __typename?: 'VersionInformation';
@@ -718,113 +535,6 @@ export type CreateEventMutationVariables = Exact<{
 
 export type CreateEventMutation = { __typename?: 'Mutation', createEvent: string };
 
-export type MailTemplateQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type MailTemplateQuery = { __typename?: 'Query', mailTemplates: Array<{ __typename?: 'MailTemplateWithUrlAndStatusModel', id: string, name: string, description?: string | null, externalMailTemplateId: string, remoteMissing: boolean, url: string, status: string }>, provider: { __typename?: 'MailProviderModel', name: string } };
-
-export type SynchronizeMailTemplatesMutationVariables = Exact<{ [key: string]: never; }>;
-
-
-export type SynchronizeMailTemplatesMutation = { __typename?: 'Mutation', syncTemplates?: boolean | null };
-
-export type FullMailTemplateFragment = { __typename?: 'MailTemplateWithUrlAndStatusModel', id: string, name: string, description?: string | null, externalMailTemplateId: string, remoteMissing: boolean, url: string, status: string };
-
-export type FullMailProviderFragment = { __typename?: 'MailProviderModel', name: string };
-
-export type SubscriptionFlowsQueryVariables = Exact<{
-  defaultFlowOnly: Scalars['Boolean'];
-  memberPlanId?: InputMaybe<Scalars['String']>;
-}>;
-
-
-export type SubscriptionFlowsQuery = { __typename?: 'Query', subscriptionFlows: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
-
-export type CreateSubscriptionFlowMutationVariables = Exact<{
-  subscriptionFlow: SubscriptionFlowModelCreateInput;
-}>;
-
-
-export type CreateSubscriptionFlowMutation = { __typename?: 'Mutation', createSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
-
-export type UpdateSubscriptionFlowMutationVariables = Exact<{
-  subscriptionFlow: SubscriptionFlowModelUpdateInput;
-}>;
-
-
-export type UpdateSubscriptionFlowMutation = { __typename?: 'Mutation', updateSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
-
-export type DeleteSubscriptionFlowMutationVariables = Exact<{
-  subscriptionFlowId: Scalars['String'];
-}>;
-
-
-export type DeleteSubscriptionFlowMutation = { __typename?: 'Mutation', deleteSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
-
-export type CreateSubscriptionIntervalMutationVariables = Exact<{
-  subscriptionInterval: SubscriptionIntervalCreateInput;
-}>;
-
-
-export type CreateSubscriptionIntervalMutation = { __typename?: 'Mutation', createSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
-
-export type UpdateSubscriptionIntervalsMutationVariables = Exact<{
-  subscriptionIntervals: Array<SubscriptionIntervalUpdateInput> | SubscriptionIntervalUpdateInput;
-}>;
-
-
-export type UpdateSubscriptionIntervalsMutation = { __typename?: 'Mutation', updateSubscriptionIntervals: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
-
-export type UpdateSubscriptionIntervalMutationVariables = Exact<{
-  subscriptionInterval: SubscriptionIntervalUpdateInput;
-}>;
-
-
-export type UpdateSubscriptionIntervalMutation = { __typename?: 'Mutation', updateSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
-
-export type DeleteSubscriptionIntervalMutationVariables = Exact<{
-  subscriptionInterval: SubscriptionIntervalDeleteInput;
-}>;
-
-
-export type DeleteSubscriptionIntervalMutation = { __typename?: 'Mutation', deleteSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
-
-export type ListPaymentMethodsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type ListPaymentMethodsQuery = { __typename?: 'Query', paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }> };
-
-export type SubscriptionFlowFragment = { __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> };
-
-export type SubscriptionIntervalFragment = { __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null };
-
-export type MailTemplateRefFragment = { __typename?: 'MailTemplateRef', id: string, name: string };
-
-export type MemberPlanRefFragment = { __typename?: 'MemberPlanRef', id: string, name: string };
-
-export type PaymentMethodRefFragment = { __typename?: 'PaymentMethodRef', id: string, name: string };
-
-export type GetSystemMailsQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type GetSystemMailsQuery = { __typename?: 'Query', getSystemMails: Array<{ __typename?: 'SystemMailModel', event: UserEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> };
-
-export type UpdateSystemMailMutationVariables = Exact<{
-  systemMail: SystemMailUpdateInput;
-}>;
-
-
-export type UpdateSystemMailMutation = { __typename?: 'Mutation', updateSystemMail: Array<{ __typename?: 'SystemMailModel', event: UserEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> };
-
-export type TestSystemMailMutationVariables = Exact<{
-  systemMail: SystemMailTestInput;
-}>;
-
-
-export type TestSystemMailMutation = { __typename?: 'Mutation', testSystemMail: Array<{ __typename?: 'SystemMailModel', event: UserEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> };
-
-export type SystemMailFragment = { __typename?: 'SystemMailModel', event: UserEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null };
-
 export type VersionInformationQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -844,78 +554,6 @@ export const ImportableEventRefFragmentDoc = gql`
   endsAt
 }
     `;
-export const FullMailTemplateFragmentDoc = gql`
-    fragment fullMailTemplate on MailTemplateWithUrlAndStatusModel {
-  id
-  name
-  description
-  externalMailTemplateId
-  remoteMissing
-  url
-  status
-}
-    `;
-export const FullMailProviderFragmentDoc = gql`
-    fragment fullMailProvider on MailProviderModel {
-  name
-}
-    `;
-export const MemberPlanRefFragmentDoc = gql`
-    fragment MemberPlanRef on MemberPlanRef {
-  id
-  name
-}
-    `;
-export const PaymentMethodRefFragmentDoc = gql`
-    fragment PaymentMethodRef on PaymentMethodRef {
-  id
-  name
-}
-    `;
-export const MailTemplateRefFragmentDoc = gql`
-    fragment MailTemplateRef on MailTemplateRef {
-  id
-  name
-}
-    `;
-export const SubscriptionIntervalFragmentDoc = gql`
-    fragment SubscriptionInterval on SubscriptionInterval {
-  id
-  daysAwayFromEnding
-  event
-  mailTemplate {
-    ...MailTemplateRef
-  }
-}
-    ${MailTemplateRefFragmentDoc}`;
-export const SubscriptionFlowFragmentDoc = gql`
-    fragment SubscriptionFlow on SubscriptionFlowModel {
-  id
-  default
-  memberPlan {
-    ...MemberPlanRef
-  }
-  autoRenewal
-  paymentMethods {
-    ...PaymentMethodRef
-  }
-  periodicities
-  intervals {
-    ...SubscriptionInterval
-  }
-  numberOfSubscriptions
-}
-    ${MemberPlanRefFragmentDoc}
-${PaymentMethodRefFragmentDoc}
-${SubscriptionIntervalFragmentDoc}`;
-export const SystemMailFragmentDoc = gql`
-    fragment SystemMail on SystemMailModel {
-  event
-  mailTemplate {
-    ...MailTemplateRef
-  }
-}
-    ${MailTemplateRefFragmentDoc}`;
 export const ConsentsDocument = gql`
     query Consents {
   consents {
@@ -1501,478 +1139,6 @@ export function useCreateEventMutation(baseOptions?: Apollo.MutationHookOptions<
 export type CreateEventMutationHookResult = ReturnType<typeof useCreateEventMutation>;
 export type CreateEventMutationResult = Apollo.MutationResult<CreateEventMutation>;
 export type CreateEventMutationOptions = Apollo.BaseMutationOptions<CreateEventMutation, CreateEventMutationVariables>;
-export const MailTemplateDocument = gql`
-    query MailTemplate {
-  mailTemplates {
-    ...fullMailTemplate
-  }
-  provider {
-    ...fullMailProvider
-  }
-}
-    ${FullMailTemplateFragmentDoc}
-${FullMailProviderFragmentDoc}`;
-
-/**
- * __useMailTemplateQuery__
- *
- * To run a query within a React component, call `useMailTemplateQuery` and pass it any options that fit your needs.
- * When your component renders, `useMailTemplateQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useMailTemplateQuery({
- *   variables: {
- *   },
- * });
- */
-export function useMailTemplateQuery(baseOptions?: Apollo.QueryHookOptions<MailTemplateQuery, MailTemplateQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<MailTemplateQuery, MailTemplateQueryVariables>(MailTemplateDocument, options);
-      }
-export function useMailTemplateLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MailTemplateQuery, MailTemplateQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<MailTemplateQuery, MailTemplateQueryVariables>(MailTemplateDocument, options);
-        }
-export type MailTemplateQueryHookResult = ReturnType<typeof useMailTemplateQuery>;
-export type MailTemplateLazyQueryHookResult = ReturnType<typeof useMailTemplateLazyQuery>;
-export type MailTemplateQueryResult = Apollo.QueryResult<MailTemplateQuery, MailTemplateQueryVariables>;
-export const SynchronizeMailTemplatesDocument = gql`
-    mutation SynchronizeMailTemplates {
-  syncTemplates
-}
-    `;
-export type SynchronizeMailTemplatesMutationFn = Apollo.MutationFunction<SynchronizeMailTemplatesMutation, SynchronizeMailTemplatesMutationVariables>;
-
-/**
- * __useSynchronizeMailTemplatesMutation__
- *
- * To run a mutation, you first call `useSynchronizeMailTemplatesMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useSynchronizeMailTemplatesMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [synchronizeMailTemplatesMutation, { data, loading, error }] = useSynchronizeMailTemplatesMutation({
- *   variables: {
- *   },
- * });
- */
-export function useSynchronizeMailTemplatesMutation(baseOptions?: Apollo.MutationHookOptions<SynchronizeMailTemplatesMutation, SynchronizeMailTemplatesMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<SynchronizeMailTemplatesMutation, SynchronizeMailTemplatesMutationVariables>(SynchronizeMailTemplatesDocument, options);
-      }
-export type SynchronizeMailTemplatesMutationHookResult = ReturnType<typeof useSynchronizeMailTemplatesMutation>;
-export type SynchronizeMailTemplatesMutationResult = Apollo.MutationResult<SynchronizeMailTemplatesMutation>;
-export type SynchronizeMailTemplatesMutationOptions = Apollo.BaseMutationOptions<SynchronizeMailTemplatesMutation, SynchronizeMailTemplatesMutationVariables>;
-export const SubscriptionFlowsDocument = gql`
-    query SubscriptionFlows($defaultFlowOnly: Boolean!, $memberPlanId: String) {
-  subscriptionFlows(
-    defaultFlowOnly: $defaultFlowOnly
-    memberPlanId: $memberPlanId
-  ) {
-    ...SubscriptionFlow
-  }
-}
-    ${SubscriptionFlowFragmentDoc}`;
-
-/**
- * __useSubscriptionFlowsQuery__
- *
- * To run a query within a React component, call `useSubscriptionFlowsQuery` and pass it any options that fit your needs.
- * When your component renders, `useSubscriptionFlowsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useSubscriptionFlowsQuery({
- *   variables: {
- *      defaultFlowOnly: // value for 'defaultFlowOnly'
- *      memberPlanId: // value for 'memberPlanId'
- *   },
- * });
- */
-export function useSubscriptionFlowsQuery(baseOptions: Apollo.QueryHookOptions<SubscriptionFlowsQuery, SubscriptionFlowsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<SubscriptionFlowsQuery, SubscriptionFlowsQueryVariables>(SubscriptionFlowsDocument, options);
-      }
-export function useSubscriptionFlowsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SubscriptionFlowsQuery, SubscriptionFlowsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<SubscriptionFlowsQuery, SubscriptionFlowsQueryVariables>(SubscriptionFlowsDocument, options);
-        }
-export type SubscriptionFlowsQueryHookResult = ReturnType<typeof useSubscriptionFlowsQuery>;
-export type SubscriptionFlowsLazyQueryHookResult = ReturnType<typeof useSubscriptionFlowsLazyQuery>;
-export type SubscriptionFlowsQueryResult = Apollo.QueryResult<SubscriptionFlowsQuery, SubscriptionFlowsQueryVariables>;
-export const CreateSubscriptionFlowDocument = gql`
-    mutation CreateSubscriptionFlow($subscriptionFlow: SubscriptionFlowModelCreateInput!) {
-  createSubscriptionFlow(subscriptionFlow: $subscriptionFlow) {
-    ...SubscriptionFlow
-  }
-}
-    ${SubscriptionFlowFragmentDoc}`;
-export type CreateSubscriptionFlowMutationFn = Apollo.MutationFunction<CreateSubscriptionFlowMutation, CreateSubscriptionFlowMutationVariables>;
-
-/**
- * __useCreateSubscriptionFlowMutation__
- *
- * To run a mutation, you first call `useCreateSubscriptionFlowMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateSubscriptionFlowMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createSubscriptionFlowMutation, { data, loading, error }] = useCreateSubscriptionFlowMutation({
- *   variables: {
- *      subscriptionFlow: // value for 'subscriptionFlow'
- *   },
- * });
- */
-export function useCreateSubscriptionFlowMutation(baseOptions?: Apollo.MutationHookOptions<CreateSubscriptionFlowMutation, CreateSubscriptionFlowMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateSubscriptionFlowMutation, CreateSubscriptionFlowMutationVariables>(CreateSubscriptionFlowDocument, options);
-      }
-export type CreateSubscriptionFlowMutationHookResult = ReturnType<typeof useCreateSubscriptionFlowMutation>;
-export type CreateSubscriptionFlowMutationResult = Apollo.MutationResult<CreateSubscriptionFlowMutation>;
-export type CreateSubscriptionFlowMutationOptions = Apollo.BaseMutationOptions<CreateSubscriptionFlowMutation, CreateSubscriptionFlowMutationVariables>;
-export const UpdateSubscriptionFlowDocument = gql`
-    mutation UpdateSubscriptionFlow($subscriptionFlow: SubscriptionFlowModelUpdateInput!) {
-  updateSubscriptionFlow(subscriptionFlow: $subscriptionFlow) {
-    ...SubscriptionFlow
-  }
-}
-    ${SubscriptionFlowFragmentDoc}`;
-export type UpdateSubscriptionFlowMutationFn = Apollo.MutationFunction<UpdateSubscriptionFlowMutation, UpdateSubscriptionFlowMutationVariables>;
-
-/**
- * __useUpdateSubscriptionFlowMutation__
- *
- * To run a mutation, you first call `useUpdateSubscriptionFlowMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateSubscriptionFlowMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateSubscriptionFlowMutation, { data, loading, error }] = useUpdateSubscriptionFlowMutation({
- *   variables: {
- *      subscriptionFlow: // value for 'subscriptionFlow'
- *   },
- * });
- */
-export function useUpdateSubscriptionFlowMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSubscriptionFlowMutation, UpdateSubscriptionFlowMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateSubscriptionFlowMutation, UpdateSubscriptionFlowMutationVariables>(UpdateSubscriptionFlowDocument, options);
-      }
-export type UpdateSubscriptionFlowMutationHookResult = ReturnType<typeof useUpdateSubscriptionFlowMutation>;
-export type UpdateSubscriptionFlowMutationResult = Apollo.MutationResult<UpdateSubscriptionFlowMutation>;
-export type UpdateSubscriptionFlowMutationOptions = Apollo.BaseMutationOptions<UpdateSubscriptionFlowMutation, UpdateSubscriptionFlowMutationVariables>;
-export const DeleteSubscriptionFlowDocument = gql`
-    mutation DeleteSubscriptionFlow($subscriptionFlowId: String!) {
-  deleteSubscriptionFlow(subscriptionFlowId: $subscriptionFlowId) {
-    ...SubscriptionFlow
-  }
-}
-    ${SubscriptionFlowFragmentDoc}`;
-export type DeleteSubscriptionFlowMutationFn = Apollo.MutationFunction<DeleteSubscriptionFlowMutation, DeleteSubscriptionFlowMutationVariables>;
-
-/**
- * __useDeleteSubscriptionFlowMutation__
- *
- * To run a mutation, you first call `useDeleteSubscriptionFlowMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeleteSubscriptionFlowMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [deleteSubscriptionFlowMutation, { data, loading, error }] = useDeleteSubscriptionFlowMutation({
- *   variables: {
- *      subscriptionFlowId: // value for 'subscriptionFlowId'
- *   },
- * });
- */
-export function useDeleteSubscriptionFlowMutation(baseOptions?: Apollo.MutationHookOptions<DeleteSubscriptionFlowMutation, DeleteSubscriptionFlowMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteSubscriptionFlowMutation, DeleteSubscriptionFlowMutationVariables>(DeleteSubscriptionFlowDocument, options);
-      }
-export type DeleteSubscriptionFlowMutationHookResult = ReturnType<typeof useDeleteSubscriptionFlowMutation>;
-export type DeleteSubscriptionFlowMutationResult = Apollo.MutationResult<DeleteSubscriptionFlowMutation>;
-export type DeleteSubscriptionFlowMutationOptions = Apollo.BaseMutationOptions<DeleteSubscriptionFlowMutation, DeleteSubscriptionFlowMutationVariables>;
-export const CreateSubscriptionIntervalDocument = gql`
-    mutation CreateSubscriptionInterval($subscriptionInterval: SubscriptionIntervalCreateInput!) {
-  createSubscriptionInterval(subscriptionInterval: $subscriptionInterval) {
-    ...SubscriptionFlow
-  }
-}
-    ${SubscriptionFlowFragmentDoc}`;
-export type CreateSubscriptionIntervalMutationFn = Apollo.MutationFunction<CreateSubscriptionIntervalMutation, CreateSubscriptionIntervalMutationVariables>;
-
-/**
- * __useCreateSubscriptionIntervalMutation__
- *
- * To run a mutation, you first call `useCreateSubscriptionIntervalMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateSubscriptionIntervalMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [createSubscriptionIntervalMutation, { data, loading, error }] = useCreateSubscriptionIntervalMutation({
- *   variables: {
- *      subscriptionInterval: // value for 'subscriptionInterval'
- *   },
- * });
- */
-export function useCreateSubscriptionIntervalMutation(baseOptions?: Apollo.MutationHookOptions<CreateSubscriptionIntervalMutation, CreateSubscriptionIntervalMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateSubscriptionIntervalMutation, CreateSubscriptionIntervalMutationVariables>(CreateSubscriptionIntervalDocument, options);
-      }
-export type CreateSubscriptionIntervalMutationHookResult = ReturnType<typeof useCreateSubscriptionIntervalMutation>;
-export type CreateSubscriptionIntervalMutationResult = Apollo.MutationResult<CreateSubscriptionIntervalMutation>;
-export type CreateSubscriptionIntervalMutationOptions = Apollo.BaseMutationOptions<CreateSubscriptionIntervalMutation, CreateSubscriptionIntervalMutationVariables>;
-export const UpdateSubscriptionIntervalsDocument = gql`
-    mutation UpdateSubscriptionIntervals($subscriptionIntervals: [SubscriptionIntervalUpdateInput!]!) {
-  updateSubscriptionIntervals(subscriptionIntervals: $subscriptionIntervals) {
-    ...SubscriptionFlow
-  }
-}
-    ${SubscriptionFlowFragmentDoc}`;
-export type UpdateSubscriptionIntervalsMutationFn = Apollo.MutationFunction<UpdateSubscriptionIntervalsMutation, UpdateSubscriptionIntervalsMutationVariables>;
-
-/**
- * __useUpdateSubscriptionIntervalsMutation__
- *
- * To run a mutation, you first call `useUpdateSubscriptionIntervalsMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateSubscriptionIntervalsMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateSubscriptionIntervalsMutation, { data, loading, error }] = useUpdateSubscriptionIntervalsMutation({
- *   variables: {
- *      subscriptionIntervals: // value for 'subscriptionIntervals'
- *   },
- * });
- */
-export function useUpdateSubscriptionIntervalsMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSubscriptionIntervalsMutation, UpdateSubscriptionIntervalsMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateSubscriptionIntervalsMutation, UpdateSubscriptionIntervalsMutationVariables>(UpdateSubscriptionIntervalsDocument, options);
-      }
-export type UpdateSubscriptionIntervalsMutationHookResult = ReturnType<typeof useUpdateSubscriptionIntervalsMutation>;
-export type UpdateSubscriptionIntervalsMutationResult = Apollo.MutationResult<UpdateSubscriptionIntervalsMutation>;
-export type UpdateSubscriptionIntervalsMutationOptions = Apollo.BaseMutationOptions<UpdateSubscriptionIntervalsMutation, UpdateSubscriptionIntervalsMutationVariables>;
-export const UpdateSubscriptionIntervalDocument = gql`
-    mutation UpdateSubscriptionInterval($subscriptionInterval: SubscriptionIntervalUpdateInput!) {
-  updateSubscriptionInterval(subscriptionInterval: $subscriptionInterval) {
-    ...SubscriptionFlow
-  }
-}
-    ${SubscriptionFlowFragmentDoc}`;
-export type UpdateSubscriptionIntervalMutationFn = Apollo.MutationFunction<UpdateSubscriptionIntervalMutation, UpdateSubscriptionIntervalMutationVariables>;
-
-/**
- * __useUpdateSubscriptionIntervalMutation__
- *
- * To run a mutation, you first call `useUpdateSubscriptionIntervalMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateSubscriptionIntervalMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateSubscriptionIntervalMutation, { data, loading, error }] = useUpdateSubscriptionIntervalMutation({
- *   variables: {
- *      subscriptionInterval: // value for 'subscriptionInterval'
- *   },
- * });
- */
-export function useUpdateSubscriptionIntervalMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSubscriptionIntervalMutation, UpdateSubscriptionIntervalMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateSubscriptionIntervalMutation, UpdateSubscriptionIntervalMutationVariables>(UpdateSubscriptionIntervalDocument, options);
-      }
-export type UpdateSubscriptionIntervalMutationHookResult = ReturnType<typeof useUpdateSubscriptionIntervalMutation>;
-export type UpdateSubscriptionIntervalMutationResult = Apollo.MutationResult<UpdateSubscriptionIntervalMutation>;
-export type UpdateSubscriptionIntervalMutationOptions = Apollo.BaseMutationOptions<UpdateSubscriptionIntervalMutation, UpdateSubscriptionIntervalMutationVariables>;
-export const DeleteSubscriptionIntervalDocument = gql`
-    mutation DeleteSubscriptionInterval($subscriptionInterval: SubscriptionIntervalDeleteInput!) {
-  deleteSubscriptionInterval(subscriptionInterval: $subscriptionInterval) {
-    ...SubscriptionFlow
-  }
-}
-    ${SubscriptionFlowFragmentDoc}`;
-export type DeleteSubscriptionIntervalMutationFn = Apollo.MutationFunction<DeleteSubscriptionIntervalMutation, DeleteSubscriptionIntervalMutationVariables>;
-
-/**
- * __useDeleteSubscriptionIntervalMutation__
- *
- * To run a mutation, you first call `useDeleteSubscriptionIntervalMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeleteSubscriptionIntervalMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [deleteSubscriptionIntervalMutation, { data, loading, error }] = useDeleteSubscriptionIntervalMutation({
- *   variables: {
- *      subscriptionInterval: // value for 'subscriptionInterval'
- *   },
- * });
- */
-export function useDeleteSubscriptionIntervalMutation(baseOptions?: Apollo.MutationHookOptions<DeleteSubscriptionIntervalMutation, DeleteSubscriptionIntervalMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<DeleteSubscriptionIntervalMutation, DeleteSubscriptionIntervalMutationVariables>(DeleteSubscriptionIntervalDocument, options);
-      }
-export type DeleteSubscriptionIntervalMutationHookResult = ReturnType<typeof useDeleteSubscriptionIntervalMutation>;
-export type DeleteSubscriptionIntervalMutationResult = Apollo.MutationResult<DeleteSubscriptionIntervalMutation>;
-export type DeleteSubscriptionIntervalMutationOptions = Apollo.BaseMutationOptions<DeleteSubscriptionIntervalMutation, DeleteSubscriptionIntervalMutationVariables>;
-export const ListPaymentMethodsDocument = gql`
-    query ListPaymentMethods {
-  paymentMethods {
-    ...PaymentMethodRef
-  }
-}
-    ${PaymentMethodRefFragmentDoc}`;
-
-/**
- * __useListPaymentMethodsQuery__
- *
- * To run a query within a React component, call `useListPaymentMethodsQuery` and pass it any options that fit your needs.
- * When your component renders, `useListPaymentMethodsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useListPaymentMethodsQuery({
- *   variables: {
- *   },
- * });
- */
-export function useListPaymentMethodsQuery(baseOptions?: Apollo.QueryHookOptions<ListPaymentMethodsQuery, ListPaymentMethodsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ListPaymentMethodsQuery, ListPaymentMethodsQueryVariables>(ListPaymentMethodsDocument, options);
-      }
-export function useListPaymentMethodsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ListPaymentMethodsQuery, ListPaymentMethodsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ListPaymentMethodsQuery, ListPaymentMethodsQueryVariables>(ListPaymentMethodsDocument, options);
-        }
-export type ListPaymentMethodsQueryHookResult = ReturnType<typeof useListPaymentMethodsQuery>;
-export type ListPaymentMethodsLazyQueryHookResult = ReturnType<typeof useListPaymentMethodsLazyQuery>;
-export type ListPaymentMethodsQueryResult = Apollo.QueryResult<ListPaymentMethodsQuery, ListPaymentMethodsQueryVariables>;
-export const GetSystemMailsDocument = gql`
-    query GetSystemMails {
-  getSystemMails {
-    ...SystemMail
-  }
-}
-    ${SystemMailFragmentDoc}`;
-
-/**
- * __useGetSystemMailsQuery__
- *
- * To run a query within a React component, call `useGetSystemMailsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetSystemMailsQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useGetSystemMailsQuery({
- *   variables: {
- *   },
- * });
- */
-export function useGetSystemMailsQuery(baseOptions?: Apollo.QueryHookOptions<GetSystemMailsQuery, GetSystemMailsQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetSystemMailsQuery, GetSystemMailsQueryVariables>(GetSystemMailsDocument, options);
-      }
-export function useGetSystemMailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSystemMailsQuery, GetSystemMailsQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetSystemMailsQuery, GetSystemMailsQueryVariables>(GetSystemMailsDocument, options);
-        }
-export type GetSystemMailsQueryHookResult = ReturnType<typeof useGetSystemMailsQuery>;
-export type GetSystemMailsLazyQueryHookResult = ReturnType<typeof useGetSystemMailsLazyQuery>;
-export type GetSystemMailsQueryResult = Apollo.QueryResult<GetSystemMailsQuery, GetSystemMailsQueryVariables>;
-export const UpdateSystemMailDocument = gql`
-    mutation UpdateSystemMail($systemMail: SystemMailUpdateInput!) {
-  updateSystemMail(systemMail: $systemMail) {
-    ...SystemMail
-  }
-}
-    ${SystemMailFragmentDoc}`;
-export type UpdateSystemMailMutationFn = Apollo.MutationFunction<UpdateSystemMailMutation, UpdateSystemMailMutationVariables>;
-
-/**
- * __useUpdateSystemMailMutation__
- *
- * To run a mutation, you first call `useUpdateSystemMailMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateSystemMailMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateSystemMailMutation, { data, loading, error }] = useUpdateSystemMailMutation({
- *   variables: {
- *      systemMail: // value for 'systemMail'
- *   },
- * });
- */
-export function useUpdateSystemMailMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSystemMailMutation, UpdateSystemMailMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateSystemMailMutation, UpdateSystemMailMutationVariables>(UpdateSystemMailDocument, options);
-      }
-export type UpdateSystemMailMutationHookResult = ReturnType<typeof useUpdateSystemMailMutation>;
-export type UpdateSystemMailMutationResult = Apollo.MutationResult<UpdateSystemMailMutation>;
-export type UpdateSystemMailMutationOptions = Apollo.BaseMutationOptions<UpdateSystemMailMutation, UpdateSystemMailMutationVariables>;
-export const TestSystemMailDocument = gql`
-    mutation TestSystemMail($systemMail: SystemMailTestInput!) {
-  testSystemMail(systemMail: $systemMail) {
-    ...SystemMail
-  }
-}
-    ${SystemMailFragmentDoc}`;
-export type TestSystemMailMutationFn = Apollo.MutationFunction<TestSystemMailMutation, TestSystemMailMutationVariables>;
-
-/**
- * __useTestSystemMailMutation__
- *
- * To run a mutation, you first call `useTestSystemMailMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useTestSystemMailMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [testSystemMailMutation, { data, loading, error }] = useTestSystemMailMutation({
- *   variables: {
- *      systemMail: // value for 'systemMail'
- *   },
- * });
- */
-export function useTestSystemMailMutation(baseOptions?: Apollo.MutationHookOptions<TestSystemMailMutation, TestSystemMailMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<TestSystemMailMutation, TestSystemMailMutationVariables>(TestSystemMailDocument, options);
-      }
-export type TestSystemMailMutationHookResult = ReturnType<typeof useTestSystemMailMutation>;
-export type TestSystemMailMutationResult = Apollo.MutationResult<TestSystemMailMutation>;
-export type TestSystemMailMutationOptions = Apollo.BaseMutationOptions<TestSystemMailMutation, TestSystemMailMutationVariables>;
 export const VersionInformationDocument = gql`
     query VersionInformation {
   versionInformation {

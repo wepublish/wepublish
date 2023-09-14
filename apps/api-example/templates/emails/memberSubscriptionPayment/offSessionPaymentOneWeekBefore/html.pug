@@ -1,0 +1,7 @@
+extends ../../base.pug
+
+block content
+    h1 Hi #{user.name}
+
+    p We will try to bill your cc in #{invoice.dueAt}. If you want to change the amount, payment method or something else. Please use the link: #{loginURL}&invoice=#{invoice.id}
+

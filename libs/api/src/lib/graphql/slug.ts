@@ -1,5 +1,5 @@
 import {GraphQLScalarType, valueFromAST, GraphQLString} from 'graphql'
-import {slugify} from '@wepublish/utils'
+import {slugify} from '../utility'
 
 export const GraphQLSlug = new GraphQLScalarType({
   name: 'Slug',

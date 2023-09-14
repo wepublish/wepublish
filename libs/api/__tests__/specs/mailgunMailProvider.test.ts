@@ -1,9 +1,6 @@
-import nock from 'nock'
-import {MailgunMailProvider, MailProviderTemplate} from '../../src'
-import Mailgun from 'mailgun.js'
-import FormData from 'form-data'
+import {MailgunMailProvider} from '../../src'
 
-const mockSubmit = jest.fn()
+let mockSubmit = jest.fn()
 const mockAppend = jest.fn()
 
 jest.mock('form-data', () => {
@@ -15,83 +12,43 @@ jest.mock('form-data', () => {
   })
 })
 
-let listTemplates: nock.Scope
-let listTemplatesInvalidKey: nock.Scope
+let mailgunMailProvider: MailgunMailProvider
 
 describe('Mailgun Mail Provider', () => {
-  beforeAll(() => {
-    listTemplates = nock('https://api.mailgun.net')
-      .persist()
-      .get('/v3/sandbox8a2185cfb29c48d4941d51c261fc3e03.mailgun.org/templates')
-      .basicAuth({user: 'api', pass: 'mg-12345678'})
-      .replyWithFile(
-        200,
-        __dirname + '/__fixtures__/mailgun-templates-list-success-response.json',
-        {
-          'Content-Type': 'application/json'
-        }
-      )
-
-    listTemplatesInvalidKey = nock('https://api.mailgun.net')
-      .persist()
-      .get('/v3/sandbox8a2185cfb29c48d4941d51c261fc3e03.mailgun.org/templates')
-      .basicAuth({user: 'api', pass: 'invalid-key'})
-      .replyWithFile(401, __dirname + '/__fixtures__/mailgun-templates-list-error-response.json', {
-        'Content-Type': 'application/json'
-      })
-  })
-
   test('can be created', () => {
-    const mailgunClient = new Mailgun(FormData).client({username: 'api', key: 'fakeAPIkey'})
-    const mailgunMailProvider = new MailgunMailProvider({
+    mailgunMailProvider = new MailgunMailProvider({
       id: 'mailgun',
       name: 'Mailgun',
       apiKey: 'fakeAPIkey',
       baseDomain: 'https://mailgun.com',
       mailDomain: 'https://mailgun.com',
       webhookEndpointSecret: 'fakeSecret',
-      fromAddress: 'dev@wepublish.ch',
-      mailgunClient
+      fromAddress: 'dev@wepublish.ch'
     })
     expect(mailgunMailProvider).toBeDefined()
   })
 
-  test('loads templates', async () => {
-    const mailgunClient = new Mailgun(FormData).client({username: 'api', key: 'mg-12345678'})
-    const mailgunMailProvider = new MailgunMailProvider({
-      id: 'mailgun',
-      name: 'Mailgun',
-      apiKey: 'mg-12345678',
-      baseDomain: 'https://mailgun.com',
-      mailDomain: 'sandbox8a2185cfb29c48d4941d51c261fc3e03.mailgun.org',
-      webhookEndpointSecret: 'fakeSecret',
-      fromAddress: 'dev@wepublish.ch',
-      mailgunClient
-    })
+  test('can call send', async () => {
+    const mailInfo = {
+      replyToAddress: 'dev@wepublish.ch',
+      recipient: 'test@recipient.adr',
+      subject: 'Mocked Send',
+      message: 'mocking send',
+      mailLogID: 'mailLogID'
+    }
 
-    const response = await mailgunMailProvider.getTemplates()
-    const templates = response as MailProviderTemplate[]
-    expect(templates.length).toEqual(2)
-    expect(templates.map(t => t.name).sort()).toEqual(
-      ['subscription_creation', 'subscription_expiration'].sort()
-    )
-    expect(listTemplates.isDone()).toEqual(true)
-  })
+    mockSubmit = jest
+      .fn()
+      .mockImplementationOnce((data, callback) => callback(null, {statusCode: 200}))
+      .mockImplementationOnce((data, callback) => callback(null, {statusCode: 404}))
 
-  test('returns error when using invalid key', async () => {
-    const mailgunClient = new Mailgun(FormData).client({username: 'api', key: 'invalid-key'})
-    const mailgunMailProvider = new MailgunMailProvider({
-      id: 'mailgun',
-      name: 'Mailgun',
-      apiKey: 'invalid-key',
-      baseDomain: 'https://mailgun.com',
-      mailDomain: 'sandbox8a2185cfb29c48d4941d51c261fc3e03.mailgun.org',
-      webhookEndpointSecret: 'fakeSecret',
-      fromAddress: 'dev@wepublish.ch',
-      mailgunClient
-    })
+    await mailgunMailProvider.sendMail(mailInfo)
 
-    await expect(mailgunMailProvider.getTemplates()).rejects.toThrow('Invalid private key')
-    expect(listTemplatesInvalidKey.isDone()).toEqual(true)
+    expect(mockSubmit).toHaveBeenCalledTimes(1)
+
+    expect(mockAppend).toHaveBeenCalledTimes(5)
+    expect(mockAppend).toHaveBeenLastCalledWith('v:mail_log_id', 'mailLogID')
+
+    await expect(mailgunMailProvider.sendMail(mailInfo)).rejects.toEqual({statusCode: 404})
   })
 })

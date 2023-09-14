@@ -2,7 +2,7 @@ import {Context} from '../../context'
 import {authorise} from '../permissions'
 import {CanCreateInvoice, CanDeleteInvoice} from '@wepublish/permissions/api'
 import {PrismaClient, Prisma, Invoice} from '@prisma/client'
-import {InvoiceWithItems} from '@wepublish/payments'
+import {InvoiceWithItems} from '../../db/invoice'
 
 export const deleteInvoiceById = async (
   id: string,
@@ -99,16 +99,12 @@ export const markInvoiceAsPaid = async (
       subscriptionPeriods: true
     }
   })
-  if (!invoice) {
-    throw new Error('Invoice not found')
-  }
-  // Should not happen since an invoice is limited to one subscription
+
+  // Should not happen since a invoice is limited to one subscription
   if (invoice.subscriptionPeriods.length !== 1) {
-    throw new Error('Not one period is linked to the invoice')
+    throw new Error('More than one period is linked to the invoice')
   }
-  if (!invoice.subscriptionID) {
-    throw new Error('Invoice has no subscriptionID')
-  }
+
   await prismaClient.subscription.update({
     where: {
       id: invoice.subscriptionID
