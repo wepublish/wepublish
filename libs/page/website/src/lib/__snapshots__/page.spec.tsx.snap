@@ -163,7 +163,7 @@ exports[`Page should render Default 1`] = `
           </span>
         </p>
         <table
-          class="css-10wrcpg-Element"
+          class="css-o38l6f-tableStyles"
         >
           <tbody
             data-slate-node="element"
@@ -172,7 +172,7 @@ exports[`Page should render Default 1`] = `
               data-slate-node="element"
             >
               <td
-                class="css-1loma0k-Element"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -191,7 +191,7 @@ exports[`Page should render Default 1`] = `
                 </p>
               </td>
               <td
-                class="css-1loma0k-Element"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -214,7 +214,7 @@ exports[`Page should render Default 1`] = `
               data-slate-node="element"
             >
               <td
-                class="css-1loma0k-Element"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -233,7 +233,7 @@ exports[`Page should render Default 1`] = `
                 </p>
               </td>
               <td
-                class="css-1loma0k-Element"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -2114,7 +2114,7 @@ exports[`Page should render WithChildren 1`] = `
           </span>
         </p>
         <table
-          class="css-10wrcpg-Element"
+          class="css-o38l6f-tableStyles"
         >
           <tbody
             data-slate-node="element"
@@ -2123,7 +2123,7 @@ exports[`Page should render WithChildren 1`] = `
               data-slate-node="element"
             >
               <td
-                class="css-1loma0k-Element"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -2142,7 +2142,7 @@ exports[`Page should render WithChildren 1`] = `
                 </p>
               </td>
               <td
-                class="css-1loma0k-Element"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -2165,7 +2165,7 @@ exports[`Page should render WithChildren 1`] = `
               data-slate-node="element"
             >
               <td
-                class="css-1loma0k-Element"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -2184,7 +2184,7 @@ exports[`Page should render WithChildren 1`] = `
                 </p>
               </td>
               <td
-                class="css-1loma0k-Element"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -4068,7 +4068,7 @@ exports[`Page should render WithClassName 1`] = `
           </span>
         </p>
         <table
-          class="css-10wrcpg-Element"
+          class="css-o38l6f-tableStyles"
         >
           <tbody
             data-slate-node="element"
@@ -4077,7 +4077,7 @@ exports[`Page should render WithClassName 1`] = `
               data-slate-node="element"
             >
               <td
-                class="css-1loma0k-Element"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -4096,7 +4096,7 @@ exports[`Page should render WithClassName 1`] = `
                 </p>
               </td>
               <td
-                class="css-1loma0k-Element"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -4119,7 +4119,7 @@ exports[`Page should render WithClassName 1`] = `
               data-slate-node="element"
             >
               <td
-                class="css-1loma0k-Element"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -4138,7 +4138,7 @@ exports[`Page should render WithClassName 1`] = `
                 </p>
               </td>
               <td
-                class="css-1loma0k-Element"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -6019,7 +6019,7 @@ exports[`Page should render WithEmotion 1`] = `
           </span>
         </p>
         <table
-          class="css-10wrcpg-Element"
+          class="css-o38l6f-tableStyles"
         >
           <tbody
             data-slate-node="element"
@@ -6028,7 +6028,7 @@ exports[`Page should render WithEmotion 1`] = `
               data-slate-node="element"
             >
               <td
-                class="css-1loma0k-Element"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -6047,7 +6047,7 @@ exports[`Page should render WithEmotion 1`] = `
                 </p>
               </td>
               <td
-                class="css-1loma0k-Element"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -6070,7 +6070,7 @@ exports[`Page should render WithEmotion 1`] = `
               data-slate-node="element"
             >
               <td
-                class="css-1loma0k-Element"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -6089,7 +6089,7 @@ exports[`Page should render WithEmotion 1`] = `
                 </p>
               </td>
               <td
-                class="css-1loma0k-Element"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -7986,7 +7986,7 @@ exports[`Page should render WithoutDescription 1`] = `
           </span>
         </p>
         <table
-          class="css-10wrcpg-Element"
+          class="css-o38l6f-tableStyles"
         >
           <tbody
             data-slate-node="element"
@@ -7995,7 +7995,7 @@ exports[`Page should render WithoutDescription 1`] = `
               data-slate-node="element"
             >
               <td
-                class="css-1loma0k-Element"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -8014,7 +8014,7 @@ exports[`Page should render WithoutDescription 1`] = `
                 </p>
               </td>
               <td
-                class="css-1loma0k-Element"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -8037,7 +8037,7 @@ exports[`Page should render WithoutDescription 1`] = `
               data-slate-node="element"
             >
               <td
-                class="css-1loma0k-Element"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -8056,7 +8056,7 @@ exports[`Page should render WithoutDescription 1`] = `
                 </p>
               </td>
               <td
-                class="css-1loma0k-Element"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -9937,7 +9937,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
           </span>
         </p>
         <table
-          class="css-10wrcpg-Element"
+          class="css-o38l6f-tableStyles"
         >
           <tbody
             data-slate-node="element"
@@ -9946,7 +9946,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
               data-slate-node="element"
             >
               <td
-                class="css-1loma0k-Element"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -9965,7 +9965,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
                 </p>
               </td>
               <td
-                class="css-1loma0k-Element"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -9988,7 +9988,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
               data-slate-node="element"
             >
               <td
-                class="css-1loma0k-Element"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -10007,7 +10007,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
                 </p>
               </td>
               <td
-                class="css-1loma0k-Element"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -11880,7 +11880,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
           </span>
         </p>
         <table
-          class="css-10wrcpg-Element"
+          class="css-o38l6f-tableStyles"
         >
           <tbody
             data-slate-node="element"
@@ -11889,7 +11889,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
               data-slate-node="element"
             >
               <td
-                class="css-1loma0k-Element"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -11908,7 +11908,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
                 </p>
               </td>
               <td
-                class="css-1loma0k-Element"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -11931,7 +11931,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
               data-slate-node="element"
             >
               <td
-                class="css-1loma0k-Element"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -11950,7 +11950,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
                 </p>
               </td>
               <td
-                class="css-1loma0k-Element"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
