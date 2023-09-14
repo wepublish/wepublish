@@ -1,0 +1,103 @@
+fragment FullCommentRatingSystemAnswer on CommentRatingSystemAnswer {
+  id
+  ratingSystemId
+  answer
+  type
+}
+
+fragment FullCalculatedRating on CalculatedRating {
+  count
+  total
+  mean
+
+  answer {
+    ...FullCommentRatingSystemAnswer
+  }
+}
+
+fragment FullOverriddenRating on overriddenRating {
+  answerId
+  value
+}
+
+fragment CommentWithoutNesting on Comment {
+  id
+  itemID
+  itemType
+  peerId
+  parentID
+
+  createdAt
+  modifiedAt
+
+  title
+  lead
+  text
+  authorType
+  rejectionReason
+  state
+
+  tags {
+    ...FullTag
+  }
+
+  user {
+    ...FullUser
+  }
+
+  source
+  guestUsername
+  guestUserImage {
+    ...FullImage
+  }
+
+  calculatedRatings {
+    ...FullCalculatedRating
+  }
+
+  overriddenRatings {
+    ...FullOverriddenRating
+  }
+}
+
+fragment FullComment on Comment {
+  ...CommentWithoutNesting
+
+  children {
+    ...CommentWithoutNesting
+
+    children {
+      ...CommentWithoutNesting
+
+      children {
+        ...CommentWithoutNesting
+
+        children {
+          ...CommentWithoutNesting
+
+          children {
+            ...CommentWithoutNesting
+          }
+        }
+      }
+    }
+  }
+}
+
+query CommentList($itemId: ID!, $order: SortOrder, $sort: CommentSort) {
+  comments(itemId: $itemId, order: $order, sort: $sort) {
+    ...FullComment
+  }
+}
+
+mutation AddComment($input: CommentInput!) {
+  addComment(input: $input) {
+    ...FullComment
+  }
+}
+
+mutation EditComment($input: CommentUpdateInput!) {
+  updateComment(input: $input) {
+    ...FullComment
+  }
+}

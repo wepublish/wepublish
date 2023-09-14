@@ -1,6 +1,6 @@
 import {styled} from '@mui/material'
 import {BuilderArticleProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {Block} from '@wepublish/website/api'
+import {Article as ArticleType, Block} from '@wepublish/website/api'
 import {Blocks} from '@wepublish/block-content/website'
 
 export const ArticleWrapper = styled('article')`
@@ -16,18 +16,28 @@ export const ArticleInfoWrapper = styled('section')`
   justify-self: center;
 `
 
-export function Article({className, data, loading, error}: BuilderArticleProps) {
-  const {AuthorChip} = useWebsiteBuilder()
+export function Article({className, data, children, loading, error}: BuilderArticleProps) {
+  const {AuthorChip, ArticleSEO, date} = useWebsiteBuilder()
 
   return (
     <ArticleWrapper className={className}>
+      {data?.article && <ArticleSEO article={data.article as ArticleType} />}
+
       <Blocks blocks={(data?.article?.blocks as Block[]) ?? []} />
 
       <ArticleInfoWrapper>
         {data?.article?.authors.map(author => (
           <AuthorChip key={author.id} author={author} />
         ))}
+
+        {data?.article?.publishedAt && (
+          <time dateTime={data.article.publishedAt}>
+            {date.format(new Date(data.article.publishedAt))}
+          </time>
+        )}
       </ArticleInfoWrapper>
+
+      {children}
     </ArticleWrapper>
   )
 }

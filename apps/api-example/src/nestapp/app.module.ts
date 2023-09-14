@@ -1,33 +1,37 @@
 import {Module, Global} from '@nestjs/common'
 import {ApiModule, PrismaModule, PrismaService} from '@wepublish/nest-modules'
-import {GraphQLModule} from '@nestjs/graphql'
 import {ApolloDriver, ApolloDriverConfig} from '@nestjs/apollo'
-import {DashboardModule, MembershipModule} from '@wepublish/membership/api'
+import {GraphQLModule} from '@nestjs/graphql'
 import {
+  MembershipModule,
+  AgendaBaselService,
+  KulturZueriService,
   SettingModule,
   AuthenticationModule,
-  PermissionModule,
   ConsentModule,
+  DashboardModule,
+  EventsImportModule,
   MediaAdapterService,
   KarmaMediaAdapter,
-  MailchimpMailProvider
-} from '@wepublish/api'
-import {ScheduleModule} from '@nestjs/schedule'
-import {MailsModule, MailgunMailProvider} from '@wepublish/mails'
-import bodyParser from 'body-parser'
-import Mailgun from 'mailgun.js'
-import FormData from 'form-data'
-import {
+  MailchimpMailProvider,
+  PermissionModule,
   PaymentProvider,
   PaymentsModule,
   PayrexxPaymentProvider,
   PayrexxSubscriptionPaymentProvider,
   StripeCheckoutPaymentProvider,
-  StripePaymentProvider
-} from '@wepublish/payments'
+  StripePaymentProvider,
+  MailsModule,
+  MailgunMailProvider,
+  GraphQLRichText,
+  JobsModule
+} from '@wepublish/api'
+import {ScheduleModule} from '@nestjs/schedule'
+import bodyParser from 'body-parser'
+import Mailgun from 'mailgun.js'
+import FormData from 'form-data'
 import {ConfigModule, ConfigService} from '@nestjs/config'
 import {URL} from 'url'
-import {JobsModule} from '@wepublish/jobs'
 import {SlackMailProvider} from '../app/slack-mail-provider'
 
 @Global()
@@ -35,14 +39,12 @@ import {SlackMailProvider} from '../app/slack-mail-provider'
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
+      resolvers: {RichText: GraphQLRichText},
       autoSchemaFile: './apps/api-example/schema-v2.graphql',
       sortSchema: true,
       path: 'v2',
-      cors: {
-        credentials: true,
-        origin: true
-      },
-      cache: 'bounded'
+      cache: 'bounded',
+      playground: process.env.NODE_ENV === 'development'
     }),
     PrismaModule,
     MailsModule.registerAsync({
@@ -192,6 +194,13 @@ import {SlackMailProvider} from '../app/slack-mail-provider'
     PermissionModule,
     ConsentModule,
     SettingModule,
+    EventsImportModule.registerAsync({
+      useFactory: (agendaBasel: AgendaBaselService, kulturZueri: KulturZueriService) => [
+        agendaBasel,
+        kulturZueri
+      ],
+      inject: [AgendaBaselService, KulturZueriService]
+    }),
     ScheduleModule.forRoot(),
     JobsModule.registerAsync({
       imports: [ConfigModule],

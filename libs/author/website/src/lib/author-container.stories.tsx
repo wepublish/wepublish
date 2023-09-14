@@ -1,4 +1,3 @@
-import {action} from '@storybook/addon-actions'
 import {Meta} from '@storybook/react'
 import {AuthorDocument, AuthorQuery} from '@wepublish/website/api'
 import {AuthorContainer} from './author-container'
@@ -253,8 +252,10 @@ const author = {
     squareLargeURL: 'https://unsplash.it/500/500',
     squareMediumURL: 'https://unsplash.it/300/300',
     squareSmallURL: 'https://unsplash.it/200/200'
-  }
-} as Exclude<AuthorQuery['author'], undefined | null>
+  },
+  createdAt: '2023-01-01',
+  modifiedAt: '2023-01-01'
+} as NonNullable<AuthorQuery['author']>
 
 export default {
   component: AuthorContainer,
@@ -263,7 +264,6 @@ export default {
 
 export const ById = {
   args: {
-    onQuery: action('onQuery'),
     id: author.id
   },
 
@@ -290,7 +290,6 @@ export const ById = {
 
 export const BySlug = {
   args: {
-    onQuery: action('onQuery'),
     slug: author.slug
   },
 
@@ -317,7 +316,6 @@ export const BySlug = {
 
 export const WithClassName = {
   args: {
-    onQuery: action('onQuery'),
     id: author.id,
     className: 'extra-classname'
   },
@@ -345,7 +343,6 @@ export const WithClassName = {
 
 export const WithEmotion = {
   args: {
-    onQuery: action('onQuery'),
     id: author.id,
     css: css`
       background-color: #eee;

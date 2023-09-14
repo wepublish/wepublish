@@ -16,6 +16,7 @@ import {
   MdDashboard,
   MdDescription,
   MdEvent,
+  MdEventAvailable,
   MdFactCheck,
   MdFileCopy,
   MdGroup,
@@ -290,6 +291,21 @@ export function Base({children}: BaseProps) {
                       icon={<MdEvent />}
                       active={path === 'events'}>
                       {t('navbar.events')}
+                    </Nav.Item>
+                  </PermissionControl>
+
+                  <PermissionControl
+                    qualifyingPermissions={[
+                      'CAN_GET_EVENT',
+                      'CAN_UPDATE_EVENT',
+                      'CAN_DELETE_EVENT'
+                    ]}>
+                    <Nav.Item
+                      as={NavLink}
+                      href="/events/import"
+                      icon={<MdEventAvailable />}
+                      active={path === 'events/import'}>
+                      {t('navbar.importableEvents')}
                     </Nav.Item>
                   </PermissionControl>
 

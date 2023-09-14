@@ -15,10 +15,12 @@ import {
   CommentAuthenticationError,
   CommentLengthError,
   NotAuthorisedError,
+  NotFound,
   PeerIdMissingCommentError,
   UserInputError
 } from '../../error'
 import {countRichtextChars} from '../../utility'
+import {CanCreateApprovedComment, hasPermission} from '@wepublish/permissions/api'
 
 export const addPublicComment = async (
   input: {
@@ -46,6 +48,8 @@ export const addPublicComment = async (
   if (commentLength > maxCommentLength) {
     throw new CommentLengthError(+maxCommentLength)
   }
+
+  const canSkipApproval = hasPermission(CanCreateApprovedComment, user?.roles ?? [])
 
   // Challenge
   if (!user) {
@@ -91,7 +95,7 @@ export const addPublicComment = async (
       },
       userID: user?.user.id,
       authorType,
-      state: CommentState.pendingApproval
+      state: canSkipApproval ? CommentState.approved : CommentState.pendingApproval
     },
     include: {revisions: {orderBy: {createdAt: 'asc'}}}
   })
@@ -99,12 +103,14 @@ export const addPublicComment = async (
 }
 
 export const updatePublicComment = async (
-  input: {id: Comment['id']} & Prisma.CommentsRevisionsCreateInput,
+  input: {id: Comment['id']} & Pick<Prisma.CommentsRevisionsCreateInput, 'text' | 'title' | 'lead'>,
   authenticateUser: Context['authenticateUser'],
   commentClient: PrismaClient['comment'],
   settingsClient: PrismaClient['setting']
 ) => {
-  const {user} = authenticateUser()
+  const {user, roles} = authenticateUser()
+
+  const canSkipApproval = hasPermission(CanCreateApprovedComment, roles)
 
   const comment = await commentClient.findUnique({
     where: {
@@ -113,11 +119,14 @@ export const updatePublicComment = async (
     include: {revisions: {orderBy: {createdAt: 'asc'}}}
   })
 
-  if (!comment) return null
+  if (!comment) {
+    throw new NotFound('comment', input.id)
+  }
 
   if (user.id !== comment?.userID) {
     throw new NotAuthorisedError()
   }
+
   const commentEditingSetting = await settingsClient.findUnique({
     where: {
       name: SettingName.ALLOW_COMMENT_EDITING
@@ -128,20 +137,27 @@ export const updatePublicComment = async (
     throw new UserInputError('Comment state must be pending user changes')
   }
 
-  const {id, text} = input
+  const {id, text, title, lead} = input
 
   const updatedComment = await commentClient.update({
     where: {id},
     data: {
       revisions: {
         create: {
-          text
+          text: text ?? comment?.revisions.at(-1)?.text,
+          title: title ?? comment?.revisions.at(-1)?.title,
+          lead: lead ?? comment?.revisions.at(-1)?.lead
         }
       },
-      state: CommentState.pendingApproval
+      state: canSkipApproval ? CommentState.approved : CommentState.pendingApproval
     },
     include: {revisions: {orderBy: {createdAt: 'asc'}}}
   })
 
-  return {...updatedComment, text}
+  return {
+    ...updatedComment,
+    text: updatedComment.revisions.at(-1)?.text,
+    title: updatedComment.revisions.at(-1)?.title,
+    lead: updatedComment.revisions.at(-1)?.lead
+  }
 }

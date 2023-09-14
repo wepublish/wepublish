@@ -752,7 +752,8 @@
       "systemMails": "System Mails",
       "usersAndMembers": "Users & Members",
       "consents": "Consents",
-      "userConsents": "User Consents"
+      "userConsents": "User Consents",
+      "importableEvents": "Importable Events"
     },
     "navigation": {
       "overview": {
@@ -1040,7 +1041,9 @@
         "isDraft": "Draft",
         "isPending": "Pending",
         "isPublished": "Published",
-        "publicationDate": "Publication Date"
+        "publicationDate": "Publication Date",
+        "dates": "Dates",
+        "providers": "Providers"
       }
     },
     "userList": {
@@ -1372,9 +1375,12 @@
         "edit": "Edit",
         "delete": "Delete",
         "create": "Create new event",
+        "startsAtHeader": "Starts at",
+        "endsAtHeader": "Ends at",
         "startsAt": "Starts at {{startsAt, ccc PP p}}",
         "endsAt": "Ends at {{endsAt, ccc PP p}}",
         "endsAtNone": "Open ended",
+        "source": "Source",
         "upcomingOnly": "Upcoming only"
       },
       "create": {
@@ -1386,6 +1392,7 @@
       "form": {
         "name": "Name",
         "location": "Location",
+        "externalSource": "External source (for imported events)",
         "status": "Status",
         "startsAt": "Starts at",
         "endsAt": "Ends at",
@@ -1402,6 +1409,12 @@
         "body": "Do you really want to delete the event \"{{name}}\"?",
         "delete": "Yes, delete the event"
       }
+    },
+    "importableEvent": {
+      "title": "Importable events",
+      "editTitle": "Edit importable event",
+      "import": "Import",
+      "imported": "Imported"
     },
     "mailTemplates": {
       "availableTemplates": "Available templates",

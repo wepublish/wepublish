@@ -4,49 +4,49 @@ import {Link as MuiLink, LinkTypeMap} from '@mui/material'
 
 export type HeadingProps = HTMLAttributes<HTMLHeadingElement> & {component?: React.ElementType}
 
-export const H1 = forwardRef(({children, ...props}: HeadingProps, ref) => {
+export const H1 = forwardRef<HTMLHeadingElement, HeadingProps>(({children, ...props}, ref) => {
   return (
-    <Typography {...props} ref={ref as any} variant="h1">
+    <Typography {...props} ref={ref} variant="h1">
       {children}
     </Typography>
   )
 })
 
-export const H2 = forwardRef(({children, ...props}: HeadingProps, ref) => {
+export const H2 = forwardRef<HTMLHeadingElement, HeadingProps>(({children, ...props}, ref) => {
   return (
-    <Typography {...props} ref={ref as any} variant="h2">
+    <Typography {...props} ref={ref} variant="h2">
       {children}
     </Typography>
   )
 })
 
-export const H3 = forwardRef(({children, ...props}: HeadingProps, ref) => {
+export const H3 = forwardRef<HTMLHeadingElement, HeadingProps>(({children, ...props}, ref) => {
   return (
-    <Typography {...props} ref={ref as any} variant="h3">
+    <Typography {...props} ref={ref} variant="h3">
       {children}
     </Typography>
   )
 })
 
-export const H4 = forwardRef(({children, ...props}: HeadingProps, ref) => {
+export const H4 = forwardRef<HTMLHeadingElement, HeadingProps>(({children, ...props}, ref) => {
   return (
-    <Typography {...props} ref={ref as any} variant="h4">
+    <Typography {...props} ref={ref} variant="h4">
       {children}
     </Typography>
   )
 })
 
-export const H5 = forwardRef(({children, ...props}: HeadingProps, ref) => {
+export const H5 = forwardRef<HTMLHeadingElement, HeadingProps>(({children, ...props}, ref) => {
   return (
-    <Typography {...props} ref={ref as any} variant="h5">
+    <Typography {...props} ref={ref} variant="h5">
       {children}
     </Typography>
   )
 })
 
-export const H6 = forwardRef(({children, ...props}: HeadingProps, ref) => {
+export const H6 = forwardRef<HTMLHeadingElement, HeadingProps>(({children, ...props}, ref) => {
   return (
-    <Typography {...props} ref={ref as any} variant="h6">
+    <Typography {...props} ref={ref} variant="h6">
       {children}
     </Typography>
   )
@@ -57,10 +57,10 @@ export type ParagraphProps = HTMLAttributes<HTMLParagraphElement> & {
   gutterBottom?: boolean
 }
 
-export const Paragraph = forwardRef(
-  ({children, gutterBottom = true, ...props}: ParagraphProps, ref) => {
+export const Paragraph = forwardRef<HTMLParagraphElement, ParagraphProps>(
+  ({children, gutterBottom = true, ...props}, ref) => {
     return (
-      <Typography {...props} ref={ref as any} variant="body1" gutterBottom={gutterBottom}>
+      <Typography {...props} ref={ref} variant="body1" gutterBottom={gutterBottom}>
         {children}
       </Typography>
     )
@@ -73,10 +73,12 @@ export type LinkProps = AnchorHTMLAttributes<HTMLAnchorElement> & {
   color?: LinkTypeMap['props']['color']
 }
 
-export const Link = forwardRef(({children, underline, color, ...props}: LinkProps, ref) => {
-  return (
-    <MuiLink {...props} ref={ref as any} color={color} underline={underline}>
-      {children}
-    </MuiLink>
-  )
-})
+export const Link = forwardRef<HTMLAnchorElement, LinkProps>(
+  ({children, underline, color, ...props}, ref) => {
+    return (
+      <MuiLink {...props} ref={ref} color={color} underline={underline}>
+        {children}
+      </MuiLink>
+    )
+  }
+)

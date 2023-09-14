@@ -8,6 +8,10 @@ import {MailContext} from '@wepublish/mails'
 
 async function bootstrap() {
   const nestApp = await NestFactory.create(AppModule)
+  nestApp.enableCors({
+    origin: true,
+    credentials: true
+  })
   const mediaAdapter = nestApp.get(MediaAdapterService)
   const paymentProviders = nestApp.get(PaymentsService).paymentProviders
   const mailProvider = nestApp.get(MailContext).mailProvider

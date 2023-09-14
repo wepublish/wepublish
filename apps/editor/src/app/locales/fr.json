@@ -562,7 +562,9 @@
         "isPending": "En attente",
         "isDraft": "Brouillon",
         "isPublished": "Publié",
-        "publicationDate": "Date de publication"
+        "publicationDate": "Date de publication",
+        "dates": "Dates",
+        "providers": "Fournisseurs"
       }
     },
     "userList": {
@@ -1070,7 +1072,8 @@
       "subscriptionPlans": "Plans d'abonnement",
       "subscriptions": "Abonnements",
       "consents": "Consentement",
-      "userConsents": "Consentement de l'utilisateur"
+      "userConsents": "Consentement de l'utilisateur",
+      "importableEvents": "Importable Events"
     },
     "navigation": {
       "overview": {
@@ -1336,6 +1339,7 @@
       "form": {
         "name": "Name",
         "location": "Location",
+        "externalSource": "External source (for imported events)",
         "status": "Status",
         "startsAt": "Starts at",
         "endsAt": "Ends at",
@@ -1352,6 +1356,12 @@
         "body": "Do you really want to delete the event \"{{name}}\"?",
         "delete": "Yes, delete the event"
       }
+    },
+    "importableEvent": {
+      "title": "Importable events",
+      "editTitle": "Edit importable event",
+      "import": "Import",
+      "imported": "Imported"
     },
     "mailTemplates": {
       "availableTemplates": "Modèles de courriels disponibles",

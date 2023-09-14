@@ -1,23 +1,16 @@
 import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {BuilderRenderElementProps} from '@wepublish/website/builder'
-import {Link} from '@mui/material'
+import {Link, css} from '@mui/material'
+import {BlockFormat, InlineFormat} from '@wepublish/richtext'
 
-export enum BlockFormat {
-  H1 = 'heading-one',
-  H2 = 'heading-two',
-  H3 = 'heading-three',
-  Paragraph = 'paragraph',
-  UnorderedList = 'unordered-list',
-  OrderedList = 'ordered-list',
-  ListItem = 'list-item',
-  Table = 'table',
-  TableRow = 'table-row',
-  TableCell = 'table-cell'
-}
+const tableStyles = css`
+  border-collapse: collapse;
+`
 
-export enum InlineFormat {
-  Link = 'link'
-}
+const tableCellStyles = (borderColor?: string) => css`
+  border-collapse: collapse;
+  border: 1px solid ${borderColor ?? 'transparent'};
+`
 
 export function RenderElement({
   attributes,
@@ -61,7 +54,7 @@ export function RenderElement({
 
     case BlockFormat.Table:
       return (
-        <table>
+        <table css={tableStyles}>
           <tbody {...attributes}>{children}</tbody>
         </table>
       )
@@ -70,7 +63,11 @@ export function RenderElement({
       return <tr {...attributes}>{children}</tr>
 
     case BlockFormat.TableCell:
-      return <td {...attributes}>{children}</td>
+      return (
+        <td {...attributes} css={tableCellStyles(element.borderColor as string)}>
+          {children}
+        </td>
+      )
 
     case InlineFormat.Link:
       return (

@@ -23,7 +23,8 @@
         "assets": ["libs/website/*.md"],
         "external": "all",
         "rootDir": ".",
-        "buildableProjectDepsInPackageJsonType": "dependencies"
+        "buildableProjectDepsInPackageJsonType": "dependencies",
+        "updateBuildableProjectDepsInPackageJson": true
       }
     },
     "test": {

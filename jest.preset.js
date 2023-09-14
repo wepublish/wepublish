@@ -2,5 +2,49 @@ const nxPreset = require('@nx/jest/preset').default
 
 module.exports = {
   ...nxPreset,
-  globalSetup: `${__dirname}/jest.setup.ts`
+  globalSetup: `${__dirname}/jest.setup.ts`,
+  coverageReporters: [...nxPreset.coverageReporters, 'text', 'lcov'],
+  reporters: ['default', ['github-actions', {silent: false}]],
+  watchPlugins: ['jest-watch-typeahead/filename', 'jest-watch-typeahead/testname'],
+  transformIgnorePatterns: [`/node_modules/(?!react-tweet)`],
+  transform: {
+    '^(?!.*\\.(js|jsx|ts|tsx|css|json)$)': '@nx/react/plugins/jest',
+    '^.+\\.[tj]sx?$': [
+      'babel-jest',
+      {
+        presets: [
+          [
+            '@nx/next/babel',
+            {
+              'preset-react': {
+                runtime: 'automatic',
+                importSource: '@emotion/react'
+              }
+            }
+          ]
+        ],
+        plugins: [
+          [
+            '@emotion',
+            {
+              importMap: {
+                '@mui/material': {
+                  styled: {
+                    canonicalImport: ['@emotion/styled', 'default'],
+                    styledBaseImport: ['@mui/material', 'styled']
+                  }
+                },
+                '@mui/material/styles': {
+                  styled: {
+                    canonicalImport: ['@emotion/styled', 'default'],
+                    styledBaseImport: ['@mui/material/styles', 'styled']
+                  }
+                }
+              }
+            }
+          ]
+        ]
+      }
+    ]
+  }
 }

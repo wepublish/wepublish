@@ -3,7 +3,7 @@
 exports[`Login Form Container should render WithClassName 1`] = `
 <DocumentFragment>
   <div
-    class="extra-classname css-37hfgs"
+    class="extra-classname css-v72p96-LoginFormWrapper e85oeuu1"
   >
     <label
       class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
@@ -38,7 +38,7 @@ exports[`Login Form Container should render WithClassName 1`] = `
       </span>
     </label>
     <form
-      class="css-sxg9br"
+      class="css-sunyqu-LoginFormForm e85oeuu0"
     >
       <div
         class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -46,8 +46,8 @@ exports[`Login Form Container should render WithClassName 1`] = `
         <label
           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
           data-shrink="false"
-          for=":r3:"
-          id=":r3:-label"
+          for=":r0:"
+          id=":r0:-label"
         >
           Email
         </label>
@@ -56,8 +56,9 @@ exports[`Login Form Container should render WithClassName 1`] = `
         >
           <input
             aria-invalid="false"
+            autocomplete="email"
             class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-            id=":r3:"
+            id=":r0:"
             name="email"
             type="email"
             value=""
@@ -77,8 +78,7 @@ exports[`Login Form Container should render WithClassName 1`] = `
         </div>
       </div>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
-        css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-jsepf2-MuiButtonBase-root-MuiButton-root-LoginForm"
         tabindex="0"
         type="submit"
       >
@@ -142,8 +142,8 @@ exports[`Login Form Container should render WithCredentials 1`] = `
           >
             Email
           </label>
-@@ -55,21 +55,57 @@
-              aria-invalid="false"
+@@ -56,32 +56,69 @@
+              autocomplete="email"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r1:"
               name="email"
@@ -161,11 +161,11 @@ exports[`Login Form Container should render WithCredentials 1`] = `
               >
                 <span>
                   Email
-+               </span>
-+             </legend>
-+           </fieldset>
-+         </div>
-+       </div>
+                </span>
+              </legend>
+            </fieldset>
+          </div>
+        </div>
 +       <div
 +         class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
 +       >
@@ -182,6 +182,7 @@ exports[`Login Form Container should render WithCredentials 1`] = `
 +         >
 +           <input
 +             aria-invalid="false"
++             autocomplete="current-password"
 +             class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
 +             id=":r2:"
 +             name="password"
@@ -197,14 +198,13 @@ exports[`Login Form Container should render WithCredentials 1`] = `
 +             >
 +               <span>
 +                 Passwort
-                </span>
-              </legend>
-            </fieldset>
-          </div>
-        </div>
-@@ -77,11 +113,11 @@
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
-          css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
++               </span>
++             </legend>
++           </fieldset>
++         </div>
++       </div>
+        <button
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-jsepf2-MuiButtonBase-root-MuiButton-root-LoginForm"
           tabindex="0"
           type="submit"
         >
@@ -232,15 +232,15 @@ exports[`Login Form Container should render WithEmail 1`] = `
 -           data-shrink="false"
 +           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 +           data-shrink="true"
-            for=":r0:"
-            id=":r0:-label"
+            for=":r3:"
+            id=":r3:-label"
           >
             Email
           </label>
-@@ -55,35 +55,58 @@
-              aria-invalid="false"
+@@ -56,34 +56,57 @@
+              autocomplete="email"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r0:"
+              id=":r3:"
               name="email"
               type="email"
 -             value=""
@@ -287,10 +287,9 @@ exports[`Login Form Container should render WithEmail 1`] = `
 +         </div>
 +       </div>
         <button
--         class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
-+         class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
-          css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+-         class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-jsepf2-MuiButtonBase-root-MuiButton-root-LoginForm"
 -         tabindex="0"
++         class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-jsepf2-MuiButtonBase-root-MuiButton-root-LoginForm"
 +         disabled=""
 +         tabindex="-1"
           type="submit"
@@ -309,7 +308,7 @@ exports[`Login Form Container should render WithEmail 1`] = `
 exports[`Login Form Container should render WithEmotion 1`] = `
 <DocumentFragment>
   <div
-    class="css-37hfgs"
+    class="css-v72p96-LoginFormWrapper e85oeuu1"
   >
     <label
       class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
@@ -344,7 +343,7 @@ exports[`Login Form Container should render WithEmotion 1`] = `
       </span>
     </label>
     <form
-      class="css-sxg9br"
+      class="css-sunyqu-LoginFormForm e85oeuu0"
     >
       <div
         class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -362,6 +361,7 @@ exports[`Login Form Container should render WithEmotion 1`] = `
         >
           <input
             aria-invalid="false"
+            autocomplete="email"
             class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
             id=":r4:"
             name="email"
@@ -383,8 +383,7 @@ exports[`Login Form Container should render WithEmotion 1`] = `
         </div>
       </div>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
-        css="You have tried to stringify object returned from \`css\` function. It isn't supposed to be used directly (e.g. as value of the \`className\` prop), but rather handed to emotion so it can handle it (e.g. as value of \`css\` prop)."
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-jsepf2-MuiButtonBase-root-MuiButton-root-LoginForm"
         tabindex="0"
         type="submit"
       >

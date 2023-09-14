@@ -23,8 +23,8 @@ export const GraphQLPageInfo = new GraphQLObjectType({
   fields: {
     startCursor: {type: GraphQLString},
     endCursor: {type: GraphQLString},
-    hasNextPage: {type: GraphQLNonNull(GraphQLBoolean)},
-    hasPreviousPage: {type: GraphQLNonNull(GraphQLBoolean)}
+    hasNextPage: {type: new GraphQLNonNull(GraphQLBoolean)},
+    hasPreviousPage: {type: new GraphQLNonNull(GraphQLBoolean)}
   }
 })
 
@@ -32,41 +32,41 @@ export const GraphQLUnidirectionalPageInfo = new GraphQLObjectType({
   name: 'UnidirectionalPageInfo',
   fields: {
     endCursor: {type: GraphQLString},
-    hasNextPage: {type: GraphQLNonNull(GraphQLBoolean)}
+    hasNextPage: {type: new GraphQLNonNull(GraphQLBoolean)}
   }
 })
 
 export const GraphQLMetadataProperty = new GraphQLObjectType({
   name: 'Properties',
   fields: {
-    key: {type: GraphQLNonNull(GraphQLString)},
-    value: {type: GraphQLNonNull(GraphQLString)},
-    public: {type: GraphQLNonNull(GraphQLBoolean)}
+    key: {type: new GraphQLNonNull(GraphQLString)},
+    value: {type: new GraphQLNonNull(GraphQLString)},
+    public: {type: new GraphQLNonNull(GraphQLBoolean)}
   }
 })
 
 export const GraphQLMetadataPropertyPublic = new GraphQLObjectType({
   name: 'PublicProperties',
   fields: {
-    key: {type: GraphQLNonNull(GraphQLString)},
-    value: {type: GraphQLNonNull(GraphQLString)}
+    key: {type: new GraphQLNonNull(GraphQLString)},
+    value: {type: new GraphQLNonNull(GraphQLString)}
   }
 })
 
 export const GraphQLMetadataPropertyInput = new GraphQLInputObjectType({
   name: 'PropertiesInput',
   fields: {
-    key: {type: GraphQLNonNull(GraphQLString)},
-    value: {type: GraphQLNonNull(GraphQLString)},
-    public: {type: GraphQLNonNull(GraphQLBoolean)}
+    key: {type: new GraphQLNonNull(GraphQLString)},
+    value: {type: new GraphQLNonNull(GraphQLString)},
+    public: {type: new GraphQLNonNull(GraphQLBoolean)}
   }
 })
 
 export const GraphQLMetadataPropertyPublicInput = new GraphQLInputObjectType({
   name: 'PublicPropertiesInput',
   fields: {
-    key: {type: GraphQLNonNull(GraphQLString)},
-    value: {type: GraphQLNonNull(GraphQLString)}
+    key: {type: new GraphQLNonNull(GraphQLString)},
+    value: {type: new GraphQLNonNull(GraphQLString)}
   }
 })
 
@@ -85,6 +85,6 @@ export const GraphQLDateFilter = new GraphQLInputObjectType({
   name: 'DateFilter',
   fields: {
     date: {type: GraphQLDateTime, defaultValue: null},
-    comparison: {type: GraphQLNonNull(GraphQLDateFilterComparison)}
+    comparison: {type: new GraphQLNonNull(GraphQLDateFilterComparison)}
   }
 })

@@ -9,7 +9,6 @@ export * from './lib/graphql/page'
 export * from './lib/graphql/peer'
 export * from './lib/graphql/token'
 
-export * from './lib/graphql/richText'
 export * from './lib/graphql/slug'
 
 export * from './lib/graphql/schema'
@@ -51,6 +50,10 @@ export * from '@wepublish/authentication/api'
 export * from '@wepublish/permissions/api'
 export * from '@wepublish/mails'
 export * from '@wepublish/consent/api'
+export * from '@wepublish/events/import/api'
 export * from '@wepublish/image/api'
 export * from '@wepublish/payments'
 export * from '@wepublish/utils'
+export * from '@wepublish/richtext/api'
+
+export * from '@wepublish/jobs'

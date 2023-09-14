@@ -1,8 +1,7 @@
-import {EventListDocument, EventQuery, EventStatus} from '@wepublish/website/api'
-import {action} from '@storybook/addon-actions'
-import {Meta} from '@storybook/react'
-import {EventListContainer} from './event-list-container'
 import {css} from '@emotion/react'
+import {Meta} from '@storybook/react'
+import {EventListDocument, EventQuery, EventStatus} from '@wepublish/website/api'
+import {EventListContainer} from './event-list-container'
 
 const event = {
   id: '16ca80ce-a2d0-44dc-8c87-b735e4b08877',
@@ -182,9 +181,7 @@ export default {
 } as Meta
 
 export const Default = {
-  args: {
-    onQuery: action('onQuery')
-  },
+  args: {},
 
   parameters: {
     apolloClient: {
@@ -216,7 +213,6 @@ export const Default = {
 
 export const WithClassName = {
   args: {
-    onQuery: action('onQuery'),
     className: 'extra-classname'
   },
 
@@ -250,7 +246,6 @@ export const WithClassName = {
 
 export const WithEmotion = {
   args: {
-    onQuery: action('onQuery'),
     css: css`
       background-color: #eee;
     `

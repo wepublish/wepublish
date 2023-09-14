@@ -110,7 +110,7 @@ const fillPassword: StoryObj['play'] = async ({canvasElement, step}) => {
 const fillStreetName: StoryObj['play'] = async ({canvasElement, step}) => {
   const canvas = within(canvasElement)
 
-  const input = canvas.getByLabelText('Address', {
+  const input = canvas.getByLabelText('Adresse', {
     selector: 'input'
   })
 
@@ -123,7 +123,7 @@ const fillStreetName: StoryObj['play'] = async ({canvasElement, step}) => {
 const fillZip: StoryObj['play'] = async ({canvasElement, step}) => {
   const canvas = within(canvasElement)
 
-  const input = canvas.getByLabelText('Postleitzahl', {
+  const input = canvas.getByLabelText('PLZ', {
     selector: 'input'
   })
 
@@ -136,7 +136,7 @@ const fillZip: StoryObj['play'] = async ({canvasElement, step}) => {
 const fillCity: StoryObj['play'] = async ({canvasElement, step}) => {
   const canvas = within(canvasElement)
 
-  const input = canvas.getByLabelText('Stadt', {
+  const input = canvas.getByLabelText('Ort / Stadt', {
     selector: 'input'
   })
 

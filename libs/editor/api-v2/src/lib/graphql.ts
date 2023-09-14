@@ -17,6 +17,7 @@ export type Scalars = {
   Float: number;
   /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
   DateTime: string;
+  RichText: Node[];
 };
 
 export type Consent = {
@@ -41,6 +42,11 @@ export type ConsentInput = {
   slug: Scalars['String'];
 };
 
+export type CreateEventArgs = {
+  id: Scalars['String'];
+  source: Scalars['String'];
+};
+
 export type DashboardInvoice = {
   __typename?: 'DashboardInvoice';
   amount: Scalars['Int'];
@@ -59,6 +65,50 @@ export type DashboardSubscription = {
   reasonForDeactivation?: Maybe<SubscriptionDeactivationReason>;
   renewsAt?: Maybe<Scalars['DateTime']>;
   startsAt: Scalars['DateTime'];
+};
+
+export type Event = {
+  __typename?: 'Event';
+  createdAt: Scalars['DateTime'];
+  description: Scalars['RichText'];
+  endsAt?: Maybe<Scalars['DateTime']>;
+  externalSourceId: Scalars['String'];
+  externalSourceName: Scalars['String'];
+  id: Scalars['String'];
+  imageUrl?: Maybe<Scalars['String']>;
+  location: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  startsAt: Scalars['DateTime'];
+  status: EventStatus;
+};
+
+export enum EventStatus {
+  Cancelled = 'Cancelled',
+  Postponed = 'Postponed',
+  Rescheduled = 'Rescheduled',
+  Scheduled = 'Scheduled'
+}
+
+export type ImportedEventFilter = {
+  from?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  providers?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
+  to?: InputMaybe<Scalars['String']>;
+};
+
+export enum ImportedEventSort {
+  CreatedAt = 'CREATED_AT',
+  EndsAt = 'ENDS_AT',
+  ModifiedAt = 'MODIFIED_AT',
+  StartsAt = 'STARTS_AT'
+}
+
+export type ImportedEventsDocument = {
+  __typename?: 'ImportedEventsDocument';
+  nodes: Array<Event>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
 };
 
 export type MailProviderModel = {
@@ -91,35 +141,60 @@ export type MemberPlanRef = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  /** Create a new consent. */
+  /**
+   *
+   *       Create a new consent.
+   *
+   */
   createConsent: Consent;
+  /**
+   *
+   *       Creates and event based on data from importable events list and an id and provider.
+   *       Also, uploads an image to WePublish Image library.
+   *
+   */
+  createEvent: Scalars['String'];
   createSubscriptionFlow: Array<SubscriptionFlowModel>;
   createSubscriptionInterval: Array<SubscriptionFlowModel>;
   /**
-   * Creates a new userConsent based on input.
-   * Returns created userConsent.
+   *
+   *       Creates a new userConsent based on input.
+   *       Returns created userConsent.
+   *
    */
   createUserConsent: UserConsent;
-  /** Deletes an existing consent. */
+  /**
+   *
+   *       Deletes an existing consent.
+   *
+   */
   deleteConsent: Consent;
   deleteSubscriptionFlow: Array<SubscriptionFlowModel>;
   deleteSubscriptionInterval: Array<SubscriptionFlowModel>;
   /**
-   * Delete an existing userConsent by id.
-   * Returns deleted userConsent.
+   *
+   *       Delete an existing userConsent by id.
+   *       Returns deleted userConsent.
+   *
    */
   deleteUserConsent: UserConsent;
   syncTemplates?: Maybe<Scalars['Boolean']>;
   testSystemMail: Array<SystemMailModel>;
-  /** Updates an existing consent. */
+  /**
+   *
+   *       Updates an existing consent.
+   *
+   */
   updateConsent: Consent;
   updateSubscriptionFlow: Array<SubscriptionFlowModel>;
   updateSubscriptionInterval: Array<SubscriptionFlowModel>;
   updateSubscriptionIntervals: Array<SubscriptionFlowModel>;
   updateSystemMail: Array<SystemMailModel>;
   /**
-   * Updates an existing userConsent based on input.
-   * Returns updated userConsent.
+   *
+   *       Updates an existing userConsent based on input.
+   *       Returns updated userConsent.
+   *
    */
   updateUserConsent: UserConsent;
 };
@@ -127,6 +202,11 @@ export type Mutation = {
 
 export type MutationCreateConsentArgs = {
   consent: ConsentInput;
+};
+
+
+export type MutationCreateEventArgs = {
+  filter: CreateEventArgs;
 };
 
 
@@ -201,6 +281,14 @@ export type MutationUpdateUserConsentArgs = {
   userConsent: UpdateUserConsentInput;
 };
 
+export type PageInfo = {
+  __typename?: 'PageInfo';
+  endCursor: Scalars['String'];
+  hasNextPage: Scalars['Boolean'];
+  hasPreviousPage: Scalars['Boolean'];
+  startCursor: Scalars['String'];
+};
+
 export type PaymentMethodRef = {
   __typename?: 'PaymentMethodRef';
   id: Scalars['String'];
@@ -217,44 +305,98 @@ export enum PaymentPeriodicity {
 export type Query = {
   __typename?: 'Query';
   /**
-   * Returns all active subscribers.
-   * Includes subscribers with a cancelled but not run out subscription.
+   *
+   *       Returns all active subscribers.
+   *       Includes subscribers with a cancelled but not run out subscription.
+   *
    */
   activeSubscribers: Array<DashboardSubscription>;
-  /** Returns a consent by id. */
+  /**
+   *
+   *       Returns a consent by id.
+   *
+   */
   consent: Consent;
-  /** Returns all consents. */
+  /**
+   *
+   *       Returns all consents.
+   *
+   */
   consents: Array<Consent>;
   /**
-   * Returns the expected revenue for the time period given.
-   * Excludes cancelled or manually set as paid invoices.
+   *
+   *       Returns a list of Importable Event Providers
+   *
+   */
+  eventProviders: Array<Scalars['String']>;
+  /**
+   *
+   *       Returns the expected revenue for the time period given.
+   *       Excludes cancelled or manually set as paid invoices.
+   *
    */
   expectedRevenue: Array<DashboardInvoice>;
   getSystemMails: Array<SystemMailModel>;
+  /**
+   *
+   *       Returns a more detailed version of a single importable event, by id and source.
+   *
+   */
+  importedEvent: Event;
+  /**
+   *
+   *       Returns a list of imported events from external sources, transformed to match our model.
+   *
+   */
+  importedEvents: ImportedEventsDocument;
+  /**
+   *
+   *       Returns a list of external source ids of already imported events.
+   *
+   */
+  importedEventsIds: Array<Scalars['String']>;
   mailTemplates: Array<MailTemplateWithUrlAndStatusModel>;
   /**
-   * Returns all new deactivations in a given timeframe.
-   * This considers the time the deactivation was made, not when the subscription runs out.
+   *
+   *       Returns all new deactivations in a given timeframe.
+   *       This considers the time the deactivation was made, not when the subscription runs out.
+   *
    */
   newDeactivations: Array<DashboardSubscription>;
   /**
-   * Returns all new subscribers in a given timeframe.
-   * Includes already deactivated ones.
+   *
+   *       Returns all new subscribers in a given timeframe.
+   *       Includes already deactivated ones.
+   *
    */
   newSubscribers: Array<DashboardSubscription>;
   paymentMethods: Array<PaymentMethodRef>;
   provider: MailProviderModel;
-  /** Returns all renewing subscribers in a given timeframe. */
+  /**
+   *
+   *       Returns all renewing subscribers in a given timeframe.
+   *
+   */
   renewingSubscribers: Array<DashboardSubscription>;
   /**
-   * Returns the revenue generated for the time period given.
-   * Only includes paid invoices that have not been manually paid.
+   *
+   *       Returns the revenue generated for the time period given.
+   *       Only includes paid invoices that have not been manually paid.
+   *
    */
   revenue: Array<DashboardInvoice>;
   subscriptionFlows: Array<SubscriptionFlowModel>;
-  /** Returns a single userConsent by id. */
+  /**
+   *
+   *       Returns a single userConsent by id.
+   *
+   */
   userConsent: UserConsent;
-  /** Returns a list of userConsents. Possible to filter. */
+  /**
+   *
+   *       Returns a list of userConsents. Possible to filter.
+   *
+   */
   userConsents: Array<UserConsent>;
   versionInformation: VersionInformation;
 };
@@ -273,6 +415,20 @@ export type QueryConsentsArgs = {
 export type QueryExpectedRevenueArgs = {
   end?: InputMaybe<Scalars['DateTime']>;
   start: Scalars['DateTime'];
+};
+
+
+export type QueryImportedEventArgs = {
+  filter: SingleEventFilter;
+};
+
+
+export type QueryImportedEventsArgs = {
+  filter?: InputMaybe<ImportedEventFilter>;
+  order?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<ImportedEventSort>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -313,6 +469,11 @@ export type QueryUserConsentArgs = {
 
 export type QueryUserConsentsArgs = {
   filter?: InputMaybe<UserConsentFilter>;
+};
+
+export type SingleEventFilter = {
+  id: Scalars['String'];
+  source: Scalars['String'];
 };
 
 export enum SubscriptionDeactivationReason {
@@ -521,6 +682,43 @@ export type DeleteUserConsentMutationVariables = Exact<{
 
 export type DeleteUserConsentMutation = { __typename?: 'Mutation', deleteUserConsent: { __typename?: 'UserConsent', id: string } };
 
+export type ImportableEventRefFragment = { __typename?: 'Event', id: string, name: string, description: Node[], status: EventStatus, location: string, externalSourceId: string, externalSourceName: string, imageUrl?: string | null, startsAt: string, endsAt?: string | null };
+
+export type ImportedEventListQueryVariables = Exact<{
+  filter?: InputMaybe<ImportedEventFilter>;
+  order?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<ImportedEventSort>;
+}>;
+
+
+export type ImportedEventListQuery = { __typename?: 'Query', importedEvents: { __typename?: 'ImportedEventsDocument', totalCount: number, nodes: Array<{ __typename?: 'Event', id: string, name: string, description: Node[], status: EventStatus, location: string, externalSourceId: string, externalSourceName: string, imageUrl?: string | null, startsAt: string, endsAt?: string | null }>, pageInfo: { __typename?: 'PageInfo', startCursor: string, endCursor: string, hasNextPage: boolean, hasPreviousPage: boolean } } };
+
+export type ImportedEventQueryVariables = Exact<{
+  filter: SingleEventFilter;
+}>;
+
+
+export type ImportedEventQuery = { __typename?: 'Query', importedEvent: { __typename?: 'Event', id: string, name: string, description: Node[], status: EventStatus, location: string, externalSourceId: string, externalSourceName: string, imageUrl?: string | null, startsAt: string, endsAt?: string | null } };
+
+export type ImportedEventsIdsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ImportedEventsIdsQuery = { __typename?: 'Query', importedEventsIds: Array<string> };
+
+export type EventProvidersQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type EventProvidersQuery = { __typename?: 'Query', eventProviders: Array<string> };
+
+export type CreateEventMutationVariables = Exact<{
+  filter: CreateEventArgs;
+}>;
+
+
+export type CreateEventMutation = { __typename?: 'Mutation', createEvent: string };
+
 export type MailTemplateQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -633,6 +831,20 @@ export type VersionInformationQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type VersionInformationQuery = { __typename?: 'Query', versionInformation: { __typename?: 'VersionInformation', version: string } };
 
+export const ImportableEventRefFragmentDoc = gql`
+    fragment ImportableEventRef on Event {
+  id
+  name
+  description
+  status
+  location
+  externalSourceId
+  externalSourceName
+  imageUrl
+  startsAt
+  endsAt
+}
+    `;
 export const FullMailTemplateFragmentDoc = gql`
     fragment fullMailTemplate on MailTemplateWithUrlAndStatusModel {
   id
@@ -1106,6 +1318,190 @@ export function useDeleteUserConsentMutation(baseOptions?: Apollo.MutationHookOp
 export type DeleteUserConsentMutationHookResult = ReturnType<typeof useDeleteUserConsentMutation>;
 export type DeleteUserConsentMutationResult = Apollo.MutationResult<DeleteUserConsentMutation>;
 export type DeleteUserConsentMutationOptions = Apollo.BaseMutationOptions<DeleteUserConsentMutation, DeleteUserConsentMutationVariables>;
+export const ImportedEventListDocument = gql`
+    query ImportedEventList($filter: ImportedEventFilter, $order: Int, $skip: Int, $take: Int, $sort: ImportedEventSort) {
+  importedEvents(
+    filter: $filter
+    order: $order
+    skip: $skip
+    take: $take
+    sort: $sort
+  ) {
+    nodes {
+      ...ImportableEventRef
+    }
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+    totalCount
+  }
+}
+    ${ImportableEventRefFragmentDoc}`;
+
+/**
+ * __useImportedEventListQuery__
+ *
+ * To run a query within a React component, call `useImportedEventListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useImportedEventListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useImportedEventListQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *      order: // value for 'order'
+ *      skip: // value for 'skip'
+ *      take: // value for 'take'
+ *      sort: // value for 'sort'
+ *   },
+ * });
+ */
+export function useImportedEventListQuery(baseOptions?: Apollo.QueryHookOptions<ImportedEventListQuery, ImportedEventListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ImportedEventListQuery, ImportedEventListQueryVariables>(ImportedEventListDocument, options);
+      }
+export function useImportedEventListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ImportedEventListQuery, ImportedEventListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ImportedEventListQuery, ImportedEventListQueryVariables>(ImportedEventListDocument, options);
+        }
+export type ImportedEventListQueryHookResult = ReturnType<typeof useImportedEventListQuery>;
+export type ImportedEventListLazyQueryHookResult = ReturnType<typeof useImportedEventListLazyQuery>;
+export type ImportedEventListQueryResult = Apollo.QueryResult<ImportedEventListQuery, ImportedEventListQueryVariables>;
+export const ImportedEventDocument = gql`
+    query ImportedEvent($filter: SingleEventFilter!) {
+  importedEvent(filter: $filter) {
+    ...ImportableEventRef
+  }
+}
+    ${ImportableEventRefFragmentDoc}`;
+
+/**
+ * __useImportedEventQuery__
+ *
+ * To run a query within a React component, call `useImportedEventQuery` and pass it any options that fit your needs.
+ * When your component renders, `useImportedEventQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useImportedEventQuery({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useImportedEventQuery(baseOptions: Apollo.QueryHookOptions<ImportedEventQuery, ImportedEventQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ImportedEventQuery, ImportedEventQueryVariables>(ImportedEventDocument, options);
+      }
+export function useImportedEventLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ImportedEventQuery, ImportedEventQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ImportedEventQuery, ImportedEventQueryVariables>(ImportedEventDocument, options);
+        }
+export type ImportedEventQueryHookResult = ReturnType<typeof useImportedEventQuery>;
+export type ImportedEventLazyQueryHookResult = ReturnType<typeof useImportedEventLazyQuery>;
+export type ImportedEventQueryResult = Apollo.QueryResult<ImportedEventQuery, ImportedEventQueryVariables>;
+export const ImportedEventsIdsDocument = gql`
+    query ImportedEventsIds {
+  importedEventsIds
+}
+    `;
+
+/**
+ * __useImportedEventsIdsQuery__
+ *
+ * To run a query within a React component, call `useImportedEventsIdsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useImportedEventsIdsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useImportedEventsIdsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useImportedEventsIdsQuery(baseOptions?: Apollo.QueryHookOptions<ImportedEventsIdsQuery, ImportedEventsIdsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ImportedEventsIdsQuery, ImportedEventsIdsQueryVariables>(ImportedEventsIdsDocument, options);
+      }
+export function useImportedEventsIdsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ImportedEventsIdsQuery, ImportedEventsIdsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ImportedEventsIdsQuery, ImportedEventsIdsQueryVariables>(ImportedEventsIdsDocument, options);
+        }
+export type ImportedEventsIdsQueryHookResult = ReturnType<typeof useImportedEventsIdsQuery>;
+export type ImportedEventsIdsLazyQueryHookResult = ReturnType<typeof useImportedEventsIdsLazyQuery>;
+export type ImportedEventsIdsQueryResult = Apollo.QueryResult<ImportedEventsIdsQuery, ImportedEventsIdsQueryVariables>;
+export const EventProvidersDocument = gql`
+    query EventProviders {
+  eventProviders
+}
+    `;
+
+/**
+ * __useEventProvidersQuery__
+ *
+ * To run a query within a React component, call `useEventProvidersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useEventProvidersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useEventProvidersQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useEventProvidersQuery(baseOptions?: Apollo.QueryHookOptions<EventProvidersQuery, EventProvidersQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<EventProvidersQuery, EventProvidersQueryVariables>(EventProvidersDocument, options);
+      }
+export function useEventProvidersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<EventProvidersQuery, EventProvidersQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<EventProvidersQuery, EventProvidersQueryVariables>(EventProvidersDocument, options);
+        }
+export type EventProvidersQueryHookResult = ReturnType<typeof useEventProvidersQuery>;
+export type EventProvidersLazyQueryHookResult = ReturnType<typeof useEventProvidersLazyQuery>;
+export type EventProvidersQueryResult = Apollo.QueryResult<EventProvidersQuery, EventProvidersQueryVariables>;
+export const CreateEventDocument = gql`
+    mutation createEvent($filter: CreateEventArgs!) {
+  createEvent(filter: $filter)
+}
+    `;
+export type CreateEventMutationFn = Apollo.MutationFunction<CreateEventMutation, CreateEventMutationVariables>;
+
+/**
+ * __useCreateEventMutation__
+ *
+ * To run a mutation, you first call `useCreateEventMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateEventMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createEventMutation, { data, loading, error }] = useCreateEventMutation({
+ *   variables: {
+ *      filter: // value for 'filter'
+ *   },
+ * });
+ */
+export function useCreateEventMutation(baseOptions?: Apollo.MutationHookOptions<CreateEventMutation, CreateEventMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateEventMutation, CreateEventMutationVariables>(CreateEventDocument, options);
+      }
+export type CreateEventMutationHookResult = ReturnType<typeof useCreateEventMutation>;
+export type CreateEventMutationResult = Apollo.MutationResult<CreateEventMutation>;
+export type CreateEventMutationOptions = Apollo.BaseMutationOptions<CreateEventMutation, CreateEventMutationVariables>;
 export const MailTemplateDocument = gql`
     query MailTemplate {
   mailTemplates {

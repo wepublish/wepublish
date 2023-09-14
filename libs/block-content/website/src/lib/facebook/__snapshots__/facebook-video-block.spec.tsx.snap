@@ -1,0 +1,47 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Facebook Video Block should render Default 1`] = `
+<DocumentFragment>
+  <div
+    class="css-rbixsl-FacebookVideoBlockWrapper eet15gy1"
+  >
+    <div
+      class="css-1pe9yew-FacebookVideoBlockPlayer eet15gy0"
+      style="width: auto; height: auto;"
+    >
+      <div
+        class="fb-video"
+        data-allowfullscreen="true"
+        data-autoplay="false"
+        data-controls="true"
+        data-href="https://www.facebook.com/100064959061177/videos/1310370486335266/"
+        id=":r0:"
+        style="width: 100%; height: 100%;"
+      />
+    </div>
+  </div>
+</DocumentFragment>
+`;
+
+exports[`Facebook Video Block should render WithClassName 1`] = `
+<DocumentFragment>
+  <div
+    class="extra-classname css-rbixsl-FacebookVideoBlockWrapper eet15gy1"
+  >
+    <div
+      class="css-1pe9yew-FacebookVideoBlockPlayer eet15gy0"
+      style="width: auto; height: auto;"
+    >
+      <div
+        class="fb-video"
+        data-allowfullscreen="true"
+        data-autoplay="false"
+        data-controls="true"
+        data-href="https://www.facebook.com/100064959061177/videos/1310370486335266/"
+        id=":r1:"
+        style="width: 100%; height: 100%;"
+      />
+    </div>
+  </div>
+</DocumentFragment>
+`;

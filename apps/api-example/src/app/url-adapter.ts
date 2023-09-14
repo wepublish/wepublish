@@ -1,4 +1,4 @@
-import {CommentItemType, Event, Peer} from '@prisma/client'
+import {CommentItemType, Event, Peer, Subscription} from '@prisma/client'
 import {Author, PublicArticle, PublicComment, PublicPage, URLAdapter} from '@wepublish/api'
 
 export interface ExampleURLAdapterProps {
@@ -12,8 +12,12 @@ export class ExampleURLAdapter implements URLAdapter {
     this.websiteURL = props.websiteURL
   }
 
+  getSubscriptionURL(subscription: Subscription): string {
+    return `${this.websiteURL}/profile/subscription/${subscription.id}`
+  }
+
   getPublicArticleURL(article: PublicArticle): string {
-    return `${this.websiteURL}/a/${article.id}/${article.slug}`
+    return `${this.websiteURL}/a/${article.slug}`
   }
 
   getPeeredArticleURL(peer: Peer, article: PublicArticle): string {
@@ -21,15 +25,15 @@ export class ExampleURLAdapter implements URLAdapter {
   }
 
   getPublicPageURL(page: PublicPage): string {
-    return `${this.websiteURL}/page/${page.id}/${page.slug}`
+    return `${this.websiteURL}/${page.slug}`
   }
 
   getAuthorURL(author: Author): string {
-    return `${this.websiteURL}/author/${author.slug || author.id}`
+    return `${this.websiteURL}/author/${author.slug}`
   }
 
   getEventURL(event: Event): string {
-    return `${this.websiteURL}/events/${event.id}`
+    return `${this.websiteURL}/event/${event.id}`
   }
 
   getCommentURL(item: PublicArticle | PublicPage, comment: PublicComment, peer?: Peer) {

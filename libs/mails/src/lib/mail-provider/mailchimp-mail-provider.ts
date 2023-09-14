@@ -1,6 +1,6 @@
 import crypto from 'crypto'
 
-import mailchimp from '@mailchimp/mailchimp_transactional'
+import mailchimp, {TemplateResponse} from '@mailchimp/mailchimp_transactional'
 import {AxiosError} from 'axios'
 
 import {MailLogState} from '@prisma/client'
@@ -175,14 +175,16 @@ export class MailchimpMailProvider extends BaseMailProvider {
     if (this.responseIsError(response)) {
       throw new MailProviderError(response.response?.data.message)
     }
-    const templates: MailProviderTemplate[] = response.map(mailTemplateResponse => {
-      return {
-        name: mailTemplateResponse.name,
-        uniqueIdentifier: mailTemplateResponse.slug,
-        createdAt: new Date(mailTemplateResponse.created_at),
-        updatedAt: new Date(mailTemplateResponse.updated_at)
+    const templates: MailProviderTemplate[] = (response as TemplateResponse[]).map(
+      mailTemplateResponse => {
+        return {
+          name: mailTemplateResponse.name,
+          uniqueIdentifier: mailTemplateResponse.slug,
+          createdAt: new Date(mailTemplateResponse.created_at),
+          updatedAt: new Date(mailTemplateResponse.updated_at)
+        }
       }
-    })
+    )
     return templates
   }
 

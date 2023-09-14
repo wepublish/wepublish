@@ -80,7 +80,8 @@ export const getNewSubscribersPerMonth = async (
 ) => {
   const {roles} = authenticate()
   authorise(CanGetSubscriptions, roles)
-  const subscriptionCount = await subscription.findMany({
+
+  const subscriptions = await subscription.findMany({
     where: {
       startsAt: {
         gte: startOfMonth(subMonths(new Date(), monthsBack - 1))
@@ -93,7 +94,7 @@ export const getNewSubscribersPerMonth = async (
     }
   })
 
-  return getSubscriberCount(subscriptionCount, monthsBack)
+  return getSubscriberCount(subscriptions, monthsBack)
 }
 
 const getSubscriberCount = (subscribers: Subscription[], monthsBack: number) => {

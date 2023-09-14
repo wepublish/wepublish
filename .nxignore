@@ -1,2 +1,5 @@
 libs/testing
+libs/storybook
 apps/api-example/schema-v2.graphql
+libs/membership/api/package.json
+libs/membership/api/__tests__

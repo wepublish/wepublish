@@ -981,6 +981,9 @@ model Event {
   startsAt DateTime
   endsAt   DateTime?
 
+  externalSourceName String?
+  externalSourceId   String?
+
   tags TaggedEvents[]
 
   @@map("events")

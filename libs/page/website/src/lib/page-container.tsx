@@ -1,28 +1,26 @@
-import {usePageQuery, PageQuery} from '@wepublish/website/api'
-import {QueryResult} from '@apollo/client'
-import {useEffect} from 'react'
+import {PollBlockProvider} from '@wepublish/block-content/website'
+import {usePageQuery} from '@wepublish/website/api'
 import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {PropsWithChildren} from 'react'
 
 type IdOrSlug = {id: string; slug?: never} | {id?: never; slug: string}
 
-export type PageContainerProps = IdOrSlug & {
-  onQuery?: (
-    queryResult: Pick<QueryResult<PageQuery>, 'data' | 'loading' | 'error' | 'refetch'>
-  ) => void
-} & BuilderContainerProps
+export type PageContainerProps = PropsWithChildren<IdOrSlug & BuilderContainerProps>
 
-export function PageContainer({onQuery, id, slug, className}: PageContainerProps) {
+export function PageContainer({id, slug, className, children}: PageContainerProps) {
   const {Page} = useWebsiteBuilder()
-  const {data, loading, error, refetch} = usePageQuery({
+  const {data, loading, error} = usePageQuery({
     variables: {
       id,
       slug
     }
   })
 
-  useEffect(() => {
-    onQuery?.({data, loading, error, refetch})
-  }, [data, loading, error, refetch, onQuery])
-
-  return <Page data={data} loading={loading} error={error} className={className} />
+  return (
+    <PollBlockProvider>
+      <Page data={data} loading={loading} error={error} className={className}>
+        {children}
+      </Page>
+    </PollBlockProvider>
+  )
 }

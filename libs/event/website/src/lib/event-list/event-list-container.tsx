@@ -1,34 +1,22 @@
-import {EventListQuery} from '@wepublish/website/api'
-import {QueryResult} from '@apollo/client'
-import {useEffect} from 'react'
 import {useEventListQuery} from '@wepublish/website/api'
 import {
   BuilderContainerProps,
-  useWebsiteBuilder,
-  BuilderEventListProps
+  BuilderEventListProps,
+  useWebsiteBuilder
 } from '@wepublish/website/builder'
 
-export type EventListContainerProps = {
-  onQuery?: (
-    queryResult: Pick<QueryResult<EventListQuery>, 'data' | 'loading' | 'error' | 'fetchMore'>
-  ) => void
-} & BuilderContainerProps &
+export type EventListContainerProps = BuilderContainerProps &
   Pick<BuilderEventListProps, 'variables' | 'onVariablesChange'>
 
 export function EventListContainer({
-  onQuery,
   className,
   variables,
   onVariablesChange
 }: EventListContainerProps) {
   const {EventList} = useWebsiteBuilder()
-  const {data, loading, error, fetchMore} = useEventListQuery({
+  const {data, loading, error} = useEventListQuery({
     variables
   })
-
-  useEffect(() => {
-    onQuery?.({data, loading, error, fetchMore})
-  }, [data, loading, error, fetchMore, onQuery])
 
   return (
     <EventList

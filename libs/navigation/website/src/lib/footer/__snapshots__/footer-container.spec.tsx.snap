@@ -3,10 +3,10 @@
 exports[`Footer Container should render Default 1`] = `
 <DocumentFragment>
   <footer
-    class="css-vtn3aj"
+    class="css-5rtvk-FooterWrapper enubu9x2"
   >
     <div
-      class="MuiContainer-root MuiContainer-maxWidthLg css-1ezpp1g-MuiContainer-root"
+      class="MuiContainer-root MuiContainer-maxWidthLg enubu9x1 css-1iuxm26-MuiContainer-root-FooterInnerWrapper"
     >
       <svg
         height="50"
@@ -23,7 +23,7 @@ exports[`Footer Container should render Default 1`] = `
         />
       </svg>
       <nav
-        class="css-1y3cie6"
+        class="css-1svnta4-FooterLinks enubu9x0"
       >
         <a
           class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
@@ -52,10 +52,10 @@ exports[`Footer Container should render Default 1`] = `
 exports[`Footer Container should render WithClassName 1`] = `
 <DocumentFragment>
   <footer
-    class="extra-classname css-vtn3aj"
+    class="extra-classname css-5rtvk-FooterWrapper enubu9x2"
   >
     <div
-      class="MuiContainer-root MuiContainer-maxWidthLg css-1ezpp1g-MuiContainer-root"
+      class="MuiContainer-root MuiContainer-maxWidthLg enubu9x1 css-1iuxm26-MuiContainer-root-FooterInnerWrapper"
     >
       <svg
         height="50"
@@ -72,7 +72,7 @@ exports[`Footer Container should render WithClassName 1`] = `
         />
       </svg>
       <nav
-        class="css-1y3cie6"
+        class="css-1svnta4-FooterLinks enubu9x0"
       >
         <a
           class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
@@ -101,10 +101,10 @@ exports[`Footer Container should render WithClassName 1`] = `
 exports[`Footer Container should render WithEmotion 1`] = `
 <DocumentFragment>
   <footer
-    class="css-vtn3aj"
+    class="css-5rtvk-FooterWrapper enubu9x2"
   >
     <div
-      class="MuiContainer-root MuiContainer-maxWidthLg css-1ezpp1g-MuiContainer-root"
+      class="MuiContainer-root MuiContainer-maxWidthLg enubu9x1 css-1iuxm26-MuiContainer-root-FooterInnerWrapper"
     >
       <svg
         height="50"
@@ -121,7 +121,7 @@ exports[`Footer Container should render WithEmotion 1`] = `
         />
       </svg>
       <nav
-        class="css-1y3cie6"
+        class="css-1svnta4-FooterLinks enubu9x0"
       >
         <a
           class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"

@@ -1,5 +1,11 @@
 import {QueryResult} from '@apollo/client'
-import {AuthorQuery, FullAuthorFragment} from '@wepublish/website/api'
+import {
+  AuthorQuery,
+  AuthorListQuery,
+  FullAuthorFragment,
+  AuthorListQueryVariables,
+  Author
+} from '@wepublish/website/api'
 import {ComponentType} from 'react'
 
 export type BuilderAuthorProps = Pick<QueryResult<AuthorQuery>, 'data' | 'loading' | 'error'> & {
@@ -10,6 +16,19 @@ export type BuilderAuthorProps = Pick<QueryResult<AuthorQuery>, 'data' | 'loadin
 export type BuilderAuthorChipProps = {
   author: FullAuthorFragment
   className?: string
+}
+
+export type BuilderAuthorListItemProps = Author & {
+  className?: string
+}
+
+export type BuilderAuthorListProps = Pick<
+  QueryResult<AuthorListQuery>,
+  'data' | 'loading' | 'error'
+> & {
+  className?: string
+  variables?: Partial<AuthorListQueryVariables>
+  onVariablesChange?: (variables: Partial<AuthorListQueryVariables>) => void
 }
 
 export type BuilderAuthorLinksProps = {

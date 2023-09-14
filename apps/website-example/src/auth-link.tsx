@@ -17,3 +17,19 @@ export const authLink = new ApolloLink((operation, forward) => {
 
   return forward(operation)
 })
+
+export const ssrAuthLink = (token: string | undefined) =>
+  new ApolloLink((operation, forward) => {
+    const context = operation.getContext()
+
+    operation.setContext({
+      headers: {
+        authorization: token ? `Bearer ${token}` : '',
+        ...context.headers
+      },
+      credentials: 'include',
+      ...context
+    })
+
+    return forward(operation)
+  })

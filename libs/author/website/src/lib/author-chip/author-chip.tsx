@@ -16,13 +16,16 @@ export const AuthorChipContentWrapper = styled('div')`
   display: grid;
 `
 
+export const AuthorChipJobTitle = styled('div')``
+export const AuthorChipName = styled('div')``
+
 const imageStyles = css`
   border-radius: 50%;
 `
 
 export function AuthorChip({className, author}: BuilderAuthorChipProps) {
   const {
-    elements: {Image, Link, Paragraph}
+    elements: {Image, Link}
   } = useWebsiteBuilder()
 
   return (
@@ -32,13 +35,13 @@ export function AuthorChip({className, author}: BuilderAuthorChipProps) {
       </AuthorChipImageWrapper>
 
       <AuthorChipContentWrapper>
-        <Paragraph gutterBottom={false}>
+        <AuthorChipName>
           <strong>
             Von <Link href={author.url}>{author.name}</Link>
           </strong>
-        </Paragraph>
+        </AuthorChipName>
 
-        {author.jobTitle && <Paragraph gutterBottom={false}>{author.jobTitle}</Paragraph>}
+        {author.jobTitle && <AuthorChipJobTitle>{author.jobTitle}</AuthorChipJobTitle>}
       </AuthorChipContentWrapper>
     </AuthorChipWrapper>
   )

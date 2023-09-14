@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import {css, styled} from '@mui/material'
 import {
   BuilderAuthorLinksProps,
   BuilderAuthorProps,
@@ -14,6 +14,11 @@ declare module 'react' {
 export const AuthorWrapper = styled('article')`
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};
+`
+
+const imageStyles = css`
+  width: 100%;
+  max-width: 500px;
 `
 
 export function Author({
@@ -39,7 +44,9 @@ export function Author({
         {data.author.jobTitle && <H5 component="aside">{data.author.jobTitle}</H5>}
       </header>
 
-      {data.author.image && <Image image={data.author.image} fetchPriority="high" />}
+      {data.author.image && (
+        <Image image={data.author.image} fetchPriority="high" css={imageStyles} />
+      )}
       {!!data.author.links?.length && <AuthorLinksComponent links={data.author.links} />}
 
       <RichText richText={data.author.bio ?? []} />

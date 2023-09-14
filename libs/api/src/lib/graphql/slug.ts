@@ -13,8 +13,10 @@ export const GraphQLSlug = new GraphQLScalarType({
   },
 
   parseLiteral(literal) {
-    const value: string | undefined = valueFromAST(literal, GraphQLString)
-    if (value == undefined) throw new Error()
+    const value = valueFromAST(literal, GraphQLString) as string | undefined
+
+    if (value == null) throw new Error()
+
     return slugify(value)
   }
 })

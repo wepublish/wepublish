@@ -1,0 +1,40 @@
+fragment FullPeerProfile on PeerProfile {
+  name
+  logo {
+    ...FullImage
+  }
+
+  themeColor
+  themeFontColor
+
+  hostURL
+  websiteURL
+
+  callToActionText
+  callToActionURL
+  callToActionImageURL
+  callToActionImage {
+    ...FullImage
+  }
+}
+
+fragment FullPeer on Peer {
+  id
+  createdAt
+  modifiedAt
+
+  name
+  slug
+  isDisabled
+  hostURL
+
+  profile {
+    ...FullPeerProfile
+  }
+}
+
+query Peer($id: ID, $slug: Slug) {
+  peer(id: $id, slug: $slug) {
+    ...FullPeer
+  }
+}
