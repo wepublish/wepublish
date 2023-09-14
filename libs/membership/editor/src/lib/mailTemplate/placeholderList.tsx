@@ -43,7 +43,7 @@ interface Placeholder {
   exampleOverride?: string
 }
 
-export default function PlaceholderListe() {
+export function PlaceholderListe() {
   const {t} = useTranslation()
 
   /**

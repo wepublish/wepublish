@@ -1,9 +1,4 @@
-import {Invoice, Prisma, SubscriptionPeriod, PrismaClient, SubscriptionEvent} from '@prisma/client'
-import {Context} from './context'
-import {unselectPassword} from '@wepublish/user/api'
-import {logger} from '@wepublish/utils'
-import {SettingName} from '@wepublish/settings/api'
-import {mailLogType} from '@wepublish/mails'
+import {Prisma, PrismaClient} from '@prisma/client'
 
 // @TODO: move into cron job
 export const onFindArticle =

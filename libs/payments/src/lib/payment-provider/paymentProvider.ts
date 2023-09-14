@@ -5,8 +5,7 @@ import {
   Payment,
   PaymentState,
   PrismaClient,
-  Subscription,
-  SubscriptionDeactivationReason
+  Subscription
 } from '@prisma/client'
 import bodyParser from 'body-parser'
 import {NextHandleFunction} from 'connect'

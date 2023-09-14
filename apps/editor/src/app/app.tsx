@@ -15,6 +15,7 @@ import {ImportableEventListView} from '@wepublish/events/import/editor'
 import {
   MailTemplateList,
   MemberPlanEdit,
+  PlaceholderListe,
   SubscriptionFlowList,
   SystemMailList
 } from '@wepublish/membership/editor'
@@ -58,7 +59,6 @@ import {UserEditView} from './routes/userEditView'
 import {UserList} from './routes/userList'
 import {UserRoleList} from './routes/userRoleList'
 import {LocalStorageKey} from './utility'
-import PlaceholderListe from '../../../../libs/membership/editor/src/lib/mailTemplate/placeholderList'
 
 const LogoutMutation = gql`
   mutation Logout {

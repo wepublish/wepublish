@@ -1,4 +1,4 @@
-import {ApolloClient, ApolloLink, createHttpLink, HttpLink, InMemoryCache} from '@apollo/client'
+import {ApolloClient, ApolloLink, createHttpLink, InMemoryCache} from '@apollo/client'
 import {PaymentPeriodicity, SortOrder} from '@wepublish/editor/api'
 import {DocumentNode, OperationDefinitionNode} from 'graphql'
 import nanoid from 'nanoid'

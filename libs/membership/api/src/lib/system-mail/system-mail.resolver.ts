@@ -49,7 +49,7 @@ export class SystemMailResolver {
       mailType: mailLogType.SystemMail,
       recipient: user,
       optionalData: {},
-      externalMailTemplateId
+      externalMailTemplateId: externalMailTemplateId || ''
     })
 
     return this.getAllMails()
