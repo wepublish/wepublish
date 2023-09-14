@@ -9,6 +9,7 @@ import {
   useUserQuery,
   useUserRoleListQuery
 } from '@wepublish/editor/api'
+import {SingleViewTitle} from '@wepublish/ui'
 import {
   ChooseEditImage,
   createCheckedPermissionComponent,
@@ -38,8 +39,6 @@ import {
   toaster,
   Toggle as RToggle
 } from 'rsuite'
-
-import {SingleViewTitle} from '@wepublish/ui'
 
 const Grid = styled(RGrid)`
   padding-right: 0px;

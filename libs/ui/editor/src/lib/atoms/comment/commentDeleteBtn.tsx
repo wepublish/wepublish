@@ -5,7 +5,7 @@ import {useTranslation} from 'react-i18next'
 import {MdDelete} from 'react-icons/md'
 import {Button, IconButton, Message, Modal, toaster} from 'rsuite'
 
-import {PermissionControl} from '@wepublish/ui/editor'
+import {PermissionControl} from '../permissionControl'
 
 const onErrorToast = (error: ApolloError) => {
   toaster.push(

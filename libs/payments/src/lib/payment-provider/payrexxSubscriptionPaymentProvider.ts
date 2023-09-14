@@ -16,8 +16,6 @@ import {
   PaymentPeriodicity,
   Invoice,
   Subscription,
-  SubscriptionDeactivationReason,
-  Prisma,
   PrismaClient,
   MetadataProperty
 } from '@prisma/client'

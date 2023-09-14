@@ -1,4 +1,4 @@
-import {Injectable, OnModuleInit} from '@nestjs/common'
+import {Injectable} from '@nestjs/common'
 import {PaymentProvider} from './payment-provider/paymentProvider'
 import {PrismaClient} from '@prisma/client'
 

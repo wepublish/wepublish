@@ -146,7 +146,7 @@ export const updateAdminSubscription = async (
 
   const originalSubscription = await subscriptionClient.findUnique({
     where: {
-      id: id
+      id
     },
     include: {
       properties: true,
