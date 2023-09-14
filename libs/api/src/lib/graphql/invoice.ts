@@ -11,7 +11,8 @@ import {
 } from 'graphql'
 import {GraphQLDate, GraphQLDateTime} from 'graphql-scalars'
 import {Context} from '../context'
-import {InvoiceSort, InvoiceWithItems} from '../db/invoice'
+import {InvoiceSort} from '../db/invoice'
+import {InvoiceWithItems} from '@wepublish/payments'
 import {createProxyingResolver} from '../utility'
 import {GraphQLPageInfo} from './common'
 import {GraphQLPublicSubscription} from './subscription-public'
@@ -138,7 +139,6 @@ export const GraphQLInvoiceInput = new GraphQLInputObjectType({
   fields: {
     mail: {type: new GraphQLNonNull(GraphQLString)},
     description: {type: GraphQLString},
-    paidAt: {type: GraphQLDateTime},
     subscriptionID: {type: GraphQLID},
     manuallySetAsPaidByUserId: {type: GraphQLID},
     items: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLInvoiceItemInput)))}

@@ -790,7 +790,6 @@ export type InvoiceInput = {
   items: Array<InvoiceItemInput>;
   mail: Scalars['String'];
   manuallySetAsPaidByUserId?: InputMaybe<Scalars['ID']>;
-  paidAt?: InputMaybe<Scalars['DateTime']>;
   subscriptionID?: InputMaybe<Scalars['ID']>;
 };
 
@@ -922,6 +921,7 @@ export enum MemberPlanSort {
 export type Mutation = {
   __typename?: 'Mutation';
   approveComment: Comment;
+  cancelSubscription?: Maybe<Subscription>;
   createArticle: Article;
   createAuthor?: Maybe<Author>;
   createComment: Comment;
@@ -1005,6 +1005,12 @@ export type Mutation = {
 
 export type MutationApproveCommentArgs = {
   id: Scalars['ID'];
+};
+
+
+export type MutationCancelSubscriptionArgs = {
+  id: Scalars['ID'];
+  reason: SubscriptionDeactivationReason;
 };
 
 

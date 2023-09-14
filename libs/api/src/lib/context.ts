@@ -43,7 +43,7 @@ import {
   PublicArticle
 } from './db/article'
 import {DefaultBcryptHashCostFactor, DefaultSessionTTL} from './db/common'
-import {InvoiceWithItems} from './db/invoice'
+import {InvoiceWithItems} from '@wepublish/payments'
 import {MemberPlanWithPaymentMethods} from './db/memberPlan'
 import {NavigationWithLinks} from './db/navigation'
 import {PageWithRevisions, pageWithRevisionsToPublicPage, PublicPage} from './db/page'
@@ -51,12 +51,11 @@ import {TokenExpiredError} from './error'
 import {getEvent} from './graphql/event/event.query'
 import {FullPoll, getPoll} from './graphql/poll/poll.public-queries'
 import {Hooks} from './hooks'
-import {MailContext, MailContextOptions} from './mails/mailContext'
-import {BaseMailProvider} from './mails/mailProvider'
+import {BaseMailProvider, MailContext, MailContextOptions} from '@wepublish/mails'
 import {MediaAdapter} from '@wepublish/image/api'
 import {MemberContext} from './memberContext'
-import {PaymentProvider} from './payments/paymentProvider'
-import {logger} from './server'
+import {PaymentProvider} from '@wepublish/payments'
+import {logger} from '@wepublish/utils'
 import {URLAdapter} from './urlAdapter'
 import {SettingName} from '@wepublish/settings/api'
 import {SubscriptionWithRelations} from './db/subscription'
@@ -148,11 +147,15 @@ export interface Context {
   getOauth2Clients(): Promise<OAuth2Clients[]>
 
   authenticate(): AuthSession
+
   authenticateToken(): TokenSession
+
   authenticateUser(): UserSession
+
   optionalAuthenticateUser(): UserSession | null
 
   generateJWT(props: GenerateJWTProps): string
+
   verifyJWT(token: string): string
 
   createPaymentWithProvider(props: CreatePaymentWithProvider): Promise<Payment>
@@ -191,7 +194,7 @@ export interface ContextOptions {
   readonly prisma: PrismaClient
   readonly mediaAdapter: MediaAdapter
   readonly urlAdapter: URLAdapter
-  readonly mailProvider?: BaseMailProvider
+  readonly mailProvider: BaseMailProvider
   readonly mailContextOptions: MailContextOptions
   readonly oauth2Providers: Oauth2Provider[]
   readonly paymentProviders: PaymentProvider[]
@@ -581,7 +584,7 @@ export async function contextFromRequest(
         ids as string[],
         await prisma.mailLog.findMany({
           where: {
-            id: {
+            mailIdentifier: {
               in: ids as string[]
             }
           }
@@ -870,9 +873,7 @@ export async function contextFromRequest(
     prisma,
     mailProvider,
     defaultFromAddress: mailContextOptions.defaultFromAddress,
-    defaultReplyToAddress: mailContextOptions.defaultReplyToAddress,
-    mailTemplateMaps: mailContextOptions.mailTemplateMaps,
-    mailTemplatesPath: mailContextOptions.mailTemplatesPath
+    defaultReplyToAddress: mailContextOptions.defaultReplyToAddress
   })
 
   const generateJWT = (props: GenerateJWTProps): string => {
@@ -1030,6 +1031,16 @@ export async function contextFromRequest(
       })
 
       if (!updatedPayment) throw new Error('Error during updating payment') // TODO: this check needs to be removed
+
+      // Mark invoice as paid
+      if (intent.state === PaymentState.paid) {
+        await prisma.invoice.update({
+          where: {id: invoice.id},
+          data: {
+            paidAt: new Date()
+          }
+        })
+      }
 
       return updatedPayment as Payment
     },

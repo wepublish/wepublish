@@ -15,7 +15,7 @@ import {SortOrder} from '../db/common'
 import {MemberPlanSort} from '../db/memberPlan'
 import {PageSort, PublicPage} from '../db/page'
 import {NotFound} from '../error'
-import {logger} from '../server'
+import {logger} from '@wepublish/utils'
 import {delegateToPeerSchema} from '../utility'
 import {
   GraphQLPublicArticle,
