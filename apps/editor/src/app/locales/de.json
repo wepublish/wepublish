@@ -600,7 +600,10 @@
     "memberPlanList": {
       "action": "Aktionen",
       "active": "Aktiv",
+      "activeDescription": "Plan verfügbar machen",
       "adapter": "Zahlungsadapter",
+      "autoRenewal": "Automatische Erneuerung erzwingen",
+      "autoRenewalDescription": "Erzwingt automatische Erneuerung des Abonnements",
       "createNew": "Neuer Memberplan",
       "createTitle": "Memberplan erstellen",
       "deleteModalTitle": "Memberplan löschen",
@@ -617,33 +620,11 @@
         "MONTHLY": "Monatlich"
       },
       "priceRange": "Preis-(spanne) in CHF",
-      "title": "Abo Pläne",
+      "title": "Memberpläne",
       "fixPriceDescription": "Bei false kann der Preis eine Preisspanne sein",
       "minimumMonthlyAmount": "Minimaler monatlicher Betrag CHF",
       "slug": "Slug",
       "errorMessage": "Gib eine Nummer ein"
-    },
-    "memberPlanEdit": {
-      "nameRequired": "Name erforderlich",
-      "slugRequired": "Slug erforderlich",
-      "amountPerMonthMinRequired": "Minimaler Betrag erforderlich",
-      "amountPerMonthMinZero": "Minimaler Betrag muss mindestens 0 betragen",
-      "loadingTitle": "Lade",
-      "createMemberPlanHeader": "Erstelle Memberplan",
-      "noMemberPlanName": "Memberplan ohne Namen",
-      "saveBtnTitle": "Speichern",
-      "saveAndCloseBtnTitle": "Speichern & Schliessen",
-      "active": "Aktiv",
-      "activeDescription": "Plan verfügbar machen",
-      "name": "Name",
-      "slug": "Slug",
-      "description": "Beschreibung",
-      "tags": "Tags",
-      "amountPerMonthMin": "Minimaler Betrag / Monat",
-      "forceAutoRenewal": "Automatische Erneuerung erzwingen",
-      "autoRenewalDescription": "Erzwingt automatische Erneuerung des Abonnements",
-      "paymentConfigs": "Zahlungseinstellungen",
-      "editPaymentSetting": "Zahlungseinstellung bearbeiten"
     },
     "pollList": {
       "title": "Umfragen",
@@ -730,22 +711,19 @@
         "selectNewLanguage": "Neue Sprache auswählen"
       },
       "logout": "Logout",
-      "memberPlans": "Abo Pläne",
+      "memberPlans": "Memberpläne",
       "navigations": "Navigationen",
       "pages": "Seiten",
       "paymentMethods": "Zahlungsmethoden",
       "peering": "Peering",
       "userRoles": "Userrollen",
       "users": "User",
-      "usersAndMembers": "User & Abos",
+      "usersAndMembers": "User & Member",
       "tokens": "Tokens",
       "myPeerInfo": "Meine Peer Infos",
       "peers": "Peers",
       "subscriptions": "Abonnements",
       "peerArticles": "Peerbare Artikel",
-      "subscriptionSettings": "Default Mailing",
-      "mailTemplates": "E-Mail-Vorlagen",
-      "subscriptionPlans": "Abo Pläne",
       "consents": "Konsens",
       "userConsents": "User-Konsens",
       "importableEvents": "Importable Events"
@@ -1192,7 +1170,7 @@
           "deactivated": "Willst du das Abonnement von \"{{userName}}\" reaktiviern mit der Emailadresse \"{{userEmail}}\"?",
           "activated": "Willst du das Abonnement von \"{{userName}}\" deaktiviern mit der Emailadresse \"{{userEmail}}\"?"
         },
-        "help": "Deaktivierte Abonnements können bis zum \"bezahlt bis\"-Datum gebraucht werden. Aber sie werden nicht automatisch erneuert auch wenn die automatische Erneuerung gewählt ist. Einmal deaktiviert, kann das Abo nicht reaktiviert werden.",
+        "help": "Deaktivierte Abonnements können bis zum \"bezahlt bis\"-Datum gebraucht werden. Aber sie werden nicht automatisch erneuert auch wenn die automatische Erneuerun gewählt ist",
         "modalTitle": {
           "deactivated": "Abonnement aktivieren?",
           "activated": "Abonnement deaktivieren?"
@@ -1211,7 +1189,7 @@
         "reasonNone": "Keiner",
         "reasonUserSelfDeactivated": "User will deaktivieren",
         "reasonInvoiceNotPaid": "User hat Rechnung nicht bezahlt",
-        "isDeactivated": "Das Abonnement ist seit {{date, ccc PP p}} deaktiviert und kann nicht mehr bearbeitet werden. Allenfalls kann ein neues Abo gelöst werden."
+        "isDeactivated": "Das Abonnement is seit {{date, ccc PP p}} deaktiviert und muss vor dem Bearbeiten reaktiviert werden."
       },
       "hasAddress": "User hat Adresse"
     },
@@ -1258,8 +1236,7 @@
       "noUserErrorMessage": "Bitte wähle den/die Benutzer:in",
       "noTokenErrorMessage": "Bitte gib den Token ein",
       "invalidRange": "Ungültiger Wert. Bitte Zahl zwischen {{min}} und {{max}} eingeben.",
-      "required": "Dieses Feld ist erforderlich",
-      "minimalAmountPerMonth": "Der Minimalbetrag / Monat ist {{amount}} chf."
+      "required": "Dieses Feld ist erforderlich"
     },
     "invoice": {
       "manuallyPaidByAdmin": "Durch Administrator als bezahlt markiert.",
@@ -1390,23 +1367,6 @@
       "import": "Import",
       "imported": "Imported"
     },
-    "mailTemplates": {
-      "availableTemplates": "Verfügbare E-Mail-Templates",
-      "explanation": "Diese Templates von {{provider}} kannst du für den Versand von Benachrichtigungen verwenden.",
-      "name": "Name",
-      "internalName": "Interner Name",
-      "description": "Beschreibung",
-      "content": "Inhalt",
-      "view": "Auf {{provider}} ansehen",
-      "status": "Status",
-      "synchronize": "Templates synchronisieren",
-      "statusDeleted": "Template '{{internalName}}' bei {{provider}} gelöscht",
-      "showPlaceholders": "Placeholder Dokumentation",
-      "goToPlaceholders": "Verfügbare Placeholders"
-    },
-    "mailTemplateSelect": {
-      "noMailSentSelectNow": "Kein Mailversand"
-    },
     "general": {
       "deletedSuccess": "Erfolgreich gelöscht",
       "created": "Erfolgreich erstellt",
@@ -1432,32 +1392,6 @@
       "createdBy": " von {{creator}}",
       "user": "Benutzer",
       "memberPlan": "Memberplan: {{plan}}"
-    },
-    "placeholderList": {
-      "description": {
-        "optional_subscription_memberPlan_name": "Name des Subscription-Plans. Z.B. Jahres-Abo.",
-        "optional_subscription_paymentMethod_name": "Name der Payment-Methode. Z.B. Stripe",
-        "optional_subscription_autoRenew": "Ob das Abo automatisch erneuert wird. Die Werte sind true oder false",
-        "optional_subscription_monthlyAmount": "Monatlicher Betrag in Rappen. Z.B. 1000 für 10 chf / Monat.",
-        "optional_subscription_paymentPeriodicity": "Periodizität des Abos. Mögliche Werte sind: yearly, biannual, quarterly, monthly",
-        "optional_subscriptionID": "Eindeutige ID der Subscription.",
-        "user_id": "Eindeutige ID des Users.",
-        "user_email": "E-Mail des Users.",
-        "user_name": "Nachname des Users.",
-        "user_firstName": "Vorname des Users",
-        "jwt": "jwt steht für JSON Web Token. Mit diesem Token kann sich der User einloggen. Hierzu muss das Token in der URL an das Frontend übergeben werden. In der Regel in dem man ?jwt=TOKEN an die URL anhängt. Rechter Hand findest du ein Beispiel."
-      },
-      "header": "Liste der verfügbaren Placeholder",
-      "subtitle": "Bitte beachte, dass die Placeholder je nach Mail unterschiedlich sind. Wenn etwa ein Login-Link verschickt wird, hat dieses Mail nicht die gleichen Placeholder, wie bei einer Erneuerung des Abos.",
-      "placeholder": "Placeholder",
-      "descriptionTitle": "Beschreibung",
-      "example": "Beispiel im Template"
-    },
-    "draggableSubscriptionInterval": {
-      "ignoreDeactivatedSubscriptions": "Mails an deaktivierte Abos werden nicht verschickt!"
-    },
-    "resetUserPasswordForm": {
-      "sendMail": "Mail an User:in senden (Registration System Mail)"
     }
   }
 }

@@ -1,0 +1,7 @@
+extends ../../base.pug
+
+block content
+    h1 Hi #{user.name}
+
+    p You have a new invoice open which is due at  #{invoice.dueAt}. Click the link to pay: #{loginURL}&invoice=${invoice.id}
+

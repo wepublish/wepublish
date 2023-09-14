@@ -8,7 +8,7 @@ import {
 } from 'graphql'
 import {Context} from '../context'
 import {GraphQLDateTime} from 'graphql-scalars'
-import {PaymentProvider} from '@wepublish/payments'
+import {PaymentProvider} from '../payments/paymentProvider'
 import {createProxyingResolver} from '../utility'
 import {GraphQLSlug} from './slug'
 import {PaymentMethod} from '@prisma/client'

@@ -1,10 +1,10 @@
 import {runServer} from './app'
+
 import {Logger} from '@nestjs/common'
 import {NestFactory} from '@nestjs/core'
+
 import {AppModule} from './nestapp/app.module'
-import {MediaAdapterService} from '@wepublish/image/api'
-import {PaymentsService} from '@wepublish/payments'
-import {MailContext} from '@wepublish/mails'
+import {MediaAdapterService} from '@wepublish/api'
 
 async function bootstrap() {
   const nestApp = await NestFactory.create(AppModule)
@@ -13,17 +13,10 @@ async function bootstrap() {
     credentials: true
   })
   const mediaAdapter = nestApp.get(MediaAdapterService)
-  const paymentProviders = nestApp.get(PaymentsService).paymentProviders
-  const mailProvider = nestApp.get(MailContext).mailProvider
   const port = process.env.PORT ?? 4000
-  const expressApp = nestApp.getHttpAdapter().getInstance()
 
-  await runServer({
-    expressApp,
-    mediaAdapter,
-    paymentProviders,
-    mailProvider
-  }).catch(err => {
+  const expressApp = nestApp.getHttpAdapter().getInstance()
+  await runServer(expressApp, mediaAdapter).catch(err => {
     console.error(err)
     process.exit(1)
   })

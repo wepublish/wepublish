@@ -7,7 +7,7 @@ import {
   useEventQuery,
   useUpdateEventMutation
 } from '@wepublish/editor/api'
-import {SingleViewTitle} from '@wepublish/ui'
+import {ModelTitle} from '@wepublish/ui/editor'
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useNavigate, useParams} from 'react-router-dom'
@@ -91,7 +91,7 @@ export const EventEditView = () => {
       model={validationModel}
       disabled={loading}
       onSubmit={validationPassed => validationPassed && onSubmit()}>
-      <SingleViewTitle
+      <ModelTitle
         loading={loading}
         title={t('event.edit.title')}
         loadingTitle={t('event.edit.title')}

@@ -35,8 +35,11 @@ const ListViewFilterArea = styled.div`
 `
 
 const TableWrapper = styled.div`
-  height: 100%;
+  display: flex;
+  flex-flow: column;
   margin-top: 20px;
+  flex-grow: 1;
+  height: 100%;
 `
 
 const PaddedCell = styled(Cell)`

@@ -1,7 +1,7 @@
 import {useResetUserPasswordMutation} from '@wepublish/editor/api'
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, Checkbox, Form, Notification, Schema, toaster} from 'rsuite'
+import {Button, Form, Notification, Schema, toaster} from 'rsuite'
 
 export interface ResetUserPasswordPanelProps {
   userID?: string
@@ -11,7 +11,6 @@ export interface ResetUserPasswordPanelProps {
 
 export function ResetUserPasswordForm({userID, userName, onClose}: ResetUserPasswordPanelProps) {
   const [password, setPassword] = useState('')
-  const [sendMail, setSendMail] = useState<boolean>(false)
 
   const [resetUserPassword, {loading: isUpdating, error: updateError}] =
     useResetUserPasswordMutation()
@@ -40,8 +39,7 @@ export function ResetUserPasswordForm({userID, userName, onClose}: ResetUserPass
         const {data} = await resetUserPassword({
           variables: {
             id: userID,
-            password,
-            sendMail
+            password
           }
         })
         if (data?.resetUserPassword) {
@@ -69,13 +67,6 @@ export function ResetUserPasswordForm({userID, userName, onClose}: ResetUserPass
           value={password}
           onChange={(value: string) => setPassword(value)}
         />
-
-        <Checkbox
-          style={{marginTop: '8px'}}
-          checked={sendMail}
-          onChange={(value, checked) => setSendMail(checked)}>
-          {t('resetUserPasswordForm.sendMail')}
-        </Checkbox>
       </Form.Group>
 
       <Button type="submit" disabled={isDisabled} appearance="primary" color="red">

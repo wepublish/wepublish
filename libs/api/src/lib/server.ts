@@ -3,18 +3,23 @@ import express, {Application, NextFunction, Request, Response} from 'express'
 import pino from 'pino'
 import pinoHttp from 'pino-http'
 import {contextFromRequest, ContextOptions} from './context'
-import {onFindArticle, onFindPage} from './events'
+import {onInvoiceUpdate, onFindArticle, onFindPage} from './events'
 import {GraphQLWepublishPublicSchema, GraphQLWepublishSchema} from './graphql/schema'
-import {MAIL_WEBHOOK_PATH_PREFIX} from '@wepublish/mails'
-import {PAYMENT_WEBHOOK_PATH_PREFIX, setupPaymentProvider} from './payments'
+import {JobType, runJob} from './jobs'
+import {MAIL_WEBHOOK_PATH_PREFIX, setupMailProvider} from './mails/mailProvider'
+import {PAYMENT_WEBHOOK_PATH_PREFIX, setupPaymentProvider} from './payments/paymentProvider'
 import {MAX_PAYLOAD_SIZE} from './utility'
 import {
   ApolloServerPluginLandingPageGraphQLPlayground,
   ApolloServerPluginLandingPageDisabled
 } from 'apollo-server-core'
 import {graphqlUploadExpress} from 'graphql-upload'
-import {setupMailProvider} from './mails'
-import {serverLogger, logger} from '@wepublish/utils'
+
+let serverLogger: pino.Logger
+
+export function logger(moduleName: string): pino.Logger {
+  return serverLogger.child({module: moduleName})
+}
 
 export interface WepublishServerOpts extends ContextOptions {
   readonly playground?: boolean
@@ -30,7 +35,7 @@ export class WepublishServer {
 
     this.setupPrismaMiddlewares()
 
-    serverLogger.logger = this.opts.logger ? this.opts.logger : pino({name: 'we.publish'})
+    serverLogger = this.opts.logger ? this.opts.logger : pino({name: 'we.publish'})
 
     const adminServer = new ApolloServer({
       schema: GraphQLWepublishSchema,
@@ -72,7 +77,7 @@ export class WepublishServer {
 
     app.use(
       pinoHttp({
-        logger: serverLogger.logger,
+        logger: serverLogger,
         useLevel: 'debug'
       })
     )
@@ -104,11 +109,28 @@ export class WepublishServer {
         res.status(500).end()
       }
     })
+
     this.app = app
+  }
+
+  async runJob(command: JobType, data: any): Promise<void> {
+    try {
+      const context = await contextFromRequest(null, this.opts)
+      await runJob(command, context, data)
+
+      // FIXME: Will be refactored in WPC-604
+      // Wait for all asynchronous events to finish. I know this is bad code.
+      await new Promise(resolve => setTimeout(resolve, 10000))
+    } catch (error) {
+      logger('server').error(error as Error, 'Error while running job "%s"', command)
+    }
   }
 
   private async setupPrismaMiddlewares(): Promise<void> {
     this.opts.prisma.$use(onFindArticle(this.opts.prisma))
     this.opts.prisma.$use(onFindPage(this.opts.prisma))
+
+    const contextWithoutReq = await contextFromRequest(null, this.opts)
+    this.opts.prisma.$use(onInvoiceUpdate(contextWithoutReq))
   }
 }

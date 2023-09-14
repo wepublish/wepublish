@@ -1,14 +1,11 @@
+import {faker} from '@faker-js/faker'
 import {
-  PaymentPeriodicity,
-  PrismaClient,
-  SubscriptionEvent,
-  UserEvent,
   CommentAuthorType,
   CommentItemType,
   CommentState,
-  Prisma
+  Prisma,
+  PrismaClient
 } from '@prisma/client'
-import {faker} from '@faker-js/faker'
 import {createReadStream} from 'fs'
 import {Node} from 'slate'
 import {seed as rootSeed} from '../../../libs/api/prisma/seed'
@@ -32,10 +29,10 @@ import {
 } from '../../../libs/api/src/lib/db/block'
 
 const shuffle = <T>(list: T[]): T[] => {
-  let idx = -1
-  let len = list.length
-  let position
-  let result = []
+  var idx = -1
+  var len = list.length
+  var position
+  var result = []
 
   while (++idx < len) {
     position = Math.floor((idx + 1) * Math.random())
@@ -852,12 +849,8 @@ async function seed() {
       }
     })
 
-    await prisma.user.upsert({
-      where: {
-        email: 'editor@wepublish.ch'
-      },
-      update: {},
-      create: {
+    await prisma.user.create({
+      data: {
         email: 'editor@wepublish.ch',
         emailVerifiedAt: new Date(),
         name: 'Editor User',

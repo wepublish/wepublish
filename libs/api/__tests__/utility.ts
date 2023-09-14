@@ -14,8 +14,7 @@ import {
   PublicComment,
   PublicPage,
   URLAdapter,
-  DefaultSessionTTL,
-  FakeMailProvider
+  DefaultSessionTTL
 } from '../src'
 import {createUserSession} from '../src/lib/graphql/session/session.mutation'
 
@@ -114,12 +113,6 @@ export async function createGraphQLTestClient(overwriteRequest?: any): Promise<T
     }
   })
 
-  const mailProvider = new FakeMailProvider({
-    id: 'fakeMail',
-    name: 'Fake Mail',
-    fromAddress: 'fakeMail@wepublish.media'
-  })
-
   const mediaAdapter: KarmaMediaAdapter = {
     url: new URL('https://fakeurl.com'),
     token: 'fake',
@@ -143,10 +136,10 @@ export async function createGraphQLTestClient(overwriteRequest?: any): Promise<T
         websiteURL: 'https://fakeurl',
         prisma,
         mediaAdapter,
-        mailProvider,
         mailContextOptions: {
           defaultFromAddress: 'dev@fake.org',
-          defaultReplyToAddress: 'reply-to@fake.org'
+          defaultReplyToAddress: 'reply-to@fake.org',
+          mailTemplateMaps: []
         },
         urlAdapter: new ExampleURLAdapter(),
         oauth2Providers: [],
@@ -164,10 +157,10 @@ export async function createGraphQLTestClient(overwriteRequest?: any): Promise<T
         websiteURL: 'https://fakeurl',
         prisma,
         mediaAdapter,
-        mailProvider,
         mailContextOptions: {
           defaultFromAddress: 'dev@fake.org',
-          defaultReplyToAddress: 'reply-to@fake.org'
+          defaultReplyToAddress: 'reply-to@fake.org',
+          mailTemplateMaps: []
         },
         urlAdapter: new ExampleURLAdapter(),
         oauth2Providers: [],

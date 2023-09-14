@@ -1,0 +1,7 @@
+extends ../../base.pug
+
+block content
+    h1 Hi #{user.name}
+
+    p Your invoice is due since ${invoice.dueAt.toISOString()}. Please click the link to pay otherwise your account will be suspended: #{loginURL}&invoice=#{invoice.id}
+

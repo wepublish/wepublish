@@ -145,7 +145,6 @@ export const duplicateArticle = async (
 
   const input: Prisma.ArticleRevisionCreateInput = {
     ...articleRevision,
-    blocks: articleRevision.blocks || Prisma.JsonNull,
     properties: {
       createMany: {
         data: duplicatedProperties
@@ -212,7 +211,6 @@ export const unpublishArticle = async (
         upsert: {
           create: {
             ...revision,
-            blocks: revision.blocks || Prisma.JsonNull,
             publishAt: null,
             publishedAt: null,
             updatedAt: null,
@@ -234,7 +232,6 @@ export const unpublishArticle = async (
           },
           update: {
             ...revision,
-            blocks: revision.blocks || Prisma.JsonNull,
             publishAt: null,
             publishedAt: null,
             updatedAt: null,
@@ -355,7 +352,6 @@ export const publishArticle = async (
           pending: {
             create: {
               ...revision,
-              blocks: revision.blocks || Prisma.JsonNull,
               publishAt,
               publishedAt: publishedAt ?? article?.published?.publishedAt ?? publishAt,
               updatedAt: updatedAt ?? publishAt,
@@ -403,7 +399,6 @@ export const publishArticle = async (
         published: {
           create: {
             ...revision,
-            blocks: revision.blocks || Prisma.JsonNull,
             publishedAt: publishedAt ?? article.published?.publishAt ?? publishAt,
             updatedAt: updatedAt ?? publishAt,
             publishAt: null,

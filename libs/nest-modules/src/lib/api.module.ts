@@ -3,7 +3,6 @@ import {PrismaModule} from './database/prisma.module'
 import {MaintenanceModule} from './maintenance/maintenance.module'
 
 @Module({
-  imports: [MaintenanceModule, PrismaModule],
-  providers: []
+  imports: [MaintenanceModule, PrismaModule]
 })
 export class ApiModule {}

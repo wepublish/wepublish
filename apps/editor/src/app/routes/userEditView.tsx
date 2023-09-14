@@ -9,7 +9,6 @@ import {
   useUserQuery,
   useUserRoleListQuery
 } from '@wepublish/editor/api'
-import {SingleViewTitle} from '@wepublish/ui'
 import {
   ChooseEditImage,
   createCheckedPermissionComponent,
@@ -18,6 +17,7 @@ import {
   ImageSelectPanel,
   ListInput,
   ListValue,
+  ModelTitle,
   toggleRequiredLabel,
   useAuthorisation,
   UserSubscriptionsList
@@ -355,7 +355,7 @@ function UserEditView() {
         fluid
         model={validationModel}
         formValue={{name, email, password}}>
-        <SingleViewTitle
+        <ModelTitle
           loading={false}
           title={titleView()}
           loadingTitle={t('comments.edit.title')}
