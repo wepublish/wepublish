@@ -789,6 +789,7 @@ export type InvoiceInput = {
   description?: InputMaybe<Scalars['String']>;
   items: Array<InvoiceItemInput>;
   mail: Scalars['String'];
+  manuallySetAsPaidByUserId?: InputMaybe<Scalars['ID']>;
   subscriptionID?: InputMaybe<Scalars['ID']>;
 };
 
@@ -2356,6 +2357,11 @@ export type SubscriptionDeactivation = {
   reason: SubscriptionDeactivationReason;
 };
 
+export type SubscriptionDeactivationInput = {
+  date: Scalars['DateTime'];
+  reason: SubscriptionDeactivationReason;
+};
+
 export enum SubscriptionDeactivationReason {
   InvoiceNotPaid = 'INVOICE_NOT_PAID',
   None = 'NONE',
@@ -2382,8 +2388,10 @@ export type SubscriptionFilter = {
 
 export type SubscriptionInput = {
   autoRenew: Scalars['Boolean'];
+  deactivation?: InputMaybe<SubscriptionDeactivationInput>;
   memberPlanID: Scalars['String'];
   monthlyAmount: Scalars['Int'];
+  paidUntil?: InputMaybe<Scalars['DateTime']>;
   paymentMethodID: Scalars['String'];
   paymentPeriodicity: PaymentPeriodicity;
   properties: Array<PropertiesInput>;
