@@ -283,7 +283,9 @@ export class SubscriptionFlowController {
     memberPlanId: string | null,
     newFlow: Partial<SubscriptionFlowModelUpdateInput>
   ) {
+    const whereClause = memberPlanId ? {memberPlan: {id: memberPlanId}} : {}
     const allFlows = await this.prismaService.subscriptionFlow.findMany({
+      where: whereClause,
       select: {
         id: true,
         paymentMethods: {

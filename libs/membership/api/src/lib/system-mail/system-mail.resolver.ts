@@ -3,7 +3,7 @@ import {User, UserFlowMail} from '@prisma/client'
 import {PrismaService} from '@wepublish/nest-modules'
 import {CurrentUser} from '../user.decorator'
 import {SystemMailModel, SystemMailTestInput, SystemMailUpdateInput} from './system-mail.model'
-import {MailContext} from '@wepublish/mails'
+import {MailContext, mailLogType} from '@wepublish/mails'
 
 @Resolver(() => SystemMailModel)
 export class SystemMailResolver {
@@ -43,12 +43,13 @@ export class SystemMailResolver {
     @CurrentUser() user: User,
     @Args('systemMail') systemMail: SystemMailTestInput
   ) {
-    const remoteTemplate = await this.mailContext.getUserTemplateName(systemMail.event)
-    await this.mailContext.sendRemoteTemplateDirect({
-      remoteTemplate,
-      recipient: user.email,
-      data: {user},
-      mailLogID: systemMail.event
+    const externalMailTemplateId = await this.mailContext.getUserTemplateName(systemMail.event)
+
+    await this.mailContext.sendMail({
+      mailType: mailLogType.SystemMail,
+      recipient: user,
+      optionalData: {},
+      externalMailTemplateId
     })
 
     return this.getAllMails()

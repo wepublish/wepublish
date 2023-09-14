@@ -1245,7 +1245,7 @@ declare type InvoiceFactoryDefineInput = {
   description?: string | null
   paidAt?: Date | null
   canceledAt?: Date | null
-  scheduledDeactivationAt?: Date | null
+  scheduledDeactivationAt?: Date
   manuallySetAsPaidByUserId?: string | null
   items?: Prisma.InvoiceItemCreateNestedManyWithoutInvoicesInput
   subscription?: InvoicesubscriptionFactory | Prisma.SubscriptionCreateNestedOneWithoutInvoicesInput

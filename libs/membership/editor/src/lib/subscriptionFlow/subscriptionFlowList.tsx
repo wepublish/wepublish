@@ -60,16 +60,15 @@ export const MailTemplatesContext = createContext<FullMailTemplateFragment[]>([]
  * TYPES
  */
 
-const USER_ACTION_EVENTS = [
+export const USER_ACTION_EVENTS = [
   SubscriptionEvent.Subscribe,
   SubscriptionEvent.RenewalSuccess,
   SubscriptionEvent.RenewalFailed,
-  SubscriptionEvent.DeactivationByUser,
-  SubscriptionEvent.Reactivation
+  SubscriptionEvent.DeactivationByUser
 ] as const
 type UserActionEvents = (typeof USER_ACTION_EVENTS)[number]
 
-const NON_USER_ACTION_EVENTS = [
+export const NON_USER_ACTION_EVENTS = [
   SubscriptionEvent.InvoiceCreation,
   SubscriptionEvent.DeactivationUnpaid,
   SubscriptionEvent.Custom
@@ -127,7 +126,7 @@ function SubscriptionFlowList() {
    ******************************************/
   const client: ApolloClient<NormalizedCacheObject> = useMemo(() => getApiClientV2(), [])
 
-  const {data: memberPlans} = useMemberPlanListQuery({})
+  const {data: memberPlans} = useMemberPlanListQuery({variables: {take: 100}})
 
   const memberPlan = useMemo(() => {
     return memberPlans && memberPlans.memberPlans.nodes.find(p => p.id === memberPlanId)
@@ -285,15 +284,17 @@ function SubscriptionFlowList() {
       <ListViewContainer>
         <ListViewHeader>
           <h2>
-            <MdTune />
+            <MdTune style={{marginRight: '4px'}} />
             {defaultFlowOnly
               ? t('subscriptionFlow.titleDefaultSettings')
-              : `${memberPlan?.name || ''} ${t('subscriptionFlow.titleSettings')}`}
+              : `«${memberPlan?.name || ''}»`}
           </h2>
-          <Typography variant="subtitle1">{t('subscriptionFlow.settingsDescription')}</Typography>
+          {!defaultFlowOnly && (
+            <Typography variant="subtitle1">{t('subscriptionFlow.settingsDescription')}</Typography>
+          )}
         </ListViewHeader>
       </ListViewContainer>
-      <TableContainer style={{marginTop: '16px', overflow: 'hidden', overflowAnchor: 'none'}}>
+      <TableContainer style={{marginTop: '16px', maxWidth: '100%'}}>
         <MailTemplatesContext.Provider value={mailTemplates?.mailTemplates || []}>
           <GraphqlClientContext.Provider
             value={{

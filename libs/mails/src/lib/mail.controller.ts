@@ -3,12 +3,14 @@ import {MailLogState, User} from '@prisma/client'
 import {MailContext} from './mail-context'
 import {PrismaService} from '@wepublish/nest-modules'
 import {generateJWT} from '@wepublish/utils-api'
+import {randomUUID} from 'crypto'
 
 const ONE_WEEK_IN_MINUTES = 7 * 24 * 60 * 60
 
 export enum mailLogType {
   SubscriptionFlow,
-  UserFlow
+  UserFlow,
+  SystemMail
 }
 
 export type MailControllerConfig = {
@@ -61,18 +63,20 @@ export class MailController {
    * @returns a HashMap of configuration data
    */
   private buildData() {
-    this.config.recipient.password = 'hidden'
-    this.config.recipient.roleIDs = ['hidden']
+    // avoid unwanted data mutation by reference
+    const recipient = JSON.parse(JSON.stringify(this.config.recipient))
+    recipient.password = 'hidden'
+    recipient.roleIDs = ['hidden']
 
     if (!process.env['JWT_SECRET_KEY']) throw new Error('No JWT_SECRET_KEY defined in environment.')
 
     return {
-      user: this.config.recipient,
+      user: recipient,
       optional: this.config.optionalData,
       jwt: generateJWT({
         issuer: 'mailer',
         audience: 'audience',
-        id: this.generateMailIdentifier(),
+        id: recipient.id,
         expiresInMinutes: ONE_WEEK_IN_MINUTES,
         secret: process.env['JWT_SECRET_KEY']
       })
@@ -93,14 +97,17 @@ export class MailController {
       return
     }
 
+    const mailLogId = randomUUID()
+
     await this.mailContext.sendRemoteTemplateDirect({
-      mailLogID: this.generateMailIdentifier(),
+      mailLogID: mailLogId,
       remoteTemplate: this.config.externalMailTemplateId,
       recipient: this.config.recipient.email,
       data: this.buildData()
     })
     await this.prismaService.mailLog.create({
       data: {
+        id: mailLogId,
         recipient: {
           connect: {
             id: this.config.recipient.id

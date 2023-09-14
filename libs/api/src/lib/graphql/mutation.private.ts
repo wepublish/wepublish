@@ -131,6 +131,7 @@ import {GraphQLSetting, GraphQLUpdateSettingArgs} from './setting'
 import {updateSettings} from './setting/setting.private-mutation'
 import {GraphQLSubscription, GraphQLSubscriptionInput} from './subscription'
 import {
+  cancelSubscriptionById,
   createSubscription,
   deleteSubscriptionById,
   updateAdminSubscription
@@ -161,6 +162,7 @@ import {
 } from './event/event.private-mutation'
 import {CanSendJWTLogin} from '@wepublish/permissions/api'
 import {mailLogType} from '@wepublish/mails'
+import {GraphQLSubscriptionDeactivationReason} from './subscriptionDeactivation'
 
 function mapTeaserUnionMap(value: any) {
   if (!value) return null
@@ -451,8 +453,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         input: {type: new GraphQLNonNull(GraphQLUserInput)},
         password: {type: new GraphQLNonNull(GraphQLString)}
       },
-      resolve: (root, {input, password}, {hashCostFactor, authenticate, prisma: {user}}) =>
-        createAdminUser({...input, password}, authenticate, hashCostFactor, user)
+      resolve: (root, {input, password}, {hashCostFactor, authenticate, prisma, mailContext}) =>
+        createAdminUser({...input, password}, authenticate, hashCostFactor, prisma, mailContext)
     },
 
     updateUser: {
@@ -507,14 +509,15 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         id: {type: new GraphQLNonNull(GraphQLID)},
         input: {type: new GraphQLNonNull(GraphQLSubscriptionInput)}
       },
-      resolve: (root, {id, input}, {authenticate, prisma, memberContext}) =>
+      resolve: (root, {id, input}, {authenticate, prisma, memberContext, paymentProviders}) =>
         updateAdminSubscription(
           id,
           input,
           authenticate,
           memberContext,
           prisma.subscription,
-          prisma.user
+          prisma.user,
+          paymentProviders
         )
     },
 
@@ -525,6 +528,16 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       },
       resolve: (root, {id}, {authenticate, prisma: {subscription}}) =>
         deleteSubscriptionById(id, authenticate, subscription)
+    },
+
+    cancelSubscription: {
+      type: GraphQLSubscription,
+      args: {
+        id: {type: new GraphQLNonNull(GraphQLID)},
+        reason: {type: new GraphQLNonNull(GraphQLSubscriptionDeactivationReason)}
+      },
+      resolve: (root, {id, reason}, {authenticate, prisma: {subscription}, memberContext}) =>
+        cancelSubscriptionById(id, reason, authenticate, subscription, memberContext)
     },
 
     // UserRole

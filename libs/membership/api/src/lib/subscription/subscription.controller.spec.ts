@@ -241,7 +241,7 @@ describe('SubscriptionController', () => {
           amount: 10,
           invoice: {
             create: {
-              scheduledDeactivationAt: null,
+              scheduledDeactivationAt: add(validUntil, {days: 7}),
               mail: 'test@wepublish.com',
               dueAt: sub(validUntil, {years: 1}),
               paidAt: sub(validUntil, {years: 1})

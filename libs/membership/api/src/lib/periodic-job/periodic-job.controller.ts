@@ -9,6 +9,7 @@ import {
   PaymentProviderCustomer,
   PeriodicJob,
   Subscription,
+  SubscriptionDeactivationReason,
   SubscriptionEvent,
   SubscriptionPeriod,
   User
@@ -18,6 +19,8 @@ import {Injectable, Logger} from '@nestjs/common'
 import {MailContext, MailController, mailLogType} from '@wepublish/mails'
 import {Action} from '../subscription-event-dictionary/subscription-event-dictionary.type'
 import {SubscriptionController} from '../subscription/subscription.controller'
+import {PaymentsService} from '@wepublish/payments'
+import {inspect} from 'util'
 
 const FIVE_MINUTES_IN_MS = 5 * 60 * 1000
 
@@ -35,7 +38,8 @@ export class PeriodicJobController {
   constructor(
     private readonly prismaService: PrismaService,
     private readonly mailContext: MailContext,
-    private readonly subscriptionController: SubscriptionController
+    private readonly subscriptionController: SubscriptionController,
+    private readonly payments: PaymentsService
   ) {
     this.subscriptionEventDictionary = new SubscriptionEventDictionary(this.prismaService)
   }
@@ -62,23 +66,51 @@ export class PeriodicJobController {
    * - deactivate overdue subscriptions
    * If any of the tasks fail, the entire job is marked as failed.
    */
-  public async execute() {
-    for (const periodicJobRunObject of await this.getOutstandingRuns()) {
+  public async execute(customRunDate: Date = new Date()) {
+    for (const periodicJobRunObject of await this.getOutstandingRuns(customRunDate)) {
       if (periodicJobRunObject.isRetry) {
         await this.retryFailedJob(periodicJobRunObject.date)
       } else {
         await this.markJobStarted(periodicJobRunObject.date)
       }
       try {
+        this.logger.log('Executing periodic job...')
+        this.logger.log('Processing custom mails...')
         await this.findAndSendCustomMails(periodicJobRunObject)
+        this.logger.log('Processing invoice creation...')
         await this.findAndCreateInvoices(periodicJobRunObject)
+        this.logger.log('Processing charge of invoices...')
         await this.findAndChargeDueInvoices(periodicJobRunObject)
+        this.logger.log('Processing deactivation of subscriptions with unpaid invoice...')
         await this.findAndDeactivateSubscriptions(periodicJobRunObject)
+        this.logger.log(
+          'Processing deactivation of subscriptions with which are not auto renewed...'
+        )
+        await this.findAndDeactivateExpiredNotAutoRenewSubscription(periodicJobRunObject)
+        this.logger.log('Periodic job successfully finished.')
       } catch (e) {
-        await this.markJobFailed((e as Error).toString())
-        throw e
+        await this.markJobFailed(inspect(e))
+        throw new Error(inspect(e))
       }
       await this.markJobSuccessful()
+    }
+  }
+
+  private async findAndDeactivateExpiredNotAutoRenewSubscription(
+    periodicJobRunObject: PeriodicJobRunObject
+  ) {
+    const subscriptionsToDeactivate =
+      await this.subscriptionController.getExpiredNotAutoRenewSubscriptionsToDeactivate(
+        periodicJobRunObject.date
+      )
+    for (const subscriptionToDeactivate of subscriptionsToDeactivate) {
+      await this.prismaService.subscriptionDeactivation.create({
+        data: {
+          subscriptionID: subscriptionToDeactivate.id,
+          date: new Date(),
+          reason: SubscriptionDeactivationReason.userSelfDeactivated
+        }
+      })
     }
   }
 
@@ -128,10 +160,15 @@ export class PeriodicJobController {
               date.getTimezoneOffset()
             )
           }
-        }))
+        })),
+        // Don't send custom mails for deactivated subscriptions
+        deactivation: {
+          is: null
+        }
       },
       include: {
-        user: true
+        user: true,
+        deactivation: true
       }
     })
     for (const subscriptionsWithEvent of subscriptionsWithEvents) {
@@ -187,6 +224,7 @@ export class PeriodicJobController {
     const creationEvent = eventInvoiceCreation.find(
       e => e.type === SubscriptionEvent.INVOICE_CREATION
     )
+
     if (!creationEvent) {
       throw new Error('No invoice creation found!')
     }
@@ -206,7 +244,30 @@ export class PeriodicJobController {
       return false
     }
 
-    await this.subscriptionController.createInvoice(subscriptionToCreateInvoice, deactivationEvent)
+    const invoice = await this.subscriptionController.createInvoice(
+      subscriptionToCreateInvoice,
+      deactivationEvent
+    )
+
+    const paymentProvider = await this.payments.findPaymentProviderByPaymentMethodeId(
+      subscriptionToCreateInvoice.paymentMethodID
+    )
+    if (paymentProvider) {
+      const subscription = await this.prismaService.subscription.findUnique({
+        where: {
+          id: subscriptionToCreateInvoice.id
+        },
+        include: {
+          properties: true
+        }
+      })
+      if (subscription) {
+        await paymentProvider.createRemoteInvoice({
+          subscription,
+          invoice
+        })
+      }
+    }
 
     await this.sendTemplateMail(
       creationEvent,
@@ -281,6 +342,25 @@ export class PeriodicJobController {
       })
     if (!eventDeactivationUnpaid[0]) {
       throw new Error('No subscription deactivation found!')
+    }
+
+    const paymentProvider = await this.payments.findPaymentProviderByPaymentMethodeId(
+      unpaidInvoice.subscription.paymentMethodID
+    )
+    if (paymentProvider) {
+      const subscription = await this.prismaService.subscription.findUnique({
+        where: {
+          id: unpaidInvoice.subscription.id
+        },
+        include: {
+          properties: true
+        }
+      })
+      if (subscription) {
+        await paymentProvider.cancelRemoteSubscription({
+          subscription
+        })
+      }
     }
 
     await this.subscriptionController.deactivateSubscription(unpaidInvoice)
@@ -401,8 +481,8 @@ export class PeriodicJobController {
    * - If there was an execution pause, it returns all runs between the last successful run and the current day.
    * @returns An array of pending runs.
    */
-  private async getOutstandingRuns(): Promise<PeriodicJobRunObject[]> {
-    const today = new Date()
+  private async getOutstandingRuns(customRunDate: Date): Promise<PeriodicJobRunObject[]> {
+    const today = customRunDate || new Date()
     const runDates: PeriodicJobRunObject[] = []
     const latestRun = await this.prismaService.periodicJob.findFirst({
       orderBy: {

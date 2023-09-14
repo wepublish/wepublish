@@ -139,7 +139,6 @@ export const GraphQLInvoiceInput = new GraphQLInputObjectType({
   fields: {
     mail: {type: new GraphQLNonNull(GraphQLString)},
     description: {type: GraphQLString},
-    paidAt: {type: GraphQLDateTime},
     subscriptionID: {type: GraphQLID},
     manuallySetAsPaidByUserId: {type: GraphQLID},
     items: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLInvoiceItemInput)))}

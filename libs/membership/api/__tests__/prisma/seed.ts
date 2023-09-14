@@ -12,14 +12,12 @@ async function seed() {
     throw new Error('@wepublish/api seeding has not been done')
   }
 
-  const hasUsers = await prisma.user.count()
-
-  if (hasUsers) {
-    throw 'Website Example seeding has already been done. Skipping'
-  }
-
-  const dev = await prisma.user.create({
-    data: {
+  const dev = await prisma.user.upsert({
+    where: {
+      email: 'dev@wepublish.ch'
+    },
+    update: {},
+    create: {
       email: 'dev@wepublish.ch',
       emailVerifiedAt: new Date(),
       name: 'Dev User',
@@ -183,13 +181,6 @@ async function seed() {
       subscriptionFlow: {connect: {id: subscriptionFlows[0].id}}
     },
     {
-      id: '987db417-778e-482e-b1b9-06d3dfa54803',
-      event: SubscriptionEvent.REACTIVATION,
-      daysAwayFromEnding: null,
-      mailTemplate: {connect: {id: mailTemplates[0].id}},
-      subscriptionFlow: {connect: {id: subscriptionFlows[0].id}}
-    },
-    {
       id: '96c35c14-9897-48f2-9484-1919b2f8a2a9',
       event: SubscriptionEvent.CUSTOM,
       daysAwayFromEnding: -6,
@@ -250,6 +241,7 @@ async function seed() {
       create: createObj
     })
   }
+
   await prisma.$disconnect()
 }
 

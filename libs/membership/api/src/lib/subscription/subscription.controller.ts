@@ -146,6 +146,29 @@ export class SubscriptionController {
   }
 
   /**
+   * Find all subscriptions that have autorenew false and have a missing deactivation object
+   * @param runDate the date to check for
+   * @returns a list of subscriptions.
+   */
+
+  public async getExpiredNotAutoRenewSubscriptionsToDeactivate(runDate: Date) {
+    return this.prismaService.subscription.findMany({
+      where: {
+        paidUntil: {
+          lte: endOfDay(runDate)
+        },
+        autoRenew: false,
+        deactivation: {
+          is: null
+        }
+      },
+      include: {
+        deactivation: true
+      }
+    })
+  }
+
+  /**
    * Calculate the runtime of a specific {@link PaymentPeriodicity}
    * @param periodicity The periodicity to calculate the runtime for.
    * @returns the number of months the subscription runs for.
@@ -247,6 +270,9 @@ export class SubscriptionController {
             id: subscription.id
           }
         }
+      },
+      include: {
+        items: true
       }
     })
   }
@@ -398,39 +424,55 @@ export class SubscriptionController {
       }
     })
 
-    const intent = await paymentProvider.createIntent({
-      paymentID: payment.id,
-      invoice,
-      saveCustomer: false,
-      customerID: customer.customerID
-    })
+    try {
+      const intent = await paymentProvider.createIntent({
+        paymentID: payment.id,
+        invoice,
+        saveCustomer: false,
+        customerID: customer.customerID
+      })
 
-    await this.prismaService.payment.update({
-      where: {id: payment.id},
-      data: {
-        state: intent.state,
-        intentID: intent.intentID,
-        intentData: intent.intentData,
-        intentSecret: intent.intentSecret,
-        paymentData: intent.paymentData,
-        paymentMethodID: payment.paymentMethodID,
-        invoiceID: payment.invoiceID
-      }
-    })
+      await this.prismaService.payment.update({
+        where: {id: payment.id},
+        data: {
+          state: intent.state,
+          intentID: intent.intentID,
+          intentData: intent.intentData,
+          intentSecret: intent.intentSecret,
+          paymentData: intent.paymentData,
+          paymentMethodID: payment.paymentMethodID,
+          invoiceID: payment.invoiceID
+        }
+      })
 
-    if (intent.state === PaymentState.paid) {
-      const renewalSuccessAction = mailActions.find(
-        ma => ma.type === SubscriptionEvent.RENEWAL_SUCCESS
-      )
-      await this.markInvoiceAsPaid(invoice)
-      return {
-        action: renewalSuccessAction,
-        errorCode: ''
+      if (intent.state === PaymentState.paid) {
+        const renewalSuccessAction = mailActions.find(
+          ma => ma.type === SubscriptionEvent.RENEWAL_SUCCESS
+        )
+        await this.markInvoiceAsPaid(invoice)
+        return {
+          action: renewalSuccessAction,
+          errorCode: ''
+        }
+      } else {
+        return {
+          action: renewalFailedAction,
+          errorCode: 'user-action-required'
+        }
       }
-    } else {
+    } catch (e) {
+      await this.prismaService.payment.update({
+        where: {id: payment.id},
+        data: {
+          state: PaymentState.requiresUserAction,
+          paymentData: `${e}`,
+          paymentMethodID: payment.paymentMethodID,
+          invoiceID: payment.invoiceID
+        }
+      })
       return {
         action: renewalFailedAction,
-        errorCode: 'user-action-required'
+        errorCode: `${e}`
       }
     }
   }

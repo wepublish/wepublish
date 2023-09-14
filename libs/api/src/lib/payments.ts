@@ -2,16 +2,12 @@ import {Router} from 'express'
 import {contextFromRequest} from './context'
 import {WepublishServerOpts} from './server'
 import {logger} from '@wepublish/utils'
-import {PaymentsService} from '../../../payments/src/lib/payments.service'
 
 export const PAYMENT_WEBHOOK_PATH_PREFIX = 'payment-webhooks'
 
 export function setupPaymentProvider(opts: WepublishServerOpts): Router {
   const {paymentProviders, prisma} = opts
   const paymentProviderWebhookRouter = Router()
-
-  const paymentsService = new PaymentsService(prisma, paymentProviders)
-  paymentsService.onModuleInit()
 
   // setup webhook routes for each payment provider
   paymentProviders.forEach(paymentProvider => {

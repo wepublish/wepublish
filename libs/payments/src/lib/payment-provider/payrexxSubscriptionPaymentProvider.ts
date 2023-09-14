@@ -1,11 +1,13 @@
 import {
   BasePaymentProvider,
+  CancelRemoteSubscriptionProps,
   CheckIntentProps,
   CreatePaymentIntentProps,
   Intent,
   IntentState,
   PaymentProviderProps,
   UpdatePaymentWithIntentStateProps,
+  UpdateRemoteSubscriptionAmountProps,
   WebhookForPaymentIntentProps
 } from './paymentProvider'
 import {logger} from '@wepublish/utils'
@@ -137,99 +139,39 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
   readonly instanceName: string
   readonly instanceAPISecret: string
   readonly webhookSecret: string
+  readonly prisma: PrismaClient
+  readonly remoteManagedSubscription: boolean
 
   constructor(props: PayrexxSubscripionsPaymentProviderProps) {
     super(props)
     this.instanceName = props.instanceName
     this.instanceAPISecret = props.instanceAPISecret
     this.webhookSecret = props.webhookSecret
-    this.activateHook(props.prisma)
+    this.remoteManagedSubscription = true
+    this.prisma = props.prisma
   }
 
-  activateHook(prisma: PrismaClient) {
-    const hook = (): Prisma.Middleware => async (params, next) => {
-      // Only handle subscription update db queries skip all other
-      if (params.model !== 'Subscription' || params.action !== 'update') {
-        return next(params)
-      }
-      const subscription = params.args.data
-      const subscriptionID = params.args.where.id
-
-      const subscriptionObject = await prisma.subscription.findUnique({
-        where: {
-          id: subscriptionID
-        },
-        include: {
-          properties: true
-        }
-      })
-
-      if (!subscriptionObject) {
-        throw new Error('Payrexx subscription: Subscription not found!')
-      }
-
-      // Get paymentProviderName
-      const paymentProvider = await prisma.paymentMethod.findUnique({
-        where: {
-          id: subscriptionObject.paymentMethodID
-        }
-      })
-
-      // Exit if subscription has no external id or is other payment provider
-      if (paymentProvider?.paymentProviderID !== this.id) {
-        return next(params)
-      }
-
-      // Find external id property and fail if subscription has been deactivated
-      const properties: MetadataProperty[] = subscriptionObject.properties
-      const isPayrexxExt = properties.find(sub => sub.key === 'payrexx_external_id')
-      if (!isPayrexxExt) {
-        throw new Error("It's not supported to reactivate a deactivated Payrexx subscription!")
-      }
-
-      const deactivation = params.args.data.deactivation
-      // Disable Subscription (deactivation.upsert is defined if a deactivation is added)
-      if (deactivation?.upsert || ('autoRenew' in subscription && !subscription.autoRenew)) {
-        await this.cancelRemoteSubscription(parseInt(isPayrexxExt.value, 10))
-
-        // Rewrite properties
-        isPayrexxExt.key = 'deactivated_payrexx_external_id'
-
-        // Rewrite subscription
-        subscription.autoRenew = false
-        subscription.deactivation = {
-          upsert: {
-            create: {
-              date: new Date(),
-              reason: SubscriptionDeactivationReason.userSelfDeactivated
-            },
-            update: {
-              date: new Date(),
-              reason: SubscriptionDeactivationReason.userSelfDeactivated
-            }
-          }
-        }
-        subscription.properties = {
-          update: {
-            where: {
-              id: isPayrexxExt.id
-            },
-            data: {
-              key: isPayrexxExt.key
-            }
-          }
-        }
-
-        // Update subscription
-      } else if (params?.args?.data?.monthlyAmount) {
-        const amount = subscription.monthlyAmount * getMonths(subscription.paymentPeriodicity)
-        await this.updateRemoteSubscription(parseInt(isPayrexxExt.value, 10), amount.toString())
-      }
-
-      // Return in the end
-      return next(params)
+  async updateRemoteSubscriptionAmount(props: UpdateRemoteSubscriptionAmountProps) {
+    // Find external id property and fail if subscription has been deactivated
+    const properties: MetadataProperty[] = props.subscription.properties
+    const isPayrexxExt = properties.find(sub => sub.key === 'payrexx_external_id')
+    if (!isPayrexxExt) {
+      throw new Error(`Payrexx Subscription Id not found on subscription ${props.subscription.id}`)
     }
-    prisma.$use(hook())
+    const amount = props.newAmount * getMonths(props.subscription.paymentPeriodicity)
+    await this.updateAmountUpstream(parseInt(isPayrexxExt.value, 10), amount.toString())
+  }
+
+  async cancelRemoteSubscription(props: CancelRemoteSubscriptionProps): Promise<void> {
+    // Find external id property and fail if subscription has been deactivated
+    const properties: MetadataProperty[] = props.subscription.properties
+    const isPayrexxExt = properties.find(sub => sub.key === 'payrexx_external_id')
+    if (!isPayrexxExt) {
+      throw new Error(`Payrexx Subscription Id not found on subscription ${props.subscription.id}`)
+    }
+
+    // Doing actual upstream cancellation
+    await this.cancelSubscriptionUpstream(parseInt(isPayrexxExt.value, 10))
   }
 
   async updatePaymentWithIntentState({
@@ -325,7 +267,8 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
           subscriptionID: subscription.id,
           description: `Abo ${memberPlan.name}`,
           paidAt: new Date(),
-          canceledAt: null
+          canceledAt: null,
+          scheduledDeactivationAt: add(new Date(), {days: 10})
         }
       })
 
@@ -382,7 +325,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
     }
   }
 
-  async updateRemoteSubscription(subscriptionId: number, amount: string) {
+  async updateAmountUpstream(subscriptionId: number, amount: string) {
     const data = {
       amount,
       currency: 'CHF'
@@ -401,22 +344,26 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
         body: qs.stringify({...data, ApiSignature: signature})
       }
     )
-    if (res.status === 200) {
+    const resJSON = await res.json()
+    if (res.status === 200 && resJSON.status === 'success') {
       logger('payrexxSubscriptionPaymentProvider').info(
         'Payrexx response for subscription %s updated',
         subscriptionId
       )
     } else {
       logger('payrexxSubscriptionPaymentProvider').error(
-        'Payrexx subscription update response for subscription %s is NOK with status %s',
+        'Payrexx subscription update response for subscription %s is NOK with status %s and message %s',
         subscriptionId,
-        res.status
+        res.status,
+        resJSON.message
       )
-      throw new Error(`Payrexx response is NOK with status ${res.status}`)
+      throw new Error(
+        `Payrexx response is NOK with status ${res.status} and message: ${resJSON.message}`
+      )
     }
   }
 
-  async cancelRemoteSubscription(subscriptionId: number) {
+  async cancelSubscriptionUpstream(subscriptionId: number) {
     const signature = crypto.createHmac('sha256', this.instanceAPISecret).digest('base64')
 
     const res = await fetch(
@@ -427,18 +374,22 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
       }
     )
 
-    if (res.status === 200) {
+    const resJSON = await res.json()
+    if (res.status === 200 && resJSON.status === 'success') {
       logger('payrexxSubscriptionPaymentProvider').info(
         'Payrexx response for subscription %s canceled',
         subscriptionId
       )
     } else {
       logger('payrexxSubscriptionPaymentProvider').error(
-        'Payrexx subscription cancel response for subscription %s is NOK with status %s',
+        'Payrexx subscription cancel response for subscription %s is NOK with status %s and message %s ',
         subscriptionId,
-        res.status
+        res.status,
+        resJSON.message
       )
-      throw new Error(`Payrexx response is NOK with status ${res.status}`)
+      throw new Error(
+        `Payrexx response is NOK with status ${res.status} and message: ${resJSON.message}`
+      )
     }
   }
 

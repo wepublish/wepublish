@@ -23,8 +23,7 @@ import {
   StripePaymentProvider,
   MailsModule,
   MailgunMailProvider,
-  GraphQLRichText,
-  JobsModule
+  GraphQLRichText
 } from '@wepublish/api'
 import {ScheduleModule} from '@nestjs/schedule'
 import bodyParser from 'body-parser'
@@ -202,13 +201,6 @@ import {SlackMailProvider} from '../app/slack-mail-provider'
       inject: [AgendaBaselService, KulturZueriService]
     }),
     ScheduleModule.forRoot(),
-    JobsModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: (config: ConfigService) => ({
-        databaseUrl: config.getOrThrow('DATABASE_URL')
-      }),
-      inject: [ConfigService]
-    }),
     ConfigModule.forRoot()
   ],
   exports: [MediaAdapterService],

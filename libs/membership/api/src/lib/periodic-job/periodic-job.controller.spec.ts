@@ -166,12 +166,6 @@ describe('PeriodicJobController', () => {
       },
       {
         subscriptionFlowId: defaultFlow.id,
-        mailTemplateName: 'default-REACTIVATION',
-        event: SubscriptionEvent.REACTIVATION,
-        daysAwayFromEnding: null
-      },
-      {
-        subscriptionFlowId: defaultFlow.id,
         mailTemplateName: 'default-CUSTOM1',
         event: SubscriptionEvent.CUSTOM,
         daysAwayFromEnding: -15
@@ -533,7 +527,7 @@ describe('PeriodicJobController', () => {
           startsAt: sub(subscriptionValidUntil, {months: 12}),
           paymentMethod: {
             connect: {
-              id: 'payrexx-subscription'
+              id: 'payrexx'
             }
           },
           memberPlan: {
@@ -850,7 +844,7 @@ describe('PeriodicJobController', () => {
   })
 
   it('Get outstanding runs on first run', async () => {
-    const runs = await controller['getOutstandingRuns']()
+    const runs = await controller['getOutstandingRuns'](new Date())
     expect(runs.length).toEqual(1)
     expect(runs[0].isRetry).toBeFalsy()
     expect(runs[0].date.getTime()).toEqual(startOfDay(new Date()).getTime())
@@ -862,7 +856,7 @@ describe('PeriodicJobController', () => {
       successfullyFinished: sub(new Date(), {days: 7}),
       tries: 1
     })
-    const runs = await controller['getOutstandingRuns']()
+    const runs = await controller['getOutstandingRuns'](new Date())
 
     expect(runs.length).toEqual(7)
     for (const runCtr in runs) {
@@ -879,7 +873,7 @@ describe('PeriodicJobController', () => {
       finishedWithError: sub(new Date(), {days: 3}),
       tries: 1
     })
-    const runs = await controller['getOutstandingRuns']()
+    const runs = await controller['getOutstandingRuns'](new Date())
     expect(runs.length).toEqual(4)
     const retryRun = runs.shift()
     expect(retryRun!.isRetry).toBeTruthy()
@@ -893,7 +887,7 @@ describe('PeriodicJobController', () => {
   })
 
   it('Concurrent periodic job run protection', async () => {
-    const runs = await controller['getOutstandingRuns']()
+    const runs = await controller['getOutstandingRuns'](new Date())
     expect(await controller['isAlreadyAJobRunning']()).toBeFalsy()
     await controller['markJobStarted'](runs[0].date)
     expect(await controller['isAlreadyAJobRunning']()).toBeTruthy()
@@ -1036,6 +1030,7 @@ describe('PeriodicJobController', () => {
       )
     }
   })
+
   it('Charge Invoice missing subscription', async () => {
     const pjo: any = {}
     const invoice: any = {}

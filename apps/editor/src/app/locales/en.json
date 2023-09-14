@@ -746,11 +746,10 @@
       "userRoles": "User Roles",
       "users": "Users",
       "usersAndMembers": "Users & Subscriptions",
-      "subscriptionSettings": "Subscription Mailing",
+      "subscriptionSettings": "Default Mailing",
       "mailTemplates": "E-Mail Templates",
       "subscriptionPlans": "Subscription Plans",
       "systemMails": "System Mails",
-      "usersAndMembers": "Users & Members",
       "consents": "Consents",
       "userConsents": "User Consents",
       "importableEvents": "Importable Events"
@@ -1197,7 +1196,7 @@
       "autoRenewDescription": "Renew the subscription automatically",
       "createTitle": "Create Subscription",
       "deactivation": {
-        "isDeactivated": "The subscription is deactivated since {{date, ccc PP p}} and needs to be reactivated before editing.",
+        "isDeactivated": "The subscription has been deactivated since {{date, ccc PP p}} and can no longer be edited. Probably, a new subscription can be created.",
         "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}",
         "modalTitle": {
           "deactivated": "Activate subscription?",
@@ -1215,7 +1214,7 @@
           "deactivated": "Reactivate",
           "activated": "Deactivate"
         },
-        "help": "Deactivated subscriptions can still be used until the paid until date. But they will not be automatically renewed even if the auto renew is true",
+        "help": "Deactivated subscriptions can still be used until the paid until date. But they will not be automatically renewed even if the auto renew is true. Once deactivated, the subscription cannot be reactivated.",
         "date": "Deactivation Date",
         "dateFrom": "Deactivation date (from)",
         "dateTo": "Deactivation date (to)",
@@ -1280,7 +1279,8 @@
       "noUserErrorMessage": "Please select a user",
       "noTokenErrorMessage": "Please enter a token",
       "invalidRange": "Value out of range. Please input a number between {{min}} and {{max}}.",
-      "required": "This field is required"
+      "required": "This field is required",
+      "minimalAmountPerMonth": "The minimal amount / month is defined as {{amount}} chf."
     },
     "invoice": {
       "manuallyPaidByAdmin": "Marked as paid by administrator.",
@@ -1431,7 +1431,9 @@
         "remoteMissing": "Template '{{internalName}}' removed at {{provider}}",
         "unused": "Template '{{internalName}}' is unused",
         "error": "Unknown error"
-      }
+      },
+      "showPlaceholders": "Placeholder Documentation",
+      "goToPlaceholders": "Available Placeholders"
     },
     "subscriptionFlow": {
       "subscribe": "Subscribe",
@@ -1444,9 +1446,8 @@
       "custom": "Custom event",
       "settings": "Subscription flow settings",
       "edit": "Edit subscription flow",
-      "titleSettings": "Subscription settings",
-      "titleDefaultSettings": "Default subscription settings",
-      "settingsDescription": "You can overwrite these settings for every member plan.",
+      "titleDefaultSettings": "Default Subscription Settings",
+      "settingsDescription": "You can overwrite these settings for every subscription plan.",
       "addNew": "Create new flow",
       "dayWithNumber": "day {{day}}",
       "days": "days",
@@ -1511,6 +1512,32 @@
       "createdBy": "by {{creator}}",
       "user": "User",
       "memberPlan": "Member Plan: {{plan}}"
+    },
+    "placeholderList": {
+      "description": {
+        "optional_subscription_memberPlan_name": "Name des Subscription-Plans. Z.B. Jahres-Abo.",
+        "optional_subscription_paymentMethod_name": "Name der Payment-Methode. Z.B. Stripe",
+        "optional_subscription_autoRenew": "Ob das Abo automatisch erneuert wird. Die Werte sind true oder false",
+        "optional_subscription_monthlyAmount": "Monatlicher Betrag in Rappen. Z.B. 1000 für 10 chf / Monat.",
+        "optional_subscription_paymentPeriodicity": "Periodizität des Abos. Mögliche Werte sind: yearly, biannual, quarterly, monthly",
+        "optional_subscriptionID": "Eindeutige ID der Subscription.",
+        "user_id": "Eindeutige ID des Users.",
+        "user_email": "E-Mail des Users.",
+        "user_name": "Nachname des Users.",
+        "user_firstName": "Vorname des Users",
+        "jwt": "jwt steht für JSON Web Token. Mit diesem Token kann sich der User einloggen. Hierzu muss das Token in der URL an das Frontend übergeben werden. In der Regel in dem man ?jwt=TOKEN an die URL anhängt. Rechter Hand findest du ein Beispiel."
+      },
+      "header": "Liste der verfügbaren Placeholder",
+      "subtitle": "Bitte beachte, dass die Placeholder je nach Mail unterschiedlich sind. Wenn etwa ein Login-Link verschickt wird, hat dieses Mail nicht die gleichen Placeholder, wie bei einer Erneuerung des Abos.",
+      "placeholder": "Placeholder",
+      "descriptionTitle": "Beschreibung",
+      "example": "Beispiel im Template"
+    },
+    "draggableSubscriptionInterval": {
+      "ignoreDeactivatedSubscriptions": "No mails will be sent to deactivated subscriptions!"
+    },
+    "resetUserPasswordForm": {
+      "sendMail": "Send mail to user (Registration System Mail)"
     }
   }
 }

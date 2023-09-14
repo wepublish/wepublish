@@ -55,5 +55,3 @@ export * from '@wepublish/image/api'
 export * from '@wepublish/payments'
 export * from '@wepublish/utils'
 export * from '@wepublish/richtext/api'
-
-export * from '@wepublish/jobs'

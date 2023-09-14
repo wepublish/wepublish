@@ -17,10 +17,11 @@ import {
 } from '@wepublish/ui/editor'
 import {useMemo} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdCheck, MdSync, MdWarning} from 'react-icons/md'
+import {MdCheck, MdDataObject, MdSync, MdWarning} from 'react-icons/md'
 import {Button, Stack} from 'rsuite'
 import styles from './mailTemplate.module.css'
 import {DEFAULT_MUTATION_OPTIONS, DEFAULT_QUERY_OPTIONS} from '../common'
+import {Link} from 'react-router-dom'
 
 function MailTemplateList() {
   const {t} = useTranslation()
@@ -75,6 +76,9 @@ function MailTemplateList() {
                 <b>{t('mailTemplates.content')}</b>
               </TableCell>
               <TableCell>
+                <b>{t('mailTemplates.showPlaceholders')}</b>
+              </TableCell>
+              <TableCell>
                 <b>{t('mailTemplates.status')}</b>
               </TableCell>
             </TableRow>
@@ -93,6 +97,13 @@ function MailTemplateList() {
                         {t('mailTemplates.view', {provider: queryData?.provider.name})}
                       </Button>
                     )}
+                  </TableCell>
+                  <TableCell>
+                    <Link to="/mailtemplates/placeholders">
+                      <Button appearance="default" endIcon={<MdDataObject />}>
+                        {t('mailTemplates.goToPlaceholders')}
+                      </Button>
+                    </Link>
                   </TableCell>
                   <TableCell>
                     {template.status === 'ok' ? (

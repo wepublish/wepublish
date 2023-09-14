@@ -391,7 +391,7 @@ model Invoice {
   description               String?
   paidAt                    DateTime?
   canceledAt                DateTime?
-  scheduledDeactivationAt           DateTime?
+  scheduledDeactivationAt           DateTime
   items                     InvoiceItem[]
   manuallySetAsPaidByUserId String?
 
@@ -424,7 +424,7 @@ model MailLog {
   state                   MailLogState
   sentDate                DateTime
   mailProviderID          String
-  mailIdentifier          String @unique
+  mailIdentifier          String
   mailTemplate            MailTemplate @relation(fields: [mailTemplateId], references: [id])
   mailTemplateId          String @db.Uuid
   mailData                String?
@@ -1058,7 +1058,6 @@ enum SubscriptionEvent {
   RENEWAL_FAILED
   DEACTIVATION_UNPAID
   DEACTIVATION_BY_USER
-  REACTIVATION
   CUSTOM
 }
 

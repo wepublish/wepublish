@@ -58,6 +58,7 @@ import {UserEditView} from './routes/userEditView'
 import {UserList} from './routes/userList'
 import {UserRoleList} from './routes/userRoleList'
 import {LocalStorageKey} from './utility'
+import PlaceholderListe from '../../../../libs/membership/editor/src/lib/mailTemplate/placeholderList'
 
 const LogoutMutation = gql`
   mutation Logout {
@@ -630,6 +631,14 @@ export function App() {
               element={
                 <Base>
                   <MailTemplateList />
+                </Base>
+              }
+            />
+            <Route
+              path="mailtemplates/placeholders"
+              element={
+                <Base>
+                  <PlaceholderListe />
                 </Base>
               }
             />

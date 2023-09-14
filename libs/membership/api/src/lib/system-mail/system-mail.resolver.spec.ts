@@ -33,7 +33,8 @@ const prismaServiceMock = {
 
 const mailContestMock = {
   getUserTemplateName: jest.fn((): string => 'test-template'),
-  sendRemoteTemplateDirect: jest.fn((): void => undefined)
+  sendRemoteTemplateDirect: jest.fn((): void => undefined),
+  sendMail: jest.fn((): void => undefined)
 }
 
 const FAKE_USER: User = {

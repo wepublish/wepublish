@@ -189,7 +189,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       async resolve(
         root,
         {name, firstName, preferredName, email, address, password, challengeAnswer},
-        {sessionTTL, hashCostFactor, prisma, challenge}
+        {sessionTTL, hashCostFactor, prisma, challenge, mailContext}
       ) {
         email = email.toLowerCase()
         await Validator.createUser().parse({name, email, firstName, preferredName})
@@ -231,7 +231,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             password
           },
           hashCostFactor,
-          prisma.user
+          prisma,
+          mailContext
         )
 
         if (!user) {
@@ -303,7 +304,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           loaders,
           memberContext,
           challenge,
-          createPaymentWithProvider
+          createPaymentWithProvider,
+          mailContext
         }
       ) {
         email = email.toLowerCase()
@@ -368,7 +370,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             password
           },
           hashCostFactor,
-          prisma.user
+          prisma,
+          mailContext
         )
 
         if (!user) {
@@ -379,21 +382,16 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         const session = await createUserSession(user, sessionTTL, prisma.session, prisma.userRole)
         const properties = await memberContext.processSubscriptionProperties(subscriptionProperties)
 
-        const subscription = await memberContext.createSubscription(
+        const {subscription, invoice} = await memberContext.createSubscription(
           prisma.subscription,
           user.id,
-          paymentMethod,
+          paymentMethod.id,
           paymentPeriodicity,
           monthlyAmount,
-          memberPlan,
+          memberPlan.id,
           properties,
           autoRenew
         )
-
-        // Create Periods, Invoices and Payment
-        const invoice = await memberContext.renewSubscriptionForUser({
-          subscription
-        })
 
         if (!invoice) {
           logger('mutation.public').error(
@@ -482,21 +480,16 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
 
         const properties = await memberContext.processSubscriptionProperties(subscriptionProperties)
 
-        const subscription = await memberContext.createSubscription(
+        const {subscription, invoice} = await memberContext.createSubscription(
           prisma.subscription,
           user.id,
-          paymentMethod,
+          paymentMethod.id,
           paymentPeriodicity,
           monthlyAmount,
-          memberPlan,
+          memberPlan.id,
           properties,
           autoRenew
         )
-
-        // Create Periods, Invoices and Payment
-        const invoice = await memberContext.renewSubscriptionForUser({
-          subscription
-        })
 
         if (!invoice) {
           logger('mutation.public').error(
@@ -782,7 +775,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       resolve: (
         root,
         {id, input},
-        {authenticateUser, prisma: {subscription}, loaders, memberContext}
+        {authenticateUser, prisma: {subscription}, loaders, memberContext, paymentProviders}
       ) =>
         updatePublicSubscription(
           id,
@@ -791,7 +784,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           memberContext,
           loaders.activeMemberPlansByID,
           loaders.activePaymentMethodsByID,
-          subscription
+          subscription,
+          paymentProviders
         )
     },
 
@@ -815,20 +809,13 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           }
         })
 
-        if (!subscription) throw new NotFound('subscription', id)
+        if (!subscription || subscription.userID !== user.id) throw new NotFound('subscription', id)
 
         if (subscription.deactivation)
           throw new UserSubscriptionAlreadyDeactivated(subscription.deactivation.date)
 
-        const now = new Date()
-        const deactivationDate =
-          subscription.paidUntil !== null && subscription.paidUntil > now
-            ? subscription.paidUntil
-            : now
-
-        await memberContext.deactivateSubscriptionForUser({
-          subscriptionID: subscription.id,
-          deactivationDate,
+        await memberContext.deactivateSubscription({
+          subscription,
           deactivationReason: SubscriptionDeactivationReason.userSelfDeactivated
         })
 

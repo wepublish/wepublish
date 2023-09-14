@@ -24,7 +24,8 @@ import {MailContext} from '@wepublish/mails'
 import {PaymentProvider} from '@wepublish/payments'
 import {logger} from '@wepublish/utils'
 import {ONE_DAY_IN_MILLISECONDS, ONE_MONTH_IN_MILLISECONDS} from './utility'
-import {SubscriptionEventDictionary} from '@wepublish/membership/api'
+import {SubscriptionEventDictionary, Action, LookupActionInput} from '@wepublish/membership/api'
+import {add} from 'date-fns'
 
 export interface HandleSubscriptionChangeProps {
   subscription: SubscriptionWithRelations
@@ -42,8 +43,7 @@ export interface ChargeInvoiceProps {
 }
 
 export interface DeactivateSubscriptionForUserProps {
-  subscriptionID: string
-  deactivationDate?: Date
+  subscription: Subscription
   deactivationReason?: SubscriptionDeactivationReason
 }
 
@@ -62,7 +62,7 @@ export interface MemberContext {
 
   chargeInvoice(props: ChargeInvoiceProps): Promise<boolean | Payment>
 
-  deactivateSubscriptionForUser(props: DeactivateSubscriptionForUserProps): Promise<void>
+  deactivateSubscription(props: DeactivateSubscriptionForUserProps): Promise<Subscription>
 }
 
 export interface MemberContextProps {
@@ -251,12 +251,35 @@ export class MemberContext implements MemberContext {
         return null
       }
 
+      const subscriptionFlows = await this.getActionsForSubscriptions({
+        memberplanId: subscription.memberPlanID,
+        paymentMethodId: subscription.paymentMethodID,
+        periodicity: subscription.paymentPeriodicity,
+        autorenwal: subscription.autoRenew,
+        events: [SubscriptionEvent.DEACTIVATION_UNPAID]
+      })
+      const subscriptionFlowActionDeactivationUnpaid = subscriptionFlows.find(
+        a => a.type === SubscriptionEvent.DEACTIVATION_UNPAID
+      )
+
+      if (!subscriptionFlowActionDeactivationUnpaid) {
+        logger('memberContext').info(
+          'Subscription flow for subscription with id "%s" not found',
+          subscription.id
+        )
+        return null
+      }
+      const deactivationDate = add(subscription.paidUntil || new Date(), {
+        days: subscriptionFlowActionDeactivationUnpaid.daysAwayFromEnding
+      })
+
       const newInvoice = await this.prisma.invoice.create({
         data: {
           subscriptionID: subscription.id,
           description: `Membership from ${startDate.toISOString()} for ${user.name || user.email}`,
           mail: user.email,
           dueAt: startDate,
+          scheduledDeactivationAt: deactivationDate,
           items: {
             create: {
               name: 'Membership',
@@ -282,7 +305,10 @@ export class MemberContext implements MemberContext {
         }
       })
 
-      logger('memberContext').info('Renewed subscription with id %s', subscription.id)
+      logger('memberContext').info(
+        'Renewed or created fresh subscription with id %s',
+        subscription.id
+      )
 
       return newInvoice
     } catch (error) {
@@ -442,31 +468,25 @@ export class MemberContext implements MemberContext {
     }
   }
 
-  async deactivateSubscriptionForUser({
-    subscriptionID,
-    deactivationDate,
+  async deactivateSubscription({
+    subscription,
     deactivationReason
-  }: DeactivateSubscriptionForUserProps): Promise<void> {
-    const subscription = await this.prisma.subscription.findUnique({
-      where: {id: subscriptionID},
-      include: {
-        deactivation: true,
-        periods: true,
-        properties: true
-      }
+  }: DeactivateSubscriptionForUserProps): Promise<Subscription> {
+    // deactivate remote subscriptions
+    await this.cancelRemoteSubscription({
+      subscriptionId: subscription.id,
+      reason: deactivationReason
     })
 
-    if (!subscription) {
-      logger('memberContext').info('Subscription with id "%s" does not exist', subscriptionID)
-      return
-    }
+    const now = new Date()
+    const deactivationDate =
+      subscription.paidUntil !== null && subscription.paidUntil > now ? subscription.paidUntil : now
 
-    await this.cancelInvoicesForSubscription(subscriptionID)
+    await this.cancelInvoicesForSubscription(subscription.id)
 
-    await this.prisma.subscription.update({
-      where: {id: subscriptionID},
+    const updatedSubscription: Subscription = await this.prisma.subscription.update({
+      where: {id: subscription.id},
       data: {
-        paymentPeriodicity: subscription.paymentPeriodicity as PaymentPeriodicity,
         deactivation: {
           upsert: {
             create: {
@@ -479,7 +499,41 @@ export class MemberContext implements MemberContext {
             }
           }
         }
+      },
+      include: {
+        deactivation: true,
+        properties: true
       }
+    })
+
+    // Send deactivation Mail
+    await this.sendSubscriptionDeactivationMail(subscription, deactivationReason)
+    return updatedSubscription
+  }
+
+  async cancelRemoteSubscription({
+    subscriptionId,
+    reason
+  }: {
+    subscriptionId: string
+    reason: SubscriptionDeactivationReason
+  }) {
+    const subscription = await this.prisma.subscription.findUnique({
+      where: {id: subscriptionId},
+      include: {
+        properties: true
+      }
+    })
+    const {paymentProviderID} = await this.getPaymentMethodByIDOrSlug(
+      this.loaders,
+      undefined,
+      subscription.paymentMethodID
+    )
+    const paymentProvider = this.paymentProviders.find(
+      paymentProvider => paymentProvider.id === paymentProviderID
+    )
+    await paymentProvider.cancelRemoteSubscription({
+      subscription
     })
   }
 
@@ -571,23 +625,24 @@ export class MemberContext implements MemberContext {
   async createSubscription(
     subscriptionClient: PrismaClient['subscription'],
     userID: string,
-    paymentMethod: PaymentMethod,
+    paymentMethodId: string,
     paymentPeriodicity: PaymentPeriodicity,
     monthlyAmount: number,
-    memberPlan: MemberPlan,
+    memberPlanId: string,
     properties: Pick<MetadataProperty, 'key' | 'value' | 'public'>[],
-    autoRenew: boolean
-  ): Promise<SubscriptionWithRelations> {
+    autoRenew: boolean,
+    startsAt?: Date | string
+  ): Promise<{subscription: SubscriptionWithRelations; invoice: InvoiceWithItems}> {
     const subscription = await subscriptionClient.create({
       data: {
         userID,
-        startsAt: new Date(),
+        startsAt: startsAt ? startsAt : new Date(),
         modifiedAt: new Date(),
-        paymentMethodID: paymentMethod.id,
+        paymentMethodID: paymentMethodId,
         paymentPeriodicity,
         paidUntil: null,
         monthlyAmount,
-        memberPlanID: memberPlan.id,
+        memberPlanID: memberPlanId,
         properties: {
           createMany: {
             data: properties
@@ -607,7 +662,15 @@ export class MemberContext implements MemberContext {
       throw new InternalError()
     }
 
-    return subscription
+    const invoice = await this.renewSubscriptionForUser({subscription})
+
+    // Send subscribe mail
+    await this.sendMailForSubscriptionEvent(SubscriptionEvent.SUBSCRIBE, subscription, {})
+
+    return {
+      subscription,
+      invoice
+    }
   }
 
   async getSubscriptionTemplateIdentifier(
@@ -618,5 +681,60 @@ export class MemberContext implements MemberContext {
       subscription,
       subscriptionEvent
     )
+  }
+  async getActionsForSubscriptions(query: LookupActionInput): Promise<Action[]> {
+    return new SubscriptionEventDictionary(this.prisma).getActionsForSubscriptions(query)
+  }
+
+  async sendSubscriptionDeactivationMail(
+    subscription: Subscription,
+    deactivation: SubscriptionDeactivationReason
+  ) {
+    let event: SubscriptionEvent = SubscriptionEvent.DEACTIVATION_BY_USER
+    if (deactivation === SubscriptionDeactivationReason.invoiceNotPaid) {
+      event = SubscriptionEvent.DEACTIVATION_UNPAID
+    }
+    return this.sendMailForSubscriptionEvent(event, subscription, {})
+  }
+
+  async sendMailForSubscriptionEvent(
+    subscriptionEvent: SubscriptionEvent,
+    subscription: Subscription,
+    optionalData: Record<string, any>
+  ) {
+    const user = await this.prisma.user.findUnique({
+      where: {
+        id: subscription.userID
+      },
+      select: unselectPassword
+    })
+    if (!user) {
+      logger('MemberContext').warn(`User not found %s`, subscription.userID)
+      return
+    }
+
+    const remoteTemplate = await this.getSubscriptionTemplateIdentifier(
+      subscription,
+      subscriptionEvent
+    )
+
+    if (!remoteTemplate) {
+      logger('MemberContext').warn(
+        `RemoteTemplate <%s> for subscription <%s> not found!`,
+        subscriptionEvent,
+        subscription.id
+      )
+      return
+    }
+
+    await this.mailContext.sendMail({
+      externalMailTemplateId: remoteTemplate,
+      recipient: user,
+      optionalData: {
+        subscription,
+        ...optionalData
+      },
+      mailType: mailLogType.UserFlow
+    })
   }
 }

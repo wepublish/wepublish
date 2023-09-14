@@ -1,10 +1,12 @@
 import {
   Invoice,
   InvoiceItem,
+  MetadataProperty,
   Payment,
   PaymentState,
   PrismaClient,
-  Subscription
+  Subscription,
+  SubscriptionDeactivationReason
 } from '@prisma/client'
 import bodyParser from 'body-parser'
 import {NextHandleFunction} from 'connect'
@@ -41,6 +43,20 @@ export interface CreatePaymentIntentProps {
 
 export interface CheckIntentProps {
   intentID: string
+}
+
+export interface UpdateRemoteSubscriptionAmountProps {
+  newAmount: number
+  subscription: Subscription & {properties: MetadataProperty[]}
+}
+
+export interface CancelRemoteSubscriptionProps {
+  subscription: Subscription & {properties: MetadataProperty[]}
+}
+
+export interface CreateRemoteInvoiceProps {
+  subscription: Subscription & {properties: MetadataProperty[]}
+  invoice: Invoice & {items: InvoiceItem[]}
 }
 
 export interface UpdatePaymentWithIntentStateProps {
@@ -80,6 +96,7 @@ export interface PaymentProvider {
   id: string
   name: string
   offSessionPayments: boolean
+  remoteManagedSubscription: boolean
 
   incomingRequestHandler: NextHandleFunction
 
@@ -90,6 +107,12 @@ export interface PaymentProvider {
   checkIntentStatus(props: CheckIntentProps): Promise<IntentState>
 
   updatePaymentWithIntentState(props: UpdatePaymentWithIntentStateProps): Promise<Payment>
+
+  updateRemoteSubscriptionAmount(props: UpdateRemoteSubscriptionAmountProps): Promise<void>
+
+  cancelRemoteSubscription(props: CancelRemoteSubscriptionProps): Promise<void>
+
+  createRemoteInvoice(props: CreateRemoteInvoiceProps): Promise<void>
 }
 
 export interface PaymentProviderProps {
@@ -103,6 +126,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
   readonly id: string
   readonly name: string
   readonly offSessionPayments: boolean
+  readonly remoteManagedSubscription: boolean = false
 
   readonly incomingRequestHandler: NextHandleFunction
 
@@ -119,13 +143,26 @@ export abstract class BasePaymentProvider implements PaymentProvider {
 
   abstract checkIntentStatus(props: CheckIntentProps): Promise<IntentState>
 
+  async updateRemoteSubscriptionAmount(props: UpdateRemoteSubscriptionAmountProps): Promise<void> {
+    return
+  }
+
+  async cancelRemoteSubscription(props: CancelRemoteSubscriptionProps): Promise<void> {
+    return
+  }
+
+  async createRemoteInvoice(props: CreateRemoteInvoiceProps): Promise<void> {
+    return
+  }
+
   async updatePaymentWithIntentState({
     intentState,
     paymentClient,
     paymentsByID,
     invoicesByID,
     subscriptionClient,
-    userClient
+    userClient,
+    invoiceClient
   }: UpdatePaymentWithIntentStateProps): Promise<Payment> {
     const payment = await paymentsByID.load(intentState.paymentID)
     // TODO: should we overwrite already paid/canceled payments
@@ -158,11 +195,37 @@ export abstract class BasePaymentProvider implements PaymentProvider {
     const subscription = await subscriptionClient.findUnique({
       where: {
         id: invoice.subscriptionID
+      },
+      include: {
+        periods: true
       }
     })
 
     if (!subscription) {
       throw new Error(`Subscription with ID ${invoice.subscriptionID} does not exist`)
+    }
+
+    const invoicePeriod = subscription.periods.find(period => period.invoiceID === invoice.id)
+
+    if (!invoicePeriod) {
+      throw new Error(`Invoice with ID ${invoice.id} has no period!`)
+    }
+
+    // Mark invoice as paid
+    if (intentState.state === PaymentState.paid) {
+      await invoiceClient.update({
+        where: {id: invoice.id},
+        data: {
+          paidAt: new Date()
+        }
+      })
+
+      await subscriptionClient.update({
+        where: {id: invoice.subscriptionID},
+        data: {
+          paidUntil: invoicePeriod.endsAt
+        }
+      })
     }
 
     // update payment provider
