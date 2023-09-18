@@ -84,6 +84,29 @@ const milestones = {
   3200: data[12]
 } as const
 
+const eligibleMemberPlans = [
+  'Trichtenhausenstutz',
+  'Stelvio',
+  'Swiss Cycling',
+  'Gruppetto',
+  'Sankt Luzisteig',
+  'Bernina'
+]
+
+const supporterOffset = 400
+
+const calculateAmountSupporters = (
+  subscriberData: ApiV2.SubscriptionsQuery | undefined
+): number => {
+  if (!subscriberData) return 0
+  else {
+    return (
+      subscriberData.activeSubscribers.filter(s => eligibleMemberPlans.includes(s.memberPlan))
+        .length + supporterOffset
+    )
+  }
+}
+
 const getPositon = (supporters: number) => (supportersScale: number, min: number, max: number) => {
   const scale = max - min
   const percent = supporters / supportersScale
@@ -142,7 +165,7 @@ const CrowdfundingChart = (props: ComponentProps<typeof CrowdfundingChartWrapper
   const enableAnimations = useMediaQuery(theme.breakpoints.up('lg'))
   const {data: subscriberData} = ApiV2.useSubscriptionsQuery()
 
-  const amountSupporters = subscriberData?.activeSubscribers.length ?? 0
+  const amountSupporters = calculateAmountSupporters(subscriberData)
   const position = calculationPosition(amountSupporters)
   const gradientOffset = `${position * 100}%`
   const margin = useMemo(() => ({top: 0, bottom: 0, left: 0, right: 0}), [])

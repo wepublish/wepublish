@@ -280,7 +280,7 @@ export type RevenueQuery = { __typename?: 'Query', revenue: Array<{ __typename?:
 export type SubscriptionsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type SubscriptionsQuery = { __typename?: 'Query', activeSubscribers: Array<{ __typename?: 'DashboardSubscription', monthlyAmount: number }> };
+export type SubscriptionsQuery = { __typename?: 'Query', activeSubscribers: Array<{ __typename?: 'DashboardSubscription', monthlyAmount: number, memberPlan: string }> };
 
 export type VersionInformationQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -330,6 +330,7 @@ export const SubscriptionsDocument = gql`
     query Subscriptions {
   activeSubscribers {
     monthlyAmount
+    memberPlan
   }
 }
     `;
