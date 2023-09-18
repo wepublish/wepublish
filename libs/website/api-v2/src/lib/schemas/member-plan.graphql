@@ -9,5 +9,6 @@ query Revenue($start: DateTime!, $end: DateTime) {
 query Subscriptions {
   activeSubscribers {
     monthlyAmount
+    memberPlan
   }
 }
