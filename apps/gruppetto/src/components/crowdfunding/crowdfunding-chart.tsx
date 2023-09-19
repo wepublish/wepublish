@@ -93,7 +93,7 @@ const eligibleMemberPlans = [
   'Bernina'
 ]
 
-const supporterOffset = 400
+const supporterOffset = 600
 
 const calculateAmountSupporters = (
   subscriberData: ApiV2.SubscriptionsQuery | undefined
