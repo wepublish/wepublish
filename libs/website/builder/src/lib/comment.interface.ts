@@ -5,6 +5,7 @@ import {
   ChallengeQuery,
   Comment,
   CommentListQuery,
+  CommentBlock,
   CommentListQueryVariables,
   EditCommentMutation,
   EditCommentMutationVariables
@@ -105,3 +106,8 @@ export type BuilderCommentEditorProps = {
   loading: boolean
   error?: ApolloError
 } & (CreateCommentProps | EditCommentProps)
+
+export type BuilderCommentBlockProps = {
+  className?: string
+  comments: Comment[]
+}

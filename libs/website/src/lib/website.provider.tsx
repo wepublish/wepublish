@@ -27,9 +27,15 @@ import {
   TitleBlock,
   TwitterTweetBlock,
   VimeoVideoBlock,
-  YouTubeVideoBlock
+  YouTubeVideoBlock,
+  CommentArticleBlock
 } from '@wepublish/block-content/website'
-import {CommentEditor, CommentList, CommentListItem} from '@wepublish/comments/website'
+import {
+  CommentEditor,
+  CommentList,
+  CommentListItem,
+  CommentListSingleComment
+} from '@wepublish/comments/website'
 import {Event, EventList, EventListItem, EventSEO} from '@wepublish/event/website'
 import {PersonalDataForm, ImageUpload} from '@wepublish/user/website'
 import {Image} from '@wepublish/image/website'
@@ -116,6 +122,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
         EventListItem={EventListItem}
         CommentList={CommentList}
         CommentListItem={CommentListItem}
+        CommentListSingleComment={CommentListSingleComment}
         CommentEditor={CommentEditor}
         Page={Page}
         PageSEO={PageSEO}
@@ -151,6 +158,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           Break: BreakBlock,
           Image: ImageBlock,
           ImageGallery: ImageGalleryBlock,
+          CommentArticle: CommentArticleBlock,
           Quote: QuoteBlock,
           HTML: HtmlBlock,
           Poll: PollBlock,
