@@ -1,6 +1,6 @@
 import {styled} from '@mui/material'
 import {useUser} from '@wepublish/authentication/website'
-import {CommentAuthorType, CommentState} from '@wepublish/website/api'
+import {CommentState} from '@wepublish/website/api'
 import {BuilderCommentListItemProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {cond} from 'ramda'
 import {MdEdit, MdReply} from 'react-icons/md'
@@ -53,17 +53,10 @@ export const CommentListItem = ({
     CommentEditor,
     CommentListItem: BuilderCommentListItem,
     CommentListSingleComment: BuilderCommentListSingleComment,
-    elements: {Paragraph, Image, Button},
-    blocks: {RichText}
+    elements: {Button}
   } = useWebsiteBuilder()
 
   const {hasUser: hasLoggedInUser, user: loggedInUser} = useUser()
-
-  const image = user?.image ?? guestUserImage
-  const isVerified = authorType === CommentAuthorType.VerifiedUser
-  const isGuest = authorType === CommentAuthorType.GuestUser
-  const flair = user?.flair ?? source
-  const name = user ? `${user.preferredName || user.firstName} ${user.name}` : guestUsername
 
   const canEdit =
     hasLoggedInUser &&
@@ -79,27 +72,18 @@ export const CommentListItem = ({
     <CommentListItemWrapper className={className}>
       <BuilderCommentListSingleComment
         id={id}
-        // {...comment}
+        showContent={!showEdit}
         authorType={authorType}
-        children={[]}
+        guestUserImage={guestUserImage}
+        guestUsername={guestUsername}
+        source={source}
         title={title}
         text={text}
         user={user}
-        // createdAt={createdAt}
-        // itemType={itemType}
-        openEditorsState={openEditorsState}
-        openEditorsStateDispatch={dispatch}
-        add={add}
-        onAddComment={onAddComment}
-        edit={edit}
-        onEditComment={onEditComment}
-        challenge={challenge}
-        anonymousCanComment={anonymousCanComment}
-        anonymousCanRate={anonymousCanRate}
-        userCanEdit={userCanEdit}
-        maxCommentLength={maxCommentLength}
         className={className}
       />
+
+      <CommentListSingleCommentStateWarnings state={state} />
 
       {showEdit && (
         <CommentEditor
@@ -198,7 +182,9 @@ export const CommentListItem = ({
   )
 }
 
-const CommentListItemStateWarnings = (props: Pick<BuilderCommentListItemProps, 'state'>) => {
+const CommentListSingleCommentStateWarnings = (
+  props: Pick<BuilderCommentListItemProps, 'state'>
+) => {
   const {
     elements: {Alert}
   } = useWebsiteBuilder()

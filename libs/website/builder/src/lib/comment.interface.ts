@@ -5,7 +5,6 @@ import {
   ChallengeQuery,
   Comment,
   CommentListQuery,
-  CommentBlock,
   CommentListQueryVariables,
   EditCommentMutation,
   EditCommentMutationVariables
@@ -80,6 +79,11 @@ export type BuilderCommentListItemProps = Comment & {
     | 'openEditorsState'
     | 'openEditorsStateDispatch'
   >
+
+export type BuilderCommentListSingleCommentProps = Partial<Comment> & {
+  className?: string
+  showContent?: boolean
+}
 
 type CreateCommentProps = {
   text?: never

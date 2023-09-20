@@ -28,7 +28,7 @@ import {
   TwitterTweetBlock,
   VimeoVideoBlock,
   YouTubeVideoBlock,
-  CommentArticleBlock
+  CommentBlock
 } from '@wepublish/block-content/website'
 import {
   CommentEditor,
@@ -158,7 +158,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           Break: BreakBlock,
           Image: ImageBlock,
           ImageGallery: ImageGalleryBlock,
-          CommentArticle: CommentArticleBlock,
+          CommentArticle: CommentBlock,
           Quote: QuoteBlock,
           HTML: HtmlBlock,
           Poll: PollBlock,

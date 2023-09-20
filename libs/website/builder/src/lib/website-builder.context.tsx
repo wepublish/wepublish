@@ -26,7 +26,7 @@ import {
   BuilderBildwurfAdBlockProps,
   BuilderBlockRendererProps,
   BuilderBreakBlockProps,
-  BuilderCommentArticleBlockProps,
+  BuilderCommentBlockProps,
   BuilderEmbedBlockProps,
   BuilderEventBlockProps,
   BuilderFacebookPostBlockProps,
@@ -53,7 +53,8 @@ import {
 import {
   BuilderCommentEditorProps,
   BuilderCommentListItemProps,
-  BuilderCommentListProps
+  BuilderCommentListProps,
+  BuilderCommentListSingleCommentProps
 } from './comment.interface'
 import {
   BuilderEventListItemProps,
@@ -111,7 +112,7 @@ export type WebsiteBuilderProps = {
   EventListItem: ComponentType<BuilderEventListItemProps>
   CommentList: ComponentType<BuilderCommentListProps>
   CommentListItem: ComponentType<BuilderCommentListItemProps>
-  CommentListSingleComment: ComponentType<BuilderCommentListItemProps>
+  CommentListSingleComment: ComponentType<BuilderCommentListSingleCommentProps>
   CommentEditor: ComponentType<BuilderCommentEditorProps>
   LoginForm: ComponentType<BuilderLoginFormProps>
   RegistrationForm: ComponentType<BuilderRegistrationFormProps>
@@ -172,7 +173,7 @@ export type WebsiteBuilderProps = {
     TeaserGridFlex: ComponentType<BuilderTeaserGridFlexBlockProps>
     TeaserGrid: ComponentType<BuilderTeaserGridBlockProps>
     Teaser: ComponentType<BuilderTeaserProps>
-    CommentArticle: ComponentType<BuilderCommentArticleBlockProps>
+    CommentArticle: ComponentType<BuilderCommentBlockProps>
   }
 
   date: {

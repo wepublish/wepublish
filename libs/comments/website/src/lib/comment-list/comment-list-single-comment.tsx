@@ -1,11 +1,8 @@
 import {css} from '@emotion/react'
 import {styled} from '@mui/material'
-import {useUser} from '@wepublish/authentication/website'
-import {CommentAuthorType, CommentState} from '@wepublish/website/api'
-import {BuilderCommentListItemProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {cond} from 'ramda'
-import {MdEdit, MdPerson, MdReply, MdVerified} from 'react-icons/md'
-import {getStateForEditor} from './comment-list.state'
+import {CommentAuthorType} from '@wepublish/website/api'
+import {BuilderCommentListSingleCommentProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {MdPerson, MdVerified} from 'react-icons/md'
 
 const avatarStyles = css`
   width: 46px;
@@ -13,10 +10,7 @@ const avatarStyles = css`
   border-radius: 50%;
 `
 
-// export const CommentListSingleCommentWrapper = styled('article')`
-//   display: grid;
-//   gap: ${({theme}) => theme.spacing(2)};
-// `
+export const CommentListSingleCommentWrapper = styled('div')``
 
 export const CommentListSingleCommentHeader = styled('header')`
   display: grid;
@@ -69,7 +63,6 @@ export const CommentListSingleCommentActions = styled('div')`
 `
 
 export const CommentListSingleComment = ({
-  id,
   className,
   text,
   authorType,
@@ -78,24 +71,11 @@ export const CommentListSingleComment = ({
   guestUsername,
   title,
   source,
-  state,
   children,
-  anonymousCanComment,
-  anonymousCanRate,
-  userCanEdit,
-  maxCommentLength,
-  challenge,
-  add,
-  onAddComment,
-  edit,
-  onEditComment,
-  openEditorsState,
-  openEditorsStateDispatch: dispatch
-}) => {
+  showContent
+}: BuilderCommentListSingleCommentProps) => {
   const {
-    CommentEditor,
-    CommentListSingleComment: BuilderCommentListSingleComment,
-    elements: {Paragraph, Image, Button},
+    elements: {Paragraph, Image},
     blocks: {RichText}
   } = useWebsiteBuilder()
 
@@ -106,7 +86,7 @@ export const CommentListSingleComment = ({
   const name = user ? `${user.preferredName || user.firstName} ${user.name}` : guestUsername
 
   return (
-    <>
+    <CommentListSingleCommentWrapper className={className}>
       <CommentListSingleCommentHeader>
         {image && <Image image={image} square css={avatarStyles} />}
         {!image && <MdPerson css={avatarStyles} />}
@@ -128,64 +108,18 @@ export const CommentListSingleComment = ({
         </CommentListSingleCommentHeaderContent>
       </CommentListSingleCommentHeader>
 
-      <CommentListSingleCommentStateWarnings state={state} />
-
-      {/* {!showEdit && ( */}
-      <CommentListSingleCommentContent>
-        {title && (
-          <Paragraph component="h1" gutterBottom={false}>
-            <strong>{title}</strong>
-          </Paragraph>
-        )}
-        <RichText richText={text ?? []} />
-      </CommentListSingleCommentContent>
-      {/* )} */}
-
-      {!!children?.length && (
-        <CommentListSingleCommentChildren>
-          {children.map(child => (
-            <BuilderCommentListSingleComment
-              key={child.id}
-              {...child}
-              openEditorsState={openEditorsState}
-              openEditorsStateDispatch={dispatch}
-              add={add}
-              onAddComment={onAddComment}
-              edit={edit}
-              onEditComment={onEditComment}
-              challenge={challenge}
-              anonymousCanComment={anonymousCanComment}
-              anonymousCanRate={anonymousCanRate}
-              userCanEdit={userCanEdit}
-              maxCommentLength={maxCommentLength}
-              className={className}
-            />
-          ))}
-        </CommentListSingleCommentChildren>
+      {showContent && (
+        <CommentListSingleCommentContent>
+          {title && (
+            <Paragraph component="h1" gutterBottom={false}>
+              <strong>{title}</strong>
+            </Paragraph>
+          )}
+          <RichText richText={text ?? []} />
+        </CommentListSingleCommentContent>
       )}
-    </>
+
+      {children}
+    </CommentListSingleCommentWrapper>
   )
-}
-
-const CommentListSingleCommentStateWarnings = (
-  props: Pick<BuilderCommentListItemProps, 'state'>
-) => {
-  const {
-    elements: {Alert}
-  } = useWebsiteBuilder()
-
-  return cond([
-    [
-      ({state}) => state === CommentState.PendingApproval,
-      () => <Alert severity="info">Kommentar wartet auf Freischaltung.</Alert>
-    ],
-    [
-      ({state}) => state === CommentState.PendingUserChanges,
-      () => <Alert severity="warning">Kommentar muss editiert werden bevor Freischaltung.</Alert>
-    ],
-    [
-      ({state}) => state === CommentState.Rejected,
-      () => <Alert severity="error">Kommentar wurde nicht freigeschalten.</Alert>
-    ]
-  ])(props)
 }

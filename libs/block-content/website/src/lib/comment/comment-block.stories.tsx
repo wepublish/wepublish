@@ -7,7 +7,7 @@ import {SessionTokenContext} from '@wepublish/authentication/website'
 import {Challenge, CommentListQuery, FullImageFragment} from '@wepublish/website/api'
 import {ComponentProps, ComponentType, useReducer} from 'react'
 import {Node} from 'slate'
-import {CommentArticleBlock} from './comment-article-block'
+import {CommentBlock} from './comment-block'
 // import {commentListReducer} from './comment-list.state'
 
 const image = {
@@ -185,45 +185,14 @@ const WithUserDecorator = (Story: ComponentType) => {
   )
 }
 
-// Custom render function for passing down the reducer
-// function Render(props: ComponentProps<typeof CommentArticleBlock>) {
-//   // const [openCommentEditors, dispatch] = useReducer(commentListReducer, {})
-
-//   return (
-//     <CommentList
-//       {...props}
-//       openEditorsState={openCommentEditors}
-//       openEditorsStateDispatch={dispatch}
-//     />
-//   )
-// }
-
 export default {
-  component: CommentArticleBlock,
-  title: 'Blocks/CommentArticle'
+  component: CommentBlock,
+  title: 'Blocks/Comment'
 } as Meta
 
 export const Default: StoryObj = {
   args: {
-    // data: {
-    comments: [
-      verifiedUserComment,
-      {...verifiedUserComment, id: '123'}
-      // {...verifiedUserComment, children: nestedChildren('1'), id: '1'},
-      // {...anonymousComment, children: nestedChildren('2'), id: '2'},
-      // {...verifiedUserComment, id: '3'},
-      // {...anonymousComment, children: nestedChildren('4'), id: '4'},
-      // {...verifiedUserComment, children: nestedChildren('5'), id: '5'}
-    ]
-    // },
-    // variables: {},
-    // onVariablesChange: action('onVariablesChange'),
-    // challenge: {
-    // data: {challenge}
-    // },
-    // maxCommentLength: 2000,
-    // add: {},
-    // edit: {}
+    comments: [verifiedUserComment, {...verifiedUserComment, id: '123'}]
   }
 }
 

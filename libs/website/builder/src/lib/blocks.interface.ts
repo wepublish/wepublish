@@ -50,7 +50,7 @@ export type BuilderBildwurfAdBlockProps = BildwurfAdBlock & {className?: string}
 export type BuilderEmbedBlockProps = EmbedBlock & {className?: string}
 export type BuilderPollBlockProps = PollBlock & {className?: string}
 export type BuilderListicleBlockProps = ListicleBlock & {className?: string}
-export type BuilderCommentArticleBlockProps = CommentBlock & {className?: string}
+export type BuilderCommentBlockProps = CommentBlock & {className?: string}
 export type BuilderTeaserGridFlexBlockProps = TeaserGridFlexBlock & {
   className?: string
 }

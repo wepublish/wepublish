@@ -1,5 +1,5 @@
 import {act, render} from '@testing-library/react'
-import * as stories from './comment-list.stories'
+import * as stories from './comment-block.stories'
 import {composeStories} from '@storybook/react'
 import snapshotDiff from 'snapshot-diff'
 
