@@ -83,6 +83,7 @@ export type BuilderCommentListItemProps = Comment & {
 export type BuilderCommentListSingleCommentProps = Partial<Comment> & {
   className?: string
   showContent?: boolean
+  children: React.ReactNode
 }
 
 type CreateCommentProps = {

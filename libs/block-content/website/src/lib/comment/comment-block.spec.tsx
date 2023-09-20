@@ -3,8 +3,7 @@ import * as stories from './comment-block.stories'
 import {composeStories} from '@storybook/react'
 import snapshotDiff from 'snapshot-diff'
 
-// Excluded because of a bug. See more here https://github.com/storybookjs/storybook/issues/23410
-const {AnonymousCommentingOpen, CommentingOpen, ...storiesCmp} = composeStories(stories)
+const {...storiesCmp} = composeStories(stories)
 
 describe('Comment List', () => {
   Object.entries(storiesCmp).forEach(([story, Component]) => {
