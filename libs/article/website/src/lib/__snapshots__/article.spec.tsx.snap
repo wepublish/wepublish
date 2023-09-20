@@ -195,7 +195,7 @@ exports[`Article should render Default 1`] = `
           </span>
         </p>
         <table
-          class="css-114kdox-RenderElement"
+          class="css-o38l6f-tableStyles"
         >
           <tbody
             data-slate-node="element"
@@ -204,7 +204,7 @@ exports[`Article should render Default 1`] = `
               data-slate-node="element"
             >
               <td
-                class="css-9lag45-RenderElement"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -223,7 +223,7 @@ exports[`Article should render Default 1`] = `
                 </p>
               </td>
               <td
-                class="css-9lag45-RenderElement"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -246,7 +246,7 @@ exports[`Article should render Default 1`] = `
               data-slate-node="element"
             >
               <td
-                class="css-9lag45-RenderElement"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -265,7 +265,7 @@ exports[`Article should render Default 1`] = `
                 </p>
               </td>
               <td
-                class="css-9lag45-RenderElement"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -2267,7 +2267,7 @@ exports[`Article should render WithChildren 1`] = `
           </span>
         </p>
         <table
-          class="css-114kdox-RenderElement"
+          class="css-o38l6f-tableStyles"
         >
           <tbody
             data-slate-node="element"
@@ -2276,7 +2276,7 @@ exports[`Article should render WithChildren 1`] = `
               data-slate-node="element"
             >
               <td
-                class="css-9lag45-RenderElement"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -2295,7 +2295,7 @@ exports[`Article should render WithChildren 1`] = `
                 </p>
               </td>
               <td
-                class="css-9lag45-RenderElement"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -2318,7 +2318,7 @@ exports[`Article should render WithChildren 1`] = `
               data-slate-node="element"
             >
               <td
-                class="css-9lag45-RenderElement"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -2337,7 +2337,7 @@ exports[`Article should render WithChildren 1`] = `
                 </p>
               </td>
               <td
-                class="css-9lag45-RenderElement"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -4342,7 +4342,7 @@ exports[`Article should render WithClassName 1`] = `
           </span>
         </p>
         <table
-          class="css-114kdox-RenderElement"
+          class="css-o38l6f-tableStyles"
         >
           <tbody
             data-slate-node="element"
@@ -4351,7 +4351,7 @@ exports[`Article should render WithClassName 1`] = `
               data-slate-node="element"
             >
               <td
-                class="css-9lag45-RenderElement"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -4370,7 +4370,7 @@ exports[`Article should render WithClassName 1`] = `
                 </p>
               </td>
               <td
-                class="css-9lag45-RenderElement"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -4393,7 +4393,7 @@ exports[`Article should render WithClassName 1`] = `
               data-slate-node="element"
             >
               <td
-                class="css-9lag45-RenderElement"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -4412,7 +4412,7 @@ exports[`Article should render WithClassName 1`] = `
                 </p>
               </td>
               <td
-                class="css-9lag45-RenderElement"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -6414,7 +6414,7 @@ exports[`Article should render WithEmotion 1`] = `
           </span>
         </p>
         <table
-          class="css-114kdox-RenderElement"
+          class="css-o38l6f-tableStyles"
         >
           <tbody
             data-slate-node="element"
@@ -6423,7 +6423,7 @@ exports[`Article should render WithEmotion 1`] = `
               data-slate-node="element"
             >
               <td
-                class="css-9lag45-RenderElement"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -6442,7 +6442,7 @@ exports[`Article should render WithEmotion 1`] = `
                 </p>
               </td>
               <td
-                class="css-9lag45-RenderElement"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -6465,7 +6465,7 @@ exports[`Article should render WithEmotion 1`] = `
               data-slate-node="element"
             >
               <td
-                class="css-9lag45-RenderElement"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -6484,7 +6484,7 @@ exports[`Article should render WithEmotion 1`] = `
                 </p>
               </td>
               <td
-                class="css-9lag45-RenderElement"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -8494,7 +8494,7 @@ exports[`Article should render WithoutAuthors 1`] = `
           </span>
         </p>
         <table
-          class="css-114kdox-RenderElement"
+          class="css-o38l6f-tableStyles"
         >
           <tbody
             data-slate-node="element"
@@ -8503,7 +8503,7 @@ exports[`Article should render WithoutAuthors 1`] = `
               data-slate-node="element"
             >
               <td
-                class="css-9lag45-RenderElement"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -8522,7 +8522,7 @@ exports[`Article should render WithoutAuthors 1`] = `
                 </p>
               </td>
               <td
-                class="css-9lag45-RenderElement"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -8545,7 +8545,7 @@ exports[`Article should render WithoutAuthors 1`] = `
               data-slate-node="element"
             >
               <td
-                class="css-9lag45-RenderElement"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -8564,7 +8564,7 @@ exports[`Article should render WithoutAuthors 1`] = `
                 </p>
               </td>
               <td
-                class="css-9lag45-RenderElement"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -10486,7 +10486,7 @@ exports[`Article should render WithoutImageMetadata 1`] = `
           </span>
         </p>
         <table
-          class="css-114kdox-RenderElement"
+          class="css-o38l6f-tableStyles"
         >
           <tbody
             data-slate-node="element"
@@ -10495,7 +10495,7 @@ exports[`Article should render WithoutImageMetadata 1`] = `
               data-slate-node="element"
             >
               <td
-                class="css-9lag45-RenderElement"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -10514,7 +10514,7 @@ exports[`Article should render WithoutImageMetadata 1`] = `
                 </p>
               </td>
               <td
-                class="css-9lag45-RenderElement"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -10537,7 +10537,7 @@ exports[`Article should render WithoutImageMetadata 1`] = `
               data-slate-node="element"
             >
               <td
-                class="css-9lag45-RenderElement"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -10556,7 +10556,7 @@ exports[`Article should render WithoutImageMetadata 1`] = `
                 </p>
               </td>
               <td
-                class="css-9lag45-RenderElement"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -12554,7 +12554,7 @@ exports[`Article should render WithoutLead 1`] = `
           </span>
         </p>
         <table
-          class="css-114kdox-RenderElement"
+          class="css-o38l6f-tableStyles"
         >
           <tbody
             data-slate-node="element"
@@ -12563,7 +12563,7 @@ exports[`Article should render WithoutLead 1`] = `
               data-slate-node="element"
             >
               <td
-                class="css-9lag45-RenderElement"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -12582,7 +12582,7 @@ exports[`Article should render WithoutLead 1`] = `
                 </p>
               </td>
               <td
-                class="css-9lag45-RenderElement"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -12605,7 +12605,7 @@ exports[`Article should render WithoutLead 1`] = `
               data-slate-node="element"
             >
               <td
-                class="css-9lag45-RenderElement"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -12624,7 +12624,7 @@ exports[`Article should render WithoutLead 1`] = `
                 </p>
               </td>
               <td
-                class="css-9lag45-RenderElement"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -14626,7 +14626,7 @@ exports[`Article should render WithoutSocialMedia 1`] = `
           </span>
         </p>
         <table
-          class="css-114kdox-RenderElement"
+          class="css-o38l6f-tableStyles"
         >
           <tbody
             data-slate-node="element"
@@ -14635,7 +14635,7 @@ exports[`Article should render WithoutSocialMedia 1`] = `
               data-slate-node="element"
             >
               <td
-                class="css-9lag45-RenderElement"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -14654,7 +14654,7 @@ exports[`Article should render WithoutSocialMedia 1`] = `
                 </p>
               </td>
               <td
-                class="css-9lag45-RenderElement"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -14677,7 +14677,7 @@ exports[`Article should render WithoutSocialMedia 1`] = `
               data-slate-node="element"
             >
               <td
-                class="css-9lag45-RenderElement"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -14696,7 +14696,7 @@ exports[`Article should render WithoutSocialMedia 1`] = `
                 </p>
               </td>
               <td
-                class="css-9lag45-RenderElement"
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
