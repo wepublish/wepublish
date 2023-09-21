@@ -1,58 +1,15 @@
-import {css} from '@emotion/react'
 import {styled} from '@mui/material'
 import {useUser} from '@wepublish/authentication/website'
-import {CommentAuthorType, CommentState} from '@wepublish/website/api'
+import {CommentState} from '@wepublish/website/api'
 import {BuilderCommentListItemProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {cond} from 'ramda'
-import {MdEdit, MdPerson, MdReply, MdVerified} from 'react-icons/md'
+import {MdEdit, MdReply} from 'react-icons/md'
 import {getStateForEditor} from './comment-list.state'
-
-const avatarStyles = css`
-  width: 46px;
-  height: 46px;
-  border-radius: 50%;
-`
 
 export const CommentListItemWrapper = styled('article')`
   display: grid;
   gap: ${({theme}) => theme.spacing(2)};
 `
-
-export const CommentListItemHeader = styled('header')`
-  display: grid;
-  grid-template-columns: max-content 1fr;
-  gap: ${({theme}) => theme.spacing(2)};
-  align-items: center;
-`
-
-export const CommentListItemHeaderContent = styled('div')``
-
-export const CommentListItemName = styled('div')`
-  display: grid;
-  grid-auto-flow: column;
-  grid-auto-columns: max-content;
-  gap: ${({theme}) => theme.spacing(1)};
-  align-items: center;
-  font-weight: ${({theme}) => theme.typography.fontWeightBold};
-`
-
-export const CommentListItemVerifiedBadge = styled('div')`
-  display: grid;
-  align-items: center;
-  color: ${({theme}) => theme.palette.info.main};
-`
-
-export const CommentListItemFlair = styled('div')<{isGuest: boolean}>`
-  font-size: 0.75em;
-
-  ${({isGuest, theme}) =>
-    isGuest &&
-    css`
-      color: ${theme.palette.primary.main};
-    `}
-`
-
-export const CommentListItemContent = styled('div')``
 
 export const CommentListItemChildren = styled('aside')`
   display: grid;
@@ -95,17 +52,11 @@ export const CommentListItem = ({
   const {
     CommentEditor,
     CommentListItem: BuilderCommentListItem,
-    elements: {Paragraph, Image, Button},
-    blocks: {RichText}
+    CommentListSingleComment: BuilderCommentListSingleComment,
+    elements: {Button}
   } = useWebsiteBuilder()
 
   const {hasUser: hasLoggedInUser, user: loggedInUser} = useUser()
-
-  const image = user?.image ?? guestUserImage
-  const isVerified = authorType === CommentAuthorType.VerifiedUser
-  const isGuest = authorType === CommentAuthorType.GuestUser
-  const flair = user?.flair ?? source
-  const name = user ? `${user.preferredName || user.firstName} ${user.name}` : guestUsername
 
   const canEdit =
     hasLoggedInUser &&
@@ -119,37 +70,20 @@ export const CommentListItem = ({
 
   return (
     <CommentListItemWrapper className={className}>
-      <CommentListItemHeader>
-        {image && <Image image={image} square css={avatarStyles} />}
-        {!image && <MdPerson css={avatarStyles} />}
+      <BuilderCommentListSingleComment
+        id={id}
+        showContent={!showEdit}
+        authorType={authorType}
+        guestUserImage={guestUserImage}
+        guestUsername={guestUsername}
+        source={source}
+        title={title}
+        text={text}
+        user={user}
+        className={className}
+      />
 
-        <CommentListItemHeaderContent>
-          <CommentListItemName>
-            {name}
-
-            {isVerified && (
-              <CommentListItemVerifiedBadge>
-                <MdVerified title="Member" />
-              </CommentListItemVerifiedBadge>
-            )}
-          </CommentListItemName>
-
-          {flair && <CommentListItemFlair isGuest={isGuest}>{flair}</CommentListItemFlair>}
-        </CommentListItemHeaderContent>
-      </CommentListItemHeader>
-
-      <CommentListItemStateWarnings state={state} />
-
-      {!showEdit && (
-        <CommentListItemContent>
-          {title && (
-            <Paragraph component="h1" gutterBottom={false}>
-              <strong>{title}</strong>
-            </Paragraph>
-          )}
-          <RichText richText={text ?? []} />
-        </CommentListItemContent>
-      )}
+      <CommentListSingleCommentStateWarnings state={state} />
 
       {showEdit && (
         <CommentEditor
@@ -248,7 +182,9 @@ export const CommentListItem = ({
   )
 }
 
-const CommentListItemStateWarnings = (props: Pick<BuilderCommentListItemProps, 'state'>) => {
+const CommentListSingleCommentStateWarnings = (
+  props: Pick<BuilderCommentListItemProps, 'state'>
+) => {
   const {
     elements: {Alert}
   } = useWebsiteBuilder()

@@ -26,6 +26,7 @@ import {
   BuilderBildwurfAdBlockProps,
   BuilderBlockRendererProps,
   BuilderBreakBlockProps,
+  BuilderCommentBlockProps,
   BuilderEmbedBlockProps,
   BuilderEventBlockProps,
   BuilderFacebookPostBlockProps,
@@ -52,7 +53,8 @@ import {
 import {
   BuilderCommentEditorProps,
   BuilderCommentListItemProps,
-  BuilderCommentListProps
+  BuilderCommentListProps,
+  BuilderCommentListSingleCommentProps
 } from './comment.interface'
 import {
   BuilderEventListItemProps,
@@ -110,6 +112,7 @@ export type WebsiteBuilderProps = {
   EventListItem: ComponentType<BuilderEventListItemProps>
   CommentList: ComponentType<BuilderCommentListProps>
   CommentListItem: ComponentType<BuilderCommentListItemProps>
+  CommentListSingleComment: ComponentType<BuilderCommentListSingleCommentProps>
   CommentEditor: ComponentType<BuilderCommentEditorProps>
   LoginForm: ComponentType<BuilderLoginFormProps>
   RegistrationForm: ComponentType<BuilderRegistrationFormProps>
@@ -170,6 +173,7 @@ export type WebsiteBuilderProps = {
     TeaserGridFlex: ComponentType<BuilderTeaserGridFlexBlockProps>
     TeaserGrid: ComponentType<BuilderTeaserGridBlockProps>
     Teaser: ComponentType<BuilderTeaserProps>
+    Comment: ComponentType<BuilderCommentBlockProps>
   }
 
   date: {
@@ -205,6 +209,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   ArticleListItem: NoComponent,
   CommentList: NoComponent,
   CommentListItem: NoComponent,
+  CommentListSingleComment: NoComponent,
   CommentEditor: NoComponent,
   LoginForm: NoComponent,
   RegistrationForm: NoComponent,
@@ -238,6 +243,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   blocks: {
     Renderer: NoComponent,
     Title: NoComponent,
+    Comment: NoComponent,
     Image: NoComponent,
     ImageGallery: NoComponent,
     Quote: NoComponent,
