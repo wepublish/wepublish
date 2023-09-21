@@ -83,7 +83,7 @@ export type BuilderCommentListItemProps = Comment & {
 export type BuilderCommentListSingleCommentProps = Partial<Comment> & {
   className?: string
   showContent?: boolean
-  children: React.ReactNode
+  children?: JSX.Element
 }
 
 type CreateCommentProps = {
@@ -111,8 +111,3 @@ export type BuilderCommentEditorProps = {
   loading: boolean
   error?: ApolloError
 } & (CreateCommentProps | EditCommentProps)
-
-export type BuilderCommentBlockProps = {
-  className?: string
-  comments: Comment[]
-}

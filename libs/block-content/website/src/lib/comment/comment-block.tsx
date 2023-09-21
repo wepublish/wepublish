@@ -13,8 +13,8 @@ export const CommentBlock = ({className, comments}: BuilderCommentBlockProps) =>
 
   return (
     <CommentBlockWrapper className={className}>
-      {comments?.map(comment => (
-        <BuilderCommentListSingleComment key={comment.id} {...comment} showContent />
+      {comments?.map(({children, ...comment}) => (
+        <BuilderCommentListSingleComment key={comment.id} {...comment} />
       ))}
     </CommentBlockWrapper>
   )

@@ -173,7 +173,7 @@ export type WebsiteBuilderProps = {
     TeaserGridFlex: ComponentType<BuilderTeaserGridFlexBlockProps>
     TeaserGrid: ComponentType<BuilderTeaserGridBlockProps>
     Teaser: ComponentType<BuilderTeaserProps>
-    CommentArticle: ComponentType<BuilderCommentBlockProps>
+    Comment: ComponentType<BuilderCommentBlockProps>
   }
 
   date: {
@@ -243,6 +243,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   blocks: {
     Renderer: NoComponent,
     Title: NoComponent,
+    Comment: NoComponent,
     Image: NoComponent,
     ImageGallery: NoComponent,
     Quote: NoComponent,

@@ -158,7 +158,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           Break: BreakBlock,
           Image: ImageBlock,
           ImageGallery: ImageGalleryBlock,
-          CommentArticle: CommentBlock,
+          Comment: CommentBlock,
           Quote: QuoteBlock,
           HTML: HtmlBlock,
           Poll: PollBlock,

@@ -72,7 +72,7 @@ export const CommentListSingleComment = ({
   title,
   source,
   children,
-  showContent
+  showContent = true
 }: BuilderCommentListSingleCommentProps) => {
   const {
     elements: {Paragraph, Image},
