@@ -100,6 +100,8 @@ export class ImportedEventFilter {
   to?: string
   @Field(type => [String], {nullable: 'itemsAndList'})
   providers?: string[]
+  @Field({nullable: true})
+  location?: string
 }
 
 @InputType()

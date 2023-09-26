@@ -117,7 +117,7 @@ function ImportableEventListView() {
           <h2>{t('importableEvent.title')}</h2>
         </ListViewHeader>
         <ListFilters
-          fields={['dates', 'providers']}
+          fields={['dates', 'providers', 'name', 'location']}
           filter={filter}
           isLoading={isLoading}
           onSetFilter={filter => updateFilter(filter)}

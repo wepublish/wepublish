@@ -92,6 +92,7 @@ export enum EventStatus {
 
 export type ImportedEventFilter = {
   from?: InputMaybe<Scalars['String']>;
+  location?: InputMaybe<Scalars['String']>;
   name?: InputMaybe<Scalars['String']>;
   providers?: InputMaybe<Array<InputMaybe<Scalars['String']>>>;
   to?: InputMaybe<Scalars['String']>;
