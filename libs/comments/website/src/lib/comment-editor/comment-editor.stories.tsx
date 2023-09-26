@@ -1,11 +1,10 @@
+import {ApolloError} from '@apollo/client'
 import {action} from '@storybook/addon-actions'
 import {Meta, StoryObj} from '@storybook/react'
 import {userEvent, within} from '@storybook/testing-library'
-import {CommentEditor} from './comment-editor'
-import {ComponentType} from 'react'
-import {SessionTokenContext} from '@wepublish/authentication/website'
+import {WithUserDecorator} from '@wepublish/storybook'
 import {Challenge} from '@wepublish/website/api'
-import {ApolloError} from '@apollo/client'
+import {CommentEditor} from './comment-editor'
 
 const challenge = {
   challengeID:
@@ -20,21 +19,6 @@ export default {
   component: CommentEditor,
   title: 'Components/Comment Editor'
 } as Meta
-
-const WithUserDecorator = (Story: ComponentType) => {
-  return (
-    <SessionTokenContext.Provider
-      value={[
-        {} as any,
-        true,
-        () => {
-          /* do nothing */
-        }
-      ]}>
-      <Story />
-    </SessionTokenContext.Provider>
-  )
-}
 
 const fillComment: StoryObj['play'] = async ({canvasElement, step}) => {
   const canvas = within(canvasElement)
@@ -150,7 +134,7 @@ export const LoggedIn: StoryObj = {
     ...Anonymous.args,
     challenge: null
   },
-  decorators: [WithUserDecorator]
+  decorators: [WithUserDecorator({} as any)]
 }
 
 export const LoggedInFilled: StoryObj = {

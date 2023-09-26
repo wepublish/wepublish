@@ -4,3 +4,4 @@ export * from './lib/login-form/login-form-container'
 
 export * from './lib/registration-form/registration-form'
 export * from './lib/registration-form/registration-form-container'
+export * from './lib/registration-form/user-form'

@@ -19,9 +19,12 @@ export const V1_CLIENT_STATE_PROP_NAME = '__APOLLO_STATE_V1__'
 
 let CACHED_CLIENT: ApolloClient<NormalizedCacheObject>
 
-const isFile = (value: unknown): value is File | Blob =>
-  (typeof File !== 'undefined' && value instanceof File) ||
-  (typeof Blob !== 'undefined' && value instanceof Blob)
+const isFile = (value: unknown): boolean =>
+  Boolean(
+    (typeof File !== 'undefined' && value instanceof File) ||
+      (typeof Blob !== 'undefined' && value instanceof Blob) ||
+      (value && typeof value === 'object' && Object.values(value).some(isFile))
+  )
 
 const createV1ApiClient = (
   apiUrl: string,
@@ -31,11 +34,11 @@ const createV1ApiClient = (
 ) => {
   // If operation is uploading a file, use the upload link, else use the batch http
   const httpLink = split(
-    ({variables}) => Object.values(variables).some(isFile),
-    new BatchHttpLink({uri: `${apiUrl}/v1`, batchMax: 5, batchInterval: 20}),
+    ({variables}) => isFile(variables),
     createUploadLink({
       uri: `${apiUrl}/v1`
-    })
+    }),
+    new BatchHttpLink({uri: `${apiUrl}/v1`, batchMax: 5, batchInterval: 20})
   )
 
   const link = [...links, httpLink].reduce(

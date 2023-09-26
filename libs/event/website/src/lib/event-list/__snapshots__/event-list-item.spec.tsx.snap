@@ -3,7 +3,7 @@
 exports[`EventListItem should render Default 1`] = `
 <DocumentFragment>
   <a
-    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-191jqm4-MuiTypography-root-MuiLink-root-EventListItem"
+    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
     href="https://example.com"
   >
     <article
@@ -423,7 +423,7 @@ https://unsplash.it/200/100 200w"
 exports[`EventListItem should render WithClassName 1`] = `
 <DocumentFragment>
   <a
-    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-191jqm4-MuiTypography-root-MuiLink-root-EventListItem"
+    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
     href="https://example.com"
   >
     <article
@@ -843,7 +843,7 @@ https://unsplash.it/200/100 200w"
 exports[`EventListItem should render WithEmotion 1`] = `
 <DocumentFragment>
   <a
-    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-191jqm4-MuiTypography-root-MuiLink-root-EventListItem"
+    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
     href="https://example.com"
   >
     <article
@@ -1263,7 +1263,7 @@ https://unsplash.it/200/100 200w"
 exports[`EventListItem should render WithoutImage 1`] = `
 <DocumentFragment>
   <a
-    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-191jqm4-MuiTypography-root-MuiLink-root-EventListItem"
+    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
     href="https://example.com"
   >
     <article

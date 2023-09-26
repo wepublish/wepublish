@@ -1,6 +1,19 @@
-import {Invoice, InvoicesQuery, Subscription} from '@wepublish/website/api'
 import {QueryResult} from '@apollo/client'
-import {SubscriptionsQuery} from '@wepublish/website/api'
+import {
+  ChallengeQuery,
+  Invoice,
+  InvoicesQuery,
+  MemberPlan,
+  MemberPlanListQuery,
+  PaymentMethod,
+  PaymentPeriodicity,
+  RegisterMutationVariables,
+  SubscribeMutationVariables,
+  Subscription,
+  SubscriptionsQuery
+} from '@wepublish/website/api'
+import {BuilderRegistrationFormProps} from './authentication.interface'
+import {OptionalKeysOf} from 'type-fest'
 
 export type BuilderSubscriptionListItemProps = Subscription & {
   className?: string
@@ -31,3 +44,45 @@ export type BuilderInvoiceListProps = Pick<
   className?: string
   onPay?: (invoiceId: string, paymentMethodId: string) => Promise<void>
 }
+
+export type BuilderMemberPlanPickerProps = {
+  memberPlans: MemberPlan[] | undefined
+  className?: string
+  onChange: (memberPlanId: string) => void
+  name?: string
+  value?: string
+  defaultValue?: string
+}
+
+export type BuilderPeriodicityPickerProps = {
+  periodicities: PaymentPeriodicity[] | undefined
+  className?: string
+  onChange: (periodicitiy: PaymentPeriodicity) => void
+  name?: string
+  value?: string
+  defaultValue?: string
+}
+
+export type BuilderPaymentMethodPickerProps = {
+  paymentMethods: PaymentMethod[] | undefined
+  className?: string
+  onChange: (paymentMethodId: string) => void
+  name?: string
+  value?: string
+  defaultValue?: string
+}
+
+export type BuilderSubscribeProps<
+  T extends OptionalKeysOf<RegisterMutationVariables> = OptionalKeysOf<RegisterMutationVariables>
+> = {
+  challenge: Pick<QueryResult<ChallengeQuery>, 'data' | 'loading' | 'error'>
+  memberPlans: Pick<QueryResult<MemberPlanListQuery>, 'data' | 'loading' | 'error'>
+  className?: string
+  onSubscribeWithRegister?: (data: {
+    subscribe: Omit<SubscribeMutationVariables, 'failureURL' | 'successURL'>
+    register: RegisterMutationVariables
+  }) => Promise<void>
+  onSubscribe?: (
+    data: Omit<SubscribeMutationVariables, 'failureURL' | 'successURL'>
+  ) => Promise<void>
+} & Pick<BuilderRegistrationFormProps<T>, 'schema' | 'fields'>

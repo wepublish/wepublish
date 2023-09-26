@@ -3,10 +3,10 @@
 exports[`Event Block should render Default 1`] = `
 <DocumentFragment>
   <aside
-    class="css-1rwno3v-EventBlockWrapper ea1goei0"
+    class="css-1lwhsgn-EventBlockWrapper ea1goei0"
   >
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-191jqm4-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
@@ -170,7 +170,7 @@ https://unsplash.it/200/100 200w"
       </article>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-191jqm4-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
@@ -334,7 +334,7 @@ https://unsplash.it/200/100 200w"
       </article>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-191jqm4-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
@@ -498,7 +498,7 @@ https://unsplash.it/200/100 200w"
       </article>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-191jqm4-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
@@ -662,7 +662,7 @@ https://unsplash.it/200/100 200w"
       </article>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-191jqm4-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
@@ -826,7 +826,7 @@ https://unsplash.it/200/100 200w"
       </article>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-191jqm4-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
@@ -996,10 +996,10 @@ https://unsplash.it/200/100 200w"
 exports[`Event Block should render WithClassName 1`] = `
 <DocumentFragment>
   <aside
-    class="extra-classname css-1rwno3v-EventBlockWrapper ea1goei0"
+    class="extra-classname css-1lwhsgn-EventBlockWrapper ea1goei0"
   >
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-191jqm4-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
@@ -1163,7 +1163,7 @@ https://unsplash.it/200/100 200w"
       </article>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-191jqm4-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
@@ -1327,7 +1327,7 @@ https://unsplash.it/200/100 200w"
       </article>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-191jqm4-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
@@ -1491,7 +1491,7 @@ https://unsplash.it/200/100 200w"
       </article>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-191jqm4-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
@@ -1655,7 +1655,7 @@ https://unsplash.it/200/100 200w"
       </article>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-191jqm4-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
@@ -1819,7 +1819,7 @@ https://unsplash.it/200/100 200w"
       </article>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-191jqm4-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
@@ -1989,10 +1989,10 @@ https://unsplash.it/200/100 200w"
 exports[`Event Block should render WithEmotion 1`] = `
 <DocumentFragment>
   <aside
-    class="css-1rwno3v-EventBlockWrapper ea1goei0"
+    class="css-1lwhsgn-EventBlockWrapper ea1goei0"
   >
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-191jqm4-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
@@ -2156,7 +2156,7 @@ https://unsplash.it/200/100 200w"
       </article>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-191jqm4-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
@@ -2320,7 +2320,7 @@ https://unsplash.it/200/100 200w"
       </article>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-191jqm4-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
@@ -2484,7 +2484,7 @@ https://unsplash.it/200/100 200w"
       </article>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-191jqm4-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
@@ -2648,7 +2648,7 @@ https://unsplash.it/200/100 200w"
       </article>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-191jqm4-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
@@ -2812,7 +2812,7 @@ https://unsplash.it/200/100 200w"
       </article>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-191jqm4-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article

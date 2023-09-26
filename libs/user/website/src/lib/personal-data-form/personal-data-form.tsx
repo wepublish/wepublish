@@ -4,9 +4,10 @@ import {
   BuilderPersonalDataFormFields,
   BuilderPersonalDataFormProps,
   PersonalDataFormFields,
+  useAsyncAction,
   useWebsiteBuilder
 } from '@wepublish/website/builder'
-import {useCallback, useReducer, useState} from 'react'
+import {useReducer, useState} from 'react'
 import {Controller, useForm} from 'react-hook-form'
 import {MdVisibility, MdVisibilityOff} from 'react-icons/md'
 import {OptionalKeysOf} from 'type-fest'
@@ -148,23 +149,7 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error>()
-  const callAction = useCallback(
-    (action: (...args: any[]) => Promise<void>) =>
-      async (...args: any[]) => {
-        try {
-          setError(undefined)
-          setLoading(true)
-          await action(...args)
-        } catch (e) {
-          if (e instanceof Error) {
-            setError(e)
-          }
-        } finally {
-          setLoading(false)
-        }
-      },
-    []
-  )
+  const callAction = useAsyncAction(setLoading, setError)
 
   const {handleSubmit, control} = useForm<PersonalDataFormFields>({
     resolver: zodResolver(validationSchema),

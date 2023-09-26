@@ -43,7 +43,11 @@ import {
   SubscriptionList,
   SubscriptionListItem,
   InvoiceListItem,
-  InvoiceList
+  InvoiceList,
+  Subscribe,
+  MemberPlanPicker,
+  PeriodicityPicker,
+  PaymentMethodPicker
 } from '@wepublish/membership/website'
 import {Footer, Navbar} from '@wepublish/navigation/website'
 import {Page, PageSEO} from '@wepublish/page/website'
@@ -133,6 +137,10 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
         SubscriptionListItem={SubscriptionListItem}
         InvoiceList={InvoiceList}
         InvoiceListItem={InvoiceListItem}
+        MemberPlanPicker={MemberPlanPicker}
+        PeriodicityPicker={PeriodicityPicker}
+        PaymentMethodPicker={PaymentMethodPicker}
+        Subscribe={Subscribe}
         elements={{
           TextField,
           Alert,

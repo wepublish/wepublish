@@ -3,7 +3,6 @@ import {css} from '@emotion/react'
 import {action} from '@storybook/addon-actions'
 import {Meta, StoryObj} from '@storybook/react'
 import {userEvent, within} from '@storybook/testing-library'
-import {SessionTokenContext} from '@wepublish/authentication/website'
 import {
   FullPollFragment,
   PollVoteMutationResult,
@@ -13,6 +12,7 @@ import {ComponentType} from 'react'
 import {Node} from 'slate'
 import {PollBlock} from './poll-block'
 import {PollBlockContext} from './poll-block.context'
+import {WithUserDecorator} from '@wepublish/storybook'
 
 const text: Node[] = [
   {
@@ -66,21 +66,6 @@ const poll = {
     }
   ]
 } as FullPollFragment
-
-const WithUserDecorator = (Story: ComponentType) => {
-  return (
-    <SessionTokenContext.Provider
-      value={[
-        {} as any,
-        true,
-        () => {
-          /* do nothing */
-        }
-      ]}>
-      <Story />
-    </SessionTokenContext.Provider>
-  )
-}
 
 type PollDecoratorProps = Partial<{
   fetchUserVoteResult: Pick<UserPollVoteQueryResult, 'data' | 'error'>
@@ -143,7 +128,7 @@ export const Default: StoryObj = {
 export const Voting: StoryObj = {
   ...Default,
   decorators: [
-    WithUserDecorator,
+    WithUserDecorator({} as any),
     WithPollBlockDecorators({
       fetchUserVoteResult: {
         data: {
@@ -180,7 +165,7 @@ export const VotingPlay: StoryObj = {
 export const AnonymousVoting: StoryObj = {
   ...Default,
   decorators: [
-    WithUserDecorator,
+    WithUserDecorator({} as any),
     WithPollBlockDecorators({
       canVoteAnonymously: true,
       anonymousVoteResult: undefined,
@@ -204,7 +189,7 @@ export const AnonymousVotingPlay: StoryObj = {
 export const AlreadyVoted: StoryObj = {
   ...Default,
   decorators: [
-    WithUserDecorator,
+    WithUserDecorator({} as any),
     WithPollBlockDecorators({
       fetchUserVoteResult: {
         data: {
@@ -218,7 +203,7 @@ export const AlreadyVoted: StoryObj = {
 export const AnonymousAlreadyVoted: StoryObj = {
   ...Default,
   decorators: [
-    WithUserDecorator,
+    WithUserDecorator({} as any),
     WithPollBlockDecorators({
       canVoteAnonymously: true,
       anonymousVoteResult: poll.answers[1].id
@@ -236,7 +221,7 @@ export const VotingClosed: StoryObj = {
     }
   },
   decorators: [
-    WithUserDecorator,
+    WithUserDecorator({} as any),
     WithPollBlockDecorators({
       fetchUserVoteResult: {
         data: {
@@ -250,7 +235,7 @@ export const VotingClosed: StoryObj = {
 export const WithError: StoryObj = {
   ...Default,
   decorators: [
-    WithUserDecorator,
+    WithUserDecorator({} as any),
     WithPollBlockDecorators({
       fetchUserVoteResult: {
         data: undefined,
