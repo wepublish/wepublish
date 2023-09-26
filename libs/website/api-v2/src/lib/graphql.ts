@@ -200,10 +200,10 @@ export type MutationUpdateUserConsentArgs = {
 
 export type PageInfo = {
   __typename?: 'PageInfo';
-  endCursor: Scalars['String'];
+  endCursor?: Maybe<Scalars['String']>;
   hasNextPage: Scalars['Boolean'];
   hasPreviousPage: Scalars['Boolean'];
-  startCursor: Scalars['String'];
+  startCursor?: Maybe<Scalars['String']>;
 };
 
 export enum PaymentPeriodicity {
