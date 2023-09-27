@@ -170,6 +170,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
       owner_id: this.userId,
       contact_group_ids: [],
       postcode: user?.address?.zipCode,
+      city: user?.address?.city,
       address: user?.address?.streetAddress
     }
     if (!contact) {
@@ -204,8 +205,9 @@ export class BexioPaymentProvider extends BasePaymentProvider {
           tax_id: this.taxId,
           text: invoice.subscription.memberPlan.name,
           unit_price: `${
-            invoice.subscription.monthlyAmount *
-            getMonthsFromPaymentPeriodicity(invoice.subscription.paymentPeriodicity)
+            (invoice.subscription.monthlyAmount *
+              getMonthsFromPaymentPeriodicity(invoice.subscription.paymentPeriodicity)) /
+            100
           }`,
           type: 'KbPositionCustom'
         }
