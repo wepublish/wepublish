@@ -45,6 +45,8 @@ export class SystemMailResolver {
   ) {
     const externalMailTemplateId = await this.mailContext.getUserTemplateName(systemMail.event)
 
+    if (!externalMailTemplateId) throw new Error('No test system mail found!')
+
     await this.mailContext.sendMail({
       mailType: mailLogType.SystemMail,
       recipient: user,

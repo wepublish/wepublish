@@ -88,8 +88,11 @@ export class PeriodicJobController {
         )
         await this.findAndDeactivateExpiredNotAutoRenewSubscription(periodicJobRunObject)
         this.logger.log('Periodic job successfully finished.')
-      } catch (e) {
+      } catch (e: unknown) {
         await this.markJobFailed(inspect(e))
+        if (e instanceof Error) {
+          throw e
+        }
         throw new Error(inspect(e))
       }
       await this.markJobSuccessful()

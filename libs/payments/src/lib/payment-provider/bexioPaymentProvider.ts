@@ -89,11 +89,19 @@ export class BexioPaymentProvider extends BasePaymentProvider {
    */
 
   async createIntent(props: CreatePaymentIntentProps): Promise<Intent> {
-    const subscription = await this.prisma.subscription.findUnique({
-      where: {id: props.invoice.subscriptionID}
-    })
-    if (!subscription.paidUntil) {
-      return await this.bexioCreate(props.invoice.id, false)
+    if (props.invoice.subscriptionID) {
+      const subscription = await this.prisma.subscription.findUnique({
+        where: {id: props.invoice.subscriptionID}
+      })
+      if (!subscription?.paidUntil) {
+        return await this.bexioCreate(props.invoice.id, false)
+      }
+    }
+    return {
+      intentID: '',
+      intentSecret: '',
+      intentData: '',
+      state: PaymentState.requiresUserAction
     }
   }
 
@@ -109,7 +117,6 @@ export class BexioPaymentProvider extends BasePaymentProvider {
   async checkIntentStatus({intentID}: CheckIntentProps): Promise<IntentState> {
     return {
       state: PaymentState.requiresUserAction,
-      paidAt: null,
       paymentID: 'None',
       paymentData: ''
     }
@@ -134,6 +141,15 @@ export class BexioPaymentProvider extends BasePaymentProvider {
           }
         }
       })
+
+      if (!invoice || !invoice.subscription || !invoice.subscription.user) {
+        throw new Error(
+          `Bexio payment adapter not found the invoice, subscription or user! ${JSON.stringify(
+            invoice
+          )}`
+        )
+      }
+
       const bexio = new Bexio(this.apiKey)
       const contact = await this.searchForContact(bexio, invoice.subscription.user)
       const updatedContact = await this.createOrUpdateContact(
@@ -146,7 +162,6 @@ export class BexioPaymentProvider extends BasePaymentProvider {
         intentID: '',
         intentSecret: '',
         intentData: '',
-        paidAt: null,
         state: PaymentState.created
       }
     } catch (e) {
@@ -155,7 +170,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     }
   }
 
-  async searchForContact(bexio: Bexio, user: User & {address: UserAddress}) {
+  async searchForContact(bexio: Bexio, user: User) {
     const contacts = await bexio.contacts.search([
       {
         field: ContactSearchParameters.mail,
@@ -169,21 +184,21 @@ export class BexioPaymentProvider extends BasePaymentProvider {
   async createOrUpdateContact(
     bexio: Bexio,
     contact: ContactsStatic.ContactSmall,
-    user: User & {address: UserAddress}
+    user: User & {address: UserAddress | null}
   ) {
     const upsertContact: ContactsStatic.ContactOverwrite = {
       nr: '',
       name_1: user?.address?.company ? user?.address.company : user.name, // lastname or company name
-      name_2: user?.address?.company ? '' : user.firstName, // Firstname or none
+      name_2: user?.address?.company ? '' : user.firstName ?? undefined, // Firstname or none
       mail: user.email,
       user_id: this.userId,
       contact_type_id: user?.address?.company ? 1 : 2, // 1: Company 2: Person
       country_id: this.countryId,
       owner_id: this.userId,
       contact_group_ids: [],
-      postcode: user?.address?.zipCode,
-      city: user?.address?.city,
-      address: user?.address?.streetAddress
+      postcode: user?.address?.zipCode ?? undefined,
+      city: user?.address?.city ?? undefined,
+      address: user?.address?.streetAddress ?? undefined
     }
     if (!contact) {
       return await bexio.contacts.create(upsertContact)
@@ -196,9 +211,16 @@ export class BexioPaymentProvider extends BasePaymentProvider {
   async createInvoice(
     bexio: Bexio,
     contact: ContactsStatic.ContactFull,
-    invoice: Invoice & {subscription: Subscription & {memberPlan: MemberPlan; user: User}},
+    invoice: Invoice & {subscription: (Subscription & {memberPlan: MemberPlan; user: User}) | null},
     isRenewal: boolean
   ) {
+    if (!invoice || !invoice.subscription || !invoice.subscription.user) {
+      throw new Error(
+        `Bexio payment adapter not found the invoice, subscription or user! ${JSON.stringify(
+          invoice
+        )}`
+      )
+    }
     const stringReplaceMap = new MappedReplacer()
     this.addToStringReplaceMap(stringReplaceMap, 'subscription', invoice.subscription)
     this.addToStringReplaceMap(stringReplaceMap, 'user', invoice.subscription.user)
@@ -244,6 +266,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
       throw Error(`Send of invoice failed with message: ${sentInvoice}`)
     }
   }
+
   addToStringReplaceMap(
     stringReplaceMap: MappedReplacer,
     id: string,
