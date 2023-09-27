@@ -967,7 +967,8 @@
         "reasonUserSelfDeactivated": "Désactivation par l'utilisateur·trice",
         "reasonInvoiceNotPaid": "Facture impayée",
         "isDeactivated": "L'abonnement est désactivé depuis {{date, ccc PP p}} et ne peut plus être modifié. Le cas échéant, un nouvel abonnement peut être souscrit.",
-        "help": "Les abonnements désactivés peuvent encore être utilisés jusqu'à la date \"payée jusqu'à\". Mais ils ne seront pas renouvelés automatiquement, même si l'option de renouvellement automatique est activée. Une fois désactivé, l'abonnement ne peut pas être réactivé."
+        "help": "Les abonnements désactivés peuvent encore être utilisés jusqu'à la date \"payée jusqu'à\". Mais ils ne seront pas renouvelés automatiquement, même si l'option de renouvellement automatique est activée. Une fois désactivé, l'abonnement ne peut pas être réactivé.",
+        "cancellation": "Date d'annulation"
       },
       "hasAddress": "Adresse de l'utilisateur·trice"
     },

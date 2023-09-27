@@ -1208,7 +1208,8 @@
         "reasonNone": "Keiner",
         "reasonUserSelfDeactivated": "User will deaktivieren",
         "reasonInvoiceNotPaid": "User hat Rechnung nicht bezahlt",
-        "isDeactivated": "Das Abonnement ist seit {{date, ccc PP p}} deaktiviert und kann nicht mehr bearbeitet werden. Allenfalls kann ein neues Abo gelöst werden."
+        "isDeactivated": "Das Abonnement ist seit {{date, ccc PP p}} deaktiviert und kann nicht mehr bearbeitet werden. Allenfalls kann ein neues Abo gelöst werden.",
+        "cancellation": "Stornierungsdatum"
       },
       "hasAddress": "User hat Adresse"
     },
