@@ -29,7 +29,6 @@ import {
 import {ConfigModule, ConfigService} from '@nestjs/config'
 import {URL} from 'url'
 import {SlackMailProvider} from '../app/slack-mail-provider'
-import {PrismaClient} from '@prisma/client'
 
 @Global()
 @Module({

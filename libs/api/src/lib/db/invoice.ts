@@ -1,4 +1,3 @@
-import {Invoice, InvoiceItem} from '@prisma/client'
 import {DateFilter} from './common'
 
 export enum InvoiceSort {

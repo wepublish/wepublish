@@ -15,7 +15,8 @@ import {
   MailTemplateList,
   MemberPlanEdit,
   SubscriptionFlowList,
-  SystemMailList
+  SystemMailList,
+  PlaceholderListe
 } from '@wepublish/membership/editor'
 import {AuthContext, AuthDispatchActionType, AuthDispatchContext} from '@wepublish/ui/editor'
 import {useContext, useEffect, useState} from 'react'
@@ -57,7 +58,6 @@ import {UserEditView} from './routes/userEditView'
 import {UserList} from './routes/userList'
 import {UserRoleList} from './routes/userRoleList'
 import {LocalStorageKey} from './utility'
-import PlaceholderListe from '../../../../libs/membership/editor/src/lib/mailTemplate/placeholderList'
 
 const LogoutMutation = gql`
   mutation Logout {
