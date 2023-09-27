@@ -8,7 +8,6 @@ npm-debug.log
 coverage/
 screenshots
 .env.local
-.env
 
 # Next.js
 .next
