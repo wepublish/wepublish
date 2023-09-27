@@ -3,6 +3,11 @@ generator client {
   previewFeatures = ["fullTextSearch"]
 }
 
+generator fabbrica {
+  provider = "prisma-fabbrica"
+  output = "../../membership/api/src/__generated__/fabbrica"
+}
+
 datasource db {
   provider = "postgres"
   url      = env("DATABASE_URL")
@@ -386,15 +391,13 @@ model Invoice {
   description               String?
   paidAt                    DateTime?
   canceledAt                DateTime?
-  sentReminderAt            DateTime?
+  scheduledDeactivationAt           DateTime
   items                     InvoiceItem[]
   manuallySetAsPaidByUserId String?
 
   subscriptionID String?
   subscription   Subscription? @relation(fields: [subscriptionID], references: [id], onDelete: SetNull)
 
-  userID String?
-  user   User?   @relation(fields: [userID], references: [id])
 
   subscriptionPeriods SubscriptionPeriod[]
 
@@ -412,17 +415,22 @@ enum MailLogState {
 }
 
 model MailLog {
-  id         String   @id @default(cuid())
-  createdAt  DateTime @default(now())
-  modifiedAt DateTime @updatedAt
+  id                      String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt               DateTime @default(now())
+  modifiedAt              DateTime @updatedAt
 
-  recipient      String
-  subject        String
-  state          MailLogState
-  mailData       String?
-  mailProviderID String
+  recipientID             String
+  recipient               User   @relation(fields: [recipientID], references: [id], onDelete: Cascade)
+  state                   MailLogState
+  sentDate                DateTime
+  mailProviderID          String
+  mailIdentifier          String
+  mailTemplate            MailTemplate @relation(fields: [mailTemplateId], references: [id])
+  mailTemplateId          String @db.Uuid
+  mailData                String?
+  subject                 String?
 
-  @@index([subject])
+  @@index([mailIdentifier])
   @@map("mail.log")
 }
 
@@ -465,6 +473,8 @@ model MemberPlan {
   image   Image?  @relation(fields: [imageID], references: [id])
 
   Subscription Subscription[]
+
+  subscriptionFlows  SubscriptionFlow[]
 
   @@index([name])
   @@map("member.plans")
@@ -570,6 +580,7 @@ model PaymentMethod {
 
   Subscription Subscription[]
   Payment      Payment[]
+  subscriptionFlows  SubscriptionFlow[]
 
   @@map("payment.methods")
 }
@@ -807,9 +818,9 @@ model User {
   Comment       Comment[]
   Session       Session[]
   Subscription  Subscription[]
-  Invoice       Invoice[]
   CommentRating CommentRating[]
   PollVote      PollVote[]
+  mailSent      MailLog[]
   UserConsent   UserConsent[]
 
   @@map("users")
@@ -1015,4 +1026,103 @@ model UserConsent {
 
   @@unique([userId, consentId])
   @@map("user-consents")
+}
+
+enum UserEvent {
+  ACCOUNT_CREATION
+  PASSWORD_RESET
+  LOGIN_LINK
+  TEST_MAIL
+}
+
+model UserFlowMail {
+  id                    String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+	createdAt             DateTime @default(now())
+	modifiedAt            DateTime @updatedAt
+
+  event                 UserEvent @unique
+
+  mailTemplate       MailTemplate? @relation(fields: [mailTemplateId], references: [id]) // user creates a new account
+	mailTemplateId     String? @db.Uuid
+
+  @@map("user_communication_flows")
+}
+
+enum SubscriptionEvent {
+  SUBSCRIBE
+  INVOICE_CREATION
+  RENEWAL_SUCCESS
+  RENEWAL_FAILED
+  DEACTIVATION_UNPAID
+  DEACTIVATION_BY_USER
+  CUSTOM
+}
+
+model SubscriptionFlow {
+	id                    String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+	createdAt             DateTime @default(now())
+	modifiedAt            DateTime @updatedAt
+
+  default               Boolean @default(false)
+
+  memberPlan            MemberPlan? @relation(fields: [memberPlanId], references: [id])
+  memberPlanId          String?
+
+	paymentMethods        PaymentMethod[]
+  periodicities         PaymentPeriodicity[]
+  autoRenewal           Boolean[]
+
+	intervals   SubscriptionInterval[] // send some more e-mails such as reminders
+
+  @@map("subscription_communication_flows")
+}
+
+model SubscriptionInterval {
+	id                      String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+	createdAt               DateTime @default(now())
+    modifiedAt              DateTime @updatedAt
+    event                   SubscriptionEvent
+	daysAwayFromEnding      Int? @db.SmallInt
+	mailTemplate            MailTemplate? @relation(fields: [mailTemplateId], references: [id])
+	mailTemplateId          String? @db.Uuid
+
+	subscriptionFlow   SubscriptionFlow @relation(fields: [subscriptionFlowId], references: [id], onDelete: Cascade)
+  subscriptionFlowId String @db.Uuid
+
+  @@map("subscriptions.intervals")
+}
+
+model MailTemplate {
+	id                          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+	createdAt                   DateTime @default(now())
+  modifiedAt                  DateTime @updatedAt
+
+	name                        String
+	description                 String?
+	externalMailTemplateId      String @unique
+  remoteMissing               Boolean @default(false)
+
+	subscriptionIntervals       SubscriptionInterval[]
+
+	userFlowMails               UserFlowMail[]
+
+	mailLog                     MailLog[]
+
+
+  @@map("mail_templates")
+}
+
+model PeriodicJob {
+	id                          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+	createdAt                   DateTime @default(now())
+    modifiedAt                  DateTime @updatedAt
+
+    date                        DateTime @db.Date @unique
+    executionTime               DateTime?
+    successfullyFinished        DateTime?
+    finishedWithError           DateTime?
+    tries                       Int @default(0)
+    error                       String?
+
+  @@map("periodic_jobs")
 }

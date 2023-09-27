@@ -789,8 +789,6 @@ export type InvoiceInput = {
   description?: InputMaybe<Scalars['String']>;
   items: Array<InvoiceItemInput>;
   mail: Scalars['String'];
-  manuallySetAsPaidByUserId?: InputMaybe<Scalars['ID']>;
-  paidAt?: InputMaybe<Scalars['DateTime']>;
   subscriptionID?: InputMaybe<Scalars['ID']>;
 };
 
@@ -922,6 +920,7 @@ export enum MemberPlanSort {
 export type Mutation = {
   __typename?: 'Mutation';
   approveComment: Comment;
+  cancelSubscription?: Maybe<Subscription>;
   createArticle: Article;
   createAuthor?: Maybe<Author>;
   createComment: Comment;
@@ -1005,6 +1004,12 @@ export type Mutation = {
 
 export type MutationApproveCommentArgs = {
   id: Scalars['ID'];
+};
+
+
+export type MutationCancelSubscriptionArgs = {
+  id: Scalars['ID'];
+  reason: SubscriptionDeactivationReason;
 };
 
 
@@ -2345,11 +2350,6 @@ export type SubscriptionDeactivation = {
   reason: SubscriptionDeactivationReason;
 };
 
-export type SubscriptionDeactivationInput = {
-  date: Scalars['DateTime'];
-  reason: SubscriptionDeactivationReason;
-};
-
 export enum SubscriptionDeactivationReason {
   InvoiceNotPaid = 'INVOICE_NOT_PAID',
   None = 'NONE',
@@ -2376,10 +2376,8 @@ export type SubscriptionFilter = {
 
 export type SubscriptionInput = {
   autoRenew: Scalars['Boolean'];
-  deactivation?: InputMaybe<SubscriptionDeactivationInput>;
   memberPlanID: Scalars['String'];
   monthlyAmount: Scalars['Int'];
-  paidUntil?: InputMaybe<Scalars['DateTime']>;
   paymentMethodID: Scalars['String'];
   paymentPeriodicity: PaymentPeriodicity;
   properties: Array<PropertiesInput>;
@@ -3624,6 +3622,14 @@ export type UpdateSubscriptionMutationVariables = Exact<{
 
 export type UpdateSubscriptionMutation = { __typename?: 'Mutation', updateSubscription?: { __typename?: 'Subscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, preferredName?: string | null, flair?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, memberPlan: { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider: { __typename?: 'PaymentProvider', id: string, name: string } }> }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, paymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider: { __typename?: 'PaymentProvider', id: string, name: string } }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null } | null };
 
+export type CancelSubscriptionMutationVariables = Exact<{
+  cancelSubscriptionId: Scalars['ID'];
+  reason: SubscriptionDeactivationReason;
+}>;
+
+
+export type CancelSubscriptionMutation = { __typename?: 'Mutation', cancelSubscription?: { __typename?: 'Subscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, preferredName?: string | null, flair?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, memberPlan: { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider: { __typename?: 'PaymentProvider', id: string, name: string } }> }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, paymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider: { __typename?: 'PaymentProvider', id: string, name: string } }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null } | null };
+
 export type DeleteSubscriptionMutationVariables = Exact<{
   id: Scalars['ID'];
 }>;
@@ -3741,6 +3747,7 @@ export type UpdateUserMutation = { __typename?: 'Mutation', updateUser?: { __typ
 export type ResetUserPasswordMutationVariables = Exact<{
   id: Scalars['ID'];
   password: Scalars['String'];
+  sendMail?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 
@@ -8368,6 +8375,40 @@ export function useUpdateSubscriptionMutation(baseOptions?: Apollo.MutationHookO
 export type UpdateSubscriptionMutationHookResult = ReturnType<typeof useUpdateSubscriptionMutation>;
 export type UpdateSubscriptionMutationResult = Apollo.MutationResult<UpdateSubscriptionMutation>;
 export type UpdateSubscriptionMutationOptions = Apollo.BaseMutationOptions<UpdateSubscriptionMutation, UpdateSubscriptionMutationVariables>;
+export const CancelSubscriptionDocument = gql`
+    mutation CancelSubscription($cancelSubscriptionId: ID!, $reason: SubscriptionDeactivationReason!) {
+  cancelSubscription(id: $cancelSubscriptionId, reason: $reason) {
+    ...FullSubscription
+  }
+}
+    ${FullSubscriptionFragmentDoc}`;
+export type CancelSubscriptionMutationFn = Apollo.MutationFunction<CancelSubscriptionMutation, CancelSubscriptionMutationVariables>;
+
+/**
+ * __useCancelSubscriptionMutation__
+ *
+ * To run a mutation, you first call `useCancelSubscriptionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCancelSubscriptionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [cancelSubscriptionMutation, { data, loading, error }] = useCancelSubscriptionMutation({
+ *   variables: {
+ *      cancelSubscriptionId: // value for 'cancelSubscriptionId'
+ *      reason: // value for 'reason'
+ *   },
+ * });
+ */
+export function useCancelSubscriptionMutation(baseOptions?: Apollo.MutationHookOptions<CancelSubscriptionMutation, CancelSubscriptionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CancelSubscriptionMutation, CancelSubscriptionMutationVariables>(CancelSubscriptionDocument, options);
+      }
+export type CancelSubscriptionMutationHookResult = ReturnType<typeof useCancelSubscriptionMutation>;
+export type CancelSubscriptionMutationResult = Apollo.MutationResult<CancelSubscriptionMutation>;
+export type CancelSubscriptionMutationOptions = Apollo.BaseMutationOptions<CancelSubscriptionMutation, CancelSubscriptionMutationVariables>;
 export const DeleteSubscriptionDocument = gql`
     mutation DeleteSubscription($id: ID!) {
   deleteSubscription(id: $id) {
@@ -8896,8 +8937,8 @@ export type UpdateUserMutationHookResult = ReturnType<typeof useUpdateUserMutati
 export type UpdateUserMutationResult = Apollo.MutationResult<UpdateUserMutation>;
 export type UpdateUserMutationOptions = Apollo.BaseMutationOptions<UpdateUserMutation, UpdateUserMutationVariables>;
 export const ResetUserPasswordDocument = gql`
-    mutation ResetUserPassword($id: ID!, $password: String!) {
-  resetUserPassword(id: $id, password: $password) {
+    mutation ResetUserPassword($id: ID!, $password: String!, $sendMail: Boolean) {
+  resetUserPassword(id: $id, password: $password, sendMail: $sendMail) {
     ...FullUser
   }
 }
@@ -8919,6 +8960,7 @@ export type ResetUserPasswordMutationFn = Apollo.MutationFunction<ResetUserPassw
  *   variables: {
  *      id: // value for 'id'
  *      password: // value for 'password'
+ *      sendMail: // value for 'sendMail'
  *   },
  * });
  */

@@ -154,12 +154,10 @@ export const GraphQLSubscriptionInput = new GraphQLInputObjectType({
     monthlyAmount: {type: GraphQLNonNull(GraphQLInt)},
     autoRenew: {type: GraphQLNonNull(GraphQLBoolean)},
     startsAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    paidUntil: {type: GraphQLDateTime},
     paymentMethodID: {type: GraphQLNonNull(GraphQLString)},
     properties: {
       type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataPropertyInput)))
-    },
-    deactivation: {type: GraphQLSubscriptionDeactivationInput}
+    }
   }
 })
 

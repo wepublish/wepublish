@@ -18,6 +18,12 @@
       "options": {
         "jestConfig": "libs/richtext/website/jest.config.ts",
         "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
       }
     }
   }

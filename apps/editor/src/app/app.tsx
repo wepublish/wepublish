@@ -12,11 +12,12 @@ import {
 } from '@wepublish/consent/editor'
 import {TagType} from '@wepublish/editor/api'
 import {
-  AuthContext,
-  AuthDispatchActionType,
-  AuthDispatchContext,
-  LocalStorageKey
-} from '@wepublish/ui/editor'
+  MailTemplateList,
+  MemberPlanEdit,
+  SubscriptionFlowList,
+  SystemMailList
+} from '@wepublish/membership/editor'
+import {AuthContext, AuthDispatchActionType, AuthDispatchContext} from '@wepublish/ui/editor'
 import {useContext, useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {BrowserRouter, Navigate, Route, Routes} from 'react-router-dom'
@@ -55,6 +56,8 @@ import {TokenList} from './routes/tokenList'
 import {UserEditView} from './routes/userEditView'
 import {UserList} from './routes/userList'
 import {UserRoleList} from './routes/userRoleList'
+import {LocalStorageKey} from './utility'
+import PlaceholderListe from '../../../../libs/membership/editor/src/lib/mailTemplate/placeholderList'
 
 const LogoutMutation = gql`
   mutation Logout {
@@ -518,7 +521,7 @@ export function App() {
               path="memberplans/create"
               element={
                 <Base>
-                  <MemberPlanList />
+                  <MemberPlanEdit />
                 </Base>
               }
             />
@@ -526,7 +529,7 @@ export function App() {
               path="memberplans/edit/:id"
               element={
                 <Base>
-                  <MemberPlanList />
+                  <MemberPlanEdit />
                 </Base>
               }
             />
@@ -602,6 +605,38 @@ export function App() {
               element={
                 <Base>
                   <UserConsentEditView />
+                </Base>
+              }
+            />
+            <Route
+              path="communicationflows/edit/:id"
+              element={
+                <Base>
+                  <SubscriptionFlowList />
+                </Base>
+              }
+            />
+            <Route
+              path="mailtemplates"
+              element={
+                <Base>
+                  <MailTemplateList />
+                </Base>
+              }
+            />
+            <Route
+              path="mailtemplates/placeholders"
+              element={
+                <Base>
+                  <PlaceholderListe />
+                </Base>
+              }
+            />
+            <Route
+              path="systemmails"
+              element={
+                <Base>
+                  <SystemMailList />
                 </Base>
               }
             />

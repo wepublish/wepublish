@@ -141,8 +141,8 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
 
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
-  const [filter, setFilter] = useState<ArticleFilter>({title: '', published: true})
-  const [eventFilter, setEventFilter] = useState<boolean>(false)
+  const [filter, setFilter] = useState<ArticleFilter>({title: ''})
+  const [eventFilter, setEventFilter] = useState<boolean>(true)
   const [metaDataProperties, setMetadataProperties] = useState<ListValue<TeaserMetadataProperty>[]>(
     initialTeaser.type === TeaserType.Custom && initialTeaser.properties
       ? initialTeaser.properties.map(metaDataProperty => ({
@@ -638,11 +638,11 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
           <RNav.Item eventKey={TeaserType.Page} icon={<MdDashboard />}>
             {t('articleEditor.panels.page')}
           </RNav.Item>
-          <RNav.Item eventKey={TeaserType.Custom} icon={<MdSettings />}>
-            {t('articleEditor.panels.custom')}
-          </RNav.Item>
           <RNav.Item eventKey={TeaserType.Event} icon={<MdEvent />}>
             {t('articleEditor.panels.event')}
+          </RNav.Item>
+          <RNav.Item eventKey={TeaserType.Custom} icon={<MdSettings />}>
+            {t('articleEditor.panels.custom')}
           </RNav.Item>
         </Nav>
 

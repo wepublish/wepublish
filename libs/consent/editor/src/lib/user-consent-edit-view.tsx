@@ -10,9 +10,9 @@ import {useTranslation} from 'react-i18next'
 import {useNavigate, useParams} from 'react-router-dom'
 import {Form, Message, Schema, toaster} from 'rsuite'
 
-import {ModelTitle} from '@wepublish/ui/editor'
 import {UserConsentForm} from './user-consent-form'
 import {getApiClientV2} from '../apiClientv2'
+import {SingleViewTitle} from '@wepublish/ui'
 
 const mapApiDataToInput = (userConsent: any): MutationUpdateUserConsentArgs['userConsent'] => ({
   ...stripTypename(userConsent),
@@ -106,7 +106,7 @@ export const UserConsentEditView = () => {
       model={validationModel}
       disabled={loading}
       onSubmit={validationPassed => validationPassed && onSubmit()}>
-      <ModelTitle
+      <SingleViewTitle
         loading={loading}
         title={t('userConsents.titleEdit')}
         loadingTitle={t('userConsents.titleEdit')}

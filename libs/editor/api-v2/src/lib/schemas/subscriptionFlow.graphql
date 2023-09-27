@@ -1,0 +1,96 @@
+query SubscriptionFlows($defaultFlowOnly: Boolean!, $memberPlanId: String) {
+    subscriptionFlows(defaultFlowOnly: $defaultFlowOnly, memberPlanId: $memberPlanId) {
+        ...SubscriptionFlow
+    }
+}
+
+mutation CreateSubscriptionFlow($subscriptionFlow: SubscriptionFlowModelCreateInput!) {
+    createSubscriptionFlow(subscriptionFlow: $subscriptionFlow) {
+        ...SubscriptionFlow
+    }
+}
+
+mutation UpdateSubscriptionFlow($subscriptionFlow: SubscriptionFlowModelUpdateInput!) {
+    updateSubscriptionFlow(subscriptionFlow: $subscriptionFlow) {
+        ...SubscriptionFlow
+    }
+}
+
+mutation DeleteSubscriptionFlow($subscriptionFlowId: String!) {
+    deleteSubscriptionFlow(subscriptionFlowId: $subscriptionFlowId) {
+        ...SubscriptionFlow
+    }
+}
+
+mutation CreateSubscriptionInterval($subscriptionInterval: SubscriptionIntervalCreateInput!) {
+    createSubscriptionInterval(subscriptionInterval: $subscriptionInterval) {
+        ...SubscriptionFlow
+    }
+}
+
+mutation UpdateSubscriptionIntervals($subscriptionIntervals: [SubscriptionIntervalUpdateInput!]!) {
+    updateSubscriptionIntervals(subscriptionIntervals: $subscriptionIntervals) {
+        ...SubscriptionFlow
+    }
+}
+
+mutation UpdateSubscriptionInterval($subscriptionInterval: SubscriptionIntervalUpdateInput!) {
+    updateSubscriptionInterval(subscriptionInterval: $subscriptionInterval) {
+        ...SubscriptionFlow
+    }
+}
+
+mutation DeleteSubscriptionInterval($subscriptionInterval: SubscriptionIntervalDeleteInput!) {
+    deleteSubscriptionInterval(subscriptionInterval: $subscriptionInterval) {
+        ...SubscriptionFlow
+    }
+}
+
+query ListPaymentMethods {
+    paymentMethods {
+        ...PaymentMethodRef
+    }
+}
+
+fragment SubscriptionFlow on SubscriptionFlowModel {
+    id
+    default
+    memberPlan {
+        ...MemberPlanRef
+    }
+    autoRenewal
+    paymentMethods {
+        ...PaymentMethodRef
+    }
+    periodicities
+    intervals {
+        ...SubscriptionInterval
+    }
+    numberOfSubscriptions
+}
+
+fragment SubscriptionInterval on SubscriptionInterval {
+    id
+    daysAwayFromEnding
+    event
+    mailTemplate {
+        ...MailTemplateRef
+    }
+}
+
+fragment MailTemplateRef on MailTemplateRef {
+    id
+    name
+}
+
+fragment MemberPlanRef on MemberPlanRef {
+    id
+    name
+}
+
+fragment PaymentMethodRef on PaymentMethodRef {
+    id
+    name
+}
+
+

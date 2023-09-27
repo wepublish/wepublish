@@ -17,7 +17,6 @@ import {
   ImageSelectPanel,
   ListInput,
   ListValue,
-  ModelTitle,
   toggleRequiredLabel,
   useAuthorisation,
   UserSubscriptionsList
@@ -30,15 +29,17 @@ import {
   Col,
   Drawer,
   Form,
-  Grid as RGrid,
   Input,
   Message,
-  Panel as RPanel,
+  Grid as RGrid,
   Row,
+  Panel as RPanel,
+  Toggle as RToggle,
   Schema,
-  toaster,
-  Toggle as RToggle
+  toaster
 } from 'rsuite'
+
+import {SingleViewTitle} from '@wepublish/ui'
 
 const Grid = styled(RGrid)`
   padding-right: 0px;
@@ -355,7 +356,7 @@ function UserEditView() {
         fluid
         model={validationModel}
         formValue={{name, email, password}}>
-        <ModelTitle
+        <SingleViewTitle
           loading={false}
           title={titleView()}
           loadingTitle={t('comments.edit.title')}

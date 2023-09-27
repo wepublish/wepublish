@@ -46,6 +46,30 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type MailProviderModel {
+  name: String!
+}
+
+type MailTemplateRef {
+  id: String!
+  name: String!
+}
+
+type MailTemplateWithUrlAndStatusModel {
+  description: String
+  externalMailTemplateId: String!
+  id: String!
+  name: String!
+  remoteMissing: Boolean!
+  status: String!
+  url: String!
+}
+
+type MemberPlanRef {
+  id: String!
+  name: String!
+}
+
 type Mutation {
   """
   
@@ -53,6 +77,8 @@ type Mutation {
       
   """
   createConsent(consent: ConsentInput!): Consent!
+  createSubscriptionFlow(subscriptionFlow: SubscriptionFlowModelCreateInput!): [SubscriptionFlowModel!]!
+  createSubscriptionInterval(subscriptionInterval: SubscriptionIntervalCreateInput!): [SubscriptionFlowModel!]!
 
   """
   
@@ -68,6 +94,8 @@ type Mutation {
       
   """
   deleteConsent(id: String!): Consent!
+  deleteSubscriptionFlow(subscriptionFlowId: String!): [SubscriptionFlowModel!]!
+  deleteSubscriptionInterval(subscriptionInterval: SubscriptionIntervalDeleteInput!): [SubscriptionFlowModel!]!
 
   """
   
@@ -76,6 +104,8 @@ type Mutation {
       
   """
   deleteUserConsent(id: String!): UserConsent!
+  syncTemplates: Boolean
+  testSystemMail(systemMail: SystemMailTestInput!): [SystemMailModel!]!
 
   """
   
@@ -83,6 +113,10 @@ type Mutation {
       
   """
   updateConsent(consent: ConsentInput!, id: String!): Consent!
+  updateSubscriptionFlow(subscriptionFlow: SubscriptionFlowModelUpdateInput!): [SubscriptionFlowModel!]!
+  updateSubscriptionInterval(subscriptionInterval: SubscriptionIntervalUpdateInput!): [SubscriptionFlowModel!]!
+  updateSubscriptionIntervals(subscriptionIntervals: [SubscriptionIntervalUpdateInput!]!): [SubscriptionFlowModel!]!
+  updateSystemMail(systemMail: SystemMailUpdateInput!): [SystemMailModel!]!
 
   """
   
@@ -91,6 +125,11 @@ type Mutation {
       
   """
   updateUserConsent(id: String!, userConsent: UpdateUserConsentInput!): UserConsent!
+}
+
+type PaymentMethodRef {
+  id: String!
+  name: String!
 }
 
 enum PaymentPeriodicity {
@@ -130,6 +169,8 @@ type Query {
       
   """
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
+  getSystemMails: [SystemMailModel!]!
+  mailTemplates: [MailTemplateWithUrlAndStatusModel!]!
 
   """
   
@@ -146,6 +187,8 @@ type Query {
       
   """
   newSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
+  paymentMethods: [PaymentMethodRef!]!
+  provider: MailProviderModel!
 
   """
   
@@ -161,6 +204,7 @@ type Query {
       
   """
   revenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
+  subscriptionFlows(defaultFlowOnly: Boolean!, memberPlanId: String): [SubscriptionFlowModel!]!
 
   """
   
@@ -182,6 +226,79 @@ enum SubscriptionDeactivationReason {
   invoiceNotPaid
   none
   userSelfDeactivated
+}
+
+enum SubscriptionEvent {
+  CUSTOM
+  DEACTIVATION_BY_USER
+  DEACTIVATION_UNPAID
+  INVOICE_CREATION
+  RENEWAL_FAILED
+  RENEWAL_SUCCESS
+  SUBSCRIBE
+}
+
+type SubscriptionFlowModel {
+  autoRenewal: [Boolean!]!
+  default: Boolean!
+  id: String!
+  intervals: [SubscriptionInterval!]!
+  memberPlan: MemberPlanRef
+  numberOfSubscriptions: Int!
+  paymentMethods: [PaymentMethodRef!]!
+  periodicities: [PaymentPeriodicity!]!
+}
+
+input SubscriptionFlowModelCreateInput {
+  autoRenewal: [Boolean!]!
+  memberPlanId: String!
+  paymentMethodIds: [String!]!
+  periodicities: [PaymentPeriodicity!]!
+}
+
+input SubscriptionFlowModelUpdateInput {
+  autoRenewal: [Boolean!]!
+  id: String!
+  paymentMethodIds: [String!]!
+  periodicities: [PaymentPeriodicity!]!
+}
+
+type SubscriptionInterval {
+  daysAwayFromEnding: Int
+  event: SubscriptionEvent!
+  id: String!
+  mailTemplate: MailTemplateRef
+}
+
+input SubscriptionIntervalCreateInput {
+  daysAwayFromEnding: Int
+  event: SubscriptionEvent!
+  mailTemplateId: String
+  subscriptionFlowId: String!
+}
+
+input SubscriptionIntervalDeleteInput {
+  id: String!
+}
+
+input SubscriptionIntervalUpdateInput {
+  daysAwayFromEnding: Int
+  id: String!
+  mailTemplateId: String
+}
+
+type SystemMailModel {
+  event: UserEvent!
+  mailTemplate: MailTemplateRef
+}
+
+input SystemMailTestInput {
+  event: UserEvent!
+}
+
+input SystemMailUpdateInput {
+  event: UserEvent!
+  mailTemplateId: String!
 }
 
 input UpdateUserConsentInput {
@@ -223,6 +340,13 @@ input UserConsentInput {
   consentId: String!
   userId: String!
   value: Boolean!
+}
+
+enum UserEvent {
+  ACCOUNT_CREATION
+  LOGIN_LINK
+  PASSWORD_RESET
+  TEST_MAIL
 }
 
 type VersionInformation {

@@ -9,7 +9,6 @@ import {
 } from '@wepublish/editor/api'
 import {
   createCheckedPermissionComponent,
-  ModelTitle,
   PollAnswers,
   PollExternalVotes,
   RichTextBlock
@@ -19,6 +18,8 @@ import {useTranslation} from 'react-i18next'
 import {useNavigate, useParams} from 'react-router-dom'
 import {Col, DatePicker, FlexboxGrid, Form, Message, Panel, Row, Schema, toaster} from 'rsuite'
 import {Node} from 'slate'
+
+import {SingleViewTitle} from '@wepublish/ui'
 
 const OpensAtLabel = styled(Form.ControlLabel)`
   margin-right: 5px;
@@ -148,7 +149,7 @@ function PollEditView() {
       <FlexboxGrid>
         {/* model title */}
         <FlexboxGrid.Item colspan={24}>
-          <ModelTitle
+          <SingleViewTitle
             loading={loading}
             title={poll?.question || t('pollList.noQuestion')}
             loadingTitle={t('pollEditView.loadingTitle')}

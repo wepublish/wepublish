@@ -1,4 +1,10 @@
-import {CommentState, Prisma, RatingSystemType} from '@prisma/client'
+import {
+  CommentState,
+  Prisma,
+  RatingSystemType,
+  SubscriptionDeactivationReason,
+  UserEvent
+} from '@prisma/client'
 import {
   GraphQLBoolean,
   GraphQLID,
@@ -13,7 +19,6 @@ import {Block, BlockMap, BlockType} from '../db/block'
 import {SettingName} from '@wepublish/settings/api'
 import {unselectPassword} from '@wepublish/user/api'
 import {NotFound} from '../error'
-import {SendMailType} from '../mails/mailContext'
 import {Validator} from '../validator'
 import {GraphQLArticle, GraphQLArticleInput} from './article'
 import {
@@ -29,10 +34,10 @@ import {createAuthor, deleteAuthorById, updateAuthor} from './author/author.priv
 import {GraphQLBlockInput, GraphQLTeaserInput} from './blocks'
 import {
   GraphQLComment,
-  GraphQLCommentRejectionReason,
   GraphQLCommentItemType,
-  GraphQLCommentRevisionUpdateInput,
-  GraphQLCommentRatingOverrideUpdateInput
+  GraphQLCommentRatingOverrideUpdateInput,
+  GraphQLCommentRejectionReason,
+  GraphQLCommentRevisionUpdateInput
 } from './comment/comment'
 import {
   GraphQLCommentRatingSystemAnswer,
@@ -132,6 +137,7 @@ import {GraphQLSetting, GraphQLUpdateSettingArgs} from './setting'
 import {updateSettings} from './setting/setting.private-mutation'
 import {GraphQLSubscription, GraphQLSubscriptionInput} from './subscription'
 import {
+  cancelSubscriptionById,
   createSubscription,
   deleteSubscriptionById,
   updateAdminSubscription
@@ -161,6 +167,8 @@ import {
   UpdateOrCreateEventInput
 } from './event/event.private-mutation'
 import {CanSendJWTLogin} from '@wepublish/permissions/api'
+import {mailLogType} from '@wepublish/mails'
+import {GraphQLSubscriptionDeactivationReason} from './subscriptionDeactivation'
 
 function mapTeaserUnionMap(value: any) {
   if (!value) return null
@@ -352,7 +360,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         authorise(CanSendJWTLogin, roles)
 
         email = email.toLowerCase()
-        await Validator.login().validateAsync({email})
+        await Validator.login().parse({email})
 
         const user = await prisma.user.findUnique({
           where: {email},
@@ -371,20 +379,13 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
           throw new Error('No value set for SEND_LOGIN_JWT_EXPIRES_MIN')
         }
 
-        const token = generateJWT({
-          id: user.id,
-          expiresInMinutes: jwtExpires
-        })
-
+        const remoteTemplate = await mailContext.getUserTemplateName(UserEvent.LOGIN_LINK)
         await mailContext.sendMail({
-          type: SendMailType.LoginLink,
-          recipient: email,
-          data: {
-            url: `${url}?jwt=${token}`,
-            user
-          }
+          externalMailTemplateId: remoteTemplate,
+          recipient: user,
+          optionalData: {},
+          mailType: mailLogType.UserFlow
         })
-
         return email
       }
     },
@@ -400,7 +401,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         {authenticate, prisma, generateJWT, mailContext, urlAdapter}
       ) {
         email = email.toLowerCase()
-        await Validator.login().validateAsync({email})
+        await Validator.login().parse({email})
         const {roles} = authenticate()
         authorise(CanSendJWTLogin, roles)
 
@@ -420,18 +421,12 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
 
         if (!user) throw new NotFound('User', email)
 
-        const token = generateJWT({
-          id: user.id,
-          expiresInMinutes: jwtExpires
-        })
-
+        const remoteTemplate = await mailContext.getUserTemplateName(UserEvent.LOGIN_LINK)
         await mailContext.sendMail({
-          type: SendMailType.LoginLink,
-          recipient: email,
-          data: {
-            url: urlAdapter.getLoginURL(token),
-            user
-          }
+          externalMailTemplateId: remoteTemplate,
+          recipient: user,
+          optionalData: {},
+          mailType: mailLogType.UserFlow
         })
 
         return email
@@ -464,8 +459,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         input: {type: GraphQLNonNull(GraphQLUserInput)},
         password: {type: GraphQLNonNull(GraphQLString)}
       },
-      resolve: (root, {input, password}, {hashCostFactor, authenticate, prisma: {user}}) =>
-        createAdminUser({...input, password}, authenticate, hashCostFactor, user)
+      resolve: (root, {input, password}, {hashCostFactor, authenticate, prisma, mailContext}) =>
+        createAdminUser({...input, password}, authenticate, hashCostFactor, prisma, mailContext)
     },
 
     updateUser: {
@@ -520,14 +515,15 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         id: {type: GraphQLNonNull(GraphQLID)},
         input: {type: GraphQLNonNull(GraphQLSubscriptionInput)}
       },
-      resolve: (root, {id, input}, {authenticate, prisma, memberContext}) =>
+      resolve: (root, {id, input}, {authenticate, prisma, memberContext, paymentProviders}) =>
         updateAdminSubscription(
           id,
           input,
           authenticate,
           memberContext,
           prisma.subscription,
-          prisma.user
+          prisma.user,
+          paymentProviders
         )
     },
 
@@ -538,6 +534,16 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       },
       resolve: (root, {id}, {authenticate, prisma: {subscription}}) =>
         deleteSubscriptionById(id, authenticate, subscription)
+    },
+
+    cancelSubscription: {
+      type: GraphQLSubscription,
+      args: {
+        id: {type: GraphQLNonNull(GraphQLID)},
+        reason: {type: GraphQLNonNull(GraphQLSubscriptionDeactivationReason)}
+      },
+      resolve: (root, {id, reason}, {authenticate, prisma: {subscription}, memberContext}) =>
+        cancelSubscriptionById(id, reason, authenticate, subscription, memberContext)
     },
 
     // UserRole

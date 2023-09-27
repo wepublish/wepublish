@@ -8,7 +8,7 @@ exports[`Teaser Article should render Default 1`] = `
     y="0"
   >
     <a
-      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
       href="https://example.com"
     >
       <div
@@ -48,7 +48,7 @@ exports[`Teaser Article should render WithShowLead 1`] = `
     y="0"
   >
     <a
-      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
       href="https://example.com"
     >
       <div
@@ -93,7 +93,7 @@ exports[`Teaser Article should render WithoutImage 1`] = `
     y="0"
   >
     <a
-      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
       href="https://example.com"
     >
       <div
@@ -133,7 +133,7 @@ exports[`Teaser Article should render WithoutImageWithoutBlock 1`] = `
     y="0"
   >
     <a
-      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
       href="https://example.com"
     >
       <div
@@ -162,7 +162,7 @@ exports[`Teaser Article should render WithoutLead 1`] = `
     y="0"
   >
     <a
-      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
       href="https://example.com"
     >
       <div
@@ -207,7 +207,7 @@ exports[`Teaser Article should render WithoutLeadWithoutBlock 1`] = `
     y="0"
   >
     <a
-      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
       href="https://example.com"
     >
       <div
@@ -252,7 +252,7 @@ exports[`Teaser Article should render WithoutPreTitle 1`] = `
     y="0"
   >
     <a
-      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
       href="https://example.com"
     >
       <div
@@ -292,7 +292,7 @@ exports[`Teaser Article should render WithoutTitle 1`] = `
     y="0"
   >
     <a
-      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
       href="https://example.com"
     >
       <div
@@ -332,7 +332,7 @@ exports[`Teaser Custom should render Default 1`] = `
     y="0"
   >
     <a
-      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
       href="https://example.com"
     >
       <div
@@ -372,7 +372,7 @@ exports[`Teaser Custom should render WithShowLead 1`] = `
     y="0"
   >
     <a
-      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
       href="https://example.com"
     >
       <div
@@ -417,7 +417,7 @@ exports[`Teaser Custom should render WithoutImage 1`] = `
     y="0"
   >
     <a
-      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
       href="https://example.com"
     >
       <div
@@ -446,7 +446,7 @@ exports[`Teaser Custom should render WithoutLead 1`] = `
     y="0"
   >
     <a
-      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
       href="https://example.com"
     >
       <div
@@ -489,7 +489,7 @@ exports[`Teaser Custom should render WithoutPreTitle 1`] = `
     y="0"
   >
     <a
-      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
       href="https://example.com"
     >
       <div
@@ -529,7 +529,7 @@ exports[`Teaser Custom should render WithoutTitle 1`] = `
     y="0"
   >
     <a
-      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
       href="https://example.com"
     >
       <div
@@ -569,7 +569,7 @@ exports[`Teaser Page should render Default 1`] = `
     y="0"
   >
     <a
-      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
       href="https://example.com"
     >
       <div
@@ -609,7 +609,7 @@ exports[`Teaser Page should render WithShowLead 1`] = `
     y="0"
   >
     <a
-      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
       href="https://example.com"
     >
       <div
@@ -654,7 +654,7 @@ exports[`Teaser Page should render WithoutImage 1`] = `
     y="0"
   >
     <a
-      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
       href="https://example.com"
     >
       <div
@@ -694,7 +694,7 @@ exports[`Teaser Page should render WithoutImageWithoutBlock 1`] = `
     y="0"
   >
     <a
-      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
       href="https://example.com"
     >
       <div
@@ -734,7 +734,7 @@ exports[`Teaser Page should render WithoutLead 1`] = `
     y="0"
   >
     <a
-      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
       href="https://example.com"
     >
       <div
@@ -779,7 +779,7 @@ exports[`Teaser Page should render WithoutLeadWithoutBlock 1`] = `
     y="0"
   >
     <a
-      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
       href="https://example.com"
     >
       <div
@@ -824,7 +824,7 @@ exports[`Teaser Page should render WithoutPreTitle 1`] = `
     y="0"
   >
     <a
-      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
       href="https://example.com"
     >
       <div
@@ -864,7 +864,7 @@ exports[`Teaser Page should render WithoutTitle 1`] = `
     y="0"
   >
     <a
-      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
       href="https://example.com"
     >
       <div
@@ -904,7 +904,7 @@ exports[`Teaser should render WithClassName 1`] = `
     y="0"
   >
     <a
-      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
       href="https://example.com"
     >
       <div
@@ -944,7 +944,7 @@ exports[`Teaser should render WithEmotion 1`] = `
     y="0"
   >
     <a
-      class="MuiTypography-root MuiTypography-body1 MuiLink-root MuiLink-underlineNone css-1ri27nj-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
       href="https://example.com"
     >
       <div

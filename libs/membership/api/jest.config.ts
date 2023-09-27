@@ -14,5 +14,6 @@ export default {
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../../coverage/libs/membership/api',
-  globalSetup: '<rootDir>/setup-database.js'
+  globalSetup: '<rootDir>/setup-database.js',
+  maxWorkers: 1
 }

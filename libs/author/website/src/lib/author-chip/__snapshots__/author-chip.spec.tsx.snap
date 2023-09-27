@@ -1,0 +1,214 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Author Chip should render Default 1`] = `
+<DocumentFragment>
+  <aside
+    class="css-a451hm"
+  >
+    <div
+      class="css-chr1eq"
+    >
+      <img
+        alt="DSC07717"
+        class="css-1qnf57e"
+        height="6000"
+        srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+        title=""
+        width="4000"
+      />
+    </div>
+    <div
+      class="css-chr1eq"
+    >
+      <p
+        class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+      >
+        <strong>
+          Von 
+          <a
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+            href="https://example.com"
+          >
+            Foobar
+          </a>
+        </strong>
+      </p>
+      <p
+        class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+      >
+        Editor
+      </p>
+    </div>
+  </aside>
+</DocumentFragment>
+`;
+
+exports[`Author Chip should render WithClassName 1`] = `
+<DocumentFragment>
+  <aside
+    class="extra-classname css-a451hm"
+  >
+    <div
+      class="css-chr1eq"
+    >
+      <img
+        alt="DSC07717"
+        class="css-1qnf57e"
+        height="6000"
+        srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+        title=""
+        width="4000"
+      />
+    </div>
+    <div
+      class="css-chr1eq"
+    >
+      <p
+        class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+      >
+        <strong>
+          Von 
+          <a
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+            href="https://example.com"
+          >
+            Foobar
+          </a>
+        </strong>
+      </p>
+      <p
+        class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+      >
+        Editor
+      </p>
+    </div>
+  </aside>
+</DocumentFragment>
+`;
+
+exports[`Author Chip should render WithEmotion 1`] = `
+<DocumentFragment>
+  <aside
+    class="css-a451hm"
+  >
+    <div
+      class="css-chr1eq"
+    >
+      <img
+        alt="DSC07717"
+        class="css-1qnf57e"
+        height="6000"
+        srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+        title=""
+        width="4000"
+      />
+    </div>
+    <div
+      class="css-chr1eq"
+    >
+      <p
+        class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+      >
+        <strong>
+          Von 
+          <a
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+            href="https://example.com"
+          >
+            Foobar
+          </a>
+        </strong>
+      </p>
+      <p
+        class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+      >
+        Editor
+      </p>
+    </div>
+  </aside>
+</DocumentFragment>
+`;
+
+exports[`Author Chip should render WithoutImage 1`] = `
+<DocumentFragment>
+  <aside
+    class="css-a451hm"
+  >
+    <div
+      class="css-chr1eq"
+    />
+    <div
+      class="css-chr1eq"
+    >
+      <p
+        class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+      >
+        <strong>
+          Von 
+          <a
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+            href="https://example.com"
+          >
+            Foobar
+          </a>
+        </strong>
+      </p>
+      <p
+        class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+      >
+        Editor
+      </p>
+    </div>
+  </aside>
+</DocumentFragment>
+`;
+
+exports[`Author Chip should render WithoutJobTitle 1`] = `
+<DocumentFragment>
+  <aside
+    class="css-a451hm"
+  >
+    <div
+      class="css-chr1eq"
+    >
+      <img
+        alt="DSC07717"
+        class="css-1qnf57e"
+        height="6000"
+        srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+        title=""
+        width="4000"
+      />
+    </div>
+    <div
+      class="css-chr1eq"
+    >
+      <p
+        class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+      >
+        <strong>
+          Von 
+          <a
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+            href="https://example.com"
+          >
+            Foobar
+          </a>
+        </strong>
+      </p>
+    </div>
+  </aside>
+</DocumentFragment>
+`;

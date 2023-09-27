@@ -12,7 +12,10 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "lib": ["es2017", "dom"],
+    "lib": [
+      "es2017",
+      "dom"
+    ],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
@@ -23,6 +26,7 @@
       "@wepublish/article/website": ["libs/article/website/src/index.ts"],
       "@wepublish/authentication/api": ["libs/authentication/api/src/index.ts"],
       "@wepublish/authentication/website": ["libs/authentication/website/src/index.ts"],
+      "@wepublish/author/website": ["libs/author/website/src/index.ts"],
       "@wepublish/block-content/website": ["libs/block-content/website/src/index.ts"],
       "@wepublish/consent/api": ["libs/consent/api/src/index.ts"],
       "@wepublish/consent/editor": ["libs/consent/editor/src/index.ts"],
@@ -32,17 +36,21 @@
       "@wepublish/image/api": ["libs/image/api/src/index.ts"],
       "@wepublish/image/website": ["libs/image/website/src/index.ts"],
       "@wepublish/jobs": ["libs/jobs/src/index.ts"],
+      "@wepublish/mails": ["libs/mails/src/index.ts"],
       "@wepublish/membership/api": ["libs/membership/api/src/index.ts"],
       "@wepublish/membership/editor": ["libs/membership/editor/src/index.ts"],
       "@wepublish/navigation/website": ["libs/navigation/website/src/index.ts"],
       "@wepublish/nest-modules": ["libs/nest-modules/src/index.ts"],
       "@wepublish/page/website": ["libs/page/website/src/index.ts"],
+      "@wepublish/payments": ["libs/payments/src/index.ts"],
       "@wepublish/permissions/api": ["libs/permissions/api/src/index.ts"],
       "@wepublish/richtext": ["libs/richtext/src/index.ts"],
       "@wepublish/richtext/website": ["libs/richtext/website/src/index.ts"],
       "@wepublish/settings/api": ["libs/settings/api/src/index.ts"],
       "@wepublish/storybook": ["tools/storybook/index.tsx"],
       "@wepublish/testing": ["libs/testing/src/index.ts"],
+      "@wepublish/utils": ["libs/utils/src/index.ts"],
+      "@wepublish/utils-api": ["libs/utils-api/src/index.ts"],
       "@wepublish/ui": ["libs/ui/src/index.ts"],
       "@wepublish/ui/editor": ["libs/ui/editor/src/index.ts"],
       "@wepublish/user/api": ["libs/user/api/src/index.ts"],
@@ -52,5 +60,8 @@
       "@wepublish/website/builder": ["libs/website/builder/src/index.ts"]
     }
   },
-  "exclude": ["node_modules", "tmp"]
+  "exclude": [
+    "node_modules",
+    "tmp"
+  ]
 }
