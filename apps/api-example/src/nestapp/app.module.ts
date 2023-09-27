@@ -127,7 +127,7 @@ import {SlackMailProvider} from '../app/slack-mail-provider'
         ) {
           paymentProviders.push(
             new BexioPaymentProvider({
-              id: 'bexio_invoice',
+              id: 'bexio',
               name: 'Bexio Invoice',
               offSessionPayments: false,
               apiKey: config.get('BEXIO_API_KEY'),
