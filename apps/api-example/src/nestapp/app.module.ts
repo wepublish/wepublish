@@ -23,11 +23,13 @@ import {
   PayrexxPaymentProvider,
   PayrexxSubscriptionPaymentProvider,
   StripeCheckoutPaymentProvider,
-  StripePaymentProvider
+  StripePaymentProvider,
+  BexioPaymentProvider
 } from '@wepublish/payments'
 import {ConfigModule, ConfigService} from '@nestjs/config'
 import {URL} from 'url'
 import {SlackMailProvider} from '../app/slack-mail-provider'
+import {PrismaClient} from '@prisma/client'
 
 @Global()
 @Module({
@@ -114,6 +116,40 @@ import {SlackMailProvider} from '../app/slack-mail-provider'
       imports: [ConfigModule, PrismaModule],
       useFactory: (config: ConfigService, prisma: PrismaService) => {
         const paymentProviders: PaymentProvider[] = []
+
+        if (
+          config.get('BEXIO_API_KEY') &&
+          config.get('BEXIO_USER_ID') &&
+          config.get('BEXIO_COUNTRY_ID') &&
+          config.get('BEXIO_INVOICE_TEMPLATE') &&
+          config.get('BEXIO_UNIT_ID') &&
+          config.get('BEXIO_TAX_ID') &&
+          config.get('BEXIO_ACCOUNT_ID')
+        ) {
+          paymentProviders.push(
+            new BexioPaymentProvider({
+              id: 'bexio_invoice',
+              name: 'Bexio Invoice',
+              offSessionPayments: false,
+              apiKey: config.get('BEXIO_API_KEY'),
+              userId: parseInt(config.get('BEXIO_USER_ID')),
+              countryId: parseInt(config.get('BEXIO_COUNTRY_ID')),
+              invoiceTemplateNewMembership: config.get('BEXIO_INVOICE_TEMPLATE'),
+              invoiceTemplateRenewalMembership: config.get('BEXIO_INVOICE_TEMPLATE'),
+              unitId: parseInt(config.get('BEXIO_UNIT_ID')),
+              taxId: parseInt(config.get('BEXIO_TAX_ID')),
+              accountId: parseInt(config.get('BEXIO_ACCOUNT_ID')),
+              invoiceMailSubject:
+                'Invoice for :memberPlan.name:' || config.get('BEXIO_INVOICE_MAIL_SUBJECT'),
+              // [Network Link] is required by bexio => you can use replacer for user, subscription and memberPlan as you see in the example (any db fields are possible)
+              invoiceMailBody:
+                'Hello :user.firstName:\nThank you for your subscription :memberPlan.name:. You can see the invoice here:\n [Network Link]\n\n Kind regards from the Wepublish team' ||
+                config.get('BEXIO_INVOICE_MAIL_BODY'),
+              markInvoiceAsOpen: false,
+              prisma: prisma
+            })
+          )
+        }
 
         if (
           config.get('STRIPE_SECRET_KEY') &&
