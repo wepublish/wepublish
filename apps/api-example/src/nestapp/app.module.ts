@@ -138,21 +138,21 @@ import {SlackMailProvider} from '../app/slack-mail-provider'
               unitId: parseInt(config.get('BEXIO_UNIT_ID')),
               taxId: parseInt(config.get('BEXIO_TAX_ID')),
               accountId: parseInt(config.get('BEXIO_ACCOUNT_ID')),
-              invoiceTitleNewMembership: config.get('BEXIO_INVOICE_TITLE_NEW') || 'new invoice',
+              invoiceTitleNewMembership: config.get('BEXIO_INVOICE_TITLE_NEW') || 'New Invoice',
               invoiceTitleRenewalMembership:
-                config.get('BEXIO_INVOICE_TITLE_RENEW') || 'new invoice',
+                config.get('BEXIO_INVOICE_TITLE_RENEW') || 'New Invoice',
               invoiceMailSubjectNewMembership:
                 config.get('BEXIO_INVOICE_MAIL_SUBJECT_NEW') || 'Invoice for :memberPlan.name:',
               // [Network Link] is required by bexio => you can use replacer for user, subscription and memberPlan as you see in the example (any db fields are possible)
               invoiceMailBodyNewMembership:
                 config.get('BEXIO_INVOICE_MAIL_BODY_NEW') ||
-                'Hello :user.firstName:\nThank you for your subscription :memberPlan.name:. You can see the invoice here:\n [Network Link]\n\n Kind regards from the Wepublish team',
+                'Hello :user.firstname:\n\nThank you for subscribing to :memberPlan.name:.\nYou can view your invoice here: [Network Link]\n\nBest wishes from the Wepublish team',
               invoiceMailSubjectRenewalMembership:
                 config.get('BEXIO_INVOICE_MAIL_SUBJECT_RENEW') || 'Invoice for :memberPlan.name:',
               // [Network Link] is required by bexio => you can use replacer for user, subscription and memberPlan as you see in the example (any db fields are possible)
               invoiceMailBodyRenewalMembership:
                 config.get('BEXIO_INVOICE_MAIL_BODY_RENEW') ||
-                'Hello :user.firstName:\nThank you for your subscription :memberPlan.name:. You can see the invoice here:\n [Network Link]\n\n Kind regards from the Wepublish team',
+                'Hello :user.firstname:\n\nThank you for subscribing to :memberPlan.name:.\nYou can view your invoice here: [Network Link]\n\nBest wishes from the Wepublish team',
               markInvoiceAsOpen: false,
               prisma: prisma
             })
