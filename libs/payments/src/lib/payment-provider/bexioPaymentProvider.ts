@@ -31,8 +31,12 @@ export interface BexioPaymentProviderProps extends PaymentProviderProps {
   unitId: number
   taxId: number
   accountId: number
-  invoiceMailSubject: string
-  invoiceMailBody: string
+  invoiceTitleNewMembership: string
+  invoiceTitleRenewalMembership: string
+  invoiceMailSubjectNewMembership: string
+  invoiceMailBodyNewMembership: string
+  invoiceMailSubjectRenewalMembership: string
+  invoiceMailBodyRenewalMembership: string
   markInvoiceAsOpen: boolean
   prisma: PrismaClient
 }
@@ -46,8 +50,12 @@ export class BexioPaymentProvider extends BasePaymentProvider {
   private unitId: number
   private taxId: number
   private accountId: number
-  private invoiceMailSubject: string
-  private invoiceMailBody: string
+  private invoiceTitleNewMembership: string
+  private invoiceTitleRenewalMembership: string
+  private invoiceMailSubjectNewMembership: string
+  private invoiceMailBodyNewMembership: string
+  private invoiceMailSubjectRenewalMembership: string
+  private invoiceMailBodyRenewalMembership: string
   private markInvoiceAsOpen: boolean
   private prisma: PrismaClient
 
@@ -61,8 +69,12 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     this.unitId = props.unitId
     this.taxId = props.taxId
     this.accountId = props.accountId
-    this.invoiceMailSubject = props.invoiceMailSubject
-    this.invoiceMailBody = props.invoiceMailBody
+    this.invoiceTitleNewMembership = props.invoiceTitleNewMembership
+    this.invoiceTitleRenewalMembership = props.invoiceTitleRenewalMembership
+    this.invoiceMailSubjectNewMembership = props.invoiceMailSubjectNewMembership
+    this.invoiceMailBodyNewMembership = props.invoiceMailBodyNewMembership
+    this.invoiceMailSubjectRenewalMembership = props.invoiceMailSubjectRenewalMembership
+    this.invoiceMailBodyRenewalMembership = props.invoiceMailBodyRenewalMembership
     this.markInvoiceAsOpen = props.markInvoiceAsOpen
     this.prisma = props.prisma
   }
@@ -81,7 +93,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
       where: {id: props.invoice.subscriptionID}
     })
     if (!subscription.paidUntil) {
-      return await this.bexioCreate(props.invoice.id, this.invoiceTemplateNewMembership)
+      return await this.bexioCreate(props.invoice.id, false)
     }
   }
 
@@ -91,7 +103,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
    */
 
   async createRemoteInvoice(props: CreateRemoteInvoiceProps) {
-    await this.bexioCreate(props.invoice.id, this.invoiceTemplateRenewalMembership)
+    await this.bexioCreate(props.invoice.id, true)
   }
 
   async checkIntentStatus({intentID}: CheckIntentProps): Promise<IntentState> {
@@ -103,7 +115,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     }
   }
 
-  async bexioCreate(invoiceId: string, template: string) {
+  async bexioCreate(invoiceId: string, isRenewal: boolean) {
     try {
       const invoice = await this.prisma.invoice.findUnique({
         where: {
@@ -129,7 +141,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
         contact,
         invoice.subscription.user
       )
-      await this.createInvoice(bexio, updatedContact, invoice, template)
+      await this.createInvoice(bexio, updatedContact, invoice, isRenewal)
       return {
         intentID: '',
         intentSecret: '',
@@ -159,7 +171,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     contact: ContactsStatic.ContactSmall,
     user: User & {address: UserAddress}
   ) {
-    const uppserContact: ContactsStatic.ContactOverwrite = {
+    const upsertContact: ContactsStatic.ContactOverwrite = {
       nr: '',
       name_1: user?.address?.company ? user?.address.company : user.name, // lastname or company name
       name_2: user?.address?.company ? '' : user.firstName, // Firstname or none
@@ -174,10 +186,10 @@ export class BexioPaymentProvider extends BasePaymentProvider {
       address: user?.address?.streetAddress
     }
     if (!contact) {
-      return await bexio.contacts.create(uppserContact)
+      return await bexio.contacts.create(upsertContact)
     } else {
-      uppserContact.nr = contact.nr
-      return await bexio.contacts.edit(contact.id, uppserContact)
+      upsertContact.nr = contact.nr
+      return await bexio.contacts.edit(contact.id, upsertContact)
     }
   }
 
@@ -185,18 +197,21 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     bexio: Bexio,
     contact: ContactsStatic.ContactFull,
     invoice: Invoice & {subscription: Subscription & {memberPlan: MemberPlan; user: User}},
-    template: string
+    isRenewal: boolean
   ) {
     const stringReplaceMap = new MappedReplacer()
     this.addToStringReplaceMap(stringReplaceMap, 'subscription', invoice.subscription)
     this.addToStringReplaceMap(stringReplaceMap, 'user', invoice.subscription.user)
     this.addToStringReplaceMap(stringReplaceMap, 'memberPlan', invoice.subscription.memberPlan)
     const bexioInvoice: InvoicesStatic.InvoiceCreate = {
+      title: isRenewal ? this.invoiceTitleRenewalMembership : this.invoiceTitleNewMembership,
       contact_id: contact.id,
       user_id: this.userId,
       mwst_type: 0,
       mwst_is_net: false,
-      template_slug: template,
+      template_slug: isRenewal
+        ? this.invoiceTemplateRenewalMembership
+        : this.invoiceTemplateNewMembership,
       positions: [
         {
           amount: '1',
@@ -216,8 +231,12 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     const invoiceUpdated = await bexio.invoices.create(bexioInvoice)
     const sentInvoice = await bexio.invoices.sent(invoiceUpdated.id, {
       recipient_email: contact.mail,
-      subject: stringReplaceMap.replace(this.invoiceMailSubject),
-      message: stringReplaceMap.replace(this.invoiceMailBody),
+      subject: stringReplaceMap.replace(
+        isRenewal ? this.invoiceMailSubjectRenewalMembership : this.invoiceMailSubjectNewMembership
+      ),
+      message: stringReplaceMap.replace(
+        isRenewal ? this.invoiceMailBodyRenewalMembership : this.invoiceMailBodyNewMembership
+      ),
       mark_as_open: this.markInvoiceAsOpen,
       attach_pdf: true
     })
