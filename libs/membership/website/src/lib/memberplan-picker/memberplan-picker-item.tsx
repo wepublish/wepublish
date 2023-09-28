@@ -3,7 +3,8 @@ import {MemberPlan} from '@wepublish/website/api'
 import {forwardRef} from 'react'
 import {formatChf} from '../formatters/format-currency'
 
-export type MemberPlanItemProps = MemberPlan & RadioProps & {className?: string}
+export type MemberPlanItemProps = Pick<MemberPlan, 'amountPerMonthMin'> &
+  RadioProps & {className?: string}
 
 export const MemberPlanItemWrapper = styled('div')<{isChecked: boolean}>`
   display: grid;

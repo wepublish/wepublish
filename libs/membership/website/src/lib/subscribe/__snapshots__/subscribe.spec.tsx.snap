@@ -5,7 +5,7 @@ exports[`Subscribe should render Filled 1`] = `
 - First value
 + Second value
 
-@@ -363,12 +363,12 @@
+@@ -345,12 +345,12 @@
         >
           <div
             class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -20,8 +20,8 @@ exports[`Subscribe should render Filled 1`] = `
             >
               Vorname
             </label>
-@@ -379,18 +379,18 @@
-                aria-invalid="false"
+@@ -362,18 +362,18 @@
+                autocomplete="firstname"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r2:"
                 name="firstName"
@@ -41,7 +41,7 @@ exports[`Subscribe should render Filled 1`] = `
                     Vorname
                   </span>
                 </legend>
-@@ -399,12 +399,12 @@
+@@ -382,12 +382,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -56,8 +56,8 @@ exports[`Subscribe should render Filled 1`] = `
             >
               Nachname
             </label>
-@@ -415,18 +415,18 @@
-                aria-invalid="false"
+@@ -399,18 +399,18 @@
+                autocomplete="lastname"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r3:"
                 name="name"
@@ -77,7 +77,7 @@ exports[`Subscribe should render Filled 1`] = `
                     Nachname
                   </span>
                 </legend>
-@@ -435,12 +435,12 @@
+@@ -419,12 +419,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -92,7 +92,7 @@ exports[`Subscribe should render Filled 1`] = `
             >
               Email
             </label>
-@@ -452,18 +452,18 @@
+@@ -436,18 +436,18 @@
                 autocomplete="email"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r4:"
@@ -113,7 +113,7 @@ exports[`Subscribe should render Filled 1`] = `
                     Email
                   </span>
                 </legend>
-@@ -472,12 +472,12 @@
+@@ -456,12 +456,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -128,7 +128,7 @@ exports[`Subscribe should render Filled 1`] = `
             >
               Passwort
             </label>
-@@ -489,11 +489,11 @@
+@@ -473,11 +473,11 @@
                 autocomplete="new-password"
                 class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r5:"
@@ -141,7 +141,7 @@ exports[`Subscribe should render Filled 1`] = `
                 class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1laqsz7-MuiInputAdornment-root"
               >
                 <button
-@@ -526,11 +526,11 @@
+@@ -510,11 +510,11 @@
               <fieldset
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
@@ -154,7 +154,7 @@ exports[`Subscribe should render Filled 1`] = `
                     Passwort
                   </span>
                 </legend>
-@@ -542,12 +542,12 @@
+@@ -526,12 +526,12 @@
           >
             <div
               class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-1706pe8-MuiFormControl-root-MuiTextField-root"
@@ -169,8 +169,8 @@ exports[`Subscribe should render Filled 1`] = `
               >
                 Adresse
               </label>
-@@ -558,18 +558,18 @@
-                  aria-invalid="false"
+@@ -543,18 +543,18 @@
+                  autocomplete="address"
                   class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                   id=":r6:"
                   name="address.streetAddress"
@@ -190,7 +190,7 @@ exports[`Subscribe should render Filled 1`] = `
                       Adresse
                     </span>
                   </legend>
-@@ -578,12 +578,12 @@
+@@ -563,12 +563,12 @@
             </div>
             <div
               class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -205,8 +205,8 @@ exports[`Subscribe should render Filled 1`] = `
               >
                 PLZ
               </label>
-@@ -594,18 +594,18 @@
-                  aria-invalid="false"
+@@ -580,18 +580,18 @@
+                  autocomplete="zip"
                   class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                   id=":r7:"
                   name="address.zipCode"
@@ -226,7 +226,7 @@ exports[`Subscribe should render Filled 1`] = `
                       PLZ
                     </span>
                   </legend>
-@@ -614,12 +614,12 @@
+@@ -600,12 +600,12 @@
             </div>
             <div
               class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -241,8 +241,8 @@ exports[`Subscribe should render Filled 1`] = `
               >
                 Ort / Stadt
               </label>
-@@ -630,18 +630,18 @@
-                  aria-invalid="false"
+@@ -617,18 +617,18 @@
+                  autocomplete="city"
                   class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                   id=":r8:"
                   name="address.city"
@@ -262,7 +262,7 @@ exports[`Subscribe should render Filled 1`] = `
                       Ort / Stadt
                     </span>
                   </legend>
-@@ -650,12 +650,12 @@
+@@ -637,12 +637,12 @@
             </div>
             <div
               class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-8qobka-MuiFormControl-root-MuiTextField-root"
@@ -277,8 +277,8 @@ exports[`Subscribe should render Filled 1`] = `
               >
                 Land
               </label>
-@@ -666,18 +666,18 @@
-                  aria-invalid="false"
+@@ -654,18 +654,18 @@
+                  autocomplete="country"
                   class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                   id=":r9:"
                   name="address.country"
@@ -298,7 +298,7 @@ exports[`Subscribe should render Filled 1`] = `
                       Land
                     </span>
                   </legend>
-@@ -937,12 +937,12 @@
+@@ -925,12 +925,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -313,7 +313,7 @@ exports[`Subscribe should render Filled 1`] = `
             >
               Captcha
             </label>
-@@ -953,18 +953,18 @@
+@@ -941,18 +941,18 @@
                 aria-invalid="false"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":rc:"
@@ -341,7 +341,7 @@ exports[`Subscribe should render Invalid 1`] = `
 - First value
 + Second value
 
-@@ -363,22 +363,23 @@
+@@ -345,22 +345,23 @@
         >
           <div
             class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -363,12 +363,12 @@ exports[`Subscribe should render Invalid 1`] = `
 -               aria-invalid="false"
 +               aria-describedby=":rf:-helper-text"
 +               aria-invalid="true"
+                autocomplete="firstname"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":rf:"
                 name="firstName"
                 type="text"
-                value=""
-@@ -394,27 +395,34 @@
+@@ -377,27 +378,34 @@
                     Vorname
                   </span>
                 </legend>
@@ -401,12 +401,12 @@ exports[`Subscribe should render Invalid 1`] = `
 -               aria-invalid="false"
 +               aria-describedby=":rg:-helper-text"
 +               aria-invalid="true"
+                autocomplete="lastname"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":rg:"
                 name="name"
                 type="text"
-                value=""
-@@ -430,27 +438,34 @@
+@@ -414,27 +422,34 @@
                     Nachname
                   </span>
                 </legend>
@@ -444,7 +444,7 @@ exports[`Subscribe should render Invalid 1`] = `
                 id=":rh:"
                 name="email"
                 type="email"
-@@ -467,27 +482,34 @@
+@@ -451,27 +466,34 @@
                     Email
                   </span>
                 </legend>
@@ -482,7 +482,7 @@ exports[`Subscribe should render Invalid 1`] = `
                 id=":ri:"
                 name="password"
                 type="password"
-@@ -534,30 +556,37 @@
+@@ -518,30 +540,37 @@
                     Passwort
                   </span>
                 </legend>
@@ -518,12 +518,12 @@ exports[`Subscribe should render Invalid 1`] = `
 -                 aria-invalid="false"
 +                 aria-describedby=":rj:-helper-text"
 +                 aria-invalid="true"
+                  autocomplete="address"
                   class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                   id=":rj:"
                   name="address.streetAddress"
                   type="text"
-                  value=""
-@@ -573,27 +602,34 @@
+@@ -558,27 +587,34 @@
                       Adresse
                     </span>
                   </legend>
@@ -556,12 +556,12 @@ exports[`Subscribe should render Invalid 1`] = `
 -                 aria-invalid="false"
 +                 aria-describedby=":rk:-helper-text"
 +                 aria-invalid="true"
+                  autocomplete="zip"
                   class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                   id=":rk:"
                   name="address.zipCode"
                   type="text"
-                  value=""
-@@ -609,27 +645,34 @@
+@@ -595,27 +631,34 @@
                       PLZ
                     </span>
                   </legend>
@@ -594,12 +594,12 @@ exports[`Subscribe should render Invalid 1`] = `
 -                 aria-invalid="false"
 +                 aria-describedby=":rl:-helper-text"
 +                 aria-invalid="true"
+                  autocomplete="city"
                   class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                   id=":rl:"
                   name="address.city"
                   type="text"
-                  value=""
-@@ -645,27 +688,34 @@
+@@ -632,27 +675,34 @@
                       Ort / Stadt
                     </span>
                   </legend>
@@ -632,12 +632,12 @@ exports[`Subscribe should render Invalid 1`] = `
 -                 aria-invalid="false"
 +                 aria-describedby=":rm:-helper-text"
 +                 aria-invalid="true"
+                  autocomplete="country"
                   class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                   id=":rm:"
                   name="address.country"
                   type="text"
-                  value=""
-@@ -681,10 +731,16 @@
+@@ -669,10 +719,16 @@
                       Land
                     </span>
                   </legend>
@@ -654,7 +654,7 @@ exports[`Subscribe should render Invalid 1`] = `
         </div>
       </div>
       <div
-@@ -937,22 +993,23 @@
+@@ -925,22 +981,23 @@
           </div>
           <div
             class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -681,7 +681,7 @@ exports[`Subscribe should render Invalid 1`] = `
                 name="challengeAnswer.challengeSolution"
                 type="text"
                 value=""
-@@ -968,10 +1025,16 @@
+@@ -956,10 +1013,16 @@
                     Captcha
                   </span>
                 </legend>
@@ -697,7 +697,7 @@ exports[`Subscribe should render Invalid 1`] = `
         </div>
       </div>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-ov4jqr-MuiButtonBase-root-MuiButton-root-Subscribe""
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-193x9on-MuiButtonBase-root-MuiButton-root-buttonStyles""
 `;
 
 exports[`Subscribe should render LoggedIn 1`] = `
@@ -742,13 +742,7 @@ exports[`Subscribe should render LoggedIn 1`] = `
                 </small>
               </div>
               <span
-                __typename="MemberPlan"
-                availablepaymentmethods="[object Object],[object Object],[object Object]"
                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-                description="[object Object]"
-                image="[object Object]"
-                slug=""
-                tags=""
               >
                 <input
                   checked=""
@@ -812,13 +806,7 @@ exports[`Subscribe should render LoggedIn 1`] = `
                 </small>
               </div>
               <span
-                __typename="MemberPlan"
-                availablepaymentmethods="[object Object]"
                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-                description="[object Object]"
-                image="[object Object]"
-                slug=""
-                tags=""
               >
                 <input
                   class="PrivateSwitchBase-input css-1m9pwf3"
@@ -881,13 +869,7 @@ exports[`Subscribe should render LoggedIn 1`] = `
                 </small>
               </div>
               <span
-                __typename="MemberPlan"
-                availablepaymentmethods="[object Object]"
                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-                description="[object Object]"
-                image="[object Object]"
-                slug=""
-                tags=""
               >
                 <input
                   class="PrivateSwitchBase-input css-1m9pwf3"
@@ -1237,7 +1219,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-ov4jqr-MuiButtonBase-root-MuiButton-root-Subscribe"
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-193x9on-MuiButtonBase-root-MuiButton-root-buttonStyles"
       tabindex="0"
       type="submit"
     >
@@ -1292,13 +1274,7 @@ exports[`Subscribe should render LoggedOut 1`] = `
                 </small>
               </div>
               <span
-                __typename="MemberPlan"
-                availablepaymentmethods="[object Object],[object Object],[object Object]"
                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-                description="[object Object]"
-                image="[object Object]"
-                slug=""
-                tags=""
               >
                 <input
                   checked=""
@@ -1362,13 +1338,7 @@ exports[`Subscribe should render LoggedOut 1`] = `
                 </small>
               </div>
               <span
-                __typename="MemberPlan"
-                availablepaymentmethods="[object Object]"
                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-                description="[object Object]"
-                image="[object Object]"
-                slug=""
-                tags=""
               >
                 <input
                   class="PrivateSwitchBase-input css-1m9pwf3"
@@ -1431,13 +1401,7 @@ exports[`Subscribe should render LoggedOut 1`] = `
                 </small>
               </div>
               <span
-                __typename="MemberPlan"
-                availablepaymentmethods="[object Object]"
                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-                description="[object Object]"
-                image="[object Object]"
-                slug=""
-                tags=""
               >
                 <input
                   class="PrivateSwitchBase-input css-1m9pwf3"
@@ -1630,6 +1594,7 @@ https://unsplash.it/200/100 200w"
           >
             <input
               aria-invalid="false"
+              autocomplete="firstname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r10:"
               name="firstName"
@@ -1666,6 +1631,7 @@ https://unsplash.it/200/100 200w"
           >
             <input
               aria-invalid="false"
+              autocomplete="lastname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r11:"
               name="name"
@@ -1809,6 +1775,7 @@ https://unsplash.it/200/100 200w"
             >
               <input
                 aria-invalid="false"
+                autocomplete="address"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r14:"
                 name="address.streetAddress"
@@ -1845,6 +1812,7 @@ https://unsplash.it/200/100 200w"
             >
               <input
                 aria-invalid="false"
+                autocomplete="zip"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r15:"
                 name="address.zipCode"
@@ -1881,6 +1849,7 @@ https://unsplash.it/200/100 200w"
             >
               <input
                 aria-invalid="false"
+                autocomplete="city"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r16:"
                 name="address.city"
@@ -1917,6 +1886,7 @@ https://unsplash.it/200/100 200w"
             >
               <input
                 aria-invalid="false"
+                autocomplete="country"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r17:"
                 name="address.country"
@@ -2227,7 +2197,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-ov4jqr-MuiButtonBase-root-MuiButton-root-Subscribe"
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-193x9on-MuiButtonBase-root-MuiButton-root-buttonStyles"
       tabindex="0"
       type="submit"
     >
@@ -2282,13 +2252,7 @@ exports[`Subscribe should render OnlyAddress 1`] = `
                 </small>
               </div>
               <span
-                __typename="MemberPlan"
-                availablepaymentmethods="[object Object],[object Object],[object Object]"
                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-                description="[object Object]"
-                image="[object Object]"
-                slug=""
-                tags=""
               >
                 <input
                   checked=""
@@ -2352,13 +2316,7 @@ exports[`Subscribe should render OnlyAddress 1`] = `
                 </small>
               </div>
               <span
-                __typename="MemberPlan"
-                availablepaymentmethods="[object Object]"
                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-                description="[object Object]"
-                image="[object Object]"
-                slug=""
-                tags=""
               >
                 <input
                   class="PrivateSwitchBase-input css-1m9pwf3"
@@ -2421,13 +2379,7 @@ exports[`Subscribe should render OnlyAddress 1`] = `
                 </small>
               </div>
               <span
-                __typename="MemberPlan"
-                availablepaymentmethods="[object Object]"
                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-                description="[object Object]"
-                image="[object Object]"
-                slug=""
-                tags=""
               >
                 <input
                   class="PrivateSwitchBase-input css-1m9pwf3"
@@ -2620,6 +2572,7 @@ https://unsplash.it/200/100 200w"
           >
             <input
               aria-invalid="false"
+              autocomplete="lastname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r1d:"
               name="name"
@@ -2696,6 +2649,7 @@ https://unsplash.it/200/100 200w"
             >
               <input
                 aria-invalid="false"
+                autocomplete="address"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r1f:"
                 name="address.streetAddress"
@@ -2732,6 +2686,7 @@ https://unsplash.it/200/100 200w"
             >
               <input
                 aria-invalid="false"
+                autocomplete="zip"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r1g:"
                 name="address.zipCode"
@@ -2768,6 +2723,7 @@ https://unsplash.it/200/100 200w"
             >
               <input
                 aria-invalid="false"
+                autocomplete="city"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r1h:"
                 name="address.city"
@@ -2804,6 +2760,7 @@ https://unsplash.it/200/100 200w"
             >
               <input
                 aria-invalid="false"
+                autocomplete="country"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r1i:"
                 name="address.country"
@@ -3114,7 +3071,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-ov4jqr-MuiButtonBase-root-MuiButton-root-Subscribe"
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-193x9on-MuiButtonBase-root-MuiButton-root-buttonStyles"
       tabindex="0"
       type="submit"
     >
@@ -3132,7 +3089,7 @@ exports[`Subscribe should render OnlyAddressFilled 1`] = `
 - First value
 + Second value
 
-@@ -363,12 +363,12 @@
+@@ -345,12 +345,12 @@
         >
           <div
             class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -3147,8 +3104,8 @@ exports[`Subscribe should render OnlyAddressFilled 1`] = `
             >
               Nachname
             </label>
-@@ -379,18 +379,18 @@
-                aria-invalid="false"
+@@ -362,18 +362,18 @@
+                autocomplete="lastname"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r1o:"
                 name="name"
@@ -3168,7 +3125,7 @@ exports[`Subscribe should render OnlyAddressFilled 1`] = `
                     Nachname
                   </span>
                 </legend>
-@@ -399,12 +399,12 @@
+@@ -382,12 +382,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -3183,7 +3140,7 @@ exports[`Subscribe should render OnlyAddressFilled 1`] = `
             >
               Email
             </label>
-@@ -416,18 +416,18 @@
+@@ -399,18 +399,18 @@
                 autocomplete="email"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r1p:"
@@ -3204,7 +3161,7 @@ exports[`Subscribe should render OnlyAddressFilled 1`] = `
                     Email
                   </span>
                 </legend>
-@@ -439,12 +439,12 @@
+@@ -422,12 +422,12 @@
           >
             <div
               class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-1706pe8-MuiFormControl-root-MuiTextField-root"
@@ -3219,8 +3176,8 @@ exports[`Subscribe should render OnlyAddressFilled 1`] = `
               >
                 Adresse
               </label>
-@@ -455,18 +455,18 @@
-                  aria-invalid="false"
+@@ -439,18 +439,18 @@
+                  autocomplete="address"
                   class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                   id=":r1q:"
                   name="address.streetAddress"
@@ -3240,7 +3197,7 @@ exports[`Subscribe should render OnlyAddressFilled 1`] = `
                       Adresse
                     </span>
                   </legend>
-@@ -475,12 +475,12 @@
+@@ -459,12 +459,12 @@
             </div>
             <div
               class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -3255,8 +3212,8 @@ exports[`Subscribe should render OnlyAddressFilled 1`] = `
               >
                 PLZ
               </label>
-@@ -491,18 +491,18 @@
-                  aria-invalid="false"
+@@ -476,18 +476,18 @@
+                  autocomplete="zip"
                   class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                   id=":r1r:"
                   name="address.zipCode"
@@ -3276,7 +3233,7 @@ exports[`Subscribe should render OnlyAddressFilled 1`] = `
                       PLZ
                     </span>
                   </legend>
-@@ -511,12 +511,12 @@
+@@ -496,12 +496,12 @@
             </div>
             <div
               class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -3291,8 +3248,8 @@ exports[`Subscribe should render OnlyAddressFilled 1`] = `
               >
                 Ort / Stadt
               </label>
-@@ -527,18 +527,18 @@
-                  aria-invalid="false"
+@@ -513,18 +513,18 @@
+                  autocomplete="city"
                   class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                   id=":r1s:"
                   name="address.city"
@@ -3312,7 +3269,7 @@ exports[`Subscribe should render OnlyAddressFilled 1`] = `
                       Ort / Stadt
                     </span>
                   </legend>
-@@ -547,12 +547,12 @@
+@@ -533,12 +533,12 @@
             </div>
             <div
               class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-8qobka-MuiFormControl-root-MuiTextField-root"
@@ -3327,8 +3284,8 @@ exports[`Subscribe should render OnlyAddressFilled 1`] = `
               >
                 Land
               </label>
-@@ -563,18 +563,18 @@
-                  aria-invalid="false"
+@@ -550,18 +550,18 @@
+                  autocomplete="country"
                   class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                   id=":r1t:"
                   name="address.country"
@@ -3348,7 +3305,7 @@ exports[`Subscribe should render OnlyAddressFilled 1`] = `
                       Land
                     </span>
                   </legend>
-@@ -834,12 +834,12 @@
+@@ -821,12 +821,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -3363,7 +3320,7 @@ exports[`Subscribe should render OnlyAddressFilled 1`] = `
             >
               Captcha
             </label>
-@@ -850,18 +850,18 @@
+@@ -837,18 +837,18 @@
                 aria-invalid="false"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r20:"
@@ -3391,7 +3348,7 @@ exports[`Subscribe should render OnlyAddressInvalid 1`] = `
 - First value
 + Second value
 
-@@ -363,22 +363,23 @@
+@@ -345,22 +345,23 @@
         >
           <div
             class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -3413,12 +3370,12 @@ exports[`Subscribe should render OnlyAddressInvalid 1`] = `
 -               aria-invalid="false"
 +               aria-describedby=":r23:-helper-text"
 +               aria-invalid="true"
+                autocomplete="lastname"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r23:"
                 name="name"
                 type="text"
-                value=""
-@@ -394,27 +395,34 @@
+@@ -377,27 +378,34 @@
                     Nachname
                   </span>
                 </legend>
@@ -3456,7 +3413,7 @@ exports[`Subscribe should render OnlyAddressInvalid 1`] = `
                 id=":r24:"
                 name="email"
                 type="email"
-@@ -431,30 +439,37 @@
+@@ -414,30 +422,37 @@
                     Email
                   </span>
                 </legend>
@@ -3492,12 +3449,12 @@ exports[`Subscribe should render OnlyAddressInvalid 1`] = `
 -                 aria-invalid="false"
 +                 aria-describedby=":r25:-helper-text"
 +                 aria-invalid="true"
+                  autocomplete="address"
                   class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                   id=":r25:"
                   name="address.streetAddress"
                   type="text"
-                  value=""
-@@ -470,27 +485,34 @@
+@@ -454,27 +469,34 @@
                       Adresse
                     </span>
                   </legend>
@@ -3530,12 +3487,12 @@ exports[`Subscribe should render OnlyAddressInvalid 1`] = `
 -                 aria-invalid="false"
 +                 aria-describedby=":r26:-helper-text"
 +                 aria-invalid="true"
+                  autocomplete="zip"
                   class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                   id=":r26:"
                   name="address.zipCode"
                   type="text"
-                  value=""
-@@ -506,27 +528,34 @@
+@@ -491,27 +513,34 @@
                       PLZ
                     </span>
                   </legend>
@@ -3568,12 +3525,12 @@ exports[`Subscribe should render OnlyAddressInvalid 1`] = `
 -                 aria-invalid="false"
 +                 aria-describedby=":r27:-helper-text"
 +                 aria-invalid="true"
+                  autocomplete="city"
                   class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                   id=":r27:"
                   name="address.city"
                   type="text"
-                  value=""
-@@ -542,27 +571,34 @@
+@@ -528,27 +557,34 @@
                       Ort / Stadt
                     </span>
                   </legend>
@@ -3606,12 +3563,12 @@ exports[`Subscribe should render OnlyAddressInvalid 1`] = `
 -                 aria-invalid="false"
 +                 aria-describedby=":r28:-helper-text"
 +                 aria-invalid="true"
+                  autocomplete="country"
                   class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                   id=":r28:"
                   name="address.country"
                   type="text"
-                  value=""
-@@ -578,10 +614,16 @@
+@@ -565,10 +601,16 @@
                       Land
                     </span>
                   </legend>
@@ -3628,7 +3585,7 @@ exports[`Subscribe should render OnlyAddressInvalid 1`] = `
         </div>
       </div>
       <div
-@@ -834,22 +876,23 @@
+@@ -821,22 +863,23 @@
           </div>
           <div
             class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -3655,7 +3612,7 @@ exports[`Subscribe should render OnlyAddressInvalid 1`] = `
                 name="challengeAnswer.challengeSolution"
                 type="text"
                 value=""
-@@ -865,10 +908,16 @@
+@@ -852,10 +895,16 @@
                     Captcha
                   </span>
                 </legend>
@@ -3671,7 +3628,7 @@ exports[`Subscribe should render OnlyAddressInvalid 1`] = `
         </div>
       </div>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-ov4jqr-MuiButtonBase-root-MuiButton-root-Subscribe""
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-193x9on-MuiButtonBase-root-MuiButton-root-buttonStyles""
 `;
 
 exports[`Subscribe should render OnlyFirstName 1`] = `
@@ -3716,13 +3673,7 @@ exports[`Subscribe should render OnlyFirstName 1`] = `
                 </small>
               </div>
               <span
-                __typename="MemberPlan"
-                availablepaymentmethods="[object Object],[object Object],[object Object]"
                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-                description="[object Object]"
-                image="[object Object]"
-                slug=""
-                tags=""
               >
                 <input
                   checked=""
@@ -3786,13 +3737,7 @@ exports[`Subscribe should render OnlyFirstName 1`] = `
                 </small>
               </div>
               <span
-                __typename="MemberPlan"
-                availablepaymentmethods="[object Object]"
                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-                description="[object Object]"
-                image="[object Object]"
-                slug=""
-                tags=""
               >
                 <input
                   class="PrivateSwitchBase-input css-1m9pwf3"
@@ -3855,13 +3800,7 @@ exports[`Subscribe should render OnlyFirstName 1`] = `
                 </small>
               </div>
               <span
-                __typename="MemberPlan"
-                availablepaymentmethods="[object Object]"
                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-                description="[object Object]"
-                image="[object Object]"
-                slug=""
-                tags=""
               >
                 <input
                   class="PrivateSwitchBase-input css-1m9pwf3"
@@ -4054,6 +3993,7 @@ https://unsplash.it/200/100 200w"
           >
             <input
               aria-invalid="false"
+              autocomplete="firstname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r2e:"
               name="firstName"
@@ -4090,6 +4030,7 @@ https://unsplash.it/200/100 200w"
           >
             <input
               aria-invalid="false"
+              autocomplete="lastname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r2f:"
               name="name"
@@ -4436,7 +4377,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-ov4jqr-MuiButtonBase-root-MuiButton-root-Subscribe"
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-193x9on-MuiButtonBase-root-MuiButton-root-buttonStyles"
       tabindex="0"
       type="submit"
     >
@@ -4454,7 +4395,7 @@ exports[`Subscribe should render OnlyFirstNameFilled 1`] = `
 - First value
 + Second value
 
-@@ -363,12 +363,12 @@
+@@ -345,12 +345,12 @@
         >
           <div
             class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -4469,8 +4410,8 @@ exports[`Subscribe should render OnlyFirstNameFilled 1`] = `
             >
               Vorname
             </label>
-@@ -379,18 +379,18 @@
-                aria-invalid="false"
+@@ -362,18 +362,18 @@
+                autocomplete="firstname"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r2m:"
                 name="firstName"
@@ -4490,7 +4431,7 @@ exports[`Subscribe should render OnlyFirstNameFilled 1`] = `
                     Vorname
                   </span>
                 </legend>
-@@ -399,12 +399,12 @@
+@@ -382,12 +382,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -4505,8 +4446,8 @@ exports[`Subscribe should render OnlyFirstNameFilled 1`] = `
             >
               Nachname
             </label>
-@@ -415,18 +415,18 @@
-                aria-invalid="false"
+@@ -399,18 +399,18 @@
+                autocomplete="lastname"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r2n:"
                 name="name"
@@ -4526,7 +4467,7 @@ exports[`Subscribe should render OnlyFirstNameFilled 1`] = `
                     Nachname
                   </span>
                 </legend>
-@@ -435,12 +435,12 @@
+@@ -419,12 +419,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -4541,7 +4482,7 @@ exports[`Subscribe should render OnlyFirstNameFilled 1`] = `
             >
               Email
             </label>
-@@ -452,18 +452,18 @@
+@@ -436,18 +436,18 @@
                 autocomplete="email"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r2o:"
@@ -4562,7 +4503,7 @@ exports[`Subscribe should render OnlyFirstNameFilled 1`] = `
                     Email
                   </span>
                 </legend>
-@@ -722,12 +722,12 @@
+@@ -706,12 +706,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -4577,7 +4518,7 @@ exports[`Subscribe should render OnlyFirstNameFilled 1`] = `
             >
               Captcha
             </label>
-@@ -738,18 +738,18 @@
+@@ -722,18 +722,18 @@
                 aria-invalid="false"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r2r:"
@@ -4605,7 +4546,7 @@ exports[`Subscribe should render OnlyFirstNameInvalid 1`] = `
 - First value
 + Second value
 
-@@ -363,22 +363,23 @@
+@@ -345,22 +345,23 @@
         >
           <div
             class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -4627,12 +4568,12 @@ exports[`Subscribe should render OnlyFirstNameInvalid 1`] = `
 -               aria-invalid="false"
 +               aria-describedby=":r2u:-helper-text"
 +               aria-invalid="true"
+                autocomplete="firstname"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r2u:"
                 name="firstName"
                 type="text"
-                value=""
-@@ -394,27 +395,34 @@
+@@ -377,27 +378,34 @@
                     Vorname
                   </span>
                 </legend>
@@ -4665,12 +4606,12 @@ exports[`Subscribe should render OnlyFirstNameInvalid 1`] = `
 -               aria-invalid="false"
 +               aria-describedby=":r2v:-helper-text"
 +               aria-invalid="true"
+                autocomplete="lastname"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r2v:"
                 name="name"
                 type="text"
-                value=""
-@@ -430,27 +438,34 @@
+@@ -414,27 +422,34 @@
                     Nachname
                   </span>
                 </legend>
@@ -4708,7 +4649,7 @@ exports[`Subscribe should render OnlyFirstNameInvalid 1`] = `
                 id=":r30:"
                 name="email"
                 type="email"
-@@ -467,10 +482,16 @@
+@@ -451,10 +466,16 @@
                     Email
                   </span>
                 </legend>
@@ -4725,7 +4666,7 @@ exports[`Subscribe should render OnlyFirstNameInvalid 1`] = `
       </div>
       <div
         class="css-qtq6nf-SubscribeSection eu4qtxp2"
-@@ -722,22 +743,23 @@
+@@ -706,22 +727,23 @@
           </div>
           <div
             class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -4752,7 +4693,7 @@ exports[`Subscribe should render OnlyFirstNameInvalid 1`] = `
                 name="challengeAnswer.challengeSolution"
                 type="text"
                 value=""
-@@ -753,10 +775,16 @@
+@@ -737,10 +759,16 @@
                     Captcha
                   </span>
                 </legend>
@@ -4768,7 +4709,7 @@ exports[`Subscribe should render OnlyFirstNameInvalid 1`] = `
         </div>
       </div>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-ov4jqr-MuiButtonBase-root-MuiButton-root-Subscribe""
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-193x9on-MuiButtonBase-root-MuiButton-root-buttonStyles""
 `;
 
 exports[`Subscribe should render OnlyPassword 1`] = `
@@ -4813,13 +4754,7 @@ exports[`Subscribe should render OnlyPassword 1`] = `
                 </small>
               </div>
               <span
-                __typename="MemberPlan"
-                availablepaymentmethods="[object Object],[object Object],[object Object]"
                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-                description="[object Object]"
-                image="[object Object]"
-                slug=""
-                tags=""
               >
                 <input
                   checked=""
@@ -4883,13 +4818,7 @@ exports[`Subscribe should render OnlyPassword 1`] = `
                 </small>
               </div>
               <span
-                __typename="MemberPlan"
-                availablepaymentmethods="[object Object]"
                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-                description="[object Object]"
-                image="[object Object]"
-                slug=""
-                tags=""
               >
                 <input
                   class="PrivateSwitchBase-input css-1m9pwf3"
@@ -4952,13 +4881,7 @@ exports[`Subscribe should render OnlyPassword 1`] = `
                 </small>
               </div>
               <span
-                __typename="MemberPlan"
-                availablepaymentmethods="[object Object]"
                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-                description="[object Object]"
-                image="[object Object]"
-                slug=""
-                tags=""
               >
                 <input
                   class="PrivateSwitchBase-input css-1m9pwf3"
@@ -5151,6 +5074,7 @@ https://unsplash.it/200/100 200w"
           >
             <input
               aria-invalid="false"
+              autocomplete="lastname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r36:"
               name="name"
@@ -5564,7 +5488,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-ov4jqr-MuiButtonBase-root-MuiButton-root-Subscribe"
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-193x9on-MuiButtonBase-root-MuiButton-root-buttonStyles"
       tabindex="0"
       type="submit"
     >
@@ -5582,7 +5506,7 @@ exports[`Subscribe should render OnlyPasswordFilled 1`] = `
 - First value
 + Second value
 
-@@ -363,12 +363,12 @@
+@@ -345,12 +345,12 @@
         >
           <div
             class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -5597,8 +5521,8 @@ exports[`Subscribe should render OnlyPasswordFilled 1`] = `
             >
               Nachname
             </label>
-@@ -379,18 +379,18 @@
-                aria-invalid="false"
+@@ -362,18 +362,18 @@
+                autocomplete="lastname"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r3e:"
                 name="name"
@@ -5618,7 +5542,7 @@ exports[`Subscribe should render OnlyPasswordFilled 1`] = `
                     Nachname
                   </span>
                 </legend>
-@@ -399,12 +399,12 @@
+@@ -382,12 +382,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -5633,7 +5557,7 @@ exports[`Subscribe should render OnlyPasswordFilled 1`] = `
             >
               Email
             </label>
-@@ -416,18 +416,18 @@
+@@ -399,18 +399,18 @@
                 autocomplete="email"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r3f:"
@@ -5654,7 +5578,7 @@ exports[`Subscribe should render OnlyPasswordFilled 1`] = `
                     Email
                   </span>
                 </legend>
-@@ -436,12 +436,12 @@
+@@ -419,12 +419,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -5669,7 +5593,7 @@ exports[`Subscribe should render OnlyPasswordFilled 1`] = `
             >
               Passwort
             </label>
-@@ -453,11 +453,11 @@
+@@ -436,11 +436,11 @@
                 autocomplete="new-password"
                 class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r3g:"
@@ -5682,7 +5606,7 @@ exports[`Subscribe should render OnlyPasswordFilled 1`] = `
                 class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1laqsz7-MuiInputAdornment-root"
               >
                 <button
-@@ -490,11 +490,11 @@
+@@ -473,11 +473,11 @@
               <fieldset
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
@@ -5695,7 +5619,7 @@ exports[`Subscribe should render OnlyPasswordFilled 1`] = `
                     Passwort
                   </span>
                 </legend>
-@@ -753,12 +753,12 @@
+@@ -736,12 +736,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -5710,7 +5634,7 @@ exports[`Subscribe should render OnlyPasswordFilled 1`] = `
             >
               Captcha
             </label>
-@@ -769,18 +769,18 @@
+@@ -752,18 +752,18 @@
                 aria-invalid="false"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r3j:"
@@ -5738,7 +5662,7 @@ exports[`Subscribe should render OnlyPasswordInvalid 1`] = `
 - First value
 + Second value
 
-@@ -363,22 +363,23 @@
+@@ -345,22 +345,23 @@
         >
           <div
             class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -5760,12 +5684,12 @@ exports[`Subscribe should render OnlyPasswordInvalid 1`] = `
 -               aria-invalid="false"
 +               aria-describedby=":r3m:-helper-text"
 +               aria-invalid="true"
+                autocomplete="lastname"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r3m:"
                 name="name"
                 type="text"
-                value=""
-@@ -394,27 +395,34 @@
+@@ -377,27 +378,34 @@
                     Nachname
                   </span>
                 </legend>
@@ -5803,7 +5727,7 @@ exports[`Subscribe should render OnlyPasswordInvalid 1`] = `
                 id=":r3n:"
                 name="email"
                 type="email"
-@@ -431,27 +439,34 @@
+@@ -414,27 +422,34 @@
                     Email
                   </span>
                 </legend>
@@ -5841,7 +5765,7 @@ exports[`Subscribe should render OnlyPasswordInvalid 1`] = `
                 id=":r3o:"
                 name="password"
                 type="password"
-@@ -498,10 +513,16 @@
+@@ -481,10 +496,16 @@
                     Passwort
                   </span>
                 </legend>
@@ -5858,7 +5782,7 @@ exports[`Subscribe should render OnlyPasswordInvalid 1`] = `
       </div>
       <div
         class="css-qtq6nf-SubscribeSection eu4qtxp2"
-@@ -753,22 +774,23 @@
+@@ -736,22 +757,23 @@
           </div>
           <div
             class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -5885,7 +5809,7 @@ exports[`Subscribe should render OnlyPasswordInvalid 1`] = `
                 name="challengeAnswer.challengeSolution"
                 type="text"
                 value=""
-@@ -784,10 +806,16 @@
+@@ -767,10 +789,16 @@
                     Captcha
                   </span>
                 </legend>
@@ -5901,7 +5825,7 @@ exports[`Subscribe should render OnlyPasswordInvalid 1`] = `
         </div>
       </div>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-ov4jqr-MuiButtonBase-root-MuiButton-root-Subscribe""
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-193x9on-MuiButtonBase-root-MuiButton-root-buttonStyles""
 `;
 
 exports[`Subscribe should render OnlyPreferredName 1`] = `
@@ -5946,13 +5870,7 @@ exports[`Subscribe should render OnlyPreferredName 1`] = `
                 </small>
               </div>
               <span
-                __typename="MemberPlan"
-                availablepaymentmethods="[object Object],[object Object],[object Object]"
                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-                description="[object Object]"
-                image="[object Object]"
-                slug=""
-                tags=""
               >
                 <input
                   checked=""
@@ -6016,13 +5934,7 @@ exports[`Subscribe should render OnlyPreferredName 1`] = `
                 </small>
               </div>
               <span
-                __typename="MemberPlan"
-                availablepaymentmethods="[object Object]"
                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-                description="[object Object]"
-                image="[object Object]"
-                slug=""
-                tags=""
               >
                 <input
                   class="PrivateSwitchBase-input css-1m9pwf3"
@@ -6085,13 +5997,7 @@ exports[`Subscribe should render OnlyPreferredName 1`] = `
                 </small>
               </div>
               <span
-                __typename="MemberPlan"
-                availablepaymentmethods="[object Object]"
                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-                description="[object Object]"
-                image="[object Object]"
-                slug=""
-                tags=""
               >
                 <input
                   class="PrivateSwitchBase-input css-1m9pwf3"
@@ -6320,6 +6226,7 @@ https://unsplash.it/200/100 200w"
           >
             <input
               aria-invalid="false"
+              autocomplete="lastname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r3v:"
               name="name"
@@ -6666,7 +6573,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-ov4jqr-MuiButtonBase-root-MuiButton-root-Subscribe"
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-193x9on-MuiButtonBase-root-MuiButton-root-buttonStyles"
       tabindex="0"
       type="submit"
     >
@@ -6684,7 +6591,7 @@ exports[`Subscribe should render OnlyPreferredNameFilled 1`] = `
 - First value
 + Second value
 
-@@ -363,12 +363,12 @@
+@@ -345,12 +345,12 @@
         >
           <div
             class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -6699,7 +6606,7 @@ exports[`Subscribe should render OnlyPreferredNameFilled 1`] = `
             >
               Bevorzugter Name
             </label>
-@@ -379,18 +379,18 @@
+@@ -361,18 +361,18 @@
                 aria-invalid="false"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r46:"
@@ -6720,7 +6627,7 @@ exports[`Subscribe should render OnlyPreferredNameFilled 1`] = `
                     Bevorzugter Name
                   </span>
                 </legend>
-@@ -399,12 +399,12 @@
+@@ -381,12 +381,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -6735,8 +6642,8 @@ exports[`Subscribe should render OnlyPreferredNameFilled 1`] = `
             >
               Nachname
             </label>
-@@ -415,18 +415,18 @@
-                aria-invalid="false"
+@@ -398,18 +398,18 @@
+                autocomplete="lastname"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r47:"
                 name="name"
@@ -6756,7 +6663,7 @@ exports[`Subscribe should render OnlyPreferredNameFilled 1`] = `
                     Nachname
                   </span>
                 </legend>
-@@ -435,12 +435,12 @@
+@@ -418,12 +418,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -6771,7 +6678,7 @@ exports[`Subscribe should render OnlyPreferredNameFilled 1`] = `
             >
               Email
             </label>
-@@ -452,18 +452,18 @@
+@@ -435,18 +435,18 @@
                 autocomplete="email"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r48:"
@@ -6792,7 +6699,7 @@ exports[`Subscribe should render OnlyPreferredNameFilled 1`] = `
                     Email
                   </span>
                 </legend>
-@@ -722,12 +722,12 @@
+@@ -705,12 +705,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -6807,7 +6714,7 @@ exports[`Subscribe should render OnlyPreferredNameFilled 1`] = `
             >
               Captcha
             </label>
-@@ -738,18 +738,18 @@
+@@ -721,18 +721,18 @@
                 aria-invalid="false"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r4b:"
@@ -6835,7 +6742,7 @@ exports[`Subscribe should render OnlyPreferredNameInvalid 1`] = `
 - First value
 + Second value
 
-@@ -399,22 +399,23 @@
+@@ -381,22 +381,23 @@
           </div>
           <div
             class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -6857,12 +6764,12 @@ exports[`Subscribe should render OnlyPreferredNameInvalid 1`] = `
 -               aria-invalid="false"
 +               aria-describedby=":r4f:-helper-text"
 +               aria-invalid="true"
+                autocomplete="lastname"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r4f:"
                 name="name"
                 type="text"
-                value=""
-@@ -430,27 +431,34 @@
+@@ -413,27 +414,34 @@
                     Nachname
                   </span>
                 </legend>
@@ -6900,7 +6807,7 @@ exports[`Subscribe should render OnlyPreferredNameInvalid 1`] = `
                 id=":r4g:"
                 name="email"
                 type="email"
-@@ -467,10 +475,16 @@
+@@ -450,10 +458,16 @@
                     Email
                   </span>
                 </legend>
@@ -6917,7 +6824,7 @@ exports[`Subscribe should render OnlyPreferredNameInvalid 1`] = `
       </div>
       <div
         class="css-qtq6nf-SubscribeSection eu4qtxp2"
-@@ -722,22 +736,23 @@
+@@ -705,22 +719,23 @@
           </div>
           <div
             class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -6944,7 +6851,7 @@ exports[`Subscribe should render OnlyPreferredNameInvalid 1`] = `
                 name="challengeAnswer.challengeSolution"
                 type="text"
                 value=""
-@@ -753,10 +768,16 @@
+@@ -736,10 +751,16 @@
                     Captcha
                   </span>
                 </legend>
@@ -6960,7 +6867,7 @@ exports[`Subscribe should render OnlyPreferredNameInvalid 1`] = `
         </div>
       </div>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-ov4jqr-MuiButtonBase-root-MuiButton-root-Subscribe""
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-193x9on-MuiButtonBase-root-MuiButton-root-buttonStyles""
 `;
 
 exports[`Subscribe should render OnlyRequired 1`] = `
@@ -7005,13 +6912,7 @@ exports[`Subscribe should render OnlyRequired 1`] = `
                 </small>
               </div>
               <span
-                __typename="MemberPlan"
-                availablepaymentmethods="[object Object],[object Object],[object Object]"
                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-                description="[object Object]"
-                image="[object Object]"
-                slug=""
-                tags=""
               >
                 <input
                   checked=""
@@ -7075,13 +6976,7 @@ exports[`Subscribe should render OnlyRequired 1`] = `
                 </small>
               </div>
               <span
-                __typename="MemberPlan"
-                availablepaymentmethods="[object Object]"
                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-                description="[object Object]"
-                image="[object Object]"
-                slug=""
-                tags=""
               >
                 <input
                   class="PrivateSwitchBase-input css-1m9pwf3"
@@ -7144,13 +7039,7 @@ exports[`Subscribe should render OnlyRequired 1`] = `
                 </small>
               </div>
               <span
-                __typename="MemberPlan"
-                availablepaymentmethods="[object Object]"
                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-                description="[object Object]"
-                image="[object Object]"
-                slug=""
-                tags=""
               >
                 <input
                   class="PrivateSwitchBase-input css-1m9pwf3"
@@ -7343,6 +7232,7 @@ https://unsplash.it/200/100 200w"
           >
             <input
               aria-invalid="false"
+              autocomplete="lastname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r4m:"
               name="name"
@@ -7689,7 +7579,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-ov4jqr-MuiButtonBase-root-MuiButton-root-Subscribe"
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-193x9on-MuiButtonBase-root-MuiButton-root-buttonStyles"
       tabindex="0"
       type="submit"
     >
@@ -7707,7 +7597,7 @@ exports[`Subscribe should render OnlyRequiredFilled 1`] = `
 - First value
 + Second value
 
-@@ -363,12 +363,12 @@
+@@ -345,12 +345,12 @@
         >
           <div
             class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -7722,8 +7612,8 @@ exports[`Subscribe should render OnlyRequiredFilled 1`] = `
             >
               Nachname
             </label>
-@@ -379,18 +379,18 @@
-                aria-invalid="false"
+@@ -362,18 +362,18 @@
+                autocomplete="lastname"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r4t:"
                 name="name"
@@ -7743,7 +7633,7 @@ exports[`Subscribe should render OnlyRequiredFilled 1`] = `
                     Nachname
                   </span>
                 </legend>
-@@ -399,12 +399,12 @@
+@@ -382,12 +382,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -7758,7 +7648,7 @@ exports[`Subscribe should render OnlyRequiredFilled 1`] = `
             >
               Email
             </label>
-@@ -416,18 +416,18 @@
+@@ -399,18 +399,18 @@
                 autocomplete="email"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r4u:"
@@ -7779,7 +7669,7 @@ exports[`Subscribe should render OnlyRequiredFilled 1`] = `
                     Email
                   </span>
                 </legend>
-@@ -686,12 +686,12 @@
+@@ -669,12 +669,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -7794,7 +7684,7 @@ exports[`Subscribe should render OnlyRequiredFilled 1`] = `
             >
               Captcha
             </label>
-@@ -702,18 +702,18 @@
+@@ -685,18 +685,18 @@
                 aria-invalid="false"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r51:"
@@ -7822,7 +7712,7 @@ exports[`Subscribe should render OnlyRequiredInvalid 1`] = `
 - First value
 + Second value
 
-@@ -363,22 +363,23 @@
+@@ -345,22 +345,23 @@
         >
           <div
             class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -7844,12 +7734,12 @@ exports[`Subscribe should render OnlyRequiredInvalid 1`] = `
 -               aria-invalid="false"
 +               aria-describedby=":r54:-helper-text"
 +               aria-invalid="true"
+                autocomplete="lastname"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r54:"
                 name="name"
                 type="text"
-                value=""
-@@ -394,27 +395,34 @@
+@@ -377,27 +378,34 @@
                     Nachname
                   </span>
                 </legend>
@@ -7887,7 +7777,7 @@ exports[`Subscribe should render OnlyRequiredInvalid 1`] = `
                 id=":r55:"
                 name="email"
                 type="email"
-@@ -431,10 +439,16 @@
+@@ -414,10 +422,16 @@
                     Email
                   </span>
                 </legend>
@@ -7904,7 +7794,7 @@ exports[`Subscribe should render OnlyRequiredInvalid 1`] = `
       </div>
       <div
         class="css-qtq6nf-SubscribeSection eu4qtxp2"
-@@ -686,22 +700,23 @@
+@@ -669,22 +683,23 @@
           </div>
           <div
             class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -7931,7 +7821,7 @@ exports[`Subscribe should render OnlyRequiredInvalid 1`] = `
                 name="challengeAnswer.challengeSolution"
                 type="text"
                 value=""
-@@ -717,10 +732,16 @@
+@@ -700,10 +715,16 @@
                     Captcha
                   </span>
                 </legend>
@@ -7947,7 +7837,7 @@ exports[`Subscribe should render OnlyRequiredInvalid 1`] = `
         </div>
       </div>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-ov4jqr-MuiButtonBase-root-MuiButton-root-Subscribe""
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-193x9on-MuiButtonBase-root-MuiButton-root-buttonStyles""
 `;
 
 exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
@@ -7968,20 +7858,20 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
                   class="css-1deqsbg-MemberPlanItemContent eofgi42"
                 >
                   <span
-@@ -39,11 +39,11 @@
+@@ -37,11 +37,11 @@
+                  >
+                    Ab CHF 5.- pro Monat
                   </small>
                 </div>
                 <span
-                  __typename="MemberPlan"
-                  availablepaymentmethods="[object Object],[object Object],[object Object]"
 -                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
 +                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-                  description="[object Object]"
-                  image="[object Object]"
-                  slug=""
-                  tags=""
                 >
-@@ -68,11 +68,11 @@
+                  <input
+                    checked=""
+                    class="PrivateSwitchBase-input css-1m9pwf3"
+                    name="Foobar Memberplan"
+@@ -62,11 +62,11 @@
                         d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
                       />
                     </svg>
@@ -7994,7 +7884,7 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
                       viewBox="0 0 24 24"
                     >
                       <path
-@@ -159,11 +159,11 @@
+@@ -147,11 +147,11 @@
             </label>
             <label
               class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
@@ -8007,20 +7897,20 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
                   class="css-1deqsbg-MemberPlanItemContent eofgi42"
                 >
                   <span
-@@ -178,11 +178,11 @@
+@@ -164,11 +164,11 @@
+                  >
+                    Ab CHF 12.- pro Monat
                   </small>
                 </div>
                 <span
-                  __typename="MemberPlan"
-                  availablepaymentmethods="[object Object]"
 -                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
 +                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-                  description="[object Object]"
-                  image="[object Object]"
-                  slug=""
-                  tags=""
                 >
-@@ -206,11 +206,11 @@
+                  <input
+                    class="PrivateSwitchBase-input css-1m9pwf3"
+                    name="Foobaz Memberplan"
+                    type="radio"
+@@ -188,11 +188,11 @@
                         d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
                       />
                     </svg>
@@ -8033,7 +7923,7 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
                       viewBox="0 0 24 24"
                     >
                       <path
-@@ -363,142 +363,12 @@
+@@ -345,142 +345,12 @@
         >
           Zahlungsmethode wählen
         </h2>
@@ -8176,9 +8066,9 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
             <span
               class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium Mui-checked MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium css-12wnr2w-MuiButtonBase-root-MuiCheckbox-root"
             >
-@@ -536,11 +406,11 @@
+@@ -518,11 +388,11 @@
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-ov4jqr-MuiButtonBase-root-MuiButton-root-Subscribe"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-193x9on-MuiButtonBase-root-MuiButton-root-buttonStyles"
         tabindex="0"
         type="submit"
       >
@@ -8196,7 +8086,7 @@ exports[`Subscribe should render ResetPaymentOptionsOnPaymentMethodChange 1`] = 
 - First value
 + Second value
 
-@@ -429,85 +429,23 @@
+@@ -411,85 +411,23 @@
                   </span>
                 </legend>
               </fieldset>
@@ -8287,7 +8177,7 @@ exports[`Subscribe should render ResetPaymentOptionsOnPaymentMethodChange 1`] = 
                 value="true"
               />
               <svg
-@@ -519,16 +457,13 @@
+@@ -501,16 +439,13 @@
               >
                 <path
                   d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
@@ -8349,13 +8239,7 @@ exports[`Subscribe should render WithChallengeError 1`] = `
                 </small>
               </div>
               <span
-                __typename="MemberPlan"
-                availablepaymentmethods="[object Object],[object Object],[object Object]"
                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-                description="[object Object]"
-                image="[object Object]"
-                slug=""
-                tags=""
               >
                 <input
                   checked=""
@@ -8419,13 +8303,7 @@ exports[`Subscribe should render WithChallengeError 1`] = `
                 </small>
               </div>
               <span
-                __typename="MemberPlan"
-                availablepaymentmethods="[object Object]"
                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-                description="[object Object]"
-                image="[object Object]"
-                slug=""
-                tags=""
               >
                 <input
                   class="PrivateSwitchBase-input css-1m9pwf3"
@@ -8488,13 +8366,7 @@ exports[`Subscribe should render WithChallengeError 1`] = `
                 </small>
               </div>
               <span
-                __typename="MemberPlan"
-                availablepaymentmethods="[object Object]"
                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-                description="[object Object]"
-                image="[object Object]"
-                slug=""
-                tags=""
               >
                 <input
                   class="PrivateSwitchBase-input css-1m9pwf3"
@@ -8687,6 +8559,7 @@ https://unsplash.it/200/100 200w"
           >
             <input
               aria-invalid="false"
+              autocomplete="firstname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r5j:"
               name="firstName"
@@ -8723,6 +8596,7 @@ https://unsplash.it/200/100 200w"
           >
             <input
               aria-invalid="false"
+              autocomplete="lastname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r5k:"
               name="name"
@@ -8866,6 +8740,7 @@ https://unsplash.it/200/100 200w"
             >
               <input
                 aria-invalid="false"
+                autocomplete="address"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r5n:"
                 name="address.streetAddress"
@@ -8902,6 +8777,7 @@ https://unsplash.it/200/100 200w"
             >
               <input
                 aria-invalid="false"
+                autocomplete="zip"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r5o:"
                 name="address.zipCode"
@@ -8938,6 +8814,7 @@ https://unsplash.it/200/100 200w"
             >
               <input
                 aria-invalid="false"
+                autocomplete="city"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r5p:"
                 name="address.city"
@@ -8974,6 +8851,7 @@ https://unsplash.it/200/100 200w"
             >
               <input
                 aria-invalid="false"
+                autocomplete="country"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r5q:"
                 name="address.country"
@@ -9210,7 +9088,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-ov4jqr-MuiButtonBase-root-MuiButton-root-Subscribe"
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-193x9on-MuiButtonBase-root-MuiButton-root-buttonStyles"
       tabindex="0"
       type="submit"
     >
@@ -9265,13 +9143,7 @@ exports[`Subscribe should render WithChallengeLoading 1`] = `
                 </small>
               </div>
               <span
-                __typename="MemberPlan"
-                availablepaymentmethods="[object Object],[object Object],[object Object]"
                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-                description="[object Object]"
-                image="[object Object]"
-                slug=""
-                tags=""
               >
                 <input
                   checked=""
@@ -9335,13 +9207,7 @@ exports[`Subscribe should render WithChallengeLoading 1`] = `
                 </small>
               </div>
               <span
-                __typename="MemberPlan"
-                availablepaymentmethods="[object Object]"
                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-                description="[object Object]"
-                image="[object Object]"
-                slug=""
-                tags=""
               >
                 <input
                   class="PrivateSwitchBase-input css-1m9pwf3"
@@ -9404,13 +9270,7 @@ exports[`Subscribe should render WithChallengeLoading 1`] = `
                 </small>
               </div>
               <span
-                __typename="MemberPlan"
-                availablepaymentmethods="[object Object]"
                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-                description="[object Object]"
-                image="[object Object]"
-                slug=""
-                tags=""
               >
                 <input
                   class="PrivateSwitchBase-input css-1m9pwf3"
@@ -9603,6 +9463,7 @@ https://unsplash.it/200/100 200w"
           >
             <input
               aria-invalid="false"
+              autocomplete="firstname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r5v:"
               name="firstName"
@@ -9639,6 +9500,7 @@ https://unsplash.it/200/100 200w"
           >
             <input
               aria-invalid="false"
+              autocomplete="lastname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r60:"
               name="name"
@@ -9782,6 +9644,7 @@ https://unsplash.it/200/100 200w"
             >
               <input
                 aria-invalid="false"
+                autocomplete="address"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r63:"
                 name="address.streetAddress"
@@ -9818,6 +9681,7 @@ https://unsplash.it/200/100 200w"
             >
               <input
                 aria-invalid="false"
+                autocomplete="zip"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r64:"
                 name="address.zipCode"
@@ -9854,6 +9718,7 @@ https://unsplash.it/200/100 200w"
             >
               <input
                 aria-invalid="false"
+                autocomplete="city"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r65:"
                 name="address.city"
@@ -9890,6 +9755,7 @@ https://unsplash.it/200/100 200w"
             >
               <input
                 aria-invalid="false"
+                autocomplete="country"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r66:"
                 name="address.country"
@@ -10101,7 +9967,7 @@ https://unsplash.it/200/100 200w"
       </h2>
     </div>
     <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-ov4jqr-MuiButtonBase-root-MuiButton-root-Subscribe"
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-193x9on-MuiButtonBase-root-MuiButton-root-buttonStyles"
       disabled=""
       tabindex="-1"
       type="submit"
@@ -10154,13 +10020,7 @@ exports[`Subscribe should render WithClassName 1`] = `
                 </small>
               </div>
               <span
-                __typename="MemberPlan"
-                availablepaymentmethods="[object Object],[object Object],[object Object]"
                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-                description="[object Object]"
-                image="[object Object]"
-                slug=""
-                tags=""
               >
                 <input
                   checked=""
@@ -10224,13 +10084,7 @@ exports[`Subscribe should render WithClassName 1`] = `
                 </small>
               </div>
               <span
-                __typename="MemberPlan"
-                availablepaymentmethods="[object Object]"
                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-                description="[object Object]"
-                image="[object Object]"
-                slug=""
-                tags=""
               >
                 <input
                   class="PrivateSwitchBase-input css-1m9pwf3"
@@ -10293,13 +10147,7 @@ exports[`Subscribe should render WithClassName 1`] = `
                 </small>
               </div>
               <span
-                __typename="MemberPlan"
-                availablepaymentmethods="[object Object]"
                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-                description="[object Object]"
-                image="[object Object]"
-                slug=""
-                tags=""
               >
                 <input
                   class="PrivateSwitchBase-input css-1m9pwf3"
@@ -10492,6 +10340,7 @@ https://unsplash.it/200/100 200w"
           >
             <input
               aria-invalid="false"
+              autocomplete="firstname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r6b:"
               name="firstName"
@@ -10528,6 +10377,7 @@ https://unsplash.it/200/100 200w"
           >
             <input
               aria-invalid="false"
+              autocomplete="lastname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r6c:"
               name="name"
@@ -10671,6 +10521,7 @@ https://unsplash.it/200/100 200w"
             >
               <input
                 aria-invalid="false"
+                autocomplete="address"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r6f:"
                 name="address.streetAddress"
@@ -10707,6 +10558,7 @@ https://unsplash.it/200/100 200w"
             >
               <input
                 aria-invalid="false"
+                autocomplete="zip"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r6g:"
                 name="address.zipCode"
@@ -10743,6 +10595,7 @@ https://unsplash.it/200/100 200w"
             >
               <input
                 aria-invalid="false"
+                autocomplete="city"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r6h:"
                 name="address.city"
@@ -10779,6 +10632,7 @@ https://unsplash.it/200/100 200w"
             >
               <input
                 aria-invalid="false"
+                autocomplete="country"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r6i:"
                 name="address.country"
@@ -11089,7 +10943,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-ov4jqr-MuiButtonBase-root-MuiButton-root-Subscribe"
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-193x9on-MuiButtonBase-root-MuiButton-root-buttonStyles"
       tabindex="0"
       type="submit"
     >
@@ -11107,7 +10961,7 @@ exports[`Subscribe should render WithCustomValidation 1`] = `
 - First value
 + Second value
 
-@@ -363,22 +363,23 @@
+@@ -345,22 +345,23 @@
         >
           <div
             class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -11129,12 +10983,12 @@ exports[`Subscribe should render WithCustomValidation 1`] = `
 -               aria-invalid="false"
 +               aria-describedby=":r6o:-helper-text"
 +               aria-invalid="true"
+                autocomplete="lastname"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r6o:"
                 name="name"
                 type="text"
-                value=""
-@@ -394,27 +395,34 @@
+@@ -377,27 +378,34 @@
                     Nachname
                   </span>
                 </legend>
@@ -11172,7 +11026,7 @@ exports[`Subscribe should render WithCustomValidation 1`] = `
                 id=":r6p:"
                 name="email"
                 type="email"
-@@ -431,27 +439,34 @@
+@@ -414,27 +422,34 @@
                     Email
                   </span>
                 </legend>
@@ -11210,7 +11064,7 @@ exports[`Subscribe should render WithCustomValidation 1`] = `
                 id=":r6q:"
                 name="password"
                 type="password"
-@@ -498,10 +513,16 @@
+@@ -481,10 +496,16 @@
                     Passwort
                   </span>
                 </legend>
@@ -11227,7 +11081,7 @@ exports[`Subscribe should render WithCustomValidation 1`] = `
       </div>
       <div
         class="css-qtq6nf-SubscribeSection eu4qtxp2"
-@@ -753,22 +774,23 @@
+@@ -736,22 +757,23 @@
           </div>
           <div
             class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -11254,7 +11108,7 @@ exports[`Subscribe should render WithCustomValidation 1`] = `
                 name="challengeAnswer.challengeSolution"
                 type="text"
                 value=""
-@@ -784,10 +806,16 @@
+@@ -767,10 +789,16 @@
                     Captcha
                   </span>
                 </legend>
@@ -11270,7 +11124,7 @@ exports[`Subscribe should render WithCustomValidation 1`] = `
         </div>
       </div>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-ov4jqr-MuiButtonBase-root-MuiButton-root-Subscribe""
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-193x9on-MuiButtonBase-root-MuiButton-root-buttonStyles""
 `;
 
 exports[`Subscribe should render WithEmotion 1`] = `
@@ -11315,13 +11169,7 @@ exports[`Subscribe should render WithEmotion 1`] = `
                 </small>
               </div>
               <span
-                __typename="MemberPlan"
-                availablepaymentmethods="[object Object],[object Object],[object Object]"
                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-                description="[object Object]"
-                image="[object Object]"
-                slug=""
-                tags=""
               >
                 <input
                   checked=""
@@ -11385,13 +11233,7 @@ exports[`Subscribe should render WithEmotion 1`] = `
                 </small>
               </div>
               <span
-                __typename="MemberPlan"
-                availablepaymentmethods="[object Object]"
                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-                description="[object Object]"
-                image="[object Object]"
-                slug=""
-                tags=""
               >
                 <input
                   class="PrivateSwitchBase-input css-1m9pwf3"
@@ -11454,13 +11296,7 @@ exports[`Subscribe should render WithEmotion 1`] = `
                 </small>
               </div>
               <span
-                __typename="MemberPlan"
-                availablepaymentmethods="[object Object]"
                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-                description="[object Object]"
-                image="[object Object]"
-                slug=""
-                tags=""
               >
                 <input
                   class="PrivateSwitchBase-input css-1m9pwf3"
@@ -11653,6 +11489,7 @@ https://unsplash.it/200/100 200w"
           >
             <input
               aria-invalid="false"
+              autocomplete="firstname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r70:"
               name="firstName"
@@ -11689,6 +11526,7 @@ https://unsplash.it/200/100 200w"
           >
             <input
               aria-invalid="false"
+              autocomplete="lastname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":r71:"
               name="name"
@@ -11832,6 +11670,7 @@ https://unsplash.it/200/100 200w"
             >
               <input
                 aria-invalid="false"
+                autocomplete="address"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r74:"
                 name="address.streetAddress"
@@ -11868,6 +11707,7 @@ https://unsplash.it/200/100 200w"
             >
               <input
                 aria-invalid="false"
+                autocomplete="zip"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r75:"
                 name="address.zipCode"
@@ -11904,6 +11744,7 @@ https://unsplash.it/200/100 200w"
             >
               <input
                 aria-invalid="false"
+                autocomplete="city"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r76:"
                 name="address.city"
@@ -11940,6 +11781,7 @@ https://unsplash.it/200/100 200w"
             >
               <input
                 aria-invalid="false"
+                autocomplete="country"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r77:"
                 name="address.country"
@@ -12250,7 +12092,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-ov4jqr-MuiButtonBase-root-MuiButton-root-Subscribe"
+      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-193x9on-MuiButtonBase-root-MuiButton-root-buttonStyles"
       tabindex="0"
       type="submit"
     >
@@ -12268,7 +12110,7 @@ exports[`Subscribe should render WithRegisterError 1`] = `
 - First value
 + Second value
 
-@@ -363,12 +363,12 @@
+@@ -345,12 +345,12 @@
         >
           <div
             class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -12283,8 +12125,8 @@ exports[`Subscribe should render WithRegisterError 1`] = `
             >
               Vorname
             </label>
-@@ -379,18 +379,18 @@
-                aria-invalid="false"
+@@ -362,18 +362,18 @@
+                autocomplete="firstname"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r7d:"
                 name="firstName"
@@ -12304,7 +12146,7 @@ exports[`Subscribe should render WithRegisterError 1`] = `
                     Vorname
                   </span>
                 </legend>
-@@ -399,12 +399,12 @@
+@@ -382,12 +382,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -12319,8 +12161,8 @@ exports[`Subscribe should render WithRegisterError 1`] = `
             >
               Nachname
             </label>
-@@ -415,18 +415,18 @@
-                aria-invalid="false"
+@@ -399,18 +399,18 @@
+                autocomplete="lastname"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r7e:"
                 name="name"
@@ -12340,7 +12182,7 @@ exports[`Subscribe should render WithRegisterError 1`] = `
                     Nachname
                   </span>
                 </legend>
-@@ -435,12 +435,12 @@
+@@ -419,12 +419,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -12355,7 +12197,7 @@ exports[`Subscribe should render WithRegisterError 1`] = `
             >
               Email
             </label>
-@@ -452,18 +452,18 @@
+@@ -436,18 +436,18 @@
                 autocomplete="email"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r7f:"
@@ -12376,7 +12218,7 @@ exports[`Subscribe should render WithRegisterError 1`] = `
                     Email
                   </span>
                 </legend>
-@@ -472,12 +472,12 @@
+@@ -456,12 +456,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -12391,7 +12233,7 @@ exports[`Subscribe should render WithRegisterError 1`] = `
             >
               Passwort
             </label>
-@@ -489,11 +489,11 @@
+@@ -473,11 +473,11 @@
                 autocomplete="new-password"
                 class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r7g:"
@@ -12404,7 +12246,7 @@ exports[`Subscribe should render WithRegisterError 1`] = `
                 class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1laqsz7-MuiInputAdornment-root"
               >
                 <button
-@@ -526,11 +526,11 @@
+@@ -510,11 +510,11 @@
               <fieldset
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
@@ -12417,7 +12259,7 @@ exports[`Subscribe should render WithRegisterError 1`] = `
                     Passwort
                   </span>
                 </legend>
-@@ -542,12 +542,12 @@
+@@ -526,12 +526,12 @@
           >
             <div
               class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-1706pe8-MuiFormControl-root-MuiTextField-root"
@@ -12432,8 +12274,8 @@ exports[`Subscribe should render WithRegisterError 1`] = `
               >
                 Adresse
               </label>
-@@ -558,18 +558,18 @@
-                  aria-invalid="false"
+@@ -543,18 +543,18 @@
+                  autocomplete="address"
                   class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                   id=":r7h:"
                   name="address.streetAddress"
@@ -12453,7 +12295,7 @@ exports[`Subscribe should render WithRegisterError 1`] = `
                       Adresse
                     </span>
                   </legend>
-@@ -578,12 +578,12 @@
+@@ -563,12 +563,12 @@
             </div>
             <div
               class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -12468,8 +12310,8 @@ exports[`Subscribe should render WithRegisterError 1`] = `
               >
                 PLZ
               </label>
-@@ -594,18 +594,18 @@
-                  aria-invalid="false"
+@@ -580,18 +580,18 @@
+                  autocomplete="zip"
                   class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                   id=":r7i:"
                   name="address.zipCode"
@@ -12489,7 +12331,7 @@ exports[`Subscribe should render WithRegisterError 1`] = `
                       PLZ
                     </span>
                   </legend>
-@@ -614,12 +614,12 @@
+@@ -600,12 +600,12 @@
             </div>
             <div
               class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -12504,8 +12346,8 @@ exports[`Subscribe should render WithRegisterError 1`] = `
               >
                 Ort / Stadt
               </label>
-@@ -630,18 +630,18 @@
-                  aria-invalid="false"
+@@ -617,18 +617,18 @@
+                  autocomplete="city"
                   class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                   id=":r7j:"
                   name="address.city"
@@ -12525,7 +12367,7 @@ exports[`Subscribe should render WithRegisterError 1`] = `
                       Ort / Stadt
                     </span>
                   </legend>
-@@ -650,12 +650,12 @@
+@@ -637,12 +637,12 @@
             </div>
             <div
               class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-8qobka-MuiFormControl-root-MuiTextField-root"
@@ -12540,8 +12382,8 @@ exports[`Subscribe should render WithRegisterError 1`] = `
               >
                 Land
               </label>
-@@ -666,18 +666,18 @@
-                  aria-invalid="false"
+@@ -654,18 +654,18 @@
+                  autocomplete="country"
                   class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                   id=":r7k:"
                   name="address.country"
@@ -12561,7 +12403,7 @@ exports[`Subscribe should render WithRegisterError 1`] = `
                       Land
                     </span>
                   </legend>
-@@ -937,12 +937,12 @@
+@@ -925,12 +925,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiTextField-root css-1u3bzj6-MuiFormControl-root-MuiTextField-root"
@@ -12576,7 +12418,7 @@ exports[`Subscribe should render WithRegisterError 1`] = `
             >
               Captcha
             </label>
-@@ -953,26 +953,51 @@
+@@ -941,26 +941,51 @@
                 aria-invalid="false"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r7n:"
@@ -12628,7 +12470,7 @@ exports[`Subscribe should render WithRegisterError 1`] = `
         </div>
       </div>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-ov4jqr-MuiButtonBase-root-MuiButton-root-Subscribe"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-193x9on-MuiButtonBase-root-MuiButton-root-buttonStyles"
         tabindex="0""
 `;
 
@@ -12637,7 +12479,7 @@ exports[`Subscribe should render WithSubscribeError 1`] = `
 - First value
 + Second value
 
-@@ -531,10 +531,35 @@
+@@ -513,10 +513,35 @@
               Automatisch Erneuern
             </span>
           </label>
@@ -12669,7 +12511,7 @@ exports[`Subscribe should render WithSubscribeError 1`] = `
 +       </div>
 +     </div>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-ov4jqr-MuiButtonBase-root-MuiButton-root-Subscribe"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-193x9on-MuiButtonBase-root-MuiButton-root-buttonStyles"
         tabindex="0"
         type="submit"
       >"

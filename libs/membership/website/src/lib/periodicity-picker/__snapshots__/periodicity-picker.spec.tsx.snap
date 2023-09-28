@@ -21,7 +21,6 @@ exports[`PeriodicityPicker should render Default 1`] = `
         id=":r0:"
       >
         <option
-          selected=""
           value="MONTHLY"
         >
           Monatlich
@@ -162,7 +161,6 @@ exports[`PeriodicityPicker should render WithClassName 1`] = `
         id=":r3:"
       >
         <option
-          selected=""
           value="MONTHLY"
         >
           Monatlich
@@ -232,7 +230,6 @@ exports[`PeriodicityPicker should render WithEmotion 1`] = `
         id=":r4:"
       >
         <option
-          selected=""
           value="MONTHLY"
         >
           Monatlich
@@ -302,7 +299,6 @@ exports[`PeriodicityPicker should render WithError 1`] = `
         id=":r5:"
       >
         <option
-          selected=""
           value="MONTHLY"
         >
           Monatlich
@@ -372,7 +368,6 @@ exports[`PeriodicityPicker should render WithLoading 1`] = `
         id=":r6:"
       >
         <option
-          selected=""
           value="MONTHLY"
         >
           Monatlich

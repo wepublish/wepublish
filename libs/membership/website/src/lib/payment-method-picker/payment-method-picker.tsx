@@ -19,7 +19,7 @@ export const PaymentMethodPicker = forwardRef<HTMLButtonElement, BuilderPaymentM
     }, [paymentMethods, onChange, value])
 
     if (!show) {
-      return undefined
+      return null
     }
 
     return (
@@ -33,8 +33,7 @@ export const PaymentMethodPicker = forwardRef<HTMLButtonElement, BuilderPaymentM
             ref={ref}
             name={name}
             onChange={event => onChange(event.target.value as PaymentPeriodicity)}
-            defaultValue={paymentMethods[0]?.id}
-            value={value ? value : undefined}
+            value={value ? value : ''}
             id={id}>
             {paymentMethods.map(method => (
               <option key={method.id} value={method.id}>

@@ -1,5 +1,5 @@
 import {zodResolver} from '@hookform/resolvers/zod'
-import {Checkbox, FormControlLabel, InputAdornment, Slider, css, styled} from '@mui/material'
+import {Checkbox, FormControlLabel, InputAdornment, Slider, styled} from '@mui/material'
 import {
   RegistrationChallenge,
   RegistrationChallengeWrapper,
@@ -26,6 +26,7 @@ import {z} from 'zod'
 import {formatChf} from '../formatters/format-currency'
 import {formatPaymentPeriod, getPaymentPeriodicyMonths} from '../formatters/format-payment-period'
 import {formatRenewalPeriod} from '../formatters/format-renewal-period'
+import {css} from '@emotion/react'
 
 const subscribeSchema = z.object({
   memberPlanId: z.string().nonempty(),
@@ -382,6 +383,7 @@ export const Subscribe = <T extends BuilderUserFormFields>({
                 render={({field, fieldState: {error}}) => (
                   <TextField
                     {...field}
+                    value={field.value ?? ''}
                     label={'Captcha'}
                     error={!!error}
                     helperText={error?.message}

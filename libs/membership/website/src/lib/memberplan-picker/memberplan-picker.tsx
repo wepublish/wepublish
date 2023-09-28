@@ -52,8 +52,7 @@ export const MemberPlanPicker = forwardRef<HTMLButtonElement, BuilderMemberPlanP
         <MemberPlanPickerRadios
           name={name}
           onChange={event => onChange(event.target.value)}
-          defaultValue={memberPlans[0]?.id}
-          value={value ? value : undefined}
+          value={value ? value : ''}
           ref={ref}>
           {memberPlans.map(memberPlan => (
             <FormControlLabel
@@ -63,7 +62,8 @@ export const MemberPlanPicker = forwardRef<HTMLButtonElement, BuilderMemberPlanP
                 <MemberPlanItem
                   key={memberPlan.id}
                   checked={memberPlan.id === value}
-                  {...memberPlan}
+                  name={memberPlan.name}
+                  amountPerMonthMin={memberPlan.amountPerMonthMin}
                 />
               }
               label={memberPlan.name}

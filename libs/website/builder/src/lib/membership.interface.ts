@@ -51,7 +51,6 @@ export type BuilderMemberPlanPickerProps = {
   onChange: (memberPlanId: string) => void
   name?: string
   value?: string
-  defaultValue?: string
 }
 
 export type BuilderPeriodicityPickerProps = {
@@ -60,7 +59,6 @@ export type BuilderPeriodicityPickerProps = {
   onChange: (periodicitiy: PaymentPeriodicity) => void
   name?: string
   value?: string
-  defaultValue?: string
 }
 
 export type BuilderPaymentMethodPickerProps = {
@@ -69,7 +67,6 @@ export type BuilderPaymentMethodPickerProps = {
   onChange: (paymentMethodId: string) => void
   name?: string
   value?: string
-  defaultValue?: string
 }
 
 export type BuilderSubscribeProps<

@@ -20,7 +20,7 @@ export const PeriodicityPicker = forwardRef<HTMLButtonElement, BuilderPeriodicit
     }, [periodicities, onChange, value])
 
     if (!show) {
-      return undefined
+      return null
     }
 
     return (
@@ -34,8 +34,7 @@ export const PeriodicityPicker = forwardRef<HTMLButtonElement, BuilderPeriodicit
             ref={ref}
             name={name}
             onChange={event => onChange(event.target.value as PaymentPeriodicity)}
-            defaultValue={periodicities[0]}
-            value={value ? value : undefined}
+            value={value ? value : ''}
             id={id}>
             {periodicities.map(period => (
               <option key={period} value={period}>
