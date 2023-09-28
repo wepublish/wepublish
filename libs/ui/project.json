@@ -38,19 +38,6 @@
           "codeCoverage": true
         }
       }
-    },
-    "build-storybook": {
-      "executor": "@nx/storybook:build",
-      "outputs": ["{options.outputDir}"],
-      "options": {
-        "configDir": "libs/ui/.storybook",
-        "outputDir": "dist/storybook/ui"
-      },
-      "configurations": {
-        "ci": {
-          "quiet": true
-        }
-      }
     }
   }
 }
