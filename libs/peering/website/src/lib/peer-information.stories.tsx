@@ -71,7 +71,7 @@ const peer = {
   createdAt: '2023-01-01',
   modifiedAt: '2023-01-01',
   __typename: 'Peer'
-} as PeerQuery['peer']
+} as NonNullable<PeerQuery['peer']>
 
 export default {
   component: PeerInformation,
@@ -83,6 +83,38 @@ export const Default = {
     originUrl: 'https://example.com',
     data: {
       peer
+    }
+  }
+}
+
+export const WithoutCtaUrl = {
+  ...Default,
+  args: {
+    ...Default.args,
+    data: {
+      peer: {
+        ...peer,
+        profile: {
+          ...peer.profile,
+          callToActionURL: null
+        }
+      }
+    }
+  }
+}
+
+export const WithoutCtaText = {
+  ...Default,
+  args: {
+    ...Default.args,
+    data: {
+      peer: {
+        ...peer,
+        profile: {
+          ...peer.profile,
+          callToActionText: null
+        }
+      }
     }
   }
 }

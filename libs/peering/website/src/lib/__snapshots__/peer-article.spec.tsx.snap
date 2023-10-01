@@ -1,0 +1,101 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PeerInformation should render Default 1`] = `
+<DocumentFragment>
+  <aside
+    class="css-1ng24i9-PeerInformationWrapper eyzn4eq3"
+  >
+    <div
+      class="css-uc87i1-PeerInformationName eyzn4eq2"
+    />
+    <div
+      class="css-1eo3s8y-PeerInformationCTA eyzn4eq1"
+    />
+    <div
+      class="css-198qeby-PeerInformationOrigin eyzn4eq0"
+    />
+  </aside>
+</DocumentFragment>
+`;
+
+exports[`PeerInformation should render WithClassName 1`] = `
+<DocumentFragment>
+  <aside
+    class="extra-classname css-1ng24i9-PeerInformationWrapper eyzn4eq3"
+  >
+    <div
+      class="css-uc87i1-PeerInformationName eyzn4eq2"
+    />
+    <div
+      class="css-1eo3s8y-PeerInformationCTA eyzn4eq1"
+    />
+    <div
+      class="css-198qeby-PeerInformationOrigin eyzn4eq0"
+    />
+  </aside>
+</DocumentFragment>
+`;
+
+exports[`PeerInformation should render WithEmotion 1`] = `
+<DocumentFragment>
+  <aside
+    class="css-1ng24i9-PeerInformationWrapper eyzn4eq3"
+  >
+    <div
+      class="css-uc87i1-PeerInformationName eyzn4eq2"
+    />
+    <div
+      class="css-1eo3s8y-PeerInformationCTA eyzn4eq1"
+    />
+    <div
+      class="css-198qeby-PeerInformationOrigin eyzn4eq0"
+    />
+  </aside>
+</DocumentFragment>
+`;
+
+exports[`PeerInformation should render WithError 1`] = `
+<DocumentFragment>
+  <aside
+    class="css-1ng24i9-PeerInformationWrapper eyzn4eq3"
+  />
+</DocumentFragment>
+`;
+
+exports[`PeerInformation should render WithLoading 1`] = `<DocumentFragment />`;
+
+exports[`PeerInformation should render WithoutCtaText 1`] = `
+<DocumentFragment>
+  <aside
+    class="css-1ng24i9-PeerInformationWrapper eyzn4eq3"
+  >
+    <div
+      class="css-uc87i1-PeerInformationName eyzn4eq2"
+    />
+    <div
+      class="css-1eo3s8y-PeerInformationCTA eyzn4eq1"
+    />
+    <div
+      class="css-198qeby-PeerInformationOrigin eyzn4eq0"
+    />
+  </aside>
+</DocumentFragment>
+`;
+
+exports[`PeerInformation should render WithoutCtaUrl 1`] = `
+<DocumentFragment>
+  <aside
+    class="css-1ng24i9-PeerInformationWrapper eyzn4eq3"
+  >
+    <div
+      class="css-uc87i1-PeerInformationName eyzn4eq2"
+    />
+    <div
+      class="css-1eo3s8y-PeerInformationCTA eyzn4eq1"
+    />
+    <div
+      class="css-198qeby-PeerInformationOrigin eyzn4eq0"
+    />
+  </aside>
+</DocumentFragment>
+`;
