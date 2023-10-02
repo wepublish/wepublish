@@ -31,7 +31,8 @@ const IconWrapper = styled.div`
 `
 
 const InnerHtmlWrapper = styled.div`
-  margin-top: 30px;
+  min-height: 50px;
+  margin-top: 20px;
 `
 
 export const HTMLBlock = ({value, onChange, autofocus}: BlockProps<HTMLBlockValue>) => {
