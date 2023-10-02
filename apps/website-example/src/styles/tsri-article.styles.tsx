@@ -24,11 +24,21 @@ export const tsriArticleStyles = (theme: Theme) => css`
   ${ArticleWrapper} ${ArticleInfoWrapper} {
     width: 100%;
     justify-self: flex-start;
-    padding-top: ${theme.spacing(2)};
+    padding: ${theme.spacing(2)} 0;
     gap: ${theme.spacing(4)};
     grid-auto-flow: row;
     grid-auto-columns: 1fr;
     grid-row: 2;
+    position: relative;
+
+    &::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      width: 100%;
+      height: 1px;
+      background-color: #000;
+    }
 
     & > * {
       position: relative;
@@ -80,9 +90,12 @@ export const tsriArticleStyles = (theme: Theme) => css`
       grid-column-start: 1;
       grid-column-end: 3;
 
+      &::after {
+        width: 40px;
+      }
+
       & > * {
         &::before {
-          top: -${theme.spacing(2)};
           width: 40px;
         }
       }

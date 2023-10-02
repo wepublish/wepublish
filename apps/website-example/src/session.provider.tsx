@@ -5,7 +5,7 @@ import {PropsWithChildren, memo, useCallback, useEffect, useState} from 'react'
 export const AuthTokenStorageKey = 'auth.token'
 
 export const SessionProvider = memo<PropsWithChildren<{sessionToken: ApiV1.UserSession | null}>>(
-  ({sessionToken, children}) => {
+  function SessionProvider({sessionToken, children}) {
     const [token, setToken] = useState<typeof sessionToken>(sessionToken)
     const [user, setUser] = useState<ApiV1.User | null>(null)
 
@@ -55,5 +55,3 @@ export const SessionProvider = memo<PropsWithChildren<{sessionToken: ApiV1.UserS
     )
   }
 )
-
-SessionProvider.displayName = 'SessionProvider'
