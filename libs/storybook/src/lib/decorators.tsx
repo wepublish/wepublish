@@ -9,6 +9,7 @@ import {
   WebsiteProvider
 } from '@wepublish/website'
 import {ComponentType, PropsWithChildren, memo, useCallback, useState} from 'react'
+import {User} from '@wepublish/website/api'
 
 const SessionProvider = memo<PropsWithChildren>(({children}) => {
   const [token, setToken] = useState<ApiV1.UserSession | null>()
@@ -78,3 +79,18 @@ const withExtraClassname = (Story: ComponentType) => {
 }
 
 export const decorators = [withWebsiteProvider, withExtraClassname] as Preview['decorators']
+
+export const WithUserDecorator = (user: User | null) => (Story: ComponentType) => {
+  return (
+    <SessionTokenContext.Provider
+      value={[
+        user,
+        true,
+        () => {
+          /* do nothing */
+        }
+      ]}>
+      <Story />
+    </SessionTokenContext.Provider>
+  )
+}

@@ -72,6 +72,10 @@ import {
 import {
   BuilderInvoiceListItemProps,
   BuilderInvoiceListProps,
+  BuilderMemberPlanPickerProps,
+  BuilderPaymentMethodPickerProps,
+  BuilderPeriodicityPickerProps,
+  BuilderSubscribeProps,
   BuilderSubscriptionListItemProps,
   BuilderSubscriptionListProps
 } from './membership.interface'
@@ -121,6 +125,10 @@ export type WebsiteBuilderProps = {
   SubscriptionListItem: ComponentType<BuilderSubscriptionListItemProps>
   InvoiceList: ComponentType<BuilderInvoiceListProps>
   InvoiceListItem: ComponentType<BuilderInvoiceListItemProps>
+  MemberPlanPicker: ComponentType<BuilderMemberPlanPickerProps>
+  PaymentMethodPicker: ComponentType<BuilderPaymentMethodPickerProps>
+  PeriodicityPicker: ComponentType<BuilderPeriodicityPickerProps>
+  Subscribe: ComponentType<BuilderSubscribeProps>
 
   elements: {
     Alert: ComponentType<BuilderAlertProps>
@@ -192,6 +200,10 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   SubscriptionListItem: NoComponent,
   InvoiceList: NoComponent,
   InvoiceListItem: NoComponent,
+  Subscribe: NoComponent,
+  MemberPlanPicker: NoComponent,
+  PaymentMethodPicker: NoComponent,
+  PeriodicityPicker: NoComponent,
   Page: NoComponent,
   PageSEO: NoComponent,
   Article: NoComponent,

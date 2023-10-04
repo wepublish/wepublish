@@ -14,7 +14,7 @@ export const EventBlockWrapper = styled('aside')`
   justify-items: center;
 
   ${EventListItemWrapper} {
-    grid-template-columns: 1fr !important;
+    grid-template-columns: 1fr;
   }
 `
 

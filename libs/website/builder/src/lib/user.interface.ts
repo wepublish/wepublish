@@ -1,5 +1,6 @@
 import {
   Image,
+  RegisterMutationVariables,
   UpdatePasswordMutationVariables,
   UpdateUserMutationVariables,
   User
@@ -7,6 +8,15 @@ import {
 import {ChangeEvent} from 'react'
 import {OptionalKeysOf} from 'type-fest'
 import z from 'zod'
+import {Control} from 'react-hook-form'
+
+export type BuilderUserFormFields = OptionalKeysOf<RegisterMutationVariables>
+
+export type BuilderUserFormProps<T extends BuilderUserFormFields> = {
+  fields: T[]
+  className?: string
+  control: Control<any>
+}
 
 export type BuilderImageUploadProps = {
   image?: Image | null

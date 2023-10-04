@@ -2,7 +2,7 @@ import {css} from '@emotion/react'
 import {action} from '@storybook/addon-actions'
 import {StoryObj} from '@storybook/react'
 import {userEvent, within} from '@storybook/testing-library'
-import {SessionTokenContext} from '@wepublish/authentication/website'
+import {WithUserDecorator} from '@wepublish/storybook'
 import {
   FullImageFragment,
   UpdatePasswordDocument,
@@ -10,28 +10,12 @@ import {
   User
 } from '@wepublish/website/api'
 import {PersonalDataFormFields} from '@wepublish/website/builder'
-import {ComponentType} from 'react'
 import {PersonalDataFormContainer} from './personal-data-form-container'
 import * as personalDataFormStories from './personal-data-form.stories'
 
 export default {
   title: 'Container/Personal Data Form',
   component: PersonalDataFormContainer
-}
-
-const WithUserDecorator = (Story: ComponentType) => {
-  return (
-    <SessionTokenContext.Provider
-      value={[
-        mockUser as User,
-        true,
-        () => {
-          /* do nothing */
-        }
-      ]}>
-      <Story />
-    </SessionTokenContext.Provider>
-  )
 }
 
 const mockUser: PersonalDataFormFields = {
@@ -212,7 +196,7 @@ export const Default: StoryObj = {
       ]
     }
   },
-  decorators: [WithUserDecorator]
+  decorators: [WithUserDecorator(mockUser as User)]
 }
 
 export const Filled: StoryObj = {

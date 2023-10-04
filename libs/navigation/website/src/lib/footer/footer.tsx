@@ -37,10 +37,12 @@ const FooterLinks = styled('nav')`
   `}
 `
 
-export function Footer({className, data, loading, error, children}: BuilderFooterProps) {
+export function Footer({className, slug, data, loading, error, children}: BuilderFooterProps) {
   const {
     elements: {Link}
   } = useWebsiteBuilder()
+
+  const navigation = data?.navigations?.find(navigation => navigation.key === slug)
 
   return (
     <FooterWrapper className={className}>
@@ -48,7 +50,7 @@ export function Footer({className, data, loading, error, children}: BuilderFoote
         {children}
 
         <FooterLinks>
-          {data?.navigation?.links?.map((link, index) => {
+          {navigation?.links.map((link, index) => {
             const url = navigationLinkToUrl(link)
 
             return (

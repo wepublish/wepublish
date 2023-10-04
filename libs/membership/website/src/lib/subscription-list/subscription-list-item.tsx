@@ -1,8 +1,11 @@
 import {styled} from '@mui/material'
-import {PaymentPeriodicity, SubscriptionDeactivationReason} from '@wepublish/website/api'
-import {BuilderSubscriptionListItemProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {cond} from 'ramda'
-import {useCallback, useState} from 'react'
+import {SubscriptionDeactivationReason} from '@wepublish/website/api'
+import {
+  BuilderSubscriptionListItemProps,
+  useAsyncAction,
+  useWebsiteBuilder
+} from '@wepublish/website/builder'
+import {useState} from 'react'
 import {
   MdAttachMoney,
   MdAutorenew,
@@ -13,6 +16,7 @@ import {
   MdTimelapse
 } from 'react-icons/md'
 import {formatChf} from '../formatters/format-currency'
+import {formatPaymentPeriod, formatPaymentTimeline} from '../formatters/format-payment-period'
 
 export const SubscriptionListItemWrapper = styled('div')`
   display: grid;
@@ -75,33 +79,10 @@ export function SubscriptionListItem({
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error>()
-  const callAction = useCallback(async (action: () => Promise<void>) => {
-    try {
-      setError(undefined)
-      setLoading(true)
-      await action()
-    } catch (e) {
-      if (e instanceof Error) {
-        setError(e)
-      }
-    } finally {
-      setLoading(false)
-    }
-  }, [])
+  const callAction = useAsyncAction(setLoading, setError)
 
-  const periodicityTimeline = cond([
-    [period => period === PaymentPeriodicity.Monthly, () => 'monatlich'],
-    [period => period === PaymentPeriodicity.Quarterly, () => 'vierteljährlich'],
-    [period => period === PaymentPeriodicity.Biannual, () => 'zweimal pro Jahr'],
-    [() => true, () => 'jährlich']
-  ])(paymentPeriodicity)
-
-  const subscriptionDuration = cond([
-    [period => period === PaymentPeriodicity.Monthly, () => '1 Monat'],
-    [period => period === PaymentPeriodicity.Quarterly, () => '3 Monate'],
-    [period => period === PaymentPeriodicity.Biannual, () => '6 Monate'],
-    [() => true, () => '1 Jahr']
-  ])(paymentPeriodicity)
+  const periodicityTimeline = formatPaymentTimeline(paymentPeriodicity)
+  const subscriptionDuration = formatPaymentPeriod(paymentPeriodicity)
 
   return (
     <SubscriptionListItemWrapper className={className}>
@@ -185,7 +166,7 @@ export function SubscriptionListItem({
         {!deactivation && (
           <SubscriptionListItemActions>
             <Button
-              onClick={() => cancel && callAction(cancel)}
+              onClick={callAction(cancel)}
               disabled={loading}
               variant="text"
               color="secondary">
@@ -193,13 +174,13 @@ export function SubscriptionListItem({
             </Button>
 
             {!paidUntil && (
-              <Button onClick={() => pay && callAction(pay)} disabled={loading}>
+              <Button onClick={callAction(pay)} disabled={loading}>
                 Jetzt Bezahlen
               </Button>
             )}
 
             {paidUntil && (
-              <Button onClick={() => extend && callAction(extend)} disabled={loading}>
+              <Button onClick={callAction(extend)} disabled={loading}>
                 Jetzt Verlängern
               </Button>
             )}

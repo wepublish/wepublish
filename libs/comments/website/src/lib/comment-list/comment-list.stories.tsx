@@ -3,9 +3,9 @@ import {css} from '@emotion/react'
 import {action} from '@storybook/addon-actions'
 import {Meta, StoryObj} from '@storybook/react'
 import {userEvent, waitFor, within} from '@storybook/testing-library'
-import {SessionTokenContext} from '@wepublish/authentication/website'
+import {WithUserDecorator} from '@wepublish/storybook'
 import {Challenge, CommentListQuery, FullImageFragment} from '@wepublish/website/api'
-import {ComponentProps, ComponentType, useReducer} from 'react'
+import {ComponentProps, useReducer} from 'react'
 import {Node} from 'slate'
 import {CommentList} from './comment-list'
 import {commentListReducer} from './comment-list.state'
@@ -179,21 +179,6 @@ const nestedChildren = (id: string) => [
   }
 ]
 
-const WithUserDecorator = (Story: ComponentType) => {
-  return (
-    <SessionTokenContext.Provider
-      value={[
-        verifiedUserComment.user ?? null,
-        true,
-        () => {
-          /* do nothing */
-        }
-      ]}>
-      <Story />
-    </SessionTokenContext.Provider>
-  )
-}
-
 // Custom render function for passing down the reducer
 function Render(props: ComponentProps<typeof CommentList>) {
   const [openCommentEditors, dispatch] = useReducer(commentListReducer, {})
@@ -247,12 +232,12 @@ export const Empty: StoryObj = {
 
 export const Commenting: StoryObj = {
   ...Default,
-  decorators: [WithUserDecorator]
+  decorators: [WithUserDecorator(verifiedUserComment.user ?? null)]
 }
 
 export const CommentingOpen: StoryObj = {
   ...Commenting,
-  decorators: [WithUserDecorator],
+  decorators: [WithUserDecorator(verifiedUserComment.user ?? null)],
   play: async ctx => {
     const {canvasElement, step} = ctx
     const canvas = within(canvasElement)

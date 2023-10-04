@@ -6,7 +6,7 @@ exports[`AuthorList Container should render Default 1`] = `
     class="css-1d3do4s-AuthorListWrapper e17rhc8g0"
   >
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="https://example.com"
     >
       <div
@@ -39,7 +39,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="https://example.com"
     >
       <div
@@ -72,7 +72,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="https://example.com"
     >
       <div
@@ -114,7 +114,7 @@ exports[`AuthorList Container should render WithClassName 1`] = `
     class="extra-classname css-1d3do4s-AuthorListWrapper e17rhc8g0"
   >
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="https://example.com"
     >
       <div
@@ -147,7 +147,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="https://example.com"
     >
       <div
@@ -180,7 +180,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="https://example.com"
     >
       <div
@@ -222,7 +222,7 @@ exports[`AuthorList Container should render WithEmotion 1`] = `
     class="css-1d3do4s-AuthorListWrapper e17rhc8g0"
   >
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="https://example.com"
     >
       <div
@@ -255,7 +255,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="https://example.com"
     >
       <div
@@ -288,7 +288,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="https://example.com"
     >
       <div

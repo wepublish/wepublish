@@ -1,6 +1,10 @@
 import {styled} from '@mui/material'
-import {BuilderInvoiceListItemProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {useCallback, useState} from 'react'
+import {
+  BuilderInvoiceListItemProps,
+  useAsyncAction,
+  useWebsiteBuilder
+} from '@wepublish/website/builder'
+import {useState} from 'react'
 import {MdAttachMoney, MdCalendarMonth, MdOutlineInfo, MdOutlineWarning} from 'react-icons/md'
 import {formatChf} from '../formatters/format-currency'
 
@@ -62,19 +66,7 @@ export function InvoiceListItem({
 
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error>()
-  const callAction = useCallback(async (action: () => Promise<void>) => {
-    try {
-      setError(undefined)
-      setLoading(true)
-      await action()
-    } catch (e) {
-      if (e instanceof Error) {
-        setError(e)
-      }
-    } finally {
-      setLoading(false)
-    }
-  }, [])
+  const callAction = useAsyncAction(setLoading, setError)
 
   return (
     <InvoiceListItemWrapper className={className}>
@@ -131,7 +123,7 @@ export function InvoiceListItem({
 
         {!paidAt && !canceledAt && (
           <InvoiceListItemActions>
-            <Button onClick={() => pay && callAction(pay)} disabled={loading}>
+            <Button onClick={callAction(pay)} disabled={loading}>
               Jetzt Bezahlen
             </Button>
           </InvoiceListItemActions>

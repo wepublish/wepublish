@@ -73,6 +73,9 @@ export const EventEditView = () => {
 
   const onSubmit = () => {
     const {image, ...eventWithoutImage} = event!
+    if (!eventWithoutImage.endsAt) {
+      eventWithoutImage.endsAt = null
+    }
     updateEvent({variables: eventWithoutImage})
   }
 

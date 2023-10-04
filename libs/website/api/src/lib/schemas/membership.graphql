@@ -108,23 +108,6 @@ fragment FullInvoice on Invoice {
   total
 }
 
-query MemberPlanList($take: Int, $skip: Int) {
-  memberPlans(filter: {active: true}, take: $take, skip: $skip) {
-    nodes {
-      ...FullMemberPlan
-    }
-
-    pageInfo {
-      startCursor
-      endCursor
-      hasNextPage
-      hasPreviousPage
-    }
-
-    totalCount
-  }
-}
-
 mutation Subscribe(
   $memberPlanId: ID
   $memberPlanSlug: Slug
@@ -214,5 +197,36 @@ query Subscriptions {
 query CheckInvoiceStatus($id: ID!) {
   checkInvoiceStatus(id: $id) {
     ...FullInvoice
+  }
+}
+
+query MemberPlanList(
+  $filter: MemberPlanFilter
+  $cursor: ID
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: MemberPlanSort
+) {
+  memberPlans(
+    filter: $filter
+    cursor: $cursor
+    take: $take
+    skip: $skip
+    order: $order
+    sort: $sort
+  ) {
+    nodes {
+      ...FullMemberPlan
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
   }
 }

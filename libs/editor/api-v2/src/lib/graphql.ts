@@ -201,10 +201,10 @@ export type MutationUpdateUserConsentArgs = {
 
 export type PageInfo = {
   __typename?: 'PageInfo';
-  endCursor: Scalars['String'];
+  endCursor?: Maybe<Scalars['String']>;
   hasNextPage: Scalars['Boolean'];
   hasPreviousPage: Scalars['Boolean'];
-  startCursor: Scalars['String'];
+  startCursor?: Maybe<Scalars['String']>;
 };
 
 export enum PaymentPeriodicity {
@@ -510,7 +510,7 @@ export type ImportedEventListQueryVariables = Exact<{
 }>;
 
 
-export type ImportedEventListQuery = { __typename?: 'Query', importedEvents: { __typename?: 'ImportedEventsDocument', totalCount: number, nodes: Array<{ __typename?: 'Event', id: string, name: string, description: Node[], status: EventStatus, location: string, externalSourceId: string, externalSourceName: string, imageUrl?: string | null, startsAt: string, endsAt?: string | null }>, pageInfo: { __typename?: 'PageInfo', startCursor: string, endCursor: string, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type ImportedEventListQuery = { __typename?: 'Query', importedEvents: { __typename?: 'ImportedEventsDocument', totalCount: number, nodes: Array<{ __typename?: 'Event', id: string, name: string, description: Node[], status: EventStatus, location: string, externalSourceId: string, externalSourceName: string, imageUrl?: string | null, startsAt: string, endsAt?: string | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type ImportedEventQueryVariables = Exact<{
   filter: SingleEventFilter;
