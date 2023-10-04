@@ -33,7 +33,7 @@ jobs:
         uses: 'google-github-actions/get-gke-credentials@v1'
         with:
           project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
-          cluster_name: funiciello-dev-cluster
+          cluster_name: development
           location: europe-west6
 
       - name: Ensure namespace exists
@@ -69,7 +69,7 @@ jobs:
             port: 80
           ingress:
             enabled: true
-            host: media-${{ github.event.pull_request.number }}.reviews.wepublish.media
+            host: media-${{ github.event.pull_request.number }}.reviews.wepublish.dev
             path: /
           pvc:
             storage: 20Gi
@@ -83,10 +83,10 @@ jobs:
           deployment:
             image: ${{ inputs.image }}
             env:
-              API_URL: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.media
-              EDITOR_URL: https://editor-${{ github.event.pull_request.number }}.reviews.wepublish.media
-              WEBSITE_URL: https://website-${{ github.event.pull_request.number }}.reviews.wepublish.media
-              MEDIA_SERVER_URL: https://media-${{ github.event.pull_request.number }}.reviews.wepublish.media
+              API_URL: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+              EDITOR_URL: https://editor-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+              WEBSITE_URL: https://website-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+              MEDIA_SERVER_URL: https://media-${{ github.event.pull_request.number }}.reviews.wepublish.dev
           api:
             env:
               GOOGLE_APPLICATION_CREDENTIALS: /var/secrets/google/key.json
@@ -99,7 +99,7 @@ jobs:
           website:
             enabled: false
           EOF
-          helm upgrade --install review-${{ github.event.pull_request.number }}-app ./helm/charts/wepublish -n reviews -f values.yaml
+          helm upgrade --install review-${{ github.event.pull_request.number }}-app ./helm/charts/wepublish -n reviews -f values.yaml --wait
           
 
   notify:
