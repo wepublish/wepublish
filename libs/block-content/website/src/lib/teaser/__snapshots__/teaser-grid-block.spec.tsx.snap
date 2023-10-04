@@ -11,7 +11,7 @@ exports[`Teaser Grid Block should render OneColumn 1`] = `
       y="0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1szdm08-MuiTypography-root-MuiLink-root-Teaser"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
@@ -56,7 +56,7 @@ https://unsplash.it/200/200 200w"
       y="1"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1szdm08-MuiTypography-root-MuiLink-root-Teaser"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
@@ -95,7 +95,7 @@ https://unsplash.it/200/200 200w"
       y="2"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1szdm08-MuiTypography-root-MuiLink-root-Teaser"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
@@ -143,7 +143,7 @@ exports[`Teaser Grid Block should render ThreeColumns 1`] = `
       y="0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1szdm08-MuiTypography-root-MuiLink-root-Teaser"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
@@ -188,7 +188,7 @@ https://unsplash.it/200/200 200w"
       y="0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1szdm08-MuiTypography-root-MuiLink-root-Teaser"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
@@ -227,7 +227,7 @@ https://unsplash.it/200/200 200w"
       y="0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1szdm08-MuiTypography-root-MuiLink-root-Teaser"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
@@ -275,7 +275,7 @@ exports[`Teaser Grid Block should render WithClassName 1`] = `
       y="0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1szdm08-MuiTypography-root-MuiLink-root-Teaser"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
@@ -320,7 +320,7 @@ https://unsplash.it/200/200 200w"
       y="0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1szdm08-MuiTypography-root-MuiLink-root-Teaser"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
@@ -359,7 +359,7 @@ https://unsplash.it/200/200 200w"
       y="0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1szdm08-MuiTypography-root-MuiLink-root-Teaser"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
@@ -407,7 +407,7 @@ exports[`Teaser Grid Block should render WithEmotion 1`] = `
       y="0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1szdm08-MuiTypography-root-MuiLink-root-Teaser"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
@@ -452,7 +452,7 @@ https://unsplash.it/200/200 200w"
       y="0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1szdm08-MuiTypography-root-MuiLink-root-Teaser"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
@@ -491,7 +491,7 @@ https://unsplash.it/200/200 200w"
       y="0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1szdm08-MuiTypography-root-MuiLink-root-Teaser"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-149wvsa-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div

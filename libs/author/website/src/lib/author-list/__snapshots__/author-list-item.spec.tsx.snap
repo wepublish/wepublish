@@ -3,7 +3,7 @@
 exports[`AuthorList Item should render Default 1`] = `
 <DocumentFragment>
   <a
-    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
     href="https://example.com"
   >
     <div
@@ -41,7 +41,7 @@ https://unsplash.it/200/200 200w"
 exports[`AuthorList Item should render WithClassName 1`] = `
 <DocumentFragment>
   <a
-    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways extra-classname css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways extra-classname css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
     href="https://example.com"
   >
     <div
@@ -79,7 +79,7 @@ https://unsplash.it/200/200 200w"
 exports[`AuthorList Item should render WithEmotion 1`] = `
 <DocumentFragment>
   <a
-    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
     href="https://example.com"
   >
     <div
@@ -117,7 +117,7 @@ https://unsplash.it/200/200 200w"
 exports[`AuthorList Item should render WithoutImage 1`] = `
 <DocumentFragment>
   <a
-    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
     href="https://example.com"
   >
     <div
@@ -144,7 +144,7 @@ exports[`AuthorList Item should render WithoutImage 1`] = `
 exports[`AuthorList Item should render WithoutJobTitle 1`] = `
 <DocumentFragment>
   <a
-    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
     href="https://example.com"
   >
     <div

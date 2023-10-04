@@ -3,7 +3,7 @@
 exports[`ArticleList Item should render Default 1`] = `
 <DocumentFragment>
   <a
-    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
     href="https://example.com"
   >
     <div
@@ -46,7 +46,7 @@ https://unsplash.it/200/200 200w"
 exports[`ArticleList Item should render WithClassName 1`] = `
 <DocumentFragment>
   <a
-    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways extra-classname css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways extra-classname css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
     href="https://example.com"
   >
     <div
@@ -89,7 +89,7 @@ https://unsplash.it/200/200 200w"
 exports[`ArticleList Item should render WithEmotion 1`] = `
 <DocumentFragment>
   <a
-    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
     href="https://example.com"
   >
     <div
@@ -132,7 +132,7 @@ https://unsplash.it/200/200 200w"
 exports[`ArticleList Item should render WithoutImage 1`] = `
 <DocumentFragment>
   <a
-    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
     href="https://example.com"
   >
     <div
@@ -175,7 +175,7 @@ https://unsplash.it/200/200 200w"
 exports[`ArticleList Item should render WithoutImageWithoutImageBlock 1`] = `
 <DocumentFragment>
   <a
-    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
     href="https://example.com"
   >
     <div
@@ -207,7 +207,7 @@ exports[`ArticleList Item should render WithoutImageWithoutImageBlock 1`] = `
 exports[`ArticleList Item should render WithoutTitle 1`] = `
 <DocumentFragment>
   <a
-    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
     href="https://example.com"
   >
     <div

@@ -6,7 +6,7 @@ exports[`ArticleList should render Default 1`] = `
     class="css-dp8k64-ArticleListWrapper ei1ca8h0"
   >
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -44,7 +44,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -82,7 +82,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -120,7 +120,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -158,7 +158,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -196,7 +196,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -234,7 +234,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -272,7 +272,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -310,7 +310,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -348,7 +348,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -386,7 +386,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -433,7 +433,7 @@ exports[`ArticleList should render WithClassName 1`] = `
     class="extra-classname css-dp8k64-ArticleListWrapper ei1ca8h0"
   >
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -471,7 +471,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -509,7 +509,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -547,7 +547,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -585,7 +585,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -623,7 +623,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -661,7 +661,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -699,7 +699,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -737,7 +737,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -775,7 +775,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -813,7 +813,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -860,7 +860,7 @@ exports[`ArticleList should render WithEmotion 1`] = `
     class="css-dp8k64-ArticleListWrapper ei1ca8h0"
   >
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -898,7 +898,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -936,7 +936,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -974,7 +974,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -1012,7 +1012,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -1050,7 +1050,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -1088,7 +1088,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -1126,7 +1126,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -1164,7 +1164,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -1202,7 +1202,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -1240,7 +1240,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -1303,7 +1303,7 @@ exports[`ArticleList should render WithoutImage 1`] = `
     class="css-dp8k64-ArticleListWrapper ei1ca8h0"
   >
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -1341,7 +1341,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -1379,7 +1379,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -1417,7 +1417,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -1455,7 +1455,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -1493,7 +1493,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -1531,7 +1531,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -1569,7 +1569,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -1607,7 +1607,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -1645,7 +1645,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div
@@ -1683,7 +1683,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1vgz1ax-MuiTypography-root-MuiLink-root-ArticleListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1a0h34g-MuiTypography-root-MuiLink-root-ArticleListItem"
       href="https://example.com"
     >
       <div

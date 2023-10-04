@@ -341,7 +341,7 @@ exports[`Richtext Block should render Default 1`] = `
           </span>
         </span>
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
           data-slate-node="element"
           href="https://google.com"
           rel="noreferrer"
@@ -714,7 +714,7 @@ exports[`Richtext Block should render WithClassName 1`] = `
           </span>
         </span>
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
           data-slate-node="element"
           href="https://google.com"
           rel="noreferrer"
@@ -1087,7 +1087,7 @@ exports[`Richtext Block should render WithEmotion 1`] = `
           </span>
         </span>
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
           data-slate-node="element"
           href="https://google.com"
           rel="noreferrer"
