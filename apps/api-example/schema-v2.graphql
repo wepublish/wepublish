@@ -74,7 +74,10 @@ enum EventStatus {
 }
 
 input ImportedEventFilter {
+  from: String
   name: String
+  providers: [String]
+  to: String
 }
 
 enum ImportedEventSort {
@@ -114,10 +117,10 @@ type Mutation {
 }
 
 type PageInfo {
-  endCursor: String!
+  endCursor: String
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
-  startCursor: String!
+  startCursor: String
 }
 
 enum PaymentPeriodicity {
@@ -137,10 +140,13 @@ type Query {
   "\n      Returns all consents.\n    "
   consents(filter: ConsentFilter): [Consent!]!
 
+  "\n      Returns a list of Importable Event Providers\n    "
+  eventProviders: [String!]!
+
   "\n      Returns the expected revenue for the time period given.\n      Excludes cancelled or manually set as paid invoices.\n    "
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
 
-  "\n      Returns a more detailed version of a single importable event, by id and source (e.g. AgendaBasel).\n    "
+  "\n      Returns a more detailed version of a single importable event, by id and source.\n    "
   importedEvent(filter: SingleEventFilter!): Event!
 
   "\n      Returns a list of imported events from external sources, transformed to match our model.\n    "

@@ -1,5 +1,4 @@
 import {css} from '@emotion/react'
-import {action} from '@storybook/addon-actions'
 import {StoryObj} from '@storybook/react'
 import {LoginWithCredentialsDocument, LoginWithEmailDocument} from '@wepublish/website/api'
 import {LoginFormContainer} from './login-form-container'
@@ -11,10 +10,7 @@ export default {
 }
 
 export const WithEmail: StoryObj = {
-  args: {
-    onLoginWithEmail: action('onLoginWithEmail'),
-    onLoginWithCredentials: action('onLoginWithCredentials')
-  },
+  args: {},
   play: loginFormStories.WithEmailFilled.play,
   parameters: {
     apolloClient: {
@@ -36,10 +32,7 @@ export const WithEmail: StoryObj = {
 }
 
 export const WithCredentials: StoryObj = {
-  args: {
-    onLoginWithEmail: action('onLoginWithEmail'),
-    onLoginWithCredentials: action('onLoginWithCredentials')
-  },
+  args: {},
   play: loginFormStories.WithCredentialsFilled.play,
   parameters: {
     apolloClient: {
@@ -69,16 +62,12 @@ export const WithCredentials: StoryObj = {
 
 export const WithClassName: StoryObj = {
   args: {
-    onLoginWithEmail: action('onLoginWithEmail'),
-    onLoginWithCredentials: action('onLoginWithCredentials'),
     className: 'extra-classname'
   }
 }
 
 export const WithEmotion: StoryObj = {
   args: {
-    onLoginWithEmail: action('onLoginWithEmail'),
-    onLoginWithCredentials: action('onLoginWithCredentials'),
     css: css`
       background-color: #eee;
     `

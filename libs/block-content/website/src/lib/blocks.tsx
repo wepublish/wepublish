@@ -8,6 +8,7 @@ import {isTeaserGridFlexBlock} from './teaser/teaser-grid-flex-block'
 import {isTitleBlock} from './title/title-block'
 import {cond} from 'ramda'
 import {isEmbedBlock} from './embed/embed-block'
+import {isCommentBlock} from './comment/comment-block'
 import {isBildwurfAdBlock} from './bildwurf-ad/bildwurf-ad-block'
 import {isFacebookPostBlock} from './facebook/facebook-post-block'
 import {isFacebookVideoBlock} from './facebook/facebook-video-block'
@@ -68,7 +69,8 @@ export const BlockRenderer = ({block}: BuilderBlockRendererProps) => {
       [isHtmlBlock, block => <blocks.HTML {...block} />],
       [isEventBlock, block => <blocks.Event {...block} />],
       [isPollBlock, block => <blocks.Poll {...block} />],
-      [isListicleBlock, block => <blocks.Listicle {...block} />]
+      [isListicleBlock, block => <blocks.Listicle {...block} />],
+      [isCommentBlock, block => <blocks.Comment {...block} />]
     ])(block)
   )
 }

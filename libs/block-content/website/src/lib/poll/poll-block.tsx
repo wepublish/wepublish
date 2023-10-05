@@ -172,7 +172,11 @@ export const PollBlock = ({poll, className}: BuilderPollBlockProps) => {
       <PollBlockMeta>
         {totalVotes} Stimmen
         {poll.closedAt && isOpen && (
-          <> &ndash; Schliesst am {date.format(new Date(poll.closedAt))}</>
+          <>
+            {' '}
+            &ndash; Schliesst am{' '}
+            <time dateTime={poll.closedAt}>{date.format(new Date(poll.closedAt))}</time>
+          </>
         )}
         {!isOpen && <> &ndash; Abstimmung beendet.</>}
       </PollBlockMeta>

@@ -10,24 +10,27 @@ declare module 'react' {
 
 type ImageItem = {size: number; url: string | null | undefined}
 
-const imageToImageItems = (image: FullImageFragment): ImageItem[] => [
+export const imageToImageItems = (image: FullImageFragment): ImageItem[] => [
   {url: image.bigURL, size: 800},
   {url: image.largeURL, size: 500},
   {url: image.mediumURL, size: 300},
   {url: image.smallURL, size: 200}
 ]
 
-const imageToSquareImageItems = (image: FullImageFragment): ImageItem[] => [
+export const imageToSquareImageItems = (image: FullImageFragment): ImageItem[] => [
   {url: image.squareBigURL, size: 800},
   {url: image.squareLargeURL, size: 500},
   {url: image.squareMediumURL, size: 300},
   {url: image.squareSmallURL, size: 200}
 ]
 
-const ImageWrapper = styled('img')`
+export const ImageWrapper = styled('img')<{aspectRatio: number}>`
   max-width: 100%;
+  width: 100%;
   height: auto;
+  aspect-ratio: auto ${({aspectRatio}) => aspectRatio};
 `
+
 export function Image({
   image,
   square,
@@ -50,8 +53,7 @@ export function Image({
       {...props}
       alt={image.description ?? image.title ?? image.filename ?? ''}
       title={image.title ?? ''}
-      width={image.width}
-      height={image.height}
+      aspectRatio={image.width / image.height}
       srcSet={imageArray.join(',\n')}
       loading={loading}
       fetchPriority={fetchPriority}

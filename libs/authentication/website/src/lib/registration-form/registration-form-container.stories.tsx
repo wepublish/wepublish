@@ -1,5 +1,4 @@
 import {css} from '@emotion/react'
-import {action} from '@storybook/addon-actions'
 import {StoryObj} from '@storybook/react'
 import {Challenge, ChallengeDocument, RegisterDocument} from '@wepublish/website/api'
 import {RegistrationFormContainer} from './registration-form-container'
@@ -45,10 +44,7 @@ export const Filled: StoryObj = {
       </>
     )
   },
-  args: {
-    onRegister: action('onRegister'),
-    onChallengeQuery: action('onChallengeQuery')
-  },
+  args: {},
   play: async ctx => {
     const canvas = within(ctx.canvasElement)
     await waitFor(() => canvas.getByLabelText('Captcha'))
@@ -75,8 +71,8 @@ export const Filled: StoryObj = {
             data: {
               registerMember: {
                 session: {
-                  createdAt: new Date(),
-                  expiresAt: new Date(),
+                  createdAt: new Date('2023-01-01'),
+                  expiresAt: new Date('2023-01-01'),
                   token: '1234-1234'
                 },
                 user: {
@@ -98,10 +94,7 @@ export const Filled: StoryObj = {
 }
 
 export const WithChallengeError: StoryObj = {
-  args: {
-    onRegister: action('onRegister'),
-    onChallengeQuery: action('onChallengeQuery')
-  },
+  args: {},
   parameters: {
     apolloClient: {
       mocks: [
@@ -127,10 +120,7 @@ export const WithChallengeError: StoryObj = {
 }
 
 export const WithRegisterError: StoryObj = {
-  args: {
-    onRegister: action('onRegister'),
-    onChallengeQuery: action('onChallengeQuery')
-  },
+  args: {},
   play: Filled.play,
   parameters: {
     apolloClient: {
@@ -172,8 +162,6 @@ export const WithRegisterError: StoryObj = {
 
 export const WithClassName: StoryObj = {
   args: {
-    onRegister: action('onRegister'),
-    onChallengeQuery: action('onChallengeQuery'),
     className: 'extra-classname'
   },
   parameters: {
@@ -194,8 +182,6 @@ export const WithClassName: StoryObj = {
 
 export const WithEmotion: StoryObj = {
   args: {
-    onRegister: action('onRegister'),
-    onChallengeQuery: action('onChallengeQuery'),
     css: css`
       background-color: #eee;
     `

@@ -1,8 +1,7 @@
-import {action} from '@storybook/addon-actions'
-import {Meta} from '@storybook/react'
-import {Navigation, NavigationDocument} from '@wepublish/website/api'
-import {FooterContainer} from './footer-container'
 import {css} from '@emotion/react'
+import {Meta} from '@storybook/react'
+import {Navigation, NavigationListDocument} from '@wepublish/website/api'
+import {FooterContainer} from './footer-container'
 
 const children = (
   <svg
@@ -18,7 +17,7 @@ const children = (
 const navigation = {
   __typename: 'Navigation',
   id: 'cldx7kcpi1168oapxftiqsh0p',
-  key: 'main',
+  key: 'footer',
   name: 'main',
   links: [
     {
@@ -58,7 +57,6 @@ export default {
 
 export const Default = {
   args: {
-    onQuery: action('onQuery'),
     slug: 'footer',
     children
   },
@@ -68,14 +66,11 @@ export const Default = {
       mocks: [
         {
           request: {
-            query: NavigationDocument,
-            variables: {
-              slug: 'footer'
-            }
+            query: NavigationListDocument
           },
           result: {
             data: {
-              navigation
+              navigations: [navigation]
             }
           }
         }
@@ -85,61 +80,19 @@ export const Default = {
 }
 
 export const WithClassName = {
+  ...Default,
   args: {
-    onQuery: action('onQuery'),
-    slug: 'footer',
-    children,
+    ...Default.args,
     className: 'extra-classname'
-  },
-
-  parameters: {
-    apolloClient: {
-      mocks: [
-        {
-          request: {
-            query: NavigationDocument,
-            variables: {
-              slug: 'footer'
-            }
-          },
-          result: {
-            data: {
-              navigation
-            }
-          }
-        }
-      ]
-    }
   }
 }
 
 export const WithEmotion = {
+  ...Default,
   args: {
-    onQuery: action('onQuery'),
-    slug: 'footer',
-    children,
+    ...Default.args,
     css: css`
       background-color: #eee;
     `
-  },
-
-  parameters: {
-    apolloClient: {
-      mocks: [
-        {
-          request: {
-            query: NavigationDocument,
-            variables: {
-              slug: 'footer'
-            }
-          },
-          result: {
-            data: {
-              navigation
-            }
-          }
-        }
-      ]
-    }
   }
 }

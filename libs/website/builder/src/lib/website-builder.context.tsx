@@ -10,10 +10,10 @@ import {
 } from 'react'
 import {PartialDeep} from 'type-fest'
 import {
-  BuilderArticleProps,
-  BuilderArticleSEOProps,
+  BuilderArticleListItemProps,
   BuilderArticleListProps,
-  BuilderArticleListItemProps
+  BuilderArticleProps,
+  BuilderArticleSEOProps
 } from './article.interface'
 import {BuilderLoginFormProps, BuilderRegistrationFormProps} from './authentication.interface'
 import {
@@ -25,18 +25,19 @@ import {
 import {
   BuilderBildwurfAdBlockProps,
   BuilderBlockRendererProps,
+  BuilderBreakBlockProps,
+  BuilderCommentBlockProps,
   BuilderEmbedBlockProps,
+  BuilderEventBlockProps,
   BuilderFacebookPostBlockProps,
   BuilderFacebookVideoBlockProps,
   BuilderHTMLBlockProps,
   BuilderImageBlockProps,
-  BuilderBreakBlockProps,
   BuilderImageGalleryBlockProps,
   BuilderInstagramPostBlockProps,
-  BuilderPolisConversationBlockProps,
-  BuilderEventBlockProps,
-  BuilderPollBlockProps,
   BuilderListicleBlockProps,
+  BuilderPolisConversationBlockProps,
+  BuilderPollBlockProps,
   BuilderQuoteBlockProps,
   BuilderRichTextBlockProps,
   BuilderSoundCloudTrackBlockProps,
@@ -52,7 +53,8 @@ import {
 import {
   BuilderCommentEditorProps,
   BuilderCommentListItemProps,
-  BuilderCommentListProps
+  BuilderCommentListProps,
+  BuilderCommentListSingleCommentProps
 } from './comment.interface'
 import {
   BuilderEventListItemProps,
@@ -67,13 +69,20 @@ import {
   BuilderOrderedListProps,
   BuilderUnorderedListProps
 } from './lists.interface'
-import {BuilderMemberPlansProps} from './member-plans.interface'
+import {
+  BuilderInvoiceListItemProps,
+  BuilderInvoiceListProps,
+  BuilderMemberPlanPickerProps,
+  BuilderPaymentMethodPickerProps,
+  BuilderPeriodicityPickerProps,
+  BuilderSubscribeProps,
+  BuilderSubscriptionListItemProps,
+  BuilderSubscriptionListProps
+} from './membership.interface'
 import {BuilderNavbarProps} from './navbar.interface'
 import {BuilderPageProps, BuilderPageSEOProps} from './page.interface'
-import {BuilderPayInvoicesProps} from './pay-invoices.interface'
 import {BuilderPeerProps} from './peer.interface'
 import {BuilderRenderElementProps, BuilderRenderLeafProps} from './richText.interface'
-import {BuilderSubscribeProps} from './subscribe.interface'
 import {BuilderHeadingProps, BuilderLinkProps, BuilderParagraphProps} from './typography.interface'
 import {
   BuilderAlertProps,
@@ -81,17 +90,15 @@ import {
   BuilderIconButtonProps,
   BuilderTextFieldProps
 } from './ui.interface'
+import {BuilderPersonalDataFormProps, BuilderImageUploadProps} from './user.interface'
 
 const NoComponent = () => null
 
-export type WebsiteBuilderComponents = {
+export type WebsiteBuilderProps = {
   Head: ComponentType<{children: ReactNode}>
   Script: ComponentType<{children?: ReactNode} & ScriptHTMLAttributes<HTMLScriptElement>>
   Navbar: ComponentType<BuilderNavbarProps>
   Footer: ComponentType<BuilderFooterProps>
-  MemberPlans: ComponentType<BuilderMemberPlansProps>
-  Subscribe: ComponentType<BuilderSubscribeProps>
-  PayInvoices: ComponentType<BuilderPayInvoicesProps>
   Page: ComponentType<BuilderPageProps>
   PageSEO: ComponentType<BuilderPageSEOProps>
   Article: ComponentType<BuilderArticleProps>
@@ -109,9 +116,19 @@ export type WebsiteBuilderComponents = {
   EventListItem: ComponentType<BuilderEventListItemProps>
   CommentList: ComponentType<BuilderCommentListProps>
   CommentListItem: ComponentType<BuilderCommentListItemProps>
+  CommentListSingleComment: ComponentType<BuilderCommentListSingleCommentProps>
   CommentEditor: ComponentType<BuilderCommentEditorProps>
   LoginForm: ComponentType<BuilderLoginFormProps>
   RegistrationForm: ComponentType<BuilderRegistrationFormProps>
+  PersonalDataForm: ComponentType<BuilderPersonalDataFormProps>
+  SubscriptionList: ComponentType<BuilderSubscriptionListProps>
+  SubscriptionListItem: ComponentType<BuilderSubscriptionListItemProps>
+  InvoiceList: ComponentType<BuilderInvoiceListProps>
+  InvoiceListItem: ComponentType<BuilderInvoiceListItemProps>
+  MemberPlanPicker: ComponentType<BuilderMemberPlanPickerProps>
+  PaymentMethodPicker: ComponentType<BuilderPaymentMethodPickerProps>
+  PeriodicityPicker: ComponentType<BuilderPeriodicityPickerProps>
+  Subscribe: ComponentType<BuilderSubscribeProps>
 
   elements: {
     Alert: ComponentType<BuilderAlertProps>
@@ -130,6 +147,7 @@ export type WebsiteBuilderComponents = {
     UnorderedList: ComponentType<BuilderUnorderedListProps>
     ListItem: ComponentType<BuilderListItemProps>
     Image: ComponentType<BuilderImageProps>
+    ImageUpload: ComponentType<BuilderImageUploadProps>
   }
 
   richtext: {
@@ -163,21 +181,29 @@ export type WebsiteBuilderComponents = {
     TeaserGridFlex: ComponentType<BuilderTeaserGridFlexBlockProps>
     TeaserGrid: ComponentType<BuilderTeaserGridBlockProps>
     Teaser: ComponentType<BuilderTeaserProps>
+    Comment: ComponentType<BuilderCommentBlockProps>
   }
 
   date: {
-    format: (date: Date) => string
+    format: (date: Date, includeTime?: boolean) => string
   }
+
+  locale: string
 }
 
-const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
+const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   Head: NoComponent,
   Script: NoComponent,
   Navbar: NoComponent,
   Footer: NoComponent,
-  MemberPlans: NoComponent,
+  SubscriptionList: NoComponent,
+  SubscriptionListItem: NoComponent,
+  InvoiceList: NoComponent,
+  InvoiceListItem: NoComponent,
   Subscribe: NoComponent,
-  PayInvoices: NoComponent,
+  MemberPlanPicker: NoComponent,
+  PaymentMethodPicker: NoComponent,
+  PeriodicityPicker: NoComponent,
   Page: NoComponent,
   PageSEO: NoComponent,
   Article: NoComponent,
@@ -195,9 +221,11 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
   ArticleListItem: NoComponent,
   CommentList: NoComponent,
   CommentListItem: NoComponent,
+  CommentListSingleComment: NoComponent,
   CommentEditor: NoComponent,
   LoginForm: NoComponent,
   RegistrationForm: NoComponent,
+  PersonalDataForm: NoComponent,
 
   elements: {
     Alert: NoComponent,
@@ -215,7 +243,8 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
     OrderedList: NoComponent,
     UnorderedList: NoComponent,
     ListItem: NoComponent,
-    Image: NoComponent
+    Image: NoComponent,
+    ImageUpload: NoComponent
   },
 
   richtext: {
@@ -226,6 +255,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
   blocks: {
     Renderer: NoComponent,
     Title: NoComponent,
+    Comment: NoComponent,
     Image: NoComponent,
     ImageGallery: NoComponent,
     Quote: NoComponent,
@@ -253,22 +283,24 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderComponents>({
 
   date: {
     format: date => date.toString()
-  }
+  },
+
+  locale: 'ch-DE'
 })
 
 export const useWebsiteBuilder = () => {
   return useContext(WebsiteBuilderContext)
 }
 
-export const WebsiteBuilderProvider = memo<
-  PropsWithChildren<PartialDeep<WebsiteBuilderComponents>>
->(({children, ...components}) => {
-  const parentComponents = useWebsiteBuilder()
-  const newComponents = mergeDeepRight(parentComponents, components) as WebsiteBuilderComponents
+export const WebsiteBuilderProvider = memo<PropsWithChildren<PartialDeep<WebsiteBuilderProps>>>(
+  ({children, ...components}) => {
+    const parentComponents = useWebsiteBuilder()
+    const newComponents = mergeDeepRight(parentComponents, components) as WebsiteBuilderProps
 
-  return (
-    <WebsiteBuilderContext.Provider value={newComponents}>
-      {children}
-    </WebsiteBuilderContext.Provider>
-  )
-})
+    return (
+      <WebsiteBuilderContext.Provider value={newComponents}>
+        {children}
+      </WebsiteBuilderContext.Provider>
+    )
+  }
+)

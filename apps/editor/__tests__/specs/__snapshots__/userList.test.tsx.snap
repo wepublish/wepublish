@@ -80,7 +80,7 @@ exports[`User list view should render successfully 1`] = `
         style="margin-right: 15px; margin-top: 0px; margin-bottom: 10px;"
       >
         <div
-          class="rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-placement-auto rs-picker-cleanable rs-picker-block rs-picker-countable"
+          class="css-1inivuc rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-placement-auto rs-picker-cleanable rs-picker-block rs-picker-countable"
         >
           <div
             aria-expanded="false"

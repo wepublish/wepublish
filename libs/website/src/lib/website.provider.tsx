@@ -1,19 +1,21 @@
 import {GlobalStyles, TextField, Theme, ThemeProvider, css} from '@mui/material'
-import {Article, ArticleSEO, ArticleList, ArticleListItem} from '@wepublish/article/website'
+import {Article, ArticleList, ArticleListItem, ArticleSEO} from '@wepublish/article/website'
 import {LoginForm, RegistrationForm} from '@wepublish/authentication/website'
 import {Author, AuthorChip, AuthorList, AuthorListItem} from '@wepublish/author/website'
 import {
   BildwurfAdBlock,
   BlockRenderer,
+  BreakBlock,
   EmbedBlock,
+  EventBlock,
   FacebookPostBlock,
   FacebookVideoBlock,
+  HtmlBlock,
   ImageBlock,
   ImageGalleryBlock,
   InstagramPostBlock,
+  ListicleBlock,
   PolisConversationBlock,
-  EventBlock,
-  HtmlBlock,
   PollBlock,
   QuoteBlock,
   RichTextBlock,
@@ -22,16 +24,31 @@ import {
   TeaserGridBlock,
   TeaserGridFlexBlock,
   TikTokVideoBlock,
+  TitleBlock,
   TwitterTweetBlock,
   VimeoVideoBlock,
   YouTubeVideoBlock,
-  ListicleBlock,
-  TitleBlock,
-  BreakBlock
+  CommentBlock
 } from '@wepublish/block-content/website'
-import {CommentEditor, CommentList, CommentListItem} from '@wepublish/comments/website'
+import {
+  CommentEditor,
+  CommentList,
+  CommentListItem,
+  CommentListSingleComment
+} from '@wepublish/comments/website'
 import {Event, EventList, EventListItem, EventSEO} from '@wepublish/event/website'
+import {PersonalDataForm, ImageUpload} from '@wepublish/user/website'
 import {Image} from '@wepublish/image/website'
+import {
+  SubscriptionList,
+  SubscriptionListItem,
+  InvoiceListItem,
+  InvoiceList,
+  Subscribe,
+  MemberPlanPicker,
+  PeriodicityPicker,
+  PaymentMethodPicker
+} from '@wepublish/membership/website'
 import {Footer, Navbar} from '@wepublish/navigation/website'
 import {Page, PageSEO} from '@wepublish/page/website'
 import {PeerInformation} from '@wepublish/peering/website'
@@ -60,7 +77,8 @@ import {IconContext} from 'react-icons'
 
 export type WebsiteProps = PropsWithChildren
 
-const dateFormatter = (date: Date) => format(date, 'dd.MM.yyyy HH:mm')
+const dateFormatter = (date: Date, includeTime = true) =>
+  includeTime ? format(date, 'dd.MM.yyyy HH:mm') : format(date, 'dd.MM.yyyy')
 
 const styles = (theme: Theme) => css`
   html {
@@ -108,11 +126,21 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
         EventListItem={EventListItem}
         CommentList={CommentList}
         CommentListItem={CommentListItem}
+        CommentListSingleComment={CommentListSingleComment}
         CommentEditor={CommentEditor}
         Page={Page}
         PageSEO={PageSEO}
         LoginForm={LoginForm}
         RegistrationForm={RegistrationForm}
+        PersonalDataForm={PersonalDataForm}
+        SubscriptionList={SubscriptionList}
+        SubscriptionListItem={SubscriptionListItem}
+        InvoiceList={InvoiceList}
+        InvoiceListItem={InvoiceListItem}
+        MemberPlanPicker={MemberPlanPicker}
+        PeriodicityPicker={PeriodicityPicker}
+        PaymentMethodPicker={PaymentMethodPicker}
+        Subscribe={Subscribe}
         elements={{
           TextField,
           Alert,
@@ -127,6 +155,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           Paragraph,
           Link,
           UnorderedList,
+          ImageUpload,
           OrderedList,
           ListItem,
           Image
@@ -137,6 +166,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           Break: BreakBlock,
           Image: ImageBlock,
           ImageGallery: ImageGalleryBlock,
+          Comment: CommentBlock,
           Quote: QuoteBlock,
           HTML: HtmlBlock,
           Poll: PollBlock,

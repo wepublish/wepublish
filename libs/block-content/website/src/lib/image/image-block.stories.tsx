@@ -10,8 +10,8 @@ export default {
 
 const image = {
   id: '1234',
-  createdAt: new Date().toDateString(),
-  modifiedAt: new Date().toDateString(),
+  createdAt: new Date('2023-01-01').toDateString(),
+  modifiedAt: new Date('2023-01-01').toDateString(),
   extension: '.jpg',
   fileSize: 1,
   format: '',

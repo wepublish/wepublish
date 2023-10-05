@@ -2,10 +2,13 @@ import {MockedProvider as MockedProviderBase} from '@apollo/client/testing'
 import {fireEvent, render, screen, waitFor} from '@testing-library/react'
 import {UserListDocument, UserRoleListDocument} from '@wepublish/editor/api'
 import {AuthContext} from '@wepublish/ui/editor'
+import fetch from 'jest-fetch-mock'
 import {BrowserRouter} from 'react-router-dom'
 
 import {UserList} from '../../src/app/routes/userList'
 import {actWait, sessionWithPermissions} from '../utils'
+
+jest.setMock('node-fetch', fetch)
 
 const MockedProvider = MockedProviderBase as any
 

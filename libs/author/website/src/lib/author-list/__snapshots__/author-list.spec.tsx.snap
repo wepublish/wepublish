@@ -6,23 +6,21 @@ exports[`AuthorList should render Default 1`] = `
     class="css-1d3do4s-AuthorListWrapper e17rhc8g0"
   >
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
-      href="example-slug"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
     >
       <div
         class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
-          class="css-1wiojmo-ImageWrapper-AuthorListItem e1shv2yg0"
-          height="6000"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
       </div>
       <div
@@ -41,23 +39,21 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
-      href="example-slug"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
     >
       <div
         class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
-          class="css-1wiojmo-ImageWrapper-AuthorListItem e1shv2yg0"
-          height="6000"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
       </div>
       <div
@@ -76,23 +72,21 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
-      href="example-slug"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
     >
       <div
         class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
-          class="css-1wiojmo-ImageWrapper-AuthorListItem e1shv2yg0"
-          height="6000"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
       </div>
       <div
@@ -111,23 +105,21 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
-      href="example-slug"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
     >
       <div
         class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
-          class="css-1wiojmo-ImageWrapper-AuthorListItem e1shv2yg0"
-          height="6000"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
       </div>
       <div
@@ -146,23 +138,21 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
-      href="example-slug"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
     >
       <div
         class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
-          class="css-1wiojmo-ImageWrapper-AuthorListItem e1shv2yg0"
-          height="6000"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
       </div>
       <div
@@ -181,23 +171,21 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
-      href="example-slug"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
     >
       <div
         class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
-          class="css-1wiojmo-ImageWrapper-AuthorListItem e1shv2yg0"
-          height="6000"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
       </div>
       <div
@@ -216,23 +204,21 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
-      href="example-slug"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
     >
       <div
         class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
-          class="css-1wiojmo-ImageWrapper-AuthorListItem e1shv2yg0"
-          height="6000"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
       </div>
       <div
@@ -251,23 +237,21 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
-      href="example-slug"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
     >
       <div
         class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
-          class="css-1wiojmo-ImageWrapper-AuthorListItem e1shv2yg0"
-          height="6000"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
       </div>
       <div
@@ -286,23 +270,21 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
-      href="example-slug"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
     >
       <div
         class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
-          class="css-1wiojmo-ImageWrapper-AuthorListItem e1shv2yg0"
-          height="6000"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
       </div>
       <div
@@ -321,23 +303,21 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
-      href="example-slug"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
     >
       <div
         class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
-          class="css-1wiojmo-ImageWrapper-AuthorListItem e1shv2yg0"
-          height="6000"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
       </div>
       <div
@@ -356,23 +336,21 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
-      href="example-slug"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
     >
       <div
         class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
-          class="css-1wiojmo-ImageWrapper-AuthorListItem e1shv2yg0"
-          height="6000"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
       </div>
       <div
@@ -398,7 +376,371 @@ exports[`AuthorList should render WithClassName 1`] = `
 <DocumentFragment>
   <article
     class="extra-classname css-1d3do4s-AuthorListWrapper e17rhc8g0"
-  />
+  >
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
+    >
+      <div
+        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+      >
+        <img
+          alt="DSC07717"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title=""
+        />
+      </div>
+      <div
+        class="css-1f3530-AuthorListItemContent ersskp40"
+      >
+        <h6
+          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+        >
+          Example Name
+        </h6>
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        >
+          Co-Geschäftsleitung & Chefredaktor
+        </p>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
+    >
+      <div
+        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+      >
+        <img
+          alt="DSC07717"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title=""
+        />
+      </div>
+      <div
+        class="css-1f3530-AuthorListItemContent ersskp40"
+      >
+        <h6
+          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+        >
+          Example Name
+        </h6>
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        >
+          Co-Geschäftsleitung & Chefredaktor
+        </p>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
+    >
+      <div
+        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+      >
+        <img
+          alt="DSC07717"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title=""
+        />
+      </div>
+      <div
+        class="css-1f3530-AuthorListItemContent ersskp40"
+      >
+        <h6
+          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+        >
+          Example Name
+        </h6>
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        >
+          Co-Geschäftsleitung & Chefredaktor
+        </p>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
+    >
+      <div
+        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+      >
+        <img
+          alt="DSC07717"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title=""
+        />
+      </div>
+      <div
+        class="css-1f3530-AuthorListItemContent ersskp40"
+      >
+        <h6
+          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+        >
+          Example Name
+        </h6>
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        >
+          Co-Geschäftsleitung & Chefredaktor
+        </p>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
+    >
+      <div
+        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+      >
+        <img
+          alt="DSC07717"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title=""
+        />
+      </div>
+      <div
+        class="css-1f3530-AuthorListItemContent ersskp40"
+      >
+        <h6
+          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+        >
+          Example Name
+        </h6>
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        >
+          Co-Geschäftsleitung & Chefredaktor
+        </p>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
+    >
+      <div
+        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+      >
+        <img
+          alt="DSC07717"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title=""
+        />
+      </div>
+      <div
+        class="css-1f3530-AuthorListItemContent ersskp40"
+      >
+        <h6
+          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+        >
+          Example Name
+        </h6>
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        >
+          Co-Geschäftsleitung & Chefredaktor
+        </p>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
+    >
+      <div
+        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+      >
+        <img
+          alt="DSC07717"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title=""
+        />
+      </div>
+      <div
+        class="css-1f3530-AuthorListItemContent ersskp40"
+      >
+        <h6
+          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+        >
+          Example Name
+        </h6>
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        >
+          Co-Geschäftsleitung & Chefredaktor
+        </p>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
+    >
+      <div
+        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+      >
+        <img
+          alt="DSC07717"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title=""
+        />
+      </div>
+      <div
+        class="css-1f3530-AuthorListItemContent ersskp40"
+      >
+        <h6
+          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+        >
+          Example Name
+        </h6>
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        >
+          Co-Geschäftsleitung & Chefredaktor
+        </p>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
+    >
+      <div
+        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+      >
+        <img
+          alt="DSC07717"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title=""
+        />
+      </div>
+      <div
+        class="css-1f3530-AuthorListItemContent ersskp40"
+      >
+        <h6
+          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+        >
+          Example Name
+        </h6>
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        >
+          Co-Geschäftsleitung & Chefredaktor
+        </p>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
+    >
+      <div
+        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+      >
+        <img
+          alt="DSC07717"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title=""
+        />
+      </div>
+      <div
+        class="css-1f3530-AuthorListItemContent ersskp40"
+      >
+        <h6
+          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+        >
+          Example Name
+        </h6>
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        >
+          Co-Geschäftsleitung & Chefredaktor
+        </p>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
+    >
+      <div
+        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+      >
+        <img
+          alt="DSC07717"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title=""
+        />
+      </div>
+      <div
+        class="css-1f3530-AuthorListItemContent ersskp40"
+      >
+        <h6
+          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+        >
+          Example Name
+        </h6>
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        >
+          Co-Geschäftsleitung & Chefredaktor
+        </p>
+      </div>
+    </a>
+  </article>
 </DocumentFragment>
 `;
 
@@ -406,7 +748,371 @@ exports[`AuthorList should render WithEmotion 1`] = `
 <DocumentFragment>
   <article
     class="css-1d3do4s-AuthorListWrapper e17rhc8g0"
-  />
+  >
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
+    >
+      <div
+        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+      >
+        <img
+          alt="DSC07717"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title=""
+        />
+      </div>
+      <div
+        class="css-1f3530-AuthorListItemContent ersskp40"
+      >
+        <h6
+          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+        >
+          Example Name
+        </h6>
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        >
+          Co-Geschäftsleitung & Chefredaktor
+        </p>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
+    >
+      <div
+        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+      >
+        <img
+          alt="DSC07717"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title=""
+        />
+      </div>
+      <div
+        class="css-1f3530-AuthorListItemContent ersskp40"
+      >
+        <h6
+          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+        >
+          Example Name
+        </h6>
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        >
+          Co-Geschäftsleitung & Chefredaktor
+        </p>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
+    >
+      <div
+        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+      >
+        <img
+          alt="DSC07717"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title=""
+        />
+      </div>
+      <div
+        class="css-1f3530-AuthorListItemContent ersskp40"
+      >
+        <h6
+          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+        >
+          Example Name
+        </h6>
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        >
+          Co-Geschäftsleitung & Chefredaktor
+        </p>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
+    >
+      <div
+        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+      >
+        <img
+          alt="DSC07717"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title=""
+        />
+      </div>
+      <div
+        class="css-1f3530-AuthorListItemContent ersskp40"
+      >
+        <h6
+          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+        >
+          Example Name
+        </h6>
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        >
+          Co-Geschäftsleitung & Chefredaktor
+        </p>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
+    >
+      <div
+        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+      >
+        <img
+          alt="DSC07717"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title=""
+        />
+      </div>
+      <div
+        class="css-1f3530-AuthorListItemContent ersskp40"
+      >
+        <h6
+          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+        >
+          Example Name
+        </h6>
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        >
+          Co-Geschäftsleitung & Chefredaktor
+        </p>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
+    >
+      <div
+        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+      >
+        <img
+          alt="DSC07717"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title=""
+        />
+      </div>
+      <div
+        class="css-1f3530-AuthorListItemContent ersskp40"
+      >
+        <h6
+          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+        >
+          Example Name
+        </h6>
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        >
+          Co-Geschäftsleitung & Chefredaktor
+        </p>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
+    >
+      <div
+        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+      >
+        <img
+          alt="DSC07717"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title=""
+        />
+      </div>
+      <div
+        class="css-1f3530-AuthorListItemContent ersskp40"
+      >
+        <h6
+          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+        >
+          Example Name
+        </h6>
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        >
+          Co-Geschäftsleitung & Chefredaktor
+        </p>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
+    >
+      <div
+        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+      >
+        <img
+          alt="DSC07717"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title=""
+        />
+      </div>
+      <div
+        class="css-1f3530-AuthorListItemContent ersskp40"
+      >
+        <h6
+          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+        >
+          Example Name
+        </h6>
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        >
+          Co-Geschäftsleitung & Chefredaktor
+        </p>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
+    >
+      <div
+        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+      >
+        <img
+          alt="DSC07717"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title=""
+        />
+      </div>
+      <div
+        class="css-1f3530-AuthorListItemContent ersskp40"
+      >
+        <h6
+          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+        >
+          Example Name
+        </h6>
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        >
+          Co-Geschäftsleitung & Chefredaktor
+        </p>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
+    >
+      <div
+        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+      >
+        <img
+          alt="DSC07717"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title=""
+        />
+      </div>
+      <div
+        class="css-1f3530-AuthorListItemContent ersskp40"
+      >
+        <h6
+          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+        >
+          Example Name
+        </h6>
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        >
+          Co-Geschäftsleitung & Chefredaktor
+        </p>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
+    >
+      <div
+        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+      >
+        <img
+          alt="DSC07717"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title=""
+        />
+      </div>
+      <div
+        class="css-1f3530-AuthorListItemContent ersskp40"
+      >
+        <h6
+          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+        >
+          Example Name
+        </h6>
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        >
+          Co-Geschäftsleitung & Chefredaktor
+        </p>
+      </div>
+    </a>
+  </article>
 </DocumentFragment>
 `;
 
@@ -432,23 +1138,21 @@ exports[`AuthorList should render WithoutImage 1`] = `
     class="css-1d3do4s-AuthorListWrapper e17rhc8g0"
   >
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
-      href="example-slug"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
     >
       <div
         class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
-          class="css-1wiojmo-ImageWrapper-AuthorListItem e1shv2yg0"
-          height="6000"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
       </div>
       <div
@@ -467,8 +1171,8 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
-      href="example-slug"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
     >
       <div
         class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
@@ -489,8 +1193,8 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
-      href="example-slug"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
     >
       <div
         class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
@@ -511,23 +1215,21 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
-      href="example-slug"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
     >
       <div
         class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
-          class="css-1wiojmo-ImageWrapper-AuthorListItem e1shv2yg0"
-          height="6000"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
       </div>
       <div
@@ -546,23 +1248,21 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
-      href="example-slug"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
     >
       <div
         class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
-          class="css-1wiojmo-ImageWrapper-AuthorListItem e1shv2yg0"
-          height="6000"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
       </div>
       <div
@@ -581,8 +1281,8 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
-      href="example-slug"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
     >
       <div
         class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
@@ -603,8 +1303,8 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
-      href="example-slug"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
     >
       <div
         class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
@@ -625,23 +1325,21 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
-      href="example-slug"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
     >
       <div
         class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
-          class="css-1wiojmo-ImageWrapper-AuthorListItem e1shv2yg0"
-          height="6000"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
       </div>
       <div
@@ -660,23 +1358,21 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
-      href="example-slug"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
     >
       <div
         class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
-          class="css-1wiojmo-ImageWrapper-AuthorListItem e1shv2yg0"
-          height="6000"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
       </div>
       <div
@@ -695,8 +1391,8 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
-      href="example-slug"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
     >
       <div
         class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
@@ -717,23 +1413,21 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
-      href="example-slug"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
     >
       <div
         class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
-          class="css-1wiojmo-ImageWrapper-AuthorListItem e1shv2yg0"
-          height="6000"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
       </div>
       <div
@@ -761,23 +1455,21 @@ exports[`AuthorList should render WithoutJobTitle 1`] = `
     class="css-1d3do4s-AuthorListWrapper e17rhc8g0"
   >
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
-      href="example-slug"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
     >
       <div
         class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
-          class="css-1wiojmo-ImageWrapper-AuthorListItem e1shv2yg0"
-          height="6000"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
       </div>
       <div
@@ -796,23 +1488,21 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
-      href="example-slug"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
     >
       <div
         class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
-          class="css-1wiojmo-ImageWrapper-AuthorListItem e1shv2yg0"
-          height="6000"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
       </div>
       <div
@@ -826,23 +1516,21 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
-      href="example-slug"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
     >
       <div
         class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
-          class="css-1wiojmo-ImageWrapper-AuthorListItem e1shv2yg0"
-          height="6000"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
       </div>
       <div
@@ -856,58 +1544,21 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
-      href="example-slug"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
     >
       <div
         class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
-          class="css-1wiojmo-ImageWrapper-AuthorListItem e1shv2yg0"
-          height="6000"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
-        />
-      </div>
-      <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
-      >
-        <h6
-          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
-        >
-          Example Name
-        </h6>
-        <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
-        >
-          Co-Geschäftsleitung & Chefredaktor
-        </p>
-      </div>
-    </a>
-    <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
-      href="example-slug"
-    >
-      <div
-        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
-      >
-        <img
-          alt="DSC07717"
-          class="css-1wiojmo-ImageWrapper-AuthorListItem e1shv2yg0"
-          height="6000"
-          loading="lazy"
-          srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-          title=""
-          width="4000"
         />
       </div>
       <div
@@ -926,53 +1577,21 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
-      href="example-slug"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
     >
       <div
         class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
-          class="css-1wiojmo-ImageWrapper-AuthorListItem e1shv2yg0"
-          height="6000"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
-        />
-      </div>
-      <div
-        class="css-1f3530-AuthorListItemContent ersskp40"
-      >
-        <h6
-          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
-        >
-          Example Name
-        </h6>
-      </div>
-    </a>
-    <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
-      href="example-slug"
-    >
-      <div
-        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
-      >
-        <img
-          alt="DSC07717"
-          class="css-1wiojmo-ImageWrapper-AuthorListItem e1shv2yg0"
-          height="6000"
-          loading="lazy"
-          srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-          title=""
-          width="4000"
         />
       </div>
       <div
@@ -991,23 +1610,21 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
-      href="example-slug"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
     >
       <div
         class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
-          class="css-1wiojmo-ImageWrapper-AuthorListItem e1shv2yg0"
-          height="6000"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
       </div>
       <div
@@ -1021,23 +1638,21 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
-      href="example-slug"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
     >
       <div
         class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
-          class="css-1wiojmo-ImageWrapper-AuthorListItem e1shv2yg0"
-          height="6000"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
       </div>
       <div
@@ -1056,23 +1671,21 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
-      href="example-slug"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
     >
       <div
         class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
-          class="css-1wiojmo-ImageWrapper-AuthorListItem e1shv2yg0"
-          height="6000"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
         />
       </div>
       <div
@@ -1086,23 +1699,82 @@ https://unsplash.it/200/200 200w"
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
-      href="example-slug"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
     >
       <div
         class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
-          class="css-1wiojmo-ImageWrapper-AuthorListItem e1shv2yg0"
-          height="6000"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
           title=""
-          width="4000"
+        />
+      </div>
+      <div
+        class="css-1f3530-AuthorListItemContent ersskp40"
+      >
+        <h6
+          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+        >
+          Example Name
+        </h6>
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+        >
+          Co-Geschäftsleitung & Chefredaktor
+        </p>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
+    >
+      <div
+        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+      >
+        <img
+          alt="DSC07717"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title=""
+        />
+      </div>
+      <div
+        class="css-1f3530-AuthorListItemContent ersskp40"
+      >
+        <h6
+          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+        >
+          Example Name
+        </h6>
+      </div>
+    </a>
+    <a
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      href="https://example.com"
+    >
+      <div
+        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+      >
+        <img
+          alt="DSC07717"
+          class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
+          loading="lazy"
+          srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+          title=""
         />
       </div>
       <div

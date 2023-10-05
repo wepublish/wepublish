@@ -2,6 +2,7 @@ import {ApolloError} from '@apollo/client'
 import {css} from '@emotion/react'
 import {Meta} from '@storybook/react'
 import {
+  CommentListQuery,
   ArticleQuery,
   Event,
   EventStatus,
@@ -9,6 +10,7 @@ import {
   FullImageFragment,
   FullPollFragment
 } from '@wepublish/website/api'
+import {Node} from 'slate'
 import {Article} from './article'
 
 const image = {
@@ -274,6 +276,55 @@ const poll = {
     }
   ]
 } as FullPollFragment
+
+const text: Node[] = [
+  {
+    type: 'paragraph',
+    children: [
+      {
+        text: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+      }
+    ]
+  }
+]
+
+const comment = {
+  id: 'verified',
+  parentID: 'cljgx3n3i382572shctpgd5gg0',
+  peerId: null,
+  overriddenRatings: [],
+  user: {
+    __typename: 'User',
+    id: 'qnK8vb5D5RtlTEbb',
+    name: 'User',
+    firstName: 'Fallback',
+    email: 'foobar@example.com',
+    preferredName: 'Signed Up',
+    address: null,
+    flair: 'Flair',
+    paymentProviderCustomers: [],
+    image,
+    properties: [],
+    oauth2Accounts: []
+  },
+  guestUsername: null,
+  guestUserImage: null,
+  calculatedRatings: null,
+  authorType: 'VerifiedUser',
+  itemID: 'cljfya8sj4342602siydzsx4pxv',
+  itemType: 'Article',
+  title: 'de Finibus Bonorum et Malorum',
+  lead: null,
+  text,
+  state: 'Approved',
+  source: 'Source',
+  rejectionReason: null,
+  createdAt: '2023-06-29T09:39:28.351Z',
+  modifiedAt: '2023-06-29T09:45:01.334Z',
+  __typename: 'Comment',
+  children: [],
+  tags: []
+} as CommentListQuery['comments'][number]
 
 const article = {
   __typename: 'Article',
@@ -754,7 +805,9 @@ const article = {
               {
                 __typename: 'RichTextBlock'
               }
-            ]
+            ],
+            authors: [author],
+            publishedAt: new Date('2023-01-01').toISOString()
           }
         },
         {
@@ -809,7 +862,9 @@ const article = {
               {
                 __typename: 'RichTextBlock'
               }
-            ]
+            ],
+            authors: [author],
+            publishedAt: new Date('2023-01-01').toISOString()
           }
         },
         {
@@ -1381,7 +1436,9 @@ const article = {
               {
                 __typename: 'RichTextBlock'
               }
-            ]
+            ],
+            authors: [author],
+            publishedAt: new Date('2023-01-01').toISOString()
           }
         },
         {
@@ -1436,7 +1493,9 @@ const article = {
               {
                 __typename: 'RichTextBlock'
               }
-            ]
+            ],
+            authors: [author],
+            publishedAt: new Date('2023-01-01').toISOString()
           }
         },
         {
@@ -2735,7 +2794,8 @@ const article = {
       poll
     },
     {
-      __typename: 'CommentBlock'
+      __typename: 'CommentBlock',
+      comments: [comment]
     },
     {
       __typename: 'EventBlock',
@@ -2772,6 +2832,13 @@ export const WithError = {
     error: new ApolloError({
       errorMessage: 'Foobar'
     })
+  }
+}
+
+export const WithChildren = {
+  args: {
+    data: {article},
+    children: <div>Children</div>
   }
 }
 

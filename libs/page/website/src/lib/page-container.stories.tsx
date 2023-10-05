@@ -1,4 +1,3 @@
-import {action} from '@storybook/addon-actions'
 import {Meta} from '@storybook/react'
 import {
   Event,
@@ -700,7 +699,9 @@ const page = {
               {
                 __typename: 'RichTextBlock'
               }
-            ]
+            ],
+            authors: [author],
+            publishedAt: new Date('2023-01-01').toISOString()
           }
         },
         {
@@ -755,7 +756,9 @@ const page = {
               {
                 __typename: 'RichTextBlock'
               }
-            ]
+            ],
+            authors: [author],
+            publishedAt: new Date('2023-01-01').toISOString()
           }
         },
         {
@@ -1327,7 +1330,9 @@ const page = {
               {
                 __typename: 'RichTextBlock'
               }
-            ]
+            ],
+            authors: [author],
+            publishedAt: new Date('2023-01-01').toISOString()
           }
         },
         {
@@ -1382,7 +1387,9 @@ const page = {
               {
                 __typename: 'RichTextBlock'
               }
-            ]
+            ],
+            authors: [author],
+            publishedAt: new Date('2023-01-01').toISOString()
           }
         },
         {
@@ -2243,7 +2250,6 @@ export default {
 
 export const ById = {
   args: {
-    onQuery: action('onQuery'),
     id: page.id
   },
 
@@ -2270,7 +2276,6 @@ export const ById = {
 
 export const BySlug = {
   args: {
-    onQuery: action('onQuery'),
     slug: page.slug
   },
 
@@ -2295,9 +2300,34 @@ export const BySlug = {
   }
 }
 
+export const WithChildren = {
+  args: {
+    id: page.id,
+    children: <div>Children</div>
+  },
+  parameters: {
+    apolloClient: {
+      mocks: [
+        {
+          request: {
+            query: PageDocument,
+            variables: {
+              id: page.id
+            }
+          },
+          result: {
+            data: {
+              page
+            }
+          }
+        }
+      ]
+    }
+  }
+}
+
 export const WithClassName = {
   args: {
-    onQuery: action('onQuery'),
     id: page.id,
     className: 'extra-classname'
   },
@@ -2325,7 +2355,6 @@ export const WithClassName = {
 
 export const WithEmotion = {
   args: {
-    onQuery: action('onQuery'),
     id: page.id,
     css: css`
       background-color: #eee;

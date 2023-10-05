@@ -3,13 +3,8 @@ import {Inject, Injectable} from '@nestjs/common'
 import {Prisma, PrismaClient} from '@prisma/client'
 import {ImageFetcherService, MediaAdapterService} from '@wepublish/image/api'
 import {Cache} from 'cache-manager'
-import {Event, ImportedEventsDocument} from './events-import.model'
-import {
-  CreateEventParams,
-  EventsProvider,
-  ImportedEventParams,
-  ImportedEventsParams
-} from './events-import.service'
+import {Event} from './events-import.model'
+import {CreateEventParams, EventsProvider, ImportedEventParams} from './events-import.service'
 import {fetchAndParseKulturagenda} from './kulturagenda-parser'
 
 @Injectable()
@@ -25,7 +20,7 @@ export class AgendaBaselService implements EventsProvider {
   readonly url = 'https://www.agendabasel.ch/xmlexport/kzexport-basel.xml'
 
   private async getEvents() {
-    const cachedEvents = await this.cacheManager.get<Event[]>('parsedEvents')
+    const cachedEvents = await this.cacheManager.get<Event[]>('agenda-basel-events')
 
     if (cachedEvents) {
       return cachedEvents
@@ -34,36 +29,14 @@ export class AgendaBaselService implements EventsProvider {
     const events = await fetchAndParseKulturagenda(this.url, this.name)
     const ttl = 8 * 60 * 60 * 1000 // 8 hours
 
-    await this.cacheManager.set('parsedEvents', events, ttl)
+    await this.cacheManager.set('agenda-basel-events', events, ttl)
 
     return events
   }
 
-  async importedEvents({
-    skip = 0,
-    take = 10
-  }: ImportedEventsParams): Promise<ImportedEventsDocument> {
+  async importedEvents(): Promise<Event[]> {
     const parsedEvents = await this.getEvents()
-
-    const sortedEvents = parsedEvents.sort((a, b) => {
-      return +a.startsAt - +b.startsAt
-    })
-
-    const paginatedEvents = sortedEvents.slice(skip, skip + take)
-
-    const firstEvent = parsedEvents[0]
-    const lastEvent = parsedEvents[parsedEvents.length - 1]
-
-    return {
-      nodes: paginatedEvents,
-      totalCount: parsedEvents.length,
-      pageInfo: {
-        hasPreviousPage: false,
-        hasNextPage: false,
-        startCursor: firstEvent?.id,
-        endCursor: lastEvent?.id
-      }
-    }
+    return parsedEvents
   }
 
   async importedEvent({id}: ImportedEventParams): Promise<Event> {

@@ -15,6 +15,10 @@ fragment PageWithoutBlocks on Page {
   socialMediaImage {
     ...FullImage
   }
+
+  properties {
+    ...FullProperty
+  }
 }
 
 fragment FullPage on Page {

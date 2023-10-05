@@ -4,6 +4,7 @@ import {ConfigModule, ConfigService} from '@nestjs/config'
 import {GraphQLModule} from '@nestjs/graphql'
 import {
   AgendaBaselService,
+  KulturZueriService,
   AuthenticationModule,
   ConsentModule,
   DashboardModule,
@@ -37,8 +38,11 @@ import {JobsModule} from '@wepublish/jobs'
     ConsentModule,
     SettingModule,
     EventsImportModule.registerAsync({
-      useFactory: (agendaBasel: AgendaBaselService) => [agendaBasel],
-      inject: [AgendaBaselService]
+      useFactory: (agendaBasel: AgendaBaselService, kulturZueri: KulturZueriService) => [
+        agendaBasel,
+        kulturZueri
+      ],
+      inject: [AgendaBaselService, KulturZueriService]
     }),
     JobsModule.registerAsync({
       imports: [ConfigModule],

@@ -32,10 +32,10 @@ export class PageInfo {
   @Field()
   hasNextPage!: boolean
 
-  @Field()
+  @Field({nullable: true})
   startCursor!: string
 
-  @Field()
+  @Field({nullable: true})
   endCursor!: string
 }
 
@@ -94,6 +94,12 @@ export class ImportedEventsDocument {
 export class ImportedEventFilter {
   @Field({nullable: true})
   name?: string
+  @Field({nullable: true})
+  from?: string
+  @Field({nullable: true})
+  to?: string
+  @Field(type => [String], {nullable: 'itemsAndList'})
+  providers?: string[]
 }
 
 @InputType()

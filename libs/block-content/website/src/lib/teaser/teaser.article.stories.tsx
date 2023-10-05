@@ -1,5 +1,10 @@
 import {Meta} from '@storybook/react'
-import {ArticleTeaser, FullImageFragment} from '@wepublish/website/api'
+import {
+  ArticleTeaser,
+  FullAuthorFragment,
+  FullImageFragment,
+  TeaserStyle
+} from '@wepublish/website/api'
 import {Teaser} from './teaser'
 
 export default {
@@ -9,8 +14,8 @@ export default {
 
 const image = {
   id: '1234',
-  createdAt: new Date().toDateString(),
-  modifiedAt: new Date().toDateString(),
+  createdAt: new Date('2023-01-01').toDateString(),
+  modifiedAt: new Date('2023-01-01').toDateString(),
   extension: '.jpg',
   fileSize: 1,
   format: '',
@@ -28,6 +33,20 @@ const image = {
   smallURL: 'https://unsplash.it/200/200'
 } as FullImageFragment
 
+const author = {
+  __typename: 'Author',
+  id: 'clgp1hfio50331801rejmrk6sj3',
+  slug: 'slug',
+  name: 'Foobar',
+  jobTitle: 'Editor',
+  url: 'https://example.com',
+  bio: [],
+  links: [],
+  image: undefined,
+  createdAt: new Date('2023-01-01').toISOString(),
+  modifiedAt: new Date('2023-01-01').toISOString()
+} as FullAuthorFragment
+
 const articleTeaser = {
   __typename: 'ArticleTeaser',
   style: 'DEFAULT',
@@ -41,6 +60,9 @@ const articleTeaser = {
     preTitle: 'Pre Title on the article',
     lead: 'Lead on the article',
     url: 'https://example.com',
+    authors: [author, author],
+    publishedAt: new Date('2023-01-01').toISOString(),
+
     blocks: [
       {
         __typename: 'TitleBlock',
@@ -69,21 +91,7 @@ export const Default = {
   }
 }
 
-export const WithShowLead = {
-  args: {
-    alignment: {
-      x: 0,
-      y: 0,
-      w: 3,
-      h: 4,
-      __typename: 'FlexAlignment'
-    },
-    teaser: articleTeaser,
-    showLead: true
-  }
-}
-
-export const WithoutLead = {
+export const WithLightStyle = {
   args: {
     alignment: {
       x: 0,
@@ -94,13 +102,12 @@ export const WithoutLead = {
     },
     teaser: {
       ...articleTeaser,
-      lead: null
-    },
-    showLead: true
+      style: TeaserStyle.Light
+    }
   }
 }
 
-export const WithoutLeadWithoutBlock = {
+export const WithoutBlockWithLightStyle = {
   args: {
     alignment: {
       x: 0,
@@ -111,13 +118,13 @@ export const WithoutLeadWithoutBlock = {
     },
     teaser: {
       ...articleTeaser,
+      style: TeaserStyle.Light,
       lead: null,
       article: {
         ...articleTeaser.article,
         blocks: []
       }
-    },
-    showLead: true
+    }
   }
 }
 
@@ -153,6 +160,22 @@ export const WithoutTitle = {
   }
 }
 
+export const WithoutLead = {
+  args: {
+    alignment: {
+      x: 0,
+      y: 0,
+      w: 3,
+      h: 4,
+      __typename: 'FlexAlignment'
+    },
+    teaser: {
+      ...articleTeaser,
+      lead: null
+    }
+  }
+}
+
 export const WithoutImage = {
   args: {
     alignment: {
@@ -184,6 +207,44 @@ export const WithoutImageWithoutBlock = {
       article: {
         ...articleTeaser.article,
         blocks: []
+      }
+    }
+  }
+}
+
+export const WithoutAuthors = {
+  args: {
+    alignment: {
+      x: 0,
+      y: 0,
+      w: 3,
+      h: 4,
+      __typename: 'FlexAlignment'
+    },
+    teaser: {
+      ...articleTeaser,
+      article: {
+        ...articleTeaser.article,
+        authors: []
+      }
+    }
+  }
+}
+
+export const WithoutDate = {
+  args: {
+    alignment: {
+      x: 0,
+      y: 0,
+      w: 3,
+      h: 4,
+      __typename: 'FlexAlignment'
+    },
+    teaser: {
+      ...articleTeaser,
+      article: {
+        ...articleTeaser.article,
+        publishedAt: null
       }
     }
   }

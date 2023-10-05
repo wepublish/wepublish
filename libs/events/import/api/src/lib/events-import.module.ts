@@ -8,6 +8,7 @@ import {
   EventsProvider
 } from './import/events-import.service'
 import {AgendaBaselService} from './import/agenda-basel.service'
+import {KulturZueriService} from './import/kultur-zueri.service'
 import {ImageFetcherModule} from '@wepublish/image/api'
 
 export type EventsImportOptionsFactory = {
@@ -23,8 +24,8 @@ export interface EventsImportAsyncOptions extends Pick<ModuleMetadata, 'imports'
 
 @Module({
   imports: [PrismaModule, CacheModule.register(), ImageFetcherModule],
-  providers: [EventsImportResolver, EventsImportService, AgendaBaselService],
-  exports: [AgendaBaselService]
+  providers: [EventsImportResolver, EventsImportService, AgendaBaselService, KulturZueriService],
+  exports: [AgendaBaselService, KulturZueriService]
 })
 export class EventsImportModule {
   public static register(config: EventsProvider[]): DynamicModule {

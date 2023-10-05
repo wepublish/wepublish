@@ -3,7 +3,6 @@ import {CACHE_MANAGER} from '@nestjs/cache-manager'
 import {PrismaClient} from '@prisma/client'
 import {EVENT_IMPORT_PROVIDER} from './events-import.service'
 import {AgendaBaselService} from './agenda-basel.service'
-import {ImportedEventSort} from './events-import.model'
 import {Cache} from 'cache-manager'
 import {HttpService} from '@nestjs/axios'
 import {ImageFetcherService, MediaAdapterService} from '@wepublish/image/api'
@@ -80,19 +79,9 @@ describe('AgendaBaselService', () => {
 
   describe('AgendaBaselService', () => {
     test('importedEvents() method returns the correct paginated events.', async () => {
-      const importedEvents = await service.importedEvents({
-        filter: {} as any,
-        order: 1,
-        skip: 0,
-        take: 10,
-        sort: ImportedEventSort.CREATED_AT
-      })
+      const importedEvents = await service.importedEvents()
 
-      expect(importedEvents.nodes.length).toBe(10)
-      expect(importedEvents.totalCount).toBeGreaterThanOrEqual(10)
-      expect(importedEvents.pageInfo.hasPreviousPage).toBe(false)
-      expect(importedEvents.pageInfo.hasNextPage).toBe(false)
-      expect(importedEvents.pageInfo.startCursor).toBe(importedEvents.nodes[0]?.id)
+      expect(importedEvents).not.toBeNull()
     })
 
     test('importedEvent() method returns not found error when searching for a non-existing id', async () => {
@@ -106,16 +95,10 @@ describe('AgendaBaselService', () => {
     })
 
     test('createEvent() method successfully creates an event and returns the ID.', async () => {
-      const importedEvents = await service.importedEvents({
-        filter: {} as any,
-        order: 1,
-        skip: 0,
-        take: 1,
-        sort: ImportedEventSort.CREATED_AT
-      })
+      const importedEvents = await service.importedEvents()
 
       const createEventParams = {
-        id: importedEvents.nodes[0].id
+        id: importedEvents[0].id
       }
 
       const createdEventId = await service.createEvent(createEventParams)

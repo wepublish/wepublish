@@ -19,35 +19,33 @@ exports[`Author should render Default 1`] = `
     </header>
     <img
       alt="DSC07717"
-      class="css-10ctmcf-ImageWrapper e1shv2yg0"
-      height="6000"
+      class="css-128ccri-ImageWrapper-Author e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
       title=""
-      width="4000"
     />
     <aside
       class="css-xraw1t-AuthorLinksWrapper e18ssx8j0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
         href="https://twitter.com"
         target="__blank"
       >
         Twitter
       </a>
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
         href="https://facebook.com"
         target="__blank"
       >
         Facebook
       </a>
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
         href="https://instagram.com"
         target="__blank"
       >
@@ -155,7 +153,9 @@ https://unsplash.it/200/100 200w"
             </span>
           </span>
         </p>
-        <table>
+        <table
+          class="css-o38l6f-tableStyles"
+        >
           <tbody
             data-slate-node="element"
           >
@@ -163,6 +163,7 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -181,6 +182,7 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -203,6 +205,7 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -221,6 +224,7 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -387,7 +391,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </span>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
             data-slate-node="element"
             href="https://google.com"
             rel="noreferrer"
@@ -439,35 +443,33 @@ exports[`Author should render WithClassName 1`] = `
     </header>
     <img
       alt="DSC07717"
-      class="css-10ctmcf-ImageWrapper e1shv2yg0"
-      height="6000"
+      class="css-128ccri-ImageWrapper-Author e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
       title=""
-      width="4000"
     />
     <aside
       class="css-xraw1t-AuthorLinksWrapper e18ssx8j0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
         href="https://twitter.com"
         target="__blank"
       >
         Twitter
       </a>
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
         href="https://facebook.com"
         target="__blank"
       >
         Facebook
       </a>
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
         href="https://instagram.com"
         target="__blank"
       >
@@ -575,7 +577,9 @@ https://unsplash.it/200/100 200w"
             </span>
           </span>
         </p>
-        <table>
+        <table
+          class="css-o38l6f-tableStyles"
+        >
           <tbody
             data-slate-node="element"
           >
@@ -583,6 +587,7 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -601,6 +606,7 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -623,6 +629,7 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -641,6 +648,7 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -807,7 +815,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </span>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
             data-slate-node="element"
             href="https://google.com"
             rel="noreferrer"
@@ -859,21 +867,19 @@ exports[`Author should render WithCustomAuthorLinks 1`] = `
     </header>
     <img
       alt="DSC07717"
-      class="css-10ctmcf-ImageWrapper e1shv2yg0"
-      height="6000"
+      class="css-128ccri-ImageWrapper-Author e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
       title=""
-      width="4000"
     />
     <div
       class="MuiBox-root css-13333fs"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
         href="https://twitter.com"
         target="__blank"
         title="Twitter"
@@ -894,7 +900,7 @@ https://unsplash.it/200/100 200w"
         </svg>
       </a>
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
         href="https://facebook.com"
         target="__blank"
         title="Facebook"
@@ -915,7 +921,7 @@ https://unsplash.it/200/100 200w"
         </svg>
       </a>
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
         href="https://instagram.com"
         target="__blank"
         title="Instagram"
@@ -1037,7 +1043,9 @@ https://unsplash.it/200/100 200w"
             </span>
           </span>
         </p>
-        <table>
+        <table
+          class="css-o38l6f-tableStyles"
+        >
           <tbody
             data-slate-node="element"
           >
@@ -1045,6 +1053,7 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -1063,6 +1072,7 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -1085,6 +1095,7 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -1103,6 +1114,7 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -1269,7 +1281,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </span>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
             data-slate-node="element"
             href="https://google.com"
             rel="noreferrer"
@@ -1321,35 +1333,33 @@ exports[`Author should render WithEmotion 1`] = `
     </header>
     <img
       alt="DSC07717"
-      class="css-10ctmcf-ImageWrapper e1shv2yg0"
-      height="6000"
+      class="css-128ccri-ImageWrapper-Author e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
       title=""
-      width="4000"
     />
     <aside
       class="css-xraw1t-AuthorLinksWrapper e18ssx8j0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
         href="https://twitter.com"
         target="__blank"
       >
         Twitter
       </a>
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
         href="https://facebook.com"
         target="__blank"
       >
         Facebook
       </a>
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
         href="https://instagram.com"
         target="__blank"
       >
@@ -1457,7 +1467,9 @@ https://unsplash.it/200/100 200w"
             </span>
           </span>
         </p>
-        <table>
+        <table
+          class="css-o38l6f-tableStyles"
+        >
           <tbody
             data-slate-node="element"
           >
@@ -1465,6 +1477,7 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -1483,6 +1496,7 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -1505,6 +1519,7 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -1523,6 +1538,7 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -1689,7 +1705,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </span>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
             data-slate-node="element"
             href="https://google.com"
             rel="noreferrer"
@@ -1745,35 +1761,33 @@ exports[`Author should render WithoutBio 1`] = `
     </header>
     <img
       alt="DSC07717"
-      class="css-10ctmcf-ImageWrapper e1shv2yg0"
-      height="6000"
+      class="css-128ccri-ImageWrapper-Author e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
       title=""
-      width="4000"
     />
     <aside
       class="css-xraw1t-AuthorLinksWrapper e18ssx8j0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
         href="https://twitter.com"
         target="__blank"
       >
         Twitter
       </a>
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
         href="https://facebook.com"
         target="__blank"
       >
         Facebook
       </a>
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
         href="https://instagram.com"
         target="__blank"
       >
@@ -1815,21 +1829,21 @@ exports[`Author should render WithoutImage 1`] = `
       class="css-xraw1t-AuthorLinksWrapper e18ssx8j0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
         href="https://twitter.com"
         target="__blank"
       >
         Twitter
       </a>
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
         href="https://facebook.com"
         target="__blank"
       >
         Facebook
       </a>
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
         href="https://instagram.com"
         target="__blank"
       >
@@ -1937,7 +1951,9 @@ exports[`Author should render WithoutImage 1`] = `
             </span>
           </span>
         </p>
-        <table>
+        <table
+          class="css-o38l6f-tableStyles"
+        >
           <tbody
             data-slate-node="element"
           >
@@ -1945,6 +1961,7 @@ exports[`Author should render WithoutImage 1`] = `
               data-slate-node="element"
             >
               <td
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -1963,6 +1980,7 @@ exports[`Author should render WithoutImage 1`] = `
                 </p>
               </td>
               <td
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -1985,6 +2003,7 @@ exports[`Author should render WithoutImage 1`] = `
               data-slate-node="element"
             >
               <td
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -2003,6 +2022,7 @@ exports[`Author should render WithoutImage 1`] = `
                 </p>
               </td>
               <td
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -2169,7 +2189,7 @@ exports[`Author should render WithoutImage 1`] = `
             </span>
           </span>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
             data-slate-node="element"
             href="https://google.com"
             rel="noreferrer"
@@ -2216,35 +2236,33 @@ exports[`Author should render WithoutJobTitle 1`] = `
     </header>
     <img
       alt="DSC07717"
-      class="css-10ctmcf-ImageWrapper e1shv2yg0"
-      height="6000"
+      class="css-128ccri-ImageWrapper-Author e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
       title=""
-      width="4000"
     />
     <aside
       class="css-xraw1t-AuthorLinksWrapper e18ssx8j0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
         href="https://twitter.com"
         target="__blank"
       >
         Twitter
       </a>
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
         href="https://facebook.com"
         target="__blank"
       >
         Facebook
       </a>
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
         href="https://instagram.com"
         target="__blank"
       >
@@ -2352,7 +2370,9 @@ https://unsplash.it/200/100 200w"
             </span>
           </span>
         </p>
-        <table>
+        <table
+          class="css-o38l6f-tableStyles"
+        >
           <tbody
             data-slate-node="element"
           >
@@ -2360,6 +2380,7 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -2378,6 +2399,7 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -2400,6 +2422,7 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -2418,6 +2441,7 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -2584,7 +2608,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </span>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
             data-slate-node="element"
             href="https://google.com"
             rel="noreferrer"
@@ -2636,15 +2660,13 @@ exports[`Author should render WithoutLinks 1`] = `
     </header>
     <img
       alt="DSC07717"
-      class="css-10ctmcf-ImageWrapper e1shv2yg0"
-      height="6000"
+      class="css-128ccri-ImageWrapper-Author e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
       title=""
-      width="4000"
     />
     <div
       class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
@@ -2747,7 +2769,9 @@ https://unsplash.it/200/100 200w"
             </span>
           </span>
         </p>
-        <table>
+        <table
+          class="css-o38l6f-tableStyles"
+        >
           <tbody
             data-slate-node="element"
           >
@@ -2755,6 +2779,7 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -2773,6 +2798,7 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -2795,6 +2821,7 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -2813,6 +2840,7 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
+                class="css-1suggax-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
@@ -2979,7 +3007,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </span>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1bhi0za-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
             data-slate-node="element"
             href="https://google.com"
             rel="noreferrer"

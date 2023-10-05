@@ -49,32 +49,35 @@ export default {
 export const Default = {
   args: {
     data: {
-      navigation
+      navigations: [navigation]
     },
     loading: false,
-    children
+    children,
+    slug: 'main'
   }
 }
 
 export const WithLoading = {
+  ...Default,
   args: {
+    ...Default.args,
     data: {
       navigation: null
     },
-    loading: true,
-    children
+    loading: true
   }
 }
 
 export const WithError = {
+  ...Default,
   args: {
+    ...Default.args,
     data: {
       navigation: null
     },
     loading: false,
     error: new ApolloError({
       errorMessage: 'Foobar'
-    }),
-    children
+    })
   }
 }

@@ -1,42 +1,45 @@
-import {ArticleListQuery} from '@wepublish/website/api'
-import {QueryResult} from '@apollo/client'
-import {useEffect} from 'react'
-import {useArticleListQuery} from '@wepublish/website/api'
+import {FullArticleFragment, useArticleListQuery} from '@wepublish/website/api'
 import {
+  BuilderArticleListProps,
   BuilderContainerProps,
-  useWebsiteBuilder,
-  BuilderArticleListProps
+  useWebsiteBuilder
 } from '@wepublish/website/builder'
 
-export type ArticleListContainerProps = {
-  onQuery?: (
-    queryResult: Pick<QueryResult<ArticleListQuery>, 'data' | 'loading' | 'error' | 'fetchMore'>
-  ) => void
-} & BuilderContainerProps &
-  Pick<BuilderArticleListProps, 'variables' | 'onVariablesChange'>
+export type ArticleListContainerProps = BuilderContainerProps &
+  Pick<BuilderArticleListProps, 'variables' | 'onVariablesChange'> & {
+    filter?: (articles: FullArticleFragment[]) => FullArticleFragment[]
+  }
 
 export function ArticleListContainer({
-  onQuery,
   className,
   variables,
-  onVariablesChange
+  onVariablesChange,
+  filter
 }: ArticleListContainerProps) {
   const {ArticleList} = useWebsiteBuilder()
-  const {data, loading, error, fetchMore} = useArticleListQuery({
+  const {data, loading, error} = useArticleListQuery({
     variables
   })
 
-  useEffect(() => {
-    onQuery?.({data, loading, error, fetchMore})
-  }, [data, loading, error, fetchMore, onQuery])
-
   return (
     <ArticleList
-      data={data}
+      data={
+        filter && data?.articles
+          ? {
+              ...data,
+              articles: {
+                pageInfo: data.articles.pageInfo,
+                totalCount: data.articles.totalCount,
+                nodes: filter(data.articles.nodes)
+              }
+            }
+          : data
+      }
       loading={loading}
       error={error}
       className={className}
       variables={variables}
+      onVariablesChange={onVariablesChange}
     />
   )
 }

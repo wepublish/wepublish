@@ -110,7 +110,7 @@ const fillPassword: StoryObj['play'] = async ({canvasElement, step}) => {
 const fillStreetName: StoryObj['play'] = async ({canvasElement, step}) => {
   const canvas = within(canvasElement)
 
-  const input = canvas.getByLabelText('Address', {
+  const input = canvas.getByLabelText('Adresse', {
     selector: 'input'
   })
 
@@ -123,7 +123,7 @@ const fillStreetName: StoryObj['play'] = async ({canvasElement, step}) => {
 const fillZip: StoryObj['play'] = async ({canvasElement, step}) => {
   const canvas = within(canvasElement)
 
-  const input = canvas.getByLabelText('Postleitzahl', {
+  const input = canvas.getByLabelText('PLZ', {
     selector: 'input'
   })
 
@@ -136,7 +136,7 @@ const fillZip: StoryObj['play'] = async ({canvasElement, step}) => {
 const fillCity: StoryObj['play'] = async ({canvasElement, step}) => {
   const canvas = within(canvasElement)
 
-  const input = canvas.getByLabelText('Stadt', {
+  const input = canvas.getByLabelText('Ort / Stadt', {
     selector: 'input'
   })
 
@@ -231,12 +231,9 @@ export const Invalid: StoryObj = {
 }
 
 export const OnlyFirstName: StoryObj = {
+  ...Default,
   args: {
-    onRegister: action('onRegister'),
-    challenge: {
-      data: {challenge}
-    },
-    register: {},
+    ...Default.args,
     fields: ['firstName']
   }
 }
@@ -258,12 +255,9 @@ export const OnlyFirstNameInvalid: StoryObj = {
 }
 
 export const OnlyPreferredName: StoryObj = {
+  ...Default,
   args: {
-    onRegister: action('onRegister'),
-    challenge: {
-      data: {challenge}
-    },
-    register: {},
+    ...Default.args,
     fields: ['preferredName']
   }
 }
@@ -285,12 +279,9 @@ export const OnlyPreferredNameInvalid: StoryObj = {
 }
 
 export const OnlyAddress: StoryObj = {
+  ...Default,
   args: {
-    onRegister: action('onRegister'),
-    challenge: {
-      data: {challenge}
-    },
-    register: {},
+    ...Default.args,
     fields: ['address']
   }
 }
@@ -312,12 +303,9 @@ export const OnlyAddressInvalid: StoryObj = {
 }
 
 export const OnlyPassword: StoryObj = {
+  ...Default,
   args: {
-    onRegister: action('onRegister'),
-    challenge: {
-      data: {challenge}
-    },
-    register: {},
+    ...Default.args,
     fields: ['password']
   }
 }
@@ -339,12 +327,9 @@ export const OnlyPasswordInvalid: StoryObj = {
 }
 
 export const OnlyRequired: StoryObj = {
+  ...Default,
   args: {
-    onRegister: action('onRegister'),
-    challenge: {
-      data: {challenge}
-    },
-    register: {},
+    ...Default.args,
     fields: []
   }
 }
@@ -377,31 +362,29 @@ export const WithCustomValidation: StoryObj = {
 }
 
 export const WithChallengeError: StoryObj = {
+  ...Default,
   args: {
-    onRegister: action('onRegister'),
+    ...Default.args,
     challenge: {
       error: new ApolloError({errorMessage: 'Something went wrong.'})
-    },
-    register: {}
+    }
   }
 }
 
 export const WithChallengeLoading: StoryObj = {
+  ...Default,
   args: {
-    onRegister: action('onRegister'),
+    ...Default.args,
     challenge: {
       loading: true
-    },
-    register: {}
+    }
   }
 }
 
 export const WithRegisterError: StoryObj = {
+  ...Default,
   args: {
-    onRegister: action('onRegister'),
-    challenge: {
-      data: {challenge}
-    },
+    ...Default.args,
     register: {
       error: new ApolloError({errorMessage: 'Email already in use.'})
     }
@@ -409,11 +392,9 @@ export const WithRegisterError: StoryObj = {
 }
 
 export const WithRegisterLoading: StoryObj = {
+  ...Default,
   args: {
-    onRegister: action('onRegister'),
-    challenge: {
-      data: {challenge}
-    },
+    ...Default.args,
     register: {
       loading: true
     }

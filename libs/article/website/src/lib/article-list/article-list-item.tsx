@@ -1,6 +1,7 @@
 import {Article} from '@wepublish/website/api'
 import {Theme, styled, css, useTheme} from '@mui/material'
 import {useWebsiteBuilder} from '@wepublish/website/builder'
+import {isImageBlock} from '@wepublish/block-content/website'
 
 export const ArticleListItemImageWrapper = styled('div')`
   display: grid;
@@ -8,6 +9,10 @@ export const ArticleListItemImageWrapper = styled('div')`
 `
 
 export const ArticleListItemContent = styled('div')``
+
+export const ArticleListItemAuthors = styled('div')`
+  margin-top: ${({theme}) => theme.spacing(2)};
+`
 
 export const wrapperStyles = (theme: Theme) => css`
   display: grid;
@@ -24,24 +29,44 @@ const imageStyles = css`
   object-fit: cover;
 `
 
-export function ArticleListItem({className, ...data}: Article & {className?: string}) {
+export function ArticleListItem({
+  className,
+  title,
+  preTitle,
+  authors,
+  image: seoImage,
+  blocks,
+  publishedAt,
+  url
+}: Article & {className?: string}) {
   const theme = useTheme()
   const {
-    elements: {Image, Paragraph, H5, Link},
+    elements: {Image, H5, Link},
     date: {format}
   } = useWebsiteBuilder()
 
+  const imageBlock = blocks.find(isImageBlock)
+  const image = seoImage ?? imageBlock?.image
+
   return (
-    <Link css={wrapperStyles(theme)} className={className} href={data.url}>
+    <Link css={wrapperStyles(theme)} className={className} href={url}>
       <ArticleListItemImageWrapper>
-        {data.image && <Image image={data.image} square css={imageStyles} />}
+        {image && <Image image={image} square css={imageStyles} />}
       </ArticleListItemImageWrapper>
 
       <ArticleListItemContent>
-        <Paragraph gutterBottom={false}>{format(new Date(data.publishedAt))}</Paragraph>
+        <time dateTime={publishedAt}>{format(new Date(publishedAt), false)}</time>
 
-        {data.title && <H5 component="h1">{data.title}</H5>}
-        {data.authors && <Paragraph>von {data.authors.map(a => a.name).join(', ')}</Paragraph>}
+        {title && (
+          <H5 component="h1">
+            {preTitle && `${preTitle}: `}
+            {title}
+          </H5>
+        )}
+
+        {!!authors.length && (
+          <ArticleListItemAuthors>{authors.map(a => a.name).join(', ')}</ArticleListItemAuthors>
+        )}
       </ArticleListItemContent>
     </Link>
   )

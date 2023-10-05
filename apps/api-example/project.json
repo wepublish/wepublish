@@ -67,7 +67,7 @@
       "options": {
         "commands": [
           {
-            "command": "npx ts-node apps/api-example/prisma/seed.ts"
+            "command": "npx tsx apps/api-example/prisma/seed.ts"
           }
         ]
       }

@@ -1,29 +1,10 @@
-import {MutationResult} from '@apollo/client'
-import {
-  LoginWithCredentialsMutation,
-  LoginWithEmailMutation,
-  useLoginWithCredentialsMutation,
-  useLoginWithEmailMutation
-} from '@wepublish/website/api'
+import {useLoginWithCredentialsMutation, useLoginWithEmailMutation} from '@wepublish/website/api'
 import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {useEffect} from 'react'
 import {useUser} from '../session.context'
 
-export type LoginFormContainerProps = {
-  onLoginWithEmail?: (
-    mutationResult: Pick<MutationResult<LoginWithEmailMutation>, 'data' | 'loading' | 'error'>
-  ) => void
+export type LoginFormContainerProps = BuilderContainerProps
 
-  onLoginWithCredentials?: (
-    mutationResult: Pick<MutationResult<LoginWithCredentialsMutation>, 'data' | 'loading' | 'error'>
-  ) => void
-} & BuilderContainerProps
-
-export function LoginFormContainer({
-  onLoginWithEmail,
-  onLoginWithCredentials,
-  className
-}: LoginFormContainerProps) {
+export function LoginFormContainer({className}: LoginFormContainerProps) {
   const {LoginForm} = useWebsiteBuilder()
   const {setToken} = useUser()
   const [loginWithEmail, withEmail] = useLoginWithEmailMutation()
@@ -36,14 +17,6 @@ export function LoginFormContainer({
       })
     }
   })
-
-  useEffect(() => {
-    onLoginWithCredentials?.(withCredentials)
-  }, [withCredentials, onLoginWithCredentials])
-
-  useEffect(() => {
-    onLoginWithEmail?.(withEmail)
-  }, [withEmail, onLoginWithEmail])
 
   return (
     <LoginForm

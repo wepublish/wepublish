@@ -1,7 +1,8 @@
 import {css} from '@emotion/react'
 import {Meta} from '@storybook/react'
 import {ArticleListItem} from './article-list-item'
-import {ArticleQuery, FullAuthorFragment, FullImageFragment} from '@wepublish/website/api'
+import {ArticleQuery, Block, FullAuthorFragment, FullImageFragment} from '@wepublish/website/api'
+import {isImageBlock} from '@wepublish/block-content/website'
 
 const image = {
   __typename: 'Image',
@@ -442,7 +443,9 @@ const article = {
               {
                 __typename: 'RichTextBlock'
               }
-            ]
+            ],
+            authors: [author],
+            publishedAt: new Date('2023-01-01').toISOString()
           }
         },
         {
@@ -497,7 +500,9 @@ const article = {
               {
                 __typename: 'RichTextBlock'
               }
-            ]
+            ],
+            authors: [author],
+            publishedAt: new Date('2023-01-01').toISOString()
           }
         },
         {
@@ -1069,7 +1074,9 @@ const article = {
               {
                 __typename: 'RichTextBlock'
               }
-            ]
+            ],
+            authors: [author],
+            publishedAt: new Date('2023-01-01').toISOString()
           }
         },
         {
@@ -1124,7 +1131,9 @@ const article = {
               {
                 __typename: 'RichTextBlock'
               }
-            ]
+            ],
+            authors: [author],
+            publishedAt: new Date('2023-01-01').toISOString()
           }
         },
         {
@@ -2432,7 +2441,7 @@ const article = {
 
 export default {
   component: ArticleListItem,
-  title: 'Components/ArticleListItem'
+  title: 'Components/ArticleList/Item'
 } as Meta
 
 export const Default = {
@@ -2468,5 +2477,13 @@ export const WithoutImage = {
   args: {
     ...article,
     image: null
+  }
+}
+
+export const WithoutImageWithoutImageBlock = {
+  args: {
+    ...article,
+    image: null,
+    blocks: article.blocks.filter(block => !isImageBlock(block as Block))
   }
 }

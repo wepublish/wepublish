@@ -2396,26 +2396,26 @@ const generate = generateFeed({
   updated: new Date('2023-01-01')
 })
 
-it('should setup the feed', () => {
+it('should setup the feed', async () => {
   const articles = [article, article]
 
-  expect(generate(articles)).toMatchSnapshot()
+  expect(await generate(articles)).toMatchSnapshot()
 })
 
-it('should generate the RSS feed', () => {
+it('should generate the RSS feed', async () => {
   const articles = [article, article]
 
-  expect(generate(articles).rss2()).toMatchSnapshot()
+  expect((await generate(articles)).rss2()).toMatchSnapshot()
 })
 
-it('should generate the atom feed', () => {
+it('should generate the atom feed', async () => {
   const articles = [article, article]
 
-  expect(generate(articles).atom1()).toMatchSnapshot()
+  expect((await generate(articles)).atom1()).toMatchSnapshot()
 })
 
-it('should generate the json feed', () => {
+it('should generate the json feed', async () => {
   const articles = [article, article]
 
-  expect(generate(articles).json1()).toMatchSnapshot()
+  expect((await generate(articles)).json1()).toMatchSnapshot()
 })

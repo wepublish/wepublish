@@ -1,29 +1,25 @@
-import {MutationResult, QueryResult} from '@apollo/client'
 import {
-  ChallengeQuery,
-  RegisterMutation,
+  RegisterMutationVariables,
   useChallengeQuery,
   useRegisterMutation
 } from '@wepublish/website/api'
-import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {useEffect} from 'react'
+import {
+  BuilderContainerProps,
+  BuilderRegistrationFormProps,
+  useWebsiteBuilder
+} from '@wepublish/website/builder'
+import {OptionalKeysOf} from 'type-fest'
 import {useUser} from '../session.context'
 
-export type RegistrationFormContainerProps = {
-  onChallengeQuery?: (
-    queryResult: Pick<QueryResult<ChallengeQuery>, 'data' | 'loading' | 'error' | 'refetch'>
-  ) => void
+export type RegistrationFormContainerProps<
+  T extends OptionalKeysOf<RegisterMutationVariables> = OptionalKeysOf<RegisterMutationVariables>
+> = BuilderContainerProps & Pick<BuilderRegistrationFormProps<T>, 'fields' | 'schema'>
 
-  onRegister?: (
-    mutationResult: Pick<MutationResult<RegisterMutation>, 'data' | 'loading' | 'error'>
-  ) => void
-} & BuilderContainerProps
-
-export function RegistrationFormContainer({
-  onRegister,
-  onChallengeQuery,
-  className
-}: RegistrationFormContainerProps) {
+export function RegistrationFormContainer<T extends OptionalKeysOf<RegisterMutationVariables>>({
+  className,
+  fields,
+  schema
+}: RegistrationFormContainerProps<T>) {
   const {RegistrationForm} = useWebsiteBuilder()
   const {setToken} = useUser()
   const [register, registerData] = useRegisterMutation({
@@ -38,16 +34,6 @@ export function RegistrationFormContainer({
   })
   const challenge = useChallengeQuery()
 
-  useEffect(() => {
-    if (registerData.called) {
-      onRegister?.(registerData)
-    }
-  }, [registerData, onRegister])
-
-  useEffect(() => {
-    onChallengeQuery?.(challenge)
-  }, [challenge, onChallengeQuery])
-
   return (
     <RegistrationForm
       className={className}
@@ -58,6 +44,8 @@ export function RegistrationFormContainer({
           variables
         })
       }
+      fields={fields}
+      schema={schema}
     />
   )
 }

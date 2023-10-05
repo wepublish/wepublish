@@ -3,23 +3,21 @@
 exports[`AuthorList Item should render Default 1`] = `
 <DocumentFragment>
   <a
-    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
-    href="slug"
+    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+    href="https://example.com"
   >
     <div
       class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
     >
       <img
         alt="DSC07717"
-        class="css-1wiojmo-ImageWrapper-AuthorListItem e1shv2yg0"
-        height="6000"
+        class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
         title=""
-        width="4000"
       />
     </div>
     <div
@@ -43,23 +41,21 @@ https://unsplash.it/200/200 200w"
 exports[`AuthorList Item should render WithClassName 1`] = `
 <DocumentFragment>
   <a
-    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways extra-classname css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
-    href="slug"
+    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways extra-classname css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+    href="https://example.com"
   >
     <div
       class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
     >
       <img
         alt="DSC07717"
-        class="css-1wiojmo-ImageWrapper-AuthorListItem e1shv2yg0"
-        height="6000"
+        class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
         title=""
-        width="4000"
       />
     </div>
     <div
@@ -83,23 +79,21 @@ https://unsplash.it/200/200 200w"
 exports[`AuthorList Item should render WithEmotion 1`] = `
 <DocumentFragment>
   <a
-    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
-    href="slug"
+    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+    href="https://example.com"
   >
     <div
       class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
     >
       <img
         alt="DSC07717"
-        class="css-1wiojmo-ImageWrapper-AuthorListItem e1shv2yg0"
-        height="6000"
+        class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
         title=""
-        width="4000"
       />
     </div>
     <div
@@ -123,8 +117,8 @@ https://unsplash.it/200/200 200w"
 exports[`AuthorList Item should render WithoutImage 1`] = `
 <DocumentFragment>
   <a
-    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
-    href="slug"
+    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+    href="https://example.com"
   >
     <div
       class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
@@ -150,23 +144,21 @@ exports[`AuthorList Item should render WithoutImage 1`] = `
 exports[`AuthorList Item should render WithoutJobTitle 1`] = `
 <DocumentFragment>
   <a
-    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1d7qh53-MuiTypography-root-MuiLink-root-AuthorListItem"
-    href="slug"
+    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+    href="https://example.com"
   >
     <div
       class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
     >
       <img
         alt="DSC07717"
-        class="css-1wiojmo-ImageWrapper-AuthorListItem e1shv2yg0"
-        height="6000"
+        class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
         title=""
-        width="4000"
       />
     </div>
     <div

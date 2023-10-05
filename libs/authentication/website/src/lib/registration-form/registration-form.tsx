@@ -1,35 +1,16 @@
 import {zodResolver} from '@hookform/resolvers/zod'
-import {IconButton, InputAdornment, css, styled} from '@mui/material'
+import {css, styled} from '@mui/material'
 import {RegisterMutationVariables} from '@wepublish/website/api'
 import {BuilderRegistrationFormProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {useEffect, useReducer} from 'react'
+import {useEffect} from 'react'
 import {Controller, useForm} from 'react-hook-form'
-import {MdVisibility, MdVisibilityOff} from 'react-icons/md'
 import {OptionalKeysOf} from 'type-fest'
 import {z} from 'zod'
+import {UserForm} from './user-form'
 
 export const RegistrationFormWrapper = styled('form')`
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};
-`
-
-export const RegistrationInputForm = styled('div')`
-  display: grid;
-  gap: ${({theme}) => theme.spacing(3)};
-  grid-template-columns: 1fr 1fr;
-`
-
-export const RegistrationAddressWrapper = styled('div')`
-  grid-column-start: 1;
-  grid-column-end: 3;
-  display: grid;
-  gap: ${({theme}) => theme.spacing(3)};
-  grid-template-columns: repeat(1fr, 3);
-`
-
-const addressStyles = css`
-  grid-column-start: 1;
-  grid-column-end: 4;
 `
 
 export const RegistrationChallengeWrapper = styled('div')`
@@ -53,7 +34,7 @@ const buttonStyles = css`
   justify-self: flex-end;
 `
 
-const requiredSchema = z.object({
+export const requiredRegisterSchema = z.object({
   name: z.string().nonempty(),
   email: z.string().email().nonempty(),
   challengeAnswer: z.object({
@@ -62,7 +43,7 @@ const requiredSchema = z.object({
   })
 })
 
-const defaultSchema = z.object({
+export const defaultRegisterSchema = z.object({
   preferredName: z.string().optional(),
   firstName: z.string().nonempty(),
   address: z.object({
@@ -79,17 +60,15 @@ export function RegistrationForm<T extends OptionalKeysOf<RegisterMutationVariab
   fields = ['firstName', 'address', 'password'] as T[],
   register,
   className,
-  schema = defaultSchema,
+  schema = defaultRegisterSchema,
   onRegister
 }: BuilderRegistrationFormProps<T>) {
-  const [showPassword, togglePassword] = useReducer(state => !state, false)
-
   const fieldsToDisplay = fields.reduce(
     (obj, field) => ({...obj, [field]: true}),
     {} as Record<OptionalKeysOf<RegisterMutationVariables>, true>
   )
 
-  const validationSchema = requiredSchema.merge(schema.pick(fieldsToDisplay))
+  const validationSchema = requiredRegisterSchema.merge(schema.pick(fieldsToDisplay))
 
   const {handleSubmit, control, setValue} = useForm<RegisterMutationVariables>({
     resolver: zodResolver(validationSchema),
@@ -126,145 +105,7 @@ export function RegistrationForm<T extends OptionalKeysOf<RegisterMutationVariab
 
   return (
     <RegistrationFormWrapper className={className} onSubmit={onSubmit}>
-      <RegistrationInputForm>
-        {fieldsToDisplay.firstName && (
-          <Controller
-            name={'firstName'}
-            control={control}
-            render={({field, fieldState: {error}}) => (
-              <TextField {...field} label={'Vorname'} error={!!error} helperText={error?.message} />
-            )}
-          />
-        )}
-
-        {fieldsToDisplay.preferredName && (
-          <Controller
-            name={'preferredName'}
-            control={control}
-            render={({field, fieldState: {error}}) => (
-              <TextField
-                {...field}
-                label={'Bevorzugter Name'}
-                error={!!error}
-                helperText={error?.message}
-              />
-            )}
-          />
-        )}
-
-        <Controller
-          name={'name'}
-          control={control}
-          render={({field, fieldState: {error}}) => (
-            <TextField {...field} label={'Nachname'} error={!!error} helperText={error?.message} />
-          )}
-        />
-
-        <Controller
-          name={'email'}
-          control={control}
-          render={({field, fieldState: {error}}) => (
-            <TextField
-              {...field}
-              type={'email'}
-              fullWidth
-              label={'Email'}
-              error={!!error}
-              helperText={error?.message}
-            />
-          )}
-        />
-
-        {fieldsToDisplay.password && (
-          <Controller
-            name={'password'}
-            control={control}
-            render={({field, fieldState: {error}}) => (
-              <TextField
-                {...field}
-                type={showPassword ? 'text' : 'password'}
-                fullWidth
-                label={'Passwort'}
-                error={!!error}
-                helperText={error?.message}
-                InputProps={{
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        onClick={togglePassword}
-                        onMouseDown={event => event.preventDefault()}
-                        edge="end">
-                        {showPassword ? <MdVisibilityOff /> : <MdVisibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  )
-                }}
-              />
-            )}
-          />
-        )}
-
-        {fieldsToDisplay.address && (
-          <RegistrationAddressWrapper>
-            <Controller
-              name={'address.streetAddress'}
-              control={control}
-              render={({field, fieldState: {error}}) => (
-                <TextField
-                  {...field}
-                  css={addressStyles}
-                  fullWidth
-                  label={'Address'}
-                  error={!!error}
-                  helperText={error?.message}
-                />
-              )}
-            />
-
-            <Controller
-              name={'address.zipCode'}
-              control={control}
-              render={({field, fieldState: {error}}) => (
-                <TextField
-                  {...field}
-                  fullWidth
-                  label={'Postleitzahl'}
-                  error={!!error}
-                  helperText={error?.message}
-                />
-              )}
-            />
-
-            <Controller
-              name={'address.city'}
-              control={control}
-              render={({field, fieldState: {error}}) => (
-                <TextField
-                  {...field}
-                  fullWidth
-                  label={'Stadt'}
-                  error={!!error}
-                  helperText={error?.message}
-                />
-              )}
-            />
-
-            <Controller
-              name={'address.country'}
-              control={control}
-              render={({field, fieldState: {error}}) => (
-                <TextField
-                  {...field}
-                  fullWidth
-                  label={'Land'}
-                  error={!!error}
-                  helperText={error?.message}
-                />
-              )}
-            />
-          </RegistrationAddressWrapper>
-        )}
-      </RegistrationInputForm>
+      <UserForm control={control} fields={fields} />
 
       {challenge.data && (
         <RegistrationChallengeWrapper>

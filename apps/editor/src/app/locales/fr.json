@@ -562,7 +562,9 @@
         "isPending": "En attente",
         "isDraft": "Brouillon",
         "isPublished": "Publié",
-        "publicationDate": "Date de publication"
+        "publicationDate": "Date de publication",
+        "dates": "Dates",
+        "providers": "Fournisseurs"
       }
     },
     "userList": {

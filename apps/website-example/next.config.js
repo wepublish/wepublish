@@ -1,7 +1,10 @@
 //@ts-check
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const {composePlugins, withNx} = require('@nx/next')
+const withBundleAnalyzer = require('@next/bundle-analyzer')({
+  enabled: process.env.NODE_ENV === 'production',
+  openAnalyzer: false
+})
 
 /**
  * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
@@ -10,10 +13,17 @@ const nextConfig = {
   nx: {
     svgr: true
   },
+  poweredByHeader: false,
+  reactStrictMode: true,
   publicRuntimeConfig: {
     env: {
       API_URL: process.env.API_URL || ''
     }
+  },
+  // Adds the language attribute to the HTML
+  i18n: {
+    locales: ['gsw-CH'],
+    defaultLocale: 'gsw-CH'
   },
   compiler: {
     // This is needed so that we can use components as selectors in Emotion
@@ -43,7 +53,8 @@ const nextConfig = {
 
 const plugins = [
   // Add more Next.js plugins to this list if needed.
-  withNx
+  withNx,
+  withBundleAnalyzer
 ]
 
 module.exports = composePlugins(...plugins)(nextConfig)

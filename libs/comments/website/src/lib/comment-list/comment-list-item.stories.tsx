@@ -1,16 +1,15 @@
+import {ApolloError} from '@apollo/client'
 import {css} from '@emotion/react'
 import {useArgs, useReducer} from '@storybook/preview-api'
 import {Meta, StoryObj} from '@storybook/react'
-import {SessionTokenContext} from '@wepublish/authentication/website'
+import {userEvent, waitFor, within} from '@storybook/testing-library'
+import {WithUserDecorator} from '@wepublish/storybook'
 import {Challenge, CommentListQuery, CommentState, FullImageFragment} from '@wepublish/website/api'
-import {ComponentProps, ComponentType} from 'react'
+import {ComponentProps} from 'react'
 import {Node} from 'slate'
+import {LoggedInFilled} from '../comment-editor/comment-editor.stories'
 import {CommentListItem} from './comment-list-item'
 import {commentListReducer} from './comment-list.state'
-import {ApolloError} from '@apollo/client'
-import {userEvent, waitFor, within} from '@storybook/testing-library'
-import {LoggedInFilled} from '../comment-editor/comment-editor.stories'
-import {action} from '@storybook/addon-actions'
 
 const image = {
   __typename: 'Image',
@@ -184,21 +183,6 @@ function Render() {
   )
 }
 
-const WithUserDecorator = (Story: ComponentType) => {
-  return (
-    <SessionTokenContext.Provider
-      value={[
-        verifiedUserComment.user ?? null,
-        true,
-        () => {
-          /* do nothing */
-        }
-      ]}>
-      <Story />
-    </SessionTokenContext.Provider>
-  )
-}
-
 const openAddEditor: StoryObj['play'] = async ({canvasElement, step}) => {
   const canvas = within(canvasElement)
   const submitButton = canvas.getByText('Antworten')
@@ -324,7 +308,7 @@ export const PendingUserChanges: StoryObj = {
     maxCommentLength: 2000,
     state: CommentState.PendingUserChanges
   },
-  decorators: [WithUserDecorator]
+  decorators: [WithUserDecorator(verifiedUserComment.user ?? null)]
 }
 
 export const Rejected: StoryObj = {
@@ -371,10 +355,9 @@ export const Commenting: StoryObj = {
     challenge: {
       data: {challenge}
     },
-    maxCommentLength: 2000,
-    onAddComment: action('onAddComment')
+    maxCommentLength: 2000
   },
-  decorators: [WithUserDecorator]
+  decorators: [WithUserDecorator(verifiedUserComment.user ?? null)]
 }
 
 export const AnonymousCommenting: StoryObj = {
@@ -385,8 +368,7 @@ export const AnonymousCommenting: StoryObj = {
       data: {challenge}
     },
     maxCommentLength: 2000,
-    anonymousCanComment: true,
-    onAddComment: action('onAddComment')
+    anonymousCanComment: true
   }
 }
 
@@ -414,10 +396,9 @@ export const Editing: StoryObj = {
       data: {challenge}
     },
     maxCommentLength: 2000,
-    userCanEdit: true,
-    onEditComment: action('onEditComment')
+    userCanEdit: true
   },
-  decorators: [WithUserDecorator]
+  decorators: [WithUserDecorator(verifiedUserComment.user ?? null)]
 }
 
 export const EditingWithError: StoryObj = {

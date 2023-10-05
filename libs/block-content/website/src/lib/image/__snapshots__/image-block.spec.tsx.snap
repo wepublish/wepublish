@@ -7,15 +7,13 @@ exports[`Image Block should render Default 1`] = `
   >
     <img
       alt="An image description"
-      class="css-10ctmcf-ImageWrapper e1shv2yg0"
-      height="500"
+      class="css-oph4oo-ImageWrapper e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
       title="An image title"
-      width="500"
     />
     <figcaption>
       Image caption
@@ -31,15 +29,13 @@ exports[`Image Block should render WithClassName 1`] = `
   >
     <img
       alt="An image description"
-      class="css-10ctmcf-ImageWrapper e1shv2yg0"
-      height="500"
+      class="css-oph4oo-ImageWrapper e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
       title="An image title"
-      width="500"
     />
     <figcaption>
       Image caption
@@ -55,15 +51,13 @@ exports[`Image Block should render WithEmotion 1`] = `
   >
     <img
       alt="An image description"
-      class="css-10ctmcf-ImageWrapper e1shv2yg0"
-      height="500"
+      class="css-oph4oo-ImageWrapper e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
       title="An image title"
-      width="500"
     />
     <figcaption>
       Image caption
@@ -79,15 +73,13 @@ exports[`Image Block should render WithoutCaption 1`] = `
   >
     <img
       alt="An image description"
-      class="css-10ctmcf-ImageWrapper e1shv2yg0"
-      height="500"
+      class="css-oph4oo-ImageWrapper e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
       title="An image title"
-      width="500"
     />
   </figure>
 </DocumentFragment>

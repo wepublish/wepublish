@@ -80,6 +80,12 @@ export type BuilderCommentListItemProps = Comment & {
     | 'openEditorsStateDispatch'
   >
 
+export type BuilderCommentListSingleCommentProps = Partial<Comment> & {
+  className?: string
+  showContent?: boolean
+  children?: JSX.Element
+}
+
 type CreateCommentProps = {
   text?: never
   title?: never

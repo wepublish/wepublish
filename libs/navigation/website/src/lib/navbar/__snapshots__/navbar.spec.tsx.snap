@@ -9,10 +9,10 @@ exports[`Navbar should render Default 1`] = `
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl27 css-1jnr00-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl27 css-15e8tal-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
-          class="css-1mutcct-NavbarMain ei6evl26"
+          class="css-kfwxas-NavbarMain ei6evl26"
         >
           <button
             aria-label="Menu"
@@ -42,22 +42,22 @@ exports[`Navbar should render Default 1`] = `
             />
           </button>
           <div
-            class="css-zom751-NavbarMainItems ei6evl25"
+            class="css-pd0s4t-NavbarMainItems ei6evl25"
           >
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
               href="/"
             >
               Home
             </a>
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
               href="/a/abcd"
             >
               Artikel
             </a>
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
               href="https://google.com"
             >
               Google
@@ -79,10 +79,10 @@ exports[`Navbar should render WithClassName 1`] = `
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl27 css-1jnr00-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl27 css-15e8tal-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
-          class="css-1mutcct-NavbarMain ei6evl26"
+          class="css-kfwxas-NavbarMain ei6evl26"
         >
           <button
             aria-label="Menu"
@@ -112,22 +112,22 @@ exports[`Navbar should render WithClassName 1`] = `
             />
           </button>
           <div
-            class="css-zom751-NavbarMainItems ei6evl25"
+            class="css-pd0s4t-NavbarMainItems ei6evl25"
           >
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
               href="/"
             >
               Home
             </a>
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
               href="/a/abcd"
             >
               Artikel
             </a>
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
               href="https://google.com"
             >
               Google
@@ -149,10 +149,10 @@ exports[`Navbar should render WithEmotion 1`] = `
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl27 css-1jnr00-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl27 css-15e8tal-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
-          class="css-1mutcct-NavbarMain ei6evl26"
+          class="css-kfwxas-NavbarMain ei6evl26"
         >
           <button
             aria-label="Menu"
@@ -182,22 +182,22 @@ exports[`Navbar should render WithEmotion 1`] = `
             />
           </button>
           <div
-            class="css-zom751-NavbarMainItems ei6evl25"
+            class="css-pd0s4t-NavbarMainItems ei6evl25"
           >
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
               href="/"
             >
               Home
             </a>
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
               href="/a/abcd"
             >
               Artikel
             </a>
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-9lisvk-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
               href="https://google.com"
             >
               Google
@@ -219,10 +219,10 @@ exports[`Navbar should render WithError 1`] = `
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl27 css-1jnr00-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl27 css-15e8tal-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
-          class="css-1mutcct-NavbarMain ei6evl26"
+          class="css-kfwxas-NavbarMain ei6evl26"
         >
           <button
             aria-label="Menu"
@@ -252,7 +252,7 @@ exports[`Navbar should render WithError 1`] = `
             />
           </button>
           <div
-            class="css-zom751-NavbarMainItems ei6evl25"
+            class="css-pd0s4t-NavbarMainItems ei6evl25"
           />
         </div>
       </div>
@@ -270,10 +270,10 @@ exports[`Navbar should render WithLoading 1`] = `
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl27 css-1jnr00-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl27 css-15e8tal-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
-          class="css-1mutcct-NavbarMain ei6evl26"
+          class="css-kfwxas-NavbarMain ei6evl26"
         >
           <button
             aria-label="Menu"
@@ -303,7 +303,7 @@ exports[`Navbar should render WithLoading 1`] = `
             />
           </button>
           <div
-            class="css-zom751-NavbarMainItems ei6evl25"
+            class="css-pd0s4t-NavbarMainItems ei6evl25"
           />
         </div>
       </div>
@@ -321,10 +321,10 @@ exports[`Navbar should render WithoutItems 1`] = `
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl27 css-1jnr00-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl27 css-15e8tal-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
-          class="css-1mutcct-NavbarMain ei6evl26"
+          class="css-kfwxas-NavbarMain ei6evl26"
         >
           <button
             aria-label="Menu"
@@ -354,7 +354,7 @@ exports[`Navbar should render WithoutItems 1`] = `
             />
           </button>
           <div
-            class="css-zom751-NavbarMainItems ei6evl25"
+            class="css-pd0s4t-NavbarMainItems ei6evl25"
           />
         </div>
       </div>

@@ -95,6 +95,7 @@ export function LoginForm({
           render={({field, fieldState: {error}}) => (
             <TextField
               {...field}
+              autoComplete="email"
               type={'email'}
               fullWidth
               label={'Email'}
@@ -111,6 +112,7 @@ export function LoginForm({
             render={({field, fieldState: {error}}) => (
               <TextField
                 {...field}
+                autoComplete="current-password"
                 type={'password'}
                 fullWidth
                 label={'Passwort'}
