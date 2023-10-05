@@ -320,6 +320,8 @@ export type EventConnection = {
 
 export type EventFilter = {
   from?: InputMaybe<Scalars['DateTime']>;
+  location?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
   tags?: InputMaybe<Array<Scalars['ID']>>;
   to?: InputMaybe<Scalars['DateTime']>;
   upcomingOnly?: InputMaybe<Scalars['Boolean']>;
