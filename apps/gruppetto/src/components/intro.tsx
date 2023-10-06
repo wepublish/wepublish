@@ -53,7 +53,7 @@ const Intro = () => {
         Deine Firma möchte ein Inserat im ersten Gruppetto-Magazin schalten oder eine Werbe-Partnerschaft 
         eingehen? Melde dich auf {' '} 
         <Link href="mailto:fabian@gruppetto-magazin.ch">fabian@gruppetto-magazin.ch</Link> 
-        und wir erarbeiten zusammen eine passende Lösung.
+         und wir erarbeiten zusammen eine passende Lösung.
         </Paragraph>
         
       <ActionWrapper>
