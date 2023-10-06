@@ -46,7 +46,7 @@ const Intro = () => {
         <Link href="https://gruppetto.bigcartel.com">Shop</Link>
         gibt es die erste Ausgabe sowie weitere «Gruppetto» Produkte wie den Bidon oder das Velochäppli. 
         Wer die erste Ausgabe im ePaper lesen möchte, kann das {' '}
-        <Link href="https://gruppetto.tiun.store/">hier</Link> tun:
+        <Link href="https://gruppetto.tiun.store/">hier</Link> tun.
       </Paragraph>
       
        <Paragraph>
