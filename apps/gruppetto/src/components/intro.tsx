@@ -47,7 +47,8 @@ const Intro = () => {
 
       <Paragraph>
        Du möchtest gerne die erste Ausgabe bestellen? Oder einen Gruppetto-Bidon oder ein Velochäppli? Hier gelangst du zu unserem {' '}
-        <Link href="https://gruppetto.bigcartel.com">Shop</Link>.
+        <Link href="https://gruppetto.bigcartel.com">Shop</Link>. Wenn du online lesen willst, kannst du das {' '}
+        <Link href="https://gruppetto.tiun.store/">hier</Link> tun.
       </Paragraph>
         
       <ActionWrapper>
@@ -57,6 +58,10 @@ const Intro = () => {
 
         <UnstyledLink href="#ueber-uns" scroll={false} shallow>
           <Button variant="text">Mehr über das Magazin</Button>
+        </UnstyledLink>
+        
+        <UnstyledLink href="https://gruppetto.tiun.store/" scroll={false} shallow>
+          <Button variant="text">Online lesen</Button>
         </UnstyledLink>
       </ActionWrapper>
     </IntroWrapper>
