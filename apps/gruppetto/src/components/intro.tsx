@@ -33,22 +33,20 @@ const Intro = () => {
 
   return (
     <IntroWrapper>
-      <H3 component="h1">Abonniere das neue Velomagazin aus der Schweiz</H3>
+      <H3 component="h1">Abonniere das neue Velomagazin</H3>
 
       <Paragraph>
-        Das «Gruppetto»-Magazin erzählt packende Radsport-Geschichten, beleuchtet weniger bekannte
-        Hintergründe und widerspiegelt die Velobegeisterung der Leser:innen.
+        «Gruppetto» ist das neue Magazin für Radsport und Velokultur aus der Schweiz. 
+        Es erzählt packende Radsport-Geschichten, beleuchtet weniger bekannte Hintergründe und widerspiegelt die Velobegeisterung der Leser:innen.
       </Paragraph>
 
       <Paragraph>
-        Es ist im Sommer 2023 zum allerersten Mal gedruckt worden. Ab 2024 erschein das Heft viermal jährlich. Wer das «Gruppetto» abonnieren möchte,
-        kann dies hier auf der Website tun.
-      </Paragraph>
-
-      <Paragraph>
-       Du möchtest gerne die erste Ausgabe bestellen? Oder einen Gruppetto-Bidon oder ein Velochäppli? Hier gelangst du zu unserem {' '}
-        <Link href="https://gruppetto.bigcartel.com">Shop</Link>. Wenn du online lesen willst, kannst du das {' '}
-        <Link href="https://gruppetto.tiun.store/">hier</Link> tun.
+        Es ist diesen Sommer zum allerersten Mal gedruckt worden. Ab 2024 wird es viermal jährlich erscheinen. Wer das «Gruppetto» abonnieren möchte, 
+        kann dies hier auf der Website tun. In unserem  {' '}
+        <Link href="https://gruppetto.bigcartel.com">Shop</Link>
+        gibt es die erste Ausgabe sowie weitere «Gruppetto» Produkte wie den Bidon oder das Velochäppli. 
+        Wer die erste Ausgabe im ePaper lesen möchte, kann das {' '}
+        <Link href="https://gruppetto.tiun.store/">hier</Link> tun:
       </Paragraph>
         
       <ActionWrapper>
