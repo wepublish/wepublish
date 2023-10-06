@@ -42,15 +42,19 @@ export function Index() {
       <BreakImage id={'ueber-uns'}>
         <div>
           <Typography component="h2" variant="h4" marginBottom={3}>
-            Unser Traum
+            Das Magazin
           </Typography>
 
           <Typography variant="body1" marginBottom={2}>
-            Wir sind vor zwei Jahren mit einer Idee losgerollt, die uns seither nicht mehr loslässt.
-            Wir wollen ein hochwertiges Radsport-Magazin herausgeben, das man gerne in den Händen
-            hält und dabei ein Gefühl der Freiheit spürt. Die erste Nummer des «Gruppetto» ist im
-            Juni erschienen. Nun entscheidet sich, ob es ab 2024 viermal im Jahr allen
-            Abonnent:innen nachhause geliefert werden soll.
+            Das «Gruppetto» ist ein hochwertiges Radsport-Magazin, das man gerne in den Händen hält und dabei ein Gefühl der 
+            Freiheit spürt. Die erste Nummer des «Gruppetto» ist im Juni 2023 erschienen. Wir haben die beiden neuen Schweizer 
+            Teams Tudor und Q36.5 begleitet und Hintergründe geliefert. Wir haben das Leiden von Robin Gemperle, einem 
+            Schweizer Ultracycling-Fahrer beschrieben, der sich von nichts stoppen lässt. Oder wir haben Marlen Reusser getroffen, 
+            um ein Porträt über die Olympia-Silbermedaillen-Gewinnerin und amtierende Europameisterin im Zeitfahren zu schreiben, 
+            die mit 25 Jahren noch nicht einmal mit dem Gedanken spielte, Radprofi zu werden.
+
+            Ab März 2024 erscheint das Magazin viermal im Jahr.
+
           </Typography>
 
           <Typography variant="body1">
@@ -93,31 +97,38 @@ export function Index() {
           </Typography>
 
           <Typography variant="body1" marginBottom={2}>
-            Hinter dem Gruppetto stehen Corsin Zander, Pascal Ritter und Tim Brühlmann.
+            Hinter dem Gruppetto stehen Corsin Zander, Kathrin Hefel, Laurent Aeberli, Pascal Ritter und Tim Brühlmann.
           </Typography>
 
           <Typography variant="body1" marginBottom={2}>
-            Corsin Zander, 34, feuert die Fahrerinnen und Fahrer am liebsten vom Streckenrand aus an
-            – ob am Mortirolo oder auf der Offenen Rennbahn in Oerlikon. Vor 15 Jahren ist er in den
-            Journalismus eingestiegen und arbeitet mittlerweile in leitender Funktion beim
-            «Tages-Anzeiger». Corsin schaut dafür, dass das Gruppetto das Ziel in der Karenzzeit
-            erreicht.
+            Corsin Zander ist 2008 in den Journalismus eingestiegen und Co-Chefredaktor beim «Gruppetto». 
+            Daneben arbeitet er beim «Tages-Anzeiger». Corsin schaut dafür, dass das Gruppetto das Ziel in der Karenzzeit erreicht.
           </Typography>
 
           <Typography variant="body1" marginBottom={2}>
-            Der eigentliche Ideengeber des Magazins ist Pascal Ritter, 37. An Montagen flitzt er als
-            Velokurier durch Zürich. Den Rest der Woche ist er als Reporter für die Zeitungen von
-            CH-Media unterwegs oder verantwortet als Tagesleiter den Online-Auftritt. Pascal liefert
-            für die Taktik des Gruppetto die nötige Kreativität.
+            Pascal Ritter ist der eigentliche Ideengeber des Magazins. An Montagen flitzt er als Velokurier durch Zürich. Er 
+            ist Co-Chefredaktor des «Gruppetto» und arbeitet bei den Zeitungen von CH-Media. Pascal liefert für die 
+            Taktik des Gruppetto die nötige Kreativität.
           </Typography>
 
           <Typography variant="body1" marginBottom={2}>
-            Der Mann für Grafik und Produktion heisst Tim Brühlmann, 36. Er arbeitet seit 16 Jahren
-            für verschiedene Schweizer Magazine («Das Magazin», «Annabelle», «Facts», «Schweizer
-            Illustrierte», etc.). Zurzeit ist er Art Director und Produktionsleiter vom
-            «Sport-Magazin» der «Schweizer Illustrierten». Dank Tims Erfahrung, rollt das Gruppetto
-            sicher die Serpentinen zum Gipfel hinauf und sieht dabei auch noch gut aus.
+            Tim Brühlmann ist der kreative Leiter des «Gruppetto». Zudem ist er Verantwortlicher für den grafischen 
+            Auftritt des Ochsner Sport und gestaltet das «Playground Magazine». Dank Tims Erfahrung, rollt das Gruppetto 
+            sicher die Serpentinen zum Gipfel hinauf.
           </Typography>
+          
+          <Typography variant="body1" marginBottom={2}>
+            Kathrin Hefel ist freischaffende Grafikerin. Sie hat das Design des «Gruppetto» entwickelt und verantwortet 
+            das Layout des Magazins. Daneben arbeitet sie für weitere Magazine wie «Caminada» und «Travel». Dank Kathrin 
+            sieht das Gruppetto immer gut aus.
+          </Typography>
+
+          <Typography variant="body1" marginBottom={2}>
+            Laurent Aeberli ist Musiker und Projekt-Manager. Er kümmert sich um den digitalen Auftritt des «Gruppetto». 
+            Zuletzt hat er die Medienstiftung We.Publish mitaufgebaut und davor bei «Watson» gearbeitet. Mit Laurent 
+            verpasst das Gruppetto keine neue Entwicklung im Rennen.
+          </Typography>
+          
         </div>
       </BreakImage>
 
