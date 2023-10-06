@@ -41,24 +41,15 @@ const Intro = () => {
       </Paragraph>
 
       <Paragraph>
-        Es ist diesen Sommer zum allerersten Mal gedruckt worden. Finden wir 3000 Abonnent:innen,
-        erscheint das «Gruppetto» ab 2024 viermal jährlich. Klappt das nicht, bleibt es bei der
-        einen Ausgabe und wir zahlen die Abogebühren zurück. Wer das «Gruppetto» abonnieren möchte,
+        Es ist im Sommer 2023 zum allerersten Mal gedruckt worden. Ab 2024 erschein das Heft viermal jährlich. Wer das «Gruppetto» abonnieren möchte,
         kann dies hier auf der Website tun.
       </Paragraph>
 
       <Paragraph>
-        Du hast das Crowdfunding und damit die erste Ausgabe verpasst? Löse gleich hier unten ein
-        Ticket für den «Besenwagen» und wir schicken dir die Nummer 1 noch per Post nachhause.
+       Du möchtest gerne die erste Ausgabe bestellen? Oder einen Gruppetto-Bidon oder ein Velochäppli? Hier gelangst du zu unserem {' '}
+        <Link href="https://gruppetto.bigcartel.com">Shop</Link>.
       </Paragraph>
-
-      <Paragraph>
-        Deine Firma möchte ein Inserat im ersten Gruppetto-Magazin schalten oder eine
-        Werbe-Partnerschaft eingehen? Melde dich auf{' '}
-        <Link href="mailto:redaktion@gruppetto-magazin.ch">redaktion@gruppetto-magazin.ch</Link> und
-        wir erarbeiten zusammen eine passende Lösung.
-      </Paragraph>
-
+        
       <ActionWrapper>
         <UnstyledLink href="#unterstuetze-uns" scroll={false} shallow>
           <Button>Abo lösen</Button>
