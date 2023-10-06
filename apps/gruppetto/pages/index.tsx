@@ -25,7 +25,6 @@ export function Index() {
     <>
       <Intro />
 
-      <CrowdfundingChart />
 
       <SubscriptionWrapper id={'unterstuetze-uns'}>
         <WebsiteBuilderProvider Subscribe={Subscribe} PayInvoices={PayInvoices}>
