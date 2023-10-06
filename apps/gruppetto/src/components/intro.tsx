@@ -43,8 +43,8 @@ const Intro = () => {
       <Paragraph>
         Es ist diesen Sommer zum allerersten Mal gedruckt worden. Ab 2024 wird es viermal jährlich erscheinen. Wer das «Gruppetto» abonnieren möchte, 
         kann dies hier auf der Website tun. In unserem {' '}
-        <Link href="https://gruppetto.bigcartel.com">Shop</Link> 
-        gibt es die erste Ausgabe sowie weitere «Gruppetto» Produkte wie den Bidon oder das Velochäppli. 
+        <Link href="https://gruppetto.bigcartel.com">Shop</Link> gibt es 
+        die erste Ausgabe sowie weitere «Gruppetto» Produkte wie den Bidon oder das Velochäppli. 
         Wer die erste Ausgabe im ePaper lesen möchte, kann das {' '}
         <Link href="https://gruppetto.tiun.store/">hier</Link> tun.
       </Paragraph>
@@ -52,8 +52,8 @@ const Intro = () => {
        <Paragraph>
         Deine Firma möchte ein Inserat im ersten Gruppetto-Magazin schalten oder eine Werbe-Partnerschaft 
         eingehen? Melde dich auf {' '} 
-        <Link href="mailto:fabian@gruppetto-magazin.ch">fabian@gruppetto-magazin.ch</Link> 
-         und wir erarbeiten zusammen eine passende Lösung.
+        <Link href="mailto:fabian@gruppetto-magazin.ch">fabian@gruppetto-magazin.ch</Link> und 
+         wir erarbeiten zusammen eine passende Lösung.
         </Paragraph>
         
       <ActionWrapper>
