@@ -42,8 +42,8 @@ const Intro = () => {
 
       <Paragraph>
         Es ist diesen Sommer zum allerersten Mal gedruckt worden. Ab 2024 wird es viermal jährlich erscheinen. Wer das «Gruppetto» abonnieren möchte, 
-        kann dies hier auf der Website tun. In unserem  {' '}
-        <Link href="https://gruppetto.bigcartel.com">Shop</Link>
+        kann dies hier auf der Website tun. In unserem {' '}
+        <Link href="https://gruppetto.bigcartel.com">Shop</Link> 
         gibt es die erste Ausgabe sowie weitere «Gruppetto» Produkte wie den Bidon oder das Velochäppli. 
         Wer die erste Ausgabe im ePaper lesen möchte, kann das {' '}
         <Link href="https://gruppetto.tiun.store/">hier</Link> tun.
