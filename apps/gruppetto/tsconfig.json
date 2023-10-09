@@ -12,18 +12,13 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
     "types": ["jest", "node"]
   },
-  "include": [
-    "src/**/*.ts",
-    "src/**/*.tsx",
-    "src/**/*.js",
-    "src/**/*.jsx",
-    "pages/**/*.ts",
-    "pages/**/*.tsx",
-    "pages/**/*.js",
-    "pages/**/*.jsx",
-    "next-env.d.ts"
-  ],
-  "exclude": ["node_modules", "jest.config.ts"]
+  "include": ["**/*.ts", "**/*.tsx", "**/*.js", "**/*.jsx", "next-env.d.ts"],
+  "exclude": ["node_modules", "jest.config.ts", "src/**/*.spec.ts", "src/**/*.test.ts"]
 }

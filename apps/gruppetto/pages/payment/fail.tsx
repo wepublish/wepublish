@@ -2,7 +2,7 @@ import {Alert, CircularProgress, styled, Typography} from '@mui/material'
 import {ApiV1, useUser} from '@wepublish/website'
 import {useRouter} from 'next/router'
 import {useEffect, useMemo, useState} from 'react'
-import {Button} from '../../src/components/button'
+import {Button} from '../../src/button'
 
 const ProgressWrapper = styled('div')`
   display: flex;
@@ -33,7 +33,7 @@ export default function PaymentFail() {
   const [checkedInvoices, setCheckedInvoices] =
     useState<ApiV1.CheckInvoiceStatusQuery['checkInvoiceStatus'][]>()
 
-  const [pay, payResult] = ApiV1.usePayMutation({
+  const [pay, payResult] = ApiV1.usePayInvoiceMutation({
     onCompleted(data) {
       if (data.createPaymentFromInvoice?.intentSecret) {
         window.location.href = data.createPaymentFromInvoice.intentSecret
@@ -135,8 +135,8 @@ export default function PaymentFail() {
                 variables: {
                   successURL: `${location.origin}/payment/success`,
                   failureURL: `${location.origin}/payment/fail`,
-                  invoiceID: invoice.id,
-                  paymentMethodID: paymentMethod?.id
+                  invoiceId: invoice.id,
+                  paymentMethodId: paymentMethod?.id
                 }
               })
             }>

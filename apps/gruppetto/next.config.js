@@ -1,25 +1,55 @@
 //@ts-check
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const {withNx} = require('@nx/next/plugins/with-nx')
+const {composePlugins, withNx} = require('@nx/next')
 
 /**
  * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
  **/
 const nextConfig = {
   nx: {
-    // Set this to true if you would like to to use SVGR
-    // See: https://github.com/gregberge/svgr
-    svgr: false
+    svgr: true
   },
+  poweredByHeader: false,
+  reactStrictMode: true,
   publicRuntimeConfig: {
     env: {
       API_URL: process.env.API_URL || ''
     }
   },
+  // Adds the language attribute to the HTML
+  i18n: {
+    locales: ['gsw-CH'],
+    defaultLocale: 'gsw-CH'
+  },
   compiler: {
-    emotion: true
-  }
+    // This is needed so that we can use components as selectors in Emotion
+    emotion: {
+      sourceMap: true,
+      importMap: {
+        '@mui/material': {
+          styled: {
+            canonicalImport: ['@emotion/styled', 'default'],
+            styledBaseImport: ['@mui/material', 'styled']
+          }
+        },
+        '@mui/material/styles': {
+          styled: {
+            canonicalImport: ['@emotion/styled', 'default'],
+            styledBaseImport: ['@mui/material/styles', 'styled']
+          }
+        }
+      }
+    }
+  },
+  // Not needed for the monorepository but for demo purposes.
+  // @wepublish/ui and @wepublish/website are ES Modules which Next does not support yet.
+  // This will transpile the ES Modules to CommonJS
+  transpilePackages: ['@wepublish/ui', '@wepublish/website', 'react-tweet']
 }
 
-module.exports = withNx(nextConfig)
+const plugins = [
+  // Add more Next.js plugins to this list if needed.
+  withNx
+]
+
+module.exports = composePlugins(...plugins)(nextConfig)

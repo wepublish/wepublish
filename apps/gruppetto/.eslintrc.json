@@ -10,7 +10,18 @@
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "rules": {
-        "@next/next/no-html-link-for-pages": ["error", "apps/gruppetto/pages"]
+        "@next/next/no-html-link-for-pages": ["error", "apps/gruppetto/pages"],
+        "no-restricted-imports": [
+          "error",
+          {
+            "patterns": [
+              {
+                "group": ["@wepublish/*/website", "@wepublish/website/*"],
+                "message": "Please use @wepublish/website instead."
+              }
+            ]
+          }
+        ]
       }
     },
     {
