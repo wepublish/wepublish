@@ -16,7 +16,7 @@ const ActionWrapper = styled('div')`
 
   ${({theme}) => css`
     ${theme.breakpoints.up('md')} {
-      grid-template-columns: max-content max-content;
+      grid-template-columns: max-content max-content max-content;
     }
   `}
 `
