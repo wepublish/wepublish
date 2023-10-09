@@ -16,7 +16,7 @@ const ActionWrapper = styled('div')`
 
   ${({theme}) => css`
     ${theme.breakpoints.up('md')} {
-      grid-template-columns: max-content max-content;
+      grid-template-columns: max-content max-content max-content;
     }
   `}
 `
@@ -33,32 +33,29 @@ const Intro = () => {
 
   return (
     <IntroWrapper>
-      <H3 component="h1">Abonniere das neue Velomagazin aus der Schweiz</H3>
+      <H3 component="h1">Abonniere das neue Velomagazin</H3>
 
       <Paragraph>
-        Das «Gruppetto»-Magazin erzählt packende Radsport-Geschichten, beleuchtet weniger bekannte
-        Hintergründe und widerspiegelt die Velobegeisterung der Leser:innen.
+        «Gruppetto» ist das neue Magazin für Radsport und Velokultur aus der Schweiz. 
+        Es erzählt packende Radsport-Geschichten, beleuchtet weniger bekannte Hintergründe und widerspiegelt die Velobegeisterung der Leser:innen.
       </Paragraph>
 
       <Paragraph>
-        Es ist diesen Sommer zum allerersten Mal gedruckt worden. Finden wir 3000 Abonnent:innen,
-        erscheint das «Gruppetto» ab 2024 viermal jährlich. Klappt das nicht, bleibt es bei der
-        einen Ausgabe und wir zahlen die Abogebühren zurück. Wer das «Gruppetto» abonnieren möchte,
-        kann dies hier auf der Website tun.
+        Es ist diesen Sommer zum allerersten Mal gedruckt worden. Ab 2024 wird es viermal jährlich erscheinen. Wer das «Gruppetto» abonnieren möchte, 
+        kann dies hier auf der Website tun. In unserem {' '}
+        <Link href="https://shop.gruppetto-magazin.ch/">Shop</Link> gibt es 
+        die erste Ausgabe sowie weitere «Gruppetto» Produkte wie den Bidon oder das Velochäppli. 
+        Wer die erste Ausgabe im ePaper lesen möchte, kann das {' '}
+        <Link href="https://gruppetto.tiun.store/">hier</Link> tun.
       </Paragraph>
-
-      <Paragraph>
-        Du hast das Crowdfunding und damit die erste Ausgabe verpasst? Löse gleich hier unten ein
-        Ticket für den «Besenwagen» und wir schicken dir die Nummer 1 noch per Post nachhause.
-      </Paragraph>
-
-      <Paragraph>
-        Deine Firma möchte ein Inserat im ersten Gruppetto-Magazin schalten oder eine
-        Werbe-Partnerschaft eingehen? Melde dich auf{' '}
-        <Link href="mailto:redaktion@gruppetto-magazin.ch">redaktion@gruppetto-magazin.ch</Link> und
-        wir erarbeiten zusammen eine passende Lösung.
-      </Paragraph>
-
+      
+       <Paragraph>
+        Deine Firma möchte ein Inserat im ersten Gruppetto-Magazin schalten oder eine Werbe-Partnerschaft 
+        eingehen? Melde dich auf {' '} 
+        <Link href="mailto:fabian@gruppetto-magazin.ch">fabian@gruppetto-magazin.ch</Link> und 
+         wir erarbeiten zusammen eine passende Lösung.
+        </Paragraph>
+        
       <ActionWrapper>
         <UnstyledLink href="#unterstuetze-uns" scroll={false} shallow>
           <Button>Abo lösen</Button>
@@ -66,6 +63,10 @@ const Intro = () => {
 
         <UnstyledLink href="#ueber-uns" scroll={false} shallow>
           <Button variant="text">Mehr über das Magazin</Button>
+        </UnstyledLink>
+        
+        <UnstyledLink href="https://gruppetto.tiun.store/" scroll={false} shallow>
+          <Button variant="text">Online lesen</Button>
         </UnstyledLink>
       </ActionWrapper>
     </IntroWrapper>
