@@ -1,30 +1,23 @@
 import {Meta} from '@storybook/react'
 import {ListItem, OrderedList, UnorderedList} from './lists'
+import {Stack} from '@mui/material'
 
 export default {
-  title: 'UI/Lists'
+  component: ListItem,
+  title: 'UI/Lists',
+  render: () => (
+    <Stack gap={1} alignItems={'start'}>
+      <UnorderedList>
+        <ListItem>One</ListItem>
+        <ListItem>Two</ListItem>
+      </UnorderedList>
+
+      <OrderedList>
+        <ListItem>One</ListItem>
+        <ListItem>Two</ListItem>
+      </OrderedList>
+    </Stack>
+  )
 } as Meta
 
-export const Unordered = {
-  component: UnorderedList,
-  args: {
-    children: (
-      <>
-        <ListItem>One</ListItem>
-        <ListItem>Two</ListItem>
-      </>
-    )
-  }
-}
-
-export const Ordered = {
-  component: OrderedList,
-  args: {
-    children: (
-      <>
-        <ListItem>One</ListItem>
-        <ListItem>Two</ListItem>
-      </>
-    )
-  }
-}
+export const Lists = {}

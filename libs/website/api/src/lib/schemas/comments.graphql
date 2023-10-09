@@ -5,6 +5,19 @@ fragment FullCommentRatingSystemAnswer on CommentRatingSystemAnswer {
   type
 }
 
+fragment FullCommentRating on CommentRating {
+  id
+  commentId
+  userId
+  createdAt
+  disabled
+  value
+
+  answer {
+    ...FullCommentRatingSystemAnswer
+  }
+}
+
 fragment FullCalculatedRating on CalculatedRating {
   count
   total
@@ -58,6 +71,10 @@ fragment CommentWithoutNesting on Comment {
   overriddenRatings {
     ...FullOverriddenRating
   }
+
+  userRatings {
+    ...FullCommentRating
+  }
 }
 
 fragment FullComment on Comment {
@@ -84,9 +101,29 @@ fragment FullComment on Comment {
   }
 }
 
+fragment FullRatingSystemAnswer on CommentRatingSystemAnswer {
+  id
+  type
+  answer
+  ratingSystemId
+}
+
+fragment FullRatingSystem on FullCommentRatingSystem {
+  id
+  name
+
+  answers {
+    ...FullRatingSystemAnswer
+  }
+}
+
 query CommentList($itemId: ID!, $order: SortOrder, $sort: CommentSort) {
   comments(itemId: $itemId, order: $order, sort: $sort) {
     ...FullComment
+  }
+
+  ratingSystem {
+    ...FullRatingSystem
   }
 }
 
@@ -98,6 +135,12 @@ mutation AddComment($input: CommentInput!) {
 
 mutation EditComment($input: CommentUpdateInput!) {
   updateComment(input: $input) {
+    ...FullComment
+  }
+}
+
+mutation RateComment($answerId: ID!, $commentId: ID!, $value: Int!) {
+  rateComment(answerId: $answerId, commentId: $commentId, value: $value) {
     ...FullComment
   }
 }

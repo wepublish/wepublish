@@ -2,14 +2,18 @@ import {ApolloError, MutationResult, QueryResult} from '@apollo/client'
 import {
   AddCommentMutation,
   AddCommentMutationVariables,
+  CalculatedRating,
   ChallengeQuery,
   Comment,
   CommentListQuery,
   CommentListQueryVariables,
+  CommentRating,
   EditCommentMutation,
-  EditCommentMutationVariables
+  EditCommentMutationVariables,
+  FullCommentRatingSystem,
+  OverriddenRating
 } from '@wepublish/website/api'
-import {Dispatch} from 'react'
+import {Dispatch, PropsWithChildren} from 'react'
 import {Node} from 'slate'
 
 export type BuilderCommentListStateTypes = 'add' | 'edit'
@@ -65,6 +69,7 @@ export type BuilderCommentListProps = Pick<
 
 export type BuilderCommentListItemProps = Comment & {
   className?: string
+  ratingSystem: FullCommentRatingSystem
 } & Pick<
     BuilderCommentListProps,
     | 'anonymousCanComment'
@@ -80,11 +85,15 @@ export type BuilderCommentListItemProps = Comment & {
     | 'openEditorsStateDispatch'
   >
 
-export type BuilderCommentListSingleCommentProps = Partial<Comment> & {
-  className?: string
-  showContent?: boolean
-  children?: JSX.Element
-}
+export type BuilderCommentProps = PropsWithChildren<
+  Pick<
+    Comment,
+    'text' | 'authorType' | 'user' | 'guestUserImage' | 'guestUsername' | 'title' | 'source'
+  > & {
+    className?: string
+    showContent?: boolean
+  }
+>
 
 type CreateCommentProps = {
   text?: never
@@ -111,3 +120,11 @@ export type BuilderCommentEditorProps = {
   loading: boolean
   error?: ApolloError
 } & (CreateCommentProps | EditCommentProps)
+
+export type BuilderCommentRatingsProps = {
+  commentId: string
+  ratingSystem: FullCommentRatingSystem
+  userRatings: CommentRating[]
+  calculatedRatings: CalculatedRating[]
+  overriddenRatings: OverriddenRating[]
+}

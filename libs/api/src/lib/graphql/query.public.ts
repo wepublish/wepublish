@@ -33,8 +33,8 @@ import {
 } from './author'
 import {getPublicAuthors} from './author/author.public-queries'
 import {GraphQLChallenge} from './challenge'
-import {GraphQLCommentRating, GraphQLFullCommentRatingSystem} from './comment-rating/comment-rating'
-import {getRatingSystem, userCommentRating} from './comment-rating/comment-rating.public-queries'
+import {GraphQLFullCommentRatingSystem} from './comment-rating/comment-rating'
+import {getRatingSystem} from './comment-rating/comment-rating.public-queries'
 import {GraphQLPublicComment, GraphQLPublicCommentSort} from './comment/comment'
 import {getPublicCommentsForItemById} from './comment/comment.public-queries'
 import {GraphQLSortOrder} from './common'
@@ -302,7 +302,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
       resolve: (
         root,
         {itemId, sort, order},
-        {session, prisma: {comment, commentRatingSystemAnswer}}
+        {session, prisma: {comment}, loaders: {commentRatingSystemAnswers}}
       ) => {
         const userId = session?.type === AuthSessionType.User ? session.user.id : null
 
@@ -311,21 +311,10 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
           userId,
           sort,
           order,
-          commentRatingSystemAnswer,
+          commentRatingSystemAnswers,
           comment
         )
       }
-    },
-
-    userCommentRatings: {
-      type: new GraphQLNonNull(new GraphQLList(GraphQLCommentRating)),
-      args: {
-        commentId: {type: new GraphQLNonNull(GraphQLID)}
-      },
-      description:
-        'This query returns the value of a comments answer rating if the user has already rated it.',
-      resolve: (root, {commentId}, {authenticateUser, prisma: {commentRating}}) =>
-        userCommentRating(commentId, authenticateUser, commentRating)
     },
 
     // Auth

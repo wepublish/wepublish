@@ -52,11 +52,11 @@ export const GraphQLCommentRating = new GraphQLObjectType<CommentRating, Context
     id: {type: new GraphQLNonNull(GraphQLID)},
     userId: {type: GraphQLID},
     commentId: {type: new GraphQLNonNull(GraphQLID)},
-    value: {type: GraphQLInt},
+    value: {type: new GraphQLNonNull(GraphQLInt)},
     createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     fingerprint: {type: GraphQLString},
     disabled: {type: GraphQLBoolean},
-    answer: {type: GraphQLCommentRatingSystemAnswer}
+    answer: {type: new GraphQLNonNull(GraphQLCommentRatingSystemAnswer)}
   }
 })
 

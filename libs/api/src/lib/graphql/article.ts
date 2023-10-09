@@ -341,7 +341,7 @@ export const GraphQLPublicArticle: GraphQLObjectType<PublicArticle, Context> =
       comments: {
         type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPublicComment))),
         resolve: createProxyingResolver(
-          async ({id}, _, {session, prisma: {comment, commentRatingSystemAnswer}}) => {
+          async ({id}, _, {session, prisma: {comment}, loaders: {commentRatingSystemAnswers}}) => {
             const userId = session?.type === AuthSessionType.User ? session.user.id : null
 
             return getPublicCommentsForItemById(
@@ -349,7 +349,7 @@ export const GraphQLPublicArticle: GraphQLObjectType<PublicArticle, Context> =
               userId,
               null,
               -1,
-              commentRatingSystemAnswer,
+              commentRatingSystemAnswers,
               comment
             )
           }

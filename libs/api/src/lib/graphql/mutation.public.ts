@@ -29,7 +29,6 @@ import {SendMailType} from '../mails/mailContext'
 import {logger} from '../server'
 import {FIFTEEN_MINUTES_IN_MILLISECONDS, USER_PROPERTY_LAST_LOGIN_LINK_SEND} from '../utility'
 import {Validator} from '../validator'
-import {GraphQLCommentRating} from './comment-rating/comment-rating'
 import {rateComment} from './comment-rating/comment-rating.public-mutation'
 import {
   GraphQLChallengeInput,
@@ -147,7 +146,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
     },
 
     rateComment: {
-      type: new GraphQLNonNull(GraphQLCommentRating),
+      type: new GraphQLNonNull(GraphQLPublicComment),
       args: {
         commentId: {type: new GraphQLNonNull(GraphQLID)},
         answerId: {type: new GraphQLNonNull(GraphQLID)},
@@ -157,7 +156,10 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       resolve: (
         root,
         {commentId, answerId, value},
-        {optionalAuthenticateUser, prisma: {commentRating, commentRatingSystemAnswer, setting}}
+        {
+          optionalAuthenticateUser,
+          prisma: {comment, commentRating, commentRatingSystemAnswer, setting}
+        }
       ) =>
         rateComment(
           commentId,
@@ -167,6 +169,7 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           optionalAuthenticateUser,
           commentRatingSystemAnswer,
           commentRating,
+          comment,
           setting
         )
     },

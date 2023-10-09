@@ -6,11 +6,6 @@ import {cond} from 'ramda'
 import {MdEdit, MdReply} from 'react-icons/md'
 import {getStateForEditor} from './comment-list.state'
 
-export const CommentListItemWrapper = styled('article')`
-  display: grid;
-  gap: ${({theme}) => theme.spacing(2)};
-`
-
 export const CommentListItemChildren = styled('aside')`
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};
@@ -23,20 +18,11 @@ export const CommentListItemActions = styled('div')`
   display: flex;
   flex-flow: row wrap;
   gap: ${({theme}) => theme.spacing(1)};
+  align-items: start;
+  justify-content: space-between;
 `
 
 export const CommentListItem = ({
-  id,
-  className,
-  text,
-  authorType,
-  user,
-  guestUserImage,
-  guestUsername,
-  title,
-  source,
-  state,
-  children,
   anonymousCanComment,
   anonymousCanRate,
   userCanEdit,
@@ -47,12 +33,19 @@ export const CommentListItem = ({
   edit,
   onEditComment,
   openEditorsState,
-  openEditorsStateDispatch: dispatch
+  openEditorsStateDispatch: dispatch,
+  ratingSystem,
+  className,
+  ...comment
 }: BuilderCommentListItemProps) => {
+  const {id, text, title, state, children, userRatings, overriddenRatings, calculatedRatings} =
+    comment
+
   const {
     CommentEditor,
-    CommentListItem: BuilderCommentListItem,
-    CommentListSingleComment: BuilderCommentListSingleComment,
+    CommentRatings,
+    CommentListItemChild,
+    Comment,
     elements: {Button}
   } = useWebsiteBuilder()
 
@@ -60,30 +53,16 @@ export const CommentListItem = ({
 
   const canEdit =
     hasLoggedInUser &&
-    loggedInUser?.id === user?.id &&
-    (userCanEdit || state === CommentState.PendingUserChanges)
+    loggedInUser?.id === comment.user?.id &&
+    (userCanEdit || comment.state === CommentState.PendingUserChanges)
   const canReply = anonymousCanComment || hasLoggedInUser
-  const hasActions = canEdit || canReply
 
   const showReply = getStateForEditor(openEditorsState)('add', id)
   const showEdit = getStateForEditor(openEditorsState)('edit', id)
 
   return (
-    <CommentListItemWrapper className={className}>
-      <BuilderCommentListSingleComment
-        id={id}
-        showContent={!showEdit}
-        authorType={authorType}
-        guestUserImage={guestUserImage}
-        guestUsername={guestUsername}
-        source={source}
-        title={title}
-        text={text}
-        user={user}
-        className={className}
-      />
-
-      <CommentListSingleCommentStateWarnings state={state} />
+    <Comment {...comment} showContent={!showEdit} className={className}>
+      <CommentListItemStateWarnings state={state} />
 
       {showEdit && (
         <CommentEditor
@@ -103,7 +82,7 @@ export const CommentListItem = ({
         />
       )}
 
-      {hasActions && (
+      <CommentListItemActions>
         <CommentListItemActions>
           {canReply && (
             <Button
@@ -137,7 +116,15 @@ export const CommentListItem = ({
             </Button>
           )}
         </CommentListItemActions>
-      )}
+
+        <CommentRatings
+          commentId={id}
+          ratingSystem={ratingSystem}
+          userRatings={userRatings}
+          overriddenRatings={overriddenRatings}
+          calculatedRatings={calculatedRatings}
+        />
+      </CommentListItemActions>
 
       {showReply && (
         <CommentEditor
@@ -159,9 +146,10 @@ export const CommentListItem = ({
       {!!children?.length && (
         <CommentListItemChildren>
           {children.map(child => (
-            <BuilderCommentListItem
+            <CommentListItemChild
               key={child.id}
               {...child}
+              ratingSystem={ratingSystem}
               openEditorsState={openEditorsState}
               openEditorsStateDispatch={dispatch}
               add={add}
@@ -178,13 +166,11 @@ export const CommentListItem = ({
           ))}
         </CommentListItemChildren>
       )}
-    </CommentListItemWrapper>
+    </Comment>
   )
 }
 
-const CommentListSingleCommentStateWarnings = (
-  props: Pick<BuilderCommentListItemProps, 'state'>
-) => {
+const CommentListItemStateWarnings = (props: Pick<BuilderCommentListItemProps, 'state'>) => {
   const {
     elements: {Alert}
   } = useWebsiteBuilder()
@@ -201,6 +187,7 @@ const CommentListSingleCommentStateWarnings = (
     [
       ({state}) => state === CommentState.Rejected,
       () => <Alert severity="error">Kommentar wurde nicht freigeschalten.</Alert>
-    ]
+    ],
+    [({state}: typeof props) => true, (_: typeof props): JSX.Element | null => null]
   ])(props)
 }

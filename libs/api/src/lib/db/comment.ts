@@ -2,6 +2,7 @@ import {
   CommentAuthorType,
   CommentItemType,
   CommentRatingOverride,
+  CommentRatingSystemAnswer,
   CommentRejectionReason,
   CommentState
 } from '@prisma/client'
@@ -23,7 +24,7 @@ export interface CommentData {
   readonly createdAt: Date
   readonly modifiedAt: Date
 
-  readonly overriddenRatings?: CommentRatingOverride[] | null
+  readonly overriddenRatings: CommentRatingOverride[]
   readonly revisions: CommentRevision[]
 }
 
@@ -40,8 +41,16 @@ export interface CommentRevision {
   readonly createdAt: Date
 }
 
+export type CalculatedRating = {
+  count: number
+  mean: number
+  total: number
+  answer: CommentRatingSystemAnswer
+}
+
 export interface PublicComment extends CommentData {
   readonly text: RichTextNode[]
+  readonly calculatedRatings?: CalculatedRating[]
 }
 
 export enum CommentSort {

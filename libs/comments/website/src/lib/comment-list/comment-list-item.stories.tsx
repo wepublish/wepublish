@@ -1,10 +1,16 @@
 import {ApolloError} from '@apollo/client'
 import {css} from '@emotion/react'
+import {action} from '@storybook/addon-actions'
 import {useArgs, useReducer} from '@storybook/preview-api'
 import {Meta, StoryObj} from '@storybook/react'
 import {userEvent, waitFor, within} from '@storybook/testing-library'
-import {WithUserDecorator} from '@wepublish/storybook'
-import {Challenge, CommentListQuery, CommentState, FullImageFragment} from '@wepublish/website/api'
+import {WithCommentRatingsDecorators, WithUserDecorator} from '@wepublish/storybook'
+import {
+  Challenge,
+  CommentListQuery,
+  FullImageFragment,
+  RatingSystemType
+} from '@wepublish/website/api'
 import {ComponentProps} from 'react'
 import {Node} from 'slate'
 import {LoggedInFilled} from '../comment-editor/comment-editor.stories'
@@ -72,48 +78,6 @@ const anonymousComment = {
   user: null,
   guestUsername: 'Dr. Anonymous',
   guestUserImage: image,
-  calculatedRatings: [
-    {
-      count: 3,
-      mean: 5,
-      total: 15,
-      answer: {
-        id: 'cl9wv78am1810854fszdbjcu6f',
-        answer: 'Informativ',
-        ratingSystemId: 'default',
-        type: 'STAR',
-        __typename: 'CommentRatingSystemAnswer'
-      },
-      __typename: 'CalculatedRating'
-    },
-    {
-      count: 2,
-      mean: 5,
-      total: 10,
-      answer: {
-        id: 'cl9wv7drp1822954fszyd05kqe',
-        answer: 'Konstruktiv',
-        ratingSystemId: 'default',
-        type: 'STAR',
-        __typename: 'CommentRatingSystemAnswer'
-      },
-      __typename: 'CalculatedRating'
-    },
-    {
-      count: 3,
-      mean: 5,
-      total: 15,
-      answer: {
-        id: 'cl9wv7h961829254fsrm9mpjzz',
-        answer: 'Nützlich',
-        ratingSystemId: 'default',
-        type: 'STAR',
-        __typename: 'CommentRatingSystemAnswer'
-      },
-      __typename: 'CalculatedRating'
-    }
-  ],
-  overriddenRatings: [],
   tags: [],
   authorType: 'GuestUser',
   itemID: 'cljfya8sj4342602siydzsx4pxv',
@@ -126,14 +90,16 @@ const anonymousComment = {
   rejectionReason: null,
   createdAt: '2023-06-29T09:02:46.446Z',
   modifiedAt: '2023-06-29T09:02:46.446Z',
-  children: []
-}
+  children: [],
+  calculatedRatings: [],
+  overriddenRatings: [],
+  userRatings: []
+} as CommentListQuery['comments'][number]
 
 const verifiedUserComment = {
   id: 'verified',
   parentID: 'cljgx3n3i382572shctpgd5gg0',
   peerId: null,
-  overriddenRatings: [],
   user: {
     __typename: 'User',
     id: 'qnK8vb5D5RtlTEbb',
@@ -150,7 +116,6 @@ const verifiedUserComment = {
   },
   guestUsername: null,
   guestUserImage: null,
-  calculatedRatings: null,
   authorType: 'VerifiedUser',
   itemID: 'cljfya8sj4342602siydzsx4pxv',
   itemType: 'Article',
@@ -164,8 +129,31 @@ const verifiedUserComment = {
   modifiedAt: '2023-06-29T09:45:01.334Z',
   __typename: 'Comment',
   children: [],
-  tags: []
+  tags: [],
+  userRatings: [],
+  calculatedRatings: [],
+  overriddenRatings: []
 } as CommentListQuery['comments'][number]
+
+const ratingSystem = {
+  id: '1234',
+  __typename: 'FullCommentRatingSystem',
+  name: 'Default',
+  answers: [
+    {
+      id: '111-111',
+      ratingSystemId: '1',
+      type: RatingSystemType.Star,
+      answer: 'Foobar'
+    },
+    {
+      id: '222-222',
+      ratingSystemId: '1',
+      type: RatingSystemType.Star,
+      answer: 'Barfoo'
+    }
+  ]
+} as CommentListQuery['ratingSystem']
 
 // Custom render function as Storybook passes the children down as render props
 // Also for passing down the reducer
@@ -210,164 +198,38 @@ export default {
   render: Render
 } as Meta
 
-export const VerifiedUser: StoryObj = {
+export const Default: StoryObj = {
   args: {
     ...verifiedUserComment,
     challenge: {
-      data: {challenge}
-    },
-    maxCommentLength: 2000
-  }
-}
-
-export const AnonymousUser: StoryObj = {
-  args: {
-    ...anonymousComment,
-    challenge: {
-      data: {challenge}
-    },
-    maxCommentLength: 2000
-  }
-}
-
-export const WithoutImage: StoryObj = {
-  args: {
-    ...verifiedUserComment,
-    challenge: {
+      loading: false,
       data: {challenge}
     },
     maxCommentLength: 2000,
-    guestUserImage: null,
-    user: {
-      ...verifiedUserComment.user,
-      image: null
-    }
-  }
-}
-
-export const WithoutFlair: StoryObj = {
-  args: {
-    ...verifiedUserComment,
-    challenge: {
-      data: {challenge}
-    },
-    maxCommentLength: 2000,
-    user: {
-      ...verifiedUserComment.user,
-      flair: null
-    }
-  }
-}
-
-export const WithoutSource: StoryObj = {
-  args: {
-    ...verifiedUserComment,
-    challenge: {
-      data: {challenge}
-    },
-    maxCommentLength: 2000,
-    source: null,
-    user: {
-      ...verifiedUserComment.user,
-      flair: null
-    }
-  }
-}
-
-export const WithoutPreferredName: StoryObj = {
-  args: {
-    ...verifiedUserComment,
-    challenge: {
-      data: {challenge}
-    },
-    maxCommentLength: 2000,
-    user: {
-      ...verifiedUserComment.user,
-      preferredName: null
-    }
-  }
-}
-
-export const PendingApproval: StoryObj = {
-  args: {
-    ...verifiedUserComment,
-    challenge: {
-      data: {challenge}
-    },
-    maxCommentLength: 2000,
-    state: CommentState.PendingApproval
-  }
-}
-
-export const PendingUserChanges: StoryObj = {
-  args: {
-    ...verifiedUserComment,
-    challenge: {
-      data: {challenge}
-    },
-    maxCommentLength: 2000,
-    state: CommentState.PendingUserChanges
+    ratingSystem,
+    onEditComment: action('onEditComment'),
+    onADdComment: action('onAddComment'),
+    add: {},
+    edit: {}
   },
-  decorators: [WithUserDecorator(verifiedUserComment.user ?? null)]
-}
-
-export const Rejected: StoryObj = {
-  args: {
-    ...verifiedUserComment,
-    challenge: {
-      data: {challenge}
-    },
-    maxCommentLength: 2000,
-    state: CommentState.Rejected,
-    rejectionReason: 'Spam'
-  }
-}
-
-export const Nested: StoryObj = {
-  args: {
-    ...verifiedUserComment,
-    challenge: {
-      data: {challenge}
-    },
-    maxCommentLength: 2000,
-    children: [
-      {
-        ...verifiedUserComment,
-        challenge: {
-          data: {challenge}
-        },
-        maxCommentLength: 2000,
-        children: [verifiedUserComment]
-      },
-      {
-        ...anonymousComment,
-        maxCommentLength: 2000,
-        children: [verifiedUserComment]
-      }
-    ]
-  }
+  decorators: [WithCommentRatingsDecorators({})]
 }
 
 export const Commenting: StoryObj = {
+  ...Default,
   args: {
-    ...verifiedUserComment,
-    add: {},
-    challenge: {
-      data: {challenge}
-    },
-    maxCommentLength: 2000
+    ...Default.args
   },
-  decorators: [WithUserDecorator(verifiedUserComment.user ?? null)]
+  decorators: [
+    WithCommentRatingsDecorators({}),
+    WithUserDecorator(verifiedUserComment.user ?? null)
+  ]
 }
 
 export const AnonymousCommenting: StoryObj = {
+  ...Default,
   args: {
-    ...verifiedUserComment,
-    add: {},
-    challenge: {
-      data: {challenge}
-    },
-    maxCommentLength: 2000,
+    ...Default.args,
     anonymousCanComment: true
   }
 }
@@ -389,16 +251,15 @@ export const CommentingWithError: StoryObj = {
 }
 
 export const Editing: StoryObj = {
+  ...Default,
   args: {
-    ...verifiedUserComment,
-    edit: {},
-    challenge: {
-      data: {challenge}
-    },
-    maxCommentLength: 2000,
+    ...Default.args,
     userCanEdit: true
   },
-  decorators: [WithUserDecorator(verifiedUserComment.user ?? null)]
+  decorators: [
+    WithCommentRatingsDecorators({}),
+    WithUserDecorator(verifiedUserComment.user ?? null)
+  ]
 }
 
 export const EditingWithError: StoryObj = {
@@ -417,24 +278,40 @@ export const EditingWithError: StoryObj = {
   }
 }
 
-export const WithClassName: StoryObj = {
+export const Nested: StoryObj = {
+  ...Editing,
   args: {
-    ...verifiedUserComment,
-    challenge: {
-      data: {challenge}
-    },
-    maxCommentLength: 2000,
+    ...Editing.args,
+    children: [
+      {
+        ...verifiedUserComment,
+        challenge: {
+          data: {challenge}
+        },
+        maxCommentLength: 2000,
+        children: [anonymousComment]
+      },
+      {
+        ...anonymousComment,
+        maxCommentLength: 2000,
+        children: [verifiedUserComment]
+      }
+    ]
+  }
+}
+
+export const WithClassName: StoryObj = {
+  ...Default,
+  args: {
+    ...Default.args,
     className: 'extra-classname'
   }
 }
 
 export const WithEmotion: StoryObj = {
+  ...Default,
   args: {
-    ...verifiedUserComment,
-    challenge: {
-      data: {challenge}
-    },
-    maxCommentLength: 2000,
+    ...Default.args,
     css: css`
       background-color: #eee;
     `

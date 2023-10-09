@@ -1,13 +1,23 @@
+import {Link, Stack} from '@mui/material'
 import {Meta} from '@storybook/react'
-import {Alert, AlertProps} from './alert'
+import {Alert as AlertCmp} from './alert'
 
 export default {
-  component: Alert,
-  title: 'UI/Alert'
-} as Meta<typeof Alert>
+  component: AlertCmp,
+  title: 'UI/Alert',
+  render: () => (
+    <Stack gap={1}>
+      <AlertCmp severity="error">Error</AlertCmp>
+      <AlertCmp severity="warning">Warning</AlertCmp>
+      <AlertCmp severity="info">Info</AlertCmp>
+      <AlertCmp severity="success">Success</AlertCmp>
 
-const Template = (args: AlertProps) => <Alert {...args}>Alert</Alert>
+      <br />
+      <Link href="https://mui.com/material-ui/react-alert/" target="_blank">
+        See more
+      </Link>
+    </Stack>
+  )
+} as Meta<typeof AlertCmp>
 
-export const Default = {
-  render: Template
-}
+export const Alert = {}
