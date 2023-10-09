@@ -87,7 +87,7 @@ export function Index() {
 
         <div>
           <Typography component="h2" variant="h4" marginBottom={3}>
-            Über Uns
+            Team
           </Typography>
 
           <Typography variant="body1" marginBottom={2}>
