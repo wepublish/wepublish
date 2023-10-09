@@ -1,4 +1,3 @@
-import {Chip, capitalize, styled} from '@mui/material'
 import {
   ApiV1,
   ArticleContainer,
@@ -11,15 +10,8 @@ import {GetStaticPaths, GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 
-export const ArticleTagList = styled('div')`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(75px, max-content));
-  gap: ${({theme}) => theme.spacing(1)};
-`
-
 export default function ArticleBySlug() {
   const {
-    push,
     query: {slug}
   } = useRouter()
   const {
@@ -35,18 +27,7 @@ export default function ArticleBySlug() {
 
   return (
     <>
-      <ArticleContainer slug={slug as string}>
-        <ArticleTagList>
-          {data?.article?.tags.map((tag, index) => (
-            <Chip
-              key={index}
-              label={capitalize(tag)}
-              variant="outlined"
-              onClick={() => push(`/a/tag/${tag}`)}
-            />
-          ))}
-        </ArticleTagList>
-      </ArticleContainer>
+      <ArticleContainer slug={slug as string} />
 
       {data?.article && (
         <>
