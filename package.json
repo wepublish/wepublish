@@ -13,7 +13,7 @@
     "@emotion/styled": "11.11.0",
     "@mui/x-date-pickers": "^6.16.1",
     "@nx/next": "16.10.0",
-    "@wepublish/website": "^0.0.19",
+    "@wepublish/website": "^0.0.20",
     "cookies-next": "^2.1.2",
     "graphql": "^16.8.1",
     "next": "13.4.1",

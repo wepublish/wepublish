@@ -39,6 +39,7 @@ import {ReactComponent as Logo} from '../src/logo.svg'
 import {NavBarProfile} from '../src/navbar-profile'
 import {NextWepublishLink} from '../src/next-wepublish-link'
 import {SessionProvider} from '../src/session.provider'
+import {YearlyMemberPlanItem} from '../src/yearly-memberplan-item'
 
 setDefaultOptions({
   locale: de
@@ -153,6 +154,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
           Head={Head}
           Script={Script}
           Footer={Footer}
+          MemberPlanItem={YearlyMemberPlanItem}
           elements={{Link: NextWepublishLink, Button}}
           blocks={{Break: GruppettoBreakBlock}}>
           <ThemeProvider theme={gruppettoTheme}>
