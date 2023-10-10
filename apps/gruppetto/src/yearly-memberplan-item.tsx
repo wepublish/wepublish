@@ -20,7 +20,7 @@ export const YearlyMemberPlanItem = forwardRef<HTMLButtonElement, BuilderMemberP
           <MemberPlanItemName>{name}</MemberPlanItemName>
 
           <MemberPlanItemPrice>
-            Ab {formatChf((amountPerMonthMin / 100) * 12)} pro Jahr
+            Ab {formatChf(Math.ceil((amountPerMonthMin / 100) * 12))} pro Jahr
           </MemberPlanItemPrice>
         </MemberPlanItemContent>
 
