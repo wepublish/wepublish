@@ -9,26 +9,54 @@ import {
   ThemeProvider
 } from '@mui/material'
 import {theme} from '@wepublish/ui'
-import {ApiV1, FooterContainer, WebsiteBuilderProvider, WebsiteProvider} from '@wepublish/website'
-import {getCookie} from 'cookies-next'
+import {
+  ApiV1,
+  FooterContainer,
+  NavbarContainer,
+  NavbarInnerWrapper,
+  WebsiteBuilderProvider,
+  WebsiteProvider
+} from '@wepublish/website'
 import {setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
-import App, {AppContext, AppProps} from 'next/app'
+import i18next from 'i18next'
+import LanguageDetector from 'i18next-browser-languagedetector'
+import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
+import Script from 'next/script'
+import {initReactI18next} from 'react-i18next'
 import {PartialDeep} from 'type-fest'
+import {z} from 'zod'
+import {zodI18nMap} from 'zod-i18n-map'
+import translation from 'zod-i18n-map/locales/de/zod.json'
 import {authLink} from '../src/auth-link'
 import background from '../src/background.svg'
-import {Button} from '../src/components/button'
-import {Footer} from '../src/components/footer'
-import {Header} from '../src/components/header'
-import {Link} from '../src/components/link'
-import {Logo} from '../src/components/logo'
-import {AuthTokenStorageKey, SessionProvider} from '../src/session.provider'
+import {GruppettoBreakBlock} from '../src/break-block'
+import {Button} from '../src/button'
+import {Footer} from '../src/footer'
+import {ReactComponent as Logo} from '../src/logo.svg'
+import {NavBarProfile} from '../src/navbar-profile'
+import {NextWepublishLink} from '../src/next-wepublish-link'
+import {SessionProvider} from '../src/session.provider'
+import {YearlyMemberPlanItem} from '../src/yearly-memberplan-item'
 
 setDefaultOptions({
   locale: de
 })
+
+i18next
+  .use(LanguageDetector)
+  .use(initReactI18next)
+  .init({
+    lng: 'de',
+    fallbackLng: 'de',
+    supportedLngs: ['de'],
+    resources: {
+      de: {zod: translation}
+    }
+  })
+z.setErrorMap(zodI18nMap)
 
 const gruppettoTheme = createTheme(theme, {
   palette: {
@@ -74,40 +102,85 @@ const FooterInnerWrapper = styled('div')`
   gap: ${({theme}) => theme.spacing(2)};
 `
 
-const FooterLogoLink = styled(Link)`
+const FooterLogoLink = styled(NextWepublishLink)`
   grid-column-start: 1;
   grid-column-end: 4;
   display: grid;
   grid-template-columns: 1fr;
 `
 
-const SocialLink = styled(Link)`
+const SocialLink = styled(NextWepublishLink)`
   display: grid;
   grid-template-columns: 32px;
   justify-content: center;
 `
 
-type CustomAppProps = AppProps & {
-  sessionToken: ApiV1.UserSession | null
-}
+const LogoLink = styled(NextWepublishLink)`
+  color: unset;
+  display: grid;
+  align-items: center;
+  justify-items: center;
+`
 
-function CustomApp({Component, pageProps, sessionToken}: CustomAppProps) {
+const LogoWrapper = styled(Logo)`
+  fill: currentColor;
+  height: 30px;
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    height: 45px;
+  }
+`
+
+const NavBar = styled(NavbarContainer)`
+  background-color: ${({theme}) => theme.palette.background.default};
+  margin-bottom: ${({theme}) => theme.spacing(3)};
+
+  ${NavbarInnerWrapper} {
+    width: 100%;
+    max-width: ${({theme}) => `${theme.breakpoints.values['lg']}${theme.breakpoints.unit}`};
+    align-self: center;
+  }
+`
+
+type CustomAppProps = AppProps<{
+  sessionToken?: ApiV1.UserSession
+}>
+
+function CustomApp({Component, pageProps}: CustomAppProps) {
   return (
-    <SessionProvider sessionToken={sessionToken}>
+    <SessionProvider sessionToken={pageProps.sessionToken ?? null}>
       <WebsiteProvider>
-        <WebsiteBuilderProvider Head={Head} Footer={Footer} elements={{Link, Button}}>
+        <WebsiteBuilderProvider
+          Head={Head}
+          Script={Script}
+          Footer={Footer}
+          MemberPlanItem={YearlyMemberPlanItem}
+          elements={{Link: NextWepublishLink, Button}}
+          blocks={{Break: GruppettoBreakBlock}}>
           <ThemeProvider theme={gruppettoTheme}>
             <CssBaseline />
 
             <Head>
               <title>Gruppetto &mdash; Das neue Schweizer Radsportmagazin</title>
+              <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+              {/* Feeds */}
+              <link rel="alternate" type="application/rss+xml" href="/api/rss-feed" />
+              <link rel="alternate" type="application/atom+xml" href="/api/atom-feed" />
+              <link rel="alternate" type="application/feed+json" href="/api/json-feed" />
             </Head>
 
             <Spacer>
-              <Header />
+              <NavBar categorySlugs={['about-us', 'issues', 'account']} slug="main">
+                <LogoLink href="/" aria-label="Startseite">
+                  <LogoWrapper />
+                </LogoLink>
+
+                <NavBarProfile />
+              </NavBar>
 
               <main>
-                <MainSpacer>
+                <MainSpacer maxWidth="lg">
                   <Component {...pageProps} />
                 </MainSpacer>
               </main>
@@ -173,21 +246,5 @@ const {publicRuntimeConfig} = getConfig()
 const ConnectedApp = ApiV1.createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink])(
   CustomApp
 )
-
-;(ConnectedApp as any).getInitialProps = async (appContext: AppContext) => {
-  const appProps = await App.getInitialProps(appContext)
-
-  const token =
-    typeof window === 'undefined'
-      ? getCookie(AuthTokenStorageKey, {req: appContext.ctx.req})
-      : getCookie(AuthTokenStorageKey)
-
-  const sessionToken = token ? (JSON.parse(token.toString()) as ApiV1.UserSession) : null
-
-  return {
-    ...appProps,
-    sessionToken
-  }
-}
 
 export {ConnectedApp as default}

@@ -1,5 +1,0 @@
-query VersionInformation {
-    versionInformation {
-        version
-    }
-}

@@ -1,6 +1,5 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
-  "npmScope": "wepublish",
   "tasksRunnerOptions": {
     "default": {
       "runner": "nx-cloud",
@@ -9,75 +8,65 @@
           "build",
           "lint",
           "test",
-          "e2e",
-          "browser",
-          "server",
-          "build-storybook"
+          "e2e"
         ],
-        "accessToken": "YmQxYTg2ZDgtNDBlNS00MmM1LWI4MjAtZmJkMWUxM2Y1ZTJkfHJlYWQtd3JpdGU="
+        "accessToken": "MzdkNTYwMWEtMzYyMy00NWIzLTljYjItZWJkNjkzZWJkODQzfHJlYWQtd3JpdGU="
       }
     }
   },
   "targetDefaults": {
     "build": {
-      "dependsOn": ["^build"],
-      "inputs": ["production", "^production"]
-    },
-    "e2e": {
-      "inputs": ["default", "^production"]
-    },
-    "lint": {
-      "inputs": ["default", "{workspaceRoot}/.eslintrc.json"]
+      "dependsOn": [
+        "^build"
+      ],
+      "inputs": [
+        "production",
+        "^production"
+      ]
     },
     "test": {
-      "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"]
-    },
-    "build-storybook": {
       "inputs": [
         "default",
         "^production",
-        "{workspaceRoot}/.storybook/**/*",
-        "{projectRoot}/.storybook/**/*",
-        "{projectRoot}/tsconfig.storybook.json"
+        "{workspaceRoot}/jest.preset.js"
+      ]
+    },
+    "lint": {
+      "inputs": [
+        "default",
+        "{workspaceRoot}/.eslintrc.json",
+        "{workspaceRoot}/.eslintignore",
+        "{workspaceRoot}/eslint.config.js"
       ]
     }
   },
   "namedInputs": {
-    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "default": [
+      "{projectRoot}/**/*",
+      "sharedGlobals"
+    ],
     "production": [
       "default",
-      "!{projectRoot}/.eslintrc.json",
       "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
       "!{projectRoot}/tsconfig.spec.json",
       "!{projectRoot}/jest.config.[jt]s",
-      "!{projectRoot}/.storybook/**/*",
-      "!{projectRoot}/**/*.stories.@(js|jsx|ts|tsx|mdx)",
-      "!{projectRoot}/tsconfig.storybook.json",
-      "!{projectRoot}/src/test-setup.[jt]s"
+      "!{projectRoot}/src/test-setup.[jt]s",
+      "!{projectRoot}/test-setup.[jt]s",
+      "!{projectRoot}/.eslintrc.json",
+      "!{projectRoot}/eslint.config.js"
     ],
-    "sharedGlobals": ["{workspaceRoot}/babel.config.json"]
+    "sharedGlobals": []
   },
   "generators": {
     "@nx/react": {
       "application": {
-        "style": "@emotion/styled",
-        "linter": "eslint",
-        "bundler": "webpack",
         "babel": true
-      },
-      "component": {
-        "style": "@emotion/styled"
-      },
-      "library": {
-        "style": "@emotion/styled",
-        "linter": "eslint"
       }
     },
     "@nx/next": {
       "application": {
         "style": "@emotion/styled",
-        "linter": "eslint",
-        "export": true
+        "linter": "eslint"
       }
     }
   }
