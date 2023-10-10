@@ -171,7 +171,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
             </Head>
 
             <Spacer>
-              <NavBar categorySlugs={['about-us']} slug="main">
+              <NavBar categorySlugs={['about-us', 'account']} slug="main">
                 <LogoLink href="/" aria-label="Startseite">
                   <LogoWrapper />
                 </LogoLink>
