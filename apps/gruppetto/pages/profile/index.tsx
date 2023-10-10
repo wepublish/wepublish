@@ -20,7 +20,7 @@ function Profile() {
     <ProfileWrapper>
       <H4 component={'h1'}>Profil</H4>
 
-      <PersonalDataFormContainer mediaEmail="info@wepublish.dev" />
+      <PersonalDataFormContainer mediaEmail="abo@gruppetto-magazin.ch" />
     </ProfileWrapper>
   )
 }
