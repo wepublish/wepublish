@@ -13,12 +13,12 @@ export const CommentBlockWrapper = styled('article')`
 export const CommentBlockActions = styled('div')``
 
 export const CommentBlock = ({className, comments}: BuilderCommentBlockProps) => {
-  const {CommentListSingleComment: BuilderCommentListSingleComment} = useWebsiteBuilder()
+  const {Comment: BuilderComment} = useWebsiteBuilder()
 
   return (
     <CommentBlockWrapper className={className}>
       {comments?.map(({children, ...comment}) => (
-        <BuilderCommentListSingleComment key={comment.id} {...comment} />
+        <BuilderComment key={comment.id} {...comment} />
       ))}
     </CommentBlockWrapper>
   )

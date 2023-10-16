@@ -33,22 +33,5 @@ export const parameters = {
     showWarnings: false,
     assumeImmutableResults: true,
     defaultOptions
-  },
-  options: {
-    storySort: {
-      includeName: true,
-      method: 'alphabetical',
-      order: [
-        'Getting Started',
-        'Overview',
-        'Installation',
-        'Usage',
-        'Learn',
-        'FAQ',
-        'Glossary',
-        '*',
-        'Item'
-      ]
-    }
   }
 } as Preview['parameters']

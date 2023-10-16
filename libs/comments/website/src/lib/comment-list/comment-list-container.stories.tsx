@@ -107,48 +107,6 @@ const anonymousComment = {
   user: null,
   guestUsername: 'Dr. Anonymous',
   guestUserImage: image,
-  calculatedRatings: [
-    {
-      count: 3,
-      mean: 5,
-      total: 15,
-      answer: {
-        id: 'cl9wv78am1810854fszdbjcu6f',
-        answer: 'Informativ',
-        ratingSystemId: 'default',
-        type: 'STAR',
-        __typename: 'CommentRatingSystemAnswer'
-      },
-      __typename: 'CalculatedRating'
-    },
-    {
-      count: 2,
-      mean: 5,
-      total: 10,
-      answer: {
-        id: 'cl9wv7drp1822954fszyd05kqe',
-        answer: 'Konstruktiv',
-        ratingSystemId: 'default',
-        type: 'STAR',
-        __typename: 'CommentRatingSystemAnswer'
-      },
-      __typename: 'CalculatedRating'
-    },
-    {
-      count: 3,
-      mean: 5,
-      total: 15,
-      answer: {
-        id: 'cl9wv7h961829254fsrm9mpjzz',
-        answer: 'Nützlich',
-        ratingSystemId: 'default',
-        type: 'STAR',
-        __typename: 'CommentRatingSystemAnswer'
-      },
-      __typename: 'CalculatedRating'
-    }
-  ],
-  overriddenRatings: [],
   tags: [],
   authorType: 'GuestUser',
   itemID: 'cljfya8sj4342602siydzsx4pxv',
@@ -161,14 +119,16 @@ const anonymousComment = {
   rejectionReason: null,
   createdAt: '2023-06-29T09:02:46.446Z',
   modifiedAt: '2023-06-29T09:02:46.446Z',
-  children: []
-}
+  children: [],
+  calculatedRatings: [],
+  overriddenRatings: [],
+  userRatings: []
+} as CommentListQuery['comments'][number]
 
 const verifiedUserComment = {
   id: 'verified',
   parentID: 'cljgx3n3i382572shctpgd5gg0',
   peerId: null,
-  overriddenRatings: [],
   user: {
     __typename: 'User',
     id: 'qnK8vb5D5RtlTEbb',
@@ -185,7 +145,6 @@ const verifiedUserComment = {
   },
   guestUsername: null,
   guestUserImage: null,
-  calculatedRatings: null,
   authorType: 'VerifiedUser',
   itemID: 'cljfya8sj4342602siydzsx4pxv',
   itemType: 'Article',
@@ -199,7 +158,10 @@ const verifiedUserComment = {
   modifiedAt: '2023-06-29T09:45:01.334Z',
   __typename: 'Comment',
   children: [],
-  tags: []
+  tags: [],
+  calculatedRatings: [],
+  overriddenRatings: [],
+  userRatings: []
 } as CommentListQuery['comments'][number]
 
 const nestedChildren = (id: string) => [
@@ -248,7 +210,13 @@ export const Default: StoryObj = {
           },
           result: {
             data: {
-              comments
+              comments,
+              ratingSystem: {
+                __typename: 'FullCommentRatingSystem',
+                answers: [],
+                id: '123',
+                name: 'default'
+              }
             }
           }
         },

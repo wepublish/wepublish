@@ -5,11 +5,11 @@ exports[`Comment List should render Default 1`] = `
   <article
     class="css-1mm1s5y-CommentBlockWrapper es9rr591"
   >
-    <div
-      class="css-yfucaz-CommentListSingleCommentWrapper e1dy24588"
+    <article
+      class="css-4zvvnd-CommentWrapper ekbi54x8"
     >
       <header
-        class="css-1xu0n7p-CommentListSingleCommentHeader e1dy24587"
+        class="css-p4cys7-CommentHeader ekbi54x7"
       >
         <img
           alt="DSC07717"
@@ -22,14 +22,14 @@ https://unsplash.it/200/200 200w"
           title=""
         />
         <div
-          class="css-1gcir5e-CommentListSingleCommentHeaderContent e1dy24586"
+          class="css-1x1fqyu-CommentHeaderContent ekbi54x6"
         >
           <div
-            class="css-1mkxyjp-CommentListSingleCommentName e1dy24585"
+            class="css-l1mcyg-CommentName ekbi54x5"
           >
             Signed Up User
             <div
-              class="css-fwvge4-CommentListSingleCommentVerifiedBadge e1dy24584"
+              class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
             >
               <svg
                 fill="currentColor"
@@ -54,14 +54,14 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="css-16pu5r0-CommentListSingleCommentFlair e1dy24583"
+            class="css-rox5w-CommentFlair ekbi54x3"
           >
             Flair
           </div>
         </div>
       </header>
       <div
-        class="css-1yyf35q-CommentListSingleCommentContent e1dy24582"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -96,12 +96,12 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
       </div>
-    </div>
-    <div
-      class="css-yfucaz-CommentListSingleCommentWrapper e1dy24588"
+    </article>
+    <article
+      class="css-4zvvnd-CommentWrapper ekbi54x8"
     >
       <header
-        class="css-1xu0n7p-CommentListSingleCommentHeader e1dy24587"
+        class="css-p4cys7-CommentHeader ekbi54x7"
       >
         <img
           alt="DSC07717"
@@ -114,14 +114,14 @@ https://unsplash.it/200/200 200w"
           title=""
         />
         <div
-          class="css-1gcir5e-CommentListSingleCommentHeaderContent e1dy24586"
+          class="css-1x1fqyu-CommentHeaderContent ekbi54x6"
         >
           <div
-            class="css-1mkxyjp-CommentListSingleCommentName e1dy24585"
+            class="css-l1mcyg-CommentName ekbi54x5"
           >
             Signed Up User
             <div
-              class="css-fwvge4-CommentListSingleCommentVerifiedBadge e1dy24584"
+              class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
             >
               <svg
                 fill="currentColor"
@@ -146,14 +146,14 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="css-16pu5r0-CommentListSingleCommentFlair e1dy24583"
+            class="css-rox5w-CommentFlair ekbi54x3"
           >
             Flair
           </div>
         </div>
       </header>
       <div
-        class="css-1yyf35q-CommentListSingleCommentContent e1dy24582"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -188,7 +188,7 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
       </div>
-    </div>
+    </article>
   </article>
 </DocumentFragment>
 `;
@@ -198,11 +198,11 @@ exports[`Comment List should render WithAnonymousComments 1`] = `
   <article
     class="css-1mm1s5y-CommentBlockWrapper es9rr591"
   >
-    <div
-      class="css-yfucaz-CommentListSingleCommentWrapper e1dy24588"
+    <article
+      class="css-4zvvnd-CommentWrapper ekbi54x8"
     >
       <header
-        class="css-1xu0n7p-CommentListSingleCommentHeader e1dy24587"
+        class="css-p4cys7-CommentHeader ekbi54x7"
       >
         <img
           alt="DSC07717"
@@ -215,22 +215,22 @@ https://unsplash.it/200/200 200w"
           title=""
         />
         <div
-          class="css-1gcir5e-CommentListSingleCommentHeaderContent e1dy24586"
+          class="css-1x1fqyu-CommentHeaderContent ekbi54x6"
         >
           <div
-            class="css-1mkxyjp-CommentListSingleCommentName e1dy24585"
+            class="css-l1mcyg-CommentName ekbi54x5"
           >
             Dr. Anonymous
           </div>
           <div
-            class="css-1iupad4-CommentListSingleCommentFlair-CommentListSingleCommentFlair e1dy24583"
+            class="css-bc7ih0-CommentFlair-CommentFlair ekbi54x3"
           >
             Source
           </div>
         </div>
       </header>
       <div
-        class="css-1yyf35q-CommentListSingleCommentContent e1dy24582"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -265,12 +265,12 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
       </div>
-    </div>
-    <div
-      class="css-yfucaz-CommentListSingleCommentWrapper e1dy24588"
+    </article>
+    <article
+      class="css-4zvvnd-CommentWrapper ekbi54x8"
     >
       <header
-        class="css-1xu0n7p-CommentListSingleCommentHeader e1dy24587"
+        class="css-p4cys7-CommentHeader ekbi54x7"
       >
         <img
           alt="DSC07717"
@@ -283,22 +283,22 @@ https://unsplash.it/200/200 200w"
           title=""
         />
         <div
-          class="css-1gcir5e-CommentListSingleCommentHeaderContent e1dy24586"
+          class="css-1x1fqyu-CommentHeaderContent ekbi54x6"
         >
           <div
-            class="css-1mkxyjp-CommentListSingleCommentName e1dy24585"
+            class="css-l1mcyg-CommentName ekbi54x5"
           >
             Dr. Anonymous
           </div>
           <div
-            class="css-1iupad4-CommentListSingleCommentFlair-CommentListSingleCommentFlair e1dy24583"
+            class="css-bc7ih0-CommentFlair-CommentFlair ekbi54x3"
           >
             Source
           </div>
         </div>
       </header>
       <div
-        class="css-1yyf35q-CommentListSingleCommentContent e1dy24582"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -333,7 +333,7 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
       </div>
-    </div>
+    </article>
   </article>
 </DocumentFragment>
 `;
@@ -343,11 +343,11 @@ exports[`Comment List should render WithClassName 1`] = `
   <article
     class="extra-classname css-1mm1s5y-CommentBlockWrapper es9rr591"
   >
-    <div
-      class="css-yfucaz-CommentListSingleCommentWrapper e1dy24588"
+    <article
+      class="css-4zvvnd-CommentWrapper ekbi54x8"
     >
       <header
-        class="css-1xu0n7p-CommentListSingleCommentHeader e1dy24587"
+        class="css-p4cys7-CommentHeader ekbi54x7"
       >
         <img
           alt="DSC07717"
@@ -360,14 +360,14 @@ https://unsplash.it/200/200 200w"
           title=""
         />
         <div
-          class="css-1gcir5e-CommentListSingleCommentHeaderContent e1dy24586"
+          class="css-1x1fqyu-CommentHeaderContent ekbi54x6"
         >
           <div
-            class="css-1mkxyjp-CommentListSingleCommentName e1dy24585"
+            class="css-l1mcyg-CommentName ekbi54x5"
           >
             Signed Up User
             <div
-              class="css-fwvge4-CommentListSingleCommentVerifiedBadge e1dy24584"
+              class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
             >
               <svg
                 fill="currentColor"
@@ -392,14 +392,14 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="css-16pu5r0-CommentListSingleCommentFlair e1dy24583"
+            class="css-rox5w-CommentFlair ekbi54x3"
           >
             Flair
           </div>
         </div>
       </header>
       <div
-        class="css-1yyf35q-CommentListSingleCommentContent e1dy24582"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -434,12 +434,12 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
       </div>
-    </div>
-    <div
-      class="css-yfucaz-CommentListSingleCommentWrapper e1dy24588"
+    </article>
+    <article
+      class="css-4zvvnd-CommentWrapper ekbi54x8"
     >
       <header
-        class="css-1xu0n7p-CommentListSingleCommentHeader e1dy24587"
+        class="css-p4cys7-CommentHeader ekbi54x7"
       >
         <img
           alt="DSC07717"
@@ -452,14 +452,14 @@ https://unsplash.it/200/200 200w"
           title=""
         />
         <div
-          class="css-1gcir5e-CommentListSingleCommentHeaderContent e1dy24586"
+          class="css-1x1fqyu-CommentHeaderContent ekbi54x6"
         >
           <div
-            class="css-1mkxyjp-CommentListSingleCommentName e1dy24585"
+            class="css-l1mcyg-CommentName ekbi54x5"
           >
             Signed Up User
             <div
-              class="css-fwvge4-CommentListSingleCommentVerifiedBadge e1dy24584"
+              class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
             >
               <svg
                 fill="currentColor"
@@ -484,14 +484,14 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="css-16pu5r0-CommentListSingleCommentFlair e1dy24583"
+            class="css-rox5w-CommentFlair ekbi54x3"
           >
             Flair
           </div>
         </div>
       </header>
       <div
-        class="css-1yyf35q-CommentListSingleCommentContent e1dy24582"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -526,7 +526,7 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
       </div>
-    </div>
+    </article>
   </article>
 </DocumentFragment>
 `;
@@ -536,11 +536,11 @@ exports[`Comment List should render WithEmotion 1`] = `
   <article
     class="css-1mm1s5y-CommentBlockWrapper es9rr591"
   >
-    <div
-      class="css-yfucaz-CommentListSingleCommentWrapper e1dy24588"
+    <article
+      class="css-4zvvnd-CommentWrapper ekbi54x8"
     >
       <header
-        class="css-1xu0n7p-CommentListSingleCommentHeader e1dy24587"
+        class="css-p4cys7-CommentHeader ekbi54x7"
       >
         <img
           alt="DSC07717"
@@ -553,14 +553,14 @@ https://unsplash.it/200/200 200w"
           title=""
         />
         <div
-          class="css-1gcir5e-CommentListSingleCommentHeaderContent e1dy24586"
+          class="css-1x1fqyu-CommentHeaderContent ekbi54x6"
         >
           <div
-            class="css-1mkxyjp-CommentListSingleCommentName e1dy24585"
+            class="css-l1mcyg-CommentName ekbi54x5"
           >
             Signed Up User
             <div
-              class="css-fwvge4-CommentListSingleCommentVerifiedBadge e1dy24584"
+              class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
             >
               <svg
                 fill="currentColor"
@@ -585,14 +585,14 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="css-16pu5r0-CommentListSingleCommentFlair e1dy24583"
+            class="css-rox5w-CommentFlair ekbi54x3"
           >
             Flair
           </div>
         </div>
       </header>
       <div
-        class="css-1yyf35q-CommentListSingleCommentContent e1dy24582"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -627,12 +627,12 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
       </div>
-    </div>
-    <div
-      class="css-yfucaz-CommentListSingleCommentWrapper e1dy24588"
+    </article>
+    <article
+      class="css-4zvvnd-CommentWrapper ekbi54x8"
     >
       <header
-        class="css-1xu0n7p-CommentListSingleCommentHeader e1dy24587"
+        class="css-p4cys7-CommentHeader ekbi54x7"
       >
         <img
           alt="DSC07717"
@@ -645,14 +645,14 @@ https://unsplash.it/200/200 200w"
           title=""
         />
         <div
-          class="css-1gcir5e-CommentListSingleCommentHeaderContent e1dy24586"
+          class="css-1x1fqyu-CommentHeaderContent ekbi54x6"
         >
           <div
-            class="css-1mkxyjp-CommentListSingleCommentName e1dy24585"
+            class="css-l1mcyg-CommentName ekbi54x5"
           >
             Signed Up User
             <div
-              class="css-fwvge4-CommentListSingleCommentVerifiedBadge e1dy24584"
+              class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
             >
               <svg
                 fill="currentColor"
@@ -677,14 +677,14 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="css-16pu5r0-CommentListSingleCommentFlair e1dy24583"
+            class="css-rox5w-CommentFlair ekbi54x3"
           >
             Flair
           </div>
         </div>
       </header>
       <div
-        class="css-1yyf35q-CommentListSingleCommentContent e1dy24582"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -719,7 +719,7 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
       </div>
-    </div>
+    </article>
   </article>
 </DocumentFragment>
 `;
@@ -729,11 +729,11 @@ exports[`Comment List should render WithError 1`] = `
   <article
     class="css-1mm1s5y-CommentBlockWrapper es9rr591"
   >
-    <div
-      class="css-yfucaz-CommentListSingleCommentWrapper e1dy24588"
+    <article
+      class="css-4zvvnd-CommentWrapper ekbi54x8"
     >
       <header
-        class="css-1xu0n7p-CommentListSingleCommentHeader e1dy24587"
+        class="css-p4cys7-CommentHeader ekbi54x7"
       >
         <img
           alt="DSC07717"
@@ -746,14 +746,14 @@ https://unsplash.it/200/200 200w"
           title=""
         />
         <div
-          class="css-1gcir5e-CommentListSingleCommentHeaderContent e1dy24586"
+          class="css-1x1fqyu-CommentHeaderContent ekbi54x6"
         >
           <div
-            class="css-1mkxyjp-CommentListSingleCommentName e1dy24585"
+            class="css-l1mcyg-CommentName ekbi54x5"
           >
             Signed Up User
             <div
-              class="css-fwvge4-CommentListSingleCommentVerifiedBadge e1dy24584"
+              class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
             >
               <svg
                 fill="currentColor"
@@ -778,14 +778,14 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="css-16pu5r0-CommentListSingleCommentFlair e1dy24583"
+            class="css-rox5w-CommentFlair ekbi54x3"
           >
             Flair
           </div>
         </div>
       </header>
       <div
-        class="css-1yyf35q-CommentListSingleCommentContent e1dy24582"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -820,12 +820,12 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
       </div>
-    </div>
-    <div
-      class="css-yfucaz-CommentListSingleCommentWrapper e1dy24588"
+    </article>
+    <article
+      class="css-4zvvnd-CommentWrapper ekbi54x8"
     >
       <header
-        class="css-1xu0n7p-CommentListSingleCommentHeader e1dy24587"
+        class="css-p4cys7-CommentHeader ekbi54x7"
       >
         <img
           alt="DSC07717"
@@ -838,14 +838,14 @@ https://unsplash.it/200/200 200w"
           title=""
         />
         <div
-          class="css-1gcir5e-CommentListSingleCommentHeaderContent e1dy24586"
+          class="css-1x1fqyu-CommentHeaderContent ekbi54x6"
         >
           <div
-            class="css-1mkxyjp-CommentListSingleCommentName e1dy24585"
+            class="css-l1mcyg-CommentName ekbi54x5"
           >
             Signed Up User
             <div
-              class="css-fwvge4-CommentListSingleCommentVerifiedBadge e1dy24584"
+              class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
             >
               <svg
                 fill="currentColor"
@@ -870,14 +870,14 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="css-16pu5r0-CommentListSingleCommentFlair e1dy24583"
+            class="css-rox5w-CommentFlair ekbi54x3"
           >
             Flair
           </div>
         </div>
       </header>
       <div
-        class="css-1yyf35q-CommentListSingleCommentContent e1dy24582"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -912,7 +912,7 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
       </div>
-    </div>
+    </article>
   </article>
 </DocumentFragment>
 `;
@@ -922,11 +922,11 @@ exports[`Comment List should render WithLoading 1`] = `
   <article
     class="css-1mm1s5y-CommentBlockWrapper es9rr591"
   >
-    <div
-      class="css-yfucaz-CommentListSingleCommentWrapper e1dy24588"
+    <article
+      class="css-4zvvnd-CommentWrapper ekbi54x8"
     >
       <header
-        class="css-1xu0n7p-CommentListSingleCommentHeader e1dy24587"
+        class="css-p4cys7-CommentHeader ekbi54x7"
       >
         <img
           alt="DSC07717"
@@ -939,14 +939,14 @@ https://unsplash.it/200/200 200w"
           title=""
         />
         <div
-          class="css-1gcir5e-CommentListSingleCommentHeaderContent e1dy24586"
+          class="css-1x1fqyu-CommentHeaderContent ekbi54x6"
         >
           <div
-            class="css-1mkxyjp-CommentListSingleCommentName e1dy24585"
+            class="css-l1mcyg-CommentName ekbi54x5"
           >
             Signed Up User
             <div
-              class="css-fwvge4-CommentListSingleCommentVerifiedBadge e1dy24584"
+              class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
             >
               <svg
                 fill="currentColor"
@@ -971,14 +971,14 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="css-16pu5r0-CommentListSingleCommentFlair e1dy24583"
+            class="css-rox5w-CommentFlair ekbi54x3"
           >
             Flair
           </div>
         </div>
       </header>
       <div
-        class="css-1yyf35q-CommentListSingleCommentContent e1dy24582"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -1013,12 +1013,12 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
       </div>
-    </div>
-    <div
-      class="css-yfucaz-CommentListSingleCommentWrapper e1dy24588"
+    </article>
+    <article
+      class="css-4zvvnd-CommentWrapper ekbi54x8"
     >
       <header
-        class="css-1xu0n7p-CommentListSingleCommentHeader e1dy24587"
+        class="css-p4cys7-CommentHeader ekbi54x7"
       >
         <img
           alt="DSC07717"
@@ -1031,14 +1031,14 @@ https://unsplash.it/200/200 200w"
           title=""
         />
         <div
-          class="css-1gcir5e-CommentListSingleCommentHeaderContent e1dy24586"
+          class="css-1x1fqyu-CommentHeaderContent ekbi54x6"
         >
           <div
-            class="css-1mkxyjp-CommentListSingleCommentName e1dy24585"
+            class="css-l1mcyg-CommentName ekbi54x5"
           >
             Signed Up User
             <div
-              class="css-fwvge4-CommentListSingleCommentVerifiedBadge e1dy24584"
+              class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
             >
               <svg
                 fill="currentColor"
@@ -1063,14 +1063,14 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="css-16pu5r0-CommentListSingleCommentFlair e1dy24583"
+            class="css-rox5w-CommentFlair ekbi54x3"
           >
             Flair
           </div>
         </div>
       </header>
       <div
-        class="css-1yyf35q-CommentListSingleCommentContent e1dy24582"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
@@ -1105,7 +1105,7 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
       </div>
-    </div>
+    </article>
   </article>
 </DocumentFragment>
 `;

@@ -6,6 +6,7 @@ import {
   BildwurfAdBlock,
   BlockRenderer,
   BreakBlock,
+  CommentBlock,
   EmbedBlock,
   EventBlock,
   FacebookPostBlock,
@@ -27,27 +28,27 @@ import {
   TitleBlock,
   TwitterTweetBlock,
   VimeoVideoBlock,
-  YouTubeVideoBlock,
-  CommentBlock
+  YouTubeVideoBlock
 } from '@wepublish/block-content/website'
 import {
+  Comment,
   CommentEditor,
   CommentList,
   CommentListItem,
-  CommentListSingleComment
+  CommentListItemChild,
+  CommentRatings
 } from '@wepublish/comments/website'
 import {Event, EventList, EventListItem, EventSEO} from '@wepublish/event/website'
-import {PersonalDataForm, ImageUpload} from '@wepublish/user/website'
 import {Image} from '@wepublish/image/website'
 import {
-  SubscriptionList,
-  SubscriptionListItem,
-  InvoiceListItem,
   InvoiceList,
-  Subscribe,
+  InvoiceListItem,
   MemberPlanPicker,
+  PaymentMethodPicker,
   PeriodicityPicker,
-  PaymentMethodPicker
+  Subscribe,
+  SubscriptionList,
+  SubscriptionListItem
 } from '@wepublish/membership/website'
 import {Footer, Navbar} from '@wepublish/navigation/website'
 import {Page, PageSEO} from '@wepublish/page/website'
@@ -67,9 +68,11 @@ import {
   ListItem,
   OrderedList,
   Paragraph,
+  Rating,
   UnorderedList,
   theme
 } from '@wepublish/ui'
+import {ImageUpload, PersonalDataForm} from '@wepublish/user/website'
 import {WebsiteBuilderProvider} from '@wepublish/website/builder'
 import {format} from 'date-fns'
 import {PropsWithChildren, memo} from 'react'
@@ -126,8 +129,10 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
         EventListItem={EventListItem}
         CommentList={CommentList}
         CommentListItem={CommentListItem}
-        CommentListSingleComment={CommentListSingleComment}
+        CommentListItemChild={CommentListItemChild}
+        Comment={Comment}
         CommentEditor={CommentEditor}
+        CommentRatings={CommentRatings}
         Page={Page}
         PageSEO={PageSEO}
         LoginForm={LoginForm}
@@ -143,6 +148,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
         Subscribe={Subscribe}
         elements={{
           TextField,
+          Rating,
           Alert,
           Button,
           IconButton,

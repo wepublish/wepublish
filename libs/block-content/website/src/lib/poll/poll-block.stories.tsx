@@ -1,18 +1,11 @@
 import {ApolloError} from '@apollo/client'
 import {css} from '@emotion/react'
-import {action} from '@storybook/addon-actions'
 import {Meta, StoryObj} from '@storybook/react'
 import {userEvent, within} from '@storybook/testing-library'
-import {
-  FullPollFragment,
-  PollVoteMutationResult,
-  UserPollVoteQueryResult
-} from '@wepublish/website/api'
-import {ComponentType} from 'react'
+import {WithPollBlockDecorators, WithUserDecorator} from '@wepublish/storybook'
+import {FullPollFragment} from '@wepublish/website/api'
 import {Node} from 'slate'
 import {PollBlock} from './poll-block'
-import {PollBlockContext} from './poll-block.context'
-import {WithUserDecorator} from '@wepublish/storybook'
 
 const text: Node[] = [
   {
@@ -67,62 +60,16 @@ const poll = {
   ]
 } as FullPollFragment
 
-type PollDecoratorProps = Partial<{
-  fetchUserVoteResult: Pick<UserPollVoteQueryResult, 'data' | 'error'>
-  voteResult: Pick<PollVoteMutationResult, 'data' | 'error'>
-  anonymousVoteResult: string
-  canVoteAnonymously: boolean
-}>
-
-const WithPollBlockDecorators =
-  ({
-    anonymousVoteResult,
-    canVoteAnonymously,
-    fetchUserVoteResult,
-    voteResult
-  }: PollDecoratorProps) =>
-  (Story: ComponentType) => {
-    const vote = async (args: unknown) => {
-      action('vote')(args)
-
-      return voteResult || {}
-    }
-
-    const fetchUserVote = async (args: unknown): Promise<any> => {
-      action('fetchUserVote')(args)
-
-      return fetchUserVoteResult || {}
-    }
-
-    const getAnonymousVote = (args: unknown): string | null => {
-      action('getAnonymousVote')(args)
-
-      return anonymousVoteResult ?? null
-    }
-
-    return (
-      <PollBlockContext.Provider
-        value={{
-          vote,
-          fetchUserVote,
-          canVoteAnonymously,
-          getAnonymousVote
-        }}>
-        <Story />
-      </PollBlockContext.Provider>
-    )
-  }
-
 export default {
   component: PollBlock,
-  title: 'Blocks/Poll',
-  decorators: [WithPollBlockDecorators({})]
+  title: 'Blocks/Poll'
 } as Meta
 
 export const Default: StoryObj = {
   args: {
     poll
-  }
+  },
+  decorators: [WithPollBlockDecorators({})]
 }
 
 export const Voting: StoryObj = {

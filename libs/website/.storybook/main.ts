@@ -31,9 +31,8 @@ export default {
       }
     },
     '@storybook/addon-a11y',
-    '@storybook/addon-docs',
-    '@storybook/addon-styling',
     '@storybook/addon-links',
+    '@storybook/addon-themes',
     'storybook-react-i18next'
   ],
   webpack: (config, options) => {

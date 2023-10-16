@@ -13,8 +13,7 @@ export const tsriArticleStyles = (theme: Theme) => css`
   }
 
   ${ArticleWrapper} > * {
-    grid-column-start: 1;
-    grid-column-end: 12;
+    grid-column: 1 / -1;
 
     &:is(${TitleBlockWrapper}):first-of-type {
       grid-row: 1;
@@ -62,6 +61,7 @@ export const tsriArticleStyles = (theme: Theme) => css`
 
   ${theme.breakpoints.up('md')} {
     ${ArticleWrapper} {
+      grid-template-columns: 350px repeat(11, 1fr);
       align-items: flex-start;
     }
 
@@ -69,8 +69,7 @@ export const tsriArticleStyles = (theme: Theme) => css`
       &:is(${TitleBlockWrapper}):first-of-type {
         grid-row-start: 1;
         grid-row-end: 3;
-        grid-column-start: 3;
-        grid-column-end: 12;
+        grid-column: 2 / -1;
       }
     }
 
@@ -78,7 +77,7 @@ export const tsriArticleStyles = (theme: Theme) => css`
       grid-row: 1;
       grid-auto-columns: max-content;
       grid-column-start: 1;
-      grid-column-end: 3;
+      grid-column-end: 1;
 
       & > * {
         &::before {
@@ -91,7 +90,7 @@ export const tsriArticleStyles = (theme: Theme) => css`
     ${ArticleWrapper} ${ArticleTagList} {
       grid-row: 2;
       grid-column-start: 1;
-      grid-column-end: 3;
+      grid-column-end: 1;
 
       &::before {
         width: 40px;

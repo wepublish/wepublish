@@ -54,7 +54,8 @@ import {
   BuilderCommentEditorProps,
   BuilderCommentListItemProps,
   BuilderCommentListProps,
-  BuilderCommentListSingleCommentProps
+  BuilderCommentProps,
+  BuilderCommentRatingsProps
 } from './comment.interface'
 import {
   BuilderEventListItemProps,
@@ -88,6 +89,7 @@ import {
   BuilderAlertProps,
   BuilderButtonProps,
   BuilderIconButtonProps,
+  BuilderRatingProps,
   BuilderTextFieldProps
 } from './ui.interface'
 import {BuilderPersonalDataFormProps, BuilderImageUploadProps} from './user.interface'
@@ -114,10 +116,12 @@ export type WebsiteBuilderProps = {
   EventSEO: ComponentType<BuilderEventSEOProps>
   EventList: ComponentType<BuilderEventListProps>
   EventListItem: ComponentType<BuilderEventListItemProps>
+  Comment: ComponentType<BuilderCommentProps>
   CommentList: ComponentType<BuilderCommentListProps>
   CommentListItem: ComponentType<BuilderCommentListItemProps>
-  CommentListSingleComment: ComponentType<BuilderCommentListSingleCommentProps>
+  CommentListItemChild: ComponentType<BuilderCommentListItemProps>
   CommentEditor: ComponentType<BuilderCommentEditorProps>
+  CommentRatings: ComponentType<BuilderCommentRatingsProps>
   LoginForm: ComponentType<BuilderLoginFormProps>
   RegistrationForm: ComponentType<BuilderRegistrationFormProps>
   PersonalDataForm: ComponentType<BuilderPersonalDataFormProps>
@@ -131,6 +135,7 @@ export type WebsiteBuilderProps = {
   Subscribe: ComponentType<BuilderSubscribeProps>
 
   elements: {
+    Rating: ComponentType<BuilderRatingProps>
     Alert: ComponentType<BuilderAlertProps>
     TextField: ComponentType<BuilderTextFieldProps>
     Button: ComponentType<BuilderButtonProps>
@@ -221,13 +226,16 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   ArticleListItem: NoComponent,
   CommentList: NoComponent,
   CommentListItem: NoComponent,
-  CommentListSingleComment: NoComponent,
+  CommentListItemChild: NoComponent,
+  Comment: NoComponent,
   CommentEditor: NoComponent,
+  CommentRatings: NoComponent,
   LoginForm: NoComponent,
   RegistrationForm: NoComponent,
   PersonalDataForm: NoComponent,
 
   elements: {
+    Rating: NoComponent,
     Alert: NoComponent,
     TextField: NoComponent,
     Button: NoComponent,

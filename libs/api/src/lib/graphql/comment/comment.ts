@@ -4,36 +4,44 @@ import {
   CommentRejectionReason,
   CommentState
 } from '@prisma/client'
+import {AuthSessionType} from '@wepublish/authentication/api'
+import {GraphQLRichText} from '@wepublish/richtext/api'
+import {unselectPassword} from '@wepublish/user/api'
 import {
   GraphQLEnumType,
   GraphQLFloat,
   GraphQLID,
   GraphQLInputObjectType,
+  GraphQLInt,
   GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
-  GraphQLString,
-  GraphQLInt
+  GraphQLString
 } from 'graphql'
 import {GraphQLDateTime} from 'graphql-scalars'
 import {Context} from '../../context'
 import {
-  CommentRevision,
-  PublicComment,
+  CalculatedRating,
   Comment,
+  CommentRevision,
   CommentSort,
+  PublicComment,
   PublicCommentSort
 } from '../../db/comment'
-import {unselectPassword} from '@wepublish/user/api'
 import {createProxyingResolver} from '../../utility'
-import {CalculatedRating, getPublicChildrenCommentsByParentId} from './comment.public-queries'
+import {
+  GraphQLCommentRating,
+  GraphQLCommentRatingSystemAnswer
+} from '../comment-rating/comment-rating'
 import {GraphQLPageInfo} from '../common'
-import {GraphQLRichText} from '@wepublish/richtext/api'
-import {GraphQLPublicUser, GraphQLUser} from '../user'
-import {GraphQLTag} from '../tag/tag'
 import {GraphQLImage} from '../image'
-import {GraphQLCommentRatingSystemAnswer} from '../comment-rating/comment-rating'
-import {AuthSessionType} from '@wepublish/authentication/api'
+import {GraphQLTag} from '../tag/tag'
+import {GraphQLPublicUser, GraphQLUser} from '../user'
+import {
+  getCalculatedRatingsForComment,
+  getPublicChildrenCommentsByParentId
+} from './comment.public-queries'
+import {userCommentRating} from '../comment-rating/comment-rating.public-queries'
 
 export const GraphQLCommentState = new GraphQLEnumType({
   name: 'CommentState',
@@ -267,7 +275,7 @@ export const GraphQLCalculatedRating = new GraphQLObjectType<CalculatedRating, C
     count: {type: new GraphQLNonNull(GraphQLInt)},
     total: {type: new GraphQLNonNull(GraphQLInt)},
     mean: {type: new GraphQLNonNull(GraphQLFloat)},
-    answer: {type: GraphQLCommentRatingSystemAnswer}
+    answer: {type: new GraphQLNonNull(GraphQLCommentRatingSystemAnswer)}
   }
 })
 
@@ -345,12 +353,38 @@ export const GraphQLPublicComment: GraphQLObjectType<PublicComment, Context> =
         })
       },
       calculatedRatings: {
-        type: new GraphQLList(GraphQLCalculatedRating)
+        type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLCalculatedRating))),
+        resolve: createProxyingResolver(
+          async (
+            {calculatedRatings, id},
+            _,
+            {prisma: {commentRating}, loaders: {commentRatingSystemAnswers}}
+          ) => {
+            if (calculatedRatings) {
+              return calculatedRatings
+            }
+
+            const [answers, ratings] = await Promise.all([
+              commentRatingSystemAnswers.load(1),
+              commentRating.findMany({
+                where: {
+                  commentId: id
+                }
+              })
+            ])
+
+            return getCalculatedRatingsForComment(answers, ratings)
+          }
+        )
       },
       overriddenRatings: {
         type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLoverriddenRating))),
-        resolve: comment =>
-          comment.overriddenRatings?.filter(ratings => ratings.value != null) ?? []
+        resolve: comment => comment.overriddenRatings.filter(ratings => ratings.value != null) ?? []
+      },
+      userRatings: {
+        type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLCommentRating))),
+        resolve: ({id}, _, {optionalAuthenticateUser, prisma: {commentRating}}) =>
+          userCommentRating(id, optionalAuthenticateUser, commentRating)
       }
     })
   })

@@ -97,7 +97,7 @@ export const addPublicComment = async (
       authorType,
       state: canSkipApproval ? CommentState.approved : CommentState.pendingApproval
     },
-    include: {revisions: {orderBy: {createdAt: 'asc'}}}
+    include: {revisions: {orderBy: {createdAt: 'asc'}}, overriddenRatings: true}
   })
   return {...comment, title, text}
 }
@@ -151,7 +151,7 @@ export const updatePublicComment = async (
       },
       state: canSkipApproval ? CommentState.approved : CommentState.pendingApproval
     },
-    include: {revisions: {orderBy: {createdAt: 'asc'}}}
+    include: {revisions: {orderBy: {createdAt: 'asc'}}, overriddenRatings: true}
   })
 
   return {
