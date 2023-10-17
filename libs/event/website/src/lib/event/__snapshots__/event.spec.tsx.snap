@@ -49,7 +49,7 @@ exports[`Event should render Default 1`] = `
     </script>
     <img
       alt="DSC07717"
-      class="css-1c1klla-ImageWrapper-Event e1shv2yg0"
+      class="css-f7a9ma-ImageWrapper-Event e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -522,7 +522,7 @@ exports[`Event should render WithClassName 1`] = `
     </script>
     <img
       alt="DSC07717"
-      class="css-1c1klla-ImageWrapper-Event e1shv2yg0"
+      class="css-f7a9ma-ImageWrapper-Event e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -995,7 +995,7 @@ exports[`Event should render WithEmotion 1`] = `
     </script>
     <img
       alt="DSC07717"
-      class="css-1c1klla-ImageWrapper-Event e1shv2yg0"
+      class="css-f7a9ma-ImageWrapper-Event e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,

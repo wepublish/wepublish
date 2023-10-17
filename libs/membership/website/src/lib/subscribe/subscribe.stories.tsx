@@ -71,7 +71,7 @@ const memberPlan = {
   __typename: 'MemberPlan',
   image,
   name: 'Foobar Memberplan',
-  amountPerMonthMin: 500,
+  amountPerMonthMin: 1200,
   availablePaymentMethods: [
     {
       forceAutoRenewal: false,
@@ -139,7 +139,7 @@ const memberPlan2 = {
   ...memberPlan,
   id: '2',
   name: 'Barfoo Memberplan',
-  amountPerMonthMin: 800,
+  amountPerMonthMin: 500,
   availablePaymentMethods: [memberPlan.availablePaymentMethods[1]]
 } as Exact<FullMemberPlanFragment>
 
@@ -147,7 +147,7 @@ const memberPlan3 = {
   ...memberPlan,
   id: '3',
   name: 'Foobaz Memberplan',
-  amountPerMonthMin: 1200,
+  amountPerMonthMin: 800,
   availablePaymentMethods: [memberPlan.availablePaymentMethods[2]]
 } as Exact<FullMemberPlanFragment>
 

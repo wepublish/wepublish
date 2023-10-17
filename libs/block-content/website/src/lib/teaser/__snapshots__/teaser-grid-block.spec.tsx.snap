@@ -19,7 +19,7 @@ exports[`Teaser Grid Block should render OneColumn 1`] = `
         >
           <img
             alt="An image description"
-            class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
+            class="css-f4dbqy-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -64,7 +64,7 @@ https://unsplash.it/200/200 200w"
         >
           <img
             alt="An image description"
-            class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
+            class="css-f4dbqy-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -103,7 +103,7 @@ https://unsplash.it/200/200 200w"
         >
           <img
             alt="An image description"
-            class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
+            class="css-f4dbqy-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -151,7 +151,7 @@ exports[`Teaser Grid Block should render ThreeColumns 1`] = `
         >
           <img
             alt="An image description"
-            class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
+            class="css-f4dbqy-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -196,7 +196,7 @@ https://unsplash.it/200/200 200w"
         >
           <img
             alt="An image description"
-            class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
+            class="css-f4dbqy-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -235,7 +235,7 @@ https://unsplash.it/200/200 200w"
         >
           <img
             alt="An image description"
-            class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
+            class="css-f4dbqy-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -283,7 +283,7 @@ exports[`Teaser Grid Block should render WithClassName 1`] = `
         >
           <img
             alt="An image description"
-            class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
+            class="css-f4dbqy-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -328,7 +328,7 @@ https://unsplash.it/200/200 200w"
         >
           <img
             alt="An image description"
-            class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
+            class="css-f4dbqy-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -367,7 +367,7 @@ https://unsplash.it/200/200 200w"
         >
           <img
             alt="An image description"
-            class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
+            class="css-f4dbqy-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -415,7 +415,7 @@ exports[`Teaser Grid Block should render WithEmotion 1`] = `
         >
           <img
             alt="An image description"
-            class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
+            class="css-f4dbqy-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -460,7 +460,7 @@ https://unsplash.it/200/200 200w"
         >
           <img
             alt="An image description"
-            class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
+            class="css-f4dbqy-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -499,7 +499,7 @@ https://unsplash.it/200/200 200w"
         >
           <img
             alt="An image description"
-            class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
+            class="css-f4dbqy-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,

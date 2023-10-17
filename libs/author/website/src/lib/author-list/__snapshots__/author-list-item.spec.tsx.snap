@@ -11,7 +11,7 @@ exports[`AuthorList Item should render Default 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
+        class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -49,7 +49,7 @@ exports[`AuthorList Item should render WithClassName 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
+        class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -87,7 +87,7 @@ exports[`AuthorList Item should render WithEmotion 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
+        class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -152,7 +152,7 @@ exports[`AuthorList Item should render WithoutJobTitle 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
+        class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,

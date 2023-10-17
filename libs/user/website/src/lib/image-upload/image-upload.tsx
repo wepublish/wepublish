@@ -2,7 +2,7 @@ import {css, styled} from '@mui/material'
 import {BuilderImageUploadProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {useId, useRef, forwardRef, useImperativeHandle} from 'react'
 import {MdDelete, MdEdit, MdOutlineUploadFile} from 'react-icons/md'
-import {ReactComponent as PlaceholderImage} from './placeholder.svg'
+import {ImageUploadPlaceholder} from './image-upload-placeholder'
 
 export const ImageUploadWrapper = styled('div')`
   display: grid;
@@ -50,7 +50,7 @@ export const ImageUpload = forwardRef<HTMLInputElement | null, BuilderImageUploa
           {image ? (
             <Image css={avatarStyles} image={image} />
           ) : (
-            <PlaceholderImage css={avatarStyles} />
+            <ImageUploadPlaceholder css={avatarStyles} />
           )}
 
           <input

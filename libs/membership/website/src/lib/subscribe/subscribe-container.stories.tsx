@@ -283,6 +283,14 @@ export const Filled: StoryObj<typeof SubscribeContainer> = {
   }
 }
 
+export const WithFilter: StoryObj<typeof SubscribeContainer> = {
+  ...Default,
+  args: {
+    ...Default.args,
+    filter: memberPlans => memberPlans.filter(memberPLan => memberPlan.id === memberPlan2.id)
+  }
+}
+
 export const WithChallengeError: StoryObj<typeof SubscribeContainer> = {
   args: {},
   parameters: {
