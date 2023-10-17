@@ -1017,7 +1017,9 @@
         "isPublished": "Published",
         "publicationDate": "Publication Date",
         "dates": "Dates",
-        "providers": "Providers"
+        "providers": "Providers",
+        "location": "Location",
+        "name": "Name"
       }
     },
     "userList": {

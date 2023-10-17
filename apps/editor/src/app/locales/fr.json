@@ -564,7 +564,9 @@
         "isPublished": "Publié",
         "publicationDate": "Date de publication",
         "dates": "Dates",
-        "providers": "Fournisseurs"
+        "providers": "Fournisseurs",
+        "location": "Location",
+        "name": "Nom"
       }
     },
     "userList": {

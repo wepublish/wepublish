@@ -75,6 +75,7 @@ enum EventStatus {
 
 input ImportedEventFilter {
   from: String
+  location: String
   name: String
   providers: [String]
   to: String
