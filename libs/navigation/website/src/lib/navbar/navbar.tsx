@@ -1,6 +1,4 @@
-import {Theme, css, styled, useTheme} from '@mui/material'
-import AppBar from '@mui/material/AppBar'
-import Toolbar from '@mui/material/Toolbar'
+import {AppBar, Theme, Toolbar, css, styled, useTheme} from '@mui/material'
 import {FullNavigationFragment} from '@wepublish/website/api'
 import {BuilderNavbarProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {useCallback, useState} from 'react'
@@ -21,7 +19,7 @@ const appBarStyles = (theme: Theme, isMenuOpen: boolean) =>
         background-color: ${theme.palette.primary.main};
         color: ${theme.palette.primary.contrastText};
       `
-    : undefined
+    : null
 
 export const NavbarInnerWrapper = styled(Toolbar)`
   display: grid;

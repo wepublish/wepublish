@@ -19,7 +19,7 @@ exports[`Author should render Default 1`] = `
     </header>
     <img
       alt="DSC07717"
-      class="css-128ccri-ImageWrapper-Author e1shv2yg0"
+      class="css-1f8yvym-ImageWrapper-Author e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -443,7 +443,7 @@ exports[`Author should render WithClassName 1`] = `
     </header>
     <img
       alt="DSC07717"
-      class="css-128ccri-ImageWrapper-Author e1shv2yg0"
+      class="css-1f8yvym-ImageWrapper-Author e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -867,7 +867,7 @@ exports[`Author should render WithCustomAuthorLinks 1`] = `
     </header>
     <img
       alt="DSC07717"
-      class="css-128ccri-ImageWrapper-Author e1shv2yg0"
+      class="css-1f8yvym-ImageWrapper-Author e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1333,7 +1333,7 @@ exports[`Author should render WithEmotion 1`] = `
     </header>
     <img
       alt="DSC07717"
-      class="css-128ccri-ImageWrapper-Author e1shv2yg0"
+      class="css-1f8yvym-ImageWrapper-Author e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1761,7 +1761,7 @@ exports[`Author should render WithoutBio 1`] = `
     </header>
     <img
       alt="DSC07717"
-      class="css-128ccri-ImageWrapper-Author e1shv2yg0"
+      class="css-1f8yvym-ImageWrapper-Author e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -2236,7 +2236,7 @@ exports[`Author should render WithoutJobTitle 1`] = `
     </header>
     <img
       alt="DSC07717"
-      class="css-128ccri-ImageWrapper-Author e1shv2yg0"
+      class="css-1f8yvym-ImageWrapper-Author e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -2660,7 +2660,7 @@ exports[`Author should render WithoutLinks 1`] = `
     </header>
     <img
       alt="DSC07717"
-      class="css-128ccri-ImageWrapper-Author e1shv2yg0"
+      class="css-1f8yvym-ImageWrapper-Author e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,

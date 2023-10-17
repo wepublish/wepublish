@@ -725,70 +725,6 @@ exports[`Subscribe should render LoggedIn 1`] = `
             class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
           >
             <div
-              class="css-146nkty-MemberPlanItemWrapper eofgi43"
-            >
-              <div
-                class="css-1deqsbg-MemberPlanItemContent eofgi42"
-              >
-                <span
-                  class="css-e8tfvl-MemberPlanItemName eofgi41"
-                >
-                  Foobar Memberplan
-                </span>
-                <small
-                  class="css-4q4uht-MemberPlanItemPrice eofgi40"
-                >
-                  Ab CHF 5.- pro Monat
-                </small>
-              </div>
-              <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-              >
-                <input
-                  checked=""
-                  class="PrivateSwitchBase-input css-1m9pwf3"
-                  name="Foobar Memberplan"
-                  type="radio"
-                  value="123"
-                />
-                <span
-                  class="css-hyxlzm"
-                >
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
-                    data-testid="RadioButtonUncheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-                    />
-                  </svg>
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-11zohuh-MuiSvgIcon-root"
-                    data-testid="RadioButtonCheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
-                    />
-                  </svg>
-                </span>
-              </span>
-            </div>
-            <span
-              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-ahj2mt-MuiTypography-root"
-            >
-              Foobar Memberplan
-            </span>
-          </label>
-          <label
-            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
-          >
-            <div
               class="css-19eiwdu-MemberPlanItemWrapper eofgi43"
             >
               <div
@@ -802,7 +738,7 @@ exports[`Subscribe should render LoggedIn 1`] = `
                 <small
                   class="css-4q4uht-MemberPlanItemPrice eofgi40"
                 >
-                  Ab CHF 8.- pro Monat
+                  Ab CHF 5.- pro Monat
                 </small>
               </div>
               <span
@@ -865,7 +801,7 @@ exports[`Subscribe should render LoggedIn 1`] = `
                 <small
                   class="css-4q4uht-MemberPlanItemPrice eofgi40"
                 >
-                  Ab CHF 12.- pro Monat
+                  Ab CHF 8.- pro Monat
                 </small>
               </div>
               <span
@@ -911,10 +847,74 @@ exports[`Subscribe should render LoggedIn 1`] = `
               Foobaz Memberplan
             </span>
           </label>
+          <label
+            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
+          >
+            <div
+              class="css-146nkty-MemberPlanItemWrapper eofgi43"
+            >
+              <div
+                class="css-1deqsbg-MemberPlanItemContent eofgi42"
+              >
+                <span
+                  class="css-e8tfvl-MemberPlanItemName eofgi41"
+                >
+                  Foobar Memberplan
+                </span>
+                <small
+                  class="css-4q4uht-MemberPlanItemPrice eofgi40"
+                >
+                  Ab CHF 12.- pro Monat
+                </small>
+              </div>
+              <span
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
+              >
+                <input
+                  checked=""
+                  class="PrivateSwitchBase-input css-1m9pwf3"
+                  name="Foobar Memberplan"
+                  type="radio"
+                  value="123"
+                />
+                <span
+                  class="css-hyxlzm"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-11zohuh-MuiSvgIcon-root"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
+                </span>
+              </span>
+            </div>
+            <span
+              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-ahj2mt-MuiTypography-root"
+            >
+              Foobar Memberplan
+            </span>
+          </label>
         </div>
         <img
           alt="DSC07717"
-          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
+          class="css-cibo30-ImageWrapper e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1213,7 +1213,7 @@ https://unsplash.it/200/100 200w"
           <span
             class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-ahj2mt-MuiTypography-root"
           >
-            Automatisch Erneuern
+            Automatisch erneuern
           </span>
         </label>
       </div>
@@ -1223,7 +1223,7 @@ https://unsplash.it/200/100 200w"
       tabindex="0"
       type="submit"
     >
-      Monatlich für CHF 5.- Abonieren
+      Monatlich für CHF 12.- Abonieren
       <span
         class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
       />
@@ -1257,70 +1257,6 @@ exports[`Subscribe should render LoggedOut 1`] = `
             class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
           >
             <div
-              class="css-146nkty-MemberPlanItemWrapper eofgi43"
-            >
-              <div
-                class="css-1deqsbg-MemberPlanItemContent eofgi42"
-              >
-                <span
-                  class="css-e8tfvl-MemberPlanItemName eofgi41"
-                >
-                  Foobar Memberplan
-                </span>
-                <small
-                  class="css-4q4uht-MemberPlanItemPrice eofgi40"
-                >
-                  Ab CHF 5.- pro Monat
-                </small>
-              </div>
-              <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-              >
-                <input
-                  checked=""
-                  class="PrivateSwitchBase-input css-1m9pwf3"
-                  name="Foobar Memberplan"
-                  type="radio"
-                  value="123"
-                />
-                <span
-                  class="css-hyxlzm"
-                >
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
-                    data-testid="RadioButtonUncheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-                    />
-                  </svg>
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-11zohuh-MuiSvgIcon-root"
-                    data-testid="RadioButtonCheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
-                    />
-                  </svg>
-                </span>
-              </span>
-            </div>
-            <span
-              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-ahj2mt-MuiTypography-root"
-            >
-              Foobar Memberplan
-            </span>
-          </label>
-          <label
-            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
-          >
-            <div
               class="css-19eiwdu-MemberPlanItemWrapper eofgi43"
             >
               <div
@@ -1334,7 +1270,7 @@ exports[`Subscribe should render LoggedOut 1`] = `
                 <small
                   class="css-4q4uht-MemberPlanItemPrice eofgi40"
                 >
-                  Ab CHF 8.- pro Monat
+                  Ab CHF 5.- pro Monat
                 </small>
               </div>
               <span
@@ -1397,7 +1333,7 @@ exports[`Subscribe should render LoggedOut 1`] = `
                 <small
                   class="css-4q4uht-MemberPlanItemPrice eofgi40"
                 >
-                  Ab CHF 12.- pro Monat
+                  Ab CHF 8.- pro Monat
                 </small>
               </div>
               <span
@@ -1443,10 +1379,74 @@ exports[`Subscribe should render LoggedOut 1`] = `
               Foobaz Memberplan
             </span>
           </label>
+          <label
+            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
+          >
+            <div
+              class="css-146nkty-MemberPlanItemWrapper eofgi43"
+            >
+              <div
+                class="css-1deqsbg-MemberPlanItemContent eofgi42"
+              >
+                <span
+                  class="css-e8tfvl-MemberPlanItemName eofgi41"
+                >
+                  Foobar Memberplan
+                </span>
+                <small
+                  class="css-4q4uht-MemberPlanItemPrice eofgi40"
+                >
+                  Ab CHF 12.- pro Monat
+                </small>
+              </div>
+              <span
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
+              >
+                <input
+                  checked=""
+                  class="PrivateSwitchBase-input css-1m9pwf3"
+                  name="Foobar Memberplan"
+                  type="radio"
+                  value="123"
+                />
+                <span
+                  class="css-hyxlzm"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-11zohuh-MuiSvgIcon-root"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
+                </span>
+              </span>
+            </div>
+            <span
+              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-ahj2mt-MuiTypography-root"
+            >
+              Foobar Memberplan
+            </span>
+          </label>
         </div>
         <img
           alt="DSC07717"
-          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
+          class="css-cibo30-ImageWrapper e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -2083,7 +2083,7 @@ https://unsplash.it/200/100 200w"
           <span
             class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-ahj2mt-MuiTypography-root"
           >
-            Automatisch Erneuern
+            Automatisch erneuern
           </span>
         </label>
       </div>
@@ -2201,7 +2201,7 @@ https://unsplash.it/200/100 200w"
       tabindex="0"
       type="submit"
     >
-      Monatlich für CHF 5.- Abonieren
+      Monatlich für CHF 12.- Abonieren
       <span
         class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
       />
@@ -2235,70 +2235,6 @@ exports[`Subscribe should render OnlyAddress 1`] = `
             class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
           >
             <div
-              class="css-146nkty-MemberPlanItemWrapper eofgi43"
-            >
-              <div
-                class="css-1deqsbg-MemberPlanItemContent eofgi42"
-              >
-                <span
-                  class="css-e8tfvl-MemberPlanItemName eofgi41"
-                >
-                  Foobar Memberplan
-                </span>
-                <small
-                  class="css-4q4uht-MemberPlanItemPrice eofgi40"
-                >
-                  Ab CHF 5.- pro Monat
-                </small>
-              </div>
-              <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-              >
-                <input
-                  checked=""
-                  class="PrivateSwitchBase-input css-1m9pwf3"
-                  name="Foobar Memberplan"
-                  type="radio"
-                  value="123"
-                />
-                <span
-                  class="css-hyxlzm"
-                >
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
-                    data-testid="RadioButtonUncheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-                    />
-                  </svg>
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-11zohuh-MuiSvgIcon-root"
-                    data-testid="RadioButtonCheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
-                    />
-                  </svg>
-                </span>
-              </span>
-            </div>
-            <span
-              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-ahj2mt-MuiTypography-root"
-            >
-              Foobar Memberplan
-            </span>
-          </label>
-          <label
-            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
-          >
-            <div
               class="css-19eiwdu-MemberPlanItemWrapper eofgi43"
             >
               <div
@@ -2312,7 +2248,7 @@ exports[`Subscribe should render OnlyAddress 1`] = `
                 <small
                   class="css-4q4uht-MemberPlanItemPrice eofgi40"
                 >
-                  Ab CHF 8.- pro Monat
+                  Ab CHF 5.- pro Monat
                 </small>
               </div>
               <span
@@ -2375,7 +2311,7 @@ exports[`Subscribe should render OnlyAddress 1`] = `
                 <small
                   class="css-4q4uht-MemberPlanItemPrice eofgi40"
                 >
-                  Ab CHF 12.- pro Monat
+                  Ab CHF 8.- pro Monat
                 </small>
               </div>
               <span
@@ -2421,10 +2357,74 @@ exports[`Subscribe should render OnlyAddress 1`] = `
               Foobaz Memberplan
             </span>
           </label>
+          <label
+            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
+          >
+            <div
+              class="css-146nkty-MemberPlanItemWrapper eofgi43"
+            >
+              <div
+                class="css-1deqsbg-MemberPlanItemContent eofgi42"
+              >
+                <span
+                  class="css-e8tfvl-MemberPlanItemName eofgi41"
+                >
+                  Foobar Memberplan
+                </span>
+                <small
+                  class="css-4q4uht-MemberPlanItemPrice eofgi40"
+                >
+                  Ab CHF 12.- pro Monat
+                </small>
+              </div>
+              <span
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
+              >
+                <input
+                  checked=""
+                  class="PrivateSwitchBase-input css-1m9pwf3"
+                  name="Foobar Memberplan"
+                  type="radio"
+                  value="123"
+                />
+                <span
+                  class="css-hyxlzm"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-11zohuh-MuiSvgIcon-root"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
+                </span>
+              </span>
+            </div>
+            <span
+              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-ahj2mt-MuiTypography-root"
+            >
+              Foobar Memberplan
+            </span>
+          </label>
         </div>
         <img
           alt="DSC07717"
-          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
+          class="css-cibo30-ImageWrapper e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -2957,7 +2957,7 @@ https://unsplash.it/200/100 200w"
           <span
             class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-ahj2mt-MuiTypography-root"
           >
-            Automatisch Erneuern
+            Automatisch erneuern
           </span>
         </label>
       </div>
@@ -3075,7 +3075,7 @@ https://unsplash.it/200/100 200w"
       tabindex="0"
       type="submit"
     >
-      Monatlich für CHF 5.- Abonieren
+      Monatlich für CHF 12.- Abonieren
       <span
         class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
       />
@@ -3656,70 +3656,6 @@ exports[`Subscribe should render OnlyFirstName 1`] = `
             class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
           >
             <div
-              class="css-146nkty-MemberPlanItemWrapper eofgi43"
-            >
-              <div
-                class="css-1deqsbg-MemberPlanItemContent eofgi42"
-              >
-                <span
-                  class="css-e8tfvl-MemberPlanItemName eofgi41"
-                >
-                  Foobar Memberplan
-                </span>
-                <small
-                  class="css-4q4uht-MemberPlanItemPrice eofgi40"
-                >
-                  Ab CHF 5.- pro Monat
-                </small>
-              </div>
-              <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-              >
-                <input
-                  checked=""
-                  class="PrivateSwitchBase-input css-1m9pwf3"
-                  name="Foobar Memberplan"
-                  type="radio"
-                  value="123"
-                />
-                <span
-                  class="css-hyxlzm"
-                >
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
-                    data-testid="RadioButtonUncheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-                    />
-                  </svg>
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-11zohuh-MuiSvgIcon-root"
-                    data-testid="RadioButtonCheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
-                    />
-                  </svg>
-                </span>
-              </span>
-            </div>
-            <span
-              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-ahj2mt-MuiTypography-root"
-            >
-              Foobar Memberplan
-            </span>
-          </label>
-          <label
-            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
-          >
-            <div
               class="css-19eiwdu-MemberPlanItemWrapper eofgi43"
             >
               <div
@@ -3733,7 +3669,7 @@ exports[`Subscribe should render OnlyFirstName 1`] = `
                 <small
                   class="css-4q4uht-MemberPlanItemPrice eofgi40"
                 >
-                  Ab CHF 8.- pro Monat
+                  Ab CHF 5.- pro Monat
                 </small>
               </div>
               <span
@@ -3796,7 +3732,7 @@ exports[`Subscribe should render OnlyFirstName 1`] = `
                 <small
                   class="css-4q4uht-MemberPlanItemPrice eofgi40"
                 >
-                  Ab CHF 12.- pro Monat
+                  Ab CHF 8.- pro Monat
                 </small>
               </div>
               <span
@@ -3842,10 +3778,74 @@ exports[`Subscribe should render OnlyFirstName 1`] = `
               Foobaz Memberplan
             </span>
           </label>
+          <label
+            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
+          >
+            <div
+              class="css-146nkty-MemberPlanItemWrapper eofgi43"
+            >
+              <div
+                class="css-1deqsbg-MemberPlanItemContent eofgi42"
+              >
+                <span
+                  class="css-e8tfvl-MemberPlanItemName eofgi41"
+                >
+                  Foobar Memberplan
+                </span>
+                <small
+                  class="css-4q4uht-MemberPlanItemPrice eofgi40"
+                >
+                  Ab CHF 12.- pro Monat
+                </small>
+              </div>
+              <span
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
+              >
+                <input
+                  checked=""
+                  class="PrivateSwitchBase-input css-1m9pwf3"
+                  name="Foobar Memberplan"
+                  type="radio"
+                  value="123"
+                />
+                <span
+                  class="css-hyxlzm"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-11zohuh-MuiSvgIcon-root"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
+                </span>
+              </span>
+            </div>
+            <span
+              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-ahj2mt-MuiTypography-root"
+            >
+              Foobar Memberplan
+            </span>
+          </label>
         </div>
         <img
           alt="DSC07717"
-          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
+          class="css-cibo30-ImageWrapper e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -4263,7 +4263,7 @@ https://unsplash.it/200/100 200w"
           <span
             class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-ahj2mt-MuiTypography-root"
           >
-            Automatisch Erneuern
+            Automatisch erneuern
           </span>
         </label>
       </div>
@@ -4381,7 +4381,7 @@ https://unsplash.it/200/100 200w"
       tabindex="0"
       type="submit"
     >
-      Monatlich für CHF 5.- Abonieren
+      Monatlich für CHF 12.- Abonieren
       <span
         class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
       />
@@ -4737,70 +4737,6 @@ exports[`Subscribe should render OnlyPassword 1`] = `
             class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
           >
             <div
-              class="css-146nkty-MemberPlanItemWrapper eofgi43"
-            >
-              <div
-                class="css-1deqsbg-MemberPlanItemContent eofgi42"
-              >
-                <span
-                  class="css-e8tfvl-MemberPlanItemName eofgi41"
-                >
-                  Foobar Memberplan
-                </span>
-                <small
-                  class="css-4q4uht-MemberPlanItemPrice eofgi40"
-                >
-                  Ab CHF 5.- pro Monat
-                </small>
-              </div>
-              <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-              >
-                <input
-                  checked=""
-                  class="PrivateSwitchBase-input css-1m9pwf3"
-                  name="Foobar Memberplan"
-                  type="radio"
-                  value="123"
-                />
-                <span
-                  class="css-hyxlzm"
-                >
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
-                    data-testid="RadioButtonUncheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-                    />
-                  </svg>
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-11zohuh-MuiSvgIcon-root"
-                    data-testid="RadioButtonCheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
-                    />
-                  </svg>
-                </span>
-              </span>
-            </div>
-            <span
-              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-ahj2mt-MuiTypography-root"
-            >
-              Foobar Memberplan
-            </span>
-          </label>
-          <label
-            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
-          >
-            <div
               class="css-19eiwdu-MemberPlanItemWrapper eofgi43"
             >
               <div
@@ -4814,7 +4750,7 @@ exports[`Subscribe should render OnlyPassword 1`] = `
                 <small
                   class="css-4q4uht-MemberPlanItemPrice eofgi40"
                 >
-                  Ab CHF 8.- pro Monat
+                  Ab CHF 5.- pro Monat
                 </small>
               </div>
               <span
@@ -4877,7 +4813,7 @@ exports[`Subscribe should render OnlyPassword 1`] = `
                 <small
                   class="css-4q4uht-MemberPlanItemPrice eofgi40"
                 >
-                  Ab CHF 12.- pro Monat
+                  Ab CHF 8.- pro Monat
                 </small>
               </div>
               <span
@@ -4923,10 +4859,74 @@ exports[`Subscribe should render OnlyPassword 1`] = `
               Foobaz Memberplan
             </span>
           </label>
+          <label
+            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
+          >
+            <div
+              class="css-146nkty-MemberPlanItemWrapper eofgi43"
+            >
+              <div
+                class="css-1deqsbg-MemberPlanItemContent eofgi42"
+              >
+                <span
+                  class="css-e8tfvl-MemberPlanItemName eofgi41"
+                >
+                  Foobar Memberplan
+                </span>
+                <small
+                  class="css-4q4uht-MemberPlanItemPrice eofgi40"
+                >
+                  Ab CHF 12.- pro Monat
+                </small>
+              </div>
+              <span
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
+              >
+                <input
+                  checked=""
+                  class="PrivateSwitchBase-input css-1m9pwf3"
+                  name="Foobar Memberplan"
+                  type="radio"
+                  value="123"
+                />
+                <span
+                  class="css-hyxlzm"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-11zohuh-MuiSvgIcon-root"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
+                </span>
+              </span>
+            </div>
+            <span
+              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-ahj2mt-MuiTypography-root"
+            >
+              Foobar Memberplan
+            </span>
+          </label>
         </div>
         <img
           alt="DSC07717"
-          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
+          class="css-cibo30-ImageWrapper e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -5374,7 +5374,7 @@ https://unsplash.it/200/100 200w"
           <span
             class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-ahj2mt-MuiTypography-root"
           >
-            Automatisch Erneuern
+            Automatisch erneuern
           </span>
         </label>
       </div>
@@ -5492,7 +5492,7 @@ https://unsplash.it/200/100 200w"
       tabindex="0"
       type="submit"
     >
-      Monatlich für CHF 5.- Abonieren
+      Monatlich für CHF 12.- Abonieren
       <span
         class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
       />
@@ -5853,70 +5853,6 @@ exports[`Subscribe should render OnlyPreferredName 1`] = `
             class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
           >
             <div
-              class="css-146nkty-MemberPlanItemWrapper eofgi43"
-            >
-              <div
-                class="css-1deqsbg-MemberPlanItemContent eofgi42"
-              >
-                <span
-                  class="css-e8tfvl-MemberPlanItemName eofgi41"
-                >
-                  Foobar Memberplan
-                </span>
-                <small
-                  class="css-4q4uht-MemberPlanItemPrice eofgi40"
-                >
-                  Ab CHF 5.- pro Monat
-                </small>
-              </div>
-              <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-              >
-                <input
-                  checked=""
-                  class="PrivateSwitchBase-input css-1m9pwf3"
-                  name="Foobar Memberplan"
-                  type="radio"
-                  value="123"
-                />
-                <span
-                  class="css-hyxlzm"
-                >
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
-                    data-testid="RadioButtonUncheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-                    />
-                  </svg>
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-11zohuh-MuiSvgIcon-root"
-                    data-testid="RadioButtonCheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
-                    />
-                  </svg>
-                </span>
-              </span>
-            </div>
-            <span
-              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-ahj2mt-MuiTypography-root"
-            >
-              Foobar Memberplan
-            </span>
-          </label>
-          <label
-            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
-          >
-            <div
               class="css-19eiwdu-MemberPlanItemWrapper eofgi43"
             >
               <div
@@ -5930,7 +5866,7 @@ exports[`Subscribe should render OnlyPreferredName 1`] = `
                 <small
                   class="css-4q4uht-MemberPlanItemPrice eofgi40"
                 >
-                  Ab CHF 8.- pro Monat
+                  Ab CHF 5.- pro Monat
                 </small>
               </div>
               <span
@@ -5993,7 +5929,7 @@ exports[`Subscribe should render OnlyPreferredName 1`] = `
                 <small
                   class="css-4q4uht-MemberPlanItemPrice eofgi40"
                 >
-                  Ab CHF 12.- pro Monat
+                  Ab CHF 8.- pro Monat
                 </small>
               </div>
               <span
@@ -6039,10 +5975,74 @@ exports[`Subscribe should render OnlyPreferredName 1`] = `
               Foobaz Memberplan
             </span>
           </label>
+          <label
+            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
+          >
+            <div
+              class="css-146nkty-MemberPlanItemWrapper eofgi43"
+            >
+              <div
+                class="css-1deqsbg-MemberPlanItemContent eofgi42"
+              >
+                <span
+                  class="css-e8tfvl-MemberPlanItemName eofgi41"
+                >
+                  Foobar Memberplan
+                </span>
+                <small
+                  class="css-4q4uht-MemberPlanItemPrice eofgi40"
+                >
+                  Ab CHF 12.- pro Monat
+                </small>
+              </div>
+              <span
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
+              >
+                <input
+                  checked=""
+                  class="PrivateSwitchBase-input css-1m9pwf3"
+                  name="Foobar Memberplan"
+                  type="radio"
+                  value="123"
+                />
+                <span
+                  class="css-hyxlzm"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-11zohuh-MuiSvgIcon-root"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
+                </span>
+              </span>
+            </div>
+            <span
+              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-ahj2mt-MuiTypography-root"
+            >
+              Foobar Memberplan
+            </span>
+          </label>
         </div>
         <img
           alt="DSC07717"
-          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
+          class="css-cibo30-ImageWrapper e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -6459,7 +6459,7 @@ https://unsplash.it/200/100 200w"
           <span
             class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-ahj2mt-MuiTypography-root"
           >
-            Automatisch Erneuern
+            Automatisch erneuern
           </span>
         </label>
       </div>
@@ -6577,7 +6577,7 @@ https://unsplash.it/200/100 200w"
       tabindex="0"
       type="submit"
     >
-      Monatlich für CHF 5.- Abonieren
+      Monatlich für CHF 12.- Abonieren
       <span
         class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
       />
@@ -6895,70 +6895,6 @@ exports[`Subscribe should render OnlyRequired 1`] = `
             class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
           >
             <div
-              class="css-146nkty-MemberPlanItemWrapper eofgi43"
-            >
-              <div
-                class="css-1deqsbg-MemberPlanItemContent eofgi42"
-              >
-                <span
-                  class="css-e8tfvl-MemberPlanItemName eofgi41"
-                >
-                  Foobar Memberplan
-                </span>
-                <small
-                  class="css-4q4uht-MemberPlanItemPrice eofgi40"
-                >
-                  Ab CHF 5.- pro Monat
-                </small>
-              </div>
-              <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-              >
-                <input
-                  checked=""
-                  class="PrivateSwitchBase-input css-1m9pwf3"
-                  name="Foobar Memberplan"
-                  type="radio"
-                  value="123"
-                />
-                <span
-                  class="css-hyxlzm"
-                >
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
-                    data-testid="RadioButtonUncheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-                    />
-                  </svg>
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-11zohuh-MuiSvgIcon-root"
-                    data-testid="RadioButtonCheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
-                    />
-                  </svg>
-                </span>
-              </span>
-            </div>
-            <span
-              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-ahj2mt-MuiTypography-root"
-            >
-              Foobar Memberplan
-            </span>
-          </label>
-          <label
-            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
-          >
-            <div
               class="css-19eiwdu-MemberPlanItemWrapper eofgi43"
             >
               <div
@@ -6972,7 +6908,7 @@ exports[`Subscribe should render OnlyRequired 1`] = `
                 <small
                   class="css-4q4uht-MemberPlanItemPrice eofgi40"
                 >
-                  Ab CHF 8.- pro Monat
+                  Ab CHF 5.- pro Monat
                 </small>
               </div>
               <span
@@ -7035,7 +6971,7 @@ exports[`Subscribe should render OnlyRequired 1`] = `
                 <small
                   class="css-4q4uht-MemberPlanItemPrice eofgi40"
                 >
-                  Ab CHF 12.- pro Monat
+                  Ab CHF 8.- pro Monat
                 </small>
               </div>
               <span
@@ -7081,10 +7017,74 @@ exports[`Subscribe should render OnlyRequired 1`] = `
               Foobaz Memberplan
             </span>
           </label>
+          <label
+            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
+          >
+            <div
+              class="css-146nkty-MemberPlanItemWrapper eofgi43"
+            >
+              <div
+                class="css-1deqsbg-MemberPlanItemContent eofgi42"
+              >
+                <span
+                  class="css-e8tfvl-MemberPlanItemName eofgi41"
+                >
+                  Foobar Memberplan
+                </span>
+                <small
+                  class="css-4q4uht-MemberPlanItemPrice eofgi40"
+                >
+                  Ab CHF 12.- pro Monat
+                </small>
+              </div>
+              <span
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
+              >
+                <input
+                  checked=""
+                  class="PrivateSwitchBase-input css-1m9pwf3"
+                  name="Foobar Memberplan"
+                  type="radio"
+                  value="123"
+                />
+                <span
+                  class="css-hyxlzm"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-11zohuh-MuiSvgIcon-root"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
+                </span>
+              </span>
+            </div>
+            <span
+              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-ahj2mt-MuiTypography-root"
+            >
+              Foobar Memberplan
+            </span>
+          </label>
         </div>
         <img
           alt="DSC07717"
-          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
+          class="css-cibo30-ImageWrapper e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -7465,7 +7465,7 @@ https://unsplash.it/200/100 200w"
           <span
             class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-ahj2mt-MuiTypography-root"
           >
-            Automatisch Erneuern
+            Automatisch erneuern
           </span>
         </label>
       </div>
@@ -7583,7 +7583,7 @@ https://unsplash.it/200/100 200w"
       tabindex="0"
       type="submit"
     >
-      Monatlich für CHF 5.- Abonieren
+      Monatlich für CHF 12.- Abonieren
       <span
         class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
       />
@@ -7845,46 +7845,7 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
 - First value
 + Second value
 
-@@ -20,11 +20,11 @@
-          >
-            <label
-              class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
-            >
-              <div
--               class="css-146nkty-MemberPlanItemWrapper eofgi43"
-+               class="css-19eiwdu-MemberPlanItemWrapper eofgi43"
-              >
-                <div
-                  class="css-1deqsbg-MemberPlanItemContent eofgi42"
-                >
-                  <span
-@@ -37,11 +37,11 @@
-                  >
-                    Ab CHF 5.- pro Monat
-                  </small>
-                </div>
-                <span
--                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-+                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-                >
-                  <input
-                    checked=""
-                    class="PrivateSwitchBase-input css-1m9pwf3"
-                    name="Foobar Memberplan"
-@@ -62,11 +62,11 @@
-                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-                      />
-                    </svg>
-                    <svg
-                      aria-hidden="true"
--                     class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-11zohuh-MuiSvgIcon-root"
-+                     class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hhw7if-MuiSvgIcon-root"
-                      data-testid="RadioButtonCheckedIcon"
-                      focusable="false"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-@@ -147,11 +147,11 @@
+@@ -83,11 +83,11 @@
             </label>
             <label
               class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
@@ -7897,9 +7858,9 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
                   class="css-1deqsbg-MemberPlanItemContent eofgi42"
                 >
                   <span
-@@ -164,11 +164,11 @@
+@@ -100,11 +100,11 @@
                   >
-                    Ab CHF 12.- pro Monat
+                    Ab CHF 8.- pro Monat
                   </small>
                 </div>
                 <span
@@ -7910,7 +7871,7 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
                     class="PrivateSwitchBase-input css-1m9pwf3"
                     name="Foobaz Memberplan"
                     type="radio"
-@@ -188,11 +188,11 @@
+@@ -124,11 +124,11 @@
                         d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
                       />
                     </svg>
@@ -7918,6 +7879,45 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
                       aria-hidden="true"
 -                     class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hhw7if-MuiSvgIcon-root"
 +                     class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-11zohuh-MuiSvgIcon-root"
+                      data-testid="RadioButtonCheckedIcon"
+                      focusable="false"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+@@ -146,11 +146,11 @@
+            </label>
+            <label
+              class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
+            >
+              <div
+-               class="css-146nkty-MemberPlanItemWrapper eofgi43"
++               class="css-19eiwdu-MemberPlanItemWrapper eofgi43"
+              >
+                <div
+                  class="css-1deqsbg-MemberPlanItemContent eofgi42"
+                >
+                  <span
+@@ -163,11 +163,11 @@
+                  >
+                    Ab CHF 12.- pro Monat
+                  </small>
+                </div>
+                <span
+-                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
++                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
+                >
+                  <input
+                    checked=""
+                    class="PrivateSwitchBase-input css-1m9pwf3"
+                    name="Foobar Memberplan"
+@@ -188,11 +188,11 @@
+                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                      />
+                    </svg>
+                    <svg
+                      aria-hidden="true"
+-                     class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-11zohuh-MuiSvgIcon-root"
++                     class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hhw7if-MuiSvgIcon-root"
                       data-testid="RadioButtonCheckedIcon"
                       focusable="false"
                       viewBox="0 0 24 24"
@@ -8072,8 +8072,8 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
         tabindex="0"
         type="submit"
       >
--       Monatlich für CHF 5.- Abonieren
-+       Monatlich für CHF 12.- Abonieren
+-       Monatlich für CHF 12.- Abonieren
++       Monatlich für CHF 8.- Abonieren
         <span
           class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
         />
@@ -8191,7 +8191,7 @@ exports[`Subscribe should render ResetPaymentOptionsOnPaymentMethodChange 1`] = 
 -             class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-ahj2mt-MuiTypography-root"
 +             class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label Mui-disabled css-ahj2mt-MuiTypography-root"
             >
-              Automatisch Erneuern
+              Automatisch erneuern
             </span>
           </label>
         </div>"
@@ -8222,70 +8222,6 @@ exports[`Subscribe should render WithChallengeError 1`] = `
             class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
           >
             <div
-              class="css-146nkty-MemberPlanItemWrapper eofgi43"
-            >
-              <div
-                class="css-1deqsbg-MemberPlanItemContent eofgi42"
-              >
-                <span
-                  class="css-e8tfvl-MemberPlanItemName eofgi41"
-                >
-                  Foobar Memberplan
-                </span>
-                <small
-                  class="css-4q4uht-MemberPlanItemPrice eofgi40"
-                >
-                  Ab CHF 5.- pro Monat
-                </small>
-              </div>
-              <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-              >
-                <input
-                  checked=""
-                  class="PrivateSwitchBase-input css-1m9pwf3"
-                  name="Foobar Memberplan"
-                  type="radio"
-                  value="123"
-                />
-                <span
-                  class="css-hyxlzm"
-                >
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
-                    data-testid="RadioButtonUncheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-                    />
-                  </svg>
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-11zohuh-MuiSvgIcon-root"
-                    data-testid="RadioButtonCheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
-                    />
-                  </svg>
-                </span>
-              </span>
-            </div>
-            <span
-              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-ahj2mt-MuiTypography-root"
-            >
-              Foobar Memberplan
-            </span>
-          </label>
-          <label
-            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
-          >
-            <div
               class="css-19eiwdu-MemberPlanItemWrapper eofgi43"
             >
               <div
@@ -8299,7 +8235,7 @@ exports[`Subscribe should render WithChallengeError 1`] = `
                 <small
                   class="css-4q4uht-MemberPlanItemPrice eofgi40"
                 >
-                  Ab CHF 8.- pro Monat
+                  Ab CHF 5.- pro Monat
                 </small>
               </div>
               <span
@@ -8362,7 +8298,7 @@ exports[`Subscribe should render WithChallengeError 1`] = `
                 <small
                   class="css-4q4uht-MemberPlanItemPrice eofgi40"
                 >
-                  Ab CHF 12.- pro Monat
+                  Ab CHF 8.- pro Monat
                 </small>
               </div>
               <span
@@ -8408,10 +8344,74 @@ exports[`Subscribe should render WithChallengeError 1`] = `
               Foobaz Memberplan
             </span>
           </label>
+          <label
+            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
+          >
+            <div
+              class="css-146nkty-MemberPlanItemWrapper eofgi43"
+            >
+              <div
+                class="css-1deqsbg-MemberPlanItemContent eofgi42"
+              >
+                <span
+                  class="css-e8tfvl-MemberPlanItemName eofgi41"
+                >
+                  Foobar Memberplan
+                </span>
+                <small
+                  class="css-4q4uht-MemberPlanItemPrice eofgi40"
+                >
+                  Ab CHF 12.- pro Monat
+                </small>
+              </div>
+              <span
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
+              >
+                <input
+                  checked=""
+                  class="PrivateSwitchBase-input css-1m9pwf3"
+                  name="Foobar Memberplan"
+                  type="radio"
+                  value="123"
+                />
+                <span
+                  class="css-hyxlzm"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-11zohuh-MuiSvgIcon-root"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
+                </span>
+              </span>
+            </div>
+            <span
+              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-ahj2mt-MuiTypography-root"
+            >
+              Foobar Memberplan
+            </span>
+          </label>
         </div>
         <img
           alt="DSC07717"
-          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
+          class="css-cibo30-ImageWrapper e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -9048,7 +9048,7 @@ https://unsplash.it/200/100 200w"
           <span
             class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-ahj2mt-MuiTypography-root"
           >
-            Automatisch Erneuern
+            Automatisch erneuern
           </span>
         </label>
       </div>
@@ -9092,7 +9092,7 @@ https://unsplash.it/200/100 200w"
       tabindex="0"
       type="submit"
     >
-      Monatlich für CHF 5.- Abonieren
+      Monatlich für CHF 12.- Abonieren
       <span
         class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
       />
@@ -9126,70 +9126,6 @@ exports[`Subscribe should render WithChallengeLoading 1`] = `
             class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
           >
             <div
-              class="css-146nkty-MemberPlanItemWrapper eofgi43"
-            >
-              <div
-                class="css-1deqsbg-MemberPlanItemContent eofgi42"
-              >
-                <span
-                  class="css-e8tfvl-MemberPlanItemName eofgi41"
-                >
-                  Foobar Memberplan
-                </span>
-                <small
-                  class="css-4q4uht-MemberPlanItemPrice eofgi40"
-                >
-                  Ab CHF 5.- pro Monat
-                </small>
-              </div>
-              <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-              >
-                <input
-                  checked=""
-                  class="PrivateSwitchBase-input css-1m9pwf3"
-                  name="Foobar Memberplan"
-                  type="radio"
-                  value="123"
-                />
-                <span
-                  class="css-hyxlzm"
-                >
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
-                    data-testid="RadioButtonUncheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-                    />
-                  </svg>
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-11zohuh-MuiSvgIcon-root"
-                    data-testid="RadioButtonCheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
-                    />
-                  </svg>
-                </span>
-              </span>
-            </div>
-            <span
-              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-ahj2mt-MuiTypography-root"
-            >
-              Foobar Memberplan
-            </span>
-          </label>
-          <label
-            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
-          >
-            <div
               class="css-19eiwdu-MemberPlanItemWrapper eofgi43"
             >
               <div
@@ -9203,7 +9139,7 @@ exports[`Subscribe should render WithChallengeLoading 1`] = `
                 <small
                   class="css-4q4uht-MemberPlanItemPrice eofgi40"
                 >
-                  Ab CHF 8.- pro Monat
+                  Ab CHF 5.- pro Monat
                 </small>
               </div>
               <span
@@ -9266,7 +9202,7 @@ exports[`Subscribe should render WithChallengeLoading 1`] = `
                 <small
                   class="css-4q4uht-MemberPlanItemPrice eofgi40"
                 >
-                  Ab CHF 12.- pro Monat
+                  Ab CHF 8.- pro Monat
                 </small>
               </div>
               <span
@@ -9312,10 +9248,74 @@ exports[`Subscribe should render WithChallengeLoading 1`] = `
               Foobaz Memberplan
             </span>
           </label>
+          <label
+            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
+          >
+            <div
+              class="css-146nkty-MemberPlanItemWrapper eofgi43"
+            >
+              <div
+                class="css-1deqsbg-MemberPlanItemContent eofgi42"
+              >
+                <span
+                  class="css-e8tfvl-MemberPlanItemName eofgi41"
+                >
+                  Foobar Memberplan
+                </span>
+                <small
+                  class="css-4q4uht-MemberPlanItemPrice eofgi40"
+                >
+                  Ab CHF 12.- pro Monat
+                </small>
+              </div>
+              <span
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
+              >
+                <input
+                  checked=""
+                  class="PrivateSwitchBase-input css-1m9pwf3"
+                  name="Foobar Memberplan"
+                  type="radio"
+                  value="123"
+                />
+                <span
+                  class="css-hyxlzm"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-11zohuh-MuiSvgIcon-root"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
+                </span>
+              </span>
+            </div>
+            <span
+              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-ahj2mt-MuiTypography-root"
+            >
+              Foobar Memberplan
+            </span>
+          </label>
         </div>
         <img
           alt="DSC07717"
-          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
+          class="css-cibo30-ImageWrapper e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -9952,7 +9952,7 @@ https://unsplash.it/200/100 200w"
           <span
             class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-ahj2mt-MuiTypography-root"
           >
-            Automatisch Erneuern
+            Automatisch erneuern
           </span>
         </label>
       </div>
@@ -9972,7 +9972,7 @@ https://unsplash.it/200/100 200w"
       tabindex="-1"
       type="submit"
     >
-      Monatlich für CHF 5.- Abonieren
+      Monatlich für CHF 12.- Abonieren
     </button>
   </form>
 </DocumentFragment>
@@ -10003,70 +10003,6 @@ exports[`Subscribe should render WithClassName 1`] = `
             class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
           >
             <div
-              class="css-146nkty-MemberPlanItemWrapper eofgi43"
-            >
-              <div
-                class="css-1deqsbg-MemberPlanItemContent eofgi42"
-              >
-                <span
-                  class="css-e8tfvl-MemberPlanItemName eofgi41"
-                >
-                  Foobar Memberplan
-                </span>
-                <small
-                  class="css-4q4uht-MemberPlanItemPrice eofgi40"
-                >
-                  Ab CHF 5.- pro Monat
-                </small>
-              </div>
-              <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-              >
-                <input
-                  checked=""
-                  class="PrivateSwitchBase-input css-1m9pwf3"
-                  name="Foobar Memberplan"
-                  type="radio"
-                  value="123"
-                />
-                <span
-                  class="css-hyxlzm"
-                >
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
-                    data-testid="RadioButtonUncheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-                    />
-                  </svg>
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-11zohuh-MuiSvgIcon-root"
-                    data-testid="RadioButtonCheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
-                    />
-                  </svg>
-                </span>
-              </span>
-            </div>
-            <span
-              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-ahj2mt-MuiTypography-root"
-            >
-              Foobar Memberplan
-            </span>
-          </label>
-          <label
-            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
-          >
-            <div
               class="css-19eiwdu-MemberPlanItemWrapper eofgi43"
             >
               <div
@@ -10080,7 +10016,7 @@ exports[`Subscribe should render WithClassName 1`] = `
                 <small
                   class="css-4q4uht-MemberPlanItemPrice eofgi40"
                 >
-                  Ab CHF 8.- pro Monat
+                  Ab CHF 5.- pro Monat
                 </small>
               </div>
               <span
@@ -10143,7 +10079,7 @@ exports[`Subscribe should render WithClassName 1`] = `
                 <small
                   class="css-4q4uht-MemberPlanItemPrice eofgi40"
                 >
-                  Ab CHF 12.- pro Monat
+                  Ab CHF 8.- pro Monat
                 </small>
               </div>
               <span
@@ -10189,10 +10125,74 @@ exports[`Subscribe should render WithClassName 1`] = `
               Foobaz Memberplan
             </span>
           </label>
+          <label
+            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
+          >
+            <div
+              class="css-146nkty-MemberPlanItemWrapper eofgi43"
+            >
+              <div
+                class="css-1deqsbg-MemberPlanItemContent eofgi42"
+              >
+                <span
+                  class="css-e8tfvl-MemberPlanItemName eofgi41"
+                >
+                  Foobar Memberplan
+                </span>
+                <small
+                  class="css-4q4uht-MemberPlanItemPrice eofgi40"
+                >
+                  Ab CHF 12.- pro Monat
+                </small>
+              </div>
+              <span
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
+              >
+                <input
+                  checked=""
+                  class="PrivateSwitchBase-input css-1m9pwf3"
+                  name="Foobar Memberplan"
+                  type="radio"
+                  value="123"
+                />
+                <span
+                  class="css-hyxlzm"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-11zohuh-MuiSvgIcon-root"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
+                </span>
+              </span>
+            </div>
+            <span
+              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-ahj2mt-MuiTypography-root"
+            >
+              Foobar Memberplan
+            </span>
+          </label>
         </div>
         <img
           alt="DSC07717"
-          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
+          class="css-cibo30-ImageWrapper e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -10829,7 +10829,7 @@ https://unsplash.it/200/100 200w"
           <span
             class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-ahj2mt-MuiTypography-root"
           >
-            Automatisch Erneuern
+            Automatisch erneuern
           </span>
         </label>
       </div>
@@ -10947,7 +10947,7 @@ https://unsplash.it/200/100 200w"
       tabindex="0"
       type="submit"
     >
-      Monatlich für CHF 5.- Abonieren
+      Monatlich für CHF 12.- Abonieren
       <span
         class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
       />
@@ -11152,70 +11152,6 @@ exports[`Subscribe should render WithEmotion 1`] = `
             class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
           >
             <div
-              class="css-146nkty-MemberPlanItemWrapper eofgi43"
-            >
-              <div
-                class="css-1deqsbg-MemberPlanItemContent eofgi42"
-              >
-                <span
-                  class="css-e8tfvl-MemberPlanItemName eofgi41"
-                >
-                  Foobar Memberplan
-                </span>
-                <small
-                  class="css-4q4uht-MemberPlanItemPrice eofgi40"
-                >
-                  Ab CHF 5.- pro Monat
-                </small>
-              </div>
-              <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-              >
-                <input
-                  checked=""
-                  class="PrivateSwitchBase-input css-1m9pwf3"
-                  name="Foobar Memberplan"
-                  type="radio"
-                  value="123"
-                />
-                <span
-                  class="css-hyxlzm"
-                >
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
-                    data-testid="RadioButtonUncheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-                    />
-                  </svg>
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-11zohuh-MuiSvgIcon-root"
-                    data-testid="RadioButtonCheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
-                    />
-                  </svg>
-                </span>
-              </span>
-            </div>
-            <span
-              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-ahj2mt-MuiTypography-root"
-            >
-              Foobar Memberplan
-            </span>
-          </label>
-          <label
-            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
-          >
-            <div
               class="css-19eiwdu-MemberPlanItemWrapper eofgi43"
             >
               <div
@@ -11229,7 +11165,7 @@ exports[`Subscribe should render WithEmotion 1`] = `
                 <small
                   class="css-4q4uht-MemberPlanItemPrice eofgi40"
                 >
-                  Ab CHF 8.- pro Monat
+                  Ab CHF 5.- pro Monat
                 </small>
               </div>
               <span
@@ -11292,7 +11228,7 @@ exports[`Subscribe should render WithEmotion 1`] = `
                 <small
                   class="css-4q4uht-MemberPlanItemPrice eofgi40"
                 >
-                  Ab CHF 12.- pro Monat
+                  Ab CHF 8.- pro Monat
                 </small>
               </div>
               <span
@@ -11338,10 +11274,74 @@ exports[`Subscribe should render WithEmotion 1`] = `
               Foobaz Memberplan
             </span>
           </label>
+          <label
+            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
+          >
+            <div
+              class="css-146nkty-MemberPlanItemWrapper eofgi43"
+            >
+              <div
+                class="css-1deqsbg-MemberPlanItemContent eofgi42"
+              >
+                <span
+                  class="css-e8tfvl-MemberPlanItemName eofgi41"
+                >
+                  Foobar Memberplan
+                </span>
+                <small
+                  class="css-4q4uht-MemberPlanItemPrice eofgi40"
+                >
+                  Ab CHF 12.- pro Monat
+                </small>
+              </div>
+              <span
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
+              >
+                <input
+                  checked=""
+                  class="PrivateSwitchBase-input css-1m9pwf3"
+                  name="Foobar Memberplan"
+                  type="radio"
+                  value="123"
+                />
+                <span
+                  class="css-hyxlzm"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-11zohuh-MuiSvgIcon-root"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
+                </span>
+              </span>
+            </div>
+            <span
+              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-ahj2mt-MuiTypography-root"
+            >
+              Foobar Memberplan
+            </span>
+          </label>
         </div>
         <img
           alt="DSC07717"
-          class="css-1sg8o3u-ImageWrapper e1shv2yg0"
+          class="css-cibo30-ImageWrapper e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -11978,7 +11978,7 @@ https://unsplash.it/200/100 200w"
           <span
             class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-ahj2mt-MuiTypography-root"
           >
-            Automatisch Erneuern
+            Automatisch erneuern
           </span>
         </label>
       </div>
@@ -12096,7 +12096,7 @@ https://unsplash.it/200/100 200w"
       tabindex="0"
       type="submit"
     >
-      Monatlich für CHF 5.- Abonieren
+      Monatlich für CHF 12.- Abonieren
       <span
         class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
       />
@@ -12480,7 +12480,7 @@ exports[`Subscribe should render WithSubscribeError 1`] = `
 + Second value
 
 @@ -513,10 +513,35 @@
-              Automatisch Erneuern
+              Automatisch erneuern
             </span>
           </label>
         </div>

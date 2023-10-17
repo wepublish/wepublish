@@ -201,7 +201,7 @@ exports[`MemberPlanPicker should render Default 1`] = `
     </div>
     <img
       alt="DSC07717"
-      class="css-1sg8o3u-ImageWrapper e1shv2yg0"
+      class="css-cibo30-ImageWrapper e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -440,7 +440,7 @@ exports[`MemberPlanPicker should render Selected 1`] = `
     </div>
     <img
       alt="DSC07717"
-      class="css-1sg8o3u-ImageWrapper e1shv2yg0"
+      class="css-cibo30-ImageWrapper e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -680,7 +680,7 @@ exports[`MemberPlanPicker should render WithClassName 1`] = `
     </div>
     <img
       alt="DSC07717"
-      class="css-1sg8o3u-ImageWrapper e1shv2yg0"
+      class="css-cibo30-ImageWrapper e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -918,7 +918,7 @@ exports[`MemberPlanPicker should render WithEmotion 1`] = `
     </div>
     <img
       alt="DSC07717"
-      class="css-1sg8o3u-ImageWrapper e1shv2yg0"
+      class="css-cibo30-ImageWrapper e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1156,7 +1156,7 @@ exports[`MemberPlanPicker should render WithError 1`] = `
     </div>
     <img
       alt="DSC07717"
-      class="css-1sg8o3u-ImageWrapper e1shv2yg0"
+      class="css-cibo30-ImageWrapper e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1394,7 +1394,7 @@ exports[`MemberPlanPicker should render WithLoading 1`] = `
     </div>
     <img
       alt="DSC07717"
-      class="css-1sg8o3u-ImageWrapper e1shv2yg0"
+      class="css-cibo30-ImageWrapper e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,

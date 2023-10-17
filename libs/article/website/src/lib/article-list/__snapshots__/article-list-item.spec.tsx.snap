@@ -11,7 +11,7 @@ exports[`ArticleList Item should render Default 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-v2aane-ImageWrapper-ArticleListItem e1shv2yg0"
+        class="css-11fw878-ImageWrapper-ArticleListItem e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -54,7 +54,7 @@ exports[`ArticleList Item should render WithClassName 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-v2aane-ImageWrapper-ArticleListItem e1shv2yg0"
+        class="css-11fw878-ImageWrapper-ArticleListItem e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -97,7 +97,7 @@ exports[`ArticleList Item should render WithEmotion 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-v2aane-ImageWrapper-ArticleListItem e1shv2yg0"
+        class="css-11fw878-ImageWrapper-ArticleListItem e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -140,7 +140,7 @@ exports[`ArticleList Item should render WithoutImage 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-v2aane-ImageWrapper-ArticleListItem e1shv2yg0"
+        class="css-11fw878-ImageWrapper-ArticleListItem e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -215,7 +215,7 @@ exports[`ArticleList Item should render WithoutTitle 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-v2aane-ImageWrapper-ArticleListItem e1shv2yg0"
+        class="css-11fw878-ImageWrapper-ArticleListItem e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
