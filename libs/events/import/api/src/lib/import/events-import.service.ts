@@ -74,6 +74,14 @@ export class EventsImportService {
       if (filter.from) {
         sortedEvents = sortedEvents.filter(e => e.startsAt > new Date(filter.from as string))
       }
+      if (filter.name) {
+        const nameFilter = filter.name.toLowerCase()
+        sortedEvents = sortedEvents.filter(e => e.name.toLowerCase().includes(nameFilter))
+      }
+      if (filter.location) {
+        const locationFilter = filter.location.toLowerCase()
+        sortedEvents = sortedEvents.filter(e => e.location.toLowerCase().includes(locationFilter))
+      }
       if (filter.to) {
         sortedEvents = sortedEvents
           .filter(e => e.endsAt)
