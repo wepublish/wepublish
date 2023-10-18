@@ -48,6 +48,7 @@ import {PageWithRevisions, PublicPage, pageWithRevisionsToPublicPage} from './db
 import {SubscriptionWithRelations} from './db/subscription'
 import {TokenExpiredError} from './error'
 import {getEvent} from './graphql/event/event.query'
+import {createSafeHostUrl} from './graphql/peer/create-safe-host-url'
 import {FullPoll, getPoll} from './graphql/poll/poll.public-queries'
 import {Hooks} from './hooks'
 import {MailContext, MailContextOptions} from './mails/mailContext'
@@ -622,7 +623,11 @@ export async function contextFromRequest(
               )?.value as number) ||
               parseInt(process.env.PEERING_TIMEOUT_IN_MS as string) ||
               10 * 1000 // 10 Seconds timeout in  ms
-            const fetcher = createFetcher(`${peer.hostURL}`, peer.token, peerTimeout)
+            const fetcher = createFetcher(
+              createSafeHostUrl(peer.hostURL, 'v1'),
+              peer.token,
+              peerTimeout
+            )
 
             return wrapSchema({
               schema: await schemaFromExecutor(fetcher),
@@ -657,7 +662,11 @@ export async function contextFromRequest(
               parseInt(process.env.PEERING_TIMEOUT_IN_MS as string) ||
               10 * 1000 // 10 Seconds timeout in  ms
 
-            const fetcher = createFetcher(`${peer.hostURL}/v1/admin`, peer.token, peerTimeout)
+            const fetcher = createFetcher(
+              createSafeHostUrl(peer.hostURL, 'v1/admin'),
+              peer.token,
+              peerTimeout
+            )
 
             return wrapSchema({
               schema: await schemaFromExecutor(fetcher),

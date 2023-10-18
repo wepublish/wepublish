@@ -1,15 +1,15 @@
-import {PrismaClient} from '@prisma/client'
-import {GraphQLResolveInfo} from 'graphql'
 import {delegateToSchema} from '@graphql-tools/delegate'
 import {schemaFromExecutor} from '@graphql-tools/wrap'
-import {Context, createFetcher} from '../../context'
+import {PrismaClient} from '@prisma/client'
+import {CanCreatePeer, CanGetPeerProfile} from '@wepublish/permissions/api'
 import {SettingName} from '@wepublish/settings/api'
+import {GraphQLResolveInfo} from 'graphql'
+import {Context, createFetcher} from '../../context'
 import {PeerTokenInvalidError} from '../../error'
 import {markResultAsProxied} from '../../utility'
 import {authorise} from '../permissions'
-import {CanCreatePeer, CanGetPeerProfile} from '@wepublish/permissions/api'
 import {getPeerProfile} from './peer-profile.queries'
-import {z} from 'zod'
+import {createSafeHostUrl} from '../peer/create-safe-host-url'
 
 export const getAdminPeerProfile = async (
   hostURL: string,
@@ -32,7 +32,7 @@ export const getRemotePeerProfile = async (
 ) => {
   const {roles} = authenticate()
   authorise(CanCreatePeer, roles)
-  const link = z.string().url().parse(hostURL.replace(/\/+$/, ''))
+  const link = createSafeHostUrl(hostURL, 'v1/admin')
 
   const peerTimeoutSetting = await setting.findUnique({
     where: {
@@ -47,7 +47,7 @@ export const getRemotePeerProfile = async (
     throw new Error('No value set for PEERING_TIMEOUT_IN_MS')
   }
 
-  const fetcher = await createFetcher(`${link}/v1`, token, peerTimeout)
+  const fetcher = await createFetcher(link, token, peerTimeout)
   const remoteExecutableSchema = {
     schema: await schemaFromExecutor(fetcher),
     executor: fetcher
