@@ -40,6 +40,7 @@ import {NavBarProfile} from '../src/navbar-profile'
 import {NextWepublishLink} from '../src/next-wepublish-link'
 import {SessionProvider} from '../src/session.provider'
 import {YearlyMemberPlanItem} from '../src/yearly-memberplan-item'
+import {Paragraph} from '../src/gruppetto-paragraph'
 
 setDefaultOptions({
   locale: de
@@ -155,7 +156,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
           Script={Script}
           Footer={Footer}
           MemberPlanItem={YearlyMemberPlanItem}
-          elements={{Link: NextWepublishLink, Button}}
+          elements={{Link: NextWepublishLink, Button, Paragraph}}
           blocks={{Break: GruppettoBreakBlock}}>
           <ThemeProvider theme={gruppettoTheme}>
             <CssBaseline />
