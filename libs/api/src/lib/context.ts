@@ -622,7 +622,7 @@ export async function contextFromRequest(
               )?.value as number) ||
               parseInt(process.env.PEERING_TIMEOUT_IN_MS as string) ||
               10 * 1000 // 10 Seconds timeout in  ms
-            const fetcher = createFetcher(`${peer.hostURL}`, peer.token, peerTimeout)
+            const fetcher = createFetcher(`${peer.hostURL}/v1`, peer.token, peerTimeout)
 
             return wrapSchema({
               schema: await schemaFromExecutor(fetcher),
