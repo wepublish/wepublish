@@ -13,6 +13,8 @@ export type EventFilter = {
   from: Date
   to: Date
   tags: string[]
+  name: string
+  location: string
 }
 
 export enum EventSort {
@@ -129,12 +131,48 @@ const createToFilter = (filter?: Partial<EventFilter>): Prisma.EventWhereInput =
   return {}
 }
 
+const createNameFilter = (filter?: Partial<EventFilter>): Prisma.EventWhereInput => {
+  if (filter?.name) {
+    return {
+      OR: [
+        {
+          name: {
+            contains: filter.name,
+            mode: 'insensitive'
+          }
+        }
+      ]
+    }
+  }
+
+  return {}
+}
+
+const createLocationFilter = (filter?: Partial<EventFilter>): Prisma.EventWhereInput => {
+  if (filter?.location) {
+    return {
+      OR: [
+        {
+          location: {
+            contains: filter.location,
+            mode: 'insensitive'
+          }
+        }
+      ]
+    }
+  }
+
+  return {}
+}
+
 export const createEventFilter = (filter?: Partial<EventFilter>): Prisma.EventWhereInput => ({
   AND: [
     createUpcomingOnlyFilter(filter),
     createFromFilter(filter),
     createToFilter(filter),
-    createTagFilter(filter)
+    createTagFilter(filter),
+    createNameFilter(filter),
+    createLocationFilter(filter)
   ]
 })
 

@@ -81,6 +81,8 @@ type Field =
   | 'providers'
   | 'userRole'
   | 'text'
+  | 'name'
+  | 'location'
 
 export type ImportableEventFilter = {
   startsAt?: InputMaybe<Scalars['String']>
@@ -288,6 +290,26 @@ export function ListViewFilters({
               value={filter.lead || ''}
               placeholder={t('articleList.filter.lead')}
               onChange={value => updateFilter({lead: value})}
+            />
+          </Group>
+        )}
+
+        {fields.includes('name') && (
+          <Group style={formInputStyle}>
+            <Input
+              value={filter.name || ''}
+              placeholder={t('articleList.filter.name')}
+              onChange={value => updateFilter({name: value})}
+            />
+          </Group>
+        )}
+
+        {fields.includes('location') && (
+          <Group style={formInputStyle}>
+            <Input
+              value={filter.location || ''}
+              placeholder={t('articleList.filter.location')}
+              onChange={value => updateFilter({location: value})}
             />
           </Group>
         )}
