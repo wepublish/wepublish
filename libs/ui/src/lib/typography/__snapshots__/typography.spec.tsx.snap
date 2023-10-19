@@ -1,8 +1,107 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Typography should render Default 1`] = `
-"Snapshot Diff:
-Compared values have no visual difference."
+<DocumentFragment>
+  .emotion-0 {
+  margin: 0;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 300;
+  font-size: 6rem;
+  line-height: 1.167;
+  letter-spacing: -0.01562em;
+}
+
+<h1
+    class="MuiTypography-root MuiTypography-h1 emotion-0"
+  >
+    H1
+  </h1>
+  .emotion-0 {
+  margin: 0;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 300;
+  font-size: 3.75rem;
+  line-height: 1.2;
+  letter-spacing: -0.00833em;
+}
+
+<h2
+    class="MuiTypography-root MuiTypography-h2 emotion-0"
+  >
+    H2
+  </h2>
+  .emotion-0 {
+  margin: 0;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 400;
+  font-size: 3rem;
+  line-height: 1.167;
+  letter-spacing: 0em;
+}
+
+<h3
+    class="MuiTypography-root MuiTypography-h3 emotion-0"
+  >
+    H3
+  </h3>
+  .emotion-0 {
+  margin: 0;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 400;
+  font-size: 2.125rem;
+  line-height: 1.235;
+  letter-spacing: 0.00735em;
+}
+
+<h4
+    class="MuiTypography-root MuiTypography-h4 emotion-0"
+  >
+    H4
+  </h4>
+  .emotion-0 {
+  margin: 0;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 400;
+  font-size: 1.5rem;
+  line-height: 1.334;
+  letter-spacing: 0em;
+}
+
+<h5
+    class="MuiTypography-root MuiTypography-h5 emotion-0"
+  >
+    H5
+  </h5>
+  .emotion-0 {
+  margin: 0;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 500;
+  font-size: 1.25rem;
+  line-height: 1.6;
+  letter-spacing: 0.0075em;
+}
+
+<h6
+    class="MuiTypography-root MuiTypography-h6 emotion-0"
+  >
+    H6
+  </h6>
+  .emotion-0 {
+  margin: 0;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.5;
+  letter-spacing: 0.00938em;
+  margin-bottom: 0.35em;
+}
+
+<p
+    class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-0"
+  >
+    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+  </p>
+</DocumentFragment>
 `;
 
 exports[`Typography should render Styling 1`] = `

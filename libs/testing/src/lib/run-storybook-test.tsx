@@ -14,11 +14,7 @@ export function runStorybookTests<T extends Parameters<typeof composeStories>[0]
   let defaultSnapshot: DocumentFragment | undefined
   let DefaultComponent: ComposedStoryFn<ReactRenderer> | undefined
 
-  const setDefault = async () => {
-    if (DefaultComponent && defaultSnapshot) {
-      return
-    }
-
+  beforeAll(async () => {
     if (defaultStory in storiesCmp) {
       DefaultComponent = storiesCmp[
         defaultStory as keyof typeof storiesCmp
@@ -31,7 +27,7 @@ export function runStorybookTests<T extends Parameters<typeof composeStories>[0]
 
       defaultSnapshot = asFragment()
     }
-  }
+  })
 
   Object.entries(storiesCmp).forEach(([story, Cmp]) => {
     it(`should render ${story}`, async () => {
@@ -45,8 +41,6 @@ export function runStorybookTests<T extends Parameters<typeof composeStories>[0]
 
         expect(snapshotDiff(before, after)).toMatchSnapshot()
       } else {
-        await setDefault()
-
         if (defaultSnapshot && DefaultComponent !== Component) {
           expect(snapshotDiff(defaultSnapshot, asFragment())).toMatchSnapshot()
         } else {
@@ -66,11 +60,7 @@ export function runStorybookContainerTests<T extends Parameters<typeof composeSt
   let defaultSnapshot: DocumentFragment | undefined
   let DefaultComponent: ComposedStoryFn<ReactRenderer> | undefined
 
-  const setDefault = async () => {
-    if (DefaultComponent && defaultSnapshot) {
-      return
-    }
-
+  beforeAll(async () => {
     if (defaultStory in storiesCmp) {
       DefaultComponent = storiesCmp[
         defaultStory as keyof typeof storiesCmp
@@ -90,7 +80,7 @@ export function runStorybookContainerTests<T extends Parameters<typeof composeSt
 
       defaultSnapshot = asFragment()
     }
-  }
+  })
 
   Object.entries(storiesCmp).forEach(([story, Cmp]) => {
     it(`should render ${story}`, async () => {
@@ -111,8 +101,6 @@ export function runStorybookContainerTests<T extends Parameters<typeof composeSt
 
         expect(snapshotDiff(before, after)).toMatchSnapshot()
       } else {
-        await setDefault()
-
         if (defaultSnapshot && DefaultComponent !== Component) {
           expect(snapshotDiff(defaultSnapshot, asFragment())).toMatchSnapshot()
         } else {

@@ -1,8 +1,27 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Embed Block should render Default 1`] = `
-"Snapshot Diff:
-Compared values have no visual difference."
+<DocumentFragment>
+  .emotion-2 {
+  width: 100%;
+  border: 0;
+  aspect-ratio: 1.78343949044586;
+  background: #aaa;
+  padding: 50px;
+}
+
+<div
+    class="emotion-0 emotion-1"
+  >
+    <iframe
+      allowfullscreen=""
+      class="emotion-2 emotion-3"
+      sandbox=""
+      src="https://www.example.com"
+      title="Title"
+    />
+  </div>
+</DocumentFragment>
 `;
 
 exports[`Embed Block should render WithClassName 1`] = `

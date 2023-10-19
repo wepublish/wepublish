@@ -1,8 +1,37 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Image Block should render Default 1`] = `
-"Snapshot Diff:
-Compared values have no visual difference."
+<DocumentFragment>
+  .emotion-0 {
+  margin: 0;
+  max-width: 100%;
+}
+
+.emotion-2 {
+  max-width: 100%;
+  width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+}
+
+<figure
+    class="emotion-0 emotion-1"
+  >
+    <img
+      alt="An image description"
+      class="emotion-2 emotion-3"
+      loading="lazy"
+      srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+      title="An image title"
+    />
+    <figcaption>
+      Image caption
+    </figcaption>
+  </figure>
+</DocumentFragment>
 `;
 
 exports[`Image Block should render WithClassName 1`] = `

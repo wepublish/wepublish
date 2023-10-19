@@ -1,8 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Instagram Post Block should render Default 1`] = `
-"Snapshot Diff:
-Compared values have no visual difference."
+<DocumentFragment>
+  <div
+    class="emotion-0 emotion-1"
+  />
+</DocumentFragment>
 `;
 
 exports[`Instagram Post Block should render WithClassName 1`] = `

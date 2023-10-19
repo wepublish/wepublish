@@ -526,394 +526,778 @@ exports[`CommentRatings should render AnonymousUserRatings 1`] = `
 `;
 
 exports[`CommentRatings should render Default 1`] = `
-"Snapshot Diff:
-- First value
-+ Second value
+<DocumentFragment>
+  .emotion-0 {
+  display: grid;
+}
 
-@@ -16,11 +16,11 @@
-          <span
-            class="MuiRating-root MuiRating-sizeMedium css-iljtu2-MuiRating-root"
+.emotion-2 {
+  display: grid;
+  grid-template-columns: auto max-content;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  -webkit-justify-content: end;
+  justify-content: end;
+  gap: 16px;
+}
+
+.emotion-4 {
+  font-size: 0.75em;
+  font-weight: 700;
+}
+
+.emotion-6 .MuiRating-iconFilled {
+  color: #1976d2;
+}
+
+.emotion-6 .MuiRating-iconHover {
+  color: #1976d2;
+}
+
+.emotion-6 .MuiRating-iconEmpty {
+  color: #bdbdbd;
+}
+
+.emotion-8 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  position: relative;
+  font-size: 1.5rem;
+  color: #faaf00;
+  cursor: pointer;
+  text-align: left;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.emotion-8.Mui-disabled {
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+.emotion-8.Mui-focusVisible .MuiRating-iconActive {
+  outline: 1px solid #999;
+}
+
+.emotion-8 .MuiRating-visuallyHidden {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.emotion-9 {
+  cursor: inherit;
+}
+
+.emotion-10 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  pointer-events: none;
+}
+
+.emotion-34 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  pointer-events: none;
+  color: rgba(0, 0, 0, 0.26);
+}
+
+<div
+    class="emotion-0 emotion-1"
+  >
+    <div
+      class="emotion-2 emotion-3"
+    >
+      <div
+        class="emotion-4 emotion-5"
+      >
+        Foobar
+      </div>
+      <div
+        class="emotion-6 emotion-7"
+      >
+        <span
+          class="MuiRating-root MuiRating-sizeMedium emotion-8"
+        >
+          <label
+            class="emotion-9"
+            for=":r15:"
           >
-            <label
-              class="css-dqr9h-MuiRating-label"
--             for=":r1:"
-+             for=":r15:"
+            <span
+              class="MuiRating-icon MuiRating-iconFilled emotion-10"
             >
-              <span
-                class="MuiRating-icon MuiRating-iconFilled css-7qmtgc-MuiRating-icon"
+              <svg
+                fill="currentColor"
+                height="1em"
+                stroke="currentColor"
+                stroke-width="0"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <svg
-@@ -47,18 +47,18 @@
-                1 Star
-              </span>
-            </label>
-            <input
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M22 9.24l-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"
+                />
+              </svg>
+            </span>
+            <span
               class="MuiRating-visuallyHidden"
--             id=":r1:"
--             name=":r0:"
-+             id=":r15:"
-+             name=":r14:"
-              type="radio"
-              value="1"
-            />
-            <label
-              class="css-dqr9h-MuiRating-label"
--             for=":r2:"
-+             for=":r16:"
             >
-              <span
-                class="MuiRating-icon MuiRating-iconFilled css-7qmtgc-MuiRating-icon"
-              >
-                <svg
-@@ -85,18 +85,18 @@
-                2 Stars
-              </span>
-            </label>
-            <input
-              class="MuiRating-visuallyHidden"
--             id=":r2:"
--             name=":r0:"
-+             id=":r16:"
-+             name=":r14:"
-              type="radio"
-              value="2"
-            />
-            <label
-              class="css-dqr9h-MuiRating-label"
--             for=":r3:"
-+             for=":r17:"
-            >
-              <span
-                class="MuiRating-icon MuiRating-iconFilled css-7qmtgc-MuiRating-icon"
-              >
-                <svg
-@@ -123,18 +123,18 @@
-                3 Stars
-              </span>
-            </label>
-            <input
-              class="MuiRating-visuallyHidden"
--             id=":r3:"
--             name=":r0:"
-+             id=":r17:"
-+             name=":r14:"
-              type="radio"
-              value="3"
-            />
-            <label
-              class="css-dqr9h-MuiRating-label"
--             for=":r4:"
-+             for=":r18:"
-            >
-              <span
-                class="MuiRating-icon MuiRating-iconFilled css-7qmtgc-MuiRating-icon"
-              >
-                <svg
-@@ -161,18 +161,18 @@
-                4 Stars
-              </span>
-            </label>
-            <input
-              class="MuiRating-visuallyHidden"
--             id=":r4:"
--             name=":r0:"
-+             id=":r18:"
-+             name=":r14:"
-              type="radio"
-              value="4"
-            />
-            <label
-              class="css-dqr9h-MuiRating-label"
--             for=":r5:"
-+             for=":r19:"
-            >
-              <span
-                class="MuiRating-icon MuiRating-iconFilled css-7qmtgc-MuiRating-icon"
-              >
-                <svg
-@@ -200,22 +200,22 @@
-              </span>
-            </label>
-            <input
-              checked=""
-              class="MuiRating-visuallyHidden"
--             id=":r5:"
--             name=":r0:"
-+             id=":r19:"
-+             name=":r14:"
-              type="radio"
-              value="5"
-            />
-            <label
-              class="MuiRating-label MuiRating-pristine css-dqr9h-MuiRating-label"
-            >
-              <input
-                class="MuiRating-visuallyHidden"
--               id=":r0:-empty"
--               name=":r0:"
-+               id=":r14:-empty"
-+               name=":r14:"
-                type="radio"
-                value=""
-              />
-              <span
-                class="MuiRating-visuallyHidden"
-@@ -240,11 +240,11 @@
-          <span
-            class="MuiRating-root MuiRating-sizeMedium css-iljtu2-MuiRating-root"
+              1 Star
+            </span>
+          </label>
+          <input
+            class="MuiRating-visuallyHidden"
+            id=":r15:"
+            name=":r14:"
+            type="radio"
+            value="1"
+          />
+          <label
+            class="emotion-9"
+            for=":r16:"
           >
-            <label
-              class="css-dqr9h-MuiRating-label"
--             for=":r7:"
-+             for=":r1b:"
+            <span
+              class="MuiRating-icon MuiRating-iconFilled emotion-10"
             >
-              <span
-                class="MuiRating-icon MuiRating-iconFilled css-7qmtgc-MuiRating-icon"
+              <svg
+                fill="currentColor"
+                height="1em"
+                stroke="currentColor"
+                stroke-width="0"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <svg
-@@ -271,18 +271,18 @@
-                1 Star
-              </span>
-            </label>
-            <input
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M22 9.24l-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"
+                />
+              </svg>
+            </span>
+            <span
               class="MuiRating-visuallyHidden"
--             id=":r7:"
--             name=":r6:"
-+             id=":r1b:"
-+             name=":r1a:"
-              type="radio"
-              value="1"
-            />
-            <label
-              class="css-dqr9h-MuiRating-label"
--             for=":r8:"
-+             for=":r1c:"
             >
-              <span
-                class="MuiRating-icon MuiRating-iconFilled css-7qmtgc-MuiRating-icon"
-              >
-                <svg
-@@ -309,18 +309,18 @@
-                2 Stars
-              </span>
-            </label>
-            <input
-              class="MuiRating-visuallyHidden"
--             id=":r8:"
--             name=":r6:"
-+             id=":r1c:"
-+             name=":r1a:"
-              type="radio"
-              value="2"
-            />
-            <label
-              class="css-dqr9h-MuiRating-label"
--             for=":r9:"
-+             for=":r1d:"
-            >
-              <span
-                class="MuiRating-icon MuiRating-iconFilled css-7qmtgc-MuiRating-icon"
-              >
-                <svg
-@@ -348,18 +348,18 @@
-              </span>
-            </label>
-            <input
-              checked=""
-              class="MuiRating-visuallyHidden"
--             id=":r9:"
--             name=":r6:"
-+             id=":r1d:"
-+             name=":r1a:"
-              type="radio"
-              value="3"
-            />
-            <label
-              class="css-dqr9h-MuiRating-label"
--             for=":ra:"
-+             for=":r1e:"
-            >
-              <span
-                class="MuiRating-icon MuiRating-iconEmpty css-1c99szj-MuiRating-icon"
-              >
-                <svg
-@@ -386,18 +386,18 @@
-                4 Stars
-              </span>
-            </label>
-            <input
-              class="MuiRating-visuallyHidden"
--             id=":ra:"
--             name=":r6:"
-+             id=":r1e:"
-+             name=":r1a:"
-              type="radio"
-              value="4"
-            />
-            <label
-              class="css-dqr9h-MuiRating-label"
--             for=":rb:"
-+             for=":r1f:"
-            >
-              <span
-                class="MuiRating-icon MuiRating-iconEmpty css-1c99szj-MuiRating-icon"
-              >
-                <svg
-@@ -424,22 +424,22 @@
-                5 Stars
-              </span>
-            </label>
-            <input
-              class="MuiRating-visuallyHidden"
--             id=":rb:"
--             name=":r6:"
-+             id=":r1f:"
-+             name=":r1a:"
-              type="radio"
-              value="5"
-            />
-            <label
-              class="MuiRating-label MuiRating-pristine css-dqr9h-MuiRating-label"
-            >
-              <input
-                class="MuiRating-visuallyHidden"
--               id=":r6:-empty"
--               name=":r6:"
-+               id=":r1a:-empty"
-+               name=":r1a:"
-                type="radio"
-                value=""
-              />
-              <span
-                class="MuiRating-visuallyHidden"
-@@ -464,11 +464,11 @@
-          <span
-            class="MuiRating-root MuiRating-sizeMedium css-iljtu2-MuiRating-root"
+              2 Stars
+            </span>
+          </label>
+          <input
+            class="MuiRating-visuallyHidden"
+            id=":r16:"
+            name=":r14:"
+            type="radio"
+            value="2"
+          />
+          <label
+            class="emotion-9"
+            for=":r17:"
           >
-            <label
-              class="css-dqr9h-MuiRating-label"
--             for=":rd:"
-+             for=":r1h:"
+            <span
+              class="MuiRating-icon MuiRating-iconFilled emotion-10"
             >
-              <span
-                class="MuiRating-icon MuiRating-iconFilled css-7qmtgc-MuiRating-icon"
+              <svg
+                fill="currentColor"
+                height="1em"
+                stroke="currentColor"
+                stroke-width="0"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <svg
-@@ -495,18 +495,18 @@
-                1 Star
-              </span>
-            </label>
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M22 9.24l-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"
+                />
+              </svg>
+            </span>
+            <span
+              class="MuiRating-visuallyHidden"
+            >
+              3 Stars
+            </span>
+          </label>
+          <input
+            class="MuiRating-visuallyHidden"
+            id=":r17:"
+            name=":r14:"
+            type="radio"
+            value="3"
+          />
+          <label
+            class="emotion-9"
+            for=":r18:"
+          >
+            <span
+              class="MuiRating-icon MuiRating-iconFilled emotion-10"
+            >
+              <svg
+                fill="currentColor"
+                height="1em"
+                stroke="currentColor"
+                stroke-width="0"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M22 9.24l-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"
+                />
+              </svg>
+            </span>
+            <span
+              class="MuiRating-visuallyHidden"
+            >
+              4 Stars
+            </span>
+          </label>
+          <input
+            class="MuiRating-visuallyHidden"
+            id=":r18:"
+            name=":r14:"
+            type="radio"
+            value="4"
+          />
+          <label
+            class="emotion-9"
+            for=":r19:"
+          >
+            <span
+              class="MuiRating-icon MuiRating-iconFilled emotion-10"
+            >
+              <svg
+                fill="currentColor"
+                height="1em"
+                stroke="currentColor"
+                stroke-width="0"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M22 9.24l-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"
+                />
+              </svg>
+            </span>
+            <span
+              class="MuiRating-visuallyHidden"
+            >
+              5 Stars
+            </span>
+          </label>
+          <input
+            checked=""
+            class="MuiRating-visuallyHidden"
+            id=":r19:"
+            name=":r14:"
+            type="radio"
+            value="5"
+          />
+          <label
+            class="MuiRating-label MuiRating-pristine emotion-9"
+          >
             <input
               class="MuiRating-visuallyHidden"
--             id=":rd:"
--             name=":rc:"
-+             id=":r1h:"
-+             name=":r1g:"
+              id=":r14:-empty"
+              name=":r14:"
               type="radio"
-              value="1"
+              value=""
             />
-            <label
-              class="css-dqr9h-MuiRating-label"
--             for=":re:"
-+             for=":r1i:"
-            >
-              <span
-                class="MuiRating-icon MuiRating-iconFilled css-7qmtgc-MuiRating-icon"
-              >
-                <svg
-@@ -534,18 +534,18 @@
-              </span>
-            </label>
-            <input
-              checked=""
+            <span
               class="MuiRating-visuallyHidden"
--             id=":re:"
--             name=":rc:"
-+             id=":r1i:"
-+             name=":r1g:"
-              type="radio"
-              value="2"
-            />
-            <label
-              class="css-dqr9h-MuiRating-label"
--             for=":rf:"
-+             for=":r1j:"
             >
-              <span
-                class="MuiRating-icon MuiRating-iconEmpty css-1c99szj-MuiRating-icon"
+              Empty
+            </span>
+          </label>
+        </span>
+      </div>
+    </div>
+    <div
+      class="emotion-2 emotion-3"
+    >
+      <div
+        class="emotion-4 emotion-5"
+      >
+        Barfoo
+      </div>
+      <div
+        class="emotion-6 emotion-7"
+      >
+        <span
+          class="MuiRating-root MuiRating-sizeMedium emotion-8"
+        >
+          <label
+            class="emotion-9"
+            for=":r1b:"
+          >
+            <span
+              class="MuiRating-icon MuiRating-iconFilled emotion-10"
+            >
+              <svg
+                fill="currentColor"
+                height="1em"
+                stroke="currentColor"
+                stroke-width="0"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <svg
-@@ -572,18 +572,18 @@
-                3 Stars
-              </span>
-            </label>
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M22 9.24l-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"
+                />
+              </svg>
+            </span>
+            <span
+              class="MuiRating-visuallyHidden"
+            >
+              1 Star
+            </span>
+          </label>
+          <input
+            class="MuiRating-visuallyHidden"
+            id=":r1b:"
+            name=":r1a:"
+            type="radio"
+            value="1"
+          />
+          <label
+            class="emotion-9"
+            for=":r1c:"
+          >
+            <span
+              class="MuiRating-icon MuiRating-iconFilled emotion-10"
+            >
+              <svg
+                fill="currentColor"
+                height="1em"
+                stroke="currentColor"
+                stroke-width="0"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M22 9.24l-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"
+                />
+              </svg>
+            </span>
+            <span
+              class="MuiRating-visuallyHidden"
+            >
+              2 Stars
+            </span>
+          </label>
+          <input
+            class="MuiRating-visuallyHidden"
+            id=":r1c:"
+            name=":r1a:"
+            type="radio"
+            value="2"
+          />
+          <label
+            class="emotion-9"
+            for=":r1d:"
+          >
+            <span
+              class="MuiRating-icon MuiRating-iconFilled emotion-10"
+            >
+              <svg
+                fill="currentColor"
+                height="1em"
+                stroke="currentColor"
+                stroke-width="0"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M22 9.24l-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"
+                />
+              </svg>
+            </span>
+            <span
+              class="MuiRating-visuallyHidden"
+            >
+              3 Stars
+            </span>
+          </label>
+          <input
+            checked=""
+            class="MuiRating-visuallyHidden"
+            id=":r1d:"
+            name=":r1a:"
+            type="radio"
+            value="3"
+          />
+          <label
+            class="emotion-9"
+            for=":r1e:"
+          >
+            <span
+              class="MuiRating-icon MuiRating-iconEmpty emotion-34"
+            >
+              <svg
+                fill="currentColor"
+                height="1em"
+                stroke="currentColor"
+                stroke-width="0"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M22 9.24l-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"
+                />
+              </svg>
+            </span>
+            <span
+              class="MuiRating-visuallyHidden"
+            >
+              4 Stars
+            </span>
+          </label>
+          <input
+            class="MuiRating-visuallyHidden"
+            id=":r1e:"
+            name=":r1a:"
+            type="radio"
+            value="4"
+          />
+          <label
+            class="emotion-9"
+            for=":r1f:"
+          >
+            <span
+              class="MuiRating-icon MuiRating-iconEmpty emotion-34"
+            >
+              <svg
+                fill="currentColor"
+                height="1em"
+                stroke="currentColor"
+                stroke-width="0"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M22 9.24l-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"
+                />
+              </svg>
+            </span>
+            <span
+              class="MuiRating-visuallyHidden"
+            >
+              5 Stars
+            </span>
+          </label>
+          <input
+            class="MuiRating-visuallyHidden"
+            id=":r1f:"
+            name=":r1a:"
+            type="radio"
+            value="5"
+          />
+          <label
+            class="MuiRating-label MuiRating-pristine emotion-9"
+          >
             <input
               class="MuiRating-visuallyHidden"
--             id=":rf:"
--             name=":rc:"
-+             id=":r1j:"
-+             name=":r1g:"
+              id=":r1a:-empty"
+              name=":r1a:"
               type="radio"
-              value="3"
+              value=""
             />
-            <label
-              class="css-dqr9h-MuiRating-label"
--             for=":rg:"
-+             for=":r1k:"
+            <span
+              class="MuiRating-visuallyHidden"
             >
-              <span
-                class="MuiRating-icon MuiRating-iconEmpty css-1c99szj-MuiRating-icon"
+              Empty
+            </span>
+          </label>
+        </span>
+      </div>
+    </div>
+    <div
+      class="emotion-2 emotion-3"
+    >
+      <div
+        class="emotion-4 emotion-5"
+      >
+        Foobaz
+      </div>
+      <div
+        class="emotion-6 emotion-7"
+      >
+        <span
+          class="MuiRating-root MuiRating-sizeMedium emotion-8"
+        >
+          <label
+            class="emotion-9"
+            for=":r1h:"
+          >
+            <span
+              class="MuiRating-icon MuiRating-iconFilled emotion-10"
+            >
+              <svg
+                fill="currentColor"
+                height="1em"
+                stroke="currentColor"
+                stroke-width="0"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
               >
-                <svg
-@@ -610,18 +610,18 @@
-                4 Stars
-              </span>
-            </label>
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M22 9.24l-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"
+                />
+              </svg>
+            </span>
+            <span
+              class="MuiRating-visuallyHidden"
+            >
+              1 Star
+            </span>
+          </label>
+          <input
+            class="MuiRating-visuallyHidden"
+            id=":r1h:"
+            name=":r1g:"
+            type="radio"
+            value="1"
+          />
+          <label
+            class="emotion-9"
+            for=":r1i:"
+          >
+            <span
+              class="MuiRating-icon MuiRating-iconFilled emotion-10"
+            >
+              <svg
+                fill="currentColor"
+                height="1em"
+                stroke="currentColor"
+                stroke-width="0"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M22 9.24l-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"
+                />
+              </svg>
+            </span>
+            <span
+              class="MuiRating-visuallyHidden"
+            >
+              2 Stars
+            </span>
+          </label>
+          <input
+            checked=""
+            class="MuiRating-visuallyHidden"
+            id=":r1i:"
+            name=":r1g:"
+            type="radio"
+            value="2"
+          />
+          <label
+            class="emotion-9"
+            for=":r1j:"
+          >
+            <span
+              class="MuiRating-icon MuiRating-iconEmpty emotion-34"
+            >
+              <svg
+                fill="currentColor"
+                height="1em"
+                stroke="currentColor"
+                stroke-width="0"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M22 9.24l-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"
+                />
+              </svg>
+            </span>
+            <span
+              class="MuiRating-visuallyHidden"
+            >
+              3 Stars
+            </span>
+          </label>
+          <input
+            class="MuiRating-visuallyHidden"
+            id=":r1j:"
+            name=":r1g:"
+            type="radio"
+            value="3"
+          />
+          <label
+            class="emotion-9"
+            for=":r1k:"
+          >
+            <span
+              class="MuiRating-icon MuiRating-iconEmpty emotion-34"
+            >
+              <svg
+                fill="currentColor"
+                height="1em"
+                stroke="currentColor"
+                stroke-width="0"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M22 9.24l-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"
+                />
+              </svg>
+            </span>
+            <span
+              class="MuiRating-visuallyHidden"
+            >
+              4 Stars
+            </span>
+          </label>
+          <input
+            class="MuiRating-visuallyHidden"
+            id=":r1k:"
+            name=":r1g:"
+            type="radio"
+            value="4"
+          />
+          <label
+            class="emotion-9"
+            for=":r1l:"
+          >
+            <span
+              class="MuiRating-icon MuiRating-iconEmpty emotion-34"
+            >
+              <svg
+                fill="currentColor"
+                height="1em"
+                stroke="currentColor"
+                stroke-width="0"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M22 9.24l-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"
+                />
+              </svg>
+            </span>
+            <span
+              class="MuiRating-visuallyHidden"
+            >
+              5 Stars
+            </span>
+          </label>
+          <input
+            class="MuiRating-visuallyHidden"
+            id=":r1l:"
+            name=":r1g:"
+            type="radio"
+            value="5"
+          />
+          <label
+            class="MuiRating-label MuiRating-pristine emotion-9"
+          >
             <input
               class="MuiRating-visuallyHidden"
--             id=":rg:"
--             name=":rc:"
-+             id=":r1k:"
-+             name=":r1g:"
+              id=":r1g:-empty"
+              name=":r1g:"
               type="radio"
-              value="4"
+              value=""
             />
-            <label
-              class="css-dqr9h-MuiRating-label"
--             for=":rh:"
-+             for=":r1l:"
-            >
-              <span
-                class="MuiRating-icon MuiRating-iconEmpty css-1c99szj-MuiRating-icon"
-              >
-                <svg
-@@ -648,22 +648,22 @@
-                5 Stars
-              </span>
-            </label>
-            <input
+            <span
               class="MuiRating-visuallyHidden"
--             id=":rh:"
--             name=":rc:"
-+             id=":r1l:"
-+             name=":r1g:"
-              type="radio"
-              value="5"
-            />
-            <label
-              class="MuiRating-label MuiRating-pristine css-dqr9h-MuiRating-label"
             >
-              <input
-                class="MuiRating-visuallyHidden"
--               id=":rc:-empty"
--               name=":rc:"
-+               id=":r1g:-empty"
-+               name=":r1g:"
-                type="radio"
-                value=""
-              />
-              <span
-                class="MuiRating-visuallyHidden""
+              Empty
+            </span>
+          </label>
+        </span>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
 `;
 
 exports[`CommentRatings should render Empty 1`] = `

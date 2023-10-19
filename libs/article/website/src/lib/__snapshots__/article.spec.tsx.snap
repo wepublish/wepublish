@@ -1900,7 +1900,7 @@ https://unsplash.it/200/100 200w"
           data-autoplay="false"
           data-controls="true"
           data-href="https://www.facebook.com/100064959061177/videos/1310370486335266/"
-          id=":r0:"
+          id=":r1:"
           style="width: 100%; height: 100%;"
         />
       </div>
@@ -1942,30 +1942,21 @@ https://unsplash.it/200/100 200w"
       data-theme="dark"
     >
       <div
-        class="react-tweet-theme root root"
+        class="react-tweet-theme root"
       >
         <article
           class="article"
         >
-          <span
-            class="skeleton"
-            style="height: 3rem; margin-bottom: 0.75rem;"
-          />
-          <span
-            class="skeleton"
-            style="height: 6rem; margin: 0.5rem 0px;"
-          />
           <div
-            style="margin: 0.5rem 0px;"
-          />
-          <span
-            class="skeleton"
-            style="height: 2rem;"
-          />
-          <span
-            class="skeleton"
-            style="height: 2rem; border-radius: 9999px; margin-top: 0.5rem;"
-          />
+            class="root"
+          >
+            <h3>
+              Tweet not found
+            </h3>
+            <p>
+              The embedded tweet could not be found…
+            </p>
+          </div>
         </article>
       </div>
     </div>
@@ -3142,7 +3133,7 @@ exports[`Article should render WithChildren 1`] = `
             data-autoplay="false"
             data-controls="true"
             data-href="https://www.facebook.com/100064959061177/videos/1310370486335266/"
--           id=":r1:"
+-           id=":r0:"
 +           id=":r2:"
             style="width: 100%; height: 100%;"
           />
@@ -3183,7 +3174,7 @@ exports[`Article should render WithClassName 1`] = `
             data-autoplay="false"
             data-controls="true"
             data-href="https://www.facebook.com/100064959061177/videos/1310370486335266/"
--           id=":r1:"
+-           id=":r0:"
 +           id=":r3:"
             style="width: 100%; height: 100%;"
           />
@@ -3203,7 +3194,7 @@ exports[`Article should render WithEmotion 1`] = `
             data-autoplay="false"
             data-controls="true"
             data-href="https://www.facebook.com/100064959061177/videos/1310370486335266/"
--           id=":r1:"
+-           id=":r0:"
 +           id=":r4:"
             style="width: 100%; height: 100%;"
           />
@@ -4153,7 +4144,7 @@ exports[`Article should render WithError 1`] = `
 -           data-autoplay="false"
 -           data-controls="true"
 -           data-href="https://www.facebook.com/100064959061177/videos/1310370486335266/"
--           id=":r1:"
+-           id=":r0:"
 -           style="width: 100%; height: 100%;"
 -         />
 -       </div>
@@ -6325,7 +6316,7 @@ exports[`Article should render WithLoading 1`] = `
 -           data-autoplay="false"
 -           data-controls="true"
 -           data-href="https://www.facebook.com/100064959061177/videos/1310370486335266/"
--           id=":r1:"
+-           id=":r0:"
 -           style="width: 100%; height: 100%;"
 -         />
 -       </div>
@@ -7607,7 +7598,7 @@ exports[`Article should render WithoutAuthors 1`] = `
             data-autoplay="false"
             data-controls="true"
             data-href="https://www.facebook.com/100064959061177/videos/1310370486335266/"
--           id=":r1:"
+-           id=":r0:"
 +           id=":r5:"
             style="width: 100%; height: 100%;"
           />
@@ -7719,7 +7710,7 @@ exports[`Article should render WithoutImageMetadata 1`] = `
             data-autoplay="false"
             data-controls="true"
             data-href="https://www.facebook.com/100064959061177/videos/1310370486335266/"
--           id=":r1:"
+-           id=":r0:"
 +           id=":r6:"
             style="width: 100%; height: 100%;"
           />
@@ -7767,7 +7758,7 @@ exports[`Article should render WithoutLead 1`] = `
             data-autoplay="false"
             data-controls="true"
             data-href="https://www.facebook.com/100064959061177/videos/1310370486335266/"
--           id=":r1:"
+-           id=":r0:"
 +           id=":r7:"
             style="width: 100%; height: 100%;"
           />
@@ -7805,7 +7796,7 @@ exports[`Article should render WithoutSocialMedia 1`] = `
             data-autoplay="false"
             data-controls="true"
             data-href="https://www.facebook.com/100064959061177/videos/1310370486335266/"
--           id=":r1:"
+-           id=":r0:"
 +           id=":r8:"
             style="width: 100%; height: 100%;"
           />

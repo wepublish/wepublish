@@ -1,8 +1,21 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Bildwurf Ad Block should render Default 1`] = `
-"Snapshot Diff:
-Compared values have no visual difference."
+<DocumentFragment>
+  <script
+    data-testid="fake-script"
+    src="https://media.online.bildwurf.ch/js/code.min.js"
+  />
+  <div
+    class="emotion-0 emotion-1"
+    id="bildwurf-injection-wrapper"
+  >
+    <ins
+      class="aso-zone"
+      data-zone="77348"
+    />
+  </div>
+</DocumentFragment>
 `;
 
 exports[`Bildwurf Ad Block should render WithClassName 1`] = `

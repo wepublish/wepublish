@@ -1,8 +1,48 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Quote Block should render Default 1`] = `
-"Snapshot Diff:
-Compared values have no visual difference."
+<DocumentFragment>
+  .emotion-0 {
+  font-style: italic;
+  margin: 24px 40px;
+  display: grid;
+  gap: 16px;
+}
+
+.emotion-2 {
+  margin: 0;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 400;
+  font-size: 2.125rem;
+  line-height: 1.235;
+  letter-spacing: 0.00735em;
+}
+
+.emotion-3 {
+  margin: 0;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.5;
+  letter-spacing: 0.00938em;
+  margin-bottom: 0.35em;
+}
+
+<blockquote
+    class="emotion-0 emotion-1"
+  >
+    <p
+      class="MuiTypography-root MuiTypography-h4 emotion-2"
+    >
+      «This is a quote»
+    </p>
+    <cite
+      class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-3"
+    >
+      John Doe
+    </cite>
+  </blockquote>
+</DocumentFragment>
 `;
 
 exports[`Quote Block should render WithClassName 1`] = `

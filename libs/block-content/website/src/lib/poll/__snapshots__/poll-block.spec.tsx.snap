@@ -333,8 +333,213 @@ exports[`Poll Block should render AnonymousVotingPlay 1`] = `
 `;
 
 exports[`Poll Block should render Default 1`] = `
-"Snapshot Diff:
-Compared values have no visual difference."
+<DocumentFragment>
+  .emotion-0 {
+  display: grid;
+  gap: 16px;
+}
+
+.emotion-2 {
+  margin: 0;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 400;
+  font-size: 2.125rem;
+  line-height: 1.235;
+  letter-spacing: 0.00735em;
+}
+
+.emotion-5 {
+  margin: 0;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.5;
+  letter-spacing: 0.00938em;
+  margin-bottom: 0.35em;
+}
+
+.emotion-6 {
+  display: grid;
+  gap: 8px;
+}
+
+.emotion-8 {
+  display: grid;
+}
+
+.emotion-10 {
+  display: grid;
+  gap: 8px;
+  grid-template-columns: max-content max-content;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+}
+
+.emotion-12 {
+  font-weight: 500;
+}
+
+.emotion-14 {
+  font-weight: 500;
+}
+
+.emotion-16 {
+  position: relative;
+  font-size: 0.75em;
+  padding: 4px 8px;
+  position: relative;
+  background-color: #eeeeee;
+}
+
+.emotion-18 {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background-color: #e0e0e0;
+  z-index: 0;
+  pointer-events: none;
+  background-color: #000;
+  width: 52.38095238095239%;
+}
+
+.emotion-20 {
+  position: relative;
+  color: rgba(0, 0, 0, 0.87);
+  color: #fff;
+}
+
+.emotion-32 {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background-color: #e0e0e0;
+  z-index: 0;
+  pointer-events: none;
+  width: 47.61904761904761%;
+}
+
+.emotion-34 {
+  position: relative;
+  color: rgba(0, 0, 0, 0.87);
+}
+
+.emotion-36 {
+  font-size: 0.875em;
+  color: rgba(0, 0, 0, 0.38);
+}
+
+<article
+    class="emotion-0 emotion-1"
+  >
+    <h1
+      class="MuiTypography-root MuiTypography-h4 emotion-2"
+    >
+      Question
+    </h1>
+    <div
+      class="emotion-3 emotion-4"
+    >
+      <div
+        data-gramm="false"
+        data-slate-editor="true"
+        data-slate-node="value"
+        style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+      >
+        <p
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-5"
+          data-slate-node="element"
+        >
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </span>
+          </span>
+        </p>
+      </div>
+    </div>
+    <div
+      class="emotion-6 emotion-7"
+    >
+      <div
+        class="emotion-8 emotion-9"
+      >
+        <div
+          class="emotion-10 emotion-11"
+        >
+          <div
+            class="emotion-12 emotion-13"
+          >
+            Ja
+          </div>
+          <div
+            class="emotion-14 emotion-15"
+          >
+            52%
+          </div>
+        </div>
+        <div
+          class="emotion-16 emotion-17"
+        >
+          <div
+            class="emotion-18 emotion-19"
+          />
+          <div
+            class="emotion-20 emotion-21"
+          >
+            11 Stimmen
+          </div>
+        </div>
+      </div>
+      <div
+        class="emotion-8 emotion-9"
+      >
+        <div
+          class="emotion-10 emotion-11"
+        >
+          <div
+            class="emotion-12 emotion-13"
+          >
+            Nein
+          </div>
+          <div
+            class="emotion-14 emotion-15"
+          >
+            48%
+          </div>
+        </div>
+        <div
+          class="emotion-16 emotion-17"
+        >
+          <div
+            class="emotion-32 emotion-19"
+          />
+          <div
+            class="emotion-34 emotion-21"
+          >
+            10 Stimmen
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="emotion-36 emotion-37"
+    >
+      21 Stimmen – Schliesst am 
+      <time
+        datetime="2033-01-01"
+      >
+        01.01.2033 00:00
+      </time>
+    </div>
+  </article>
+</DocumentFragment>
 `;
 
 exports[`Poll Block should render Voting 1`] = `

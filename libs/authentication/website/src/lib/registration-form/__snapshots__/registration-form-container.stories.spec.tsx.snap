@@ -24,15 +24,15 @@ exports[`Registration Form Container should render Filled 1`] = `
 -           data-shrink="false"
 +           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 +           data-shrink="true"
-            for=":r0:"
-            id=":r0:-label"
+            for=":r9:"
+            id=":r9:-label"
           >
             Vorname
           </label>
 @@ -24,18 +27,18 @@
               autocomplete="firstname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r0:"
+              id=":r9:"
               name="firstName"
               type="text"
 -             value=""
@@ -60,15 +60,15 @@ exports[`Registration Form Container should render Filled 1`] = `
 -           data-shrink="false"
 +           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 +           data-shrink="true"
-            for=":r1:"
-            id=":r1:-label"
+            for=":ra:"
+            id=":ra:-label"
           >
             Nachname
           </label>
 @@ -61,18 +64,18 @@
               autocomplete="lastname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r1:"
+              id=":ra:"
               name="name"
               type="text"
 -             value=""
@@ -96,15 +96,15 @@ exports[`Registration Form Container should render Filled 1`] = `
 -           data-shrink="false"
 +           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 +           data-shrink="true"
-            for=":r2:"
-            id=":r2:-label"
+            for=":rb:"
+            id=":rb:-label"
           >
             Email
           </label>
 @@ -98,18 +101,18 @@
               autocomplete="email"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r2:"
+              id=":rb:"
               name="email"
               type="email"
 -             value=""
@@ -132,15 +132,15 @@ exports[`Registration Form Container should render Filled 1`] = `
 -           data-shrink="false"
 +           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 +           data-shrink="true"
-            for=":r3:"
-            id=":r3:-label"
+            for=":rc:"
+            id=":rc:-label"
           >
             Passwort
           </label>
 @@ -135,11 +138,11 @@
               autocomplete="new-password"
               class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r3:"
+              id=":rc:"
               name="password"
               type="password"
 -             value=""
@@ -173,15 +173,15 @@ exports[`Registration Form Container should render Filled 1`] = `
 -             data-shrink="false"
 +             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 +             data-shrink="true"
-              for=":r4:"
-              id=":r4:-label"
+              for=":rd:"
+              id=":rd:-label"
             >
               Adresse
             </label>
 @@ -205,18 +208,18 @@
                 autocomplete="address"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r4:"
+                id=":rd:"
                 name="address.streetAddress"
                 type="text"
 -               value=""
@@ -209,15 +209,15 @@ exports[`Registration Form Container should render Filled 1`] = `
 -             data-shrink="false"
 +             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 +             data-shrink="true"
-              for=":r5:"
-              id=":r5:-label"
+              for=":re:"
+              id=":re:-label"
             >
               PLZ
             </label>
 @@ -242,18 +245,18 @@
                 autocomplete="zip"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r5:"
+                id=":re:"
                 name="address.zipCode"
                 type="text"
 -               value=""
@@ -245,15 +245,15 @@ exports[`Registration Form Container should render Filled 1`] = `
 -             data-shrink="false"
 +             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 +             data-shrink="true"
-              for=":r6:"
-              id=":r6:-label"
+              for=":rf:"
+              id=":rf:-label"
             >
               Ort / Stadt
             </label>
 @@ -279,18 +282,18 @@
                 autocomplete="city"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r6:"
+                id=":rf:"
                 name="address.city"
                 type="text"
 -               value=""
@@ -281,15 +281,15 @@ exports[`Registration Form Container should render Filled 1`] = `
 -             data-shrink="false"
 +             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 +             data-shrink="true"
-              for=":r7:"
-              id=":r7:-label"
+              for=":rg:"
+              id=":rg:-label"
             >
               Land
             </label>
 @@ -316,18 +319,18 @@
                 autocomplete="country"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r7:"
+                id=":rg:"
                 name="address.country"
                 type="text"
 -               value=""
@@ -317,15 +317,15 @@ exports[`Registration Form Container should render Filled 1`] = `
 -           data-shrink="false"
 +           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 +           data-shrink="true"
-            for=":r8:"
-            id=":r8:-label"
+            for=":rh:"
+            id=":rh:-label"
           >
             Captcha
           </label>
 @@ -416,18 +419,18 @@
               aria-invalid="false"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r8:"
+              id=":rh:"
               name="challengeAnswer.challengeSolution"
               type="text"
 -             value=""
@@ -367,12 +367,12 @@ exports[`Registration Form Container should render WithChallengeError 1`] = `
           <label
 -           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 -           data-shrink="true"
--           for=":rh:"
--           id=":rh:-label"
+-           for=":r0:"
+-           id=":r0:-label"
 +           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
 +           data-shrink="false"
-+           for=":r9:"
-+           id=":r9:-label"
++           for=":ri:"
++           id=":ri:-label"
           >
             Vorname
           </label>
@@ -383,8 +383,8 @@ exports[`Registration Form Container should render WithChallengeError 1`] = `
               aria-invalid="false"
               autocomplete="firstname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
--             id=":rh:"
-+             id=":r9:"
+-             id=":r0:"
++             id=":ri:"
               name="firstName"
               type="text"
 -             value="Foo"
@@ -410,12 +410,12 @@ exports[`Registration Form Container should render WithChallengeError 1`] = `
           <label
 -           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 -           data-shrink="true"
--           for=":ri:"
--           id=":ri:-label"
+-           for=":r1:"
+-           id=":r1:-label"
 +           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
 +           data-shrink="false"
-+           for=":ra:"
-+           id=":ra:-label"
++           for=":rj:"
++           id=":rj:-label"
           >
             Nachname
           </label>
@@ -426,8 +426,8 @@ exports[`Registration Form Container should render WithChallengeError 1`] = `
               aria-invalid="false"
               autocomplete="lastname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
--             id=":ri:"
-+             id=":ra:"
+-             id=":r1:"
++             id=":rj:"
               name="name"
               type="text"
 -             value="Bar"
@@ -453,12 +453,12 @@ exports[`Registration Form Container should render WithChallengeError 1`] = `
           <label
 -           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 -           data-shrink="true"
--           for=":rj:"
--           id=":rj:-label"
+-           for=":r2:"
+-           id=":r2:-label"
 +           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
 +           data-shrink="false"
-+           for=":rb:"
-+           id=":rb:-label"
++           for=":rk:"
++           id=":rk:-label"
           >
             Email
           </label>
@@ -469,8 +469,8 @@ exports[`Registration Form Container should render WithChallengeError 1`] = `
               aria-invalid="false"
               autocomplete="email"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
--             id=":rj:"
-+             id=":rb:"
+-             id=":r2:"
++             id=":rk:"
               name="email"
               type="email"
 -             value="foobar@email.com"
@@ -496,12 +496,12 @@ exports[`Registration Form Container should render WithChallengeError 1`] = `
           <label
 -           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 -           data-shrink="true"
--           for=":rk:"
--           id=":rk:-label"
+-           for=":r3:"
+-           id=":r3:-label"
 +           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
 +           data-shrink="false"
-+           for=":rc:"
-+           id=":rc:-label"
++           for=":rl:"
++           id=":rl:-label"
           >
             Passwort
           </label>
@@ -512,8 +512,8 @@ exports[`Registration Form Container should render WithChallengeError 1`] = `
               aria-invalid="false"
               autocomplete="new-password"
               class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
--             id=":rk:"
-+             id=":rc:"
+-             id=":r3:"
++             id=":rl:"
               name="password"
               type="password"
 -             value="12345678"
@@ -544,12 +544,12 @@ exports[`Registration Form Container should render WithChallengeError 1`] = `
             <label
 -             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 -             data-shrink="true"
--             for=":rl:"
--             id=":rl:-label"
+-             for=":r4:"
+-             id=":r4:-label"
 +             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
 +             data-shrink="false"
-+             for=":rd:"
-+             id=":rd:-label"
++             for=":rm:"
++             id=":rm:-label"
             >
               Adresse
             </label>
@@ -560,8 +560,8 @@ exports[`Registration Form Container should render WithChallengeError 1`] = `
                 aria-invalid="false"
                 autocomplete="address"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
--               id=":rl:"
-+               id=":rd:"
+-               id=":r4:"
++               id=":rm:"
                 name="address.streetAddress"
                 type="text"
 -               value="Musterstrasse 1"
@@ -587,12 +587,12 @@ exports[`Registration Form Container should render WithChallengeError 1`] = `
             <label
 -             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 -             data-shrink="true"
--             for=":rm:"
--             id=":rm:-label"
+-             for=":r5:"
+-             id=":r5:-label"
 +             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
 +             data-shrink="false"
-+             for=":re:"
-+             id=":re:-label"
++             for=":rn:"
++             id=":rn:-label"
             >
               PLZ
             </label>
@@ -603,8 +603,8 @@ exports[`Registration Form Container should render WithChallengeError 1`] = `
                 aria-invalid="false"
                 autocomplete="zip"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
--               id=":rm:"
-+               id=":re:"
+-               id=":r5:"
++               id=":rn:"
                 name="address.zipCode"
                 type="text"
 -               value="8047"
@@ -630,12 +630,12 @@ exports[`Registration Form Container should render WithChallengeError 1`] = `
             <label
 -             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 -             data-shrink="true"
--             for=":rn:"
--             id=":rn:-label"
+-             for=":r6:"
+-             id=":r6:-label"
 +             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
 +             data-shrink="false"
-+             for=":rf:"
-+             id=":rf:-label"
++             for=":ro:"
++             id=":ro:-label"
             >
               Ort / Stadt
             </label>
@@ -646,8 +646,8 @@ exports[`Registration Form Container should render WithChallengeError 1`] = `
                 aria-invalid="false"
                 autocomplete="city"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
--               id=":rn:"
-+               id=":rf:"
+-               id=":r6:"
++               id=":ro:"
                 name="address.city"
                 type="text"
 -               value="Zürich"
@@ -673,12 +673,12 @@ exports[`Registration Form Container should render WithChallengeError 1`] = `
             <label
 -             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 -             data-shrink="true"
--             for=":ro:"
--             id=":ro:-label"
+-             for=":r7:"
+-             id=":r7:-label"
 +             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
 +             data-shrink="false"
-+             for=":rg:"
-+             id=":rg:-label"
++             for=":rp:"
++             id=":rp:-label"
             >
               Land
             </label>
@@ -689,8 +689,8 @@ exports[`Registration Form Container should render WithChallengeError 1`] = `
                 aria-invalid="false"
                 autocomplete="country"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
--               id=":ro:"
-+               id=":rg:"
+-               id=":r7:"
++               id=":rp:"
                 name="address.country"
                 type="text"
 -               value="Schweiz"
@@ -791,8 +791,8 @@ exports[`Registration Form Container should render WithChallengeError 1`] = `
 -         <label
 -           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 -           data-shrink="true"
--           for=":rp:"
--           id=":rp:-label"
+-           for=":r8:"
+-           id=":r8:-label"
 -         >
 -           Captcha
 -         </label>
@@ -802,7 +802,7 @@ exports[`Registration Form Container should render WithChallengeError 1`] = `
 -           <input
 -             aria-invalid="false"
 -             class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
--             id=":rp:"
+-             id=":r8:"
 -             name="challengeAnswer.challengeSolution"
 -             type="text"
 -             value="1"
@@ -851,8 +851,8 @@ exports[`Registration Form Container should render WithClassName 1`] = `
           <label
 -           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 -           data-shrink="true"
--           for=":rh:"
--           id=":rh:-label"
+-           for=":r0:"
+-           id=":r0:-label"
 +           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
 +           data-shrink="false"
 +           for=":rq:"
@@ -867,7 +867,7 @@ exports[`Registration Form Container should render WithClassName 1`] = `
               aria-invalid="false"
               autocomplete="firstname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
--             id=":rh:"
+-             id=":r0:"
 +             id=":rq:"
               name="firstName"
               type="text"
@@ -894,8 +894,8 @@ exports[`Registration Form Container should render WithClassName 1`] = `
           <label
 -           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 -           data-shrink="true"
--           for=":ri:"
--           id=":ri:-label"
+-           for=":r1:"
+-           id=":r1:-label"
 +           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
 +           data-shrink="false"
 +           for=":rr:"
@@ -910,7 +910,7 @@ exports[`Registration Form Container should render WithClassName 1`] = `
               aria-invalid="false"
               autocomplete="lastname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
--             id=":ri:"
+-             id=":r1:"
 +             id=":rr:"
               name="name"
               type="text"
@@ -937,8 +937,8 @@ exports[`Registration Form Container should render WithClassName 1`] = `
           <label
 -           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 -           data-shrink="true"
--           for=":rj:"
--           id=":rj:-label"
+-           for=":r2:"
+-           id=":r2:-label"
 +           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
 +           data-shrink="false"
 +           for=":rs:"
@@ -953,7 +953,7 @@ exports[`Registration Form Container should render WithClassName 1`] = `
               aria-invalid="false"
               autocomplete="email"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
--             id=":rj:"
+-             id=":r2:"
 +             id=":rs:"
               name="email"
               type="email"
@@ -980,8 +980,8 @@ exports[`Registration Form Container should render WithClassName 1`] = `
           <label
 -           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 -           data-shrink="true"
--           for=":rk:"
--           id=":rk:-label"
+-           for=":r3:"
+-           id=":r3:-label"
 +           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
 +           data-shrink="false"
 +           for=":rt:"
@@ -996,7 +996,7 @@ exports[`Registration Form Container should render WithClassName 1`] = `
               aria-invalid="false"
               autocomplete="new-password"
               class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
--             id=":rk:"
+-             id=":r3:"
 +             id=":rt:"
               name="password"
               type="password"
@@ -1028,8 +1028,8 @@ exports[`Registration Form Container should render WithClassName 1`] = `
             <label
 -             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 -             data-shrink="true"
--             for=":rl:"
--             id=":rl:-label"
+-             for=":r4:"
+-             id=":r4:-label"
 +             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
 +             data-shrink="false"
 +             for=":ru:"
@@ -1044,7 +1044,7 @@ exports[`Registration Form Container should render WithClassName 1`] = `
                 aria-invalid="false"
                 autocomplete="address"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
--               id=":rl:"
+-               id=":r4:"
 +               id=":ru:"
                 name="address.streetAddress"
                 type="text"
@@ -1071,8 +1071,8 @@ exports[`Registration Form Container should render WithClassName 1`] = `
             <label
 -             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 -             data-shrink="true"
--             for=":rm:"
--             id=":rm:-label"
+-             for=":r5:"
+-             id=":r5:-label"
 +             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
 +             data-shrink="false"
 +             for=":rv:"
@@ -1087,7 +1087,7 @@ exports[`Registration Form Container should render WithClassName 1`] = `
                 aria-invalid="false"
                 autocomplete="zip"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
--               id=":rm:"
+-               id=":r5:"
 +               id=":rv:"
                 name="address.zipCode"
                 type="text"
@@ -1114,8 +1114,8 @@ exports[`Registration Form Container should render WithClassName 1`] = `
             <label
 -             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 -             data-shrink="true"
--             for=":rn:"
--             id=":rn:-label"
+-             for=":r6:"
+-             id=":r6:-label"
 +             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
 +             data-shrink="false"
 +             for=":r10:"
@@ -1130,7 +1130,7 @@ exports[`Registration Form Container should render WithClassName 1`] = `
                 aria-invalid="false"
                 autocomplete="city"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
--               id=":rn:"
+-               id=":r6:"
 +               id=":r10:"
                 name="address.city"
                 type="text"
@@ -1157,8 +1157,8 @@ exports[`Registration Form Container should render WithClassName 1`] = `
             <label
 -             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 -             data-shrink="true"
--             for=":ro:"
--             id=":ro:-label"
+-             for=":r7:"
+-             id=":r7:-label"
 +             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
 +             data-shrink="false"
 +             for=":r11:"
@@ -1173,7 +1173,7 @@ exports[`Registration Form Container should render WithClassName 1`] = `
                 aria-invalid="false"
                 autocomplete="country"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
--               id=":ro:"
+-               id=":r7:"
 +               id=":r11:"
                 name="address.country"
                 type="text"
@@ -1200,8 +1200,8 @@ exports[`Registration Form Container should render WithClassName 1`] = `
           <label
 -           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 -           data-shrink="true"
--           for=":rp:"
--           id=":rp:-label"
+-           for=":r8:"
+-           id=":r8:-label"
 +           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
 +           data-shrink="false"
 +           for=":r12:"
@@ -1215,7 +1215,7 @@ exports[`Registration Form Container should render WithClassName 1`] = `
             <input
               aria-invalid="false"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
--             id=":rp:"
+-             id=":r8:"
 +             id=":r12:"
               name="challengeAnswer.challengeSolution"
               type="text"
@@ -1258,8 +1258,8 @@ exports[`Registration Form Container should render WithEmotion 1`] = `
           <label
 -           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 -           data-shrink="true"
--           for=":rh:"
--           id=":rh:-label"
+-           for=":r0:"
+-           id=":r0:-label"
 +           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
 +           data-shrink="false"
 +           for=":r13:"
@@ -1274,7 +1274,7 @@ exports[`Registration Form Container should render WithEmotion 1`] = `
               aria-invalid="false"
               autocomplete="firstname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
--             id=":rh:"
+-             id=":r0:"
 +             id=":r13:"
               name="firstName"
               type="text"
@@ -1301,8 +1301,8 @@ exports[`Registration Form Container should render WithEmotion 1`] = `
           <label
 -           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 -           data-shrink="true"
--           for=":ri:"
--           id=":ri:-label"
+-           for=":r1:"
+-           id=":r1:-label"
 +           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
 +           data-shrink="false"
 +           for=":r14:"
@@ -1317,7 +1317,7 @@ exports[`Registration Form Container should render WithEmotion 1`] = `
               aria-invalid="false"
               autocomplete="lastname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
--             id=":ri:"
+-             id=":r1:"
 +             id=":r14:"
               name="name"
               type="text"
@@ -1344,8 +1344,8 @@ exports[`Registration Form Container should render WithEmotion 1`] = `
           <label
 -           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 -           data-shrink="true"
--           for=":rj:"
--           id=":rj:-label"
+-           for=":r2:"
+-           id=":r2:-label"
 +           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
 +           data-shrink="false"
 +           for=":r15:"
@@ -1360,7 +1360,7 @@ exports[`Registration Form Container should render WithEmotion 1`] = `
               aria-invalid="false"
               autocomplete="email"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
--             id=":rj:"
+-             id=":r2:"
 +             id=":r15:"
               name="email"
               type="email"
@@ -1387,8 +1387,8 @@ exports[`Registration Form Container should render WithEmotion 1`] = `
           <label
 -           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 -           data-shrink="true"
--           for=":rk:"
--           id=":rk:-label"
+-           for=":r3:"
+-           id=":r3:-label"
 +           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
 +           data-shrink="false"
 +           for=":r16:"
@@ -1403,7 +1403,7 @@ exports[`Registration Form Container should render WithEmotion 1`] = `
               aria-invalid="false"
               autocomplete="new-password"
               class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
--             id=":rk:"
+-             id=":r3:"
 +             id=":r16:"
               name="password"
               type="password"
@@ -1435,8 +1435,8 @@ exports[`Registration Form Container should render WithEmotion 1`] = `
             <label
 -             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 -             data-shrink="true"
--             for=":rl:"
--             id=":rl:-label"
+-             for=":r4:"
+-             id=":r4:-label"
 +             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
 +             data-shrink="false"
 +             for=":r17:"
@@ -1451,7 +1451,7 @@ exports[`Registration Form Container should render WithEmotion 1`] = `
                 aria-invalid="false"
                 autocomplete="address"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
--               id=":rl:"
+-               id=":r4:"
 +               id=":r17:"
                 name="address.streetAddress"
                 type="text"
@@ -1478,8 +1478,8 @@ exports[`Registration Form Container should render WithEmotion 1`] = `
             <label
 -             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 -             data-shrink="true"
--             for=":rm:"
--             id=":rm:-label"
+-             for=":r5:"
+-             id=":r5:-label"
 +             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
 +             data-shrink="false"
 +             for=":r18:"
@@ -1494,7 +1494,7 @@ exports[`Registration Form Container should render WithEmotion 1`] = `
                 aria-invalid="false"
                 autocomplete="zip"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
--               id=":rm:"
+-               id=":r5:"
 +               id=":r18:"
                 name="address.zipCode"
                 type="text"
@@ -1521,8 +1521,8 @@ exports[`Registration Form Container should render WithEmotion 1`] = `
             <label
 -             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 -             data-shrink="true"
--             for=":rn:"
--             id=":rn:-label"
+-             for=":r6:"
+-             id=":r6:-label"
 +             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
 +             data-shrink="false"
 +             for=":r19:"
@@ -1537,7 +1537,7 @@ exports[`Registration Form Container should render WithEmotion 1`] = `
                 aria-invalid="false"
                 autocomplete="city"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
--               id=":rn:"
+-               id=":r6:"
 +               id=":r19:"
                 name="address.city"
                 type="text"
@@ -1564,8 +1564,8 @@ exports[`Registration Form Container should render WithEmotion 1`] = `
             <label
 -             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 -             data-shrink="true"
--             for=":ro:"
--             id=":ro:-label"
+-             for=":r7:"
+-             id=":r7:-label"
 +             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
 +             data-shrink="false"
 +             for=":r1a:"
@@ -1580,7 +1580,7 @@ exports[`Registration Form Container should render WithEmotion 1`] = `
                 aria-invalid="false"
                 autocomplete="country"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
--               id=":ro:"
+-               id=":r7:"
 +               id=":r1a:"
                 name="address.country"
                 type="text"
@@ -1607,8 +1607,8 @@ exports[`Registration Form Container should render WithEmotion 1`] = `
           <label
 -           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 -           data-shrink="true"
--           for=":rp:"
--           id=":rp:-label"
+-           for=":r8:"
+-           id=":r8:-label"
 +           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
 +           data-shrink="false"
 +           for=":r1b:"
@@ -1622,7 +1622,7 @@ exports[`Registration Form Container should render WithEmotion 1`] = `
             <input
               aria-invalid="false"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
--             id=":rp:"
+-             id=":r8:"
 +             id=":r1b:"
               name="challengeAnswer.challengeSolution"
               type="text"

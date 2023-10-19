@@ -1,8 +1,405 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Teaser Grid Flex Block should render Default 1`] = `
-"Snapshot Diff:
-Compared values have no visual difference."
+<DocumentFragment>
+  .emotion-0 {
+  display: grid;
+  -webkit-column-gap: 16px;
+  column-gap: 16px;
+  row-gap: 40px;
+  grid-template-columns: 1fr;
+  -webkit-align-items: stretch;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+}
+
+@media (min-width:600px) {
+  .emotion-0 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-0 {
+    grid-template-columns: repeat(12, 1fr);
+  }
+}
+
+.emotion-2 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-2 {
+    grid-column-start: 1;
+    grid-column-end: 4;
+    grid-row-start: 1;
+    grid-row-end: 5;
+  }
+}
+
+.emotion-4 {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  display: grid;
+}
+
+.emotion-5 {
+  display: grid;
+  gap: 8px;
+  grid-template-rows: auto;
+  grid-auto-rows: max-content;
+}
+
+.emotion-7 {
+  max-width: 100%;
+  width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.emotion-11 {
+  margin: 0;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 400;
+  font-size: 1.5rem;
+  line-height: 1.334;
+  letter-spacing: 0em;
+}
+
+.emotion-12 {
+  margin: 0;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 500;
+  font-size: 1.25rem;
+  line-height: 1.6;
+  letter-spacing: 0.0075em;
+}
+
+.emotion-13 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-13 {
+    grid-column-start: 4;
+    grid-column-end: 8;
+    grid-row-start: 1;
+    grid-row-end: 7;
+  }
+}
+
+.emotion-26 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-26 {
+    grid-column-start: 8;
+    grid-column-end: 13;
+    grid-row-start: 1;
+    grid-row-end: 9;
+  }
+}
+
+.emotion-37 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-37 {
+    grid-column-start: 1;
+    grid-column-end: 4;
+    grid-row-start: 5;
+    grid-row-end: 9;
+  }
+}
+
+.emotion-50 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-50 {
+    grid-column-start: 4;
+    grid-column-end: 8;
+    grid-row-start: 7;
+    grid-row-end: 13;
+  }
+}
+
+.emotion-61 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-61 {
+    grid-column-start: 8;
+    grid-column-end: 13;
+    grid-row-start: 9;
+    grid-row-end: 17;
+  }
+}
+
+<div
+    class="emotion-0 emotion-1"
+  >
+    <article
+      class="emotion-2 emotion-3"
+      x="0"
+      y="0"
+    >
+      <a
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-4"
+        href="https://example.com"
+      >
+        <div
+          class="emotion-5 emotion-6"
+        >
+          <img
+            alt="An image description"
+            class="emotion-7 emotion-8"
+            loading="lazy"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title="An image title"
+          />
+          <header
+            class="emotion-9 emotion-10"
+          >
+            <h1
+              class="MuiTypography-root MuiTypography-h5 emotion-11"
+            >
+              Teambesprechung vom 23.05.
+            </h1>
+          </header>
+          <p
+            class="MuiTypography-root MuiTypography-h6 emotion-12"
+          >
+            Lead
+          </p>
+        </div>
+      </a>
+    </article>
+    <article
+      class="emotion-13 emotion-3"
+      x="3"
+      y="0"
+    >
+      <a
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-4"
+        href="https://example.com"
+      >
+        <div
+          class="emotion-5 emotion-6"
+        >
+          <img
+            alt="An image description"
+            class="emotion-7 emotion-8"
+            loading="lazy"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title="An image title"
+          />
+          <time
+            class="emotion-20 emotion-21"
+            datetime="2023-01-01T00:00:00.000Z"
+          >
+            01.01.2023
+          </time>
+          <header
+            class="emotion-9 emotion-10"
+          >
+            <h1
+              class="MuiTypography-root MuiTypography-h5 emotion-11"
+            >
+              Pre Title: Title
+            </h1>
+          </header>
+          <p
+            class="MuiTypography-root MuiTypography-h6 emotion-12"
+          >
+            Lead
+          </p>
+        </div>
+      </a>
+    </article>
+    <article
+      class="emotion-26 emotion-3"
+      x="7"
+      y="0"
+    >
+      <a
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-4"
+        href="https://example.com"
+      >
+        <div
+          class="emotion-5 emotion-6"
+        >
+          <img
+            alt="An image description"
+            class="emotion-7 emotion-8"
+            loading="lazy"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title="An image title"
+          />
+          <header
+            class="emotion-9 emotion-10"
+          >
+            <h1
+              class="MuiTypography-root MuiTypography-h5 emotion-11"
+            >
+              Pre Title: Title
+            </h1>
+          </header>
+          <p
+            class="MuiTypography-root MuiTypography-h6 emotion-12"
+          >
+            Lead
+          </p>
+        </div>
+      </a>
+    </article>
+    <article
+      class="emotion-37 emotion-3"
+      x="0"
+      y="4"
+    >
+      <a
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-4"
+        href="https://example.com"
+      >
+        <div
+          class="emotion-5 emotion-6"
+        >
+          <img
+            alt="An image description"
+            class="emotion-7 emotion-8"
+            loading="lazy"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title="An image title"
+          />
+          <time
+            class="emotion-20 emotion-21"
+            datetime="2023-01-01T00:00:00.000Z"
+          >
+            01.01.2023
+          </time>
+          <header
+            class="emotion-9 emotion-10"
+          >
+            <h1
+              class="MuiTypography-root MuiTypography-h5 emotion-11"
+            >
+              Pre Title: Title
+            </h1>
+          </header>
+          <p
+            class="MuiTypography-root MuiTypography-h6 emotion-12"
+          >
+            Lead
+          </p>
+        </div>
+      </a>
+    </article>
+    <article
+      class="emotion-50 emotion-3"
+      x="3"
+      y="6"
+    >
+      <a
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-4"
+        href="https://example.com"
+      >
+        <div
+          class="emotion-5 emotion-6"
+        >
+          <img
+            alt="An image description"
+            class="emotion-7 emotion-8"
+            loading="lazy"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title="An image title"
+          />
+          <header
+            class="emotion-9 emotion-10"
+          >
+            <h1
+              class="MuiTypography-root MuiTypography-h5 emotion-11"
+            >
+              Pre Title: Title
+            </h1>
+          </header>
+          <p
+            class="MuiTypography-root MuiTypography-h6 emotion-12"
+          >
+            Lead
+          </p>
+        </div>
+      </a>
+    </article>
+    <article
+      class="emotion-61 emotion-3"
+      x="7"
+      y="8"
+    >
+      <a
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-4"
+        href="https://example.com"
+      >
+        <div
+          class="emotion-5 emotion-6"
+        >
+          <img
+            alt="An image description"
+            class="emotion-7 emotion-8"
+            loading="lazy"
+            srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+            title="An image title"
+          />
+          <header
+            class="emotion-9 emotion-10"
+          >
+            <h1
+              class="MuiTypography-root MuiTypography-h5 emotion-11"
+            >
+              Teambesprechung vom 23.05.
+            </h1>
+          </header>
+          <p
+            class="MuiTypography-root MuiTypography-h6 emotion-12"
+          >
+            Lead
+          </p>
+        </div>
+      </a>
+    </article>
+  </div>
+</DocumentFragment>
 `;
 
 exports[`Teaser Grid Flex Block should render WithClassName 1`] = `
