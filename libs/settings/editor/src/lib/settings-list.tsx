@@ -321,13 +321,19 @@ function SettingList() {
     return value
   }
 
+  // console.log('showWarning', validation)
+  console.log('showWarning', showWarning)
+
   return (
     <>
       <Form
         disabled={isDisabled}
         model={validationModel}
         formValue={formValue}
-        onSubmit={validationPassed => validationPassed && setShowWarning(true)}>
+        onSubmit={validationPassed => {
+          console.log('validationPassed', validationPassed)
+          return validationPassed && setShowWarning(true)
+        }}>
         <ListViewContainer>
           <ListViewHeader>
             <h2>{t('settingList.settings')}</h2>
