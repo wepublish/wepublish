@@ -27,7 +27,7 @@ export enum SettingName {
   ALLOW_COMMENT_EDITING = 'allowCommentEditing'
 }
 
-export type SettingInput<T = unknown> = Pick<Setting<T>, 'value'>
+// export type SettingInput<T = unknown> = Pick<Setting<T>, 'value'>
 
 export type CreateSettingArgs<T> = Omit<Setting<T>, 'id'>
 

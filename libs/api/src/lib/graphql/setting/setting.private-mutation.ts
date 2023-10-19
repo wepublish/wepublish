@@ -1,9 +1,12 @@
 import {Prisma, PrismaClient} from '@prisma/client'
 import {CanUpdateSettings} from '@wepublish/permissions/api'
 import {Context} from '../../context'
-import {SettingRestriction, UpdateSettingArgs} from '@wepublish/settings/api'
+import {
+  SettingRestriction,
+  UpdateSettingArgs,
+  checkSettingRestrictions
+} from '@wepublish/settings/api'
 import {NotFound} from '../../error'
-import {checkSettingRestrictions} from '../../utility'
 import {authorise} from '../permissions'
 
 export const updateSettings = async (

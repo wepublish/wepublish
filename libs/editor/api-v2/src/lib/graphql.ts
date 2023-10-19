@@ -18,6 +18,14 @@ export type Scalars = {
   /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
   DateTime: string;
   RichText: Node[];
+  /** Setting Value */
+  Value: any;
+};
+
+export type AllowedSettingVals = {
+  __typename?: 'AllowedSettingVals';
+  boolChoice?: Maybe<Scalars['Boolean']>;
+  stringChoice?: Maybe<Array<Scalars['String']>>;
 };
 
 export type Consent = {
@@ -155,6 +163,12 @@ export type Mutation = {
   updateConsent: Consent;
   /**
    *
+   *       Updates an existing settings.
+   *
+   */
+  updateSettings: Array<Setting>;
+  /**
+   *
    *       Updates an existing userConsent based on input.
    *       Returns updated userConsent.
    *
@@ -191,6 +205,11 @@ export type MutationDeleteUserConsentArgs = {
 export type MutationUpdateConsentArgs = {
   consent: ConsentInput;
   id: Scalars['String'];
+};
+
+
+export type MutationUpdateSettingsArgs = {
+  value: Array<UpdateSettingInput>;
 };
 
 
@@ -295,6 +314,18 @@ export type Query = {
   revenue: Array<DashboardInvoice>;
   /**
    *
+   *       Returns a single setting by id.
+   *
+   */
+  setting: Setting;
+  /**
+   *
+   *       Returns all settings.
+   *
+   */
+  settingsList: Array<Setting>;
+  /**
+   *
    *       Returns a single userConsent by id.
    *
    */
@@ -363,6 +394,16 @@ export type QueryRevenueArgs = {
 };
 
 
+export type QuerySettingArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QuerySettingsListArgs = {
+  filter?: InputMaybe<SettingFilter>;
+};
+
+
 export type QueryUserConsentArgs = {
   id: Scalars['String'];
 };
@@ -370,6 +411,45 @@ export type QueryUserConsentArgs = {
 
 export type QueryUserConsentsArgs = {
   filter?: InputMaybe<UserConsentFilter>;
+};
+
+export type Setting = {
+  __typename?: 'Setting';
+  id: Scalars['ID'];
+  name: SettingName;
+  settingRestriction?: Maybe<SettingRestriction>;
+  value?: Maybe<Scalars['Value']>;
+};
+
+export type SettingFilter = {
+  name?: InputMaybe<Scalars['String']>;
+};
+
+export enum SettingName {
+  AllowCommentEditing = 'ALLOW_COMMENT_EDITING',
+  AllowGuestCommenting = 'ALLOW_GUEST_COMMENTING',
+  AllowGuestCommentRating = 'ALLOW_GUEST_COMMENT_RATING',
+  AllowGuestPollVoting = 'ALLOW_GUEST_POLL_VOTING',
+  CommentCharLimit = 'COMMENT_CHAR_LIMIT',
+  InvoiceReminderFreq = 'INVOICE_REMINDER_FREQ',
+  InvoiceReminderMaxTries = 'INVOICE_REMINDER_MAX_TRIES',
+  MakeActiveSubscribersApiPublic = 'MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC',
+  MakeExpectedRevenueApiPublic = 'MAKE_EXPECTED_REVENUE_API_PUBLIC',
+  MakeNewDeactivationsApiPublic = 'MAKE_NEW_DEACTIVATIONS_API_PUBLIC',
+  MakeNewSubscribersApiPublic = 'MAKE_NEW_SUBSCRIBERS_API_PUBLIC',
+  MakeRenewingSubscribersApiPublic = 'MAKE_RENEWING_SUBSCRIBERS_API_PUBLIC',
+  MakeRevenueApiPublic = 'MAKE_REVENUE_API_PUBLIC',
+  PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
+  ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
+  SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN'
+}
+
+export type SettingRestriction = {
+  __typename?: 'SettingRestriction';
+  allowedValues?: Maybe<AllowedSettingVals>;
+  inputLength?: Maybe<Scalars['Int']>;
+  maxValue?: Maybe<Scalars['Int']>;
+  minValue?: Maybe<Scalars['Int']>;
 };
 
 export type SingleEventFilter = {
@@ -382,6 +462,11 @@ export enum SubscriptionDeactivationReason {
   None = 'none',
   UserSelfDeactivated = 'userSelfDeactivated'
 }
+
+export type UpdateSettingInput = {
+  name: SettingName;
+  value: Scalars['Value'];
+};
 
 export type UpdateUserConsentInput = {
   value: Scalars['Boolean'];
@@ -535,6 +620,18 @@ export type CreateEventMutationVariables = Exact<{
 
 
 export type CreateEventMutation = { __typename?: 'Mutation', createEvent: string };
+
+export type SettingsListQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type SettingsListQuery = { __typename?: 'Query', settingsList: Array<{ __typename?: 'Setting', id: string, name: SettingName, value?: any | null, settingRestriction?: { __typename?: 'SettingRestriction', maxValue?: number | null, minValue?: number | null, inputLength?: number | null, allowedValues?: { __typename?: 'AllowedSettingVals', stringChoice?: Array<string> | null, boolChoice?: boolean | null } | null } | null }> };
+
+export type UpdateSettingListMutationVariables = Exact<{
+  input: Array<UpdateSettingInput> | UpdateSettingInput;
+}>;
+
+
+export type UpdateSettingListMutation = { __typename?: 'Mutation', updateSettings: Array<{ __typename?: 'Setting', value?: any | null }> };
 
 export type VersionInformationQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1140,6 +1237,84 @@ export function useCreateEventMutation(baseOptions?: Apollo.MutationHookOptions<
 export type CreateEventMutationHookResult = ReturnType<typeof useCreateEventMutation>;
 export type CreateEventMutationResult = Apollo.MutationResult<CreateEventMutation>;
 export type CreateEventMutationOptions = Apollo.BaseMutationOptions<CreateEventMutation, CreateEventMutationVariables>;
+export const SettingsListDocument = gql`
+    query SettingsList {
+  settingsList {
+    id
+    name
+    value
+    settingRestriction {
+      maxValue
+      minValue
+      inputLength
+      allowedValues {
+        stringChoice
+        boolChoice
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useSettingsListQuery__
+ *
+ * To run a query within a React component, call `useSettingsListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSettingsListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSettingsListQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSettingsListQuery(baseOptions?: Apollo.QueryHookOptions<SettingsListQuery, SettingsListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<SettingsListQuery, SettingsListQueryVariables>(SettingsListDocument, options);
+      }
+export function useSettingsListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SettingsListQuery, SettingsListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<SettingsListQuery, SettingsListQueryVariables>(SettingsListDocument, options);
+        }
+export type SettingsListQueryHookResult = ReturnType<typeof useSettingsListQuery>;
+export type SettingsListLazyQueryHookResult = ReturnType<typeof useSettingsListLazyQuery>;
+export type SettingsListQueryResult = Apollo.QueryResult<SettingsListQuery, SettingsListQueryVariables>;
+export const UpdateSettingListDocument = gql`
+    mutation UpdateSettingList($input: [UpdateSettingInput!]!) {
+  updateSettings(value: $input) {
+    value
+  }
+}
+    `;
+export type UpdateSettingListMutationFn = Apollo.MutationFunction<UpdateSettingListMutation, UpdateSettingListMutationVariables>;
+
+/**
+ * __useUpdateSettingListMutation__
+ *
+ * To run a mutation, you first call `useUpdateSettingListMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSettingListMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSettingListMutation, { data, loading, error }] = useUpdateSettingListMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateSettingListMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSettingListMutation, UpdateSettingListMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateSettingListMutation, UpdateSettingListMutationVariables>(UpdateSettingListDocument, options);
+      }
+export type UpdateSettingListMutationHookResult = ReturnType<typeof useUpdateSettingListMutation>;
+export type UpdateSettingListMutationResult = Apollo.MutationResult<UpdateSettingListMutation>;
+export type UpdateSettingListMutationOptions = Apollo.BaseMutationOptions<UpdateSettingListMutation, UpdateSettingListMutationVariables>;
 export const VersionInformationDocument = gql`
     query VersionInformation {
   versionInformation {

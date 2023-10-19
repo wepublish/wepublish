@@ -1,0 +1,24 @@
+# Settings
+
+query SettingsList {
+  settingsList {
+    id
+    name
+    value
+    settingRestriction {
+      maxValue
+      minValue
+      inputLength
+      allowedValues {
+        stringChoice
+        boolChoice
+      }
+    }
+  }
+}
+
+mutation UpdateSettingList($input: [UpdateSettingInput!]!) {
+  updateSettings(value: $input) {
+    value
+  }
+}

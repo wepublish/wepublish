@@ -12,6 +12,7 @@ import {
 } from '@wepublish/consent/editor'
 import {TagType} from '@wepublish/editor/api'
 import {ImportableEventListView} from '@wepublish/events/import/editor'
+import {SettingList} from '@wepublish/settings/editor'
 import {
   AuthContext,
   AuthDispatchActionType,
@@ -48,7 +49,7 @@ import {PeerArticleList} from './routes/peerArticleList'
 import {PeerList} from './routes/peerList'
 import {PollEditView} from './routes/polls/pollEditView'
 import {PollList} from './routes/polls/pollList'
-import {SettingList} from './routes/settingList'
+// import {SettingList} from './routes/settingList'
 import {SubscriptionEditView} from './routes/subscriptionEditView'
 import {SubscriptionList} from './routes/subscriptionList'
 import {TagList} from './routes/tagList'
