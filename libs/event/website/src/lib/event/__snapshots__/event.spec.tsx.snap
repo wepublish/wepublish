@@ -1,1931 +1,1029 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Event should render Default 1`] = `
-<DocumentFragment>
-  <article
-    class="css-uh6yvp-EventWrapper ec2zadl3"
-  >
-    <div
-      data-testid="fake-head"
-    >
-      <meta
-        content="website"
-        property="og:type"
-      />
-      <meta
-        content="Cool concert"
-        property="og:title"
-      />
-      <meta
-        content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-        property="og:description"
-      />
-      <meta
-        content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-        name="description"
-      />
-      <meta
-        content="https://example.com"
-        property="og:url"
-      />
-      <link
-        href="https://example.com"
-        rel="canonical"
-      />
-      <meta
-        content="https://unsplash.it/500/300"
-        property="og:image"
-      />
-      <meta
-        content="summary_large_image"
-        name="twitter:card"
-      />
-    </div>
-    <script
-      data-testid="fake-script"
-      type="application/ld+json"
-    >
-      {"@context":"http://schema.org","@type":"Event","startDate":"2023-02-24T09:00:00Z","endDate":"2023-02-25T07:30:00Z","duration":"P0Y0M0DT22H30M0S","keywords":"Concert","eventStatus":"SCHEDULED","location":"Basel","image":"https://unsplash.it/500/300","name":"Cool concert","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
-    </script>
-    <img
-      alt="DSC07717"
-      class="css-1c1klla-ImageWrapper-Event e1shv2yg0"
-      loading="lazy"
-      srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-      title=""
-    />
-    <div
-      class="css-1wax86k-EventMeta ec2zadl2"
-    >
-      <div
-        class="css-10k8kcv-MetaWrapper ec2zadl1"
-      >
-        <div
-          class="css-j7qr3l-EventStart ec2zadl0"
-        >
-          <svg
-            fill="currentColor"
-            height="1em"
-            stroke="currentColor"
-            stroke-width="0"
-            viewBox="0 0 24 24"
-            width="1em"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M0 0h24v24H0z"
-              fill="none"
-            />
-            <path
-              d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
-            />
-          </svg>
-          24.02.2023 09:00
-        </div>
-        <span>
-          –
-        </span>
-         25.02.2023 07:30
-      </div>
-      <div
-        class="css-10k8kcv-MetaWrapper ec2zadl1"
-      >
-        <svg
-          fill="currentColor"
-          height="1em"
-          stroke="currentColor"
-          stroke-width="0"
-          viewBox="0 0 24 24"
-          width="1em"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M0 0h24v24H0z"
-            fill="none"
-          />
-          <path
-            d="M15 11V5l-3-3-3 3v2H3v14h18V11h-6zm-8 8H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm6 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2z"
-          />
-        </svg>
-         Basel
-      </div>
-    </div>
-    <div
-      class="css-6jfyyt-TitleBlockWrapper ek0hk6a0"
-    >
-      <h1
-        class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
-      >
-        Cool concert
-      </h1>
-    </div>
-    <div
-      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
-    >
-      <div
-        data-gramm="false"
-        data-slate-editor="true"
-        data-slate-node="value"
-        style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-      >
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-          data-slate-node="element"
-        >
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Lorem ipsum dolor sit amet, 
-            </span>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <strong
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                consectetur adipiscing elit, 
-              </span>
-            </strong>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <em
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-              </span>
-            </em>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <u
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                Ut enim ad minim veniam, 
-              </span>
-            </u>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <del
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-              </span>
-            </del>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-            </span>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </span>
-          </span>
-        </p>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-          data-slate-node="element"
-        >
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Lorem ipsum dolor sit amet, 
-            </span>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <strong
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                consectetur adipiscing elit, 
-              </span>
-            </strong>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <em
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-              </span>
-            </em>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <u
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                Ut enim ad minim veniam, 
-              </span>
-            </u>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <del
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-              </span>
-            </del>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-            </span>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </span>
-          </span>
-        </p>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-          data-slate-node="element"
-        >
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Lorem ipsum dolor sit amet, 
-            </span>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <strong
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                consectetur adipiscing elit, 
-              </span>
-            </strong>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <em
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-              </span>
-            </em>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <u
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                Ut enim ad minim veniam, 
-              </span>
-            </u>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <del
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-              </span>
-            </del>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-            </span>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </span>
-          </span>
-        </p>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-          data-slate-node="element"
-        >
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Lorem ipsum dolor sit amet, 
-            </span>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <strong
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                consectetur adipiscing elit, 
-              </span>
-            </strong>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <em
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-              </span>
-            </em>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <u
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                Ut enim ad minim veniam, 
-              </span>
-            </u>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <del
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-              </span>
-            </del>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-            </span>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </span>
-          </span>
-        </p>
-      </div>
-    </div>
-  </article>
-</DocumentFragment>
+"Snapshot Diff:
+Compared values have no visual difference."
 `;
 
 exports[`Event should render WithClassName 1`] = `
-<DocumentFragment>
-  <article
-    class="extra-classname css-uh6yvp-EventWrapper ec2zadl3"
-  >
-    <div
-      data-testid="fake-head"
-    >
-      <meta
-        content="website"
-        property="og:type"
-      />
-      <meta
-        content="Cool concert"
-        property="og:title"
-      />
-      <meta
-        content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-        property="og:description"
-      />
-      <meta
-        content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-        name="description"
-      />
-      <meta
-        content="https://example.com"
-        property="og:url"
-      />
-      <link
-        href="https://example.com"
-        rel="canonical"
-      />
-      <meta
-        content="https://unsplash.it/500/300"
-        property="og:image"
-      />
-      <meta
-        content="summary_large_image"
-        name="twitter:card"
-      />
-    </div>
-    <script
-      data-testid="fake-script"
-      type="application/ld+json"
-    >
-      {"@context":"http://schema.org","@type":"Event","startDate":"2023-02-24T09:00:00Z","endDate":"2023-02-25T07:30:00Z","duration":"P0Y0M0DT22H30M0S","keywords":"Concert","eventStatus":"SCHEDULED","location":"Basel","image":"https://unsplash.it/500/300","name":"Cool concert","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
-    </script>
-    <img
-      alt="DSC07717"
-      class="css-1c1klla-ImageWrapper-Event e1shv2yg0"
-      loading="lazy"
-      srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-      title=""
-    />
-    <div
-      class="css-1wax86k-EventMeta ec2zadl2"
+"Snapshot Diff:
+- First value
++ Second value
+
+@@ -1,8 +1,8 @@
+  <DocumentFragment>
+    <article
+-     class="css-uh6yvp-EventWrapper ec2zadl3"
++     class="extra-classname css-uh6yvp-EventWrapper ec2zadl3"
     >
       <div
-        class="css-10k8kcv-MetaWrapper ec2zadl1"
+        data-testid="fake-head"
       >
-        <div
-          class="css-j7qr3l-EventStart ec2zadl0"
-        >
-          <svg
-            fill="currentColor"
-            height="1em"
-            stroke="currentColor"
-            stroke-width="0"
-            viewBox="0 0 24 24"
-            width="1em"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M0 0h24v24H0z"
-              fill="none"
-            />
-            <path
-              d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
-            />
-          </svg>
-          24.02.2023 09:00
-        </div>
-        <span>
-          –
-        </span>
-         25.02.2023 07:30
-      </div>
-      <div
-        class="css-10k8kcv-MetaWrapper ec2zadl1"
-      >
-        <svg
-          fill="currentColor"
-          height="1em"
-          stroke="currentColor"
-          stroke-width="0"
-          viewBox="0 0 24 24"
-          width="1em"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M0 0h24v24H0z"
-            fill="none"
-          />
-          <path
-            d="M15 11V5l-3-3-3 3v2H3v14h18V11h-6zm-8 8H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm6 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2z"
-          />
-        </svg>
-         Basel
-      </div>
-    </div>
-    <div
-      class="css-6jfyyt-TitleBlockWrapper ek0hk6a0"
-    >
-      <h1
-        class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
-      >
-        Cool concert
-      </h1>
-    </div>
-    <div
-      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
-    >
-      <div
-        data-gramm="false"
-        data-slate-editor="true"
-        data-slate-node="value"
-        style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-      >
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-          data-slate-node="element"
-        >
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Lorem ipsum dolor sit amet, 
-            </span>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <strong
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                consectetur adipiscing elit, 
-              </span>
-            </strong>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <em
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-              </span>
-            </em>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <u
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                Ut enim ad minim veniam, 
-              </span>
-            </u>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <del
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-              </span>
-            </del>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-            </span>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </span>
-          </span>
-        </p>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-          data-slate-node="element"
-        >
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Lorem ipsum dolor sit amet, 
-            </span>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <strong
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                consectetur adipiscing elit, 
-              </span>
-            </strong>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <em
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-              </span>
-            </em>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <u
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                Ut enim ad minim veniam, 
-              </span>
-            </u>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <del
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-              </span>
-            </del>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-            </span>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </span>
-          </span>
-        </p>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-          data-slate-node="element"
-        >
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Lorem ipsum dolor sit amet, 
-            </span>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <strong
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                consectetur adipiscing elit, 
-              </span>
-            </strong>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <em
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-              </span>
-            </em>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <u
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                Ut enim ad minim veniam, 
-              </span>
-            </u>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <del
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-              </span>
-            </del>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-            </span>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </span>
-          </span>
-        </p>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-          data-slate-node="element"
-        >
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Lorem ipsum dolor sit amet, 
-            </span>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <strong
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                consectetur adipiscing elit, 
-              </span>
-            </strong>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <em
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-              </span>
-            </em>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <u
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                Ut enim ad minim veniam, 
-              </span>
-            </u>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <del
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-              </span>
-            </del>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-            </span>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </span>
-          </span>
-        </p>
-      </div>
-    </div>
-  </article>
-</DocumentFragment>
+        <meta"
 `;
 
 exports[`Event should render WithEmotion 1`] = `
-<DocumentFragment>
-  <article
-    class="css-uh6yvp-EventWrapper ec2zadl3"
-  >
-    <div
-      data-testid="fake-head"
-    >
-      <meta
-        content="website"
-        property="og:type"
-      />
-      <meta
-        content="Cool concert"
-        property="og:title"
-      />
-      <meta
-        content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-        property="og:description"
-      />
-      <meta
-        content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-        name="description"
-      />
-      <meta
-        content="https://example.com"
-        property="og:url"
-      />
-      <link
-        href="https://example.com"
-        rel="canonical"
-      />
-      <meta
-        content="https://unsplash.it/500/300"
-        property="og:image"
-      />
-      <meta
-        content="summary_large_image"
-        name="twitter:card"
-      />
-    </div>
-    <script
-      data-testid="fake-script"
-      type="application/ld+json"
-    >
-      {"@context":"http://schema.org","@type":"Event","startDate":"2023-02-24T09:00:00Z","endDate":"2023-02-25T07:30:00Z","duration":"P0Y0M0DT22H30M0S","keywords":"Concert","eventStatus":"SCHEDULED","location":"Basel","image":"https://unsplash.it/500/300","name":"Cool concert","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
-    </script>
-    <img
-      alt="DSC07717"
-      class="css-1c1klla-ImageWrapper-Event e1shv2yg0"
-      loading="lazy"
-      srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-      title=""
-    />
-    <div
-      class="css-1wax86k-EventMeta ec2zadl2"
-    >
-      <div
-        class="css-10k8kcv-MetaWrapper ec2zadl1"
-      >
-        <div
-          class="css-j7qr3l-EventStart ec2zadl0"
-        >
-          <svg
-            fill="currentColor"
-            height="1em"
-            stroke="currentColor"
-            stroke-width="0"
-            viewBox="0 0 24 24"
-            width="1em"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M0 0h24v24H0z"
-              fill="none"
-            />
-            <path
-              d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
-            />
-          </svg>
-          24.02.2023 09:00
-        </div>
-        <span>
-          –
-        </span>
-         25.02.2023 07:30
-      </div>
-      <div
-        class="css-10k8kcv-MetaWrapper ec2zadl1"
-      >
-        <svg
-          fill="currentColor"
-          height="1em"
-          stroke="currentColor"
-          stroke-width="0"
-          viewBox="0 0 24 24"
-          width="1em"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M0 0h24v24H0z"
-            fill="none"
-          />
-          <path
-            d="M15 11V5l-3-3-3 3v2H3v14h18V11h-6zm-8 8H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm6 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2z"
-          />
-        </svg>
-         Basel
-      </div>
-    </div>
-    <div
-      class="css-6jfyyt-TitleBlockWrapper ek0hk6a0"
-    >
-      <h1
-        class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
-      >
-        Cool concert
-      </h1>
-    </div>
-    <div
-      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
-    >
-      <div
-        data-gramm="false"
-        data-slate-editor="true"
-        data-slate-node="value"
-        style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-      >
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-          data-slate-node="element"
-        >
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Lorem ipsum dolor sit amet, 
-            </span>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <strong
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                consectetur adipiscing elit, 
-              </span>
-            </strong>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <em
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-              </span>
-            </em>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <u
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                Ut enim ad minim veniam, 
-              </span>
-            </u>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <del
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-              </span>
-            </del>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-            </span>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </span>
-          </span>
-        </p>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-          data-slate-node="element"
-        >
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Lorem ipsum dolor sit amet, 
-            </span>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <strong
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                consectetur adipiscing elit, 
-              </span>
-            </strong>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <em
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-              </span>
-            </em>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <u
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                Ut enim ad minim veniam, 
-              </span>
-            </u>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <del
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-              </span>
-            </del>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-            </span>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </span>
-          </span>
-        </p>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-          data-slate-node="element"
-        >
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Lorem ipsum dolor sit amet, 
-            </span>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <strong
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                consectetur adipiscing elit, 
-              </span>
-            </strong>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <em
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-              </span>
-            </em>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <u
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                Ut enim ad minim veniam, 
-              </span>
-            </u>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <del
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-              </span>
-            </del>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-            </span>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </span>
-          </span>
-        </p>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-          data-slate-node="element"
-        >
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Lorem ipsum dolor sit amet, 
-            </span>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <strong
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                consectetur adipiscing elit, 
-              </span>
-            </strong>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <em
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-              </span>
-            </em>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <u
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                Ut enim ad minim veniam, 
-              </span>
-            </u>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <del
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-              </span>
-            </del>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-            </span>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </span>
-          </span>
-        </p>
-      </div>
-    </div>
-  </article>
-</DocumentFragment>
+"Snapshot Diff:
+Compared values have no visual difference."
 `;
 
 exports[`Event should render WithError 1`] = `
-<DocumentFragment>
-  <article
-    class="css-uh6yvp-EventWrapper ec2zadl3"
-  >
-    <div
-      class="css-6jfyyt-TitleBlockWrapper ek0hk6a0"
-    >
-      <h1
-        class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
-      />
-    </div>
-    <div
-      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+"Snapshot Diff:
+- First value
++ Second value
+
+  <DocumentFragment>
+    <article
+      class="css-uh6yvp-EventWrapper ec2zadl3"
     >
       <div
-        data-gramm="false"
-        data-slate-editor="true"
-        data-slate-node="value"
-        style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-      />
-    </div>
-  </article>
-</DocumentFragment>
+-       data-testid="fake-head"
+-     >
+-       <meta
+-         content="website"
+-         property="og:type"
+-       />
+-       <meta
+-         content="Cool concert"
+-         property="og:title"
+-       />
+-       <meta
+-         content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+-         property="og:description"
+-       />
+-       <meta
+-         content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+-         name="description"
+-       />
+-       <meta
+-         content="https://example.com"
+-         property="og:url"
+-       />
+-       <link
+-         href="https://example.com"
+-         rel="canonical"
+-       />
+-       <meta
+-         content="https://unsplash.it/500/300"
+-         property="og:image"
+-       />
+-       <meta
+-         content="summary_large_image"
+-         name="twitter:card"
+-       />
+-     </div>
+-     <script
+-       data-testid="fake-script"
+-       type="application/ld+json"
+-     >
+-       {"@context":"http://schema.org","@type":"Event","startDate":"2023-02-24T09:00:00Z","endDate":"2023-02-25T07:30:00Z","duration":"P0Y0M0DT22H30M0S","keywords":"Concert","eventStatus":"SCHEDULED","location":"Basel","image":"https://unsplash.it/500/300","name":"Cool concert","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
+-     </script>
+-     <img
+-       alt="DSC07717"
+-       class="css-1c1klla-ImageWrapper-Event e1shv2yg0"
+-       loading="lazy"
+-       srcset="https://unsplash.it/800/400 800w,
+- https://unsplash.it/500/300 500w,
+- https://unsplash.it/300/200 300w,
+- https://unsplash.it/200/100 200w"
+-       title=""
+-     />
+-     <div
+-       class="css-1wax86k-EventMeta ec2zadl2"
+-     >
+-       <div
+-         class="css-10k8kcv-MetaWrapper ec2zadl1"
+-       >
+-         <div
+-           class="css-j7qr3l-EventStart ec2zadl0"
+-         >
+-           <svg
+-             fill="currentColor"
+-             height="1em"
+-             stroke="currentColor"
+-             stroke-width="0"
+-             viewBox="0 0 24 24"
+-             width="1em"
+-             xmlns="http://www.w3.org/2000/svg"
+-           >
+-             <path
+-               d="M0 0h24v24H0z"
+-               fill="none"
+-             />
+-             <path
+-               d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
+-             />
+-           </svg>
+-           24.02.2023 09:00
+-         </div>
+-         <span>
+-           –
+-         </span>
+-          25.02.2023 07:30
+-       </div>
+-       <div
+-         class="css-10k8kcv-MetaWrapper ec2zadl1"
+-       >
+-         <svg
+-           fill="currentColor"
+-           height="1em"
+-           stroke="currentColor"
+-           stroke-width="0"
+-           viewBox="0 0 24 24"
+-           width="1em"
+-           xmlns="http://www.w3.org/2000/svg"
+-         >
+-           <path
+-             d="M0 0h24v24H0z"
+-             fill="none"
+-           />
+-           <path
+-             d="M15 11V5l-3-3-3 3v2H3v14h18V11h-6zm-8 8H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm6 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2z"
+-           />
+-         </svg>
+-          Basel
+-       </div>
+-     </div>
+-     <div
+        class="css-6jfyyt-TitleBlockWrapper ek0hk6a0"
+      >
+        <h1
+          class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
+-       >
+-         Cool concert
+-       </h1>
++       />
+      </div>
+      <div
+        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+      >
+        <div
+          data-gramm="false"
+          data-slate-editor="true"
+          data-slate-node="value"
+          style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+-       >
+-         <p
+-           class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+-           data-slate-node="element"
+-         >
+-           <span
+-             data-slate-node="text"
+-           >
+-             <span
+-               data-slate-string="true"
+-             >
+-               Lorem ipsum dolor sit amet, 
+-             </span>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <strong
+-               data-slate-leaf="true"
+-             >
+-               <span
+-                 data-slate-string="true"
+-               >
+-                 consectetur adipiscing elit, 
+-               </span>
+-             </strong>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <em
+-               data-slate-leaf="true"
+-             >
+-               <span
+-                 data-slate-string="true"
+-               >
+-                 sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+-               </span>
+-             </em>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <u
+-               data-slate-leaf="true"
+-             >
+-               <span
+-                 data-slate-string="true"
+-               >
+-                 Ut enim ad minim veniam, 
+-               </span>
+-             </u>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <del
+-               data-slate-leaf="true"
+-             >
+-               <span
+-                 data-slate-string="true"
+-               >
+-                 quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+-               </span>
+-             </del>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <span
+-               data-slate-string="true"
+-             >
+-               Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+-             </span>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <span
+-               data-slate-string="true"
+-             >
+-               Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+-             </span>
+-           </span>
+-         </p>
+-         <p
+-           class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+-           data-slate-node="element"
+-         >
+-           <span
+-             data-slate-node="text"
+-           >
+-             <span
+-               data-slate-string="true"
+-             >
+-               Lorem ipsum dolor sit amet, 
+-             </span>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <strong
+-               data-slate-leaf="true"
+-             >
+-               <span
+-                 data-slate-string="true"
+-               >
+-                 consectetur adipiscing elit, 
+-               </span>
+-             </strong>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <em
+-               data-slate-leaf="true"
+-             >
+-               <span
+-                 data-slate-string="true"
+-               >
+-                 sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+-               </span>
+-             </em>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <u
+-               data-slate-leaf="true"
+-             >
+-               <span
+-                 data-slate-string="true"
+-               >
+-                 Ut enim ad minim veniam, 
+-               </span>
+-             </u>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <del
+-               data-slate-leaf="true"
+-             >
+-               <span
+-                 data-slate-string="true"
+-               >
+-                 quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+-               </span>
+-             </del>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <span
+-               data-slate-string="true"
+-             >
+-               Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+-             </span>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <span
+-               data-slate-string="true"
+-             >
+-               Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+-             </span>
+-           </span>
+-         </p>
+-         <p
+-           class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+-           data-slate-node="element"
+-         >
+-           <span
+-             data-slate-node="text"
+-           >
+-             <span
+-               data-slate-string="true"
+-             >
+-               Lorem ipsum dolor sit amet, 
+-             </span>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <strong
+-               data-slate-leaf="true"
+-             >
+-               <span
+-                 data-slate-string="true"
+-               >
+-                 consectetur adipiscing elit, 
+-               </span>
+-             </strong>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <em
+-               data-slate-leaf="true"
+-             >
+-               <span
+-                 data-slate-string="true"
+-               >
+-                 sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+-               </span>
+-             </em>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <u
+-               data-slate-leaf="true"
+-             >
+-               <span
+-                 data-slate-string="true"
+-               >
+-                 Ut enim ad minim veniam, 
+-               </span>
+-             </u>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <del
+-               data-slate-leaf="true"
+-             >
+-               <span
+-                 data-slate-string="true"
+-               >
+-                 quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+-               </span>
+-             </del>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <span
+-               data-slate-string="true"
+-             >
+-               Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+-             </span>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <span
+-               data-slate-string="true"
+-             >
+-               Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+-             </span>
+-           </span>
+-         </p>
+-         <p
+-           class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+-           data-slate-node="element"
+-         >
+-           <span
+-             data-slate-node="text"
+-           >
+-             <span
+-               data-slate-string="true"
+-             >
+-               Lorem ipsum dolor sit amet, 
+-             </span>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <strong
+-               data-slate-leaf="true"
+-             >
+-               <span
+-                 data-slate-string="true"
+-               >
+-                 consectetur adipiscing elit, 
+-               </span>
+-             </strong>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <em
+-               data-slate-leaf="true"
+-             >
+-               <span
+-                 data-slate-string="true"
+-               >
+-                 sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+-               </span>
+-             </em>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <u
+-               data-slate-leaf="true"
+-             >
+-               <span
+-                 data-slate-string="true"
+-               >
+-                 Ut enim ad minim veniam, 
+-               </span>
+-             </u>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <del
+-               data-slate-leaf="true"
+-             >
+-               <span
+-                 data-slate-string="true"
+-               >
+-                 quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+-               </span>
+-             </del>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <span
+-               data-slate-string="true"
+-             >
+-               Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+-             </span>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <span
+-               data-slate-string="true"
+-             >
+-               Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+-             </span>
+-           </span>
+-         </p>
+-       </div>
++       />
+      </div>
+    </article>
+  </DocumentFragment>"
 `;
 
 exports[`Event should render WithLoading 1`] = `
-<DocumentFragment>
-  <article
-    class="css-uh6yvp-EventWrapper ec2zadl3"
-  >
-    <div
-      class="css-6jfyyt-TitleBlockWrapper ek0hk6a0"
-    >
-      <h1
-        class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
-      />
-    </div>
-    <div
-      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+"Snapshot Diff:
+- First value
++ Second value
+
+  <DocumentFragment>
+    <article
+      class="css-uh6yvp-EventWrapper ec2zadl3"
     >
       <div
-        data-gramm="false"
-        data-slate-editor="true"
-        data-slate-node="value"
-        style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-      />
-    </div>
-  </article>
-</DocumentFragment>
+-       data-testid="fake-head"
+-     >
+-       <meta
+-         content="website"
+-         property="og:type"
+-       />
+-       <meta
+-         content="Cool concert"
+-         property="og:title"
+-       />
+-       <meta
+-         content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+-         property="og:description"
+-       />
+-       <meta
+-         content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
+-         name="description"
+-       />
+-       <meta
+-         content="https://example.com"
+-         property="og:url"
+-       />
+-       <link
+-         href="https://example.com"
+-         rel="canonical"
+-       />
+-       <meta
+-         content="https://unsplash.it/500/300"
+-         property="og:image"
+-       />
+-       <meta
+-         content="summary_large_image"
+-         name="twitter:card"
+-       />
+-     </div>
+-     <script
+-       data-testid="fake-script"
+-       type="application/ld+json"
+-     >
+-       {"@context":"http://schema.org","@type":"Event","startDate":"2023-02-24T09:00:00Z","endDate":"2023-02-25T07:30:00Z","duration":"P0Y0M0DT22H30M0S","keywords":"Concert","eventStatus":"SCHEDULED","location":"Basel","image":"https://unsplash.it/500/300","name":"Cool concert","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
+-     </script>
+-     <img
+-       alt="DSC07717"
+-       class="css-1c1klla-ImageWrapper-Event e1shv2yg0"
+-       loading="lazy"
+-       srcset="https://unsplash.it/800/400 800w,
+- https://unsplash.it/500/300 500w,
+- https://unsplash.it/300/200 300w,
+- https://unsplash.it/200/100 200w"
+-       title=""
+-     />
+-     <div
+-       class="css-1wax86k-EventMeta ec2zadl2"
+-     >
+-       <div
+-         class="css-10k8kcv-MetaWrapper ec2zadl1"
+-       >
+-         <div
+-           class="css-j7qr3l-EventStart ec2zadl0"
+-         >
+-           <svg
+-             fill="currentColor"
+-             height="1em"
+-             stroke="currentColor"
+-             stroke-width="0"
+-             viewBox="0 0 24 24"
+-             width="1em"
+-             xmlns="http://www.w3.org/2000/svg"
+-           >
+-             <path
+-               d="M0 0h24v24H0z"
+-               fill="none"
+-             />
+-             <path
+-               d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
+-             />
+-           </svg>
+-           24.02.2023 09:00
+-         </div>
+-         <span>
+-           –
+-         </span>
+-          25.02.2023 07:30
+-       </div>
+-       <div
+-         class="css-10k8kcv-MetaWrapper ec2zadl1"
+-       >
+-         <svg
+-           fill="currentColor"
+-           height="1em"
+-           stroke="currentColor"
+-           stroke-width="0"
+-           viewBox="0 0 24 24"
+-           width="1em"
+-           xmlns="http://www.w3.org/2000/svg"
+-         >
+-           <path
+-             d="M0 0h24v24H0z"
+-             fill="none"
+-           />
+-           <path
+-             d="M15 11V5l-3-3-3 3v2H3v14h18V11h-6zm-8 8H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm6 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2z"
+-           />
+-         </svg>
+-          Basel
+-       </div>
+-     </div>
+-     <div
+        class="css-6jfyyt-TitleBlockWrapper ek0hk6a0"
+      >
+        <h1
+          class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
+-       >
+-         Cool concert
+-       </h1>
++       />
+      </div>
+      <div
+        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+      >
+        <div
+          data-gramm="false"
+          data-slate-editor="true"
+          data-slate-node="value"
+          style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+-       >
+-         <p
+-           class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+-           data-slate-node="element"
+-         >
+-           <span
+-             data-slate-node="text"
+-           >
+-             <span
+-               data-slate-string="true"
+-             >
+-               Lorem ipsum dolor sit amet, 
+-             </span>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <strong
+-               data-slate-leaf="true"
+-             >
+-               <span
+-                 data-slate-string="true"
+-               >
+-                 consectetur adipiscing elit, 
+-               </span>
+-             </strong>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <em
+-               data-slate-leaf="true"
+-             >
+-               <span
+-                 data-slate-string="true"
+-               >
+-                 sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+-               </span>
+-             </em>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <u
+-               data-slate-leaf="true"
+-             >
+-               <span
+-                 data-slate-string="true"
+-               >
+-                 Ut enim ad minim veniam, 
+-               </span>
+-             </u>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <del
+-               data-slate-leaf="true"
+-             >
+-               <span
+-                 data-slate-string="true"
+-               >
+-                 quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+-               </span>
+-             </del>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <span
+-               data-slate-string="true"
+-             >
+-               Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+-             </span>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <span
+-               data-slate-string="true"
+-             >
+-               Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+-             </span>
+-           </span>
+-         </p>
+-         <p
+-           class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+-           data-slate-node="element"
+-         >
+-           <span
+-             data-slate-node="text"
+-           >
+-             <span
+-               data-slate-string="true"
+-             >
+-               Lorem ipsum dolor sit amet, 
+-             </span>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <strong
+-               data-slate-leaf="true"
+-             >
+-               <span
+-                 data-slate-string="true"
+-               >
+-                 consectetur adipiscing elit, 
+-               </span>
+-             </strong>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <em
+-               data-slate-leaf="true"
+-             >
+-               <span
+-                 data-slate-string="true"
+-               >
+-                 sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+-               </span>
+-             </em>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <u
+-               data-slate-leaf="true"
+-             >
+-               <span
+-                 data-slate-string="true"
+-               >
+-                 Ut enim ad minim veniam, 
+-               </span>
+-             </u>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <del
+-               data-slate-leaf="true"
+-             >
+-               <span
+-                 data-slate-string="true"
+-               >
+-                 quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+-               </span>
+-             </del>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <span
+-               data-slate-string="true"
+-             >
+-               Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+-             </span>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <span
+-               data-slate-string="true"
+-             >
+-               Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+-             </span>
+-           </span>
+-         </p>
+-         <p
+-           class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+-           data-slate-node="element"
+-         >
+-           <span
+-             data-slate-node="text"
+-           >
+-             <span
+-               data-slate-string="true"
+-             >
+-               Lorem ipsum dolor sit amet, 
+-             </span>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <strong
+-               data-slate-leaf="true"
+-             >
+-               <span
+-                 data-slate-string="true"
+-               >
+-                 consectetur adipiscing elit, 
+-               </span>
+-             </strong>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <em
+-               data-slate-leaf="true"
+-             >
+-               <span
+-                 data-slate-string="true"
+-               >
+-                 sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+-               </span>
+-             </em>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <u
+-               data-slate-leaf="true"
+-             >
+-               <span
+-                 data-slate-string="true"
+-               >
+-                 Ut enim ad minim veniam, 
+-               </span>
+-             </u>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <del
+-               data-slate-leaf="true"
+-             >
+-               <span
+-                 data-slate-string="true"
+-               >
+-                 quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+-               </span>
+-             </del>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <span
+-               data-slate-string="true"
+-             >
+-               Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+-             </span>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <span
+-               data-slate-string="true"
+-             >
+-               Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+-             </span>
+-           </span>
+-         </p>
+-         <p
+-           class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+-           data-slate-node="element"
+-         >
+-           <span
+-             data-slate-node="text"
+-           >
+-             <span
+-               data-slate-string="true"
+-             >
+-               Lorem ipsum dolor sit amet, 
+-             </span>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <strong
+-               data-slate-leaf="true"
+-             >
+-               <span
+-                 data-slate-string="true"
+-               >
+-                 consectetur adipiscing elit, 
+-               </span>
+-             </strong>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <em
+-               data-slate-leaf="true"
+-             >
+-               <span
+-                 data-slate-string="true"
+-               >
+-                 sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
+-               </span>
+-             </em>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <u
+-               data-slate-leaf="true"
+-             >
+-               <span
+-                 data-slate-string="true"
+-               >
+-                 Ut enim ad minim veniam, 
+-               </span>
+-             </u>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <del
+-               data-slate-leaf="true"
+-             >
+-               <span
+-                 data-slate-string="true"
+-               >
+-                 quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+-               </span>
+-             </del>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <span
+-               data-slate-string="true"
+-             >
+-               Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
+-             </span>
+-           </span>
+-           <span
+-             data-slate-node="text"
+-           >
+-             <span
+-               data-slate-string="true"
+-             >
+-               Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+-             </span>
+-           </span>
+-         </p>
+-       </div>
++       />
+      </div>
+    </article>
+  </DocumentFragment>"
 `;
 
 exports[`Event should render WithoutImage 1`] = `
-<DocumentFragment>
-  <article
-    class="css-uh6yvp-EventWrapper ec2zadl3"
-  >
-    <div
-      data-testid="fake-head"
-    >
-      <meta
-        content="website"
-        property="og:type"
-      />
-      <meta
-        content="Cool concert"
-        property="og:title"
-      />
-      <meta
-        content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-        property="og:description"
-      />
-      <meta
-        content="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
-        name="description"
-      />
-      <meta
-        content="https://example.com"
-        property="og:url"
-      />
-      <link
-        href="https://example.com"
-        rel="canonical"
-      />
-      <meta
-        content="summary_large_image"
-        name="twitter:card"
-      />
-    </div>
-    <script
-      data-testid="fake-script"
-      type="application/ld+json"
-    >
-      {"@context":"http://schema.org","@type":"Event","startDate":"2023-02-24T09:00:00Z","endDate":"2023-02-25T07:30:00Z","duration":"P0Y0M0DT22H30M0S","keywords":"Concert","eventStatus":"SCHEDULED","location":"Basel","name":"Cool concert","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
-    </script>
-    <div
-      class="css-1wax86k-EventMeta ec2zadl2"
-    >
+"Snapshot Diff:
+- First value
++ Second value
+
+@@ -28,34 +28,20 @@
+        <link
+          href="https://example.com"
+          rel="canonical"
+        />
+        <meta
+-         content="https://unsplash.it/500/300"
+-         property="og:image"
+-       />
+-       <meta
+          content="summary_large_image"
+          name="twitter:card"
+        />
+      </div>
+      <script
+        data-testid="fake-script"
+        type="application/ld+json"
+      >
+-       {"@context":"http://schema.org","@type":"Event","startDate":"2023-02-24T09:00:00Z","endDate":"2023-02-25T07:30:00Z","duration":"P0Y0M0DT22H30M0S","keywords":"Concert","eventStatus":"SCHEDULED","location":"Basel","image":"https://unsplash.it/500/300","name":"Cool concert","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
++       {"@context":"http://schema.org","@type":"Event","startDate":"2023-02-24T09:00:00Z","endDate":"2023-02-25T07:30:00Z","duration":"P0Y0M0DT22H30M0S","keywords":"Concert","eventStatus":"SCHEDULED","location":"Basel","name":"Cool concert","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
+      </script>
+-     <img
+-       alt="DSC07717"
+-       class="css-1c1klla-ImageWrapper-Event e1shv2yg0"
+-       loading="lazy"
+-       srcset="https://unsplash.it/800/400 800w,
+- https://unsplash.it/500/300 500w,
+- https://unsplash.it/300/200 300w,
+- https://unsplash.it/200/100 200w"
+-       title=""
+-     />
       <div
-        class="css-10k8kcv-MetaWrapper ec2zadl1"
+        class="css-1wax86k-EventMeta ec2zadl2"
       >
         <div
-          class="css-j7qr3l-EventStart ec2zadl0"
-        >
-          <svg
-            fill="currentColor"
-            height="1em"
-            stroke="currentColor"
-            stroke-width="0"
-            viewBox="0 0 24 24"
-            width="1em"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M0 0h24v24H0z"
-              fill="none"
-            />
-            <path
-              d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
-            />
-          </svg>
-          24.02.2023 09:00
-        </div>
-        <span>
-          –
-        </span>
-         25.02.2023 07:30
-      </div>
-      <div
-        class="css-10k8kcv-MetaWrapper ec2zadl1"
-      >
-        <svg
-          fill="currentColor"
-          height="1em"
-          stroke="currentColor"
-          stroke-width="0"
-          viewBox="0 0 24 24"
-          width="1em"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M0 0h24v24H0z"
-            fill="none"
-          />
-          <path
-            d="M15 11V5l-3-3-3 3v2H3v14h18V11h-6zm-8 8H5v-2h2v2zm0-4H5v-2h2v2zm0-4H5V9h2v2zm6 8h-2v-2h2v2zm0-4h-2v-2h2v2zm0-4h-2V9h2v2zm0-4h-2V5h2v2zm6 12h-2v-2h2v2zm0-4h-2v-2h2v2z"
-          />
-        </svg>
-         Basel
-      </div>
-    </div>
-    <div
-      class="css-6jfyyt-TitleBlockWrapper ek0hk6a0"
-    >
-      <h1
-        class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
-      >
-        Cool concert
-      </h1>
-    </div>
-    <div
-      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
-    >
-      <div
-        data-gramm="false"
-        data-slate-editor="true"
-        data-slate-node="value"
-        style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-      >
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-          data-slate-node="element"
-        >
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Lorem ipsum dolor sit amet, 
-            </span>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <strong
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                consectetur adipiscing elit, 
-              </span>
-            </strong>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <em
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-              </span>
-            </em>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <u
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                Ut enim ad minim veniam, 
-              </span>
-            </u>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <del
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-              </span>
-            </del>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-            </span>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </span>
-          </span>
-        </p>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-          data-slate-node="element"
-        >
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Lorem ipsum dolor sit amet, 
-            </span>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <strong
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                consectetur adipiscing elit, 
-              </span>
-            </strong>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <em
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-              </span>
-            </em>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <u
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                Ut enim ad minim veniam, 
-              </span>
-            </u>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <del
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-              </span>
-            </del>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-            </span>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </span>
-          </span>
-        </p>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-          data-slate-node="element"
-        >
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Lorem ipsum dolor sit amet, 
-            </span>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <strong
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                consectetur adipiscing elit, 
-              </span>
-            </strong>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <em
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-              </span>
-            </em>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <u
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                Ut enim ad minim veniam, 
-              </span>
-            </u>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <del
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-              </span>
-            </del>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-            </span>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </span>
-          </span>
-        </p>
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-          data-slate-node="element"
-        >
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Lorem ipsum dolor sit amet, 
-            </span>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <strong
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                consectetur adipiscing elit, 
-              </span>
-            </strong>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <em
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. 
-              </span>
-            </em>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <u
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                Ut enim ad minim veniam, 
-              </span>
-            </u>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <del
-              data-slate-leaf="true"
-            >
-              <span
-                data-slate-string="true"
-              >
-                quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
-              </span>
-            </del>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. 
-            </span>
-          </span>
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </span>
-          </span>
-        </p>
-      </div>
-    </div>
-  </article>
-</DocumentFragment>
+          class="css-10k8kcv-MetaWrapper ec2zadl1""
 `;

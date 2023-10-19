@@ -1,37 +1,26 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Bildwurf Ad Block should render Default 1`] = `
-<DocumentFragment>
-  <script
-    data-testid="fake-script"
-    src="https://media.online.bildwurf.ch/js/code.min.js"
-  />
-  <div
-    class="css-1ege008-BildwurfBlockWrapper e14oxtci0"
-    id="bildwurf-injection-wrapper"
-  >
-    <ins
-      class="aso-zone"
-      data-zone="77348"
-    />
-  </div>
-</DocumentFragment>
+"Snapshot Diff:
+Compared values have no visual difference."
 `;
 
 exports[`Bildwurf Ad Block should render WithClassName 1`] = `
-<DocumentFragment>
-  <script
-    data-testid="fake-script"
-    src="https://media.online.bildwurf.ch/js/code.min.js"
-  />
-  <div
-    class="extra-classname css-1ege008-BildwurfBlockWrapper e14oxtci0"
-    id="bildwurf-injection-wrapper"
-  >
-    <ins
-      class="aso-zone"
-      data-zone="77348"
+"Snapshot Diff:
+- First value
++ Second value
+
+@@ -2,11 +2,11 @@
+    <script
+      data-testid="fake-script"
+      src="https://media.online.bildwurf.ch/js/code.min.js"
     />
-  </div>
-</DocumentFragment>
+    <div
+-     class="css-1ege008-BildwurfBlockWrapper e14oxtci0"
++     class="extra-classname css-1ege008-BildwurfBlockWrapper e14oxtci0"
+      id="bildwurf-injection-wrapper"
+    >
+      <ins
+        class="aso-zone"
+        data-zone="77348""
 `;

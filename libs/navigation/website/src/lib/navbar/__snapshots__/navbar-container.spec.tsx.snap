@@ -1,154 +1,28 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Navbar Container should render Default 1`] = `
-<DocumentFragment>
-  <nav
-    class="css-1xe741k-NavbarWrapper ei6evl28"
-  >
-    <header
-      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
-    >
-      <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl27 css-15e8tal-MuiToolbar-root-NavbarInnerWrapper"
-      >
-        <div
-          class="css-kfwxas-NavbarMain ei6evl26"
-        >
-          <button
-            aria-label="Menu"
-            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-edgeStart MuiIconButton-sizeLarge css-1snimjj-MuiButtonBase-root-MuiIconButton-root"
-            tabindex="0"
-            type="button"
-          >
-            <svg
-              fill="currentColor"
-              height="1em"
-              stroke="currentColor"
-              stroke-width="0"
-              viewBox="0 0 24 24"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M0 0h24v24H0z"
-                fill="none"
-              />
-              <path
-                d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"
-              />
-            </svg>
-            <span
-              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-            />
-          </button>
-          <div
-            class="css-pd0s4t-NavbarMainItems ei6evl25"
-          />
-        </div>
-      </div>
-    </header>
-  </nav>
-</DocumentFragment>
+"Snapshot Diff:
+Compared values have no visual difference."
 `;
 
 exports[`Navbar Container should render WithClassName 1`] = `
-<DocumentFragment>
-  <nav
-    class="extra-classname css-1xe741k-NavbarWrapper ei6evl28"
-  >
-    <header
-      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
+"Snapshot Diff:
+- First value
++ Second value
+
+@@ -1,8 +1,8 @@
+  <DocumentFragment>
+    <nav
+-     class="css-1xe741k-NavbarWrapper ei6evl28"
++     class="extra-classname css-1xe741k-NavbarWrapper ei6evl28"
     >
-      <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl27 css-15e8tal-MuiToolbar-root-NavbarInnerWrapper"
+      <header
+        class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
       >
-        <div
-          class="css-kfwxas-NavbarMain ei6evl26"
-        >
-          <button
-            aria-label="Menu"
-            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-edgeStart MuiIconButton-sizeLarge css-1snimjj-MuiButtonBase-root-MuiIconButton-root"
-            tabindex="0"
-            type="button"
-          >
-            <svg
-              fill="currentColor"
-              height="1em"
-              stroke="currentColor"
-              stroke-width="0"
-              viewBox="0 0 24 24"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M0 0h24v24H0z"
-                fill="none"
-              />
-              <path
-                d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"
-              />
-            </svg>
-            <span
-              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-            />
-          </button>
-          <div
-            class="css-pd0s4t-NavbarMainItems ei6evl25"
-          />
-        </div>
-      </div>
-    </header>
-  </nav>
-</DocumentFragment>
+        <div"
 `;
 
 exports[`Navbar Container should render WithEmotion 1`] = `
-<DocumentFragment>
-  <nav
-    class="css-1xe741k-NavbarWrapper ei6evl28"
-  >
-    <header
-      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
-    >
-      <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl27 css-15e8tal-MuiToolbar-root-NavbarInnerWrapper"
-      >
-        <div
-          class="css-kfwxas-NavbarMain ei6evl26"
-        >
-          <button
-            aria-label="Menu"
-            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-edgeStart MuiIconButton-sizeLarge css-1snimjj-MuiButtonBase-root-MuiIconButton-root"
-            tabindex="0"
-            type="button"
-          >
-            <svg
-              fill="currentColor"
-              height="1em"
-              stroke="currentColor"
-              stroke-width="0"
-              viewBox="0 0 24 24"
-              width="1em"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M0 0h24v24H0z"
-                fill="none"
-              />
-              <path
-                d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"
-              />
-            </svg>
-            <span
-              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-            />
-          </button>
-          <div
-            class="css-pd0s4t-NavbarMainItems ei6evl25"
-          />
-        </div>
-      </div>
-    </header>
-  </nav>
-</DocumentFragment>
+"Snapshot Diff:
+Compared values have no visual difference."
 `;

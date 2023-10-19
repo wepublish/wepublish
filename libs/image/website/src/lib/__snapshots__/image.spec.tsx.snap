@@ -1,61 +1,63 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Image should render Default 1`] = `
-<DocumentFragment>
-  <img
-    alt="An image description"
-    class="css-oph4oo-ImageWrapper e1shv2yg0"
-    loading="lazy"
-    srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-    title="An image title"
-  />
-</DocumentFragment>
+"Snapshot Diff:
+Compared values have no visual difference."
 `;
 
 exports[`Image should render Square 1`] = `
-<DocumentFragment>
-  <img
-    alt="An image description"
-    class="css-oph4oo-ImageWrapper e1shv2yg0"
-    loading="lazy"
-    srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-    title="An image title"
-  />
-</DocumentFragment>
+"Snapshot Diff:
+- First value
++ Second value
+
+  <DocumentFragment>
+    <img
+      alt="An image description"
+      class="css-oph4oo-ImageWrapper e1shv2yg0"
+      loading="lazy"
+-     srcset="https://unsplash.it/800/400 800w,
+- https://unsplash.it/500/300 500w,
+- https://unsplash.it/300/200 300w,
+- https://unsplash.it/200/100 200w"
++     srcset="https://unsplash.it/800/800 800w,
++ https://unsplash.it/500/500 500w,
++ https://unsplash.it/300/300 300w,
++ https://unsplash.it/200/200 200w"
+      title="An image title"
+    />
+  </DocumentFragment>"
 `;
 
 exports[`Image should render WithoutDescription 1`] = `
-<DocumentFragment>
-  <img
-    alt="An image title"
-    class="css-oph4oo-ImageWrapper e1shv2yg0"
-    loading="lazy"
-    srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-    title="An image title"
-  />
-</DocumentFragment>
+"Snapshot Diff:
+- First value
++ Second value
+
+@@ -1,8 +1,8 @@
+  <DocumentFragment>
+    <img
+-     alt="An image description"
++     alt="An image title"
+      class="css-oph4oo-ImageWrapper e1shv2yg0"
+      loading="lazy"
+      srcset="https://unsplash.it/800/400 800w,
+  https://unsplash.it/500/300 500w,
+  https://unsplash.it/300/200 300w,"
 `;
 
 exports[`Image should render WithoutTitle 1`] = `
-<DocumentFragment>
-  <img
-    alt="An image description"
-    class="css-oph4oo-ImageWrapper e1shv2yg0"
-    loading="lazy"
-    srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-    title=""
-  />
-</DocumentFragment>
+"Snapshot Diff:
+- First value
++ Second value
+
+@@ -5,8 +5,8 @@
+      loading="lazy"
+      srcset="https://unsplash.it/800/400 800w,
+  https://unsplash.it/500/300 500w,
+  https://unsplash.it/300/200 300w,
+  https://unsplash.it/200/100 200w"
+-     title="An image title"
++     title=""
+    />
+  </DocumentFragment>"
 `;

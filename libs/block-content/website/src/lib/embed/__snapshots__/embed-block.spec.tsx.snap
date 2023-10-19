@@ -1,33 +1,23 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Embed Block should render Default 1`] = `
-<DocumentFragment>
-  <div
-    class="css-1tmmrj4-EmbedBlockWrapper e1t445oh1"
-  >
-    <iframe
-      allowfullscreen=""
-      class="css-1wlgbuj-EmbedBlockIframe-styleCustomCss e1t445oh0"
-      sandbox=""
-      src="https://www.example.com"
-      title="Title"
-    />
-  </div>
-</DocumentFragment>
+"Snapshot Diff:
+Compared values have no visual difference."
 `;
 
 exports[`Embed Block should render WithClassName 1`] = `
-<DocumentFragment>
-  <div
-    class="extra-classname css-1tmmrj4-EmbedBlockWrapper e1t445oh1"
-  >
-    <iframe
-      allowfullscreen=""
-      class="css-1wlgbuj-EmbedBlockIframe-styleCustomCss e1t445oh0"
-      sandbox=""
-      src="https://www.example.com"
-      title="Title"
-    />
-  </div>
-</DocumentFragment>
+"Snapshot Diff:
+- First value
++ Second value
+
+@@ -1,8 +1,8 @@
+  <DocumentFragment>
+    <div
+-     class="css-1tmmrj4-EmbedBlockWrapper e1t445oh1"
++     class="extra-classname css-1tmmrj4-EmbedBlockWrapper e1t445oh1"
+    >
+      <iframe
+        allowfullscreen=""
+        class="css-1wlgbuj-EmbedBlockIframe-styleCustomCss e1t445oh0"
+        sandbox="""
 `;

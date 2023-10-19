@@ -1,262 +1,234 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Poll Block should render AlreadyVoted 1`] = `
-<DocumentFragment>
-  <article
-    class="css-nrshve-PollBlockWrapper ecm33wf3"
-  >
-    <h1
-      class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
-    >
-      Question
-    </h1>
-    <div
-      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
-    >
-      <div
-        data-gramm="false"
-        data-slate-editor="true"
-        data-slate-node="value"
-        style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-      >
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-          data-slate-node="element"
-        >
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+"Snapshot Diff:
+- First value
++ Second value
+
+@@ -31,72 +31,32 @@
             </span>
-          </span>
-        </p>
+          </p>
+        </div>
       </div>
-    </div>
-    <div
-      class="css-bq6dsl-PollBlockVoting ecm33wf2"
-    >
-      <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1hf73u2-MuiButtonBase-root-MuiButton-root"
-        tabindex="0"
-        type="button"
+      <div
+-       class="css-1pntsw6-PollBlockVoteResultList ecm33wf1"
+-     >
+-       <div
+-         class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
+-       >
+-         <div
+-           class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
++       class="css-bq6dsl-PollBlockVoting ecm33wf2"
       >
-        Ja
-        <span
-          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-        />
-      </button>
-      <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1hf73u2-MuiButtonBase-root-MuiButton-root"
-        tabindex="0"
-        type="button"
+-           <div
+-             class="css-115xnt3-PollBlockResultName e1v5g0xr4"
++       <button
++         class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1hf73u2-MuiButtonBase-root-MuiButton-root"
++         tabindex="0"
++         type="button"
+        >
+          Ja
+-           </div>
+-           <div
+-             class="css-qn23nf-PollBlockResultPercentage e1v5g0xr3"
+-           >
+-             52%
+-           </div>
+-         </div>
+-         <div
+-           class="css-56q0p9-PollBlockVoteBar e1v5g0xr2"
+-         >
+-           <div
+-             class="css-1l1sayy-PollBlockVoteBarFill e1v5g0xr1"
++         <span
++           class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+          />
+-           <div
+-             class="css-1kbfvnx-PollBlockVoteBarText e1v5g0xr0"
+-           >
+-             11 Stimmen
+-           </div>
+-         </div>
+-       </div>
+-       <div
+-         class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
++       </button>
++       <button
++         class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1hf73u2-MuiButtonBase-root-MuiButton-root"
++         tabindex="0"
++         type="button"
+        >
+-         <div
+-           class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
+-         >
+-           <div
+-             class="css-115xnt3-PollBlockResultName e1v5g0xr4"
+-           >
+          Nein
+-           </div>
+-           <div
+-             class="css-qn23nf-PollBlockResultPercentage e1v5g0xr3"
+-           >
+-             48%
+-           </div>
+-         </div>
+-         <div
+-           class="css-56q0p9-PollBlockVoteBar e1v5g0xr2"
+-         >
+-           <div
+-             class="css-1itrzla-PollBlockVoteBarFill e1v5g0xr1"
++         <span
++           class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+          />
+-           <div
+-             class="css-q7kpoh-PollBlockVoteBarText e1v5g0xr0"
+-           >
+-             10 Stimmen
+-           </div>
+-         </div>
+-       </div>
++       </button>
+      </div>
+      <div
+        class="css-nh52ap-PollBlockMeta ecm33wf0"
       >
-        Nein
-        <span
-          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-        />
-      </button>
-    </div>
-    <div
-      class="css-nh52ap-PollBlockMeta ecm33wf0"
-    >
-      21 Stimmen – Schliesst am 
-      <time
-        datetime="2033-01-01"
-      >
-        01.01.2033 00:00
-      </time>
-    </div>
-  </article>
-</DocumentFragment>
+        21 Stimmen – Schliesst am "
 `;
 
 exports[`Poll Block should render AnonymousAlreadyVoted 1`] = `
-<DocumentFragment>
-  <article
-    class="css-nrshve-PollBlockWrapper ecm33wf3"
-  >
-    <h1
-      class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
-    >
-      Question
-    </h1>
-    <div
-      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
-    >
-      <div
-        data-gramm="false"
-        data-slate-editor="true"
-        data-slate-node="value"
-        style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-      >
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-          data-slate-node="element"
-        >
-          <span
-            data-slate-node="text"
+"Snapshot Diff:
+- First value
++ Second value
+
+@@ -54,14 +54,14 @@
+          </div>
+          <div
+            class="css-56q0p9-PollBlockVoteBar e1v5g0xr2"
           >
-            <span
-              data-slate-string="true"
+            <div
+-             class="css-1l1sayy-PollBlockVoteBarFill e1v5g0xr1"
++             class="css-d140y6-PollBlockVoteBarFill e1v5g0xr1"
+            />
+            <div
+-             class="css-1kbfvnx-PollBlockVoteBarText e1v5g0xr0"
++             class="css-q7kpoh-PollBlockVoteBarText e1v5g0xr0"
             >
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </span>
-          </span>
-        </p>
-      </div>
-    </div>
-    <div
-      class="css-1pntsw6-PollBlockVoteResultList ecm33wf1"
-    >
-      <div
-        class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
-      >
-        <div
-          class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
-        >
-          <div
-            class="css-115xnt3-PollBlockResultName e1v5g0xr4"
-          >
-            Ja
-          </div>
-          <div
-            class="css-qn23nf-PollBlockResultPercentage e1v5g0xr3"
-          >
-            52%
+              11 Stimmen
+            </div>
           </div>
         </div>
-        <div
-          class="css-56q0p9-PollBlockVoteBar e1v5g0xr2"
-        >
-          <div
-            class="css-d140y6-PollBlockVoteBarFill e1v5g0xr1"
-          />
-          <div
-            class="css-q7kpoh-PollBlockVoteBarText e1v5g0xr0"
-          >
-            11 Stimmen
-          </div>
-        </div>
-      </div>
-      <div
-        class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
-      >
-        <div
-          class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
-        >
-          <div
-            class="css-115xnt3-PollBlockResultName e1v5g0xr4"
-          >
-            Nein
+@@ -84,14 +84,14 @@
           </div>
           <div
-            class="css-qn23nf-PollBlockResultPercentage e1v5g0xr3"
+            class="css-56q0p9-PollBlockVoteBar e1v5g0xr2"
           >
-            48%
+            <div
+-             class="css-1itrzla-PollBlockVoteBarFill e1v5g0xr1"
++             class="css-dzkrto-PollBlockVoteBarFill e1v5g0xr1"
+            />
+            <div
+-             class="css-q7kpoh-PollBlockVoteBarText e1v5g0xr0"
++             class="css-1kbfvnx-PollBlockVoteBarText e1v5g0xr0"
+            >
+              10 Stimmen
+            </div>
           </div>
-        </div>
-        <div
-          class="css-56q0p9-PollBlockVoteBar e1v5g0xr2"
-        >
-          <div
-            class="css-dzkrto-PollBlockVoteBarFill e1v5g0xr1"
-          />
-          <div
-            class="css-1kbfvnx-PollBlockVoteBarText e1v5g0xr0"
-          >
-            10 Stimmen
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="css-nh52ap-PollBlockMeta ecm33wf0"
-    >
-      21 Stimmen – Schliesst am 
-      <time
-        datetime="2033-01-01"
-      >
-        01.01.2033 00:00
-      </time>
-    </div>
-  </article>
-</DocumentFragment>
+        </div>"
 `;
 
 exports[`Poll Block should render AnonymousVoting 1`] = `
-<DocumentFragment>
-  <article
-    class="css-nrshve-PollBlockWrapper ecm33wf3"
-  >
-    <h1
-      class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
-    >
-      Question
-    </h1>
-    <div
-      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
-    >
-      <div
-        data-gramm="false"
-        data-slate-editor="true"
-        data-slate-node="value"
-        style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-      >
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-          data-slate-node="element"
-        >
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+"Snapshot Diff:
+- First value
++ Second value
+
+@@ -31,72 +31,32 @@
             </span>
-          </span>
-        </p>
+          </p>
+        </div>
       </div>
-    </div>
-    <div
-      class="css-bq6dsl-PollBlockVoting ecm33wf2"
-    >
-      <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1hf73u2-MuiButtonBase-root-MuiButton-root"
-        tabindex="0"
-        type="button"
+      <div
+-       class="css-1pntsw6-PollBlockVoteResultList ecm33wf1"
+-     >
+-       <div
+-         class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
+-       >
+-         <div
+-           class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
++       class="css-bq6dsl-PollBlockVoting ecm33wf2"
       >
-        Ja
-        <span
-          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-        />
-      </button>
-      <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1hf73u2-MuiButtonBase-root-MuiButton-root"
-        tabindex="0"
-        type="button"
+-           <div
+-             class="css-115xnt3-PollBlockResultName e1v5g0xr4"
++       <button
++         class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1hf73u2-MuiButtonBase-root-MuiButton-root"
++         tabindex="0"
++         type="button"
+        >
+          Ja
+-           </div>
+-           <div
+-             class="css-qn23nf-PollBlockResultPercentage e1v5g0xr3"
+-           >
+-             52%
+-           </div>
+-         </div>
+-         <div
+-           class="css-56q0p9-PollBlockVoteBar e1v5g0xr2"
+-         >
+-           <div
+-             class="css-1l1sayy-PollBlockVoteBarFill e1v5g0xr1"
++         <span
++           class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+          />
+-           <div
+-             class="css-1kbfvnx-PollBlockVoteBarText e1v5g0xr0"
+-           >
+-             11 Stimmen
+-           </div>
+-         </div>
+-       </div>
+-       <div
+-         class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
++       </button>
++       <button
++         class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1hf73u2-MuiButtonBase-root-MuiButton-root"
++         tabindex="0"
++         type="button"
+        >
+-         <div
+-           class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
+-         >
+-           <div
+-             class="css-115xnt3-PollBlockResultName e1v5g0xr4"
+-           >
+          Nein
+-           </div>
+-           <div
+-             class="css-qn23nf-PollBlockResultPercentage e1v5g0xr3"
+-           >
+-             48%
+-           </div>
+-         </div>
+-         <div
+-           class="css-56q0p9-PollBlockVoteBar e1v5g0xr2"
+-         >
+-           <div
+-             class="css-1itrzla-PollBlockVoteBarFill e1v5g0xr1"
++         <span
++           class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+          />
+-           <div
+-             class="css-q7kpoh-PollBlockVoteBarText e1v5g0xr0"
+-           >
+-             10 Stimmen
+-           </div>
+-         </div>
+-       </div>
++       </button>
+      </div>
+      <div
+        class="css-nh52ap-PollBlockMeta ecm33wf0"
       >
-        Nein
-        <span
-          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-        />
-      </button>
-    </div>
-    <div
-      class="css-nh52ap-PollBlockMeta ecm33wf0"
-    >
-      21 Stimmen – Schliesst am 
-      <time
-        datetime="2033-01-01"
-      >
-        01.01.2033 00:00
-      </time>
-    </div>
-  </article>
-</DocumentFragment>
+        21 Stimmen – Schliesst am "
 `;
 
 exports[`Poll Block should render AnonymousVotingPlay 1`] = `
@@ -361,297 +333,126 @@ exports[`Poll Block should render AnonymousVotingPlay 1`] = `
 `;
 
 exports[`Poll Block should render Default 1`] = `
-<DocumentFragment>
-  <article
-    class="css-nrshve-PollBlockWrapper ecm33wf3"
-  >
-    <h1
-      class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
-    >
-      Question
-    </h1>
-    <div
-      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
-    >
-      <div
-        data-gramm="false"
-        data-slate-editor="true"
-        data-slate-node="value"
-        style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-      >
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-          data-slate-node="element"
-        >
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </span>
-          </span>
-        </p>
-      </div>
-    </div>
-    <div
-      class="css-1pntsw6-PollBlockVoteResultList ecm33wf1"
-    >
-      <div
-        class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
-      >
-        <div
-          class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
-        >
-          <div
-            class="css-115xnt3-PollBlockResultName e1v5g0xr4"
-          >
-            Ja
-          </div>
-          <div
-            class="css-qn23nf-PollBlockResultPercentage e1v5g0xr3"
-          >
-            52%
-          </div>
-        </div>
-        <div
-          class="css-56q0p9-PollBlockVoteBar e1v5g0xr2"
-        >
-          <div
-            class="css-1l1sayy-PollBlockVoteBarFill e1v5g0xr1"
-          />
-          <div
-            class="css-1kbfvnx-PollBlockVoteBarText e1v5g0xr0"
-          >
-            11 Stimmen
-          </div>
-        </div>
-      </div>
-      <div
-        class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
-      >
-        <div
-          class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
-        >
-          <div
-            class="css-115xnt3-PollBlockResultName e1v5g0xr4"
-          >
-            Nein
-          </div>
-          <div
-            class="css-qn23nf-PollBlockResultPercentage e1v5g0xr3"
-          >
-            48%
-          </div>
-        </div>
-        <div
-          class="css-56q0p9-PollBlockVoteBar e1v5g0xr2"
-        >
-          <div
-            class="css-1itrzla-PollBlockVoteBarFill e1v5g0xr1"
-          />
-          <div
-            class="css-q7kpoh-PollBlockVoteBarText e1v5g0xr0"
-          >
-            10 Stimmen
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="css-nh52ap-PollBlockMeta ecm33wf0"
-    >
-      21 Stimmen – Schliesst am 
-      <time
-        datetime="2033-01-01"
-      >
-        01.01.2033 00:00
-      </time>
-    </div>
-  </article>
-</DocumentFragment>
+"Snapshot Diff:
+Compared values have no visual difference."
 `;
 
 exports[`Poll Block should render Voting 1`] = `
-<DocumentFragment>
-  <article
-    class="css-nrshve-PollBlockWrapper ecm33wf3"
-  >
-    <h1
-      class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
-    >
-      Question
-    </h1>
-    <div
-      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
-    >
-      <div
-        data-gramm="false"
-        data-slate-editor="true"
-        data-slate-node="value"
-        style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-      >
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-          data-slate-node="element"
-        >
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+"Snapshot Diff:
+- First value
++ Second value
+
+@@ -31,72 +31,32 @@
             </span>
-          </span>
-        </p>
+          </p>
+        </div>
       </div>
-    </div>
-    <div
-      class="css-bq6dsl-PollBlockVoting ecm33wf2"
-    >
-      <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1hf73u2-MuiButtonBase-root-MuiButton-root"
-        tabindex="0"
-        type="button"
+      <div
+-       class="css-1pntsw6-PollBlockVoteResultList ecm33wf1"
+-     >
+-       <div
+-         class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
+-       >
+-         <div
+-           class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
++       class="css-bq6dsl-PollBlockVoting ecm33wf2"
       >
-        Ja
-        <span
-          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-        />
-      </button>
-      <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1hf73u2-MuiButtonBase-root-MuiButton-root"
-        tabindex="0"
-        type="button"
+-           <div
+-             class="css-115xnt3-PollBlockResultName e1v5g0xr4"
++       <button
++         class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1hf73u2-MuiButtonBase-root-MuiButton-root"
++         tabindex="0"
++         type="button"
+        >
+          Ja
+-           </div>
+-           <div
+-             class="css-qn23nf-PollBlockResultPercentage e1v5g0xr3"
+-           >
+-             52%
+-           </div>
+-         </div>
+-         <div
+-           class="css-56q0p9-PollBlockVoteBar e1v5g0xr2"
+-         >
+-           <div
+-             class="css-1l1sayy-PollBlockVoteBarFill e1v5g0xr1"
++         <span
++           class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+          />
+-           <div
+-             class="css-1kbfvnx-PollBlockVoteBarText e1v5g0xr0"
+-           >
+-             11 Stimmen
+-           </div>
+-         </div>
+-       </div>
+-       <div
+-         class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
++       </button>
++       <button
++         class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedSecondary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-1hf73u2-MuiButtonBase-root-MuiButton-root"
++         tabindex="0"
++         type="button"
+        >
+-         <div
+-           class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
+-         >
+-           <div
+-             class="css-115xnt3-PollBlockResultName e1v5g0xr4"
+-           >
+          Nein
+-           </div>
+-           <div
+-             class="css-qn23nf-PollBlockResultPercentage e1v5g0xr3"
+-           >
+-             48%
+-           </div>
+-         </div>
+-         <div
+-           class="css-56q0p9-PollBlockVoteBar e1v5g0xr2"
+-         >
+-           <div
+-             class="css-1itrzla-PollBlockVoteBarFill e1v5g0xr1"
++         <span
++           class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+          />
+-           <div
+-             class="css-q7kpoh-PollBlockVoteBarText e1v5g0xr0"
+-           >
+-             10 Stimmen
+-           </div>
+-         </div>
+-       </div>
++       </button>
+      </div>
+      <div
+        class="css-nh52ap-PollBlockMeta ecm33wf0"
       >
-        Nein
-        <span
-          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-        />
-      </button>
-    </div>
-    <div
-      class="css-nh52ap-PollBlockMeta ecm33wf0"
-    >
-      21 Stimmen – Schliesst am 
-      <time
-        datetime="2033-01-01"
-      >
-        01.01.2033 00:00
-      </time>
-    </div>
-  </article>
-</DocumentFragment>
+        21 Stimmen – Schliesst am "
 `;
 
 exports[`Poll Block should render VotingClosed 1`] = `
-<DocumentFragment>
-  <article
-    class="css-nrshve-PollBlockWrapper ecm33wf3"
-  >
-    <h1
-      class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
-    >
-      Question
-    </h1>
-    <div
-      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
-    >
-      <div
-        data-gramm="false"
-        data-slate-editor="true"
-        data-slate-node="value"
-        style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-      >
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-          data-slate-node="element"
-        >
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </span>
-          </span>
-        </p>
-      </div>
-    </div>
-    <div
-      class="css-1pntsw6-PollBlockVoteResultList ecm33wf1"
-    >
-      <div
-        class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
-      >
-        <div
-          class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
-        >
-          <div
-            class="css-115xnt3-PollBlockResultName e1v5g0xr4"
-          >
-            Ja
-          </div>
-          <div
-            class="css-qn23nf-PollBlockResultPercentage e1v5g0xr3"
-          >
-            52%
-          </div>
-        </div>
-        <div
-          class="css-56q0p9-PollBlockVoteBar e1v5g0xr2"
-        >
-          <div
-            class="css-1l1sayy-PollBlockVoteBarFill e1v5g0xr1"
-          />
-          <div
-            class="css-1kbfvnx-PollBlockVoteBarText e1v5g0xr0"
-          >
-            11 Stimmen
-          </div>
+"Snapshot Diff:
+- First value
++ Second value
+
+@@ -97,14 +97,9 @@
         </div>
       </div>
       <div
-        class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
+        class="css-nh52ap-PollBlockMeta ecm33wf0"
       >
-        <div
-          class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
-        >
-          <div
-            class="css-115xnt3-PollBlockResultName e1v5g0xr4"
-          >
-            Nein
-          </div>
-          <div
-            class="css-qn23nf-PollBlockResultPercentage e1v5g0xr3"
-          >
-            48%
-          </div>
-        </div>
-        <div
-          class="css-56q0p9-PollBlockVoteBar e1v5g0xr2"
-        >
-          <div
-            class="css-1itrzla-PollBlockVoteBarFill e1v5g0xr1"
-          />
-          <div
-            class="css-q7kpoh-PollBlockVoteBarText e1v5g0xr0"
-          >
-            10 Stimmen
-          </div>
-        </div>
+-       21 Stimmen – Schliesst am 
+-       <time
+-         datetime="2033-01-01"
+-       >
+-         01.01.2033 00:00
+-       </time>
++       21 Stimmen – Abstimmung beendet.
       </div>
-    </div>
-    <div
-      class="css-nh52ap-PollBlockMeta ecm33wf0"
-    >
-      21 Stimmen – Abstimmung beendet.
-    </div>
-  </article>
-</DocumentFragment>
+    </article>
+  </DocumentFragment>"
 `;
 
 exports[`Poll Block should render VotingPlay 1`] = `
@@ -755,232 +556,144 @@ exports[`Poll Block should render VotingPlay 1`] = `
         </time>"
 `;
 
-exports[`Poll Block should render WihtoutPoll 1`] = `<DocumentFragment />`;
+exports[`Poll Block should render WihtoutPoll 1`] = `
+"Snapshot Diff:
+- First value
++ Second value
+
+- <DocumentFragment>
+-   <article
+-     class="css-nrshve-PollBlockWrapper ecm33wf3"
+-   >
+-     <h1
+-       class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+-     >
+-       Question
+-     </h1>
+-     <div
+-       class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+-     >
+-       <div
+-         data-gramm="false"
+-         data-slate-editor="true"
+-         data-slate-node="value"
+-         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+-       >
+-         <p
+-           class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+-           data-slate-node="element"
+-         >
+-           <span
+-             data-slate-node="text"
+-           >
+-             <span
+-               data-slate-string="true"
+-             >
+-               Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+-             </span>
+-           </span>
+-         </p>
+-       </div>
+-     </div>
+-     <div
+-       class="css-1pntsw6-PollBlockVoteResultList ecm33wf1"
+-     >
+-       <div
+-         class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
+-       >
+-         <div
+-           class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
+-         >
+-           <div
+-             class="css-115xnt3-PollBlockResultName e1v5g0xr4"
+-           >
+-             Ja
+-           </div>
+-           <div
+-             class="css-qn23nf-PollBlockResultPercentage e1v5g0xr3"
+-           >
+-             52%
+-           </div>
+-         </div>
+-         <div
+-           class="css-56q0p9-PollBlockVoteBar e1v5g0xr2"
+-         >
+-           <div
+-             class="css-1l1sayy-PollBlockVoteBarFill e1v5g0xr1"
+-           />
+-           <div
+-             class="css-1kbfvnx-PollBlockVoteBarText e1v5g0xr0"
+-           >
+-             11 Stimmen
+-           </div>
+-         </div>
+-       </div>
+-       <div
+-         class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
+-       >
+-         <div
+-           class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
+-         >
+-           <div
+-             class="css-115xnt3-PollBlockResultName e1v5g0xr4"
+-           >
+-             Nein
+-           </div>
+-           <div
+-             class="css-qn23nf-PollBlockResultPercentage e1v5g0xr3"
+-           >
+-             48%
+-           </div>
+-         </div>
+-         <div
+-           class="css-56q0p9-PollBlockVoteBar e1v5g0xr2"
+-         >
+-           <div
+-             class="css-1itrzla-PollBlockVoteBarFill e1v5g0xr1"
+-           />
+-           <div
+-             class="css-q7kpoh-PollBlockVoteBarText e1v5g0xr0"
+-           >
+-             10 Stimmen
+-           </div>
+-         </div>
+-       </div>
+-     </div>
+-     <div
+-       class="css-nh52ap-PollBlockMeta ecm33wf0"
+-     >
+-       21 Stimmen – Schliesst am 
+-       <time
+-         datetime="2033-01-01"
+-       >
+-         01.01.2033 00:00
+-       </time>
+-     </div>
+-   </article>
+- </DocumentFragment>
++ <DocumentFragment />"
+`;
 
 exports[`Poll Block should render WithClassName 1`] = `
-<DocumentFragment>
-  <article
-    class="extra-classname css-nrshve-PollBlockWrapper ecm33wf3"
-  >
-    <h1
-      class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+"Snapshot Diff:
+- First value
++ Second value
+
+@@ -1,8 +1,8 @@
+  <DocumentFragment>
+    <article
+-     class="css-nrshve-PollBlockWrapper ecm33wf3"
++     class="extra-classname css-nrshve-PollBlockWrapper ecm33wf3"
     >
-      Question
-    </h1>
-    <div
-      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
-    >
-      <div
-        data-gramm="false"
-        data-slate-editor="true"
-        data-slate-node="value"
-        style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+      <h1
+        class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
       >
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-          data-slate-node="element"
-        >
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </span>
-          </span>
-        </p>
-      </div>
-    </div>
-    <div
-      class="css-1pntsw6-PollBlockVoteResultList ecm33wf1"
-    >
-      <div
-        class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
-      >
-        <div
-          class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
-        >
-          <div
-            class="css-115xnt3-PollBlockResultName e1v5g0xr4"
-          >
-            Ja
-          </div>
-          <div
-            class="css-qn23nf-PollBlockResultPercentage e1v5g0xr3"
-          >
-            52%
-          </div>
-        </div>
-        <div
-          class="css-56q0p9-PollBlockVoteBar e1v5g0xr2"
-        >
-          <div
-            class="css-1l1sayy-PollBlockVoteBarFill e1v5g0xr1"
-          />
-          <div
-            class="css-1kbfvnx-PollBlockVoteBarText e1v5g0xr0"
-          >
-            11 Stimmen
-          </div>
-        </div>
-      </div>
-      <div
-        class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
-      >
-        <div
-          class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
-        >
-          <div
-            class="css-115xnt3-PollBlockResultName e1v5g0xr4"
-          >
-            Nein
-          </div>
-          <div
-            class="css-qn23nf-PollBlockResultPercentage e1v5g0xr3"
-          >
-            48%
-          </div>
-        </div>
-        <div
-          class="css-56q0p9-PollBlockVoteBar e1v5g0xr2"
-        >
-          <div
-            class="css-1itrzla-PollBlockVoteBarFill e1v5g0xr1"
-          />
-          <div
-            class="css-q7kpoh-PollBlockVoteBarText e1v5g0xr0"
-          >
-            10 Stimmen
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="css-nh52ap-PollBlockMeta ecm33wf0"
-    >
-      21 Stimmen – Schliesst am 
-      <time
-        datetime="2033-01-01"
-      >
-        01.01.2033 00:00
-      </time>
-    </div>
-  </article>
-</DocumentFragment>
+        Question"
 `;
 
 exports[`Poll Block should render WithEmotion 1`] = `
-<DocumentFragment>
-  <article
-    class="css-nrshve-PollBlockWrapper ecm33wf3"
-  >
-    <h1
-      class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
-    >
-      Question
-    </h1>
-    <div
-      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
-    >
-      <div
-        data-gramm="false"
-        data-slate-editor="true"
-        data-slate-node="value"
-        style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-      >
-        <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-          data-slate-node="element"
-        >
-          <span
-            data-slate-node="text"
-          >
-            <span
-              data-slate-string="true"
-            >
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-            </span>
-          </span>
-        </p>
-      </div>
-    </div>
-    <div
-      class="css-1pntsw6-PollBlockVoteResultList ecm33wf1"
-    >
-      <div
-        class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
-      >
-        <div
-          class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
-        >
-          <div
-            class="css-115xnt3-PollBlockResultName e1v5g0xr4"
-          >
-            Ja
-          </div>
-          <div
-            class="css-qn23nf-PollBlockResultPercentage e1v5g0xr3"
-          >
-            52%
-          </div>
-        </div>
-        <div
-          class="css-56q0p9-PollBlockVoteBar e1v5g0xr2"
-        >
-          <div
-            class="css-1l1sayy-PollBlockVoteBarFill e1v5g0xr1"
-          />
-          <div
-            class="css-1kbfvnx-PollBlockVoteBarText e1v5g0xr0"
-          >
-            11 Stimmen
-          </div>
-        </div>
-      </div>
-      <div
-        class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
-      >
-        <div
-          class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
-        >
-          <div
-            class="css-115xnt3-PollBlockResultName e1v5g0xr4"
-          >
-            Nein
-          </div>
-          <div
-            class="css-qn23nf-PollBlockResultPercentage e1v5g0xr3"
-          >
-            48%
-          </div>
-        </div>
-        <div
-          class="css-56q0p9-PollBlockVoteBar e1v5g0xr2"
-        >
-          <div
-            class="css-1itrzla-PollBlockVoteBarFill e1v5g0xr1"
-          />
-          <div
-            class="css-q7kpoh-PollBlockVoteBarText e1v5g0xr0"
-          >
-            10 Stimmen
-          </div>
-        </div>
-      </div>
-    </div>
-    <div
-      class="css-nh52ap-PollBlockMeta ecm33wf0"
-    >
-      21 Stimmen – Schliesst am 
-      <time
-        datetime="2033-01-01"
-      >
-        01.01.2033 00:00
-      </time>
-    </div>
-  </article>
-</DocumentFragment>
+"Snapshot Diff:
+Compared values have no visual difference."
 `;
 
 exports[`Poll Block should render WithError 1`] = `

@@ -163,8 +163,150 @@ exports[`Author Edit Panel should fill the link field 1`] = `
 
 exports[`Author Edit Panel should render 1`] = `
 <DocumentFragment>
-  <form
-    class="css-1c13mle-Form e14dal3y0 rs-form rs-form-vertical rs-form-fluid"
+  .emotion-0 {
+  height: 100%;
+}
+
+.emotion-2 {
+  display: grid;
+}
+
+.emotion-3 {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  background-color: #f7f9fa;
+  max-height: 240px;
+  min-height: 100px;
+}
+
+.emotion-4 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  margin-bottom: 10px;
+}
+
+.emotion-5 {
+  margin-right: 10px;
+}
+
+.emotion-6 {
+  width: 100%;
+}
+
+.emotion-7 {
+  min-height: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.emotion-8 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+}
+
+.emotion-10 {
+  width: 230px;
+  margin-left: 5px;
+}
+
+.emotion-12 {
+  margin-left: 10px;
+}
+
+.emotion-13 {
+  pointer-events: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: -webkit-sticky;
+  position: sticky;
+  z-index: 1;
+  margin-bottom: 30px;
+}
+
+.emotion-14 {
+  pointer-events: auto;
+  padding: 5px;
+  background-color: white;
+  border-radius: 6px;
+  transition-property: opacity;
+  transition-duration: 100ms;
+}
+
+.emotion-15 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  transition-property: opacity;
+  transition-duration: 100ms;
+  opacity: 0.5;
+}
+
+.emotion-16 {
+  border: 1px solid rgba(0, 0, 0, 0);
+  background-color: white;
+  border-radius: 3px;
+  font-size: 18px;
+  cursor: pointer;
+  border-color: white;
+  height: 24px;
+  width: 24px;
+  margin: 0 1px;
+  padding: 2px;
+  position: relative;
+}
+
+.emotion-16 svg {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+}
+
+.emotion-19 {
+  height: 1.5em;
+}
+
+.emotion-24 {
+  width: 18px;
+  height: 18px;
+}
+
+.emotion-24 svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+<form
+    class="emotion-0 emotion-1 rs-form rs-form-vertical rs-form-fluid"
   >
     <div
       class="rs-drawer-header"
@@ -318,14 +460,14 @@ exports[`Author Edit Panel should render 1`] = `
             role="region"
           >
             <div
-              class="css-chr1eq rs-panel"
+              class="emotion-2 rs-panel"
             >
               <div
                 class="rs-panel-body rs-panel-body-fill"
                 role="region"
               >
                 <div
-                  class="css-gv6g1x"
+                  class="emotion-3"
                 >
                   <button
                     class="rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default rs-btn-sm"
@@ -387,10 +529,10 @@ exports[`Author Edit Panel should render 1`] = `
             <div>
               <div>
                 <div
-                  class="css-1c4wd4"
+                  class="emotion-4"
                 >
                   <div
-                    class="css-12frltk"
+                    class="emotion-5"
                   >
                     <button
                       aria-disabled="false"
@@ -424,17 +566,17 @@ exports[`Author Edit Panel should render 1`] = `
                     </button>
                   </div>
                   <div
-                    class="css-1ago99h rs-panel"
+                    class="emotion-6 rs-panel"
                   >
                     <div
                       class="rs-panel-body rs-panel-body-fill"
                       role="region"
                     >
                       <div
-                        class="css-10odzlz"
+                        class="emotion-7"
                       >
                         <div
-                          class="css-fngpsb-Controls e14dal3y1"
+                          class="emotion-8 emotion-9"
                         >
                           <div
                             class="rs-form-control rs-form-control-wrapper"
@@ -452,7 +594,7 @@ exports[`Author Edit Panel should render 1`] = `
                             role="group"
                           >
                             <div
-                              class="css-119kd5y-InputGroup e14dal3y2 rs-input-group rs-input-group-inside"
+                              class="emotion-10 emotion-11 rs-input-group rs-input-group-inside"
                             >
                               <span
                                 class="rs-input-group-addon"
@@ -493,7 +635,7 @@ exports[`Author Edit Panel should render 1`] = `
                     </div>
                   </div>
                   <div
-                    class="css-17nfp2s"
+                    class="emotion-12"
                   >
                     <button
                       aria-disabled="false"
@@ -589,16 +731,16 @@ exports[`Author Edit Panel should render 1`] = `
               class="richTextFrame"
             >
               <div
-                class="css-u6g4ew"
+                class="emotion-13"
               >
                 <div
-                  class="css-14noxf0"
+                  class="emotion-14"
                 >
                   <div
-                    class="css-18wuio6"
+                    class="emotion-15"
                   >
                     <button
-                      class="css-109gd2z"
+                      class="emotion-16"
                       type="button"
                     >
                       <svg
@@ -615,7 +757,7 @@ exports[`Author Edit Panel should render 1`] = `
                       </svg>
                     </button>
                     <button
-                      class="css-109gd2z"
+                      class="emotion-16"
                       type="button"
                     >
                       <svg
@@ -632,7 +774,7 @@ exports[`Author Edit Panel should render 1`] = `
                       </svg>
                     </button>
                     <button
-                      class="css-109gd2z"
+                      class="emotion-16"
                       type="button"
                     >
                       <svg
@@ -650,11 +792,11 @@ exports[`Author Edit Panel should render 1`] = `
                     </button>
                     <div
                       aria-orientation="vertical"
-                      class="css-e1iw3k rs-divider rs-divider-vertical"
+                      class="emotion-19 rs-divider rs-divider-vertical"
                       role="separator"
                     />
                     <button
-                      class="css-109gd2z"
+                      class="emotion-16"
                       type="button"
                     >
                       <svg
@@ -676,7 +818,7 @@ exports[`Author Edit Panel should render 1`] = `
                       </svg>
                     </button>
                     <button
-                      class="css-109gd2z"
+                      class="emotion-16"
                       type="button"
                     >
                       <svg
@@ -699,15 +841,15 @@ exports[`Author Edit Panel should render 1`] = `
                     </button>
                     <div
                       aria-orientation="vertical"
-                      class="css-e1iw3k rs-divider rs-divider-vertical"
+                      class="emotion-19 rs-divider rs-divider-vertical"
                       role="separator"
                     />
                     <button
-                      class="css-109gd2z"
+                      class="emotion-16"
                       type="button"
                     >
                       <div
-                        class="css-1ttmkdf"
+                        class="emotion-24"
                       >
                         <svg
                           fill="currentColor"
@@ -730,11 +872,11 @@ exports[`Author Edit Panel should render 1`] = `
                     </button>
                     <div
                       aria-orientation="vertical"
-                      class="css-e1iw3k rs-divider rs-divider-vertical"
+                      class="emotion-19 rs-divider rs-divider-vertical"
                       role="separator"
                     />
                     <button
-                      class="css-109gd2z"
+                      class="emotion-16"
                       type="button"
                     >
                       <svg
@@ -756,7 +898,7 @@ exports[`Author Edit Panel should render 1`] = `
                       </svg>
                     </button>
                     <button
-                      class="css-109gd2z"
+                      class="emotion-16"
                       type="button"
                     >
                       <svg
@@ -778,7 +920,7 @@ exports[`Author Edit Panel should render 1`] = `
                       </svg>
                     </button>
                     <button
-                      class="css-109gd2z"
+                      class="emotion-16"
                       type="button"
                     >
                       <svg
@@ -800,7 +942,7 @@ exports[`Author Edit Panel should render 1`] = `
                       </svg>
                     </button>
                     <button
-                      class="css-109gd2z"
+                      class="emotion-16"
                       type="button"
                     >
                       <svg
@@ -822,7 +964,7 @@ exports[`Author Edit Panel should render 1`] = `
                       </svg>
                     </button>
                     <button
-                      class="css-109gd2z"
+                      class="emotion-16"
                       type="button"
                     >
                       <svg
@@ -844,7 +986,7 @@ exports[`Author Edit Panel should render 1`] = `
                       </svg>
                     </button>
                     <button
-                      class="css-109gd2z"
+                      class="emotion-16"
                       type="button"
                     >
                       <svg
@@ -867,15 +1009,15 @@ exports[`Author Edit Panel should render 1`] = `
                     </button>
                     <div
                       aria-orientation="vertical"
-                      class="css-e1iw3k rs-divider rs-divider-vertical"
+                      class="emotion-19 rs-divider rs-divider-vertical"
                       role="separator"
                     />
                     <button
-                      class="css-109gd2z"
+                      class="emotion-16"
                       type="button"
                     >
                       <div
-                        class="css-1ttmkdf"
+                        class="emotion-24"
                       >
                         <svg
                           fill="currentColor"
@@ -898,15 +1040,15 @@ exports[`Author Edit Panel should render 1`] = `
                     </button>
                     <div
                       aria-orientation="vertical"
-                      class="css-e1iw3k rs-divider rs-divider-vertical"
+                      class="emotion-19 rs-divider rs-divider-vertical"
                       role="separator"
                     />
                     <button
-                      class="css-109gd2z"
+                      class="emotion-16"
                       type="button"
                     >
                       <div
-                        class="css-1ttmkdf"
+                        class="emotion-24"
                       >
                         <svg
                           fill="currentColor"
@@ -969,8 +1111,108 @@ exports[`Author Edit Panel should render 1`] = `
 
 exports[`Author Edit Panel should render with ID 1`] = `
 <DocumentFragment>
-  <form
-    class="css-1c13mle-Form e14dal3y0 rs-form rs-form-vertical rs-form-fluid"
+  .emotion-0 {
+  height: 100%;
+}
+
+.emotion-2 {
+  display: grid;
+}
+
+.emotion-3 {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  background-color: #f7f9fa;
+  max-height: 240px;
+  min-height: 100px;
+}
+
+.emotion-4 {
+  pointer-events: none;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: -webkit-sticky;
+  position: sticky;
+  z-index: 1;
+  margin-bottom: 30px;
+}
+
+.emotion-5 {
+  pointer-events: auto;
+  padding: 5px;
+  background-color: white;
+  border-radius: 6px;
+  transition-property: opacity;
+  transition-duration: 100ms;
+}
+
+.emotion-6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  transition-property: opacity;
+  transition-duration: 100ms;
+  opacity: 0.5;
+}
+
+.emotion-7 {
+  border: 1px solid rgba(0, 0, 0, 0);
+  background-color: white;
+  border-radius: 3px;
+  font-size: 18px;
+  cursor: pointer;
+  border-color: white;
+  height: 24px;
+  width: 24px;
+  margin: 0 1px;
+  padding: 2px;
+  position: relative;
+}
+
+.emotion-7 svg {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+}
+
+.emotion-10 {
+  height: 1.5em;
+}
+
+.emotion-15 {
+  width: 18px;
+  height: 18px;
+}
+
+.emotion-15 svg {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+.emotion-29 {
+  color: #cad5e4;
+}
+
+<form
+    class="emotion-0 emotion-1 rs-form rs-form-vertical rs-form-fluid"
   >
     <div
       class="rs-drawer-header"
@@ -1124,14 +1366,14 @@ exports[`Author Edit Panel should render with ID 1`] = `
             role="region"
           >
             <div
-              class="css-chr1eq rs-panel"
+              class="emotion-2 rs-panel"
             >
               <div
                 class="rs-panel-body rs-panel-body-fill"
                 role="region"
               >
                 <div
-                  class="css-gv6g1x"
+                  class="emotion-3"
                 >
                   <button
                     class="rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default rs-btn-sm"
@@ -1254,16 +1496,16 @@ exports[`Author Edit Panel should render with ID 1`] = `
               class="richTextFrame"
             >
               <div
-                class="css-u6g4ew"
+                class="emotion-4"
               >
                 <div
-                  class="css-14noxf0"
+                  class="emotion-5"
                 >
                   <div
-                    class="css-18wuio6"
+                    class="emotion-6"
                   >
                     <button
-                      class="css-109gd2z"
+                      class="emotion-7"
                       type="button"
                     >
                       <svg
@@ -1280,7 +1522,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                       </svg>
                     </button>
                     <button
-                      class="css-109gd2z"
+                      class="emotion-7"
                       type="button"
                     >
                       <svg
@@ -1297,7 +1539,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                       </svg>
                     </button>
                     <button
-                      class="css-109gd2z"
+                      class="emotion-7"
                       type="button"
                     >
                       <svg
@@ -1315,11 +1557,11 @@ exports[`Author Edit Panel should render with ID 1`] = `
                     </button>
                     <div
                       aria-orientation="vertical"
-                      class="css-e1iw3k rs-divider rs-divider-vertical"
+                      class="emotion-10 rs-divider rs-divider-vertical"
                       role="separator"
                     />
                     <button
-                      class="css-109gd2z"
+                      class="emotion-7"
                       type="button"
                     >
                       <svg
@@ -1341,7 +1583,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                       </svg>
                     </button>
                     <button
-                      class="css-109gd2z"
+                      class="emotion-7"
                       type="button"
                     >
                       <svg
@@ -1364,15 +1606,15 @@ exports[`Author Edit Panel should render with ID 1`] = `
                     </button>
                     <div
                       aria-orientation="vertical"
-                      class="css-e1iw3k rs-divider rs-divider-vertical"
+                      class="emotion-10 rs-divider rs-divider-vertical"
                       role="separator"
                     />
                     <button
-                      class="css-109gd2z"
+                      class="emotion-7"
                       type="button"
                     >
                       <div
-                        class="css-1ttmkdf"
+                        class="emotion-15"
                       >
                         <svg
                           fill="currentColor"
@@ -1395,11 +1637,11 @@ exports[`Author Edit Panel should render with ID 1`] = `
                     </button>
                     <div
                       aria-orientation="vertical"
-                      class="css-e1iw3k rs-divider rs-divider-vertical"
+                      class="emotion-10 rs-divider rs-divider-vertical"
                       role="separator"
                     />
                     <button
-                      class="css-109gd2z"
+                      class="emotion-7"
                       type="button"
                     >
                       <svg
@@ -1421,7 +1663,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                       </svg>
                     </button>
                     <button
-                      class="css-109gd2z"
+                      class="emotion-7"
                       type="button"
                     >
                       <svg
@@ -1443,7 +1685,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                       </svg>
                     </button>
                     <button
-                      class="css-109gd2z"
+                      class="emotion-7"
                       type="button"
                     >
                       <svg
@@ -1465,7 +1707,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                       </svg>
                     </button>
                     <button
-                      class="css-109gd2z"
+                      class="emotion-7"
                       type="button"
                     >
                       <svg
@@ -1487,7 +1729,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                       </svg>
                     </button>
                     <button
-                      class="css-109gd2z"
+                      class="emotion-7"
                       type="button"
                     >
                       <svg
@@ -1509,7 +1751,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                       </svg>
                     </button>
                     <button
-                      class="css-109gd2z"
+                      class="emotion-7"
                       type="button"
                     >
                       <svg
@@ -1532,15 +1774,15 @@ exports[`Author Edit Panel should render with ID 1`] = `
                     </button>
                     <div
                       aria-orientation="vertical"
-                      class="css-e1iw3k rs-divider rs-divider-vertical"
+                      class="emotion-10 rs-divider rs-divider-vertical"
                       role="separator"
                     />
                     <button
-                      class="css-109gd2z"
+                      class="emotion-7"
                       type="button"
                     >
                       <div
-                        class="css-1ttmkdf"
+                        class="emotion-15"
                       >
                         <svg
                           fill="currentColor"
@@ -1563,15 +1805,15 @@ exports[`Author Edit Panel should render with ID 1`] = `
                     </button>
                     <div
                       aria-orientation="vertical"
-                      class="css-e1iw3k rs-divider rs-divider-vertical"
+                      class="emotion-10 rs-divider rs-divider-vertical"
                       role="separator"
                     />
                     <button
-                      class="css-109gd2z"
+                      class="emotion-7"
                       type="button"
                     >
                       <div
-                        class="css-1ttmkdf"
+                        class="emotion-15"
                       >
                         <svg
                           fill="currentColor"
@@ -1596,7 +1838,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                 </div>
               </div>
               <div
-                class="css-8hzfm6"
+                class="emotion-29"
               >
                 blocks.richText.startWriting
               </div>

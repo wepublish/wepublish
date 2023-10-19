@@ -2,24 +2,123 @@
 
 exports[`Teaser Grid Block should render OneColumn 1`] = `
 <DocumentFragment>
-  <div
-    class="css-1ek02iu-TeaserGridBlockWrapper e1xnbuxv0"
+  .emotion-0 {
+  display: grid;
+  -webkit-column-gap: 16px;
+  column-gap: 16px;
+  row-gap: 40px;
+  grid-template-columns: 1fr;
+  -webkit-align-items: stretch;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+}
+
+.emotion-2 {
+  display: grid;
+  grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-2 {
+    grid-column-start: 1;
+    grid-column-end: 13;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-4 {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  display: grid;
+}
+
+.emotion-5 {
+  display: grid;
+  gap: 8px;
+  grid-template-rows: auto;
+  grid-auto-rows: max-content;
+}
+
+.emotion-7 {
+  max-width: 100%;
+  width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.emotion-13 {
+  margin: 0;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 400;
+  font-size: 1.5rem;
+  line-height: 1.334;
+  letter-spacing: 0em;
+}
+
+.emotion-14 {
+  margin: 0;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 500;
+  font-size: 1.25rem;
+  line-height: 1.6;
+  letter-spacing: 0.0075em;
+}
+
+.emotion-15 {
+  display: grid;
+  grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-15 {
+    grid-column-start: 1;
+    grid-column-end: 13;
+    grid-row-start: 2;
+    grid-row-end: 3;
+  }
+}
+
+.emotion-26 {
+  display: grid;
+  grid-column: 1/-1;
+}
+
+@media (min-width:900px) {
+  .emotion-26 {
+    grid-column-start: 1;
+    grid-column-end: 13;
+    grid-row-start: 3;
+    grid-row-end: 4;
+  }
+}
+
+<div
+    class="emotion-0 emotion-1"
   >
     <article
-      class="css-13bgdik-TeaserWrapper e18of27r4"
+      class="emotion-2 emotion-3"
       x="0"
       y="0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1szdm08-MuiTypography-root-MuiLink-root-Teaser"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-4"
         href="https://example.com"
       >
         <div
-          class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
+          class="emotion-5 emotion-6"
         >
           <img
             alt="An image description"
-            class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
+            class="emotion-7 emotion-8"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -28,22 +127,22 @@ https://unsplash.it/200/200 200w"
             title="An image title"
           />
           <time
-            class="css-3uu3f-TeaserDate e18of27r1"
+            class="emotion-9 emotion-10"
             datetime="2023-01-01T00:00:00.000Z"
           >
             01.01.2023
           </time>
           <header
-            class="css-4se2pd-TeaserTitle e18of27r2"
+            class="emotion-11 emotion-12"
           >
             <h1
-              class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-h5 emotion-13"
             >
               Pre Title: Title
             </h1>
           </header>
           <p
-            class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h6 emotion-14"
           >
             Lead
           </p>
@@ -51,20 +150,20 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-jx9mmb-TeaserWrapper e18of27r4"
+      class="emotion-15 emotion-3"
       x="0"
       y="1"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1szdm08-MuiTypography-root-MuiLink-root-Teaser"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-4"
         href="https://example.com"
       >
         <div
-          class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
+          class="emotion-5 emotion-6"
         >
           <img
             alt="An image description"
-            class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
+            class="emotion-7 emotion-8"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -73,16 +172,16 @@ https://unsplash.it/200/200 200w"
             title="An image title"
           />
           <header
-            class="css-4se2pd-TeaserTitle e18of27r2"
+            class="emotion-11 emotion-12"
           >
             <h1
-              class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-h5 emotion-13"
             >
               Pre Title: Title
             </h1>
           </header>
           <p
-            class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h6 emotion-14"
           >
             Lead
           </p>
@@ -90,20 +189,20 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-1ml5tfp-TeaserWrapper e18of27r4"
+      class="emotion-26 emotion-3"
       x="0"
       y="2"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1szdm08-MuiTypography-root-MuiLink-root-Teaser"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-4"
         href="https://example.com"
       >
         <div
-          class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
+          class="emotion-5 emotion-6"
         >
           <img
             alt="An image description"
-            class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
+            class="emotion-7 emotion-8"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -112,16 +211,16 @@ https://unsplash.it/200/200 200w"
             title="An image title"
           />
           <header
-            class="css-4se2pd-TeaserTitle e18of27r2"
+            class="emotion-11 emotion-12"
           >
             <h1
-              class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-h5 emotion-13"
             >
               Teambesprechung vom 23.05.
             </h1>
           </header>
           <p
-            class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h6 emotion-14"
           >
             Lead
           </p>
@@ -134,24 +233,132 @@ https://unsplash.it/200/200 200w"
 
 exports[`Teaser Grid Block should render ThreeColumns 1`] = `
 <DocumentFragment>
-  <div
-    class="css-hw4wfz-TeaserGridBlockWrapper e1xnbuxv0"
+  .emotion-0 {
+  display: grid;
+  -webkit-column-gap: 16px;
+  column-gap: 16px;
+  row-gap: 40px;
+  grid-template-columns: 1fr;
+  -webkit-align-items: stretch;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+}
+
+@media (min-width:600px) {
+  .emotion-0 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-0 {
+    grid-template-columns: repeat(12, 1fr);
+  }
+}
+
+.emotion-2 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-2 {
+    grid-column-start: 1;
+    grid-column-end: 5;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-4 {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  display: grid;
+}
+
+.emotion-5 {
+  display: grid;
+  gap: 8px;
+  grid-template-rows: auto;
+  grid-auto-rows: max-content;
+}
+
+.emotion-7 {
+  max-width: 100%;
+  width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.emotion-13 {
+  margin: 0;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 400;
+  font-size: 1.5rem;
+  line-height: 1.334;
+  letter-spacing: 0em;
+}
+
+.emotion-14 {
+  margin: 0;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 500;
+  font-size: 1.25rem;
+  line-height: 1.6;
+  letter-spacing: 0.0075em;
+}
+
+.emotion-15 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-15 {
+    grid-column-start: 5;
+    grid-column-end: 9;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-26 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-26 {
+    grid-column-start: 9;
+    grid-column-end: 13;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+<div
+    class="emotion-0 emotion-1"
   >
     <article
-      class="css-8p11sj-TeaserWrapper e18of27r4"
+      class="emotion-2 emotion-3"
       x="0"
       y="0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1szdm08-MuiTypography-root-MuiLink-root-Teaser"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-4"
         href="https://example.com"
       >
         <div
-          class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
+          class="emotion-5 emotion-6"
         >
           <img
             alt="An image description"
-            class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
+            class="emotion-7 emotion-8"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -160,22 +367,22 @@ https://unsplash.it/200/200 200w"
             title="An image title"
           />
           <time
-            class="css-3uu3f-TeaserDate e18of27r1"
+            class="emotion-9 emotion-10"
             datetime="2023-01-01T00:00:00.000Z"
           >
             01.01.2023
           </time>
           <header
-            class="css-4se2pd-TeaserTitle e18of27r2"
+            class="emotion-11 emotion-12"
           >
             <h1
-              class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-h5 emotion-13"
             >
               Pre Title: Title
             </h1>
           </header>
           <p
-            class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h6 emotion-14"
           >
             Lead
           </p>
@@ -183,20 +390,20 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-z4j0q-TeaserWrapper e18of27r4"
+      class="emotion-15 emotion-3"
       x="4"
       y="0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1szdm08-MuiTypography-root-MuiLink-root-Teaser"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-4"
         href="https://example.com"
       >
         <div
-          class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
+          class="emotion-5 emotion-6"
         >
           <img
             alt="An image description"
-            class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
+            class="emotion-7 emotion-8"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -205,16 +412,16 @@ https://unsplash.it/200/200 200w"
             title="An image title"
           />
           <header
-            class="css-4se2pd-TeaserTitle e18of27r2"
+            class="emotion-11 emotion-12"
           >
             <h1
-              class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-h5 emotion-13"
             >
               Pre Title: Title
             </h1>
           </header>
           <p
-            class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h6 emotion-14"
           >
             Lead
           </p>
@@ -222,20 +429,20 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-wylm69-TeaserWrapper e18of27r4"
+      class="emotion-26 emotion-3"
       x="8"
       y="0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1szdm08-MuiTypography-root-MuiLink-root-Teaser"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-4"
         href="https://example.com"
       >
         <div
-          class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
+          class="emotion-5 emotion-6"
         >
           <img
             alt="An image description"
-            class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
+            class="emotion-7 emotion-8"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -244,16 +451,16 @@ https://unsplash.it/200/200 200w"
             title="An image title"
           />
           <header
-            class="css-4se2pd-TeaserTitle e18of27r2"
+            class="emotion-11 emotion-12"
           >
             <h1
-              class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-h5 emotion-13"
             >
               Teambesprechung vom 23.05.
             </h1>
           </header>
           <p
-            class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h6 emotion-14"
           >
             Lead
           </p>
@@ -266,24 +473,132 @@ https://unsplash.it/200/200 200w"
 
 exports[`Teaser Grid Block should render WithClassName 1`] = `
 <DocumentFragment>
-  <div
-    class="extra-classname css-hw4wfz-TeaserGridBlockWrapper e1xnbuxv0"
+  .emotion-0 {
+  display: grid;
+  -webkit-column-gap: 16px;
+  column-gap: 16px;
+  row-gap: 40px;
+  grid-template-columns: 1fr;
+  -webkit-align-items: stretch;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+}
+
+@media (min-width:600px) {
+  .emotion-0 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-0 {
+    grid-template-columns: repeat(12, 1fr);
+  }
+}
+
+.emotion-2 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-2 {
+    grid-column-start: 1;
+    grid-column-end: 5;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-4 {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  display: grid;
+}
+
+.emotion-5 {
+  display: grid;
+  gap: 8px;
+  grid-template-rows: auto;
+  grid-auto-rows: max-content;
+}
+
+.emotion-7 {
+  max-width: 100%;
+  width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.emotion-13 {
+  margin: 0;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 400;
+  font-size: 1.5rem;
+  line-height: 1.334;
+  letter-spacing: 0em;
+}
+
+.emotion-14 {
+  margin: 0;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 500;
+  font-size: 1.25rem;
+  line-height: 1.6;
+  letter-spacing: 0.0075em;
+}
+
+.emotion-15 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-15 {
+    grid-column-start: 5;
+    grid-column-end: 9;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-26 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-26 {
+    grid-column-start: 9;
+    grid-column-end: 13;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+<div
+    class="extra-classname emotion-0 emotion-1"
   >
     <article
-      class="css-8p11sj-TeaserWrapper e18of27r4"
+      class="emotion-2 emotion-3"
       x="0"
       y="0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1szdm08-MuiTypography-root-MuiLink-root-Teaser"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-4"
         href="https://example.com"
       >
         <div
-          class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
+          class="emotion-5 emotion-6"
         >
           <img
             alt="An image description"
-            class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
+            class="emotion-7 emotion-8"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -292,22 +607,22 @@ https://unsplash.it/200/200 200w"
             title="An image title"
           />
           <time
-            class="css-3uu3f-TeaserDate e18of27r1"
+            class="emotion-9 emotion-10"
             datetime="2023-01-01T00:00:00.000Z"
           >
             01.01.2023
           </time>
           <header
-            class="css-4se2pd-TeaserTitle e18of27r2"
+            class="emotion-11 emotion-12"
           >
             <h1
-              class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-h5 emotion-13"
             >
               Pre Title: Title
             </h1>
           </header>
           <p
-            class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h6 emotion-14"
           >
             Lead
           </p>
@@ -315,20 +630,20 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-z4j0q-TeaserWrapper e18of27r4"
+      class="emotion-15 emotion-3"
       x="4"
       y="0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1szdm08-MuiTypography-root-MuiLink-root-Teaser"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-4"
         href="https://example.com"
       >
         <div
-          class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
+          class="emotion-5 emotion-6"
         >
           <img
             alt="An image description"
-            class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
+            class="emotion-7 emotion-8"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -337,16 +652,16 @@ https://unsplash.it/200/200 200w"
             title="An image title"
           />
           <header
-            class="css-4se2pd-TeaserTitle e18of27r2"
+            class="emotion-11 emotion-12"
           >
             <h1
-              class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-h5 emotion-13"
             >
               Pre Title: Title
             </h1>
           </header>
           <p
-            class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h6 emotion-14"
           >
             Lead
           </p>
@@ -354,20 +669,20 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-wylm69-TeaserWrapper e18of27r4"
+      class="emotion-26 emotion-3"
       x="8"
       y="0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1szdm08-MuiTypography-root-MuiLink-root-Teaser"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-4"
         href="https://example.com"
       >
         <div
-          class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
+          class="emotion-5 emotion-6"
         >
           <img
             alt="An image description"
-            class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
+            class="emotion-7 emotion-8"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -376,16 +691,16 @@ https://unsplash.it/200/200 200w"
             title="An image title"
           />
           <header
-            class="css-4se2pd-TeaserTitle e18of27r2"
+            class="emotion-11 emotion-12"
           >
             <h1
-              class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-h5 emotion-13"
             >
               Teambesprechung vom 23.05.
             </h1>
           </header>
           <p
-            class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h6 emotion-14"
           >
             Lead
           </p>
@@ -398,24 +713,132 @@ https://unsplash.it/200/200 200w"
 
 exports[`Teaser Grid Block should render WithEmotion 1`] = `
 <DocumentFragment>
-  <div
-    class="css-hw4wfz-TeaserGridBlockWrapper e1xnbuxv0"
+  .emotion-0 {
+  display: grid;
+  -webkit-column-gap: 16px;
+  column-gap: 16px;
+  row-gap: 40px;
+  grid-template-columns: 1fr;
+  -webkit-align-items: stretch;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+}
+
+@media (min-width:600px) {
+  .emotion-0 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-0 {
+    grid-template-columns: repeat(12, 1fr);
+  }
+}
+
+.emotion-2 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-2 {
+    grid-column-start: 1;
+    grid-column-end: 5;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-4 {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  display: grid;
+}
+
+.emotion-5 {
+  display: grid;
+  gap: 8px;
+  grid-template-rows: auto;
+  grid-auto-rows: max-content;
+}
+
+.emotion-7 {
+  max-width: 100%;
+  width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.emotion-13 {
+  margin: 0;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 400;
+  font-size: 1.5rem;
+  line-height: 1.334;
+  letter-spacing: 0em;
+}
+
+.emotion-14 {
+  margin: 0;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 500;
+  font-size: 1.25rem;
+  line-height: 1.6;
+  letter-spacing: 0.0075em;
+}
+
+.emotion-15 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-15 {
+    grid-column-start: 5;
+    grid-column-end: 9;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-26 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-26 {
+    grid-column-start: 9;
+    grid-column-end: 13;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+<div
+    class="emotion-0 emotion-1"
   >
     <article
-      class="css-8p11sj-TeaserWrapper e18of27r4"
+      class="emotion-2 emotion-3"
       x="0"
       y="0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1szdm08-MuiTypography-root-MuiLink-root-Teaser"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-4"
         href="https://example.com"
       >
         <div
-          class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
+          class="emotion-5 emotion-6"
         >
           <img
             alt="An image description"
-            class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
+            class="emotion-7 emotion-8"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -424,22 +847,22 @@ https://unsplash.it/200/200 200w"
             title="An image title"
           />
           <time
-            class="css-3uu3f-TeaserDate e18of27r1"
+            class="emotion-9 emotion-10"
             datetime="2023-01-01T00:00:00.000Z"
           >
             01.01.2023
           </time>
           <header
-            class="css-4se2pd-TeaserTitle e18of27r2"
+            class="emotion-11 emotion-12"
           >
             <h1
-              class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-h5 emotion-13"
             >
               Pre Title: Title
             </h1>
           </header>
           <p
-            class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h6 emotion-14"
           >
             Lead
           </p>
@@ -447,20 +870,20 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-z4j0q-TeaserWrapper e18of27r4"
+      class="emotion-15 emotion-3"
       x="4"
       y="0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1szdm08-MuiTypography-root-MuiLink-root-Teaser"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-4"
         href="https://example.com"
       >
         <div
-          class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
+          class="emotion-5 emotion-6"
         >
           <img
             alt="An image description"
-            class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
+            class="emotion-7 emotion-8"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -469,16 +892,16 @@ https://unsplash.it/200/200 200w"
             title="An image title"
           />
           <header
-            class="css-4se2pd-TeaserTitle e18of27r2"
+            class="emotion-11 emotion-12"
           >
             <h1
-              class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-h5 emotion-13"
             >
               Pre Title: Title
             </h1>
           </header>
           <p
-            class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h6 emotion-14"
           >
             Lead
           </p>
@@ -486,20 +909,20 @@ https://unsplash.it/200/200 200w"
       </a>
     </article>
     <article
-      class="css-wylm69-TeaserWrapper e18of27r4"
+      class="emotion-26 emotion-3"
       x="8"
       y="0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1szdm08-MuiTypography-root-MuiLink-root-Teaser"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-4"
         href="https://example.com"
       >
         <div
-          class="css-1xecuhw-TeaserInnerWrapper e18of27r3"
+          class="emotion-5 emotion-6"
         >
           <img
             alt="An image description"
-            class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
+            class="emotion-7 emotion-8"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -508,16 +931,16 @@ https://unsplash.it/200/200 200w"
             title="An image title"
           />
           <header
-            class="css-4se2pd-TeaserTitle e18of27r2"
+            class="emotion-11 emotion-12"
           >
             <h1
-              class="MuiTypography-root MuiTypography-h5 css-ag7rrr-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-h5 emotion-13"
             >
               Teambesprechung vom 23.05.
             </h1>
           </header>
           <p
-            class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h6 emotion-14"
           >
             Lead
           </p>

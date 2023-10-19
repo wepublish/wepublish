@@ -1,86 +1,46 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`Image Block should render Default 1`] = `
-<DocumentFragment>
-  <figure
-    class="css-1emeboo-ImageBlockWrapper eekavcu0"
-  >
-    <img
-      alt="An image description"
-      class="css-oph4oo-ImageWrapper e1shv2yg0"
-      loading="lazy"
-      srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-      title="An image title"
-    />
-    <figcaption>
-      Image caption
-    </figcaption>
-  </figure>
-</DocumentFragment>
+"Snapshot Diff:
+Compared values have no visual difference."
 `;
 
 exports[`Image Block should render WithClassName 1`] = `
-<DocumentFragment>
-  <figure
-    class="extra-classname css-1emeboo-ImageBlockWrapper eekavcu0"
-  >
-    <img
-      alt="An image description"
-      class="css-oph4oo-ImageWrapper e1shv2yg0"
-      loading="lazy"
-      srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-      title="An image title"
-    />
-    <figcaption>
-      Image caption
-    </figcaption>
-  </figure>
-</DocumentFragment>
+"Snapshot Diff:
+- First value
++ Second value
+
+@@ -1,8 +1,8 @@
+  <DocumentFragment>
+    <figure
+-     class="css-1emeboo-ImageBlockWrapper eekavcu0"
++     class="extra-classname css-1emeboo-ImageBlockWrapper eekavcu0"
+    >
+      <img
+        alt="An image description"
+        class="css-oph4oo-ImageWrapper e1shv2yg0"
+        loading="lazy""
 `;
 
 exports[`Image Block should render WithEmotion 1`] = `
-<DocumentFragment>
-  <figure
-    class="css-1emeboo-ImageBlockWrapper eekavcu0"
-  >
-    <img
-      alt="An image description"
-      class="css-oph4oo-ImageWrapper e1shv2yg0"
-      loading="lazy"
-      srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-      title="An image title"
-    />
-    <figcaption>
-      Image caption
-    </figcaption>
-  </figure>
-</DocumentFragment>
+"Snapshot Diff:
+Compared values have no visual difference."
 `;
 
 exports[`Image Block should render WithoutCaption 1`] = `
-<DocumentFragment>
-  <figure
-    class="css-1emeboo-ImageBlockWrapper eekavcu0"
-  >
-    <img
-      alt="An image description"
-      class="css-oph4oo-ImageWrapper e1shv2yg0"
-      loading="lazy"
-      srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-      title="An image title"
-    />
-  </figure>
-</DocumentFragment>
+"Snapshot Diff:
+- First value
++ Second value
+
+@@ -10,10 +10,7 @@
+  https://unsplash.it/500/500 500w,
+  https://unsplash.it/300/300 300w,
+  https://unsplash.it/200/200 200w"
+        title="An image title"
+      />
+-     <figcaption>
+-       Image caption
+-     </figcaption>
+    </figure>
+  </DocumentFragment>"
 `;

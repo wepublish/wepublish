@@ -4,7 +4,7 @@ import {action} from '@storybook/addon-actions'
 import {Meta, StoryObj} from '@storybook/react'
 import {userEvent, within} from '@storybook/testing-library'
 import {WithUserDecorator} from '@wepublish/storybook'
-import {wait} from '@wepublish/testing'
+import {wait} from '@wepublish/storybook'
 import {
   Challenge,
   Exact,

@@ -1,14 +1,6 @@
-import {render} from '@testing-library/react'
+import {runStorybookTests} from '@wepublish/testing'
 import * as stories from './break-block.stories'
-import {composeStories} from '@storybook/react'
-
-const storiesCmp = composeStories(stories)
 
 describe('Break Block', () => {
-  Object.entries(storiesCmp).forEach(([story, Component]) => {
-    it(`should render ${story}`, () => {
-      const {asFragment} = render(<Component />)
-      expect(asFragment()).toMatchSnapshot()
-    })
-  })
+  runStorybookTests(stories)
 })
