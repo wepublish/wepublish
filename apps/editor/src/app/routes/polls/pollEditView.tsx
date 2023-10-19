@@ -7,9 +7,9 @@ import {
   usePollQuery,
   useUpdatePollMutation
 } from '@wepublish/editor/api'
+import {SingleViewTitle} from '@wepublish/ui'
 import {
   createCheckedPermissionComponent,
-  ModelTitle,
   PollAnswers,
   PollExternalVotes,
   RichTextBlock
@@ -148,7 +148,7 @@ function PollEditView() {
       <FlexboxGrid>
         {/* model title */}
         <FlexboxGrid.Item colspan={24}>
-          <ModelTitle
+          <SingleViewTitle
             loading={loading}
             title={poll?.question || t('pollList.noQuestion')}
             loadingTitle={t('pollEditView.loadingTitle')}

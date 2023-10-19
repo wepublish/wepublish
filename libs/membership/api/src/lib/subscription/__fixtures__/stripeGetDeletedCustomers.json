@@ -1,0 +1,28 @@
+{
+  "id": "stripeCustomerId",
+  "object": "customer",
+  "address": null,
+  "balance": 0,
+  "created": 1641214272,
+  "currency": null,
+  "default_source": null,
+  "delinquent": false,
+  "description": null,
+  "discount": null,
+  "email": "dev-mail@test.wepublish.com",
+  "invoice_prefix": "1D643065",
+  "invoice_settings": {
+    "custom_fields": null,
+    "default_payment_method": "pm_1KDq0IFuERSrPkd4nLnXR9N5",
+    "footer": null
+  },
+  "livemode": true,
+  "metadata": {},
+  "name": null,
+  "next_invoice_sequence": 1,
+  "phone": null,
+  "preferred_locales": [],
+  "shipping": null,
+  "tax_exempt": "none",
+  "deleted": true
+}

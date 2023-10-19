@@ -9,13 +9,13 @@ import {
   useRatingSystemQuery,
   useUpdateCommentMutation
 } from '@wepublish/editor/api'
+import {SingleViewTitle} from '@wepublish/ui'
 import {
   CommentDeleteBtn,
   CommentHistory,
   CommentStateDropdown,
   CommentUser,
   createCheckedPermissionComponent,
-  ModelTitle,
   SelectTags
 } from '@wepublish/ui/editor'
 import {memo, useEffect, useMemo, useState} from 'react'
@@ -212,7 +212,7 @@ const CommentEditView = memo(() => {
       fluid
       disabled={loading}
       style={{maxHeight: 'calc(100vh - 135px)', maxWidth: 'calc(100vw - 260px - 80px)'}}>
-      <ModelTitle
+      <SingleViewTitle
         loading={loading}
         title={t('comments.edit.title')}
         loadingTitle={t('comments.edit.title')}
