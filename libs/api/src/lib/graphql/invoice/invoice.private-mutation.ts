@@ -89,7 +89,7 @@ export const markInvoiceAsPaid = async (
 ): Promise<InvoiceWithItems> => {
   const {roles} = authenticate()
   authorise(CanCreateInvoice, roles)
-  const user = userSession()
+  const session = userSession()
 
   const invoice = await prismaClient.invoice.findUnique({
     where: {
@@ -121,7 +121,7 @@ export const markInvoiceAsPaid = async (
   return prismaClient.invoice.update({
     where: {id},
     data: {
-      manuallySetAsPaidByUserId: user.id,
+      manuallySetAsPaidByUserId: session.user.id,
       paidAt: new Date()
     },
     include: {
