@@ -17,7 +17,7 @@ export class SettingsResolver {
     `
   })
   @Permissions(CanGetSettings)
-  settingsList(@Args('filter', {nullable: true}) filter: SettingFilter) {
+  settingsList(@Args('filter', {nullable: true}) filter?: SettingFilter) {
     return this.settingsService.settingsList(filter)
   }
 
