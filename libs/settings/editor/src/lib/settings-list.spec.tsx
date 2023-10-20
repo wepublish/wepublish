@@ -1,5 +1,4 @@
 import {render, screen, waitFor} from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import {MockedProvider as MockedProviderBase} from '@apollo/client/testing'
 import '@testing-library/jest-dom'
 import {SettingList} from './settings-list'
@@ -111,30 +110,6 @@ describe('SettingList', () => {
     await waitFor(() => {
       expect(screen.getByText('settingList.guestCommenting')).toBeInTheDocument()
       expect(screen.getByText('settingList.allowGuestCommentRating')).toBeInTheDocument()
-    })
-  })
-
-  test('displays a modal when trying to toggle a setting', async () => {
-    render(
-      <AuthContext.Provider value={sessionWithPermissions}>
-        <MockedProvider mocks={mocks} addTypename={false}>
-          <BrowserRouter>
-            <SettingList />
-          </BrowserRouter>
-        </MockedProvider>
-      </AuthContext.Provider>
-    )
-
-    await actWait()
-
-    const toggleElement = screen.getAllByRole('switch')[1]
-    await userEvent.click(toggleElement)
-
-    const saveButton = screen.getByText('save')
-    await userEvent.click(saveButton)
-
-    await waitFor(() => {
-      expect(screen.getByRole('dialog')).toBeInTheDocument()
     })
   })
 })

@@ -3,13 +3,13 @@ import {INestApplication, Module} from '@nestjs/common'
 import request from 'supertest'
 import * as crypto from 'crypto'
 import {GraphQLModule} from '@nestjs/graphql'
-import {PrismaClient, Prisma} from '@prisma/client'
+import {PrismaClient} from '@prisma/client'
 import {ApolloDriverConfig, ApolloDriver} from '@nestjs/apollo'
 import {PrismaModule} from '@wepublish/nest-modules'
 import {SettingsResolver} from './settings.resolver'
 import {SettingsService} from './settings.service'
-import {AuthenticationModule, AuthenticationGuard} from '@wepublish/authentication/api'
 import {GraphQLSettingValueType} from './settings.model'
+import {SettingName} from './setting'
 
 export const generateRandomString = () => crypto.randomBytes(20).toString('hex')
 
@@ -21,8 +21,7 @@ export const generateRandomString = () => crypto.randomBytes(20).toString('hex')
       path: '/',
       cache: 'bounded'
     }),
-    PrismaModule,
-    AuthenticationModule
+    PrismaModule
   ],
   providers: [SettingsResolver, SettingsService, GraphQLSettingValueType]
 })
@@ -30,7 +29,7 @@ export class AppModule {}
 
 const settingsListQuery = `
   query settingsList($filter: SettingFilter) {
-    settingsList {
+    settingsList(filter: $filter) {
       id
       name
       value
@@ -53,39 +52,26 @@ const settingQuery = `
       id
       name
       value
-      settingRestriction
+      settingRestriction {
+        maxValue
+        minValue
+        inputLength
+        allowedValues {
+          stringChoice
+          boolChoice
+        }
+      }
     }
   }
 `
 
 const updateSettingsMutation = `
   mutation updateSettings($value: [UpdateSettingInput!]!) {
-    updateSettings(value: $input) {
+    updateSettings(value: $value) {
       value
     }
   }
 `
-
-const mockSetting: Prisma.SettingCreateInput = {
-  id: generateRandomString(),
-  name: generateRandomString(),
-  value: 'mock-setting-value',
-  settingRestriction: ''
-}
-
-const mockUser = {
-  type: 'user',
-  id: 'random-user-id',
-  token: 'some-token',
-  user: {roleIDs: [], id: 'random-role-id'},
-  roles: []
-}
-
-class MockAuthenticationGuard extends AuthenticationGuard {
-  public override handleRequest(): any {
-    return mockUser
-  }
-}
 
 describe('SettingsResolver', () => {
   let app: INestApplication
@@ -94,17 +80,11 @@ describe('SettingsResolver', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [AppModule]
-    })
-      .overrideGuard(AuthenticationGuard)
-      .useClass(MockAuthenticationGuard)
-      .compile()
+    }).compile()
 
     prisma = module.get<PrismaClient>(PrismaClient)
     app = module.createNestApplication()
     await app.init()
-
-    // Create mock setting data
-    await prisma.setting.create({data: mockSetting})
   })
 
   afterAll(async () => {
@@ -120,32 +100,35 @@ describe('SettingsResolver', () => {
       })
       .expect(200)
       .expect(res => {
-        expect(res.body.data.settingsList).toHaveLength(1)
-        expect(res.body.data.settingsList[0].name).toBe('mock-setting-name')
+        expect(res.body.data.settingsList).toHaveLength(16)
       })
   })
 
-  // test('setting query', async () => {
-  //   await request(app.getHttpServer())
-  //     .post('/')
-  //     .send({
-  //       query: settingQuery,
-  //       variables: {
-  //         id: mockSetting.id
-  //       }
-  //     })
-  //     .expect(200)
-  //     .expect(res => {
-  //       expect(res.body.data.setting).toMatchObject({
-  //         id: expect.any(String),
-  //         name: 'mock-setting-name',
-  //         value: 'mock-setting-value'
-  //       })
-  //     })
-  // })
+  test('setting query', async () => {
+    const settingToGet = await prisma.setting.findUnique({
+      where: {name: SettingName.INVOICE_REMINDER_MAX_TRIES}
+    })
+
+    await request(app.getHttpServer())
+      .post('/')
+      .send({
+        query: settingQuery,
+        variables: {
+          id: settingToGet!.id
+        }
+      })
+      .expect(200)
+      .expect(res => {
+        expect(res.body.data.setting).toMatchObject({
+          id: expect.any(String),
+          name: 'INVOICE_REMINDER_MAX_TRIES',
+          value: 5
+        })
+      })
+  })
 
   test('updateSettings mutation', async () => {
-    const newValue = 'updated-mock-setting-value'
+    const newValue = 1000
 
     await request(app.getHttpServer())
       .post('')
@@ -154,8 +137,8 @@ describe('SettingsResolver', () => {
         variables: {
           value: [
             {
-              name: 'mock-setting-name',
-              value: newValue
+              name: 'PEERING_TIMEOUT_MS',
+              value: 1000
             }
           ]
         }

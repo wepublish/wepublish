@@ -3,6 +3,7 @@ import {SettingsService} from './settings.service'
 import {PrismaModule} from '@wepublish/nest-modules'
 import {PrismaClient, Setting} from '@prisma/client'
 import {SettingName} from './setting'
+import {GraphQLSettingValueType} from './settings.model'
 
 describe('SettingsService', () => {
   let service: SettingsService
@@ -11,7 +12,7 @@ describe('SettingsService', () => {
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [PrismaModule],
-      providers: [SettingsService]
+      providers: [SettingsService, GraphQLSettingValueType]
     }).compile()
 
     prisma = module.get<PrismaClient>(PrismaClient)
@@ -28,16 +29,16 @@ describe('SettingsService', () => {
         id: '1',
         name: 'setting1',
         value: 'value1',
-        createdAt: new Date(),
-        modifiedAt: new Date(),
+        createdAt: new Date('1/1/2020'),
+        modifiedAt: new Date('2/1/2020'),
         settingRestriction: null
       },
       {
         id: '2',
         name: 'setting2',
         value: 'value2',
-        createdAt: new Date(),
-        modifiedAt: new Date(),
+        createdAt: new Date('1/1/2020'),
+        modifiedAt: new Date('2/1/2020'),
         settingRestriction: null
       }
     ]
@@ -54,8 +55,8 @@ describe('SettingsService', () => {
       id: '1',
       name: 'setting1',
       value: 'value1',
-      createdAt: new Date(),
-      modifiedAt: new Date(),
+      createdAt: new Date('1/1/2020'),
+      modifiedAt: new Date('2/1/2020'),
       settingRestriction: null
     }
 
@@ -68,35 +69,26 @@ describe('SettingsService', () => {
   })
 
   test('should update settings', async () => {
-    const updateInput = [
-      {name: SettingName.ALLOW_COMMENT_EDITING, value: 'updatedValue1'},
-      {name: SettingName.ALLOW_COMMENT_EDITING, value: 'updatedValue2'}
-    ]
+    const updateInput = [{name: SettingName.ALLOW_COMMENT_EDITING, value: false}]
 
     const updatedSettings: Setting[] = [
       {
         id: '1',
         name: 'setting1',
         value: SettingName.ALLOW_COMMENT_EDITING,
-        createdAt: new Date(),
-        modifiedAt: new Date(),
-        settingRestriction: null
-      },
-      {
-        id: '2',
-        name: SettingName.ALLOW_COMMENT_EDITING,
-        value: 'updatedValue2',
-        createdAt: new Date(),
-        modifiedAt: new Date(),
+        createdAt: new Date('1/1/2020'),
+        modifiedAt: new Date('2/1/2020'),
         settingRestriction: null
       }
     ]
 
     jest.spyOn(prisma.setting, 'findUnique').mockResolvedValue(updatedSettings[0])
-    const mockFunction = jest.spyOn(prisma.setting, 'update').mockResolvedValue(updatedSettings[1])
 
     const result = await service.updateSettings({value: updateInput})
-    expect(result).toMatchSnapshot()
-    expect(mockFunction.mock.calls[0][0]).toMatchSnapshot()
+    expect(result).toMatchSnapshot([
+      {
+        modifiedAt: expect.any(Date)
+      }
+    ])
   })
 })

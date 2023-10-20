@@ -322,11 +322,15 @@ function SettingList() {
   }
 
   // console.log('showWarning', validation)
-  console.log('showWarning', showWarning)
+  // console.log('showWarning', showWarning)
+  // console.log('validationModel', validationModel)
+  // console.log('formValue', formValue)
+  console.log('changedSetting', changedSetting)
 
   return (
     <>
       <Form
+        data-testId="form"
         disabled={isDisabled}
         model={validationModel}
         formValue={formValue}

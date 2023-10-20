@@ -54,9 +54,9 @@ export class SettingsService {
       checkSettingRestrictions(newVal, currentVal, restriction as SettingRestriction)
     }
 
-    const updated = this.prisma.$transaction(
-      (value as UpdateSettingInput[]).map(({name, value: val}) =>
-        this.prisma.setting.update({
+    return this.prisma.$transaction(
+      value.map(({name, value: val}) => {
+        return this.prisma.setting.update({
           where: {
             name
           },
@@ -64,9 +64,7 @@ export class SettingsService {
             value: val as Prisma.InputJsonValue
           }
         })
-      )
+      })
     )
-
-    return updated
   }
 }
