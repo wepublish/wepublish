@@ -13,7 +13,7 @@ import {
 import {Consent, useConsentsQuery, useDeleteConsentMutation} from '@wepublish/editor/api-v2'
 import {RowDataType} from 'rsuite-table'
 import {useMemo} from 'react'
-import {getApiClientV2} from '../apiClientv2'
+import {getApiClientV2} from '@wepublish/website/api-v2'
 
 const consentValues = [
   {

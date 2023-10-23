@@ -7,7 +7,7 @@ import {Form, Message, Schema, toaster} from 'rsuite'
 
 import {ModelTitle} from '@wepublish/ui/editor'
 import {ConsentForm} from './consent-form'
-import {getApiClientV2} from '../apiClientv2'
+import {getApiClientV2} from '@wepublish/website/api-v2'
 
 const onErrorToast = (error: ApolloError, slug?: string) => {
   if (error.message.includes('Unique constraint')) {

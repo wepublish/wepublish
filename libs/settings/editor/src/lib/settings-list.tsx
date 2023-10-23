@@ -38,7 +38,7 @@ import {
 } from 'rsuite'
 import InputGroupAddon from 'rsuite/cjs/InputGroup/InputGroupAddon'
 import FormControl from 'rsuite/FormControl'
-import {getApiClientV2} from '../apiClientv2'
+import {getApiClientV2} from '@wepublish/website/api-v2'
 import {useUnsavedChangesDialog} from './unsavedChangesDialog'
 
 const Panel = styled(RPanel)`
@@ -321,12 +321,6 @@ function SettingList() {
     return value
   }
 
-  // console.log('showWarning', validation)
-  // console.log('showWarning', showWarning)
-  // console.log('validationModel', validationModel)
-  // console.log('formValue', formValue)
-  console.log('changedSetting', changedSetting)
-
   return (
     <>
       <Form
@@ -335,7 +329,6 @@ function SettingList() {
         model={validationModel}
         formValue={formValue}
         onSubmit={validationPassed => {
-          console.log('validationPassed', validationPassed)
           return validationPassed && setShowWarning(true)
         }}>
         <ListViewContainer>

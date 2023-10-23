@@ -25,7 +25,7 @@ import {
 
 import {AuthorCheckPicker} from '../panel/authorCheckPicker'
 import {InputMaybe, Scalars, useEventProvidersLazyQuery} from '@wepublish/editor/api-v2'
-import {getApiClientV2} from '../utility'
+import {getApiClientV2} from '@wepublish/website/api-v2'
 
 const {Group} = RForm
 
