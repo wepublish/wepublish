@@ -407,7 +407,7 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
           {mediaEmail && (
             <RequestEmail>
               <Link
-                href={`mailto:${mediaEmail}&subject=Email Änderung&body=Guten Tag, %0D%0A. Ich würde gerne meine Email von ${initialUser.email} zu  >>Neue Email hier einfügen<< %0D%0A Liebe Grüsse`}>
+                href={`mailto:${mediaEmail}?subject=Email Änderung&body=Guten Tag, %0D%0A. Ich würde gerne meine Email von ${initialUser.email} zu  >>Neue Email hier einfügen<< %0D%0A Liebe Grüsse`}>
                 Klicke hier um deine Email zu ändern
               </Link>
             </RequestEmail>
