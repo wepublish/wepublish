@@ -3,6 +3,7 @@
   "compilerOptions": {
     "module": "commonjs"
   },
+  "target": "ES2018",
   "files": [],
   "include": [],
   "references": [
