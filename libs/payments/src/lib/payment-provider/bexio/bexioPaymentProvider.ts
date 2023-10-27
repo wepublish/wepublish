@@ -202,7 +202,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
         customerID: bexioResponse.data.contact_id ? bexioResponse.data.contact_id.toString() : ''
       }
     } catch (error) {
-      throw new Error(`Failed to check Bexio invoice status: ${error.message}`)
+      throw new ResponseNOK(error.message)
     }
   }
 
