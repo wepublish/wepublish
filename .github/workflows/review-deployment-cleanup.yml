@@ -29,12 +29,12 @@ jobs:
         uses: 'google-github-actions/get-gke-credentials@v1'
         with:
           project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
-          cluster_name: production
+          cluster_name: development
           location: europe-west6
 
       - name: Delete review environment
         run: |
-          helm uninstall review-${{ github.event.pull_request.number }}-app --namespace reviews
-          helm uninstall review-${{ github.event.pull_request.number }}-media-server --namespace reviews
-          helm uninstall review-${{ github.event.pull_request.number }}-postgres --namespace reviews
+          helm uninstall review-${{ github.event.pull_request.number }}-app -n reviews
+          helm uninstall review-${{ github.event.pull_request.number }}-media-server -n reviews
+          helm uninstall review-${{ github.event.pull_request.number }}-database -n reviews
           
