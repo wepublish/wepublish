@@ -1,16 +1,22 @@
-import {Meta} from '@storybook/react'
-import {TextField, TextFieldProps} from './text-field'
+import {Link, Stack} from '@mui/material'
+import {Meta, StoryObj} from '@storybook/react'
+import {TextField as TextFieldCmp} from './text-field'
 
 export default {
-  component: TextField,
-  title: 'UI/TextField'
+  component: TextFieldCmp,
+  title: 'UI/TextField',
+  render: () => (
+    <Stack gap={1} alignItems={'start'}>
+      <TextFieldCmp label={'Default'} />
+      <TextFieldCmp label={'Error'} error />
+      <TextFieldCmp label={'Disabled'} disabled />
+
+      <br />
+      <Link href="https://mui.com/material-ui/react-text-field/" target="_blank">
+        See more
+      </Link>
+    </Stack>
+  )
 } as Meta<typeof TextField>
 
-const Template = (args: TextFieldProps) => <TextField {...args} />
-
-export const Default = {
-  render: Template,
-  args: {
-    label: 'Label'
-  } as TextFieldProps
-}
+export const TextField: StoryObj<typeof TextFieldCmp> = {}

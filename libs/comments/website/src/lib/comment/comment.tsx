@@ -1,7 +1,7 @@
 import {css} from '@emotion/react'
 import {styled} from '@mui/material'
 import {CommentAuthorType} from '@wepublish/website/api'
-import {BuilderCommentListSingleCommentProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {BuilderCommentProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {MdPerson, MdVerified} from 'react-icons/md'
 
 const avatarStyles = css`
@@ -10,18 +10,21 @@ const avatarStyles = css`
   border-radius: 50%;
 `
 
-export const CommentListSingleCommentWrapper = styled('div')``
+export const CommentWrapper = styled('article')`
+  display: grid;
+  gap: ${({theme}) => theme.spacing(2)};
+`
 
-export const CommentListSingleCommentHeader = styled('header')`
+export const CommentHeader = styled('header')`
   display: grid;
   grid-template-columns: max-content 1fr;
   gap: ${({theme}) => theme.spacing(2)};
   align-items: center;
 `
 
-export const CommentListSingleCommentHeaderContent = styled('div')``
+export const CommentHeaderContent = styled('div')``
 
-export const CommentListSingleCommentName = styled('div')`
+export const CommentName = styled('div')`
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: max-content;
@@ -30,13 +33,13 @@ export const CommentListSingleCommentName = styled('div')`
   font-weight: ${({theme}) => theme.typography.fontWeightBold};
 `
 
-export const CommentListSingleCommentVerifiedBadge = styled('div')`
+export const CommentVerifiedBadge = styled('div')`
   display: grid;
   align-items: center;
   color: ${({theme}) => theme.palette.info.main};
 `
 
-export const CommentListSingleCommentFlair = styled('div')<{isGuest: boolean}>`
+export const CommentFlair = styled('div')<{isGuest: boolean}>`
   font-size: 0.75em;
 
   ${({isGuest, theme}) =>
@@ -46,9 +49,9 @@ export const CommentListSingleCommentFlair = styled('div')<{isGuest: boolean}>`
     `}
 `
 
-export const CommentListSingleCommentContent = styled('div')``
+export const CommentContent = styled('div')``
 
-export const CommentListSingleCommentChildren = styled('aside')`
+export const CommentChildren = styled('aside')`
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};
   border-left: 2px solid currentColor;
@@ -56,13 +59,13 @@ export const CommentListSingleCommentChildren = styled('aside')`
   padding-right: 0;
 `
 
-export const CommentListSingleCommentActions = styled('div')`
+export const CommentActions = styled('div')`
   display: flex;
   flex-flow: row wrap;
   gap: ${({theme}) => theme.spacing(1)};
 `
 
-export const CommentListSingleComment = ({
+export const Comment = ({
   className,
   text,
   authorType,
@@ -73,7 +76,7 @@ export const CommentListSingleComment = ({
   source,
   children,
   showContent = true
-}: BuilderCommentListSingleCommentProps) => {
+}: BuilderCommentProps) => {
   const {
     elements: {Paragraph, Image},
     blocks: {RichText}
@@ -86,40 +89,38 @@ export const CommentListSingleComment = ({
   const name = user ? `${user.preferredName || user.firstName} ${user.name}` : guestUsername
 
   return (
-    <CommentListSingleCommentWrapper className={className}>
-      <CommentListSingleCommentHeader>
+    <CommentWrapper className={className}>
+      <CommentHeader>
         {image && <Image image={image} square css={avatarStyles} />}
         {!image && <MdPerson css={avatarStyles} />}
 
-        <CommentListSingleCommentHeaderContent>
-          <CommentListSingleCommentName>
+        <CommentHeaderContent>
+          <CommentName>
             {name}
 
             {isVerified && (
-              <CommentListSingleCommentVerifiedBadge>
+              <CommentVerifiedBadge>
                 <MdVerified title="Member" />
-              </CommentListSingleCommentVerifiedBadge>
+              </CommentVerifiedBadge>
             )}
-          </CommentListSingleCommentName>
+          </CommentName>
 
-          {flair && (
-            <CommentListSingleCommentFlair isGuest={isGuest}>{flair}</CommentListSingleCommentFlair>
-          )}
-        </CommentListSingleCommentHeaderContent>
-      </CommentListSingleCommentHeader>
+          {flair && <CommentFlair isGuest={isGuest}>{flair}</CommentFlair>}
+        </CommentHeaderContent>
+      </CommentHeader>
 
       {showContent && (
-        <CommentListSingleCommentContent>
+        <CommentContent>
           {title && (
             <Paragraph component="h1" gutterBottom={false}>
               <strong>{title}</strong>
             </Paragraph>
           )}
           <RichText richText={text ?? []} />
-        </CommentListSingleCommentContent>
+        </CommentContent>
       )}
 
       {children}
-    </CommentListSingleCommentWrapper>
+    </CommentWrapper>
   )
 }

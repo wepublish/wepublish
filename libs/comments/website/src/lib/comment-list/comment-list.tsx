@@ -6,7 +6,7 @@ import {BuilderCommentListProps, useWebsiteBuilder} from '@wepublish/website/bui
 import {MdForum} from 'react-icons/md'
 import {getStateForEditor} from './comment-list.state'
 
-export const CommentListWrapper = styled('article')`
+export const CommentListWrapper = styled('section')`
   display: grid;
   gap: ${({theme}) => theme.spacing(4)};
 `
@@ -86,6 +86,7 @@ export const CommentList = ({
         <CommentListItem
           key={comment.id}
           {...comment}
+          ratingSystem={data.ratingSystem}
           openEditorsState={openEditorsState}
           openEditorsStateDispatch={dispatch}
           challenge={challenge}

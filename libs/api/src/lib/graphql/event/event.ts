@@ -92,7 +92,9 @@ export const GraphQLEventFilter = new GraphQLInputObjectType({
     upcomingOnly: {type: GraphQLBoolean},
     from: {type: GraphQLDateTime},
     to: {type: GraphQLDateTime},
-    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))}
+    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
+    name: {type: GraphQLString},
+    location: {type: GraphQLString}
   }
 })
 

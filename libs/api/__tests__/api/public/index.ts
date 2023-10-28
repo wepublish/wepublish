@@ -150,7 +150,7 @@ export type Block = BildwurfAdBlock | CommentBlock | EmbedBlock | EventBlock | F
 
 export type CalculatedRating = {
   __typename?: 'CalculatedRating';
-  answer?: Maybe<CommentRatingSystemAnswer>;
+  answer: CommentRatingSystemAnswer;
   count: Scalars['Int'];
   mean: Scalars['Float'];
   total: Scalars['Int'];
@@ -171,7 +171,7 @@ export type ChallengeInput = {
 export type Comment = {
   __typename?: 'Comment';
   authorType: CommentAuthorType;
-  calculatedRatings?: Maybe<Array<Maybe<CalculatedRating>>>;
+  calculatedRatings: Array<CalculatedRating>;
   children: Array<Comment>;
   createdAt: Scalars['DateTime'];
   guestUserImage?: Maybe<Image>;
@@ -191,6 +191,7 @@ export type Comment = {
   text?: Maybe<Scalars['RichText']>;
   title?: Maybe<Scalars['String']>;
   user?: Maybe<User>;
+  userRatings: Array<CommentRating>;
 };
 
 export enum CommentAuthorType {
@@ -224,14 +225,14 @@ export enum CommentItemType {
 
 export type CommentRating = {
   __typename?: 'CommentRating';
-  answer?: Maybe<CommentRatingSystemAnswer>;
+  answer: CommentRatingSystemAnswer;
   commentId: Scalars['ID'];
   createdAt: Scalars['DateTime'];
   disabled?: Maybe<Scalars['Boolean']>;
   fingerprint?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   userId?: Maybe<Scalars['ID']>;
-  value?: Maybe<Scalars['Int']>;
+  value: Scalars['Int'];
 };
 
 export type CommentRatingSystemAnswer = {
@@ -318,6 +319,8 @@ export type EventConnection = {
 
 export type EventFilter = {
   from?: InputMaybe<Scalars['DateTime']>;
+  location?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
   tags?: InputMaybe<Array<Scalars['ID']>>;
   to?: InputMaybe<Scalars['DateTime']>;
   upcomingOnly?: InputMaybe<Scalars['Boolean']>;
@@ -580,7 +583,7 @@ export type Mutation = {
   /** This mutation extends an subscription early */
   extendSubscription: Payment;
   /** This mutation allows to rate a comment. Supports logged in and anonymous */
-  rateComment: CommentRating;
+  rateComment: Comment;
   /** This mutation allows to register a new member, */
   registerMember: Registration;
   /** This mutation allows to register a new member, select a member plan, payment method and create an invoice.  */
@@ -1035,7 +1038,7 @@ export type Query = {
   /** This query returns a list of tags */
   tags?: Maybe<TagConnection>;
   /** This query returns the value of a comments answer rating if the user has already rated it. */
-  userCommentRatings: Array<Maybe<CommentRating>>;
+  userCommentRatings: Array<CommentRating>;
   /** This query returns the answerId of a poll if the user has already voted on it. */
   userPollVote?: Maybe<Scalars['ID']>;
 };

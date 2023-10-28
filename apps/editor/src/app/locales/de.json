@@ -1003,7 +1003,9 @@
         "isPublished": "Publiziert",
         "publicationDate": "Publikationsdatum",
         "dates": "Daten",
-        "providers": "Anbieter"
+        "providers": "Anbieter",
+        "location": "Veranstaltungsort",
+        "name": "Name"
       }
     },
     "userList": {

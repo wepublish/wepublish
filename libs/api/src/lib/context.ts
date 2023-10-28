@@ -10,7 +10,8 @@ import {
   PrismaClient,
   User,
   UserRole,
-  Comment
+  Comment,
+  CommentRatingSystemAnswer
 } from '@prisma/client'
 import {
   AuthenticationService,
@@ -115,6 +116,7 @@ export interface DataLoaderContext {
   readonly eventById: DataLoader<string, Event | null>
 
   readonly commentsById: DataLoader<string, Comment | null>
+  readonly commentRatingSystemAnswers: DataLoader<1, CommentRatingSystemAnswer[]>
   readonly subscriptionsById: DataLoader<string, SubscriptionWithRelations | null>
   readonly usersById: DataLoader<string, User | null>
 }
@@ -659,6 +661,7 @@ export async function contextFromRequest(
               )?.value as number) ||
               parseInt(process.env.PEERING_TIMEOUT_IN_MS as string) ||
               10 * 1000 // 10 Seconds timeout in  ms
+
             const fetcher = createFetcher(
               url.resolve(peer.hostURL, 'admin'),
               peer.token,
@@ -832,6 +835,10 @@ export async function contextFromRequest(
         'id'
       )
     ),
+
+    commentRatingSystemAnswers: new DataLoader(async () => [
+      await prisma.commentRatingSystemAnswer.findMany()
+    ]),
 
     subscriptionsById: new DataLoader(async ids =>
       createOptionalsArray(

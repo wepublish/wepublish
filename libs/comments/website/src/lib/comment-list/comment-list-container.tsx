@@ -20,6 +20,7 @@ import {
 import {produce} from 'immer'
 import {useEffect, useReducer} from 'react'
 import {commentListReducer} from './comment-list.state'
+import {CommentRatingsProvider} from '../comment-ratings/comment-ratings.provider'
 
 type PeerArticleComments = {
   type: CommentItemType.PeerArticle
@@ -110,55 +111,57 @@ export function CommentListContainer({
   }, [hasUser, fetchChallenge])
 
   return (
-    <CommentList
-      data={data}
-      loading={loading || settings.loading}
-      error={error ?? settings.error}
-      challenge={challenge}
-      className={className}
-      variables={variables}
-      onVariablesChange={onVariablesChange}
-      openEditorsState={openCommentEditors}
-      openEditorsStateDispatch={dispatch}
-      add={add}
-      onAddComment={input => {
-        addComment({
-          variables: {
-            input: {
-              ...input,
-              itemID: id,
-              itemType: type,
-              peerId
+    <CommentRatingsProvider>
+      <CommentList
+        data={data}
+        loading={loading || settings.loading}
+        error={error ?? settings.error}
+        challenge={challenge}
+        className={className}
+        variables={variables}
+        onVariablesChange={onVariablesChange}
+        openEditorsState={openCommentEditors}
+        openEditorsStateDispatch={dispatch}
+        add={add}
+        onAddComment={input => {
+          addComment({
+            variables: {
+              input: {
+                ...input,
+                itemID: id,
+                itemType: type,
+                peerId
+              }
             }
-          }
-        })
-      }}
-      edit={edit}
-      onEditComment={input => {
-        editComment({
-          variables: {
-            input
-          }
-        })
-      }}
-      maxCommentLength={
-        settings.data?.settings.find(setting => setting.name === SettingName.CommentCharLimit)
-          ?.value ?? 1000
-      }
-      anonymousCanComment={
-        settings.data?.settings.find(setting => setting.name === SettingName.AllowGuestCommenting)
-          ?.value
-      }
-      anonymousCanRate={
-        settings.data?.settings.find(
-          setting => setting.name === SettingName.AllowGuestCommentRating
-        )?.value
-      }
-      userCanEdit={
-        settings.data?.settings.find(setting => setting.name === SettingName.AllowCommentEditing)
-          ?.value
-      }
-    />
+          })
+        }}
+        edit={edit}
+        onEditComment={input => {
+          editComment({
+            variables: {
+              input
+            }
+          })
+        }}
+        maxCommentLength={
+          settings.data?.settings.find(setting => setting.name === SettingName.CommentCharLimit)
+            ?.value ?? 1000
+        }
+        anonymousCanComment={
+          settings.data?.settings.find(setting => setting.name === SettingName.AllowGuestCommenting)
+            ?.value
+        }
+        anonymousCanRate={
+          settings.data?.settings.find(
+            setting => setting.name === SettingName.AllowGuestCommentRating
+          )?.value
+        }
+        userCanEdit={
+          settings.data?.settings.find(setting => setting.name === SettingName.AllowCommentEditing)
+            ?.value
+        }
+      />
+    </CommentRatingsProvider>
   )
 }
 
@@ -206,7 +209,8 @@ const useAddCommentMutationWithCacheUpdate = (
       cache.writeQuery<CommentListQuery>({
         query: CommentListDocument,
         data: {
-          comments: updatedComments
+          comments: updatedComments,
+          ratingSystem: query.ratingSystem
         },
         variables
       })

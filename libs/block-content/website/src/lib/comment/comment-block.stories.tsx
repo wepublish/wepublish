@@ -135,7 +135,7 @@ const verifiedUserComment = {
   },
   guestUsername: null,
   guestUserImage: null,
-  calculatedRatings: null,
+  calculatedRatings: [],
   authorType: 'VerifiedUser',
   itemID: 'cljfya8sj4342602siydzsx4pxv',
   itemType: 'Article',
