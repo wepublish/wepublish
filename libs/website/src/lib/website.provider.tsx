@@ -43,6 +43,7 @@ import {Image} from '@wepublish/image/website'
 import {
   InvoiceList,
   InvoiceListItem,
+  MemberPlanItem,
   MemberPlanPicker,
   PaymentMethodPicker,
   PeriodicityPicker,
@@ -143,6 +144,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
         InvoiceList={InvoiceList}
         InvoiceListItem={InvoiceListItem}
         MemberPlanPicker={MemberPlanPicker}
+        MemberPlanItem={MemberPlanItem}
         PeriodicityPicker={PeriodicityPicker}
         PaymentMethodPicker={PaymentMethodPicker}
         Subscribe={Subscribe}

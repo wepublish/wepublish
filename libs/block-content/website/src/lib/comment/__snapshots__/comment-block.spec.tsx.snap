@@ -13,7 +13,7 @@ exports[`Comment List should render Default 1`] = `
       >
         <img
           alt="DSC07717"
-          class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
+          class="css-fy51ct-ImageWrapper-avatarStyles e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -105,7 +105,7 @@ https://unsplash.it/200/200 200w"
       >
         <img
           alt="DSC07717"
-          class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
+          class="css-fy51ct-ImageWrapper-avatarStyles e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -206,7 +206,7 @@ exports[`Comment List should render WithAnonymousComments 1`] = `
       >
         <img
           alt="DSC07717"
-          class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
+          class="css-fy51ct-ImageWrapper-avatarStyles e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -274,7 +274,7 @@ https://unsplash.it/200/200 200w"
       >
         <img
           alt="DSC07717"
-          class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
+          class="css-fy51ct-ImageWrapper-avatarStyles e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -351,7 +351,7 @@ exports[`Comment List should render WithClassName 1`] = `
       >
         <img
           alt="DSC07717"
-          class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
+          class="css-fy51ct-ImageWrapper-avatarStyles e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -443,7 +443,7 @@ https://unsplash.it/200/200 200w"
       >
         <img
           alt="DSC07717"
-          class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
+          class="css-fy51ct-ImageWrapper-avatarStyles e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -544,7 +544,7 @@ exports[`Comment List should render WithEmotion 1`] = `
       >
         <img
           alt="DSC07717"
-          class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
+          class="css-fy51ct-ImageWrapper-avatarStyles e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -636,7 +636,7 @@ https://unsplash.it/200/200 200w"
       >
         <img
           alt="DSC07717"
-          class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
+          class="css-fy51ct-ImageWrapper-avatarStyles e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -737,7 +737,7 @@ exports[`Comment List should render WithError 1`] = `
       >
         <img
           alt="DSC07717"
-          class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
+          class="css-fy51ct-ImageWrapper-avatarStyles e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -829,7 +829,7 @@ https://unsplash.it/200/200 200w"
       >
         <img
           alt="DSC07717"
-          class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
+          class="css-fy51ct-ImageWrapper-avatarStyles e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -930,7 +930,7 @@ exports[`Comment List should render WithLoading 1`] = `
       >
         <img
           alt="DSC07717"
-          class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
+          class="css-fy51ct-ImageWrapper-avatarStyles e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1022,7 +1022,7 @@ https://unsplash.it/200/200 200w"
       >
         <img
           alt="DSC07717"
-          class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
+          class="css-fy51ct-ImageWrapper-avatarStyles e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,

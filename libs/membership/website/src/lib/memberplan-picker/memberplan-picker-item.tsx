@@ -1,10 +1,7 @@
-import {Radio, RadioProps, css, lighten, styled, useRadioGroup} from '@mui/material'
-import {MemberPlan} from '@wepublish/website/api'
+import {Radio, css, lighten, styled, useRadioGroup} from '@mui/material'
+import {BuilderMemberPlanItemProps} from '@wepublish/website/builder'
 import {forwardRef} from 'react'
 import {formatChf} from '../formatters/format-currency'
-
-export type MemberPlanItemProps = Pick<MemberPlan, 'amountPerMonthMin'> &
-  RadioProps & {className?: string}
 
 export const MemberPlanItemWrapper = styled('div')<{isChecked: boolean}>`
   display: grid;
@@ -36,7 +33,7 @@ export const MemberPlanItemPrice = styled('small')`
   font-size: 0.75em;
 `
 
-export const MemberPlanItem = forwardRef<HTMLButtonElement, MemberPlanItemProps>(
+export const MemberPlanItem = forwardRef<HTMLButtonElement, BuilderMemberPlanItemProps>(
   ({className, id, name, amountPerMonthMin, ...props}, ref) => {
     const radioGroup = useRadioGroup()
     const isChecked = props.checked ?? radioGroup?.value === id

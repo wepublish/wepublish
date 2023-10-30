@@ -5,6 +5,8 @@ import {
   usePayInvoiceMutation
 } from '@wepublish/website/api'
 import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {produce} from 'immer'
+import {useMemo} from 'react'
 
 export type InvoiceListContainerProps = {
   successURL: string
@@ -44,16 +46,19 @@ export function InvoiceListContainer({
     }
   })
 
+  const filteredInvoices = useMemo(
+    () =>
+      produce(data, draftData => {
+        if (filter && draftData?.invoices) {
+          draftData.invoices = filter(draftData.invoices)
+        }
+      }),
+    [data, filter]
+  )
+
   return (
     <InvoiceList
-      data={
-        filter && data?.invoices
-          ? {
-              ...data,
-              invoices: filter(data.invoices)
-            }
-          : data
-      }
+      data={filteredInvoices}
       loading={loading}
       error={error}
       className={className}

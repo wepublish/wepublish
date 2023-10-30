@@ -1,5 +1,6 @@
 import {useUser} from '@wepublish/authentication/website'
 import {
+  MemberPlan,
   RegisterMutationVariables,
   useChallengeLazyQuery,
   useMemberPlanListQuery,
@@ -11,7 +12,8 @@ import {
   BuilderSubscribeProps,
   useWebsiteBuilder
 } from '@wepublish/website/builder'
-import {useEffect} from 'react'
+import {produce} from 'immer'
+import {useEffect, useMemo} from 'react'
 import {OptionalKeysOf} from 'type-fest'
 
 export type SubscribeContainerProps<
@@ -20,6 +22,7 @@ export type SubscribeContainerProps<
   Pick<BuilderSubscribeProps<T>, 'fields' | 'schema'> & {
     successURL: string
     failureURL: string
+    filter?: (memberPlans: MemberPlan[]) => MemberPlan[]
   }
 
 export const SubscribeContainer = <T extends OptionalKeysOf<RegisterMutationVariables>>({
@@ -27,7 +30,8 @@ export const SubscribeContainer = <T extends OptionalKeysOf<RegisterMutationVari
   failureURL,
   successURL,
   fields,
-  schema
+  schema,
+  filter
 }: SubscribeContainerProps<T>) => {
   const {setToken, hasUser} = useUser()
   const {Subscribe} = useWebsiteBuilder()
@@ -61,13 +65,21 @@ export const SubscribeContainer = <T extends OptionalKeysOf<RegisterMutationVari
     }
   }, [hasUser, fetchChallenge])
 
+  const filteredMemberPlans = useMemo(() => {
+    return produce(memberPlanList, draftList => {
+      if (filter && draftList.data?.memberPlans) {
+        draftList.data.memberPlans.nodes = filter(draftList.data.memberPlans.nodes)
+      }
+    })
+  }, [memberPlanList, filter])
+
   return (
     <Subscribe
       className={className}
       fields={fields}
       schema={schema}
       challenge={challenge}
-      memberPlans={memberPlanList}
+      memberPlans={filteredMemberPlans}
       onSubscribe={async formData => {
         await subscribe({
           variables: {
