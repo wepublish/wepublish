@@ -1,4 +1,5 @@
 import {QueryResult} from '@apollo/client'
+import {RadioProps} from '@mui/material'
 import {
   ChallengeQuery,
   Invoice,
@@ -12,8 +13,8 @@ import {
   Subscription,
   SubscriptionsQuery
 } from '@wepublish/website/api'
-import {BuilderRegistrationFormProps} from './authentication.interface'
 import {OptionalKeysOf} from 'type-fest'
+import {BuilderRegistrationFormProps} from './authentication.interface'
 
 export type BuilderSubscriptionListItemProps = Subscription & {
   className?: string
@@ -46,12 +47,15 @@ export type BuilderInvoiceListProps = Pick<
 }
 
 export type BuilderMemberPlanPickerProps = {
-  memberPlans: MemberPlan[] | undefined
+  memberPlans: MemberPlan[]
   className?: string
   onChange: (memberPlanId: string) => void
   name?: string
   value?: string
 }
+
+export type BuilderMemberPlanItemProps = Pick<MemberPlan, 'amountPerMonthMin'> &
+  RadioProps & {className?: string}
 
 export type BuilderPeriodicityPickerProps = {
   periodicities: PaymentPeriodicity[] | undefined

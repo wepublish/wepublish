@@ -1,7 +1,6 @@
 import {FormControlLabel, RadioGroup, styled} from '@mui/material'
 import {BuilderMemberPlanPickerProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {forwardRef, useEffect} from 'react'
-import {MemberPlanItem} from './memberplan-picker-item'
 
 export const MemberPlanPickerWrapper = styled('fieldset')`
   display: grid;
@@ -30,15 +29,16 @@ export const MemberPlanPickerRadios = styled(RadioGroup)`
 export const MemberPlanPicker = forwardRef<HTMLButtonElement, BuilderMemberPlanPickerProps>(
   function MemberPlanPicker({memberPlans, onChange, value, className, name}, ref) {
     const {
+      MemberPlanItem,
       elements: {Image},
       blocks: {RichText}
     } = useWebsiteBuilder()
 
-    const showRadioButtons = memberPlans && memberPlans.length > 1
-    const selectedMemberPlan = memberPlans?.find(({id}) => id === value)
+    const showRadioButtons = memberPlans.length > 1
+    const selectedMemberPlan = memberPlans.find(({id}) => id === value)
 
     useEffect(() => {
-      if (memberPlans?.length && !selectedMemberPlan) {
+      if (memberPlans.length && !selectedMemberPlan) {
         onChange(memberPlans[0].id)
       }
     }, [memberPlans, onChange, selectedMemberPlan])

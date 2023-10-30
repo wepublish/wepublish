@@ -9,6 +9,7 @@ import {
   useUser
 } from '@wepublish/authentication/website'
 import {
+  MemberPlan,
   PaymentPeriodicity,
   RegisterMutationVariables,
   SubscribeMutationVariables,
@@ -27,6 +28,7 @@ import {formatChf} from '../formatters/format-currency'
 import {formatPaymentPeriod, getPaymentPeriodicyMonths} from '../formatters/format-payment-period'
 import {formatRenewalPeriod} from '../formatters/format-renewal-period'
 import {css} from '@emotion/react'
+import {sortBy} from 'ramda'
 
 const subscribeSchema = z.object({
   memberPlanId: z.string().nonempty(),
@@ -148,6 +150,15 @@ export const Subscribe = <T extends BuilderUserFormFields>({
   const extraMoney = watch<'extraMoney'>('extraMoney')
   const autoRenew = watch<'autoRenew'>('autoRenew')
 
+  const sortedMemberPlans = useMemo(
+    () =>
+      sortBy(
+        (memberPlan: MemberPlan) => memberPlan.amountPerMonthMin,
+        memberPlans.data?.memberPlans.nodes ?? []
+      ),
+    [memberPlans.data?.memberPlans.nodes]
+  )
+
   const selectedMemberPlan = useMemo(
     () =>
       memberPlans.data?.memberPlans.nodes.find(
@@ -263,7 +274,7 @@ export const Subscribe = <T extends BuilderUserFormFields>({
             <MemberPlanPicker
               {...field}
               onChange={memberPlanId => field.onChange(memberPlanId)}
-              memberPlans={memberPlans.data?.memberPlans.nodes}
+              memberPlans={sortedMemberPlans}
             />
           )}
         />
@@ -354,7 +365,7 @@ export const Subscribe = <T extends BuilderUserFormFields>({
                     disabled={selectedAvailablePaymentMethod?.forceAutoRenewal}
                   />
                 }
-                label="Automatisch Erneuern"
+                label="Automatisch erneuern"
               />
             )}
           />
