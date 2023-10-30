@@ -16,7 +16,7 @@ import fetch from 'jest-fetch-mock'
 
 jest.setMock('node-fetch', fetch)
 
-jest.mock('../apiClientv2', () => ({
+jest.mock('@wepublish/website/api-v2', () => ({
   getApiClientV2: jest.fn()
 }))
 
