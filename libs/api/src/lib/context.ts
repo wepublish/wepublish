@@ -1,5 +1,9 @@
+import {ExecutionRequest, Executor} from '@graphql-tools/utils'
+import {schemaFromExecutor, wrapSchema} from '@graphql-tools/wrap'
 import {
   Author,
+  Comment,
+  CommentRatingSystemAnswer,
   Event,
   Image,
   MailLog,
@@ -9,58 +13,50 @@ import {
   Peer,
   PrismaClient,
   User,
-  UserRole,
-  Comment,
-  CommentRatingSystemAnswer
+  UserRole
 } from '@prisma/client'
 import {
-  AuthenticationService,
   AuthSession,
   AuthSessionType,
+  AuthenticationService,
   TokenSession,
   UserSession
 } from '@wepublish/authentication/api'
+import {MediaAdapter} from '@wepublish/image/api'
+import {SettingName} from '@wepublish/settings/api'
 import AbortController from 'abort-controller'
 import {AuthenticationError} from 'apollo-server-express'
 import crypto from 'crypto'
 import DataLoader from 'dataloader'
 import {GraphQLError, GraphQLSchema, print} from 'graphql'
-import {
-  Fetcher,
-  IFetcherOperation,
-  introspectSchema,
-  makeRemoteExecutableSchema
-} from 'graphql-tools'
 import {IncomingMessage} from 'http'
 import jwt, {SignOptions} from 'jsonwebtoken'
 import NodeCache from 'node-cache'
 import fetch from 'node-fetch'
 import {Client, Issuer} from 'openid-client'
-import url from 'url'
 import {ChallengeProvider} from './challenges/challengeProvider'
 import {
   ArticleWithRevisions,
-  articleWithRevisionsToPublicArticle,
-  PublicArticle
+  PublicArticle,
+  articleWithRevisionsToPublicArticle
 } from './db/article'
 import {DefaultBcryptHashCostFactor, DefaultSessionTTL} from './db/common'
 import {InvoiceWithItems} from './db/invoice'
 import {MemberPlanWithPaymentMethods} from './db/memberPlan'
 import {NavigationWithLinks} from './db/navigation'
-import {PageWithRevisions, pageWithRevisionsToPublicPage, PublicPage} from './db/page'
+import {PageWithRevisions, PublicPage, pageWithRevisionsToPublicPage} from './db/page'
+import {SubscriptionWithRelations} from './db/subscription'
 import {TokenExpiredError} from './error'
 import {getEvent} from './graphql/event/event.query'
+import {createSafeHostUrl} from './graphql/peer/create-safe-host-url'
 import {FullPoll, getPoll} from './graphql/poll/poll.public-queries'
 import {Hooks} from './hooks'
 import {MailContext, MailContextOptions} from './mails/mailContext'
 import {BaseMailProvider} from './mails/mailProvider'
-import {MediaAdapter} from '@wepublish/image/api'
 import {MemberContext} from './memberContext'
 import {PaymentProvider} from './payments/paymentProvider'
 import {logger} from './server'
 import {URLAdapter} from './urlAdapter'
-import {SettingName} from '@wepublish/settings/api'
-import {SubscriptionWithRelations} from './db/subscription'
 
 /**
  * Peered article cache configuration and setup
@@ -627,11 +623,15 @@ export async function contextFromRequest(
               )?.value as number) ||
               parseInt(process.env.PEERING_TIMEOUT_IN_MS as string) ||
               10 * 1000 // 10 Seconds timeout in  ms
-            const fetcher = createFetcher(peer.hostURL, peer.token, peerTimeout)
+            const fetcher = createFetcher(
+              createSafeHostUrl(peer.hostURL, 'v1'),
+              peer.token,
+              peerTimeout
+            )
 
-            return makeRemoteExecutableSchema({
-              schema: await introspectSchema(fetcher),
-              fetcher
+            return wrapSchema({
+              schema: await schemaFromExecutor(fetcher),
+              executor: fetcher
             })
           } catch (err) {
             console.error(err)
@@ -663,14 +663,14 @@ export async function contextFromRequest(
               10 * 1000 // 10 Seconds timeout in  ms
 
             const fetcher = createFetcher(
-              url.resolve(peer.hostURL, 'admin'),
+              createSafeHostUrl(peer.hostURL, 'v1/admin'),
               peer.token,
               peerTimeout
             )
 
-            return makeRemoteExecutableSchema({
-              schema: await introspectSchema(fetcher),
-              fetcher
+            return wrapSchema({
+              schema: await schemaFromExecutor(fetcher),
+              executor: fetcher
             })
           } catch (err) {
             console.error(err)
@@ -1117,12 +1117,12 @@ async function loadFreshData(params: PeerQueryParams) {
   }
 }
 
-export function createFetcher(hostURL: string, token: string, peerTimeOut: number): Fetcher {
+export function createFetcher(hostURL: string, token: string, peerTimeOut: number): Executor {
   const loadData = async ({
     query,
     variables,
     operationName
-  }: {query: string} & Omit<IFetcherOperation, 'query' | 'context'>) => {
+  }: {query: string} & Omit<ExecutionRequest, 'document' | 'context'>) => {
     // Initialize and prepare caching
     const fetchParams: PeerQueryParams = {
       hostURL,
@@ -1145,8 +1145,8 @@ export function createFetcher(hostURL: string, token: string, peerTimeOut: numbe
     return await loadFreshData(fetchParams)
   }
 
-  return async ({query: queryDocument, variables, operationName}) => {
-    const query = print(queryDocument)
+  return async ({variables, operationName, document}) => {
+    const query = print(document)
 
     return loadData({query, variables, operationName})
   }
