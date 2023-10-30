@@ -10,7 +10,7 @@
     "clean": "run-p --print-label clean:**",
     "clean:media": "docker-compose exec media rm -rf ./.media",
     "lint": "nx run-many --target=lint",
-    "build": "nx run-many --targets=build,build-storybook",
+    "build": "nx run-many --targets=build",
     "test": "nx affected:test --base master --parallel=4",
     "test-all": "nx run-many --target=test --parallel=10 --runInBand",
     "watch": "npm run migrate && run-p --print-label watch:*",

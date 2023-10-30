@@ -2,18 +2,26 @@ name: Deploy pull request
 
 on:
   pull_request:
+    types: [ opened, synchronize, reopened, closed ]
 
 jobs:
   publish-docker-image:
+    if: github.event.action != 'closed'
     uses: ./.github/workflows/publish-docker-image.yml
     with:
       tags: |
         ghcr.io/wepublish/wepublish:${{ github.sha }}
     secrets: inherit
 
-  deploy-to-k8s:
-    uses: ./.github/workflows/deploy-to-k8s.yml
+  review_deployment:
+    if: github.event.action != 'closed'
+    uses: ./.github/workflows/review-deployment.yml
     needs: publish-docker-image
     with:
       image: ghcr.io/wepublish/wepublish:${{ github.sha }}
+    secrets: inherit
+
+  review_deployment_cleanup:
+    if: github.event.action == 'closed'
+    uses: ./.github/workflows/review-deployment-cleanup.yml
     secrets: inherit
