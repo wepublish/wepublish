@@ -70,7 +70,6 @@ export class BexioPaymentProvider extends BasePaymentProvider {
 
   constructor(props: BexioPaymentProviderProps) {
     super(props)
-    this.bexio = new Bexio(this.apiKey)
     this.apiKey = props.apiKey
     this.userId = props.userId
     this.countryId = props.countryId
@@ -87,6 +86,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     this.invoiceMailBodyRenewalMembership = props.invoiceMailBodyRenewalMembership
     this.markInvoiceAsOpen = props.markInvoiceAsOpen
     this.prisma = props.prisma
+    this.bexio = new Bexio(this.apiKey)
   }
 
   async webhookForPaymentIntent(props: WebhookForPaymentIntentProps): Promise<IntentState[]> {
