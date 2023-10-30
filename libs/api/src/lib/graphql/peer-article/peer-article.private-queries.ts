@@ -1,5 +1,5 @@
 import {GraphQLResolveInfo, Kind} from 'graphql'
-import {ExtractField, WrapQuery} from 'graphql-tools'
+import {ExtractField, WrapQuery} from '@graphql-tools/wrap'
 import {Context} from '../../context'
 import {ArticleFilter, ArticleSort, PeerArticle} from '../../db/article'
 import {ConnectionResult, SortOrder} from '../../db/common'
