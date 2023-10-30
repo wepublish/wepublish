@@ -2861,7 +2861,7 @@ https://unsplash.it/200/100 200w"
         >
           <a
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
-            href="mailto:some@email.com&subject=Email Änderung&body=Guten Tag, %0D%0A. Ich würde gerne meine Email von some-example@mail.com zu  >>Neue Email hier einfügen<< %0D%0A Liebe Grüsse"
+            href="mailto:some@email.com?subject=Email Änderung&body=Guten Tag, %0D%0A. Ich würde gerne meine Email von some-example@mail.com zu  >>Neue Email hier einfügen<< %0D%0A Liebe Grüsse"
           >
             Klicke hier um deine Email zu ändern
           </a>
