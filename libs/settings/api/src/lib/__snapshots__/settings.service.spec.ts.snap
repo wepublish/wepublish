@@ -52,8 +52,8 @@ exports[`SettingsService should list settings 2`] = `
 exports[`SettingsService should update settings 1`] = `
 [
   {
-    "createdAt": 2023-10-20T12:20:20.896Z,
-    "id": "clnykwzdt000fc9i6s6np1uun",
+    "createdAt": Any<Date>,
+    "id": Any<String>,
     "modifiedAt": Any<Date>,
     "name": "allowCommentEditing",
     "settingRestriction": {

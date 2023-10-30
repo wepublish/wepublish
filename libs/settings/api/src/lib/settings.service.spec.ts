@@ -87,7 +87,9 @@ describe('SettingsService', () => {
     const result = await service.updateSettings({value: updateInput})
     expect(result).toMatchSnapshot([
       {
-        modifiedAt: expect.any(Date)
+        modifiedAt: expect.any(Date),
+        createdAt: expect.any(Date),
+        id: expect.any(String)
       }
     ])
   })
