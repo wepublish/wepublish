@@ -1,12 +1,11 @@
-name: Review
+name: Deploy pull request
 
 on:
   pull_request:
     types: [ opened, synchronize, reopened, closed ]
 
 jobs:
-  docker:
-    name: Build docker
+  publish-docker-image:
     if: github.event.action != 'closed'
     uses: ./.github/workflows/publish-docker-image.yml
     with:
@@ -15,7 +14,6 @@ jobs:
     secrets: inherit
 
   review_deployment:
-    name: Deployment
     if: github.event.action != 'closed'
     uses: ./.github/workflows/review-deployment.yml
     needs: publish-docker-image
@@ -24,7 +22,6 @@ jobs:
     secrets: inherit
 
   review_deployment_cleanup:
-    name: Cleanup
     if: github.event.action == 'closed'
-    uses: ./.github/workflows/review-cleanup.yml
+    uses: ./.github/workflows/review-deployment-cleanup.yml
     secrets: inherit
