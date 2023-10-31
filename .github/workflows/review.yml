@@ -4,6 +4,10 @@ on:
   pull_request:
     types: [ opened, synchronize, reopened]
 
+concurrency:
+  group: review-${{ github.head_ref }}
+  cancel-in-progress: true
+
 jobs:
   publish-docker-image:
     name: Docker
