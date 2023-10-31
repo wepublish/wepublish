@@ -9,7 +9,6 @@ on:
 
 jobs:
   deployment:
-    name: Review deployment
     runs-on: ubuntu-latest
     permissions:
       contents: 'read'
