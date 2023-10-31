@@ -5,6 +5,7 @@ on:
 
 jobs:
   cleanup:
+    name: Review cleanup
     runs-on: ubuntu-latest
     permissions:
       contents: 'read'
