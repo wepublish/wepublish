@@ -1,4 +1,4 @@
-name: Deploy pull request
+name: Review
 
 on:
   pull_request:
