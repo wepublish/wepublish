@@ -4,7 +4,7 @@ on:
   workflow_call:
 
 jobs:
-  cleanup:
+  helm:
     runs-on: ubuntu-latest
     permissions:
       contents: 'read'
