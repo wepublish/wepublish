@@ -1,10 +1,11 @@
-name: Review deployment cleanup
+name: Review cleanup
 
 on:
   workflow_call:
 
 jobs:
   cleanup:
+    name: Review cleanup
     runs-on: ubuntu-latest
     permissions:
       contents: 'read'
