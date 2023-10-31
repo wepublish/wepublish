@@ -110,7 +110,8 @@ jobs:
           
 
   notify:
-    needs: deployment
+    name: Notify
+    needs: helm_deployment
     if: ${{ needs.deployment.result == 'success' }}
     runs-on: ubuntu-latest
     continue-on-error: true
