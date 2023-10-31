@@ -15,7 +15,7 @@ jobs:
     secrets: inherit
 
   review_deployment:
-    name: Deployment 123
+    name: Deployment
     if: github.event.action != 'closed'
     uses: ./.github/workflows/review-deployment.yml
     needs: publish-docker-image
