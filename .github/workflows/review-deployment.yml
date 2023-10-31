@@ -8,7 +8,8 @@ on:
         type: string
 
 jobs:
-  deployment:
+  helm_deployment:
+    name: Helm
     runs-on: ubuntu-latest
     permissions:
       contents: 'read'
@@ -109,7 +110,8 @@ jobs:
           
 
   notify:
-    needs: deployment
+    name: Notify
+    needs: helm_deployment
     if: ${{ needs.deployment.result == 'success' }}
     runs-on: ubuntu-latest
     continue-on-error: true
