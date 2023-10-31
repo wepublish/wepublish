@@ -22,6 +22,7 @@ jobs:
     secrets: inherit
 
   review_deployment_cleanup:
+    name: Cleanup
     if: github.event.action == 'closed'
     uses: ./.github/workflows/review-deployment-cleanup.yml
     secrets: inherit
