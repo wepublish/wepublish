@@ -1,11 +1,12 @@
-name: Review deployment cleanup
+name: Review cleanup
 
 on:
-  workflow_call:
+  pull_request:
+    types: [ closed ]
 
 jobs:
-  cleanup_helm:
-    name: Helm
+  uninstall_helm_release:
+    name: Uninstall helm release
     runs-on: ubuntu-latest
     permissions:
       contents: 'read'

@@ -2,12 +2,11 @@ name: Review
 
 on:
   pull_request:
-    types: [ opened, synchronize, reopened, closed ]
+    types: [ opened, synchronize, reopened]
 
 jobs:
   publish-docker-image:
     name: Docker
-    if: github.event.action != 'closed'
     uses: ./.github/workflows/publish-docker-image.yml
     with:
       tags: |
@@ -16,15 +15,8 @@ jobs:
 
   review_deployment:
     name: Deployment
-    if: github.event.action != 'closed'
     uses: ./.github/workflows/review-deployment.yml
     needs: publish-docker-image
     with:
       image: ghcr.io/wepublish/wepublish:${{ github.sha }}
-    secrets: inherit
-
-  review_deployment_cleanup:
-    name: Cleanup
-    if: github.event.action == 'closed'
-    uses: ./.github/workflows/review-deployment-cleanup.yml
     secrets: inherit
