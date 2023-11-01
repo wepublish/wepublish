@@ -14,6 +14,8 @@ import {
   FooterContainer,
   NavbarContainer,
   NavbarInnerWrapper,
+  TeaserDate,
+  TeaserWrapper,
   WebsiteBuilderProvider,
   WebsiteProvider
 } from '@wepublish/website'
@@ -33,6 +35,7 @@ import translation from 'zod-i18n-map/locales/de/zod.json'
 import {authLink} from '../src/auth-link'
 import background from '../src/background.svg'
 import {GruppettoBreakBlock} from '../src/break-block'
+import {GruppettoTeaserInnerWrapper} from '../src/gruppetto-inner-teaser-wrapper'
 import {Button} from '../src/button'
 import {Footer} from '../src/footer'
 import {ReactComponent as Logo} from '../src/logo.svg'
