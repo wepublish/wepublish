@@ -152,12 +152,21 @@ import {PrismaClient} from '@prisma/client'
               unitId: parseInt(config.get('BEXIO_UNIT_ID')),
               taxId: parseInt(config.get('BEXIO_TAX_ID')),
               accountId: parseInt(config.get('BEXIO_ACCOUNT_ID')),
-              invoiceMailSubject:
-                'Invoice for :memberPlan.name:' || config.get('BEXIO_INVOICE_MAIL_SUBJECT'),
+              invoiceTitleNewMembership: config.get('BEXIO_INVOICE_TITLE_NEW') || 'new invoice',
+              invoiceTitleRenewalMembership:
+                config.get('BEXIO_INVOICE_TITLE_RENEW') || 'new invoice',
+              invoiceMailSubjectNewMembership:
+                config.get('BEXIO_INVOICE_MAIL_SUBJECT_NEW') || 'Invoice for :memberPlan.name:',
               // [Network Link] is required by bexio => you can use replacer for user, subscription and memberPlan as you see in the example (any db fields are possible)
-              invoiceMailBody:
-                'Hello :user.firstName:\nThank you for your subscription :memberPlan.name:. You can see the invoice here:\n [Network Link]\n\n Kind regards from the Wepublish team' ||
-                config.get('BEXIO_INVOICE_MAIL_BODY'),
+              invoiceMailBodyNewMembership:
+                config.get('BEXIO_INVOICE_MAIL_BODY_NEW') ||
+                'Hello :user.firstName:\nThank you for your subscription :memberPlan.name:. You can see the invoice here:\n [Network Link]\n\n Kind regards from the Wepublish team',
+              invoiceMailSubjectRenewalMembership:
+                config.get('BEXIO_INVOICE_MAIL_SUBJECT_RENEW') || 'Invoice for :memberPlan.name:',
+              // [Network Link] is required by bexio => you can use replacer for user, subscription and memberPlan as you see in the example (any db fields are possible)
+              invoiceMailBodyRenewalMembership:
+                config.get('BEXIO_INVOICE_MAIL_BODY_RENEW') ||
+                'Hello :user.firstName:\nThank you for your subscription :memberPlan.name:. You can see the invoice here:\n [Network Link]\n\n Kind regards from the Wepublish team',
               markInvoiceAsOpen: false,
               prisma: prisma
             })
