@@ -3,6 +3,7 @@ import {DynamicModule} from '@nestjs/common'
 import {PrismaModule, PrismaService} from '@wepublish/nest-modules'
 import {FakeMailProvider, MailsModule} from '@wepublish/mails'
 import {
+  BexioPaymentProvider,
   PaymentProvider,
   PaymentsModule,
   PayrexxPaymentProvider,
@@ -45,6 +46,48 @@ export function registerPaymentsModule(): DynamicModule {
     imports: [ConfigModule, PrismaModule],
     useFactory: (config: ConfigService, prisma: PrismaService) => {
       const paymentProviders: PaymentProvider[] = []
+
+      if (
+        config.get('BEXIO_API_KEY') &&
+        config.get('BEXIO_USER_ID') &&
+        config.get('BEXIO_COUNTRY_ID') &&
+        config.get('BEXIO_INVOICE_TEMPLATE') &&
+        config.get('BEXIO_UNIT_ID') &&
+        config.get('BEXIO_TAX_ID') &&
+        config.get('BEXIO_ACCOUNT_ID')
+      ) {
+        paymentProviders.push(
+          new BexioPaymentProvider({
+            id: 'bexio',
+            name: 'Bexio Invoice',
+            offSessionPayments: false,
+            apiKey: config.getOrThrow('BEXIO_API_KEY'),
+            userId: parseInt(config.getOrThrow('BEXIO_USER_ID')),
+            countryId: parseInt(config.getOrThrow('BEXIO_COUNTRY_ID')),
+            invoiceTemplateNewMembership: config.getOrThrow('BEXIO_INVOICE_TEMPLATE'),
+            invoiceTemplateRenewalMembership: config.getOrThrow('BEXIO_INVOICE_TEMPLATE'),
+            unitId: parseInt(config.getOrThrow('BEXIO_UNIT_ID')),
+            taxId: parseInt(config.getOrThrow('BEXIO_TAX_ID')),
+            accountId: parseInt(config.getOrThrow('BEXIO_ACCOUNT_ID')),
+            invoiceTitleNewMembership: config.get('BEXIO_INVOICE_TITLE_NEW') || 'New Invoice',
+            invoiceTitleRenewalMembership: config.get('BEXIO_INVOICE_TITLE_RENEW') || 'New Invoice',
+            invoiceMailSubjectNewMembership:
+              config.get('BEXIO_INVOICE_MAIL_SUBJECT_NEW') || 'Invoice for :memberPlan.name:',
+            // [Network Link] is required by bexio => you can use replacer for user, subscription and memberPlan as you see in the example (any db fields are possible)
+            invoiceMailBodyNewMembership:
+              config.get('BEXIO_INVOICE_MAIL_BODY_NEW') ||
+              'Hello :user.firstname:\n\nThank you for subscribing to :memberPlan.name:.\nYou can view your invoice here: [Network Link]\n\nBest wishes from the Wepublish team',
+            invoiceMailSubjectRenewalMembership:
+              config.get('BEXIO_INVOICE_MAIL_SUBJECT_RENEW') || 'Invoice for :memberPlan.name:',
+            // [Network Link] is required by bexio => you can use replacer for user, subscription and memberPlan as you see in the example (any db fields are possible)
+            invoiceMailBodyRenewalMembership:
+              config.get('BEXIO_INVOICE_MAIL_BODY_RENEW') ||
+              'Hello :user.firstname:\n\nThank you for subscribing to :memberPlan.name:.\nYou can view your invoice here: [Network Link]\n\nBest wishes from the Wepublish team',
+            markInvoiceAsOpen: false,
+            prisma
+          })
+        )
+      }
 
       if (
         config.get('STRIPE_SECRET_KEY') &&

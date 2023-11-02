@@ -1,8 +1,7 @@
-import {Invoice} from '@prisma/client'
 import {InvoicesStatic} from 'bexio'
 
 class InvoiceNotFoundError extends Error {
-  constructor(invoice: Invoice) {
+  constructor(invoice: any) {
     super(
       `Bexio payment adapter didn't find the invoice, subscription or user! ${JSON.stringify(
         invoice
