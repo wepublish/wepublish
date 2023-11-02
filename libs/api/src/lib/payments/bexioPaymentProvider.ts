@@ -4,6 +4,7 @@ import {
   BasePaymentProvider,
   CheckIntentProps,
   CreatePaymentIntentProps,
+  CreateRemoteInvoiceProps,
   Intent,
   IntentState,
   PaymentProviderProps,
@@ -25,7 +26,8 @@ export interface BexioPaymentProviderProps extends PaymentProviderProps {
   apiKey: string
   userId: number
   countryId: number
-  invoiceTemplate: string
+  invoiceTemplateNewMembership: string
+  invoiceTemplateRenewalMembership: string
   unitId: number
   taxId: number
   accountId: number
@@ -39,7 +41,8 @@ export class BexioPaymentProvider extends BasePaymentProvider {
   private apiKey: string
   private userId: number
   private countryId: number
-  private invoiceTemplate: string
+  private invoiceTemplateNewMembership: string
+  private invoiceTemplateRenewalMembership: string
   private unitId: number
   private taxId: number
   private accountId: number
@@ -53,7 +56,8 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     this.apiKey = props.apiKey
     this.userId = props.userId
     this.countryId = props.countryId
-    this.invoiceTemplate = props.invoiceTemplate
+    this.invoiceTemplateNewMembership = props.invoiceTemplateNewMembership
+    this.invoiceTemplateRenewalMembership = props.invoiceTemplateRenewalMembership
     this.unitId = props.unitId
     this.taxId = props.taxId
     this.accountId = props.accountId
@@ -67,11 +71,43 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     throw Error('Webhook not implemented!')
   }
 
+  /**
+   * Create remote invoice only in case of first
+   * @param props
+   */
+
   async createIntent(props: CreatePaymentIntentProps): Promise<Intent> {
+    const subscription = await this.prisma.subscription.findUnique({
+      where: {id: props.invoice.subscriptionID}
+    })
+    if (!subscription.paidUntil) {
+      return await this.bexioCreate(props.invoice.id, this.invoiceTemplateNewMembership)
+    }
+  }
+
+  /**
+   * Create remote invoice in case of renewal
+   * @param props
+   */
+
+  async createRemoteInvoice(props: CreateRemoteInvoiceProps) {
+    await this.bexioCreate(props.invoice.id, this.invoiceTemplateRenewalMembership)
+  }
+
+  async checkIntentStatus({intentID}: CheckIntentProps): Promise<IntentState> {
+    return {
+      state: PaymentState.requiresUserAction,
+      paidAt: null,
+      paymentID: 'None',
+      paymentData: ''
+    }
+  }
+
+  async bexioCreate(invoiceId: string, template: string) {
     try {
       const invoice = await this.prisma.invoice.findUnique({
         where: {
-          id: props.invoice.id
+          id: invoiceId
         },
         include: {
           user: {
@@ -87,9 +123,13 @@ export class BexioPaymentProvider extends BasePaymentProvider {
         }
       })
       const bexio = new Bexio(this.apiKey)
-      const contact = await this.searchForContact(bexio, invoice.user)
-      const updatedContact = await this.createOrUpdateContact(bexio, contact, invoice.user)
-      await this.createInvoice(bexio, updatedContact, invoice)
+      const contact = await this.searchForContact(bexio, invoice.subscription.user)
+      const updatedContact = await this.createOrUpdateContact(
+        bexio,
+        contact,
+        invoice.subscription.user
+      )
+      await this.createInvoice(bexio, updatedContact, invoice, template)
       return {
         intentID: '',
         intentSecret: '',
@@ -100,15 +140,6 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     } catch (e) {
       console.error(e)
       throw e
-    }
-  }
-
-  async checkIntentStatus({intentID}: CheckIntentProps): Promise<IntentState> {
-    return {
-      state: PaymentState.requiresUserAction,
-      paidAt: null,
-      paymentID: 'None',
-      paymentData: ''
     }
   }
 
@@ -152,7 +183,8 @@ export class BexioPaymentProvider extends BasePaymentProvider {
   async createInvoice(
     bexio: Bexio,
     contact: ContactsStatic.ContactFull,
-    invoice: Invoice & {subscription: Subscription & {memberPlan: MemberPlan}} & {user: User}
+    invoice: Invoice & {subscription: Subscription & {memberPlan: MemberPlan; user: User}},
+    template: string
   ) {
     const stringReplaceMap = new MappedReplacer()
     this.addToStringReplaceMap(stringReplaceMap, 'subscription', invoice.subscription)
@@ -163,7 +195,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
       user_id: this.userId,
       mwst_type: 0,
       mwst_is_net: false,
-      template_slug: this.invoiceTemplate,
+      template_slug: template,
       positions: [
         {
           amount: '1',
