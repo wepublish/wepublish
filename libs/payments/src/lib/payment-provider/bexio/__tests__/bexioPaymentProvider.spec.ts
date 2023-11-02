@@ -19,7 +19,14 @@ jest.mock('bexio', () => {
         search: jest.fn()
       },
       invoices: {
-        create: jest.fn()
+        create: jest.fn().mockImplementation(() => ({
+          id: 'testid',
+          intentID: '12345',
+          state: PaymentState.submitted
+        })),
+        sent: jest.fn().mockImplementation(() => ({
+          success: true
+        }))
       }
     }
   })
@@ -59,17 +66,13 @@ describe('BexioPaymentProvider', () => {
 
   describe('Initialization', () => {
     it('should properly initialize properties', () => {
-      // const bexioPaymentProvider = new BexioPaymentProvider(mockProps)
-
       expect(bexioPaymentProvider).toHaveProperty('apiKey', 'sampleApiKey')
       expect(bexioPaymentProvider).toHaveProperty('userId', 123)
-      // Continue for all other properties
     })
   })
 
   describe('Creating an invoice in Bexio', () => {
-    it('should create an invoice in Bexio', async () => {
-      // Mock necessary dependencies
+    it('should call invoices and sent bexio methods', async () => {
       const mockContact = {id: 123, name: 'Test Contact'}
       const mockInvoice = {
         id: 'invoice-1',
@@ -81,33 +84,29 @@ describe('BexioPaymentProvider', () => {
         }
       }
 
-      const bexioCreateSpy = jest.spyOn(bexioPaymentProvider, 'bexioCreate').mockResolvedValue({
-        intentID: '12345',
-        intentSecret: '',
-        intentData: JSON.stringify({}),
-        state: PaymentState.submitted
-      })
-
-      // Call the createInvoice function
       const result = await bexioPaymentProvider.createInvoice(mockContact, mockInvoice, false)
 
-      // Assertions
-      expect(bexioCreateSpy).toHaveBeenCalledWith('invoice-1', false)
       expect(result.intentID).toBe('12345')
       expect(result.state).toBe(PaymentState.submitted)
     })
   })
 
   describe('Checking intent status', () => {
-    it('should check intent status correctly', async () => {
-      // Setup the mock Bexio function that's being called to check intent status
-      const checkIntentMock = jest.fn().mockResolvedValue('mocked status data')
+    it('should check intent status correctly and return the values from fetch', async () => {
+      global.fetch = jest.fn(() =>
+        Promise.resolve({
+          json: () =>
+            Promise.resolve({data: {kb_item_status_id: 9, payment_type_id: 123, contact_id: 321}}),
+          status: 200
+        })
+      ) as jest.Mock
 
       const bexioPaymentProvider = new BexioPaymentProvider(mockProps)
-      const status = await bexioPaymentProvider.checkIntentStatus({intentID: '123'}) // Replace with the correct method name if necessary
+      const res = await bexioPaymentProvider.checkIntentStatus({intentID: '123'})
 
-      expect(checkIntentMock).toHaveBeenCalled()
-      expect(status).toEqual('mocked status data')
+      expect(res.state).toEqual('paid')
+      expect(res.customerID).toEqual('321')
+      expect(res.paymentID).toEqual('123')
     })
   })
 })

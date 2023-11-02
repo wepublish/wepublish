@@ -70,7 +70,6 @@ export class BexioPaymentProvider extends BasePaymentProvider {
 
   constructor(props: BexioPaymentProviderProps) {
     super(props)
-    this.bexio = new Bexio(this.apiKey)
     this.apiKey = props.apiKey
     this.userId = props.userId
     this.countryId = props.countryId
@@ -87,6 +86,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     this.invoiceMailBodyRenewalMembership = props.invoiceMailBodyRenewalMembership
     this.markInvoiceAsOpen = props.markInvoiceAsOpen
     this.prisma = props.prisma
+    this.bexio = new Bexio(this.apiKey)
   }
 
   async webhookForPaymentIntent(props: WebhookForPaymentIntentProps): Promise<IntentState[]> {
@@ -94,34 +94,20 @@ export class BexioPaymentProvider extends BasePaymentProvider {
   }
 
   /**
-   * Creates a payment intent based on the provided invoice.
+   * Creates a payment intent based on the provided invoice details.
+   * If the invoice has an associated subscription ID, it throws an error.
+   * Otherwise, it proceeds to create a payment intent using Bexio's API.
    *
-   * If the invoice has a `subscriptionID`, the function fetches the associated
-   * subscription from the database. If the subscription is found and has not been paid,
-   * a new Bexio invoice is created. Otherwise, it throws an error indicating the invoice
-   * does not contain a subscription ID.
-   *
-   * @async
-   * @function
    * @param {CreatePaymentIntentProps} props - The properties required to create the payment intent.
-   * @param {Invoice} props.invoice - The invoice associated with the payment intent.
-   * @param {string} [props.invoice.subscriptionID] - The ID of the subscription tied to the invoice.
-   *
-   * @returns {Promise<Intent>} Resolves with the created intent if successful.
-   *
-   * @throws {NoSubscriptionIdInInvoice} Throws an error if the invoice does not have a `subscriptionID` or if the associated subscription has been paid.
+   * @returns {Promise<Intent>} A promise that resolves to the created payment intent object.
+   * @throws {NoSubscriptionIdInInvoice} Throws an error if the invoice contains a subscription ID.
    */
   async createIntent(props: CreatePaymentIntentProps): Promise<Intent> {
     if (props.invoice.subscriptionID) {
-      const subscription = await this.prisma.subscription.findUnique({
-        where: {id: props.invoice.subscriptionID}
-      })
-      if (!subscription?.paidUntil) {
-        return await this.bexioCreate(props.invoice.id, false)
-      }
-    } else {
       throw new NoSubscriptionIdInInvoice()
     }
+    const created = await this.bexioCreate(props.invoice.id, false)
+    return created
   }
 
   /**
@@ -140,22 +126,14 @@ export class BexioPaymentProvider extends BasePaymentProvider {
   }
 
   /**
-   * Checks the status of a Bexio payment intent by its ID.
+   * Checks the status of a payment intent in Bexio.
+   * It makes a direct fetch request to the Bexio API because the Bexio library
+   * does not return the status when querying for an invoice.
    *
-   * @async
-   * @function
-   * @param {Object} params - Parameters for the function.
-   * @param {string} params.intentID - The ID of the payment intent in Bexio.
-   *
-   * @throws {ResponseNOK} If the response from Bexio is not OK (HTTP status 200).
-   * @throws {UnknownIntentState} If the returned intent status is not recognized.
-   * @throws {Error} For generic errors, especially when failing to check the invoice status.
-   *
-   * @returns {Promise<IntentState>} An object containing details of the intent state, including:
-   *   - state: The mapped status of the payment intent.
-   *   - paymentID: The ID of the payment type, converted to string. Empty string if not present.
-   *   - paymentData: A JSON string representation of the response data from Bexio.
-   *   - customerID: The ID of the customer/contact in Bexio, converted to string. Empty string if not present.
+   * @param {CheckIntentProps} CheckIntentProps - An object with the intentID to check the status.
+   * @returns {Promise<IntentState>} A promise that resolves to the status of the intent.
+   * @throws {ResponseNOK} Throws an error if the response status from Bexio is not 200.
+   * @throws {UnknownIntentState} Throws an error if the intent status is not recognized.
    */
   async checkIntentStatus({intentID}: CheckIntentProps): Promise<IntentState> {
     // currently the bexio library we use doesn't return the status (kb_item_status_id)
@@ -167,42 +145,38 @@ export class BexioPaymentProvider extends BasePaymentProvider {
       Authorization: `Bearer ${this.apiKey}`
     }
 
-    try {
-      const response = await fetch(`${bexioBaseUrl}/kb_invoice/${intentID}`, {headers})
+    const response = await fetch(`${bexioBaseUrl}/kb_invoice/${intentID}`, {headers})
 
-      if (response.status !== 200) {
-        logger('bexioPaymentProvider').error(
-          'Bexio response for intent %s is NOK with status %s',
-          intentID,
-          response.status
-        )
-        throw new ResponseNOK(response.status)
-      }
+    if (response.status !== 200) {
+      logger('bexioPaymentProvider').error(
+        'Bexio response for intent %s is NOK with status %s',
+        intentID,
+        response.status
+      )
+      throw new ResponseNOK(response.status)
+    }
 
-      const bexioResponse = await response.json()
+    const bexioResponse = await response.json()
 
-      const intentStatus = mapBexioStatusToPaymentStatus(bexioResponse.data.kb_item_status_id)
+    const intentStatus = mapBexioStatusToPaymentStatus(bexioResponse.data.kb_item_status_id)
 
-      if (!intentStatus) {
-        logger('bexioPaymentProvider').error(
-          'Bexio intent with ID: %s for paymentProvider %s returned with an unknown state %s',
-          intentID,
-          this.id,
-          intentStatus
-        )
-        throw new UnknownIntentState()
-      }
+    if (!intentStatus) {
+      logger('bexioPaymentProvider').error(
+        'Bexio intent with ID: %s for paymentProvider %s returned with an unknown state %s',
+        intentID,
+        this.id,
+        intentStatus
+      )
+      throw new UnknownIntentState()
+    }
 
-      return {
-        state: intentStatus,
-        paymentID: bexioResponse.data.payment_type_id
-          ? bexioResponse.data.payment_type_id.toString()
-          : '',
-        paymentData: JSON.stringify(bexioResponse.data),
-        customerID: bexioResponse.data.contact_id ? bexioResponse.data.contact_id.toString() : ''
-      }
-    } catch (error) {
-      throw new Error(`Failed to check Bexio invoice status: ${error.message}`)
+    return {
+      state: intentStatus,
+      paymentID: bexioResponse.data.payment_type_id
+        ? bexioResponse.data.payment_type_id.toString()
+        : '',
+      paymentData: JSON.stringify(bexioResponse.data),
+      customerID: bexioResponse.data.contact_id ? bexioResponse.data.contact_id.toString() : ''
     }
   }
 
@@ -222,13 +196,13 @@ export class BexioPaymentProvider extends BasePaymentProvider {
    * @throws {InvoiceNotFoundError} If the invoice or related data cannot be found in the local database.
    * @throws {Error} For any other generic error.
    *
-   * @returns {Promise<Object>} An object containing:
+   * @returns {Promise<Intent>} An object containing:
    *   - intentID: The ID of the newly created invoice in Bexio.
    *   - intentSecret: An empty string (as there's no secret provided in the function).
    *   - intentData: A JSON string representation of the new invoice from Bexio.
    *   - state: The state of the payment, set as 'submitted'.
    */
-  async bexioCreate(invoiceId: string, isRenewal: boolean) {
+  async bexioCreate(invoiceId: string, isRenewal: boolean): Promise<Intent> {
     try {
       const invoice = await this.prisma.invoice.findUnique({
         where: {

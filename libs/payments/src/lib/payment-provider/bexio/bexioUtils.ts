@@ -4,7 +4,14 @@ import {MappedReplacer} from 'mapped-replacer/dist/types'
 
 const {ContactSearchParameters} = ContactsStatic
 
-export type BexioInvoiceStatus = 7 | 8 | 9 | 16 | 19 | 31
+export enum BexioInvoiceStatus {
+  Draft = 7,
+  Pending = 8,
+  Paid = 9,
+  Partial = 16,
+  Canceled = 19,
+  Unpaid = 31
+}
 
 export async function searchForContact(bexio: Bexio, user: User) {
   const contacts = await bexio.contacts.search([
@@ -31,15 +38,15 @@ export function mapBexioStatusToPaymentStatus(
   bexioStatus: BexioInvoiceStatus
 ): PaymentState | null {
   switch (bexioStatus) {
-    case 31: // unpaid
-    case 16: // partial
-    case 7: // draft
+    case BexioInvoiceStatus.Unpaid:
+    case BexioInvoiceStatus.Partial:
+    case BexioInvoiceStatus.Draft:
       return PaymentState.requiresUserAction
-    case 8: //pending
+    case BexioInvoiceStatus.Pending:
       return PaymentState.processing
-    case 9: // paid
+    case BexioInvoiceStatus.Paid:
       return PaymentState.paid
-    case 19: // cancelled
+    case BexioInvoiceStatus.Canceled:
       return PaymentState.canceled
     default:
       return null

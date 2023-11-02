@@ -4,7 +4,6 @@
     "module": "commonjs",
     "strict": true
   },
-  "target": "ES2018",
   "files": [],
   "include": [],
   "references": [
