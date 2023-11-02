@@ -1,4 +1,4 @@
-import {Prisma, PrismaClient} from '@prisma/client'
+import {Prisma, PrismaClient, UserEvent} from '@prisma/client'
 import {hashPassword} from '../../db/user'
 import {unselectPassword} from '@wepublish/user/api'
 import {Context} from '../../context'

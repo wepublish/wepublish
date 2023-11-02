@@ -1,4 +1,4 @@
-import {CommentState, Prisma, RatingSystemType} from '@prisma/client'
+import {CommentState, Prisma, RatingSystemType, UserEvent} from '@prisma/client'
 import {
   GraphQLBoolean,
   GraphQLID,

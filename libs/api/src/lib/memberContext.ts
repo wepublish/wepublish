@@ -1,6 +1,5 @@
 import {
   Invoice,
-  MemberPlan,
   MetadataProperty,
   Payment,
   PaymentMethod,

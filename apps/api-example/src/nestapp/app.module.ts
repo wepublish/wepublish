@@ -41,7 +41,6 @@ import {ApiModule} from '@wepublish/nest-modules'
 import {GraphQLRichText} from '@wepublish/richtext/api'
 import {URL} from 'url'
 import {SlackMailProvider} from '../app/slack-mail-provider'
-import {PrismaClient} from '@prisma/client'
 
 @Global()
 @Module({
