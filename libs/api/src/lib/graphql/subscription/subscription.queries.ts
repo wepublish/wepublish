@@ -131,6 +131,48 @@ const createDeactivationDateToFilter = (
   return {}
 }
 
+const createCancellationDateFromFilter = (
+  filter: Partial<SubscriptionFilter>
+): Prisma.SubscriptionWhereInput => {
+  if (filter?.cancellationDateFrom) {
+    const {comparison, date} = filter.cancellationDateFrom
+    const compare = mapDateFilterToPrisma(comparison)
+
+    return {
+      deactivation: {
+        is: {
+          createdAt: {
+            [compare]: date
+          }
+        }
+      }
+    }
+  }
+
+  return {}
+}
+
+const createCancellationDateToFilter = (
+  filter: Partial<SubscriptionFilter>
+): Prisma.SubscriptionWhereInput => {
+  if (filter?.cancellationDateTo) {
+    const {comparison, date} = filter.cancellationDateTo
+    const compare = mapDateFilterToPrisma(comparison)
+
+    return {
+      deactivation: {
+        is: {
+          createdAt: {
+            [compare]: date
+          }
+        }
+      }
+    }
+  }
+
+  return {}
+}
+
 const createDeactivationReasonFilter = (
   filter: Partial<SubscriptionFilter>
 ): Prisma.SubscriptionWhereInput => {
@@ -219,6 +261,8 @@ export const createSubscriptionFilter = (
     createPaidUntilToFilter(filter),
     createDeactivationDateFromFilter(filter),
     createDeactivationDateToFilter(filter),
+    createCancellationDateToFilter(filter),
+    createCancellationDateFromFilter(filter),
     createDeactivationReasonFilter(filter),
     createAutoRenewFilter(filter),
     createPaymentPeriodicityFilter(filter),

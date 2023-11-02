@@ -1198,7 +1198,8 @@
         "reason": "Deactivation Reason",
         "reasonNone": "None",
         "reasonUserSelfDeactivated": "User wants to deactivate",
-        "reasonInvoiceNotPaid": "User did not pay invoices"
+        "reasonInvoiceNotPaid": "User did not pay invoices",
+        "cancellation": "Cancellation Date"
       },
       "deactivatedAt": "Deactivated",
       "description": "Description",
