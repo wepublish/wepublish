@@ -23,6 +23,7 @@ import {SlackMailProvider} from './slack-mail-provider'
 import {ExampleURLAdapter} from './url-adapter'
 import {Application} from 'express'
 import {CronJob} from 'cron'
+import {BexioPaymentProvider} from '@wepublish/payments'
 
 export async function runServer(app: Application, mediaAdapter: MediaAdapter) {
   if (!process.env.DATABASE_URL) throw new Error('No DATABASE_URL defined in environment.')
@@ -106,6 +107,48 @@ export async function runServer(app: Application, mediaAdapter: MediaAdapter) {
   }
 
   const paymentProviders = []
+
+  if (
+    process.env.BEXIO_API_KEY &&
+    process.env.BEXIO_USER_ID &&
+    process.env.BEXIO_COUNTRY_ID &&
+    process.env.BEXIO_INVOICE_TEMPLATE &&
+    process.env.BEXIO_UNIT_ID &&
+    process.env.BEXIO_TAX_ID &&
+    process.env.BEXIO_ACCOUNT_ID
+  ) {
+    paymentProviders.push(
+      new BexioPaymentProvider({
+        id: 'bexio',
+        name: 'Bexio Invoice',
+        offSessionPayments: false,
+        apiKey: process.env.BEXIO_API_KEY,
+        userId: parseInt(process.env.BEXIO_USER_ID),
+        countryId: parseInt(process.env.BEXIO_COUNTRY_ID),
+        invoiceTemplateNewMembership: process.env.BEXIO_INVOICE_TEMPLATE,
+        invoiceTemplateRenewalMembership: process.env.BEXIO_INVOICE_TEMPLATE,
+        unitId: parseInt(process.env.BEXIO_UNIT_ID),
+        taxId: parseInt(process.env.BEXIO_TAX_ID),
+        accountId: parseInt(process.env.BEXIO_ACCOUNT_ID),
+        invoiceTitleNewMembership: process.env.BEXIO_INVOICE_TITLE_NEW || 'New Invoice',
+        invoiceTitleRenewalMembership: process.env.BEXIO_INVOICE_TITLE_RENEW || 'New Invoice',
+        invoiceMailSubjectNewMembership:
+          process.env.BEXIO_INVOICE_MAIL_SUBJECT_NEW || 'Invoice for :memberPlan.name:',
+        // [Network Link] is required by bexio => you can use replacer for user, subscription and memberPlan as you see in the example (any db fields are possible)
+        invoiceMailBodyNewMembership:
+          process.env.BEXIO_INVOICE_MAIL_BODY_NEW ||
+          'Hello :user.firstname:\n\nThank you for subscribing to :memberPlan.name:.\nYou can view your invoice here: [Network Link]\n\nBest wishes from the Wepublish team',
+        invoiceMailSubjectRenewalMembership:
+          process.env.BEXIO_INVOICE_MAIL_SUBJECT_RENEW || 'Invoice for :memberPlan.name:',
+        // [Network Link] is required by bexio => you can use replacer for user, subscription and memberPlan as you see in the example (any db fields are possible)
+        invoiceMailBodyRenewalMembership:
+          process.env.BEXIO_INVOICE_MAIL_BODY_RENEW ||
+          'Hello :user.firstname:\n\nThank you for subscribing to :memberPlan.name:.\nYou can view your invoice here: [Network Link]\n\nBest wishes from the Wepublish team',
+        markInvoiceAsOpen: false,
+        prisma
+      })
+    )
+  }
 
   if (
     process.env.STRIPE_SECRET_KEY &&
