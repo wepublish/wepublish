@@ -43,6 +43,7 @@ export * from './lib/payments/paymentProvider'
 export * from './lib/payments/stripeCheckoutPaymentProvider'
 export * from './lib/payments/stripePaymentProvider'
 export * from './lib/payments/payrexxPaymentProvider'
+export * from './lib/payments/bexioPaymentProvider'
 
 export * from './lib/mails/mailProvider'
 export * from './lib/mails/MailgunMailProvider'

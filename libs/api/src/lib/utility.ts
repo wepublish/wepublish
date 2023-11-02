@@ -1,4 +1,4 @@
-import {MemberPlan, PaymentMethod} from '@prisma/client'
+import {MemberPlan, PaymentMethod, PaymentPeriodicity} from '@prisma/client'
 import formatISO from 'date-fns/formatISO'
 import {GraphQLFieldResolver, GraphQLIsTypeOfFn, GraphQLObjectType} from 'graphql'
 import {delegateToSchema, IDelegateToSchemaOptions, Transform} from '@graphql-tools/delegate'
@@ -331,5 +331,20 @@ export function checkSettingRestrictions(
     ) {
       throw new InvalidSettingValueError()
     }
+  }
+}
+
+export function getMonthsFromPaymentPeriodicity(pp: PaymentPeriodicity) {
+  switch (pp) {
+    case PaymentPeriodicity.yearly:
+      return 12
+    case PaymentPeriodicity.biannual:
+      return 6
+    case PaymentPeriodicity.quarterly:
+      return 3
+    case PaymentPeriodicity.monthly:
+      return 1
+    default:
+      return 1
   }
 }

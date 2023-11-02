@@ -1,4 +1,4 @@
-import Bexio, {ContactsStatic, InvoicesStatic} from '@seccom/bexio'
+import Bexio, {ContactsStatic, InvoicesStatic} from 'bexio'
 import ContactSearchParameters = ContactsStatic.ContactSearchParameters
 import {
   BasePaymentProvider,
@@ -7,26 +7,19 @@ import {
   Intent,
   IntentState,
   PaymentProviderProps,
-  UpdatePaymentWithIntentStateProps,
   WebhookForPaymentIntentProps
 } from './paymentProvider'
-import {Payment, PrismaClient} from '@prisma/client'
-
-type Address = {
-  company?: string
-  streetAddress?: string
-  zipCode?: string
-  city?: string
-  country?: string
-}
-
-type User = {
-  id: string
-  email: string
-  name: string
-  firstName?: string
-  address?: Address
-}
+import {
+  Invoice,
+  MemberPlan,
+  PaymentState,
+  PrismaClient,
+  Subscription,
+  User,
+  UserAddress
+} from '@prisma/client'
+import {getMonthsFromPaymentPeriodicity} from '../utility'
+import {MappedReplacer} from 'mapped-replacer'
 
 export interface BexioPaymentProviderProps extends PaymentProviderProps {
   apiKey: string
@@ -36,7 +29,6 @@ export interface BexioPaymentProviderProps extends PaymentProviderProps {
   unitId: number
   taxId: number
   accountId: number
-  invoicePositionText: string
   invoiceMailSubject: string
   invoiceMailBody: string
   markInvoiceAsOpen: boolean
@@ -51,7 +43,6 @@ export class BexioPaymentProvider extends BasePaymentProvider {
   private unitId: number
   private taxId: number
   private accountId: number
-  private invoicePositionText: string
   private invoiceMailSubject: string
   private invoiceMailBody: string
   private markInvoiceAsOpen: boolean
@@ -66,7 +57,6 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     this.unitId = props.unitId
     this.taxId = props.taxId
     this.accountId = props.accountId
-    this.invoicePositionText = props.invoicePositionText
     this.invoiceMailSubject = props.invoiceMailSubject
     this.invoiceMailBody = props.invoiceMailBody
     this.markInvoiceAsOpen = props.markInvoiceAsOpen
@@ -79,23 +69,34 @@ export class BexioPaymentProvider extends BasePaymentProvider {
 
   async createIntent(props: CreatePaymentIntentProps): Promise<Intent> {
     try {
-      const user: User = {
-        id: 'adasdads-asdasd-asdasd',
-        email: 'elias@seccom.ch',
-        name: 'API_TEST',
-        firstName: 'API_TEST',
-        address: {
-          company: 'API Test Firma',
-          streetAddress: 'Brunnmattstrasse 44',
-          zipCode: '3007',
-          city: 'Bern',
-          country: 'Switzerland'
+      const invoice = await this.prisma.invoice.findUnique({
+        where: {
+          id: props.invoice.id
+        },
+        include: {
+          user: {
+            include: {
+              address: true
+            }
+          },
+          subscription: {
+            include: {
+              memberPlan: true
+            }
+          }
         }
-      }
+      })
       const bexio = new Bexio(this.apiKey)
-      const contact = await this.searchForContact(bexio, user)
-      const updatedContact = await this.createOrUpdateContact(bexio, contact, user)
-      await this.createInvoice(bexio, updatedContact)
+      const contact = await this.searchForContact(bexio, invoice.user)
+      const updatedContact = await this.createOrUpdateContact(bexio, contact, invoice.user)
+      await this.createInvoice(bexio, updatedContact, invoice)
+      return {
+        intentID: '',
+        intentSecret: '',
+        intentData: '',
+        paidAt: null,
+        state: PaymentState.created
+      }
     } catch (e) {
       console.error(e)
       throw e
@@ -103,21 +104,15 @@ export class BexioPaymentProvider extends BasePaymentProvider {
   }
 
   async checkIntentStatus({intentID}: CheckIntentProps): Promise<IntentState> {
-    throw Error('Webhook not implemented!')
+    return {
+      state: PaymentState.requiresUserAction,
+      paidAt: null,
+      paymentID: 'None',
+      paymentData: ''
+    }
   }
 
-  async updatePaymentWithIntentState({
-    intentState,
-    paymentClient,
-    paymentsByID,
-    invoicesByID,
-    subscriptionClient,
-    userClient
-  }: UpdatePaymentWithIntentStateProps): Promise<Payment> {
-    throw Error('Update payment with intent state not implemented')
-  }
-
-  async searchForContact(bexio: Bexio, user: User) {
+  async searchForContact(bexio: Bexio, user: User & {address: UserAddress}) {
     const contacts = await bexio.contacts.search([
       {
         field: ContactSearchParameters.mail,
@@ -128,7 +123,11 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     return contacts[0]
   }
 
-  async createOrUpdateContact(bexio: Bexio, contact: ContactsStatic.ContactSmall, user: User) {
+  async createOrUpdateContact(
+    bexio: Bexio,
+    contact: ContactsStatic.ContactSmall,
+    user: User & {address: UserAddress}
+  ) {
     const uppserContact: ContactsStatic.ContactOverwrite = {
       nr: '',
       name_1: user?.address?.company ? user?.address.company : user.name, // lastname or company name
@@ -150,8 +149,16 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     }
   }
 
-  async createInvoice(bexio: Bexio, contact: ContactsStatic.ContactFull) {
-    const invoice: InvoicesStatic.InvoiceCreate = {
+  async createInvoice(
+    bexio: Bexio,
+    contact: ContactsStatic.ContactFull,
+    invoice: Invoice & {subscription: Subscription & {memberPlan: MemberPlan}} & {user: User}
+  ) {
+    const stringReplaceMap = new MappedReplacer()
+    this.addToStringReplaceMap(stringReplaceMap, 'subscription', invoice.subscription)
+    this.addToStringReplaceMap(stringReplaceMap, 'user', invoice.user)
+    this.addToStringReplaceMap(stringReplaceMap, 'memberPlan', invoice.subscription.memberPlan)
+    const bexioInvoice: InvoicesStatic.InvoiceCreate = {
       contact_id: contact.id,
       user_id: this.userId,
       mwst_type: 0,
@@ -163,22 +170,34 @@ export class BexioPaymentProvider extends BasePaymentProvider {
           unit_id: this.unitId,
           account_id: this.accountId,
           tax_id: this.taxId,
-          text: this.invoicePositionText,
-          unit_price: '22',
+          text: invoice.subscription.memberPlan.name,
+          unit_price: `${
+            invoice.subscription.monthlyAmount *
+            getMonthsFromPaymentPeriodicity(invoice.subscription.paymentPeriodicity)
+          }`,
           type: 'KbPositionCustom'
         }
       ]
     }
-    const invoiceUpdated = await bexio.invoices.create(invoice)
+    const invoiceUpdated = await bexio.invoices.create(bexioInvoice)
     const sentInvoice = await bexio.invoices.sent(invoiceUpdated.id, {
       recipient_email: contact.mail,
-      subject: this.invoiceMailSubject,
-      message: this.invoiceMailBody,
+      subject: stringReplaceMap.replace(this.invoiceMailSubject),
+      message: stringReplaceMap.replace(this.invoiceMailBody),
       mark_as_open: this.markInvoiceAsOpen,
       attach_pdf: true
     })
     if (!sentInvoice.success) {
       throw Error(`Send of invoice failed with message: ${sentInvoice}`)
+    }
+  }
+  addToStringReplaceMap(
+    stringReplaceMap: MappedReplacer,
+    id: string,
+    object: User | Subscription | MemberPlan
+  ) {
+    for (const [key, value] of Object.entries(object)) {
+      stringReplaceMap.addRule(`:${id}.${key}:`, `${value}`)
     }
   }
 }

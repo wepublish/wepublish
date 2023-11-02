@@ -11,7 +11,6 @@ import {
 import {logger} from '../server'
 import {
   PaymentState,
-  PaymentPeriodicity,
   Invoice,
   Subscription,
   SubscriptionDeactivationReason,
@@ -27,6 +26,7 @@ import sub from 'date-fns/sub'
 import parseISO from 'date-fns/parseISO'
 import startOfDay from 'date-fns/startOfDay'
 import add from 'date-fns/add'
+import {getMonthsFromPaymentPeriodicity} from '../utility'
 
 export interface PayrexxSubscripionsPaymentProviderProps extends PaymentProviderProps {
   instanceName: string
@@ -47,21 +47,6 @@ function mapPayrexxEventToPaymentStatus(event: string): PaymentState | null {
       return PaymentState.declined
     default:
       return null
-  }
-}
-
-function getMonths(pp: PaymentPeriodicity) {
-  switch (pp) {
-    case PaymentPeriodicity.yearly:
-      return 12
-    case PaymentPeriodicity.biannual:
-      return 6
-    case PaymentPeriodicity.quarterly:
-      return 3
-    case PaymentPeriodicity.monthly:
-      return 1
-    default:
-      return 1
   }
 }
 
@@ -224,7 +209,9 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
 
         // Update subscription
       } else if (params?.args?.data?.monthlyAmount) {
-        const amount = subscription.monthlyAmount * getMonths(subscription.paymentPeriodicity)
+        const amount =
+          subscription.monthlyAmount *
+          getMonthsFromPaymentPeriodicity(subscription.paymentPeriodicity)
         await this.updateRemoteSubscription(parseInt(isPayrexxExt.value, 10), amount.toString())
       }
 
@@ -287,7 +274,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
 
       // Calculate new subscription valid until
       const newSubscriptionValidUntil = add(longestPeriod.endsAt, {
-        months: getMonths(subscription.paymentPeriodicity)
+        months: getMonthsFromPaymentPeriodicity(subscription.paymentPeriodicity)
       }).toISOString()
       const newSubscriptionValidFrom = add(longestPeriod.endsAt, {
         days: 1
@@ -307,7 +294,9 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
 
       const payedAmount = rawSubscription.invoice.amount
       const minPayment =
-        subscription.monthlyAmount * getMonths(subscription.paymentPeriodicity) - 100 // -1CHF to ensure that imported rounding differences are no issue
+        subscription.monthlyAmount *
+          getMonthsFromPaymentPeriodicity(subscription.paymentPeriodicity) -
+        100 // -1CHF to ensure that imported rounding differences are no issue
       if (payedAmount < minPayment) {
         logger('payrexxSubscriptionPaymentProvider').warn(
           `Payrexx Subscription ${subscription.id} payment ${payedAmount} lower than min payment ${minPayment}`
