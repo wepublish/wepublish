@@ -6,6 +6,10 @@ on:
       tags:
         required: true
         type: string
+      target:
+        default: production
+        required: false
+        type: string
 
 jobs:
   build-and-push-docker:
@@ -23,6 +27,7 @@ jobs:
 
       - uses: docker/build-push-action@v2
         with:
+          target: ${{ inputs.target }}
           push: true
           tags: |
             ${{ inputs.tags }}
