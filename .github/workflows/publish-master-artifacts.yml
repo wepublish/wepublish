@@ -20,4 +20,6 @@ jobs:
     with:
       tags: |
         ghcr.io/wepublish/wepublish:master-${{ needs.date_sha_tag.outputs.tag }}
+      storybook_tags: |
+        ghcr.io/wepublish/storybook:master-${{ needs.date_sha_tag.outputs.tag }}
     secrets: inherit

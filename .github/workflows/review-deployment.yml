@@ -3,7 +3,10 @@ name: Review deployment
 on:
   workflow_call:
     inputs:
-      image:
+      app_image:
+        required: true
+        type: string
+      storybook_image:
         required: true
         type: string
 
@@ -88,7 +91,7 @@ jobs:
         run: |
           cat > values.yaml <<EOF
           deployment:
-            image: ${{ inputs.image }}
+            image: ${{ inputs.app_image }}
             env:
               API_URL: ${API_URL}
               EDITOR_URL: ${EDITOR_URL}
@@ -105,6 +108,9 @@ jobs:
               PEER_BY_DEFAULT: "true"
           website:
             enabled: true
+          storybook:
+            enabled: true
+            image: ${{ inputs.storybook_image }}
           EOF
           helm upgrade --install review-${{ github.event.pull_request.number }}-app ./helm/charts/wepublish -n reviews -f values.yaml --wait
           

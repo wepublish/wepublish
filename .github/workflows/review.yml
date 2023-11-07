@@ -15,6 +15,8 @@ jobs:
     with:
       tags: |
         ghcr.io/wepublish/wepublish:${{ github.sha }}
+      storybook_tags: |
+        ghcr.io/wepublish/storybook:${{ github.sha }}
     secrets: inherit
 
   review_deployment:
@@ -22,5 +24,6 @@ jobs:
     uses: ./.github/workflows/review-deployment.yml
     needs: publish-docker-image
     with:
-      image: ghcr.io/wepublish/wepublish:${{ github.sha }}
+      app_image: ghcr.io/wepublish/wepublish:${{ github.sha }}
+      storybook_image: ghcr.io/wepublish/storybook:${{ github.sha }}
     secrets: inherit
