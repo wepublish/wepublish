@@ -9,6 +9,7 @@ on:
 
 jobs:
   build-and-push-docker:
+    name: Build and push
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
