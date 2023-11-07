@@ -149,7 +149,6 @@ exports[`User list view should render successfully 1`] = `
       class="css-kkcxf3 rs-table rs-table-hover"
       role="grid"
       style="width: auto; height: 0px;"
-      tabindex="-1"
     >
       <div
         class="rs-table-header-row-wrapper"

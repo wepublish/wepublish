@@ -2062,7 +2062,7 @@ exports[`Registration Form Container should render WithRegisterError 1`] = `
 +       <div
 +         class="MuiAlert-message css-1pxa9xg-MuiAlert-message"
 +       >
-+         Email already in use.
++         Cannot read properties of undefined (reading 'registerMember')
         </div>
       </div>
       <button
