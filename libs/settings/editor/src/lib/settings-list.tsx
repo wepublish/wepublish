@@ -38,7 +38,7 @@ import {
 } from 'rsuite'
 import InputGroupAddon from 'rsuite/cjs/InputGroup/InputGroupAddon'
 import FormControl from 'rsuite/FormControl'
-import {getApiClientV2} from '@wepublish/website/api-v2'
+import {getApiClientV2} from '@wepublish/editor/api-v2'
 import {useUnsavedChangesDialog} from './unsavedChangesDialog'
 
 const Panel = styled(RPanel)`
@@ -203,6 +203,7 @@ function SettingList() {
     ) ?? []
   )
 
+  console.log('settingsListData.settingsList', settingListData?.settingsList)
   useUnsavedChangesDialog(changedSetting.length > 0)
 
   async function handleSettingListUpdate() {

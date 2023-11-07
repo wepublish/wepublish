@@ -1,24 +1,21 @@
-import {render, screen, waitFor} from '@testing-library/react'
-import {MockedProvider as MockedProviderBase} from '@apollo/client/testing'
+import {MockLink, MockedProvider as MockedProviderBase} from '@apollo/client/testing'
 import '@testing-library/jest-dom'
-import {SettingList} from './settings-list'
-import {BrowserRouter} from 'react-router-dom'
+import {render, screen, waitFor} from '@testing-library/react'
 import {
   SettingName,
   SettingsListDocument,
   SettingsListQuery,
   UpdateSettingListDocument
 } from '@wepublish/editor/api-v2'
-import {actWait, sessionWithPermissions} from '@wepublish/ui/editor'
-import {AuthContext} from '@wepublish/ui/editor'
+import {AuthContext, actWait, sessionWithPermissions} from '@wepublish/ui/editor'
+import * as v2Client from '@wepublish/editor/api-v2'
+import {BrowserRouter} from 'react-router-dom'
+import {SettingList} from './settings-list'
 
+import {ApolloClient, InMemoryCache} from '@apollo/client'
 import fetch from 'jest-fetch-mock'
 
 jest.setMock('node-fetch', fetch)
-
-jest.mock('@wepublish/website/api-v2', () => ({
-  getApiClientV2: jest.fn()
-}))
 
 const MockedProvider = MockedProviderBase as any
 
@@ -80,6 +77,15 @@ const mocks = [
 ]
 
 describe('SettingList', () => {
+  beforeAll(() => {
+    jest.spyOn(v2Client, 'getApiClientV2').mockReturnValue(
+      new ApolloClient({
+        cache: new InMemoryCache(),
+        link: new MockLink([], true, {showWarnings: false})
+      })
+    )
+  })
+
   test('renders successfully', () => {
     const {baseElement, asFragment} = render(
       <AuthContext.Provider value={sessionWithPermissions}>
