@@ -1,7 +1,6 @@
 import {Test, TestingModule} from '@nestjs/testing'
 import {INestApplication, Module} from '@nestjs/common'
 import request from 'supertest'
-import * as crypto from 'crypto'
 import {GraphQLModule} from '@nestjs/graphql'
 import {PrismaClient} from '@prisma/client'
 import {ApolloDriverConfig, ApolloDriver} from '@nestjs/apollo'
@@ -10,8 +9,6 @@ import {SettingsResolver} from './settings.resolver'
 import {SettingsService} from './settings.service'
 import {GraphQLSettingValueType} from './settings.model'
 import {SettingName} from './setting'
-
-export const generateRandomString = () => crypto.randomBytes(20).toString('hex')
 
 @Module({
   imports: [
