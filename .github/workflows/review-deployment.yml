@@ -3,7 +3,10 @@ name: Review deployment
 on:
   workflow_call:
     inputs:
-      image:
+      app_image:
+        required: true
+        type: string
+      storybook_image:
         required: true
         type: string
 
@@ -20,6 +23,7 @@ jobs:
       EDITOR_URL: https://editor-${{ github.event.pull_request.number }}.reviews.wepublish.dev
       WEBSITE_URL: https://website-${{ github.event.pull_request.number }}.reviews.wepublish.dev
       MEDIA_SERVER_URL: https://media-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+      STORYBOOK_URL: https://storybook-${{ github.event.pull_request.number }}.reviews.wepublish.dev
 
     steps:
       - uses: actions/checkout@v3
@@ -88,7 +92,7 @@ jobs:
         run: |
           cat > values.yaml <<EOF
           deployment:
-            image: ${{ inputs.image }}
+            image: ${{ inputs.app_image }}
             env:
               API_URL: ${API_URL}
               EDITOR_URL: ${EDITOR_URL}
@@ -105,6 +109,10 @@ jobs:
               PEER_BY_DEFAULT: "true"
           website:
             enabled: true
+          storybook:
+            enabled: true
+            image: ${{ inputs.storybook_image }}
+            url: ${STORYBOOK_URL}
           EOF
           helm upgrade --install review-${{ github.event.pull_request.number }}-app ./helm/charts/wepublish -n reviews -f values.yaml --wait
           

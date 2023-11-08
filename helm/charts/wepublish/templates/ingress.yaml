@@ -51,3 +51,16 @@ spec:
                 port:
                   name: http
 {{- end }}
+{{- if .Values.storybook.enabled -}}
+    {{- $storybookUrl := urlParse .Values.storybook.url }}
+    - host: {{ $storybookUrl.host }}
+      http:
+        paths:
+          - path: {{ $storybookUrl.path | default "/" }}
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ $fullName }}-storybook
+                port:
+                  name: http
+{{- end }}
