@@ -55,8 +55,8 @@ export class SettingsService {
     }
 
     return this.prisma.$transaction(
-      value.map(({name, value: val}) => {
-        return this.prisma.setting.update({
+      value.map(({name, value: val}) =>
+        this.prisma.setting.update({
           where: {
             name
           },
@@ -64,7 +64,7 @@ export class SettingsService {
             value: val as Prisma.InputJsonValue
           }
         })
-      })
+      )
     )
   }
 }

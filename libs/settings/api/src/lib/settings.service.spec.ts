@@ -74,15 +74,20 @@ describe('SettingsService', () => {
     const updatedSettings: Setting[] = [
       {
         id: '1',
-        name: 'setting1',
-        value: SettingName.ALLOW_COMMENT_EDITING,
+        name: SettingName.ALLOW_COMMENT_EDITING,
+        value: true,
         createdAt: new Date('1/1/2020'),
         modifiedAt: new Date('2/1/2020'),
-        settingRestriction: null
+        settingRestriction: {
+          allowedValues: {
+            boolChoice: true
+          }
+        }
       }
     ]
 
     jest.spyOn(prisma.setting, 'findUnique').mockResolvedValue(updatedSettings[0])
+    jest.spyOn(prisma, '$transaction').mockResolvedValue(updatedSettings)
 
     const result = await service.updateSettings({value: updateInput})
     expect(result).toMatchSnapshot([

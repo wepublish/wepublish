@@ -61,7 +61,7 @@ exports[`SettingsService should update settings 1`] = `
         "boolChoice": true,
       },
     },
-    "value": false,
+    "value": true,
   },
 ]
 `;
