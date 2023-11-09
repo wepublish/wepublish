@@ -34,4 +34,13 @@ website:
   properties: { }
   replicaCount: 1
 
+
+storybook:
+  enabled: false
+  image: ghcr.io/wepublish/storybook
+  imagePullPolicy: Always
+  imagePullSecret:
+  url: https://storybook
+  env: {}
+
 labels: {}
