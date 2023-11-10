@@ -292,7 +292,7 @@ const fillCaptcha: StoryObj['play'] = async ({canvasElement, step}) => {
 
 const clickSubscribe: StoryObj['play'] = async ({canvasElement, step}) => {
   const canvas = within(canvasElement)
-  const submitButton = canvas.getByText('Abonieren', {
+  const submitButton = canvas.getByText('Abonnieren', {
     exact: false
   })
 
