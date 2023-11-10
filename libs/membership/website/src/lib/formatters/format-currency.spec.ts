@@ -3,11 +3,11 @@ import {formatChf} from './format-currency'
 
 describe('formatChf', () => {
   it('should format a number without decimals in the swiss german locale', () => {
-    expect(formatChf(50000, 'ch-DE')).toMatchInlineSnapshot(`"CHF 50'000.-"`)
+    expect(formatChf(50000, 'ch-DE')).toMatchInlineSnapshot(`"CHF 50’000.-"`)
   })
 
   it('should format a number with decimals in the swiss german locale', () => {
-    expect(formatChf(50000.25, 'ch-DE')).toMatchInlineSnapshot(`"CHF 50'000.25"`)
+    expect(formatChf(50000.25, 'ch-DE')).toMatchInlineSnapshot(`"CHF 50’000.25"`)
   })
 
   it('should format a number in another locale', () => {
