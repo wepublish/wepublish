@@ -700,6 +700,11 @@ exports[`Subscribe should render Invalid 1`] = `
         class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-193x9on-MuiButtonBase-root-MuiButton-root-buttonStyles""
 `;
 
+exports[`Subscribe should render Invalid 2`] = `
+"Snapshot Diff:
+Compared values have no visual difference."
+`;
+
 exports[`Subscribe should render LoggedIn 1`] = `
 <DocumentFragment>
   <form
