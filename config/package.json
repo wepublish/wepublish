@@ -8,6 +8,6 @@
   "devDependencies": {},
   "dependencies": {
     "@actions/core": "^1.9.1",
-    "axios": "^0.27.2"
+    "axios": "^1.6.0"
   }
 }
