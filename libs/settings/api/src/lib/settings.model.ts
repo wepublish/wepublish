@@ -107,7 +107,7 @@ export class SettingFilter {
   name?: string
 }
 
-@InputType()
+@ArgsType()
 export class UpdateSettingInput {
   @Field(type => SettingName)
   name!: SettingName
