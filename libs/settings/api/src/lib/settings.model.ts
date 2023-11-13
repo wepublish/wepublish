@@ -38,7 +38,7 @@ export class GraphQLSettingValueType implements CustomScalar<any, any> {
       case 'FloatValue':
         return parseFloat(ast.value)
       default:
-        throw new Error(`Value scalar error: cannot handle kind: ${ast.kind}`)
+        throw new BadRequestException(`Value scalar error: cannot handle kind: ${ast.kind}`)
     }
   }
 }
