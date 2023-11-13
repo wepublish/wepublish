@@ -1,21 +1,22 @@
 import {Args, Mutation, Query, Resolver} from '@nestjs/graphql'
-import {User, UserFlowMail} from '@prisma/client'
+import {User, UserEvent, UserFlowMail} from '@prisma/client'
 import {PrismaService} from '@wepublish/nest-modules'
 import {CurrentUser} from '../user.decorator'
-import {SystemMailModel, SystemMailTestInput, SystemMailUpdateInput} from './system-mail.model'
-import {MailContext, mailLogType} from '@wepublish/mails'
+import {SystemMailModel, SystemMailUpdateInput} from './system-mail.model'
+import {MailContext, mailLogType} from '@wepublish/mail/api'
+import {NotFoundException} from '@nestjs/common'
 
 @Resolver(() => SystemMailModel)
 export class SystemMailResolver {
   constructor(private prismaService: PrismaService, private readonly mailContext: MailContext) {}
 
-  @Query(() => [SystemMailModel])
-  async getSystemMails() {
+  @Query(() => [SystemMailModel], {description: `Returns all mail flows`})
+  async systemMails() {
     return this.getAllMails()
   }
 
-  @Mutation(() => [SystemMailModel])
-  async updateSystemMail(@Args('systemMail') systemMail: SystemMailUpdateInput) {
+  @Mutation(() => [SystemMailModel], {description: `Updates an existing mail flow`})
+  async updateSystemMail(@Args() systemMail: SystemMailUpdateInput) {
     const userMail = await this.prismaService.userFlowMail.findUnique({
       where: {
         event: systemMail.event
@@ -23,7 +24,7 @@ export class SystemMailResolver {
     })
 
     if (!userMail) {
-      throw new Error('There is no userflow present in the database.')
+      throw new NotFoundException('There is no userflow present in the database.')
     }
 
     await this.prismaService.userFlowMail.update({
@@ -38,12 +39,14 @@ export class SystemMailResolver {
     return this.getAllMails()
   }
 
-  @Mutation(() => [SystemMailModel])
+  @Mutation(() => Boolean, {
+    description: `Sends a test email for the given event`
+  })
   async testSystemMail(
     @CurrentUser() user: User,
-    @Args('systemMail') systemMail: SystemMailTestInput
+    @Args('event', {type: () => UserEvent}) event: UserEvent
   ) {
-    const externalMailTemplateId = await this.mailContext.getUserTemplateName(systemMail.event)
+    const externalMailTemplateId = await this.mailContext.getUserTemplateName(event)
 
     await this.mailContext.sendMail({
       mailType: mailLogType.SystemMail,
@@ -52,15 +55,14 @@ export class SystemMailResolver {
       externalMailTemplateId: externalMailTemplateId || ''
     })
 
-    return this.getAllMails()
+    return true
   }
 
   private async getAllMails(): Promise<UserFlowMail[]> {
     return this.prismaService.userFlowMail.findMany({
       include: {
         mailTemplate: true
-      },
-      orderBy: [{id: 'asc'}]
+      }
     })
   }
 }

@@ -17,17 +17,6 @@ input ConsentFilter {
   slug: String
 }
 
-input ConsentInput {
-  defaultValue: Boolean!
-  name: String!
-  slug: String!
-}
-
-input CreateEventArgs {
-  id: String!
-  source: String!
-}
-
 type DashboardInvoice {
   amount: Int!
   dueAt: DateTime!
@@ -120,35 +109,46 @@ type MemberPlanRef {
 
 type Mutation {
   "\n      Create a new consent.\n    "
-  createConsent(consent: ConsentInput!): Consent!
+  createConsent(defaultValue: Boolean!, name: String!, slug: String!): Consent!
 
   "\n      Creates and event based on data from importable events list and an id and provider.\n      Also, uploads an image to WePublish Image library.\n    "
-  createEvent(filter: CreateEventArgs!): String!
-  createSubscriptionFlow(subscriptionFlow: SubscriptionFlowModelCreateInput!): [SubscriptionFlowModel!]!
-  createSubscriptionInterval(subscriptionInterval: SubscriptionIntervalCreateInput!): [SubscriptionFlowModel!]!
+  createEvent(id: String!, source: String!): String!
+
+  """"""
+  createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
+
+  """"""
+  createSubscriptionInterval(daysAwayFromEnding: Int, event: SubscriptionEvent!, mailTemplateId: String, subscriptionFlowId: String!): [SubscriptionFlowModel!]!
 
   "\n      Creates a new userConsent based on input.\n      Returns created userConsent.\n    "
-  createUserConsent(userConsent: UserConsentInput!): UserConsent!
+  createUserConsent(consentId: String!, userId: String!, value: Boolean!): UserConsent!
 
   "\n      Deletes an existing consent.\n    "
   deleteConsent(id: String!): Consent!
-  deleteSubscriptionFlow(subscriptionFlowId: String!): [SubscriptionFlowModel!]!
-  deleteSubscriptionInterval(subscriptionInterval: SubscriptionIntervalDeleteInput!): [SubscriptionFlowModel!]!
+
+  """"""
+  deleteSubscriptionFlow(id: String!): [SubscriptionFlowModel!]!
+
+  """"""
+  deleteSubscriptionInterval(id: String!): [SubscriptionFlowModel!]!
 
   "\n      Delete an existing userConsent by id.\n      Returns deleted userConsent.\n    "
   deleteUserConsent(id: String!): UserConsent!
   syncTemplates: Boolean
-  testSystemMail(systemMail: SystemMailTestInput!): [SystemMailModel!]!
+  testSystemMail(event: UserEvent!): Boolean!
 
   "\n      Updates an existing consent.\n    "
-  updateConsent(consent: ConsentInput!, id: String!): Consent!
-  updateSubscriptionFlow(subscriptionFlow: SubscriptionFlowModelUpdateInput!): [SubscriptionFlowModel!]!
-  updateSubscriptionInterval(subscriptionInterval: SubscriptionIntervalUpdateInput!): [SubscriptionFlowModel!]!
-  updateSubscriptionIntervals(subscriptionIntervals: [SubscriptionIntervalUpdateInput!]!): [SubscriptionFlowModel!]!
-  updateSystemMail(systemMail: SystemMailUpdateInput!): [SystemMailModel!]!
+  updateConsent(defaultValue: Boolean, id: String!, name: String, slug: String): Consent!
+
+  """"""
+  updateSubscriptionFlow(autoRenewal: [Boolean!], id: String!, paymentMethodIds: [String!], periodicities: [PaymentPeriodicity!]): [SubscriptionFlowModel!]!
+
+  """"""
+  updateSubscriptionInterval(daysAwayFromEnding: Int, id: String!, mailTemplateId: String): [SubscriptionFlowModel!]!
+  updateSystemMail(event: UserEvent!, mailTemplateId: String!): [SystemMailModel!]!
 
   "\n      Updates an existing userConsent based on input.\n      Returns updated userConsent.\n    "
-  updateUserConsent(id: String!, userConsent: UpdateUserConsentInput!): UserConsent!
+  updateUserConsent(id: String!, value: Boolean!): UserConsent!
 }
 
 type PageInfo {
@@ -185,7 +185,6 @@ type Query {
 
   "\n      Returns the expected revenue for the time period given.\n      Excludes cancelled or manually set as paid invoices.\n    "
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
-  getSystemMails: [SystemMailModel!]!
 
   "\n      Returns a more detailed version of a single importable event, by id and source.\n    "
   importedEvent(filter: SingleEventFilter!): Event!
@@ -210,13 +209,16 @@ type Query {
 
   "\n      Returns the revenue generated for the time period given.\n      Only includes paid invoices that have not been manually paid.\n    "
   revenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
+
+  """"""
   subscriptionFlows(defaultFlowOnly: Boolean!, memberPlanId: String): [SubscriptionFlowModel!]!
+  systemMails: [SystemMailModel!]!
 
   "\n      Returns a single userConsent by id.\n    "
   userConsent(id: String!): UserConsent!
 
   "\n      Returns a list of userConsents. Possible to filter.\n    "
-  userConsents(filter: UserConsentFilter): [UserConsent!]!
+  userConsents(name: String, slug: String, value: Boolean): [UserConsent!]!
   versionInformation: VersionInformation!
 }
 
@@ -254,20 +256,6 @@ type SubscriptionFlowModel {
   periodicities: [PaymentPeriodicity!]!
 }
 
-input SubscriptionFlowModelCreateInput {
-  autoRenewal: [Boolean!]!
-  memberPlanId: String!
-  paymentMethodIds: [String!]!
-  periodicities: [PaymentPeriodicity!]!
-}
-
-input SubscriptionFlowModelUpdateInput {
-  autoRenewal: [Boolean!]!
-  id: String!
-  paymentMethodIds: [String!]!
-  periodicities: [PaymentPeriodicity!]!
-}
-
 type SubscriptionInterval {
   daysAwayFromEnding: Int
   event: SubscriptionEvent!
@@ -275,39 +263,9 @@ type SubscriptionInterval {
   mailTemplate: MailTemplateRef
 }
 
-input SubscriptionIntervalCreateInput {
-  daysAwayFromEnding: Int
-  event: SubscriptionEvent!
-  mailTemplateId: String
-  subscriptionFlowId: String!
-}
-
-input SubscriptionIntervalDeleteInput {
-  id: String!
-}
-
-input SubscriptionIntervalUpdateInput {
-  daysAwayFromEnding: Int
-  id: String!
-  mailTemplateId: String
-}
-
 type SystemMailModel {
   event: UserEvent!
   mailTemplate: MailTemplateRef
-}
-
-input SystemMailTestInput {
-  event: UserEvent!
-}
-
-input SystemMailUpdateInput {
-  event: UserEvent!
-  mailTemplateId: String!
-}
-
-input UpdateUserConsentInput {
-  value: Boolean!
 }
 
 type User {
@@ -332,18 +290,6 @@ type UserConsent {
   id: String!
   modifiedAt: DateTime!
   user: User!
-  value: Boolean!
-}
-
-input UserConsentFilter {
-  name: String
-  slug: String
-  value: Boolean
-}
-
-input UserConsentInput {
-  consentId: String!
-  userId: String!
   value: Boolean!
 }
 

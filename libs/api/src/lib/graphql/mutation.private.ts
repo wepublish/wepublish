@@ -161,7 +161,7 @@ import {
   UpdateOrCreateEventInput
 } from './event/event.private-mutation'
 import {CanSendJWTLogin} from '@wepublish/permissions/api'
-import {mailLogType} from '@wepublish/mails'
+import {mailLogType} from '@wepublish/mail/api'
 import {GraphQLSubscriptionDeactivationReason} from './subscriptionDeactivation'
 
 function mapTeaserUnionMap(value: any) {

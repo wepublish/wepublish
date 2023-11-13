@@ -12,7 +12,7 @@ import {
 import {GraphQLDate, GraphQLDateTime} from 'graphql-scalars'
 import {Context} from '../context'
 import {InvoiceSort} from '../db/invoice'
-import {InvoiceWithItems} from '@wepublish/payments'
+import {InvoiceWithItems} from '@wepublish/payment/api'
 import {createProxyingResolver} from '../utility'
 import {GraphQLPageInfo} from './common'
 import {GraphQLPublicSubscription} from './subscription-public'

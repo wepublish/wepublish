@@ -1,5 +1,4 @@
 {
-  "name": "@wepublish/membership-api",
   "prisma": {
     "schema": "../../api/prisma/schema.prisma",
     "seed": "npx tsx __tests__/prisma/seed.ts"

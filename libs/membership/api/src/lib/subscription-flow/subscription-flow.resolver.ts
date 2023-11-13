@@ -1,21 +1,5 @@
-import {Args, Mutation, Query, Resolver} from '@nestjs/graphql'
-import {
-  PaymentMethodRef,
-  SubscriptionFlowModel,
-  SubscriptionFlowModelCreateInput,
-  SubscriptionFlowModelUpdateInput,
-  SubscriptionIntervalCreateInput,
-  SubscriptionIntervalDeleteInput,
-  SubscriptionIntervalUpdateInput
-} from './subscription-flow.model'
-import {SubscriptionFlowController} from './subscription-flow.controller'
-import {SubscriptionFlow} from '@prisma/client'
+import {Args, Int, Mutation, Parent, Query, ResolveField, Resolver} from '@nestjs/graphql'
 import {PrismaService} from '@wepublish/nest-modules'
-import {SubscriptionFlowHelper, SubscriptionFlowWithPaymentMethod} from './subscription-flow.helper'
-
-type WithNumberOfSubscriptions<T> = T & {
-  numberOfSubscriptions: number
-}
 import {
   CanCreateSubscriptionFlow,
   CanDeleteSubscriptionFlow,
@@ -24,92 +8,95 @@ import {
   CanUpdateSubscriptionFlow,
   Permissions
 } from '@wepublish/permissions/api'
+import {SubscriptionFlowService} from './subscription-flow.service'
+import {
+  PaymentMethodRef,
+  SubscriptionFlowModel,
+  SubscriptionFlowModelCreateInput,
+  SubscriptionFlowModelUpdateInput,
+  SubscriptionIntervalCreateInput,
+  SubscriptionIntervalUpdateInput
+} from './subscription-flow.model'
 
-@Resolver(() => [SubscriptionFlowResolver])
+@Resolver(() => SubscriptionFlowModel)
 export class SubscriptionFlowResolver {
   constructor(
-    private readonly controller: SubscriptionFlowController,
-    private readonly prismaService: PrismaService,
-    private readonly flowHelper: SubscriptionFlowHelper
+    private readonly subscriptionFlowService: SubscriptionFlowService,
+    private readonly prismaService: PrismaService
   ) {}
 
   @Permissions(CanGetSubscriptionFlows)
-  @Query(() => [SubscriptionFlowModel], {name: 'subscriptionFlows'})
+  @Query(() => [SubscriptionFlowModel], {
+    description: `Returns all subscription flows`
+  })
   async subscriptionFlows(
     @Args('defaultFlowOnly') defaultFlowOnly: boolean,
     @Args('memberPlanId', {nullable: true}) memberPlanId?: string
   ) {
-    return this.decorate(await this.controller.getFlows(defaultFlowOnly, memberPlanId))
+    return await this.subscriptionFlowService.getFlows(defaultFlowOnly, memberPlanId)
   }
 
   @Permissions(CanCreateSubscriptionFlow)
-  @Mutation(() => [SubscriptionFlowModel], {name: 'createSubscriptionFlow'})
-  async createSubscriptionFlow(@Args('subscriptionFlow') flow: SubscriptionFlowModelCreateInput) {
-    return this.decorate(await this.controller.createFlow(flow))
+  @Mutation(() => [SubscriptionFlowModel], {description: `Create a new subscription flow`})
+  async createSubscriptionFlow(@Args() flow: SubscriptionFlowModelCreateInput) {
+    return await this.subscriptionFlowService.createFlow(flow)
   }
 
   @Permissions(CanUpdateSubscriptionFlow)
-  @Mutation(() => [SubscriptionFlowModel], {name: 'updateSubscriptionFlow'})
-  async updateSubscriptionFlow(@Args('subscriptionFlow') flow: SubscriptionFlowModelUpdateInput) {
-    return this.decorate(await this.controller.updateFlow(flow))
+  @Mutation(() => [SubscriptionFlowModel], {description: `Update an existing subscription flow`})
+  async updateSubscriptionFlow(@Args() flow: SubscriptionFlowModelUpdateInput) {
+    return await this.subscriptionFlowService.updateFlow(flow)
   }
 
   @Permissions(CanDeleteSubscriptionFlow)
-  @Mutation(() => [SubscriptionFlowModel], {name: 'deleteSubscriptionFlow'})
-  async deleteSubscriptionFlow(@Args('subscriptionFlowId') subscriptionFlowId: string) {
-    return this.decorate(await this.controller.deleteFlow(subscriptionFlowId))
+  @Mutation(() => [SubscriptionFlowModel], {description: `Delete an existing subscription flow`})
+  async deleteSubscriptionFlow(@Args('id') subscriptionFlowId: string) {
+    return await this.subscriptionFlowService.deleteFlow(subscriptionFlowId)
   }
 
   @Permissions(CanCreateSubscriptionFlow, CanUpdateSubscriptionFlow)
-  @Mutation(() => [SubscriptionFlowModel], {name: 'createSubscriptionInterval'})
-  async createSubscriptionInterval(
-    @Args('subscriptionInterval') subscriptionInterval: SubscriptionIntervalCreateInput
-  ) {
-    return this.decorate(await this.controller.createInterval(subscriptionInterval))
+  @Mutation(() => [SubscriptionFlowModel], {description: 'Create a subscription interval'})
+  async createSubscriptionInterval(@Args() subscriptionInterval: SubscriptionIntervalCreateInput) {
+    return await this.subscriptionFlowService.createInterval(subscriptionInterval)
   }
 
   @Permissions(CanUpdateSubscriptionFlow)
-  @Mutation(() => [SubscriptionFlowModel], {name: 'updateSubscriptionIntervals'})
-  async updateSubscriptionIntervals(
-    @Args({name: 'subscriptionIntervals', type: () => [SubscriptionIntervalUpdateInput]})
-    subscriptionIntervals: SubscriptionIntervalUpdateInput[]
-  ) {
-    return this.decorate(await this.controller.updateIntervals(subscriptionIntervals))
+  @Mutation(() => [SubscriptionFlowModel], {
+    description: 'Update an existing subscription interval'
+  })
+  async updateSubscriptionInterval(@Args() subscriptionInterval: SubscriptionIntervalUpdateInput) {
+    return await this.subscriptionFlowService.updateInterval(subscriptionInterval)
   }
 
   @Permissions(CanUpdateSubscriptionFlow)
-  @Mutation(() => [SubscriptionFlowModel], {name: 'updateSubscriptionInterval'})
-  async updateSubscriptionInterval(
-    @Args('subscriptionInterval') subscriptionInterval: SubscriptionIntervalUpdateInput
-  ) {
-    return this.decorate(await this.controller.updateInterval(subscriptionInterval))
-  }
-
-  @Permissions(CanUpdateSubscriptionFlow)
-  @Mutation(() => [SubscriptionFlowModel], {name: 'deleteSubscriptionInterval'})
-  async deleteSubscriptionInterval(
-    @Args('subscriptionInterval') subscriptionInterval: SubscriptionIntervalDeleteInput
-  ) {
-    return this.decorate(await this.controller.deleteInterval(subscriptionInterval))
+  @Mutation(() => [SubscriptionFlowModel], {
+    description: 'Delete an existing subscription interval'
+  })
+  async deleteSubscriptionInterval(@Args('id') id: string) {
+    return await this.subscriptionFlowService.deleteInterval(id)
   }
 
   @Permissions(CanGetPaymentMethods)
-  @Query(() => [PaymentMethodRef])
+  @Query(() => [PaymentMethodRef], {description: `Returns all payment methods`})
   async paymentMethods() {
-    return this.controller.paymentMethods()
+    return await this.prismaService.paymentMethod.findMany({})
   }
 
-  private async decorate(
-    flows: SubscriptionFlowWithPaymentMethod[]
-  ): Promise<WithNumberOfSubscriptions<SubscriptionFlow>[]> {
-    const subscriptionCounts = await this.flowHelper.numberOfSubscriptionsFor(flows)
-
-    return flows.map(f => {
-      const count = subscriptionCounts.find(c => c.subscriptionFlowId === f.id)
-
-      return {
-        ...f,
-        numberOfSubscriptions: (count && count.subscriptionCount) || 0
+  @ResolveField('numberOfSubscriptions', () => Int, {
+    description: 'Count of all subscriptions that are affected by this flow'
+  })
+  async numberOfSubscriptions(@Parent() flow: SubscriptionFlowModel): Promise<number> {
+    return await this.prismaService.subscription.count({
+      where: {
+        OR: flow.autoRenewal.map(autoRenew => ({
+          paymentMethodID: {
+            in: flow.paymentMethods.map(paymentMethod => paymentMethod.id)
+          },
+          paymentPeriodicity: {
+            in: flow.periodicities
+          },
+          autoRenew
+        }))
       }
     })
   }

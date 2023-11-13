@@ -455,7 +455,7 @@ describe('SubscriptionEventDictionary', () => {
         daysAwayFromEnding: 10,
         events: [SubscriptionEvent.INVOICE_CREATION]
       })
-      throw Error('This execution should fail!')
+      fail()
     } catch (e) {
       expect((e as Error).toString()).toEqual(
         'Error: Its not supported to query for daysAwayFromEnding combined with an event list'
@@ -653,7 +653,8 @@ describe('SubscriptionEventDictionary', () => {
         paymentMethodId: 'stripe',
         autorenwal: true
       })
-      throw Error('This execution should fail!')
+
+      fail()
     } catch (e) {
       expect((e as Error).toString()).toEqual('Error: Default user subscription flow not found!')
     }
@@ -672,7 +673,8 @@ describe('SubscriptionEventDictionary', () => {
         paymentMethodId: 'stripe',
         autorenwal: true
       })
-      throw Error('This execution should fail!')
+
+      fail()
     } catch (e) {
       expect((e as Error).toString()).toEqual(
         'Error: Subscription Flow with no memberplan found that is not default! This is a data integrity error!'
@@ -693,7 +695,7 @@ describe('SubscriptionEventDictionary', () => {
         paymentMethodId: 'stripe',
         autorenwal: true
       })
-      throw Error('This execution should fail!')
+      fail()
     } catch (e) {
       expect((e as Error).toString()).toEqual(
         'Error: Multiple default memberplans found! This is a data integrity error!'

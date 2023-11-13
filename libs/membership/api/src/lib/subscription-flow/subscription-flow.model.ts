@@ -1,4 +1,13 @@
-import {Field, InputType, Int, ObjectType, registerEnumType} from '@nestjs/graphql'
+import {
+  ArgsType,
+  Field,
+  Int,
+  ObjectType,
+  PartialType,
+  OmitType,
+  registerEnumType,
+  PickType
+} from '@nestjs/graphql'
 import {PaymentPeriodicity, SubscriptionEvent} from '@prisma/client'
 
 registerEnumType(PaymentPeriodicity, {
@@ -13,6 +22,7 @@ registerEnumType(SubscriptionEvent, {
 export class MailTemplateRef {
   @Field()
   id!: string
+
   @Field()
   name!: string
 }
@@ -21,6 +31,7 @@ export class MailTemplateRef {
 class MemberPlanRef {
   @Field()
   id!: string
+
   @Field()
   name!: string
 }
@@ -29,6 +40,7 @@ class MemberPlanRef {
 export class PaymentMethodRef {
   @Field()
   id!: string
+
   @Field()
   name!: string
 }
@@ -37,10 +49,13 @@ export class PaymentMethodRef {
 export class SubscriptionInterval {
   @Field()
   id!: string
+
   @Field(() => Int, {nullable: true})
   daysAwayFromEnding?: number
-  @Field(type => MailTemplateRef, {nullable: true})
+
+  @Field(() => MailTemplateRef, {nullable: true})
   mailTemplate!: MailTemplateRef | null
+
   @Field(() => SubscriptionEvent)
   event!: SubscriptionEvent
 }
@@ -49,79 +64,73 @@ export class SubscriptionInterval {
 export class SubscriptionFlowModel {
   @Field()
   id!: string
+
   @Field()
   default!: boolean
-  @Field(type => MemberPlanRef, {nullable: true})
+
+  @Field(() => MemberPlanRef, {nullable: true})
   memberPlan?: MemberPlanRef
-  @Field(type => [PaymentMethodRef])
+
+  @Field(() => [PaymentMethodRef])
   paymentMethods!: PaymentMethodRef[]
-  @Field(type => [PaymentPeriodicity])
+
+  @Field(() => [PaymentPeriodicity])
   periodicities!: PaymentPeriodicity[]
-  @Field(type => [Boolean])
+
+  @Field(() => [Boolean])
   autoRenewal!: boolean[]
-  @Field(type => [SubscriptionInterval])
+
+  @Field(() => [SubscriptionInterval])
   intervals!: SubscriptionInterval[]
+
   @Field(() => Int)
   numberOfSubscriptions!: number
 }
 
-@InputType()
+@ArgsType()
 export class SubscriptionIntervalCreateInput {
   @Field()
   subscriptionFlowId!: string
+
   @Field(() => Int, {nullable: true})
   daysAwayFromEnding?: number
+
   @Field({nullable: true})
   mailTemplateId?: string
+
   @Field(() => SubscriptionEvent)
   event!: SubscriptionEvent
 }
 
-@InputType()
-export class SubscriptionIntervalUpdateInput {
-  @Field()
-  id!: string
-  @Field(() => Int, {nullable: true})
-  daysAwayFromEnding?: number
-  @Field({nullable: true})
-  mailTemplateId?: string
-}
-
-@InputType()
-export class SubscriptionIntervalsUpdateInput {
-  intervals: SubscriptionIntervalUpdateInput[]
-
-  constructor(intervals: SubscriptionIntervalUpdateInput[]) {
-    this.intervals = intervals
-  }
-}
-
-@InputType()
-export class SubscriptionIntervalDeleteInput {
+@ArgsType()
+export class SubscriptionIntervalUpdateInput extends PartialType(
+  PickType(SubscriptionIntervalCreateInput, ['daysAwayFromEnding', 'mailTemplateId'] as const),
+  ArgsType
+) {
   @Field()
   id!: string
 }
 
-@InputType()
+@ArgsType()
 export class SubscriptionFlowModelCreateInput {
   @Field()
   memberPlanId!: string
-  @Field(type => [String])
+
+  @Field(() => [String])
   paymentMethodIds!: string[]
-  @Field(type => [PaymentPeriodicity])
+
+  @Field(() => [PaymentPeriodicity])
   periodicities!: PaymentPeriodicity[]
-  @Field(type => [Boolean])
+
+  @Field(() => [Boolean])
   autoRenewal!: boolean[]
 }
 
-@InputType()
-export class SubscriptionFlowModelUpdateInput {
+@ArgsType()
+export class SubscriptionFlowModelUpdateInput extends PartialType(
+  OmitType(SubscriptionFlowModelCreateInput, ['memberPlanId'] as const),
+  ArgsType
+) {
   @Field()
   id!: string
-  @Field(type => [String])
-  paymentMethodIds!: string[]
-  @Field(type => [PaymentPeriodicity])
-  periodicities!: PaymentPeriodicity[]
-  @Field(type => [Boolean])
-  autoRenewal!: boolean[]
 }

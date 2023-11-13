@@ -9,7 +9,7 @@ import {
   SubscriptionFlow,
   SubscriptionInterval
 } from '@prisma/client'
-import {Injectable} from '@nestjs/common'
+import {Injectable, NotFoundException} from '@nestjs/common'
 
 /**
  * This class loads all subscription flows and allows filtering by member plan,
@@ -39,7 +39,7 @@ export class SubscriptionEventDictionary {
     )
 
     if (allCreationEvents.length === 0) {
-      throw new Error('No invoice creation date found!')
+      throw new NotFoundException('No invoice creation date found!')
     }
 
     let earliest = Number.MAX_SAFE_INTEGER
@@ -144,7 +144,7 @@ export class SubscriptionEventDictionary {
     const defaultFlows = this.allFlows.filter(flow => flow.default)
 
     if (defaultFlows.length === 0) {
-      throw new Error('Default user subscription flow not found!')
+      throw new NotFoundException('Default user subscription flow not found!')
     }
 
     if (defaultFlows.length > 1) {
@@ -152,7 +152,7 @@ export class SubscriptionEventDictionary {
     }
 
     const nonDefaultFlows = this.allFlows.filter(flow => !flow.default)
-    if (nonDefaultFlows.filter(flow => !flow.memberPlanId).length > 0) {
+    if (nonDefaultFlows.filter(flow => !flow.memberPlanId).length) {
       throw new Error(
         'Subscription Flow with no memberplan found that is not default! This is a data integrity error!'
       )

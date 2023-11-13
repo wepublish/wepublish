@@ -5,7 +5,7 @@ import pinoHttp from 'pino-http'
 import {contextFromRequest, ContextOptions} from './context'
 import {onFindArticle, onFindPage} from './events'
 import {GraphQLWepublishPublicSchema, GraphQLWepublishSchema} from './graphql/schema'
-import {MAIL_WEBHOOK_PATH_PREFIX} from '@wepublish/mails'
+import {MAIL_WEBHOOK_PATH_PREFIX} from '@wepublish/mail/api'
 import {PAYMENT_WEBHOOK_PATH_PREFIX, setupPaymentProvider} from './payments'
 import {MAX_PAYLOAD_SIZE} from './utility'
 import {
@@ -14,7 +14,7 @@ import {
 } from 'apollo-server-core'
 import {graphqlUploadExpress} from 'graphql-upload'
 import {setupMailProvider} from './mails'
-import {serverLogger, logger} from '@wepublish/utils'
+import {serverLogger, setLogger, logger} from '@wepublish/utils/api'
 
 export interface WepublishServerOpts extends ContextOptions {
   readonly playground?: boolean
@@ -29,8 +29,7 @@ export class WepublishServer {
     const app = this.app || express()
 
     this.setupPrismaMiddlewares()
-
-    serverLogger.logger = this.opts.logger ? this.opts.logger : pino({name: 'we.publish'})
+    setLogger(this.opts.logger)
 
     const adminServer = new ApolloServer({
       schema: GraphQLWepublishSchema,

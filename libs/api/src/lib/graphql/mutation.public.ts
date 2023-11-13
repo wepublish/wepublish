@@ -25,7 +25,7 @@ import {
   UserInputError,
   UserSubscriptionAlreadyDeactivated
 } from '../error'
-import {logger} from '@wepublish/utils'
+import {logger} from '@wepublish/utils/api'
 import {FIFTEEN_MINUTES_IN_MILLISECONDS, USER_PROPERTY_LAST_LOGIN_LINK_SEND} from '../utility'
 import {Validator} from '../validator'
 import {rateComment} from './comment-rating/comment-rating.public-mutation'
@@ -70,7 +70,7 @@ import {
   uploadPublicUserProfileImage
 } from './user/user.public-mutation'
 
-import {mailLogType} from '@wepublish/mails'
+import {mailLogType} from '@wepublish/mail/api'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',

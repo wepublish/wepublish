@@ -7,7 +7,7 @@ import {Form, Message, Schema, toaster} from 'rsuite'
 
 import {ConsentForm} from './consent-form'
 import {getApiClientV2} from '../apiClientv2'
-import {SingleViewTitle} from '@wepublish/ui'
+import {SingleViewTitle} from '@wepublish/ui/editor'
 
 const onErrorToast = (error: ApolloError, slug?: string) => {
   if (error.message.includes('Unique constraint')) {
@@ -35,7 +35,7 @@ export const ConsentCreateView = () => {
     name: '',
     slug: '',
     defaultValue: true
-  } as MutationCreateConsentArgs['consent'])
+  } as MutationCreateConsentArgs)
 
   const [shouldClose, setShouldClose] = useState(false)
 
@@ -58,9 +58,7 @@ export const ConsentCreateView = () => {
 
   const onSubmit = () => {
     createConsent({
-      variables: {
-        consent
-      }
+      variables: consent
     })
   }
 

@@ -1,4 +1,4 @@
-import {Field, InputType, ObjectType, registerEnumType} from '@nestjs/graphql'
+import {ArgsType, Field, ObjectType, registerEnumType} from '@nestjs/graphql'
 import {UserEvent} from '@prisma/client'
 import {MailTemplateRef} from '../subscription-flow/subscription-flow.model'
 
@@ -15,17 +15,11 @@ export class SystemMailModel {
   mailTemplate!: MailTemplateRef | null
 }
 
-@InputType()
+@ArgsType()
 export class SystemMailUpdateInput {
   @Field(() => UserEvent)
   event!: UserEvent
 
   @Field()
   mailTemplateId!: string
-}
-
-@InputType()
-export class SystemMailTestInput {
-  @Field(() => UserEvent)
-  event!: UserEvent
 }

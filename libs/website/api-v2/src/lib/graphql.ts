@@ -36,17 +36,6 @@ export type ConsentFilter = {
   slug?: InputMaybe<Scalars['String']>;
 };
 
-export type ConsentInput = {
-  defaultValue: Scalars['Boolean'];
-  name: Scalars['String'];
-  slug: Scalars['String'];
-};
-
-export type CreateEventArgs = {
-  id: Scalars['String'];
-  source: Scalars['String'];
-};
-
 export type DashboardInvoice = {
   __typename?: 'DashboardInvoice';
   amount: Scalars['Int'];
@@ -180,7 +169,7 @@ export type Mutation = {
    */
   deleteUserConsent: UserConsent;
   syncTemplates?: Maybe<Scalars['Boolean']>;
-  testSystemMail: Array<SystemMailModel>;
+  testSystemMail: Scalars['Boolean'];
   /**
    *
    *       Updates an existing consent.
@@ -189,7 +178,6 @@ export type Mutation = {
   updateConsent: Consent;
   updateSubscriptionFlow: Array<SubscriptionFlowModel>;
   updateSubscriptionInterval: Array<SubscriptionFlowModel>;
-  updateSubscriptionIntervals: Array<SubscriptionFlowModel>;
   updateSystemMail: Array<SystemMailModel>;
   /**
    *
@@ -202,27 +190,38 @@ export type Mutation = {
 
 
 export type MutationCreateConsentArgs = {
-  consent: ConsentInput;
+  defaultValue: Scalars['Boolean'];
+  name: Scalars['String'];
+  slug: Scalars['String'];
 };
 
 
 export type MutationCreateEventArgs = {
-  filter: CreateEventArgs;
+  id: Scalars['String'];
+  source: Scalars['String'];
 };
 
 
 export type MutationCreateSubscriptionFlowArgs = {
-  subscriptionFlow: SubscriptionFlowModelCreateInput;
+  autoRenewal: Array<Scalars['Boolean']>;
+  memberPlanId: Scalars['String'];
+  paymentMethodIds: Array<Scalars['String']>;
+  periodicities: Array<PaymentPeriodicity>;
 };
 
 
 export type MutationCreateSubscriptionIntervalArgs = {
-  subscriptionInterval: SubscriptionIntervalCreateInput;
+  daysAwayFromEnding?: InputMaybe<Scalars['Int']>;
+  event: SubscriptionEvent;
+  mailTemplateId?: InputMaybe<Scalars['String']>;
+  subscriptionFlowId: Scalars['String'];
 };
 
 
 export type MutationCreateUserConsentArgs = {
-  userConsent: UserConsentInput;
+  consentId: Scalars['String'];
+  userId: Scalars['String'];
+  value: Scalars['Boolean'];
 };
 
 
@@ -232,12 +231,12 @@ export type MutationDeleteConsentArgs = {
 
 
 export type MutationDeleteSubscriptionFlowArgs = {
-  subscriptionFlowId: Scalars['String'];
+  id: Scalars['String'];
 };
 
 
 export type MutationDeleteSubscriptionIntervalArgs = {
-  subscriptionInterval: SubscriptionIntervalDeleteInput;
+  id: Scalars['String'];
 };
 
 
@@ -247,39 +246,42 @@ export type MutationDeleteUserConsentArgs = {
 
 
 export type MutationTestSystemMailArgs = {
-  systemMail: SystemMailTestInput;
+  event: UserEvent;
 };
 
 
 export type MutationUpdateConsentArgs = {
-  consent: ConsentInput;
+  defaultValue?: InputMaybe<Scalars['Boolean']>;
   id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+  slug?: InputMaybe<Scalars['String']>;
 };
 
 
 export type MutationUpdateSubscriptionFlowArgs = {
-  subscriptionFlow: SubscriptionFlowModelUpdateInput;
+  autoRenewal?: InputMaybe<Array<Scalars['Boolean']>>;
+  id: Scalars['String'];
+  paymentMethodIds?: InputMaybe<Array<Scalars['String']>>;
+  periodicities?: InputMaybe<Array<PaymentPeriodicity>>;
 };
 
 
 export type MutationUpdateSubscriptionIntervalArgs = {
-  subscriptionInterval: SubscriptionIntervalUpdateInput;
-};
-
-
-export type MutationUpdateSubscriptionIntervalsArgs = {
-  subscriptionIntervals: Array<SubscriptionIntervalUpdateInput>;
+  daysAwayFromEnding?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  mailTemplateId?: InputMaybe<Scalars['String']>;
 };
 
 
 export type MutationUpdateSystemMailArgs = {
-  systemMail: SystemMailUpdateInput;
+  event: UserEvent;
+  mailTemplateId: Scalars['String'];
 };
 
 
 export type MutationUpdateUserConsentArgs = {
   id: Scalars['String'];
-  userConsent: UpdateUserConsentInput;
+  value: Scalars['Boolean'];
 };
 
 export type PageInfo = {
@@ -337,7 +339,6 @@ export type Query = {
    *
    */
   expectedRevenue: Array<DashboardInvoice>;
-  getSystemMails: Array<SystemMailModel>;
   /**
    *
    *       Returns a more detailed version of a single importable event, by id and source.
@@ -387,6 +388,7 @@ export type Query = {
    */
   revenue: Array<DashboardInvoice>;
   subscriptionFlows: Array<SubscriptionFlowModel>;
+  systemMails: Array<SystemMailModel>;
   /**
    *
    *       Returns a single userConsent by id.
@@ -469,7 +471,9 @@ export type QueryUserConsentArgs = {
 
 
 export type QueryUserConsentsArgs = {
-  filter?: InputMaybe<UserConsentFilter>;
+  name?: InputMaybe<Scalars['String']>;
+  slug?: InputMaybe<Scalars['String']>;
+  value?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type SingleEventFilter = {
@@ -505,20 +509,6 @@ export type SubscriptionFlowModel = {
   periodicities: Array<PaymentPeriodicity>;
 };
 
-export type SubscriptionFlowModelCreateInput = {
-  autoRenewal: Array<Scalars['Boolean']>;
-  memberPlanId: Scalars['String'];
-  paymentMethodIds: Array<Scalars['String']>;
-  periodicities: Array<PaymentPeriodicity>;
-};
-
-export type SubscriptionFlowModelUpdateInput = {
-  autoRenewal: Array<Scalars['Boolean']>;
-  id: Scalars['String'];
-  paymentMethodIds: Array<Scalars['String']>;
-  periodicities: Array<PaymentPeriodicity>;
-};
-
 export type SubscriptionInterval = {
   __typename?: 'SubscriptionInterval';
   daysAwayFromEnding?: Maybe<Scalars['Int']>;
@@ -527,40 +517,10 @@ export type SubscriptionInterval = {
   mailTemplate?: Maybe<MailTemplateRef>;
 };
 
-export type SubscriptionIntervalCreateInput = {
-  daysAwayFromEnding?: InputMaybe<Scalars['Int']>;
-  event: SubscriptionEvent;
-  mailTemplateId?: InputMaybe<Scalars['String']>;
-  subscriptionFlowId: Scalars['String'];
-};
-
-export type SubscriptionIntervalDeleteInput = {
-  id: Scalars['String'];
-};
-
-export type SubscriptionIntervalUpdateInput = {
-  daysAwayFromEnding?: InputMaybe<Scalars['Int']>;
-  id: Scalars['String'];
-  mailTemplateId?: InputMaybe<Scalars['String']>;
-};
-
 export type SystemMailModel = {
   __typename?: 'SystemMailModel';
   event: UserEvent;
   mailTemplate?: Maybe<MailTemplateRef>;
-};
-
-export type SystemMailTestInput = {
-  event: UserEvent;
-};
-
-export type SystemMailUpdateInput = {
-  event: UserEvent;
-  mailTemplateId: Scalars['String'];
-};
-
-export type UpdateUserConsentInput = {
-  value: Scalars['Boolean'];
 };
 
 export type User = {
@@ -587,18 +547,6 @@ export type UserConsent = {
   id: Scalars['String'];
   modifiedAt: Scalars['DateTime'];
   user: User;
-  value: Scalars['Boolean'];
-};
-
-export type UserConsentFilter = {
-  name?: InputMaybe<Scalars['String']>;
-  slug?: InputMaybe<Scalars['String']>;
-  value?: InputMaybe<Scalars['Boolean']>;
-};
-
-export type UserConsentInput = {
-  consentId: Scalars['String'];
-  userId: Scalars['String'];
   value: Scalars['Boolean'];
 };
 

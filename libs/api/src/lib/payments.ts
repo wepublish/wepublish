@@ -1,7 +1,7 @@
 import {Router} from 'express'
 import {contextFromRequest} from './context'
 import {WepublishServerOpts} from './server'
-import {logger} from '@wepublish/utils'
+import {logger} from '@wepublish/utils/api'
 
 export const PAYMENT_WEBHOOK_PATH_PREFIX = 'payment-webhooks'
 

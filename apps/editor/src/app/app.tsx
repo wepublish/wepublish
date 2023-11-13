@@ -11,11 +11,11 @@ import {
   UserConsentList
 } from '@wepublish/consent/editor'
 import {TagType} from '@wepublish/editor/api'
-import {ImportableEventListView} from '@wepublish/events/import/editor'
+import {ImportableEventListView} from '@wepublish/event/import/editor'
 import {
   MailTemplateList,
   MemberPlanEdit,
-  PlaceholderListe,
+  PlaceholderList,
   SubscriptionFlowList,
   SystemMailList
 } from '@wepublish/membership/editor'
@@ -638,7 +638,7 @@ export function App() {
               path="mailtemplates/placeholders"
               element={
                 <Base>
-                  <PlaceholderListe />
+                  <PlaceholderList />
                 </Base>
               }
             />

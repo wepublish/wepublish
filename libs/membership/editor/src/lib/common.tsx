@@ -29,7 +29,7 @@ export const DEFAULT_MUTATION_OPTIONS = (
   t: TFunction
 ) => {
   return {
-    ...DEFAULT_QUERY_OPTIONS(client, t),
+    ...DEFAULT_QUERY_OPTIONS(client),
     onCompleted: () => showSavedToast(t)
   }
 }
@@ -37,13 +37,9 @@ export const DEFAULT_MUTATION_OPTIONS = (
 /**
  * Default options for the GraphQL client. Displays errors.
  * @param client the graphql client to make the request with
- * @param t the translation instance
  * @returns QueryHookOptions for the GraphQL client
  */
-export const DEFAULT_QUERY_OPTIONS = (
-  client: ApolloClient<NormalizedCacheObject>,
-  t: TFunction
-) => {
+export const DEFAULT_QUERY_OPTIONS = (client: ApolloClient<NormalizedCacheObject>) => {
   return {
     client,
     onError: showErrors

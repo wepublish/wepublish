@@ -1,10 +1,9 @@
-import {Mutation, Query, Resolver} from '@nestjs/graphql'
-import {MailTemplate} from '@prisma/client'
-import {MailContext, MailTemplateStatus, WithUrlAndStatus} from '@wepublish/mails'
+import {Mutation, Parent, Query, ResolveField, Resolver} from '@nestjs/graphql'
+import {MailContext, MailTemplateStatus} from '@wepublish/mail/api'
+import {PrismaService} from '@wepublish/nest-modules'
+import {CanGetMailTemplates, CanSyncMailTemplates, Permissions} from '@wepublish/permissions/api'
 import {MailTemplateSyncService} from './mail-template-sync.service'
 import {MailProviderModel, MailTemplateWithUrlAndStatusModel} from './mail-template.model'
-import {CanGetMailTemplates, CanSyncMailTemplates, Permissions} from '@wepublish/permissions/api'
-import {PrismaService} from '@wepublish/nest-modules'
 
 @Resolver(() => MailTemplateWithUrlAndStatusModel)
 export class MailTemplatesResolver {
@@ -15,12 +14,15 @@ export class MailTemplatesResolver {
   ) {}
 
   @Permissions(CanGetMailTemplates)
-  @Query(() => [MailTemplateWithUrlAndStatusModel])
+  @Query(() => [MailTemplateWithUrlAndStatusModel], {
+    description: `Return all mail templates`
+  })
   async mailTemplates() {
     const templates = await this.prismaService.mailTemplate.findMany({
       orderBy: [{remoteMissing: 'asc'}, {id: 'asc'}]
     })
-    return this.decorate(templates)
+
+    return templates
   }
 
   @Permissions(CanGetMailTemplates)
@@ -36,26 +38,29 @@ export class MailTemplatesResolver {
     await this.syncService.synchronizeTemplates()
   }
 
-  private async decorate(templates: MailTemplate[]): Promise<WithUrlAndStatus<MailTemplate>[]> {
-    const provider = await this.mailContext.mailProvider
+  @ResolveField('status', () => MailTemplateStatus, {
+    description: 'Status of the template'
+  })
+  async status(@Parent() template: MailTemplateWithUrlAndStatusModel): Promise<MailTemplateStatus> {
     const usedTemplates = await this.mailContext.getUsedTemplateIdentifiers()
 
-    return templates.map(t => {
-      let status = MailTemplateStatus.Ok
+    if (!usedTemplates.includes(template.externalMailTemplateId)) {
+      return MailTemplateStatus.Unused
+    }
 
-      if (!usedTemplates.includes(t.externalMailTemplateId)) {
-        status = MailTemplateStatus.Unused
-      }
+    if (template.remoteMissing) {
+      return MailTemplateStatus.RemoteMissing
+    }
 
-      if (t.remoteMissing) {
-        status = MailTemplateStatus.RemoteMissing
-      }
+    return MailTemplateStatus.Ok
+  }
 
-      return {
-        ...t,
-        url: provider.getTemplateUrl(t),
-        status
-      }
-    })
+  @ResolveField('url', () => MailTemplateStatus, {
+    description: 'External URL of the template'
+  })
+  async url(@Parent() template: MailTemplateWithUrlAndStatusModel): Promise<string> {
+    const provider = await this.mailContext.mailProvider
+
+    return provider.getTemplateUrl(template)
   }
 }

@@ -36,17 +36,6 @@ export type ConsentFilter = {
   slug?: InputMaybe<Scalars['String']>;
 };
 
-export type ConsentInput = {
-  defaultValue: Scalars['Boolean'];
-  name: Scalars['String'];
-  slug: Scalars['String'];
-};
-
-export type CreateEventArgs = {
-  id: Scalars['String'];
-  source: Scalars['String'];
-};
-
 export type DashboardInvoice = {
   __typename?: 'DashboardInvoice';
   amount: Scalars['Int'];
@@ -180,7 +169,7 @@ export type Mutation = {
    */
   deleteUserConsent: UserConsent;
   syncTemplates?: Maybe<Scalars['Boolean']>;
-  testSystemMail: Array<SystemMailModel>;
+  testSystemMail: Scalars['Boolean'];
   /**
    *
    *       Updates an existing consent.
@@ -189,7 +178,6 @@ export type Mutation = {
   updateConsent: Consent;
   updateSubscriptionFlow: Array<SubscriptionFlowModel>;
   updateSubscriptionInterval: Array<SubscriptionFlowModel>;
-  updateSubscriptionIntervals: Array<SubscriptionFlowModel>;
   updateSystemMail: Array<SystemMailModel>;
   /**
    *
@@ -202,27 +190,38 @@ export type Mutation = {
 
 
 export type MutationCreateConsentArgs = {
-  consent: ConsentInput;
+  defaultValue: Scalars['Boolean'];
+  name: Scalars['String'];
+  slug: Scalars['String'];
 };
 
 
 export type MutationCreateEventArgs = {
-  filter: CreateEventArgs;
+  id: Scalars['String'];
+  source: Scalars['String'];
 };
 
 
 export type MutationCreateSubscriptionFlowArgs = {
-  subscriptionFlow: SubscriptionFlowModelCreateInput;
+  autoRenewal: Array<Scalars['Boolean']>;
+  memberPlanId: Scalars['String'];
+  paymentMethodIds: Array<Scalars['String']>;
+  periodicities: Array<PaymentPeriodicity>;
 };
 
 
 export type MutationCreateSubscriptionIntervalArgs = {
-  subscriptionInterval: SubscriptionIntervalCreateInput;
+  daysAwayFromEnding?: InputMaybe<Scalars['Int']>;
+  event: SubscriptionEvent;
+  mailTemplateId?: InputMaybe<Scalars['String']>;
+  subscriptionFlowId: Scalars['String'];
 };
 
 
 export type MutationCreateUserConsentArgs = {
-  userConsent: UserConsentInput;
+  consentId: Scalars['String'];
+  userId: Scalars['String'];
+  value: Scalars['Boolean'];
 };
 
 
@@ -232,12 +231,12 @@ export type MutationDeleteConsentArgs = {
 
 
 export type MutationDeleteSubscriptionFlowArgs = {
-  subscriptionFlowId: Scalars['String'];
+  id: Scalars['String'];
 };
 
 
 export type MutationDeleteSubscriptionIntervalArgs = {
-  subscriptionInterval: SubscriptionIntervalDeleteInput;
+  id: Scalars['String'];
 };
 
 
@@ -247,39 +246,42 @@ export type MutationDeleteUserConsentArgs = {
 
 
 export type MutationTestSystemMailArgs = {
-  systemMail: SystemMailTestInput;
+  event: UserEvent;
 };
 
 
 export type MutationUpdateConsentArgs = {
-  consent: ConsentInput;
+  defaultValue?: InputMaybe<Scalars['Boolean']>;
   id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+  slug?: InputMaybe<Scalars['String']>;
 };
 
 
 export type MutationUpdateSubscriptionFlowArgs = {
-  subscriptionFlow: SubscriptionFlowModelUpdateInput;
+  autoRenewal?: InputMaybe<Array<Scalars['Boolean']>>;
+  id: Scalars['String'];
+  paymentMethodIds?: InputMaybe<Array<Scalars['String']>>;
+  periodicities?: InputMaybe<Array<PaymentPeriodicity>>;
 };
 
 
 export type MutationUpdateSubscriptionIntervalArgs = {
-  subscriptionInterval: SubscriptionIntervalUpdateInput;
-};
-
-
-export type MutationUpdateSubscriptionIntervalsArgs = {
-  subscriptionIntervals: Array<SubscriptionIntervalUpdateInput>;
+  daysAwayFromEnding?: InputMaybe<Scalars['Int']>;
+  id: Scalars['String'];
+  mailTemplateId?: InputMaybe<Scalars['String']>;
 };
 
 
 export type MutationUpdateSystemMailArgs = {
-  systemMail: SystemMailUpdateInput;
+  event: UserEvent;
+  mailTemplateId: Scalars['String'];
 };
 
 
 export type MutationUpdateUserConsentArgs = {
   id: Scalars['String'];
-  userConsent: UpdateUserConsentInput;
+  value: Scalars['Boolean'];
 };
 
 export type PageInfo = {
@@ -337,7 +339,6 @@ export type Query = {
    *
    */
   expectedRevenue: Array<DashboardInvoice>;
-  getSystemMails: Array<SystemMailModel>;
   /**
    *
    *       Returns a more detailed version of a single importable event, by id and source.
@@ -387,6 +388,7 @@ export type Query = {
    */
   revenue: Array<DashboardInvoice>;
   subscriptionFlows: Array<SubscriptionFlowModel>;
+  systemMails: Array<SystemMailModel>;
   /**
    *
    *       Returns a single userConsent by id.
@@ -469,7 +471,9 @@ export type QueryUserConsentArgs = {
 
 
 export type QueryUserConsentsArgs = {
-  filter?: InputMaybe<UserConsentFilter>;
+  name?: InputMaybe<Scalars['String']>;
+  slug?: InputMaybe<Scalars['String']>;
+  value?: InputMaybe<Scalars['Boolean']>;
 };
 
 export type SingleEventFilter = {
@@ -505,20 +509,6 @@ export type SubscriptionFlowModel = {
   periodicities: Array<PaymentPeriodicity>;
 };
 
-export type SubscriptionFlowModelCreateInput = {
-  autoRenewal: Array<Scalars['Boolean']>;
-  memberPlanId: Scalars['String'];
-  paymentMethodIds: Array<Scalars['String']>;
-  periodicities: Array<PaymentPeriodicity>;
-};
-
-export type SubscriptionFlowModelUpdateInput = {
-  autoRenewal: Array<Scalars['Boolean']>;
-  id: Scalars['String'];
-  paymentMethodIds: Array<Scalars['String']>;
-  periodicities: Array<PaymentPeriodicity>;
-};
-
 export type SubscriptionInterval = {
   __typename?: 'SubscriptionInterval';
   daysAwayFromEnding?: Maybe<Scalars['Int']>;
@@ -527,40 +517,10 @@ export type SubscriptionInterval = {
   mailTemplate?: Maybe<MailTemplateRef>;
 };
 
-export type SubscriptionIntervalCreateInput = {
-  daysAwayFromEnding?: InputMaybe<Scalars['Int']>;
-  event: SubscriptionEvent;
-  mailTemplateId?: InputMaybe<Scalars['String']>;
-  subscriptionFlowId: Scalars['String'];
-};
-
-export type SubscriptionIntervalDeleteInput = {
-  id: Scalars['String'];
-};
-
-export type SubscriptionIntervalUpdateInput = {
-  daysAwayFromEnding?: InputMaybe<Scalars['Int']>;
-  id: Scalars['String'];
-  mailTemplateId?: InputMaybe<Scalars['String']>;
-};
-
 export type SystemMailModel = {
   __typename?: 'SystemMailModel';
   event: UserEvent;
   mailTemplate?: Maybe<MailTemplateRef>;
-};
-
-export type SystemMailTestInput = {
-  event: UserEvent;
-};
-
-export type SystemMailUpdateInput = {
-  event: UserEvent;
-  mailTemplateId: Scalars['String'];
-};
-
-export type UpdateUserConsentInput = {
-  value: Scalars['Boolean'];
 };
 
 export type User = {
@@ -590,18 +550,6 @@ export type UserConsent = {
   value: Scalars['Boolean'];
 };
 
-export type UserConsentFilter = {
-  name?: InputMaybe<Scalars['String']>;
-  slug?: InputMaybe<Scalars['String']>;
-  value?: InputMaybe<Scalars['Boolean']>;
-};
-
-export type UserConsentInput = {
-  consentId: Scalars['String'];
-  userId: Scalars['String'];
-  value: Scalars['Boolean'];
-};
-
 export enum UserEvent {
   AccountCreation = 'ACCOUNT_CREATION',
   LoginLink = 'LOGIN_LINK',
@@ -613,6 +561,10 @@ export type VersionInformation = {
   __typename?: 'VersionInformation';
   version: Scalars['String'];
 };
+
+export type FullConsentFragment = { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string };
+
+export type FullUserConsentFragment = { __typename?: 'UserConsent', id: string, value: boolean, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null, email: string } };
 
 export type ConsentsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -627,60 +579,66 @@ export type ConsentQueryVariables = Exact<{
 export type ConsentQuery = { __typename?: 'Query', consent: { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string } };
 
 export type CreateConsentMutationVariables = Exact<{
-  consent: ConsentInput;
+  name: Scalars['String'];
+  slug: Scalars['String'];
+  defaultValue: Scalars['Boolean'];
 }>;
 
 
-export type CreateConsentMutation = { __typename?: 'Mutation', createConsent: { __typename?: 'Consent', id: string, createdAt: string, modifiedAt: string, name: string, slug: string, defaultValue: boolean } };
+export type CreateConsentMutation = { __typename?: 'Mutation', createConsent: { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string } };
 
 export type UpdateConsentMutationVariables = Exact<{
   id: Scalars['String'];
-  consent: ConsentInput;
+  name?: InputMaybe<Scalars['String']>;
+  slug?: InputMaybe<Scalars['String']>;
+  defaultValue?: InputMaybe<Scalars['Boolean']>;
 }>;
 
 
-export type UpdateConsentMutation = { __typename?: 'Mutation', updateConsent: { __typename?: 'Consent', id: string, createdAt: string, modifiedAt: string, name: string, slug: string, defaultValue: boolean } };
+export type UpdateConsentMutation = { __typename?: 'Mutation', updateConsent: { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string } };
 
 export type DeleteConsentMutationVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type DeleteConsentMutation = { __typename?: 'Mutation', deleteConsent: { __typename?: 'Consent', id: string } };
+export type DeleteConsentMutation = { __typename?: 'Mutation', deleteConsent: { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string } };
 
 export type UserConsentsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type UserConsentsQuery = { __typename?: 'Query', userConsents: Array<{ __typename?: 'UserConsent', id: string, value: boolean, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', slug: string, id: string, name: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null, email: string } }> };
+export type UserConsentsQuery = { __typename?: 'Query', userConsents: Array<{ __typename?: 'UserConsent', id: string, value: boolean, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null, email: string } }> };
 
 export type UserConsentQueryVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type UserConsentQuery = { __typename?: 'Query', userConsent: { __typename?: 'UserConsent', id: string, value: boolean, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', slug: string, id: string, name: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null, email: string } } };
+export type UserConsentQuery = { __typename?: 'Query', userConsent: { __typename?: 'UserConsent', id: string, value: boolean, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null, email: string } } };
 
 export type CreateUserConsentMutationVariables = Exact<{
-  userConsent: UserConsentInput;
+  consentId: Scalars['String'];
+  userId: Scalars['String'];
+  value: Scalars['Boolean'];
 }>;
 
 
-export type CreateUserConsentMutation = { __typename?: 'Mutation', createUserConsent: { __typename?: 'UserConsent', id: string, value: boolean } };
+export type CreateUserConsentMutation = { __typename?: 'Mutation', createUserConsent: { __typename?: 'UserConsent', id: string, value: boolean, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null, email: string } } };
 
 export type UpdateUserConsentMutationVariables = Exact<{
   id: Scalars['String'];
-  userConsent: UpdateUserConsentInput;
+  value: Scalars['Boolean'];
 }>;
 
 
-export type UpdateUserConsentMutation = { __typename?: 'Mutation', updateUserConsent: { __typename?: 'UserConsent', id: string, value: boolean, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', slug: string, id: string, name: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null, email: string } } };
+export type UpdateUserConsentMutation = { __typename?: 'Mutation', updateUserConsent: { __typename?: 'UserConsent', id: string, value: boolean, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null, email: string } } };
 
 export type DeleteUserConsentMutationVariables = Exact<{
   id: Scalars['String'];
 }>;
 
 
-export type DeleteUserConsentMutation = { __typename?: 'Mutation', deleteUserConsent: { __typename?: 'UserConsent', id: string } };
+export type DeleteUserConsentMutation = { __typename?: 'Mutation', deleteUserConsent: { __typename?: 'UserConsent', id: string, value: boolean, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null, email: string } } };
 
 export type ImportableEventRefFragment = { __typename?: 'Event', id: string, name: string, description: Node[], status: EventStatus, location: string, externalSourceId: string, externalSourceName: string, imageUrl?: string | null, startsAt: string, endsAt?: string | null };
 
@@ -713,7 +671,8 @@ export type EventProvidersQueryVariables = Exact<{ [key: string]: never; }>;
 export type EventProvidersQuery = { __typename?: 'Query', eventProviders: Array<string> };
 
 export type CreateEventMutationVariables = Exact<{
-  filter: CreateEventArgs;
+  id: Scalars['String'];
+  source: Scalars['String'];
 }>;
 
 
@@ -742,49 +701,53 @@ export type SubscriptionFlowsQueryVariables = Exact<{
 export type SubscriptionFlowsQuery = { __typename?: 'Query', subscriptionFlows: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type CreateSubscriptionFlowMutationVariables = Exact<{
-  subscriptionFlow: SubscriptionFlowModelCreateInput;
+  memberPlanId: Scalars['String'];
+  paymentMethodIds: Array<Scalars['String']> | Scalars['String'];
+  periodicities: Array<PaymentPeriodicity> | PaymentPeriodicity;
+  autoRenewal: Array<Scalars['Boolean']> | Scalars['Boolean'];
 }>;
 
 
 export type CreateSubscriptionFlowMutation = { __typename?: 'Mutation', createSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type UpdateSubscriptionFlowMutationVariables = Exact<{
-  subscriptionFlow: SubscriptionFlowModelUpdateInput;
+  id: Scalars['String'];
+  paymentMethodIds: Array<Scalars['String']> | Scalars['String'];
+  periodicities: Array<PaymentPeriodicity> | PaymentPeriodicity;
+  autoRenewal: Array<Scalars['Boolean']> | Scalars['Boolean'];
 }>;
 
 
 export type UpdateSubscriptionFlowMutation = { __typename?: 'Mutation', updateSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type DeleteSubscriptionFlowMutationVariables = Exact<{
-  subscriptionFlowId: Scalars['String'];
+  id: Scalars['String'];
 }>;
 
 
 export type DeleteSubscriptionFlowMutation = { __typename?: 'Mutation', deleteSubscriptionFlow: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type CreateSubscriptionIntervalMutationVariables = Exact<{
-  subscriptionInterval: SubscriptionIntervalCreateInput;
+  subscriptionFlowId: Scalars['String'];
+  daysAwayFromEnding?: InputMaybe<Scalars['Int']>;
+  mailTemplateId?: InputMaybe<Scalars['String']>;
+  event: SubscriptionEvent;
 }>;
 
 
 export type CreateSubscriptionIntervalMutation = { __typename?: 'Mutation', createSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
-export type UpdateSubscriptionIntervalsMutationVariables = Exact<{
-  subscriptionIntervals: Array<SubscriptionIntervalUpdateInput> | SubscriptionIntervalUpdateInput;
-}>;
-
-
-export type UpdateSubscriptionIntervalsMutation = { __typename?: 'Mutation', updateSubscriptionIntervals: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
-
 export type UpdateSubscriptionIntervalMutationVariables = Exact<{
-  subscriptionInterval: SubscriptionIntervalUpdateInput;
+  id: Scalars['String'];
+  daysAwayFromEnding?: InputMaybe<Scalars['Int']>;
+  mailTemplateId?: InputMaybe<Scalars['String']>;
 }>;
 
 
 export type UpdateSubscriptionIntervalMutation = { __typename?: 'Mutation', updateSubscriptionInterval: Array<{ __typename?: 'SubscriptionFlowModel', id: string, default: boolean, autoRenewal: Array<boolean>, periodicities: Array<PaymentPeriodicity>, numberOfSubscriptions: number, memberPlan?: { __typename?: 'MemberPlanRef', id: string, name: string } | null, paymentMethods: Array<{ __typename?: 'PaymentMethodRef', id: string, name: string }>, intervals: Array<{ __typename?: 'SubscriptionInterval', id: string, daysAwayFromEnding?: number | null, event: SubscriptionEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> }> };
 
 export type DeleteSubscriptionIntervalMutationVariables = Exact<{
-  subscriptionInterval: SubscriptionIntervalDeleteInput;
+  id: Scalars['String'];
 }>;
 
 
@@ -805,24 +768,25 @@ export type MemberPlanRefFragment = { __typename?: 'MemberPlanRef', id: string, 
 
 export type PaymentMethodRefFragment = { __typename?: 'PaymentMethodRef', id: string, name: string };
 
-export type GetSystemMailsQueryVariables = Exact<{ [key: string]: never; }>;
+export type SystemMailsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetSystemMailsQuery = { __typename?: 'Query', getSystemMails: Array<{ __typename?: 'SystemMailModel', event: UserEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> };
+export type SystemMailsQuery = { __typename?: 'Query', systemMails: Array<{ __typename?: 'SystemMailModel', event: UserEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> };
 
 export type UpdateSystemMailMutationVariables = Exact<{
-  systemMail: SystemMailUpdateInput;
+  event: UserEvent;
+  mailTemplateId: Scalars['String'];
 }>;
 
 
 export type UpdateSystemMailMutation = { __typename?: 'Mutation', updateSystemMail: Array<{ __typename?: 'SystemMailModel', event: UserEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> };
 
 export type TestSystemMailMutationVariables = Exact<{
-  systemMail: SystemMailTestInput;
+  event: UserEvent;
 }>;
 
 
-export type TestSystemMailMutation = { __typename?: 'Mutation', testSystemMail: Array<{ __typename?: 'SystemMailModel', event: UserEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null }> };
+export type TestSystemMailMutation = { __typename?: 'Mutation', testSystemMail: boolean };
 
 export type SystemMailFragment = { __typename?: 'SystemMailModel', event: UserEvent, mailTemplate?: { __typename?: 'MailTemplateRef', id: string, name: string } | null };
 
@@ -831,6 +795,33 @@ export type VersionInformationQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type VersionInformationQuery = { __typename?: 'Query', versionInformation: { __typename?: 'VersionInformation', version: string } };
 
+export const FullConsentFragmentDoc = gql`
+    fragment FullConsent on Consent {
+  id
+  name
+  slug
+  defaultValue
+  createdAt
+  modifiedAt
+}
+    `;
+export const FullUserConsentFragmentDoc = gql`
+    fragment FullUserConsent on UserConsent {
+  id
+  value
+  createdAt
+  modifiedAt
+  consent {
+    ...FullConsent
+  }
+  user {
+    id
+    name
+    firstName
+    email
+  }
+}
+    ${FullConsentFragmentDoc}`;
 export const ImportableEventRefFragmentDoc = gql`
     fragment ImportableEventRef on Event {
   id
@@ -846,7 +837,7 @@ export const ImportableEventRefFragmentDoc = gql`
 }
     `;
 export const FullMailTemplateFragmentDoc = gql`
-    fragment fullMailTemplate on MailTemplateWithUrlAndStatusModel {
+    fragment FullMailTemplate on MailTemplateWithUrlAndStatusModel {
   id
   name
   description
@@ -857,7 +848,7 @@ export const FullMailTemplateFragmentDoc = gql`
 }
     `;
 export const FullMailProviderFragmentDoc = gql`
-    fragment fullMailProvider on MailProviderModel {
+    fragment FullMailProvider on MailProviderModel {
   name
 }
     `;
@@ -920,15 +911,10 @@ export const SystemMailFragmentDoc = gql`
 export const ConsentsDocument = gql`
     query Consents {
   consents {
-    id
-    name
-    slug
-    defaultValue
-    createdAt
-    modifiedAt
+    ...FullConsent
   }
 }
-    `;
+    ${FullConsentFragmentDoc}`;
 
 /**
  * __useConsentsQuery__
@@ -959,15 +945,10 @@ export type ConsentsQueryResult = Apollo.QueryResult<ConsentsQuery, ConsentsQuer
 export const ConsentDocument = gql`
     query consent($id: String!) {
   consent(id: $id) {
-    id
-    name
-    slug
-    defaultValue
-    createdAt
-    modifiedAt
+    ...FullConsent
   }
 }
-    `;
+    ${FullConsentFragmentDoc}`;
 
 /**
  * __useConsentQuery__
@@ -997,17 +978,12 @@ export type ConsentQueryHookResult = ReturnType<typeof useConsentQuery>;
 export type ConsentLazyQueryHookResult = ReturnType<typeof useConsentLazyQuery>;
 export type ConsentQueryResult = Apollo.QueryResult<ConsentQuery, ConsentQueryVariables>;
 export const CreateConsentDocument = gql`
-    mutation createConsent($consent: ConsentInput!) {
-  createConsent(consent: $consent) {
-    id
-    createdAt
-    modifiedAt
-    name
-    slug
-    defaultValue
+    mutation createConsent($name: String!, $slug: String!, $defaultValue: Boolean!) {
+  createConsent(name: $name, slug: $slug, defaultValue: $defaultValue) {
+    ...FullConsent
   }
 }
-    `;
+    ${FullConsentFragmentDoc}`;
 export type CreateConsentMutationFn = Apollo.MutationFunction<CreateConsentMutation, CreateConsentMutationVariables>;
 
 /**
@@ -1023,7 +999,9 @@ export type CreateConsentMutationFn = Apollo.MutationFunction<CreateConsentMutat
  * @example
  * const [createConsentMutation, { data, loading, error }] = useCreateConsentMutation({
  *   variables: {
- *      consent: // value for 'consent'
+ *      name: // value for 'name'
+ *      slug: // value for 'slug'
+ *      defaultValue: // value for 'defaultValue'
  *   },
  * });
  */
@@ -1035,17 +1013,12 @@ export type CreateConsentMutationHookResult = ReturnType<typeof useCreateConsent
 export type CreateConsentMutationResult = Apollo.MutationResult<CreateConsentMutation>;
 export type CreateConsentMutationOptions = Apollo.BaseMutationOptions<CreateConsentMutation, CreateConsentMutationVariables>;
 export const UpdateConsentDocument = gql`
-    mutation updateConsent($id: String!, $consent: ConsentInput!) {
-  updateConsent(id: $id, consent: $consent) {
-    id
-    createdAt
-    modifiedAt
-    name
-    slug
-    defaultValue
+    mutation updateConsent($id: String!, $name: String, $slug: String, $defaultValue: Boolean) {
+  updateConsent(id: $id, name: $name, slug: $slug, defaultValue: $defaultValue) {
+    ...FullConsent
   }
 }
-    `;
+    ${FullConsentFragmentDoc}`;
 export type UpdateConsentMutationFn = Apollo.MutationFunction<UpdateConsentMutation, UpdateConsentMutationVariables>;
 
 /**
@@ -1062,7 +1035,9 @@ export type UpdateConsentMutationFn = Apollo.MutationFunction<UpdateConsentMutat
  * const [updateConsentMutation, { data, loading, error }] = useUpdateConsentMutation({
  *   variables: {
  *      id: // value for 'id'
- *      consent: // value for 'consent'
+ *      name: // value for 'name'
+ *      slug: // value for 'slug'
+ *      defaultValue: // value for 'defaultValue'
  *   },
  * });
  */
@@ -1076,10 +1051,10 @@ export type UpdateConsentMutationOptions = Apollo.BaseMutationOptions<UpdateCons
 export const DeleteConsentDocument = gql`
     mutation deleteConsent($id: String!) {
   deleteConsent(id: $id) {
-    id
+    ...FullConsent
   }
 }
-    `;
+    ${FullConsentFragmentDoc}`;
 export type DeleteConsentMutationFn = Apollo.MutationFunction<DeleteConsentMutation, DeleteConsentMutationVariables>;
 
 /**
@@ -1109,24 +1084,10 @@ export type DeleteConsentMutationOptions = Apollo.BaseMutationOptions<DeleteCons
 export const UserConsentsDocument = gql`
     query UserConsents {
   userConsents {
-    id
-    value
-    createdAt
-    modifiedAt
-    consent {
-      slug
-      id
-      name
-    }
-    user {
-      id
-      name
-      firstName
-      email
-    }
+    ...FullUserConsent
   }
 }
-    `;
+    ${FullUserConsentFragmentDoc}`;
 
 /**
  * __useUserConsentsQuery__
@@ -1157,24 +1118,10 @@ export type UserConsentsQueryResult = Apollo.QueryResult<UserConsentsQuery, User
 export const UserConsentDocument = gql`
     query userConsent($id: String!) {
   userConsent(id: $id) {
-    id
-    value
-    createdAt
-    modifiedAt
-    consent {
-      slug
-      id
-      name
-    }
-    user {
-      id
-      name
-      firstName
-      email
-    }
+    ...FullUserConsent
   }
 }
-    `;
+    ${FullUserConsentFragmentDoc}`;
 
 /**
  * __useUserConsentQuery__
@@ -1204,13 +1151,12 @@ export type UserConsentQueryHookResult = ReturnType<typeof useUserConsentQuery>;
 export type UserConsentLazyQueryHookResult = ReturnType<typeof useUserConsentLazyQuery>;
 export type UserConsentQueryResult = Apollo.QueryResult<UserConsentQuery, UserConsentQueryVariables>;
 export const CreateUserConsentDocument = gql`
-    mutation createUserConsent($userConsent: UserConsentInput!) {
-  createUserConsent(userConsent: $userConsent) {
-    id
-    value
+    mutation createUserConsent($consentId: String!, $userId: String!, $value: Boolean!) {
+  createUserConsent(consentId: $consentId, userId: $userId, value: $value) {
+    ...FullUserConsent
   }
 }
-    `;
+    ${FullUserConsentFragmentDoc}`;
 export type CreateUserConsentMutationFn = Apollo.MutationFunction<CreateUserConsentMutation, CreateUserConsentMutationVariables>;
 
 /**
@@ -1226,7 +1172,9 @@ export type CreateUserConsentMutationFn = Apollo.MutationFunction<CreateUserCons
  * @example
  * const [createUserConsentMutation, { data, loading, error }] = useCreateUserConsentMutation({
  *   variables: {
- *      userConsent: // value for 'userConsent'
+ *      consentId: // value for 'consentId'
+ *      userId: // value for 'userId'
+ *      value: // value for 'value'
  *   },
  * });
  */
@@ -1238,26 +1186,12 @@ export type CreateUserConsentMutationHookResult = ReturnType<typeof useCreateUse
 export type CreateUserConsentMutationResult = Apollo.MutationResult<CreateUserConsentMutation>;
 export type CreateUserConsentMutationOptions = Apollo.BaseMutationOptions<CreateUserConsentMutation, CreateUserConsentMutationVariables>;
 export const UpdateUserConsentDocument = gql`
-    mutation updateUserConsent($id: String!, $userConsent: UpdateUserConsentInput!) {
-  updateUserConsent(id: $id, userConsent: $userConsent) {
-    id
-    value
-    createdAt
-    modifiedAt
-    consent {
-      slug
-      id
-      name
-    }
-    user {
-      id
-      name
-      firstName
-      email
-    }
+    mutation updateUserConsent($id: String!, $value: Boolean!) {
+  updateUserConsent(id: $id, value: $value) {
+    ...FullUserConsent
   }
 }
-    `;
+    ${FullUserConsentFragmentDoc}`;
 export type UpdateUserConsentMutationFn = Apollo.MutationFunction<UpdateUserConsentMutation, UpdateUserConsentMutationVariables>;
 
 /**
@@ -1274,7 +1208,7 @@ export type UpdateUserConsentMutationFn = Apollo.MutationFunction<UpdateUserCons
  * const [updateUserConsentMutation, { data, loading, error }] = useUpdateUserConsentMutation({
  *   variables: {
  *      id: // value for 'id'
- *      userConsent: // value for 'userConsent'
+ *      value: // value for 'value'
  *   },
  * });
  */
@@ -1288,10 +1222,10 @@ export type UpdateUserConsentMutationOptions = Apollo.BaseMutationOptions<Update
 export const DeleteUserConsentDocument = gql`
     mutation deleteUserConsent($id: String!) {
   deleteUserConsent(id: $id) {
-    id
+    ...FullUserConsent
   }
 }
-    `;
+    ${FullUserConsentFragmentDoc}`;
 export type DeleteUserConsentMutationFn = Apollo.MutationFunction<DeleteUserConsentMutation, DeleteUserConsentMutationVariables>;
 
 /**
@@ -1472,8 +1406,8 @@ export type EventProvidersQueryHookResult = ReturnType<typeof useEventProvidersQ
 export type EventProvidersLazyQueryHookResult = ReturnType<typeof useEventProvidersLazyQuery>;
 export type EventProvidersQueryResult = Apollo.QueryResult<EventProvidersQuery, EventProvidersQueryVariables>;
 export const CreateEventDocument = gql`
-    mutation createEvent($filter: CreateEventArgs!) {
-  createEvent(filter: $filter)
+    mutation createEvent($id: String!, $source: String!) {
+  createEvent(id: $id, source: $source)
 }
     `;
 export type CreateEventMutationFn = Apollo.MutationFunction<CreateEventMutation, CreateEventMutationVariables>;
@@ -1491,7 +1425,8 @@ export type CreateEventMutationFn = Apollo.MutationFunction<CreateEventMutation,
  * @example
  * const [createEventMutation, { data, loading, error }] = useCreateEventMutation({
  *   variables: {
- *      filter: // value for 'filter'
+ *      id: // value for 'id'
+ *      source: // value for 'source'
  *   },
  * });
  */
@@ -1505,10 +1440,10 @@ export type CreateEventMutationOptions = Apollo.BaseMutationOptions<CreateEventM
 export const MailTemplateDocument = gql`
     query MailTemplate {
   mailTemplates {
-    ...fullMailTemplate
+    ...FullMailTemplate
   }
   provider {
-    ...fullMailProvider
+    ...FullMailProvider
   }
 }
     ${FullMailTemplateFragmentDoc}
@@ -1610,8 +1545,13 @@ export type SubscriptionFlowsQueryHookResult = ReturnType<typeof useSubscription
 export type SubscriptionFlowsLazyQueryHookResult = ReturnType<typeof useSubscriptionFlowsLazyQuery>;
 export type SubscriptionFlowsQueryResult = Apollo.QueryResult<SubscriptionFlowsQuery, SubscriptionFlowsQueryVariables>;
 export const CreateSubscriptionFlowDocument = gql`
-    mutation CreateSubscriptionFlow($subscriptionFlow: SubscriptionFlowModelCreateInput!) {
-  createSubscriptionFlow(subscriptionFlow: $subscriptionFlow) {
+    mutation CreateSubscriptionFlow($memberPlanId: String!, $paymentMethodIds: [String!]!, $periodicities: [PaymentPeriodicity!]!, $autoRenewal: [Boolean!]!) {
+  createSubscriptionFlow(
+    memberPlanId: $memberPlanId
+    paymentMethodIds: $paymentMethodIds
+    periodicities: $periodicities
+    autoRenewal: $autoRenewal
+  ) {
     ...SubscriptionFlow
   }
 }
@@ -1631,7 +1571,10 @@ export type CreateSubscriptionFlowMutationFn = Apollo.MutationFunction<CreateSub
  * @example
  * const [createSubscriptionFlowMutation, { data, loading, error }] = useCreateSubscriptionFlowMutation({
  *   variables: {
- *      subscriptionFlow: // value for 'subscriptionFlow'
+ *      memberPlanId: // value for 'memberPlanId'
+ *      paymentMethodIds: // value for 'paymentMethodIds'
+ *      periodicities: // value for 'periodicities'
+ *      autoRenewal: // value for 'autoRenewal'
  *   },
  * });
  */
@@ -1643,8 +1586,13 @@ export type CreateSubscriptionFlowMutationHookResult = ReturnType<typeof useCrea
 export type CreateSubscriptionFlowMutationResult = Apollo.MutationResult<CreateSubscriptionFlowMutation>;
 export type CreateSubscriptionFlowMutationOptions = Apollo.BaseMutationOptions<CreateSubscriptionFlowMutation, CreateSubscriptionFlowMutationVariables>;
 export const UpdateSubscriptionFlowDocument = gql`
-    mutation UpdateSubscriptionFlow($subscriptionFlow: SubscriptionFlowModelUpdateInput!) {
-  updateSubscriptionFlow(subscriptionFlow: $subscriptionFlow) {
+    mutation UpdateSubscriptionFlow($id: String!, $paymentMethodIds: [String!]!, $periodicities: [PaymentPeriodicity!]!, $autoRenewal: [Boolean!]!) {
+  updateSubscriptionFlow(
+    id: $id
+    paymentMethodIds: $paymentMethodIds
+    periodicities: $periodicities
+    autoRenewal: $autoRenewal
+  ) {
     ...SubscriptionFlow
   }
 }
@@ -1664,7 +1612,10 @@ export type UpdateSubscriptionFlowMutationFn = Apollo.MutationFunction<UpdateSub
  * @example
  * const [updateSubscriptionFlowMutation, { data, loading, error }] = useUpdateSubscriptionFlowMutation({
  *   variables: {
- *      subscriptionFlow: // value for 'subscriptionFlow'
+ *      id: // value for 'id'
+ *      paymentMethodIds: // value for 'paymentMethodIds'
+ *      periodicities: // value for 'periodicities'
+ *      autoRenewal: // value for 'autoRenewal'
  *   },
  * });
  */
@@ -1676,8 +1627,8 @@ export type UpdateSubscriptionFlowMutationHookResult = ReturnType<typeof useUpda
 export type UpdateSubscriptionFlowMutationResult = Apollo.MutationResult<UpdateSubscriptionFlowMutation>;
 export type UpdateSubscriptionFlowMutationOptions = Apollo.BaseMutationOptions<UpdateSubscriptionFlowMutation, UpdateSubscriptionFlowMutationVariables>;
 export const DeleteSubscriptionFlowDocument = gql`
-    mutation DeleteSubscriptionFlow($subscriptionFlowId: String!) {
-  deleteSubscriptionFlow(subscriptionFlowId: $subscriptionFlowId) {
+    mutation DeleteSubscriptionFlow($id: String!) {
+  deleteSubscriptionFlow(id: $id) {
     ...SubscriptionFlow
   }
 }
@@ -1697,7 +1648,7 @@ export type DeleteSubscriptionFlowMutationFn = Apollo.MutationFunction<DeleteSub
  * @example
  * const [deleteSubscriptionFlowMutation, { data, loading, error }] = useDeleteSubscriptionFlowMutation({
  *   variables: {
- *      subscriptionFlowId: // value for 'subscriptionFlowId'
+ *      id: // value for 'id'
  *   },
  * });
  */
@@ -1709,8 +1660,13 @@ export type DeleteSubscriptionFlowMutationHookResult = ReturnType<typeof useDele
 export type DeleteSubscriptionFlowMutationResult = Apollo.MutationResult<DeleteSubscriptionFlowMutation>;
 export type DeleteSubscriptionFlowMutationOptions = Apollo.BaseMutationOptions<DeleteSubscriptionFlowMutation, DeleteSubscriptionFlowMutationVariables>;
 export const CreateSubscriptionIntervalDocument = gql`
-    mutation CreateSubscriptionInterval($subscriptionInterval: SubscriptionIntervalCreateInput!) {
-  createSubscriptionInterval(subscriptionInterval: $subscriptionInterval) {
+    mutation CreateSubscriptionInterval($subscriptionFlowId: String!, $daysAwayFromEnding: Int, $mailTemplateId: String, $event: SubscriptionEvent!) {
+  createSubscriptionInterval(
+    subscriptionFlowId: $subscriptionFlowId
+    daysAwayFromEnding: $daysAwayFromEnding
+    mailTemplateId: $mailTemplateId
+    event: $event
+  ) {
     ...SubscriptionFlow
   }
 }
@@ -1730,7 +1686,10 @@ export type CreateSubscriptionIntervalMutationFn = Apollo.MutationFunction<Creat
  * @example
  * const [createSubscriptionIntervalMutation, { data, loading, error }] = useCreateSubscriptionIntervalMutation({
  *   variables: {
- *      subscriptionInterval: // value for 'subscriptionInterval'
+ *      subscriptionFlowId: // value for 'subscriptionFlowId'
+ *      daysAwayFromEnding: // value for 'daysAwayFromEnding'
+ *      mailTemplateId: // value for 'mailTemplateId'
+ *      event: // value for 'event'
  *   },
  * });
  */
@@ -1741,42 +1700,13 @@ export function useCreateSubscriptionIntervalMutation(baseOptions?: Apollo.Mutat
 export type CreateSubscriptionIntervalMutationHookResult = ReturnType<typeof useCreateSubscriptionIntervalMutation>;
 export type CreateSubscriptionIntervalMutationResult = Apollo.MutationResult<CreateSubscriptionIntervalMutation>;
 export type CreateSubscriptionIntervalMutationOptions = Apollo.BaseMutationOptions<CreateSubscriptionIntervalMutation, CreateSubscriptionIntervalMutationVariables>;
-export const UpdateSubscriptionIntervalsDocument = gql`
-    mutation UpdateSubscriptionIntervals($subscriptionIntervals: [SubscriptionIntervalUpdateInput!]!) {
-  updateSubscriptionIntervals(subscriptionIntervals: $subscriptionIntervals) {
-    ...SubscriptionFlow
-  }
-}
-    ${SubscriptionFlowFragmentDoc}`;
-export type UpdateSubscriptionIntervalsMutationFn = Apollo.MutationFunction<UpdateSubscriptionIntervalsMutation, UpdateSubscriptionIntervalsMutationVariables>;
-
-/**
- * __useUpdateSubscriptionIntervalsMutation__
- *
- * To run a mutation, you first call `useUpdateSubscriptionIntervalsMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateSubscriptionIntervalsMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [updateSubscriptionIntervalsMutation, { data, loading, error }] = useUpdateSubscriptionIntervalsMutation({
- *   variables: {
- *      subscriptionIntervals: // value for 'subscriptionIntervals'
- *   },
- * });
- */
-export function useUpdateSubscriptionIntervalsMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSubscriptionIntervalsMutation, UpdateSubscriptionIntervalsMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateSubscriptionIntervalsMutation, UpdateSubscriptionIntervalsMutationVariables>(UpdateSubscriptionIntervalsDocument, options);
-      }
-export type UpdateSubscriptionIntervalsMutationHookResult = ReturnType<typeof useUpdateSubscriptionIntervalsMutation>;
-export type UpdateSubscriptionIntervalsMutationResult = Apollo.MutationResult<UpdateSubscriptionIntervalsMutation>;
-export type UpdateSubscriptionIntervalsMutationOptions = Apollo.BaseMutationOptions<UpdateSubscriptionIntervalsMutation, UpdateSubscriptionIntervalsMutationVariables>;
 export const UpdateSubscriptionIntervalDocument = gql`
-    mutation UpdateSubscriptionInterval($subscriptionInterval: SubscriptionIntervalUpdateInput!) {
-  updateSubscriptionInterval(subscriptionInterval: $subscriptionInterval) {
+    mutation UpdateSubscriptionInterval($id: String!, $daysAwayFromEnding: Int, $mailTemplateId: String) {
+  updateSubscriptionInterval(
+    id: $id
+    daysAwayFromEnding: $daysAwayFromEnding
+    mailTemplateId: $mailTemplateId
+  ) {
     ...SubscriptionFlow
   }
 }
@@ -1796,7 +1726,9 @@ export type UpdateSubscriptionIntervalMutationFn = Apollo.MutationFunction<Updat
  * @example
  * const [updateSubscriptionIntervalMutation, { data, loading, error }] = useUpdateSubscriptionIntervalMutation({
  *   variables: {
- *      subscriptionInterval: // value for 'subscriptionInterval'
+ *      id: // value for 'id'
+ *      daysAwayFromEnding: // value for 'daysAwayFromEnding'
+ *      mailTemplateId: // value for 'mailTemplateId'
  *   },
  * });
  */
@@ -1808,8 +1740,8 @@ export type UpdateSubscriptionIntervalMutationHookResult = ReturnType<typeof use
 export type UpdateSubscriptionIntervalMutationResult = Apollo.MutationResult<UpdateSubscriptionIntervalMutation>;
 export type UpdateSubscriptionIntervalMutationOptions = Apollo.BaseMutationOptions<UpdateSubscriptionIntervalMutation, UpdateSubscriptionIntervalMutationVariables>;
 export const DeleteSubscriptionIntervalDocument = gql`
-    mutation DeleteSubscriptionInterval($subscriptionInterval: SubscriptionIntervalDeleteInput!) {
-  deleteSubscriptionInterval(subscriptionInterval: $subscriptionInterval) {
+    mutation DeleteSubscriptionInterval($id: String!) {
+  deleteSubscriptionInterval(id: $id) {
     ...SubscriptionFlow
   }
 }
@@ -1829,7 +1761,7 @@ export type DeleteSubscriptionIntervalMutationFn = Apollo.MutationFunction<Delet
  * @example
  * const [deleteSubscriptionIntervalMutation, { data, loading, error }] = useDeleteSubscriptionIntervalMutation({
  *   variables: {
- *      subscriptionInterval: // value for 'subscriptionInterval'
+ *      id: // value for 'id'
  *   },
  * });
  */
@@ -1874,43 +1806,43 @@ export function useListPaymentMethodsLazyQuery(baseOptions?: Apollo.LazyQueryHoo
 export type ListPaymentMethodsQueryHookResult = ReturnType<typeof useListPaymentMethodsQuery>;
 export type ListPaymentMethodsLazyQueryHookResult = ReturnType<typeof useListPaymentMethodsLazyQuery>;
 export type ListPaymentMethodsQueryResult = Apollo.QueryResult<ListPaymentMethodsQuery, ListPaymentMethodsQueryVariables>;
-export const GetSystemMailsDocument = gql`
-    query GetSystemMails {
-  getSystemMails {
+export const SystemMailsDocument = gql`
+    query SystemMails {
+  systemMails {
     ...SystemMail
   }
 }
     ${SystemMailFragmentDoc}`;
 
 /**
- * __useGetSystemMailsQuery__
+ * __useSystemMailsQuery__
  *
- * To run a query within a React component, call `useGetSystemMailsQuery` and pass it any options that fit your needs.
- * When your component renders, `useGetSystemMailsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useSystemMailsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSystemMailsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useGetSystemMailsQuery({
+ * const { data, loading, error } = useSystemMailsQuery({
  *   variables: {
  *   },
  * });
  */
-export function useGetSystemMailsQuery(baseOptions?: Apollo.QueryHookOptions<GetSystemMailsQuery, GetSystemMailsQueryVariables>) {
+export function useSystemMailsQuery(baseOptions?: Apollo.QueryHookOptions<SystemMailsQuery, SystemMailsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<GetSystemMailsQuery, GetSystemMailsQueryVariables>(GetSystemMailsDocument, options);
+        return Apollo.useQuery<SystemMailsQuery, SystemMailsQueryVariables>(SystemMailsDocument, options);
       }
-export function useGetSystemMailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetSystemMailsQuery, GetSystemMailsQueryVariables>) {
+export function useSystemMailsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SystemMailsQuery, SystemMailsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<GetSystemMailsQuery, GetSystemMailsQueryVariables>(GetSystemMailsDocument, options);
+          return Apollo.useLazyQuery<SystemMailsQuery, SystemMailsQueryVariables>(SystemMailsDocument, options);
         }
-export type GetSystemMailsQueryHookResult = ReturnType<typeof useGetSystemMailsQuery>;
-export type GetSystemMailsLazyQueryHookResult = ReturnType<typeof useGetSystemMailsLazyQuery>;
-export type GetSystemMailsQueryResult = Apollo.QueryResult<GetSystemMailsQuery, GetSystemMailsQueryVariables>;
+export type SystemMailsQueryHookResult = ReturnType<typeof useSystemMailsQuery>;
+export type SystemMailsLazyQueryHookResult = ReturnType<typeof useSystemMailsLazyQuery>;
+export type SystemMailsQueryResult = Apollo.QueryResult<SystemMailsQuery, SystemMailsQueryVariables>;
 export const UpdateSystemMailDocument = gql`
-    mutation UpdateSystemMail($systemMail: SystemMailUpdateInput!) {
-  updateSystemMail(systemMail: $systemMail) {
+    mutation UpdateSystemMail($event: UserEvent!, $mailTemplateId: String!) {
+  updateSystemMail(event: $event, mailTemplateId: $mailTemplateId) {
     ...SystemMail
   }
 }
@@ -1930,7 +1862,8 @@ export type UpdateSystemMailMutationFn = Apollo.MutationFunction<UpdateSystemMai
  * @example
  * const [updateSystemMailMutation, { data, loading, error }] = useUpdateSystemMailMutation({
  *   variables: {
- *      systemMail: // value for 'systemMail'
+ *      event: // value for 'event'
+ *      mailTemplateId: // value for 'mailTemplateId'
  *   },
  * });
  */
@@ -1942,12 +1875,10 @@ export type UpdateSystemMailMutationHookResult = ReturnType<typeof useUpdateSyst
 export type UpdateSystemMailMutationResult = Apollo.MutationResult<UpdateSystemMailMutation>;
 export type UpdateSystemMailMutationOptions = Apollo.BaseMutationOptions<UpdateSystemMailMutation, UpdateSystemMailMutationVariables>;
 export const TestSystemMailDocument = gql`
-    mutation TestSystemMail($systemMail: SystemMailTestInput!) {
-  testSystemMail(systemMail: $systemMail) {
-    ...SystemMail
-  }
+    mutation TestSystemMail($event: UserEvent!) {
+  testSystemMail(event: $event)
 }
-    ${SystemMailFragmentDoc}`;
+    `;
 export type TestSystemMailMutationFn = Apollo.MutationFunction<TestSystemMailMutation, TestSystemMailMutationVariables>;
 
 /**
@@ -1963,7 +1894,7 @@ export type TestSystemMailMutationFn = Apollo.MutationFunction<TestSystemMailMut
  * @example
  * const [testSystemMailMutation, { data, loading, error }] = useTestSystemMailMutation({
  *   variables: {
- *      systemMail: // value for 'systemMail'
+ *      event: // value for 'event'
  *   },
  * });
  */

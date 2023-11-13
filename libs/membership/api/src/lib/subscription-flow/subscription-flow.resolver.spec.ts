@@ -1,26 +1,24 @@
-import {CanActivate, ExecutionContext, INestApplication, Injectable, Module} from '@nestjs/common'
-import {GraphQLModule} from '@nestjs/graphql'
 import {ApolloDriver, ApolloDriverConfig} from '@nestjs/apollo'
-import {PrismaModule} from '@wepublish/nest-modules'
-import {Test, TestingModule} from '@nestjs/testing'
-import request from 'supertest'
-import {SubscriptionFlowResolver} from './subscription-flow.resolver'
-import {SubscriptionFlowController} from './subscription-flow.controller'
-import {PrismaService} from '@wepublish/nest-modules'
-import {PeriodicJobController} from '../periodic-job/periodic-job.controller'
-import {SubscriptionController} from '../subscription/subscription.controller'
+import {CanActivate, ExecutionContext, INestApplication, Injectable, Module} from '@nestjs/common'
 import {APP_GUARD} from '@nestjs/core'
-import {SubscriptionFlowHelper} from './subscription-flow.helper'
+import {GraphQLModule} from '@nestjs/graphql'
+import {Test, TestingModule} from '@nestjs/testing'
 import {PaymentPeriodicity, PrismaClient, SubscriptionEvent} from '@prisma/client'
-import {
-  initialize,
-  defineMemberPlanFactory,
-  defineSubscriptionFlowFactory,
-  definePaymentMethodFactory
-} from '../../__generated__/fabbrica'
+import {PrismaModule, PrismaService} from '@wepublish/nest-modules'
 import {PermissionsGuard} from '@wepublish/permissions/api'
+import request from 'supertest'
+import {
+  defineMemberPlanFactory,
+  definePaymentMethodFactory,
+  defineSubscriptionFlowFactory,
+  initialize
+} from '../../__generated__/fabbrica'
 import {clearDatabase} from '../../prisma-utils'
+import {PeriodicJobService} from '../periodic-job/periodic-job.service'
+import {SubscriptionService} from '../subscription/subscription.service'
 import {registerMailsModule, registerPaymentsModule} from '../testing/module-registrars'
+import {SubscriptionFlowResolver} from './subscription-flow.resolver'
+import {SubscriptionFlowService} from './subscription-flow.service'
 
 @Injectable()
 export class TestPermissionsGuard implements CanActivate {
@@ -69,13 +67,7 @@ const createSubscriptionIntervalMutation = `
     }
   }
 `
-const updateSubscriptionIntervals = `
-  mutation UpdateSubscriptionIntervals($subscriptionIntervals: [SubscriptionIntervalUpdateInput!]!) {
-    updateSubscriptionIntervals(subscriptionIntervals: $subscriptionIntervals) {
-      id
-    }
-  }
-`
+
 const updateSubscriptionInterval = `
   mutation UpdateSubscriptionInterval($subscriptionInterval: SubscriptionIntervalUpdateInput!) {
     updateSubscriptionInterval(subscriptionInterval: $subscriptionInterval) {
@@ -108,10 +100,9 @@ const paymentMethodsQuery = `
   providers: [
     SubscriptionFlowResolver,
     PrismaService,
-    SubscriptionFlowController,
-    PeriodicJobController,
-    SubscriptionController,
-    SubscriptionFlowHelper,
+    SubscriptionFlowService,
+    PeriodicJobService,
+    SubscriptionService,
     {
       provide: APP_GUARD,
       useClass: PermissionsGuard
@@ -134,10 +125,9 @@ export class AppUnauthenticatedModule {}
   providers: [
     SubscriptionFlowResolver,
     PrismaService,
-    SubscriptionFlowController,
-    PeriodicJobController,
-    SubscriptionController,
-    SubscriptionFlowHelper,
+    SubscriptionFlowService,
+    PeriodicJobService,
+    SubscriptionService,
     {
       provide: APP_GUARD,
       useClass: TestPermissionsGuard
@@ -267,30 +257,6 @@ describe('Subscription Flow Resolver', () => {
         })
     })
 
-    it('updateSubscriptionIntervals is not public', () => {
-      return request(app.getHttpServer())
-        .post('')
-        .send({
-          query: updateSubscriptionIntervals,
-          variables: {
-            subscriptionIntervals: [
-              {
-                id: '92269df0-e7ce-410e-b3c4-3fefd92a4430',
-                daysAwayFromEnding: 1,
-                mailTemplateId: '43eb16bb-d5c7-4c0c-a13f-f5c192a361f3'
-              }
-            ]
-          }
-        })
-        .expect(200)
-        .expect(({body}) => {
-          expect(
-            !!body.errors.find((error: any) => error.message === 'Forbidden resource')
-          ).toEqual(true)
-          expect(body.data).toBeNull()
-        })
-    })
-
     it('updateSubscriptionInterval is not public', () => {
       return request(app.getHttpServer())
         .post('')
@@ -371,10 +337,9 @@ describe('Subscription Flow Resolver', () => {
           registerPaymentsModule()
         ],
         providers: [
-          PeriodicJobController,
-          SubscriptionController,
-          SubscriptionFlowController,
-          SubscriptionFlowHelper,
+          PeriodicJobService,
+          SubscriptionService,
+          SubscriptionFlowService,
           SubscriptionFlowResolver
         ]
       }).compile()
@@ -403,7 +368,6 @@ describe('Subscription Flow Resolver', () => {
 
       const response = await resolver.subscriptionFlows(false, plan.id)
       expect(response.length).toEqual(1)
-      expect(response[0].numberOfSubscriptions).toEqual(0)
     })
 
     it('returns subscription flows for all queries and mutations', async () => {

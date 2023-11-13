@@ -1,5 +1,5 @@
 import {Field, ObjectType, registerEnumType} from '@nestjs/graphql'
-import {MailTemplateStatus} from '@wepublish/mails'
+import {MailTemplateStatus} from '@wepublish/mail/api'
 
 registerEnumType(MailTemplateStatus, {
   name: 'MailTemplateStatus'

@@ -1,7 +1,7 @@
 import {Context} from '../../context'
 import {PaymentPeriodicity, Prisma, PrismaClient, Subscription} from '@prisma/client'
 import {MonthlyAmountNotEnough, NotFound, PaymentConfigurationNotAllowed} from '../../error'
-import {PaymentProvider} from '@wepublish/payments'
+import {PaymentProvider} from '@wepublish/payment/api'
 import {handleRemoteManagedSubscription} from './subscription.private-mutation'
 
 export const updatePublicSubscription = async (

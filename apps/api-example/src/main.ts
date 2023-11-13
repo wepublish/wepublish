@@ -3,8 +3,8 @@ import {Logger} from '@nestjs/common'
 import {NestFactory} from '@nestjs/core'
 import {AppModule} from './nestapp/app.module'
 import {MediaAdapterService} from '@wepublish/image/api'
-import {PaymentsService} from '@wepublish/payments'
-import {MailContext} from '@wepublish/mails'
+import {PaymentsService} from '@wepublish/payment/api'
+import {MailContext} from '@wepublish/mail/api'
 
 async function bootstrap() {
   const nestApp = await NestFactory.create(AppModule)

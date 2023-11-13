@@ -4,7 +4,7 @@ import {
   MutationCreateEventArgs,
   useCreateEventMutation
 } from '@wepublish/editor/api'
-import {SingleViewTitle} from '@wepublish/ui'
+import {SingleViewTitle} from '@wepublish/ui/editor'
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useNavigate} from 'react-router-dom'

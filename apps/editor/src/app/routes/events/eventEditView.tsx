@@ -7,7 +7,7 @@ import {
   useEventQuery,
   useUpdateEventMutation
 } from '@wepublish/editor/api'
-import {SingleViewTitle} from '@wepublish/ui'
+import {SingleViewTitle} from '@wepublish/ui/editor'
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useNavigate, useParams} from 'react-router-dom'

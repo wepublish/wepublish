@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {Test, TestingModule} from '@nestjs/testing'
 import {MailTemplate} from '@prisma/client'
-import {MailContext, MailProvider, MailProviderTemplate} from '@wepublish/mails'
+import {MailContext, MailProvider, MailProviderTemplate} from '@wepublish/mail/api'
 import {MailTemplateSyncService} from './mail-template-sync.service'
 import {PrismaService} from '@wepublish/nest-modules'
 

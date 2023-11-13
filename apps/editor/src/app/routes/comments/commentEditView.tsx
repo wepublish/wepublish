@@ -9,14 +9,14 @@ import {
   useRatingSystemQuery,
   useUpdateCommentMutation
 } from '@wepublish/editor/api'
-import {SingleViewTitle} from '@wepublish/ui'
 import {
   CommentDeleteBtn,
   CommentHistory,
   CommentStateDropdown,
   CommentUser,
   createCheckedPermissionComponent,
-  SelectTags
+  SelectTags,
+  SingleViewTitle
 } from '@wepublish/ui/editor'
 import {memo, useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'

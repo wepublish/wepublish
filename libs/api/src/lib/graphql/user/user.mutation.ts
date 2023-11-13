@@ -3,7 +3,7 @@ import {hashPassword} from '../../db/user'
 import {unselectPassword} from '@wepublish/user/api'
 import {Context} from '../../context'
 import {Validator} from '../../validator'
-import {mailLogType} from '@wepublish/mails'
+import {mailLogType} from '@wepublish/mail/api'
 
 export type CreateUserInput = Prisma.UserUncheckedCreateInput &
   Partial<{
@@ -42,6 +42,7 @@ export const createUser = async (
     UserEvent.ACCOUNT_CREATION,
     false
   )
+
   await mailContext.sendMail({
     externalMailTemplateId,
     recipient,

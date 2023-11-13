@@ -1,14 +1,11 @@
-import {Injectable} from '@nestjs/common'
+import {Injectable, NotFoundException} from '@nestjs/common'
 import {PrismaClient} from '@prisma/client'
-import {Consent, ConsentInput, ConsentFilter} from './consent.model'
+import {Consent, ConsentFilter, CreateConsentInput, UpdateConsentInput} from './consent.model'
 
 @Injectable()
 export class ConsentService {
   constructor(private prisma: PrismaClient) {}
 
-  /*
-  Queries
- */
   async consentList(filter?: ConsentFilter): Promise<Consent[]> {
     const data = await this.prisma.consent.findMany({
       where: {
@@ -18,6 +15,7 @@ export class ConsentService {
         createdAt: 'desc'
       }
     })
+
     return data
   }
 
@@ -29,27 +27,24 @@ export class ConsentService {
     })
 
     if (!data) {
-      throw Error(`Consent with id ${id} not found`)
+      throw new NotFoundException(`Consent with id ${id} not found`)
     }
 
     return data
   }
 
-  /*
-  Mutations
- */
-  async createConsent(consent: ConsentInput): Promise<Consent> {
-    const created = await this.prisma.consent.create({data: consent})
-    return created
+  async createConsent(consent: CreateConsentInput): Promise<Consent> {
+    return await this.prisma.consent.create({data: consent})
   }
 
-  async updateConsent({id, consent}: {id: string; consent: ConsentInput}): Promise<Consent> {
+  async updateConsent({id, ...consent}: UpdateConsentInput): Promise<Consent> {
     const updated = await this.prisma.consent.update({
       where: {id},
       data: {
         ...consent
       }
     })
+
     return updated
   }
 

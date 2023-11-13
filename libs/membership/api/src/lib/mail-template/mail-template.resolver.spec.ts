@@ -1,6 +1,6 @@
 import {Test, TestingModule} from '@nestjs/testing'
 import {MailTemplate} from '@prisma/client'
-import {MailContext, MailProvider, MailTemplateStatus} from '@wepublish/mails'
+import {MailContext, MailProvider, MailTemplateStatus} from '@wepublish/mail/api'
 import {PrismaService} from '@wepublish/nest-modules'
 import {MailTemplateSyncService} from './mail-template-sync.service'
 import {MailTemplatesResolver} from './mail-template.resolver'

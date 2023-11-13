@@ -13,9 +13,9 @@ import {
   MailgunMailProvider,
   mailLogType,
   MailchimpMailProvider
-} from '@wepublish/mails'
+} from '@wepublish/mail/api'
 import {PrismaModule, PrismaService} from '@wepublish/nest-modules'
-import {SubscriptionFlowController} from '../subscription-flow/subscription-flow.controller'
+import {SubscriptionFlowController} from '../subscription-flow/subscription-flow.service'
 import {clearDatabase, clearFullDatabase} from '../../prisma-utils'
 import {matches} from 'lodash'
 import bodyParser from 'body-parser'

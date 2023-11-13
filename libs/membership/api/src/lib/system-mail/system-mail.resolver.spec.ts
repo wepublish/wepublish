@@ -2,7 +2,7 @@ import {Test, TestingModule} from '@nestjs/testing'
 import {User, UserEvent, UserFlowMail} from '@prisma/client'
 import {PrismaService} from '@wepublish/nest-modules'
 import {SystemMailResolver} from './system-mail.resolver'
-import {MailContext} from '@wepublish/mails'
+import {MailContext} from '@wepublish/mail/api'
 
 const mockTemplate1: UserFlowMail = {
   id: 'c29a088f-40f0-4578-a6c4-810249902495',
@@ -74,7 +74,7 @@ describe('SystemMailResolver', () => {
   })
 
   it('returns all templates for get action', async () => {
-    const result = await resolver.getSystemMails()
+    const result = await resolver.systemMails()
     expect(result.length).toEqual(2)
     expect(result[0].event).toEqual(UserEvent.ACCOUNT_CREATION)
     expect(result[1].event).toEqual(UserEvent.LOGIN_LINK)
@@ -85,17 +85,14 @@ describe('SystemMailResolver', () => {
       event: UserEvent.ACCOUNT_CREATION,
       mailTemplateId: '0c517621-4707-49e2-8994-1eeb4cc13b01'
     })
+
     expect(result.length).toEqual(2)
     expect(result[0].event).toEqual(UserEvent.ACCOUNT_CREATION)
     expect(result[1].event).toEqual(UserEvent.LOGIN_LINK)
   })
 
-  it('returns all templates for test action', async () => {
-    const result = await resolver.testSystemMail(FAKE_USER, {
-      event: UserEvent.ACCOUNT_CREATION
-    })
-    expect(result.length).toEqual(2)
-    expect(result[0].event).toEqual(UserEvent.ACCOUNT_CREATION)
-    expect(result[1].event).toEqual(UserEvent.LOGIN_LINK)
+  it('should test the system mail', async () => {
+    const result = await resolver.testSystemMail(FAKE_USER, UserEvent.ACCOUNT_CREATION)
+    expect(result).toBeTruthy()
   })
 })

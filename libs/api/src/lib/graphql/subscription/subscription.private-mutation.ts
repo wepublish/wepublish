@@ -15,7 +15,7 @@ import {
 import {unselectPassword} from '@wepublish/user/api'
 import {NotFound, UserSubscriptionAlreadyDeactivated} from '../../error'
 import {MemberContext} from '../../memberContext'
-import {PaymentProvider} from '@wepublish/payments'
+import {PaymentProvider} from '@wepublish/payment/api'
 
 export const deleteSubscriptionById = (
   id: string,

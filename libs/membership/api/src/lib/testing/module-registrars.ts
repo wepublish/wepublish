@@ -1,7 +1,7 @@
 import {PrismaClient} from '@prisma/client'
 import {DynamicModule} from '@nestjs/common'
 import {PrismaModule, PrismaService} from '@wepublish/nest-modules'
-import {FakeMailProvider, MailsModule} from '@wepublish/mails'
+import {FakeMailProvider, MailsModule} from '@wepublish/mail/api'
 import {
   PaymentProvider,
   PaymentsModule,
@@ -9,7 +9,7 @@ import {
   PayrexxSubscriptionPaymentProvider,
   StripeCheckoutPaymentProvider,
   StripePaymentProvider
-} from '@wepublish/payments'
+} from '@wepublish/payment/api'
 import bodyParser from 'body-parser'
 import {ConfigModule, ConfigService} from '@nestjs/config'
 

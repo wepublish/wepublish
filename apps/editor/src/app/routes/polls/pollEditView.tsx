@@ -7,12 +7,12 @@ import {
   usePollQuery,
   useUpdatePollMutation
 } from '@wepublish/editor/api'
-import {SingleViewTitle} from '@wepublish/ui'
 import {
   createCheckedPermissionComponent,
   PollAnswers,
   PollExternalVotes,
-  RichTextBlock
+  RichTextBlock,
+  SingleViewTitle
 } from '@wepublish/ui/editor'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'

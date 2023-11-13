@@ -1,5 +1,7 @@
 import {
   Author,
+  Comment,
+  CommentRatingSystemAnswer,
   Event,
   Image,
   MailLog,
@@ -9,17 +11,21 @@ import {
   Peer,
   PrismaClient,
   User,
-  UserRole,
-  Comment,
-  CommentRatingSystemAnswer
+  UserRole
 } from '@prisma/client'
 import {
-  AuthenticationService,
   AuthSession,
   AuthSessionType,
+  AuthenticationService,
   TokenSession,
   UserSession
 } from '@wepublish/authentication/api'
+import {MediaAdapter} from '@wepublish/image/api'
+import {BaseMailProvider, MailContext, MailContextOptions} from '@wepublish/mail/api'
+import {InvoiceWithItems, PaymentProvider} from '@wepublish/payment/api'
+import {SettingName} from '@wepublish/settings/api'
+import {logger} from '@wepublish/utils/api'
+import {GenerateJWTProps, generateJWT} from '@wepublish/utils/api'
 import AbortController from 'abort-controller'
 import {AuthenticationError} from 'apollo-server-express'
 import crypto from 'crypto'
@@ -32,7 +38,7 @@ import {
   makeRemoteExecutableSchema
 } from 'graphql-tools'
 import {IncomingMessage} from 'http'
-import jwt, {SignOptions} from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 import NodeCache from 'node-cache'
 import fetch from 'node-fetch'
 import {Client, Issuer} from 'openid-client'
@@ -40,26 +46,20 @@ import url from 'url'
 import {ChallengeProvider} from './challenges/challengeProvider'
 import {
   ArticleWithRevisions,
-  articleWithRevisionsToPublicArticle,
-  PublicArticle
+  PublicArticle,
+  articleWithRevisionsToPublicArticle
 } from './db/article'
 import {DefaultBcryptHashCostFactor, DefaultSessionTTL} from './db/common'
-import {InvoiceWithItems} from '@wepublish/payments'
 import {MemberPlanWithPaymentMethods} from './db/memberPlan'
 import {NavigationWithLinks} from './db/navigation'
-import {PageWithRevisions, pageWithRevisionsToPublicPage, PublicPage} from './db/page'
+import {PageWithRevisions, PublicPage, pageWithRevisionsToPublicPage} from './db/page'
+import {SubscriptionWithRelations} from './db/subscription'
 import {TokenExpiredError} from './error'
 import {getEvent} from './graphql/event/event.query'
 import {FullPoll, getPoll} from './graphql/poll/poll.public-queries'
 import {Hooks} from './hooks'
-import {BaseMailProvider, MailContext, MailContextOptions} from '@wepublish/mails'
-import {MediaAdapter} from '@wepublish/image/api'
 import {MemberContext} from './memberContext'
-import {PaymentProvider} from '@wepublish/payments'
-import {logger} from '@wepublish/utils'
 import {URLAdapter} from './urlAdapter'
-import {SettingName} from '@wepublish/settings/api'
-import {SubscriptionWithRelations} from './db/subscription'
 
 /**
  * Peered article cache configuration and setup
@@ -156,7 +156,7 @@ export interface Context {
 
   optionalAuthenticateUser(): UserSession | null
 
-  generateJWT(props: GenerateJWTProps): string
+  generateJWT(props: Pick<GenerateJWTProps, 'id' | 'audience' | 'expiresInMinutes'>): string
 
   verifyJWT(token: string): string
 
@@ -219,12 +219,6 @@ export interface CreatePaymentWithProvider {
   saveCustomer: boolean
   successURL?: string
   failureURL?: string
-}
-
-export interface GenerateJWTProps {
-  id: string
-  audience?: string
-  expiresInMinutes?: number
 }
 
 const createOptionalsArray = <Data, Attribute extends keyof Data, Key extends Data[Attribute]>(
@@ -883,15 +877,16 @@ export async function contextFromRequest(
     defaultReplyToAddress: mailContextOptions.defaultReplyToAddress
   })
 
-  const generateJWT = (props: GenerateJWTProps): string => {
+  const generateJWTWrapper: Context['generateJWT'] = ({expiresInMinutes, audience, id}): string => {
     if (!process.env.JWT_SECRET_KEY) throw new Error('No JWT_SECRET_KEY defined in environment.')
-    const jwtOptions: SignOptions = {
+
+    return generateJWT({
+      id,
+      secret: process.env.JWT_SECRET_KEY,
       issuer: hostURL,
-      audience: props.audience ?? websiteURL,
-      algorithm: 'HS256',
-      expiresIn: `${props.expiresInMinutes || 15}m`
-    }
-    return jwt.sign({sub: props.id}, process.env.JWT_SECRET_KEY, jwtOptions)
+      audience: audience ?? websiteURL,
+      expiresInMinutes
+    })
   }
 
   const verifyJWT = (token: string): string => {
@@ -906,7 +901,7 @@ export async function contextFromRequest(
     paymentProviders,
     mailContext,
     getLoginUrlForUser(user: User): string {
-      const jwt = generateJWT({
+      const jwt = generateJWTWrapper({
         id: user.id,
         expiresInMinutes: 10080 // One week in minutes
       })
@@ -988,7 +983,7 @@ export async function contextFromRequest(
       return session
     },
 
-    generateJWT,
+    generateJWT: generateJWTWrapper,
 
     verifyJWT,
 

@@ -1,6 +1,7 @@
 import {ApolloError} from '@apollo/client'
 import {stripTypename} from '@wepublish/editor/api'
 import {
+  FullUserConsentFragment,
   MutationUpdateUserConsentArgs,
   useUpdateUserConsentMutation,
   useUserConsentQuery
@@ -10,11 +11,13 @@ import {useTranslation} from 'react-i18next'
 import {useNavigate, useParams} from 'react-router-dom'
 import {Form, Message, Schema, toaster} from 'rsuite'
 
-import {UserConsentForm} from './user-consent-form'
+import {SingleViewTitle} from '@wepublish/ui/editor'
 import {getApiClientV2} from '../apiClientv2'
-import {SingleViewTitle} from '@wepublish/ui'
+import {UserConsentForm} from './user-consent-form'
 
-const mapApiDataToInput = (userConsent: any): MutationUpdateUserConsentArgs['userConsent'] => ({
+const mapApiDataToInput = (
+  userConsent: FullUserConsentFragment
+): MutationUpdateUserConsentArgs => ({
   ...stripTypename(userConsent),
   value: userConsent.value
 })
@@ -46,7 +49,7 @@ export const UserConsentEditView = () => {
   const closePath = '/userConsents'
   const [userConsent, setUserConsent] = useState({
     value: false
-  } as MutationUpdateUserConsentArgs['userConsent'])
+  } as MutationUpdateUserConsentArgs)
 
   const [shouldClose, setShouldClose] = useState<boolean>(false)
 
@@ -85,9 +88,7 @@ export const UserConsentEditView = () => {
     updateUserConsent({
       variables: {
         id: userConsentId,
-        userConsent: {
-          value: userConsent.value
-        }
+        value: userConsent.value
       }
     })
   }
