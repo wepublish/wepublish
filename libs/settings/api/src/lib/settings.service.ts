@@ -34,7 +34,6 @@ export class SettingsService {
   }
 
   async updateSetting(input: UpdateSettingInput) {
-    // for (const {name, value: newVal} of input) {
     const {name, value} = input
     const fullSetting = await this.prisma.setting.findUnique({
       where: {name}
@@ -47,10 +46,7 @@ export class SettingsService {
     const currentVal = fullSetting.value
     const restriction = fullSetting.settingRestriction
     checkSettingRestrictions(value, currentVal, restriction as SettingRestriction)
-    // }
 
-    // return this.prisma.$transaction(
-    //   input.map(({name, value}) =>
     return this.prisma.setting.update({
       where: {
         name
@@ -59,7 +55,5 @@ export class SettingsService {
         value: value as unknown as Prisma.InputJsonValue
       }
     })
-    //   )
-    // )
   }
 }

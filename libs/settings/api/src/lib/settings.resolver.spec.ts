@@ -128,22 +128,6 @@ jest.mock('@prisma/client', () => {
       }
     }
   })
-  const mockTransaction = jest.fn().mockResolvedValue([
-    {
-      id: '123',
-      name: 'allowCommentEditing',
-      value: true,
-      settingRestriction: {
-        maxValue: 100,
-        minValue: 10,
-        inputLength: 10,
-        allowedValues: {
-          stringChoice: 'some-string',
-          boolChoice: true
-        }
-      }
-    }
-  ])
   return {
     PrismaClient: jest.fn().mockImplementation(() => {
       return {
@@ -151,8 +135,7 @@ jest.mock('@prisma/client', () => {
           findMany: mockSettingFindMany,
           findUnique: mockSettingFindUnique,
           update: mockSettingUpdate
-        },
-        $transaction: mockTransaction
+        }
       }
     })
   }
