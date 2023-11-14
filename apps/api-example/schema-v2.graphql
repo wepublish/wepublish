@@ -78,6 +78,9 @@ enum EventStatus {
   Scheduled
 }
 
+"""Setting Value"""
+scalar GraphQLSettingValueType
+
 input ImportedEventFilter {
   from: String
   location: String
@@ -118,8 +121,8 @@ type Mutation {
   "\n      Updates an existing consent.\n    "
   updateConsent(consent: ConsentInput!, id: String!): Consent!
 
-  "\n      Updates an existing settings.\n    "
-  updateSettings(value: [UpdateSettingInput!]!): [Setting!]!
+  """Updates an existing setting."""
+  updateSetting(name: SettingName!, value: GraphQLSettingValueType!): Setting!
 
   "\n      Updates an existing userConsent based on input.\n      Returns updated userConsent.\n    "
   updateUserConsent(id: String!, userConsent: UpdateUserConsentInput!): UserConsent!
@@ -196,7 +199,7 @@ type Setting {
   id: ID!
   name: SettingName!
   settingRestriction: SettingRestriction
-  value: Value
+  value: GraphQLSettingValueType
 }
 
 input SettingFilter {
@@ -240,11 +243,6 @@ enum SubscriptionDeactivationReason {
   userSelfDeactivated
 }
 
-input UpdateSettingInput {
-  name: SettingName!
-  value: Value!
-}
-
 input UpdateUserConsentInput {
   value: Boolean!
 }
@@ -285,9 +283,6 @@ input UserConsentInput {
   userId: String!
   value: Boolean!
 }
-
-"""Setting Value"""
-scalar Value
 
 type VersionInformation {
   version: String!

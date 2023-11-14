@@ -6,17 +6,19 @@ import {
   registerEnumType,
   InputType,
   Scalar,
-  CustomScalar
+  CustomScalar,
+  ArgsType
 } from '@nestjs/graphql'
 import {SettingName} from './setting'
 import {ValueNode} from 'graphql'
+import {BadRequestException} from '@nestjs/common'
 
 registerEnumType(SettingName, {
   name: 'SettingName'
 })
 
-@Scalar('Value', type => GraphQLSettingValueType)
-export class GraphQLSettingValueType implements CustomScalar<any, any> {
+@Scalar('GraphQLSettingValueType')
+export class GraphQLSettingValueType implements CustomScalar<string, any> {
   description = 'Setting Value'
 
   serialize(value: any): any {
@@ -42,25 +44,6 @@ export class GraphQLSettingValueType implements CustomScalar<any, any> {
     }
   }
 }
-// @Scalar('Value', type => GraphQLSettingValueType)
-// export class GraphQLSettingValueType implements CustomScalar<string, any> {
-//   description = 'Setting Value'
-
-//   serialize(value: any): string {
-//     return value
-//   }
-
-//   parseValue(value: any): any {
-//     return value
-//   }
-
-//   parseLiteral(ast: ValueNode): any {
-//     if (ast.kind === 'StringValue') {
-//       return ast.value
-//     }
-//     throw new Error(`Value scalar error: cannot handle kind: ${ast.kind}`)
-//   }
-// }
 
 @ObjectType()
 export class AllowedSettingVals {

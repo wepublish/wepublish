@@ -60,9 +60,10 @@ const settingQuery = `
   }
 `
 
-const updateSettingsMutation = `
-  mutation updateSettings($value: [UpdateSettingInput!]!) {
-    updateSettings(value: $value) {
+const updateSettingMutation = `
+  mutation updateSetting($name: SettingName!, $value: GraphQLSettingValueType!) {
+    updateSetting(name: $name, value: $value) {
+      name
       value
     }
   }
@@ -213,19 +214,15 @@ describe('SettingsResolver', () => {
     await request(app.getHttpServer())
       .post('')
       .send({
-        query: updateSettingsMutation,
+        query: updateSettingMutation,
         variables: {
-          value: [
-            {
-              name: 'ALLOW_COMMENT_EDITING',
-              value: newValue
-            }
-          ]
+          name: 'ALLOW_COMMENT_EDITING',
+          value: newValue
         }
       })
       .expect(200)
       .expect(res => {
-        expect(res.body.data.updateSettings[0].value).toBe(newValue)
+        expect(res.body.data.updateSetting.value).toBe(newValue)
       })
   })
 })

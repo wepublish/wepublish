@@ -17,8 +17,9 @@ query SettingsList {
   }
 }
 
-mutation UpdateSettingList($input: [UpdateSettingInput!]!) {
-  updateSettings(value: $input) {
+mutation UpdateSetting($name: SettingName!, $value: GraphQLSettingValueType!) {
+  updateSetting(name: $name, value: $value) {
+    name
     value
   }
 }

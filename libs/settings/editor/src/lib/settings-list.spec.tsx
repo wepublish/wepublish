@@ -5,7 +5,7 @@ import {
   SettingName,
   SettingsListDocument,
   SettingsListQuery,
-  UpdateSettingListDocument
+  UpdateSettingDocument
 } from '@wepublish/editor/api-v2'
 import {AuthContext, actWait, sessionWithPermissions} from '@wepublish/ui/editor'
 import * as v2Client from '@wepublish/editor/api-v2'
@@ -63,7 +63,7 @@ const mocks = [
   },
   {
     request: {
-      query: UpdateSettingListDocument,
+      query: UpdateSettingDocument,
       variables: {
         id: '1'
       }

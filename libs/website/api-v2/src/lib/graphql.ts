@@ -17,9 +17,9 @@ export type Scalars = {
   Float: number;
   /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
   DateTime: string;
-  RichText: Node[];
   /** Setting Value */
-  Value: any;
+  GraphQLSettingValueType: any;
+  RichText: Node[];
 };
 
 export type AllowedSettingVals = {
@@ -161,12 +161,8 @@ export type Mutation = {
    *
    */
   updateConsent: Consent;
-  /**
-   *
-   *       Updates an existing settings.
-   *
-   */
-  updateSettings: Array<Setting>;
+  /** Updates an existing setting. */
+  updateSetting: Setting;
   /**
    *
    *       Updates an existing userConsent based on input.
@@ -208,8 +204,9 @@ export type MutationUpdateConsentArgs = {
 };
 
 
-export type MutationUpdateSettingsArgs = {
-  value: Array<UpdateSettingInput>;
+export type MutationUpdateSettingArgs = {
+  name: SettingName;
+  value: Scalars['GraphQLSettingValueType'];
 };
 
 
@@ -418,7 +415,7 @@ export type Setting = {
   id: Scalars['ID'];
   name: SettingName;
   settingRestriction?: Maybe<SettingRestriction>;
-  value?: Maybe<Scalars['Value']>;
+  value?: Maybe<Scalars['GraphQLSettingValueType']>;
 };
 
 export type SettingFilter = {
@@ -462,11 +459,6 @@ export enum SubscriptionDeactivationReason {
   None = 'none',
   UserSelfDeactivated = 'userSelfDeactivated'
 }
-
-export type UpdateSettingInput = {
-  name: SettingName;
-  value: Scalars['Value'];
-};
 
 export type UpdateUserConsentInput = {
   value: Scalars['Boolean'];

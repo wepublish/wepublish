@@ -7,9 +7,6 @@ import {checkSettingRestrictions} from './settings-utils'
 export class SettingsService {
   constructor(private prisma: PrismaClient) {}
 
-  /*
-  Queries
- */
   async settingsList(filter?: SettingFilter): Promise<Setting[]> {
     const data = await this.prisma.setting.findMany({
       where: {
@@ -36,35 +33,33 @@ export class SettingsService {
     return data
   }
 
-  /*
-  Mutations
- */
-  async updateSettings({value}: {value: UpdateSettingInput[]}): Promise<Setting[]> {
-    for (const {name, value: newVal} of value) {
-      const fullSetting = await this.prisma.setting.findUnique({
-        where: {name}
-      })
+  async updateSetting(input: UpdateSettingInput) {
+    // for (const {name, value: newVal} of input) {
+    const {name, value} = input
+    const fullSetting = await this.prisma.setting.findUnique({
+      where: {name}
+    })
 
-      if (!fullSetting) {
-        throw new NotFoundException('setting', name)
-      }
-
-      const currentVal = fullSetting.value
-      const restriction = fullSetting.settingRestriction
-      checkSettingRestrictions(newVal, currentVal, restriction as SettingRestriction)
+    if (!fullSetting) {
+      throw new NotFoundException('setting', name)
     }
 
-    return this.prisma.$transaction(
-      value.map(({name, value: val}) =>
-        this.prisma.setting.update({
-          where: {
-            name
-          },
-          data: {
-            value: val as Prisma.InputJsonValue
-          }
-        })
-      )
-    )
+    const currentVal = fullSetting.value
+    const restriction = fullSetting.settingRestriction
+    checkSettingRestrictions(value, currentVal, restriction as SettingRestriction)
+    // }
+
+    // return this.prisma.$transaction(
+    //   input.map(({name, value}) =>
+    return this.prisma.setting.update({
+      where: {
+        name
+      },
+      data: {
+        value: value as unknown as Prisma.InputJsonValue
+      }
+    })
+    //   )
+    // )
   }
 }

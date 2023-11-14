@@ -3,7 +3,7 @@ import {
   Setting,
   SettingName,
   useSettingsListQuery,
-  useUpdateSettingListMutation
+  useUpdateSettingMutation
 } from '@wepublish/editor/api-v2'
 import {
   createCheckedPermissionComponent,
@@ -192,7 +192,7 @@ function SettingList() {
     settingListData?.settingsList.forEach(setSetting)
   }, [settingListData])
 
-  const [updateSettings, {error: updateSettingError}] = useUpdateSettingListMutation({
+  const [updateSetting, {error: updateSettingError}] = useUpdateSettingMutation({
     client,
     fetchPolicy: 'network-only'
   })
@@ -203,21 +203,30 @@ function SettingList() {
     ) ?? []
   )
 
-  console.log('settingsListData.settingsList', settingListData?.settingsList)
   useUnsavedChangesDialog(changedSetting.length > 0)
 
   async function handleSettingListUpdate() {
     setShowWarning(false)
-    await updateSettings({
-      variables: {input: Object.values(settings).map(({name, value}) => ({name, value}))}
+
+    const batchedUpdates = Object.values(settings).map(({name, value}) => {
+      return updateSetting({variables: {name, value}})
     })
 
-    toaster.push(
-      <Notification header={t('settingList.successTitle')} type="success" duration={2000}>
-        {t('settingList.successMessage')}
-      </Notification>
-    )
-    await refetch()
+    try {
+      await Promise.all(batchedUpdates)
+      toaster.push(
+        <Notification header={t('settingList.successTitle')} type="success" duration={2000}>
+          {t('settingList.successMessage')}
+        </Notification>
+      )
+      await refetch()
+    } catch (error) {
+      toaster.push(
+        <Notification type="error" header={t('settingList.errorTitle')} duration={2000}>
+          {t('toast.updateError')}
+        </Notification>
+      )
+    }
   }
 
   useEffect(() => {

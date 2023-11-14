@@ -17,9 +17,9 @@ export type Scalars = {
   Float: number;
   /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
   DateTime: string;
-  RichText: Node[];
   /** Setting Value */
-  Value: any;
+  GraphQLSettingValueType: any;
+  RichText: Node[];
 };
 
 export type AllowedSettingVals = {
@@ -161,12 +161,8 @@ export type Mutation = {
    *
    */
   updateConsent: Consent;
-  /**
-   *
-   *       Updates an existing settings.
-   *
-   */
-  updateSettings: Array<Setting>;
+  /** Updates an existing setting. */
+  updateSetting: Setting;
   /**
    *
    *       Updates an existing userConsent based on input.
@@ -208,8 +204,9 @@ export type MutationUpdateConsentArgs = {
 };
 
 
-export type MutationUpdateSettingsArgs = {
-  value: Array<UpdateSettingInput>;
+export type MutationUpdateSettingArgs = {
+  name: SettingName;
+  value: Scalars['GraphQLSettingValueType'];
 };
 
 
@@ -418,7 +415,7 @@ export type Setting = {
   id: Scalars['ID'];
   name: SettingName;
   settingRestriction?: Maybe<SettingRestriction>;
-  value?: Maybe<Scalars['Value']>;
+  value?: Maybe<Scalars['GraphQLSettingValueType']>;
 };
 
 export type SettingFilter = {
@@ -462,11 +459,6 @@ export enum SubscriptionDeactivationReason {
   None = 'none',
   UserSelfDeactivated = 'userSelfDeactivated'
 }
-
-export type UpdateSettingInput = {
-  name: SettingName;
-  value: Scalars['Value'];
-};
 
 export type UpdateUserConsentInput = {
   value: Scalars['Boolean'];
@@ -626,12 +618,13 @@ export type SettingsListQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type SettingsListQuery = { __typename?: 'Query', settingsList: Array<{ __typename?: 'Setting', id: string, name: SettingName, value?: any | null, settingRestriction?: { __typename?: 'SettingRestriction', maxValue?: number | null, minValue?: number | null, inputLength?: number | null, allowedValues?: { __typename?: 'AllowedSettingVals', stringChoice?: Array<string> | null, boolChoice?: boolean | null } | null } | null }> };
 
-export type UpdateSettingListMutationVariables = Exact<{
-  input: Array<UpdateSettingInput> | UpdateSettingInput;
+export type UpdateSettingMutationVariables = Exact<{
+  name: SettingName;
+  value: Scalars['GraphQLSettingValueType'];
 }>;
 
 
-export type UpdateSettingListMutation = { __typename?: 'Mutation', updateSettings: Array<{ __typename?: 'Setting', value?: any | null }> };
+export type UpdateSettingMutation = { __typename?: 'Mutation', updateSetting: { __typename?: 'Setting', name: SettingName, value?: any | null } };
 
 export type VersionInformationQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -1282,39 +1275,41 @@ export function useSettingsListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptio
 export type SettingsListQueryHookResult = ReturnType<typeof useSettingsListQuery>;
 export type SettingsListLazyQueryHookResult = ReturnType<typeof useSettingsListLazyQuery>;
 export type SettingsListQueryResult = Apollo.QueryResult<SettingsListQuery, SettingsListQueryVariables>;
-export const UpdateSettingListDocument = gql`
-    mutation UpdateSettingList($input: [UpdateSettingInput!]!) {
-  updateSettings(value: $input) {
+export const UpdateSettingDocument = gql`
+    mutation UpdateSetting($name: SettingName!, $value: GraphQLSettingValueType!) {
+  updateSetting(name: $name, value: $value) {
+    name
     value
   }
 }
     `;
-export type UpdateSettingListMutationFn = Apollo.MutationFunction<UpdateSettingListMutation, UpdateSettingListMutationVariables>;
+export type UpdateSettingMutationFn = Apollo.MutationFunction<UpdateSettingMutation, UpdateSettingMutationVariables>;
 
 /**
- * __useUpdateSettingListMutation__
+ * __useUpdateSettingMutation__
  *
- * To run a mutation, you first call `useUpdateSettingListMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useUpdateSettingListMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useUpdateSettingMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSettingMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [updateSettingListMutation, { data, loading, error }] = useUpdateSettingListMutation({
+ * const [updateSettingMutation, { data, loading, error }] = useUpdateSettingMutation({
  *   variables: {
- *      input: // value for 'input'
+ *      name: // value for 'name'
+ *      value: // value for 'value'
  *   },
  * });
  */
-export function useUpdateSettingListMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSettingListMutation, UpdateSettingListMutationVariables>) {
+export function useUpdateSettingMutation(baseOptions?: Apollo.MutationHookOptions<UpdateSettingMutation, UpdateSettingMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<UpdateSettingListMutation, UpdateSettingListMutationVariables>(UpdateSettingListDocument, options);
+        return Apollo.useMutation<UpdateSettingMutation, UpdateSettingMutationVariables>(UpdateSettingDocument, options);
       }
-export type UpdateSettingListMutationHookResult = ReturnType<typeof useUpdateSettingListMutation>;
-export type UpdateSettingListMutationResult = Apollo.MutationResult<UpdateSettingListMutation>;
-export type UpdateSettingListMutationOptions = Apollo.BaseMutationOptions<UpdateSettingListMutation, UpdateSettingListMutationVariables>;
+export type UpdateSettingMutationHookResult = ReturnType<typeof useUpdateSettingMutation>;
+export type UpdateSettingMutationResult = Apollo.MutationResult<UpdateSettingMutation>;
+export type UpdateSettingMutationOptions = Apollo.BaseMutationOptions<UpdateSettingMutation, UpdateSettingMutationVariables>;
 export const VersionInformationDocument = gql`
     query VersionInformation {
   versionInformation {

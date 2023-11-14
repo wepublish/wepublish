@@ -7,9 +7,6 @@ import {SettingsService} from './settings.service'
 export class SettingsResolver {
   constructor(private settingsService: SettingsService) {}
 
-  /*
-  Queries
- */
   @Query(returns => [Setting], {
     name: 'settingsList',
     description: `
@@ -32,17 +29,12 @@ export class SettingsResolver {
     return this.settingsService.setting(id)
   }
 
-  /*
-  Mutations
- */
-  @Mutation(returns => [Setting], {
-    name: 'updateSettings',
-    description: `
-      Updates an existing settings.
-    `
+  @Mutation(returns => Setting, {
+    name: 'updateSetting',
+    description: 'Updates an existing setting.'
   })
   @Permissions(CanUpdateSettings)
-  updateSettings(@Args('value', {type: () => [UpdateSettingInput]}) value: [UpdateSettingInput]) {
-    return this.settingsService.updateSettings({value})
+  updateSetting(@Args() input: UpdateSettingInput) {
+    return this.settingsService.updateSetting(input)
   }
 }
