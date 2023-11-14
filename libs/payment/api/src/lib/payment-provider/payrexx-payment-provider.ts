@@ -6,11 +6,11 @@ import {
   IntentState,
   PaymentProviderProps,
   WebhookForPaymentIntentProps
-} from './paymentProvider'
+} from './payment-provider'
 import fetch from 'node-fetch'
 import crypto from 'crypto'
 import qs from 'qs'
-import {logger} from '@wepublish/utils'
+import {logger} from '@wepublish/utils/api'
 import {PaymentState} from '@prisma/client'
 
 export interface PayrexxPaymentProviderProps extends PaymentProviderProps {

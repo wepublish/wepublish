@@ -9,9 +9,16 @@ import {
   UpdatePaymentWithIntentStateProps,
   UpdateRemoteSubscriptionAmountProps,
   WebhookForPaymentIntentProps
-} from './paymentProvider'
-import {logger, getMonthsFromPaymentPeriodicity} from '@wepublish/utils'
-import {PaymentState, Invoice, Subscription, PrismaClient, MetadataProperty} from '@prisma/client'
+} from './payment-provider'
+import {logger} from '@wepublish/utils/api'
+import {
+  PaymentState,
+  PaymentPeriodicity,
+  Invoice,
+  Subscription,
+  PrismaClient,
+  MetadataProperty
+} from '@prisma/client'
 import fetch from 'node-fetch'
 import * as crypto from 'crypto'
 import {timingSafeEqual} from 'crypto'
@@ -40,6 +47,21 @@ function mapPayrexxEventToPaymentStatus(event: string): PaymentState | null {
       return PaymentState.declined
     default:
       return null
+  }
+}
+
+function getMonths(pp: PaymentPeriodicity) {
+  switch (pp) {
+    case PaymentPeriodicity.yearly:
+      return 12
+    case PaymentPeriodicity.biannual:
+      return 6
+    case PaymentPeriodicity.quarterly:
+      return 3
+    case PaymentPeriodicity.monthly:
+      return 1
+    default:
+      return 1
   }
 }
 
@@ -134,8 +156,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
     if (!isPayrexxExt) {
       throw new Error(`Payrexx Subscription Id not found on subscription ${props.subscription.id}`)
     }
-    const amount =
-      props.newAmount * getMonthsFromPaymentPeriodicity(props.subscription.paymentPeriodicity)
+    const amount = props.newAmount * getMonths(props.subscription.paymentPeriodicity)
     await this.updateAmountUpstream(parseInt(isPayrexxExt.value, 10), amount.toString())
   }
 
@@ -204,7 +225,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
 
       // Calculate new subscription valid until
       const newSubscriptionValidUntil = add(longestPeriod.endsAt, {
-        months: getMonthsFromPaymentPeriodicity(subscription.paymentPeriodicity)
+        months: getMonths(subscription.paymentPeriodicity)
       }).toISOString()
       const newSubscriptionValidFrom = add(longestPeriod.endsAt, {
         days: 1
@@ -224,9 +245,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
 
       const payedAmount = rawSubscription.invoice.amount
       const minPayment =
-        subscription.monthlyAmount *
-          getMonthsFromPaymentPeriodicity(subscription.paymentPeriodicity) -
-        100 // -1CHF to ensure that imported rounding differences are no issue
+        subscription.monthlyAmount * getMonths(subscription.paymentPeriodicity) - 100 // -1CHF to ensure that imported rounding differences are no issue
       if (payedAmount < minPayment) {
         logger('payrexxSubscriptionPaymentProvider').warn(
           `Payrexx Subscription ${subscription.id} payment ${payedAmount} lower than min payment ${minPayment}`
@@ -246,8 +265,8 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
           subscriptionID: subscription.id,
           description: `Abo ${memberPlan.name}`,
           paidAt: new Date(),
-          canceledAt: null
-          // scheduledDeactivationAt: add(new Date(), {days: 10}) // comment out for now for compatibility
+          canceledAt: null,
+          scheduledDeactivationAt: add(new Date(), {days: 10})
         }
       })
 

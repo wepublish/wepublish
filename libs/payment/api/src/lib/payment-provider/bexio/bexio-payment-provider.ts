@@ -19,7 +19,7 @@ import {
   IntentState,
   PaymentProviderProps,
   WebhookForPaymentIntentProps
-} from '../paymentProvider'
+} from '../payment-provider'
 import {
   InvoiceNotFoundError,
   NoSubscriptionIdInInvoice,
@@ -27,8 +27,8 @@ import {
   SendingInvoiceError,
   UnknownIntentState,
   WebhookNotImplementedError
-} from './bexioErrors'
-import {addToStringReplaceMap, mapBexioStatusToPaymentStatus, searchForContact} from './bexioUtils'
+} from './bexio-errors'
+import {addToStringReplaceMap, mapBexioStatusToPaymentStatus, searchForContact} from './bexio-utils'
 
 export interface BexioPaymentProviderProps extends PaymentProviderProps {
   apiKey: string

@@ -1,7 +1,7 @@
 import {DynamicModule, Module, Provider} from '@nestjs/common'
 import {PrismaModule} from '@wepublish/nest-modules'
 import {PaymentsService} from './payments.service'
-import {createAsyncOptionsProvider} from '@wepublish/utils'
+import {createAsyncOptionsProvider} from '@wepublish/utils/api'
 import {
   PAYMENTS_MODULE_OPTIONS,
   PaymentsModuleAsyncOptions,
