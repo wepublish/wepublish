@@ -5,10 +5,11 @@ import {
   useAuthorListQuery,
   useCreateAuthorMutation
 } from '@wepublish/editor/api'
-import {getOperationNameFromDocument, slugify} from '../utility'
+import {getOperationNameFromDocument} from '../utility'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, CheckPicker} from 'rsuite'
+import {slugify} from '@wepublish/utils'
 
 const ButtonWrapper = styled.div`
   margin: 10px;

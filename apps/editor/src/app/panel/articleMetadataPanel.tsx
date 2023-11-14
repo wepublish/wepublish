@@ -12,10 +12,10 @@ import {
   ListValue,
   MetaDataType,
   PermissionControl,
-  slugify,
   Textarea,
   useAuthorisation
 } from '@wepublish/ui/editor'
+import {slugify} from '@wepublish/utils'
 import {useEffect, useState} from 'react'
 import {Trans, useTranslation} from 'react-i18next'
 import {MdAutoFixHigh, MdComment, MdListAlt, MdSettings, MdShare} from 'react-icons/md'
