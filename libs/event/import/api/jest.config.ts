@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-  displayName: 'events/import-api',
+  displayName: 'event-import-api',
   preset: '../../../../jest.preset.js',
   globals: {},
   testEnvironment: 'node',
@@ -13,5 +13,5 @@ export default {
     ]
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../../../coverage/libs/events/import'
+  coverageDirectory: '../../../../coverage/libs/event/import'
 }
