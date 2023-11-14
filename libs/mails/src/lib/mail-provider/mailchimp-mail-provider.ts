@@ -51,7 +51,14 @@ function mapMandrillEventToMailLogState(event: string): MailLogState | null {
 function flattenObj(ob: any) {
   const nestedObject: any = {}
   for (const i in ob) {
-    if (typeof ob[i] === 'object' && !Array.isArray(ob[i])) {
+    if (Array.isArray(ob[i])) {
+      for (const j in ob[i]) {
+        const returnedNestedObject = flattenObj(ob[i][j])
+        for (const k in returnedNestedObject) {
+          nestedObject[`${i}${j}_${k}`] = returnedNestedObject[k]
+        }
+      }
+    } else if (typeof ob[i] === 'object' && !Array.isArray(ob[i])) {
       const returnedNestedObject = flattenObj(ob[i])
       for (const j in returnedNestedObject) {
         nestedObject[i + '_' + j] = returnedNestedObject[j]

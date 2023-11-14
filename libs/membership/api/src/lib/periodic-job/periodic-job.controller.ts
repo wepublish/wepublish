@@ -273,7 +273,7 @@ export class PeriodicJobController {
       creationEvent,
       subscriptionToCreateInvoice.user,
       periodicJobRunObject.isRetry,
-      subscriptionToCreateInvoice,
+      {subscriptionToCreateInvoice, invoice},
       periodicJobRunObject.date
     )
     return true
@@ -312,13 +312,17 @@ export class PeriodicJobController {
 
     if (mailAction.action) {
       const user = Object.assign({}, invoiceToCharge.subscription.user)
+      const {subscription, items, subscriptionPeriods, ...invoice} = invoiceToCharge
       await this.sendTemplateMail(
         mailAction.action,
         user,
         periodicJobRunObject.isRetry,
         {
           errorCode: mailAction.errorCode,
-          ...invoiceToCharge
+          invoice,
+          subscriptionPeriods,
+          items,
+          subscription
         },
         periodicJobRunObject.date
       )
@@ -364,12 +368,12 @@ export class PeriodicJobController {
     }
 
     await this.subscriptionController.deactivateSubscription(unpaidInvoice)
-
+    const {subscription, ...invoice} = unpaidInvoice
     await this.sendTemplateMail(
       eventDeactivationUnpaid[0],
       unpaidInvoice.subscription.user,
       periodicJobRunObject.isRetry,
-      unpaidInvoice,
+      {subscription, invoice},
       periodicJobRunObject.date
     )
   }
