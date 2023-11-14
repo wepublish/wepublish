@@ -5,7 +5,7 @@ generator client {
 
 generator fabbrica {
   provider = "prisma-fabbrica"
-  output = "../../membership/api/src/__generated__/fabbrica"
+  output   = "../../testing/src/__generated__/fabbrica"
 }
 
 datasource db {
@@ -391,13 +391,12 @@ model Invoice {
   description               String?
   paidAt                    DateTime?
   canceledAt                DateTime?
-  scheduledDeactivationAt           DateTime
+  scheduledDeactivationAt   DateTime
   items                     InvoiceItem[]
   manuallySetAsPaidByUserId String?
 
   subscriptionID String?
   subscription   Subscription? @relation(fields: [subscriptionID], references: [id], onDelete: SetNull)
-
 
   subscriptionPeriods SubscriptionPeriod[]
 
@@ -415,20 +414,20 @@ enum MailLogState {
 }
 
 model MailLog {
-  id                      String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  createdAt               DateTime @default(now())
-  modifiedAt              DateTime @updatedAt
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
 
-  recipientID             String
-  recipient               User   @relation(fields: [recipientID], references: [id], onDelete: Cascade)
-  state                   MailLogState
-  sentDate                DateTime
-  mailProviderID          String
-  mailIdentifier          String
-  mailTemplate            MailTemplate @relation(fields: [mailTemplateId], references: [id])
-  mailTemplateId          String @db.Uuid
-  mailData                String?
-  subject                 String?
+  recipientID    String
+  recipient      User         @relation(fields: [recipientID], references: [id], onDelete: Cascade)
+  state          MailLogState
+  sentDate       DateTime
+  mailProviderID String
+  mailIdentifier String
+  mailTemplate   MailTemplate @relation(fields: [mailTemplateId], references: [id])
+  mailTemplateId String       @db.Uuid
+  mailData       String?
+  subject        String?
 
   @@index([mailIdentifier])
   @@map("mail.log")
@@ -474,7 +473,7 @@ model MemberPlan {
 
   Subscription Subscription[]
 
-  subscriptionFlows  SubscriptionFlow[]
+  subscriptionFlows SubscriptionFlow[]
 
   @@index([name])
   @@map("member.plans")
@@ -578,9 +577,9 @@ model PaymentMethod {
   paymentProviderID String
   active            Boolean
 
-  Subscription Subscription[]
-  Payment      Payment[]
-  subscriptionFlows  SubscriptionFlow[]
+  Subscription      Subscription[]
+  Payment           Payment[]
+  subscriptionFlows SubscriptionFlow[]
 
   @@map("payment.methods")
 }
@@ -1009,7 +1008,7 @@ model Consent {
   name         String
   slug         String        @unique
   defaultValue Boolean
-  userConsents  UserConsent[]
+  userConsents UserConsent[]
 
   @@map("consents")
 }
@@ -1039,14 +1038,14 @@ enum UserEvent {
 }
 
 model UserFlowMail {
-  id                    String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-	createdAt             DateTime @default(now())
-	modifiedAt            DateTime @updatedAt
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
 
-  event                 UserEvent @unique
+  event UserEvent @unique
 
-  mailTemplate       MailTemplate? @relation(fields: [mailTemplateId], references: [id]) // user creates a new account
-	mailTemplateId     String? @db.Uuid
+  mailTemplate   MailTemplate? @relation(fields: [mailTemplateId], references: [id]) // user creates a new account
+  mailTemplateId String?       @db.Uuid
 
   @@map("user_communication_flows")
 }
@@ -1062,70 +1061,69 @@ enum SubscriptionEvent {
 }
 
 model SubscriptionFlow {
-	id                    String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-	createdAt             DateTime @default(now())
-	modifiedAt            DateTime @updatedAt
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
 
-  default               Boolean @default(false)
+  default Boolean @default(false)
 
-  memberPlan            MemberPlan? @relation(fields: [memberPlanId], references: [id])
-  memberPlanId          String?
+  memberPlan   MemberPlan? @relation(fields: [memberPlanId], references: [id])
+  memberPlanId String?
 
-	paymentMethods        PaymentMethod[]
-  periodicities         PaymentPeriodicity[]
-  autoRenewal           Boolean[]
+  paymentMethods PaymentMethod[]
+  periodicities  PaymentPeriodicity[]
+  autoRenewal    Boolean[]
 
-	intervals   SubscriptionInterval[] // send some more e-mails such as reminders
+  intervals SubscriptionInterval[] // send some more e-mails such as reminders
 
   @@map("subscription_communication_flows")
 }
 
 model SubscriptionInterval {
-	id                      String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-	createdAt               DateTime @default(now())
-    modifiedAt              DateTime @updatedAt
-    event                   SubscriptionEvent
-	daysAwayFromEnding      Int? @db.SmallInt
-	mailTemplate            MailTemplate? @relation(fields: [mailTemplateId], references: [id])
-	mailTemplateId          String? @db.Uuid
+  id                 String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt          DateTime          @default(now())
+  modifiedAt         DateTime          @updatedAt
+  event              SubscriptionEvent
+  daysAwayFromEnding Int?              @db.SmallInt
+  mailTemplate       MailTemplate?     @relation(fields: [mailTemplateId], references: [id])
+  mailTemplateId     String?           @db.Uuid
 
-	subscriptionFlow   SubscriptionFlow @relation(fields: [subscriptionFlowId], references: [id], onDelete: Cascade)
-  subscriptionFlowId String @db.Uuid
+  subscriptionFlow   SubscriptionFlow @relation(fields: [subscriptionFlowId], references: [id], onDelete: Cascade)
+  subscriptionFlowId String           @db.Uuid
 
   @@map("subscriptions.intervals")
 }
 
 model MailTemplate {
-	id                          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-	createdAt                   DateTime @default(now())
-  modifiedAt                  DateTime @updatedAt
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
 
-	name                        String
-	description                 String?
-	externalMailTemplateId      String @unique
-  remoteMissing               Boolean @default(false)
+  name                   String
+  description            String?
+  externalMailTemplateId String  @unique
+  remoteMissing          Boolean @default(false)
 
-	subscriptionIntervals       SubscriptionInterval[]
+  subscriptionIntervals SubscriptionInterval[]
 
-	userFlowMails               UserFlowMail[]
+  userFlowMails UserFlowMail[]
 
-	mailLog                     MailLog[]
-
+  mailLog MailLog[]
 
   @@map("mail_templates")
 }
 
 model PeriodicJob {
-	id                          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-	createdAt                   DateTime @default(now())
-    modifiedAt                  DateTime @updatedAt
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
 
-    date                        DateTime @db.Date @unique
-    executionTime               DateTime?
-    successfullyFinished        DateTime?
-    finishedWithError           DateTime?
-    tries                       Int @default(0)
-    error                       String?
+  date                 DateTime  @unique @db.Date
+  executionTime        DateTime?
+  successfullyFinished DateTime?
+  finishedWithError    DateTime?
+  tries                Int       @default(0)
+  error                String?
 
   @@map("periodic_jobs")
 }

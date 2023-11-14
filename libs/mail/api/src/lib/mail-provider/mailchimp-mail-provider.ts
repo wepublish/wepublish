@@ -60,13 +60,9 @@ function flattenObjForMandrill<T>(ob: T): Record<string, string> {
       }
     }
 
-    if (typeof nestedObj === 'string') {
-      nestedObject[i] = nestedObj
-    }
-
-    if (typeof nestedObj === 'number') {
-      nestedObject[i] = nestedObj.toString()
-    }
+    // eventho it should be string according to Mandrill typings
+    // it accepts booleans, numbers etc.
+    nestedObject[i] = nestedObj as any
   }
 
   return nestedObject

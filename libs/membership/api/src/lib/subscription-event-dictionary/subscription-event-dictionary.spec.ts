@@ -1,4 +1,3 @@
-import {clearDatabase, clearFullDatabase} from '../../prisma-utils'
 import {
   MemberPlan,
   PaymentPeriodicity,
@@ -8,15 +7,17 @@ import {
   SubscriptionInterval
 } from '@prisma/client'
 import {
-  initialize,
+  clearDatabase,
+  clearFullDatabase,
   defineMemberPlanFactory,
-  defineSubscriptionFlowFactory,
   definePaymentMethodFactory,
-  defineSubscriptionIntervalFactory
-} from '../../__generated__/fabbrica'
+  defineSubscriptionFlowFactory,
+  defineSubscriptionIntervalFactory,
+  initialize
+} from '@wepublish/testing'
 import {add, format, sub} from 'date-fns'
-import {SubscriptionEventDictionary} from './subscription-event-dictionary'
 import nock from 'nock'
+import {SubscriptionEventDictionary} from './subscription-event-dictionary'
 
 type SubscriptionFlowInterval = {
   subscriptionFlowId: string
@@ -656,7 +657,9 @@ describe('SubscriptionEventDictionary', () => {
 
       fail()
     } catch (e) {
-      expect((e as Error).toString()).toEqual('Error: Default user subscription flow not found!')
+      expect((e as Error).toString()).toEqual(
+        'NotFoundException: Default user subscription flow not found!'
+      )
     }
   })
 

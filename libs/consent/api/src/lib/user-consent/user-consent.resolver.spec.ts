@@ -48,8 +48,8 @@ const userConsentQuery = `
 `
 
 const createUserConsentMutation = `
-  mutation createUserConsent($userConsent: UserConsentInput!) {
-    createUserConsent(userConsent: $userConsent) {
+  mutation createUserConsent($consentId: String!, $userId: String!, $value: Boolean!) {
+    createUserConsent(consentId: $consentId, userId: $userId, value: $value) {
       id
       value
     }
@@ -57,8 +57,8 @@ const createUserConsentMutation = `
 `
 
 const updateUserConsentMutation = `
-  mutation updateUserConsent($id: String!, $userConsent: UpdateUserConsentInput!) {
-    updateUserConsent(id: $id, userConsent: $userConsent) {
+  mutation updateUserConsent($id: String!, $value: Boolean!) {
+    updateUserConsent(id: $id, value: $value) {
       id
       value
       createdAt
@@ -203,11 +203,9 @@ describe('UserConsentResolver', () => {
       .send({
         query: createUserConsentMutation,
         variables: {
-          userConsent: {
-            consentId: createdConsent.id,
-            userId: createdUser.id,
-            value: true
-          }
+          consentId: createdConsent.id,
+          userId: createdUser.id,
+          value: true
         }
       })
       .expect(200)
@@ -229,9 +227,7 @@ describe('UserConsentResolver', () => {
         query: updateUserConsentMutation,
         variables: {
           id: idToUpdate,
-          userConsent: {
-            value: false
-          }
+          value: false
         }
       })
       .expect(200)
@@ -271,9 +267,7 @@ describe('UserConsentResolver', () => {
         query: updateUserConsentMutation,
         variables: {
           id: idToUpdate,
-          userConsent: {
-            value: false
-          }
+          value: false
         }
       })
       .expect(200)

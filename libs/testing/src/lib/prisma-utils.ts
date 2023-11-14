@@ -1,4 +1,5 @@
 import {Prisma, PrismaClient} from '@prisma/client'
+
 export const clearDatabase = async (prismaService: PrismaClient, tables_left: string[]) => {
   while (tables_left.length > 0) {
     const tables = tables_left
@@ -10,7 +11,7 @@ export const clearDatabase = async (prismaService: PrismaClient, tables_left: st
           tables_left.splice(index, 1)
         }
       } catch (e) {
-        1 + 2
+        //
       }
     }
   }

@@ -12,9 +12,6 @@ import {ConsentService} from './consent.service'
 export class ConsentResolver {
   constructor(private consents: ConsentService) {}
 
-  /*
-  Queries
- */
   @Query(returns => [Consent], {
     name: 'consents',
     description: `
@@ -35,9 +32,6 @@ export class ConsentResolver {
     return this.consents.consent(id)
   }
 
-  /*
-  Mutations
- */
   @Mutation(returns => Consent, {
     name: 'createConsent',
     description: `

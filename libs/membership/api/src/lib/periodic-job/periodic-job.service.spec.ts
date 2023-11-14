@@ -1,11 +1,10 @@
-import {forwardRef} from '@nestjs/common'
+import {NotFoundException, forwardRef} from '@nestjs/common'
 import {Test, TestingModule} from '@nestjs/testing'
 import {PaymentPeriodicity, PrismaClient, SubscriptionEvent, User} from '@prisma/client'
 import {PrismaService} from '@wepublish/nest-modules'
-import {add, startOfDay, sub} from 'date-fns'
-import {matches} from 'lodash'
-import nock from 'nock'
 import {
+  clearDatabase,
+  clearFullDatabase,
   defineInvoiceFactory,
   defineMemberPlanFactory,
   definePaymentMethodFactory,
@@ -14,17 +13,19 @@ import {
   defineSubscriptionIntervalFactory,
   defineUserFactory,
   initialize
-} from '../../__generated__/fabbrica'
-import {clearDatabase, clearFullDatabase} from '../../prisma-utils'
+} from '@wepublish/testing'
+import {add, startOfDay, sub} from 'date-fns'
+import {matches} from 'lodash'
+import nock from 'nock'
 import {Action} from '../subscription-event-dictionary/subscription-event-dictionary.type'
 import {SubscriptionFlowService} from '../subscription-flow/subscription-flow.service'
+import {SubscriptionService} from '../subscription/subscription.service'
 import {
   registerMailsModule,
   registerPaymentsModule,
   registerPrismaModule
 } from '../testing/module-registrars'
 import {PeriodicJobService} from './periodic-job.service'
-import {SubscriptionService} from '../subscription/subscription.service'
 
 describe('PeriodicJobService', () => {
   let service: PeriodicJobService
@@ -735,27 +736,38 @@ describe('PeriodicJobService', () => {
         event: SubscriptionEvent.INVOICE_CREATION
       }
     })
+
     try {
       await service.execute()
-      throw Error('This execution should fail!')
+      fail()
     } catch (e) {
-      expect((e as Error).toString()).toEqual('Error: No invoice creation date found!')
+      expect((e as Error).toString()).toContain(
+        'NotFoundException: No invoice creation date found!'
+      )
     }
+
     try {
       await service.execute()
-      throw Error('This execution should fail!')
+      fail()
     } catch (e) {
-      expect((e as Error).toString()).toEqual('Error: No invoice creation date found!')
+      expect((e as Error).toString()).toContain(
+        'NotFoundException: No invoice creation date found!'
+      )
     }
+
     try {
       await service.execute()
-      throw Error('This execution should fail!')
+      fail()
     } catch (e) {
-      expect((e as Error).toString()).toEqual('Error: No invoice creation date found!')
+      expect((e as Error).toString()).toContain(
+        'NotFoundException: No invoice creation date found!'
+      )
     }
+
     let periodicJobs = await prismaClient.periodicJob.findMany()
-    expect(periodicJobs.length).toEqual(2)
     const failedJob = periodicJobs.find(pj => pj.tries === 3)
+
+    expect(periodicJobs.length).toEqual(2)
     expect(failedJob).not.toBeNull()
     expect(failedJob!.tries).toEqual(3)
     expect(failedJob!.successfullyFinished).toBeNull()
@@ -782,10 +794,13 @@ describe('PeriodicJobService', () => {
         }
       }
     })
+
     await service.execute()
+
     periodicJobs = await prismaClient.periodicJob.findMany()
-    expect(periodicJobs.length).toEqual(2)
     const retriedJob = periodicJobs.find(pj => pj.tries === 4)
+
+    expect(periodicJobs.length).toEqual(2)
     expect(retriedJob).not.toBeNull()
     expect(retriedJob!.tries).toEqual(4)
     expect(retriedJob!.successfullyFinished).not.toBeNull()
@@ -928,7 +943,7 @@ describe('PeriodicJobService', () => {
   it('Mark job as successful while now job runs', async () => {
     try {
       await service['markJobSuccessful']()
-      throw Error('This execution should fail!')
+      fail()
     } catch (e) {
       expect((e as Error).toString()).toEqual(
         'Error: Try to make a job as successful while none is running!'
@@ -939,7 +954,7 @@ describe('PeriodicJobService', () => {
   it('Mark job as failed while now job runs', async () => {
     try {
       await service['markJobFailed']('error')
-      throw Error('This execution should fail!')
+      fail()
     } catch (e) {
       expect((e as Error).toString()).toEqual(
         'Error: Try to make a job as failed while none is running!'
@@ -977,9 +992,9 @@ describe('PeriodicJobService', () => {
     }
     try {
       await service['createInvoice'](pjo, invoice)
-      throw Error('This execution should fail!')
+      fail()
     } catch (e) {
-      expect((e as Error).toString()).toEqual('Error: No invoice creation found!')
+      expect((e as Error).toString()).toEqual('NotFoundException: No invoice creation found!')
     }
     await SubscriptionIntervalFactory.create({
       subscriptionFlow: {
@@ -992,9 +1007,11 @@ describe('PeriodicJobService', () => {
     })
     try {
       await service['createInvoice'](pjo, invoice)
-      throw Error('This execution should fail!')
+      fail()
     } catch (e) {
-      expect((e as Error).toString()).toEqual('Error: No invoice deactivation event found!')
+      expect((e as Error).toString()).toEqual(
+        'NotFoundException: No invoice deactivation event found!'
+      )
     }
     await SubscriptionIntervalFactory.create({
       subscriptionFlow: {
@@ -1009,7 +1026,7 @@ describe('PeriodicJobService', () => {
     try {
       invoice.paidUntil = add(runDate, {days: 10, seconds: -10})
       await service['createInvoice'](pjo, invoice)
-      throw Error('This execution should fail!')
+      fail()
     } catch (e) {
       expect((e as Error).toString()).toEqual(
         "TypeError: Cannot read properties of undefined (reading 'name')"
@@ -1018,7 +1035,7 @@ describe('PeriodicJobService', () => {
     try {
       invoice.paidUntil = add(runDate, {days: 9})
       await service['createInvoice'](pjo, invoice)
-      throw Error('This execution should fail!')
+      fail()
     } catch (e) {
       expect((e as Error).toString()).toEqual(
         "TypeError: Cannot read properties of undefined (reading 'name')"
@@ -1031,7 +1048,7 @@ describe('PeriodicJobService', () => {
     const invoice: any = {}
     try {
       await service['chargeInvoice'](pjo, invoice)
-      throw Error('This execution should fail!')
+      fail()
     } catch (e) {
       expect((e as Error).toString()).toEqual(
         'Error: Invoice undefined has no subscription assigned!'
@@ -1066,9 +1083,11 @@ describe('PeriodicJobService', () => {
     }
     try {
       await service['deactivateSubscription'](pjo, invoice)
-      throw Error('This execution should fail!')
+      fail()
     } catch (e) {
-      expect((e as Error).toString()).toEqual('Error: Invoice 100 has no subscription assigned!')
+      expect((e as Error).toString()).toMatchInlineSnapshot(
+        `"BadRequestException: Invoice 100 has no subscription assigned!"`
+      )
     }
     invoice.subscription = {
       memberPlanID: mp.id,
@@ -1078,9 +1097,11 @@ describe('PeriodicJobService', () => {
     }
     try {
       await service['deactivateSubscription'](pjo, invoice)
-      throw Error('This execution should fail!')
+      fail()
     } catch (e) {
-      expect((e as Error).toString()).toEqual('Error: No subscription deactivation found!')
+      expect((e as Error).toString()).toEqual(
+        'NotFoundException: No subscription deactivation found!'
+      )
     }
   })
 

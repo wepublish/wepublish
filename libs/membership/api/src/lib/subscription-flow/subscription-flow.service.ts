@@ -346,9 +346,7 @@ export class SubscriptionFlowService {
           `For event ${interval.event} daysAwayFromEnding can not be null!`
         )
       }
-    }
-
-    if (subscriptionFlowDaysAwayFromEndingNeedToBeNull.includes(interval.event)) {
+    } else if (subscriptionFlowDaysAwayFromEndingNeedToBeNull.includes(interval.event)) {
       throw new BadRequestException(
         `For event ${interval.event} daysAwayFromEnding needs to be null!`
       )

@@ -1,19 +1,19 @@
 import {Test, TestingModule} from '@nestjs/testing'
-import {SubscriptionFlowService} from './subscription-flow.service'
-import {clearDatabase} from '../../prisma-utils'
-import {PrismaModule} from '@wepublish/nest-modules'
-import {PrismaService} from '@wepublish/nest-modules'
 import {PaymentPeriodicity, PrismaClient, SubscriptionEvent} from '@prisma/client'
+import {PrismaModule, PrismaService} from '@wepublish/nest-modules'
+import {
+  clearDatabase,
+  defineMailTemplateFactory,
+  defineMemberPlanFactory,
+  definePaymentMethodFactory,
+  defineSubscriptionFlowFactory,
+  initialize
+} from '@wepublish/testing'
 import {PeriodicJobService} from '../periodic-job/periodic-job.service'
 import {SubscriptionService} from '../subscription/subscription.service'
-import {
-  initialize,
-  defineMemberPlanFactory,
-  defineMailTemplateFactory,
-  defineSubscriptionFlowFactory,
-  definePaymentMethodFactory
-} from '../../__generated__/fabbrica'
 import {registerMailsModule, registerPaymentsModule} from '../testing/module-registrars'
+import {SubscriptionFlowService} from './subscription-flow.service'
+import {BadRequestException} from '@nestjs/common'
 
 describe('SubscriptionFlowService', () => {
   let service: SubscriptionFlowService
@@ -315,6 +315,7 @@ describe('SubscriptionFlowService', () => {
       where: {id: flow.id},
       include: {intervals: true}
     })
+
     expect(existingFlow?.intervals.length).toEqual(0)
 
     if (!existingFlow) {
@@ -324,15 +325,16 @@ describe('SubscriptionFlowService', () => {
     await service.createInterval({
       subscriptionFlowId: existingFlow.id,
       mailTemplateId: template.id,
-      event: 'SUBSCRIBE'
+      event: SubscriptionEvent.SUBSCRIBE
     })
 
     const updatedFlow = await prismaClient.subscriptionFlow.findFirst({
       where: {id: flow.id},
       include: {intervals: true}
     })
+
     expect(updatedFlow?.intervals.length).toEqual(1)
-    expect(updatedFlow?.intervals[0].event).toEqual('SUBSCRIBE')
+    expect(updatedFlow?.intervals[0].event).toEqual(SubscriptionEvent.SUBSCRIBE)
   })
 
   it('prevents creation of duplicate intervals for an existing flow', async () => {
@@ -342,17 +344,18 @@ describe('SubscriptionFlowService', () => {
     await service.createInterval({
       subscriptionFlowId: flow.id,
       mailTemplateId: template.id,
-      event: 'SUBSCRIBE'
+      event: SubscriptionEvent.SUBSCRIBE
     })
 
     const t = async () => {
       await service.createInterval({
         subscriptionFlowId: flow.id,
         mailTemplateId: template.id,
-        event: 'SUBSCRIBE'
+        event: SubscriptionEvent.SUBSCRIBE
       })
     }
-    expect(t).rejects.toThrow(Error)
+
+    expect(t).rejects.toThrow(BadRequestException)
   })
 
   it('prevents creation of invalid daysAwayFromEnding', async () => {
@@ -363,11 +366,11 @@ describe('SubscriptionFlowService', () => {
       await service.createInterval({
         subscriptionFlowId: flow.id,
         mailTemplateId: template.id,
-        event: 'SUBSCRIBE',
+        event: SubscriptionEvent.SUBSCRIBE,
         daysAwayFromEnding: 3
       })
     }
-    expect(t1).rejects.toThrow(Error)
+    expect(t1).rejects.toThrow(BadRequestException)
 
     const t2 = async () => {
       await service.createInterval({
@@ -377,7 +380,7 @@ describe('SubscriptionFlowService', () => {
         daysAwayFromEnding: -30
       })
     }
-    expect(t2).rejects.toThrow(Error)
+    expect(t2).rejects.toThrow(BadRequestException)
 
     const t3 = async () => {
       await service.createInterval({
@@ -397,7 +400,7 @@ describe('SubscriptionFlowService', () => {
         daysAwayFromEnding: 3
       })
     }
-    expect(t4).rejects.toThrow(Error)
+    expect(t4).rejects.toThrow(BadRequestException)
   })
 
   it('deletes intervals for an existing flow', async () => {

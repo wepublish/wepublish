@@ -3,24 +3,20 @@ import {MailTemplate, PrismaClient} from '@prisma/client'
 import {
   initialize,
   defineMailTemplateFactory,
-  defineUserFactory
-} from '../../__generated__/fabbrica'
+  defineUserFactory,
+  clearFullDatabase,
+  clearDatabase
+} from '@wepublish/testing'
 import {Test, TestingModule} from '@nestjs/testing'
 import {forwardRef} from '@nestjs/common'
-import {
-  MailContext,
-  MailController,
-  MailgunMailProvider,
-  mailLogType,
-  MailchimpMailProvider
-} from '@wepublish/mail/api'
 import {PrismaModule, PrismaService} from '@wepublish/nest-modules'
-import {SubscriptionFlowController} from '../subscription-flow/subscription-flow.service'
-import {clearDatabase, clearFullDatabase} from '../../prisma-utils'
 import {matches} from 'lodash'
 import bodyParser from 'body-parser'
 import Mailgun from 'mailgun.js'
 import FormData from 'form-data'
+import {MailContext} from './mail-context'
+import {MailchimpMailProvider, MailgunMailProvider} from './mail-provider'
+import {MailController, mailLogType} from './mail.controller'
 
 describe('MailController', () => {
   let mailContext: MailContext
@@ -34,7 +30,18 @@ describe('MailController', () => {
   let mailTemplate2: MailTemplate
 
   beforeEach(async () => {
+    await clearDatabase(prismaClient, ['mail_templates', 'mail.log'])
     await nock.disableNetConnect()
+
+    mailTemplate1 = await MailTemplateFactory.create({
+      name: 'template1',
+      externalMailTemplateId: 'template1'
+    })
+    mailTemplate2 = await MailTemplateFactory.create({
+      name: 'template2',
+      externalMailTemplateId: 'template2'
+    })
+
     const module: TestingModule = await Test.createTestingModule({
       imports: [forwardRef(() => PrismaModule.forTest(prismaClient))],
       providers: [
@@ -58,20 +65,10 @@ describe('MailController', () => {
             })
           },
           inject: [PrismaService]
-        },
-        SubscriptionFlowController
+        }
       ]
     }).compile()
     mailContext = module.get<MailContext>(MailContext)
-    await clearDatabase(prismaClient, ['mail_templates', 'mail.log'])
-    mailTemplate1 = await MailTemplateFactory.create({
-      name: 'template1',
-      externalMailTemplateId: 'template1'
-    })
-    mailTemplate2 = await MailTemplateFactory.create({
-      name: 'template2',
-      externalMailTemplateId: 'template2'
-    })
   })
 
   afterEach(async () => {

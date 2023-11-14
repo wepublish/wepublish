@@ -66,7 +66,7 @@ const mailProviderServiceMock = {
 
 const mailContextMock = {
   mailProvider: mailProviderServiceMock as unknown as MailProvider,
-  getUsedTemplateIdentifiers: jest.fn((): string[] => [])
+  getUsedTemplateIdentifiers: jest.fn((): string[] => ['124'])
 }
 
 const syncServiceMock = {
@@ -137,10 +137,9 @@ describe('MailTemplatesResolver', () => {
   })
 
   it('computes the template url', async () => {
-    const result = await resolver.mailTemplates()
-    expect(result.length).toEqual(2)
-    expect(result[0].url).toEqual('https://example.com/template.html')
-    expect(result[1].url).toEqual('https://example.com/template.html')
+    const [template] = await resolver.mailTemplates()
+    const result = await resolver.url(template as any)
+    expect(result).toEqual('https://example.com/template.html')
   })
 
   it('resolves the provider', async () => {
@@ -154,10 +153,9 @@ describe('MailTemplatesResolver', () => {
   })
 
   it('computes the template status', async () => {
-    const result = await resolver.mailTemplates()
-    expect(result.length).toEqual(2)
-    expect(result[0].status).toEqual(MailTemplateStatus.Unused)
-    expect(result[1].status).toEqual(MailTemplateStatus.RemoteMissing)
+    const [template1, template2] = await resolver.mailTemplates()
+    expect(await resolver.status(template1 as any)).toEqual(MailTemplateStatus.Unused)
+    expect(await resolver.status(template2 as any)).toEqual(MailTemplateStatus.RemoteMissing)
   })
 
   /**

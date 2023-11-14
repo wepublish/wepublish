@@ -71,6 +71,7 @@ export class PeriodicJobService {
       } else {
         await this.markJobStarted(periodicJobRunObject.date)
       }
+
       try {
         this.logger.log('Executing periodic job...')
         this.logger.log('Processing custom mails...')
@@ -90,6 +91,7 @@ export class PeriodicJobService {
         await this.markJobFailed(inspect(e))
         throw new Error(inspect(e))
       }
+
       await this.markJobSuccessful()
     }
   }
@@ -219,6 +221,7 @@ export class PeriodicJobService {
       autorenwal: subscriptionToCreateInvoice.autoRenew,
       events: [SubscriptionEvent.INVOICE_CREATION, SubscriptionEvent.DEACTIVATION_UNPAID]
     })
+
     const creationEvent = eventInvoiceCreation.find(
       e => e.type === SubscriptionEvent.INVOICE_CREATION
     )
@@ -457,6 +460,7 @@ export class PeriodicJobService {
     )
     const sleep = (ms: number) => new Promise(r => setTimeout(r, ms))
     await sleep(randomSleepTimeout)
+
     return randomSleepTimeout
   }
 
@@ -468,6 +472,7 @@ export class PeriodicJobService {
     if (!this.runningJob) {
       throw new Error('Try to make a job as failed while none is running!')
     }
+
     await this.prismaService.periodicJob.update({
       where: {
         id: this.runningJob.id
@@ -478,6 +483,7 @@ export class PeriodicJobService {
         error
       }
     })
+
     this.runningJob = undefined
   }
 
@@ -496,14 +502,17 @@ export class PeriodicJobService {
         date: 'desc'
       }
     })
+
     if (!latestRun) {
       this.logger.debug('Periodic job first run')
       return [{isRetry: false, date: startOfDay(today)}]
     }
+
     if (latestRun.finishedWithError && !latestRun.successfullyFinished) {
       this.logger.warn('Last run had errors retrying....')
       runDates.push({isRetry: true, date: startOfDay(latestRun.date)})
     }
+
     return runDates.concat(this.generateDateArray(latestRun.date, today))
   }
 

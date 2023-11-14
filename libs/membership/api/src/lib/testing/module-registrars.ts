@@ -110,6 +110,7 @@ export function registerPaymentsModule(): DynamicModule {
           })
         )
       }
+
       return {paymentProviders}
     },
     inject: [ConfigService, PrismaService]

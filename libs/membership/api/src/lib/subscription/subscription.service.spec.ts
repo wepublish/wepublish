@@ -1,4 +1,3 @@
-import nock from 'nock'
 import {
   PaymentPeriodicity,
   PrismaClient,
@@ -7,29 +6,30 @@ import {
   SubscriptionEvent
 } from '@prisma/client'
 import {
-  initialize,
-  defineMemberPlanFactory,
-  defineSubscriptionFlowFactory,
-  definePaymentMethodFactory,
-  defineUserFactory,
-  defineSubscriptionIntervalFactory,
   defineInvoiceFactory,
-  defineSubscriptionFactory,
   defineInvoiceItemFactory,
-  defineSubscriptionPeriodFactory
-} from '../../__generated__/fabbrica'
+  defineMemberPlanFactory,
+  definePaymentMethodFactory,
+  defineSubscriptionFactory,
+  defineSubscriptionFlowFactory,
+  defineSubscriptionIntervalFactory,
+  defineSubscriptionPeriodFactory,
+  defineUserFactory,
+  initialize
+} from '@wepublish/testing'
+import nock from 'nock'
 
-import {Test, TestingModule} from '@nestjs/testing'
 import {forwardRef} from '@nestjs/common'
+import {Test, TestingModule} from '@nestjs/testing'
 import {PrismaModule, PrismaService} from '@wepublish/nest-modules'
-import {SubscriptionFlowService} from '../subscription-flow/subscription-flow.service'
-import {PeriodicJobService} from '../periodic-job/periodic-job.service'
-import {SubscriptionService} from './subscription.service'
-import {clearDatabase, clearFullDatabase} from '../../prisma-utils'
-import {add, sub} from 'date-fns'
-import {Action} from '../subscription-event-dictionary/subscription-event-dictionary.type'
 import {PaymentsService} from '@wepublish/payment/api'
+import {clearDatabase, clearFullDatabase} from '@wepublish/testing'
+import {add, sub} from 'date-fns'
+import {PeriodicJobService} from '../periodic-job/periodic-job.service'
+import {Action} from '../subscription-event-dictionary/subscription-event-dictionary.type'
+import {SubscriptionFlowService} from '../subscription-flow/subscription-flow.service'
 import {registerMailsModule, registerPaymentsModule} from '../testing/module-registrars'
+import {SubscriptionService} from './subscription.service'
 
 describe('SubscriptionController', () => {
   const prismaClient = new PrismaClient()
@@ -790,7 +790,9 @@ describe('SubscriptionController', () => {
       await subscriptionService.chargeInvoice(testableInvoice!, actions)
       throw Error('This execution should fail!')
     } catch (e) {
-      expect((e as Error).toString()).toEqual('Error: Payment Provider invalid not found!')
+      expect((e as Error).toString()).toEqual(
+        'NotFoundException: Payment Provider invalid not found!'
+      )
     }
   })
 
@@ -941,13 +943,11 @@ describe('SubscriptionController', () => {
   })
   it('Error if payment periodicity is not found', async () => {
     try {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      await subscriptionService['getMonthCount'](PaymentPeriodicity.invalid)
+      await subscriptionService['getMonthCount']('invalid' as any)
       throw Error('This execution should fail!')
     } catch (e) {
       expect((e as Error).toString()).toEqual(
-        'Error: Enum for PaymentPeriodicity undefined not defined!'
+        'Error: Enum for PaymentPeriodicity invalid not defined!'
       )
     }
   })
@@ -971,13 +971,11 @@ describe('SubscriptionController', () => {
         daysAwayFromEnding: 1,
         externalMailTemplate: null
       }
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      await subscriptionService['createInvoice']({}, event)
+      await subscriptionService['createInvoice']({} as any, event)
       throw Error('This execution should fail!')
     } catch (e) {
       expect((e as Error).toString()).toEqual(
-        'Error: Given action has not right type! RENEWAL_SUCCESS should never happen!'
+        'BadRequestException: Given action has not right type! RENEWAL_SUCCESS should never happen!'
       )
     }
   })
@@ -985,33 +983,39 @@ describe('SubscriptionController', () => {
   it('Offsession payment with canceled or already paid invoice', async () => {
     const date = new Date()
     try {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      await subscriptionService['offSessionPayment']({canceledAt: date, paidAt: null}, {}, {})
+      await subscriptionService['offSessionPayment'](
+        {canceledAt: date, paidAt: null} as any,
+        {} as any,
+        {} as any
+      )
       throw Error('This execution should fail!')
     } catch (e) {
       expect((e as Error).toString()).toEqual(
-        `Error: Tried to renew paid null or canceled invoice ${date} for subscription undefined`
+        `BadRequestException: Can not renew canceled invoice for subscription undefined`
       )
     }
     try {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      await subscriptionService['offSessionPayment']({canceledAt: null, paidAt: date}, {}, {})
+      await subscriptionService['offSessionPayment'](
+        {canceledAt: null, paidAt: date} as any,
+        {} as any,
+        {} as any
+      )
       throw Error('This execution should fail!')
     } catch (e) {
       expect((e as Error).toString()).toEqual(
-        `Error: Tried to renew paid ${date} or canceled invoice null for subscription undefined`
+        `BadRequestException: Can not renew paid invoice for subscription undefined`
       )
     }
     try {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      await subscriptionService['offSessionPayment']({canceledAt: date, paidAt: date}, {}, {})
+      await subscriptionService['offSessionPayment'](
+        {canceledAt: date, paidAt: date} as any,
+        {} as any,
+        {} as any
+      )
       throw Error('This execution should fail!')
     } catch (e) {
       expect((e as Error).toString()).toEqual(
-        `Error: Tried to renew paid ${date} or canceled invoice ${date} for subscription undefined`
+        `BadRequestException: Can not renew paid invoice for subscription undefined`
       )
     }
   })
@@ -1023,12 +1027,14 @@ describe('SubscriptionController', () => {
         daysAwayFromEnding: 1,
         externalMailTemplate: null
       }
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
-      await subscriptionService['offSessionPayment']({canceledAt: null, paidAt: null}, {}, [event])
+      await subscriptionService['offSessionPayment'](
+        {canceledAt: null, paidAt: null} as any,
+        {} as any,
+        [event]
+      )
       throw Error('This execution should fail!')
     } catch (e) {
-      expect((e as Error).toString()).toEqual('Error: Subscription or user not found!')
+      expect((e as Error).toString()).toEqual('NotFoundException: Subscription not found!')
     }
   })
 })

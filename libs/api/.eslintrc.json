@@ -1,11 +1,6 @@
 {
   "extends": ["../../.eslintrc.json"],
-  "ignorePatterns": [
-    "!**/*",
-    "__tests__/api/**/*.ts",
-    "src/__generated__/fabbrica",
-    "prisma/seed.ts"
-  ],
+  "ignorePatterns": ["!**/*", "__tests__/api/**/*.ts"],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],

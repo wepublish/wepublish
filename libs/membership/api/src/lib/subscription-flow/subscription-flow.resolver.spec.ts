@@ -6,14 +6,14 @@ import {Test, TestingModule} from '@nestjs/testing'
 import {PaymentPeriodicity, PrismaClient, SubscriptionEvent} from '@prisma/client'
 import {PrismaModule, PrismaService} from '@wepublish/nest-modules'
 import {PermissionsGuard} from '@wepublish/permissions/api'
-import request from 'supertest'
 import {
+  clearDatabase,
   defineMemberPlanFactory,
   definePaymentMethodFactory,
   defineSubscriptionFlowFactory,
   initialize
-} from '../../__generated__/fabbrica'
-import {clearDatabase} from '../../prisma-utils'
+} from '@wepublish/testing'
+import request from 'supertest'
 import {PeriodicJobService} from '../periodic-job/periodic-job.service'
 import {SubscriptionService} from '../subscription/subscription.service'
 import {registerMailsModule, registerPaymentsModule} from '../testing/module-registrars'
@@ -38,39 +38,77 @@ const getSubscriptionFlowsQuery = `
   }
 `
 const createSubscriptionFlowMutation = `
-  mutation Mutation($subscriptionFlow: SubscriptionFlowModelCreateInput!) {
-    createSubscriptionFlow(subscriptionFlow: $subscriptionFlow) {
+  mutation CreateSubscriptionFlow(
+    $memberPlanId: String!
+    $paymentMethodIds: [String!]!
+    $periodicities: [PaymentPeriodicity!]!
+    $autoRenewal: [Boolean!]!
+  ) {
+    createSubscriptionFlow(
+      memberPlanId: $memberPlanId
+      paymentMethodIds: $paymentMethodIds
+      periodicities: $periodicities
+      autoRenewal: $autoRenewal
+    ) {
       id
     }
   }
 `
 const updateSubscriptionFlowMutation = `
-  mutation UpdateSubscriptionFlow($subscriptionFlow: SubscriptionFlowModelUpdateInput!) {
-  updateSubscriptionFlow(subscriptionFlow: $subscriptionFlow) {
+mutation UpdateSubscriptionFlow(
+  $id: String!
+  $paymentMethodIds: [String!]!
+  $periodicities: [PaymentPeriodicity!]!
+  $autoRenewal: [Boolean!]!
+) {
+  updateSubscriptionFlow(
+    id: $id
+    paymentMethodIds: $paymentMethodIds
+    periodicities: $periodicities
+    autoRenewal: $autoRenewal
+  ) {
     id
   }
 }
 `
 
 const deleteSubscriptionFlowMutation = `
-  mutation UpdateSubscriptionFlow($subscriptionFlowId: String!) {
-  deleteSubscriptionFlow(subscriptionFlowId: $subscriptionFlowId) {
-    id
+  mutation DeleteSubscriptionFlow($id: String!) {
+    deleteSubscriptionFlow(id: $id) {
+      id
+    }
   }
-}
 `
 
 const createSubscriptionIntervalMutation = `
-  mutation CreateSubscriptionInterval($subscriptionInterval: SubscriptionIntervalCreateInput!) {
-    createSubscriptionInterval(subscriptionInterval: $subscriptionInterval) {
+  mutation CreateSubscriptionInterval(
+    $subscriptionFlowId: String!
+    $daysAwayFromEnding: Int
+    $mailTemplateId: String
+    $event: SubscriptionEvent!
+  ) {
+    createSubscriptionInterval(
+      subscriptionFlowId: $subscriptionFlowId
+      daysAwayFromEnding: $daysAwayFromEnding
+      mailTemplateId: $mailTemplateId
+      event: $event
+    ) {
       id
     }
   }
 `
 
 const updateSubscriptionInterval = `
-  mutation UpdateSubscriptionInterval($subscriptionInterval: SubscriptionIntervalUpdateInput!) {
-    updateSubscriptionInterval(subscriptionInterval: $subscriptionInterval) {
+  mutation UpdateSubscriptionInterval(
+    $id: String!
+    $daysAwayFromEnding: Int
+    $mailTemplateId: String
+  ) {
+    updateSubscriptionInterval(
+      id: $id
+      daysAwayFromEnding: $daysAwayFromEnding
+      mailTemplateId: $mailTemplateId
+    ) {
       id
     }
   }
@@ -176,12 +214,10 @@ describe('Subscription Flow Resolver', () => {
         .send({
           query: createSubscriptionFlowMutation,
           variables: {
-            subscriptionFlow: {
-              autoRenewal: true,
-              memberPlanId: 'abc',
-              paymentMethodIds: ['abc'],
-              periodicities: [PaymentPeriodicity.monthly]
-            }
+            autoRenewal: true,
+            memberPlanId: 'abc',
+            paymentMethodIds: ['abc'],
+            periodicities: [PaymentPeriodicity.monthly]
           }
         })
         .expect(200)
@@ -199,12 +235,10 @@ describe('Subscription Flow Resolver', () => {
         .send({
           query: updateSubscriptionFlowMutation,
           variables: {
-            subscriptionFlow: {
-              id: 'b7b37042-c9c7-4ebb-8a0d-1da489b1993b',
-              autoRenewal: true,
-              paymentMethodIds: ['abc'],
-              periodicities: [PaymentPeriodicity.monthly]
-            }
+            id: 'b7b37042-c9c7-4ebb-8a0d-1da489b1993b',
+            autoRenewal: true,
+            paymentMethodIds: ['abc'],
+            periodicities: [PaymentPeriodicity.monthly]
           }
         })
         .expect(200)
@@ -222,7 +256,7 @@ describe('Subscription Flow Resolver', () => {
         .send({
           query: deleteSubscriptionFlowMutation,
           variables: {
-            subscriptionFlowId: 'a85e1503-11a5-4482-8897-3578f9609b2e'
+            id: 'a85e1503-11a5-4482-8897-3578f9609b2e'
           }
         })
         .expect(200)
@@ -240,12 +274,10 @@ describe('Subscription Flow Resolver', () => {
         .send({
           query: createSubscriptionIntervalMutation,
           variables: {
-            subscriptionInterval: {
-              daysAwayFromEnding: 1,
-              event: SubscriptionEvent.CUSTOM,
-              mailTemplateId: 'f35d4391-6521-4648-9e76-8f27fa8fa91d',
-              subscriptionFlowId: '454d3146-9266-47a2-a87f-3c306cf1bd69'
-            }
+            daysAwayFromEnding: 1,
+            event: SubscriptionEvent.CUSTOM,
+            mailTemplateId: 'f35d4391-6521-4648-9e76-8f27fa8fa91d',
+            subscriptionFlowId: '454d3146-9266-47a2-a87f-3c306cf1bd69'
           }
         })
         .expect(200)
@@ -263,11 +295,9 @@ describe('Subscription Flow Resolver', () => {
         .send({
           query: updateSubscriptionInterval,
           variables: {
-            subscriptionInterval: {
-              id: '762e51c5-dbf2-4076-9ec0-881f77bc350a',
-              daysAwayFromEnding: 1,
-              mailTemplateId: '1eb61385-039a-4143-b525-b3b838e0d777'
-            }
+            id: '762e51c5-dbf2-4076-9ec0-881f77bc350a',
+            daysAwayFromEnding: 1,
+            mailTemplateId: '1eb61385-039a-4143-b525-b3b838e0d777'
           }
         })
         .expect(200)
@@ -285,9 +315,7 @@ describe('Subscription Flow Resolver', () => {
         .send({
           query: updateSubscriptionInterval,
           variables: {
-            subscriptionInterval: {
-              id: 'a792ef8a-0092-406d-8f4c-340007099fdd'
-            }
+            id: 'a792ef8a-0092-406d-8f4c-340007099fdd'
           }
         })
         .expect(200)

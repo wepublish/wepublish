@@ -4,7 +4,7 @@ export interface ModuleAsyncOptions<OptionsType> extends Pick<ModuleMetadata, 'i
   global?: boolean
   useExisting?: Type<OptionsType>
   useClass?: Type<OptionsType>
-  useFactory?: (...args: unknown[]) => Promise<OptionsType> | OptionsType
+  useFactory?: (...args: any[]) => Promise<OptionsType> | OptionsType
   inject?: Type[]
 }
 
