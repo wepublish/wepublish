@@ -2,6 +2,11 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type AllowedSettingVals {
+  boolChoice: Boolean
+  stringChoice: [String!]
+}
+
 type Consent {
   createdAt: DateTime!
   defaultValue: Boolean!
@@ -73,6 +78,9 @@ enum EventStatus {
   Scheduled
 }
 
+"""Setting Value"""
+scalar GraphQLSettingValueType
+
 input ImportedEventFilter {
   from: String
   location: String
@@ -112,6 +120,9 @@ type Mutation {
 
   "\n      Updates an existing consent.\n    "
   updateConsent(consent: ConsentInput!, id: String!): Consent!
+
+  """Updates an existing setting."""
+  updateSetting(name: SettingName!, value: GraphQLSettingValueType!): Setting!
 
   "\n      Updates an existing userConsent based on input.\n      Returns updated userConsent.\n    "
   updateUserConsent(id: String!, userConsent: UpdateUserConsentInput!): UserConsent!
@@ -168,6 +179,12 @@ type Query {
   "\n      Returns the revenue generated for the time period given.\n      Only includes paid invoices that have not been manually paid.\n    "
   revenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
 
+  "\n      Returns a single setting by id.\n    "
+  setting(id: String!): Setting!
+
+  "\n      Returns all settings.\n    "
+  settingsList(filter: SettingFilter): [Setting!]!
+
   "\n      Returns a single userConsent by id.\n    "
   userConsent(id: String!): UserConsent!
 
@@ -177,6 +194,43 @@ type Query {
 }
 
 scalar RichText
+
+type Setting {
+  id: ID!
+  name: SettingName!
+  settingRestriction: SettingRestriction
+  value: GraphQLSettingValueType
+}
+
+input SettingFilter {
+  name: String
+}
+
+enum SettingName {
+  ALLOW_COMMENT_EDITING
+  ALLOW_GUEST_COMMENTING
+  ALLOW_GUEST_COMMENT_RATING
+  ALLOW_GUEST_POLL_VOTING
+  COMMENT_CHAR_LIMIT
+  INVOICE_REMINDER_FREQ
+  INVOICE_REMINDER_MAX_TRIES
+  MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC
+  MAKE_EXPECTED_REVENUE_API_PUBLIC
+  MAKE_NEW_DEACTIVATIONS_API_PUBLIC
+  MAKE_NEW_SUBSCRIBERS_API_PUBLIC
+  MAKE_RENEWING_SUBSCRIBERS_API_PUBLIC
+  MAKE_REVENUE_API_PUBLIC
+  PEERING_TIMEOUT_MS
+  RESET_PASSWORD_JWT_EXPIRES_MIN
+  SEND_LOGIN_JWT_EXPIRES_MIN
+}
+
+type SettingRestriction {
+  allowedValues: AllowedSettingVals
+  inputLength: Int
+  maxValue: Int
+  minValue: Int
+}
 
 input SingleEventFilter {
   id: String!

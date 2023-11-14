@@ -1,5 +1,4 @@
 import {Test, TestingModule} from '@nestjs/testing'
-import * as crypto from 'crypto'
 import {htmlToSlate} from 'slate-serializers'
 import {EventsImportResolver} from './events-import.resolver'
 import {EVENT_IMPORT_PROVIDER, EventsImportService} from './events-import.service'
@@ -8,8 +7,6 @@ import {CACHE_MANAGER} from '@nestjs/cache-manager'
 import {PrismaClient} from '@prisma/client'
 import {MediaAdapterService} from '@wepublish/image/api'
 import {Node} from 'slate'
-
-export const generateRandomString = () => crypto.randomBytes(20).toString('hex')
 
 export const mockImportableEvents: Event[] = [
   {

@@ -10,7 +10,7 @@ import {useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Message, Pagination, Table as RTable, toaster} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
-import {getApiClientV2} from '../apiClientv2'
+import {getApiClientV2} from '@wepublish/editor/api-v2'
 
 import styled from '@emotion/styled'
 import {

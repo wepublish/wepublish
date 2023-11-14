@@ -1037,8 +1037,6 @@ export type Query = {
   subscriptions: Array<Subscription>;
   /** This query returns a list of tags */
   tags?: Maybe<TagConnection>;
-  /** This query returns the value of a comments answer rating if the user has already rated it. */
-  userCommentRatings: Array<CommentRating>;
   /** This query returns the answerId of a poll if the user has already voted on it. */
   userPollVote?: Maybe<Scalars['ID']>;
 };
@@ -1183,11 +1181,6 @@ export type QueryTagsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<TagSort>;
   take?: InputMaybe<Scalars['Int']>;
-};
-
-
-export type QueryUserCommentRatingsArgs = {
-  commentId: Scalars['ID'];
 };
 
 

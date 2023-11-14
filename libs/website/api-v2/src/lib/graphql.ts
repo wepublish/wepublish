@@ -17,7 +17,15 @@ export type Scalars = {
   Float: number;
   /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
   DateTime: string;
+  /** Setting Value */
+  GraphQLSettingValueType: any;
   RichText: Node[];
+};
+
+export type AllowedSettingVals = {
+  __typename?: 'AllowedSettingVals';
+  boolChoice?: Maybe<Scalars['Boolean']>;
+  stringChoice?: Maybe<Array<Scalars['String']>>;
 };
 
 export type Consent = {
@@ -153,6 +161,8 @@ export type Mutation = {
    *
    */
   updateConsent: Consent;
+  /** Updates an existing setting. */
+  updateSetting: Setting;
   /**
    *
    *       Updates an existing userConsent based on input.
@@ -191,6 +201,12 @@ export type MutationDeleteUserConsentArgs = {
 export type MutationUpdateConsentArgs = {
   consent: ConsentInput;
   id: Scalars['String'];
+};
+
+
+export type MutationUpdateSettingArgs = {
+  name: SettingName;
+  value: Scalars['GraphQLSettingValueType'];
 };
 
 
@@ -295,6 +311,18 @@ export type Query = {
   revenue: Array<DashboardInvoice>;
   /**
    *
+   *       Returns a single setting by id.
+   *
+   */
+  setting: Setting;
+  /**
+   *
+   *       Returns all settings.
+   *
+   */
+  settingsList: Array<Setting>;
+  /**
+   *
    *       Returns a single userConsent by id.
    *
    */
@@ -363,6 +391,16 @@ export type QueryRevenueArgs = {
 };
 
 
+export type QuerySettingArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QuerySettingsListArgs = {
+  filter?: InputMaybe<SettingFilter>;
+};
+
+
 export type QueryUserConsentArgs = {
   id: Scalars['String'];
 };
@@ -370,6 +408,45 @@ export type QueryUserConsentArgs = {
 
 export type QueryUserConsentsArgs = {
   filter?: InputMaybe<UserConsentFilter>;
+};
+
+export type Setting = {
+  __typename?: 'Setting';
+  id: Scalars['ID'];
+  name: SettingName;
+  settingRestriction?: Maybe<SettingRestriction>;
+  value?: Maybe<Scalars['GraphQLSettingValueType']>;
+};
+
+export type SettingFilter = {
+  name?: InputMaybe<Scalars['String']>;
+};
+
+export enum SettingName {
+  AllowCommentEditing = 'ALLOW_COMMENT_EDITING',
+  AllowGuestCommenting = 'ALLOW_GUEST_COMMENTING',
+  AllowGuestCommentRating = 'ALLOW_GUEST_COMMENT_RATING',
+  AllowGuestPollVoting = 'ALLOW_GUEST_POLL_VOTING',
+  CommentCharLimit = 'COMMENT_CHAR_LIMIT',
+  InvoiceReminderFreq = 'INVOICE_REMINDER_FREQ',
+  InvoiceReminderMaxTries = 'INVOICE_REMINDER_MAX_TRIES',
+  MakeActiveSubscribersApiPublic = 'MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC',
+  MakeExpectedRevenueApiPublic = 'MAKE_EXPECTED_REVENUE_API_PUBLIC',
+  MakeNewDeactivationsApiPublic = 'MAKE_NEW_DEACTIVATIONS_API_PUBLIC',
+  MakeNewSubscribersApiPublic = 'MAKE_NEW_SUBSCRIBERS_API_PUBLIC',
+  MakeRenewingSubscribersApiPublic = 'MAKE_RENEWING_SUBSCRIBERS_API_PUBLIC',
+  MakeRevenueApiPublic = 'MAKE_REVENUE_API_PUBLIC',
+  PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
+  ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
+  SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN'
+}
+
+export type SettingRestriction = {
+  __typename?: 'SettingRestriction';
+  allowedValues?: Maybe<AllowedSettingVals>;
+  inputLength?: Maybe<Scalars['Int']>;
+  maxValue?: Maybe<Scalars['Int']>;
+  minValue?: Maybe<Scalars['Int']>;
 };
 
 export type SingleEventFilter = {
