@@ -10,9 +10,7 @@ import {useTranslation} from 'react-i18next'
 import {Checkbox, Form, Loader, Message, Panel, SelectPicker, toaster} from 'rsuite'
 import {getApiClientV2} from '../apiClientv2'
 
-type UserConsentFormData = Partial<
-  MutationCreateUserConsentArgs['userConsent'] & MutationUpdateUserConsentArgs['userConsent']
->
+type UserConsentFormData = Partial<MutationCreateUserConsentArgs & MutationUpdateUserConsentArgs>
 
 type UserConsentFormProps = {
   isEdit?: boolean
