@@ -195,11 +195,16 @@ export class PeriodicJobController {
 
     for (const event of subscriptionDictionary) {
       if (event.type === SubscriptionEvent.CUSTOM) {
+        // Return all invoices for mail ordered by creation date
+        const invoices = await this.prismaService.invoice.findMany({
+          where: {subscriptionID: subscriptionsWithEvent.id},
+          orderBy: {createdAt: 'desc'}
+        })
         await this.sendTemplateMail(
           event,
           subscriptionsWithEvent.user,
           periodicJobRunObject.isRetry,
-          subscriptionsWithEvent,
+          {subscription: subscriptionsWithEvent, invoices},
           periodicJobRunObject.date
         )
       }
