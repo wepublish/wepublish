@@ -1,4 +1,4 @@
-import {Args, Query, Resolver} from '@nestjs/graphql'
+import {Args, Int, Query, Resolver} from '@nestjs/graphql'
 import {CanGetPeriodicJobLog, Permissions} from '@wepublish/permissions/api'
 import {PeriodicJobModel} from './periodic-job.model'
 import {PeriodicJobService} from './periodic-job.service'
@@ -14,7 +14,10 @@ export class PeriodicJobResolver {
       Returns 
     `
   })
-  periodicJobLog(@Args('skip') skip: number, @Args('take') take: number) {
+  periodicJobLog(
+    @Args('skip', {type: () => Int}) skip: number,
+    @Args('take', {type: () => Int}) take: number
+  ) {
     return this.periodicJobService.PeriodicJobLog(skip, take)
   }
 }

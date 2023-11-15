@@ -1,14 +1,4 @@
-import {Field, Int, ObjectType, registerEnumType} from '@nestjs/graphql'
-import {PaymentPeriodicity, SubscriptionDeactivationReason} from '@prisma/client'
-
-registerEnumType(SubscriptionDeactivationReason, {
-  name: 'SubscriptionDeactivationReason'
-})
-
-registerEnumType(PaymentPeriodicity, {
-  name: 'PaymentPeriodicity'
-})
-
+import {Field, ObjectType} from '@nestjs/graphql'
 @ObjectType()
 export class PeriodicJobModel {
   @Field()

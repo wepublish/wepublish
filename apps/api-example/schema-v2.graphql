@@ -206,7 +206,7 @@ type Query {
         Returns 
       
   """
-  periodicJobLog(skip: Float!, take: Float!): [PeriodicJobModel!]!
+  periodicJobLog(skip: Int!, take: Int!): [PeriodicJobModel!]!
   provider: MailProviderModel!
 
   """
