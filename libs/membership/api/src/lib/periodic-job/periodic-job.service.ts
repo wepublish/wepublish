@@ -1,6 +1,5 @@
 import {Injectable} from '@nestjs/common'
 import {PrismaClient} from '@prisma/client'
-import {ok} from 'assert'
 import {PeriodicJobModel} from './periodic-job.model'
 
 @Injectable()
