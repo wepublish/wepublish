@@ -214,6 +214,19 @@ export enum PaymentPeriodicity {
   Yearly = 'yearly'
 }
 
+export type PeriodicJobModel = {
+  __typename?: 'PeriodicJobModel';
+  createdAt: Scalars['DateTime'];
+  date: Scalars['DateTime'];
+  error?: Maybe<Scalars['String']>;
+  executionTime?: Maybe<Scalars['DateTime']>;
+  finishedWithError?: Maybe<Scalars['DateTime']>;
+  id: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  successfullyFinished?: Maybe<Scalars['DateTime']>;
+  tries: Scalars['Float'];
+};
+
 export type Query = {
   __typename?: 'Query';
   /**
@@ -243,6 +256,8 @@ export type Query = {
    */
   newSubscribers: Array<DashboardSubscription>;
   paymentMethods: Array<PaymentMethodRef>;
+  /** Returns  */
+  periodicJobLog: Array<PeriodicJobModel>;
   provider: MailProviderModel;
   /** Returns all renewing subscribers in a given timeframe. */
   renewingSubscribers: Array<DashboardSubscription>;
@@ -288,6 +303,12 @@ export type QueryNewSubscribersArgs = {
 };
 
 
+export type QueryPeriodicJobLogArgs = {
+  skip: Scalars['Int'];
+  take: Scalars['Int'];
+};
+
+
 export type QueryRenewingSubscribersArgs = {
   end?: InputMaybe<Scalars['DateTime']>;
   start: Scalars['DateTime'];
@@ -326,7 +347,6 @@ export enum SubscriptionEvent {
   DeactivationByUser = 'DEACTIVATION_BY_USER',
   DeactivationUnpaid = 'DEACTIVATION_UNPAID',
   InvoiceCreation = 'INVOICE_CREATION',
-  Reactivation = 'REACTIVATION',
   RenewalFailed = 'RENEWAL_FAILED',
   RenewalSuccess = 'RENEWAL_SUCCESS',
   Subscribe = 'SUBSCRIBE'
@@ -534,6 +554,14 @@ export type SynchronizeMailTemplatesMutation = { __typename?: 'Mutation', syncTe
 export type FullMailTemplateFragment = { __typename?: 'MailTemplateWithUrlAndStatusModel', id: string, name: string, description?: string | null, externalMailTemplateId: string, remoteMissing: boolean, url: string, status: string };
 
 export type FullMailProviderFragment = { __typename?: 'MailProviderModel', name: string };
+
+export type PeriodicJobLogsQueryVariables = Exact<{
+  skip: Scalars['Int'];
+  take: Scalars['Int'];
+}>;
+
+
+export type PeriodicJobLogsQuery = { __typename?: 'Query', periodicJobLog: Array<{ __typename?: 'PeriodicJobModel', createdAt: string, date: string, error?: string | null, executionTime?: string | null, finishedWithError?: string | null, id: string, modifiedAt: string, successfullyFinished?: string | null, tries: number }> };
 
 export type SubscriptionFlowsQueryVariables = Exact<{
   defaultFlowOnly: Scalars['Boolean'];
@@ -1174,6 +1202,50 @@ export function useSynchronizeMailTemplatesMutation(baseOptions?: Apollo.Mutatio
 export type SynchronizeMailTemplatesMutationHookResult = ReturnType<typeof useSynchronizeMailTemplatesMutation>;
 export type SynchronizeMailTemplatesMutationResult = Apollo.MutationResult<SynchronizeMailTemplatesMutation>;
 export type SynchronizeMailTemplatesMutationOptions = Apollo.BaseMutationOptions<SynchronizeMailTemplatesMutation, SynchronizeMailTemplatesMutationVariables>;
+export const PeriodicJobLogsDocument = gql`
+    query periodicJobLogs($skip: Int!, $take: Int!) {
+  periodicJobLog(skip: $skip, take: $take) {
+    createdAt
+    date
+    error
+    executionTime
+    finishedWithError
+    id
+    modifiedAt
+    successfullyFinished
+    tries
+  }
+}
+    `;
+
+/**
+ * __usePeriodicJobLogsQuery__
+ *
+ * To run a query within a React component, call `usePeriodicJobLogsQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePeriodicJobLogsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePeriodicJobLogsQuery({
+ *   variables: {
+ *      skip: // value for 'skip'
+ *      take: // value for 'take'
+ *   },
+ * });
+ */
+export function usePeriodicJobLogsQuery(baseOptions: Apollo.QueryHookOptions<PeriodicJobLogsQuery, PeriodicJobLogsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PeriodicJobLogsQuery, PeriodicJobLogsQueryVariables>(PeriodicJobLogsDocument, options);
+      }
+export function usePeriodicJobLogsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PeriodicJobLogsQuery, PeriodicJobLogsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PeriodicJobLogsQuery, PeriodicJobLogsQueryVariables>(PeriodicJobLogsDocument, options);
+        }
+export type PeriodicJobLogsQueryHookResult = ReturnType<typeof usePeriodicJobLogsQuery>;
+export type PeriodicJobLogsLazyQueryHookResult = ReturnType<typeof usePeriodicJobLogsLazyQuery>;
+export type PeriodicJobLogsQueryResult = Apollo.QueryResult<PeriodicJobLogsQuery, PeriodicJobLogsQueryVariables>;
 export const SubscriptionFlowsDocument = gql`
     query SubscriptionFlows($defaultFlowOnly: Boolean!, $memberPlanId: String) {
   subscriptionFlows(

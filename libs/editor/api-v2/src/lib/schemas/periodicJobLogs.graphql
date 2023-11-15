@@ -1,0 +1,13 @@
+query periodicJobLogs($skip: Int!, $take: Int!) {
+    periodicJobLog(skip: $skip, take: $take) {
+        createdAt
+        date
+        error
+        executionTime
+        finishedWithError
+        id
+        modifiedAt
+        successfullyFinished
+        tries
+    }
+}

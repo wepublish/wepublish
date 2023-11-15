@@ -9,6 +9,7 @@ import {
 } from '@wepublish/ui/editor'
 import {useTranslation} from 'react-i18next'
 import {FlexboxGrid, Panel as RPanel} from 'rsuite'
+import {PeriodicJobsLog} from '@wepublish/membership/editor'
 
 const Wrapper = styled(FlexboxGrid)`
   margin-top: 20px;
@@ -17,6 +18,7 @@ const Wrapper = styled(FlexboxGrid)`
 
 const Item = styled(FlexboxGrid.Item)`
   max-height: 100%;
+  margin-bottom: 20px;
 `
 
 export function Dashboard() {
@@ -34,6 +36,14 @@ export function Dashboard() {
         </ListViewHeader>
       </ListViewContainer>
       <Wrapper justify="space-between">
+        <PermissionControl qualifyingPermissions={['CAN_GET_PERIODIC_JOB_LOG']}>
+          <Item colspan={24}>
+            <RPanel header={'Jobs Logging'} bordered>
+              <PeriodicJobsLog />
+            </RPanel>
+          </Item>
+        </PermissionControl>
+
         <Item colspan={14}>
           <RPanel header={t('dashboard.activity')} bordered>
             <ActivityFeed />

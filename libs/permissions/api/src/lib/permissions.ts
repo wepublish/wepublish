@@ -832,7 +832,8 @@ export const EditorPermissions: Permission[] = [
   CanDeleteConsent,
   CanCreateEvent,
   CanGetSubscriptionFlows,
-  CanGetMailTemplates
+  CanGetMailTemplates,
+  CanGetPeriodicJobLog
 ]
 
 export const PeerPermissions: Permission[] = [
