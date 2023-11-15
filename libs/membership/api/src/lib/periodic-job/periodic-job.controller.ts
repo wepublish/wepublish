@@ -21,6 +21,7 @@ import {Action} from '../subscription-event-dictionary/subscription-event-dictio
 import {SubscriptionController} from '../subscription/subscription.controller'
 import {PaymentsService} from '@wepublish/payments'
 import {inspect} from 'util'
+import {SubscriptionHelper} from '../subscription/subscription.helper'
 
 const FIVE_MINUTES_IN_MS = 5 * 60 * 1000
 
@@ -99,18 +100,16 @@ export class PeriodicJobController {
   private async findAndDeactivateExpiredNotAutoRenewSubscription(
     periodicJobRunObject: PeriodicJobRunObject
   ) {
+    const subscriptionHelper = new SubscriptionHelper(this.prismaService)
     const subscriptionsToDeactivate =
       await this.subscriptionController.getExpiredNotAutoRenewSubscriptionsToDeactivate(
         periodicJobRunObject.date
       )
     for (const subscriptionToDeactivate of subscriptionsToDeactivate) {
-      await this.prismaService.subscriptionDeactivation.create({
-        data: {
-          subscriptionID: subscriptionToDeactivate.id,
-          date: new Date(),
-          reason: SubscriptionDeactivationReason.userSelfDeactivated
-        }
-      })
+      await subscriptionHelper.cancelSubscriptionById(
+        subscriptionToDeactivate.id,
+        SubscriptionDeactivationReason.userSelfDeactivated
+      )
     }
   }
 
