@@ -1401,7 +1401,7 @@
       "sendMail": "Envoyer un mail à l'utilisateur (Registration System Mail)"
     },
     "periodicJobsLog": {
-      "jobFailedTitle": "Les jobs automatiques ont échoué! Contourner Contacter l'IT!",
+      "jobFailedTitle": "Les jobs automatiques sont tombés en panne! Contacter l'IT!",
       "concerns": "Concerne: entre autres, le renouvellement de l'abonnement.",
       "noRun": "Le renouvellement automatique des abonnements n'a jamais été exécuté.",
       "failedJob": "Échec! Contacter immédiatement le service informatique.",

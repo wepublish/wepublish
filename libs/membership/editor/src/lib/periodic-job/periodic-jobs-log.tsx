@@ -22,7 +22,7 @@ export function PeriodicJobsLog() {
    * Else return all job logs. This is meant to shorten the list in favor of UX.
    */
   const jobs: PeriodicJobModel[] = useMemo<PeriodicJobModel[]>(() => {
-    if (!data?.periodicJobLog) return []
+    if (!data?.periodicJobLog?.length) return []
     const hasFailingJobs = !!data.periodicJobLog.find(job => !!job?.finishedWithError)
     return hasFailingJobs ? data.periodicJobLog : [data.periodicJobLog[0]]
   }, [data?.periodicJobLog])

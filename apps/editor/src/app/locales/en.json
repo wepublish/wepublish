@@ -1527,7 +1527,7 @@
       "sendMail": "Send mail to user (Registration System Mail)"
     },
     "periodicJobsLog": {
-      "jobFailedTitle": "Automatic jobs failed! Contact IT.",
+      "jobFailedTitle": "Automatic jobs did not run! Contact IT.",
       "concerns": "Concerns: e.g. subscription renewal.",
       "noRun": "The automatic renewal of subscriptions was never executed.",
       "failedJob": "Failed! Contact IT immediately.",
