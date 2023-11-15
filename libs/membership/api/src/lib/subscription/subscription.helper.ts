@@ -20,10 +20,8 @@ export class SubscriptionHelper {
         reason
       }
     })
-    const promises = [
-      deactivatePromise,
-      ...(await this.cancelInvoicesForSubscription(subscriptionID))
-    ]
+    const invoicePromises = await this.cancelInvoicesForSubscription(subscriptionID)
+    const promises = [deactivatePromise, ...invoicePromises]
     await this.prismaService.$transaction(promises)
   }
 
