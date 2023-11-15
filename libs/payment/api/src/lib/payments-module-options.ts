@@ -1,5 +1,5 @@
-import {ModuleAsyncOptions} from '@wepublish/utils'
-import {PaymentProvider} from './payment-provider'
+import {ModuleAsyncOptions} from '@wepublish/utils/api'
+import {PaymentProvider} from './payment-provider/payment-provider'
 
 export const PAYMENTS_MODULE_OPTIONS = 'PAYMENTS_MODULE_OPTIONS'
 
