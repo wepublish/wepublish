@@ -139,6 +139,18 @@ enum PaymentPeriodicity {
   yearly
 }
 
+type PeriodicJobModel {
+  createdAt: DateTime!
+  date: DateTime!
+  error: String
+  executionTime: DateTime
+  finishedWithError: DateTime
+  id: String!
+  modifiedAt: DateTime!
+  successfullyFinished: DateTime
+  tries: Float!
+}
+
 type Query {
   """
   
@@ -188,6 +200,13 @@ type Query {
   """
   newSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
   paymentMethods: [PaymentMethodRef!]!
+
+  """
+  
+        Returns 
+      
+  """
+  periodicJobLog(skip: Float!, take: Float!): [PeriodicJobModel!]!
   provider: MailProviderModel!
 
   """

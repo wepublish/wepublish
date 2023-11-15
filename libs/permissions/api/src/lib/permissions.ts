@@ -643,6 +643,12 @@ export const CanDeleteSubscriptionFlow: Permission = {
   deprecated: false
 }
 
+export const CanGetPeriodicJobLog: Permission = {
+  id: 'CAN_GET_PERIODIC_JOB_LOG',
+  description: 'Allows to get periodic job log',
+  deprecated: false
+}
+
 /**
  * Mail templates
  */
@@ -773,6 +779,7 @@ export const AllPermissions: Permission[] = [
   CanUpdateSubscriptionFlow,
   CanCreateSubscriptionFlow,
   CanDeleteSubscriptionFlow,
+  CanGetPeriodicJobLog,
   CanGetMailTemplates,
   CanSyncMailTemplates,
   CanGetSystemMails,
