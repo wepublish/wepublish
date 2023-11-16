@@ -231,10 +231,15 @@ function insertLink(editor: Editor, selection: Range | null, url: string, title?
       Transforms.select(editor, selection)
     }
   }
-
   Transforms.unwrapNodes(editor, {match: node => node.type === InlineFormat.Link})
   Transforms.wrapNodes(editor, {type: InlineFormat.Link, url, title, children: []}, {split: true})
   Transforms.collapse(editor, {edge: 'end'})
+
+  const pointAfterLink = Editor.after(editor, selection!.focus, {distance: 1, unit: 'offset'})
+  if (pointAfterLink) {
+    Transforms.insertNodes(editor, {text: ''}, {at: pointAfterLink})
+    Transforms.move(editor, {distance: 1, unit: 'offset'})
+  }
 }
 
 function removeLink(editor: Editor) {
