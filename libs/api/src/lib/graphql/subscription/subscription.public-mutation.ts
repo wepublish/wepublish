@@ -1,24 +1,28 @@
-import {PaymentPeriodicity, Prisma, PrismaClient} from '@prisma/client'
 import {Context} from '../../context'
+import {PaymentPeriodicity, Prisma, PrismaClient, Subscription} from '@prisma/client'
 import {MonthlyAmountNotEnough, NotFound, PaymentConfigurationNotAllowed} from '../../error'
+import {PaymentProvider} from '@wepublish/payment/api'
+import {handleRemoteManagedSubscription} from './subscription.private-mutation'
 
 export const updatePublicSubscription = async (
   id: string,
   input: Pick<
     Prisma.SubscriptionUncheckedUpdateInput,
     'memberPlanID' | 'paymentPeriodicity' | 'monthlyAmount' | 'autoRenew' | 'paymentMethodID'
-  > & {deactivation: Prisma.SubscriptionDeactivationUncheckedUpdateInput},
+  >,
   authenticateUser: Context['authenticateUser'],
   memberContext: Context['memberContext'],
   activeMemberPlansByID: Context['loaders']['activeMemberPlansByID'],
   activePaymentMethodsByID: Context['loaders']['activePaymentMethodsByID'],
-  subscriptionClient: PrismaClient['subscription']
+  subscriptionClient: PrismaClient['subscription'],
+  paymentProviders: PaymentProvider[]
 ) => {
   const {user} = authenticateUser()
 
   const subscription = await subscriptionClient.findUnique({
     where: {id},
     include: {
+      properties: true,
       deactivation: true
     }
   })
@@ -36,6 +40,10 @@ export const updatePublicSubscription = async (
   if (!monthlyAmount || (monthlyAmount as number) < memberPlan.amountPerMonthMin)
     throw new MonthlyAmountNotEnough()
 
+  if (subscription.deactivation) {
+    throw new Error('You are not allowed to change a deactivated subscription!')
+  }
+
   if (
     !memberPlan.availablePaymentMethods.some(apm => {
       if (apm.forceAutoRenewal && !autoRenew) {
@@ -51,6 +59,23 @@ export const updatePublicSubscription = async (
     throw new PaymentConfigurationNotAllowed()
   }
 
+  // handle remote managed subscriptions (Payrexx Subscription)
+  const {paymentProviderID} = await memberContext.getPaymentMethodByIDOrSlug(
+    memberContext.loaders,
+    undefined,
+    subscription.paymentMethodID
+  )
+  const paymentProvider = paymentProviders.find(
+    paymentProvider => paymentProvider.id === paymentProviderID
+  )
+  if (paymentProvider.remoteManagedSubscription) {
+    await handleRemoteManagedSubscription({
+      paymentProvider,
+      originalSubscription: subscription,
+      input: input as Subscription
+    })
+  }
+
   const updateSubscription = await subscriptionClient.update({
     where: {id},
     data: {
@@ -59,10 +84,7 @@ export const updatePublicSubscription = async (
       paymentPeriodicity,
       monthlyAmount,
       autoRenew,
-      paymentMethodID,
-      deactivation: {
-        delete: Boolean(subscription.deactivation)
-      }
+      paymentMethodID
     },
     include: {
       deactivation: true,
@@ -72,11 +94,6 @@ export const updatePublicSubscription = async (
   })
 
   if (!updateSubscription) throw new Error('Error during updateSubscription')
-
-  // cancel open invoices if subscription is deactivated
-  if (input.deactivation !== null) {
-    await memberContext.cancelInvoicesForSubscription(id)
-  }
 
   return await memberContext.handleSubscriptionChange({
     subscription: updateSubscription
