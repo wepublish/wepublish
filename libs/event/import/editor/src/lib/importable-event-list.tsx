@@ -105,7 +105,7 @@ function ImportableEventListView() {
   const alreadyImported = ids?.importedEventsIds
 
   const importEvent = async (id: string, source: string) => {
-    createEvent({variables: {filter: {id, source}}})
+    createEvent({variables: {id, source}})
   }
 
   const isLoading = queryLoading || mutationLoading

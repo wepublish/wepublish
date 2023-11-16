@@ -19,7 +19,7 @@ export interface EventsImportAsyncOptions extends Pick<ModuleMetadata, 'imports'
   useExisting?: Type<EventsImportOptionsFactory>
   useClass?: Type<EventsImportOptionsFactory>
   useFactory?: (...args: unknown[]) => Promise<EventsProvider[]> | EventsProvider[]
-  inject?: any[]
+  inject?: Type[]
 }
 
 @Module({

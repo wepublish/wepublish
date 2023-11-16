@@ -1,4 +1,4 @@
-import {Field, ObjectType, InputType, registerEnumType, Int} from '@nestjs/graphql'
+import {Field, ObjectType, InputType, registerEnumType, Int, ArgsType} from '@nestjs/graphql'
 import {GraphQLRichText} from '@wepublish/richtext/api'
 import {Node} from 'slate'
 
@@ -94,12 +94,16 @@ export class ImportedEventsDocument {
 export class ImportedEventFilter {
   @Field({nullable: true})
   name?: string
+
   @Field({nullable: true})
   from?: string
+
   @Field({nullable: true})
   to?: string
+
   @Field(type => [String], {nullable: 'itemsAndList'})
   providers?: string[]
+
   @Field({nullable: true})
   location?: string
 }
@@ -113,7 +117,7 @@ export class SingleEventFilter {
   source!: string
 }
 
-@InputType()
+@ArgsType()
 export class CreateEventArgs {
   @Field()
   id!: string

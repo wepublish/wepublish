@@ -59,9 +59,6 @@ export class EventsImportResolver {
     return this.events.getProviders()
   }
 
-  /*
-  Mutations
- */
   @Mutation(returns => String, {
     name: 'createEvent',
     description: `
@@ -69,7 +66,7 @@ export class EventsImportResolver {
       Also, uploads an image to WePublish Image library.
     `
   })
-  createEventFromSource(@Args('filter') filter: CreateEventArgs) {
+  createEventFromSource(@Args() filter: CreateEventArgs) {
     return this.events.createEventFromSource(filter)
   }
 }

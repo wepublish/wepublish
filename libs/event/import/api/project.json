@@ -1,24 +1,24 @@
 {
-  "name": "events/import-editor",
+  "name": "events-import-api",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/events/import/editor/src",
+  "sourceRoot": "libs/event/import/api/src",
   "projectType": "library",
-  "tags": [],
   "targets": {
     "lint": {
-      "executor": "@nx/linter:eslint",
+      "executor": "@nrwl/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["libs/events/import/editor/**/*.{ts,tsx,js,jsx}"]
+        "lintFilePatterns": ["libs/event/import/api/**/*.ts"]
       }
     },
     "test": {
-      "executor": "@nx/jest:jest",
+      "executor": "@nrwl/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "libs/events/import/editor/jest.config.ts",
+        "jestConfig": "libs/event/import/api/jest.config.ts",
         "passWithNoTests": true
       }
     }
-  }
+  },
+  "tags": []
 }
