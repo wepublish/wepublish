@@ -156,7 +156,7 @@ import {SlackMailProvider} from '../app/slack-mail-provider'
                 config.get('BEXIO_INVOICE_MAIL_BODY_RENEW') ||
                 'Hello :user.firstname:\n\nThank you for subscribing to :memberPlan.name:.\nYou can view your invoice here: [Network Link]\n\nBest wishes from the Wepublish team',
               markInvoiceAsOpen: false,
-              prisma: prisma
+              prisma
             })
           )
         }
