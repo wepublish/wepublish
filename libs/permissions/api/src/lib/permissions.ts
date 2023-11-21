@@ -770,7 +770,6 @@ export const AllPermissions: Permission[] = [
   CanGetEvent,
   CanUpdateEvent,
   CanDeleteEvent,
-  CanCreateEvent,
   CanCreateConsent,
   CanUpdateConsent,
   CanDeleteConsent,
