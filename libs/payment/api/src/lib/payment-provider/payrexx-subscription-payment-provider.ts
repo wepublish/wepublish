@@ -10,7 +10,7 @@ import {
   UpdateRemoteSubscriptionAmountProps,
   WebhookForPaymentIntentProps
 } from './payment-provider'
-import {logger} from '@wepublish/utils/api'
+import {logger, mapPaymentPeriodToMonths} from '@wepublish/utils/api'
 import {
   PaymentState,
   PaymentPeriodicity,
@@ -47,21 +47,6 @@ function mapPayrexxEventToPaymentStatus(event: string): PaymentState | null {
       return PaymentState.declined
     default:
       return null
-  }
-}
-
-function getMonths(pp: PaymentPeriodicity) {
-  switch (pp) {
-    case PaymentPeriodicity.yearly:
-      return 12
-    case PaymentPeriodicity.biannual:
-      return 6
-    case PaymentPeriodicity.quarterly:
-      return 3
-    case PaymentPeriodicity.monthly:
-      return 1
-    default:
-      return 1
   }
 }
 
@@ -156,7 +141,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
     if (!isPayrexxExt) {
       throw new Error(`Payrexx Subscription Id not found on subscription ${props.subscription.id}`)
     }
-    const amount = props.newAmount * getMonths(props.subscription.paymentPeriodicity)
+    const amount = props.newAmount * mapPaymentPeriodToMonths(props.subscription.paymentPeriodicity)
     await this.updateAmountUpstream(parseInt(isPayrexxExt.value, 10), amount.toString())
   }
 
@@ -225,7 +210,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
 
       // Calculate new subscription valid until
       const newSubscriptionValidUntil = add(longestPeriod.endsAt, {
-        months: getMonths(subscription.paymentPeriodicity)
+        months: mapPaymentPeriodToMonths(subscription.paymentPeriodicity)
       }).toISOString()
       const newSubscriptionValidFrom = add(longestPeriod.endsAt, {
         days: 1
@@ -245,7 +230,7 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
 
       const payedAmount = rawSubscription.invoice.amount
       const minPayment =
-        subscription.monthlyAmount * getMonths(subscription.paymentPeriodicity) - 100 // -1CHF to ensure that imported rounding differences are no issue
+        subscription.monthlyAmount * mapPaymentPeriodToMonths(subscription.paymentPeriodicity) - 100 // -1CHF to ensure that imported rounding differences are no issue
       if (payedAmount < minPayment) {
         logger('payrexxSubscriptionPaymentProvider').warn(
           `Payrexx Subscription ${subscription.id} payment ${payedAmount} lower than min payment ${minPayment}`

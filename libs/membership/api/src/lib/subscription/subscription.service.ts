@@ -18,7 +18,7 @@ import {PrismaService} from '@wepublish/nest-modules'
 import {PaymentProvider, PaymentsService} from '@wepublish/payment/api'
 import {add, endOfDay, startOfDay, sub} from 'date-fns'
 import {Action} from '../subscription-event-dictionary/subscription-event-dictionary.type'
-import {getMonthsFromPaymentPeriodicity} from '@wepublish/utils'
+import {mapPaymentPeriodToMonths} from '@wepublish/utils/api'
 
 export type SubscriptionControllerConfig = {
   subscription: Subscription
@@ -181,7 +181,7 @@ export class SubscriptionService {
     if (periods.length === 0) {
       return {
         startsAt: add(new Date(), {days: 1}),
-        endsAt: add(new Date(), {months: getMonthsFromPaymentPeriodicity(periodicity)})
+        endsAt: add(new Date(), {months: mapPaymentPeriodToMonths(periodicity)})
       }
     }
     const latestPeriod = periods.reduce(function (prev, current) {
@@ -189,7 +189,7 @@ export class SubscriptionService {
     })
     return {
       startsAt: add(latestPeriod.endsAt, {days: 1}),
-      endsAt: add(latestPeriod.endsAt, {months: getMonthsFromPaymentPeriodicity(periodicity)})
+      endsAt: add(latestPeriod.endsAt, {months: mapPaymentPeriodToMonths(periodicity)})
     }
   }
 
@@ -214,7 +214,7 @@ export class SubscriptionService {
     }
 
     const amount =
-      subscription.monthlyAmount * getMonthsFromPaymentPeriodicity(subscription.paymentPeriodicity)
+      subscription.monthlyAmount * mapPaymentPeriodToMonths(subscription.paymentPeriodicity)
     const description = `${subscription.paymentPeriodicity} renewal of subscription ${subscription.memberPlan.name}`
     const deactivationDate = add(subscription.paidUntil || new Date(), {
       days: scheduledDeactivation.daysAwayFromEnding || undefined
@@ -268,7 +268,7 @@ export class SubscriptionService {
     }
   ) {
     const newPaidUntil = add(invoice.subscription!.paidUntil || invoice.subscription!.createdAt, {
-      months: getMonthsFromPaymentPeriodicity(invoice.subscription!.paymentPeriodicity)
+      months: mapPaymentPeriodToMonths(invoice.subscription!.paymentPeriodicity)
     })
 
     await this.prismaService.$transaction([

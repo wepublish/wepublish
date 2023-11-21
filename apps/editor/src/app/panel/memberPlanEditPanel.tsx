@@ -27,10 +27,10 @@ import {
   PermissionControl,
   RichTextBlock,
   RichTextBlockValue,
-  slugify,
   toggleRequiredLabel,
   useAuthorisation
 } from '@wepublish/ui/editor'
+import {slugify} from '@wepublish/utils'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {

@@ -1,7 +1,7 @@
 /* eslint-disable */
 export default {
-  displayName: 'utils',
-  preset: '../../jest.preset.js',
+  displayName: 'utils-api',
+  preset: '../../../jest.preset.js',
   globals: {},
   testEnvironment: 'node',
   transform: {
@@ -13,5 +13,5 @@ export default {
     ]
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../../coverage/libs/utils'
+  coverageDirectory: '../../../coverage/libs/utils/api'
 }

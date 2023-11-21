@@ -12,6 +12,7 @@ export const unselectPassword: Record<
     | 'PollVote'
     | 'userImage'
     | 'UserConsent'
+    | 'mailSent'
   >,
   boolean
 > = {

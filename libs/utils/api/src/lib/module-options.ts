@@ -5,7 +5,7 @@ export interface ModuleAsyncOptions<OptionsType> extends Pick<ModuleMetadata, 'i
   useExisting?: Type<OptionsType>
   useClass?: Type<OptionsType>
   useFactory?: (...args: any[]) => Promise<OptionsType> | OptionsType
-  inject?: any[]
+  inject?: Type[]
 }
 
 export const createAsyncOptionsProvider = <OptionsType>(
