@@ -39,8 +39,8 @@ const consentQuery = `
 `
 
 const createConsentMutation = `
-  mutation createConsent($consent: ConsentInput!) {
-    createConsent(consent: $consent) {
+  mutation createConsent($name: String!, $slug: String!, $defaultValue: Boolean!) {
+    createConsent(name: $name, slug: $slug, defaultValue: $defaultValue) {
       id
       createdAt
       modifiedAt
@@ -52,8 +52,8 @@ const createConsentMutation = `
 `
 
 const updateConsentMutation = `
-  mutation updateConsent($id: String!, $consent: ConsentInput!) {
-    updateConsent(id: $id, consent: $consent) {
+  mutation updateConsent($id: String!, $name: String, $slug: String, $defaultValue: Boolean) {
+    updateConsent(id: $id, name: $name, slug: $slug, defaultValue: $defaultValue) {
       id
       createdAt
       modifiedAt
@@ -134,9 +134,7 @@ describe('ConsentResolver', () => {
       .post('/')
       .send({
         query: createConsentMutation,
-        variables: {
-          consent: toCreate
-        }
+        variables: toCreate
       })
       .set('Accept', 'application/json')
       .expect(200)
@@ -165,7 +163,7 @@ describe('ConsentResolver', () => {
         query: updateConsentMutation,
         variables: {
           id: idToUpdate,
-          consent: toUpdate
+          ...toUpdate
         }
       })
       .set('Accept', 'application/json')

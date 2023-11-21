@@ -38,12 +38,12 @@ export const addPublicComment = async (
   const commentLength = countRichtextChars(0, input.text)
 
   const maxCommentLength = (
-    await new PrismaClient().setting.findUnique({
+    await settingsClient.findUnique({
       where: {
         name: SettingName.COMMENT_CHAR_LIMIT
       }
     })
-  ).value
+  )?.value as number
 
   if (commentLength > maxCommentLength) {
     throw new CommentLengthError(+maxCommentLength)
@@ -133,7 +133,7 @@ export const updatePublicComment = async (
     }
   })
 
-  if (!commentEditingSetting.value && comment.state !== CommentState.pendingUserChanges) {
+  if (!commentEditingSetting?.value && comment.state !== CommentState.pendingUserChanges) {
     throw new UserInputError('Comment state must be pending user changes')
   }
 
