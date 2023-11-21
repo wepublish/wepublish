@@ -215,6 +215,7 @@ const authLink = new ApolloLink((operation, forward) => {
 
 export function getApiClientV2() {
   const {apiURL} = getSettings()
+
   return new ApolloClient({
     link: authLink.concat(createHttpLink({uri: `${apiURL}/v2`, fetch})),
     cache: new InMemoryCache()

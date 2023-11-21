@@ -114,10 +114,10 @@ type Mutation {
   "\n      Creates and event based on data from importable events list and an id and provider.\n      Also, uploads an image to WePublish Image library.\n    "
   createEvent(id: String!, source: String!): String!
 
-  """"""
+  """Create a new subscription flow"""
   createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
 
-  """"""
+  """Create a subscription interval"""
   createSubscriptionInterval(daysAwayFromEnding: Int, event: SubscriptionEvent!, mailTemplateId: String, subscriptionFlowId: String!): [SubscriptionFlowModel!]!
 
   "\n      Creates a new userConsent based on input.\n      Returns created userConsent.\n    "
@@ -126,25 +126,29 @@ type Mutation {
   "\n      Deletes an existing consent.\n    "
   deleteConsent(id: String!): Consent!
 
-  """"""
+  """Delete an existing subscription flow"""
   deleteSubscriptionFlow(id: String!): [SubscriptionFlowModel!]!
 
-  """"""
+  """Delete an existing subscription interval"""
   deleteSubscriptionInterval(id: String!): [SubscriptionFlowModel!]!
 
   "\n      Delete an existing userConsent by id.\n      Returns deleted userConsent.\n    "
   deleteUserConsent(id: String!): UserConsent!
   syncTemplates: Boolean
+
+  """Sends a test email for the given event"""
   testSystemMail(event: UserEvent!): Boolean!
 
   "\n      Updates an existing consent.\n    "
   updateConsent(defaultValue: Boolean, id: String!, name: String, slug: String): Consent!
 
-  """"""
+  """Update an existing subscription flow"""
   updateSubscriptionFlow(autoRenewal: [Boolean!], id: String!, paymentMethodIds: [String!], periodicities: [PaymentPeriodicity!]): [SubscriptionFlowModel!]!
 
-  """"""
+  """Update an existing subscription interval"""
   updateSubscriptionInterval(daysAwayFromEnding: Int, id: String!, mailTemplateId: String): [SubscriptionFlowModel!]!
+
+  """Updates an existing mail flow"""
   updateSystemMail(event: UserEvent!, mailTemplateId: String!): [SystemMailModel!]!
 
   "\n      Updates an existing userConsent based on input.\n      Returns updated userConsent.\n    "
@@ -194,6 +198,8 @@ type Query {
 
   "\n      Returns a list of external source ids of already imported events.\n    "
   importedEventsIds: [String!]!
+
+  """Return all mail templates"""
   mailTemplates: [MailTemplateWithUrlAndStatusModel!]!
 
   "\n      Returns all new deactivations in a given timeframe.\n      This considers the time the deactivation was made, not when the subscription runs out.\n    "
@@ -201,6 +207,8 @@ type Query {
 
   "\n      Returns all new subscribers in a given timeframe.\n      Includes already deactivated ones.\n    "
   newSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
+
+  """Returns all payment methods"""
   paymentMethods: [PaymentMethodRef!]!
   provider: MailProviderModel!
 
@@ -210,8 +218,10 @@ type Query {
   "\n      Returns the revenue generated for the time period given.\n      Only includes paid invoices that have not been manually paid.\n    "
   revenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
 
-  """"""
+  """Returns all subscription flows"""
   subscriptionFlows(defaultFlowOnly: Boolean!, memberPlanId: String): [SubscriptionFlowModel!]!
+
+  """Returns all mail flows"""
   systemMails: [SystemMailModel!]!
 
   "\n      Returns a single userConsent by id.\n    "

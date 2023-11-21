@@ -9,10 +9,10 @@ import {
 } from '@wepublish/editor/api'
 import {
   createCheckedPermissionComponent,
-  ModelTitle,
   PollAnswers,
   PollExternalVotes,
-  RichTextBlock
+  RichTextBlock,
+  SingleViewTitle
 } from '@wepublish/ui/editor'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
@@ -148,7 +148,7 @@ function PollEditView() {
       <FlexboxGrid>
         {/* model title */}
         <FlexboxGrid.Item colspan={24}>
-          <ModelTitle
+          <SingleViewTitle
             loading={loading}
             title={poll?.question || t('pollList.noQuestion')}
             loadingTitle={t('pollEditView.loadingTitle')}

@@ -814,14 +814,11 @@
       "username": "Nom d'utilisateur·trice"
     },
     "memberPlanList": {
-      "autoRenewal": "Forcer le renouvellement automatique",
       "editTitle": "Modifier le plan membre",
       "paymentPeriodicities": "Périodicités de paiement",
       "action": "Actions",
       "active": "Actif",
-      "activeDescription": "Rendre le plan disponible",
       "adapter": "Solution de paiement",
-      "autoRenewalDescription": "Force le renouvellement automatique de l'abonnement",
       "createNew": "Nouveau plan membre",
       "createTitle": "Création d'un plan membre",
       "deleteModalTitle": "Supprimer le plan membre",
@@ -973,8 +970,8 @@
         "reasonNone": "Aucun motif",
         "reasonUserSelfDeactivated": "Désactivation par l'utilisateur·trice",
         "reasonInvoiceNotPaid": "Facture impayée",
-        "isDeactivated": "L'abonnement est désactivé depuis le {{date, ccc PP p}} et doit être réactivé avant de pouvoir être modifié.",
-        "help": "Les abonnements désactivés peuvent encore être utilisés jusqu'à la date \"payée jusqu'à\". Mais ils ne seront pas renouvelés automatiquement, même si l'option de renouvellement automatique est activée."
+        "isDeactivated": "L'abonnement est désactivé depuis {{date, ccc PP p}} et ne peut plus être modifié. Le cas échéant, un nouvel abonnement peut être souscrit.",
+        "help": "Les abonnements désactivés peuvent encore être utilisés jusqu'à la date \"payée jusqu'à\". Mais ils ne seront pas renouvelés automatiquement, même si l'option de renouvellement automatique est activée. Une fois désactivé, l'abonnement ne peut pas être réactivé."
       },
       "hasAddress": "Adresse de l'utilisateur·trice"
     },
@@ -1058,7 +1055,7 @@
       "commentTags": "Tags",
       "imageLibrary": "Bibliothèque d'images",
       "logout": "Déconnection",
-      "memberPlans": "Plans membres",
+      "memberPlans": "Plans d'abonnement",
       "navigations": "Menus",
       "pages": "Pages",
       "paymentMethods": "Méthodes de paiement",
@@ -1066,12 +1063,15 @@
       "tokens": "Tokens",
       "userRoles": "Rôles d'utilisateur/utilisatrice",
       "users": "Utilisateur/Utilisatrices",
-      "usersAndMembers": "Utilisateur/Utilisatrices et membres",
+      "usersAndMembers": "Utilisateur & Abonnements",
       "myPeerInfo": "Mon profil de pair",
       "peers": "Peers",
       "settings": "Paramètres",
       "peerArticles": "Articles pairables",
       "subscriptions": "Abonnements",
+      "subscriptionSettings": "Default Mailing",
+      "mailTemplates": "Modèles de courriels",
+      "subscriptionPlans": "Plans d'abonnement",
       "consents": "Consentement",
       "userConsents": "Consentement de l'utilisateur",
       "importableEvents": "Importable Events"
@@ -1233,7 +1233,8 @@
       "noUserErrorMessage": "Veuillez sélectionner un·e utilisateur·trice",
       "noTokenErrorMessage": "Veuillez entrer un token",
       "invalidRange": "La valeur doit être comprise entre {{min}} et {{max}}.",
-      "required": "Ce champ est requis"
+      "required": "Ce champ est requis",
+      "minimalAmountPerMonth": "Le montant minimum / mois est de {{amount}} chf."
     },
     "invoice": {
       "manuallyPaidByAdmin": "Marqué comme payé par l'administrateur.",
@@ -1364,6 +1365,21 @@
       "import": "Import",
       "imported": "Imported"
     },
+    "mailTemplates": {
+      "availableTemplates": "Modèles de courriels disponibles",
+      "explanation": "Tu peux utiliser ces modèles de {{provider}} pour envoyer des notifications..",
+      "name": "Nom",
+      "internalName": "Nom interne",
+      "description": "Description",
+      "content": "Contenu",
+      "view": "Voir sur {{provider}}",
+      "status": "Statut",
+      "synchronize": "Synchroniser les modèles",
+      "statusDeleted": "Modèle '{{internalName}}' supprimé sur {{provider}}"
+    },
+    "mailTemplateSelect": {
+      "noMailSentSelectNow": "pas d'envoi mail"
+    },
     "general": {
       "deletedSuccess": "Supprimé avec succès",
       "created": "Créé avec succès",
@@ -1389,6 +1405,12 @@
       "createdBy": " de {{creator}}",
       "user": "Utilisateur",
       "memberPlan": "Plan membre: {{plan}}"
+    },
+    "draggableSubscriptionInterval": {
+      "ignoreDeactivatedSubscriptions": "Les e-mails destinés aux abonnements désactivés ne sont pas envoyés!"
+    },
+    "resetUserPasswordForm": {
+      "sendMail": "Envoyer un mail à l'utilisateur (Registration System Mail)"
     }
   }
 }

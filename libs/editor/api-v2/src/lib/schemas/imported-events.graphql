@@ -11,7 +11,6 @@ fragment ImportableEventRef on Event {
   endsAt
 }
 
-# queries
 query ImportedEventList(
   $filter: ImportedEventFilter
   $order: Int
@@ -49,7 +48,6 @@ query EventProviders {
   eventProviders
 }
 
-# mutations
-mutation createEvent($filter: CreateEventArgs!) {
-  createEvent(filter: $filter)
+mutation createEvent($id: String!, $source: String!) {
+  createEvent(id: $id, source: $source)
 }

@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import {ReactChild} from 'react'
+import {ReactNode} from 'react'
 import {MdChevronLeft} from 'react-icons/md'
 import {Link} from 'react-router-dom'
 import {Button, Col, FlexboxGrid, Loader as RLoader, Row} from 'rsuite'
@@ -48,18 +48,18 @@ const Heading = styled.h1`
   line-height: 50px;
 `
 
-interface modelTitleProps {
+interface SingleViewTitleProps {
   title?: string
   loading: boolean
   loadingTitle: string
   saveBtnTitle: string
   saveAndCloseBtnTitle: string
   closePath: string
-  additionalMenu?: ReactChild
+  additionalMenu?: ReactNode
   setCloseFn(close: boolean): void
 }
 
-export function ModelTitle({
+export function SingleViewTitle({
   title,
   loading,
   loadingTitle,
@@ -68,7 +68,7 @@ export function ModelTitle({
   closePath,
   additionalMenu,
   setCloseFn
-}: modelTitleProps) {
+}: SingleViewTitleProps) {
   /**
    * UI helpers
    */
