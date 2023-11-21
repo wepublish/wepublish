@@ -13,6 +13,7 @@ export const unselectPassword: Record<
     | 'userImage'
     | 'mailSent'
     | 'UserConsent'
+    | 'mailSent'
   >,
   boolean
 > = {

@@ -109,7 +109,7 @@ describe('ConsentService', () => {
       defaultValue: false
     }
 
-    const result = await service.updateConsent({id: idToUpdate, consent})
+    const result = await service.updateConsent({id: idToUpdate, ...consent})
     expect(result).toMatchObject([
       {
         id: idToUpdate,

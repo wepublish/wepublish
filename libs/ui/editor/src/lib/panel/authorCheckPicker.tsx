@@ -6,10 +6,10 @@ import {
   useCreateAuthorMutation
 } from '@wepublish/editor/api'
 import {getOperationNameFromDocument} from '../utility'
+import {slugify} from '@wepublish/utils'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, CheckPicker} from 'rsuite'
-import {slugify} from '@wepublish/utils'
 
 const ButtonWrapper = styled.div`
   margin: 10px;
