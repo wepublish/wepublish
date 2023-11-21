@@ -7,7 +7,7 @@ import {
   User,
   UserAddress
 } from '@prisma/client'
-import {getMonthsFromPaymentPeriodicity, logger} from '@wepublish/utils'
+import {mapPaymentPeriodToMonths, logger} from '@wepublish/utils/api'
 import Bexio, {ContactsStatic, InvoicesStatic} from 'bexio'
 import {MappedReplacer} from 'mapped-replacer'
 import {
@@ -335,7 +335,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
           text: invoice.subscription.memberPlan.name,
           unit_price: `${
             (invoice.subscription.monthlyAmount *
-              getMonthsFromPaymentPeriodicity(invoice.subscription.paymentPeriodicity)) /
+              mapPaymentPeriodToMonths(invoice.subscription.paymentPeriodicity)) /
             100
           }`,
           type: 'KbPositionCustom'

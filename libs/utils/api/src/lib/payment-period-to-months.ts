@@ -1,6 +1,6 @@
 import {PaymentPeriodicity} from '@prisma/client'
 
-export function getMonthsFromPaymentPeriodicity(periodicity: PaymentPeriodicity) {
+export function mapPaymentPeriodToMonths(periodicity: PaymentPeriodicity) {
   switch (periodicity) {
     case PaymentPeriodicity.yearly:
       return 12
