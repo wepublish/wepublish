@@ -168,9 +168,7 @@ describe('UserConsentService', () => {
       value: true
     }
 
-    const user = {user: {roleIDs: ['admin']}} as UserSession
-
-    const result = await service.createUserConsent(userConsent, user)
+    const result = await service.createUserConsent(userConsent)
     expect(result).toMatchSnapshot()
     expect(mockFunction.mock.calls[0][0]).toMatchSnapshot()
   })
@@ -192,14 +190,11 @@ describe('UserConsentService', () => {
     ])
 
     const mockFunction = jest.spyOn(prisma.userConsent, 'update').mockReturnValue(mockValue as any)
-
-    const userConsent = {
-      value: false
-    }
+    const userConsent = false
 
     const user = {user: {roleIDs: ['admin']}} as UserSession
 
-    const result = await service.updateUserConsent({id: idToUpdate, userConsent, user})
+    const result = await service.updateUserConsent(idToUpdate, userConsent, user)
     expect(result).toMatchObject([
       {
         id: idToUpdate,
