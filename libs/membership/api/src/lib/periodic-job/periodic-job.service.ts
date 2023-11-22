@@ -184,6 +184,7 @@ export class PeriodicJobService {
       periodicJobRunObject.date,
       startOfDay(subscriptionsWithEvent.paidUntil!)
     )
+
     const subscriptionDictionary =
       await this.subscriptionEventDictionary.getActionsForSubscriptions({
         memberplanId: subscriptionsWithEvent.memberPlanID,
@@ -193,13 +194,18 @@ export class PeriodicJobService {
         daysAwayFromEnding
       })
 
+    const invoices = await this.prismaService.invoice.findMany({
+      where: {subscriptionID: subscriptionsWithEvent.id},
+      orderBy: {createdAt: 'desc'}
+    })
+
     for (const event of subscriptionDictionary) {
       if (event.type === SubscriptionEvent.CUSTOM) {
         await this.sendTemplateMail(
           event,
           subscriptionsWithEvent.user,
           periodicJobRunObject.isRetry,
-          subscriptionsWithEvent,
+          {subscription: subscriptionsWithEvent, invoices},
           periodicJobRunObject.date
         )
       }
@@ -276,7 +282,7 @@ export class PeriodicJobService {
       creationEvent,
       subscriptionToCreateInvoice.user,
       periodicJobRunObject.isRetry,
-      subscriptionToCreateInvoice,
+      {subscriptionToCreateInvoice, invoice},
       periodicJobRunObject.date
     )
     return true
@@ -315,13 +321,18 @@ export class PeriodicJobService {
 
     if (mailAction.action) {
       const user = Object.assign({}, invoiceToCharge.subscription.user)
+      const {subscription, items, subscriptionPeriods, ...invoice} = invoiceToCharge
+
       await this.sendTemplateMail(
         mailAction.action,
         user,
         periodicJobRunObject.isRetry,
         {
           errorCode: mailAction.errorCode,
-          ...invoiceToCharge
+          invoice,
+          subscriptionPeriods,
+          items,
+          subscription
         },
         periodicJobRunObject.date
       )
@@ -370,12 +381,13 @@ export class PeriodicJobService {
     }
 
     await this.subscriptionController.deactivateSubscription(unpaidInvoice)
+    const {subscription, ...invoice} = unpaidInvoice
 
     await this.sendTemplateMail(
       eventDeactivationUnpaid[0],
       unpaidInvoice.subscription.user,
       periodicJobRunObject.isRetry,
-      unpaidInvoice,
+      {subscription, invoice},
       periodicJobRunObject.date
     )
   }

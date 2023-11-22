@@ -102,6 +102,7 @@ describe('MailController', () => {
         }
       }
     })
+
     const mandrillNockScope = await nock('https://mandrillapp.com:443')
       .post(
         '/api/1.0/messages/send-template',
@@ -123,7 +124,7 @@ describe('MailController', () => {
                   {name: 'user_preferredName', content: 'nickname'},
                   {name: 'user_password', content: 'hidden'},
                   {name: 'user_active', content: true},
-                  {name: 'user_roleIDs', content: ['hidden']},
+                  {name: 'user_roleIDs_0', content: 'hidden'},
                   {name: 'optional_root1_n1_n2_n3_depth', content: 3},
                   {name: 'optional_root1_n1_n2_depth', content: 2},
                   {name: 'optional_root1_n1_depth', content: 1},

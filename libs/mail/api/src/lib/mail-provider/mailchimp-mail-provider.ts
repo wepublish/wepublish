@@ -52,17 +52,29 @@ function flattenObjForMandrill<T>(ob: T): Record<string, string> {
   for (const i in ob) {
     const nestedObj = ob[i]
 
-    if (nestedObj && typeof nestedObj === 'object' && !Array.isArray(nestedObj)) {
+    if (Array.isArray(nestedObj)) {
+      for (const j in nestedObj) {
+        if (nestedObj[j] && typeof nestedObj[j] === 'object') {
+          const returnedNestedObject = flattenObjForMandrill(nestedObj[j])
+
+          for (const k in returnedNestedObject) {
+            nestedObject[`${i}_${j}_${k}`] = returnedNestedObject[k]
+          }
+        } else {
+          nestedObject[`${i}_${j}`] = nestedObj[j]
+        }
+      }
+    } else if (nestedObj && typeof nestedObj === 'object') {
       const returnedNestedObject = flattenObjForMandrill(nestedObj)
 
       for (const j in returnedNestedObject) {
         nestedObject[`${i}_${j}`] = returnedNestedObject[j]
       }
+    } else {
+      // eventho it should be string according to Mandrill typings
+      // it accepts booleans, numbers etc.
+      nestedObject[i] = nestedObj as any
     }
-
-    // eventho it should be string according to Mandrill typings
-    // it accepts booleans, numbers etc.
-    nestedObject[i] = nestedObj as any
   }
 
   return nestedObject
