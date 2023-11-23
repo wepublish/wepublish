@@ -1411,6 +1411,18 @@
     },
     "resetUserPasswordForm": {
       "sendMail": "Envoyer un mail à l'utilisateur (Registration System Mail)"
+    },
+    "periodicJobsLog": {
+      "title": "Periodic Job Logs",
+      "jobFailedTitle": "Les jobs automatiques sont tombés en panne! Contacter l'IT!",
+      "concerns": "Concerne: entre autres, le renouvellement de l'abonnement.",
+      "noRun": "Le renouvellement automatique des abonnements n'a jamais été exécuté.",
+      "failedJob": "Échec! Contacter immédiatement le service informatique.",
+      "lastRunSuccessful": "Réussite à la dernière exécution.",
+      "startTime": "Started at: {{date, ccc PP p}}",
+      "successTime": "Success at: {{date, ccc PP p}}",
+      "errorTime": "Errored at: {{date, ccc PP p}}",
+      "tries": "Runs: {{tries}}"
     }
   }
 }

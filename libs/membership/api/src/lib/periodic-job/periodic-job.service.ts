@@ -42,17 +42,29 @@ export class PeriodicJobService {
     private readonly payments: PaymentsService
   ) {}
 
+  getJobLog(take: number, skip?: number) {
+    return this.prismaService.periodicJob.findMany({
+      skip,
+      take: Math.min(take, 100),
+      orderBy: {
+        date: 'desc'
+      }
+    })
+  }
+
   /**
    * Run the periodic jobs. This makes sure that no two instances of the same
    * controller run their jobs at the same time and returns if they are.
    * @returns void
    */
-  public async concurrentExecute() {
+  public async concurrentExecute(): Promise<void> {
     await this.sleepForRandomIntervalToEnsureConcurrency()
+
     if (await this.isAlreadyAJobRunning()) {
       this.logger.log('Periodic job already running on an other instance. skipping...')
       return
     }
+
     await this.execute()
   }
 
@@ -103,15 +115,35 @@ export class PeriodicJobService {
       await this.subscriptionController.getExpiredNotAutoRenewSubscriptionsToDeactivate(
         periodicJobRunObject.date
       )
-    for (const subscriptionToDeactivate of subscriptionsToDeactivate) {
-      await this.prismaService.subscriptionDeactivation.create({
+
+    const promises = subscriptionsToDeactivate.map(subscription =>
+      this.prismaService.subscription.update({
+        where: {
+          id: subscription.id
+        },
         data: {
-          subscriptionID: subscriptionToDeactivate.id,
-          date: new Date(),
-          reason: SubscriptionDeactivationReason.userSelfDeactivated
+          deactivation: {
+            create: {
+              date: new Date(),
+              reason: SubscriptionDeactivationReason.userSelfDeactivated
+            }
+          },
+          invoices: {
+            updateMany: {
+              where: {
+                canceledAt: null,
+                paidAt: null
+              },
+              data: {
+                canceledAt: new Date()
+              }
+            }
+          }
         }
       })
-    }
+    )
+
+    this.prismaService.$transaction(promises)
   }
 
   private async findAndDeactivateSubscriptions(
@@ -120,6 +152,7 @@ export class PeriodicJobService {
     const unpaidInvoices = await this.subscriptionController.getSubscriptionsToDeactivate(
       periodicJobRunObject.date
     )
+
     for (const unpaidInvoice of unpaidInvoices) {
       await this.deactivateSubscription(periodicJobRunObject, unpaidInvoice)
     }

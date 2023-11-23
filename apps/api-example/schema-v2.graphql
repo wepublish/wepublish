@@ -185,6 +185,18 @@ enum PaymentPeriodicity {
   yearly
 }
 
+type PeriodicJob {
+  createdAt: DateTime!
+  date: DateTime!
+  error: String
+  executionTime: DateTime
+  finishedWithError: DateTime
+  id: String!
+  modifiedAt: DateTime!
+  successfullyFinished: DateTime
+  tries: Float!
+}
+
 type Query {
   "\n      Returns all active subscribers.\n      Includes subscribers with a cancelled but not run out subscription.\n    "
   activeSubscribers: [DashboardSubscription!]!
@@ -221,6 +233,7 @@ type Query {
 
   """Returns all payment methods"""
   paymentMethods: [PaymentMethodRef!]!
+  periodicJobLog(skip: Int, take: Int = 10): [PeriodicJob!]!
   provider: MailProviderModel!
 
   "\n      Returns all renewing subscribers in a given timeframe.\n    "

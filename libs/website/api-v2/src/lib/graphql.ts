@@ -329,6 +329,19 @@ export enum PaymentPeriodicity {
   Yearly = 'yearly'
 }
 
+export type PeriodicJob = {
+  __typename?: 'PeriodicJob';
+  createdAt: Scalars['DateTime'];
+  date: Scalars['DateTime'];
+  error?: Maybe<Scalars['String']>;
+  executionTime?: Maybe<Scalars['DateTime']>;
+  finishedWithError?: Maybe<Scalars['DateTime']>;
+  id: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  successfullyFinished?: Maybe<Scalars['DateTime']>;
+  tries: Scalars['Float'];
+};
+
 export type Query = {
   __typename?: 'Query';
   /**
@@ -399,6 +412,7 @@ export type Query = {
   newSubscribers: Array<DashboardSubscription>;
   /** Returns all payment methods */
   paymentMethods: Array<PaymentMethodRef>;
+  periodicJobLog: Array<PeriodicJob>;
   provider: MailProviderModel;
   /**
    *
@@ -484,6 +498,12 @@ export type QueryNewDeactivationsArgs = {
 export type QueryNewSubscribersArgs = {
   end?: InputMaybe<Scalars['DateTime']>;
   start: Scalars['DateTime'];
+};
+
+
+export type QueryPeriodicJobLogArgs = {
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 

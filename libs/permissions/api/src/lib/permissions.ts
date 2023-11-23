@@ -679,6 +679,15 @@ export const CanUpdateSystemMails: Permission = {
   deprecated: false
 }
 
+/**
+ * Periodic Job
+ */
+export const CanGetPeriodicJobLog: Permission = {
+  id: 'CAN_GET_PERIODIC_JOB_LOG',
+  description: 'Allows to get the periodic job log',
+  deprecated: false
+}
+
 export const AllPermissions: Permission[] = [
   CanTakeActionOnComment,
   CanCreateNavigation,
@@ -779,6 +788,7 @@ export const AllPermissions: Permission[] = [
   CanCreateSubscriptionFlow,
   CanDeleteSubscriptionFlow,
   CanGetMailTemplates,
+  CanGetPeriodicJobLog,
   CanSyncMailTemplates,
   CanGetSystemMails,
   CanUpdateSystemMails,
@@ -832,6 +842,7 @@ export const EditorPermissions: Permission[] = [
   CanCreateEvent,
   CanGetSubscriptionFlows,
   CanGetMailTemplates,
+  CanGetPeriodicJobLog,
   CanCreateApprovedComment
 ]
 

@@ -1540,6 +1540,18 @@
     },
     "resetUserPasswordForm": {
       "sendMail": "Send mail to user (Registration System Mail)"
+    },
+    "periodicJobsLog": {
+      "title": "Periodic Job Logs",
+      "jobFailedTitle": "Automatic jobs did not run! Contact IT.",
+      "concerns": "Concerns: e.g. subscription renewal.",
+      "noRun": "The automatic renewal of subscriptions was never executed.",
+      "failedJob": "Failed! Contact IT immediately.",
+      "lastRunSuccessful": "Successful in the last run.",
+      "startTime": "Started at: {{date, ccc PP p}}",
+      "successTime": "Success at: {{date, ccc PP p}}",
+      "errorTime": "Errored at: {{date, ccc PP p}}",
+      "tries": "Runs: {{tries}}"
     }
   }
 }

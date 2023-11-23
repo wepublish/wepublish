@@ -1460,6 +1460,18 @@
     },
     "resetUserPasswordForm": {
       "sendMail": "Mail an User:in senden (Registration System Mail)"
+    },
+    "periodicJobsLog": {
+      "title": "Automatische Job-Logs",
+      "jobFailedTitle": "Automatische Jobs ausgefallen! Umgehend mit IT Kontakt aufnehmen.",
+      "concerns": "Betrifft: u.a. Abo-Erneuerung.",
+      "noRun": "Die automatische Erneuerung der Abos wurde nie ausgeführt.",
+      "failedJob": "Fehlgeschlagen! Umgehend mit IT Kontakt aufnehmen.",
+      "lastRunSuccessful": "Im letzten Durchlauf erfolgreich.",
+      "startTime": "Gestarted: {{date, ccc PP p}}",
+      "successTime": "Erfolgreich: {{date, ccc PP p}}",
+      "errorTime": "Fehler: {{date, ccc PP p}}",
+      "tries": "Versuche: {{tries}}"
     }
   }
 }
