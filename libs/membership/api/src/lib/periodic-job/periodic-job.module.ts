@@ -1,11 +1,12 @@
 import {Module} from '@nestjs/common'
-import {PeriodicJobExecutor} from './periodic-job.executor'
 import {PrismaModule} from '@wepublish/nest-modules'
-import {PeriodicJobService} from './periodic-job.service'
 import {SubscriptionFlowModule} from '../subscription-flow/subscription-flow.module'
+import {PeriodicJobExecutor} from './periodic-job.executor'
+import {PeriodicJobResolver} from './periodic-job.resolver'
+import {PeriodicJobService} from './periodic-job.service'
 
 @Module({
-  providers: [PeriodicJobExecutor, PeriodicJobService],
+  providers: [PeriodicJobExecutor, PeriodicJobService, PeriodicJobResolver],
   imports: [PrismaModule, SubscriptionFlowModule]
 })
 export class PeriodicJobModule {}
