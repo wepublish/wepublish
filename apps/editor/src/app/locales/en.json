@@ -1130,7 +1130,8 @@
       "city": "City",
       "country": "Country",
       "selectUserImage": "Choose profile picture",
-      "flair": "Flair"
+      "flair": "Flair",
+      "foreignKeySubscription": "User cannot be deleted. This user is associated with an existing subscription."
     },
     "userSubscriptionList": {
       "deactivationReason": {

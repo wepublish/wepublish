@@ -896,7 +896,8 @@
       "city": "Ville",
       "country": "Pays",
       "selectUserImage": "Choisir une photo de profil",
-      "flair": "Flair"
+      "flair": "Flair",
+      "foreignKeySubscription": "L'utilisateur ne peut pas être supprimé. Cet utilisateur est associé à un abonnement existant."
     },
     "userSubscriptionList": {
       "deactivationReason": {

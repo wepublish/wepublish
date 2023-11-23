@@ -1113,7 +1113,8 @@
       "city": "Stadt",
       "country": "Land",
       "selectUserImage": "Profilbild wählen",
-      "flair": "Funktionsbeschreibung"
+      "flair": "Funktionsbeschreibung",
+      "foreignKeySubscription": "Benutzer kann nicht gelöscht werden. Dieser Benutzer ist mit einem bestehenden Abonnement verknüpft."
     },
     "userSubscriptionList": {
       "deactivationReason": {
