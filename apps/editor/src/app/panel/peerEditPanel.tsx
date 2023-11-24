@@ -15,10 +15,10 @@ import {
   getOperationNameFromDocument,
   PermissionControl,
   RichTextBlock,
-  slugify,
   toggleRequiredLabel,
   useAuthorisation
 } from '@wepublish/ui/editor'
+import {slugify} from '@wepublish/utils'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Drawer, Form as RForm, Message, Panel, Schema, toaster} from 'rsuite'

@@ -75,7 +75,6 @@ export default function EventList() {
               <Checkbox
                 checked={variables?.filter?.upcomingOnly ?? false}
                 onChange={(_, checked) => {
-                  console.log(_, checked)
                   onVariablesChange({
                     filter: {
                       ...variables?.filter,

@@ -13,7 +13,7 @@ const consentValues = [
   }
 ]
 
-type ConsentFormData = MutationCreateConsentArgs['consent'] | MutationUpdateConsentArgs['consent']
+type ConsentFormData = MutationCreateConsentArgs | MutationUpdateConsentArgs
 
 type ConsentFormProps = {
   create?: boolean
@@ -48,7 +48,7 @@ export const ConsentForm = ({consent, onChange, create}: ConsentFormProps) => {
         <Form.Group controlId="defaultValue">
           <Form.ControlLabel>{t('consents.defaultValueTitle')}</Form.ControlLabel>
           <Checkbox
-            checked={consent.defaultValue}
+            checked={!!consent.defaultValue}
             onChange={(_, checked) => {
               onChange({defaultValue: checked})
             }}>

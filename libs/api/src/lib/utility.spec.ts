@@ -1,5 +1,4 @@
 import {
-  slugify,
   base64Encode,
   base64Decode,
   markResultAsProxied,
@@ -13,13 +12,6 @@ import {
 } from './utility'
 
 describe('Utility Functions', () => {
-  describe('slugify', () => {
-    it('should convert a string to a slug', () => {
-      expect(slugify('Hello World!')).toBe('hello-world')
-      expect(slugify('ÇĆĈČ')).toBe('cccc')
-    })
-  })
-
   describe('base64Encode and base64Decode', () => {
     it('should encode a string to base64 and decode it back', () => {
       const original = 'Hello World'

@@ -79,7 +79,8 @@ export function CommentHistory({
         states: [
           CommentState.Approved,
           CommentState.PendingUserChanges,
-          CommentState.PendingApproval
+          CommentState.PendingApproval,
+          CommentState.Rejected
         ]
       },
       sort: CommentSort.CreatedAt,
