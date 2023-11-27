@@ -17,7 +17,7 @@ import {
   ImageSelectPanel,
   ListInput,
   ListValue,
-  ModelTitle,
+  SingleViewTitle,
   toggleRequiredLabel,
   useAuthorisation,
   UserSubscriptionsList
@@ -355,7 +355,7 @@ function UserEditView() {
         fluid
         model={validationModel}
         formValue={{name, email, password}}>
-        <ModelTitle
+        <SingleViewTitle
           loading={false}
           title={titleView()}
           loadingTitle={t('comments.edit.title')}

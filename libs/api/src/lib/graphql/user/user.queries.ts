@@ -58,7 +58,7 @@ const createNameFilter = (filter: Partial<UserFilter>): Prisma.UserWhereInput =>
   return {}
 }
 const createUserNameFilter = (filter: Partial<UserFilter>): Prisma.UserWhereInput => {
-  const splitedString = filter.text.split(' ')
+  const splitedString = (filter.text || '').split(' ')
 
   if (splitedString.length === 1) {
     return {

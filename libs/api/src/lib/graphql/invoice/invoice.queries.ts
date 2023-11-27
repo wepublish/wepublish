@@ -28,7 +28,9 @@ export const createInvoiceOrder = (
 const createUserFilter = (filter: Partial<InvoiceFilter>): Prisma.InvoiceWhereInput => {
   if (filter?.userID) {
     return {
-      userID: filter.userID
+      subscription: {
+        userID: filter.userID
+      }
     }
   }
 
@@ -124,7 +126,8 @@ export const getInvoices = async (
       orderBy,
       cursor: cursorId ? {id: cursorId} : undefined,
       include: {
-        items: true
+        items: true,
+        subscription: true
       }
     })
   ])

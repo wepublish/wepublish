@@ -1,4 +1,4 @@
-import {Field, ObjectType, InputType} from '@nestjs/graphql'
+import {Field, ObjectType, InputType, ArgsType, PartialType} from '@nestjs/graphql'
 
 @ObjectType()
 export class Consent {
@@ -21,8 +21,8 @@ export class Consent {
   defaultValue!: boolean
 }
 
-@InputType()
-export class ConsentInput {
+@ArgsType()
+export class CreateConsentInput {
   @Field()
   name!: string
 
@@ -31,6 +31,12 @@ export class ConsentInput {
 
   @Field()
   defaultValue!: boolean
+}
+
+@ArgsType()
+export class UpdateConsentInput extends PartialType(CreateConsentInput, ArgsType) {
+  @Field()
+  id!: string
 }
 
 @InputType()

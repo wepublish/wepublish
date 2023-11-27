@@ -1,10 +1,4 @@
-import {
-  BaseMailProvider,
-  MailLogStatus,
-  MailProviderProps,
-  SendMailProps,
-  WebhookForSendMailProps
-} from '@wepublish/api'
+import {BaseMailProvider, MailProviderProps, SendMailProps} from '@wepublish/api'
 
 import fetch from 'cross-fetch'
 
@@ -20,8 +14,8 @@ export class SlackMailProvider extends BaseMailProvider {
     this.webhookURL = props.webhookURL
   }
 
-  async webhookForSendMail({req}: WebhookForSendMailProps): Promise<MailLogStatus[]> {
-    return Promise.resolve([])
+  async webhookForSendMail() {
+    return []
   }
 
   async sendMail(props: SendMailProps): Promise<void> {
@@ -36,6 +30,7 @@ export class SlackMailProvider extends BaseMailProvider {
         }
       ]
     }
+
     await fetch(this.webhookURL, {
       method: 'POST',
       headers: {
@@ -43,5 +38,20 @@ export class SlackMailProvider extends BaseMailProvider {
       },
       body: JSON.stringify(message)
     })
+  }
+
+  async getTemplates() {
+    return [
+      {
+        name: 'SlackEmptyTemplate',
+        uniqueIdentifier: 'slack-empty',
+        createdAt: new Date(),
+        updatedAt: new Date()
+      }
+    ]
+  }
+
+  getTemplateUrl() {
+    return 'http://example.com/'
   }
 }

@@ -14,6 +14,7 @@ export enum SettingName {
   PEERING_TIMEOUT_MS = 'peeringTimeoutInMs',
   INVOICE_REMINDER_FREQ = 'invoiceFreqReminder',
   INVOICE_REMINDER_MAX_TRIES = 'invoiceReminderMaxTries',
+  MAIL_PROVIDER_NAME = 'mailProviderName',
 
   MAKE_NEW_SUBSCRIBERS_API_PUBLIC = 'makeNewSubscribersApiPublic',
   MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC = 'makeActiveSubscribersApiPublic',
