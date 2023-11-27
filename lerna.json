@@ -15,7 +15,10 @@
   },
   "command": {
     "version": {
-      "allowBranch": "master"
+      "allowBranch": [
+        "master",
+        "r/*"
+      ]
     },
     "publish": {
       "ignoreChanges": [
