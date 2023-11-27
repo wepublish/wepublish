@@ -76,7 +76,7 @@ function getTotalExternalVoteSourcesByAnswerId(
   return (
     pollExternalVotes
       .filter(externalVote => externalVote.answerId === answerId)
-      .reduce((total, externalVote) => total + externalVote.amount, 0) || 0
+      .reduce((total, externalVote) => total + (externalVote.amount ?? 0), 0) || 0
   )
 }
 
