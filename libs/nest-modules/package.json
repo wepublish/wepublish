@@ -1,6 +1,6 @@
 {
   "name": "@wepublish/nest-modules",
-  "version": "10.0.0-alpha.1",
+  "version": "10.0.0-alpha.2",
   "description": "Nestjs API modules for we.publish.",
   "keywords": [
     "nestjs",
