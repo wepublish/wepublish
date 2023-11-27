@@ -22,5 +22,5 @@
       "message": "chore(release): publish %s"
     }
   },
-  "packages": ["apps/editor", "libs/analytics", "libs/api", "libs/nest-modules", "libs/website"]
+  "packages": ["apps/editor", "libs/analytics", "libs/api", "libs/nest-modules", "libs/website", "libs/ui"]
 }
