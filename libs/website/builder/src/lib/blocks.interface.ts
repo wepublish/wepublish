@@ -61,4 +61,5 @@ export type BuilderTeaserGridBlockProps = TeaserGridBlock & {
 export type BuilderTeaserProps = {
   teaser?: Teaser | null
   alignment: FlexAlignment
+  numColumns?: number
 } & {className?: string}

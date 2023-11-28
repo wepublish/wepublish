@@ -48,6 +48,7 @@ export const TeaserGridBlock = ({numColumns, teasers, className}: BuilderTeaserG
         <Teaser
           key={index}
           teaser={teaser}
+          numColumns={numColumns}
           alignment={alignmentForTeaserBlock(index, numColumns)}
         />
       ))}
