@@ -1,6 +1,6 @@
 # Change Log
 
-## v10.0.0-alpha.0 (2023-11-27)
+## v10.0.0 (2023-11-29)
 
 #### :boom: Breaking Change
 
