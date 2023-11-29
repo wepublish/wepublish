@@ -41,6 +41,7 @@ import {NextWepublishLink} from '../src/next-wepublish-link'
 import {SessionProvider} from '../src/session.provider'
 import {YearlyMemberPlanItem} from '../src/yearly-memberplan-item'
 import {Paragraph} from '../src/gruppetto-paragraph'
+import {SafariBugHotfixTeaser} from '../src/safari-bug-hotfix'
 
 setDefaultOptions({
   locale: de
@@ -157,7 +158,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
           Footer={Footer}
           MemberPlanItem={YearlyMemberPlanItem}
           elements={{Link: NextWepublishLink, Button, Paragraph}}
-          blocks={{Break: GruppettoBreakBlock}}>
+          blocks={{Break: GruppettoBreakBlock, Teaser: SafariBugHotfixTeaser}}>
           <ThemeProvider theme={gruppettoTheme}>
             <CssBaseline />
 
