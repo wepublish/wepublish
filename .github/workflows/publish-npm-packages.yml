@@ -32,7 +32,7 @@ jobs:
         run: npm ci
 
       - name: "Build packages"
-        run: npm run build
+        run: npm run build -- --exclude=website-example
 
       - if: |
           contains(github.ref, 'tags/') && contains(github.ref, 'alpha')
