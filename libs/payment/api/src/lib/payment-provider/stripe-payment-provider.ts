@@ -20,7 +20,7 @@ interface CreateStripeCustomerProps {
   intent: Stripe.PaymentIntent
 }
 
-function mapStripeEventToPaymentStatue(event: string): PaymentState | null {
+function mapStripeEventToPaymentStatus(event: string): PaymentState | null {
   switch (event) {
     case 'requires_payment_method':
     case 'requires_confirmation':
@@ -74,7 +74,7 @@ export class StripePaymentProvider extends BasePaymentProvider {
 
     const intent = event.data.object as Stripe.PaymentIntent
     const intentStates: IntentState[] = []
-    const state = mapStripeEventToPaymentStatue(intent.status)
+    const state = mapStripeEventToPaymentStatus(intent.status)
     if (state !== null && intent.metadata.paymentID !== undefined) {
       let customerID
 
@@ -180,7 +180,7 @@ export class StripePaymentProvider extends BasePaymentProvider {
       }
     }
 
-    const state = mapStripeEventToPaymentStatue(intent.status)
+    const state = mapStripeEventToPaymentStatus(intent.status)
     logger('stripePaymentProvider').info(
       'Created Stripe intent with ID: %s for paymentProvider %s',
       intent.id,
@@ -198,7 +198,7 @@ export class StripePaymentProvider extends BasePaymentProvider {
 
   async checkIntentStatus({intentID}: CheckIntentProps): Promise<IntentState> {
     const intent = await this.stripe.paymentIntents.retrieve(intentID)
-    const state = mapStripeEventToPaymentStatue(intent.status)
+    const state = mapStripeEventToPaymentStatus(intent.status)
 
     if (!state) {
       logger('stripePaymentProvider').error(

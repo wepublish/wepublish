@@ -80,19 +80,11 @@ export function registerPaymentsModule(): DynamicModule {
           new PayrexxPaymentProvider({
             id: 'payrexx',
             name: 'Payrexx',
-            offSessionPayments: false,
+            offSessionPayments: true,
             instanceName: config.getOrThrow('PAYREXX_INSTANCE_NAME'),
             instanceAPISecret: config.getOrThrow('PAYREXX_API_SECRET'),
             psp: [0, 15, 17, 2, 3, 36],
-            pm: [
-              'postfinance_card',
-              'postfinance_efinance',
-              // "mastercard",
-              // "visa",
-              'twint',
-              // "invoice",
-              'paypal'
-            ],
+            pm: ['postfinance_card', 'postfinance_efinance', 'twint', 'paypal'],
             vatRate: 7.7,
             incomingRequestHandler: bodyParser.json()
           })
