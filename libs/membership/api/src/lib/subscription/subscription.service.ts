@@ -421,6 +421,7 @@ export class SubscriptionService {
     })
 
     try {
+      console.log('here!!! await paymentProvider.createIntent customerID', customer.customerID)
       const intent = await paymentProvider.createIntent({
         paymentID: payment.id,
         invoice,

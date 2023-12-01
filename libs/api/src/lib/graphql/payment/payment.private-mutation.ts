@@ -16,6 +16,7 @@ export const createPaymentFromInvoice = async (
   paymentMethodsByID: Context['loaders']['paymentMethodsByID'],
   paymentClient: PrismaClient['payment']
 ): Promise<Payment> => {
+  console.log('createPaymentFromInvoice', input)
   const {roles} = authenticate()
   authorise(CanCreatePayment, roles)
 
