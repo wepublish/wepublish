@@ -159,7 +159,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
 
     const bexioResponse = await response.json()
 
-    const intentStatus = mapBexioStatusToPaymentStatus(bexioResponse.data.kb_item_status_id)
+    const intentStatus = mapBexioStatusToPaymentStatus(bexioResponse.kb_item_status_id)
 
     if (!intentStatus) {
       logger('bexioPaymentProvider').error(
@@ -171,13 +171,18 @@ export class BexioPaymentProvider extends BasePaymentProvider {
       throw new UnknownIntentState()
     }
 
+    // Get payment to return it
+    const payment = await this.prisma.payment.findFirst({
+      where: {
+        invoiceID: bexioResponse.api_reference
+      }
+    })
+
     return {
       state: intentStatus,
-      paymentID: bexioResponse.data.payment_type_id
-        ? bexioResponse.data.payment_type_id.toString()
-        : '',
-      paymentData: JSON.stringify(bexioResponse.data),
-      customerID: bexioResponse.data.contact_id ? bexioResponse.data.contact_id.toString() : ''
+      paymentID: payment.id,
+      paymentData: JSON.stringify(bexioResponse),
+      customerID: bexioResponse.contact_id ? bexioResponse.contact_id.toString() : ''
     }
   }
 
@@ -319,12 +324,17 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     addToStringReplaceMap(stringReplaceMap, 'subscription', invoice.subscription)
     addToStringReplaceMap(stringReplaceMap, 'user', invoice.subscription.user)
     addToStringReplaceMap(stringReplaceMap, 'memberPlan', invoice.subscription.memberPlan)
+
     const bexioInvoice: InvoicesStatic.InvoiceCreate = {
       title: isRenewal ? this.invoiceTitleRenewalMembership : this.invoiceTitleNewMembership,
       contact_id: contact.id,
       user_id: this.userId,
       mwst_type: 0,
       mwst_is_net: false,
+      // Override for wrong library implementation!
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-ignore
+      api_reference: invoice.id,
       template_slug: isRenewal
         ? this.invoiceTemplateRenewalMembership
         : this.invoiceTemplateNewMembership,
