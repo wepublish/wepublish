@@ -125,8 +125,7 @@ import {SlackMailProvider} from '../app/slack-mail-provider'
           config.get('BEXIO_INVOICE_TEMPLATE') &&
           config.get('BEXIO_UNIT_ID') &&
           config.get('BEXIO_TAX_ID') &&
-          config.get('BEXIO_ACCOUNT_ID') &&
-          config.get('BEXIO_REDIRECT_URL')
+          config.get('BEXIO_ACCOUNT_ID')
         ) {
           paymentProviders.push(
             new BexioPaymentProvider({
@@ -156,7 +155,6 @@ import {SlackMailProvider} from '../app/slack-mail-provider'
               invoiceMailBodyRenewalMembership:
                 config.get('BEXIO_INVOICE_MAIL_BODY_RENEW') ||
                 'Hello :user.firstname:\n\nThank you for subscribing to :memberPlan.name:.\nYou can view your invoice here: [Network Link]\n\nBest wishes from the Wepublish team',
-              redirectUrl: config.get('BEXIO_REDIRECT_URL'),
               markInvoiceAsOpen: false,
               prisma
             })

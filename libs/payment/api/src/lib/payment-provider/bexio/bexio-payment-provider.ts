@@ -46,7 +46,6 @@ export interface BexioPaymentProviderProps extends PaymentProviderProps {
   invoiceMailSubjectRenewalMembership: string
   invoiceMailBodyRenewalMembership: string
   markInvoiceAsOpen: boolean
-  redirectUrl: string
   prisma: PrismaClient
 }
 
@@ -67,7 +66,6 @@ export class BexioPaymentProvider extends BasePaymentProvider {
   private invoiceMailSubjectRenewalMembership: string
   private invoiceMailBodyRenewalMembership: string
   private markInvoiceAsOpen: boolean
-  private redirectUrl: string
   private prisma: PrismaClient
 
   constructor(props: BexioPaymentProviderProps) {
@@ -88,7 +86,6 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     this.invoiceMailBodyRenewalMembership = props.invoiceMailBodyRenewalMembership
     this.markInvoiceAsOpen = props.markInvoiceAsOpen
     this.prisma = props.prisma
-    this.redirectUrl = props.redirectUrl
     this.bexio = new Bexio(this.apiKey)
   }
 
@@ -109,7 +106,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     if (!props.invoice.subscriptionID) {
       throw new NoSubscriptionIdInInvoice()
     }
-    const created = await this.bexioCreate(props.invoice.id, false)
+    const created = await this.bexioCreate(props.successURL, props.invoice.id, false)
     return created
   }
 
@@ -125,7 +122,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
    * @returns {Promise<void>} Resolves when the remote invoice is successfully created.
    */
   async createRemoteInvoice(props: CreateRemoteInvoiceProps) {
-    await this.bexioCreate(props.invoice.id, true)
+    await this.bexioCreate('', props.invoice.id, true)
   }
 
   /**
@@ -195,6 +192,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
    * @function
    * @param {string} invoiceId - The ID of the invoice in the local database.
    * @param {boolean} isRenewal - Indicates whether the invoice is a renewal or a new invoice.
+   * @param {string} successURL - The url the client gets redirected after successful invoice creation
    *
    * @throws {InvoiceNotFoundError} If the invoice or related data cannot be found in the local database.
    * @throws {Error} For any other generic error.
@@ -205,7 +203,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
    *   - intentData: A JSON string representation of the new invoice from Bexio.
    *   - state: The state of the payment, set as 'submitted'.
    */
-  async bexioCreate(invoiceId: string, isRenewal: boolean): Promise<Intent> {
+  async bexioCreate(successURL: string, invoiceId: string, isRenewal: boolean): Promise<Intent> {
     try {
       const invoice = await this.prisma.invoice.findUnique({
         where: {
@@ -235,7 +233,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
 
       return {
         intentID: newInvoice.id.toString(),
-        intentSecret: this.redirectUrl,
+        intentSecret: successURL,
         intentData: JSON.stringify(newInvoice),
         state: PaymentState.submitted
       }
