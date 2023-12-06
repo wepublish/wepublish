@@ -26,7 +26,8 @@ import {
   ResponseNOK,
   SendingInvoiceError,
   UnknownIntentState,
-  WebhookNotImplementedError
+  WebhookNotImplementedError,
+  PaymentNotFound
 } from './bexio-errors'
 import {addToStringReplaceMap, mapBexioStatusToPaymentStatus, searchForContact} from './bexio-utils'
 import fetch from 'node-fetch'
@@ -174,9 +175,19 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     // Get payment to return it
     const payment = await this.prisma.payment.findFirst({
       where: {
-        invoiceID: bexioResponse.api_reference
+        invoiceID: bexioResponse.api_reference,
+        intentID
       }
     })
+    if (!payment) {
+      logger('bexioPaymentProvider').error(
+        'Bexio intent with ID: %s for paymentProvider %s returned with an unknown state %s',
+        intentID,
+        this.id,
+        intentStatus
+      )
+      throw new PaymentNotFound()
+    }
 
     return {
       state: intentStatus,

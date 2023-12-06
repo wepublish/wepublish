@@ -40,11 +40,18 @@ class NoSubscriptionIdInInvoice extends Error {
   }
 }
 
+class PaymentNotFound extends Error {
+  constructor(message = 'While checking intent, payment not found!') {
+    super(message)
+  }
+}
+
 export {
   InvoiceNotFoundError,
   WebhookNotImplementedError,
   SendingInvoiceError,
   UnknownIntentState,
   ResponseNOK,
-  NoSubscriptionIdInInvoice
+  NoSubscriptionIdInInvoice,
+  PaymentNotFound
 }
