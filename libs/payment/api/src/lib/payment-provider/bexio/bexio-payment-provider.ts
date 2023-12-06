@@ -29,6 +29,7 @@ import {
   WebhookNotImplementedError
 } from './bexio-errors'
 import {addToStringReplaceMap, mapBexioStatusToPaymentStatus, searchForContact} from './bexio-utils'
+import fetch from 'node-fetch'
 
 export interface BexioPaymentProviderProps extends PaymentProviderProps {
   apiKey: string
