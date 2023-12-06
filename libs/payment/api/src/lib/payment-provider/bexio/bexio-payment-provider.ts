@@ -181,10 +181,9 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     })
     if (!payment) {
       logger('bexioPaymentProvider').error(
-        'Bexio intent with ID: %s for paymentProvider %s returned with an unknown state %s',
+        'No payment with intentID <%s> and invoiceID <%s> found!',
         intentID,
-        this.id,
-        intentStatus
+        bexioResponse.api_reference
       )
       throw new PaymentNotFound()
     }
