@@ -46,6 +46,7 @@ export interface BexioPaymentProviderProps extends PaymentProviderProps {
   invoiceMailSubjectRenewalMembership: string
   invoiceMailBodyRenewalMembership: string
   markInvoiceAsOpen: boolean
+  redirectUrl: string
   prisma: PrismaClient
 }
 
@@ -66,6 +67,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
   private invoiceMailSubjectRenewalMembership: string
   private invoiceMailBodyRenewalMembership: string
   private markInvoiceAsOpen: boolean
+  private redirectUrl: string
   private prisma: PrismaClient
 
   constructor(props: BexioPaymentProviderProps) {
@@ -86,6 +88,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     this.invoiceMailBodyRenewalMembership = props.invoiceMailBodyRenewalMembership
     this.markInvoiceAsOpen = props.markInvoiceAsOpen
     this.prisma = props.prisma
+    this.redirectUrl = props.redirectUrl
     this.bexio = new Bexio(this.apiKey)
   }
 
@@ -232,7 +235,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
 
       return {
         intentID: newInvoice.id.toString(),
-        intentSecret: '',
+        intentSecret: this.redirectUrl,
         intentData: JSON.stringify(newInvoice),
         state: PaymentState.submitted
       }
