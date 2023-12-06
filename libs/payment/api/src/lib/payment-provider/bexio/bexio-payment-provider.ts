@@ -103,7 +103,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
    * @throws {NoSubscriptionIdInInvoice} Throws an error if the invoice contains a subscription ID.
    */
   async createIntent(props: CreatePaymentIntentProps): Promise<Intent> {
-    if (props.invoice.subscriptionID) {
+    if (!props.invoice.subscriptionID) {
       throw new NoSubscriptionIdInInvoice()
     }
     const created = await this.bexioCreate(props.invoice.id, false)
