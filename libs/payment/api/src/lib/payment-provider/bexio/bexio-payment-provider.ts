@@ -108,7 +108,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     if (!props.invoice.subscriptionID) {
       throw new NoSubscriptionIdInInvoice()
     }
-    const created = await this.bexioCreate(props.successURL, props.invoice.id, false)
+    const created = await this.bexioCreate(props.invoice.id, false, props.successURL)
     return created
   }
 
@@ -124,7 +124,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
    * @returns {Promise<void>} Resolves when the remote invoice is successfully created.
    */
   async createRemoteInvoice(props: CreateRemoteInvoiceProps) {
-    await this.bexioCreate('', props.invoice.id, true)
+    await this.bexioCreate(props.invoice.id, true)
   }
 
   /**
@@ -219,7 +219,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
    *   - intentData: A JSON string representation of the new invoice from Bexio.
    *   - state: The state of the payment, set as 'submitted'.
    */
-  async bexioCreate(successURL: string, invoiceId: string, isRenewal: boolean): Promise<Intent> {
+  async bexioCreate(invoiceId: string, isRenewal: boolean, successURL = ''): Promise<Intent> {
     try {
       const invoice = await this.prisma.invoice.findUnique({
         where: {
