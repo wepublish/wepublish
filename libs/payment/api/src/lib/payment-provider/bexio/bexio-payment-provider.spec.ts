@@ -96,7 +96,7 @@ describe('BexioPaymentProvider', () => {
       global.fetch = jest.fn(() =>
         Promise.resolve({
           json: () =>
-            Promise.resolve({data: {kb_item_status_id: 9, payment_type_id: 123, contact_id: 321}}),
+            Promise.resolve({kb_item_status_id: 9, payment_type_id: 123, contact_id: 321}),
           status: 200
         })
       ) as jest.Mock
