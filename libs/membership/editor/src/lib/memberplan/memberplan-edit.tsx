@@ -50,6 +50,7 @@ function MemberPlanEdit() {
       onError: showErrors
     })
 
+  console.log('memberPlanData', memberPlanData)
   const {data: paymentMethodData, loading: paymentMethodLoading} = usePaymentMethodListQuery({
     fetchPolicy: 'network-only',
     onError: showErrors
@@ -135,7 +136,7 @@ function MemberPlanEdit() {
       name: memberPlan.name,
       slug: memberPlan.slug,
       tags: memberPlan.tags,
-      imageID: memberPlan.image?.id,
+      imageID: memberPlan.image?.id || null,
       description: memberPlan.description,
       active: memberPlan.active,
       availablePaymentMethods: availablePaymentMethods.map(({value}) => ({
@@ -146,6 +147,7 @@ function MemberPlanEdit() {
       amountPerMonthMin: memberPlan.amountPerMonthMin
     }
 
+    console.log('memberPlanInput', memberPlanInput)
     // update member plan
     if (memberPlanId) {
       await updateMemberPlanMutation({
