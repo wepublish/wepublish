@@ -812,6 +812,35 @@ async function seed() {
       throw 'Website Example seeding has already been done. Skipping'
     }
 
+    const [womanProfilePhoto, manProfilePhoto, ...teaserImages] = await seedImages(prisma)
+
+    const tags = Array.from({length: 5}, () => faker.word.noun().toLowerCase())
+    const polls = await seedPoll(prisma)
+    const navigations = await seedNavigations(prisma, tags)
+    const authors = await seedAuthors(prisma, [womanProfilePhoto.id, manProfilePhoto.id])
+    const events = await seedEvents(
+      prisma,
+      teaserImages.map(({id}) => id)
+    )
+    const articles = await seedArticles(
+      prisma,
+      teaserImages.map(({id}) => id),
+      authors.map(({id}) => id),
+      tags,
+      polls.map(({id}) => id),
+      events.map(({id}) => id)
+    )
+    const comments = await seedComments(
+      prisma,
+      articles.map(({id}) => id),
+      [womanProfilePhoto.id, manProfilePhoto.id]
+    )
+    const pages = await seedPages(
+      prisma,
+      teaserImages.map(({id}) => id),
+      articles.map(({id}) => id)
+    )
+
     await prisma.user.create({
       data: {
         email: 'dev@wepublish.ch',
