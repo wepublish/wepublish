@@ -343,7 +343,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
       mwst_is_net: false,
       // Override for wrong library implementation!
       // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-ignore
+      // @ts-expect-error
       api_reference: invoice.id,
       template_slug: isRenewal
         ? this.invoiceTemplateRenewalMembership
