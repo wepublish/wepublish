@@ -150,7 +150,7 @@ function SubscriptionList() {
   useEffect(() => {
     if (data?.subscriptions?.nodes) {
       setSubscriptions(data.subscriptions.nodes)
-      if (data.subscriptions.totalCount + 9 < page * limit) {
+      if (Math.ceil(data.subscriptions.totalCount / limit) < page) {
         setPage(1)
       }
     }
