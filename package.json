@@ -165,6 +165,7 @@
     "snapshot-diff": "^0.9.0",
     "storybook": "^7.2.0",
     "storybook-addon-apollo-client": "^5.0.0",
+    "storybook-multilevel-sort": "^2.0.0",
     "storybook-react-i18next": "^2.0.5",
     "stream-browserify": "^3.0.0",
     "stream-http": "^3.2.0",
