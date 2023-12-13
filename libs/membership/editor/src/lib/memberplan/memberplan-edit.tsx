@@ -135,7 +135,7 @@ function MemberPlanEdit() {
       name: memberPlan.name,
       slug: memberPlan.slug,
       tags: memberPlan.tags,
-      imageID: memberPlan.image?.id,
+      imageID: memberPlan.image?.id || null,
       description: memberPlan.description,
       active: memberPlan.active,
       availablePaymentMethods: availablePaymentMethods.map(({value}) => ({
