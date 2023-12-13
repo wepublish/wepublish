@@ -42,13 +42,13 @@ export const CanGetAuthor: Permission = {
 
 export const CanGetAuthors: Permission = {
   id: 'CAN_GET_AUTHORS',
-  description: 'Allows to all authors',
+  description: 'Allows to get all authors',
   deprecated: false
 }
 
 export const CanDeleteAuthor: Permission = {
-  id: 'CAN_DELETE_AUTHORS',
-  description: 'Allows to delete authors',
+  id: 'CAN_DELETE_AUTHOR',
+  description: 'Allows to delete a single author',
   deprecated: false
 }
 
