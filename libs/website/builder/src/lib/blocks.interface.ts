@@ -62,6 +62,8 @@ type TeaserTypeProps =
   | {
       teaser?: Teaser | null
       alignment: FlexAlignment
+      numColumns?: never
+      index?: never
     }
   | {
       teaser?: Teaser | null
