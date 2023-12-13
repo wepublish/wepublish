@@ -147,7 +147,6 @@ function MemberPlanEdit() {
       amountPerMonthMin: memberPlan.amountPerMonthMin
     }
 
-    console.log('memberPlanInput', memberPlanInput)
     // update member plan
     if (memberPlanId) {
       await updateMemberPlanMutation({
