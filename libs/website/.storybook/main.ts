@@ -1,4 +1,14 @@
 import {StorybookConfig} from '@storybook/react-webpack5'
+import {configureSort} from 'storybook-multilevel-sort'
+
+configureSort({
+  storyOrder: {
+    'getting started': {},
+    components: {
+      event: null
+    }
+  }
+})
 
 export default {
   framework: {

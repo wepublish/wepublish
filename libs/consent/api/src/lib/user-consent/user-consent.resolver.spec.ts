@@ -1,14 +1,14 @@
-import {Test, TestingModule} from '@nestjs/testing'
+import {ApolloDriver, ApolloDriverConfig} from '@nestjs/apollo'
 import {INestApplication, Module} from '@nestjs/common'
-import request from 'supertest'
 import {GraphQLModule} from '@nestjs/graphql'
-import {ApolloDriverConfig, ApolloDriver} from '@nestjs/apollo'
-import {PrismaClient, Prisma, UserConsent} from '@prisma/client'
+import {Test, TestingModule} from '@nestjs/testing'
+import {Prisma, PrismaClient, UserConsent} from '@prisma/client'
+import {AuthenticationGuard, AuthenticationModule} from '@wepublish/authentication/api'
 import {PrismaModule} from '@wepublish/nest-modules'
+import request from 'supertest'
+import {generateRandomString} from '../consent/consent.resolver.spec'
 import {UserConsentResolver} from './user-consent.resolver'
 import {UserConsentService} from './user-consent.service'
-import {AuthenticationModule, AuthenticationGuard} from '@wepublish/authentication/api'
-import {generateRandomString} from '../consent/consent.resolver.spec'
 
 @Module({
   imports: [
@@ -48,8 +48,8 @@ const userConsentQuery = `
 `
 
 const createUserConsentMutation = `
-  mutation createUserConsent($userConsent: UserConsentInput!) {
-    createUserConsent(userConsent: $userConsent) {
+  mutation createUserConsent($consentId: String!, $userId: String!, $value: Boolean!) {
+    createUserConsent(consentId: $consentId, userId: $userId, value: $value) {
       id
       value
     }
@@ -57,8 +57,8 @@ const createUserConsentMutation = `
 `
 
 const updateUserConsentMutation = `
-  mutation updateUserConsent($id: String!, $userConsent: UpdateUserConsentInput!) {
-    updateUserConsent(id: $id, userConsent: $userConsent) {
+  mutation updateUserConsent($id: String!, $value: Boolean!) {
+    updateUserConsent(id: $id, value: $value) {
       id
       value
       createdAt
@@ -203,11 +203,9 @@ describe('UserConsentResolver', () => {
       .send({
         query: createUserConsentMutation,
         variables: {
-          userConsent: {
-            consentId: createdConsent.id,
-            userId: createdUser.id,
-            value: true
-          }
+          consentId: createdConsent.id,
+          userId: createdUser.id,
+          value: true
         }
       })
       .expect(200)
@@ -229,9 +227,7 @@ describe('UserConsentResolver', () => {
         query: updateUserConsentMutation,
         variables: {
           id: idToUpdate,
-          userConsent: {
-            value: false
-          }
+          value: false
         }
       })
       .expect(200)
@@ -271,9 +267,7 @@ describe('UserConsentResolver', () => {
         query: updateUserConsentMutation,
         variables: {
           id: idToUpdate,
-          userConsent: {
-            value: false
-          }
+          value: false
         }
       })
       .expect(200)

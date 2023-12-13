@@ -2,7 +2,7 @@ import {PrismaClient} from '@prisma/client'
 import {Context} from '../../context'
 import {ArticleFilter, ArticleSort, PublicArticle} from '../../db/article'
 import {AuthSessionType} from '@wepublish/authentication/api'
-import {logger} from '../../server'
+import {logger} from '@wepublish/utils/api'
 import {getArticles} from './article.queries'
 
 export const getPublishedArticles = async (

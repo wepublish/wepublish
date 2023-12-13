@@ -601,10 +601,7 @@
     "memberPlanList": {
       "action": "Actions",
       "active": "Active",
-      "activeDescription": "Makes the plan available",
       "adapter": "Payment Adapter",
-      "autoRenewal": "Force Auto Renew",
-      "autoRenewalDescription": "Forces auto renewal of subscription",
       "createNew": "New Member Plan",
       "createTitle": "Create Member Plan",
       "deleteModalTitle": "Delete Member Plan",
@@ -625,7 +622,31 @@
         "YEARLY": "Yearly"
       },
       "priceRange": "Price-(Range) in CHF",
-      "title": "Member Plans"
+      "title": "Member Plans",
+      "editFlow": "Edit communication flow",
+      "editFlowShort": "Edit flow"
+    },
+    "memberPlanEdit": {
+      "nameRequired": "Name required",
+      "slugRequired": "Slug required",
+      "amountPerMonthMinRequired": "Minimal amount required",
+      "amountPerMonthMinZero": "Minimal amount cannot be less than 0",
+      "loadingTitle": "Loading",
+      "createMemberPlanHeader": "Create Memberplan",
+      "noMemberPlanName": "No name member plan",
+      "saveBtnTitle": "Save",
+      "saveAndCloseBtnTitle": "Save & Close",
+      "active": "Active",
+      "activeDescription": "Makes the plan available",
+      "name": "Name",
+      "slug": "Slug",
+      "description": "Description",
+      "tags": "Tags",
+      "amountPerMonthMin": "Minimal amount / month",
+      "forceAutoRenewal": "Force Auto Renew",
+      "autoRenewalDescription": "Forces auto renewal of subscription",
+      "paymentConfigs": "Payment settings",
+      "editPaymentSetting": "Edit payment setting"
     },
     "pollList": {
       "title": "Polls",
@@ -712,7 +733,7 @@
         "selectNewLanguage": "Select new language"
       },
       "logout": "Logout",
-      "memberPlans": "Member Plans",
+      "memberPlans": "Subscription Plans",
       "navigations": "Navigations",
       "pages": "Pages",
       "paymentMethods": "Payment Methods",
@@ -724,7 +745,11 @@
       "subscriptions": "Subscriptions",
       "userRoles": "User Roles",
       "users": "Users",
-      "usersAndMembers": "Users & Members",
+      "usersAndMembers": "Users & Subscriptions",
+      "subscriptionSettings": "Default Mailing",
+      "mailTemplates": "E-Mail Templates",
+      "subscriptionPlans": "Subscription Plans",
+      "systemMails": "System Mails",
       "consents": "Consents",
       "userConsents": "User Consents",
       "importableEvents": "Importable Events"
@@ -1174,7 +1199,7 @@
       "autoRenewDescription": "Renew the subscription automatically",
       "createTitle": "Create Subscription",
       "deactivation": {
-        "isDeactivated": "The subscription is deactivated since {{date, ccc PP p}} and needs to be reactivated before editing.",
+        "isDeactivated": "The subscription has been deactivated since {{date, ccc PP p}} and can no longer be edited. Probably, a new subscription can be created.",
         "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}",
         "modalTitle": {
           "deactivated": "Activate subscription?",
@@ -1192,7 +1217,7 @@
           "deactivated": "Reactivate",
           "activated": "Deactivate"
         },
-        "help": "Deactivated subscriptions can still be used until the paid until date. But they will not be automatically renewed even if the auto renew is true",
+        "help": "Deactivated subscriptions can still be used until the paid until date. But they will not be automatically renewed even if the auto renew is true. Once deactivated, the subscription cannot be reactivated.",
         "date": "Deactivation Date",
         "dateFrom": "Deactivation date (from)",
         "dateTo": "Deactivation date (to)",
@@ -1257,7 +1282,8 @@
       "noUserErrorMessage": "Please select a user",
       "noTokenErrorMessage": "Please enter a token",
       "invalidRange": "Value out of range. Please input a number between {{min}} and {{max}}.",
-      "required": "This field is required"
+      "required": "This field is required",
+      "minimalAmountPerMonth": "The minimal amount / month is defined as {{amount}} chf."
     },
     "invoice": {
       "manuallyPaidByAdmin": "Marked as paid by administrator.",
@@ -1290,8 +1316,6 @@
       "loginMinutes": "Email-Login token validity period",
       "passwordToken": "Email-Password reset token validity period",
       "peerToken": "Peering timeout",
-      "invoiceReminders": "Invoice reminder attempts",
-      "invoiceFrequency": "Invoice reminder frequency",
       "minutes": "minutes",
       "ms": "milliseconds",
       "days": "days",
@@ -1395,6 +1419,77 @@
       "import": "Import",
       "imported": "Imported"
     },
+    "mailTemplates": {
+      "availableTemplates": "Available templates",
+      "explanation": "You can use these templates from {{provider}} to deliver notifications to your users.",
+      "name": "Name",
+      "internalName": "Internal name",
+      "description": "Description",
+      "content": "Content",
+      "view": "View at {{provider}}",
+      "status": "Status",
+      "synchronize": "Synchronize templates",
+      "statuses": {
+        "ok": "🗸",
+        "remoteMissing": "Template '{{internalName}}' removed at {{provider}}",
+        "unused": "Template '{{internalName}}' is unused",
+        "error": "Unknown error"
+      },
+      "showPlaceholders": "Placeholder Documentation",
+      "goToPlaceholders": "Available Placeholders"
+    },
+    "subscriptionFlow": {
+      "subscribe": "Subscribe",
+      "renewal_success": "Renewal successful",
+      "renewal_failed": "Renewal failed",
+      "deactivation_by_user": "Deactivated by user",
+      "reactivation": "Reactivated",
+      "invoice_creation": "Invoice creation",
+      "deactivation_unpaid": "Deactivation for unpaid invoice",
+      "custom": "Custom event",
+      "settings": "Subscription flow settings",
+      "edit": "Edit subscription flow",
+      "titleDefaultSettings": "Default Subscription Settings",
+      "settingsDescription": "You can overwrite these settings for every subscription plan.",
+      "addNew": "Create new flow",
+      "dayWithNumber": "day {{day}}",
+      "days": "days",
+      "savedChange": "Change successfully saved",
+      "add": "Add",
+      "memberplan": "Memberplan",
+      "paymentMethod": "Payment Method",
+      "periodicity": "Periodicity",
+      "autoRenewal": "Auto Renewal?",
+      "booleanFilter": {
+        "true": "Yes",
+        "false": "No"
+      },
+      "deleteFlowQuestion": "Deleting this flow is permanently and can't be undone. Do you want to proceed anyway?",
+      "deletePermanently": "Delete permanently",
+      "dropHere": "Drop here",
+      "filters": "Filters",
+      "subscriptionEvents": "Static Subscription Events",
+      "timeline": "Timeline",
+      "actions": "Actions",
+      "dayOfRenewal": "Day of renewal / subscription ends",
+      "subscriptionsAffected": "Filter applies to {{numberOfSubscriptions}} subscriptions"
+    },
+    "systemMails": {
+      "title": "System Mails",
+      "explanation": "You can view the available templates in the 'Mail templates' settings entry.",
+      "event": "Event",
+      "template": "Mail template",
+      "test": "Send test mail",
+      "events": {
+        "login_link": "Login Link",
+        "account_creation": "Registration",
+        "password_reset": "Password reset",
+        "test_mail": "Test mail"
+      }
+    },
+    "mailTemplateSelect": {
+      "noMailSentSelectNow": "No mailing"
+    },
     "toast": {
       "deletedSuccess": "Deleted successfully",
       "createdSuccess": "Created successfully",
@@ -1420,6 +1515,44 @@
       "createdBy": "by {{creator}}",
       "user": "User",
       "memberPlan": "Member Plan: {{plan}}"
+    },
+    "placeholderList": {
+      "description": {
+        "optional_subscription_memberPlan_name": "Name des Subscription-Plans. Z.B. Jahres-Abo.",
+        "optional_subscription_paymentMethod_name": "Name der Payment-Methode. Z.B. Stripe",
+        "optional_subscription_autoRenew": "Ob das Abo automatisch erneuert wird. Die Werte sind true oder false",
+        "optional_subscription_monthlyAmount": "Monatlicher Betrag in Rappen. Z.B. 1000 für 10 chf / Monat.",
+        "optional_subscription_paymentPeriodicity": "Periodizität des Abos. Mögliche Werte sind: yearly, biannual, quarterly, monthly",
+        "optional_subscriptionID": "Eindeutige ID der Subscription.",
+        "user_id": "Eindeutige ID des Users.",
+        "user_email": "E-Mail des Users.",
+        "user_name": "Nachname des Users.",
+        "user_firstName": "Vorname des Users",
+        "jwt": "jwt steht für JSON Web Token. Mit diesem Token kann sich der User einloggen. Hierzu muss das Token in der URL an das Frontend übergeben werden. In der Regel in dem man ?jwt=TOKEN an die URL anhängt. Rechter Hand findest du ein Beispiel."
+      },
+      "header": "Liste der verfügbaren Placeholder",
+      "subtitle": "Bitte beachte, dass die Placeholder je nach Mail unterschiedlich sind. Wenn etwa ein Login-Link verschickt wird, hat dieses Mail nicht die gleichen Placeholder, wie bei einer Erneuerung des Abos.",
+      "placeholder": "Placeholder",
+      "descriptionTitle": "Beschreibung",
+      "example": "Beispiel im Template"
+    },
+    "draggableSubscriptionInterval": {
+      "ignoreDeactivatedSubscriptions": "No mails will be sent to deactivated subscriptions!"
+    },
+    "resetUserPasswordForm": {
+      "sendMail": "Send mail to user (Registration System Mail)"
+    },
+    "periodicJobsLog": {
+      "title": "Periodic Job Logs",
+      "jobFailedTitle": "Automatic jobs did not run! Contact IT.",
+      "concerns": "Concerns: e.g. subscription renewal.",
+      "noRun": "The automatic renewal of subscriptions was never executed.",
+      "failedJob": "Failed! Contact IT immediately.",
+      "lastRunSuccessful": "Successful in the last run.",
+      "startTime": "Started at: {{date, ccc PP p}}",
+      "successTime": "Success at: {{date, ccc PP p}}",
+      "errorTime": "Errored at: {{date, ccc PP p}}",
+      "tries": "Runs: {{tries}}"
     }
   }
 }
