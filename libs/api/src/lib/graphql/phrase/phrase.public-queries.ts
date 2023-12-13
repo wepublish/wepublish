@@ -6,11 +6,6 @@ import {createPageOrder} from '../page/page.queries'
 import {getSortOrder} from '../queries/sort'
 import {createArticleOrder} from '../article/article.queries'
 
-export enum PhraseSort {
-  CreatedAt = 'CreatedAt',
-  ModifiedAt = 'ModifiedAt'
-}
-
 export const queryPhrase = async (
   query: string,
   prisma: PrismaClient,
@@ -25,7 +20,7 @@ export const queryPhrase = async (
   // Default add & if no specific query is given to prevent search to fail!
   query = query.replace(' ', '&')
 
-  const [articleRevisions, pageRevisions] = await Promise.all([
+  const [foundArticleIds, foundPageIds] = await Promise.all([
     prisma.$queryRaw<{id: string}[]>`
       SELECT a.id FROM articles a 
       JOIN public."articles.revisions" ar on a."publishedId" = ar.id
@@ -50,14 +45,14 @@ export const queryPhrase = async (
     `
   ])
 
-  const articleRevisionIds = articleRevisions.map(({id}) => id)
-  const pageRevisionIds = pageRevisions.map(({id}) => id)
+  const articleIds = foundArticleIds.map(({id}) => id)
+  const pageIds = foundPageIds.map(({id}) => id)
 
   const [articles, pages] = await Promise.all([
     prisma.article.findMany({
       where: {
         id: {
-          in: articleRevisionIds
+          in: articleIds
         }
       },
       include: {
@@ -75,7 +70,7 @@ export const queryPhrase = async (
     prisma.page.findMany({
       where: {
         id: {
-          in: pageRevisionIds
+          in: pageIds
         }
       },
       include: {
