@@ -199,7 +199,9 @@ import {SlackMailProvider} from '../app/slack-mail-provider'
               instanceName: config.get('PAYREXX_INSTANCE_NAME'),
               instanceAPISecret: config.get('PAYREXX_API_SECRET'),
               psp: [0, 15, 17, 2, 3, 36],
-              pm: ['postfinance_card', 'postfinance_efinance', 'twint', 'paypal'],
+              pm: config.get('PAYREXX_PAYMENT_METHODS')
+                ? config.get('PAYREXX_PAYMENT_METHODS').split(',')
+                : ['postfinance_card', 'postfinance_efinance', 'twint', 'paypal'],
               vatRate: 7.7,
               incomingRequestHandler: bodyParser.json()
             })

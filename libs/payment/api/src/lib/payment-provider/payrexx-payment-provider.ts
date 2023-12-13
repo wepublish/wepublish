@@ -30,9 +30,10 @@ interface PayrexxResponse {
 interface PayrexxData {
   id: string
   link: string
+  status: 'waiting' | 'confirmed' | 'cancelled' | 'declined'
 }
 
-function mapPayrexxEventToPaymentStatus(event: string): PaymentState | null {
+function mapPayrexxEventToPaymentStatus(event: PayrexxData['status']): PaymentState | null {
   switch (event) {
     case 'waiting':
       return PaymentState.processing
@@ -124,29 +125,6 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
       .update(qs.stringify(data))
       .digest('base64')
 
-    if (customerID) {
-      // if we have customerID, which in reality is a pre-authorized payment from when we originally created
-      // paymentIntent, we try and charge the "tokenized" transaction
-      await fetch(
-        `https://api.payrexx.com/v1.0/Transaction/${encodeURIComponent(
-          customerID
-        )}/?instance=${encodeURIComponent(this.instanceName)}&ApiSignature=${encodeURIComponent(
-          signature
-        )}`,
-        {
-          method: 'POST',
-          body: qs.stringify({
-            amount: invoice.items.reduce(
-              (prevItem, currentItem) => prevItem + currentItem.amount * currentItem.quantity,
-              0
-            ),
-            referenceId: paymentID,
-            ApiSignature: signature
-          })
-        }
-      )
-    }
-
     const res = await fetch(
       `https://api.payrexx.com/v1.0/Gateway/?instance=${encodeURIComponent(this.instanceName)}`,
       {
@@ -157,11 +135,6 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
 
     if (res.status !== 200) throw new Error(`Payrexx response is NOK with status ${res.status}`)
     const payrexxResponse = (await res.json()) as PayrexxResponse
-
-    // here we should get a token, which is
-    // const transactionId = payrexxResponse.data[0].invoices[0]?.transactions[0]?.id
-    // but this should be returned as customerID to match the rest of implementation?
-    // but customerID is returned in checkIntentStatus method, not here in createIntent
 
     logger('payrexxPaymentProvider').info(
       'Created Payrexx intent with ID: %s for paymentProvider %s',
@@ -194,38 +167,6 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
         method: 'GET'
       }
     )
-
-    // leave it for now, but I am not sure if that should be here
-
-    // const data = {
-    //   referenceId: props.paymentID,
-    //   amount: props.invoice.items.reduce(
-    //     (prevItem, currentItem) => prevItem + currentItem.amount * currentItem.quantity,
-    //     0
-    //   ),
-    //   currency: 'CHF',
-    //   preAuthorization: true, // probably not needed
-    //   chargeOnAuthorization: true // probably not needed
-    // }
-    // const signature = crypto
-    //   .createHmac('sha256', this.instanceAPISecret)
-    //   .update(qs.stringify(data))
-    //   .digest('base64')
-
-    // todo charge pre-authorized payment
-    // which one is transaction id?
-    // I should probably use the paymentID from createIntent that's returned from POST Gateway
-    // const preAuthorized = await fetch(
-    //   `https://api.payrexx.com/v1.0/Transaction/${encodeURIComponent(
-    //     transaction id === paymentId
-    //   )}/?instance=${encodeURIComponent(this.instanceName)}&ApiSignature=${encodeURIComponent(
-    //     signature
-    //   )}`,
-    //   {
-    //     method: 'POST',
-    //     body: qs.stringify({...data, ApiSignature: signature}) // repeat these data?
-    //   }
-    // )
 
     if (res.status !== 200) {
       logger('payrexxPaymentProvider').error(
@@ -275,7 +216,7 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
       state,
       paymentID: gateway.referenceId,
       paymentData: JSON.stringify(gateway),
-      customerID: transactionId // is's passed as customerID, but the goal is to keep the transaction "token"
+      customerID: transactionId
     }
   }
 }
