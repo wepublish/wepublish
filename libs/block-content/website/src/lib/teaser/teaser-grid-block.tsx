@@ -47,8 +47,8 @@ export const TeaserGridBlock = ({numColumns, teasers, className}: BuilderTeaserG
       {teasers?.map((teaser, index) => (
         <Teaser
           key={index}
-          index={index}
           teaser={teaser}
+          index={index}
           numColumns={numColumns}
           alignment={alignmentForTeaserBlock(index, numColumns)}
         />
