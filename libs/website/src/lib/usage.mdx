@@ -132,7 +132,7 @@ export const App = () => {
 Ideally one would extend the Website Builder when overriding components instead of completely replacing them. The most obvious use case would be for the [Block Renderer](../?path=/story/blocks-blocks--default) component as often we need special cases to support the medias needs.
 
 ```tsx
-import {BlockRenderer, WebsiteBuilderProvider} from "@wepublish/website";
+import {BlockRenderer, WebsiteBuilderProvider, BuilderBlockRendererProps} from "@wepublish/website";
 
 const MyBlockRenderer = (props: BuilderBlockRendererProps) => {
     const {block} = props;
