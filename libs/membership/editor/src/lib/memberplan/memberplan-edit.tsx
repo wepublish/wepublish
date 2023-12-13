@@ -50,7 +50,6 @@ function MemberPlanEdit() {
       onError: showErrors
     })
 
-  console.log('memberPlanData', memberPlanData)
   const {data: paymentMethodData, loading: paymentMethodLoading} = usePaymentMethodListQuery({
     fetchPolicy: 'network-only',
     onError: showErrors
