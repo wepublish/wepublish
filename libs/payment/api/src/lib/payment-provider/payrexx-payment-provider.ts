@@ -65,7 +65,6 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
   }
 
   async webhookForPaymentIntent(props: WebhookForPaymentIntentProps): Promise<IntentState[]> {
-    // TODO: verify webhook
     const intentStates: IntentState[] = []
     const transaction = props.req.body.transaction
     if (!transaction) throw new Error('Can not handle webhook')
@@ -75,7 +74,12 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
       intentStates.push({
         paymentID: transaction.referenceId,
         paymentData: JSON.stringify(transaction),
-        state
+        state,
+        ...(state === 'paid'
+          ? {
+              customerID: String(transaction.preAuthorizationId)
+            }
+          : {})
       })
     }
     return intentStates
@@ -84,21 +88,10 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
   async createIntent({
     customerID,
     invoice,
-    saveCustomer,
     paymentID,
     successURL,
     failureURL
   }: CreatePaymentIntentProps): Promise<Intent> {
-    console.log(
-      'createIntent props',
-      customerID,
-      invoice,
-      saveCustomer,
-      paymentID,
-      successURL,
-      failureURL
-    )
-
     const data = {
       psp: this.psp,
       pm: this.pm,
@@ -215,8 +208,7 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
     return {
       state,
       paymentID: gateway.referenceId,
-      paymentData: JSON.stringify(gateway),
-      customerID: transactionId
+      paymentData: JSON.stringify(gateway)
     }
   }
 }
