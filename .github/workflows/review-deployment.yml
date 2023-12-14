@@ -105,6 +105,8 @@ jobs:
               MEDIA_SERVER_TOKEN: 'media-token'
               JWT_SECRET_KEY: 'jwt-token'
               SLACK_DEV_MAIL_WEBHOOK_URL: 'SLACK_DEV_MAIL_WEBHOOK_URL'
+              DEFAULT_FROM_ADDRESS: 'dev@wepublish.ch'
+              DEFAULT_REPLY_TO_ADDRESS: 'dev@wepublish.ch'
           editor:
             env:
               PEER_BY_DEFAULT: "true"
