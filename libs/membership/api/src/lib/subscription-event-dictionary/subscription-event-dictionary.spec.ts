@@ -146,7 +146,7 @@ describe('SubscriptionEventDictionary', () => {
       default: false,
       memberPlan: {
         connect: {
-          id: customMemberPlan1.id
+          id: customMemberPlan2.id
         }
       },
       autoRenewal: [true, false],

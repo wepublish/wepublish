@@ -113,9 +113,10 @@ function SubscriptionList() {
   const [subscriptions, setSubscriptions] = useState<FullSubscriptionFragment[]>([])
 
   // double check
-  Object.keys(filter).map(el => {
-    if (filter[el as keyof SubscriptionFilter] === null)
+  Object.keys(filter).forEach(el => {
+    if (filter[el as keyof SubscriptionFilter] === null) {
       delete filter[el as keyof SubscriptionFilter]
+    }
   })
 
   const {

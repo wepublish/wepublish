@@ -27,6 +27,7 @@ function ChildComments({
   setRevision
 }: ChildCommentsProps) {
   if (!comments) {
+    // eslint-disable-next-line react/jsx-no-useless-fragment
     return <></>
   }
   const childComments = comments.filter(tmpComment => tmpComment.parentComment?.id === comment.id)

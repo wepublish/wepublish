@@ -46,6 +46,7 @@ export function ExternalVoteTable({
 }: ExternalVoteTableProps) {
   const {t} = useTranslation()
   if (!poll?.externalVoteSources?.length) {
+    // eslint-disable-next-line react/jsx-no-useless-fragment
     return <></>
   }
   function changeSource(

@@ -20,7 +20,7 @@ import {
   PermissionControl
 } from '@wepublish/ui/editor'
 import {useEffect, useState} from 'react'
-import {Trans, useTranslation} from 'react-i18next'
+import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdSettings, MdVisibility, MdVisibilityOff} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {
@@ -226,14 +226,13 @@ function PeerList() {
                 <h5>{peerInfoData?.peerProfile.name || t('peerList.panels.unnamed')}</h5>
                 <p>{peerInfoData?.peerProfile.hostURL}</p>
                 <Form.HelpText>
-                  <Trans i18nKey={'peerList.panels.checkOwnPeerProfileHelpBlock'}>
-                    text{' '}
-                    <a
-                      href="https://wepublish.ch/peering-infos-preview/"
-                      target="_blank"
-                      rel="noreferrer"
-                    />
-                  </Trans>
+                  {t('peerList.panels.checkOwnPeerProfileHelpBlock')}{' '}
+                  <a
+                    href="https://wepublish.ch/peering-infos-preview/"
+                    target="_blank"
+                    rel="noreferrer">
+                    {t('peerList.panels.peeringPreviewGuide')}
+                  </a>
                 </Form.HelpText>
               </AvatarWrapper>
             }

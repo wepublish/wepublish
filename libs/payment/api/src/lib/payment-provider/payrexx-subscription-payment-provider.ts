@@ -153,8 +153,6 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
   async updatePaymentWithIntentState({
     intentState,
     paymentClient,
-    paymentsByID,
-    invoicesByID,
     subscriptionClient,
     userClient,
     invoiceClient,
@@ -390,10 +388,12 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
     return intentStates
   }
 
+  // eslint-disable-next-line
   async createIntent(props: CreatePaymentIntentProps): Promise<Intent> {
     throw new Error('NOT IMPLEMENTED')
   }
 
+  // eslint-disable-next-line
   async checkIntentStatus({intentID}: CheckIntentProps): Promise<IntentState> {
     throw new Error('NOT IMPLEMENTED')
   }

@@ -45,7 +45,8 @@
         "createdAt": "{{createdAt, ccc PP p}}",
         "default": "Default",
         "displayOptions": "Anzeigeoptionen",
-        "dontChangeSlug": "Slug nach dem Publizieren nicht mehr ändern. <2>Slug Guide</2>",
+        "dontChangeSlug": "Slug nach dem Publizieren nicht mehr ändern.",
+        "slugGuide": "Slug Guide",
         "draft": "Entwurf",
         "custom": "benutzerdefinierte",
         "contentUrl": "Inhalt URL",
@@ -950,7 +951,8 @@
         "logo": "Logo",
         "ctaImageInfo": "Empfohlene Call To Action Bildgrösse 728x90",
         "callToActionImageURL": "Call To Action Bild URL",
-        "checkOwnPeerProfileHelpBlock": "Vorschau deines eigenen Profils: <2>Peering preview guide</2>"
+        "checkOwnPeerProfileHelpBlock": "Vorschau deines eigenen Profils:",
+        "peeringPreviewGuide": "Peering preview guide"
       }
     },
     "save": "Speichern",

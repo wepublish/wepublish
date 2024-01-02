@@ -37,6 +37,7 @@ export function CommentDeleteBtn({comment, onCommentDeleted}: CommentDeleteBtnPr
   })
 
   if (!comment) {
+    // eslint-disable-next-line react/jsx-no-useless-fragment
     return <></>
   }
 

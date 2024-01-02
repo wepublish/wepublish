@@ -111,7 +111,10 @@ export function EditUserPassword({
 
   function resetPasswordModal() {
     const userId = user?.id
-    if (!userId) return <></>
+    if (!userId) {
+      // eslint-disable-next-line react/jsx-no-useless-fragment
+      return <></>
+    }
     const userName = user?.firstName ? `${user.firstName} ${user.name}` : user.name
     return (
       <Modal open={isResetUserPasswordOpen} onClose={() => setIsResetUserPasswordOpen(false)}>
