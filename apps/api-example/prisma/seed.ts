@@ -14,7 +14,7 @@ import {Node} from 'slate'
 import {seed as rootSeed} from '../../../libs/api/prisma/seed'
 import {NavigationLinkType} from '../../../libs/api/src/lib/db/navigation'
 import {hashPassword} from '../../../libs/api/src/lib/db/user'
-import {KarmaMediaAdapter} from '../../../libs/api/src/lib/media/karmaMediaAdapter'
+import {NovaMediaAdapter} from '../../../libs/api/src/lib/media/novaMediaAdapter'
 import {capitalize} from '@mui/material'
 import {
   BlockType,
@@ -72,7 +72,7 @@ function getText(min = 1, max = 10) {
 async function seedImages(prisma: PrismaClient) {
   const internalUrl = process.env.MEDIA_SERVER_INTERNAL_URL
 
-  const mediaAdapter = new KarmaMediaAdapter(
+  const mediaAdapter = new NovaMediaAdapter(
     new URL(process.env.MEDIA_SERVER_URL),
     process.env.MEDIA_SERVER_TOKEN,
     internalUrl ? new URL(internalUrl) : undefined

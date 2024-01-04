@@ -5,7 +5,7 @@ import {CanGetImage, CanGetImages} from '@wepublish/permissions/api'
 import {PrismaClient} from '@prisma/client'
 import {getImages} from './image.queries'
 
-export const getImageById = (
+export const getImageById = async (
   id: string,
   authenticate: Context['authenticate'],
   imageLoader: Context['loaders']['images']

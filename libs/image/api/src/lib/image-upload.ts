@@ -20,6 +20,10 @@ export interface ImageTransformation {
   readonly rotation?: ImageRotation | null
   readonly quality?: number | null
   readonly output?: ImageOutput | null
+  readonly blur?: boolean | number | null
+  readonly negate?: boolean | null
+  readonly grayscale?: boolean | null
+  readonly sharpen?: boolean | null
 }
 
 export type UploadImage = Pick<
