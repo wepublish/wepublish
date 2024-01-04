@@ -11,6 +11,8 @@ screenshots
 # Nx
 tmp
 .env.local
+.nx
+lerna-debug.log
 
 # Next.js
 .next
