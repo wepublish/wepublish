@@ -25,7 +25,8 @@ import {
   SettingModule,
   StripeCheckoutPaymentProvider,
   StripePaymentProvider,
-  BexioPaymentProvider
+  BexioPaymentProvider,
+  PayrexxFactory
 } from '@wepublish/api'
 import {ApiModule, PrismaModule, PrismaService} from '@wepublish/nest-modules'
 import bodyParser from 'body-parser'
@@ -191,13 +192,18 @@ import {SlackMailProvider} from '../app/slack-mail-provider'
           config.get('PAYREXX_API_SECRET') &&
           config.get('PAYREXX_WEBHOOK_SECRET')
         ) {
+          const payrexxFactory = new PayrexxFactory({
+            baseUrl: 'https://api.payrexx.com/v1.0/',
+            instance: config.get('PAYREXX_INSTANCE_NAME'),
+            secret: config.get('PAYREXX_API_SECRET')
+          })
           paymentProviders.push(
             new PayrexxPaymentProvider({
               id: 'payrexx',
               name: 'Payrexx',
               offSessionPayments: true,
-              instanceName: config.get('PAYREXX_INSTANCE_NAME'),
-              instanceAPISecret: config.get('PAYREXX_API_SECRET'),
+              transactionClient: payrexxFactory.transactionClient,
+              gatewayClient: payrexxFactory.gatewayClient,
               psp: [0, 15, 17, 2, 3, 36],
               pm: config.get('PAYREXX_PAYMENT_METHODS')
                 ? config.get('PAYREXX_PAYMENT_METHODS').split(',')

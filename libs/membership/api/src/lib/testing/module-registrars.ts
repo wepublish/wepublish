@@ -5,6 +5,7 @@ import {FakeMailProvider, MailsModule} from '@wepublish/mail/api'
 import {
   PaymentProvider,
   PaymentsModule,
+  PayrexxFactory,
   PayrexxPaymentProvider,
   PayrexxSubscriptionPaymentProvider,
   StripeCheckoutPaymentProvider,
@@ -76,13 +77,18 @@ export function registerPaymentsModule(): DynamicModule {
         config.get('PAYREXX_API_SECRET') &&
         config.get('PAYREXX_WEBHOOK_SECRET')
       ) {
+        const payrexxFactory = new PayrexxFactory({
+          baseUrl: 'https://api.payrexx.com/v1.0/',
+          instance: config.getOrThrow('PAYREXX_INSTANCE_NAME'),
+          secret: config.getOrThrow('PAYREXX_API_SECRET')
+        })
         paymentProviders.push(
           new PayrexxPaymentProvider({
             id: 'payrexx',
             name: 'Payrexx',
             offSessionPayments: true,
-            instanceName: config.getOrThrow('PAYREXX_INSTANCE_NAME'),
-            instanceAPISecret: config.getOrThrow('PAYREXX_API_SECRET'),
+            gatewayClient: payrexxFactory.gatewayClient,
+            transactionClient: payrexxFactory.transactionClient,
             psp: [0, 15, 17, 2, 3, 36],
             pm: ['postfinance_card', 'postfinance_efinance', 'twint', 'paypal'],
             vatRate: 7.7,
