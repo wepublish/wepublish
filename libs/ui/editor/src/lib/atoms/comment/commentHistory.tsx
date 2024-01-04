@@ -25,7 +25,7 @@ function ChildComments({
   originComment,
   revision,
   setRevision
-}: ChildCommentsProps) {
+}: ChildCommentsProps): JSX.Element {
   if (!comments) {
     // eslint-disable-next-line react/jsx-no-useless-fragment
     return <></>

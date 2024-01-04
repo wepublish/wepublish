@@ -20,7 +20,7 @@ interface CommentDeleteBtnProps {
   onCommentDeleted?(): void
 }
 
-export function CommentDeleteBtn({comment, onCommentDeleted}: CommentDeleteBtnProps) {
+export function CommentDeleteBtn({comment, onCommentDeleted}: CommentDeleteBtnProps): JSX.Element {
   const {t} = useTranslation()
   const [modalOpen, setModalOpen] = useState<boolean>(false)
   const [deleteComment, {loading}] = useDeleteCommentMutation({

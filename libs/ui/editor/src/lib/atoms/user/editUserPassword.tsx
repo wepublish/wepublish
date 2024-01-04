@@ -109,7 +109,7 @@ export function EditUserPassword({
     )
   }
 
-  function resetPasswordModal() {
+  function resetPasswordModal(): JSX.Element {
     const userId = user?.id
     if (!userId) {
       // eslint-disable-next-line react/jsx-no-useless-fragment

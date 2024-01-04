@@ -130,7 +130,7 @@ export function SubscriptionListFilter({
   /**
    * UI helper functions
    */
-  function resetFilterView() {
+  function resetFilterView(): JSX.Element {
     if (!isAnyFilterSet()) {
       // eslint-disable-next-line react/jsx-no-useless-fragment
       return <></>
