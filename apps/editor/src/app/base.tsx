@@ -230,102 +230,112 @@ export function Base({children}: BaseProps) {
                   </Nav.Menu>
                 </PermissionControl>
 
-                <Nav.Menu eventKey={'comments'} title={t('navbar.comments')} icon={<MdChat />}>
-                  <PermissionControl
-                    qualifyingPermissions={[
-                      'CAN_GET_COMMENTS',
-                      'CAN_UPDATE_COMMENTS',
-                      'CAN_TAKE_COMMENT_ACTION'
-                    ]}>
-                    <Nav.Item
-                      as={NavLink}
-                      href="/comments"
-                      icon={<MdChat />}
-                      active={path === 'comments'}>
-                      {t('navbar.comments')}
-                    </Nav.Item>
-                  </PermissionControl>
+                <PermissionControl
+                  qualifyingPermissions={[
+                    'CAN_GET_COMMENTS',
+                    'CAN_GET_TAGS',
+                    'CAN_GET_COMMENT_RATING_SYSTEM'
+                  ]}>
+                  <Nav.Menu eventKey={'comments'} title={t('navbar.comments')} icon={<MdChat />}>
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        'CAN_GET_COMMENTS',
+                        'CAN_UPDATE_COMMENTS',
+                        'CAN_TAKE_COMMENT_ACTION'
+                      ]}>
+                      <Nav.Item
+                        as={NavLink}
+                        href="/comments"
+                        icon={<MdChat />}
+                        active={path === 'comments'}>
+                        {t('navbar.comments')}
+                      </Nav.Item>
+                    </PermissionControl>
 
-                  <PermissionControl
-                    qualifyingPermissions={[
-                      'CAN_GET_TAGS',
-                      'CAN_CREATE_TAG',
-                      'CAN_UPDATE_TAG',
-                      'CAN_DELETE_TAG'
-                    ]}>
-                    <Nav.Item
-                      as={NavLink}
-                      href="/comments/tags"
-                      icon={<MdSell />}
-                      active={path === 'comments/tags'}>
-                      {t('navbar.commentTags')}
-                    </Nav.Item>
-                  </PermissionControl>
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        'CAN_GET_TAGS',
+                        'CAN_CREATE_TAG',
+                        'CAN_UPDATE_TAG',
+                        'CAN_DELETE_TAG'
+                      ]}>
+                      <Nav.Item
+                        as={NavLink}
+                        href="/comments/tags"
+                        icon={<MdSell />}
+                        active={path === 'comments/tags'}>
+                        {t('navbar.commentTags')}
+                      </Nav.Item>
+                    </PermissionControl>
 
-                  <PermissionControl
-                    qualifyingPermissions={[
-                      'CAN_GET_COMMENT_RATING_SYSTEM',
-                      'CAN_CREATE_COMMENT_RATING_SYSTEM',
-                      'CAN_UPDATE_COMMENT_RATING_SYSTEM',
-                      'CAN_DELETE_COMMENT_RATING_SYSTEM'
-                    ]}>
-                    <Nav.Item
-                      as={NavLink}
-                      href="/comments/rating"
-                      icon={<MdStar />}
-                      active={path === 'comments/rating'}>
-                      {t('navbar.commentRating')}
-                    </Nav.Item>
-                  </PermissionControl>
-                </Nav.Menu>
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        'CAN_GET_COMMENT_RATING_SYSTEM',
+                        'CAN_CREATE_COMMENT_RATING_SYSTEM',
+                        'CAN_UPDATE_COMMENT_RATING_SYSTEM',
+                        'CAN_DELETE_COMMENT_RATING_SYSTEM'
+                      ]}>
+                      <Nav.Item
+                        as={NavLink}
+                        href="/comments/rating"
+                        icon={<MdStar />}
+                        active={path === 'comments/rating'}>
+                        {t('navbar.commentRating')}
+                      </Nav.Item>
+                    </PermissionControl>
+                  </Nav.Menu>
+                </PermissionControl>
 
-                <Nav.Menu eventKey={'events'} title={t('navbar.events')} icon={<MdEvent />}>
-                  <PermissionControl
-                    qualifyingPermissions={[
-                      'CAN_GET_EVENT',
-                      'CAN_UPDATE_EVENT',
-                      'CAN_DELETE_EVENT'
-                    ]}>
-                    <Nav.Item
-                      as={NavLink}
-                      href="/events"
-                      icon={<MdEvent />}
-                      active={path === 'events'}>
-                      {t('navbar.events')}
-                    </Nav.Item>
-                  </PermissionControl>
+                <PermissionControl
+                  qualifyingPermissions={['CAN_GET_EVENT', 'CAN_GET_COMMENT_RATING_SYSTEM']}>
+                  <Nav.Menu eventKey={'events'} title={t('navbar.events')} icon={<MdEvent />}>
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        'CAN_GET_EVENT',
+                        'CAN_UPDATE_EVENT',
+                        'CAN_DELETE_EVENT'
+                      ]}>
+                      <Nav.Item
+                        as={NavLink}
+                        href="/events"
+                        icon={<MdEvent />}
+                        active={path === 'events'}>
+                        {t('navbar.events')}
+                      </Nav.Item>
+                    </PermissionControl>
 
-                  <PermissionControl
-                    qualifyingPermissions={[
-                      'CAN_GET_EVENT',
-                      'CAN_UPDATE_EVENT',
-                      'CAN_DELETE_EVENT'
-                    ]}>
-                    <Nav.Item
-                      as={NavLink}
-                      href="/events/import"
-                      icon={<MdEventAvailable />}
-                      active={path === 'events/import'}>
-                      {t('navbar.importableEvents')}
-                    </Nav.Item>
-                  </PermissionControl>
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        'CAN_GET_EVENT',
+                        'CAN_UPDATE_EVENT',
+                        'CAN_DELETE_EVENT'
+                      ]}>
+                      <Nav.Item
+                        as={NavLink}
+                        href="/events/import"
+                        icon={<MdEventAvailable />}
+                        active={path === 'events/import'}>
+                        {t('navbar.importableEvents')}
+                      </Nav.Item>
+                    </PermissionControl>
 
-                  <PermissionControl
-                    qualifyingPermissions={[
-                      'CAN_GET_TAGS',
-                      'CAN_CREATE_TAG',
-                      'CAN_UPDATE_TAG',
-                      'CAN_DELETE_TAG'
-                    ]}>
-                    <Nav.Item
-                      as={NavLink}
-                      href="/events/tags"
-                      icon={<MdSell />}
-                      active={path === 'events/tags'}>
-                      {t('navbar.eventTags')}
-                    </Nav.Item>
-                  </PermissionControl>
-                </Nav.Menu>
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        'CAN_GET_TAGS',
+                        'CAN_CREATE_TAG',
+                        'CAN_UPDATE_TAG',
+                        'CAN_DELETE_TAG'
+                      ]}>
+                      <Nav.Item
+                        as={NavLink}
+                        href="/events/tags"
+                        icon={<MdSell />}
+                        active={path === 'events/tags'}>
+                        {t('navbar.eventTags')}
+                      </Nav.Item>
+                    </PermissionControl>
+                  </Nav.Menu>
+                </PermissionControl>
 
                 <PermissionControl
                   qualifyingPermissions={[
