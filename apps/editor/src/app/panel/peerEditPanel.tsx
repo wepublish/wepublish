@@ -284,7 +284,7 @@ function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
                 <DescriptionListItem label={t('peerList.panels.callToActionImage')}>
                   <img
                     src={profile?.callToActionImage?.thumbURL || undefined}
-                    alt="callToActionImage"
+                    alt={t('peerList.panels.callToActionImage')}
                   />
                 </DescriptionListItem>
                 <DescriptionListItem label={t('peerList.panels.callToActionImageURL')}>
