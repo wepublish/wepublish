@@ -7,33 +7,22 @@ import {
   PaymentProviderProps,
   WebhookForPaymentIntentProps
 } from './payment-provider'
-import fetch from 'node-fetch'
-import crypto from 'crypto'
-import qs from 'qs'
 import {logger} from '@wepublish/utils/api'
 import {PaymentState} from '@prisma/client'
+import {Gateway, GatewayClient, GatewayStatus} from '../payrexx/gateway-client'
+import {Transaction, TransactionClient, TransactionStatus} from '../payrexx/transaction-client'
 
 export interface PayrexxPaymentProviderProps extends PaymentProviderProps {
-  instanceName: string
-  instanceAPISecret: string
+  gatewayClient: GatewayClient
+  transactionClient: TransactionClient
   psp: number[]
   pm: string[]
   vatRate: number
 }
 
-interface PayrexxResponse {
-  status: string
-  message: string
-  data: PayrexxData[]
-}
-
-interface PayrexxData {
-  id: string
-  link: string
-  status: 'waiting' | 'confirmed' | 'cancelled' | 'declined'
-}
-
-function mapPayrexxEventToPaymentStatus(event: PayrexxData['status']): PaymentState | null {
+function mapPayrexxEventToPaymentStatus(
+  event: GatewayStatus | TransactionStatus
+): PaymentState | null {
   switch (event) {
     case 'waiting':
       return PaymentState.processing
@@ -49,57 +38,109 @@ function mapPayrexxEventToPaymentStatus(event: PayrexxData['status']): PaymentSt
 }
 
 export class PayrexxPaymentProvider extends BasePaymentProvider {
-  readonly instanceName: string
-  readonly instanceAPISecret: string
+  readonly gatewayClient: GatewayClient
+  readonly transactionClient: TransactionClient
   readonly psp: number[]
   readonly pm: string[]
   readonly vatRate: number
 
   constructor(props: PayrexxPaymentProviderProps) {
     super(props)
-    this.instanceName = props.instanceName
-    this.instanceAPISecret = props.instanceAPISecret
+    this.gatewayClient = props.gatewayClient
+    this.transactionClient = props.transactionClient
     this.psp = props.psp
     this.pm = props.pm
     this.vatRate = props.vatRate
   }
 
   async webhookForPaymentIntent(props: WebhookForPaymentIntentProps): Promise<IntentState[]> {
-    const intentStates: IntentState[] = []
-    const transaction = props.req.body.transaction
-    if (!transaction) throw new Error('Can not handle webhook')
-
-    const state = mapPayrexxEventToPaymentStatus(transaction.status)
-    if (state !== null) {
-      intentStates.push({
-        paymentID: transaction.referenceId,
-        paymentData: JSON.stringify(transaction),
-        state,
-        ...(state === 'paid'
-          ? {
-              customerID: String(transaction.preAuthorizationId)
-            }
-          : {})
-      })
+    if (!props.req.body.transaction) {
+      throw new Error('Cannot find Transaction within webhook body')
     }
-    return intentStates
+    const transaction = props.req.body.transaction as Transaction
+    const state = mapPayrexxEventToPaymentStatus(transaction.status)
+    if (state === null) {
+      return []
+    }
+    const intentState: IntentState = {
+      paymentID: transaction.referenceId,
+      paymentData: JSON.stringify(transaction),
+      state
+    }
+    if (state === 'paid') {
+      intentState.customerID = String(transaction.preAuthorizationId)
+    }
+    return [intentState]
   }
 
-  async createIntent({
+  async createIntent(createPaymentIntentProps: CreatePaymentIntentProps): Promise<Intent> {
+    if (createPaymentIntentProps.customerID) {
+      return this.createOffsiteTransactionIntent(createPaymentIntentProps)
+    } else {
+      return this.createGatewayIntent(createPaymentIntentProps)
+    }
+  }
+
+  async checkIntentStatus({intentID}: CheckIntentProps): Promise<IntentState> {
+    const transaction = await this.transactionClient.retrieveTransaction(intentID)
+    if (transaction) {
+      return this.checkTransactionIntentStatus(transaction)
+    }
+
+    const gateway = await this.gatewayClient.getGateway(intentID)
+    if (gateway) {
+      return this.checkGatewayIntentStatus(gateway)
+    }
+
+    logger('payrexxPaymentProvider').error(
+      'No Payrexx Gateway nor Transaction with intendID: %s for paymentProvider %s found',
+      intentID,
+      this.id
+    )
+    throw new Error('Payrexx Gateway/Transaction not found')
+  }
+
+  x
+
+  private async createOffsiteTransactionIntent({
     customerID,
+    invoice,
+    paymentID
+  }: CreatePaymentIntentProps) {
+    const amount = invoice.items.reduce(
+      (accumulator, {amount, quantity}) => accumulator + amount * quantity,
+      0
+    )
+    const transaction = await this.transactionClient.chargePreAuthorizedTransaction(
+      parseInt(customerID),
+      {
+        amount,
+        referenceId: paymentID
+      }
+    )
+    return {
+      intentID: transaction.id.toString(),
+      intentSecret: '',
+      intentData: JSON.stringify(transaction),
+      state: PaymentState.submitted
+    }
+  }
+
+  private async createGatewayIntent({
     invoice,
     paymentID,
     successURL,
     failureURL
-  }: CreatePaymentIntentProps): Promise<Intent> {
-    const data = {
+  }: CreatePaymentIntentProps) {
+    const amount = invoice.items.reduce(
+      (accumulator, {amount, quantity}) => accumulator + amount * quantity,
+      0
+    )
+    const gateway = await this.gatewayClient.createGateway({
       psp: this.psp,
       pm: this.pm,
       referenceId: paymentID,
-      amount: invoice.items.reduce(
-        (prevItem, currentItem) => prevItem + currentItem.amount * currentItem.quantity,
-        0
-      ),
+      amount,
       fields: {
         email: {
           value: invoice.mail
@@ -112,88 +153,68 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
       currency: 'CHF',
       preAuthorization: true,
       chargeOnAuthorization: true
-    }
-    const signature = crypto
-      .createHmac('sha256', this.instanceAPISecret)
-      .update(qs.stringify(data))
-      .digest('base64')
-
-    const res = await fetch(
-      `https://api.payrexx.com/v1.0/Gateway/?instance=${encodeURIComponent(this.instanceName)}`,
-      {
-        method: 'POST',
-        body: qs.stringify({...data, ApiSignature: signature})
-      }
-    )
-
-    if (res.status !== 200) throw new Error(`Payrexx response is NOK with status ${res.status}`)
-    const payrexxResponse = (await res.json()) as PayrexxResponse
-
+    })
     logger('payrexxPaymentProvider').info(
       'Created Payrexx intent with ID: %s for paymentProvider %s',
-      payrexxResponse.data?.[0].id,
+      gateway.id,
       this.id
     )
-    // in case Payrexx throws an error
-    if (payrexxResponse.status === 'error') {
-      throw new Error(`Error from Payrexx: ${payrexxResponse.message}`)
-    }
-
     return {
-      intentID: payrexxResponse.data?.[0].id,
-      intentSecret: payrexxResponse.data?.[0].link,
-      intentData: JSON.stringify(payrexxResponse.data),
+      intentID: gateway.id.toString(),
+      intentSecret: gateway.link,
+      intentData: JSON.stringify(gateway),
       state: PaymentState.submitted
     }
   }
 
-  async checkIntentStatus({intentID}: CheckIntentProps): Promise<IntentState> {
-    const signature = crypto.createHmac('sha256', this.instanceAPISecret).digest('base64')
-
-    const res = await fetch(
-      `https://api.payrexx.com/v1.0/Gateway/${encodeURIComponent(
-        intentID
-      )}/?instance=${encodeURIComponent(this.instanceName)}&ApiSignature=${encodeURIComponent(
-        signature
-      )}`,
-      {
-        method: 'GET'
-      }
-    )
-
-    if (res.status !== 200) {
-      logger('payrexxPaymentProvider').error(
-        'Payrexx response for intent %s is NOK with status %s',
-        intentID,
-        res.status
-      )
-      throw new Error(`Payrexx response is NOK with status ${res.status}`)
-    }
-
-    const payrexxResponse = await res.json()
-    const [gateway] = payrexxResponse.data
-    if (!gateway) throw new Error(`Payrexx didn't return a gateway`)
-
-    const state = mapPayrexxEventToPaymentStatus(gateway.status)
-    const transactionId = gateway.invoices[0]?.transactions[0]?.id
-
-    if (!transactionId) {
-      logger('payrexxPaymentProvider').error(
-        'Payrexx gateway with ID: %s for paymentProvider %s returned without transactionId despite preAutorization set to true.',
-        gateway.id,
-        this.id
-      )
-      throw new Error('No paymentId associated with the gateway ')
-    }
-
+  private checkTransactionIntentStatus(transaction: Transaction): IntentState {
+    const state = mapPayrexxEventToPaymentStatus(transaction.status)
     if (!state) {
       logger('payrexxPaymentProvider').error(
-        'Payrexx gateway with ID: %s for paymentProvider %s returned with an unknown state %s',
+        'Payrexx gateway with ID: %s for paymentProvider %s returned with an unmappable status %s',
+        transaction.id,
+        this.id,
+        transaction.status
+      )
+      throw new Error('Unmappable Payrexx gateway status')
+    }
+
+    if (!transaction.referenceId) {
+      logger('payrexxPaymentProvider').error(
+        'Payrexx transaction with ID: %s for paymentProvider %s returned with empty referenceId',
+        transaction.id,
+        this.id
+      )
+      throw new Error('empty referenceId')
+    }
+
+    return {
+      state,
+      paymentID: transaction.referenceId,
+      paymentData: JSON.stringify(transaction)
+    }
+  }
+
+  private checkGatewayIntentStatus(gateway: Gateway): IntentState {
+    const state = mapPayrexxEventToPaymentStatus(gateway.status)
+    if (!state) {
+      logger('payrexxPaymentProvider').error(
+        'Payrexx gateway with ID: %s for paymentProvider %s returned with an unmappable status %s',
         gateway.id,
         this.id,
         gateway.status
       )
-      throw new Error('unknown gateway state')
+      throw new Error('Unmappable Payrexx gateway status')
+    }
+
+    const transaction = gateway.invoices[0]?.transactions[0]
+    if (!transaction) {
+      logger('payrexxPaymentProvider').error(
+        'Payrexx gateway with ID: %s for paymentProvider %s returned without transaction despite preAuthorization set to true.',
+        gateway.id,
+        this.id
+      )
+      throw new Error('No Payrexx transaction associated with the gateway ')
     }
 
     if (!gateway.referenceId) {
@@ -208,7 +229,8 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
     return {
       state,
       paymentID: gateway.referenceId,
-      paymentData: JSON.stringify(gateway)
+      paymentData: JSON.stringify(gateway),
+      customerID: transaction.preAuthorizationId?.toString()
     }
   }
 }
