@@ -43,7 +43,7 @@ export class TransactionClient {
     requestData: ChargeTransactionRequestData
   ) {
     const response = await this.client.post<ChargeTransactionResponseData>(
-      '/Transaction/' + preAuthorizedTransactionId,
+      'Transaction/' + preAuthorizedTransactionId,
       requestData
     )
     if (response.status === 'error') {
@@ -58,7 +58,7 @@ export class TransactionClient {
 
   async retrieveTransaction(transactionId: string) {
     const response = await this.client.get<RetrieveTransactionResponseData>(
-      '/Transaction/' + encodeURIComponent(transactionId)
+      'Transaction/' + encodeURIComponent(transactionId)
     )
 
     if (response.status === 'error') {

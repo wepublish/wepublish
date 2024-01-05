@@ -38,10 +38,10 @@ export class PayrexxClient {
   async get<Data = any>(path, queryParams = {}): Promise<PayrexxResponse<Data>> {
     const method = 'GET',
       queryStrSigned = this.buildSignedQueryString(queryParams),
-      baseUrl = this.buildBaseUrl(path + '&' + queryStrSigned)
+      baseUrl = this.buildBaseUrl(path) + '&' + queryStrSigned
     console.log({message: 'Payrexx GET request issued', path, queryParams})
     const response = await fetch(baseUrl, {method})
-    return this.validateResponse(response)
+    return await this.validateResponse(response)
   }
 
   async post<Data = any>(path, queryParams = {}): Promise<PayrexxResponse<Data>> {
@@ -50,7 +50,7 @@ export class PayrexxClient {
       baseUrl = this.buildBaseUrl(path)
     console.log({message: 'Payrexx POST request issued', path, queryParams})
     const response = await fetch(baseUrl, {method, body})
-    return this.validateResponse(response)
+    return await this.validateResponse(response)
   }
 
   private async validateResponse(response: Response) {

@@ -45,7 +45,7 @@ export class GatewayClient {
   constructor(private readonly client: PayrexxClient) {}
 
   async createGateway(requestData: CreateGatewayRequestData) {
-    const response = await this.client.post<CreateGatewayResponseData>('/Gateway', requestData)
+    const response = await this.client.post<CreateGatewayResponseData>('Gateway', requestData)
     if (response.status === 'error') {
       throw new Error(`Payrexx request has error status with message: ${response.message}`)
     }
@@ -58,7 +58,7 @@ export class GatewayClient {
 
   async getGateway(gatewayId: string) {
     const response = await this.client.get<GetGatewayResponseData>(
-      '/Gateway/' + encodeURIComponent(gatewayId)
+      'Gateway/' + encodeURIComponent(gatewayId)
     )
 
     if (response.status === 'error') {
