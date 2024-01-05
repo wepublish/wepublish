@@ -618,26 +618,25 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
               'customer %s not found',
               paymentMethod.paymentProviderID
             )
-            throw new InternalError()
-          }
-
-          // Charge customer
-          try {
-            const payment = await memberContext.chargeInvoice({
-              user,
-              invoice,
-              paymentMethodID: subscription.paymentMethodID,
-              customer
-            })
-            if (payment) {
-              return payment
+          } else {
+            // Charge customer
+            try {
+              const payment = await memberContext.chargeInvoice({
+                user,
+                invoice,
+                paymentMethodID: subscription.paymentMethodID,
+                customer
+              })
+              if (payment) {
+                return payment
+              }
+            } catch (e) {
+              logger('extendSubscription').warn(
+                'Invoice off session charge for subscription %s failed: %s',
+                subscription.id,
+                e
+              )
             }
-          } catch (e) {
-            logger('extendSubscription').warn(
-              'Invoice off session charge for subscription %s failed: %s',
-              subscription.id,
-              e
-            )
           }
         }
 
