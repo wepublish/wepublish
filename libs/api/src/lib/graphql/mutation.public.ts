@@ -507,7 +507,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           saveCustomer: true,
           paymentMethodID: paymentMethod.id,
           successURL,
-          failureURL
+          failureURL,
+          user
         })
       }
     },
@@ -904,7 +905,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           invoice,
           saveCustomer: false,
           successURL,
-          failureURL
+          failureURL,
+          user
         })
       }
     },
