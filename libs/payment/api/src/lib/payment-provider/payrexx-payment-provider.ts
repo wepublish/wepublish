@@ -105,7 +105,8 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
   private async createOffsiteTransactionIntent({
     customerID,
     invoice,
-    paymentID
+    paymentID,
+    successURL
   }: CreatePaymentIntentProps) {
     const amount = invoice.items.reduce(
       (accumulator, {amount, quantity}) => accumulator + amount * quantity,
@@ -120,7 +121,7 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
     )
     return {
       intentID: transaction.id.toString(),
-      intentSecret: '',
+      intentSecret: successURL,
       intentData: JSON.stringify(transaction),
       state: PaymentState.submitted
     }
@@ -214,7 +215,6 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
         gateway.id,
         this.id
       )
-      throw new Error('No Payrexx transaction associated with the gateway ')
     }
 
     if (!gateway.referenceId) {
@@ -230,7 +230,9 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
       state,
       paymentID: gateway.referenceId,
       paymentData: JSON.stringify(gateway),
-      customerID: transaction.preAuthorizationId?.toString()
+      customerID: transaction?.preAuthorizationId
+        ? transaction.preAuthorizationId.toString()
+        : undefined
     }
   }
 }
