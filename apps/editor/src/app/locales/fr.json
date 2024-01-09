@@ -21,28 +21,21 @@
         "publishedAtIfPending": "{{publishedAtIfPending, ccc PP p}}",
         "unpublish": "Dépublier",
         "duplicate": "Dupliquer",
-        "previewDisabled": "All article changes have been published already.",
         "preview": "Aperçu",
         "createComment": "Create Comment",
         "articlePending": "Article en attente"
       },
       "panels": {
-        "addTag": "Appuyez Enter pour ajouter un tag",
         "articlePreviewLinkDesc": "Le lien de prévisualisation montre toujours les dernières modifications apportées à la version préliminaire de l'article. Le lien de prévisualisation cesse de fonctionner après la publication de l'article.",
         "articlePreviewLinkField": "Lien de prévisualisation",
         "chooseTeaser": "Choisir un teaser",
-        "emptyImage": "Laissez vide pour utiliser l'image originale.",
         "hideAuthors": "Cacher les auteurs·trices",
-        "metadataInfo": "Les informations de ces champs sont utilisées pour les aperçus dans les publications de médias sociaux. S'ils sont laissés vides, les informations de l'onglet général seront utilisées à la place.",
         "noImagesFound": "Aucune image trouvée",
         "peerArticle": "Pairer l'article",
         "peering": "Peering",
         "custom": "personnalisé",
         "contentUrl": "URL du contenu",
-        "peerShare": "Partager avec les peers",
         "published": "Publié",
-        "removeTeaser": "Retirer le teaser",
-        "Untitled": "Sans titre",
         "articlePending": "Il y a déjà une publication en attente programmée au {{pendingPublishDate, ccc PP p}}. Une nouvelle publication remplacera cette publication.",
         "dontChangeSlug": "Veuillez ne pas changer le slug une fois l'article publié. <2>Guide des slugs</2>",
         "leadHelpBlock": "Veuillez utiliser un lead optimisé pour le référencement",
@@ -60,7 +53,6 @@
         "back": "Retour",
         "breakingNews": "Breaking News",
         "charCountWarning": "Le nombre maximum de caractères doit être {{charCountWarning}}",
-        "chooseArticle": "Choisir un article",
         "chooseImage": "Choisir une image",
         "close": "Fermer",
         "confirm": "Confirmer",
@@ -69,15 +61,10 @@
         "displayOptions": "Options d'affichage",
         "draft": "Brouillon",
         "dropImage": "Glisser l’image ici",
-        "editImage": "Modifier l'image",
         "editTeaser": "Editer le teaser",
-        "emptyLead": "Laissez vide pour utiliser le lead original.",
-        "emptyPreTitle": "Laissez vide pour utiliser le prétitre original",
-        "emptyTitle": "Laissez vide pour utiliser le titre original",
         "general": "Général",
         "image": "Image",
         "images": "Images",
-        "invalidDate": "Date non valide",
         "invalidImage": "Image non valide",
         "key": "Clé",
         "lead": "Lead",
@@ -86,8 +73,6 @@
         "loadMore": "Charger plus",
         "modifiedAt": "{{modifiedAt, ccc PP pp}}",
         "no": "Non",
-        "noAuthorsFound": "Aucun auteur·trice trouvé·e",
-        "outlined": "Aperçu de",
         "page": "Page",
         "pagePreviewLink": "Lien de prévisualisation de la page",
         "peeredArticlePreview": "Prévisualisation",
@@ -98,8 +83,6 @@
         "public": "Public",
         "publishArticle": "Publier l'article",
         "publishDate": "Date de publication",
-        "removeImage": "Supprimer l'image",
-        "search": "Recherche",
         "seoTitle": "Titre de référencement",
         "seoTitleHelpBlock": "Veuillez utiliser un titre optimisé pour le référencement seo. <2>Guide du référencement</2>",
         "sharedWithPeers": "Partagé avec les peers",
@@ -139,36 +122,29 @@
         "urlPlaceholder": "https://canonical-url.com",
         "url": "URL",
         "enterSocialMediaTitle": "Veuillez entrer un titre pour les réseaux sociaux",
-        "enterSocialMediaImage": "Veuillez ajouter une image pour les réseaux sociaux",
         "enterTag": "Veuillez ajouter un tag",
         "enterSocialMediaAuthors": "Veuillez ajouter un·e auteur·trice pour les réseaux sociaux",
         "enterAuthors": "Veuillez ajouter un·e auteur·trice",
-        "comments": "Commentaires",
-        "loadingPeerArticles": "Chargement des articles des peer..."
+        "comments": "Commentaires"
       }
     },
     "articles": {
       "overview": {
         "authors": "Auteur·trices",
-        "noArticlesFound": "Aucun article trouvé",
         "publicationDate": "Date de publication",
         "published": "Publié",
         "action": "Action",
         "articles": "Articles",
-        "created": "Créé",
         "draft": "Brouillon",
-        "loadMore": "Charger plus",
         "newArticle": "Nouvel article",
         "notPublished": "Pas encore publié",
         "pending": "En attente",
-        "search": "Recherche",
         "states": "Statut",
         "title": "Titre",
         "untitled": "Sans titre",
         "updated": "Modifié le"
       },
       "panels": {
-        "close": "Fermer",
         "createAuthorProfile": "Créer un profil d'auteur·trice pour {{name}}",
         "duplicateArticle": "Dupliquer cet article ?",
         "updatedAt": "Mis à jour le",
@@ -181,7 +157,6 @@
         "publishedAt": "Publié le",
         "publishedAtDate": "{{publishedAtDate, ccc PP p}}",
         "title": "Titre",
-        "unpublish": "Dépublier",
         "unpublishArticle": "Dépublier l'article ?",
         "untitled": "Sans titre",
         "updatedAtDate": "{{updatedAtDate, ccc PP pp}}"
@@ -189,40 +164,25 @@
     },
     "comments": {
       "overview": {
-        "untitled": "Sans titre",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "updated": "Modifié le",
-        "state": "Statut",
         "action": "Action",
-        "moderation": "Moderation",
         "comments": "Commentaires",
-        "created": "Créé",
-        "loadMore": "Charger plus",
-        "search": "Recherche",
         "text": "Texte",
-        "title": "Titre",
         "userName": "Nom de l'utilisateur·trice",
-        "requestChange": "Demande de changement",
         "edit": "Edit Comment",
-        "reject": "Rejeter",
-        "approve": "Approuver",
         "editState": "Modifier le statut"
       },
       "edit": {
         "title": "Edit Comment",
-        "tags": "Tags",
         "unnamedTag": "<Unnamed Tag>",
-        "loading": "Loading",
         "success": "Comment successfully updated"
       },
       "panels": {
         "userName": "Nom d'utilisateur·trices",
-        "chooseRejectionReason": "Veuillez choisir une raison de rejet",
         "approve": "Approuver",
         "approveComment": "Approuver le commentaire",
         "cancel": "Annuler",
-        "close": "Fermer",
-        "confirm": "Confirmer",
         "createdAt": "Créé le",
         "id": "Id",
         "parent": "Parent",
@@ -233,10 +193,8 @@
         "requestChanges": "Demander des changements",
         "requestChangesOnComment": "Demander des modifications du commentaire",
         "requestChangesReason": "Raison",
-        "revisionCreatedAt": "Révision créée le",
         "revisionCreatedAtDate": "{{revisionCreatedAtDate,ccc PP p}}",
         "revisions": "Révisions",
-        "untitled": "Sans titre",
         "updatedAt": "Mis à jour le",
         "modifiedAt": "{{modifiedAt, ccc PP p}}",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
@@ -302,21 +260,17 @@
     "cancel": "Annuler",
     "pages": {
       "overview": {
-        "loadMore": "Charger plus",
         "untitled": "Sans titre",
         "draft": "Brouillon",
         "newPage": "Nouvelle page",
-        "noPages": "Aucune page trouvée",
         "notPublished": "Pas encore publié",
         "pages": "Pages",
         "pending": "En attente",
         "publicationDate": "Date de publication",
         "published": "Publié",
-        "search": "Recherche",
         "states": "Statut",
         "title": "Titre",
         "action": "Action",
-        "created": "Créé",
         "updated": "Modifié le"
       },
       "panels": {
@@ -325,7 +279,6 @@
         "updatedAt": "Mis à jour le",
         "updatedAtDate": "{{updatedAtDate, ccc PP pp}}",
         "cancel": "Annuler",
-        "close": "Fermer",
         "confirm": "Confirmer",
         "deletePage": "Supprimer la page ?",
         "duplicatePage": "Dupliquer la page ?",
@@ -333,7 +286,6 @@
         "publishedAt": "Publié le",
         "publishedAtDate": "{{publishedAtDate, ccc PP p}}",
         "title": "Titre",
-        "unpublish": "Dépublier",
         "unpublishPage": "Dépublier la page ?",
         "untitled": "Sans titre"
       }
@@ -347,30 +299,20 @@
         "themeFontColor": "Couleur du texte",
         "createPeer": "Créer un peer",
         "name": "Nom",
-        "callToAction": "Call to Action",
         "callToActionURL": "URL d'appel pour le Call to Action",
         "cancel": "Annuler",
-        "chooseImage": "Choisir une image",
         "close": "Fermer",
         "confirm": "Confirmer",
         "deletePeer": "Supprimer le peer",
-        "editImage": "Modifier l'image",
         "editPeer": "Modifier le peer",
         "image": "Image",
-        "infoEditError": "Erreur de modification du token",
         "information": "Information",
-        "invalidURL": "URL non valide",
         "peerCreated": "Peer créé",
-        "peeredToHost": "Impossible de se pairer à soi-même",
         "peerInfoUpdated": "Mise à jour des informations du peer",
-        "removeImage": "Supprimer l'image",
         "token": "Token",
-        "Unknown": "Inconnu",
         "URL": "URL: https://www.url.com",
-        "validateToken": "Veuillez confirmer que le token est correct avant de sauvegarder",
         "callToActionImage": "Image pour le Call to Action",
         "text": "Texte",
-        "logo": "Logo",
         "ctaImageInfo": "Taille recommandée de l'image pour le Call to Action : 728x90",
         "callToActionImageURL": "URL de l'image pour le Call to Action",
         "checkOwnPeerProfileHelpBlock": "Prévisualiser son propre profile peer: <2>Guide de prévisualisation du profil</2>",
@@ -383,7 +325,6 @@
         "newPeer": "Nouveau peer",
         "noPeersFound": "Aucun peer trouvé",
         "peers": "Peers",
-        "validURLTooltip": "URL valide",
         "invalidURLTooltip": "URL non valide",
         "myPeerProfile": "Mon profil peer",
         "editProfile": "Modifier le profil",
@@ -415,12 +356,10 @@
     },
     "images": {
       "panels": {
-        "addTag": "Appuyez sur enter pour ajouter un tag",
         "imageDimension": "{{imageWidth}} x {{imageHeight}}",
         "updated": "Mise à jour",
         "attribution": "Attribution",
         "cancel": "Annuler",
-        "chooseIMage": "Choisir une image",
         "close": "Fermer",
         "confirm": "Confirmer",
         "created": "Créé",
@@ -450,9 +389,6 @@
       },
       "overview": {
         "imageLibrary": "Bibliothèque d'images",
-        "loadMore": "Charger plus",
-        "noImagesFound": "Aucune image trouvée",
-        "search": "Recherche",
         "uploadImage": "Télécharger une image",
         "noDescription": "Aucune description",
         "edit": "Editer",
@@ -467,7 +403,6 @@
     "tokenList": {
       "panels": {
         "confirm": "Confirmer",
-        "generateError": "Impossible de créer un token",
         "tokenWarning": "Les tokens ne peuvent pas être récupérés ultérieurement. Il est recommandé de copier et d'enregistrer votre token dans un endroit sûr.",
         "cancel": "Annuler",
         "close": "Fermer",
@@ -476,8 +411,7 @@
         "deleteTokenText": "Voulez-vous supprimer {{name}} ?",
         "generate": "Générer",
         "generateToken": "Générer un token",
-        "name": "Nom",
-        "Unknown": "Inconnu"
+        "name": "Nom"
       },
       "overview": {
         "generateToken": "Générer un token",
@@ -493,8 +427,7 @@
         "targetLabelSelf": "cet onglet du navigateur",
         "hideToggleLabel": "Masquer le bouton CTA",
         "targetLabel": "Ouvrir le lien dans",
-        "urlLabel": "URL CTA",
-        "urlPlaceholder": "https://..."
+        "urlLabel": "URL CTA"
       },
       "close": "Fermer",
       "layout": {
@@ -524,12 +457,9 @@
       "overview": {
         "createdAt": "Créé",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
-        "modifiedAt": "Dernière modification",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Nom",
         "newSubscription": "Nouvel abonnement",
-        "exportSubscriptionsCsv": "Exportation CSV",
-        "unknown": "Inconnu",
         "deleted": "Utilisateur·trice supprimé·e",
         "subscription": "Abonnement",
         "email": "Email",
@@ -574,23 +504,18 @@
         "action": "Action",
         "createdAt": "Créé",
         "createdAtDate": "{{createdAtDate, ccc PP p}}",
-        "description": "Description",
         "modifiedAt": "Dernière modification",
         "modifiedAtDate": "{{modifiedAtDate, ccc PP p}}",
         "name": "Nom",
         "firstName": "Prénom",
         "newUser": "Nouvel·le utilisateur·trice",
-        "noDescription": "Pas de description",
-        "noUsersFound": "Aucun·e utilisateur·trice trouvé·e",
         "resetPassword": "Réinitialiser le mot de passe",
-        "search": "Recherche",
         "unknown": "Inconnu",
         "users": "Utilisateurs·trices",
         "subscriptions": "Abonnements",
         "noSubscriptions": "Aucun abonnement",
         "oneSubscription": "1 abonnement",
-        "amountOfSubscriptions": "{{amount}} abonnements",
-        "exportSubscriptionsCsv": "Exportation CSV"
+        "amountOfSubscriptions": "{{amount}} abonnements"
       }
     },
     "authors": {
@@ -602,25 +527,19 @@
         "confirm": "Confirmer",
         "created": "Créé le",
         "deleteAuthor": "Supprimer l'auteur·trice ?",
-        "loadMore": "Charger plus",
         "name": "Nom",
-        "noAuthorsFound": "Aucun·e auteur·trice trouvé·e",
-        "search": "Recherche",
         "unknown": "Inconnu",
         "createdAt": "{{createdAt, ccc PP p}}"
       },
       "panels": {
-        "chooseImage": "Choisir une image",
         "close": "Fermer",
         "createAuthor": "Créer un·e auteur·trice",
         "editAuthor": "Editer l'auteur·trice",
-        "editImage": "Supprimer l'image",
         "image": "Image",
         "jobTitle": "Emploi",
         "link": "Lien",
         "links": "Liens",
         "name": "Nom",
-        "removeImage": "Supprimer l'image",
         "title": "Titre",
         "bioInformation": "Eléments biographiques"
       }
@@ -643,11 +562,7 @@
         "action": "Action",
         "description": "Description",
         "name": "Nom",
-        "search": "Recherche",
-        "Unknown": "Inconnu",
         "newUserRole": "Nouveau rôle d'utilisateur·trice",
-        "noDescription": "Aucune description",
-        "noUserRolesFound": "Aucun rôle d'utilisateur·trice trouvé",
         "userRoles": "Rôles d'utilisateur·trice"
       }
     },
@@ -660,7 +575,6 @@
         "cherryPick": "Select specific comments",
         "displayName": "Display name",
         "comments": "{{count}} Comment",
-        "comments_plural": "{{count}} Comments",
         "label": "Commentaires"
       },
       "event": {
@@ -670,7 +584,6 @@
         "eventsFilterByTagInformation": "All events below will be displayed",
         "cherryPick": "Select specific events",
         "events": "{{count}} Event",
-        "events_plural": "{{count}} Events",
         "label": "Events"
       },
       "poll": {
@@ -700,22 +613,15 @@
         }
       },
       "listicle": {
-        "label": "Listicle",
-        "chooseImage": "Choisir une image",
-        "editImage": "Modifier l'image",
-        "removeImage": "Supprimer l'image",
         "title": "Titre"
       },
       "richText": {
         "label": "Texte enrichi",
         "invalidLink": "Le lien saisi n'est pas valide. Veuillez vérifier l'URL et réessayer.",
         "invalidMail": "Cette adresse e-mail n'est pas valide. Vérifier le mail et réessayer.",
-        "apply": "Appliquer",
-        "cancel": "Annuler",
         "charCount": "Nombre de caractères {{charCount}}",
         "insert": "Insérer",
         "link": "Lien",
-        "optionalDescription": "Description facultative du lien",
         "remove": "Supprimer",
         "startWriting": "Commencez à écrire...",
         "text": "Texte"
@@ -729,7 +635,6 @@
         "warning": "Veuillez noter que l’utilisation d’HTML personnalisé peut à l’utilisateur·trice ou rompre la mise en page. Veuillez vous assurer que le HTML que vous fournissez est exempt de scripts malveillants et qu’il est structuré correctement."
       },
       "richTextTable": {
-        "label": "Tableau de texte enrichi",
         "columns": "Colonnes",
         "addBorders": "Ajouter des bordures",
         "border": "Bordure",
@@ -749,29 +654,16 @@
       "imageGallery": {
         "label": "Galerie",
         "overview": {
-          "add": "Ajouter",
-          "caption": "Légende",
-          "chooseImage": "Choisir une image",
-          "editGalleryList": "Editer la galerie",
-          "editImage": "Modifier l'image",
-          "next": "Suivant",
-          "previous": "Précédent",
-          "removeImage": "Supprimer l'image"
+          "caption": "Légende"
         },
         "panels": {
           "caption": "Légende",
-          "chooseImage": "Choisir une image",
           "close": "Fermer",
-          "editGallery": "Galerie d'édition",
-          "editImage": "Modifier l'image",
-          "removeImage": "Supprimer l'image"
+          "editGallery": "Galerie d'édition"
         }
       },
       "linkPageBreak": {
         "label": "Saut de ligne",
-        "linkText": "Texte du lien",
-        "linkURL": "Lien URL",
-        "text": "Texte",
         "title": "Titre"
       },
       "quote": {
@@ -804,28 +696,16 @@
       }
     },
     "login": {
-      "O2Auth": "Authentification par OAuth2 : ",
       "email": "Email",
       "login": "Login",
-      "alternativeLogin": "Ou connectez-vous avec : ",
-      "currentPassword": "Mot de passe actuel",
       "password": "Mot de passe",
-      "unauthorized": "L'utilisateur·trices n'est pas autorisé·e à se connecter",
-      "username": "Nom d'utilisateur·trice"
+      "unauthorized": "L'utilisateur·trices n'est pas autorisé·e à se connecter"
     },
     "memberPlanList": {
-      "editTitle": "Modifier le plan membre",
       "paymentPeriodicities": "Périodicités de paiement",
       "action": "Actions",
-      "active": "Actif",
-      "adapter": "Solution de paiement",
       "createNew": "Nouveau plan membre",
-      "createTitle": "Création d'un plan membre",
       "deleteModalTitle": "Supprimer le plan membre",
-      "description": "Description",
-      "fixPrice": "Prix fixe",
-      "fixPriceDescription": "Si faux, le prix peut être une fourchette de prix",
-      "minimumMonthlyAmount": "Montant minimum par mois en CHF",
       "name": "Nom",
       "paymentMethods": "Méthodes de paiement possibles",
       "paymentPeriodicity": {
@@ -834,58 +714,33 @@
         "QUARTERLY": "Trimestrielles",
         "YEARLY": "Annuelles"
       },
-      "priceRange": "Prix (fourchette) en CHF",
-      "title": "Plans membres",
-      "errorMessage": "Veuillez entrer un chiffre",
-      "slug": "Slug"
+      "title": "Plans membres"
     },
     "userCreateOrEditView": {
       "passwordHeader": "Mots de passe & accès",
       "userDataTitle": "Données des utilisateurs·trices",
-      "loadingUser": "Chargement utilisateur",
       "subscriptionsHeader": "Abonnements",
       "successfullyUpdatedUser": "Utilisateur·trice mis·e à jour avec succès",
       "errorOnUpdate": "Erreur lors de la mise à jour de l'utilisateur·trice: {{error}}",
       "successfullyCreatedUser": "Utilisateur·trice créé·e avec succès",
       "errorCreatingUser": "L'utilisateur·trice n'a pas pu être créé·e. Erreur inattendue: {{error}}",
       "createNewUser": "Créer un·e nouvel·le utilisateur·trice",
-      "csvData": "Données CSV",
-      "exportSubscriptions": "Exporter",
-      "generateCSV": "Générer",
-      "actions": "Actions",
-      "download": "Télécharger",
-      "noUsersWithSubscriptions": "Aucun·e utilisateur·trice n'a d'abonnement actuellement",
-      "remove": "Supprimer",
       "deleteUser": "Supprimer l'utilisateur·trice ?",
       "passwordChangeSuccess": "Le mot de passe a été changé avec succès !",
-      "subDisableDescription": "L'abonnement ne peut être ajouté que lorsque l'utilisateur·trice a été créé·e.",
       "Unknown": "Inconnu",
-      "subTitle": "Abonnement",
       "userRoles": "Rôles de l'utilisateur·trice",
       "active": "Actif",
       "cancel": "Annuler",
-      "close": "Fermer",
       "confirm": "Confirmer",
       "email": "Email",
       "name": "Nom",
-      "addUserRole": "Ajouter un rôle d'utilisateur·trice",
-      "createUser": "Créer un·e utilisateur·trice",
-      "editUser": "Modifier l'utilisateur·trice",
-      "memberPlan": "Plan membre",
       "password": "Mot de passe",
-      "paidUntil": "Payé jusqu'à",
-      "paidUntilDate": "{{paidUntilDate, ccc PP p}}",
       "preferredName": "Nom préféré",
       "firstName": "Prénom",
       "resetPassword": "Réinitialiser le mot de passe",
       "sendWebsiteLogin": "Envoyer le lien de login",
       "sendWebsiteLoginSuccessMessage": "Lien de login envoyé à {{email}}.",
-      "sendWebsiteLoginFailureMessage": "Le lien de login n'a pas pu être envoyé. {{error}}",
       "resetPasswordFor": "Réinitialiser le mot de passe de {{userName}}",
-      "selectUserRole": "Sélectionnez le rôle de l'utilisateur·trice",
-      "startedAt": "Commencé",
-      "startedAtDate": "{{startedAtDate, ccc PP p}}",
-      "subEdit": "Modifier",
       "company": "Entreprise",
       "streetAddress": "Rue",
       "streetAddress2": "Rue 2",
@@ -930,15 +785,9 @@
     },
     "userSubscriptionEdit": {
       "memberPlanMonthlyAmount": "Montant mensuel (CHF)",
-      "active": "Actif",
-      "description": "Description",
-      "name": "Nom",
-      "activeDescription": "Rendre la méthode disponible",
-      "adapter": "Solution de paiement",
       "autoRenew": "Renouvellement automatique",
       "autoRenewDescription": "Renouveler l'abonnement automatiquement",
       "createTitle": "Créer un abonnement",
-      "deactivatedAt": "Désactivé",
       "editTitle": "Modifier l'abonnement",
       "monthlyAmount": "Montant mensuel",
       "paidUntil": "Payé jusqu'à",
@@ -949,32 +798,25 @@
       "deactivation": {
         "willBeDeactivated": "L'abonnement sera désactivé le {{date, ccc PP p}}",
         "modalTitle": {
-          "deactivated": "Activer l'abonnement ?",
           "activated": "Désactiver l'abonnement ?"
         },
         "modalMessage": {
-          "activated": "Voulez-vous désactiver l'abonnement de \"{{userName}}\" avec l'adresse email \"{{userEmail}}\" ?",
-          "deactivated": "Voulez-vous réactiver l'abonnement de \"{{userName}}\" avec l'adresse email \"{{userEmail}}\" ?"
+          "activated": "Voulez-vous désactiver l'abonnement de \"{{userName}}\" avec l'adresse email \"{{userEmail}}\" ?"
         },
         "title": {
-          "deactivated": "Réactiver l'abonnement",
           "activated": "Désactiver l'abonnement"
         },
         "action": {
-          "deactivated": "Réactiver",
           "activated": "Désactiver"
         },
         "date": "Date de désactivation",
-        "dateFrom": "Date de désactivation (à partir du)",
-        "dateTo": "Date de désactivation (à)",
         "reason": "Motif de désactivation",
         "reasonNone": "Aucun motif",
         "reasonUserSelfDeactivated": "Désactivation par l'utilisateur·trice",
         "reasonInvoiceNotPaid": "Facture impayée",
         "isDeactivated": "L'abonnement est désactivé depuis {{date, ccc PP p}} et ne peut plus être modifié. Le cas échéant, un nouvel abonnement peut être souscrit.",
         "help": "Les abonnements désactivés peuvent encore être utilisés jusqu'à la date \"payée jusqu'à\". Mais ils ne seront pas renouvelés automatiquement, même si l'option de renouvellement automatique est activée. Une fois désactivé, l'abonnement ne peut pas être réactivé."
-      },
-      "hasAddress": "Adresse de l'utilisateur·trice"
+      }
     },
     "pollList": {
       "title": "Sondages",
@@ -987,7 +829,6 @@
       "hasBeenClosedAt": "Fermé le {{closedAt, ccc PP p}}",
       "closedAt": "Fermé le",
       "closedAtNone": "Non fermé",
-      "answersCount": "Réponses saisies",
       "state": "État",
       "delete": "Supprimer",
       "pollDeleted": "Sondage supprimé."
@@ -1001,7 +842,6 @@
       "loadingTitle": "Chargement du sondage...",
       "saveTitle": "Enregistrer",
       "saveAndCloseTitle": "Enregistrer & Fermer",
-      "question": "Question",
       "toBeOrNotToBe": "Être ou ne pas être.",
       "questionRequired": "Saisie ta question",
       "savedSuccessfully": "Sondage enregistré.",
@@ -1044,11 +884,6 @@
       "dashboard": "Dashboard",
       "events": "Events",
       "eventTags": "Tags",
-      "languageSwitch": {
-        "currentLanguage": "Anglais",
-        "selectNewLanguage": "Sélectionner une nouvelle langue",
-        "close": "Fermer"
-      },
       "articles": "Articles",
       "authors": "Auteurs/Autrices",
       "comments": "Commentaires",
@@ -1065,7 +900,6 @@
       "userRoles": "Rôles d'utilisateur/utilisatrice",
       "users": "Utilisateur/Utilisatrices",
       "usersAndMembers": "Utilisateur & Abonnements",
-      "myPeerInfo": "Mon profil de pair",
       "peers": "Peers",
       "settings": "Paramètres",
       "peerArticles": "Articles pairables",
@@ -1086,32 +920,24 @@
         "name": "Nom",
         "navigations": "Menus",
         "newNavigation": "Nouveau menu",
-        "noNavigationsFound": "Aucun menu trouvé",
-        "search": "Recherche",
         "unknown": "Inconnu"
       },
       "panels": {
         "label": "Label",
-        "article": "Article",
         "close": "Fermer",
         "createNavigation": "Créer un menu",
         "editNavigation": "Modifier le menu",
         "key": "Clé",
-        "links": "Liens",
         "name": "Nom",
-        "page": "Page",
         "selectArticle": "Sélectionner l'article",
         "selectPage": "Sélectionner la page",
-        "url": "URL",
-        "createdAt": "{{testDate}} bonjour"
+        "url": "URL"
       }
     },
     "pageEditor": {
       "overview": {
         "pageDraftCreated": "Brouillon créé",
         "unpublished": "Non publié",
-        "back": "Retour",
-        "draft": "Brouillon",
         "metadata": "Métadonnées",
         "pageDraftSaved": "Brouillon sauvegardé",
         "pageNotFound": "Page non trouvée",
@@ -1125,7 +951,6 @@
         "unpublish": "Dépublier",
         "pagePending": "Page en attente",
         "duplicate": "Dupliquer",
-        "previewDisabled": "All page changes have been published already.",
         "preview": "Aperçu",
         "createComment": "Create Comment"
       },
@@ -1133,14 +958,10 @@
         "confirm": "Confirmer",
         "metadataInfo": "Les informations de ces champs sont utilisées pour les aperçus dans les publications de médias sociaux. S'ils sont laissés vides, les informations de l'onglet général seront utilisées à la place.",
         "socialMediaDescription": "Description pour les réseaux sociaux",
-        "addTag": "Appuyez sur enter pour ajouter un tag",
-        "chooseImage": "Choisir une image",
         "close": "Fermer",
         "description": "Description du référencement (SEO)",
         "descriptionHelpBlock": "Veuillez utiliser une description optimisée pour le référencement seo",
-        "editImage": "Modifier l'image",
         "image": "Image",
-        "invalidDate": "Date non valide",
         "key": "Clé",
         "metadata": "Métadonnées",
         "pagePending": "Une publication en attente est déjà prévue le {{pendingPublishDate, ccc PP p}}. Une nouvelle publication remplacera cette publication.",
@@ -1151,7 +972,6 @@
         "public": "Public",
         "publishDate": "Date de publication",
         "publishPage": "Publier la page",
-        "removeImage": "Supprimer l'image",
         "slug": "Slug",
         "socialMediaImage": "Image pour les médias sociaux",
         "socialMediaTitle": "Titre pour les médias sociaux",
@@ -1171,8 +991,7 @@
         "publishAtDateCheckbox": "Définir une date différente pour la disponibilité en ligne",
         "enterSocialMediaTitle": "Veuillez entrer un titre pour les réseaux sociaux",
         "enterSocialMediaDescription": "Veuillez entrer une description pour les réseaux sociaux",
-        "enterImage": "Veuillez ajouter une image",
-        "enterSocialMediaImage": "Veuillez entrer une image pour les réseaux sociaux"
+        "enterImage": "Veuillez ajouter une image"
       }
     },
     "chooseEditImage": {
@@ -1210,19 +1029,15 @@
       "consentSlug": "Consentement slug",
       "value": "Valeur",
       "titleCreate": "Créer un consentement d'utilisateur",
-      "titleEdit": "Modifier le consentement de l'utilisateur",
-      "userId": "ID de l'utilisateur",
-      "consentId": "Consentement id"
+      "titleEdit": "Modifier le consentement de l'utilisateur"
     },
     "errorMessages": {
-      "noFirstNameErrorMessage": "Veuillez entrer un prénom",
       "noNameErrorMessage": "Veuillez entrer un nom",
       "noEmailErrorMessage": "Veuillez entrer une adresse email",
       "invalidEmailErrorMessage": "Veuillez entrer une adresse email valide",
       "noUrlErrorMessage": "Veuillez entrer une url",
       "invalidUrlErrorMessage": "Veuillez entrer une adresse url valide",
       "noImageErrorMessage": "Veuillez ajouter une image",
-      "noCallToActionTextErrorMessage": "Veuillez entrer un texte pour le Call to Action",
       "noCallToActionImageErrorMessage": "Veuillez entrer une image pour le Call to Action",
       "noAmountErrorMessage": "Le montant par défaut sera fixé à 5.00 CHF si le champ est laissé vide",
       "noPasswordErrorMessage": "Veuillez entrer un mot de passe",
@@ -1238,7 +1053,6 @@
       "minimalAmountPerMonth": "Le montant minimum / mois est de {{amount}} chf."
     },
     "invoice": {
-      "manuallyPaidByAdmin": "Marqué comme payé par l'administrateur.",
       "invoiceNo": "Facture n°",
       "total": "Montant facturé",
       "paidAt": "Payée le",
@@ -1248,7 +1062,6 @@
       "manuallyPaidModalBody": "La facture est marquée comme payée, bien qu'aucun paiement n'ait été effectué par l'utilisateur·trice. Veuillez vous adresser au comptable pour discuter de ce cas de figure.",
       "userNotLoaded": "Erreur inattendue : vos données d'utilisateur trice n'ont pas pu être chargées.",
       "unpaid": "(non payé)",
-      "seeInvoiceHistory": "Voir historique des factures",
       "panel": {
         "invoiceHistory": "Historique de facturation",
         "missingSubscriptionId": "Erreur inattendue : le subscriptionId n'a pas pu être trouvé.",
@@ -1263,13 +1076,10 @@
       "successMessage": "Paramètres mis à jour avec succès !",
       "successTitle": "Enregistré",
       "errorTitle": "Erreur",
-      "editSettings": "Modifier les paramètres",
       "guestCommenting": "Autoriser les commentaires de personnes non connectées",
       "loginMinutes": "Durée de validité du token de l'email d'authentification",
       "passwordToken": "Durée de validité du jeton de réinitialisation du mot de passe et de l'email",
       "peerToken": "Peering timeout",
-      "invoiceReminders": "Tentatives de rappel de facture",
-      "invoiceFrequency": "Fréquence des rappels de factures",
       "minutes": "minutes",
       "ms": "millisecondes",
       "comments": "Commentaires",
@@ -1362,7 +1172,6 @@
     },
     "importableEvent": {
       "title": "Importable events",
-      "editTitle": "Edit importable event",
       "import": "Import",
       "imported": "Imported"
     },
@@ -1370,30 +1179,20 @@
       "availableTemplates": "Modèles de courriels disponibles",
       "explanation": "Tu peux utiliser ces modèles de {{provider}} pour envoyer des notifications..",
       "name": "Nom",
-      "internalName": "Nom interne",
       "description": "Description",
       "content": "Contenu",
       "view": "Voir sur {{provider}}",
       "status": "Statut",
-      "synchronize": "Synchroniser les modèles",
-      "statusDeleted": "Modèle '{{internalName}}' supprimé sur {{provider}}"
+      "synchronize": "Synchroniser les modèles"
     },
     "mailTemplateSelect": {
       "noMailSentSelectNow": "pas d'envoi mail"
-    },
-    "general": {
-      "deletedSuccess": "Supprimé avec succès",
-      "created": "Créé avec succès",
-      "updated": "Actualisé avec succès",
-      "errorOnUpdate": "Il y a eu une erreur - veuillez réessayer"
     },
     "dashboard": {
       "dashboard": "Dashboard",
       "greeting": "Salut, {{name}}!",
       "yearlySubscribers": "Nouveaux abonné:es au cours de l'année écoulée",
       "activity": "Dernière activité",
-      "event": "Événement",
-      "summary": "Résumé",
       "noData": "Pas de données actuelles sur les abonnés",
       "newArticle": "Nouvel <0>article</0> créé",
       "newPage": "Nouvelle <0>page</0> créée",
@@ -1403,9 +1202,7 @@
       "newAuthor": "Nouvel <0>auteur</0> ajouté",
       "newEvent": "Nouvel <0>event</0> ajouté",
       "newUser": "Nouvel <0>utilisateur</0> ajouté",
-      "createdBy": " de {{creator}}",
-      "user": "Utilisateur",
-      "memberPlan": "Plan membre: {{plan}}"
+      "user": "Utilisateur"
     },
     "draggableSubscriptionInterval": {
       "ignoreDeactivatedSubscriptions": "Les e-mails destinés aux abonnements désactivés ne sont pas envoyés!"
@@ -1422,7 +1219,6 @@
       "lastRunSuccessful": "Réussite à la dernière exécution.",
       "startTime": "Started at: {{date, ccc PP p}}",
       "successTime": "Success at: {{date, ccc PP p}}",
-      "errorTime": "Errored at: {{date, ccc PP p}}",
       "tries": "Runs: {{tries}}"
     }
   }
