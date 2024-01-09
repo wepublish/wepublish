@@ -38,7 +38,6 @@ services:
       JWT_SECRET_KEY: ThisIsSuperSecret
     depends_on:
       - database
-      - media
     networks:
       - app-tier
   editor:
@@ -53,16 +52,6 @@ services:
       API_URL: http://localhost:4000
     depends_on:
       - api
-
-  media:
-    image: ghcr.io/wepublish/karma-media-server:latest
-    ports:
-      - '127.0.0.1:4100:4100'
-      - '127.0.0.1:4101:4100'
-    environment:
-      NUM_CLUSTERS: 1
-      STORAGE_PATH: ./.media
-      TOKEN: secret
 
   database:
     image: bitnami/postgresql:14
@@ -86,12 +75,26 @@ services:
       PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
       PGADMIN_CONFIG_SERVER_MODE: 'False'
     ports:
-      - "127.0.0.1:8000:80"
+      - '127.0.0.1:8000:80'
     depends_on:
       - database
     networks:
       - app-tier
 
+  storage:
+    image: bitnami/minio:latest
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    environment:
+      - MINIO_ROOT_USER=${S3_ACCESS_KEY}
+      - MINIO_ROOT_PASSWORD=${S3_SECRET_KEY}
+      - MINIO_DEFAULT_BUCKETS=${S3_BUCKETS}
+    volumes:
+      - storage_data:/data
+
 volumes:
   database_data:
+    driver: local
+  storage_data:
     driver: local

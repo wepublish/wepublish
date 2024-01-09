@@ -6,17 +6,18 @@ import {ScheduleModule} from '@nestjs/schedule'
 import {
   AgendaBaselService,
   AuthenticationModule,
+  BexioPaymentProvider,
   ConsentModule,
   DashboardModule,
   EventsImportModule,
   GraphQLRichText,
-  KarmaMediaAdapter,
   KulturZueriService,
   MailchimpMailProvider,
   MailgunMailProvider,
   MailsModule,
   MediaAdapterService,
   MembershipModule,
+  NovaMediaAdapter,
   PaymentProvider,
   PaymentsModule,
   PayrexxPaymentProvider,
@@ -24,8 +25,7 @@ import {
   PermissionModule,
   SettingModule,
   StripeCheckoutPaymentProvider,
-  StripePaymentProvider,
-  BexioPaymentProvider
+  StripePaymentProvider
 } from '@wepublish/api'
 import {ApiModule, PrismaModule, PrismaService} from '@wepublish/nest-modules'
 import bodyParser from 'body-parser'
@@ -254,10 +254,10 @@ import {SlackMailProvider} from '../app/slack-mail-provider'
       useFactory: (config: ConfigService) => {
         const internalUrl = config.get('MEDIA_SERVER_INTERNAL_URL')
 
-        return new KarmaMediaAdapter(
-          new URL(config.getOrThrow('MEDIA_SERVER_URL')),
+        return new NovaMediaAdapter(
+          config.getOrThrow('MEDIA_SERVER_URL'),
           config.getOrThrow('MEDIA_SERVER_TOKEN'),
-          internalUrl ? new URL(internalUrl) : undefined
+          internalUrl ? internalUrl : undefined
         )
       },
       inject: [ConfigService]
