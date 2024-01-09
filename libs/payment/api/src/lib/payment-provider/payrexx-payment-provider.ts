@@ -5,41 +5,36 @@ import {
   Intent,
   IntentState,
   PaymentProviderProps,
-  WebhookForPaymentIntentProps
+  WebhookForPaymentIntentProps,
+  WebhookResponse
 } from './payment-provider'
 import {logger} from '@wepublish/utils/api'
 import {PaymentState} from '@prisma/client'
 import {Gateway, GatewayClient, GatewayStatus} from '../payrexx/gateway-client'
 import {Transaction, TransactionClient, TransactionStatus} from '../payrexx/transaction-client'
+import {timingSafeEqual} from 'crypto'
 
 export interface PayrexxPaymentProviderProps extends PaymentProviderProps {
   gatewayClient: GatewayClient
   transactionClient: TransactionClient
+  webhookApiKey: string
   psp: number[]
   pm: string[]
   vatRate: number
 }
 
-function mapPayrexxEventToPaymentStatus(
-  event: GatewayStatus | TransactionStatus
-): PaymentState | null {
-  switch (event) {
-    case 'waiting':
-      return PaymentState.processing
-    case 'confirmed':
-      return PaymentState.paid
-    case 'cancelled':
-      return PaymentState.canceled
-    case 'declined':
-      return PaymentState.declined
-    default:
-      return null
+function timeConstantCompare(a: string, b: string): boolean {
+  try {
+    return timingSafeEqual(Buffer.from(a, 'utf8'), Buffer.from(b, 'utf8'))
+  } catch {
+    return false
   }
 }
 
 export class PayrexxPaymentProvider extends BasePaymentProvider {
   readonly gatewayClient: GatewayClient
   readonly transactionClient: TransactionClient
+  readonly webhookApiKey: string
   readonly psp: number[]
   readonly pm: string[]
   readonly vatRate: number
@@ -48,19 +43,34 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
     super(props)
     this.gatewayClient = props.gatewayClient
     this.transactionClient = props.transactionClient
+    this.webhookApiKey = props.webhookApiKey
     this.psp = props.psp
     this.pm = props.pm
     this.vatRate = props.vatRate
   }
 
-  async webhookForPaymentIntent(props: WebhookForPaymentIntentProps): Promise<IntentState[]> {
+  async webhookForPaymentIntent(props: WebhookForPaymentIntentProps): Promise<WebhookResponse> {
+    const apiKey = props.req.query.apiKey as string
+    if (!timeConstantCompare(apiKey, this.webhookApiKey)) {
+      return {
+        status: 403,
+        message: 'Invalid Api Key'
+      }
+    }
+
     if (!props.req.body.transaction) {
-      throw new Error('Cannot find Transaction within webhook body')
+      return {
+        status: 400,
+        message: 'Cannot find Transaction within webhook body'
+      }
     }
     const transaction = props.req.body.transaction as Transaction
-    const state = mapPayrexxEventToPaymentStatus(transaction.status)
+    const state = this.mapPayrexxEventToPaymentStatus(transaction.status)
     if (state === null) {
-      return []
+      return {
+        status: 200,
+        paymentStates: []
+      }
     }
     const intentState: IntentState = {
       paymentID: transaction.referenceId,
@@ -70,7 +80,10 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
     if (state === 'paid') {
       intentState.customerID = String(transaction.preAuthorizationId)
     }
-    return [intentState]
+    return {
+      status: 200,
+      paymentStates: [intentState]
+    }
   }
 
   async createIntent(createPaymentIntentProps: CreatePaymentIntentProps): Promise<Intent> {
@@ -169,7 +182,7 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
   }
 
   private checkTransactionIntentStatus(transaction: Transaction): IntentState {
-    const state = mapPayrexxEventToPaymentStatus(transaction.status)
+    const state = this.mapPayrexxEventToPaymentStatus(transaction.status)
     if (!state) {
       logger('payrexxPaymentProvider').error(
         'Payrexx gateway with ID: %s for paymentProvider %s returned with an unmappable status %s',
@@ -197,7 +210,7 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
   }
 
   private checkGatewayIntentStatus(gateway: Gateway): IntentState {
-    const state = mapPayrexxEventToPaymentStatus(gateway.status)
+    const state = this.mapPayrexxEventToPaymentStatus(gateway.status)
     if (!state) {
       logger('payrexxPaymentProvider').error(
         'Payrexx gateway with ID: %s for paymentProvider %s returned with an unmappable status %s',
@@ -233,6 +246,23 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
       customerID: transaction?.preAuthorizationId
         ? transaction.preAuthorizationId.toString()
         : undefined
+    }
+  }
+
+  private mapPayrexxEventToPaymentStatus(
+    event: GatewayStatus | TransactionStatus
+  ): PaymentState | null {
+    switch (event) {
+      case 'waiting':
+        return PaymentState.processing
+      case 'confirmed':
+        return PaymentState.paid
+      case 'cancelled':
+        return PaymentState.canceled
+      case 'declined':
+        return PaymentState.declined
+      default:
+        return null
     }
   }
 }

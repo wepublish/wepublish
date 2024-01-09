@@ -18,7 +18,8 @@ import {
   Intent,
   IntentState,
   PaymentProviderProps,
-  WebhookForPaymentIntentProps
+  WebhookForPaymentIntentProps,
+  WebhookResponse
 } from '../payment-provider'
 import {
   InvoiceNotFoundError,
@@ -89,7 +90,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     this.bexio = new Bexio(this.apiKey)
   }
 
-  async webhookForPaymentIntent(props: WebhookForPaymentIntentProps): Promise<IntentState[]> {
+  async webhookForPaymentIntent(props: WebhookForPaymentIntentProps): Promise<WebhookResponse> {
     throw new WebhookNotImplementedError()
   }
 

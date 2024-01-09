@@ -18,7 +18,8 @@ import {
   PaymentProviderProps,
   UpdatePaymentWithIntentStateProps,
   UpdateRemoteSubscriptionAmountProps,
-  WebhookForPaymentIntentProps
+  WebhookForPaymentIntentProps,
+  WebhookResponse
 } from './payment-provider'
 
 export interface PayrexxSubscripionsPaymentProviderProps extends PaymentProviderProps {
@@ -369,12 +370,17 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
     }
   }
 
-  async webhookForPaymentIntent(props: WebhookForPaymentIntentProps): Promise<IntentState[]> {
+  async webhookForPaymentIntent(props: WebhookForPaymentIntentProps): Promise<WebhookResponse> {
     const intentStates: IntentState[] = []
 
     // Protect endpoint
     const apiKey = props.req.query.apiKey as string
-    if (!timeConstantCompare(apiKey, this.webhookSecret)) throw new Error('Invalid api key!')
+    if (!timeConstantCompare(apiKey, this.webhookSecret)) {
+      return {
+        status: 403,
+        message: 'Invalid Api Key'
+      }
+    }
 
     const transaction = props.req.body.transaction
     if (!transaction) throw new Error('Can not handle webhook')
@@ -387,7 +393,10 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
         state
       })
     }
-    return intentStates
+    return {
+      status: 200,
+      paymentStates: intentStates
+    }
   }
 
   async createIntent(props: CreatePaymentIntentProps): Promise<Intent> {

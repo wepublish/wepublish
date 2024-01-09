@@ -194,8 +194,8 @@ import {SlackMailProvider} from '../app/slack-mail-provider'
         ) {
           const payrexxFactory = new PayrexxFactory({
             baseUrl: 'https://api.payrexx.com/v1.0/',
-            instance: config.get('PAYREXX_INSTANCE_NAME'),
-            secret: config.get('PAYREXX_API_SECRET')
+            instance: config.getOrThrow('PAYREXX_INSTANCE_NAME'),
+            secret: config.getOrThrow('PAYREXX_API_SECRET')
           })
           paymentProviders.push(
             new PayrexxPaymentProvider({
@@ -204,6 +204,7 @@ import {SlackMailProvider} from '../app/slack-mail-provider'
               offSessionPayments: true,
               transactionClient: payrexxFactory.transactionClient,
               gatewayClient: payrexxFactory.gatewayClient,
+              webhookApiKey: config.getOrThrow('PAYREXX_WEBHOOK_SECRET'),
               psp: [0, 15, 17, 2, 3, 36],
               pm: config.get('PAYREXX_PAYMENT_METHODS')
                 ? config.get('PAYREXX_PAYMENT_METHODS').split(',')

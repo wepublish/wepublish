@@ -89,6 +89,7 @@ export function registerPaymentsModule(): DynamicModule {
             offSessionPayments: true,
             gatewayClient: payrexxFactory.gatewayClient,
             transactionClient: payrexxFactory.transactionClient,
+            webhookApiKey: config.getOrThrow('PAYREXX_WEBHOOK_SECRET'),
             psp: [0, 15, 17, 2, 3, 36],
             pm: ['postfinance_card', 'postfinance_efinance', 'twint', 'paypal'],
             vatRate: 7.7,
