@@ -2,8 +2,8 @@
   "translation": {
     "articleEditor": {
       "overview": {
-        "articlePublished": "Article Published",
         "articlePending": "Article Pending",
+        "articlePublished": "Article Published",
         "back": "Back",
         "createComment": "Create Comment",
         "draft": "Draft",
@@ -209,12 +209,12 @@
     "blocks": {
       "comment": {
         "cherryPick": "Select specific comments",
+        "comments": "{{count}} Comment",
         "commentsFilterByTagInformation": "All comments below will be displayed",
         "displayName": "Display name",
         "edit": "Edit comment block",
-        "label": "Comments",
-        "comments": "{{count}} Comment",
         "filterByTag": "Filter comments by tag",
+        "label": "Comments",
         "title": "Edit Comment Block"
       },
       "embeds": {
@@ -240,11 +240,11 @@
       "event": {
         "cherryPick": "Select specific events",
         "edit": "Edit event block",
+        "events": "{{count}} Event",
         "eventsFilterByTagInformation": "All events below will be displayed",
         "filterByTag": "Filter comments by tag",
-        "title": "Edit Event Block",
-        "events": "{{count}} Event",
-        "label": "Events"
+        "label": "Events",
+        "title": "Edit Event Block"
       },
       "flexTeaser": {
         "addBlock": "Add Block",
@@ -256,10 +256,10 @@
         "unlockBlock": "Unlock"
       },
       "html": {
-        "label": "HTML",
         "close": "Close",
         "confirm": "Confirm",
         "edit": "Edit HTML",
+        "label": "HTML",
         "placeholder": "Paste your HTML block here..",
         "warning": "Please note, rendering custom HTML may be harmful to the user or break the page layout. Please make sure that the HTML you provide is free of malicious scripts and is structured correctly."
       },
@@ -290,22 +290,22 @@
         "title": "Title"
       },
       "poll": {
-        "label": "Poll",
         "edit": "Edit poll block",
+        "label": "Poll",
         "select": "Select",
         "title": "Edit Poll Block"
       },
       "quote": {
-        "label": "Quote",
         "author": "Author",
+        "label": "Quote",
         "quote": "Quote"
       },
       "richText": {
-        "label": "Rich text",
         "charCount": "Characters count {{charCount}}",
         "insert": "Insert",
         "invalidLink": "Link input is invalid. Please check URL and try again.",
         "invalidMail": "This mail address is invalid. Check mail and try again.",
+        "label": "Rich text",
         "link": "Link",
         "remove": "Remove",
         "startWriting": "Start writing ...",
@@ -320,10 +320,8 @@
         "insertTable": "Insert Table",
         "rows": "Rows"
       },
-      "title": {
-        "label": "Title",
-        "leadText": "Lead Text ",
-        "title": "Title"
+      "teaserFlexGrid": {
+        "label": "Flex Grid Teasers"
       },
       "teaserGrid1": {
         "label": "1 Col"
@@ -331,8 +329,10 @@
       "teaserGrid6": {
         "label": "6 Col"
       },
-      "teaserFlexGrid": {
-        "label": "Flex Grid Teasers"
+      "title": {
+        "label": "Title",
+        "leadText": "Lead Text ",
+        "title": "Title"
       }
     },
     "cancel": "Cancel",
@@ -671,13 +671,13 @@
       "name": "Name",
       "showPlaceholders": "Placeholder Documentation",
       "status": "Status",
-      "synchronize": "Synchronize templates",
       "statuses": {
+        "error": "Unknown error",
         "ok": "🗸",
         "remoteMissing": "Template '{{internalName}}' removed at {{provider}}",
-        "unused": "Template '{{internalName}}' is unused",
-        "error": "Unknown error"
+        "unused": "Template '{{internalName}}' is unused"
       },
+      "synchronize": "Synchronize templates",
       "view": "View at {{provider}}"
     },
     "mailTemplateSelect": {
@@ -791,8 +791,8 @@
         "pageDraftCreated": "Page Draft Created",
         "pageDraftSaved": "Page Draft Saved",
         "pageNotFound": "Page Not Found",
-        "pagePublished": "Page Published",
         "pagePending": "Page Pending",
+        "pagePublished": "Page Published",
         "pending": "Page pending publication on {{date, ccc PP p}}",
         "preview": "Preview",
         "publish": "Publish",
@@ -894,13 +894,13 @@
       "filterByPeer": "Filter by peer",
       "lead": "Lead",
       "notPublished": "Not yet published",
+      "originalArticle": "Original article",
       "peer": "Peer",
       "peerArticles": "Peerable Articles",
       "publicationDate": "{{publicationDate, ccc PP p}}",
       "publishedAt": "Publication date",
-      "originalArticle": "Original article",
-      "toOriginalArticle": "To original article",
-      "title": "Title"
+      "title": "Title",
+      "toOriginalArticle": "To original article"
     },
     "peerList": {
       "overview": {
@@ -1046,35 +1046,35 @@
     "save": "Save",
     "saveAndClose": "Save & Close",
     "settingList": {
+      "activeSubscriptionsApiPublic": "Make the active subscriptions API accessible by the public",
+      "allowCommentEditing": "Allow comment editing",
+      "allowGuestCommentRating": "Allow guest ratings on comments",
+      "commentCharLimit": "Comment character limit",
       "comments": "Comments",
       "days": "days",
       "disabled": "disabled",
       "enabled": "enabled",
       "errorTitle": "Error",
+      "expectedRevenueApiPublic": "Make the expected revenue API accessible by the public",
+      "guestCommenting": "Allow guest commenting",
+      "guestPollVote": "Allow guest votes on polls",
       "login": "Login",
+      "loginMinutes": "Email-Login token validity period",
       "memberships": "Memberships",
       "minutes": "minutes",
       "ms": "milliseconds",
+      "newDeactivationsApiPublic": "Make the new deactivations API accessible by the public",
+      "newSubscriptionsApiPublic": "Make the new subscriptions API accessible by the public",
+      "passwordToken": "Email-Password reset token validity period",
       "payment": "Payment",
       "peering": "Peering",
+      "peerToken": "Peering timeout",
       "polls": "Polls",
+      "renewingSubscriptionsApiPublic": "Make the renewing subscriptions API accessible by the public",
+      "revenueApiPublic": "Make the revenue API accessible by the public",
       "settings": "Settings",
       "successMessage": "Settings updated successfully!",
       "successTitle": "Saved",
-      "newSubscriptionsApiPublic": "Make the new subscriptions API accessible by the public",
-      "activeSubscriptionsApiPublic": "Make the active subscriptions API accessible by the public",
-      "renewingSubscriptionsApiPublic": "Make the renewing subscriptions API accessible by the public",
-      "newDeactivationsApiPublic": "Make the new deactivations API accessible by the public",
-      "expectedRevenueApiPublic": "Make the expected revenue API accessible by the public",
-      "revenueApiPublic": "Make the revenue API accessible by the public",
-      "allowGuestCommentRating": "Allow guest ratings on comments",
-      "allowCommentEditing": "Allow comment editing",
-      "commentCharLimit": "Comment character limit",
-      "guestCommenting": "Allow guest commenting",
-      "guestPollVote": "Allow guest votes on polls",
-      "loginMinutes": "Email-Login token validity period",
-      "passwordToken": "Email-Password reset token validity period",
-      "peerToken": "Peering timeout",
       "warnings": {
         "activeSubscriptionsApiPublic": "Exposes subscriptions anonymized to the public.",
         "allowCommentEditing": "Allow users to edit their comments",
@@ -1100,6 +1100,10 @@
       "add": "Add",
       "addNew": "Create new flow",
       "autoRenewal": "Auto Renewal?",
+      "booleanFilter": {
+        "false": "No",
+        "true": "Yes"
+      },
       "dayOfRenewal": "Day of renewal / subscription ends",
       "days": "days",
       "dayWithNumber": "day {{day}}",
@@ -1115,11 +1119,7 @@
       "subscriptionEvents": "Static Subscription Events",
       "subscriptionsAffected": "Filter applies to {{numberOfSubscriptions}} subscriptions",
       "timeline": "Timeline",
-      "titleDefaultSettings": "Default Subscription Settings",
-      "booleanFilter": {
-        "true": "Yes",
-        "false": "No"
-      }
+      "titleDefaultSettings": "Default Subscription Settings"
     },
     "subscriptionList": {
       "filter": {
@@ -1152,16 +1152,16 @@
     },
     "systemMails": {
       "event": "Event",
+      "events": {
+        "account_creation": "Registration",
+        "login_link": "Login Link",
+        "password_reset": "Password reset",
+        "test_mail": "Test mail"
+      },
       "explanation": "You can view the available templates in the 'Mail templates' settings entry.",
       "template": "Mail template",
       "test": "Send test mail",
-      "title": "System Mails",
-      "events": {
-        "login_link": "Login Link",
-        "account_creation": "Registration",
-        "password_reset": "Password reset",
-        "test_mail": "Test mail"
-      }
+      "title": "System Mails"
     },
     "tags": {
       "overview": {
@@ -1291,13 +1291,12 @@
       "autoRenewDescription": "Renew the subscription automatically",
       "createTitle": "Create Subscription",
       "deactivation": {
-        "isDeactivated": "The subscription has been deactivated since {{date, ccc PP p}} and can no longer be edited. Probably, a new subscription can be created.",
-        "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}",
         "action": {
           "activated": "Deactivate"
         },
         "date": "Deactivation Date",
         "help": "Deactivated subscriptions can still be used until the paid until date. But they will not be automatically renewed even if the auto renew is true. Once deactivated, the subscription cannot be reactivated.",
+        "isDeactivated": "The subscription has been deactivated since {{date, ccc PP p}} and can no longer be edited. Probably, a new subscription can be created.",
         "modalMessage": {
           "activated": "Do you want to deactivate the subscription of \"{{userName}}\" with the email address \"{{userEmail}}\"?"
         },
@@ -1310,7 +1309,8 @@
         "reasonUserSelfDeactivated": "User wants to deactivate",
         "title": {
           "activated": "Deactivate subscription"
-        }
+        },
+        "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}"
       },
       "editTitle": "Edit Subscription",
       "memberPlanMonthlyAmount": "Monthly Amount (CHF)",
