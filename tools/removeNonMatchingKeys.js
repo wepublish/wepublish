@@ -1,4 +1,5 @@
 const fs = require('fs')
+const path = require('path');
 
 /**
  * Recursively removes keys from 'sourceObj' that are not present in 'referenceObj'.
@@ -36,9 +37,15 @@ let removedKeys = []
 
 removeNonMatchingKeys(json1, json2, '', removedKeys)
 
-fs.writeFileSync('./modified_jsonfile.json', JSON.stringify(json1, null, 2), 'utf8')
-fs.writeFileSync('./removed_keys.json', JSON.stringify(removedKeys, null, 2), 'utf8')
+const targetDir = path.join(__dirname, './');
+
+const filePath = path.join(targetDir, 'modified_jsonfile.json');
+fs.writeFileSync(filePath, JSON.stringify(json1, null, 2), 'utf8');
+
+const removedKeysPath = path.join(targetDir, 'removed_keys.json');
+fs.writeFileSync(removedKeysPath, JSON.stringify(removedKeys, null, 2), 'utf8');
+
 
 // Console.log to indicate completion
-console.log('Modified JSON saved to ./modified_jsonfile.json')
-console.log('JSON with removed keys saved to ./removed_keys.json')
+console.log(`Modified JSON saved to ${filePath}`)
+console.log(`JSON with removed keys saved to ${removedKeysPath}`)
