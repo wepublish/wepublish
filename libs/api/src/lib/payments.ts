@@ -41,7 +41,7 @@ export function setupPaymentProvider(opts: WepublishServerOpts): Router {
                   })
                 }
               }
-              await res.status(200).send()
+              await res.status(200).send(webhookResponse.message || 'OK')
               break
             default:
               await res.status(webhookResponse.status).send(webhookResponse.message)

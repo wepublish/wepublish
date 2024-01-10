@@ -60,11 +60,19 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
 
     if (!props.req.body.transaction) {
       return {
-        status: 400,
-        message: 'Cannot find Transaction within webhook body'
+        status: 200,
+        message: 'Skipping non-transaction webhook'
       }
     }
+
     const transaction = props.req.body.transaction as Transaction
+    if (transaction.subscription !== null) {
+      return {
+        status: 200,
+        message: 'Skipping transaction related to subscription'
+      }
+    }
+
     const state = this.mapPayrexxEventToPaymentStatus(transaction.status)
     if (state === null) {
       return {

@@ -20,6 +20,8 @@ export type TransactionStatus =
   | 'error'
   | '_ uncaptured'
 
+type Subscription = object
+
 export type Transaction = {
   id: number
   uuid: string
@@ -30,6 +32,7 @@ export type Transaction = {
   psp: string
   amount: number
   preAuthorizationId?: number
+  subscription: null | Subscription
 }
 
 type ChargeTransactionResponseData = Array<Transaction>
