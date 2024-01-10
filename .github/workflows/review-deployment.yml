@@ -104,6 +104,9 @@ jobs:
               DATABASE_URL: postgres://postgres:foo@review-${{ github.event.pull_request.number }}-database-postgresql.reviews.svc.cluster.local:5432/wepublish?schema=public
               MEDIA_SERVER_TOKEN: 'media-token'
               JWT_SECRET_KEY: 'jwt-token'
+              SLACK_DEV_MAIL_WEBHOOK_URL: 'SLACK_DEV_MAIL_WEBHOOK_URL'
+              DEFAULT_FROM_ADDRESS: 'dev@wepublish.ch'
+              DEFAULT_REPLY_TO_ADDRESS: 'dev@wepublish.ch'
               PAYREXX_INSTANCE_NAME: wepublish-sandbox
               PAYREXX_PAYMENT_METHODS: visa
               PAYREXX_API_SECRET: ${{ secrets.PAYREXX_API_SECRET }}
