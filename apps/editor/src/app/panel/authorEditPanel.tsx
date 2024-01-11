@@ -145,7 +145,7 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
             name,
             slug,
             jobTitle,
-            imageID: image?.id,
+            imageID: image?.id || null,
             links: links.map(({value}) => value),
             bio
           }
