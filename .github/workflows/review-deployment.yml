@@ -51,20 +51,6 @@ jobs:
         run: |
           kubectl create namespace reviews --dry-run=client -o yaml | kubectl apply -f -
 
-      - name: Helm deploy database
-        run: |
-          cat > values.yaml <<EOF
-          global:
-            postgresql:
-              auth:
-                enablePostgresUser: true
-                postgresPassword: "foo"
-                username: wepublish
-                password: wepublish
-                database: wepublish
-          EOF
-          helm upgrade --install review-${{ github.event.pull_request.number }}-database oci://registry-1.docker.io/bitnamicharts/postgresql -n reviews -f values.yaml --wait
-
       - name: Helm deploy media-server
         run: |
           cat > values.yaml <<EOF
@@ -87,6 +73,20 @@ jobs:
           labels: { }
           EOF
           helm upgrade --install review-${{ github.event.pull_request.number }}-media-server karma-media-server --repo https://gitlab.com/api/v4/projects/38941346/packages/helm/stable -n reviews -f values.yaml
+
+      - name: Helm deploy database
+        run: |
+          cat > values.yaml <<EOF
+          global:
+            postgresql:
+              auth:
+                enablePostgresUser: true
+                postgresPassword: "foo"
+                username: wepublish
+                password: wepublish
+                database: wepublish
+          EOF
+          helm upgrade --install review-${{ github.event.pull_request.number }}-database oci://registry-1.docker.io/bitnamicharts/postgresql -n reviews -f values.yaml --wait
 
       - name: Helm deploy app
         run: |

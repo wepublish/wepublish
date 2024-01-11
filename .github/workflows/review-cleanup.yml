@@ -41,7 +41,13 @@ jobs:
 
       - name: Delete review environment
         run: |
-          helm uninstall review-${{ github.event.pull_request.number }}-app -n reviews
-          helm uninstall review-${{ github.event.pull_request.number }}-media-server -n reviews
-          helm uninstall review-${{ github.event.pull_request.number }}-database -n reviews
+          if helm get all review-${{ github.event.pull_request.number }}-app -n reviews; then
+            helm uninstall review-${{ github.event.pull_request.number }}-app -n reviews; 
+          fi
+          if helm get all review-${{ github.event.pull_request.number }}-media-server -n reviews; then 
+            helm uninstall review-${{ github.event.pull_request.number }}-media-server -n reviews; 
+          fi
+          if helm get all review-${{ github.event.pull_request.number }}-database -n reviews; then 
+            helm uninstall review-${{ github.event.pull_request.number }}-database -n reviews; 
+          fi
           
