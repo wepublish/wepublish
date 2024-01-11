@@ -2,12 +2,13 @@ import {Args, Int, Mutation, Query, Resolver} from '@nestjs/graphql'
 import {
   ImportedEventFilter,
   ImportedEventsDocument,
-  Event,
+  EventFromSource,
   SingleEventFilter,
-  CreateEventArgs,
+  CreateEventFromSourceArgs,
   ImportedEventSort
 } from './events-import.model'
 import {EventsImportService} from './events-import.service'
+import {SortOrder} from '@wepublish/utils/api'
 
 @Resolver()
 export class EventsImportResolver {
@@ -21,7 +22,7 @@ export class EventsImportResolver {
   })
   importedEvents(
     @Args('filter', {nullable: true}) filter: ImportedEventFilter,
-    @Args('order', {nullable: true, type: () => Int}) order: 1 | -1,
+    @Args('order', {nullable: true, type: () => Int}) order: SortOrder,
     @Args('skip', {nullable: true, type: () => Int}) skip: number,
     @Args('take', {nullable: true, type: () => Int}) take: number,
     @Args('sort', {nullable: true, type: () => ImportedEventSort}) sort: ImportedEventSort
@@ -29,7 +30,7 @@ export class EventsImportResolver {
     return this.events.importedEvents({filter, order, skip, take, sort})
   }
 
-  @Query(returns => Event, {
+  @Query(returns => EventFromSource, {
     name: 'importedEvent',
     description: `
       Returns a more detailed version of a single importable event, by id and source.
@@ -66,7 +67,7 @@ export class EventsImportResolver {
       Also, uploads an image to WePublish Image library.
     `
   })
-  createEventFromSource(@Args() filter: CreateEventArgs) {
+  createEventFromSource(@Args() filter: CreateEventFromSourceArgs) {
     return this.events.createEventFromSource(filter)
   }
 }

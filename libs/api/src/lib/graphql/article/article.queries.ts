@@ -1,7 +1,7 @@
 import {Prisma, PrismaClient} from '@prisma/client'
+import {SortOrder, getMaxTake} from '@wepublish/utils/api'
 import {ArticleFilter, ArticleSort, ArticleWithRevisions} from '../../db/article'
-import {ConnectionResult, MaxResultsPerPage} from '../../db/common'
-import {getSortOrder, SortOrder} from '../queries/sort'
+import {ConnectionResult} from '../../db/common'
 import {mapDateFilterToPrisma} from '../utils'
 
 export const createArticleOrder = (
@@ -242,13 +242,13 @@ export const createArticleFilter = (filter: Partial<ArticleFilter>): Prisma.Arti
 export const getArticles = async (
   filter: Partial<ArticleFilter>,
   sortedField: ArticleSort,
-  order: 1 | -1,
+  order: SortOrder,
   cursorId: string | null,
   skip: number,
   take: number,
   article: PrismaClient['article']
 ): Promise<ConnectionResult<ArticleWithRevisions>> => {
-  const orderBy = createArticleOrder(sortedField, getSortOrder(order))
+  const orderBy = createArticleOrder(sortedField, order)
   const where = createArticleFilter(filter)
 
   const [totalCount, articles] = await Promise.all([
@@ -259,7 +259,7 @@ export const getArticles = async (
     article.findMany({
       where,
       skip,
-      take: Math.min(take, MaxResultsPerPage) + 1,
+      take: getMaxTake(take) + 1,
       orderBy,
       cursor: cursorId ? {id: cursorId} : undefined,
       include: {

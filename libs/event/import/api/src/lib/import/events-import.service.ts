@@ -1,18 +1,19 @@
 import {Inject, Injectable} from '@nestjs/common'
 
 import {
-  CreateEventArgs,
-  Event,
+  CreateEventFromSourceArgs,
+  EventFromSource,
   ImportedEventFilter,
   ImportedEventSort,
   ImportedEventsDocument,
   SingleEventFilter
 } from './events-import.model'
 import {PrismaClient} from '@prisma/client'
+import {SortOrder} from '@wepublish/utils/api'
 
 export interface ImportedEventsResolverParams {
   filter: ImportedEventFilter
-  order: 1 | -1
+  order: SortOrder
   skip: number
   take: number
   sort: ImportedEventSort
@@ -32,9 +33,9 @@ export interface CreateEventParams {
 
 export interface EventsProvider {
   name: string
-  importedEvents(): Promise<Event[]>
+  importedEvents(): Promise<EventFromSource[]>
 
-  importedEvent({id}: ImportedEventResolverParams): Promise<Event>
+  importedEvent({id}: ImportedEventResolverParams): Promise<EventFromSource>
 
   createEvent({id}: CreateEventParams): Promise<string>
 }
@@ -71,17 +72,21 @@ export class EventsImportService {
       if (filter.providers && filter.providers.length) {
         sortedEvents = sortedEvents.filter(e => filter?.providers?.includes(e.externalSourceName))
       }
+
       if (filter.from) {
         sortedEvents = sortedEvents.filter(e => e.startsAt > new Date(filter.from as string))
       }
+
       if (filter.name) {
         const nameFilter = filter.name.toLowerCase()
         sortedEvents = sortedEvents.filter(e => e.name.toLowerCase().includes(nameFilter))
       }
+
       if (filter.location) {
         const locationFilter = filter.location.toLowerCase()
-        sortedEvents = sortedEvents.filter(e => e.location.toLowerCase().includes(locationFilter))
+        sortedEvents = sortedEvents.filter(e => e.location?.toLowerCase().includes(locationFilter))
       }
+
       if (filter.to) {
         sortedEvents = sortedEvents
           .filter(e => e.endsAt)
@@ -115,7 +120,7 @@ export class EventsImportService {
     return this.providers.find(p => p.name === source)?.importedEvent({id})
   }
 
-  async createEventFromSource({id, source}: CreateEventArgs) {
+  async createEventFromSource({id, source}: CreateEventFromSourceArgs) {
     return this.providers.find(p => p.name === source)?.createEvent({id})
   }
 

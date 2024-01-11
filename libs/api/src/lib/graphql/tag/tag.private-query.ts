@@ -1,9 +1,8 @@
 import {Prisma, PrismaClient, TagType} from '@prisma/client'
-import {Context} from '../../context'
-import {MaxResultsPerPage} from '../../db/common'
-import {authorise} from '../permissions'
 import {CanGetTags} from '@wepublish/permissions/api'
-import {getSortOrder, SortOrder} from '../queries/sort'
+import {SortOrder, getMaxTake} from '@wepublish/utils/api'
+import {Context} from '../../context'
+import {authorise} from '../permissions'
 
 export type TagFilter = {
   type: TagType
@@ -69,7 +68,7 @@ export const createTagFilter = (filter?: Partial<TagFilter>): Prisma.TagWhereInp
 export const getTags = async (
   filter: Partial<TagFilter>,
   sortedField: TagSort,
-  order: 1 | -1,
+  order: SortOrder,
   cursorId: string | null,
   skip: number,
   take: number,
@@ -79,7 +78,7 @@ export const getTags = async (
   const {roles} = authenticate()
   authorise(CanGetTags, roles)
 
-  const orderBy = createTagOrder(sortedField, getSortOrder(order))
+  const orderBy = createTagOrder(sortedField, order)
   const where = createTagFilter(filter)
 
   const [totalCount, tags] = await Promise.all([
@@ -90,7 +89,7 @@ export const getTags = async (
     tag.findMany({
       where,
       skip,
-      take: Math.min(take, MaxResultsPerPage) + 1,
+      take: getMaxTake(take) + 1,
       orderBy,
       cursor: cursorId ? {id: cursorId} : undefined
     })

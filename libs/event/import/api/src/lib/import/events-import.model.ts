@@ -1,19 +1,13 @@
-import {Field, ObjectType, InputType, registerEnumType, Int, ArgsType} from '@nestjs/graphql'
-import {GraphQLRichText} from '@wepublish/richtext/api'
-import {Node} from 'slate'
+import {ArgsType, Field, InputType, ObjectType, OmitType, registerEnumType} from '@nestjs/graphql'
+import {EventStatus} from '@prisma/client'
+import {Event} from '@wepublish/event/api'
+import {PaginatedType} from '@wepublish/utils/api'
 
 export enum ImportedEventSort {
   STARTS_AT = 'STARTS_AT',
   ENDS_AT = 'ENDS_AT',
   CREATED_AT = 'CREATED_AT',
   MODIFIED_AT = 'MODIFIED_AT'
-}
-
-export enum EventStatus {
-  Scheduled = 'Scheduled',
-  Rescheduled = 'Rescheduled',
-  Postponed = 'Postponed',
-  Cancelled = 'Cancelled'
 }
 
 registerEnumType(ImportedEventSort, {
@@ -25,70 +19,13 @@ registerEnumType(EventStatus, {
 })
 
 @ObjectType()
-export class PageInfo {
-  @Field()
-  hasPreviousPage!: boolean
-
-  @Field()
-  hasNextPage!: boolean
-
-  @Field({nullable: true})
-  startCursor!: string
-
-  @Field({nullable: true})
-  endCursor!: string
-}
-
-@ObjectType()
-export class Event {
-  @Field()
-  id!: string
-
-  @Field()
-  createdAt!: Date
-
-  @Field()
-  modifiedAt!: Date
-
-  @Field()
-  name!: string
-
-  @Field(type => GraphQLRichText)
-  description?: Node[]
-
-  @Field(type => EventStatus)
-  status!: EventStatus
-
+export class EventFromSource extends OmitType(Event, ['imageId', 'image'] as const) {
   @Field({nullable: true})
   imageUrl?: string
-
-  @Field()
-  location!: string
-
-  @Field()
-  externalSourceId!: string
-
-  @Field()
-  externalSourceName!: string
-
-  @Field()
-  startsAt!: Date
-
-  @Field({nullable: true})
-  endsAt?: Date
 }
 
 @ObjectType()
-export class ImportedEventsDocument {
-  @Field(type => [Event])
-  nodes!: Event[]
-
-  @Field(type => Int)
-  totalCount!: number
-
-  @Field()
-  pageInfo!: PageInfo
-}
+export class ImportedEventsDocument extends PaginatedType(EventFromSource) {}
 
 @InputType()
 export class ImportedEventFilter {
@@ -118,7 +55,7 @@ export class SingleEventFilter {
 }
 
 @ArgsType()
-export class CreateEventArgs {
+export class CreateEventFromSourceArgs {
   @Field()
   id!: string
 

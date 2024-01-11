@@ -1,10 +1,10 @@
 import {Prisma, PrismaClient} from '@prisma/client'
 import bcrypt from 'bcrypt'
-import {ConnectionResult, MaxResultsPerPage} from '../../db/common'
+import {ConnectionResult} from '../../db/common'
 import {UserFilter, UserSort, UserWithRelations} from '../../db/user'
 import {unselectPassword} from '@wepublish/user/api'
 import {Validator} from '../../validator'
-import {getSortOrder, SortOrder} from '../queries/sort'
+import {SortOrder, getMaxTake} from '@wepublish/utils/api'
 
 export const createUserOrder = (
   field: UserSort,
@@ -261,13 +261,13 @@ export const createUserFilter = (filter: Partial<UserFilter>): Prisma.UserWhereI
 export const getUsers = async (
   filter: Partial<UserFilter>,
   sortedField: UserSort,
-  order: 1 | -1,
+  order: SortOrder,
   cursorId: string | null,
   skip: number,
   take: number,
   user: PrismaClient['user']
 ): Promise<ConnectionResult<UserWithRelations>> => {
-  const orderBy = createUserOrder(sortedField, getSortOrder(order))
+  const orderBy = createUserOrder(sortedField, order)
   const where = createUserFilter(filter)
 
   const [totalCount, users] = await Promise.all([
@@ -278,7 +278,7 @@ export const getUsers = async (
     user.findMany({
       where,
       skip,
-      take: Math.min(take, MaxResultsPerPage) + 1,
+      take: getMaxTake(take) + 1,
       orderBy,
       cursor: cursorId ? {id: cursorId} : undefined,
       select: unselectPassword

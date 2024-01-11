@@ -1,7 +1,7 @@
 import {Author, Prisma, PrismaClient} from '@prisma/client'
+import {SortOrder, getMaxTake} from '@wepublish/utils/api'
 import {AuthorFilter, AuthorSort} from '../../db/author'
-import {ConnectionResult, MaxResultsPerPage} from '../../db/common'
-import {getSortOrder, SortOrder} from '../queries/sort'
+import {ConnectionResult} from '../../db/common'
 
 export const createAuthorOrder = (
   field: AuthorSort,
@@ -45,13 +45,13 @@ export const createAuthorFilter = (filter: Partial<AuthorFilter>): Prisma.Author
 export const getAuthors = async (
   filter: Partial<AuthorFilter>,
   sortedField: AuthorSort,
-  order: 1 | -1,
+  order: SortOrder,
   cursorId: string | null,
   skip: number,
   take: number,
   author: PrismaClient['author']
 ): Promise<ConnectionResult<Author>> => {
-  const orderBy = createAuthorOrder(sortedField, getSortOrder(order))
+  const orderBy = createAuthorOrder(sortedField, order)
   const where = createAuthorFilter(filter)
 
   const [totalCount, authors] = await Promise.all([
@@ -62,7 +62,7 @@ export const getAuthors = async (
     author.findMany({
       where,
       skip,
-      take: Math.min(take, MaxResultsPerPage) + 1,
+      take: getMaxTake(take) + 1,
       orderBy,
       cursor: cursorId ? {id: cursorId} : undefined,
       include: {
