@@ -2,9 +2,9 @@ import styled from '@emotion/styled'
 import {
   Setting,
   SettingName,
-  useSettingsListQuery,
-  useUpdateSettingMutation
-} from '@wepublish/editor/api-v2'
+  useSettingListQuery,
+  useUpdateSettingListMutation
+} from '@wepublish/editor/api'
 import {
   createCheckedPermissionComponent,
   DescriptionList,
@@ -16,7 +16,7 @@ import {
   useAuthorisation,
   useUnsavedChangesDialog
 } from '@wepublish/ui/editor'
-import {useEffect, useMemo, useReducer, useState} from 'react'
+import {useEffect, useReducer, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdCancel, MdInfo, MdSave, MdWarning} from 'react-icons/md'
 import {
@@ -39,7 +39,6 @@ import {
 } from 'rsuite'
 import InputGroupAddon from 'rsuite/cjs/InputGroup/InputGroupAddon'
 import FormControl from 'rsuite/FormControl'
-import {getApiClientV2} from '@wepublish/editor/api-v2'
 
 const Panel = styled(RPanel)`
   margin-bottom: 10px;
@@ -87,7 +86,6 @@ function settingsReducer(settings: Record<SettingName, SettingWithLabel>, change
 }
 
 function SettingList() {
-  const client = useMemo(() => getApiClientV2(), [])
   const [showWarning, setShowWarning] = useState<boolean>(false)
   const {t} = useTranslation()
 
@@ -98,8 +96,7 @@ function SettingList() {
     loading,
     refetch,
     error: fetchError
-  } = useSettingsListQuery({
-    client,
+  } = useSettingListQuery({
     fetchPolicy: 'network-only'
   })
 
@@ -189,56 +186,43 @@ function SettingList() {
   } as Record<SettingName, SettingWithLabel>)
 
   useEffect(() => {
-    settingListData?.settingsList.forEach(setSetting)
+    settingListData?.settings.forEach(setSetting)
   }, [settingListData])
 
-  const [updateSetting, {error: updateSettingError}] = useUpdateSettingMutation({
-    client,
+  const [updateSettings, {error: updateSettingError}] = useUpdateSettingListMutation({
     fetchPolicy: 'network-only'
   })
 
   const [changedSetting, setChangedSetting] = useState(
-    settingListData?.settingsList.filter(
-      setting => setting.value !== settings[setting.name].value
-    ) ?? []
+    settingListData?.settings.filter(setting => setting.value !== settings[setting.name].value) ??
+      []
   )
 
   useUnsavedChangesDialog(changedSetting.length > 0)
 
   async function handleSettingListUpdate() {
     setShowWarning(false)
-
-    const batchedUpdates = Object.values(settings).map(({name, value}) => {
-      return updateSetting({variables: {name, value}})
+    await updateSettings({
+      variables: {input: Object.values(settings).map(({name, value}) => ({name, value}))}
     })
 
-    try {
-      await Promise.all(batchedUpdates)
-      toaster.push(
-        <Notification header={t('settingList.successTitle')} type="success" duration={2000}>
-          {t('settingList.successMessage')}
-        </Notification>
-      )
-      await refetch()
-    } catch (error) {
-      toaster.push(
-        <Notification type="error" header={t('settingList.errorTitle')} duration={2000}>
-          {t('toast.updateError')}
-        </Notification>
-      )
-    }
+    toaster.push(
+      <Notification header={t('settingList.successTitle')} type="success" duration={2000}>
+        {t('settingList.successMessage')}
+      </Notification>
+    )
+    await refetch()
   }
 
   useEffect(() => {
     setChangedSetting(
-      settingListData?.settingsList.filter(
-        setting => setting.value !== settings[setting.name].value
-      ) ?? []
+      settingListData?.settings.filter(setting => setting.value !== settings[setting.name].value) ??
+        []
     )
   }, [settingListData, settings])
 
   async function handleCancel() {
-    settingListData?.settingsList.forEach(setSetting)
+    settingListData?.settings.forEach(setSetting)
   }
 
   useEffect(() => {
@@ -334,13 +318,10 @@ function SettingList() {
   return (
     <>
       <Form
-        data-testId="form"
         disabled={isDisabled}
         model={validationModel}
         formValue={formValue}
-        onSubmit={validationPassed => {
-          return validationPassed && setShowWarning(true)
-        }}>
+        onSubmit={validationPassed => validationPassed && setShowWarning(true)}>
         <ListViewContainer>
           <ListViewHeader>
             <h2>{t('settingList.settings')}</h2>
@@ -450,12 +431,12 @@ function SettingList() {
                           name={SettingName.CommentCharLimit}
                           accepter={InputNumber}
                           value={settings[SettingName.CommentCharLimit].value}
-                          onChange={(value: string) => {
+                          onChange={(value: string) =>
                             setSetting({
                               ...settings[SettingName.CommentCharLimit],
                               value: +value
                             })
-                          }}
+                          }
                         />
                       </InputGroup>
                     </Form.Group>
@@ -626,12 +607,12 @@ function SettingList() {
                           name={SettingName.SendLoginJwtExpiresMin}
                           accepter={InputNumber}
                           value={settings[SettingName.SendLoginJwtExpiresMin].value}
-                          onChange={(value: string) => {
+                          onChange={(value: string) =>
                             setSetting({
                               ...settings[SettingName.SendLoginJwtExpiresMin],
                               value: +value
                             })
-                          }}
+                          }
                         />
                         <InputGroupAddon>{t('settingList.minutes')}</InputGroupAddon>
                       </InputGroup>
@@ -707,12 +688,12 @@ function SettingList() {
                           name={SettingName.InvoiceReminderMaxTries}
                           accepter={InputNumber}
                           value={settings[SettingName.InvoiceReminderMaxTries].value}
-                          onChange={(value: string) => {
+                          onChange={(value: string) =>
                             setSetting({
                               ...settings[SettingName.InvoiceReminderMaxTries],
                               value: +value
                             })
-                          }}
+                          }
                         />
                       </InputGroup>
                     </Form.Group>
@@ -727,12 +708,12 @@ function SettingList() {
                           name={SettingName.InvoiceReminderFreq}
                           accepter={InputNumber}
                           value={settings[SettingName.InvoiceReminderFreq].value}
-                          onChange={(value: string) => {
+                          onChange={(value: string) =>
                             setSetting({
                               ...settings[SettingName.InvoiceReminderFreq],
                               value: +value
                             })
-                          }}
+                          }
                         />
                         <InputGroupAddon>{t('settingList.days')}</InputGroupAddon>
                       </InputGroup>

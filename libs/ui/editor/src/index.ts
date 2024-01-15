@@ -4,6 +4,7 @@ export * from './lib/listView/list-view'
 export * from './lib/atoms'
 export * from './lib/blocks'
 export * from './lib/panel'
+export * from './lib/hooks'
 
 export * from './lib/testUtils'
 export * from './lib/authContext'
