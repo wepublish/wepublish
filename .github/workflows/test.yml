@@ -29,6 +29,8 @@ jobs:
           NODE_OPTIONS: "--max-old-space-size=4096"
           JWT_SECRET_KEY: 'ThisIsSuperSecret'
           DATABASE_URL: 'postgresql://postgres@localhost:5432/wepublish_test?schema=public'
+
+
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
         with:
