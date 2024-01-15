@@ -2,9 +2,9 @@ import {BexioPaymentProvider} from './bexio-payment-provider'
 import {PaymentState, PrismaClient} from '@prisma/client'
 import fetch from 'jest-fetch-mock'
 
-jest.setMock('node-fetch', fetch)
 jest.mock('axios')
 jest.mock('@prisma/client')
+jest.mock('node-fetch')
 
 jest.mock('bexio', () => {
   const ContactsStatic = {
@@ -93,13 +93,15 @@ describe('BexioPaymentProvider', () => {
 
   describe('Checking intent status', () => {
     it('should check intent status correctly and return the values from fetch', async () => {
-      global.fetch = jest.fn(() =>
+      // @ts-expect-error Mock so typings incorrectly
+      const fetchMock = fetch.mock.instances[0] as jest.Mock
+      fetchMock.mockImplementation(() =>
         Promise.resolve({
           json: () =>
             Promise.resolve({kb_item_status_id: 9, payment_type_id: 123, contact_id: 321}),
           status: 200
         })
-      ) as jest.Mock
+      )
 
       const bexioPaymentProvider = new BexioPaymentProvider(mockProps)
       const res = await bexioPaymentProvider.checkIntentStatus({intentID: '123'})
