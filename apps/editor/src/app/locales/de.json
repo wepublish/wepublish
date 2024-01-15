@@ -926,7 +926,9 @@
         "themeColor": "Theme Farbe",
         "themeFontColor": "Schrift Farbe",
         "token": "Token",
-        "unknown": "Unbekannt"
+        "unknown": "Unbekannt",
+        "unnamed": "Unbenannt",
+        "URL": "URL: https://www.url.com"
       }
     },
     "periodicJobsLog": {
