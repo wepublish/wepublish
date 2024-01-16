@@ -6,14 +6,14 @@ import {logger} from '@wepublish/utils/api'
 export const PAYMENT_WEBHOOK_PATH_PREFIX = 'payment-webhooks'
 
 export function setupPaymentProvider(opts: WepublishServerOpts): Router {
-  const {paymentProviders, prisma} = opts
+  const {paymentProviders} = opts
   const paymentProviderWebhookRouter = Router()
 
   // setup webhook routes for each payment provider
   paymentProviders.forEach(paymentProvider => {
     paymentProviderWebhookRouter
       .route(`/${paymentProvider.id}`)
-      .all(paymentProvider.incomingRequestHandler, async (req, res, next) => {
+      .all(paymentProvider.incomingRequestHandler, async (req, res) => {
         await res.status(200).send() // respond immediately with 200 since webhook was received.
         logger('paymentProvider').info(
           'Received webhook from %s for paymentProvider %s',

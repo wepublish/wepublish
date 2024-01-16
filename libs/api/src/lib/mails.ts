@@ -9,7 +9,7 @@ export function setupMailProvider(opts: WepublishServerOpts): Router {
   if (mailProvider) {
     mailProviderWebhookRouter
       .route(`/${mailProvider.id}`)
-      .all(mailProvider.incomingRequestHandler, async (req, res, next) => {
+      .all(mailProvider.incomingRequestHandler, async (req, res) => {
         res.status(200).send() // respond immediately with 200 since webhook was received.
         logger('mailProvider').info(
           'Received webhook from %s for mailProvider %s',
