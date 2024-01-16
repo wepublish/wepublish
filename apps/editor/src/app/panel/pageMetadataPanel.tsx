@@ -137,11 +137,13 @@ function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
         break
       }
       default: {
+        // Handle unexpected cases
+        console.warn(`Unhandled activeKey: ${activeKey}`)
       }
     }
   }
 
-  function currentContent() {
+  function currentContent(): JSX.Element {
     switch (activeKey) {
       case MetaDataType.SocialMedia:
         return (
@@ -294,6 +296,7 @@ function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
           </>
         )
       default:
+        // eslint-disable-next-line react/jsx-no-useless-fragment
         return <></>
     }
   }

@@ -25,9 +25,13 @@
 
 ## Table of Contents
 
+- [Coding Style Guide](CodingStyleGuide.md)
+- [Code Organization](CodeOrganization.md)
+- [Prisma](prisma.md)
 - [Write Automated Tests](testing.md)
 - [Setup Commenting](commenting.md)
 - [Email Templates](emailtemplates.md)
+- [Deployments](deployments.md)
 - [Releases](Releases.md)
 
 ## apps/editor

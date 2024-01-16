@@ -46,7 +46,7 @@ export function TimelineBody({days, subscriptionFlow, eventIcons, eventColors}: 
   }
 
   return (
-    <>
+    <div>
       {days &&
         mailTemplates &&
         days.map(day => {
@@ -89,6 +89,6 @@ export function TimelineBody({days, subscriptionFlow, eventIcons, eventColors}: 
             </TableCellBottom>
           )
         })}
-    </>
+    </div>
   )
 }

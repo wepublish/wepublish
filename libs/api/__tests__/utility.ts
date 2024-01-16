@@ -86,7 +86,7 @@ export async function createGraphQLTestClientWithPrisma(): Promise<TestClient> {
   })
 
   const userSession = await createUserSession(
-    adminUser!,
+    adminUser,
     DefaultSessionTTL,
     prisma.session,
     prisma.userRole
@@ -107,12 +107,6 @@ export async function createGraphQLTestClient(overwriteRequest?: any): Promise<T
 
   const prisma = new PrismaClient()
   await prisma.$connect()
-
-  const adminUser = await prisma.user.findUnique({
-    where: {
-      email: 'dev@wepublish.ch'
-    }
-  })
 
   const mailProvider = new FakeMailProvider({
     id: 'fakeMail',

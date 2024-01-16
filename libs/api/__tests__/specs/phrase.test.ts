@@ -21,18 +21,18 @@ beforeAll(async () => {
 describe('Phrases', () => {
   test.each([
     {
-      titleQuery: 'fox & dog',
-      bodyQuery: 'bunny & hedgehog',
+      titleQuery: 'fox dog',
+      bodyQuery: 'bunny hedgehog',
       match: true
     },
     {
-      titleQuery: 'dog & fox',
-      bodyQuery: 'hedgehog & bunny',
+      titleQuery: 'dog&fox',
+      bodyQuery: 'hedgehog&bunny',
       match: true
     },
     {
-      titleQuery: 'dog & cat',
-      bodyQuery: 'hedgehog & capibara',
+      titleQuery: 'dog&cat',
+      bodyQuery: 'hedgehog&capibara',
       match: false
     },
     {
@@ -41,23 +41,23 @@ describe('Phrases', () => {
       match: true
     },
     {
-      titleQuery: 'fox | cat',
-      bodyQuery: 'bunny | capibara',
+      titleQuery: 'fox|cat',
+      bodyQuery: 'bunny|capibara',
       match: true
     },
     {
-      titleQuery: 'pig | cat',
-      bodyQuery: 'kiwi | capibara',
+      titleQuery: 'pig|cat',
+      bodyQuery: 'kiwi|capibara',
       match: false
     },
     {
-      titleQuery: 'fox <-> jumps',
-      bodyQuery: 'bunny <-> jumps',
+      titleQuery: 'fox<->jumps',
+      bodyQuery: 'bunny<->jumps',
       match: true
     },
     {
-      titleQuery: 'jumps <-> fox',
-      bodyQuery: 'jumps <-> bunny',
+      titleQuery: 'jumps<->fox',
+      bodyQuery: 'jumps<->bunny',
       match: false
     },
     {
@@ -140,18 +140,18 @@ describe('Phrases', () => {
 
   test.each([
     {
-      titleQuery: 'fox & dog',
-      bodyQuery: 'bunny & hedgehog',
+      titleQuery: 'fox dog',
+      bodyQuery: 'bunny hedgehog',
       match: true
     },
     {
-      titleQuery: 'dog & fox',
-      bodyQuery: 'hedgehog & bunny',
+      titleQuery: 'dog&fox',
+      bodyQuery: 'hedgehog&bunny',
       match: true
     },
     {
-      titleQuery: 'dog & cat',
-      bodyQuery: 'hedgehog & capibara',
+      titleQuery: 'dog&cat',
+      bodyQuery: 'hedgehog&capibara',
       match: false
     },
     {
@@ -160,23 +160,23 @@ describe('Phrases', () => {
       match: true
     },
     {
-      titleQuery: 'fox | cat',
-      bodyQuery: 'bunny | capibara',
+      titleQuery: 'fox|cat',
+      bodyQuery: 'bunny|capibara',
       match: true
     },
     {
-      titleQuery: 'pig | cat',
-      bodyQuery: 'kiwi | capibara',
+      titleQuery: 'pig|cat',
+      bodyQuery: 'kiwi|capibara',
       match: false
     },
     {
-      titleQuery: 'fox <-> jumps',
-      bodyQuery: 'bunny <-> jumps',
+      titleQuery: 'fox<->jumps',
+      bodyQuery: 'bunny<->jumps',
       match: true
     },
     {
-      titleQuery: 'jumps <-> fox',
-      bodyQuery: 'jumps <-> bunny',
+      titleQuery: 'jumps<->fox',
+      bodyQuery: 'jumps<->bunny',
       match: false
     },
     {
