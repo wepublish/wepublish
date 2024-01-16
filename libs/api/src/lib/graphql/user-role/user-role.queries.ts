@@ -1,7 +1,7 @@
 import {Prisma, PrismaClient, UserRole} from '@prisma/client'
 import {ConnectionResult} from '../../db/common'
 import {UserRoleFilter, UserRoleSort} from '../../db/userRole'
-import {SortOrder, getMaxTake} from '@wepublish/utils/api'
+import {SortOrder, getMaxTake, graphQLSortOrderToPrisma} from '@wepublish/utils/api'
 
 export const createUserRoleOrder = (
   field: UserRoleSort,
@@ -10,12 +10,12 @@ export const createUserRoleOrder = (
   switch (field) {
     case UserRoleSort.CreatedAt:
       return {
-        createdAt: sortOrder
+        createdAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case UserRoleSort.ModifiedAt:
       return {
-        modifiedAt: sortOrder
+        modifiedAt: graphQLSortOrderToPrisma(sortOrder)
       }
   }
 }

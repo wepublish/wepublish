@@ -1,7 +1,7 @@
 import {MemberPlan, Prisma, PrismaClient} from '@prisma/client'
 import {ConnectionResult} from '../../db/common'
 import {MemberPlanFilter, MemberPlanSort} from '../../db/memberPlan'
-import {SortOrder, getMaxTake} from '@wepublish/utils/api'
+import {SortOrder, getMaxTake, graphQLSortOrderToPrisma} from '@wepublish/utils/api'
 
 export const createMemberPlanOrder = (
   field: MemberPlanSort,
@@ -10,12 +10,12 @@ export const createMemberPlanOrder = (
   switch (field) {
     case MemberPlanSort.CreatedAt:
       return {
-        createdAt: sortOrder
+        createdAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case MemberPlanSort.ModifiedAt:
       return {
-        modifiedAt: sortOrder
+        modifiedAt: graphQLSortOrderToPrisma(sortOrder)
       }
   }
 }

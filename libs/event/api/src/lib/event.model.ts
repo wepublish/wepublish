@@ -68,11 +68,11 @@ export class Event {
   @Field(type => Image, {nullable: true})
   image?: Image
 
-  @Field()
-  externalSourceId!: string
+  @Field({nullable: true})
+  externalSourceId?: string
 
-  @Field()
-  externalSourceName!: string
+  @Field({nullable: true})
+  externalSourceName?: string
 }
 
 @ObjectType()
@@ -101,35 +101,31 @@ export class EventFilter {
 
 @ArgsType()
 export class EventListArgs {
-  @Field({nullable: true})
+  @Field(type => EventFilter, {nullable: true})
   filter?: EventFilter
 
-  @Field({nullable: true, defaultValue: EventSort.StartsAt})
-  sortedField!: EventSort
+  @Field(type => EventSort, {nullable: true, defaultValue: EventSort.StartsAt})
+  sort?: EventSort
 
-  @Field({nullable: true, defaultValue: SortOrder.Ascending})
-  order!: SortOrder
+  @Field(type => SortOrder, {nullable: true, defaultValue: SortOrder.Ascending})
+  order?: SortOrder
 
   @Field(type => Int, {nullable: true, defaultValue: 10})
-  take!: number
+  take?: number
 
   @Field(type => Int, {nullable: true, defaultValue: 0})
-  skip!: number
+  skip?: number
 
   @Field({nullable: true})
   cursorId?: string
 }
 
 @ArgsType()
-export class CreateEventInput extends PickType(Event, [
-  'name',
-  'description',
-  'location',
-  'imageId',
-  'startsAt',
-  'endsAt',
-  'status'
-] as const) {
+export class CreateEventInput extends PickType(
+  Event,
+  ['name', 'description', 'location', 'imageId', 'startsAt', 'endsAt'] as const,
+  ArgsType
+) {
   @Field(type => [String], {nullable: true})
   tagIds?: string[]
 }

@@ -1,4 +1,7 @@
 export enum SortOrder {
-  Ascending = 'asc',
-  Descending = 'desc'
+  Ascending = 'Ascending',
+  Descending = 'Descending'
 }
+
+export const graphQLSortOrderToPrisma = (sortOrder: SortOrder) =>
+  sortOrder === SortOrder.Ascending ? 'asc' : 'desc'

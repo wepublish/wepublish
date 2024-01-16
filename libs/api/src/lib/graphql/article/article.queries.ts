@@ -1,5 +1,5 @@
 import {Prisma, PrismaClient} from '@prisma/client'
-import {SortOrder, getMaxTake} from '@wepublish/utils/api'
+import {SortOrder, graphQLSortOrderToPrisma, getMaxTake} from '@wepublish/utils/api'
 import {ArticleFilter, ArticleSort, ArticleWithRevisions} from '../../db/article'
 import {ConnectionResult} from '../../db/common'
 import {mapDateFilterToPrisma} from '../utils'
@@ -11,32 +11,32 @@ export const createArticleOrder = (
   switch (field) {
     case ArticleSort.CreatedAt:
       return {
-        createdAt: sortOrder
+        createdAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case ArticleSort.ModifiedAt:
       return {
-        modifiedAt: sortOrder
+        modifiedAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case ArticleSort.PublishedAt:
       return {
         published: {
-          publishedAt: sortOrder
+          publishedAt: graphQLSortOrderToPrisma(sortOrder)
         }
       }
 
     case ArticleSort.UpdatedAt:
       return {
         published: {
-          updatedAt: sortOrder
+          updatedAt: graphQLSortOrderToPrisma(sortOrder)
         }
       }
 
     case ArticleSort.PublishAt:
       return {
         pending: {
-          publishAt: sortOrder
+          publishAt: graphQLSortOrderToPrisma(sortOrder)
         }
       }
   }

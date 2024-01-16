@@ -4,7 +4,7 @@ import {
   ImportedEventsDocument,
   EventFromSource,
   SingleEventFilter,
-  CreateEventFromSourceArgs,
+  ImportEventArgs,
   ImportedEventSort
 } from './events-import.model'
 import {EventsImportService} from './events-import.service'
@@ -31,7 +31,6 @@ export class EventsImportResolver {
   }
 
   @Query(returns => EventFromSource, {
-    name: 'importedEvent',
     description: `
       Returns a more detailed version of a single importable event, by id and source.
     `
@@ -41,7 +40,6 @@ export class EventsImportResolver {
   }
 
   @Query(returns => [String], {
-    name: 'importedEventsIds',
     description: `
       Returns a list of external source ids of already imported events.
     `
@@ -51,23 +49,21 @@ export class EventsImportResolver {
   }
 
   @Query(returns => [String], {
-    name: 'eventProviders',
     description: `
       Returns a list of Importable Event Providers
     `
   })
-  providers() {
+  eventProviders() {
     return this.events.getProviders()
   }
 
   @Mutation(returns => String, {
-    name: 'createEvent',
     description: `
       Creates and event based on data from importable events list and an id and provider.
       Also, uploads an image to WePublish Image library.
     `
   })
-  createEventFromSource(@Args() filter: CreateEventFromSourceArgs) {
+  importEvent(@Args() filter: ImportEventArgs) {
     return this.events.createEventFromSource(filter)
   }
 }

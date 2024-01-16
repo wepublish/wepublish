@@ -1,5 +1,5 @@
 import {Prisma, PrismaClient, TagType} from '@prisma/client'
-import {SortOrder, getMaxTake} from '@wepublish/utils/api'
+import {SortOrder, getMaxTake, graphQLSortOrderToPrisma} from '@wepublish/utils/api'
 
 export type TagFilter = {
   type: TagType
@@ -19,18 +19,18 @@ export const createTagOrder = (
   switch (field) {
     case TagSort.Tag:
       return {
-        tag: sortOrder
+        tag: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case TagSort.ModifiedAt:
       return {
-        modifiedAt: sortOrder
+        modifiedAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case TagSort.CreatedAt:
     default:
       return {
-        createdAt: sortOrder
+        createdAt: graphQLSortOrderToPrisma(sortOrder)
       }
   }
 }

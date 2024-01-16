@@ -1,6 +1,6 @@
 import {Prisma, PrismaClient} from '@prisma/client'
 import {CanGetPoll} from '@wepublish/permissions/api'
-import {SortOrder, getMaxTake} from '@wepublish/utils/api'
+import {SortOrder, getMaxTake, graphQLSortOrderToPrisma} from '@wepublish/utils/api'
 import {Context} from '../../context'
 import {authorise} from '../permissions'
 
@@ -21,18 +21,18 @@ export const createPollOrder = (
   switch (field) {
     case PollSort.ModifiedAt:
       return {
-        modifiedAt: sortOrder
+        modifiedAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case PollSort.CreatedAt:
       return {
-        createdAt: sortOrder
+        createdAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case PollSort.OpensAt:
     default:
       return {
-        opensAt: sortOrder
+        opensAt: graphQLSortOrderToPrisma(sortOrder)
       }
   }
 }

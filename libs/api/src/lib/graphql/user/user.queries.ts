@@ -4,7 +4,7 @@ import {ConnectionResult} from '../../db/common'
 import {UserFilter, UserSort, UserWithRelations} from '../../db/user'
 import {unselectPassword} from '@wepublish/user/api'
 import {Validator} from '../../validator'
-import {SortOrder, getMaxTake} from '@wepublish/utils/api'
+import {SortOrder, getMaxTake, graphQLSortOrderToPrisma} from '@wepublish/utils/api'
 
 export const createUserOrder = (
   field: UserSort,
@@ -13,22 +13,22 @@ export const createUserOrder = (
   switch (field) {
     case UserSort.CreatedAt:
       return {
-        createdAt: sortOrder
+        createdAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case UserSort.ModifiedAt:
       return {
-        modifiedAt: sortOrder
+        modifiedAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case UserSort.Name:
       return {
-        name: sortOrder
+        name: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case UserSort.FirstName:
       return {
-        firstName: sortOrder
+        firstName: graphQLSortOrderToPrisma(sortOrder)
       }
   }
 }

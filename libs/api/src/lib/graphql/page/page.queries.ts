@@ -1,7 +1,7 @@
 import {Prisma, PrismaClient} from '@prisma/client'
 import {ConnectionResult} from '../../db/common'
 import {PageFilter, PageSort, PageWithRevisions} from '../../db/page'
-import {SortOrder, getMaxTake} from '@wepublish/utils/api'
+import {SortOrder, getMaxTake, graphQLSortOrderToPrisma} from '@wepublish/utils/api'
 import {mapDateFilterToPrisma} from '../utils'
 
 export const createPageOrder = (
@@ -11,32 +11,32 @@ export const createPageOrder = (
   switch (field) {
     case PageSort.CreatedAt:
       return {
-        createdAt: sortOrder
+        createdAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case PageSort.ModifiedAt:
       return {
-        modifiedAt: sortOrder
+        modifiedAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case PageSort.PublishedAt:
       return {
         published: {
-          publishedAt: sortOrder
+          publishedAt: graphQLSortOrderToPrisma(sortOrder)
         }
       }
 
     case PageSort.UpdatedAt:
       return {
         published: {
-          updatedAt: sortOrder
+          updatedAt: graphQLSortOrderToPrisma(sortOrder)
         }
       }
 
     case PageSort.PublishAt:
       return {
         pending: {
-          publishAt: sortOrder
+          publishAt: graphQLSortOrderToPrisma(sortOrder)
         }
       }
   }

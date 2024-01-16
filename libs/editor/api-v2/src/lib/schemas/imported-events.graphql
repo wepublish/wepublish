@@ -48,6 +48,6 @@ query EventProviders {
   eventProviders
 }
 
-mutation createEvent($id: String!, $source: String!) {
-  createEvent(id: $id, source: $source)
+mutation ImportEvent($id: String!, $source: String!) {
+  importEvent(id: $id, source: $source)
 }

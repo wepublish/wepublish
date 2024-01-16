@@ -1,5 +1,5 @@
 import {Prisma, PrismaClient} from '@prisma/client'
-import {SortOrder, getMaxTake} from '@wepublish/utils/api'
+import {SortOrder, getMaxTake, graphQLSortOrderToPrisma} from '@wepublish/utils/api'
 
 export const getEvent = (id: string, event: PrismaClient['event']) => {
   return event.findUnique({
@@ -30,23 +30,23 @@ export const createEventOrder = (
   switch (field) {
     case EventSort.ModifiedAt:
       return {
-        modifiedAt: sortOrder
+        modifiedAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case EventSort.CreatedAt:
       return {
-        createdAt: sortOrder
+        createdAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case EventSort.EndsAt:
       return {
-        endsAt: sortOrder
+        endsAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case EventSort.StartsAt:
     default:
       return {
-        startsAt: sortOrder
+        startsAt: graphQLSortOrderToPrisma(sortOrder)
       }
   }
 }

@@ -49,8 +49,8 @@ type Event {
   createdAt: DateTime!
   description: RichText
   endsAt: DateTime
-  externalSourceId: String!
-  externalSourceName: String!
+  externalSourceId: String
+  externalSourceName: String
   id: String!
   image: Image
   imageId: String
@@ -74,8 +74,8 @@ type EventFromSource {
   createdAt: DateTime!
   description: RichText
   endsAt: DateTime
-  externalSourceId: String!
-  externalSourceName: String!
+  externalSourceId: String
+  externalSourceName: String
   id: String!
   imageUrl: String
   location: String
@@ -83,6 +83,13 @@ type EventFromSource {
   name: String!
   startsAt: DateTime!
   status: EventStatus!
+}
+
+enum EventSort {
+  CreatedAt
+  EndsAt
+  ModifiedAt
+  StartsAt
 }
 
 enum EventStatus {
@@ -169,8 +176,8 @@ type Mutation {
   "\n      Create a new consent.\n    "
   createConsent(defaultValue: Boolean!, name: String!, slug: String!): Consent!
 
-  "\n      Creates and event based on data from importable events list and an id and provider.\n      Also, uploads an image to WePublish Image library.\n    "
-  createEvent(id: String!, source: String!): String!
+  """Creates a new event."""
+  createEvent(description: RichText, endsAt: DateTime, imageId: String, location: String, name: String!, startsAt: DateTime!, tagIds: [String!]): Event!
 
   """Create a new subscription flow"""
   createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
@@ -195,6 +202,9 @@ type Mutation {
 
   "\n      Delete an existing userConsent by id.\n      Returns deleted userConsent.\n    "
   deleteUserConsent(id: String!): UserConsent!
+
+  "\n      Creates and event based on data from importable events list and an id and provider.\n      Also, uploads an image to WePublish Image library.\n    "
+  importEvent(id: String!, source: String!): String!
   syncTemplates: Boolean
 
   """Sends a test email for the given event"""
@@ -204,7 +214,7 @@ type Mutation {
   updateConsent(defaultValue: Boolean, id: String!, name: String, slug: String): Consent!
 
   """Updates an existing event."""
-  updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, location: String, name: String, startsAt: DateTime, status: EventStatus, tagIds: [String!]): Event!
+  updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, location: String, name: String, startsAt: DateTime, tagIds: [String!]): Event!
 
   """Updates an existing setting."""
   updateSetting(name: SettingName!, value: GraphQLSettingValueType!): Setting!
@@ -276,7 +286,7 @@ type Query {
   eventProviders: [String!]!
 
   """Returns a paginated list of events based on the filters given."""
-  events(cursorId: String, filter: EventFilter, order: SortOrder = Ascending, skip: Int = 0, sortedField: String = "StartsAt", take: Int = 10): PaginatedEvents!
+  events(cursorId: String, filter: EventFilter, order: SortOrder = Ascending, skip: Int = 0, sort: EventSort = StartsAt, take: Int = 10): PaginatedEvents!
 
   "\n      Returns the expected revenue for the time period given.\n      Excludes cancelled or manually set as paid invoices.\n    "
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!

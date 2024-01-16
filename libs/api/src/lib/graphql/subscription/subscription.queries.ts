@@ -1,7 +1,7 @@
 import {Prisma, PrismaClient, Subscription} from '@prisma/client'
 import {ConnectionResult} from '../../db/common'
 import {SubscriptionFilter, SubscriptionSort} from '../../db/subscription'
-import {SortOrder, getMaxTake} from '@wepublish/utils/api'
+import {SortOrder, getMaxTake, graphQLSortOrderToPrisma} from '@wepublish/utils/api'
 import {mapDateFilterToPrisma} from '../utils'
 
 export const createSubscriptionOrder = (
@@ -11,12 +11,12 @@ export const createSubscriptionOrder = (
   switch (field) {
     case SubscriptionSort.CreatedAt:
       return {
-        createdAt: sortOrder
+        createdAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case SubscriptionSort.ModifiedAt:
       return {
-        modifiedAt: sortOrder
+        modifiedAt: graphQLSortOrderToPrisma(sortOrder)
       }
   }
 }

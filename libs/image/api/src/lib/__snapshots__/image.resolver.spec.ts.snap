@@ -1,0 +1,14 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ImageService image 1`] = `
+[
+  "1234",
+]
+`;
+
+exports[`ImageService image 2`] = `
+{
+  "filename": "123.webp",
+  "id": "123",
+}
+`;

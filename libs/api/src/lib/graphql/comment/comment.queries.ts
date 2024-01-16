@@ -1,7 +1,7 @@
 import {Comment, Prisma, PrismaClient} from '@prisma/client'
 import {CommentFilter, CommentSort} from '../../db/comment'
 import {ConnectionResult} from '../../db/common'
-import {SortOrder, getMaxTake} from '@wepublish/utils/api'
+import {SortOrder, getMaxTake, graphQLSortOrderToPrisma} from '@wepublish/utils/api'
 
 export const createCommentOrder = (
   field: CommentSort,
@@ -10,12 +10,12 @@ export const createCommentOrder = (
   switch (field) {
     case CommentSort.CreatedAt:
       return {
-        createdAt: sortOrder
+        createdAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case CommentSort.ModifiedAt:
       return {
-        modifiedAt: sortOrder
+        modifiedAt: graphQLSortOrderToPrisma(sortOrder)
       }
   }
 }

@@ -55,7 +55,7 @@ export class SingleEventFilter {
 }
 
 @ArgsType()
-export class CreateEventFromSourceArgs {
+export class ImportEventArgs {
   @Field()
   id!: string
 

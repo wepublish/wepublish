@@ -1,7 +1,7 @@
 import {Image, Prisma, PrismaClient} from '@prisma/client'
 import {ConnectionResult} from '../../db/common'
 import {ImageFilter, ImageSort} from '../../db/image'
-import {SortOrder, getMaxTake} from '@wepublish/utils/api'
+import {SortOrder, getMaxTake, graphQLSortOrderToPrisma} from '@wepublish/utils/api'
 
 export const createImageOrder = (
   field: ImageSort,
@@ -10,12 +10,12 @@ export const createImageOrder = (
   switch (field) {
     case ImageSort.CreatedAt:
       return {
-        createdAt: sortOrder
+        createdAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case ImageSort.ModifiedAt:
       return {
-        modifiedAt: sortOrder
+        modifiedAt: graphQLSortOrderToPrisma(sortOrder)
       }
   }
 }

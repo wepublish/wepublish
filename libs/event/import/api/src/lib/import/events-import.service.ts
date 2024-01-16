@@ -1,7 +1,7 @@
 import {Inject, Injectable} from '@nestjs/common'
 
 import {
-  CreateEventFromSourceArgs,
+  ImportEventArgs,
   EventFromSource,
   ImportedEventFilter,
   ImportedEventSort,
@@ -120,7 +120,7 @@ export class EventsImportService {
     return this.providers.find(p => p.name === source)?.importedEvent({id})
   }
 
-  async createEventFromSource({id, source}: CreateEventFromSourceArgs) {
+  async createEventFromSource({id, source}: ImportEventArgs) {
     return this.providers.find(p => p.name === source)?.createEvent({id})
   }
 

@@ -1,7 +1,7 @@
 import {Payment, Prisma, PrismaClient} from '@prisma/client'
 import {ConnectionResult} from '../../db/common'
 import {PaymentFilter, PaymentSort} from '../../db/payment'
-import {SortOrder, getMaxTake} from '@wepublish/utils/api'
+import {SortOrder, getMaxTake, graphQLSortOrderToPrisma} from '@wepublish/utils/api'
 
 export const createPaymentOrder = (
   field: PaymentSort,
@@ -10,12 +10,12 @@ export const createPaymentOrder = (
   switch (field) {
     case PaymentSort.CreatedAt:
       return {
-        createdAt: sortOrder
+        createdAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case PaymentSort.ModifiedAt:
       return {
-        modifiedAt: sortOrder
+        modifiedAt: graphQLSortOrderToPrisma(sortOrder)
       }
   }
 }

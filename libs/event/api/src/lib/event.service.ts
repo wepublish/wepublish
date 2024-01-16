@@ -1,13 +1,18 @@
 import {BadRequestException, Injectable, NotFoundException} from '@nestjs/common'
 import {Event, Prisma, PrismaClient} from '@prisma/client'
+import {
+  PrimeDataLoader,
+  SortOrder,
+  getMaxTake,
+  graphQLSortOrderToPrisma
+} from '@wepublish/utils/api'
 import {EventDataloaderService} from './event-dataloader.service'
-import {PrimeDataLoader, SortOrder, getMaxTake} from '@wepublish/utils/api'
 import {
   CreateEventInput,
-  UpdateEventInput,
   EventFilter,
+  EventListArgs,
   EventSort,
-  EventListArgs
+  UpdateEventInput
 } from './event.model'
 
 @Injectable()
@@ -15,8 +20,15 @@ export class EventService {
   constructor(private prisma: PrismaClient) {}
 
   @PrimeDataLoader(EventDataloaderService)
-  async getEvents({filter, cursorId, sortedField, order, take, skip}: EventListArgs) {
-    const orderBy = createEventOrder(sortedField, order)
+  async getEvents({
+    filter,
+    cursorId,
+    sort = EventSort.StartsAt,
+    order = SortOrder.Ascending,
+    take = 10,
+    skip
+  }: EventListArgs) {
+    const orderBy = createEventOrder(sort, order)
     const where = createEventFilter(filter)
 
     const [totalCount, events] = await Promise.all([
@@ -54,11 +66,17 @@ export class EventService {
 
   @PrimeDataLoader(EventDataloaderService)
   async getEventById(id: string) {
-    return this.prisma.event.findUnique({
+    const event = await this.prisma.event.findUnique({
       where: {
         id
       }
     })
+
+    if (!event) {
+      throw new NotFoundException()
+    }
+
+    return event
   }
 
   @PrimeDataLoader(EventDataloaderService)
@@ -149,23 +167,23 @@ export const createEventOrder = (
   switch (field) {
     case EventSort.ModifiedAt:
       return {
-        modifiedAt: sortOrder
+        modifiedAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case EventSort.CreatedAt:
       return {
-        createdAt: sortOrder
+        createdAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case EventSort.EndsAt:
       return {
-        endsAt: sortOrder
+        endsAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case EventSort.StartsAt:
     default:
       return {
-        startsAt: sortOrder
+        startsAt: graphQLSortOrderToPrisma(sortOrder)
       }
   }
 }

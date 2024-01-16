@@ -1,7 +1,7 @@
 import {Invoice, Prisma, PrismaClient} from '@prisma/client'
 import {ConnectionResult, DateFilterComparison} from '../../db/common'
 import {InvoiceFilter, InvoiceSort} from '../../db/invoice'
-import {SortOrder, getMaxTake} from '@wepublish/utils/api'
+import {SortOrder, getMaxTake, graphQLSortOrderToPrisma} from '@wepublish/utils/api'
 
 export const createInvoiceOrder = (
   field: InvoiceSort,
@@ -10,17 +10,17 @@ export const createInvoiceOrder = (
   switch (field) {
     case InvoiceSort.CreatedAt:
       return {
-        createdAt: sortOrder
+        createdAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case InvoiceSort.ModifiedAt:
       return {
-        modifiedAt: sortOrder
+        modifiedAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case InvoiceSort.PaidAt:
       return {
-        paidAt: sortOrder
+        paidAt: graphQLSortOrderToPrisma(sortOrder)
       }
   }
 }
