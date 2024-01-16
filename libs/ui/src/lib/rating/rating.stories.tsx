@@ -1,7 +1,8 @@
-import {Meta, StoryObj} from '@storybook/react'
-import {Rating as RatingCmp} from './rating'
-import {MdFavorite, MdHeartBroken} from 'react-icons/md'
 import {Link, Stack} from '@mui/material'
+import {Meta, StoryObj} from '@storybook/react'
+import {MdFavorite, MdHeartBroken} from 'react-icons/md'
+
+import {Rating as RatingCmp} from './rating'
 
 export default {
   component: RatingCmp,

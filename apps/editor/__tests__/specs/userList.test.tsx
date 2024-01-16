@@ -5,7 +5,7 @@ import {AuthContext} from '@wepublish/ui/editor'
 import fetch from 'jest-fetch-mock'
 import {BrowserRouter} from 'react-router-dom'
 
-import {UserList} from '../../src/app/routes/userList'
+import {UserList} from '../../src/app/routes/users/userList'
 import {actWait, sessionWithPermissions} from '../utils'
 
 jest.setMock('node-fetch', fetch)

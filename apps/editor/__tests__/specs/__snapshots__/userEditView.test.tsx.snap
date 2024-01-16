@@ -324,10 +324,10 @@ exports[`User edit view should allow user properties to be added 1`] = `
 +                                   class="css-10odzlz"
 +                                 >
 +                                   <div
-+                                     class="css-1sdoex4-FlexRow e1pdqxno4"
++                                     class="css-1sdoex4-FlexRow eswd6by4"
 +                                   >
 +                                     <input
-+                                       class="css-122i1rs-InputW40 e1pdqxno5 rs-input"
++                                       class="css-122i1rs-InputW40 eswd6by5 rs-input"
 +                                       data-testid="propertyKey"
 +                                       id="userProperties"
 +                                       placeholder="articleEditor.panels.key"
@@ -335,7 +335,7 @@ exports[`User edit view should allow user properties to be added 1`] = `
 +                                       value="some key"
 +                                     />
 +                                     <input
-+                                       class="css-37ns6d-InputW60 e1pdqxno6 rs-input"
++                                       class="css-37ns6d-InputW60 eswd6by6 rs-input"
 +                                       data-testid="propertyValue"
 +                                       id="userProperties"
 +                                       placeholder="articleEditor.panels.value"
@@ -343,11 +343,11 @@ exports[`User edit view should allow user properties to be added 1`] = `
 +                                       value="some value"
 +                                     />
 +                                     <div
-+                                       class="css-1eryv93-FormGroup e1pdqxno0 rs-form-group"
++                                       class="css-1eryv93-FormGroup eswd6by0 rs-form-group"
 +                                       role="group"
 +                                     >
 +                                       <label
-+                                         class="css-16t8jw5-Toggle e1pdqxno7 rs-toggle rs-toggle-checked"
++                                         class="css-16t8jw5-Toggle eswd6by7 rs-toggle rs-toggle-checked"
 +                                       >
 +                                         <input
 +                                           aria-checked="true"

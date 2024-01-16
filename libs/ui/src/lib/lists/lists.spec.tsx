@@ -1,6 +1,6 @@
 import {render} from '@testing-library/react'
 
-import {UnorderedList, OrderedList} from './lists'
+import {OrderedList, UnorderedList} from './lists'
 
 describe('UnorderedList', () => {
   it('should render successfully', () => {

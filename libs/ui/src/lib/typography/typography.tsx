@@ -1,6 +1,5 @@
-import {Typography} from '@mui/material'
+import {Link as MuiLink, LinkTypeMap, Typography} from '@mui/material'
 import {AnchorHTMLAttributes, forwardRef, HTMLAttributes} from 'react'
-import {Link as MuiLink, LinkTypeMap} from '@mui/material'
 
 export type HeadingProps = HTMLAttributes<HTMLHeadingElement> & {component?: React.ElementType}
 

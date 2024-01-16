@@ -13,7 +13,8 @@ import {
   ListViewContainer,
   ListViewHeader,
   PermissionControl,
-  useAuthorisation
+  useAuthorisation,
+  useUnsavedChangesDialog
 } from '@wepublish/ui/editor'
 import {useEffect, useMemo, useReducer, useState} from 'react'
 import {useTranslation} from 'react-i18next'
@@ -39,7 +40,6 @@ import {
 import InputGroupAddon from 'rsuite/cjs/InputGroup/InputGroupAddon'
 import FormControl from 'rsuite/FormControl'
 import {getApiClientV2} from '@wepublish/editor/api-v2'
-import {useUnsavedChangesDialog} from './unsavedChangesDialog'
 
 const Panel = styled(RPanel)`
   margin-bottom: 10px;
