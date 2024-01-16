@@ -72,7 +72,7 @@ jobs:
             storage: 20Gi
           labels: { }
           EOF
-          helm upgrade --install --force review-${{ github.event.pull_request.number }}-media-server karma-media-server --repo https://gitlab.com/api/v4/projects/38941346/packages/helm/stable -n reviews -f values.yaml
+          helm upgrade --install review-${{ github.event.pull_request.number }}-media-server karma-media-server --repo https://gitlab.com/api/v4/projects/38941346/packages/helm/stable -n reviews -f values.yaml
 
       - name: Helm deploy database
         run: |
@@ -86,7 +86,7 @@ jobs:
                 password: wepublish
                 database: wepublish
           EOF
-          helm upgrade --install --force review-${{ github.event.pull_request.number }}-database oci://registry-1.docker.io/bitnamicharts/postgresql -n reviews -f values.yaml --wait
+          helm upgrade --install review-${{ github.event.pull_request.number }}-database oci://registry-1.docker.io/bitnamicharts/postgresql -n reviews -f values.yaml --wait
 
       - name: Helm deploy app
         run: |
