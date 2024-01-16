@@ -43,9 +43,10 @@ export function ExternalVoteTable({
   loading,
   onPollChange,
   onClickDeleteBtn
-}: ExternalVoteTableProps) {
+}: ExternalVoteTableProps): JSX.Element {
   const {t} = useTranslation()
   if (!poll?.externalVoteSources?.length) {
+    // eslint-disable-next-line react/jsx-no-useless-fragment
     return <></>
   }
   function changeSource(

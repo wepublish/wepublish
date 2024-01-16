@@ -143,7 +143,7 @@ function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
     }
   }
 
-  function currentContent() {
+  function currentContent(): JSX.Element {
     switch (activeKey) {
       case MetaDataType.SocialMedia:
         return (

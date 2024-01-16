@@ -40,14 +40,6 @@ const ColNoMargin = styled(RCol)`
   margin-top: 0px;
 `
 
-const Col = styled(RCol)`
-  margin-top: 20px;
-`
-
-const Panel = styled(RPanel)`
-  width: 100%;
-`
-
 const FlexItem = styled(FlexboxGrid.Item)`
   margin-top: 10px;
 `

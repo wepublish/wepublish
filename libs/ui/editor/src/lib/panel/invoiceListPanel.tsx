@@ -48,21 +48,17 @@ function InvoiceListPanel({
       )
     }
     // iterate invoices
-    return (
-      <>
-        {invoices?.map((invoice, invoiceId) => (
-          <InvoiceWrapper key={invoiceId}>
-            <Invoice
-              subscriptionId={subscriptionId}
-              invoice={invoice}
-              me={me?.me}
-              disabled={disabled}
-              onInvoicePaid={() => onInvoicePaid()}
-            />
-          </InvoiceWrapper>
-        ))}
-      </>
-    )
+    return invoices?.map((invoice, invoiceId) => (
+      <InvoiceWrapper key={invoiceId}>
+        <Invoice
+          subscriptionId={subscriptionId}
+          invoice={invoice}
+          me={me?.me}
+          disabled={disabled}
+          onInvoicePaid={() => onInvoicePaid()}
+        />
+      </InvoiceWrapper>
+    ))
   }
 
   return <>{invoiceHistoryView()}</>
