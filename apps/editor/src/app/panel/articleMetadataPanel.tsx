@@ -194,6 +194,8 @@ function ArticleMetadataPanel({
         break
       }
       default: {
+        // Handle unexpected cases
+        console.warn(`Unhandled activeKey: ${activeKey}`)
       }
     }
   }
@@ -416,13 +418,13 @@ function ArticleMetadataPanel({
                 </Whisper>
               </InputGroup>
               <HelpText>
-                <Trans i18nKey={'articleEditor.panels.dontChangeSlug'}>
-                  text{' '}
-                  <a
-                    href="https://wepublish.ch/just-another-page-2/"
-                    target="_blank"
-                    rel="noreferrer"></a>
-                </Trans>
+                {t('articleEditor.panels.dontChangeSlug')}{' '}
+                <a
+                  href="https://wepublish.ch/just-another-page-2/"
+                  target="_blank"
+                  rel="noreferrer">
+                  {t('articleEditor.panels.slugGuide')}
+                </a>
               </HelpText>
             </Group>
             <Group controlId="articleAuthors">
@@ -557,6 +559,7 @@ function ArticleMetadataPanel({
           </Panel>
         )
       default:
+        // eslint-disable-next-line react/jsx-no-useless-fragment
         return <></>
     }
   }

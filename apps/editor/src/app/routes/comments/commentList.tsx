@@ -215,21 +215,19 @@ function CommentList() {
           <Column width={350} align="left" verticalAlign="middle" resizable>
             <HeaderCell>{t('comments.overview.text')}</HeaderCell>
             <Cell dataKey="revisions">
-              {(rowData: RowDataType<FullCommentFragment>) => (
-                <>
-                  {rowData.revisions?.length ? (
-                    <RichTextBlock
-                      displayOnly
-                      displayOneLine
-                      disabled
-                      onChange={() => {
-                        return undefined
-                      }}
-                      value={rowData.revisions[rowData.revisions?.length - 1]?.text || []}
-                    />
-                  ) : null}
-                </>
-              )}
+              {(rowData: RowDataType<FullCommentFragment>) =>
+                rowData.revisions?.length ? (
+                  <RichTextBlock
+                    displayOnly
+                    displayOneLine
+                    disabled
+                    onChange={() => {
+                      return undefined
+                    }}
+                    value={rowData.revisions[rowData.revisions?.length - 1]?.text || []}
+                  />
+                ) : null
+              }
             </Cell>
           </Column>
           {/* eslint-disable-next-line i18next/no-literal-string */}

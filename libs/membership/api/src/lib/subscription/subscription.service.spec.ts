@@ -11,8 +11,6 @@ import {
   defineMemberPlanFactory,
   definePaymentMethodFactory,
   defineSubscriptionFactory,
-  defineSubscriptionFlowFactory,
-  defineSubscriptionIntervalFactory,
   defineSubscriptionPeriodFactory,
   defineUserFactory,
   initialize
@@ -37,12 +35,6 @@ describe('SubscriptionController', () => {
 
   const MemberPlanFactory = defineMemberPlanFactory()
   const PaymentMethodFactory = definePaymentMethodFactory()
-  const SubscriptionFlowFactory = defineSubscriptionFlowFactory({
-    defaultData: {
-      memberPlan: MemberPlanFactory,
-      intervals: {connect: []}
-    } as any
-  })
   const SubscriptionFactory = defineSubscriptionFactory({
     defaultData: {
       paymentMethod: {
@@ -93,11 +85,6 @@ describe('SubscriptionController', () => {
   const InvoiceFactory = defineInvoiceFactory({
     defaultData: {
       subscription: SubscriptionFactory
-    }
-  })
-  const SubscriptionIntervalFactory = defineSubscriptionIntervalFactory({
-    defaultData: {
-      subscriptionFlow: SubscriptionFlowFactory
     }
   })
   const SubscriptionPeriodFactory = defineSubscriptionPeriodFactory({
