@@ -15,7 +15,7 @@
     "test": "nx affected:test --base master --parallel=false",
     "test-all": "nx run-many --target=test --parallel=10 --runInBand",
     "test-backend": "nx run-many --target=test --parallel=10 --runInBand --exclude='*website*'",
-    "test-website": "nx run-many --target=test --parallel=10 --runInBand --projects=*-website",
+    "test-website": "nx run-many --target=test --parallel=10 --runInBand --projects=*website*",
     "watch": "npm run migrate && run-p --print-label watch:*",
     "watch:editor": "nx serve editor",
     "watch:api-example": "nx serve api-example",
