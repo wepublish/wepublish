@@ -118,8 +118,8 @@ jobs:
             url: ${STORYBOOK_URL}
           EOF
           export POD_NAME=review-${{ github.event.pull_request.number }}-app
-          echo "NAME ${POD_NAME}"
-          helm upgrade --install review-${{ github.event.pull_request.number }}-app ./helm/charts/wepublish -n reviews -f values.yaml --wait
+          if [[ ! -z $(helm ls -a -n reviews |grep ${POD_NAME} |grep -v "deployed ") ]]; then helm uninstall -n reviews ${POD_NAME}; fi
+          helm upgrade --install ${POD_NAME} ./helm/charts/wepublish -n reviews -f values.yaml --wait
           
 
   notify:
