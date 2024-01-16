@@ -1,4 +1,4 @@
-name: Tests
+name: Website Tests
 
 on:
   push:
@@ -24,7 +24,7 @@ jobs:
           node-version: '16'
           cache: 'npm'
       - run: npm ci
-      - run: npm run test-backend -- --code-coverage
+      - run: npm run test-website -- --code-coverage
         env:
           NODE_OPTIONS: "--max-old-space-size=4096"
           JWT_SECRET_KEY: 'ThisIsSuperSecret'
