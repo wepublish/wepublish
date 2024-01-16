@@ -34,7 +34,7 @@ export function AddBlockInput({menuItems, disabled, onMenuItemClick}: AddBlockIn
     <Wrapper>
       <Dropdown
         disabled={disabled}
-        renderToggle={(props: unknown, ref: React.Ref<HTMLButtonElement>) => (
+        renderToggle={(props: object, ref: React.Ref<HTMLButtonElement>) => (
           <IconButton {...props} ref={ref} icon={<MdAdd />} circle appearance="primary" />
         )}>
         {menuItems.map((item, index) => (

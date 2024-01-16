@@ -72,7 +72,7 @@ export function ChooseEditImage({
             {(openChooseModalOpen || openEditModalOpen || removeImage) && (
               <DropdownWrapper top={top} left={left}>
                 <Dropdown
-                  renderToggle={(props: unknown, ref: React.Ref<HTMLButtonElement>) => (
+                  renderToggle={(props: object, ref: React.Ref<HTMLButtonElement>) => (
                     <IconButton
                       {...props}
                       ref={ref}
