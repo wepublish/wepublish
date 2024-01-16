@@ -117,7 +117,9 @@ jobs:
             image: ${{ inputs.storybook_image }}
             url: ${STORYBOOK_URL}
           EOF
-          helm upgrade --install review-${{ github.event.pull_request.number }}-app ./helm/charts/wepublish -n reviews -f values.yaml --wait --cleanup-on-fail --atomic
+          export POD_NAME=review-${{ github.event.pull_request.number }}-app
+          echo "NAME ${POD_NAME}"
+          helm upgrade --install review-${{ github.event.pull_request.number }}-app ./helm/charts/wepublish -n reviews -f values.yaml --wait
           
 
   notify:
