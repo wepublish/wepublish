@@ -212,4 +212,84 @@ describe('PayrexxPaymentProvider', () => {
       expect(result.intentSecret).toBe('https://payrexx/gateway-link')
     })
   })
+
+  describe('Payment status checks', () => {
+    it('should throw on unmappable transaction status', async () => {
+      const transaction = {
+        status: 'chargeback'
+      } as Transaction
+      payrexx.transactionClient.retrieveTransaction = jest.fn().mockResolvedValue(transaction)
+
+      await expect(payrexx.checkIntentStatus({intentID: '5'})).rejects.toThrow(
+        'Unmappable Payrexx transaction status'
+      )
+    })
+
+    it('should throw on empty transaction referenceId', async () => {
+      const transaction = {
+        status: 'confirmed'
+      } as Transaction
+      payrexx.transactionClient.retrieveTransaction = jest.fn().mockResolvedValue(transaction)
+
+      await expect(payrexx.checkIntentStatus({intentID: '6'})).rejects.toThrow('empty referenceId')
+    })
+
+    it('should get intent state based on transaction id', async () => {
+      const transaction = {
+        status: 'confirmed',
+        referenceId: '135'
+      } as Transaction
+      payrexx.transactionClient.retrieveTransaction = jest.fn().mockResolvedValue(transaction)
+
+      const result = await payrexx.checkIntentStatus({intentID: '6'})
+      expect(result.paymentID).toBe('135')
+      expect(result.state).toBe('paid')
+      expect(result.paymentData).toBe(JSON.stringify(transaction))
+      expect(payrexx.transactionClient.retrieveTransaction).toBeCalled()
+      expect(payrexx.gatewayClient.getGateway).not.toBeCalled()
+    })
+
+    it('should throw on unmappable gateway status', async () => {
+      const gateway = {
+        status: 'unknown status' as any
+      } as Gateway
+      payrexx.transactionClient.retrieveTransaction = jest.fn().mockResolvedValue(null)
+      payrexx.gatewayClient.getGateway = jest.fn().mockResolvedValue(gateway)
+
+      await expect(payrexx.checkIntentStatus({intentID: '6'})).rejects.toThrow(
+        'Unmappable Payrexx gateway status'
+      )
+    })
+
+    it('should throw on empty gateway referenceId', async () => {
+      const gateway = {
+        status: 'waiting',
+        invoices: []
+      } as Gateway
+      payrexx.transactionClient.retrieveTransaction = jest.fn().mockResolvedValue(null)
+      payrexx.gatewayClient.getGateway = jest.fn().mockResolvedValue(gateway)
+
+      await expect(payrexx.checkIntentStatus({intentID: '6'})).rejects.toThrow('empty referenceId')
+    })
+
+    it('should get intent state based on gateway id', async () => {
+      const transaction = {
+        status: 'waiting'
+      } as Transaction
+      const gateway = {
+        status: 'waiting',
+        referenceId: '246',
+        invoices: [{transactions: [transaction]}]
+      } as Gateway
+      payrexx.transactionClient.retrieveTransaction = jest.fn().mockResolvedValue(null)
+      payrexx.gatewayClient.getGateway = jest.fn().mockResolvedValue(gateway)
+
+      const result = await payrexx.checkIntentStatus({intentID: '6'})
+      expect(result.paymentID).toBe('246')
+      expect(result.state).toBe('processing')
+      expect(result.paymentData).toBe(JSON.stringify(gateway))
+      expect(payrexx.transactionClient.retrieveTransaction).toBeCalled()
+      expect(payrexx.gatewayClient.getGateway).toBeCalled()
+    })
+  })
 })

@@ -202,7 +202,7 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
         this.id,
         transaction.status
       )
-      throw new Error('Unmappable Payrexx gateway status')
+      throw new Error('Unmappable Payrexx transaction status')
     }
 
     if (!transaction.referenceId) {
