@@ -50,7 +50,7 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
   }
 
   async webhookForPaymentIntent(props: WebhookForPaymentIntentProps): Promise<WebhookResponse> {
-    const apiKey = props.req.query.apiKey as string
+    const apiKey = props.req.query?.apiKey as string
     if (!timeConstantCompare(apiKey, this.webhookApiKey)) {
       return {
         status: 403,
@@ -66,7 +66,7 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
     }
 
     const transaction = props.req.body.transaction as Transaction
-    if (transaction.subscription !== null) {
+    if (transaction.subscription) {
       return {
         status: 200,
         message: 'Skipping transaction related to subscription'
@@ -85,7 +85,7 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
       paymentData: JSON.stringify(transaction),
       state
     }
-    if (state === 'paid') {
+    if (state === 'paid' && transaction.preAuthorizationId) {
       intentState.customerID = String(transaction.preAuthorizationId)
     }
     return {
