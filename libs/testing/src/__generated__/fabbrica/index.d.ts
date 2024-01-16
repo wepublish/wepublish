@@ -69,26 +69,26 @@ import type { SubscriptionEvent } from "@prisma/client";
 import { Prisma } from "@prisma/client";
 import { Resolver } from "@quramy/prisma-fabbrica/lib/internal";
 export { initialize, resetSequence, registerScalarFieldValueGenerator, resetScalarFieldValueGenerator } from "@quramy/prisma-fabbrica/lib/internal";
-type BuildDataOptions = {
+declare type BuildDataOptions = {
     readonly seq: number;
 };
-type MetadataPropertyArticleRevisionFactory = {
+declare type MetadataPropertyArticleRevisionFactory = {
     _factoryFor: "ArticleRevision";
     build: () => PromiseLike<Prisma.ArticleRevisionCreateNestedOneWithoutPropertiesInput["create"]>;
 };
-type MetadataPropertyPageRevisionFactory = {
+declare type MetadataPropertyPageRevisionFactory = {
     _factoryFor: "PageRevision";
     build: () => PromiseLike<Prisma.PageRevisionCreateNestedOneWithoutPropertiesInput["create"]>;
 };
-type MetadataPropertySubscriptionFactory = {
+declare type MetadataPropertySubscriptionFactory = {
     _factoryFor: "Subscription";
     build: () => PromiseLike<Prisma.SubscriptionCreateNestedOneWithoutPropertiesInput["create"]>;
 };
-type MetadataPropertyUserFactory = {
+declare type MetadataPropertyUserFactory = {
     _factoryFor: "User";
     build: () => PromiseLike<Prisma.UserCreateNestedOneWithoutPropertiesInput["create"]>;
 };
-type MetadataPropertyFactoryDefineInput = {
+declare type MetadataPropertyFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
@@ -100,7 +100,7 @@ type MetadataPropertyFactoryDefineInput = {
     Subscription?: MetadataPropertySubscriptionFactory | Prisma.SubscriptionCreateNestedOneWithoutPropertiesInput;
     User?: MetadataPropertyUserFactory | Prisma.UserCreateNestedOneWithoutPropertiesInput;
 };
-type MetadataPropertyFactoryDefineOptions = {
+declare type MetadataPropertyFactoryDefineOptions = {
     defaultData?: Resolver<MetadataPropertyFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -108,7 +108,7 @@ type MetadataPropertyFactoryDefineOptions = {
         };
     };
 };
-type MetadataPropertyTraitKeys<TOptions extends MetadataPropertyFactoryDefineOptions> = keyof TOptions["traits"];
+declare type MetadataPropertyTraitKeys<TOptions extends MetadataPropertyFactoryDefineOptions> = keyof TOptions["traits"];
 export interface MetadataPropertyFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "MetadataProperty";
     build(inputData?: Partial<Prisma.MetadataPropertyCreateInput>): PromiseLike<Prisma.MetadataPropertyCreateInput>;
@@ -129,15 +129,15 @@ export interface MetadataPropertyFactoryInterface<TOptions extends MetadataPrope
  * @returns factory {@link MetadataPropertyFactoryInterface}
  */
 export declare function defineMetadataPropertyFactory<TOptions extends MetadataPropertyFactoryDefineOptions>(options?: TOptions): MetadataPropertyFactoryInterface<TOptions>;
-type ArticleRevisionimageFactory = {
+declare type ArticleRevisionimageFactory = {
     _factoryFor: "Image";
     build: () => PromiseLike<Prisma.ImageCreateNestedOneWithoutArticleRevisionImagesInput["create"]>;
 };
-type ArticleRevisionsocialMediaImageFactory = {
+declare type ArticleRevisionsocialMediaImageFactory = {
     _factoryFor: "Image";
     build: () => PromiseLike<Prisma.ImageCreateNestedOneWithoutArticleRevisionSocialMediaImagesInput["create"]>;
 };
-type ArticleRevisionFactoryDefineInput = {
+declare type ArticleRevisionFactoryDefineInput = {
     id?: string;
     preTitle?: string | null;
     title?: string | null;
@@ -145,6 +145,7 @@ type ArticleRevisionFactoryDefineInput = {
     seoTitle?: string | null;
     slug?: string | null;
     tags?: Prisma.ArticleRevisionCreatetagsInput | Prisma.Enumerable<string>;
+    (): any;
     canonicalUrl?: string | null;
     breaking?: boolean;
     blocks?: Prisma.JsonNullValueInput | Prisma.InputJsonValue;
@@ -166,7 +167,7 @@ type ArticleRevisionFactoryDefineInput = {
     PendingArticle?: Prisma.ArticleCreateNestedManyWithoutPendingInput;
     DraftArticle?: Prisma.ArticleCreateNestedManyWithoutDraftInput;
 };
-type ArticleRevisionFactoryDefineOptions = {
+declare type ArticleRevisionFactoryDefineOptions = {
     defaultData?: Resolver<ArticleRevisionFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -174,7 +175,7 @@ type ArticleRevisionFactoryDefineOptions = {
         };
     };
 };
-type ArticleRevisionTraitKeys<TOptions extends ArticleRevisionFactoryDefineOptions> = keyof TOptions["traits"];
+declare type ArticleRevisionTraitKeys<TOptions extends ArticleRevisionFactoryDefineOptions> = keyof TOptions["traits"];
 export interface ArticleRevisionFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "ArticleRevision";
     build(inputData?: Partial<Prisma.ArticleRevisionCreateInput>): PromiseLike<Prisma.ArticleRevisionCreateInput>;
@@ -195,19 +196,19 @@ export interface ArticleRevisionFactoryInterface<TOptions extends ArticleRevisio
  * @returns factory {@link ArticleRevisionFactoryInterface}
  */
 export declare function defineArticleRevisionFactory<TOptions extends ArticleRevisionFactoryDefineOptions>(options?: TOptions): ArticleRevisionFactoryInterface<TOptions>;
-type ArticleRevisionAuthorrevisionFactory = {
+declare type ArticleRevisionAuthorrevisionFactory = {
     _factoryFor: "ArticleRevision";
     build: () => PromiseLike<Prisma.ArticleRevisionCreateNestedOneWithoutAuthorsInput["create"]>;
 };
-type ArticleRevisionAuthorauthorFactory = {
+declare type ArticleRevisionAuthorauthorFactory = {
     _factoryFor: "Author";
     build: () => PromiseLike<Prisma.AuthorCreateNestedOneWithoutArticlesAsAuthorInput["create"]>;
 };
-type ArticleRevisionAuthorFactoryDefineInput = {
+declare type ArticleRevisionAuthorFactoryDefineInput = {
     revision: ArticleRevisionAuthorrevisionFactory | Prisma.ArticleRevisionCreateNestedOneWithoutAuthorsInput;
     author: ArticleRevisionAuthorauthorFactory | Prisma.AuthorCreateNestedOneWithoutArticlesAsAuthorInput;
 };
-type ArticleRevisionAuthorFactoryDefineOptions = {
+declare type ArticleRevisionAuthorFactoryDefineOptions = {
     defaultData: Resolver<ArticleRevisionAuthorFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -215,7 +216,7 @@ type ArticleRevisionAuthorFactoryDefineOptions = {
         };
     };
 };
-type ArticleRevisionAuthorTraitKeys<TOptions extends ArticleRevisionAuthorFactoryDefineOptions> = keyof TOptions["traits"];
+declare type ArticleRevisionAuthorTraitKeys<TOptions extends ArticleRevisionAuthorFactoryDefineOptions> = keyof TOptions["traits"];
 export interface ArticleRevisionAuthorFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "ArticleRevisionAuthor";
     build(inputData?: Partial<Prisma.ArticleRevisionAuthorCreateInput>): PromiseLike<Prisma.ArticleRevisionAuthorCreateInput>;
@@ -236,19 +237,19 @@ export interface ArticleRevisionAuthorFactoryInterface<TOptions extends ArticleR
  * @returns factory {@link ArticleRevisionAuthorFactoryInterface}
  */
 export declare function defineArticleRevisionAuthorFactory<TOptions extends ArticleRevisionAuthorFactoryDefineOptions>(options: TOptions): ArticleRevisionAuthorFactoryInterface<TOptions>;
-type ArticleRevisionSocialMediaAuthorrevisionFactory = {
+declare type ArticleRevisionSocialMediaAuthorrevisionFactory = {
     _factoryFor: "ArticleRevision";
     build: () => PromiseLike<Prisma.ArticleRevisionCreateNestedOneWithoutSocialMediaAuthorsInput["create"]>;
 };
-type ArticleRevisionSocialMediaAuthorauthorFactory = {
+declare type ArticleRevisionSocialMediaAuthorauthorFactory = {
     _factoryFor: "Author";
     build: () => PromiseLike<Prisma.AuthorCreateNestedOneWithoutArticlesAsSocialMediaAuthorInput["create"]>;
 };
-type ArticleRevisionSocialMediaAuthorFactoryDefineInput = {
+declare type ArticleRevisionSocialMediaAuthorFactoryDefineInput = {
     revision: ArticleRevisionSocialMediaAuthorrevisionFactory | Prisma.ArticleRevisionCreateNestedOneWithoutSocialMediaAuthorsInput;
     author: ArticleRevisionSocialMediaAuthorauthorFactory | Prisma.AuthorCreateNestedOneWithoutArticlesAsSocialMediaAuthorInput;
 };
-type ArticleRevisionSocialMediaAuthorFactoryDefineOptions = {
+declare type ArticleRevisionSocialMediaAuthorFactoryDefineOptions = {
     defaultData: Resolver<ArticleRevisionSocialMediaAuthorFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -256,7 +257,7 @@ type ArticleRevisionSocialMediaAuthorFactoryDefineOptions = {
         };
     };
 };
-type ArticleRevisionSocialMediaAuthorTraitKeys<TOptions extends ArticleRevisionSocialMediaAuthorFactoryDefineOptions> = keyof TOptions["traits"];
+declare type ArticleRevisionSocialMediaAuthorTraitKeys<TOptions extends ArticleRevisionSocialMediaAuthorFactoryDefineOptions> = keyof TOptions["traits"];
 export interface ArticleRevisionSocialMediaAuthorFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "ArticleRevisionSocialMediaAuthor";
     build(inputData?: Partial<Prisma.ArticleRevisionSocialMediaAuthorCreateInput>): PromiseLike<Prisma.ArticleRevisionSocialMediaAuthorCreateInput>;
@@ -277,19 +278,19 @@ export interface ArticleRevisionSocialMediaAuthorFactoryInterface<TOptions exten
  * @returns factory {@link ArticleRevisionSocialMediaAuthorFactoryInterface}
  */
 export declare function defineArticleRevisionSocialMediaAuthorFactory<TOptions extends ArticleRevisionSocialMediaAuthorFactoryDefineOptions>(options: TOptions): ArticleRevisionSocialMediaAuthorFactoryInterface<TOptions>;
-type ArticlepublishedFactory = {
+declare type ArticlepublishedFactory = {
     _factoryFor: "ArticleRevision";
     build: () => PromiseLike<Prisma.ArticleRevisionCreateNestedOneWithoutPublishedArticleInput["create"]>;
 };
-type ArticlependingFactory = {
+declare type ArticlependingFactory = {
     _factoryFor: "ArticleRevision";
     build: () => PromiseLike<Prisma.ArticleRevisionCreateNestedOneWithoutPendingArticleInput["create"]>;
 };
-type ArticledraftFactory = {
+declare type ArticledraftFactory = {
     _factoryFor: "ArticleRevision";
     build: () => PromiseLike<Prisma.ArticleRevisionCreateNestedOneWithoutDraftArticleInput["create"]>;
 };
-type ArticleFactoryDefineInput = {
+declare type ArticleFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
@@ -299,7 +300,7 @@ type ArticleFactoryDefineInput = {
     draft?: ArticledraftFactory | Prisma.ArticleRevisionCreateNestedOneWithoutDraftArticleInput;
     navigations?: Prisma.NavigationLinkCreateNestedManyWithoutArticleInput;
 };
-type ArticleFactoryDefineOptions = {
+declare type ArticleFactoryDefineOptions = {
     defaultData?: Resolver<ArticleFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -307,7 +308,7 @@ type ArticleFactoryDefineOptions = {
         };
     };
 };
-type ArticleTraitKeys<TOptions extends ArticleFactoryDefineOptions> = keyof TOptions["traits"];
+declare type ArticleTraitKeys<TOptions extends ArticleFactoryDefineOptions> = keyof TOptions["traits"];
 export interface ArticleFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "Article";
     build(inputData?: Partial<Prisma.ArticleCreateInput>): PromiseLike<Prisma.ArticleCreateInput>;
@@ -328,11 +329,11 @@ export interface ArticleFactoryInterface<TOptions extends ArticleFactoryDefineOp
  * @returns factory {@link ArticleFactoryInterface}
  */
 export declare function defineArticleFactory<TOptions extends ArticleFactoryDefineOptions>(options?: TOptions): ArticleFactoryInterface<TOptions>;
-type AuthorsLinksAuthorFactory = {
+declare type AuthorsLinksAuthorFactory = {
     _factoryFor: "Author";
     build: () => PromiseLike<Prisma.AuthorCreateNestedOneWithoutLinksInput["create"]>;
 };
-type AuthorsLinksFactoryDefineInput = {
+declare type AuthorsLinksFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
@@ -340,7 +341,7 @@ type AuthorsLinksFactoryDefineInput = {
     url?: string;
     Author?: AuthorsLinksAuthorFactory | Prisma.AuthorCreateNestedOneWithoutLinksInput;
 };
-type AuthorsLinksFactoryDefineOptions = {
+declare type AuthorsLinksFactoryDefineOptions = {
     defaultData?: Resolver<AuthorsLinksFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -348,7 +349,7 @@ type AuthorsLinksFactoryDefineOptions = {
         };
     };
 };
-type AuthorsLinksTraitKeys<TOptions extends AuthorsLinksFactoryDefineOptions> = keyof TOptions["traits"];
+declare type AuthorsLinksTraitKeys<TOptions extends AuthorsLinksFactoryDefineOptions> = keyof TOptions["traits"];
 export interface AuthorsLinksFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "AuthorsLinks";
     build(inputData?: Partial<Prisma.AuthorsLinksCreateInput>): PromiseLike<Prisma.AuthorsLinksCreateInput>;
@@ -369,11 +370,11 @@ export interface AuthorsLinksFactoryInterface<TOptions extends AuthorsLinksFacto
  * @returns factory {@link AuthorsLinksFactoryInterface}
  */
 export declare function defineAuthorsLinksFactory<TOptions extends AuthorsLinksFactoryDefineOptions>(options?: TOptions): AuthorsLinksFactoryInterface<TOptions>;
-type AuthorimageFactory = {
+declare type AuthorimageFactory = {
     _factoryFor: "Image";
     build: () => PromiseLike<Prisma.ImageCreateNestedOneWithoutAuthorInput["create"]>;
 };
-type AuthorFactoryDefineInput = {
+declare type AuthorFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
@@ -386,7 +387,7 @@ type AuthorFactoryDefineInput = {
     articlesAsAuthor?: Prisma.ArticleRevisionAuthorCreateNestedManyWithoutAuthorInput;
     articlesAsSocialMediaAuthor?: Prisma.ArticleRevisionSocialMediaAuthorCreateNestedManyWithoutAuthorInput;
 };
-type AuthorFactoryDefineOptions = {
+declare type AuthorFactoryDefineOptions = {
     defaultData?: Resolver<AuthorFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -394,7 +395,7 @@ type AuthorFactoryDefineOptions = {
         };
     };
 };
-type AuthorTraitKeys<TOptions extends AuthorFactoryDefineOptions> = keyof TOptions["traits"];
+declare type AuthorTraitKeys<TOptions extends AuthorFactoryDefineOptions> = keyof TOptions["traits"];
 export interface AuthorFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "Author";
     build(inputData?: Partial<Prisma.AuthorCreateInput>): PromiseLike<Prisma.AuthorCreateInput>;
@@ -415,16 +416,16 @@ export interface AuthorFactoryInterface<TOptions extends AuthorFactoryDefineOpti
  * @returns factory {@link AuthorFactoryInterface}
  */
 export declare function defineAuthorFactory<TOptions extends AuthorFactoryDefineOptions>(options?: TOptions): AuthorFactoryInterface<TOptions>;
-type FocalPointimageFactory = {
+declare type FocalPointimageFactory = {
     _factoryFor: "Image";
     build: () => PromiseLike<Prisma.ImageCreateNestedOneWithoutFocalPointInput["create"]>;
 };
-type FocalPointFactoryDefineInput = {
+declare type FocalPointFactoryDefineInput = {
     x?: number | null;
     y?: number | null;
     image?: FocalPointimageFactory | Prisma.ImageCreateNestedOneWithoutFocalPointInput;
 };
-type FocalPointFactoryDefineOptions = {
+declare type FocalPointFactoryDefineOptions = {
     defaultData?: Resolver<FocalPointFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -432,7 +433,7 @@ type FocalPointFactoryDefineOptions = {
         };
     };
 };
-type FocalPointTraitKeys<TOptions extends FocalPointFactoryDefineOptions> = keyof TOptions["traits"];
+declare type FocalPointTraitKeys<TOptions extends FocalPointFactoryDefineOptions> = keyof TOptions["traits"];
 export interface FocalPointFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "FocalPoint";
     build(inputData?: Partial<Prisma.FocalPointCreateInput>): PromiseLike<Prisma.FocalPointCreateInput>;
@@ -453,11 +454,11 @@ export interface FocalPointFactoryInterface<TOptions extends FocalPointFactoryDe
  * @returns factory {@link FocalPointFactoryInterface}
  */
 export declare function defineFocalPointFactory<TOptions extends FocalPointFactoryDefineOptions>(options?: TOptions): FocalPointFactoryInterface<TOptions>;
-type ImagefocalPointFactory = {
+declare type ImagefocalPointFactory = {
     _factoryFor: "FocalPoint";
     build: () => PromiseLike<Prisma.FocalPointCreateNestedOneWithoutImageInput["create"]>;
 };
-type ImageFactoryDefineInput = {
+declare type ImageFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     description?: string | null;
@@ -471,6 +472,7 @@ type ImageFactoryDefineInput = {
     modifiedAt?: Date;
     source?: string | null;
     tags?: Prisma.ImageCreatetagsInput | Prisma.Enumerable<string>;
+    (): any;
     title?: string | null;
     height?: number;
     width?: number;
@@ -486,7 +488,7 @@ type ImageFactoryDefineInput = {
     users?: Prisma.UserCreateNestedManyWithoutUserImageInput;
     events?: Prisma.EventCreateNestedManyWithoutImageInput;
 };
-type ImageFactoryDefineOptions = {
+declare type ImageFactoryDefineOptions = {
     defaultData?: Resolver<ImageFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -494,7 +496,7 @@ type ImageFactoryDefineOptions = {
         };
     };
 };
-type ImageTraitKeys<TOptions extends ImageFactoryDefineOptions> = keyof TOptions["traits"];
+declare type ImageTraitKeys<TOptions extends ImageFactoryDefineOptions> = keyof TOptions["traits"];
 export interface ImageFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "Image";
     build(inputData?: Partial<Prisma.ImageCreateInput>): PromiseLike<Prisma.ImageCreateInput>;
@@ -515,11 +517,11 @@ export interface ImageFactoryInterface<TOptions extends ImageFactoryDefineOption
  * @returns factory {@link ImageFactoryInterface}
  */
 export declare function defineImageFactory<TOptions extends ImageFactoryDefineOptions>(options?: TOptions): ImageFactoryInterface<TOptions>;
-type CommentsRevisionsCommentFactory = {
+declare type CommentsRevisionsCommentFactory = {
     _factoryFor: "Comment";
     build: () => PromiseLike<Prisma.CommentCreateNestedOneWithoutRevisionsInput["create"]>;
 };
-type CommentsRevisionsFactoryDefineInput = {
+declare type CommentsRevisionsFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     text?: Prisma.NullableJsonNullValueInput | Prisma.InputJsonValue;
@@ -527,7 +529,7 @@ type CommentsRevisionsFactoryDefineInput = {
     lead?: string | null;
     Comment?: CommentsRevisionsCommentFactory | Prisma.CommentCreateNestedOneWithoutRevisionsInput;
 };
-type CommentsRevisionsFactoryDefineOptions = {
+declare type CommentsRevisionsFactoryDefineOptions = {
     defaultData?: Resolver<CommentsRevisionsFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -535,7 +537,7 @@ type CommentsRevisionsFactoryDefineOptions = {
         };
     };
 };
-type CommentsRevisionsTraitKeys<TOptions extends CommentsRevisionsFactoryDefineOptions> = keyof TOptions["traits"];
+declare type CommentsRevisionsTraitKeys<TOptions extends CommentsRevisionsFactoryDefineOptions> = keyof TOptions["traits"];
 export interface CommentsRevisionsFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "CommentsRevisions";
     build(inputData?: Partial<Prisma.CommentsRevisionsCreateInput>): PromiseLike<Prisma.CommentsRevisionsCreateInput>;
@@ -556,19 +558,19 @@ export interface CommentsRevisionsFactoryInterface<TOptions extends CommentsRevi
  * @returns factory {@link CommentsRevisionsFactoryInterface}
  */
 export declare function defineCommentsRevisionsFactory<TOptions extends CommentsRevisionsFactoryDefineOptions>(options?: TOptions): CommentsRevisionsFactoryInterface<TOptions>;
-type CommentpeerFactory = {
+declare type CommentpeerFactory = {
     _factoryFor: "Peer";
     build: () => PromiseLike<Prisma.PeerCreateNestedOneWithoutCommentsInput["create"]>;
 };
-type CommentguestUserImageFactory = {
+declare type CommentguestUserImageFactory = {
     _factoryFor: "Image";
     build: () => PromiseLike<Prisma.ImageCreateNestedOneWithoutCommentInput["create"]>;
 };
-type CommentuserFactory = {
+declare type CommentuserFactory = {
     _factoryFor: "User";
     build: () => PromiseLike<Prisma.UserCreateNestedOneWithoutCommentInput["create"]>;
 };
-type CommentFactoryDefineInput = {
+declare type CommentFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
@@ -588,7 +590,7 @@ type CommentFactoryDefineInput = {
     ratings?: Prisma.CommentRatingCreateNestedManyWithoutCommentInput;
     overriddenRatings?: Prisma.CommentRatingOverrideCreateNestedManyWithoutCommentInput;
 };
-type CommentFactoryDefineOptions = {
+declare type CommentFactoryDefineOptions = {
     defaultData?: Resolver<CommentFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -596,7 +598,7 @@ type CommentFactoryDefineOptions = {
         };
     };
 };
-type CommentTraitKeys<TOptions extends CommentFactoryDefineOptions> = keyof TOptions["traits"];
+declare type CommentTraitKeys<TOptions extends CommentFactoryDefineOptions> = keyof TOptions["traits"];
 export interface CommentFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "Comment";
     build(inputData?: Partial<Prisma.CommentCreateInput>): PromiseLike<Prisma.CommentCreateInput>;
@@ -617,21 +619,21 @@ export interface CommentFactoryInterface<TOptions extends CommentFactoryDefineOp
  * @returns factory {@link CommentFactoryInterface}
  */
 export declare function defineCommentFactory<TOptions extends CommentFactoryDefineOptions>(options?: TOptions): CommentFactoryInterface<TOptions>;
-type TaggedCommentscommentFactory = {
+declare type TaggedCommentscommentFactory = {
     _factoryFor: "Comment";
     build: () => PromiseLike<Prisma.CommentCreateNestedOneWithoutTagsInput["create"]>;
 };
-type TaggedCommentstagFactory = {
+declare type TaggedCommentstagFactory = {
     _factoryFor: "Tag";
     build: () => PromiseLike<Prisma.TagCreateNestedOneWithoutCommentsInput["create"]>;
 };
-type TaggedCommentsFactoryDefineInput = {
+declare type TaggedCommentsFactoryDefineInput = {
     createdAt?: Date;
     modifiedAt?: Date;
     comment: TaggedCommentscommentFactory | Prisma.CommentCreateNestedOneWithoutTagsInput;
     tag: TaggedCommentstagFactory | Prisma.TagCreateNestedOneWithoutCommentsInput;
 };
-type TaggedCommentsFactoryDefineOptions = {
+declare type TaggedCommentsFactoryDefineOptions = {
     defaultData: Resolver<TaggedCommentsFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -639,7 +641,7 @@ type TaggedCommentsFactoryDefineOptions = {
         };
     };
 };
-type TaggedCommentsTraitKeys<TOptions extends TaggedCommentsFactoryDefineOptions> = keyof TOptions["traits"];
+declare type TaggedCommentsTraitKeys<TOptions extends TaggedCommentsFactoryDefineOptions> = keyof TOptions["traits"];
 export interface TaggedCommentsFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "TaggedComments";
     build(inputData?: Partial<Prisma.TaggedCommentsCreateInput>): PromiseLike<Prisma.TaggedCommentsCreateInput>;
@@ -660,14 +662,14 @@ export interface TaggedCommentsFactoryInterface<TOptions extends TaggedCommentsF
  * @returns factory {@link TaggedCommentsFactoryInterface}
  */
 export declare function defineTaggedCommentsFactory<TOptions extends TaggedCommentsFactoryDefineOptions>(options: TOptions): TaggedCommentsFactoryInterface<TOptions>;
-type CommentRatingSystemFactoryDefineInput = {
+declare type CommentRatingSystemFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
     name?: string | null;
     answers?: Prisma.CommentRatingSystemAnswerCreateNestedManyWithoutRatingSystemInput;
 };
-type CommentRatingSystemFactoryDefineOptions = {
+declare type CommentRatingSystemFactoryDefineOptions = {
     defaultData?: Resolver<CommentRatingSystemFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -675,7 +677,7 @@ type CommentRatingSystemFactoryDefineOptions = {
         };
     };
 };
-type CommentRatingSystemTraitKeys<TOptions extends CommentRatingSystemFactoryDefineOptions> = keyof TOptions["traits"];
+declare type CommentRatingSystemTraitKeys<TOptions extends CommentRatingSystemFactoryDefineOptions> = keyof TOptions["traits"];
 export interface CommentRatingSystemFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "CommentRatingSystem";
     build(inputData?: Partial<Prisma.CommentRatingSystemCreateInput>): PromiseLike<Prisma.CommentRatingSystemCreateInput>;
@@ -696,11 +698,11 @@ export interface CommentRatingSystemFactoryInterface<TOptions extends CommentRat
  * @returns factory {@link CommentRatingSystemFactoryInterface}
  */
 export declare function defineCommentRatingSystemFactory<TOptions extends CommentRatingSystemFactoryDefineOptions>(options?: TOptions): CommentRatingSystemFactoryInterface<TOptions>;
-type CommentRatingSystemAnswerratingSystemFactory = {
+declare type CommentRatingSystemAnswerratingSystemFactory = {
     _factoryFor: "CommentRatingSystem";
     build: () => PromiseLike<Prisma.CommentRatingSystemCreateNestedOneWithoutAnswersInput["create"]>;
 };
-type CommentRatingSystemAnswerFactoryDefineInput = {
+declare type CommentRatingSystemAnswerFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
@@ -710,7 +712,7 @@ type CommentRatingSystemAnswerFactoryDefineInput = {
     ratings?: Prisma.CommentRatingCreateNestedManyWithoutAnswerInput;
     overriddenRatings?: Prisma.CommentRatingOverrideCreateNestedManyWithoutAnswerInput;
 };
-type CommentRatingSystemAnswerFactoryDefineOptions = {
+declare type CommentRatingSystemAnswerFactoryDefineOptions = {
     defaultData: Resolver<CommentRatingSystemAnswerFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -718,7 +720,7 @@ type CommentRatingSystemAnswerFactoryDefineOptions = {
         };
     };
 };
-type CommentRatingSystemAnswerTraitKeys<TOptions extends CommentRatingSystemAnswerFactoryDefineOptions> = keyof TOptions["traits"];
+declare type CommentRatingSystemAnswerTraitKeys<TOptions extends CommentRatingSystemAnswerFactoryDefineOptions> = keyof TOptions["traits"];
 export interface CommentRatingSystemAnswerFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "CommentRatingSystemAnswer";
     build(inputData?: Partial<Prisma.CommentRatingSystemAnswerCreateInput>): PromiseLike<Prisma.CommentRatingSystemAnswerCreateInput>;
@@ -739,19 +741,19 @@ export interface CommentRatingSystemAnswerFactoryInterface<TOptions extends Comm
  * @returns factory {@link CommentRatingSystemAnswerFactoryInterface}
  */
 export declare function defineCommentRatingSystemAnswerFactory<TOptions extends CommentRatingSystemAnswerFactoryDefineOptions>(options: TOptions): CommentRatingSystemAnswerFactoryInterface<TOptions>;
-type CommentRatinguserFactory = {
+declare type CommentRatinguserFactory = {
     _factoryFor: "User";
     build: () => PromiseLike<Prisma.UserCreateNestedOneWithoutCommentRatingInput["create"]>;
 };
-type CommentRatinganswerFactory = {
+declare type CommentRatinganswerFactory = {
     _factoryFor: "CommentRatingSystemAnswer";
     build: () => PromiseLike<Prisma.CommentRatingSystemAnswerCreateNestedOneWithoutRatingsInput["create"]>;
 };
-type CommentRatingcommentFactory = {
+declare type CommentRatingcommentFactory = {
     _factoryFor: "Comment";
     build: () => PromiseLike<Prisma.CommentCreateNestedOneWithoutRatingsInput["create"]>;
 };
-type CommentRatingFactoryDefineInput = {
+declare type CommentRatingFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
@@ -762,7 +764,7 @@ type CommentRatingFactoryDefineInput = {
     answer: CommentRatinganswerFactory | Prisma.CommentRatingSystemAnswerCreateNestedOneWithoutRatingsInput;
     comment: CommentRatingcommentFactory | Prisma.CommentCreateNestedOneWithoutRatingsInput;
 };
-type CommentRatingFactoryDefineOptions = {
+declare type CommentRatingFactoryDefineOptions = {
     defaultData: Resolver<CommentRatingFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -770,7 +772,7 @@ type CommentRatingFactoryDefineOptions = {
         };
     };
 };
-type CommentRatingTraitKeys<TOptions extends CommentRatingFactoryDefineOptions> = keyof TOptions["traits"];
+declare type CommentRatingTraitKeys<TOptions extends CommentRatingFactoryDefineOptions> = keyof TOptions["traits"];
 export interface CommentRatingFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "CommentRating";
     build(inputData?: Partial<Prisma.CommentRatingCreateInput>): PromiseLike<Prisma.CommentRatingCreateInput>;
@@ -791,22 +793,22 @@ export interface CommentRatingFactoryInterface<TOptions extends CommentRatingFac
  * @returns factory {@link CommentRatingFactoryInterface}
  */
 export declare function defineCommentRatingFactory<TOptions extends CommentRatingFactoryDefineOptions>(options: TOptions): CommentRatingFactoryInterface<TOptions>;
-type CommentRatingOverrideanswerFactory = {
+declare type CommentRatingOverrideanswerFactory = {
     _factoryFor: "CommentRatingSystemAnswer";
     build: () => PromiseLike<Prisma.CommentRatingSystemAnswerCreateNestedOneWithoutOverriddenRatingsInput["create"]>;
 };
-type CommentRatingOverridecommentFactory = {
+declare type CommentRatingOverridecommentFactory = {
     _factoryFor: "Comment";
     build: () => PromiseLike<Prisma.CommentCreateNestedOneWithoutOverriddenRatingsInput["create"]>;
 };
-type CommentRatingOverrideFactoryDefineInput = {
+declare type CommentRatingOverrideFactoryDefineInput = {
     createdAt?: Date;
     modifiedAt?: Date;
     value?: number | null;
     answer: CommentRatingOverrideanswerFactory | Prisma.CommentRatingSystemAnswerCreateNestedOneWithoutOverriddenRatingsInput;
     comment: CommentRatingOverridecommentFactory | Prisma.CommentCreateNestedOneWithoutOverriddenRatingsInput;
 };
-type CommentRatingOverrideFactoryDefineOptions = {
+declare type CommentRatingOverrideFactoryDefineOptions = {
     defaultData: Resolver<CommentRatingOverrideFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -814,7 +816,7 @@ type CommentRatingOverrideFactoryDefineOptions = {
         };
     };
 };
-type CommentRatingOverrideTraitKeys<TOptions extends CommentRatingOverrideFactoryDefineOptions> = keyof TOptions["traits"];
+declare type CommentRatingOverrideTraitKeys<TOptions extends CommentRatingOverrideFactoryDefineOptions> = keyof TOptions["traits"];
 export interface CommentRatingOverrideFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "CommentRatingOverride";
     build(inputData?: Partial<Prisma.CommentRatingOverrideCreateInput>): PromiseLike<Prisma.CommentRatingOverrideCreateInput>;
@@ -835,11 +837,11 @@ export interface CommentRatingOverrideFactoryInterface<TOptions extends CommentR
  * @returns factory {@link CommentRatingOverrideFactoryInterface}
  */
 export declare function defineCommentRatingOverrideFactory<TOptions extends CommentRatingOverrideFactoryDefineOptions>(options: TOptions): CommentRatingOverrideFactoryInterface<TOptions>;
-type InvoiceIteminvoicesFactory = {
+declare type InvoiceIteminvoicesFactory = {
     _factoryFor: "Invoice";
     build: () => PromiseLike<Prisma.InvoiceCreateNestedOneWithoutItemsInput["create"]>;
 };
-type InvoiceItemFactoryDefineInput = {
+declare type InvoiceItemFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
@@ -849,7 +851,7 @@ type InvoiceItemFactoryDefineInput = {
     amount?: number;
     invoices?: InvoiceIteminvoicesFactory | Prisma.InvoiceCreateNestedOneWithoutItemsInput;
 };
-type InvoiceItemFactoryDefineOptions = {
+declare type InvoiceItemFactoryDefineOptions = {
     defaultData?: Resolver<InvoiceItemFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -857,7 +859,7 @@ type InvoiceItemFactoryDefineOptions = {
         };
     };
 };
-type InvoiceItemTraitKeys<TOptions extends InvoiceItemFactoryDefineOptions> = keyof TOptions["traits"];
+declare type InvoiceItemTraitKeys<TOptions extends InvoiceItemFactoryDefineOptions> = keyof TOptions["traits"];
 export interface InvoiceItemFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "InvoiceItem";
     build(inputData?: Partial<Prisma.InvoiceItemCreateInput>): PromiseLike<Prisma.InvoiceItemCreateInput>;
@@ -878,11 +880,11 @@ export interface InvoiceItemFactoryInterface<TOptions extends InvoiceItemFactory
  * @returns factory {@link InvoiceItemFactoryInterface}
  */
 export declare function defineInvoiceItemFactory<TOptions extends InvoiceItemFactoryDefineOptions>(options?: TOptions): InvoiceItemFactoryInterface<TOptions>;
-type InvoicesubscriptionFactory = {
+declare type InvoicesubscriptionFactory = {
     _factoryFor: "Subscription";
     build: () => PromiseLike<Prisma.SubscriptionCreateNestedOneWithoutInvoicesInput["create"]>;
 };
-type InvoiceFactoryDefineInput = {
+declare type InvoiceFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
@@ -897,7 +899,7 @@ type InvoiceFactoryDefineInput = {
     subscription?: InvoicesubscriptionFactory | Prisma.SubscriptionCreateNestedOneWithoutInvoicesInput;
     subscriptionPeriods?: Prisma.SubscriptionPeriodCreateNestedManyWithoutInvoiceInput;
 };
-type InvoiceFactoryDefineOptions = {
+declare type InvoiceFactoryDefineOptions = {
     defaultData?: Resolver<InvoiceFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -905,7 +907,7 @@ type InvoiceFactoryDefineOptions = {
         };
     };
 };
-type InvoiceTraitKeys<TOptions extends InvoiceFactoryDefineOptions> = keyof TOptions["traits"];
+declare type InvoiceTraitKeys<TOptions extends InvoiceFactoryDefineOptions> = keyof TOptions["traits"];
 export interface InvoiceFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "Invoice";
     build(inputData?: Partial<Prisma.InvoiceCreateInput>): PromiseLike<Prisma.InvoiceCreateInput>;
@@ -926,15 +928,15 @@ export interface InvoiceFactoryInterface<TOptions extends InvoiceFactoryDefineOp
  * @returns factory {@link InvoiceFactoryInterface}
  */
 export declare function defineInvoiceFactory<TOptions extends InvoiceFactoryDefineOptions>(options?: TOptions): InvoiceFactoryInterface<TOptions>;
-type MailLogrecipientFactory = {
+declare type MailLogrecipientFactory = {
     _factoryFor: "User";
     build: () => PromiseLike<Prisma.UserCreateNestedOneWithoutMailSentInput["create"]>;
 };
-type MailLogmailTemplateFactory = {
+declare type MailLogmailTemplateFactory = {
     _factoryFor: "MailTemplate";
     build: () => PromiseLike<Prisma.MailTemplateCreateNestedOneWithoutMailLogInput["create"]>;
 };
-type MailLogFactoryDefineInput = {
+declare type MailLogFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
@@ -947,7 +949,7 @@ type MailLogFactoryDefineInput = {
     recipient: MailLogrecipientFactory | Prisma.UserCreateNestedOneWithoutMailSentInput;
     mailTemplate: MailLogmailTemplateFactory | Prisma.MailTemplateCreateNestedOneWithoutMailLogInput;
 };
-type MailLogFactoryDefineOptions = {
+declare type MailLogFactoryDefineOptions = {
     defaultData: Resolver<MailLogFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -955,7 +957,7 @@ type MailLogFactoryDefineOptions = {
         };
     };
 };
-type MailLogTraitKeys<TOptions extends MailLogFactoryDefineOptions> = keyof TOptions["traits"];
+declare type MailLogTraitKeys<TOptions extends MailLogFactoryDefineOptions> = keyof TOptions["traits"];
 export interface MailLogFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "MailLog";
     build(inputData?: Partial<Prisma.MailLogCreateInput>): PromiseLike<Prisma.MailLogCreateInput>;
@@ -976,20 +978,22 @@ export interface MailLogFactoryInterface<TOptions extends MailLogFactoryDefineOp
  * @returns factory {@link MailLogFactoryInterface}
  */
 export declare function defineMailLogFactory<TOptions extends MailLogFactoryDefineOptions>(options: TOptions): MailLogFactoryInterface<TOptions>;
-type AvailablePaymentMethodMemberPlanFactory = {
+declare type AvailablePaymentMethodMemberPlanFactory = {
     _factoryFor: "MemberPlan";
     build: () => PromiseLike<Prisma.MemberPlanCreateNestedOneWithoutAvailablePaymentMethodsInput["create"]>;
 };
-type AvailablePaymentMethodFactoryDefineInput = {
+declare type AvailablePaymentMethodFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
     paymentMethodIDs?: Prisma.AvailablePaymentMethodCreatepaymentMethodIDsInput | Prisma.Enumerable<string>;
+    (): any;
     paymentPeriodicities?: Prisma.AvailablePaymentMethodCreatepaymentPeriodicitiesInput | Prisma.Enumerable<PaymentPeriodicity>;
+    (): any;
     forceAutoRenewal?: boolean;
     MemberPlan?: AvailablePaymentMethodMemberPlanFactory | Prisma.MemberPlanCreateNestedOneWithoutAvailablePaymentMethodsInput;
 };
-type AvailablePaymentMethodFactoryDefineOptions = {
+declare type AvailablePaymentMethodFactoryDefineOptions = {
     defaultData?: Resolver<AvailablePaymentMethodFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -997,7 +1001,7 @@ type AvailablePaymentMethodFactoryDefineOptions = {
         };
     };
 };
-type AvailablePaymentMethodTraitKeys<TOptions extends AvailablePaymentMethodFactoryDefineOptions> = keyof TOptions["traits"];
+declare type AvailablePaymentMethodTraitKeys<TOptions extends AvailablePaymentMethodFactoryDefineOptions> = keyof TOptions["traits"];
 export interface AvailablePaymentMethodFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "AvailablePaymentMethod";
     build(inputData?: Partial<Prisma.AvailablePaymentMethodCreateInput>): PromiseLike<Prisma.AvailablePaymentMethodCreateInput>;
@@ -1018,17 +1022,18 @@ export interface AvailablePaymentMethodFactoryInterface<TOptions extends Availab
  * @returns factory {@link AvailablePaymentMethodFactoryInterface}
  */
 export declare function defineAvailablePaymentMethodFactory<TOptions extends AvailablePaymentMethodFactoryDefineOptions>(options?: TOptions): AvailablePaymentMethodFactoryInterface<TOptions>;
-type MemberPlanimageFactory = {
+declare type MemberPlanimageFactory = {
     _factoryFor: "Image";
     build: () => PromiseLike<Prisma.ImageCreateNestedOneWithoutMemberPlanInput["create"]>;
 };
-type MemberPlanFactoryDefineInput = {
+declare type MemberPlanFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
     name?: string;
     slug?: string;
     tags?: Prisma.MemberPlanCreatetagsInput | Prisma.Enumerable<string>;
+    (): any;
     description?: Prisma.JsonNullValueInput | Prisma.InputJsonValue;
     active?: boolean;
     amountPerMonthMin?: number;
@@ -1037,7 +1042,7 @@ type MemberPlanFactoryDefineInput = {
     Subscription?: Prisma.SubscriptionCreateNestedManyWithoutMemberPlanInput;
     subscriptionFlows?: Prisma.SubscriptionFlowCreateNestedManyWithoutMemberPlanInput;
 };
-type MemberPlanFactoryDefineOptions = {
+declare type MemberPlanFactoryDefineOptions = {
     defaultData?: Resolver<MemberPlanFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -1045,7 +1050,7 @@ type MemberPlanFactoryDefineOptions = {
         };
     };
 };
-type MemberPlanTraitKeys<TOptions extends MemberPlanFactoryDefineOptions> = keyof TOptions["traits"];
+declare type MemberPlanTraitKeys<TOptions extends MemberPlanFactoryDefineOptions> = keyof TOptions["traits"];
 export interface MemberPlanFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "MemberPlan";
     build(inputData?: Partial<Prisma.MemberPlanCreateInput>): PromiseLike<Prisma.MemberPlanCreateInput>;
@@ -1066,19 +1071,19 @@ export interface MemberPlanFactoryInterface<TOptions extends MemberPlanFactoryDe
  * @returns factory {@link MemberPlanFactoryInterface}
  */
 export declare function defineMemberPlanFactory<TOptions extends MemberPlanFactoryDefineOptions>(options?: TOptions): MemberPlanFactoryInterface<TOptions>;
-type NavigationLinkpageFactory = {
+declare type NavigationLinkpageFactory = {
     _factoryFor: "Page";
     build: () => PromiseLike<Prisma.PageCreateNestedOneWithoutNavigationsInput["create"]>;
 };
-type NavigationLinkarticleFactory = {
+declare type NavigationLinkarticleFactory = {
     _factoryFor: "Article";
     build: () => PromiseLike<Prisma.ArticleCreateNestedOneWithoutNavigationsInput["create"]>;
 };
-type NavigationLinknavigationFactory = {
+declare type NavigationLinknavigationFactory = {
     _factoryFor: "Navigation";
     build: () => PromiseLike<Prisma.NavigationCreateNestedOneWithoutLinksInput["create"]>;
 };
-type NavigationLinkFactoryDefineInput = {
+declare type NavigationLinkFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
@@ -1089,7 +1094,7 @@ type NavigationLinkFactoryDefineInput = {
     article?: NavigationLinkarticleFactory | Prisma.ArticleCreateNestedOneWithoutNavigationsInput;
     navigation?: NavigationLinknavigationFactory | Prisma.NavigationCreateNestedOneWithoutLinksInput;
 };
-type NavigationLinkFactoryDefineOptions = {
+declare type NavigationLinkFactoryDefineOptions = {
     defaultData?: Resolver<NavigationLinkFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -1097,7 +1102,7 @@ type NavigationLinkFactoryDefineOptions = {
         };
     };
 };
-type NavigationLinkTraitKeys<TOptions extends NavigationLinkFactoryDefineOptions> = keyof TOptions["traits"];
+declare type NavigationLinkTraitKeys<TOptions extends NavigationLinkFactoryDefineOptions> = keyof TOptions["traits"];
 export interface NavigationLinkFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "NavigationLink";
     build(inputData?: Partial<Prisma.NavigationLinkCreateInput>): PromiseLike<Prisma.NavigationLinkCreateInput>;
@@ -1118,7 +1123,7 @@ export interface NavigationLinkFactoryInterface<TOptions extends NavigationLinkF
  * @returns factory {@link NavigationLinkFactoryInterface}
  */
 export declare function defineNavigationLinkFactory<TOptions extends NavigationLinkFactoryDefineOptions>(options?: TOptions): NavigationLinkFactoryInterface<TOptions>;
-type NavigationFactoryDefineInput = {
+declare type NavigationFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
@@ -1126,7 +1131,7 @@ type NavigationFactoryDefineInput = {
     name?: string;
     links?: Prisma.NavigationLinkCreateNestedManyWithoutNavigationInput;
 };
-type NavigationFactoryDefineOptions = {
+declare type NavigationFactoryDefineOptions = {
     defaultData?: Resolver<NavigationFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -1134,7 +1139,7 @@ type NavigationFactoryDefineOptions = {
         };
     };
 };
-type NavigationTraitKeys<TOptions extends NavigationFactoryDefineOptions> = keyof TOptions["traits"];
+declare type NavigationTraitKeys<TOptions extends NavigationFactoryDefineOptions> = keyof TOptions["traits"];
 export interface NavigationFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "Navigation";
     build(inputData?: Partial<Prisma.NavigationCreateInput>): PromiseLike<Prisma.NavigationCreateInput>;
@@ -1155,15 +1160,15 @@ export interface NavigationFactoryInterface<TOptions extends NavigationFactoryDe
  * @returns factory {@link NavigationFactoryInterface}
  */
 export declare function defineNavigationFactory<TOptions extends NavigationFactoryDefineOptions>(options?: TOptions): NavigationFactoryInterface<TOptions>;
-type PageRevisionimageFactory = {
+declare type PageRevisionimageFactory = {
     _factoryFor: "Image";
     build: () => PromiseLike<Prisma.ImageCreateNestedOneWithoutPageRevisionImagesInput["create"]>;
 };
-type PageRevisionsocialMediaImageFactory = {
+declare type PageRevisionsocialMediaImageFactory = {
     _factoryFor: "Image";
     build: () => PromiseLike<Prisma.ImageCreateNestedOneWithoutPageRevisionSocialMediaImagesInput["create"]>;
 };
-type PageRevisionFactoryDefineInput = {
+declare type PageRevisionFactoryDefineInput = {
     id?: string;
     revision?: number;
     createdAt?: Date;
@@ -1175,6 +1180,7 @@ type PageRevisionFactoryDefineInput = {
     title?: string;
     description?: string | null;
     tags?: Prisma.PageRevisionCreatetagsInput | Prisma.Enumerable<string>;
+    (): any;
     socialMediaTitle?: string | null;
     socialMediaDescription?: string | null;
     blocks?: Prisma.JsonNullValueInput | Prisma.InputJsonValue;
@@ -1185,7 +1191,7 @@ type PageRevisionFactoryDefineInput = {
     PendingPage?: Prisma.PageCreateNestedManyWithoutPendingInput;
     DraftPage?: Prisma.PageCreateNestedManyWithoutDraftInput;
 };
-type PageRevisionFactoryDefineOptions = {
+declare type PageRevisionFactoryDefineOptions = {
     defaultData?: Resolver<PageRevisionFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -1193,7 +1199,7 @@ type PageRevisionFactoryDefineOptions = {
         };
     };
 };
-type PageRevisionTraitKeys<TOptions extends PageRevisionFactoryDefineOptions> = keyof TOptions["traits"];
+declare type PageRevisionTraitKeys<TOptions extends PageRevisionFactoryDefineOptions> = keyof TOptions["traits"];
 export interface PageRevisionFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "PageRevision";
     build(inputData?: Partial<Prisma.PageRevisionCreateInput>): PromiseLike<Prisma.PageRevisionCreateInput>;
@@ -1214,19 +1220,19 @@ export interface PageRevisionFactoryInterface<TOptions extends PageRevisionFacto
  * @returns factory {@link PageRevisionFactoryInterface}
  */
 export declare function definePageRevisionFactory<TOptions extends PageRevisionFactoryDefineOptions>(options?: TOptions): PageRevisionFactoryInterface<TOptions>;
-type PagepublishedFactory = {
+declare type PagepublishedFactory = {
     _factoryFor: "PageRevision";
     build: () => PromiseLike<Prisma.PageRevisionCreateNestedOneWithoutPublishedPageInput["create"]>;
 };
-type PagependingFactory = {
+declare type PagependingFactory = {
     _factoryFor: "PageRevision";
     build: () => PromiseLike<Prisma.PageRevisionCreateNestedOneWithoutPendingPageInput["create"]>;
 };
-type PagedraftFactory = {
+declare type PagedraftFactory = {
     _factoryFor: "PageRevision";
     build: () => PromiseLike<Prisma.PageRevisionCreateNestedOneWithoutDraftPageInput["create"]>;
 };
-type PageFactoryDefineInput = {
+declare type PageFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
@@ -1235,7 +1241,7 @@ type PageFactoryDefineInput = {
     draft?: PagedraftFactory | Prisma.PageRevisionCreateNestedOneWithoutDraftPageInput;
     navigations?: Prisma.NavigationLinkCreateNestedManyWithoutPageInput;
 };
-type PageFactoryDefineOptions = {
+declare type PageFactoryDefineOptions = {
     defaultData?: Resolver<PageFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -1243,7 +1249,7 @@ type PageFactoryDefineOptions = {
         };
     };
 };
-type PageTraitKeys<TOptions extends PageFactoryDefineOptions> = keyof TOptions["traits"];
+declare type PageTraitKeys<TOptions extends PageFactoryDefineOptions> = keyof TOptions["traits"];
 export interface PageFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "Page";
     build(inputData?: Partial<Prisma.PageCreateInput>): PromiseLike<Prisma.PageCreateInput>;
@@ -1264,7 +1270,7 @@ export interface PageFactoryInterface<TOptions extends PageFactoryDefineOptions 
  * @returns factory {@link PageFactoryInterface}
  */
 export declare function definePageFactory<TOptions extends PageFactoryDefineOptions>(options?: TOptions): PageFactoryInterface<TOptions>;
-type PaymentMethodFactoryDefineInput = {
+declare type PaymentMethodFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
@@ -1277,7 +1283,7 @@ type PaymentMethodFactoryDefineInput = {
     Payment?: Prisma.PaymentCreateNestedManyWithoutPaymentMethodInput;
     subscriptionFlows?: Prisma.SubscriptionFlowCreateNestedManyWithoutPaymentMethodsInput;
 };
-type PaymentMethodFactoryDefineOptions = {
+declare type PaymentMethodFactoryDefineOptions = {
     defaultData?: Resolver<PaymentMethodFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -1285,7 +1291,7 @@ type PaymentMethodFactoryDefineOptions = {
         };
     };
 };
-type PaymentMethodTraitKeys<TOptions extends PaymentMethodFactoryDefineOptions> = keyof TOptions["traits"];
+declare type PaymentMethodTraitKeys<TOptions extends PaymentMethodFactoryDefineOptions> = keyof TOptions["traits"];
 export interface PaymentMethodFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "PaymentMethod";
     build(inputData?: Partial<Prisma.PaymentMethodCreateInput>): PromiseLike<Prisma.PaymentMethodCreateInput>;
@@ -1306,11 +1312,11 @@ export interface PaymentMethodFactoryInterface<TOptions extends PaymentMethodFac
  * @returns factory {@link PaymentMethodFactoryInterface}
  */
 export declare function definePaymentMethodFactory<TOptions extends PaymentMethodFactoryDefineOptions>(options?: TOptions): PaymentMethodFactoryInterface<TOptions>;
-type PaymentpaymentMethodFactory = {
+declare type PaymentpaymentMethodFactory = {
     _factoryFor: "PaymentMethod";
     build: () => PromiseLike<Prisma.PaymentMethodCreateNestedOneWithoutPaymentInput["create"]>;
 };
-type PaymentFactoryDefineInput = {
+declare type PaymentFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
@@ -1322,7 +1328,7 @@ type PaymentFactoryDefineInput = {
     paymentData?: string | null;
     paymentMethod: PaymentpaymentMethodFactory | Prisma.PaymentMethodCreateNestedOneWithoutPaymentInput;
 };
-type PaymentFactoryDefineOptions = {
+declare type PaymentFactoryDefineOptions = {
     defaultData: Resolver<PaymentFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -1330,7 +1336,7 @@ type PaymentFactoryDefineOptions = {
         };
     };
 };
-type PaymentTraitKeys<TOptions extends PaymentFactoryDefineOptions> = keyof TOptions["traits"];
+declare type PaymentTraitKeys<TOptions extends PaymentFactoryDefineOptions> = keyof TOptions["traits"];
 export interface PaymentFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "Payment";
     build(inputData?: Partial<Prisma.PaymentCreateInput>): PromiseLike<Prisma.PaymentCreateInput>;
@@ -1351,11 +1357,11 @@ export interface PaymentFactoryInterface<TOptions extends PaymentFactoryDefineOp
  * @returns factory {@link PaymentFactoryInterface}
  */
 export declare function definePaymentFactory<TOptions extends PaymentFactoryDefineOptions>(options: TOptions): PaymentFactoryInterface<TOptions>;
-type PeerProfilelogoFactory = {
+declare type PeerProfilelogoFactory = {
     _factoryFor: "Image";
     build: () => PromiseLike<Prisma.ImageCreateNestedOneWithoutPeerProfileInput["create"]>;
 };
-type PeerProfileFactoryDefineInput = {
+declare type PeerProfileFactoryDefineInput = {
     id?: string;
     name?: string;
     themeColor?: string;
@@ -1366,7 +1372,7 @@ type PeerProfileFactoryDefineInput = {
     callToActionImageID?: string | null;
     logo?: PeerProfilelogoFactory | Prisma.ImageCreateNestedOneWithoutPeerProfileInput;
 };
-type PeerProfileFactoryDefineOptions = {
+declare type PeerProfileFactoryDefineOptions = {
     defaultData?: Resolver<PeerProfileFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -1374,7 +1380,7 @@ type PeerProfileFactoryDefineOptions = {
         };
     };
 };
-type PeerProfileTraitKeys<TOptions extends PeerProfileFactoryDefineOptions> = keyof TOptions["traits"];
+declare type PeerProfileTraitKeys<TOptions extends PeerProfileFactoryDefineOptions> = keyof TOptions["traits"];
 export interface PeerProfileFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "PeerProfile";
     build(inputData?: Partial<Prisma.PeerProfileCreateInput>): PromiseLike<Prisma.PeerProfileCreateInput>;
@@ -1395,7 +1401,7 @@ export interface PeerProfileFactoryInterface<TOptions extends PeerProfileFactory
  * @returns factory {@link PeerProfileFactoryInterface}
  */
 export declare function definePeerProfileFactory<TOptions extends PeerProfileFactoryDefineOptions>(options?: TOptions): PeerProfileFactoryInterface<TOptions>;
-type PeerFactoryDefineInput = {
+declare type PeerFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
@@ -1406,7 +1412,7 @@ type PeerFactoryDefineInput = {
     isDisabled?: boolean;
     comments?: Prisma.CommentCreateNestedManyWithoutPeerInput;
 };
-type PeerFactoryDefineOptions = {
+declare type PeerFactoryDefineOptions = {
     defaultData?: Resolver<PeerFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -1414,7 +1420,7 @@ type PeerFactoryDefineOptions = {
         };
     };
 };
-type PeerTraitKeys<TOptions extends PeerFactoryDefineOptions> = keyof TOptions["traits"];
+declare type PeerTraitKeys<TOptions extends PeerFactoryDefineOptions> = keyof TOptions["traits"];
 export interface PeerFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "Peer";
     build(inputData?: Partial<Prisma.PeerCreateInput>): PromiseLike<Prisma.PeerCreateInput>;
@@ -1435,15 +1441,16 @@ export interface PeerFactoryInterface<TOptions extends PeerFactoryDefineOptions 
  * @returns factory {@link PeerFactoryInterface}
  */
 export declare function definePeerFactory<TOptions extends PeerFactoryDefineOptions>(options?: TOptions): PeerFactoryInterface<TOptions>;
-type TokenFactoryDefineInput = {
+declare type TokenFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
     name?: string;
     token?: string;
     roleIDs?: Prisma.TokenCreateroleIDsInput | Prisma.Enumerable<string>;
+    (): any;
 };
-type TokenFactoryDefineOptions = {
+declare type TokenFactoryDefineOptions = {
     defaultData?: Resolver<TokenFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -1451,7 +1458,7 @@ type TokenFactoryDefineOptions = {
         };
     };
 };
-type TokenTraitKeys<TOptions extends TokenFactoryDefineOptions> = keyof TOptions["traits"];
+declare type TokenTraitKeys<TOptions extends TokenFactoryDefineOptions> = keyof TOptions["traits"];
 export interface TokenFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "Token";
     build(inputData?: Partial<Prisma.TokenCreateInput>): PromiseLike<Prisma.TokenCreateInput>;
@@ -1472,18 +1479,18 @@ export interface TokenFactoryInterface<TOptions extends TokenFactoryDefineOption
  * @returns factory {@link TokenFactoryInterface}
  */
 export declare function defineTokenFactory<TOptions extends TokenFactoryDefineOptions>(options?: TOptions): TokenFactoryInterface<TOptions>;
-type SessionuserFactory = {
+declare type SessionuserFactory = {
     _factoryFor: "User";
     build: () => PromiseLike<Prisma.UserCreateNestedOneWithoutSessionInput["create"]>;
 };
-type SessionFactoryDefineInput = {
+declare type SessionFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     expiresAt?: Date;
     token?: string;
     user: SessionuserFactory | Prisma.UserCreateNestedOneWithoutSessionInput;
 };
-type SessionFactoryDefineOptions = {
+declare type SessionFactoryDefineOptions = {
     defaultData: Resolver<SessionFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -1491,7 +1498,7 @@ type SessionFactoryDefineOptions = {
         };
     };
 };
-type SessionTraitKeys<TOptions extends SessionFactoryDefineOptions> = keyof TOptions["traits"];
+declare type SessionTraitKeys<TOptions extends SessionFactoryDefineOptions> = keyof TOptions["traits"];
 export interface SessionFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "Session";
     build(inputData?: Partial<Prisma.SessionCreateInput>): PromiseLike<Prisma.SessionCreateInput>;
@@ -1512,15 +1519,15 @@ export interface SessionFactoryInterface<TOptions extends SessionFactoryDefineOp
  * @returns factory {@link SessionFactoryInterface}
  */
 export declare function defineSessionFactory<TOptions extends SessionFactoryDefineOptions>(options: TOptions): SessionFactoryInterface<TOptions>;
-type SubscriptionPeriodinvoiceFactory = {
+declare type SubscriptionPeriodinvoiceFactory = {
     _factoryFor: "Invoice";
     build: () => PromiseLike<Prisma.InvoiceCreateNestedOneWithoutSubscriptionPeriodsInput["create"]>;
 };
-type SubscriptionPeriodsubscriptionFactory = {
+declare type SubscriptionPeriodsubscriptionFactory = {
     _factoryFor: "Subscription";
     build: () => PromiseLike<Prisma.SubscriptionCreateNestedOneWithoutPeriodsInput["create"]>;
 };
-type SubscriptionPeriodFactoryDefineInput = {
+declare type SubscriptionPeriodFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
@@ -1531,7 +1538,7 @@ type SubscriptionPeriodFactoryDefineInput = {
     invoice: SubscriptionPeriodinvoiceFactory | Prisma.InvoiceCreateNestedOneWithoutSubscriptionPeriodsInput;
     subscription?: SubscriptionPeriodsubscriptionFactory | Prisma.SubscriptionCreateNestedOneWithoutPeriodsInput;
 };
-type SubscriptionPeriodFactoryDefineOptions = {
+declare type SubscriptionPeriodFactoryDefineOptions = {
     defaultData: Resolver<SubscriptionPeriodFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -1539,7 +1546,7 @@ type SubscriptionPeriodFactoryDefineOptions = {
         };
     };
 };
-type SubscriptionPeriodTraitKeys<TOptions extends SubscriptionPeriodFactoryDefineOptions> = keyof TOptions["traits"];
+declare type SubscriptionPeriodTraitKeys<TOptions extends SubscriptionPeriodFactoryDefineOptions> = keyof TOptions["traits"];
 export interface SubscriptionPeriodFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "SubscriptionPeriod";
     build(inputData?: Partial<Prisma.SubscriptionPeriodCreateInput>): PromiseLike<Prisma.SubscriptionPeriodCreateInput>;
@@ -1560,11 +1567,11 @@ export interface SubscriptionPeriodFactoryInterface<TOptions extends Subscriptio
  * @returns factory {@link SubscriptionPeriodFactoryInterface}
  */
 export declare function defineSubscriptionPeriodFactory<TOptions extends SubscriptionPeriodFactoryDefineOptions>(options: TOptions): SubscriptionPeriodFactoryInterface<TOptions>;
-type SubscriptionDeactivationsubscriptionFactory = {
+declare type SubscriptionDeactivationsubscriptionFactory = {
     _factoryFor: "Subscription";
     build: () => PromiseLike<Prisma.SubscriptionCreateNestedOneWithoutDeactivationInput["create"]>;
 };
-type SubscriptionDeactivationFactoryDefineInput = {
+declare type SubscriptionDeactivationFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
@@ -1572,7 +1579,7 @@ type SubscriptionDeactivationFactoryDefineInput = {
     reason?: SubscriptionDeactivationReason;
     subscription: SubscriptionDeactivationsubscriptionFactory | Prisma.SubscriptionCreateNestedOneWithoutDeactivationInput;
 };
-type SubscriptionDeactivationFactoryDefineOptions = {
+declare type SubscriptionDeactivationFactoryDefineOptions = {
     defaultData: Resolver<SubscriptionDeactivationFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -1580,7 +1587,7 @@ type SubscriptionDeactivationFactoryDefineOptions = {
         };
     };
 };
-type SubscriptionDeactivationTraitKeys<TOptions extends SubscriptionDeactivationFactoryDefineOptions> = keyof TOptions["traits"];
+declare type SubscriptionDeactivationTraitKeys<TOptions extends SubscriptionDeactivationFactoryDefineOptions> = keyof TOptions["traits"];
 export interface SubscriptionDeactivationFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "SubscriptionDeactivation";
     build(inputData?: Partial<Prisma.SubscriptionDeactivationCreateInput>): PromiseLike<Prisma.SubscriptionDeactivationCreateInput>;
@@ -1601,23 +1608,23 @@ export interface SubscriptionDeactivationFactoryInterface<TOptions extends Subsc
  * @returns factory {@link SubscriptionDeactivationFactoryInterface}
  */
 export declare function defineSubscriptionDeactivationFactory<TOptions extends SubscriptionDeactivationFactoryDefineOptions>(options: TOptions): SubscriptionDeactivationFactoryInterface<TOptions>;
-type SubscriptiondeactivationFactory = {
+declare type SubscriptiondeactivationFactory = {
     _factoryFor: "SubscriptionDeactivation";
     build: () => PromiseLike<Prisma.SubscriptionDeactivationCreateNestedOneWithoutSubscriptionInput["create"]>;
 };
-type SubscriptionpaymentMethodFactory = {
+declare type SubscriptionpaymentMethodFactory = {
     _factoryFor: "PaymentMethod";
     build: () => PromiseLike<Prisma.PaymentMethodCreateNestedOneWithoutSubscriptionInput["create"]>;
 };
-type SubscriptionmemberPlanFactory = {
+declare type SubscriptionmemberPlanFactory = {
     _factoryFor: "MemberPlan";
     build: () => PromiseLike<Prisma.MemberPlanCreateNestedOneWithoutSubscriptionInput["create"]>;
 };
-type SubscriptionuserFactory = {
+declare type SubscriptionuserFactory = {
     _factoryFor: "User";
     build: () => PromiseLike<Prisma.UserCreateNestedOneWithoutSubscriptionInput["create"]>;
 };
-type SubscriptionFactoryDefineInput = {
+declare type SubscriptionFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
@@ -1634,7 +1641,7 @@ type SubscriptionFactoryDefineInput = {
     user: SubscriptionuserFactory | Prisma.UserCreateNestedOneWithoutSubscriptionInput;
     invoices?: Prisma.InvoiceCreateNestedManyWithoutSubscriptionInput;
 };
-type SubscriptionFactoryDefineOptions = {
+declare type SubscriptionFactoryDefineOptions = {
     defaultData: Resolver<SubscriptionFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -1642,7 +1649,7 @@ type SubscriptionFactoryDefineOptions = {
         };
     };
 };
-type SubscriptionTraitKeys<TOptions extends SubscriptionFactoryDefineOptions> = keyof TOptions["traits"];
+declare type SubscriptionTraitKeys<TOptions extends SubscriptionFactoryDefineOptions> = keyof TOptions["traits"];
 export interface SubscriptionFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "Subscription";
     build(inputData?: Partial<Prisma.SubscriptionCreateInput>): PromiseLike<Prisma.SubscriptionCreateInput>;
@@ -1663,11 +1670,11 @@ export interface SubscriptionFactoryInterface<TOptions extends SubscriptionFacto
  * @returns factory {@link SubscriptionFactoryInterface}
  */
 export declare function defineSubscriptionFactory<TOptions extends SubscriptionFactoryDefineOptions>(options: TOptions): SubscriptionFactoryInterface<TOptions>;
-type UserAddressUserFactory = {
+declare type UserAddressUserFactory = {
     _factoryFor: "User";
     build: () => PromiseLike<Prisma.UserCreateNestedOneWithoutAddressInput["create"]>;
 };
-type UserAddressFactoryDefineInput = {
+declare type UserAddressFactoryDefineInput = {
     createdAt?: Date;
     modifiedAt?: Date;
     company?: string | null;
@@ -1678,7 +1685,7 @@ type UserAddressFactoryDefineInput = {
     country?: string | null;
     User: UserAddressUserFactory | Prisma.UserCreateNestedOneWithoutAddressInput;
 };
-type UserAddressFactoryDefineOptions = {
+declare type UserAddressFactoryDefineOptions = {
     defaultData: Resolver<UserAddressFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -1686,7 +1693,7 @@ type UserAddressFactoryDefineOptions = {
         };
     };
 };
-type UserAddressTraitKeys<TOptions extends UserAddressFactoryDefineOptions> = keyof TOptions["traits"];
+declare type UserAddressTraitKeys<TOptions extends UserAddressFactoryDefineOptions> = keyof TOptions["traits"];
 export interface UserAddressFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "UserAddress";
     build(inputData?: Partial<Prisma.UserAddressCreateInput>): PromiseLike<Prisma.UserAddressCreateInput>;
@@ -1707,11 +1714,11 @@ export interface UserAddressFactoryInterface<TOptions extends UserAddressFactory
  * @returns factory {@link UserAddressFactoryInterface}
  */
 export declare function defineUserAddressFactory<TOptions extends UserAddressFactoryDefineOptions>(options: TOptions): UserAddressFactoryInterface<TOptions>;
-type UserOAuth2AccountUserFactory = {
+declare type UserOAuth2AccountUserFactory = {
     _factoryFor: "User";
     build: () => PromiseLike<Prisma.UserCreateNestedOneWithoutOauth2AccountsInput["create"]>;
 };
-type UserOAuth2AccountFactoryDefineInput = {
+declare type UserOAuth2AccountFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
@@ -1729,7 +1736,7 @@ type UserOAuth2AccountFactoryDefineInput = {
     sessionState?: string | null;
     User?: UserOAuth2AccountUserFactory | Prisma.UserCreateNestedOneWithoutOauth2AccountsInput;
 };
-type UserOAuth2AccountFactoryDefineOptions = {
+declare type UserOAuth2AccountFactoryDefineOptions = {
     defaultData?: Resolver<UserOAuth2AccountFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -1737,7 +1744,7 @@ type UserOAuth2AccountFactoryDefineOptions = {
         };
     };
 };
-type UserOAuth2AccountTraitKeys<TOptions extends UserOAuth2AccountFactoryDefineOptions> = keyof TOptions["traits"];
+declare type UserOAuth2AccountTraitKeys<TOptions extends UserOAuth2AccountFactoryDefineOptions> = keyof TOptions["traits"];
 export interface UserOAuth2AccountFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "UserOAuth2Account";
     build(inputData?: Partial<Prisma.UserOAuth2AccountCreateInput>): PromiseLike<Prisma.UserOAuth2AccountCreateInput>;
@@ -1758,11 +1765,11 @@ export interface UserOAuth2AccountFactoryInterface<TOptions extends UserOAuth2Ac
  * @returns factory {@link UserOAuth2AccountFactoryInterface}
  */
 export declare function defineUserOAuth2AccountFactory<TOptions extends UserOAuth2AccountFactoryDefineOptions>(options?: TOptions): UserOAuth2AccountFactoryInterface<TOptions>;
-type PaymentProviderCustomerUserFactory = {
+declare type PaymentProviderCustomerUserFactory = {
     _factoryFor: "User";
     build: () => PromiseLike<Prisma.UserCreateNestedOneWithoutPaymentProviderCustomersInput["create"]>;
 };
-type PaymentProviderCustomerFactoryDefineInput = {
+declare type PaymentProviderCustomerFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
@@ -1770,7 +1777,7 @@ type PaymentProviderCustomerFactoryDefineInput = {
     customerID?: string;
     User?: PaymentProviderCustomerUserFactory | Prisma.UserCreateNestedOneWithoutPaymentProviderCustomersInput;
 };
-type PaymentProviderCustomerFactoryDefineOptions = {
+declare type PaymentProviderCustomerFactoryDefineOptions = {
     defaultData?: Resolver<PaymentProviderCustomerFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -1778,7 +1785,7 @@ type PaymentProviderCustomerFactoryDefineOptions = {
         };
     };
 };
-type PaymentProviderCustomerTraitKeys<TOptions extends PaymentProviderCustomerFactoryDefineOptions> = keyof TOptions["traits"];
+declare type PaymentProviderCustomerTraitKeys<TOptions extends PaymentProviderCustomerFactoryDefineOptions> = keyof TOptions["traits"];
 export interface PaymentProviderCustomerFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "PaymentProviderCustomer";
     build(inputData?: Partial<Prisma.PaymentProviderCustomerCreateInput>): PromiseLike<Prisma.PaymentProviderCustomerCreateInput>;
@@ -1799,15 +1806,15 @@ export interface PaymentProviderCustomerFactoryInterface<TOptions extends Paymen
  * @returns factory {@link PaymentProviderCustomerFactoryInterface}
  */
 export declare function definePaymentProviderCustomerFactory<TOptions extends PaymentProviderCustomerFactoryDefineOptions>(options?: TOptions): PaymentProviderCustomerFactoryInterface<TOptions>;
-type UseruserImageFactory = {
+declare type UseruserImageFactory = {
     _factoryFor: "Image";
     build: () => PromiseLike<Prisma.ImageCreateNestedOneWithoutUsersInput["create"]>;
 };
-type UseraddressFactory = {
+declare type UseraddressFactory = {
     _factoryFor: "UserAddress";
     build: () => PromiseLike<Prisma.UserAddressCreateNestedOneWithoutUserInput["create"]>;
 };
-type UserFactoryDefineInput = {
+declare type UserFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
@@ -1821,6 +1828,7 @@ type UserFactoryDefineInput = {
     active?: boolean;
     lastLogin?: Date | null;
     roleIDs?: Prisma.UserCreateroleIDsInput | Prisma.Enumerable<string>;
+    (): any;
     userImage?: UseruserImageFactory | Prisma.ImageCreateNestedOneWithoutUsersInput;
     address?: UseraddressFactory | Prisma.UserAddressCreateNestedOneWithoutUserInput;
     properties?: Prisma.MetadataPropertyCreateNestedManyWithoutUserInput;
@@ -1834,7 +1842,7 @@ type UserFactoryDefineInput = {
     mailSent?: Prisma.MailLogCreateNestedManyWithoutRecipientInput;
     UserConsent?: Prisma.UserConsentCreateNestedManyWithoutUserInput;
 };
-type UserFactoryDefineOptions = {
+declare type UserFactoryDefineOptions = {
     defaultData?: Resolver<UserFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -1842,7 +1850,7 @@ type UserFactoryDefineOptions = {
         };
     };
 };
-type UserTraitKeys<TOptions extends UserFactoryDefineOptions> = keyof TOptions["traits"];
+declare type UserTraitKeys<TOptions extends UserFactoryDefineOptions> = keyof TOptions["traits"];
 export interface UserFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "User";
     build(inputData?: Partial<Prisma.UserCreateInput>): PromiseLike<Prisma.UserCreateInput>;
@@ -1863,16 +1871,17 @@ export interface UserFactoryInterface<TOptions extends UserFactoryDefineOptions 
  * @returns factory {@link UserFactoryInterface}
  */
 export declare function defineUserFactory<TOptions extends UserFactoryDefineOptions>(options?: TOptions): UserFactoryInterface<TOptions>;
-type UserRoleFactoryDefineInput = {
+declare type UserRoleFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
     description?: string | null;
     name?: string;
     permissionIDs?: Prisma.UserRoleCreatepermissionIDsInput | Prisma.Enumerable<string>;
+    (): any;
     systemRole?: boolean;
 };
-type UserRoleFactoryDefineOptions = {
+declare type UserRoleFactoryDefineOptions = {
     defaultData?: Resolver<UserRoleFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -1880,7 +1889,7 @@ type UserRoleFactoryDefineOptions = {
         };
     };
 };
-type UserRoleTraitKeys<TOptions extends UserRoleFactoryDefineOptions> = keyof TOptions["traits"];
+declare type UserRoleTraitKeys<TOptions extends UserRoleFactoryDefineOptions> = keyof TOptions["traits"];
 export interface UserRoleFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "UserRole";
     build(inputData?: Partial<Prisma.UserRoleCreateInput>): PromiseLike<Prisma.UserRoleCreateInput>;
@@ -1901,7 +1910,7 @@ export interface UserRoleFactoryInterface<TOptions extends UserRoleFactoryDefine
  * @returns factory {@link UserRoleFactoryInterface}
  */
 export declare function defineUserRoleFactory<TOptions extends UserRoleFactoryDefineOptions>(options?: TOptions): UserRoleFactoryInterface<TOptions>;
-type SettingFactoryDefineInput = {
+declare type SettingFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
@@ -1909,7 +1918,7 @@ type SettingFactoryDefineInput = {
     value?: Prisma.JsonNullValueInput | Prisma.InputJsonValue;
     settingRestriction?: Prisma.JsonNullValueInput | Prisma.InputJsonValue;
 };
-type SettingFactoryDefineOptions = {
+declare type SettingFactoryDefineOptions = {
     defaultData?: Resolver<SettingFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -1917,7 +1926,7 @@ type SettingFactoryDefineOptions = {
         };
     };
 };
-type SettingTraitKeys<TOptions extends SettingFactoryDefineOptions> = keyof TOptions["traits"];
+declare type SettingTraitKeys<TOptions extends SettingFactoryDefineOptions> = keyof TOptions["traits"];
 export interface SettingFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "Setting";
     build(inputData?: Partial<Prisma.SettingCreateInput>): PromiseLike<Prisma.SettingCreateInput>;
@@ -1938,7 +1947,7 @@ export interface SettingFactoryInterface<TOptions extends SettingFactoryDefineOp
  * @returns factory {@link SettingFactoryInterface}
  */
 export declare function defineSettingFactory<TOptions extends SettingFactoryDefineOptions>(options?: TOptions): SettingFactoryInterface<TOptions>;
-type TagFactoryDefineInput = {
+declare type TagFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
@@ -1947,7 +1956,7 @@ type TagFactoryDefineInput = {
     comments?: Prisma.TaggedCommentsCreateNestedManyWithoutTagInput;
     events?: Prisma.TaggedEventsCreateNestedManyWithoutTagInput;
 };
-type TagFactoryDefineOptions = {
+declare type TagFactoryDefineOptions = {
     defaultData?: Resolver<TagFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -1955,7 +1964,7 @@ type TagFactoryDefineOptions = {
         };
     };
 };
-type TagTraitKeys<TOptions extends TagFactoryDefineOptions> = keyof TOptions["traits"];
+declare type TagTraitKeys<TOptions extends TagFactoryDefineOptions> = keyof TOptions["traits"];
 export interface TagFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "Tag";
     build(inputData?: Partial<Prisma.TagCreateInput>): PromiseLike<Prisma.TagCreateInput>;
@@ -1976,7 +1985,7 @@ export interface TagFactoryInterface<TOptions extends TagFactoryDefineOptions = 
  * @returns factory {@link TagFactoryInterface}
  */
 export declare function defineTagFactory<TOptions extends TagFactoryDefineOptions>(options?: TOptions): TagFactoryInterface<TOptions>;
-type PollFactoryDefineInput = {
+declare type PollFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
@@ -1988,7 +1997,7 @@ type PollFactoryDefineInput = {
     votes?: Prisma.PollVoteCreateNestedManyWithoutPollInput;
     externalVoteSources?: Prisma.PollExternalVoteSourceCreateNestedManyWithoutPollInput;
 };
-type PollFactoryDefineOptions = {
+declare type PollFactoryDefineOptions = {
     defaultData?: Resolver<PollFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -1996,7 +2005,7 @@ type PollFactoryDefineOptions = {
         };
     };
 };
-type PollTraitKeys<TOptions extends PollFactoryDefineOptions> = keyof TOptions["traits"];
+declare type PollTraitKeys<TOptions extends PollFactoryDefineOptions> = keyof TOptions["traits"];
 export interface PollFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "Poll";
     build(inputData?: Partial<Prisma.PollCreateInput>): PromiseLike<Prisma.PollCreateInput>;
@@ -2017,11 +2026,11 @@ export interface PollFactoryInterface<TOptions extends PollFactoryDefineOptions 
  * @returns factory {@link PollFactoryInterface}
  */
 export declare function definePollFactory<TOptions extends PollFactoryDefineOptions>(options?: TOptions): PollFactoryInterface<TOptions>;
-type PollAnswerpollFactory = {
+declare type PollAnswerpollFactory = {
     _factoryFor: "Poll";
     build: () => PromiseLike<Prisma.PollCreateNestedOneWithoutAnswersInput["create"]>;
 };
-type PollAnswerFactoryDefineInput = {
+declare type PollAnswerFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
@@ -2030,7 +2039,7 @@ type PollAnswerFactoryDefineInput = {
     votes?: Prisma.PollVoteCreateNestedManyWithoutAnswerInput;
     externalVotes?: Prisma.PollExternalVoteCreateNestedManyWithoutAnswerInput;
 };
-type PollAnswerFactoryDefineOptions = {
+declare type PollAnswerFactoryDefineOptions = {
     defaultData: Resolver<PollAnswerFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -2038,7 +2047,7 @@ type PollAnswerFactoryDefineOptions = {
         };
     };
 };
-type PollAnswerTraitKeys<TOptions extends PollAnswerFactoryDefineOptions> = keyof TOptions["traits"];
+declare type PollAnswerTraitKeys<TOptions extends PollAnswerFactoryDefineOptions> = keyof TOptions["traits"];
 export interface PollAnswerFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "PollAnswer";
     build(inputData?: Partial<Prisma.PollAnswerCreateInput>): PromiseLike<Prisma.PollAnswerCreateInput>;
@@ -2059,19 +2068,19 @@ export interface PollAnswerFactoryInterface<TOptions extends PollAnswerFactoryDe
  * @returns factory {@link PollAnswerFactoryInterface}
  */
 export declare function definePollAnswerFactory<TOptions extends PollAnswerFactoryDefineOptions>(options: TOptions): PollAnswerFactoryInterface<TOptions>;
-type PollVoteuserFactory = {
+declare type PollVoteuserFactory = {
     _factoryFor: "User";
     build: () => PromiseLike<Prisma.UserCreateNestedOneWithoutPollVoteInput["create"]>;
 };
-type PollVoteanswerFactory = {
+declare type PollVoteanswerFactory = {
     _factoryFor: "PollAnswer";
     build: () => PromiseLike<Prisma.PollAnswerCreateNestedOneWithoutVotesInput["create"]>;
 };
-type PollVotepollFactory = {
+declare type PollVotepollFactory = {
     _factoryFor: "Poll";
     build: () => PromiseLike<Prisma.PollCreateNestedOneWithoutVotesInput["create"]>;
 };
-type PollVoteFactoryDefineInput = {
+declare type PollVoteFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
@@ -2081,7 +2090,7 @@ type PollVoteFactoryDefineInput = {
     answer: PollVoteanswerFactory | Prisma.PollAnswerCreateNestedOneWithoutVotesInput;
     poll: PollVotepollFactory | Prisma.PollCreateNestedOneWithoutVotesInput;
 };
-type PollVoteFactoryDefineOptions = {
+declare type PollVoteFactoryDefineOptions = {
     defaultData: Resolver<PollVoteFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -2089,7 +2098,7 @@ type PollVoteFactoryDefineOptions = {
         };
     };
 };
-type PollVoteTraitKeys<TOptions extends PollVoteFactoryDefineOptions> = keyof TOptions["traits"];
+declare type PollVoteTraitKeys<TOptions extends PollVoteFactoryDefineOptions> = keyof TOptions["traits"];
 export interface PollVoteFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "PollVote";
     build(inputData?: Partial<Prisma.PollVoteCreateInput>): PromiseLike<Prisma.PollVoteCreateInput>;
@@ -2110,11 +2119,11 @@ export interface PollVoteFactoryInterface<TOptions extends PollVoteFactoryDefine
  * @returns factory {@link PollVoteFactoryInterface}
  */
 export declare function definePollVoteFactory<TOptions extends PollVoteFactoryDefineOptions>(options: TOptions): PollVoteFactoryInterface<TOptions>;
-type PollExternalVoteSourcepollFactory = {
+declare type PollExternalVoteSourcepollFactory = {
     _factoryFor: "Poll";
     build: () => PromiseLike<Prisma.PollCreateNestedOneWithoutExternalVoteSourcesInput["create"]>;
 };
-type PollExternalVoteSourceFactoryDefineInput = {
+declare type PollExternalVoteSourceFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
@@ -2122,7 +2131,7 @@ type PollExternalVoteSourceFactoryDefineInput = {
     poll: PollExternalVoteSourcepollFactory | Prisma.PollCreateNestedOneWithoutExternalVoteSourcesInput;
     voteAmounts?: Prisma.PollExternalVoteCreateNestedManyWithoutSourceInput;
 };
-type PollExternalVoteSourceFactoryDefineOptions = {
+declare type PollExternalVoteSourceFactoryDefineOptions = {
     defaultData: Resolver<PollExternalVoteSourceFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -2130,7 +2139,7 @@ type PollExternalVoteSourceFactoryDefineOptions = {
         };
     };
 };
-type PollExternalVoteSourceTraitKeys<TOptions extends PollExternalVoteSourceFactoryDefineOptions> = keyof TOptions["traits"];
+declare type PollExternalVoteSourceTraitKeys<TOptions extends PollExternalVoteSourceFactoryDefineOptions> = keyof TOptions["traits"];
 export interface PollExternalVoteSourceFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "PollExternalVoteSource";
     build(inputData?: Partial<Prisma.PollExternalVoteSourceCreateInput>): PromiseLike<Prisma.PollExternalVoteSourceCreateInput>;
@@ -2151,15 +2160,15 @@ export interface PollExternalVoteSourceFactoryInterface<TOptions extends PollExt
  * @returns factory {@link PollExternalVoteSourceFactoryInterface}
  */
 export declare function definePollExternalVoteSourceFactory<TOptions extends PollExternalVoteSourceFactoryDefineOptions>(options: TOptions): PollExternalVoteSourceFactoryInterface<TOptions>;
-type PollExternalVoteanswerFactory = {
+declare type PollExternalVoteanswerFactory = {
     _factoryFor: "PollAnswer";
     build: () => PromiseLike<Prisma.PollAnswerCreateNestedOneWithoutExternalVotesInput["create"]>;
 };
-type PollExternalVotesourceFactory = {
+declare type PollExternalVotesourceFactory = {
     _factoryFor: "PollExternalVoteSource";
     build: () => PromiseLike<Prisma.PollExternalVoteSourceCreateNestedOneWithoutVoteAmountsInput["create"]>;
 };
-type PollExternalVoteFactoryDefineInput = {
+declare type PollExternalVoteFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
@@ -2167,7 +2176,7 @@ type PollExternalVoteFactoryDefineInput = {
     answer: PollExternalVoteanswerFactory | Prisma.PollAnswerCreateNestedOneWithoutExternalVotesInput;
     source: PollExternalVotesourceFactory | Prisma.PollExternalVoteSourceCreateNestedOneWithoutVoteAmountsInput;
 };
-type PollExternalVoteFactoryDefineOptions = {
+declare type PollExternalVoteFactoryDefineOptions = {
     defaultData: Resolver<PollExternalVoteFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -2175,7 +2184,7 @@ type PollExternalVoteFactoryDefineOptions = {
         };
     };
 };
-type PollExternalVoteTraitKeys<TOptions extends PollExternalVoteFactoryDefineOptions> = keyof TOptions["traits"];
+declare type PollExternalVoteTraitKeys<TOptions extends PollExternalVoteFactoryDefineOptions> = keyof TOptions["traits"];
 export interface PollExternalVoteFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "PollExternalVote";
     build(inputData?: Partial<Prisma.PollExternalVoteCreateInput>): PromiseLike<Prisma.PollExternalVoteCreateInput>;
@@ -2196,16 +2205,17 @@ export interface PollExternalVoteFactoryInterface<TOptions extends PollExternalV
  * @returns factory {@link PollExternalVoteFactoryInterface}
  */
 export declare function definePollExternalVoteFactory<TOptions extends PollExternalVoteFactoryDefineOptions>(options: TOptions): PollExternalVoteFactoryInterface<TOptions>;
-type EventimageFactory = {
+declare type EventimageFactory = {
     _factoryFor: "Image";
     build: () => PromiseLike<Prisma.ImageCreateNestedOneWithoutEventsInput["create"]>;
 };
-type EventFactoryDefineInput = {
+declare type EventFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
     name?: string;
     description?: Prisma.EventCreatedescriptionInput | Prisma.Enumerable<Prisma.InputJsonValue>;
+    (): any;
     status?: EventStatus;
     location?: string | null;
     startsAt?: Date;
@@ -2215,7 +2225,7 @@ type EventFactoryDefineInput = {
     image?: EventimageFactory | Prisma.ImageCreateNestedOneWithoutEventsInput;
     tags?: Prisma.TaggedEventsCreateNestedManyWithoutEventInput;
 };
-type EventFactoryDefineOptions = {
+declare type EventFactoryDefineOptions = {
     defaultData?: Resolver<EventFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -2223,7 +2233,7 @@ type EventFactoryDefineOptions = {
         };
     };
 };
-type EventTraitKeys<TOptions extends EventFactoryDefineOptions> = keyof TOptions["traits"];
+declare type EventTraitKeys<TOptions extends EventFactoryDefineOptions> = keyof TOptions["traits"];
 export interface EventFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "Event";
     build(inputData?: Partial<Prisma.EventCreateInput>): PromiseLike<Prisma.EventCreateInput>;
@@ -2244,21 +2254,21 @@ export interface EventFactoryInterface<TOptions extends EventFactoryDefineOption
  * @returns factory {@link EventFactoryInterface}
  */
 export declare function defineEventFactory<TOptions extends EventFactoryDefineOptions>(options?: TOptions): EventFactoryInterface<TOptions>;
-type TaggedEventseventFactory = {
+declare type TaggedEventseventFactory = {
     _factoryFor: "Event";
     build: () => PromiseLike<Prisma.EventCreateNestedOneWithoutTagsInput["create"]>;
 };
-type TaggedEventstagFactory = {
+declare type TaggedEventstagFactory = {
     _factoryFor: "Tag";
     build: () => PromiseLike<Prisma.TagCreateNestedOneWithoutEventsInput["create"]>;
 };
-type TaggedEventsFactoryDefineInput = {
+declare type TaggedEventsFactoryDefineInput = {
     createdAt?: Date;
     modifiedAt?: Date;
     event: TaggedEventseventFactory | Prisma.EventCreateNestedOneWithoutTagsInput;
     tag: TaggedEventstagFactory | Prisma.TagCreateNestedOneWithoutEventsInput;
 };
-type TaggedEventsFactoryDefineOptions = {
+declare type TaggedEventsFactoryDefineOptions = {
     defaultData: Resolver<TaggedEventsFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -2266,7 +2276,7 @@ type TaggedEventsFactoryDefineOptions = {
         };
     };
 };
-type TaggedEventsTraitKeys<TOptions extends TaggedEventsFactoryDefineOptions> = keyof TOptions["traits"];
+declare type TaggedEventsTraitKeys<TOptions extends TaggedEventsFactoryDefineOptions> = keyof TOptions["traits"];
 export interface TaggedEventsFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "TaggedEvents";
     build(inputData?: Partial<Prisma.TaggedEventsCreateInput>): PromiseLike<Prisma.TaggedEventsCreateInput>;
@@ -2287,7 +2297,7 @@ export interface TaggedEventsFactoryInterface<TOptions extends TaggedEventsFacto
  * @returns factory {@link TaggedEventsFactoryInterface}
  */
 export declare function defineTaggedEventsFactory<TOptions extends TaggedEventsFactoryDefineOptions>(options: TOptions): TaggedEventsFactoryInterface<TOptions>;
-type ConsentFactoryDefineInput = {
+declare type ConsentFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
@@ -2296,7 +2306,7 @@ type ConsentFactoryDefineInput = {
     defaultValue?: boolean;
     userConsents?: Prisma.UserConsentCreateNestedManyWithoutConsentInput;
 };
-type ConsentFactoryDefineOptions = {
+declare type ConsentFactoryDefineOptions = {
     defaultData?: Resolver<ConsentFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -2304,7 +2314,7 @@ type ConsentFactoryDefineOptions = {
         };
     };
 };
-type ConsentTraitKeys<TOptions extends ConsentFactoryDefineOptions> = keyof TOptions["traits"];
+declare type ConsentTraitKeys<TOptions extends ConsentFactoryDefineOptions> = keyof TOptions["traits"];
 export interface ConsentFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "Consent";
     build(inputData?: Partial<Prisma.ConsentCreateInput>): PromiseLike<Prisma.ConsentCreateInput>;
@@ -2325,15 +2335,15 @@ export interface ConsentFactoryInterface<TOptions extends ConsentFactoryDefineOp
  * @returns factory {@link ConsentFactoryInterface}
  */
 export declare function defineConsentFactory<TOptions extends ConsentFactoryDefineOptions>(options?: TOptions): ConsentFactoryInterface<TOptions>;
-type UserConsentconsentFactory = {
+declare type UserConsentconsentFactory = {
     _factoryFor: "Consent";
     build: () => PromiseLike<Prisma.ConsentCreateNestedOneWithoutUserConsentsInput["create"]>;
 };
-type UserConsentuserFactory = {
+declare type UserConsentuserFactory = {
     _factoryFor: "User";
     build: () => PromiseLike<Prisma.UserCreateNestedOneWithoutUserConsentInput["create"]>;
 };
-type UserConsentFactoryDefineInput = {
+declare type UserConsentFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
@@ -2341,7 +2351,7 @@ type UserConsentFactoryDefineInput = {
     consent: UserConsentconsentFactory | Prisma.ConsentCreateNestedOneWithoutUserConsentsInput;
     user: UserConsentuserFactory | Prisma.UserCreateNestedOneWithoutUserConsentInput;
 };
-type UserConsentFactoryDefineOptions = {
+declare type UserConsentFactoryDefineOptions = {
     defaultData: Resolver<UserConsentFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -2349,7 +2359,7 @@ type UserConsentFactoryDefineOptions = {
         };
     };
 };
-type UserConsentTraitKeys<TOptions extends UserConsentFactoryDefineOptions> = keyof TOptions["traits"];
+declare type UserConsentTraitKeys<TOptions extends UserConsentFactoryDefineOptions> = keyof TOptions["traits"];
 export interface UserConsentFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "UserConsent";
     build(inputData?: Partial<Prisma.UserConsentCreateInput>): PromiseLike<Prisma.UserConsentCreateInput>;
@@ -2370,18 +2380,18 @@ export interface UserConsentFactoryInterface<TOptions extends UserConsentFactory
  * @returns factory {@link UserConsentFactoryInterface}
  */
 export declare function defineUserConsentFactory<TOptions extends UserConsentFactoryDefineOptions>(options: TOptions): UserConsentFactoryInterface<TOptions>;
-type UserFlowMailmailTemplateFactory = {
+declare type UserFlowMailmailTemplateFactory = {
     _factoryFor: "MailTemplate";
     build: () => PromiseLike<Prisma.MailTemplateCreateNestedOneWithoutUserFlowMailsInput["create"]>;
 };
-type UserFlowMailFactoryDefineInput = {
+declare type UserFlowMailFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
     event?: UserEvent;
     mailTemplate?: UserFlowMailmailTemplateFactory | Prisma.MailTemplateCreateNestedOneWithoutUserFlowMailsInput;
 };
-type UserFlowMailFactoryDefineOptions = {
+declare type UserFlowMailFactoryDefineOptions = {
     defaultData?: Resolver<UserFlowMailFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -2389,7 +2399,7 @@ type UserFlowMailFactoryDefineOptions = {
         };
     };
 };
-type UserFlowMailTraitKeys<TOptions extends UserFlowMailFactoryDefineOptions> = keyof TOptions["traits"];
+declare type UserFlowMailTraitKeys<TOptions extends UserFlowMailFactoryDefineOptions> = keyof TOptions["traits"];
 export interface UserFlowMailFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "UserFlowMail";
     build(inputData?: Partial<Prisma.UserFlowMailCreateInput>): PromiseLike<Prisma.UserFlowMailCreateInput>;
@@ -2410,22 +2420,24 @@ export interface UserFlowMailFactoryInterface<TOptions extends UserFlowMailFacto
  * @returns factory {@link UserFlowMailFactoryInterface}
  */
 export declare function defineUserFlowMailFactory<TOptions extends UserFlowMailFactoryDefineOptions>(options?: TOptions): UserFlowMailFactoryInterface<TOptions>;
-type SubscriptionFlowmemberPlanFactory = {
+declare type SubscriptionFlowmemberPlanFactory = {
     _factoryFor: "MemberPlan";
     build: () => PromiseLike<Prisma.MemberPlanCreateNestedOneWithoutSubscriptionFlowsInput["create"]>;
 };
-type SubscriptionFlowFactoryDefineInput = {
+declare type SubscriptionFlowFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
     default?: boolean;
     periodicities?: Prisma.SubscriptionFlowCreateperiodicitiesInput | Prisma.Enumerable<PaymentPeriodicity>;
+    (): any;
     autoRenewal?: Prisma.SubscriptionFlowCreateautoRenewalInput | Prisma.Enumerable<boolean>;
+    (): any;
     memberPlan?: SubscriptionFlowmemberPlanFactory | Prisma.MemberPlanCreateNestedOneWithoutSubscriptionFlowsInput;
     paymentMethods?: Prisma.PaymentMethodCreateNestedManyWithoutSubscriptionFlowsInput;
     intervals?: Prisma.SubscriptionIntervalCreateNestedManyWithoutSubscriptionFlowInput;
 };
-type SubscriptionFlowFactoryDefineOptions = {
+declare type SubscriptionFlowFactoryDefineOptions = {
     defaultData?: Resolver<SubscriptionFlowFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -2433,7 +2445,7 @@ type SubscriptionFlowFactoryDefineOptions = {
         };
     };
 };
-type SubscriptionFlowTraitKeys<TOptions extends SubscriptionFlowFactoryDefineOptions> = keyof TOptions["traits"];
+declare type SubscriptionFlowTraitKeys<TOptions extends SubscriptionFlowFactoryDefineOptions> = keyof TOptions["traits"];
 export interface SubscriptionFlowFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "SubscriptionFlow";
     build(inputData?: Partial<Prisma.SubscriptionFlowCreateInput>): PromiseLike<Prisma.SubscriptionFlowCreateInput>;
@@ -2454,15 +2466,15 @@ export interface SubscriptionFlowFactoryInterface<TOptions extends SubscriptionF
  * @returns factory {@link SubscriptionFlowFactoryInterface}
  */
 export declare function defineSubscriptionFlowFactory<TOptions extends SubscriptionFlowFactoryDefineOptions>(options?: TOptions): SubscriptionFlowFactoryInterface<TOptions>;
-type SubscriptionIntervalmailTemplateFactory = {
+declare type SubscriptionIntervalmailTemplateFactory = {
     _factoryFor: "MailTemplate";
     build: () => PromiseLike<Prisma.MailTemplateCreateNestedOneWithoutSubscriptionIntervalsInput["create"]>;
 };
-type SubscriptionIntervalsubscriptionFlowFactory = {
+declare type SubscriptionIntervalsubscriptionFlowFactory = {
     _factoryFor: "SubscriptionFlow";
     build: () => PromiseLike<Prisma.SubscriptionFlowCreateNestedOneWithoutIntervalsInput["create"]>;
 };
-type SubscriptionIntervalFactoryDefineInput = {
+declare type SubscriptionIntervalFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
@@ -2471,7 +2483,7 @@ type SubscriptionIntervalFactoryDefineInput = {
     mailTemplate?: SubscriptionIntervalmailTemplateFactory | Prisma.MailTemplateCreateNestedOneWithoutSubscriptionIntervalsInput;
     subscriptionFlow: SubscriptionIntervalsubscriptionFlowFactory | Prisma.SubscriptionFlowCreateNestedOneWithoutIntervalsInput;
 };
-type SubscriptionIntervalFactoryDefineOptions = {
+declare type SubscriptionIntervalFactoryDefineOptions = {
     defaultData: Resolver<SubscriptionIntervalFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -2479,7 +2491,7 @@ type SubscriptionIntervalFactoryDefineOptions = {
         };
     };
 };
-type SubscriptionIntervalTraitKeys<TOptions extends SubscriptionIntervalFactoryDefineOptions> = keyof TOptions["traits"];
+declare type SubscriptionIntervalTraitKeys<TOptions extends SubscriptionIntervalFactoryDefineOptions> = keyof TOptions["traits"];
 export interface SubscriptionIntervalFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "SubscriptionInterval";
     build(inputData?: Partial<Prisma.SubscriptionIntervalCreateInput>): PromiseLike<Prisma.SubscriptionIntervalCreateInput>;
@@ -2500,7 +2512,7 @@ export interface SubscriptionIntervalFactoryInterface<TOptions extends Subscript
  * @returns factory {@link SubscriptionIntervalFactoryInterface}
  */
 export declare function defineSubscriptionIntervalFactory<TOptions extends SubscriptionIntervalFactoryDefineOptions>(options: TOptions): SubscriptionIntervalFactoryInterface<TOptions>;
-type MailTemplateFactoryDefineInput = {
+declare type MailTemplateFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
@@ -2512,7 +2524,7 @@ type MailTemplateFactoryDefineInput = {
     userFlowMails?: Prisma.UserFlowMailCreateNestedManyWithoutMailTemplateInput;
     mailLog?: Prisma.MailLogCreateNestedManyWithoutMailTemplateInput;
 };
-type MailTemplateFactoryDefineOptions = {
+declare type MailTemplateFactoryDefineOptions = {
     defaultData?: Resolver<MailTemplateFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -2520,7 +2532,7 @@ type MailTemplateFactoryDefineOptions = {
         };
     };
 };
-type MailTemplateTraitKeys<TOptions extends MailTemplateFactoryDefineOptions> = keyof TOptions["traits"];
+declare type MailTemplateTraitKeys<TOptions extends MailTemplateFactoryDefineOptions> = keyof TOptions["traits"];
 export interface MailTemplateFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "MailTemplate";
     build(inputData?: Partial<Prisma.MailTemplateCreateInput>): PromiseLike<Prisma.MailTemplateCreateInput>;
@@ -2541,7 +2553,7 @@ export interface MailTemplateFactoryInterface<TOptions extends MailTemplateFacto
  * @returns factory {@link MailTemplateFactoryInterface}
  */
 export declare function defineMailTemplateFactory<TOptions extends MailTemplateFactoryDefineOptions>(options?: TOptions): MailTemplateFactoryInterface<TOptions>;
-type PeriodicJobFactoryDefineInput = {
+declare type PeriodicJobFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
     modifiedAt?: Date;
@@ -2552,7 +2564,7 @@ type PeriodicJobFactoryDefineInput = {
     tries?: number;
     error?: string | null;
 };
-type PeriodicJobFactoryDefineOptions = {
+declare type PeriodicJobFactoryDefineOptions = {
     defaultData?: Resolver<PeriodicJobFactoryDefineInput, BuildDataOptions>;
     traits?: {
         [traitName: string | symbol]: {
@@ -2560,7 +2572,7 @@ type PeriodicJobFactoryDefineOptions = {
         };
     };
 };
-type PeriodicJobTraitKeys<TOptions extends PeriodicJobFactoryDefineOptions> = keyof TOptions["traits"];
+declare type PeriodicJobTraitKeys<TOptions extends PeriodicJobFactoryDefineOptions> = keyof TOptions["traits"];
 export interface PeriodicJobFactoryInterfaceWithoutTraits {
     readonly _factoryFor: "PeriodicJob";
     build(inputData?: Partial<Prisma.PeriodicJobCreateInput>): PromiseLike<Prisma.PeriodicJobCreateInput>;

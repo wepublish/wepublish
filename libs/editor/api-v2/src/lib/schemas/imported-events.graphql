@@ -1,4 +1,4 @@
-fragment ImportableEventRef on Event {
+fragment ImportableEventRef on EventFromSource {
   id
   name
   description

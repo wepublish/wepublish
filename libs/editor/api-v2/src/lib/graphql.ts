@@ -67,18 +67,51 @@ export type DashboardSubscription = {
 export type Event = {
   __typename?: 'Event';
   createdAt: Scalars['DateTime'];
-  description: Scalars['RichText'];
+  description?: Maybe<Scalars['RichText']>;
   endsAt?: Maybe<Scalars['DateTime']>;
-  externalSourceId: Scalars['String'];
-  externalSourceName: Scalars['String'];
+  externalSourceId?: Maybe<Scalars['String']>;
+  externalSourceName?: Maybe<Scalars['String']>;
   id: Scalars['String'];
-  imageUrl?: Maybe<Scalars['String']>;
-  location: Scalars['String'];
+  image?: Maybe<Image>;
+  imageId?: Maybe<Scalars['String']>;
+  location?: Maybe<Scalars['String']>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   startsAt: Scalars['DateTime'];
   status: EventStatus;
 };
+
+export type EventFilter = {
+  from?: InputMaybe<Scalars['DateTime']>;
+  location?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  tags?: InputMaybe<Array<Scalars['String']>>;
+  to?: InputMaybe<Scalars['DateTime']>;
+  upcomingOnly?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type EventFromSource = {
+  __typename?: 'EventFromSource';
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['RichText']>;
+  endsAt?: Maybe<Scalars['DateTime']>;
+  externalSourceId?: Maybe<Scalars['String']>;
+  externalSourceName?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  imageUrl?: Maybe<Scalars['String']>;
+  location?: Maybe<Scalars['String']>;
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  startsAt: Scalars['DateTime'];
+  status: EventStatus;
+};
+
+export enum EventSort {
+  CreatedAt = 'CreatedAt',
+  EndsAt = 'EndsAt',
+  ModifiedAt = 'ModifiedAt',
+  StartsAt = 'StartsAt'
+}
 
 export enum EventStatus {
   Cancelled = 'Cancelled',
@@ -86,6 +119,33 @@ export enum EventStatus {
   Rescheduled = 'Rescheduled',
   Scheduled = 'Scheduled'
 }
+
+export type FocalPoint = {
+  __typename?: 'FocalPoint';
+  x: Scalars['Float'];
+  y: Scalars['Float'];
+};
+
+export type Image = {
+  __typename?: 'Image';
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['RichText']>;
+  extension: Scalars['String'];
+  fileSize: Scalars['Int'];
+  filename?: Maybe<Scalars['String']>;
+  focalPoint?: Maybe<FocalPoint>;
+  format: Scalars['String'];
+  height: Scalars['Int'];
+  id: Scalars['String'];
+  license?: Maybe<Scalars['String']>;
+  link?: Maybe<Scalars['String']>;
+  mimeType: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  source?: Maybe<Scalars['String']>;
+  tags: Array<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  width: Scalars['Int'];
+};
 
 export type ImportedEventFilter = {
   from?: InputMaybe<Scalars['String']>;
@@ -104,9 +164,9 @@ export enum ImportedEventSort {
 
 export type ImportedEventsDocument = {
   __typename?: 'ImportedEventsDocument';
-  nodes: Array<Event>;
+  nodes: Array<EventFromSource>;
   pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Float'];
 };
 
 export type MailProviderModel = {
@@ -145,13 +205,8 @@ export type Mutation = {
    *
    */
   createConsent: Consent;
-  /**
-   *
-   *       Creates and event based on data from importable events list and an id and provider.
-   *       Also, uploads an image to WePublish Image library.
-   *
-   */
-  createEvent: Scalars['String'];
+  /** Creates a new event. */
+  createEvent: Event;
   /** Create a new subscription flow */
   createSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Create a subscription interval */
@@ -169,6 +224,8 @@ export type Mutation = {
    *
    */
   deleteConsent: Consent;
+  /** Deletes an existing event. */
+  deleteEvent: Event;
   /** Delete an existing subscription flow */
   deleteSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Delete an existing subscription interval */
@@ -180,6 +237,13 @@ export type Mutation = {
    *
    */
   deleteUserConsent: UserConsent;
+  /**
+   *
+   *       Creates and event based on data from importable events list and an id and provider.
+   *       Also, uploads an image to WePublish Image library.
+   *
+   */
+  importEvent: Scalars['String'];
   syncTemplates?: Maybe<Scalars['Boolean']>;
   /** Sends a test email for the given event */
   testSystemMail: Scalars['Boolean'];
@@ -189,6 +253,8 @@ export type Mutation = {
    *
    */
   updateConsent: Consent;
+  /** Updates an existing event. */
+  updateEvent: Event;
   /** Updates an existing setting. */
   updateSetting: Setting;
   /** Update an existing subscription flow */
@@ -215,8 +281,13 @@ export type MutationCreateConsentArgs = {
 
 
 export type MutationCreateEventArgs = {
-  id: Scalars['String'];
-  source: Scalars['String'];
+  description?: InputMaybe<Scalars['RichText']>;
+  endsAt?: InputMaybe<Scalars['DateTime']>;
+  imageId?: InputMaybe<Scalars['String']>;
+  location?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+  startsAt: Scalars['DateTime'];
+  tagIds?: InputMaybe<Array<Scalars['String']>>;
 };
 
 
@@ -248,6 +319,11 @@ export type MutationDeleteConsentArgs = {
 };
 
 
+export type MutationDeleteEventArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationDeleteSubscriptionFlowArgs = {
   id: Scalars['String'];
 };
@@ -263,6 +339,12 @@ export type MutationDeleteUserConsentArgs = {
 };
 
 
+export type MutationImportEventArgs = {
+  id: Scalars['String'];
+  source: Scalars['String'];
+};
+
+
 export type MutationTestSystemMailArgs = {
   event: UserEvent;
 };
@@ -273,6 +355,18 @@ export type MutationUpdateConsentArgs = {
   id: Scalars['String'];
   name?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationUpdateEventArgs = {
+  description?: InputMaybe<Scalars['RichText']>;
+  endsAt?: InputMaybe<Scalars['DateTime']>;
+  id: Scalars['String'];
+  imageId?: InputMaybe<Scalars['String']>;
+  location?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  startsAt?: InputMaybe<Scalars['DateTime']>;
+  tagIds?: InputMaybe<Array<Scalars['String']>>;
 };
 
 
@@ -314,6 +408,13 @@ export type PageInfo = {
   hasNextPage: Scalars['Boolean'];
   hasPreviousPage: Scalars['Boolean'];
   startCursor?: Maybe<Scalars['String']>;
+};
+
+export type PaginatedEvents = {
+  __typename?: 'PaginatedEvents';
+  nodes: Array<Event>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Float'];
 };
 
 export type PaymentMethodRef = {
@@ -363,12 +464,16 @@ export type Query = {
    *
    */
   consents: Array<Consent>;
+  /** Returns a event by id. */
+  event: Event;
   /**
    *
    *       Returns a list of Importable Event Providers
    *
    */
   eventProviders: Array<Scalars['String']>;
+  /** Returns a paginated list of events based on the filters given. */
+  events: PaginatedEvents;
   /**
    *
    *       Returns the expected revenue for the time period given.
@@ -376,12 +481,14 @@ export type Query = {
    *
    */
   expectedRevenue: Array<DashboardInvoice>;
+  /** Returns an image by id. */
+  image: Image;
   /**
    *
    *       Returns a more detailed version of a single importable event, by id and source.
    *
    */
-  importedEvent: Event;
+  importedEvent: EventFromSource;
   /**
    *
    *       Returns a list of imported events from external sources, transformed to match our model.
@@ -469,9 +576,29 @@ export type QueryConsentsArgs = {
 };
 
 
+export type QueryEventArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryEventsArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<EventFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<EventSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
 export type QueryExpectedRevenueArgs = {
   end?: InputMaybe<Scalars['DateTime']>;
   start: Scalars['DateTime'];
+};
+
+
+export type QueryImageArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -590,6 +717,11 @@ export type SingleEventFilter = {
   id: Scalars['String'];
   source: Scalars['String'];
 };
+
+export enum SortOrder {
+  Ascending = 'Ascending',
+  Descending = 'Descending'
+}
 
 export enum SubscriptionDeactivationReason {
   InvoiceNotPaid = 'invoiceNotPaid',
@@ -750,7 +882,7 @@ export type DeleteUserConsentMutationVariables = Exact<{
 
 export type DeleteUserConsentMutation = { __typename?: 'Mutation', deleteUserConsent: { __typename?: 'UserConsent', id: string, value: boolean, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null, email: string } } };
 
-export type ImportableEventRefFragment = { __typename?: 'Event', id: string, name: string, description: Node[], status: EventStatus, location: string, externalSourceId: string, externalSourceName: string, imageUrl?: string | null, startsAt: string, endsAt?: string | null };
+export type ImportableEventRefFragment = { __typename?: 'EventFromSource', id: string, name: string, description?: Node[] | null, status: EventStatus, location?: string | null, externalSourceId?: string | null, externalSourceName?: string | null, imageUrl?: string | null, startsAt: string, endsAt?: string | null };
 
 export type ImportedEventListQueryVariables = Exact<{
   filter?: InputMaybe<ImportedEventFilter>;
@@ -761,14 +893,14 @@ export type ImportedEventListQueryVariables = Exact<{
 }>;
 
 
-export type ImportedEventListQuery = { __typename?: 'Query', importedEvents: { __typename?: 'ImportedEventsDocument', totalCount: number, nodes: Array<{ __typename?: 'Event', id: string, name: string, description: Node[], status: EventStatus, location: string, externalSourceId: string, externalSourceName: string, imageUrl?: string | null, startsAt: string, endsAt?: string | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
+export type ImportedEventListQuery = { __typename?: 'Query', importedEvents: { __typename?: 'ImportedEventsDocument', totalCount: number, nodes: Array<{ __typename?: 'EventFromSource', id: string, name: string, description?: Node[] | null, status: EventStatus, location?: string | null, externalSourceId?: string | null, externalSourceName?: string | null, imageUrl?: string | null, startsAt: string, endsAt?: string | null }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } };
 
 export type ImportedEventQueryVariables = Exact<{
   filter: SingleEventFilter;
 }>;
 
 
-export type ImportedEventQuery = { __typename?: 'Query', importedEvent: { __typename?: 'Event', id: string, name: string, description: Node[], status: EventStatus, location: string, externalSourceId: string, externalSourceName: string, imageUrl?: string | null, startsAt: string, endsAt?: string | null } };
+export type ImportedEventQuery = { __typename?: 'Query', importedEvent: { __typename?: 'EventFromSource', id: string, name: string, description?: Node[] | null, status: EventStatus, location?: string | null, externalSourceId?: string | null, externalSourceName?: string | null, imageUrl?: string | null, startsAt: string, endsAt?: string | null } };
 
 export type ImportedEventsIdsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -780,13 +912,13 @@ export type EventProvidersQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type EventProvidersQuery = { __typename?: 'Query', eventProviders: Array<string> };
 
-export type CreateEventMutationVariables = Exact<{
+export type ImportEventMutationVariables = Exact<{
   id: Scalars['String'];
   source: Scalars['String'];
 }>;
 
 
-export type CreateEventMutation = { __typename?: 'Mutation', createEvent: string };
+export type ImportEventMutation = { __typename?: 'Mutation', importEvent: string };
 
 export type MailTemplateQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -956,7 +1088,7 @@ export const FullUserConsentFragmentDoc = gql`
 }
     ${FullConsentFragmentDoc}`;
 export const ImportableEventRefFragmentDoc = gql`
-    fragment ImportableEventRef on Event {
+    fragment ImportableEventRef on EventFromSource {
   id
   name
   description
@@ -1551,38 +1683,38 @@ export function useEventProvidersLazyQuery(baseOptions?: Apollo.LazyQueryHookOpt
 export type EventProvidersQueryHookResult = ReturnType<typeof useEventProvidersQuery>;
 export type EventProvidersLazyQueryHookResult = ReturnType<typeof useEventProvidersLazyQuery>;
 export type EventProvidersQueryResult = Apollo.QueryResult<EventProvidersQuery, EventProvidersQueryVariables>;
-export const CreateEventDocument = gql`
-    mutation createEvent($id: String!, $source: String!) {
-  createEvent(id: $id, source: $source)
+export const ImportEventDocument = gql`
+    mutation ImportEvent($id: String!, $source: String!) {
+  importEvent(id: $id, source: $source)
 }
     `;
-export type CreateEventMutationFn = Apollo.MutationFunction<CreateEventMutation, CreateEventMutationVariables>;
+export type ImportEventMutationFn = Apollo.MutationFunction<ImportEventMutation, ImportEventMutationVariables>;
 
 /**
- * __useCreateEventMutation__
+ * __useImportEventMutation__
  *
- * To run a mutation, you first call `useCreateEventMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useCreateEventMutation` returns a tuple that includes:
+ * To run a mutation, you first call `useImportEventMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useImportEventMutation` returns a tuple that includes:
  * - A mutate function that you can call at any time to execute the mutation
  * - An object with fields that represent the current status of the mutation's execution
  *
  * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
  *
  * @example
- * const [createEventMutation, { data, loading, error }] = useCreateEventMutation({
+ * const [importEventMutation, { data, loading, error }] = useImportEventMutation({
  *   variables: {
  *      id: // value for 'id'
  *      source: // value for 'source'
  *   },
  * });
  */
-export function useCreateEventMutation(baseOptions?: Apollo.MutationHookOptions<CreateEventMutation, CreateEventMutationVariables>) {
+export function useImportEventMutation(baseOptions?: Apollo.MutationHookOptions<ImportEventMutation, ImportEventMutationVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<CreateEventMutation, CreateEventMutationVariables>(CreateEventDocument, options);
+        return Apollo.useMutation<ImportEventMutation, ImportEventMutationVariables>(ImportEventDocument, options);
       }
-export type CreateEventMutationHookResult = ReturnType<typeof useCreateEventMutation>;
-export type CreateEventMutationResult = Apollo.MutationResult<CreateEventMutation>;
-export type CreateEventMutationOptions = Apollo.BaseMutationOptions<CreateEventMutation, CreateEventMutationVariables>;
+export type ImportEventMutationHookResult = ReturnType<typeof useImportEventMutation>;
+export type ImportEventMutationResult = Apollo.MutationResult<ImportEventMutation>;
+export type ImportEventMutationOptions = Apollo.BaseMutationOptions<ImportEventMutation, ImportEventMutationVariables>;
 export const MailTemplateDocument = gql`
     query MailTemplate {
   mailTemplates {
@@ -1652,7 +1784,7 @@ export type SynchronizeMailTemplatesMutationHookResult = ReturnType<typeof useSy
 export type SynchronizeMailTemplatesMutationResult = Apollo.MutationResult<SynchronizeMailTemplatesMutation>;
 export type SynchronizeMailTemplatesMutationOptions = Apollo.BaseMutationOptions<SynchronizeMailTemplatesMutation, SynchronizeMailTemplatesMutationVariables>;
 export const PeriodicJobLogsDocument = gql`
-    query periodicJobLogs($skip: Int, $take: Int) {
+    query PeriodicJobLogs($skip: Int, $take: Int) {
   periodicJobLog(skip: $skip, take: $take) {
     ...FullPeriodicJob
   }
