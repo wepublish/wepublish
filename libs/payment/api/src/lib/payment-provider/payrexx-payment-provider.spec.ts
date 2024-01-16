@@ -291,5 +291,13 @@ describe('PayrexxPaymentProvider', () => {
       expect(payrexx.transactionClient.retrieveTransaction).toBeCalled()
       expect(payrexx.gatewayClient.getGateway).toBeCalled()
     })
+
+    it('should throw if intent is not related to transaction or gateway', async () => {
+      payrexx.transactionClient.retrieveTransaction = jest.fn().mockResolvedValue(null)
+      payrexx.gatewayClient.getGateway = jest.fn().mockResolvedValue(null)
+      await expect(payrexx.checkIntentStatus({intentID: '6'})).rejects.toThrow(
+        'Payrexx Gateway/Transaction not found'
+      )
+    })
   })
 })
