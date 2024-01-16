@@ -64,13 +64,13 @@ export const GraphQLEvent = new GraphQLObjectType<Event, Context>({
     },
     image: {
       type: GraphQLImage,
-      resolve: createProxyingResolver(({imageId}, args, {loaders}, info) => {
+      resolve: createProxyingResolver(({imageId}, args, {loaders}) => {
         return imageId ? loaders.images.load(imageId) : null
       })
     },
     url: {
       type: new GraphQLNonNull(GraphQLString),
-      resolve: createProxyingResolver((event, args, {urlAdapter}, info) => {
+      resolve: createProxyingResolver((event, args, {urlAdapter}) => {
         return urlAdapter.getEventURL(event)
       })
     }

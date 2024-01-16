@@ -1059,7 +1059,7 @@ describe('PeriodicJobService', () => {
   it('Deactivate subscription missing invoice deletion object', async () => {
     const mp = await MemberPlanFactory.create({})
     const pm = await PaymentMethodFactory.create({})
-    const sf = await SubscriptionFlowFactory.create({
+    await SubscriptionFlowFactory.create({
       default: false,
       memberPlan: {
         connect: {

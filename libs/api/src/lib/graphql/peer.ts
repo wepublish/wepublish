@@ -37,7 +37,7 @@ export const GraphQLPeerProfile = new GraphQLObjectType<PeerProfile, Context>({
 
     logo: {
       type: GraphQLImage,
-      resolve: createProxyingResolver((profile, args, {loaders}, info) => {
+      resolve: createProxyingResolver((profile, args, {loaders}) => {
         return profile.logoID ? loaders.images.load(profile.logoID) : null
       })
     },
@@ -45,7 +45,7 @@ export const GraphQLPeerProfile = new GraphQLObjectType<PeerProfile, Context>({
     themeColor: {type: new GraphQLNonNull(GraphQLColor)},
     themeFontColor: {
       type: new GraphQLNonNull(GraphQLColor),
-      resolve(profile, args, {loaders}, info) {
+      resolve(profile) {
         return profile.themeFontColor ? profile.themeFontColor : '#fff'
       }
     },
@@ -56,7 +56,7 @@ export const GraphQLPeerProfile = new GraphQLObjectType<PeerProfile, Context>({
     callToActionImageURL: {type: GraphQLString},
     callToActionImage: {
       type: GraphQLImage,
-      resolve: createProxyingResolver((profile, args, {loaders}, info) => {
+      resolve: createProxyingResolver((profile, args, {loaders}) => {
         return profile.callToActionImageID ? loaders.images.load(profile.callToActionImageID) : null
       })
     }
