@@ -51,20 +51,6 @@ jobs:
         run: |
           kubectl create namespace reviews --dry-run=client -o yaml | kubectl apply -f -
 
-      - name: Helm deploy database
-        run: |
-          cat > values.yaml <<EOF
-          global:
-            postgresql:
-              auth:
-                enablePostgresUser: true
-                postgresPassword: "foo"
-                username: wepublish
-                password: wepublish
-                database: wepublish
-          EOF
-          helm upgrade --install review-${{ github.event.pull_request.number }}-database oci://registry-1.docker.io/bitnamicharts/postgresql -n reviews -f values.yaml --wait
-
       - name: Helm deploy media-server
         run: |
           cat > values.yaml <<EOF
@@ -88,6 +74,20 @@ jobs:
           EOF
           helm upgrade --install review-${{ github.event.pull_request.number }}-media-server karma-media-server --repo https://gitlab.com/api/v4/projects/38941346/packages/helm/stable -n reviews -f values.yaml
 
+      - name: Helm deploy database
+        run: |
+          cat > values.yaml <<EOF
+          global:
+            postgresql:
+              auth:
+                enablePostgresUser: true
+                postgresPassword: "foo"
+                username: wepublish
+                password: wepublish
+                database: wepublish
+          EOF
+          helm upgrade --install review-${{ github.event.pull_request.number }}-database oci://registry-1.docker.io/bitnamicharts/postgresql -n reviews -f values.yaml --wait
+
       - name: Helm deploy app
         run: |
           cat > values.yaml <<EOF
@@ -104,6 +104,9 @@ jobs:
               DATABASE_URL: postgres://postgres:foo@review-${{ github.event.pull_request.number }}-database-postgresql.reviews.svc.cluster.local:5432/wepublish?schema=public
               MEDIA_SERVER_TOKEN: 'media-token'
               JWT_SECRET_KEY: 'jwt-token'
+              SLACK_DEV_MAIL_WEBHOOK_URL: 'SLACK_DEV_MAIL_WEBHOOK_URL'
+              DEFAULT_FROM_ADDRESS: 'dev@wepublish.ch'
+              DEFAULT_REPLY_TO_ADDRESS: 'dev@wepublish.ch'
           editor:
             env:
               PEER_BY_DEFAULT: "true"
@@ -114,7 +117,9 @@ jobs:
             image: ${{ inputs.storybook_image }}
             url: ${STORYBOOK_URL}
           EOF
-          helm upgrade --install review-${{ github.event.pull_request.number }}-app ./helm/charts/wepublish -n reviews -f values.yaml --wait
+          export POD_NAME=review-${{ github.event.pull_request.number }}-app
+          if [[ ! -z $(helm ls -a -n reviews |grep ${POD_NAME} |grep -v "deployed ") ]]; then helm uninstall -n reviews ${POD_NAME}; fi
+          helm upgrade --install ${POD_NAME} ./helm/charts/wepublish -n reviews -f values.yaml --wait
           
 
   notify:

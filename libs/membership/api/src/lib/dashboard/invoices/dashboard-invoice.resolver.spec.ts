@@ -84,6 +84,7 @@ describe('DashboardInvoiceResolver', () => {
       {
         dueAt: new Date('2023-01-01 12:00:00'),
         paidAt: new Date('2023-01-01 12:00:00'),
+        scheduledDeactivationAt: new Date('2023-01-07 12:00:00'),
         mail: 'foo@wepublish.ch',
         items: {
           createMany: {
@@ -105,6 +106,7 @@ describe('DashboardInvoiceResolver', () => {
       {
         dueAt: new Date('2023-01-01 12:00:00'),
         paidAt: new Date('2023-01-02 12:00:00'),
+        scheduledDeactivationAt: new Date('2023-01-07 12:00:00'),
         mail: 'foo@wepublish.ch',
         items: {
           createMany: {
@@ -121,6 +123,7 @@ describe('DashboardInvoiceResolver', () => {
       {
         dueAt: new Date('2023-01-01 12:00:00'),
         paidAt: new Date('2023-02-01 12:00:00'),
+        scheduledDeactivationAt: new Date('2023-01-07 12:00:00'),
         mail: 'foo@wepublish.ch',
         items: {
           createMany: {
@@ -137,6 +140,7 @@ describe('DashboardInvoiceResolver', () => {
       {
         dueAt: new Date('2023-01-01 12:00:00'),
         paidAt: new Date('2023-01-01 12:00:00'),
+        scheduledDeactivationAt: new Date('2023-01-07 12:00:00'),
         mail: 'foo@wepublish.ch',
         manuallySetAsPaidByUserId: '123',
         items: {
@@ -153,6 +157,7 @@ describe('DashboardInvoiceResolver', () => {
       },
       {
         dueAt: new Date('2023-01-01 12:00:00'),
+        scheduledDeactivationAt: new Date('2023-01-07 12:00:00'),
         mail: 'foo@wepublish.ch',
         items: {
           createMany: {
@@ -192,6 +197,7 @@ describe('DashboardInvoiceResolver', () => {
       {
         dueAt: new Date('2023-01-01 12:00:00'),
         paidAt: new Date('2023-01-01 12:00:00'),
+        scheduledDeactivationAt: new Date('2023-01-07 12:00:00'),
         mail: 'foo@wepublish.ch',
         items: {
           createMany: {
@@ -212,6 +218,7 @@ describe('DashboardInvoiceResolver', () => {
       },
       {
         dueAt: new Date('2023-01-02 12:00:00'),
+        scheduledDeactivationAt: new Date('2023-01-07 12:00:00'),
         mail: 'foo@wepublish.ch',
         items: {
           createMany: {
@@ -227,6 +234,7 @@ describe('DashboardInvoiceResolver', () => {
       },
       {
         dueAt: new Date('2023-02-01 12:00:00'),
+        scheduledDeactivationAt: new Date('2023-01-07 12:00:00'),
         mail: 'foo@wepublish.ch',
         items: {
           createMany: {
@@ -242,6 +250,7 @@ describe('DashboardInvoiceResolver', () => {
       },
       {
         dueAt: new Date('2023-01-01 12:00:00'),
+        scheduledDeactivationAt: new Date('2023-01-07 12:00:00'),
         mail: 'foo@wepublish.ch',
         manuallySetAsPaidByUserId: '123',
         items: {
@@ -260,6 +269,7 @@ describe('DashboardInvoiceResolver', () => {
         dueAt: new Date('2023-01-01 12:00:00'),
         mail: 'foo@wepublish.ch',
         canceledAt: new Date('2023-01-01 11:00:00'),
+        scheduledDeactivationAt: new Date('2023-01-07 12:00:00'),
         items: {
           createMany: {
             data: [

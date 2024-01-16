@@ -246,7 +246,7 @@ export function RatingAnswers({answers, onDeleteAnswer, onUpdateAnswer}: PollAns
   const {t} = useTranslation()
 
   return (
-    <>
+    <div>
       {answers?.map(answer => (
         <AnswerGrid key={answer.id}>
           <Form.Control
@@ -277,7 +277,7 @@ export function RatingAnswers({answers, onDeleteAnswer, onUpdateAnswer}: PollAns
           </IconButtonTooltip>
         </AnswerGrid>
       ))}
-    </>
+    </div>
   )
 }
 

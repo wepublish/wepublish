@@ -310,10 +310,10 @@ function SettingList() {
     {} as Record<SettingName, unknown>
   )
 
-  const valueText = (value: any): string => {
+  const valueText = (value: boolean | number): string => {
     if (value === true) return t('settingList.enabled')
     if (value === false) return t('settingList.disabled')
-    return value
+    return value.toString()
   }
 
   return (

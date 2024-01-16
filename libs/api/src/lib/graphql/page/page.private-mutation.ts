@@ -137,6 +137,7 @@ export const duplicatePage = async (
 
   const input: Prisma.PageRevisionCreateInput = {
     ...pageRevision,
+    blocks: pageRevision.blocks || Prisma.JsonNull,
     properties: {
       createMany: {
         data: duplicatedProperties
@@ -230,6 +231,7 @@ export const unpublishPage = async (
         upsert: {
           create: {
             ...revision,
+            blocks: revision.blocks || Prisma.JsonNull,
             publishAt: null,
             publishedAt: null,
             updatedAt: null,
@@ -241,6 +243,7 @@ export const unpublishPage = async (
           },
           update: {
             ...revision,
+            blocks: revision.blocks || Prisma.JsonNull,
             publishAt: null,
             publishedAt: null,
             updatedAt: null,
@@ -381,6 +384,7 @@ export const publishPage = async (
           upsert: {
             create: {
               ...revision,
+              blocks: revision.blocks || Prisma.JsonNull,
               publishAt,
               publishedAt: publishedAt ?? page?.published?.publishedAt ?? publishAt,
               updatedAt: updatedAt ?? publishAt,
@@ -392,6 +396,7 @@ export const publishPage = async (
             },
             update: {
               ...revision,
+              blocks: revision.blocks || Prisma.JsonNull,
               publishAt,
               publishedAt: publishedAt ?? page?.published?.publishedAt ?? publishAt,
               updatedAt: updatedAt ?? publishAt,
@@ -437,6 +442,7 @@ export const publishPage = async (
         upsert: {
           create: {
             ...revision,
+            blocks: revision.blocks || Prisma.JsonNull,
             publishedAt: publishedAt ?? page.published?.publishAt ?? publishAt,
             updatedAt: updatedAt ?? publishAt,
             publishAt: null,
@@ -448,6 +454,7 @@ export const publishPage = async (
           },
           update: {
             ...revision,
+            blocks: revision.blocks || Prisma.JsonNull,
             publishedAt: publishedAt ?? page.published?.publishAt ?? publishAt,
             updatedAt: updatedAt ?? publishAt,
             publishAt: null,

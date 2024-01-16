@@ -1,3 +1,4 @@
+import {ApolloError} from '@apollo/client'
 import {
   FullUserFragment,
   useDeleteUserMutation,
@@ -134,6 +135,40 @@ function UserList() {
     }
     // no subscription
     return <>{t('userList.overview.noSubscriptions')}</>
+  }
+
+  const handleDeleteUser = async () => {
+    if (!currentUser) return
+
+    try {
+      await deleteUser({
+        variables: {id: currentUser.id}
+      })
+      toaster.push(
+        <Message type="success" showIcon closable duration={2000}>
+          {t('toast.deletedSuccess')}
+        </Message>
+      )
+      setConfirmationDialogOpen(false)
+      refetch()
+    } catch (e) {
+      if (e instanceof ApolloError) {
+        if (e.message.includes('Foreign key constraint')) {
+          toaster.push(
+            <Message type="error" showIcon closable duration={2000}>
+              {t('userCreateOrEditView.foreignKeySubscription')}
+            </Message>
+          )
+          setConfirmationDialogOpen(false)
+        } else {
+          toaster.push(
+            <Message type="error" showIcon closable duration={2000}>
+              {t('userCreateOrEditView.errorOnUpdate', {error: e})}
+            </Message>
+          )
+        }
+      }
+    }
   }
 
   return (
@@ -320,23 +355,7 @@ function UserList() {
         </Modal.Body>
 
         <Modal.Footer>
-          <Button
-            appearance="primary"
-            disabled={isDeleting}
-            onClick={async () => {
-              if (!currentUser) return
-
-              await deleteUser({
-                variables: {id: currentUser.id}
-              })
-              toaster.push(
-                <Message type="success" showIcon closable duration={2000}>
-                  {t('toast.deletedSuccess')}
-                </Message>
-              )
-              setConfirmationDialogOpen(false)
-              refetch()
-            }}>
+          <Button appearance="primary" disabled={isDeleting} onClick={handleDeleteUser}>
             {t('userCreateOrEditView.confirm')}
           </Button>
           <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">

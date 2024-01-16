@@ -2,32 +2,37 @@ import {ApolloDriver, ApolloDriverConfig} from '@nestjs/apollo'
 import {Global, Module} from '@nestjs/common'
 import {ConfigModule, ConfigService} from '@nestjs/config'
 import {GraphQLModule} from '@nestjs/graphql'
+import {ScheduleModule} from '@nestjs/schedule'
 import {
   AgendaBaselService,
-  KulturZueriService,
   AuthenticationModule,
   ConsentModule,
   DashboardModule,
   EventsImportModule,
+  GraphQLRichText,
   KarmaMediaAdapter,
+  KulturZueriService,
+  MailchimpMailProvider,
+  MailgunMailProvider,
+  MailsModule,
   MediaAdapterService,
-  PermissionModule,
-  SettingModule
-} from '@wepublish/api'
-import {
+  MembershipModule,
   PaymentProvider,
   PaymentsModule,
   PayrexxPaymentProvider,
   PayrexxSubscriptionPaymentProvider,
+  PermissionModule,
+  SettingModule,
   StripeCheckoutPaymentProvider,
   StripePaymentProvider,
   BexioPaymentProvider
-} from '@wepublish/payments'
+} from '@wepublish/api'
 import {ApiModule, PrismaModule, PrismaService} from '@wepublish/nest-modules'
-import {GraphQLRichText} from '@wepublish/richtext/api'
-import {URL} from 'url'
-import {JobsModule} from '@wepublish/jobs'
 import bodyParser from 'body-parser'
+import FormData from 'form-data'
+import Mailgun from 'mailgun.js'
+import {URL} from 'url'
+import {SlackMailProvider} from '../app/slack-mail-provider'
 
 @Global()
 @Module({
@@ -40,6 +45,73 @@ import bodyParser from 'body-parser'
       path: 'v2',
       cache: 'bounded',
       playground: process.env.NODE_ENV === 'development'
+    }),
+    PrismaModule,
+    MailsModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: (config: ConfigService) => {
+        let mailProvider
+        if (
+          config.get('MAILGUN_API_KEY') &&
+          config.get('MAILGUN_BASE_DOMAIN') &&
+          config.get('MAILGUN_MAIL_DOMAIN')
+        ) {
+          const mailgunClient = new Mailgun(FormData).client({
+            username: 'api',
+            key: config.get('MAILGUN_API_KEY')
+          })
+          mailProvider = new MailgunMailProvider({
+            id: 'mailgun',
+            name: 'Mailgun',
+            fromAddress:
+              config.get('MAILGUN_FROM_ADDRESS') ||
+              config.get('DEFAULT_FROM_ADDRESS') ||
+              'dev@wepublish.ch',
+            webhookEndpointSecret: config.get('MAILGUN_WEBHOOK_SECRET') || '',
+            baseDomain: config.get('MAILGUN_BASE_DOMAIN'),
+            mailDomain: config.get('MAILGUN_MAIL_DOMAIN'),
+            apiKey: config.get('MAILGUN_API_KEY'),
+            incomingRequestHandler: bodyParser.json(),
+            mailgunClient
+          })
+        }
+
+        if (config.get('MAILCHIMP_API_KEY')) {
+          mailProvider = new MailchimpMailProvider({
+            id: 'mailchimp',
+            name: 'Mailchimp',
+            fromAddress:
+              config.get('MAILCHIMP_FROM_ADDRESS') ||
+              config.get('DEFAULT_FROM_ADDRESS') ||
+              'dev@wepublish.ch',
+            webhookEndpointSecret: config.get('MAILCHIMP_WEBHOOK_SECRET') || '',
+            apiKey: config.get('MAILCHIMP_API_KEY'),
+            baseURL: '',
+            incomingRequestHandler: bodyParser.urlencoded({extended: true})
+          })
+        }
+
+        if (config.get('SLACK_DEV_MAIL_WEBHOOK_URL')) {
+          mailProvider = new SlackMailProvider({
+            id: 'slackMail',
+            name: 'Slack Mail',
+            fromAddress: 'fakeMail@wepublish.media',
+            webhookURL: config.get('SLACK_DEV_MAIL_WEBHOOK_URL')
+          })
+        }
+
+        if (!mailProvider) {
+          throw new Error('A MailProvider must be configured.')
+        }
+
+        return {
+          defaultFromAddress: config.getOrThrow('DEFAULT_FROM_ADDRESS'),
+          defaultReplyToAddress: config.getOrThrow('DEFAULT_REPLY_TO_ADDRESS'),
+          mailProvider
+        }
+      },
+      inject: [ConfigService],
+      global: true
     }),
     PaymentsModule.registerAsync({
       imports: [ConfigModule, PrismaModule],
@@ -159,6 +231,7 @@ import bodyParser from 'body-parser'
       global: true
     }),
     ApiModule,
+    MembershipModule,
     DashboardModule,
     AuthenticationModule,
     PermissionModule,
@@ -171,15 +244,10 @@ import bodyParser from 'body-parser'
       ],
       inject: [AgendaBaselService, KulturZueriService]
     }),
-    JobsModule.registerAsync({
-      imports: [ConfigModule],
-      useFactory: (config: ConfigService) => ({
-        databaseUrl: config.getOrThrow('DATABASE_URL')
-      }),
-      inject: [ConfigService]
-    }),
+    ScheduleModule.forRoot(),
     ConfigModule.forRoot()
   ],
+  exports: [MediaAdapterService],
   providers: [
     {
       provide: MediaAdapterService,
@@ -194,7 +262,6 @@ import bodyParser from 'body-parser'
       },
       inject: [ConfigService]
     }
-  ],
-  exports: [MediaAdapterService]
+  ]
 })
 export class AppModule {}

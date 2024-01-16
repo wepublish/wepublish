@@ -15,10 +15,10 @@ import {
   getOperationNameFromDocument,
   PermissionControl,
   RichTextBlock,
-  slugify,
   toggleRequiredLabel,
   useAuthorisation
 } from '@wepublish/ui/editor'
+import {slugify} from '@wepublish/utils'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Drawer, Form as RForm, Message, Panel, Schema, toaster} from 'rsuite'
@@ -282,7 +282,10 @@ function PeerEditPanel({id, hostURL, onClose, onSave}: PeerEditPanelProps) {
                   {profile?.callToActionURL}
                 </DescriptionListItem>
                 <DescriptionListItem label={t('peerList.panels.callToActionImage')}>
-                  <img src={profile?.callToActionImage?.thumbURL || undefined} />
+                  <img
+                    src={profile?.callToActionImage?.thumbURL || undefined}
+                    alt={t('peerList.panels.callToActionImage')}
+                  />
                 </DescriptionListItem>
                 <DescriptionListItem label={t('peerList.panels.callToActionImageURL')}>
                   {profile?.callToActionImageURL}
