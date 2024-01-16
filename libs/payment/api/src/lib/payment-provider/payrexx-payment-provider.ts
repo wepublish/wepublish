@@ -96,10 +96,13 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
 
   async createIntent(createPaymentIntentProps: CreatePaymentIntentProps): Promise<Intent> {
     if (createPaymentIntentProps.customerID) {
-      return this.createOffsiteTransactionIntent(createPaymentIntentProps)
-    } else {
-      return this.createGatewayIntent(createPaymentIntentProps)
+      const offsiteTransaction = await this.createOffsiteTransactionIntent(createPaymentIntentProps)
+      if (offsiteTransaction.state === 'paid') {
+        return offsiteTransaction
+      }
     }
+
+    return this.createGatewayIntent(createPaymentIntentProps)
   }
 
   async checkIntentStatus({intentID}: CheckIntentProps): Promise<IntentState> {
@@ -140,11 +143,12 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
         referenceId: paymentID
       }
     )
+
     return {
       intentID: transaction.id.toString(),
       intentSecret: successURL,
       intentData: JSON.stringify(transaction),
-      state: PaymentState.submitted
+      state: this.mapPayrexxEventToPaymentStatus(transaction.status)
     }
   }
 

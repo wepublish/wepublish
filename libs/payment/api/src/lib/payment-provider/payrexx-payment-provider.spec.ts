@@ -178,5 +178,38 @@ describe('PayrexxPaymentProvider', () => {
       expect(result.intentID).toBe('2')
       expect(result.intentSecret).toBe('https://success')
     })
+
+    it('should create gateway for user with customer id and unsuccessful transaction', async () => {
+      payrexx.transactionClient.chargePreAuthorizedTransaction = jest.fn().mockResolvedValue({
+        id: 3,
+        status: 'declined'
+      } as Partial<Transaction>)
+
+      payrexx.gatewayClient.createGateway = jest.fn().mockResolvedValue({
+        id: 4,
+        link: 'https://payrexx/gateway-link'
+      } as Partial<Gateway>)
+
+      const result = await payrexx.createIntent({
+        customerID: '123',
+        invoice: {
+          items: [
+            {
+              amount: 120,
+              quantity: 3
+            }
+          ]
+        } as unknown as InvoiceWithItems,
+        paymentID: '456',
+        successURL: 'https://success',
+        failureURL: 'https://failure',
+        saveCustomer: false
+      })
+
+      expect(payrexx.gatewayClient.createGateway).toBeCalled()
+      expect(payrexx.transactionClient.chargePreAuthorizedTransaction).toBeCalled()
+      expect(result.intentID).toBe('4')
+      expect(result.intentSecret).toBe('https://payrexx/gateway-link')
+    })
   })
 })
