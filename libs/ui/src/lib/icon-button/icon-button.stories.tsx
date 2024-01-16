@@ -1,7 +1,8 @@
-import {Meta} from '@storybook/react'
-import {IconButton as IconButtonCmp} from './icon-button'
-import {MdAdd} from 'react-icons/md'
 import {Link, Stack} from '@mui/material'
+import {Meta} from '@storybook/react'
+import {MdAdd} from 'react-icons/md'
+
+import {IconButton as IconButtonCmp} from './icon-button'
 
 export default {
   component: IconButtonCmp,
