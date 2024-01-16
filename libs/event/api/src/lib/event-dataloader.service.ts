@@ -25,15 +25,15 @@ export class EventDataloaderService implements Primeable<Event> {
 
   constructor(private prisma: PrismaClient) {}
 
-  public prime(...parameters: Parameters<(typeof this.dataloader)['prime']>) {
+  public prime(...parameters: Parameters<DataLoader<string, Event | null>['prime']>) {
     return this.dataloader.prime(...parameters)
   }
 
-  public load(...parameters: Parameters<(typeof this.dataloader)['load']>) {
+  public load(...parameters: Parameters<DataLoader<string, Event | null>['load']>) {
     return this.dataloader.load(...parameters)
   }
 
-  public loadMany(...parameters: Parameters<(typeof this.dataloader)['loadMany']>) {
+  public loadMany(...parameters: Parameters<DataLoader<string, Event | null>['loadMany']>) {
     return this.dataloader.loadMany(...parameters)
   }
 }
