@@ -11,7 +11,7 @@ import {
 } from 'graphql'
 import {Context} from '../../context'
 import {GraphQLPageInfo} from '../common'
-import {TagSort} from './tag.private-query'
+import {TagSort} from './tag.query'
 
 export const GraphQLTagType = new GraphQLEnumType({
   name: 'TagType',
@@ -24,7 +24,7 @@ export const GraphQLTagType = new GraphQLEnumType({
 export const GraphQLTag = new GraphQLObjectType<Tag, Context>({
   name: 'Tag',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLID)},
     tag: {type: GraphQLString},
     type: {type: GraphQLTagType}
   }
@@ -33,9 +33,9 @@ export const GraphQLTag = new GraphQLObjectType<Tag, Context>({
 export const GraphQLTagConnection = new GraphQLObjectType({
   name: 'TagConnection',
   fields: {
-    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLTag)))},
-    pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)},
-    totalCount: {type: GraphQLNonNull(GraphQLInt)}
+    nodes: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLTag)))},
+    pageInfo: {type: new GraphQLNonNull(GraphQLPageInfo)},
+    totalCount: {type: new GraphQLNonNull(GraphQLInt)}
   }
 })
 

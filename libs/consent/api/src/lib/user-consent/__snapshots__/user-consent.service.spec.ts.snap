@@ -1,0 +1,175 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UserConsentService should create a user consent 1`] = `
+[
+  {
+    "id": "0c6e7727-711b-40ee-b8b8-22170a085c51",
+    "userId": "clf870cla0719q1rx6vg0y2rj",
+    "value": true,
+  },
+]
+`;
+
+exports[`UserConsentService should create a user consent 2`] = `
+{
+  "data": {
+    "consentId": "2152b9c8-438b-4f4a-a066-ebe85f98f607",
+    "userId": "clf870cla0719q1rx6vg0y2rj",
+    "value": true,
+  },
+  "include": {
+    "consent": true,
+    "user": true,
+  },
+}
+`;
+
+exports[`UserConsentService should filter user consents 1`] = `
+[
+  {
+    "consent": {
+      "id": "448c86d8-9df1-4836-9ae9-aa2668ef9dcd",
+      "name": "Newsletter",
+      "slug": "newsletter-aaa",
+    },
+    "createdAt": "2023-03-17T12:08:17.277Z",
+    "id": "1572bbfc-a03e-4586-b6a5-e9dab21d54d3",
+    "modifiedAt": "2023-03-17T12:08:17.278Z",
+    "user": {
+      "email": "asdf@asdf.pl",
+      "firstName": null,
+      "id": "clfb7nce50264cvrxlliyxung",
+      "name": "ssss",
+    },
+    "value": true,
+  },
+  {
+    "consent": {
+      "id": "4e70d86a-e3d9-4487-9d98-6ea8e665ee46",
+      "name": "new 2",
+      "slug": "new slug 2",
+    },
+    "createdAt": "2023-03-17T11:00:48.580Z",
+    "id": "216d312d-f26f-4692-ad51-1591ca425d97",
+    "modifiedAt": "2023-03-17T11:40:21.092Z",
+    "user": {
+      "email": "editor@wepublish.ch",
+      "firstName": null,
+      "id": "clesor2a50105kgrxh0kyxmxy",
+      "name": "Editor User",
+    },
+    "value": false,
+  },
+]
+`;
+
+exports[`UserConsentService should filter user consents 2`] = `
+{
+  "include": {
+    "consent": true,
+    "user": true,
+  },
+  "orderBy": {
+    "createdAt": "desc",
+  },
+  "where": {
+    "consent": {
+      "name": undefined,
+      "slug": undefined,
+    },
+    "value": undefined,
+  },
+}
+`;
+
+exports[`UserConsentService should get a single user consent by id 1`] = `
+[
+  {
+    "consent": {
+      "id": "448c86d8-9df1-4836-9ae9-aa2668ef9dcd",
+      "name": "Newsletter",
+      "slug": "newsletter-aaa",
+    },
+    "createdAt": "2023-03-17T12:08:17.277Z",
+    "id": "1572bbfc-a03e-4586-b6a5-e9dab21d54d3",
+    "modifiedAt": "2023-03-17T12:08:17.278Z",
+    "user": {
+      "email": "asdf@asdf.pl",
+      "firstName": null,
+      "id": "clfb7nce50264cvrxlliyxung",
+      "name": "ssss",
+    },
+    "value": true,
+  },
+]
+`;
+
+exports[`UserConsentService should get a single user consent by id 2`] = `
+{
+  "include": {
+    "consent": true,
+    "user": true,
+  },
+  "where": {
+    "id": "1572bbfc-a03e-4586-b6a5-e9dab21d54d3",
+  },
+}
+`;
+
+exports[`UserConsentService should get user consents 1`] = `
+[
+  {
+    "consent": {
+      "id": "448c86d8-9df1-4836-9ae9-aa2668ef9dcd",
+      "name": "Newsletter",
+      "slug": "newsletter-aaa",
+    },
+    "createdAt": "2023-03-17T12:08:17.277Z",
+    "id": "1572bbfc-a03e-4586-b6a5-e9dab21d54d3",
+    "modifiedAt": "2023-03-17T12:08:17.278Z",
+    "user": {
+      "email": "asdf@asdf.pl",
+      "firstName": null,
+      "id": "clfb7nce50264cvrxlliyxung",
+      "name": "ssss",
+    },
+    "value": true,
+  },
+  {
+    "consent": {
+      "id": "4e70d86a-e3d9-4487-9d98-6ea8e665ee46",
+      "name": "new 2",
+      "slug": "new slug 2",
+    },
+    "createdAt": "2023-03-17T11:00:48.580Z",
+    "id": "216d312d-f26f-4692-ad51-1591ca425d97",
+    "modifiedAt": "2023-03-17T11:40:21.092Z",
+    "user": {
+      "email": "editor@wepublish.ch",
+      "firstName": null,
+      "id": "clesor2a50105kgrxh0kyxmxy",
+      "name": "Editor User",
+    },
+    "value": false,
+  },
+]
+`;
+
+exports[`UserConsentService should get user consents 2`] = `
+{
+  "include": {
+    "consent": true,
+    "user": true,
+  },
+  "orderBy": {
+    "createdAt": "desc",
+  },
+  "where": {
+    "consent": {
+      "name": undefined,
+      "slug": undefined,
+    },
+    "value": undefined,
+  },
+}
+`;

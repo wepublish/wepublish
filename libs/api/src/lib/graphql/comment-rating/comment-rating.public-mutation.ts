@@ -5,12 +5,13 @@ import {
   InvalidStarRatingValueError,
   NotFound
 } from '../../error'
-import {SettingName} from '../../db/setting'
+import {SettingName} from '@wepublish/settings/api'
+import {mapCommentToPublicComment} from '../comment/comment.public-queries'
 
 export const validateCommentRatingValue = (type: RatingSystemType, value: number) => {
   switch (type) {
     case RatingSystemType.star: {
-      if (value < 0 || value > 5) {
+      if (value <= 0 || value > 5) {
         throw new InvalidStarRatingValueError()
       }
     }
@@ -25,6 +26,7 @@ export const rateComment = async (
   optionalAuthenticateUser: Context['optionalAuthenticateUser'],
   commentRatingSystemAnswer: PrismaClient['commentRatingSystemAnswer'],
   commentRating: PrismaClient['commentRating'],
+  commentClient: PrismaClient['comment'],
   settingsClient: PrismaClient['setting']
 ) => {
   const session = optionalAuthenticateUser()
@@ -34,6 +36,7 @@ export const rateComment = async (
       name: SettingName.ALLOW_GUEST_COMMENT_RATING
     }
   })
+
   if (!session && guestRatingSetting?.value !== true) {
     throw new AnonymousCommentRatingDisabledError()
   }
@@ -50,7 +53,7 @@ export const rateComment = async (
 
   validateCommentRatingValue(answer.type, value)
 
-  return commentRating.upsert({
+  await commentRating.upsert({
     where: {
       answerId_commentId_userId: {
         answerId,
@@ -70,4 +73,16 @@ export const rateComment = async (
       fingerprint
     }
   })
+
+  const comment = await commentClient.findFirst({
+    where: {
+      id: commentId
+    },
+    include: {
+      revisions: {orderBy: {createdAt: 'asc'}},
+      overriddenRatings: true
+    }
+  })
+
+  return mapCommentToPublicComment(comment)
 }

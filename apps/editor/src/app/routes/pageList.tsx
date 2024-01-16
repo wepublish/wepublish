@@ -11,6 +11,24 @@ import {
   usePageListQuery,
   useUnpublishPageMutation
 } from '@wepublish/editor/api'
+import {
+  createCheckedPermissionComponent,
+  DEFAULT_MAX_TABLE_PAGES,
+  DEFAULT_TABLE_PAGE_SIZES,
+  DescriptionList,
+  DescriptionListItem,
+  IconButtonCell,
+  IconButtonTooltip,
+  ListFilters,
+  ListViewActions,
+  ListViewContainer,
+  ListViewHeader,
+  mapTableSortTypeToGraphQLSortOrder,
+  PermissionControl,
+  StatusBadge,
+  Table,
+  TableWrapper
+} from '@wepublish/ui/editor'
 import {useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdComment, MdContentCopy, MdDelete, MdPreview, MdUnpublished} from 'react-icons/md'
@@ -18,25 +36,7 @@ import {Link, useNavigate} from 'react-router-dom'
 import {Button, IconButton, Message, Modal, Pagination, Table as RTable} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {PagePreviewLinkPanel} from '../panel/pagePreviewLinkPanel'
-import {
-  IconButtonCell,
-  ListFilters,
-  ListViewActions,
-  ListViewContainer,
-  ListViewHeader,
-  StatusBadge,
-  Table,
-  TableWrapper
-} from '../ui/listView'
-import {
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
-  mapTableSortTypeToGraphQLSortOrder
-} from '../utility'
 
 interface State {
   state: string
@@ -457,7 +457,7 @@ function PageList() {
 
               setConfirmationDialogOpen(false)
             }}
-            color="red">
+            appearance="primary">
             {t('pages.panels.confirm')}
           </Button>
           <Button onClick={() => setConfirmationDialogOpen(false)} appearance="subtle">

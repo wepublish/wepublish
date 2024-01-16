@@ -2,7 +2,8 @@ import {Page, Prisma, PrismaClient} from '@prisma/client'
 import {Context} from '../../context'
 import {PageWithRevisions} from '../../db/page'
 import {DuplicatePageSlugError, NotFound} from '../../error'
-import {authorise, CanCreatePage, CanDeletePage, CanPublishPage} from '../permissions'
+import {authorise} from '../permissions'
+import {CanCreatePage, CanDeletePage, CanPublishPage} from '@wepublish/permissions/api'
 
 export const deletePageById = async (
   id: string,
@@ -136,6 +137,7 @@ export const duplicatePage = async (
 
   const input: Prisma.PageRevisionCreateInput = {
     ...pageRevision,
+    blocks: pageRevision.blocks || Prisma.JsonNull,
     properties: {
       createMany: {
         data: duplicatedProperties
@@ -229,6 +231,7 @@ export const unpublishPage = async (
         upsert: {
           create: {
             ...revision,
+            blocks: revision.blocks || Prisma.JsonNull,
             publishAt: null,
             publishedAt: null,
             updatedAt: null,
@@ -240,6 +243,7 @@ export const unpublishPage = async (
           },
           update: {
             ...revision,
+            blocks: revision.blocks || Prisma.JsonNull,
             publishAt: null,
             publishedAt: null,
             updatedAt: null,
@@ -380,6 +384,7 @@ export const publishPage = async (
           upsert: {
             create: {
               ...revision,
+              blocks: revision.blocks || Prisma.JsonNull,
               publishAt,
               publishedAt: publishedAt ?? page?.published?.publishedAt ?? publishAt,
               updatedAt: updatedAt ?? publishAt,
@@ -391,6 +396,7 @@ export const publishPage = async (
             },
             update: {
               ...revision,
+              blocks: revision.blocks || Prisma.JsonNull,
               publishAt,
               publishedAt: publishedAt ?? page?.published?.publishedAt ?? publishAt,
               updatedAt: updatedAt ?? publishAt,
@@ -436,6 +442,7 @@ export const publishPage = async (
         upsert: {
           create: {
             ...revision,
+            blocks: revision.blocks || Prisma.JsonNull,
             publishedAt: publishedAt ?? page.published?.publishAt ?? publishAt,
             updatedAt: updatedAt ?? publishAt,
             publishAt: null,
@@ -447,6 +454,7 @@ export const publishPage = async (
           },
           update: {
             ...revision,
+            blocks: revision.blocks || Prisma.JsonNull,
             publishedAt: publishedAt ?? page.published?.publishAt ?? publishAt,
             updatedAt: updatedAt ?? publishAt,
             publishAt: null,

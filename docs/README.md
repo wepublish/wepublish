@@ -25,20 +25,14 @@
 
 ## Table of Contents
 
-- [Code Organization](CodeOrganization.md)
 - [Coding Style Guide](CodingStyleGuide.md)
+- [Code Organization](CodeOrganization.md)
 - [Prisma](prisma.md)
+- [Write Automated Tests](testing.md)
 - [Setup Commenting](commenting.md)
 - [Email Templates](emailtemplates.md)
 - [Deployments](deployments.md)
 - [Releases](Releases.md)
-
-## Automated Testing
-
-It might happen, that your tests are failing. Try to update your snapshots
-by running (eventually in the package in question) `npm run test -- -u`
-
-For more information: [https://jestjs.io/docs/cli#--updatesnapshot](https://jestjs.io/docs/cli#--updatesnapshot)
 
 ## apps/editor
 
@@ -48,7 +42,7 @@ Prerequisite: In the API (packages/api) exists a corresponding GraphQL endpoint.
 
 1. In `editor/src/app/api` you have to create a corresponding graphql file or define your mutation or query in an existing one.
 2. Start the API (`npm run watch`)
-3. Navigate in your terminal to `apps/editor` and run `npx nx generate-api editor`
+3. In your terminal run `npx nx generate-api`
 4. Now the file `index.ts` will be generated automatically in `apps/editor/src/app/api`
 5. Now you can import your desired endpoint in your .tsx file. See for example `subscriptionEditPanel.tsx`
 

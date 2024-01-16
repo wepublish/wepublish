@@ -8,118 +8,118 @@ exports[`Author Edit Panel should allow a new author to be created  1`] = `
 @@ -34,13 +34,14 @@
         </h4>
         <div
-          class=\\"rs-drawer-actions\\"
+          class="rs-drawer-actions"
         >
           <button
--           aria-disabled=\\"false\\"
--           class=\\"rs-btn rs-btn-primary\\"
-+           aria-disabled=\\"true\\"
-+           class=\\"rs-btn rs-btn-primary rs-btn-disabled\\"
-            data-testid=\\"saveButton\\"
-+           disabled=\\"\\"
-            type=\\"submit\\"
+-           aria-disabled="false"
+-           class="rs-btn rs-btn-primary"
++           aria-disabled="true"
++           class="rs-btn rs-btn-primary rs-btn-disabled"
+            data-testid="saveButton"
++           disabled=""
+            type="submit"
           >
             create
             <span
-              class=\\"rs-ripple-pond\\"
+              class="rs-ripple-pond"
 @@ -94,14 +95,15 @@
                 >
                   <input
-                    aria-describedby=\\"name-help-text\\"
-                    aria-labelledby=\\"name-control-label\\"
-                    class=\\"rs-input\\"
-+                   disabled=\\"\\"
-                    id=\\"name\\"
-                    name=\\"name\\"
-                    type=\\"text\\"
--                   value=\\"\\"
-+                   value=\\"Clark Kent\\"
+                    aria-describedby="name-help-text"
+                    aria-labelledby="name-control-label"
+                    class="rs-input"
++                   disabled=""
+                    id="name"
+                    name="name"
+                    type="text"
+-                   value=""
++                   value="Clark Kent"
                   />
                 </div>
               </div>
               <div
-                class=\\"rs-form-group\\"
+                class="rs-form-group"
 @@ -119,10 +121,11 @@
                 >
                   <input
-                    aria-describedby=\\"jobTitle-help-text\\"
-                    aria-labelledby=\\"jobTitle-control-label\\"
-                    class=\\"rs-input\\"
-+                   disabled=\\"\\"
-                    id=\\"jobTitle\\"
-                    name=\\"authors.panels.jobTitle\\"
-                    type=\\"text\\"
-                    value=\\"\\"
+                    aria-describedby="jobTitle-help-text"
+                    aria-labelledby="jobTitle-control-label"
+                    class="rs-input"
++                   disabled=""
+                    id="jobTitle"
+                    name="authors.panels.jobTitle"
+                    type="text"
+                    value=""
                   />
-@@ -208,12 +211,13 @@
+@@ -227,12 +230,13 @@
                   >
                     <div
-                      class=\\"css-1ax8cc3-DragHandleWrapper e1g7b9o11\\"
+                      class="css-12frltk"
                     >
                       <button
--                       aria-disabled=\\"false\\"
--                       class=\\"rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default\\"
-+                       aria-disabled=\\"true\\"
-+                       class=\\"rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default rs-btn-disabled\\"
-+                       disabled=\\"\\"
-                        type=\\"button\\"
+-                       aria-disabled="false"
+-                       class="rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default"
++                       aria-disabled="true"
++                       class="rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default rs-btn-disabled"
++                       disabled=""
+                        type="button"
                       >
                         <svg
-                          fill=\\"currentColor\\"
-                          height=\\"1em\\"
-@@ -311,12 +315,13 @@
+                          fill="currentColor"
+                          height="1em"
+@@ -330,12 +334,13 @@
                     </div>
                     <div
-                      class=\\"css-1qpz4yt-IconButtonWrapper e1g7b9o14\\"
+                      class="css-17nfp2s"
                     >
                       <button
--                       aria-disabled=\\"false\\"
--                       class=\\"rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default\\"
-+                       aria-disabled=\\"true\\"
-+                       class=\\"rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default rs-btn-disabled\\"
-+                       disabled=\\"\\"
-                        type=\\"button\\"
+-                       aria-disabled="false"
+-                       class="rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default"
++                       aria-disabled="true"
++                       class="rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default rs-btn-disabled"
++                       disabled=""
+                        type="button"
                       >
                         <svg
-                          fill=\\"currentColor\\"
-                          height=\\"1em\\"
-@@ -343,13 +348,14 @@
+                          fill="currentColor"
+                          height="1em"
+@@ -362,13 +367,14 @@
                         </span>
                       </button>
                     </div>
                   </div>
                   <button
--                   aria-disabled=\\"false\\"
--                   class=\\"rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default\\"
-+                   aria-disabled=\\"true\\"
-+                   class=\\"rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default rs-btn-disabled\\"
-                    data-testid=\\"addProperty\\"
-+                   disabled=\\"\\"
-                    type=\\"button\\"
+-                   aria-disabled="false"
+-                   class="rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default"
++                   aria-disabled="true"
++                   class="rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default rs-btn-disabled"
+                    data-testid="addProperty"
++                   disabled=""
+                    type="button"
                   >
                     <svg
-                      fill=\\"currentColor\\"
-                      height=\\"1em\\"
-@@ -736,15 +742,18 @@
+                      fill="currentColor"
+                      height="1em"
+@@ -765,15 +771,18 @@
                       </button>
                     </div>
                   </div>
                 </div>
                 <div
--                 contenteditable=\\"true\\"
-+                 class=\\"css-1363rg7-AltPlaceholder e1u39mrp1\\"
+-                 contenteditable="true"
++                 class="css-8hzfm6"
 +               >
 +                 blocks.richText.startWriting
 +               </div>
 +               <div
-                  data-gramm=\\"false\\"
-                  data-slate-editor=\\"true\\"
-                  data-slate-node=\\"value\\"
--                 role=\\"textbox\\"
-                  style=\\"outline: none; white-space: pre-wrap; word-wrap: break-word;\\"
+                  data-gramm="false"
+                  data-slate-editor="true"
+                  data-slate-node="value"
+-                 role="textbox"
+                  style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
                 >
                   <p
-                    data-slate-node=\\"element\\"
+                    data-slate-node="element"
                   >"
 `;
 
@@ -128,21 +128,21 @@ exports[`Author Edit Panel should fill the link field 1`] = `
 - First value
 + Second value
 
-@@ -259,11 +259,11 @@
+@@ -278,11 +278,11 @@
                               <input
-                                class=\\"rs-input\\"
-                                name=\\"title\\"
-                                placeholder=\\"authors.panels.title\\"
-                                type=\\"text\\"
--                               value=\\"\\"
-+                               value=\\"abcd\\"
+                                class="rs-input"
+                                name="title"
+                                placeholder="authors.panels.title"
+                                type="text"
+-                               value=""
++                               value="abcd"
                               />
                             </div>
                             <div
-                              class=\\"rs-form-group\\"
-                              role=\\"group\\"
-@@ -732,12 +732,17 @@
-                              d=\\"M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z\\"
+                              class="rs-form-group"
+                              role="group"
+@@ -761,12 +761,17 @@
+                              d="M11.99 2C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8zm3.5-9c.83 0 1.5-.67 1.5-1.5S16.33 8 15.5 8 14 8.67 14 9.5s.67 1.5 1.5 1.5zm-7 0c.83 0 1.5-.67 1.5-1.5S9.33 8 8.5 8 7 8.67 7 9.5 7.67 11 8.5 11zm3.5 6.5c2.33 0 4.31-1.46 5.11-3.5H6.89c.8 2.04 2.78 3.5 5.11 3.5z"
                             />
                           </svg>
                         </div>
@@ -151,14 +151,14 @@ exports[`Author Edit Panel should fill the link field 1`] = `
                   </div>
                 </div>
 +               <div
-+                 class=\\"css-1363rg7-AltPlaceholder e1u39mrp1\\"
++                 class="css-8hzfm6"
 +               >
 +                 blocks.richText.startWriting
                 </div>
                 <div
-                  contenteditable=\\"true\\"
-                  data-gramm=\\"false\\"
-                  data-slate-editor=\\"true\\""
+                  contenteditable="true"
+                  data-gramm="false"
+                  data-slate-editor="true""
 `;
 
 exports[`Author Edit Panel should render 1`] = `
@@ -298,25 +298,34 @@ exports[`Author Edit Panel should render 1`] = `
           class="rs-panel"
         >
           <div
+            aria-expanded="false"
             class="rs-panel-header"
             tabindex="-1"
           >
-            authors.panels.image
+            <span
+              class="rs-panel-title"
+              role="presentation"
+            >
+              <span
+                class="collapsed"
+              >
+                authors.panels.image
+              </span>
+            </span>
           </div>
           <div
             class="rs-panel-body"
             role="region"
           >
             <div
-              class="rs-panel"
-              style="display: grid; height: 100%;"
+              class="css-chr1eq rs-panel"
             >
               <div
                 class="rs-panel-body rs-panel-body-fill"
                 role="region"
               >
                 <div
-                  class="css-1pvlote-PlaceholderInputWrapper e1tn6rau0"
+                  class="css-gv6g1x"
                 >
                   <button
                     class="rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default rs-btn-sm"
@@ -356,10 +365,20 @@ exports[`Author Edit Panel should render 1`] = `
           class="authorLinks rs-panel"
         >
           <div
+            aria-expanded="false"
             class="rs-panel-header"
             tabindex="-1"
           >
-            authors.panels.links
+            <span
+              class="rs-panel-title"
+              role="presentation"
+            >
+              <span
+                class="collapsed"
+              >
+                authors.panels.links
+              </span>
+            </span>
           </div>
           <div
             class="rs-panel-body"
@@ -368,10 +387,10 @@ exports[`Author Edit Panel should render 1`] = `
             <div>
               <div>
                 <div
-                  class="css-1wzl9qf-ListItemWrapper e1g7b9o10"
+                  class="css-1c4wd4"
                 >
                   <div
-                    class="css-1ax8cc3-DragHandleWrapper e1g7b9o11"
+                    class="css-12frltk"
                   >
                     <button
                       aria-disabled="false"
@@ -405,14 +424,14 @@ exports[`Author Edit Panel should render 1`] = `
                     </button>
                   </div>
                   <div
-                    class="css-8n2042-Panel e1g7b9o12 rs-panel"
+                    class="css-1ago99h rs-panel"
                   >
                     <div
                       class="rs-panel-body rs-panel-body-fill"
                       role="region"
                     >
                       <div
-                        class="css-1yerc6w-ChildrenWrapper e1g7b9o13"
+                        class="css-10odzlz"
                       >
                         <div
                           class="css-fngpsb-Controls e14dal3y1"
@@ -474,7 +493,7 @@ exports[`Author Edit Panel should render 1`] = `
                     </div>
                   </div>
                   <div
-                    class="css-1qpz4yt-IconButtonWrapper e1g7b9o14"
+                    class="css-17nfp2s"
                   >
                     <button
                       aria-disabled="false"
@@ -547,10 +566,20 @@ exports[`Author Edit Panel should render 1`] = `
           class="rs-panel"
         >
           <div
+            aria-expanded="false"
             class="rs-panel-header"
             tabindex="-1"
           >
-            authors.panels.bioInformation
+            <span
+              class="rs-panel-title"
+              role="presentation"
+            >
+              <span
+                class="collapsed"
+              >
+                authors.panels.bioInformation
+              </span>
+            </span>
           </div>
           <div
             class="rs-panel-body"
@@ -560,16 +589,16 @@ exports[`Author Edit Panel should render 1`] = `
               class="richTextFrame"
             >
               <div
-                class="css-13z6oi0-ToolbarWrapper e1qk45870"
+                class="css-u6g4ew"
               >
                 <div
-                  class="css-bbx743-ToolbarInner e1qk45871"
+                  class="css-14noxf0"
                 >
                   <div
-                    class="css-rlh556-ChildrenWrapper e1qk45872"
+                    class="css-18wuio6"
                   >
                     <button
-                      class="css-hkh9id-ToolbarButtonElement e1qk45873"
+                      class="css-109gd2z"
                       type="button"
                     >
                       <svg
@@ -586,7 +615,7 @@ exports[`Author Edit Panel should render 1`] = `
                       </svg>
                     </button>
                     <button
-                      class="css-hkh9id-ToolbarButtonElement e1qk45873"
+                      class="css-109gd2z"
                       type="button"
                     >
                       <svg
@@ -603,7 +632,7 @@ exports[`Author Edit Panel should render 1`] = `
                       </svg>
                     </button>
                     <button
-                      class="css-hkh9id-ToolbarButtonElement e1qk45873"
+                      class="css-109gd2z"
                       type="button"
                     >
                       <svg
@@ -621,11 +650,11 @@ exports[`Author Edit Panel should render 1`] = `
                     </button>
                     <div
                       aria-orientation="vertical"
-                      class="css-9arm09-ToolbarDividerElement e1qk45878 rs-divider rs-divider-vertical"
+                      class="css-e1iw3k rs-divider rs-divider-vertical"
                       role="separator"
                     />
                     <button
-                      class="css-hkh9id-ToolbarButtonElement e1qk45873"
+                      class="css-109gd2z"
                       type="button"
                     >
                       <svg
@@ -647,7 +676,7 @@ exports[`Author Edit Panel should render 1`] = `
                       </svg>
                     </button>
                     <button
-                      class="css-hkh9id-ToolbarButtonElement e1qk45873"
+                      class="css-109gd2z"
                       type="button"
                     >
                       <svg
@@ -670,15 +699,15 @@ exports[`Author Edit Panel should render 1`] = `
                     </button>
                     <div
                       aria-orientation="vertical"
-                      class="css-9arm09-ToolbarDividerElement e1qk45878 rs-divider rs-divider-vertical"
+                      class="css-e1iw3k rs-divider rs-divider-vertical"
                       role="separator"
                     />
                     <button
-                      class="css-hkh9id-ToolbarButtonElement e1qk45873"
+                      class="css-109gd2z"
                       type="button"
                     >
                       <div
-                        class="css-1a1xyzn-IconWrapper e1qk45875"
+                        class="css-1ttmkdf"
                       >
                         <svg
                           fill="currentColor"
@@ -701,11 +730,11 @@ exports[`Author Edit Panel should render 1`] = `
                     </button>
                     <div
                       aria-orientation="vertical"
-                      class="css-9arm09-ToolbarDividerElement e1qk45878 rs-divider rs-divider-vertical"
+                      class="css-e1iw3k rs-divider rs-divider-vertical"
                       role="separator"
                     />
                     <button
-                      class="css-hkh9id-ToolbarButtonElement e1qk45873"
+                      class="css-109gd2z"
                       type="button"
                     >
                       <svg
@@ -727,7 +756,7 @@ exports[`Author Edit Panel should render 1`] = `
                       </svg>
                     </button>
                     <button
-                      class="css-hkh9id-ToolbarButtonElement e1qk45873"
+                      class="css-109gd2z"
                       type="button"
                     >
                       <svg
@@ -749,7 +778,7 @@ exports[`Author Edit Panel should render 1`] = `
                       </svg>
                     </button>
                     <button
-                      class="css-hkh9id-ToolbarButtonElement e1qk45873"
+                      class="css-109gd2z"
                       type="button"
                     >
                       <svg
@@ -771,7 +800,7 @@ exports[`Author Edit Panel should render 1`] = `
                       </svg>
                     </button>
                     <button
-                      class="css-hkh9id-ToolbarButtonElement e1qk45873"
+                      class="css-109gd2z"
                       type="button"
                     >
                       <svg
@@ -793,7 +822,7 @@ exports[`Author Edit Panel should render 1`] = `
                       </svg>
                     </button>
                     <button
-                      class="css-hkh9id-ToolbarButtonElement e1qk45873"
+                      class="css-109gd2z"
                       type="button"
                     >
                       <svg
@@ -815,7 +844,7 @@ exports[`Author Edit Panel should render 1`] = `
                       </svg>
                     </button>
                     <button
-                      class="css-hkh9id-ToolbarButtonElement e1qk45873"
+                      class="css-109gd2z"
                       type="button"
                     >
                       <svg
@@ -838,15 +867,15 @@ exports[`Author Edit Panel should render 1`] = `
                     </button>
                     <div
                       aria-orientation="vertical"
-                      class="css-9arm09-ToolbarDividerElement e1qk45878 rs-divider rs-divider-vertical"
+                      class="css-e1iw3k rs-divider rs-divider-vertical"
                       role="separator"
                     />
                     <button
-                      class="css-hkh9id-ToolbarButtonElement e1qk45873"
+                      class="css-109gd2z"
                       type="button"
                     >
                       <div
-                        class="css-1a1xyzn-IconWrapper e1qk45875"
+                        class="css-1ttmkdf"
                       >
                         <svg
                           fill="currentColor"
@@ -869,15 +898,15 @@ exports[`Author Edit Panel should render 1`] = `
                     </button>
                     <div
                       aria-orientation="vertical"
-                      class="css-9arm09-ToolbarDividerElement e1qk45878 rs-divider rs-divider-vertical"
+                      class="css-e1iw3k rs-divider rs-divider-vertical"
                       role="separator"
                     />
                     <button
-                      class="css-hkh9id-ToolbarButtonElement e1qk45873"
+                      class="css-109gd2z"
                       type="button"
                     >
                       <div
-                        class="css-1a1xyzn-IconWrapper e1qk45875"
+                        class="css-1ttmkdf"
                       >
                         <svg
                           fill="currentColor"
@@ -1075,25 +1104,34 @@ exports[`Author Edit Panel should render with ID 1`] = `
           class="rs-panel"
         >
           <div
+            aria-expanded="false"
             class="rs-panel-header"
             tabindex="-1"
           >
-            authors.panels.image
+            <span
+              class="rs-panel-title"
+              role="presentation"
+            >
+              <span
+                class="collapsed"
+              >
+                authors.panels.image
+              </span>
+            </span>
           </div>
           <div
             class="rs-panel-body"
             role="region"
           >
             <div
-              class="rs-panel"
-              style="display: grid; height: 100%;"
+              class="css-chr1eq rs-panel"
             >
               <div
                 class="rs-panel-body rs-panel-body-fill"
                 role="region"
               >
                 <div
-                  class="css-1pvlote-PlaceholderInputWrapper e1tn6rau0"
+                  class="css-gv6g1x"
                 >
                   <button
                     class="rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default rs-btn-sm"
@@ -1133,10 +1171,20 @@ exports[`Author Edit Panel should render with ID 1`] = `
           class="authorLinks rs-panel"
         >
           <div
+            aria-expanded="false"
             class="rs-panel-header"
             tabindex="-1"
           >
-            authors.panels.links
+            <span
+              class="rs-panel-title"
+              role="presentation"
+            >
+              <span
+                class="collapsed"
+              >
+                authors.panels.links
+              </span>
+            </span>
           </div>
           <div
             class="rs-panel-body"
@@ -1183,10 +1231,20 @@ exports[`Author Edit Panel should render with ID 1`] = `
           class="rs-panel"
         >
           <div
+            aria-expanded="false"
             class="rs-panel-header"
             tabindex="-1"
           >
-            authors.panels.bioInformation
+            <span
+              class="rs-panel-title"
+              role="presentation"
+            >
+              <span
+                class="collapsed"
+              >
+                authors.panels.bioInformation
+              </span>
+            </span>
           </div>
           <div
             class="rs-panel-body"
@@ -1196,16 +1254,16 @@ exports[`Author Edit Panel should render with ID 1`] = `
               class="richTextFrame"
             >
               <div
-                class="css-13z6oi0-ToolbarWrapper e1qk45870"
+                class="css-u6g4ew"
               >
                 <div
-                  class="css-bbx743-ToolbarInner e1qk45871"
+                  class="css-14noxf0"
                 >
                   <div
-                    class="css-rlh556-ChildrenWrapper e1qk45872"
+                    class="css-18wuio6"
                   >
                     <button
-                      class="css-hkh9id-ToolbarButtonElement e1qk45873"
+                      class="css-109gd2z"
                       type="button"
                     >
                       <svg
@@ -1222,7 +1280,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                       </svg>
                     </button>
                     <button
-                      class="css-hkh9id-ToolbarButtonElement e1qk45873"
+                      class="css-109gd2z"
                       type="button"
                     >
                       <svg
@@ -1239,7 +1297,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                       </svg>
                     </button>
                     <button
-                      class="css-hkh9id-ToolbarButtonElement e1qk45873"
+                      class="css-109gd2z"
                       type="button"
                     >
                       <svg
@@ -1257,11 +1315,11 @@ exports[`Author Edit Panel should render with ID 1`] = `
                     </button>
                     <div
                       aria-orientation="vertical"
-                      class="css-9arm09-ToolbarDividerElement e1qk45878 rs-divider rs-divider-vertical"
+                      class="css-e1iw3k rs-divider rs-divider-vertical"
                       role="separator"
                     />
                     <button
-                      class="css-hkh9id-ToolbarButtonElement e1qk45873"
+                      class="css-109gd2z"
                       type="button"
                     >
                       <svg
@@ -1283,7 +1341,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                       </svg>
                     </button>
                     <button
-                      class="css-hkh9id-ToolbarButtonElement e1qk45873"
+                      class="css-109gd2z"
                       type="button"
                     >
                       <svg
@@ -1306,15 +1364,15 @@ exports[`Author Edit Panel should render with ID 1`] = `
                     </button>
                     <div
                       aria-orientation="vertical"
-                      class="css-9arm09-ToolbarDividerElement e1qk45878 rs-divider rs-divider-vertical"
+                      class="css-e1iw3k rs-divider rs-divider-vertical"
                       role="separator"
                     />
                     <button
-                      class="css-hkh9id-ToolbarButtonElement e1qk45873"
+                      class="css-109gd2z"
                       type="button"
                     >
                       <div
-                        class="css-1a1xyzn-IconWrapper e1qk45875"
+                        class="css-1ttmkdf"
                       >
                         <svg
                           fill="currentColor"
@@ -1337,11 +1395,11 @@ exports[`Author Edit Panel should render with ID 1`] = `
                     </button>
                     <div
                       aria-orientation="vertical"
-                      class="css-9arm09-ToolbarDividerElement e1qk45878 rs-divider rs-divider-vertical"
+                      class="css-e1iw3k rs-divider rs-divider-vertical"
                       role="separator"
                     />
                     <button
-                      class="css-hkh9id-ToolbarButtonElement e1qk45873"
+                      class="css-109gd2z"
                       type="button"
                     >
                       <svg
@@ -1363,7 +1421,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                       </svg>
                     </button>
                     <button
-                      class="css-hkh9id-ToolbarButtonElement e1qk45873"
+                      class="css-109gd2z"
                       type="button"
                     >
                       <svg
@@ -1385,7 +1443,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                       </svg>
                     </button>
                     <button
-                      class="css-hkh9id-ToolbarButtonElement e1qk45873"
+                      class="css-109gd2z"
                       type="button"
                     >
                       <svg
@@ -1407,7 +1465,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                       </svg>
                     </button>
                     <button
-                      class="css-hkh9id-ToolbarButtonElement e1qk45873"
+                      class="css-109gd2z"
                       type="button"
                     >
                       <svg
@@ -1429,7 +1487,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                       </svg>
                     </button>
                     <button
-                      class="css-hkh9id-ToolbarButtonElement e1qk45873"
+                      class="css-109gd2z"
                       type="button"
                     >
                       <svg
@@ -1451,7 +1509,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                       </svg>
                     </button>
                     <button
-                      class="css-hkh9id-ToolbarButtonElement e1qk45873"
+                      class="css-109gd2z"
                       type="button"
                     >
                       <svg
@@ -1474,15 +1532,15 @@ exports[`Author Edit Panel should render with ID 1`] = `
                     </button>
                     <div
                       aria-orientation="vertical"
-                      class="css-9arm09-ToolbarDividerElement e1qk45878 rs-divider rs-divider-vertical"
+                      class="css-e1iw3k rs-divider rs-divider-vertical"
                       role="separator"
                     />
                     <button
-                      class="css-hkh9id-ToolbarButtonElement e1qk45873"
+                      class="css-109gd2z"
                       type="button"
                     >
                       <div
-                        class="css-1a1xyzn-IconWrapper e1qk45875"
+                        class="css-1ttmkdf"
                       >
                         <svg
                           fill="currentColor"
@@ -1505,15 +1563,15 @@ exports[`Author Edit Panel should render with ID 1`] = `
                     </button>
                     <div
                       aria-orientation="vertical"
-                      class="css-9arm09-ToolbarDividerElement e1qk45878 rs-divider rs-divider-vertical"
+                      class="css-e1iw3k rs-divider rs-divider-vertical"
                       role="separator"
                     />
                     <button
-                      class="css-hkh9id-ToolbarButtonElement e1qk45873"
+                      class="css-109gd2z"
                       type="button"
                     >
                       <div
-                        class="css-1a1xyzn-IconWrapper e1qk45875"
+                        class="css-1ttmkdf"
                       >
                         <svg
                           fill="currentColor"
@@ -1538,7 +1596,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
                 </div>
               </div>
               <div
-                class="css-1363rg7-AltPlaceholder e1u39mrp1"
+                class="css-8hzfm6"
               >
                 blocks.richText.startWriting
               </div>

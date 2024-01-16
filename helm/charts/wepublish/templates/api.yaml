@@ -57,7 +57,7 @@ spec:
           image: {{ .Values.deployment.image }}
           imagePullPolicy: {{ .Values.deployment.imagePullPolicy }}
           command: ['/bin/sh']
-          args: ['-c', 'npx prisma migrate deploy && npx ts-node libs/api/prisma/run-seed.ts && node dist/apps/api-example/main.js']
+          args: ['-c', 'npx prisma migrate deploy && npx tsx libs/api/prisma/run-seed.ts && node dist/apps/api-example/main.js']
           ports:
             - name: http
               containerPort: 8000
@@ -95,9 +95,6 @@ metadata:
     {{- end }}
 type: Opaque
 data:
-  {{- range $name, $value := .Values.deployment.env }}
-  {{ $name }}: "{{ $value | b64enc }}"
-  {{- end }}
-  {{- range $name, $value := .Values.api.env }}
+  {{- range $name, $value := merge .Values.api.env .Values.deployment.env }}
   {{ $name }}: "{{ $value | b64enc }}"
   {{- end }}

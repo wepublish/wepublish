@@ -83,8 +83,21 @@ mutation UpdateSubscription($id: ID!, $input: SubscriptionInput!) {
   }
 }
 
+mutation CancelSubscription($cancelSubscriptionId: ID!, $reason: SubscriptionDeactivationReason!) {
+  cancelSubscription(id: $cancelSubscriptionId, reason: $reason) {
+    ...FullSubscription
+  }
+}
+
 mutation DeleteSubscription($id: ID!) {
   deleteSubscription(id: $id) {
     ...FullSubscription
   }
+}
+
+query NewSubscribersPerMonth($months: Int!) {
+    newSubscribersPerMonth(monthsBack: $months) {
+        month
+        subscriberCount
+    }
 }

@@ -9,16 +9,17 @@
       "options": {
         "commands": [
           {
-            "command": "npx nx browser editor"
+            "command": "npx nx server editor"
           },
           {
-            "command": "npx nx server editor"
+            "command": "npx nx browser editor"
           }
-        ]
+        ],
+        "parallel": false
       }
     },
     "serve-ssr": {
-      "executor": "@nrwl/webpack:ssr-dev-server",
+      "executor": "@nx/webpack:ssr-dev-server",
       "defaultConfiguration": "development",
       "options": {
         "browserTarget": "editor:build:development",
@@ -37,22 +38,28 @@
       }
     },
     "lint": {
-      "executor": "@nrwl/linter:eslint",
+      "executor": "@nx/linter:eslint",
       "outputs": ["{options.outputFile}"],
       "options": {
         "lintFilePatterns": ["apps/editor/**/*.{ts,tsx,js,jsx}"]
       }
     },
     "test": {
-      "executor": "@nrwl/jest:jest",
+      "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
         "jestConfig": "apps/editor/jest.config.ts",
         "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
       }
     },
     "browser": {
-      "executor": "@nrwl/webpack:webpack",
+      "executor": "@nx/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
@@ -66,7 +73,8 @@
         "assets": ["apps/editor/src/assets"],
         "styles": [],
         "scripts": [],
-        "webpackConfig": "@nrwl/react/plugins/webpack"
+        "webpackConfig": "apps/editor/webpack.config.js",
+        "isolatedConfig": true
       },
       "configurations": {
         "development": {
@@ -92,7 +100,7 @@
       }
     },
     "server": {
-      "executor": "@nrwl/webpack:webpack",
+      "executor": "@nx/webpack:webpack",
       "outputs": ["{options.outputPath}"],
       "defaultConfiguration": "production",
       "options": {
@@ -104,7 +112,8 @@
         "externalDependencies": "all",
         "generatePackageJson": true,
         "outputHashing": "none",
-        "webpackConfig": "@nrwl/react/plugins/webpack"
+        "webpackConfig": "apps/editor/webpack.config.server.js",
+        "isolatedConfig": true
       },
       "configurations": {
         "development": {
@@ -123,7 +132,7 @@
       }
     },
     "serve": {
-      "executor": "@nrwl/webpack:dev-server",
+      "executor": "@nx/webpack:dev-server",
       "defaultConfiguration": "development",
       "options": {
         "buildTarget": "editor:browser",
@@ -141,7 +150,7 @@
       }
     },
     "serve-server": {
-      "executor": "@nrwl/js:node",
+      "executor": "@nx/js:node",
       "defaultConfiguration": "development",
       "options": {
         "buildTarget": "editor:server:development",
@@ -154,16 +163,6 @@
         "production": {
           "buildTarget": "editor:server:production"
         }
-      }
-    },
-    "generate-api": {
-      "executor": "nx:run-commands",
-      "options": {
-        "commands": [
-          {
-            "command": "npx graphql-codegen -r dotenv/config --config codegen.yml"
-          }
-        ]
       }
     }
   },

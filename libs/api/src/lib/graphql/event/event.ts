@@ -10,15 +10,15 @@ import {
   GraphQLObjectType,
   GraphQLString
 } from 'graphql'
+import {GraphQLDateTime} from 'graphql-scalars'
 import {Context} from '../../context'
 import {ConnectionResult} from '../../db/common'
 import {createProxyingResolver} from '../../utility'
 import {GraphQLPageInfo} from '../common'
 import {GraphQLImage} from '../image'
+import {GraphQLRichText} from '@wepublish/richtext/api'
 import {GraphQLTag} from '../tag/tag'
-import {EventSort} from './event.queries'
-import {GraphQLRichText} from '../richText'
-import {GraphQLDateTime} from 'graphql-scalars'
+import {EventSort} from './event.query'
 
 export const GraphQLEventStatus = new GraphQLEnumType({
   name: 'EventStatus',
@@ -33,18 +33,21 @@ export const GraphQLEventStatus = new GraphQLEnumType({
 export const GraphQLEvent = new GraphQLObjectType<Event, Context>({
   name: 'Event',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
+    id: {type: new GraphQLNonNull(GraphQLID)},
 
-    name: {type: GraphQLNonNull(GraphQLString)},
-    status: {type: GraphQLNonNull(GraphQLEventStatus)},
+    name: {type: new GraphQLNonNull(GraphQLString)},
+    status: {type: new GraphQLNonNull(GraphQLEventStatus)},
     description: {type: GraphQLRichText},
 
     location: {type: GraphQLString},
-    startsAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    startsAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     endsAt: {type: GraphQLDateTime},
 
+    externalSourceId: {type: GraphQLString},
+    externalSourceName: {type: GraphQLString},
+
     tags: {
-      type: GraphQLList(GraphQLNonNull(GraphQLTag)),
+      type: new GraphQLList(new GraphQLNonNull(GraphQLTag)),
       resolve: createProxyingResolver(async ({id}, _, {prisma: {tag}}) => {
         const tags = await tag.findMany({
           where: {
@@ -64,6 +67,12 @@ export const GraphQLEvent = new GraphQLObjectType<Event, Context>({
       resolve: createProxyingResolver(({imageId}, args, {loaders}, info) => {
         return imageId ? loaders.images.load(imageId) : null
       })
+    },
+    url: {
+      type: new GraphQLNonNull(GraphQLString),
+      resolve: createProxyingResolver((event, args, {urlAdapter}, info) => {
+        return urlAdapter.getEventURL(event)
+      })
     }
   }
 })
@@ -71,9 +80,9 @@ export const GraphQLEvent = new GraphQLObjectType<Event, Context>({
 export const GraphQLEventConnection = new GraphQLObjectType<ConnectionResult<Event>, Context>({
   name: 'EventConnection',
   fields: {
-    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLEvent)))},
-    pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)},
-    totalCount: {type: GraphQLNonNull(GraphQLInt)}
+    nodes: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLEvent)))},
+    pageInfo: {type: new GraphQLNonNull(GraphQLPageInfo)},
+    totalCount: {type: new GraphQLNonNull(GraphQLInt)}
   }
 })
 
@@ -81,7 +90,11 @@ export const GraphQLEventFilter = new GraphQLInputObjectType({
   name: 'EventFilter',
   fields: {
     upcomingOnly: {type: GraphQLBoolean},
-    tags: {type: GraphQLList(GraphQLNonNull(GraphQLID))}
+    from: {type: GraphQLDateTime},
+    to: {type: GraphQLDateTime},
+    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
+    name: {type: GraphQLString},
+    location: {type: GraphQLString}
   }
 })
 

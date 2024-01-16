@@ -1,16 +1,21 @@
 import {ApolloClient, ApolloLink, ApolloProvider, InMemoryCache} from '@apollo/client'
 import {onError} from '@apollo/client/link/error'
+import {CssBaseline, ThemeProvider} from '@mui/material'
+import {theme} from '@wepublish/ui'
+import {
+  AuthProvider,
+  FacebookProvider,
+  getSettings,
+  InstagramProvider,
+  LocalStorageKey,
+  TwitterProvider
+} from '@wepublish/ui/editor'
 import {createUploadLink} from 'apollo-upload-client'
 import ReactDOM from 'react-dom'
 import {IconContext} from 'react-icons'
 
 import {App} from './app/app'
-import {AuthProvider} from './app/authContext'
-import {FacebookProvider} from './app/blocks/embeds/facebook'
-import {InstagramProvider} from './app/blocks/embeds/instagram'
-import {TwitterProvider} from './app/blocks/embeds/twitter'
 import {initI18N} from './app/i18n'
-import {getSettings, LocalStorageKey} from './app/utility'
 import {ElementID} from './shared/elementID'
 
 // See: https://www.apollographql.com/docs/react/data/fragments/#fragments-on-unions-and-interfaces
@@ -74,7 +79,9 @@ const onDOMContentLoaded = async () => {
     if (graphQLErrors) {
       graphQLErrors.forEach(({/* message, locations, path, */ extensions}) => {
         if (
-          ['UNAUTHENTICATED', 'TOKEN_EXPIRED'].includes(extensions?.code) &&
+          ['UNAUTHENTICATED', 'TOKEN_EXPIRED'].includes(
+            (extensions?.code as string | undefined) ?? ''
+          ) &&
           !(
             window.location.pathname.includes('/logout') ||
             window.location.pathname.includes('/login')
@@ -108,7 +115,10 @@ const onDOMContentLoaded = async () => {
           <FacebookProvider sdkLanguage={'en_US'}>
             <InstagramProvider>
               <TwitterProvider>
-                <App />
+                <ThemeProvider theme={theme}>
+                  <CssBaseline />
+                  <App />
+                </ThemeProvider>
               </TwitterProvider>
             </InstagramProvider>
           </FacebookProvider>

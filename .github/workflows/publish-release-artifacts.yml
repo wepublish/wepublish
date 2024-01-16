@@ -23,6 +23,8 @@ jobs:
     with:
       tags: |
         ghcr.io/wepublish/wepublish:${{ needs.release_version.outputs.version }}
+      storybook_tags: |
+        ghcr.io/wepublish/storybook:${{ needs.release_version.outputs.version }}
     secrets: inherit
 
   release_docker:
@@ -34,4 +36,7 @@ jobs:
       tags: |
         ghcr.io/wepublish/wepublish:${{ needs.release_version.outputs.version }}
         ghcr.io/wepublish/wepublish:latest
+      storybook_tags: |
+        ghcr.io/wepublish/storybook:${{ needs.release_version.outputs.version }}
+        ghcr.io/wepublish/storybook:latest
     secrets: inherit

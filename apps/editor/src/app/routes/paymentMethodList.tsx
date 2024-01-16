@@ -3,6 +3,20 @@ import {
   useDeletePaymentMethodMutation,
   usePaymentMethodListQuery
 } from '@wepublish/editor/api'
+import {
+  createCheckedPermissionComponent,
+  DescriptionList,
+  DescriptionListItem,
+  IconButton,
+  IconButtonTooltip,
+  ListViewActions,
+  ListViewContainer,
+  ListViewHeader,
+  PaddedCell,
+  PermissionControl,
+  Table,
+  TableWrapper
+} from '@wepublish/ui/editor'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete} from 'react-icons/md'
@@ -10,19 +24,7 @@ import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {Button, Drawer, Modal, Table as RTable} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {PaymentMethodEditPanel} from '../panel/paymentMethodEditPanel'
-import {
-  IconButton,
-  ListViewActions,
-  ListViewContainer,
-  ListViewHeader,
-  PaddedCell,
-  Table,
-  TableWrapper
-} from '../ui/listView'
 
 const {Column, HeaderCell, Cell: RCell} = RTable
 

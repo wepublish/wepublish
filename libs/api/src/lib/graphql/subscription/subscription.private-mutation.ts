@@ -1,8 +1,21 @@
 import {Context} from '../../context'
-import {authorise, CanCreateSubscription, CanDeleteSubscription} from '../permissions'
-import {Prisma, PrismaClient} from '@prisma/client'
-import {unselectPassword} from '../../db/user'
-import {NotFound} from '../../error'
+import {authorise} from '../permissions'
+import {
+  CanCancelSubscription,
+  CanCreateSubscription,
+  CanDeleteSubscription
+} from '@wepublish/permissions/api'
+import {
+  MetadataProperty,
+  Prisma,
+  PrismaClient,
+  Subscription,
+  SubscriptionDeactivationReason
+} from '@prisma/client'
+import {unselectPassword} from '@wepublish/user/api'
+import {NotFound, UserSubscriptionAlreadyDeactivated} from '../../error'
+import {MemberContext} from '../../memberContext'
+import {PaymentProvider} from '@wepublish/payment/api'
 
 export const deleteSubscriptionById = (
   id: string,
@@ -24,6 +37,36 @@ export const deleteSubscriptionById = (
   })
 }
 
+export const cancelSubscriptionById = async (
+  id: string,
+  reason: SubscriptionDeactivationReason,
+  authenticate: Context['authenticate'],
+  subscriptionDB: PrismaClient['subscription'],
+  memberContext: MemberContext
+) => {
+  const {roles} = authenticate()
+  authorise(CanCancelSubscription, roles)
+
+  const subscription = await subscriptionDB.findUnique({
+    where: {id},
+    include: {
+      deactivation: true,
+      periods: true,
+      properties: true
+    }
+  })
+
+  if (!subscription) throw new NotFound('subscription', id)
+
+  if (subscription.deactivation)
+    throw new UserSubscriptionAlreadyDeactivated(subscription.deactivation.date)
+
+  return await memberContext.deactivateSubscription({
+    subscription,
+    deactivationReason: reason
+  })
+}
+
 type CreateSubscriptionInput = Prisma.SubscriptionCreateInput & {
   properties: Prisma.MetadataPropertyCreateManySubscriptionInput[]
 }
@@ -37,23 +80,17 @@ export const createSubscription = async (
   const {roles} = authenticate()
   authorise(CanCreateSubscription, roles)
 
-  const subscription = await subscriptionClient.create({
-    data: {
-      ...input,
-      properties: {
-        createMany: {
-          data: properties
-        }
-      }
-    },
-    include: {
-      deactivation: true,
-      periods: true,
-      properties: true
-    }
-  })
-
-  await memberContext.renewSubscriptionForUser({subscription})
+  const {subscription} = await memberContext.createSubscription(
+    subscriptionClient,
+    input['userID'],
+    input['paymentMethodID'],
+    input['paymentPeriodicity'],
+    input['monthlyAmount'],
+    input['memberPlanID'],
+    properties,
+    input['autoRenew'],
+    input['startsAt']
+  )
 
   return subscription
 }
@@ -63,16 +100,80 @@ type UpdateSubscriptionInput = Prisma.SubscriptionUncheckedUpdateInput & {
   deactivation: Prisma.SubscriptionDeactivationCreateWithoutSubscriptionInput | null
 }
 
+export const handleRemoteManagedSubscription = async ({
+  paymentProvider,
+  input,
+  originalSubscription
+}: {
+  paymentProvider: PaymentProvider
+  input: Subscription
+  originalSubscription: Subscription & {properties: MetadataProperty[]}
+}) => {
+  // not updatable subscription properties for externally managed subscriptions
+  if (
+    (input.paymentMethodID && input.paymentMethodID !== originalSubscription.paymentMethodID) ||
+    (input.memberPlanID && input.memberPlanID !== originalSubscription.memberPlanID) ||
+    (input.paidUntil && input.paidUntil !== originalSubscription.paidUntil) ||
+    (input.paymentPeriodicity &&
+      input.paymentPeriodicity !== originalSubscription.paymentPeriodicity) ||
+    input?.autoRenew === false
+  ) {
+    throw new Error(
+      `It is not possible to update the subscription with payment provider "${paymentProvider.name}".`
+    )
+  }
+
+  // update amount is possible
+  if (input.monthlyAmount !== originalSubscription.monthlyAmount) {
+    await paymentProvider.updateRemoteSubscriptionAmount({
+      subscription: originalSubscription,
+      newAmount: parseInt(`${input.monthlyAmount}`, 10)
+    })
+  }
+}
+
 export const updateAdminSubscription = async (
   id: string,
-  {properties, deactivation, ...input}: UpdateSubscriptionInput,
+  {properties, ...input}: UpdateSubscriptionInput,
   authenticate: Context['authenticate'],
   memberContext: Context['memberContext'],
   subscriptionClient: PrismaClient['subscription'],
-  userClient: PrismaClient['user']
+  userClient: PrismaClient['user'],
+  paymentProviders: PaymentProvider[]
 ) => {
   const {roles} = authenticate()
   authorise(CanCreateSubscription, roles)
+
+  const originalSubscription = await subscriptionClient.findUnique({
+    where: {
+      id
+    },
+    include: {
+      properties: true,
+      deactivation: true
+    }
+  })
+
+  if (originalSubscription.deactivation) {
+    throw new Error('You are not allowed to change a deactivated subscription!')
+  }
+
+  // handle remote managed subscriptions (Payrexx Subscription)
+  const {paymentProviderID} = await memberContext.getPaymentMethodByIDOrSlug(
+    memberContext.loaders,
+    undefined,
+    originalSubscription.paymentMethodID
+  )
+  const paymentProvider = paymentProviders.find(
+    paymentProvider => paymentProvider.id === paymentProviderID
+  )
+  if (paymentProvider.remoteManagedSubscription) {
+    await handleRemoteManagedSubscription({
+      paymentProvider,
+      input: input as Subscription,
+      originalSubscription
+    })
+  }
 
   const user = await userClient.findUnique({
     where: {
@@ -83,27 +184,10 @@ export const updateAdminSubscription = async (
 
   if (!user) throw new Error('Can not update subscription without user')
 
-  const subscription = await subscriptionClient.findUnique({
-    where: {id},
-    include: {
-      deactivation: true
-    }
-  })
-
   const updatedSubscription = await subscriptionClient.update({
     where: {id},
     data: {
       ...input,
-      deactivation: deactivation
-        ? {
-            upsert: {
-              create: deactivation,
-              update: deactivation
-            }
-          }
-        : {
-            delete: Boolean(subscription?.deactivation)
-          },
       properties: {
         deleteMany: {
           subscriptionId: id
@@ -121,11 +205,6 @@ export const updateAdminSubscription = async (
   })
 
   if (!updatedSubscription) throw new NotFound('subscription', id)
-
-  // cancel open invoices if subscription is deactivated
-  if (deactivation !== null) {
-    await memberContext.cancelInvoicesForSubscription(id)
-  }
 
   return await memberContext.handleSubscriptionChange({
     subscription: updatedSubscription

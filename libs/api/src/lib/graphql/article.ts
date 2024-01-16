@@ -30,7 +30,7 @@ import {GraphQLBlockInput, GraphQLBlock, GraphQLPublicBlock} from './blocks'
 import {createProxyingResolver} from '../utility'
 import {GraphQLPeer} from './peer'
 import {GraphQLPublicComment} from './comment/comment'
-import {SessionType} from '../db/session'
+import {AuthSessionType} from '@wepublish/authentication/api'
 import {getPublicCommentsForItemById} from './comment/comment.public-queries'
 
 export const GraphQLArticleFilter = new GraphQLInputObjectType({
@@ -44,16 +44,16 @@ export const GraphQLArticleFilter = new GraphQLInputObjectType({
     draft: {type: GraphQLBoolean},
     published: {type: GraphQLBoolean},
     pending: {type: GraphQLBoolean},
-    authors: {type: GraphQLList(GraphQLNonNull(GraphQLID))},
-    tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
+    authors: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
+    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))}
   }
 })
 
 export const GraphQLPublicArticleFilter = new GraphQLInputObjectType({
   name: 'ArticleFilter',
   fields: {
-    authors: {type: GraphQLList(GraphQLNonNull(GraphQLID))},
-    tags: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
+    authors: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
+    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))}
   }
 })
 
@@ -82,30 +82,34 @@ export const GraphQLArticleInput = new GraphQLInputObjectType({
     slug: {type: GraphQLSlug},
 
     preTitle: {type: GraphQLString},
-    title: {type: GraphQLNonNull(GraphQLString)},
+    title: {type: new GraphQLNonNull(GraphQLString)},
     lead: {type: GraphQLString},
     seoTitle: {type: GraphQLString},
-    tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+    tags: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLString)))},
 
-    properties: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataPropertyInput)))},
+    properties: {
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLMetadataPropertyInput)))
+    },
 
     canonicalUrl: {type: GraphQLString},
 
     imageID: {type: GraphQLID},
-    authorIDs: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLID)))},
+    authorIDs: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLID)))},
 
-    shared: {type: GraphQLNonNull(GraphQLBoolean)},
-    breaking: {type: GraphQLNonNull(GraphQLBoolean)},
+    shared: {type: new GraphQLNonNull(GraphQLBoolean)},
+    breaking: {type: new GraphQLNonNull(GraphQLBoolean)},
 
-    hideAuthor: {type: GraphQLNonNull(GraphQLBoolean)},
+    hideAuthor: {type: new GraphQLNonNull(GraphQLBoolean)},
 
     socialMediaTitle: {type: GraphQLString},
     socialMediaDescription: {type: GraphQLString},
-    socialMediaAuthorIDs: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLID)))},
+    socialMediaAuthorIDs: {
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLID)))
+    },
     socialMediaImageID: {type: GraphQLID},
 
     blocks: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLBlockInput)))
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLBlockInput)))
     }
   }
 })
@@ -113,29 +117,31 @@ export const GraphQLArticleInput = new GraphQLInputObjectType({
 export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Context>({
   name: 'ArticleRevision',
   fields: {
-    revision: {type: GraphQLNonNull(GraphQLInt)},
+    revision: {type: new GraphQLNonNull(GraphQLInt)},
 
-    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     publishAt: {type: GraphQLDateTime},
 
     updatedAt: {type: GraphQLDateTime},
     publishedAt: {type: GraphQLDateTime},
 
-    hideAuthor: {type: GraphQLNonNull(GraphQLBoolean)},
+    hideAuthor: {type: new GraphQLNonNull(GraphQLBoolean)},
 
     preTitle: {type: GraphQLString},
     title: {type: GraphQLString},
     lead: {type: GraphQLString},
     seoTitle: {type: GraphQLString},
     slug: {type: GraphQLString},
-    tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+    tags: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLString)))},
 
-    properties: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataProperty)))},
+    properties: {
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLMetadataProperty)))
+    },
 
     canonicalUrl: {type: GraphQLString},
 
     url: {
-      type: GraphQLNonNull(GraphQLString),
+      type: new GraphQLNonNull(GraphQLString),
       resolve: createProxyingResolver((articleRevision, args, {urlAdapter}, info) => {
         // The URLAdapter expects a public article to generate the public article URL.
         // The URL should never be created with values from the updatedAt, publishAt
@@ -159,20 +165,23 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
     },
 
     authors: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAuthor))),
-      resolve: createProxyingResolver(({authors}, args, {loaders}) => {
-        return loaders.authorsByID.loadMany(authors.map(({authorId}) => authorId))
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLAuthor))),
+      resolve: createProxyingResolver(async ({authors}, args, {loaders}) => {
+        return (await loaders.authorsByID.loadMany(authors.map(({authorId}) => authorId))).filter(
+          Boolean
+        )
       })
     },
-
-    breaking: {type: GraphQLNonNull(GraphQLBoolean)},
+    breaking: {type: new GraphQLNonNull(GraphQLBoolean)},
 
     socialMediaTitle: {type: GraphQLString},
     socialMediaDescription: {type: GraphQLString},
     socialMediaAuthors: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAuthor))),
-      resolve: createProxyingResolver(({socialMediaAuthors}, args, {loaders}) => {
-        return loaders.authorsByID.loadMany(socialMediaAuthors.map(({authorId}) => authorId))
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLAuthor))),
+      resolve: createProxyingResolver(async ({socialMediaAuthors}, args, {loaders}) => {
+        return (
+          await loaders.authorsByID.loadMany(socialMediaAuthors.map(({authorId}) => authorId))
+        ).filter(Boolean)
       })
     },
     socialMediaImage: {
@@ -182,25 +191,25 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
       })
     },
 
-    blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLBlock)))}
+    blocks: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLBlock)))}
   }
 })
 
 export const GraphQLArticle = new GraphQLObjectType<Article, Context>({
   name: 'Article',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
-    shared: {type: GraphQLNonNull(GraphQLBoolean)},
+    id: {type: new GraphQLNonNull(GraphQLID)},
+    shared: {type: new GraphQLNonNull(GraphQLBoolean)},
 
-    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
+    modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
 
     draft: {type: GraphQLArticleRevision},
     published: {type: GraphQLArticleRevision},
     pending: {type: GraphQLArticleRevision},
 
     latest: {
-      type: GraphQLNonNull(GraphQLArticleRevision),
+      type: new GraphQLNonNull(GraphQLArticleRevision),
       resolve: createProxyingResolver(({draft, pending, published}) => {
         return draft ?? pending ?? published
       })
@@ -211,9 +220,9 @@ export const GraphQLArticle = new GraphQLObjectType<Article, Context>({
 export const GraphQLArticleConnection = new GraphQLObjectType({
   name: 'ArticleConnection',
   fields: {
-    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLArticle)))},
-    pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)},
-    totalCount: {type: GraphQLNonNull(GraphQLInt)}
+    nodes: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLArticle)))},
+    pageInfo: {type: new GraphQLNonNull(GraphQLPageInfo)},
+    totalCount: {type: new GraphQLNonNull(GraphQLInt)}
   }
 })
 
@@ -221,27 +230,27 @@ export const GraphQLPeerArticle = new GraphQLObjectType<PeerArticle, Context>({
   name: 'PeerArticle',
   fields: {
     peer: {
-      type: GraphQLNonNull(GraphQLPeer),
+      type: new GraphQLNonNull(GraphQLPeer),
       resolve: createProxyingResolver(({peerID}, _, {loaders}) => loaders.peer.load(peerID))
     },
     peeredArticleURL: {
-      type: GraphQLNonNull(GraphQLString),
+      type: new GraphQLNonNull(GraphQLString),
       resolve: createProxyingResolver(async ({peerID, article}, _, {loaders, urlAdapter}) => {
         const peer = await loaders.peer.load(peerID)
         if (!peer || !article) return ''
         return urlAdapter.getPeeredArticleURL(peer, article)
       })
     },
-    article: {type: GraphQLNonNull(GraphQLArticle)}
+    article: {type: new GraphQLNonNull(GraphQLArticle)}
   }
 })
 
 export const GraphQLPeerArticleConnection = new GraphQLObjectType({
   name: 'PeerArticleConnection',
   fields: {
-    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPeerArticle)))},
-    pageInfo: {type: GraphQLNonNull(GraphQLUnidirectionalPageInfo)},
-    totalCount: {type: GraphQLNonNull(GraphQLInt)}
+    nodes: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPeerArticle)))},
+    pageInfo: {type: new GraphQLNonNull(GraphQLUnidirectionalPageInfo)},
+    totalCount: {type: new GraphQLNonNull(GraphQLInt)}
   }
 })
 
@@ -249,30 +258,32 @@ export const GraphQLPublicArticle: GraphQLObjectType<PublicArticle, Context> =
   new GraphQLObjectType<PublicArticle, Context>({
     name: 'Article',
     fields: {
-      id: {type: GraphQLNonNull(GraphQLID)},
+      id: {type: new GraphQLNonNull(GraphQLID)},
 
-      updatedAt: {type: GraphQLNonNull(GraphQLDateTime)},
-      publishedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+      updatedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
+      publishedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
 
-      slug: {type: GraphQLNonNull(GraphQLSlug)},
+      slug: {type: new GraphQLNonNull(GraphQLSlug)},
 
       url: {
-        type: GraphQLNonNull(GraphQLString),
+        type: new GraphQLNonNull(GraphQLString),
         resolve: createProxyingResolver((article, _, {urlAdapter}) => {
           return urlAdapter.getPublicArticleURL(article)
         })
       },
 
       preTitle: {type: GraphQLString},
-      title: {type: GraphQLNonNull(GraphQLString)},
+      title: {type: new GraphQLNonNull(GraphQLString)},
       lead: {type: GraphQLString},
       seoTitle: {type: GraphQLString},
-      tags: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLString)))},
+      tags: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLString)))},
 
       canonicalUrl: {type: GraphQLString},
 
       properties: {
-        type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataPropertyPublic))),
+        type: new GraphQLNonNull(
+          new GraphQLList(new GraphQLNonNull(GraphQLMetadataPropertyPublic))
+        ),
         resolve: ({properties}) => {
           return properties
             .filter(property => property.public)
@@ -288,29 +299,35 @@ export const GraphQLPublicArticle: GraphQLObjectType<PublicArticle, Context> =
       },
 
       authors: {
-        type: GraphQLNonNull(GraphQLList(GraphQLAuthor)),
-        resolve: createProxyingResolver(({authors, hideAuthor}, args, {loaders}) => {
+        type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLAuthor))),
+        resolve: createProxyingResolver(async ({authors, hideAuthor}, args, {loaders}) => {
           if (hideAuthor) {
             return []
           }
 
-          return authors.map(({authorId}) => loaders.authorsByID.load(authorId))
+          return (await loaders.authorsByID.loadMany(authors.map(({authorId}) => authorId))).filter(
+            Boolean
+          )
         })
       },
 
-      breaking: {type: GraphQLNonNull(GraphQLBoolean)},
+      breaking: {type: new GraphQLNonNull(GraphQLBoolean)},
 
       socialMediaTitle: {type: GraphQLString},
       socialMediaDescription: {type: GraphQLString},
       socialMediaAuthors: {
-        type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAuthor))),
-        resolve: createProxyingResolver(({socialMediaAuthors, hideAuthor}, args, {loaders}) => {
-          if (hideAuthor) {
-            return []
-          }
+        type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLAuthor))),
+        resolve: createProxyingResolver(
+          async ({socialMediaAuthors, hideAuthor}, args, {loaders}) => {
+            if (hideAuthor) {
+              return []
+            }
 
-          return loaders.authorsByID.loadMany(socialMediaAuthors.map(({authorId}) => authorId))
-        })
+            return (
+              await loaders.authorsByID.loadMany(socialMediaAuthors.map(({authorId}) => authorId))
+            ).filter(Boolean)
+          }
+        )
       },
       socialMediaImage: {
         type: GraphQLImage,
@@ -319,26 +336,20 @@ export const GraphQLPublicArticle: GraphQLObjectType<PublicArticle, Context> =
         })
       },
 
-      blocks: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicBlock)))},
+      blocks: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPublicBlock)))},
 
       comments: {
-        type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicComment))),
+        type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPublicComment))),
         resolve: createProxyingResolver(
-          async (
-            {id},
-            _,
-            {session, authenticateUser, prisma: {comment, commentRatingSystemAnswer}}
-          ) => {
-            // if session exists, should get user's un-approved comments as well
-            // if not we should get approved ones
-            const userSession = session?.type === SessionType.User ? authenticateUser() : null
+          async ({id}, _, {session, prisma: {comment}, loaders: {commentRatingSystemAnswers}}) => {
+            const userId = session?.type === AuthSessionType.User ? session.user.id : null
 
             return getPublicCommentsForItemById(
               id,
-              userSession?.user?.id ?? null,
+              userId,
               null,
               -1,
-              commentRatingSystemAnswer,
+              commentRatingSystemAnswers,
               comment
             )
           }
@@ -350,8 +361,8 @@ export const GraphQLPublicArticle: GraphQLObjectType<PublicArticle, Context> =
 export const GraphQLPublicArticleConnection = new GraphQLObjectType({
   name: 'ArticleConnection',
   fields: {
-    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPublicArticle)))},
-    pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)},
-    totalCount: {type: GraphQLNonNull(GraphQLInt)}
+    nodes: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPublicArticle)))},
+    pageInfo: {type: new GraphQLNonNull(GraphQLPageInfo)},
+    totalCount: {type: new GraphQLNonNull(GraphQLInt)}
   }
 })

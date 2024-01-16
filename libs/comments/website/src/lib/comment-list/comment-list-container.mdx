@@ -1,0 +1,53 @@
+import {Meta, Story, Canvas, CodeOrSourceMdx} from '@storybook/blocks'
+import * as stories from './comment-list-container.stories'
+import LinkTo from '@storybook/addon-links/react'
+
+<Meta of={stories} />
+
+# Comment List Container
+
+> The Comment List Container gets comments and renders it as a <LinkTo kind="Components/Comment List" story="Default">CommentList component</LinkTo>.
+
+## Override `CommentList`
+
+To replace the `CommentList` component that is being rendered by a custom component, one can override it like this:
+
+<CodeOrSourceMdx>
+```typescript
+import {WebsiteBuilderProvider, BuilderCommentListProps, CommentListContainer} from '@wepublish/website'
+
+const MyCommentList = (props: BuilderCommentListProps) => <div>My Comment List</div>
+
+export default function () {
+  return (
+    <WebsiteBuilderProvider CommentList={MyCommentList}>
+      <CommentListContainer />
+    </WebsiteBuilderProvider>
+  )
+}
+```
+</CodeOrSourceMdx>
+
+## Override `CommentListItem`
+
+To replace the `CommentListItem` component that is being rendered by a custom component, one can override it like this:
+
+<CodeOrSourceMdx>
+```typescript
+import {WebsiteBuilderProvider, BuilderCommentListItemProps, CommentListContainer} from '@wepublish/website'
+
+const MyCommentListItem = (props: BuilderCommentListItemProps) => <div>My Comment List Item</div>
+
+export default function () {
+  return (
+    <WebsiteBuilderProvider CommentListItem={MyCommentListItem}>
+      <CommentListContainer />
+    </WebsiteBuilderProvider>
+  )
+}
+```
+</CodeOrSourceMdx>
+
+<Canvas>
+  <Story of={stories.Default} />
+</Canvas>

@@ -1,6 +1,26 @@
-import {CommentRatingSystemAnswer, Comment, CommentState, PrismaClient} from '@prisma/client'
-import {PublicCommentSort} from '../../db/comment'
-import {sortWith, descend, ascend} from 'ramda'
+import {
+  Comment,
+  CommentRating,
+  CommentRatingSystemAnswer,
+  CommentState,
+  CommentsRevisions,
+  PrismaClient
+} from '@prisma/client'
+import {ascend, descend, sortWith} from 'ramda'
+import {Context} from '../../context'
+import {CalculatedRating, PublicCommentSort} from '../../db/comment'
+
+export const mapCommentToPublicComment = (comment: Comment & {revisions: CommentsRevisions[]}) => {
+  const {revisions} = comment
+
+  return {
+    title: revisions.length ? revisions[revisions.length - 1].title : null,
+    lead: revisions.length ? revisions[revisions.length - 1].lead : null,
+    text: revisions.length ? revisions[revisions.length - 1].text : null,
+    revisions,
+    ...comment
+  }
+}
 
 export const getPublicChildrenCommentsByParentId = async (
   parentId: string,
@@ -19,27 +39,33 @@ export const getPublicChildrenCommentsByParentId = async (
     },
     include: {
       revisions: {orderBy: {createdAt: 'asc'}},
-      tags: true
+      overriddenRatings: true
     }
   })
 
-  return comments.map(comment => {
-    const revisions = comment.revisions
+  return comments.map(mapCommentToPublicComment)
+}
+
+export const getCalculatedRatingsForComment = (
+  answers: CommentRatingSystemAnswer[],
+  ratings: CommentRating[]
+) =>
+  answers.map(answer => {
+    const sortedRatings = ratings
+      .filter(rating => rating.answerId === answer.id)
+      .map(rating => rating.value)
+      .sort((a, b) => a - b)
+
+    const total = sortedRatings.reduce((value, rating) => value + rating, 0)
+    const mean = total / Math.max(sortedRatings.length, 1)
+
     return {
-      ...comment,
-      title: revisions.length ? revisions[revisions.length - 1].title : null,
-      lead: revisions.length ? revisions[revisions.length - 1].lead : null,
-      text: revisions.length ? revisions[revisions.length - 1].text : null
-    }
+      answer,
+      count: sortedRatings.length,
+      mean,
+      total
+    } as CalculatedRating
   })
-}
-
-export type CalculatedRating = {
-  count: number
-  mean: number
-  total: number
-  answer: CommentRatingSystemAnswer
-}
 
 const sortCommentsByRating = (orderFn: typeof ascend) =>
   sortWith<Comment & {calculatedRatings: CalculatedRating[]}>([
@@ -57,11 +83,11 @@ export const getPublicCommentsForItemById = async (
   userId: string | null,
   sort: PublicCommentSort | null,
   order: 1 | -1,
-  commentRatingSystemAnswer: PrismaClient['commentRatingSystemAnswer'],
+  commentRatingSystemAnswers: Context['loaders']['commentRatingSystemAnswers'],
   comment: PrismaClient['comment']
 ) => {
   const [answers, comments] = await Promise.all([
-    commentRatingSystemAnswer.findMany(),
+    commentRatingSystemAnswers.load(1),
     comment.findMany({
       where: {
         OR: [
@@ -80,27 +106,9 @@ export const getPublicCommentsForItemById = async (
     })
   ])
 
-  const commentsWithRating = comments.map(({revisions, ratings, ...comment}) => ({
-    title: revisions.length ? revisions[revisions.length - 1].title : null,
-    lead: revisions.length ? revisions[revisions.length - 1].lead : null,
-    text: revisions.length ? revisions[revisions.length - 1].text : null,
-    ...comment,
-    calculatedRatings: answers.map(answer => {
-      const sortedRatings = ratings
-        .filter(rating => rating.answerId === answer.id)
-        .map(rating => rating.value)
-        .sort((a, b) => a - b)
-
-      const total = sortedRatings.reduce((value, rating) => value + rating, 0)
-      const mean = total / Math.max(sortedRatings.length, 1)
-
-      return {
-        answer,
-        count: sortedRatings.length,
-        mean,
-        total
-      } as CalculatedRating
-    })
+  const commentsWithRating = comments.map(({ratings, ...comment}) => ({
+    ...mapCommentToPublicComment(comment),
+    calculatedRatings: getCalculatedRatingsForComment(answers, ratings)
   }))
 
   if (sort === PublicCommentSort.Rating) {

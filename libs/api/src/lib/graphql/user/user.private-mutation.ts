@@ -1,11 +1,13 @@
-import {Prisma, PrismaClient} from '@prisma/client'
+import {Prisma, PrismaClient, UserEvent} from '@prisma/client'
 import {Context} from '../../context'
-import {hashPassword, unselectPassword} from '../../db/user'
+import {hashPassword} from '../../db/user'
+import {unselectPassword} from '@wepublish/user/api'
 import {EmailAlreadyInUseError} from '../../error'
-import {SendMailType} from '../../mails/mailContext'
 import {Validator} from '../../validator'
-import {authorise, CanCreateUser, CanDeleteUser, CanResetUserPassword} from '../permissions'
+import {authorise} from '../permissions'
+import {CanCreateUser, CanDeleteUser, CanResetUserPassword} from '@wepublish/permissions/api'
 import {createUser, CreateUserInput} from './user.mutation'
+import {mailLogType} from '@wepublish/mail/api'
 
 export const deleteUserById = (
   id: string,
@@ -27,21 +29,22 @@ export const createAdminUser = async (
   input: CreateUserInput,
   authenticate: Context['authenticate'],
   hashCostFactor: Context['hashCostFactor'],
-  user: PrismaClient['user']
+  prisma: PrismaClient,
+  mailContext: Context['mailContext']
 ) => {
   const {roles} = authenticate()
   authorise(CanCreateUser, roles)
 
   input.email = input.email ? (input.email as string).toLowerCase() : input.email
-  await Validator.createUser().validateAsync(input, {allowUnknown: true})
+  await Validator.createUser().parse(input)
 
-  const userExists = await user.findUnique({
+  const userExists = await prisma.user.findUnique({
     where: {email: input.email}
   })
 
   if (userExists) throw new EmailAlreadyInUseError()
 
-  return createUser(input, hashCostFactor, user)
+  return createUser(input, hashCostFactor, prisma, mailContext)
 }
 
 type UpdateUserInput = Prisma.UserUncheckedUpdateInput & {
@@ -59,7 +62,7 @@ export const updateAdminUser = async (
   authorise(CanCreateUser, roles)
 
   input.email = input.email ? (input.email as string).toLowerCase() : input.email
-  await Validator.createUser().validateAsync(input, {allowUnknown: true})
+  await Validator.createUser().parse(input)
 
   return user.update({
     where: {id},
@@ -107,12 +110,13 @@ export const resetUserPassword = async (
   })
 
   if (sendMail && user) {
+    const remoteTemplate = await mailContext.getUserTemplateName(UserEvent.PASSWORD_RESET)
+
     await mailContext.sendMail({
-      type: SendMailType.PasswordReset,
-      recipient: user.email,
-      data: {
-        user
-      }
+      externalMailTemplateId: remoteTemplate,
+      recipient: user,
+      optionalData: {},
+      mailType: mailLogType.UserFlow
     })
   }
 

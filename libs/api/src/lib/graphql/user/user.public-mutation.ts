@@ -1,12 +1,18 @@
 import {Prisma, PrismaClient, User} from '@prisma/client'
 import {Context} from '../../context'
-import {hashPassword, unselectPassword} from '../../db/user'
+import {hashPassword} from '../../db/user'
+import {unselectPassword} from '@wepublish/user/api'
 import {EmailAlreadyInUseError, NotAuthenticatedError, NotFound, UserInputError} from '../../error'
 import {Validator} from '../../validator'
 import {CreateImageInput} from '../image/image.private-mutation'
 
+type UpdatePaymentProviderCustomers = {
+  paymentProviderID: string
+  customerID: string
+}[]
+
 export const updatePaymentProviderCustomers = async (
-  paymentProviderCustomers: Prisma.UserUncheckedUpdateInput['paymentProviderCustomers'],
+  paymentProviderCustomers: UpdatePaymentProviderCustomers,
   authenticateUser: Context['authenticateUser'],
   userClient: PrismaClient['user']
 ) => {
@@ -15,7 +21,14 @@ export const updatePaymentProviderCustomers = async (
   const updateUser = await userClient.update({
     where: {id: user.id},
     data: {
-      paymentProviderCustomers
+      paymentProviderCustomers: {
+        deleteMany: {
+          userId: user.id
+        },
+        createMany: {
+          data: paymentProviderCustomers
+        }
+      }
     },
     select: unselectPassword
   })
@@ -105,11 +118,11 @@ export async function uploadPublicUserProfileImage(
 }
 
 type UpdateUserInput = Prisma.UserUncheckedUpdateInput & {
-  address: Prisma.UserAddressUncheckedUpdateWithoutUserInput
+  address: Prisma.UserAddressUncheckedCreateWithoutUserInput | null
 } & {uploadImageInput: CreateImageInput}
 
 export const updatePublicUser = async (
-  {address, name, email, firstName, preferredName, uploadImageInput}: UpdateUserInput,
+  {address, name, email, firstName, preferredName, flair, uploadImageInput}: UpdateUserInput,
   authenticateUser: Context['authenticateUser'],
   mediaAdapter: Context['mediaAdapter'],
   userClient: PrismaClient['user'],
@@ -119,10 +132,7 @@ export const updatePublicUser = async (
 
   email = email ? (email as string).toLowerCase() : email
 
-  await Validator.createUser().validateAsync(
-    {address, name, email, firstName, preferredName},
-    {allowUnknown: true}
-  )
+  await Validator.createUser().parse({address, name, email, firstName, preferredName})
 
   if (email && user.email !== email) {
     const userExists = await userClient.findUnique({
@@ -147,9 +157,15 @@ export const updatePublicUser = async (
       name,
       firstName,
       preferredName,
-      address: {
-        update: address
-      }
+      address: address
+        ? {
+            upsert: {
+              create: address,
+              update: address
+            }
+          }
+        : undefined,
+      flair
     },
     select: unselectPassword
   })

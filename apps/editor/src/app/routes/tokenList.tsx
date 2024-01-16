@@ -5,6 +5,16 @@ import {
   useDeleteTokenMutation,
   useTokenListQuery
 } from '@wepublish/editor/api'
+import {
+  createCheckedPermissionComponent,
+  getOperationNameFromDocument,
+  IconButtonTooltip,
+  ListViewActions,
+  ListViewContainer,
+  ListViewHeader,
+  PermissionControl,
+  TableWrapper
+} from '@wepublish/ui/editor'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdDelete, MdGeneratingTokens} from 'react-icons/md'
@@ -21,11 +31,7 @@ import {
   toaster
 } from 'rsuite'
 
-import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
 import {TokenGeneratePanel} from '../panel/tokenGeneratePanel'
-import {ListViewActions, ListViewContainer, ListViewHeader, TableWrapper} from '../ui/listView'
-import {getOperationNameFromDocument} from '../utility'
 
 const List = styled(RList)`
   margin-top: 40px;

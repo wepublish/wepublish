@@ -1,0 +1,9 @@
+{
+  "error": {
+    "type": "StripeCardError",
+    "code": "card_declined",
+    "message": "Your card was declined.",
+    "param": "card",
+    "decline_code": "generic_decline"
+  }
+}

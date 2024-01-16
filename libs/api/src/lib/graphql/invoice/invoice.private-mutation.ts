@@ -1,7 +1,8 @@
 import {Context} from '../../context'
-import {authorise, CanCreateInvoice, CanDeleteInvoice} from '../permissions'
+import {authorise} from '../permissions'
+import {CanCreateInvoice, CanDeleteInvoice} from '@wepublish/permissions/api'
 import {PrismaClient, Prisma, Invoice} from '@prisma/client'
-import {InvoiceWithItems} from '../../db/invoice'
+import {InvoiceWithItems} from '@wepublish/payment/api'
 
 export const deleteInvoiceById = async (
   id: string,
@@ -19,7 +20,7 @@ export const deleteInvoiceById = async (
 }
 
 type CreateInvoiceInput = Omit<Prisma.InvoiceUncheckedCreateInput, 'items' | 'modifiedAt'> & {
-  items: Prisma.InvoiceItemUncheckedCreateWithoutInvoiceInput[]
+  items: Prisma.InvoiceItemUncheckedCreateWithoutInvoicesInput[]
 }
 
 export const createInvoice = (
@@ -47,7 +48,7 @@ type UpdateInvoiceInput = Omit<
   Prisma.InvoiceUncheckedUpdateInput,
   'items' | 'modifiedAt' | 'createdAt'
 > & {
-  items: Prisma.InvoiceItemUncheckedCreateWithoutInvoiceInput[]
+  items: Prisma.InvoiceItemUncheckedCreateWithoutInvoicesInput[]
 }
 
 export const updateInvoice = async (
@@ -73,6 +74,59 @@ export const updateInvoice = async (
           data: items
         }
       }
+    },
+    include: {
+      items: true
+    }
+  })
+}
+
+export const markInvoiceAsPaid = async (
+  id: string,
+  authenticate: Context['authenticate'],
+  userSession: Context['authenticateUser'],
+  prismaClient: PrismaClient
+): Promise<InvoiceWithItems> => {
+  const {roles} = authenticate()
+  authorise(CanCreateInvoice, roles)
+
+  const session = userSession()
+  const invoice = await prismaClient.invoice.findUnique({
+    where: {
+      id
+    },
+    include: {
+      subscriptionPeriods: true
+    }
+  })
+
+  if (!invoice) {
+    throw new Error('Invoice not found')
+  }
+
+  // Should not happen since an invoice is limited to one subscription
+  if (invoice.subscriptionPeriods.length !== 1) {
+    throw new Error('Not one period is linked to the invoice')
+  }
+
+  if (!invoice.subscriptionID) {
+    throw new Error('Invoice has no subscriptionID')
+  }
+
+  await prismaClient.subscription.update({
+    where: {
+      id: invoice.subscriptionID
+    },
+    data: {
+      paidUntil: invoice.subscriptionPeriods[0].endsAt
+    }
+  })
+
+  return prismaClient.invoice.update({
+    where: {id},
+    data: {
+      manuallySetAsPaidByUserId: session.user.id,
+      paidAt: new Date()
     },
     include: {
       items: true

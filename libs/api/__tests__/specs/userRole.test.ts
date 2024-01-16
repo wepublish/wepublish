@@ -1,5 +1,5 @@
+import {Permission} from '@wepublish/permissions/api'
 import {ApolloServer} from 'apollo-server-express'
-import {Permission} from '../../src'
 import {
   CreateUserRole,
   DeleteUserRole,

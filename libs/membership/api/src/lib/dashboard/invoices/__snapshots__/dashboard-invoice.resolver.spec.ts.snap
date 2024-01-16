@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DashboardInvoiceResolver expectedRevenue 1`] = `
+[
+  {
+    "amount": 50,
+    "dueAt": "2023-01-02T12:00:00.000Z",
+    "memberPlan": null,
+    "paidAt": null,
+  },
+  {
+    "amount": 1050,
+    "dueAt": "2023-01-01T12:00:00.000Z",
+    "memberPlan": null,
+    "paidAt": "2023-01-01T12:00:00.000Z",
+  },
+]
+`;
+
+exports[`DashboardInvoiceResolver revenue 1`] = `
+[
+  {
+    "amount": 50,
+    "dueAt": "2023-01-01T12:00:00.000Z",
+    "memberPlan": null,
+    "paidAt": "2023-01-02T12:00:00.000Z",
+  },
+  {
+    "amount": 1050,
+    "dueAt": "2023-01-01T12:00:00.000Z",
+    "memberPlan": null,
+    "paidAt": "2023-01-01T12:00:00.000Z",
+  },
+]
+`;

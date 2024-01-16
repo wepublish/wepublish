@@ -1,6 +1,7 @@
 import {Context} from '../../context'
 import {PaymentFilter, PaymentSort} from '../../db/payment'
-import {authorise, CanGetPayment, CanGetPayments} from '../permissions'
+import {authorise} from '../permissions'
+import {CanGetPayment, CanGetPayments} from '@wepublish/permissions/api'
 import {PrismaClient} from '@prisma/client'
 import {getPayments} from './payment.queries'
 

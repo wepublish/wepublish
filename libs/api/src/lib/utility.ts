@@ -1,15 +1,13 @@
 import {MemberPlan, PaymentMethod} from '@prisma/client'
 import formatISO from 'date-fns/formatISO'
 import {GraphQLFieldResolver, GraphQLIsTypeOfFn, GraphQLObjectType} from 'graphql'
-import {delegateToSchema, ExecutionResult, IDelegateToSchemaOptions, Transform} from 'graphql-tools'
+import {delegateToSchema, IDelegateToSchemaOptions, Transform} from '@graphql-tools/delegate'
+import {ExecutionResult} from '@graphql-tools/utils'
 import {Context} from './context'
 import {TeaserStyle} from './db/block'
-import {SettingRestriction} from './db/setting'
 import {SubscriptionWithRelations} from './db/subscription'
 import {UserWithRelations} from './db/user'
-import {InvalidSettingValueError} from './error'
 
-export const MAX_COMMENT_LENGTH = 1000
 export const MAX_PAYLOAD_SIZE = '1MB'
 
 export const ONE_HOUR_IN_MILLISECONDS = 60 * 60 * 1000
@@ -111,43 +109,6 @@ function sanitizeCsvContent(input: string | undefined | null) {
   return `"${escapeDoubleQuotes}"`
 }
 
-// https://gist.github.com/mathewbyrne/1280286#gistcomment-2588056
-export function slugify(str: string) {
-  return str
-    .toLowerCase()
-    .trim()
-    .replace(/[ÀÁÂÃÄÅÆĀĂĄẠẢẤẦẨẪẬẮẰẲẴẶ]/gi, 'a')
-    .replace(/[ÇĆĈČ]/gi, 'c')
-    .replace(/[ÐĎĐÞ]/gi, 'd')
-    .replace(/[ÈÉÊËĒĔĖĘĚẸẺẼẾỀỂỄỆ]/gi, 'e')
-    .replace(/[ĜĞĢǴ]/gi, 'g')
-    .replace(/[ĤḦ]/gi, 'h')
-    .replace(/[ÌÍÎÏĨĪĮİỈỊ]/gi, 'i')
-    .replace(/[Ĵ]/gi, 'j')
-    .replace(/[Ĳ]/gi, 'ij')
-    .replace(/[Ķ]/gi, 'k')
-    .replace(/[ĹĻĽŁ]/gi, 'l')
-    .replace(/[Ḿ]/gi, 'm')
-    .replace(/[ÑŃŅŇ]/gi, 'n')
-    .replace(/[ÒÓÔÕÖØŌŎŐỌỎỐỒỔỖỘỚỜỞỠỢǪǬƠ]/gi, 'o')
-    .replace(/[Œ]/gi, 'oe')
-    .replace(/[ṕ]/gi, 'p')
-    .replace(/[ŔŖŘ]/gi, 'r')
-    .replace(/[ßŚŜŞŠ]/gi, 's')
-    .replace(/[ŢŤ]/gi, 't')
-    .replace(/[ÙÚÛÜŨŪŬŮŰŲỤỦỨỪỬỮỰƯ]/gi, 'u')
-    .replace(/[ẂŴẀẄ]/gi, 'w')
-    .replace(/[ẍ]/gi, 'x')
-    .replace(/[ÝŶŸỲỴỶỸ]/gi, 'y')
-    .replace(/[ŹŻŽ]/gi, 'z')
-    .replace(/[·/_,:;\\']/gi, '-')
-    .replace(/\s+/g, '-')
-    .replace(/[^\w-]+/g, '')
-    .replace(/--+/g, '-')
-    .replace(/^-+/, '')
-    .replace(/-+$/, '')
-}
-
 export function base64Encode(str: string): string {
   return Buffer.from(str).toString('base64')
 }
@@ -212,6 +173,7 @@ export function mapEnumsBack(result: any) {
     result.__typename === 'ArticleTeaser' ||
     result.__typename === 'PeerArticleTeaser' ||
     result.__typename === 'PageTeaser' ||
+    result.__typename === 'EventTeaser' ||
     result.__typename === 'CustomTeaser'
   ) {
     switch (result.style) {
@@ -290,45 +252,4 @@ export function isString(unknown: unknown): unknown is string {
 
 export function isBoolean(unknown: unknown): unknown is boolean {
   return typeof unknown === 'boolean'
-}
-
-export function checkSettingRestrictions(
-  val: unknown,
-  currentVal: unknown,
-  restriction: SettingRestriction | undefined
-) {
-  if (!restriction) {
-    return
-  }
-
-  if (typeof val !== typeof currentVal) {
-    throw new InvalidSettingValueError()
-  }
-
-  if (restriction.allowedValues?.boolChoice && typeof val !== 'boolean') {
-    throw new InvalidSettingValueError()
-  }
-
-  if (typeof val === 'number') {
-    if (restriction.maxValue && val > restriction.maxValue) {
-      throw new InvalidSettingValueError()
-    }
-
-    if (restriction.minValue && val < restriction.minValue) {
-      throw new InvalidSettingValueError()
-    }
-  }
-
-  if (typeof val === 'string') {
-    if (restriction.inputLength && val.length > restriction.inputLength) {
-      throw new InvalidSettingValueError()
-    }
-
-    if (
-      restriction.allowedValues?.stringChoice &&
-      !restriction.allowedValues.stringChoice.includes(val)
-    ) {
-      throw new InvalidSettingValueError()
-    }
-  }
 }

@@ -7,7 +7,7 @@ import {
   PrismaClient
 } from '@prisma/client'
 import {Context} from '../../context'
-import {SettingName} from '../../db/setting'
+import {SettingName} from '@wepublish/settings/api'
 import {
   AnonymousCommentError,
   AnonymousCommentsDisabledError,
@@ -15,10 +15,12 @@ import {
   CommentAuthenticationError,
   CommentLengthError,
   NotAuthorisedError,
+  NotFound,
   PeerIdMissingCommentError,
   UserInputError
 } from '../../error'
-import {countRichtextChars, MAX_COMMENT_LENGTH} from '../../utility'
+import {countRichtextChars} from '../../utility'
+import {CanCreateApprovedComment, hasPermission} from '@wepublish/permissions/api'
 
 export const addPublicComment = async (
   input: {
@@ -35,9 +37,19 @@ export const addPublicComment = async (
   let authorType: CommentAuthorType = CommentAuthorType.verifiedUser
   const commentLength = countRichtextChars(0, input.text)
 
-  if (commentLength > MAX_COMMENT_LENGTH) {
-    throw new CommentLengthError()
+  const maxCommentLength = (
+    await settingsClient.findUnique({
+      where: {
+        name: SettingName.COMMENT_CHAR_LIMIT
+      }
+    })
+  )?.value as number
+
+  if (commentLength > maxCommentLength) {
+    throw new CommentLengthError(+maxCommentLength)
   }
+
+  const canSkipApproval = hasPermission(CanCreateApprovedComment, user?.roles ?? [])
 
   // Challenge
   if (!user) {
@@ -83,46 +95,69 @@ export const addPublicComment = async (
       },
       userID: user?.user.id,
       authorType,
-      state: CommentState.pendingApproval
-    }
+      state: canSkipApproval ? CommentState.approved : CommentState.pendingApproval
+    },
+    include: {revisions: {orderBy: {createdAt: 'asc'}}, overriddenRatings: true}
   })
   return {...comment, title, text}
 }
 
 export const updatePublicComment = async (
-  input: {id: Comment['id']} & Prisma.CommentsRevisionsCreateInput,
+  input: {id: Comment['id']} & Pick<Prisma.CommentsRevisionsCreateInput, 'text' | 'title' | 'lead'>,
   authenticateUser: Context['authenticateUser'],
-  commentClient: PrismaClient['comment']
+  commentClient: PrismaClient['comment'],
+  settingsClient: PrismaClient['setting']
 ) => {
-  const {user} = authenticateUser()
+  const {user, roles} = authenticateUser()
+
+  const canSkipApproval = hasPermission(CanCreateApprovedComment, roles)
 
   const comment = await commentClient.findUnique({
     where: {
       id: input.id
-    }
+    },
+    include: {revisions: {orderBy: {createdAt: 'asc'}}}
   })
 
-  if (!comment) return null
+  if (!comment) {
+    throw new NotFound('comment', input.id)
+  }
 
   if (user.id !== comment?.userID) {
     throw new NotAuthorisedError()
-  } else if (comment.state !== CommentState.pendingUserChanges) {
+  }
+
+  const commentEditingSetting = await settingsClient.findUnique({
+    where: {
+      name: SettingName.ALLOW_COMMENT_EDITING
+    }
+  })
+
+  if (!commentEditingSetting?.value && comment.state !== CommentState.pendingUserChanges) {
     throw new UserInputError('Comment state must be pending user changes')
   }
 
-  const {id, text} = input
+  const {id, text, title, lead} = input
 
   const updatedComment = await commentClient.update({
     where: {id},
     data: {
       revisions: {
         create: {
-          text
+          text: text ?? comment?.revisions.at(-1)?.text,
+          title: title ?? comment?.revisions.at(-1)?.title,
+          lead: lead ?? comment?.revisions.at(-1)?.lead
         }
       },
-      state: CommentState.pendingApproval
-    }
+      state: canSkipApproval ? CommentState.approved : CommentState.pendingApproval
+    },
+    include: {revisions: {orderBy: {createdAt: 'asc'}}, overriddenRatings: true}
   })
 
-  return {...updatedComment, text}
+  return {
+    ...updatedComment,
+    text: updatedComment.revisions.at(-1)?.text,
+    title: updatedComment.revisions.at(-1)?.title,
+    lead: updatedComment.revisions.at(-1)?.lead
+  }
 }

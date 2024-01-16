@@ -1,5 +1,5 @@
 import {GraphQLScalarType, valueFromAST, GraphQLString} from 'graphql'
-import {slugify} from '../utility'
+import {slugify} from '@wepublish/utils'
 
 export const GraphQLSlug = new GraphQLScalarType({
   name: 'Slug',
@@ -13,8 +13,10 @@ export const GraphQLSlug = new GraphQLScalarType({
   },
 
   parseLiteral(literal) {
-    const value: string | undefined = valueFromAST(literal, GraphQLString)
-    if (value == undefined) throw new Error()
+    const value = valueFromAST(literal, GraphQLString) as string | undefined
+
+    if (value == null) throw new Error()
+
     return slugify(value)
   }
 })

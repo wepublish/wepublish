@@ -1,7 +1,7 @@
-import {Context} from '../../context'
-import {authorise, CanGetSettings} from '../permissions'
 import {PrismaClient} from '@prisma/client'
-import {UserInputError} from '../../error'
+import {CanGetSettings} from '@wepublish/permissions/api'
+import {Context} from '../../context'
+import {authorise} from '../permissions'
 
 export const getSetting = (
   name: string,
@@ -10,10 +10,6 @@ export const getSetting = (
 ) => {
   const {roles} = authenticate()
   authorise(CanGetSettings, roles)
-
-  if (!name) {
-    throw new UserInputError('You must provide setting `name`.')
-  }
 
   return setting.findUnique({
     where: {name}

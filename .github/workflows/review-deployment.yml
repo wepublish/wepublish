@@ -1,0 +1,173 @@
+name: Review deployment
+
+on:
+  workflow_call:
+    inputs:
+      app_image:
+        required: true
+        type: string
+      storybook_image:
+        required: true
+        type: string
+
+jobs:
+  helm_deployment:
+    name: Helm
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    env:
+      API_URL: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+      EDITOR_URL: https://editor-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+      WEBSITE_URL: https://website-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+      MEDIA_SERVER_URL: https://media-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+      STORYBOOK_URL: https://storybook-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: '3.12.3'
+
+      - name: Authenticate kubectl
+        uses: 'google-github-actions/auth@v1'
+        with:
+          project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
+          workload_identity_provider: ${{ secrets.GCLOUD_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}
+
+      - name: Prepare kubectl
+        uses: 'google-github-actions/get-gke-credentials@v1'
+        with:
+          project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
+          cluster_name: development
+          location: europe-west6
+
+      - name: Ensure namespace exists
+        run: |
+          kubectl create namespace reviews --dry-run=client -o yaml | kubectl apply -f -
+
+      - name: Helm deploy media-server
+        run: |
+          cat > values.yaml <<EOF
+          deployment:
+            image: ghcr.io/wepublish/karma-media-server:latest
+            env:
+              TOKEN: media-token
+              DEBUG: 'false'
+              NUM_CLUSTERS: '1'
+            replicaCount: 1
+          service:
+            type: ClusterIP
+            port: 80
+          ingress:
+            enabled: true
+            host: media-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+            path: /
+          pvc:
+            storage: 20Gi
+          labels: { }
+          EOF
+          helm upgrade --install review-${{ github.event.pull_request.number }}-media-server karma-media-server --repo https://gitlab.com/api/v4/projects/38941346/packages/helm/stable -n reviews -f values.yaml
+
+      - name: Helm deploy database
+        run: |
+          cat > values.yaml <<EOF
+          global:
+            postgresql:
+              auth:
+                enablePostgresUser: true
+                postgresPassword: "foo"
+                username: wepublish
+                password: wepublish
+                database: wepublish
+          EOF
+          helm upgrade --install review-${{ github.event.pull_request.number }}-database oci://registry-1.docker.io/bitnamicharts/postgresql -n reviews -f values.yaml --wait
+
+      - name: Helm deploy app
+        run: |
+          cat > values.yaml <<EOF
+          deployment:
+            image: ${{ inputs.app_image }}
+            env:
+              API_URL: ${API_URL}
+              EDITOR_URL: ${EDITOR_URL}
+              WEBSITE_URL: ${WEBSITE_URL}
+              MEDIA_SERVER_URL: ${MEDIA_SERVER_URL}
+          api:
+            env:
+              GOOGLE_APPLICATION_CREDENTIALS: /var/secrets/google/key.json
+              DATABASE_URL: postgres://postgres:foo@review-${{ github.event.pull_request.number }}-database-postgresql.reviews.svc.cluster.local:5432/wepublish?schema=public
+              MEDIA_SERVER_TOKEN: 'media-token'
+              JWT_SECRET_KEY: 'jwt-token'
+              SLACK_DEV_MAIL_WEBHOOK_URL: 'SLACK_DEV_MAIL_WEBHOOK_URL'
+              DEFAULT_FROM_ADDRESS: 'dev@wepublish.ch'
+              DEFAULT_REPLY_TO_ADDRESS: 'dev@wepublish.ch'
+          editor:
+            env:
+              PEER_BY_DEFAULT: "true"
+          website:
+            enabled: true
+          storybook:
+            enabled: true
+            image: ${{ inputs.storybook_image }}
+            url: ${STORYBOOK_URL}
+          EOF
+          helm upgrade --install review-${{ github.event.pull_request.number }}-app ./helm/charts/wepublish -n reviews -f values.yaml --wait
+          
+
+  notify:
+    name: Notify
+    needs: helm_deployment
+    if: ${{ needs.helm_deployment.result == 'success' }}
+    runs-on: ubuntu-latest
+    continue-on-error: true
+
+    env:
+      API_URL: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+      EDITOR_URL: https://editor-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+      WEBSITE_URL: https://website-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+      MEDIA_SERVER_URL: https://media-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: npm
+
+      - name: Create Deployment Text
+        id: deploymentComment
+        env:
+          BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          cd ./config
+          npm ci
+          OUTPUT=$(node ./notify-github.js)
+          OUTPUT="${OUTPUT//$'\n'/'%0A'}"
+          OUTPUT="${OUTPUT//$'\r'/'%0D'}"
+          echo "::set-OUTPUT name=result::$OUTPUT"
+
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          message: |
+            ${{ steps.deploymentComment.outputs.result }}
+
+      - name: Notify Jira
+        env:
+          BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+        run: |
+          cd ./config
+          npm ci
+          node ./notify-jira.js

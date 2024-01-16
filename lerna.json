@@ -1,5 +1,5 @@
 {
-  "version": "8.1.1",
+  "version": "10.0.0",
   "changelog": {
     "repo": "wepublish/wepublish",
     "cacheDir": ".changelog",
@@ -15,12 +15,25 @@
   },
   "command": {
     "version": {
-      "allowBranch": "master"
+      "allowBranch": [
+        "master",
+        "r/*"
+      ]
     },
     "publish": {
-      "ignoreChanges": ["*.md", "*.txt"],
+      "ignoreChanges": [
+        "*.md",
+        "*.txt"
+      ],
       "message": "chore(release): publish %s"
     }
   },
-  "packages": ["libs/api", "apps/editor"]
+  "packages": [
+    "apps/editor",
+    "libs/analytics",
+    "libs/api",
+    "libs/nest-modules",
+    "libs/website",
+    "libs/ui"
+  ]
 }

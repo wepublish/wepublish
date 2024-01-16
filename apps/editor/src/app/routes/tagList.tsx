@@ -8,6 +8,17 @@ import {
   useTagListLazyQuery,
   useUpdateTagMutation
 } from '@wepublish/editor/api'
+import {
+  createCheckedPermissionComponent,
+  DEFAULT_MAX_TABLE_PAGES,
+  DEFAULT_TABLE_PAGE_SIZES,
+  IconButtonTooltip,
+  ListViewActions,
+  ListViewContainer,
+  ListViewHeader,
+  PermissionControl,
+  TableWrapper
+} from '@wepublish/ui/editor'
 import {memo, useCallback, useEffect, useReducer, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdSave} from 'react-icons/md'
@@ -22,11 +33,6 @@ import {
   Pagination,
   toaster
 } from 'rsuite'
-
-import {IconButtonTooltip} from '../atoms/iconButtonTooltip'
-import {createCheckedPermissionComponent, PermissionControl} from '../atoms/permissionControl'
-import {ListViewActions, ListViewContainer, ListViewHeader, TableWrapper} from '../ui/listView'
-import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../utility'
 
 const FlexGridSmallerMargin = styled(FlexboxGrid)`
   margin-bottom: 12px;
@@ -313,7 +319,7 @@ const TagList = memo<TagListProps>(({type}) => {
                     <IconButtonTooltip caption={t('delete')}>
                       <IconButton
                         color="red"
-                        appearance="primary"
+                        appearance="ghost"
                         circle
                         size="sm"
                         icon={<MdDelete />}

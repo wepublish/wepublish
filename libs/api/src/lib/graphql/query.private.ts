@@ -1,4 +1,9 @@
 import {
+  CanGetPaymentProviders,
+  CanGetPeerArticle,
+  CanLoginAsOtherUser
+} from '@wepublish/permissions/api'
+import {
   GraphQLID,
   GraphQLInt,
   GraphQLList,
@@ -58,7 +63,7 @@ import {
   GraphQLEventSort
 } from './event/event'
 import {getAdminEvents} from './event/event.private-queries'
-import {EventSort, getEvent} from './event/event.queries'
+import {EventSort, getEvent, getImportedEventsIds} from './event/event.query'
 import {GraphQLImage, GraphQLImageConnection, GraphQLImageFilter, GraphQLImageSort} from './image'
 import {getAdminImages, getImageById} from './image/image.private-queries'
 import {
@@ -102,12 +107,7 @@ import {
 } from './peer-profile/peer-profile.private-queries'
 import {getPeerById, getPeers} from './peer/peer.private-queries'
 import {getPermissions} from './permission/permission.private-queries'
-import {
-  authorise,
-  CanGetPaymentProviders,
-  CanGetPeerArticle,
-  CanLoginAsOtherUser
-} from './permissions'
+import {authorise} from './permissions'
 import {
   GraphQLFullPoll,
   GraphQLPollConnection,
@@ -125,15 +125,18 @@ import {
   GraphQLSubscription,
   GraphQLSubscriptionConnection,
   GraphQLSubscriptionFilter,
-  GraphQLSubscriptionSort
+  GraphQLSubscriptionSort,
+  GraphQLSubscribersPerMonth
 } from './subscription'
 import {
   getAdminSubscriptions,
   getSubscriptionById,
-  getSubscriptionsAsCSV
+  getSubscriptionsAsCSV,
+  getNewSubscribersPerMonth
 } from './subscription/subscription.private-queries'
 import {GraphQLTagConnection, GraphQLTagFilter, GraphQLTagSort} from './tag/tag'
-import {getTags, TagSort} from './tag/tag.private-query'
+import {getTags} from './tag/tag.private-query'
+import {TagSort} from './tag/tag.query'
 import {GraphQLToken} from './token'
 import {getTokens} from './token/token.private-queries'
 import {GraphQLUser, GraphQLUserConnection, GraphQLUserFilter, GraphQLUserSort} from './user'
@@ -146,6 +149,8 @@ import {
   GraphQLUserRoleFilter,
   GraphQLUserRoleSort
 } from './userRole'
+import {GraphQLAction} from './action'
+import {getActions} from './action/action.private-queries'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',
@@ -156,8 +161,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     remotePeerProfile: {
       type: GraphQLPeerProfile,
       args: {
-        hostURL: {type: GraphQLNonNull(GraphQLString)},
-        token: {type: GraphQLNonNull(GraphQLString)}
+        hostURL: {type: new GraphQLNonNull(GraphQLString)},
+        token: {type: new GraphQLNonNull(GraphQLString)}
       },
       resolve: (root, {hostURL, token}, {authenticate, prisma: {setting}}, info) =>
         getRemotePeerProfile(hostURL, token, authenticate, info, setting)
@@ -166,8 +171,8 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     createJWTForUser: {
       type: GraphQLJWTToken,
       args: {
-        userId: {type: GraphQLNonNull(GraphQLString)},
-        expiresInMinutes: {type: GraphQLNonNull(GraphQLInt)}
+        userId: {type: new GraphQLNonNull(GraphQLString)},
+        expiresInMinutes: {type: new GraphQLNonNull(GraphQLInt)}
       },
       async resolve(root, {userId, expiresInMinutes}, {authenticate, generateJWT, prisma}, info) {
         const THIRTY_DAYS_IN_MIN = 30 * 24 * 60
@@ -200,19 +205,19 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     },
 
     peerProfile: {
-      type: GraphQLNonNull(GraphQLPeerProfile),
+      type: new GraphQLNonNull(GraphQLPeerProfile),
       resolve: (root, args, {authenticate, hostURL, websiteURL, prisma: {peerProfile}}) =>
         getAdminPeerProfile(hostURL, websiteURL, authenticate, peerProfile)
     },
 
     peers: {
-      type: GraphQLList(GraphQLNonNull(GraphQLPeer)),
+      type: new GraphQLList(new GraphQLNonNull(GraphQLPeer)),
       resolve: (root, _, {authenticate, prisma: {peer}}) => getPeers(authenticate, peer)
     },
 
     peer: {
       type: GraphQLPeer,
-      args: {id: {type: GraphQLNonNull(GraphQLID)}},
+      args: {id: {type: new GraphQLNonNull(GraphQLID)}},
       resolve: (root, {id}, {authenticate, loaders: {peer}}) => getPeerById(id, authenticate, peer)
     },
 
@@ -228,13 +233,13 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     // =======
 
     sessions: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLSession))),
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLSession))),
       resolve: (root, _, {authenticateUser, prisma: {session, userRole}}) =>
         getSessionsForUser(authenticateUser, session, userRole)
     },
 
     authProviders: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLAuthProvider))),
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLAuthProvider))),
       args: {redirectUri: {type: GraphQLString}},
       async resolve(root, {redirectUri}, {getOauth2Clients}) {
         const clients = await getOauth2Clients()
@@ -259,11 +264,13 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     user: {
       type: GraphQLUser,
       args: {id: {type: GraphQLID}},
-      resolve: (root, {id}, {authenticate, prisma: {user}}) => getUserById(id, authenticate, user)
+      resolve: (root, {id}, {authenticate, prisma: {user}}) => {
+        return getUserById(id, authenticate, user)
+      }
     },
 
     users: {
-      type: GraphQLNonNull(GraphQLUserConnection),
+      type: new GraphQLNonNull(GraphQLUserConnection),
       args: {
         cursor: {type: GraphQLID},
         take: {type: GraphQLInt, defaultValue: 10},
@@ -280,13 +287,14 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     // ==========
     subscription: {
       type: GraphQLSubscription,
-      args: {id: {type: GraphQLNonNull(GraphQLID)}},
-      resolve: (root, {id}, {authenticate, prisma: {subscription}}) =>
-        getSubscriptionById(id, authenticate, subscription)
+      args: {id: {type: new GraphQLNonNull(GraphQLID)}},
+      resolve: (root, {id}, {authenticate, prisma: {subscription}}) => {
+        return getSubscriptionById(id, authenticate, subscription)
+      }
     },
 
     subscriptions: {
-      type: GraphQLNonNull(GraphQLSubscriptionConnection),
+      type: new GraphQLNonNull(GraphQLSubscriptionConnection),
       args: {
         cursor: {type: GraphQLID},
         take: {type: GraphQLInt, defaultValue: 10},
@@ -321,7 +329,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     },
 
     userRoles: {
-      type: GraphQLNonNull(GraphQLUserRoleConnection),
+      type: new GraphQLNonNull(GraphQLUserRoleConnection),
       args: {
         cursor: {type: GraphQLID},
         take: {type: GraphQLInt, defaultValue: 10},
@@ -341,7 +349,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     // ========
 
     permissions: {
-      type: GraphQLList(GraphQLNonNull(GraphQLPermission)),
+      type: new GraphQLList(new GraphQLNonNull(GraphQLPermission)),
       args: {},
       resolve: (root, _, {authenticate}) => getPermissions(authenticate)
     },
@@ -350,7 +358,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     // =====
 
     tokens: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLToken))),
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLToken))),
       resolve: (root, args, {authenticateUser, prisma: {token}}) =>
         getTokens(authenticateUser, token)
     },
@@ -366,7 +374,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     },
 
     navigations: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLNavigation))),
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLNavigation))),
       resolve: (root, args, {authenticate, prisma: {navigation}}) =>
         getNavigations(authenticate, navigation)
     },
@@ -382,7 +390,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     },
 
     authors: {
-      type: GraphQLNonNull(GraphQLAuthorConnection),
+      type: new GraphQLNonNull(GraphQLAuthorConnection),
       args: {
         cursor: {type: GraphQLID},
         take: {type: GraphQLInt, defaultValue: 10},
@@ -409,7 +417,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     },
 
     images: {
-      type: GraphQLNonNull(GraphQLImageConnection),
+      type: new GraphQLNonNull(GraphQLImageConnection),
       args: {
         cursor: {type: GraphQLID},
         take: {type: GraphQLInt, defaultValue: 5},
@@ -428,14 +436,15 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     comment: {
       type: GraphQLComment,
       args: {
-        id: {type: GraphQLNonNull(GraphQLID)}
+        id: {type: new GraphQLNonNull(GraphQLID)}
       },
-      resolve: (root, {id}, {authenticate, prisma: {comment}}) =>
-        getComment(id, authenticate, comment)
+      resolve: (root, {id}, {authenticate, prisma: {comment}}) => {
+        return getComment(id, authenticate, comment)
+      }
     },
 
     comments: {
-      type: GraphQLNonNull(GraphQLCommentConnection),
+      type: new GraphQLNonNull(GraphQLCommentConnection),
       args: {
         cursor: {type: GraphQLID},
         take: {type: GraphQLInt, defaultValue: 10},
@@ -456,13 +465,13 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
     article: {
       type: GraphQLArticle,
-      args: {id: {type: GraphQLNonNull(GraphQLID)}},
+      args: {id: {type: new GraphQLNonNull(GraphQLID)}},
       resolve: (root, {id}, {authenticate, loaders}) =>
         getArticleById(id, authenticate, loaders.articles)
     },
 
     articles: {
-      type: GraphQLNonNull(GraphQLArticleConnection),
+      type: new GraphQLNonNull(GraphQLArticleConnection),
       args: {
         cursor: {type: GraphQLID},
         take: {type: GraphQLInt, defaultValue: 10},
@@ -483,7 +492,10 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
     peerArticle: {
       type: GraphQLArticle,
-      args: {peerID: {type: GraphQLNonNull(GraphQLID)}, id: {type: GraphQLNonNull(GraphQLID)}},
+      args: {
+        peerID: {type: new GraphQLNonNull(GraphQLID)},
+        id: {type: new GraphQLNonNull(GraphQLID)}
+      },
       resolve(root, {peerID, id}, context, info) {
         const {authenticate} = context
         const {roles} = authenticate()
@@ -494,23 +506,40 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     },
 
     peerArticles: {
-      type: GraphQLNonNull(GraphQLPeerArticleConnection),
+      type: new GraphQLNonNull(GraphQLPeerArticleConnection),
       args: {
         cursors: {type: GraphQLString},
         take: {type: GraphQLInt, defaultValue: 10},
+        // Backwards compatability
+        first: {type: GraphQLInt},
+        skip: {type: GraphQLInt, defaultValue: 0},
         sort: {type: GraphQLArticleSort, defaultValue: ArticleSort.ModifiedAt},
         order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending},
         peerFilter: {type: GraphQLString},
         filter: {type: GraphQLArticleFilter}
       },
 
-      resolve: (root, {filter, sort, order, after, peerFilter}, context, info) =>
-        getAdminPeerArticles(filter, sort, order, peerFilter, after, context, info)
+      resolve: (root, {filter, sort, order, after, peerFilter, take, skip, first}, context, info) =>
+        getAdminPeerArticles(
+          filter,
+          sort,
+          order,
+          peerFilter,
+          after,
+          context,
+          info,
+          take,
+          skip,
+          first
+        )
     },
 
     articlePreviewLink: {
       type: GraphQLString,
-      args: {id: {type: GraphQLNonNull(GraphQLID)}, hours: {type: GraphQLNonNull(GraphQLInt)}},
+      args: {
+        id: {type: new GraphQLNonNull(GraphQLID)},
+        hours: {type: new GraphQLNonNull(GraphQLInt)}
+      },
       resolve: async (
         root,
         {id, hours},
@@ -529,7 +558,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     },
 
     pages: {
-      type: GraphQLNonNull(GraphQLPageConnection),
+      type: new GraphQLNonNull(GraphQLPageConnection),
       args: {
         cursor: {type: GraphQLID},
         take: {type: GraphQLInt, defaultValue: 10},
@@ -544,7 +573,10 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
     pagePreviewLink: {
       type: GraphQLString,
-      args: {id: {type: GraphQLNonNull(GraphQLID)}, hours: {type: GraphQLNonNull(GraphQLInt)}},
+      args: {
+        id: {type: new GraphQLNonNull(GraphQLID)},
+        hours: {type: new GraphQLNonNull(GraphQLInt)}
+      },
       resolve: (root, {id, hours}, {authenticate, loaders: {pages}, urlAdapter, generateJWT}) =>
         getPagePreviewLink(id, hours, authenticate, generateJWT, urlAdapter, pages)
     },
@@ -560,7 +592,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     },
 
     memberPlans: {
-      type: GraphQLNonNull(GraphQLMemberPlanConnection),
+      type: new GraphQLNonNull(GraphQLMemberPlanConnection),
       args: {
         cursor: {type: GraphQLID},
         take: {type: GraphQLInt, defaultValue: 10},
@@ -587,13 +619,13 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     },
 
     paymentMethods: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentMethod))),
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPaymentMethod))),
       resolve: (root, _, {authenticate, prisma: {paymentMethod}}) =>
         getPaymentMethods(authenticate, paymentMethod)
     },
 
     paymentProviders: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentProvider))),
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPaymentProvider))),
       resolve(root, _, {authenticate, paymentProviders}) {
         const {roles} = authenticate()
         authorise(CanGetPaymentProviders, roles)
@@ -616,7 +648,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     },
 
     invoices: {
-      type: GraphQLNonNull(GraphQLInvoiceConnection),
+      type: new GraphQLNonNull(GraphQLInvoiceConnection),
       args: {
         cursor: {type: GraphQLID},
         take: {type: GraphQLInt, defaultValue: 10},
@@ -643,7 +675,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     },
 
     payments: {
-      type: GraphQLNonNull(GraphQLPaymentConnection),
+      type: new GraphQLNonNull(GraphQLPaymentConnection),
       args: {
         cursor: {type: GraphQLID},
         take: {type: GraphQLInt, defaultValue: 10},
@@ -664,13 +696,13 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
 
     setting: {
       type: GraphQLSetting,
-      args: {name: {type: GraphQLString}},
+      args: {name: {type: new GraphQLNonNull(GraphQLString)}},
       resolve: (root, {name}, {authenticate, prisma: {setting}}) =>
         getSetting(name, authenticate, setting)
     },
 
     settings: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLSetting))),
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLSetting))),
       resolve: (root, _, {authenticate, prisma: {setting}}) => getSettings(authenticate, setting)
     },
 
@@ -678,7 +710,7 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
     // ==========
 
     ratingSystem: {
-      type: GraphQLNonNull(GraphQLFullCommentRatingSystem),
+      type: new GraphQLNonNull(GraphQLFullCommentRatingSystem),
       resolve: (root, input, {prisma: {commentRatingSystem}}) =>
         getRatingSystem(commentRatingSystem)
     },
@@ -748,6 +780,44 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
         id: {type: GraphQLID}
       },
       resolve: (root, {id}, {prisma: {event}}) => getEvent(id, event)
+    },
+
+    importedEventsIds: {
+      type: new GraphQLList(GraphQLString),
+      description: 'This query returns a list of original ids of imported events',
+      resolve: (root, _, {prisma: {event}}) => getImportedEventsIds(event)
+    },
+
+    // Stats
+    newSubscribersPerMonth: {
+      type: new GraphQLList(GraphQLSubscribersPerMonth),
+      args: {monthsBack: {type: GraphQLInt}},
+      resolve: (root, {monthsBack}, {authenticate, prisma: {subscription}}) => {
+        return getNewSubscribersPerMonth(authenticate, subscription, monthsBack)
+      }
+    },
+
+    // Actions
+    // =======
+    actions: {
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLAction))),
+      resolve: (
+        root,
+        _,
+        {authenticate, prisma: {article, page, comment, subscription, author, poll, user, event}}
+      ) => {
+        return getActions(
+          authenticate,
+          article,
+          page,
+          comment,
+          subscription,
+          author,
+          poll,
+          user,
+          event
+        )
+      }
     }
   }
 })

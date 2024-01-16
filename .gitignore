@@ -7,4 +7,16 @@ npm-debug.log
 .changelog
 coverage/
 screenshots
+
+# Nx
+tmp
 .env.local
+.nx
+lerna-debug.log
+
+# Next.js
+.next
+
+# translations cleanup files
+tools/modified_jsonfile.json
+tools/removed_keys.json

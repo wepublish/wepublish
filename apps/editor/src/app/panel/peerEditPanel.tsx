@@ -7,20 +7,21 @@ import {
   useRemotePeerProfileQuery,
   useUpdatePeerMutation
 } from '@wepublish/editor/api'
+import {
+  ChooseEditImage,
+  createCheckedPermissionComponent,
+  DescriptionList,
+  DescriptionListItem,
+  getOperationNameFromDocument,
+  PermissionControl,
+  RichTextBlock,
+  toggleRequiredLabel,
+  useAuthorisation
+} from '@wepublish/ui/editor'
+import {slugify} from '@wepublish/utils'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Drawer, Form as RForm, Message, Panel, Schema, toaster} from 'rsuite'
-
-import {ChooseEditImage} from '../atoms/chooseEditImage'
-import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
-import {
-  createCheckedPermissionComponent,
-  PermissionControl,
-  useAuthorisation
-} from '../atoms/permissionControl'
-import {RichTextBlock} from '../blocks/richTextBlock/richTextBlock'
-import {toggleRequiredLabel} from '../toggleRequiredLabel'
-import {getOperationNameFromDocument, slugify} from '../utility'
 
 export interface PeerEditPanelProps {
   id?: string

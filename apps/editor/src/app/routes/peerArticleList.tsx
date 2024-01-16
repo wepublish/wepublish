@@ -5,6 +5,17 @@ import {
   PeerArticle,
   usePeerArticleListQuery
 } from '@wepublish/editor/api'
+import {
+  createCheckedPermissionComponent,
+  DEFAULT_MAX_TABLE_PAGES,
+  DEFAULT_TABLE_PAGE_SIZES,
+  ListFilters,
+  ListViewContainer,
+  ListViewHeader,
+  mapTableSortTypeToGraphQLSortOrder,
+  Table,
+  TableWrapper
+} from '@wepublish/ui/editor'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {
@@ -17,14 +28,6 @@ import {
   Whisper
 } from 'rsuite'
 import {RowDataType} from 'rsuite-table'
-
-import {createCheckedPermissionComponent} from '../atoms/permissionControl'
-import {ListFilters, ListViewContainer, ListViewHeader, Table, TableWrapper} from '../ui/listView'
-import {
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
-  mapTableSortTypeToGraphQLSortOrder
-} from '../utility'
 
 const {Column, HeaderCell, Cell: RCell} = RTable
 

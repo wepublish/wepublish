@@ -2,8 +2,380 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type AllowedSettingVals {
+  boolChoice: Boolean
+  stringChoice: [String!]
+}
+
+type Consent {
+  createdAt: DateTime!
+  defaultValue: Boolean!
+  id: String!
+  modifiedAt: DateTime!
+  name: String!
+  slug: String!
+}
+
+input ConsentFilter {
+  defaultValue: Boolean
+  name: String
+  slug: String
+}
+
+type DashboardInvoice {
+  amount: Int!
+  dueAt: DateTime!
+  memberPlan: String
+  paidAt: DateTime
+}
+
+type DashboardSubscription {
+  deactivationDate: DateTime
+  endsAt: DateTime
+  memberPlan: String!
+  monthlyAmount: Int!
+  paymentPeriodicity: PaymentPeriodicity!
+  reasonForDeactivation: SubscriptionDeactivationReason
+  renewsAt: DateTime
+  startsAt: DateTime!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Event {
+  createdAt: DateTime!
+  description: RichText!
+  endsAt: DateTime
+  externalSourceId: String!
+  externalSourceName: String!
+  id: String!
+  imageUrl: String
+  location: String!
+  modifiedAt: DateTime!
+  name: String!
+  startsAt: DateTime!
+  status: EventStatus!
+}
+
+enum EventStatus {
+  Cancelled
+  Postponed
+  Rescheduled
+  Scheduled
+}
+
+"""Setting Value"""
+scalar GraphQLSettingValueType
+
+input ImportedEventFilter {
+  from: String
+  location: String
+  name: String
+  providers: [String]
+  to: String
+}
+
+enum ImportedEventSort {
+  CREATED_AT
+  ENDS_AT
+  MODIFIED_AT
+  STARTS_AT
+}
+
+type ImportedEventsDocument {
+  nodes: [Event!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type MailProviderModel {
+  name: String!
+}
+
+type MailTemplateRef {
+  id: String!
+  name: String!
+}
+
+type MailTemplateWithUrlAndStatusModel {
+  description: String
+  externalMailTemplateId: String!
+  id: String!
+  name: String!
+  remoteMissing: Boolean!
+  status: String!
+  url: String!
+}
+
+type MemberPlanRef {
+  id: String!
+  name: String!
+}
+
+type Mutation {
+  "\n      Create a new consent.\n    "
+  createConsent(defaultValue: Boolean!, name: String!, slug: String!): Consent!
+
+  "\n      Creates and event based on data from importable events list and an id and provider.\n      Also, uploads an image to WePublish Image library.\n    "
+  createEvent(id: String!, source: String!): String!
+
+  """Create a new subscription flow"""
+  createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
+
+  """Create a subscription interval"""
+  createSubscriptionInterval(daysAwayFromEnding: Int, event: SubscriptionEvent!, mailTemplateId: String, subscriptionFlowId: String!): [SubscriptionFlowModel!]!
+
+  "\n      Creates a new userConsent based on input.\n      Returns created userConsent.\n    "
+  createUserConsent(consentId: String!, userId: String!, value: Boolean!): UserConsent!
+
+  "\n      Deletes an existing consent.\n    "
+  deleteConsent(id: String!): Consent!
+
+  """Delete an existing subscription flow"""
+  deleteSubscriptionFlow(id: String!): [SubscriptionFlowModel!]!
+
+  """Delete an existing subscription interval"""
+  deleteSubscriptionInterval(id: String!): [SubscriptionFlowModel!]!
+
+  "\n      Delete an existing userConsent by id.\n      Returns deleted userConsent.\n    "
+  deleteUserConsent(id: String!): UserConsent!
+  syncTemplates: Boolean
+
+  """Sends a test email for the given event"""
+  testSystemMail(event: UserEvent!): Boolean!
+
+  "\n      Updates an existing consent.\n    "
+  updateConsent(defaultValue: Boolean, id: String!, name: String, slug: String): Consent!
+
+  """Updates an existing setting."""
+  updateSetting(name: SettingName!, value: GraphQLSettingValueType!): Setting!
+
+  """Update an existing subscription flow"""
+  updateSubscriptionFlow(autoRenewal: [Boolean!], id: String!, paymentMethodIds: [String!], periodicities: [PaymentPeriodicity!]): [SubscriptionFlowModel!]!
+
+  """Update an existing subscription interval"""
+  updateSubscriptionInterval(daysAwayFromEnding: Int, id: String!, mailTemplateId: String): [SubscriptionFlowModel!]!
+
+  """Updates an existing mail flow"""
+  updateSystemMail(event: UserEvent!, mailTemplateId: String!): [SystemMailModel!]!
+
+  "\n      Updates an existing userConsent based on input.\n      Returns updated userConsent.\n    "
+  updateUserConsent(id: String!, value: Boolean!): UserConsent!
+}
+
+type PageInfo {
+  endCursor: String
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+}
+
+type PaymentMethodRef {
+  id: String!
+  name: String!
+}
+
+enum PaymentPeriodicity {
+  biannual
+  monthly
+  quarterly
+  yearly
+}
+
+type PeriodicJob {
+  createdAt: DateTime!
+  date: DateTime!
+  error: String
+  executionTime: DateTime
+  finishedWithError: DateTime
+  id: String!
+  modifiedAt: DateTime!
+  successfullyFinished: DateTime
+  tries: Float!
+}
+
 type Query {
+  "\n      Returns all active subscribers.\n      Includes subscribers with a cancelled but not run out subscription.\n    "
+  activeSubscribers: [DashboardSubscription!]!
+
+  "\n      Returns a consent by id.\n    "
+  consent(id: String!): Consent!
+
+  "\n      Returns all consents.\n    "
+  consents(filter: ConsentFilter): [Consent!]!
+
+  "\n      Returns a list of Importable Event Providers\n    "
+  eventProviders: [String!]!
+
+  "\n      Returns the expected revenue for the time period given.\n      Excludes cancelled or manually set as paid invoices.\n    "
+  expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
+
+  "\n      Returns a more detailed version of a single importable event, by id and source.\n    "
+  importedEvent(filter: SingleEventFilter!): Event!
+
+  "\n      Returns a list of imported events from external sources, transformed to match our model.\n    "
+  importedEvents(filter: ImportedEventFilter, order: Int, skip: Int, sort: ImportedEventSort, take: Int): ImportedEventsDocument!
+
+  "\n      Returns a list of external source ids of already imported events.\n    "
+  importedEventsIds: [String!]!
+
+  """Return all mail templates"""
+  mailTemplates: [MailTemplateWithUrlAndStatusModel!]!
+
+  "\n      Returns all new deactivations in a given timeframe.\n      This considers the time the deactivation was made, not when the subscription runs out.\n    "
+  newDeactivations(end: DateTime, start: DateTime!): [DashboardSubscription!]!
+
+  "\n      Returns all new subscribers in a given timeframe.\n      Includes already deactivated ones.\n    "
+  newSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
+
+  """Returns all payment methods"""
+  paymentMethods: [PaymentMethodRef!]!
+  periodicJobLog(skip: Int, take: Int = 10): [PeriodicJob!]!
+  provider: MailProviderModel!
+
+  "\n      Returns all renewing subscribers in a given timeframe.\n    "
+  renewingSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
+
+  "\n      Returns the revenue generated for the time period given.\n      Only includes paid invoices that have not been manually paid.\n    "
+  revenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
+
+  "\n      Returns a single setting by id.\n    "
+  setting(id: String!): Setting!
+
+  "\n      Returns all settings.\n    "
+  settingsList(filter: SettingFilter): [Setting!]!
+
+  """Returns all subscription flows"""
+  subscriptionFlows(defaultFlowOnly: Boolean!, memberPlanId: String): [SubscriptionFlowModel!]!
+
+  """Returns all mail flows"""
+  systemMails: [SystemMailModel!]!
+
+  "\n      Returns a single userConsent by id.\n    "
+  userConsent(id: String!): UserConsent!
+
+  "\n      Returns a list of userConsents. Possible to filter.\n    "
+  userConsents(name: String, slug: String, value: Boolean): [UserConsent!]!
   versionInformation: VersionInformation!
+}
+
+scalar RichText
+
+type Setting {
+  id: ID!
+  name: SettingName!
+  settingRestriction: SettingRestriction
+  value: GraphQLSettingValueType
+}
+
+input SettingFilter {
+  name: String
+}
+
+enum SettingName {
+  ALLOW_COMMENT_EDITING
+  ALLOW_GUEST_COMMENTING
+  ALLOW_GUEST_COMMENT_RATING
+  ALLOW_GUEST_POLL_VOTING
+  COMMENT_CHAR_LIMIT
+  INVOICE_REMINDER_FREQ
+  INVOICE_REMINDER_MAX_TRIES
+  MAIL_PROVIDER_NAME
+  MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC
+  MAKE_EXPECTED_REVENUE_API_PUBLIC
+  MAKE_NEW_DEACTIVATIONS_API_PUBLIC
+  MAKE_NEW_SUBSCRIBERS_API_PUBLIC
+  MAKE_RENEWING_SUBSCRIBERS_API_PUBLIC
+  MAKE_REVENUE_API_PUBLIC
+  PEERING_TIMEOUT_MS
+  RESET_PASSWORD_JWT_EXPIRES_MIN
+  SEND_LOGIN_JWT_EXPIRES_MIN
+}
+
+type SettingRestriction {
+  allowedValues: AllowedSettingVals
+  inputLength: Int
+  maxValue: Int
+  minValue: Int
+}
+
+input SingleEventFilter {
+  id: String!
+  source: String!
+}
+
+enum SubscriptionDeactivationReason {
+  invoiceNotPaid
+  none
+  userSelfDeactivated
+}
+
+enum SubscriptionEvent {
+  CUSTOM
+  DEACTIVATION_BY_USER
+  DEACTIVATION_UNPAID
+  INVOICE_CREATION
+  RENEWAL_FAILED
+  RENEWAL_SUCCESS
+  SUBSCRIBE
+}
+
+type SubscriptionFlowModel {
+  autoRenewal: [Boolean!]!
+  default: Boolean!
+  id: String!
+  intervals: [SubscriptionInterval!]!
+  memberPlan: MemberPlanRef
+  numberOfSubscriptions: Int!
+  paymentMethods: [PaymentMethodRef!]!
+  periodicities: [PaymentPeriodicity!]!
+}
+
+type SubscriptionInterval {
+  daysAwayFromEnding: Int
+  event: SubscriptionEvent!
+  id: String!
+  mailTemplate: MailTemplateRef
+}
+
+type SystemMailModel {
+  event: UserEvent!
+  mailTemplate: MailTemplateRef
+}
+
+type User {
+  active: Boolean!
+  createdAt: DateTime!
+  email: String!
+  emailVerifiedAt: DateTime
+  firstName: String
+  id: String!
+  lastLogin: DateTime
+  modifiedAt: DateTime!
+  name: String!
+  password: String!
+  preferredName: String
+  roleIDs: [String!]!
+  userImageID: String
+}
+
+type UserConsent {
+  consent: Consent!
+  createdAt: DateTime!
+  id: String!
+  modifiedAt: DateTime!
+  user: User!
+  value: Boolean!
+}
+
+enum UserEvent {
+  ACCOUNT_CREATION
+  LOGIN_LINK
+  PASSWORD_RESET
+  TEST_MAIL
 }
 
 type VersionInformation {

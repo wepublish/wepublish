@@ -1,0 +1,191 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`DashboardSubscriptionService should get all active subscribers 1`] = `
+[
+  {
+    "deactivationDate": undefined,
+    "endsAt": undefined,
+    "memberPlan": "foo",
+    "monthlyAmount": 500,
+    "paymentPeriodicity": "monthly",
+    "reasonForDeactivation": undefined,
+    "renewsAt": undefined,
+    "startsAt": "2023-02-03T00:00:00.000Z",
+  },
+  {
+    "deactivationDate": "2023-01-20T14:12:34.832Z",
+    "endsAt": "2023-02-03T00:00:00.000Z",
+    "memberPlan": "Bar",
+    "monthlyAmount": 50,
+    "paymentPeriodicity": "monthly",
+    "reasonForDeactivation": "invoiceNotPaid",
+    "renewsAt": undefined,
+    "startsAt": "2023-02-02T00:00:00.000Z",
+  },
+  {
+    "deactivationDate": undefined,
+    "endsAt": "2023-02-01T00:00:00.000Z",
+    "memberPlan": "foo",
+    "monthlyAmount": 50,
+    "paymentPeriodicity": "monthly",
+    "reasonForDeactivation": undefined,
+    "renewsAt": "2023-02-01T00:00:00.000Z",
+    "startsAt": "2023-01-01T00:00:00.000Z",
+  },
+]
+`;
+
+exports[`DashboardSubscriptionService should get all active subscribers 2`] = `
+{
+  "include": {
+    "deactivation": true,
+    "memberPlan": {
+      "select": {
+        "name": true,
+      },
+    },
+  },
+  "orderBy": {
+    "startsAt": "desc",
+  },
+  "where": {
+    "OR": [
+      {
+        "deactivation": null,
+        "paidUntil": {
+          "gte": 2023-01-01T00:00:00.000Z,
+        },
+      },
+      {
+        "deactivation": {
+          "date": {
+            "gte": 2023-01-01T00:00:00.000Z,
+          },
+        },
+      },
+    ],
+  },
+}
+`;
+
+exports[`DashboardSubscriptionService should get the new deactivations 1`] = `
+[
+  {
+    "deactivationDate": "2023-01-01T00:00:00.000Z",
+    "endsAt": "2023-02-03T00:00:00.000Z",
+    "memberPlan": "foo",
+    "monthlyAmount": 50,
+    "paymentPeriodicity": "monthly",
+    "reasonForDeactivation": "invoiceNotPaid",
+    "startsAt": "2023-01-01T00:00:00.000Z",
+  },
+]
+`;
+
+exports[`DashboardSubscriptionService should get the new deactivations 2`] = `
+{
+  "include": {
+    "deactivation": true,
+    "memberPlan": {
+      "select": {
+        "name": true,
+      },
+    },
+  },
+  "orderBy": {
+    "deactivation": {
+      "createdAt": "desc",
+    },
+  },
+  "where": {
+    "deactivation": {
+      "createdAt": {
+        "gte": 2023-01-01T00:00:00.000Z,
+        "lt": 2023-02-01T00:00:00.000Z,
+      },
+    },
+  },
+}
+`;
+
+exports[`DashboardSubscriptionService should get the new subscribers 1`] = `
+[
+  {
+    "deactivationDate": "2023-01-20T14:11:26.283Z",
+    "endsAt": "2023-02-02T00:00:00.000Z",
+    "memberPlan": "Bar",
+    "monthlyAmount": 50,
+    "paymentPeriodicity": "monthly",
+    "reasonForDeactivation": "invoiceNotPaid",
+    "renewsAt": undefined,
+    "startsAt": "2023-01-02T00:00:00.000Z",
+  },
+  {
+    "deactivationDate": undefined,
+    "endsAt": "2023-02-01T00:00:00.000Z",
+    "memberPlan": "foo",
+    "monthlyAmount": 50,
+    "paymentPeriodicity": "monthly",
+    "reasonForDeactivation": undefined,
+    "renewsAt": "2023-02-01T00:00:00.000Z",
+    "startsAt": "2023-01-01T00:00:00.000Z",
+  },
+]
+`;
+
+exports[`DashboardSubscriptionService should get the new subscribers 2`] = `
+{
+  "include": {
+    "deactivation": true,
+    "memberPlan": {
+      "select": {
+        "name": true,
+      },
+    },
+  },
+  "orderBy": {
+    "startsAt": "desc",
+  },
+  "where": {
+    "startsAt": {
+      "gte": 2023-01-01T00:00:00.000Z,
+      "lt": 2023-02-01T00:00:00.000Z,
+    },
+  },
+}
+`;
+
+exports[`DashboardSubscriptionService should get the renewing subscribers 1`] = `
+[
+  {
+    "memberPlan": "foo",
+    "monthlyAmount": 50,
+    "paymentPeriodicity": "monthly",
+    "renewsAt": "2023-01-29T00:00:00.000Z",
+    "startsAt": "2023-01-01T00:00:00.000Z",
+  },
+]
+`;
+
+exports[`DashboardSubscriptionService should get the renewing subscribers 2`] = `
+{
+  "include": {
+    "memberPlan": {
+      "select": {
+        "name": true,
+      },
+    },
+  },
+  "orderBy": {
+    "paidUntil": "desc",
+  },
+  "where": {
+    "autoRenew": true,
+    "deactivation": null,
+    "paidUntil": {
+      "gte": 2023-01-01T00:00:00.000Z,
+      "lt": 2023-02-01T00:00:00.000Z,
+    },
+  },
+}
+`;
