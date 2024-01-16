@@ -1,15 +1,13 @@
-import {GatewayClient} from '../payrexx/gateway-client'
+import {Gateway, GatewayClient} from '../payrexx/gateway-client'
 import {TransactionClient, Transaction} from '../payrexx/transaction-client'
 import {PayrexxPaymentProvider} from './payrexx-payment-provider'
-import {IntentState} from './payment-provider'
+import {IntentState, InvoiceWithItems} from './payment-provider'
 import express from 'express'
 import Mock = jest.Mock
 import {PartialDeep} from 'type-fest'
 
-// Mock GatewayClient and TransactionClient
-
 function mockInstance<Type = unknown>(implementation?: PartialDeep<Type>) {
-  return jest.fn().mockImplementation(() => implementation) as Mock<Type> & Type
+  return new (jest.fn().mockImplementation(() => implementation) as Mock<Type>)() as Type
 }
 
 describe('PayrexxPaymentProvider', () => {
@@ -17,9 +15,13 @@ describe('PayrexxPaymentProvider', () => {
 
   beforeEach(() => {
     const gatewayClient = mockInstance<GatewayClient>({
-      getGateway: jest.fn().mockReturnValue({})
+      createGateway: jest.fn(),
+      getGateway: jest.fn()
     })
-    const transactionClient = mockInstance<TransactionClient>()
+    const transactionClient = mockInstance<TransactionClient>({
+      retrieveTransaction: jest.fn(),
+      chargePreAuthorizedTransaction: jest.fn()
+    })
 
     payrexx = new PayrexxPaymentProvider({
       id: 'payrexx',
@@ -118,6 +120,63 @@ describe('PayrexxPaymentProvider', () => {
       })
       expect(response.status).toEqual(200)
       expect(response.paymentStates).toEqual([])
+    })
+  })
+
+  describe('Payments', () => {
+    it('should create gateway for user without customerId', async () => {
+      payrexx.gatewayClient.createGateway = jest.fn().mockResolvedValue({
+        id: 1,
+        link: 'https://payrexx/gateway-link'
+      } as Partial<Gateway>)
+
+      const result = await payrexx.createIntent({
+        invoice: {
+          items: [
+            {
+              amount: 120,
+              quantity: 3
+            }
+          ]
+        } as unknown as InvoiceWithItems,
+        paymentID: '456',
+        successURL: 'https://success',
+        failureURL: 'https://failure',
+        saveCustomer: false
+      })
+
+      expect(payrexx.gatewayClient.createGateway).toBeCalled()
+      expect(payrexx.transactionClient.chargePreAuthorizedTransaction).not.toBeCalled()
+      expect(result.intentID).toBe('1')
+      expect(result.intentSecret).toBe('https://payrexx/gateway-link')
+    })
+
+    it('should charge transaction for user with customerId', async () => {
+      payrexx.transactionClient.chargePreAuthorizedTransaction = jest.fn().mockResolvedValue({
+        id: 2,
+        status: 'confirmed'
+      } as Partial<Transaction>)
+
+      const result = await payrexx.createIntent({
+        customerID: '123',
+        invoice: {
+          items: [
+            {
+              amount: 120,
+              quantity: 3
+            }
+          ]
+        } as unknown as InvoiceWithItems,
+        paymentID: '456',
+        successURL: 'https://success',
+        failureURL: 'https://failure',
+        saveCustomer: false
+      })
+
+      expect(payrexx.gatewayClient.createGateway).not.toBeCalled()
+      expect(payrexx.transactionClient.chargePreAuthorizedTransaction).toBeCalled()
+      expect(result.intentID).toBe('2')
+      expect(result.intentSecret).toBe('https://success')
     })
   })
 })
