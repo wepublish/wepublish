@@ -599,10 +599,25 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
       description:
         'This query performs a fulltext search on titles and blocks of articles/pages and returns all matching ones.',
       args: {
-        query: {type: new GraphQLNonNull(GraphQLString)}
+        query: {type: new GraphQLNonNull(GraphQLString)},
+        take: {type: GraphQLInt, defaultValue: 10},
+        skip: {type: GraphQLInt, defaultValue: 0},
+        pageSort: {type: GraphQLPublishedPageSort, defaultValue: PageSort.PublishedAt},
+        articleSort: {type: GraphQLPublicArticleSort, defaultValue: ArticleSort.PublishedAt},
+        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
-      resolve: (root, {query}, {prisma, loaders}) =>
-        queryPhrase(query, prisma, loaders.publicArticles, loaders.publicPagesByID)
+      resolve: (root, {query, take, skip, pageSort, articleSort, order}, {prisma, loaders}) =>
+        queryPhrase(
+          query,
+          prisma,
+          loaders.publicArticles,
+          loaders.publicPagesByID,
+          take,
+          skip,
+          pageSort,
+          articleSort,
+          order
+        )
     },
 
     // Setting
