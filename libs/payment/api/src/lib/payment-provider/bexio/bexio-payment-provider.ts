@@ -108,8 +108,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     if (!props.invoice.subscriptionID) {
       throw new NoSubscriptionIdInInvoice()
     }
-    const created = await this.bexioCreate(props.invoice.id, false, props.successURL)
-    return created
+    return await this.bexioCreate(props.invoice.id, false, props.successURL)
   }
 
   /**
