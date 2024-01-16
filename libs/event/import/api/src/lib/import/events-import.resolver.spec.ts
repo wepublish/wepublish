@@ -112,7 +112,7 @@ describe('EventsImportResolver', () => {
   test('importedEventsIds query should call importedEvent method of EventsImportService', async () => {
     jest
       .spyOn(service, 'importedEventsIds')
-      .mockReturnValueOnce(Promise.resolve([mockImportableEvents[0].externalSourceId]))
+      .mockReturnValueOnce(Promise.resolve([mockImportableEvents[0].externalSourceId!]))
 
     expect(resolver.importedEventsIds()).resolves.toEqual([
       mockImportableEvents[0].externalSourceId
@@ -120,12 +120,12 @@ describe('EventsImportResolver', () => {
     expect(service.importedEventsIds).toHaveBeenCalledWith()
   })
 
-  test('createEventFromSource mutation should call createEventFromSource method of EventsImportService with the provided filter', () => {
+  test('importEvent mutation should call createEventFromSource method of EventsImportService with the provided filter', () => {
     const filter = {id: 'some-id', source: 'AgendaBasel'}
 
     jest.spyOn(service, 'createEventFromSource').mockReturnValueOnce(Promise.resolve('some-id'))
 
-    expect(resolver.createEventFromSource(filter)).resolves.toEqual('some-id')
+    expect(resolver.importEvent(filter)).resolves.toEqual('some-id')
     expect(service.createEventFromSource).toHaveBeenCalledWith(filter)
   })
 })

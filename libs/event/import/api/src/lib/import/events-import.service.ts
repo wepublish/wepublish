@@ -70,7 +70,9 @@ export class EventsImportService {
 
       // apply filters to events
       if (filter.providers && filter.providers.length) {
-        sortedEvents = sortedEvents.filter(e => filter?.providers?.includes(e.externalSourceName))
+        sortedEvents = sortedEvents.filter(
+          e => e.externalSourceName && filter?.providers?.includes(e.externalSourceName)
+        )
       }
 
       if (filter.from) {
