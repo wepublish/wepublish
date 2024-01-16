@@ -56,7 +56,7 @@ exports[`Token Generate Panel should be able to generate a new token 1`] = `
 +       </div>
 +     </div>
 +     <div
-+       class="css-wsps2-Message euh87sf0 rs-message rs-message-warning rs-message-show rs-message-has-icon"
++       class="css-wsps2-Message e1aqeku00 rs-message rs-message-warning rs-message-show rs-message-has-icon"
 +       role="alert"
 +     >
 +       <div

@@ -1,12 +1,10 @@
 import {MockedProvider as MockedProviderBase} from '@apollo/client/testing'
 import {fireEvent, render} from '@testing-library/react'
 import {CreatePeerDocument, PeerDocument} from '@wepublish/editor/api'
-import {AuthContext} from '@wepublish/ui/editor'
-import React from 'react'
 import snapshotDiff from 'snapshot-diff'
-
-import {PeerEditPanel} from '../../src/app/panel/peerEditPanel'
-import {actWait, sessionWithPermissions} from '../../../../../../../apps/editor/__tests__/utils'
+import {AuthContext} from '../../authContext'
+import {actWait, sessionWithPermissions} from '../../testUtils'
+import {PeerEditPanel} from '../peerEditPanel'
 
 const MockedProvider = MockedProviderBase as any
 

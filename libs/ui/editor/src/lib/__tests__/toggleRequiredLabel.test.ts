@@ -1,4 +1,4 @@
-import {toggleRequiredLabel} from '@wepublish/ui/editor'
+import {toggleRequiredLabel} from '../toggleRequiredLabel'
 
 test('should add the required symbol by default', () => {
   const result = toggleRequiredLabel('foobar', true)

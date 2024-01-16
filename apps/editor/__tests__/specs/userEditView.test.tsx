@@ -6,7 +6,7 @@ import React from 'react'
 import {BrowserRouter} from 'react-router-dom'
 import snapshotDiff from 'snapshot-diff'
 
-import {UserEditView} from '../../src/app/routes/userEditView'
+import {UserEditView} from '../../src/app/routes/users/userEditView'
 import {actWait, sessionWithPermissions} from '../utils'
 
 const MockedProvider = MockedProviderBase as any

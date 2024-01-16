@@ -5,12 +5,10 @@ import {
   PermissionListDocument,
   UserRoleDocument
 } from '@wepublish/editor/api'
-import {AuthContext} from '@wepublish/ui/editor'
-import React from 'react'
 import snapshotDiff from 'snapshot-diff'
-
-import {UserRoleEditPanel} from '../../src/app/panel/userRoleEditPanel'
-import {actWait, sessionWithPermissions} from '../../../../../../../apps/editor/__tests__/utils'
+import {actWait, sessionWithPermissions} from '../../testUtils'
+import {AuthContext} from '../../authContext'
+import {UserRoleEditPanel} from '../userRoleEditPanel'
 
 const MockedProvider = MockedProviderBase as any
 

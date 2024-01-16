@@ -1,12 +1,12 @@
 import {MockedProvider as MockedProviderBase} from '@apollo/client/testing'
 import {fireEvent, render} from '@testing-library/react'
 import {AuthorDocument, CreateAuthorDocument} from '@wepublish/editor/api'
-import {AuthContext, createDefaultValue} from '@wepublish/ui/editor'
-import React from 'react'
 import snapshotDiff from 'snapshot-diff'
 
-import {AuthorEditPanel} from '../../src/app/panel/authorEditPanel'
-import {actWait, sessionWithPermissions} from '../../../../../../../apps/editor/__tests__/utils'
+import {AuthContext} from '../../authContext'
+import {createDefaultValue} from '../../blocks'
+import {AuthorEditPanel} from '../authorEditPanel'
+import {actWait, sessionWithPermissions} from '../../testUtils'
 
 const MockedProvider = MockedProviderBase as any
 
