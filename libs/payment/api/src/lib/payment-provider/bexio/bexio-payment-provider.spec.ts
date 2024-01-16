@@ -1,6 +1,6 @@
 import {BexioPaymentProvider} from './bexio-payment-provider'
 import {PaymentPeriodicity, PaymentState, PrismaClient} from '@prisma/client'
-import {CreatePaymentIntentProps} from '@wepublish/payment/api'
+import {CreatePaymentIntentProps} from '../payment-provider'
 
 jest.mock('axios')
 
