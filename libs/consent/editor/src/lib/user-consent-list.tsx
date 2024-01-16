@@ -17,7 +17,7 @@ import {
 } from '@wepublish/editor/api-v2'
 import {RowDataType} from 'rsuite-table'
 import {useMemo} from 'react'
-import {getApiClientV2} from '../apiClientv2'
+import {getApiClientV2} from '@wepublish/editor/api-v2'
 
 const {Column, HeaderCell, Cell} = RTable
 

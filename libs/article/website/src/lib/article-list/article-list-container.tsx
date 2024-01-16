@@ -4,6 +4,8 @@ import {
   BuilderContainerProps,
   useWebsiteBuilder
 } from '@wepublish/website/builder'
+import {produce} from 'immer'
+import {useMemo} from 'react'
 
 export type ArticleListContainerProps = BuilderContainerProps &
   Pick<BuilderArticleListProps, 'variables' | 'onVariablesChange'> & {
@@ -21,20 +23,19 @@ export function ArticleListContainer({
     variables
   })
 
+  const filteredArticles = useMemo(
+    () =>
+      produce(data, draftData => {
+        if (filter && draftData?.articles) {
+          draftData.articles.nodes = filter(draftData.articles.nodes)
+        }
+      }),
+    [data, filter]
+  )
+
   return (
     <ArticleList
-      data={
-        filter && data?.articles
-          ? {
-              ...data,
-              articles: {
-                pageInfo: data.articles.pageInfo,
-                totalCount: data.articles.totalCount,
-                nodes: filter(data.articles.nodes)
-              }
-            }
-          : data
-      }
+      data={filteredArticles}
       loading={loading}
       error={error}
       className={className}

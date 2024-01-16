@@ -31,9 +31,10 @@ exports[`AuthorList Item should render Default 1`] = `
 
 .emotion-3 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
   border-radius: 50%;
 }
 
@@ -127,7 +128,7 @@ exports[`AuthorList Item should render WithoutImage 1`] = `
 -     >
 -       <img
 -         alt="DSC07717"
--         class="css-u3ebmu-ImageWrapper-AuthorListItem e1shv2yg0"
+-         class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
 -         loading="lazy"
 -         srcset="https://unsplash.it/800/800 800w,
 - https://unsplash.it/500/500 500w,

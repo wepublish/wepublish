@@ -15,8 +15,8 @@ import {
   CommentStateDropdown,
   CommentUser,
   createCheckedPermissionComponent,
-  ModelTitle,
-  SelectTags
+  SelectTags,
+  SingleViewTitle
 } from '@wepublish/ui/editor'
 import {memo, useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
@@ -38,14 +38,6 @@ import {
 
 const ColNoMargin = styled(RCol)`
   margin-top: 0px;
-`
-
-const Col = styled(RCol)`
-  margin-top: 20px;
-`
-
-const Panel = styled(RPanel)`
-  width: 100%;
 `
 
 const FlexItem = styled(FlexboxGrid.Item)`
@@ -212,7 +204,7 @@ const CommentEditView = memo(() => {
       fluid
       disabled={loading}
       style={{maxHeight: 'calc(100vh - 135px)', maxWidth: 'calc(100vw - 260px - 80px)'}}>
-      <ModelTitle
+      <SingleViewTitle
         loading={loading}
         title={t('comments.edit.title')}
         loadingTitle={t('comments.edit.title')}

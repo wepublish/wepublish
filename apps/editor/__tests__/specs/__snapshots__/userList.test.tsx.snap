@@ -184,20 +184,8 @@ exports[`User list view should render successfully 1`] = `
     </form>
   </div>
   .emotion-0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-flex-flow: column;
-  -webkit-flex-flow: column;
-  -ms-flex-flow: column;
-  flex-flow: column;
-  margin-top: 20px;
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1;
   height: 100%;
+  margin-top: 20px;
 }
 
 .emotion-1 {

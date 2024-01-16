@@ -18,9 +18,10 @@ exports[`ImageUpload should render Default 1`] = `
 
 .emotion-4 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
   width: 150px;
   height: 150px;
   border-radius: 100%;
@@ -320,7 +321,7 @@ exports[`ImageUpload should render NoImage 1`] = `
 - First value
 + Second value
 
-@@ -3,61 +3,29 @@
+@@ -3,61 +3,44 @@
       class="css-lb7gkq-ImageUploadWrapper e99ll9v2"
     >
       <div
@@ -328,18 +329,32 @@ exports[`ImageUpload should render NoImage 1`] = `
       >
 -       <img
 -         alt="DSC07717"
--         class="css-1lykaea-ImageWrapper-ImageUpload e1shv2yg0"
+-         class="css-nbsgpq-ImageWrapper-ImageUpload e1shv2yg0"
 -         loading="lazy"
 -         srcset="https://unsplash.it/800/400 800w,
 - https://unsplash.it/500/300 500w,
 - https://unsplash.it/300/200 300w,
 - https://unsplash.it/200/100 200w"
 -         title=""
--       />
 +       <svg
 +         class="css-1a3fenb-ImageUpload"
++         fill="none"
++         height="800px"
++         viewBox="0 0 24 24"
++         width="800px"
++         xmlns="http://www.w3.org/2000/svg"
 +       >
-+         placeholder.svg
++         <rect
++           fill="white"
++           height="24"
++           width="24"
++         />
++         <path
++           clip-rule="evenodd"
++           d="M2 12C2 6.47715 6.47715 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12ZM11.9999 6C9.79077 6 7.99991 7.79086 7.99991 10C7.99991 12.2091 9.79077 14 11.9999 14C14.209 14 15.9999 12.2091 15.9999 10C15.9999 7.79086 14.209 6 11.9999 6ZM17.1115 15.9974C17.8693 16.4854 17.8323 17.5491 17.1422 18.1288C15.7517 19.2966 13.9581 20 12.0001 20C10.0551 20 8.27215 19.3059 6.88556 18.1518C6.18931 17.5723 6.15242 16.5032 6.91351 16.012C7.15044 15.8591 7.40846 15.7251 7.68849 15.6097C8.81516 15.1452 10.2542 15 12 15C13.7546 15 15.2018 15.1359 16.3314 15.5954C16.6136 15.7102 16.8734 15.8441 17.1115 15.9974Z"
++           fill="#323232"
++           fill-rule="evenodd"
+          />
 +       </svg>
         <input
           accept="image/*"
@@ -351,8 +366,8 @@ exports[`ImageUpload should render NoImage 1`] = `
       </div>
       <div
         class="css-1g6s5rh-ImageUploadContent e99ll9v0"
--     >
--       <button
+      >
+        <button
 -         class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorError MuiIconButton-sizeMedium css-1jo1f9u-MuiButtonBase-root-MuiIconButton-root"
 -         tabindex="0"
 -         title="Bild löschen"
@@ -366,7 +381,7 @@ exports[`ImageUpload should render NoImage 1`] = `
 -           viewBox="0 0 24 24"
 -           width="1em"
 -           xmlns="http://www.w3.org/2000/svg"
-      >
+-         >
 -           <path
 -             d="M0 0h24v24H0z"
 -             fill="none"
@@ -379,7 +394,7 @@ exports[`ImageUpload should render NoImage 1`] = `
 -           class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
 -         />
 -       </button>
-        <button
+-       <button
           class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorPrimary MuiIconButton-sizeMedium css-1kuq5xv-MuiButtonBase-root-MuiIconButton-root"
           tabindex="0"
 -         title="Neues Bild hochladen"
@@ -389,7 +404,7 @@ exports[`ImageUpload should render NoImage 1`] = `
           <svg
             fill="currentColor"
             height="1em"
-@@ -70,11 +38,11 @@
+@@ -70,11 +53,11 @@
             <path
               d="M0 0h24v24H0z"
               fill="none"

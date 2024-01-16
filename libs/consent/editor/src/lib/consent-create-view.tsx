@@ -5,9 +5,9 @@ import {useTranslation} from 'react-i18next'
 import {useNavigate} from 'react-router-dom'
 import {Form, Message, Schema, toaster} from 'rsuite'
 
-import {ModelTitle} from '@wepublish/ui/editor'
+import {getApiClientV2} from '@wepublish/editor/api-v2'
+import {SingleViewTitle} from '@wepublish/ui/editor'
 import {ConsentForm} from './consent-form'
-import {getApiClientV2} from '../apiClientv2'
 
 const onErrorToast = (error: ApolloError, slug?: string) => {
   if (error.message.includes('Unique constraint')) {
@@ -35,7 +35,7 @@ export const ConsentCreateView = () => {
     name: '',
     slug: '',
     defaultValue: true
-  } as MutationCreateConsentArgs['consent'])
+  } as MutationCreateConsentArgs)
 
   const [shouldClose, setShouldClose] = useState(false)
 
@@ -58,9 +58,7 @@ export const ConsentCreateView = () => {
 
   const onSubmit = () => {
     createConsent({
-      variables: {
-        consent
-      }
+      variables: consent
     })
   }
 
@@ -78,7 +76,7 @@ export const ConsentCreateView = () => {
       model={validationModel}
       disabled={loading}
       onSubmit={validationPassed => validationPassed && onSubmit()}>
-      <ModelTitle
+      <SingleViewTitle
         loading={loading}
         title={t('consents.titleCreate')}
         loadingTitle={t('consents.titleCreate')}

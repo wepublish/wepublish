@@ -1,4 +1,4 @@
-import {runStorybookContainerTests} from '@wepublish/testing'
+import {runStorybookContainerTests} from '@wepublish/testing/website'
 import * as stories from './invoice-list-container.stories'
 
 describe('InvoiceList Container', () => {

@@ -42,13 +42,13 @@ export const CanGetAuthor: Permission = {
 
 export const CanGetAuthors: Permission = {
   id: 'CAN_GET_AUTHORS',
-  description: 'Allows to all authors',
+  description: 'Allows to get all authors',
   deprecated: false
 }
 
 export const CanDeleteAuthor: Permission = {
-  id: 'CAN_DELETE_AUTHORS',
-  description: 'Allows to delete authors',
+  id: 'CAN_DELETE_AUTHOR',
+  description: 'Allows to delete a single author',
   deprecated: false
 }
 
@@ -454,6 +454,12 @@ export const CanDeleteSubscription: Permission = {
   deprecated: false
 }
 
+export const CanCancelSubscription: Permission = {
+  id: 'CAN_DELETE_SUBSCRIPTION',
+  description: 'Allows to delete a subscription',
+  deprecated: false
+}
+
 export const CanLoginAsOtherUser: Permission = {
   id: 'CAN_LOGIN_AS_OTHER_USER',
   description: 'Allows to login as other user',
@@ -616,6 +622,72 @@ export const CanDeleteUserConsent: Permission = {
   deprecated: false
 }
 
+/**
+ * Subscription Settings
+ */
+export const CanGetSubscriptionFlows: Permission = {
+  id: 'CAN_GET_SUBSCRIPTION_FLOWS',
+  description: 'Allows to get subscription flows.',
+  deprecated: false
+}
+
+export const CanUpdateSubscriptionFlow: Permission = {
+  id: 'CAN_UPDATE_SUBSCRIPTION_FLOW',
+  description: 'Allows to update subscription flow.',
+  deprecated: false
+}
+
+export const CanCreateSubscriptionFlow: Permission = {
+  id: 'CAN_CREATE_SUBSCRIPTION_FLOW',
+  description: 'Allows to create a new subscription flow.',
+  deprecated: false
+}
+
+export const CanDeleteSubscriptionFlow: Permission = {
+  id: 'CAN_DELETE_SUBSCRIPTION_FLOW',
+  description: 'Allows to delete a subscription flow.',
+  deprecated: false
+}
+
+/**
+ * Mail templates
+ */
+export const CanGetMailTemplates: Permission = {
+  id: 'CAN_GET_MAIL-TEMPLATES',
+  description: 'Allows to get mail templates.',
+  deprecated: false
+}
+
+export const CanSyncMailTemplates: Permission = {
+  id: 'CAN_SYNC_MAIL-TEMPLATES',
+  description: 'Allowed to synchronize mail templates from mail provider.',
+  deprecated: false
+}
+
+/**
+ * System mails
+ */
+export const CanGetSystemMails: Permission = {
+  id: 'CAN_GET_SYSTEM_MAILS',
+  description: 'Allows to get system mail list.',
+  deprecated: false
+}
+
+export const CanUpdateSystemMails: Permission = {
+  id: 'CAN_UPDATE_SYSTEM_MAILS',
+  description: 'Allows user to edit and save a system mail.',
+  deprecated: false
+}
+
+/**
+ * Periodic Job
+ */
+export const CanGetPeriodicJobLog: Permission = {
+  id: 'CAN_GET_PERIODIC_JOB_LOG',
+  description: 'Allows to get the periodic job log',
+  deprecated: false
+}
+
 export const AllPermissions: Permission[] = [
   CanTakeActionOnComment,
   CanCreateNavigation,
@@ -707,10 +779,19 @@ export const AllPermissions: Permission[] = [
   CanGetEvent,
   CanUpdateEvent,
   CanDeleteEvent,
-  CanCreateEvent,
   CanCreateConsent,
   CanUpdateConsent,
   CanDeleteConsent,
+  CanCreateEvent,
+  CanGetSubscriptionFlows,
+  CanUpdateSubscriptionFlow,
+  CanCreateSubscriptionFlow,
+  CanDeleteSubscriptionFlow,
+  CanGetMailTemplates,
+  CanGetPeriodicJobLog,
+  CanSyncMailTemplates,
+  CanGetSystemMails,
+  CanUpdateSystemMails,
   CanCreateApprovedComment
 ]
 
@@ -758,6 +839,10 @@ export const EditorPermissions: Permission[] = [
   CanCreateConsent,
   CanUpdateConsent,
   CanDeleteConsent,
+  CanCreateEvent,
+  CanGetSubscriptionFlows,
+  CanGetMailTemplates,
+  CanGetPeriodicJobLog,
   CanCreateApprovedComment
 ]
 

@@ -1,6 +1,8 @@
 import {ApolloError} from '@apollo/client'
 import {stripTypename} from '@wepublish/editor/api'
 import {
+  FullConsentFragment,
+  MutationCreateConsentArgs,
   MutationUpdateConsentArgs,
   useConsentQuery,
   useUpdateConsentMutation
@@ -10,11 +12,11 @@ import {useTranslation} from 'react-i18next'
 import {useNavigate, useParams} from 'react-router-dom'
 import {Form, Message, Schema, toaster} from 'rsuite'
 
-import {ModelTitle} from '@wepublish/ui/editor'
+import {getApiClientV2} from '@wepublish/editor/api-v2'
+import {SingleViewTitle} from '@wepublish/ui/editor'
 import {ConsentForm} from './consent-form'
-import {getApiClientV2} from '../apiClientv2'
 
-const mapApiDataToInput = (consent: any): MutationUpdateConsentArgs['consent'] => ({
+const mapApiDataToInput = (consent: FullConsentFragment): MutationUpdateConsentArgs => ({
   ...stripTypename(consent),
   name: consent.name,
   slug: consent.slug,
@@ -46,7 +48,7 @@ export const ConsentEditView = () => {
   }
 
   const closePath = '/consents'
-  const [consent, setConsent] = useState({
+  const [consent, setConsent] = useState<MutationCreateConsentArgs | MutationUpdateConsentArgs>({
     defaultValue: true,
     name: '',
     slug: ''
@@ -69,14 +71,16 @@ export const ConsentEditView = () => {
 
   const [updateConsent, {loading: updateLoading}] = useUpdateConsentMutation({
     client,
-    onError: error => onErrorToast(error, consent.slug),
+    onError: error => onErrorToast(error, consent.slug ?? ''),
     onCompleted: data => {
       if (shouldClose) {
         navigate(closePath)
       }
+
       if (data.updateConsent) {
         setConsent(mapApiDataToInput(data.updateConsent))
       }
+
       toaster.push(
         <Message type="success" showIcon closable duration={3000}>
           {t('toast.updatedSuccess')}
@@ -89,11 +93,9 @@ export const ConsentEditView = () => {
     updateConsent({
       variables: {
         id: consentId,
-        consent: {
-          name: consent.name,
-          slug: consent.slug,
-          defaultValue: consent.defaultValue
-        }
+        name: consent.name,
+        slug: consent.slug,
+        defaultValue: consent.defaultValue
       }
     })
   }
@@ -114,7 +116,7 @@ export const ConsentEditView = () => {
       model={validationModel}
       disabled={loading}
       onSubmit={validationPassed => validationPassed && onSubmit()}>
-      <ModelTitle
+      <SingleViewTitle
         loading={loading}
         title={t('consents.titleEdit')}
         loadingTitle={t('consents.titleEdit')}

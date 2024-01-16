@@ -4,9 +4,10 @@ exports[`Image should render Default 1`] = `
 <DocumentFragment>
   .emotion-0 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
 }
 
 <img
@@ -30,7 +31,7 @@ exports[`Image should render Square 1`] = `
   <DocumentFragment>
     <img
       alt="An image description"
-      class="css-oph4oo-ImageWrapper e1shv2yg0"
+      class="css-19cwsz4-ImageWrapper e1shv2yg0"
       loading="lazy"
 -     srcset="https://unsplash.it/800/400 800w,
 - https://unsplash.it/500/300 500w,
@@ -55,7 +56,7 @@ exports[`Image should render WithoutDescription 1`] = `
     <img
 -     alt="An image description"
 +     alt="An image title"
-      class="css-oph4oo-ImageWrapper e1shv2yg0"
+      class="css-19cwsz4-ImageWrapper e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
   https://unsplash.it/500/300 500w,

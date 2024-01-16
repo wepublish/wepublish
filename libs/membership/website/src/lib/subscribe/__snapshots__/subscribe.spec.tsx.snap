@@ -800,8 +800,6 @@ exports[`Subscribe should render LoggedIn 1`] = `
   background-color: #f5f5f5;
   border-radius: 4px;
   border: 1px solid rgba(0, 0, 0, 0.12);
-  border-color: #1976d2;
-  background-color: rgb(220, 234, 248);
 }
 
 .emotion-12 {
@@ -937,12 +935,12 @@ exports[`Subscribe should render LoggedIn 1`] = `
   font-size: 1.5rem;
   left: 0;
   position: absolute;
-  -webkit-transform: scale(1);
-  -moz-transform: scale(1);
-  -ms-transform: scale(1);
-  transform: scale(1);
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  -webkit-transform: scale(0);
+  -moz-transform: scale(0);
+  -ms-transform: scale(0);
+  transform: scale(0);
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
 }
 
 .emotion-23 {
@@ -954,7 +952,7 @@ exports[`Subscribe should render LoggedIn 1`] = `
   letter-spacing: 0.00938em;
 }
 
-.emotion-25 {
+.emotion-40 {
   display: grid;
   grid-template-columns: 1fr auto;
   -webkit-align-items: center;
@@ -966,9 +964,11 @@ exports[`Subscribe should render LoggedIn 1`] = `
   background-color: #f5f5f5;
   border-radius: 4px;
   border: 1px solid rgba(0, 0, 0, 0.12);
+  border-color: #1976d2;
+  background-color: rgb(220, 234, 248);
 }
 
-.emotion-37 {
+.emotion-52 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -985,19 +985,20 @@ exports[`Subscribe should render LoggedIn 1`] = `
   font-size: 1.5rem;
   left: 0;
   position: absolute;
-  -webkit-transform: scale(0);
-  -moz-transform: scale(0);
-  -ms-transform: scale(0);
-  transform: scale(0);
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  -webkit-transform: scale(1);
+  -moz-transform: scale(1);
+  -ms-transform: scale(1);
+  transform: scale(1);
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
 }
 
 .emotion-54 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
 }
 
 .emotion-58 {
@@ -1965,7 +1966,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-85:focus::-ms-input-
                 <span
                   class="emotion-14 emotion-15"
                 >
-                  Foobar Memberplan
+                  Barfoo Memberplan
                 </span>
                 <small
                   class="emotion-16 emotion-17"
@@ -1974,14 +1975,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-85:focus::-ms-input-
                 </small>
               </div>
               <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary emotion-18"
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary emotion-18"
               >
                 <input
-                  checked=""
                   class="PrivateSwitchBase-input emotion-19"
-                  name="Foobar Memberplan"
+                  name="Barfoo Memberplan"
                   type="radio"
-                  value="123"
+                  value="2"
                 />
                 <span
                   class="emotion-20"
@@ -2014,69 +2014,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-85:focus::-ms-input-
             <span
               class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
             >
-              Foobar Memberplan
-            </span>
-          </label>
-          <label
-            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-9"
-          >
-            <div
-              class="emotion-25 emotion-11"
-            >
-              <div
-                class="emotion-12 emotion-13"
-              >
-                <span
-                  class="emotion-14 emotion-15"
-                >
-                  Barfoo Memberplan
-                </span>
-                <small
-                  class="emotion-16 emotion-17"
-                >
-                  Ab CHF 8.- pro Monat
-                </small>
-              </div>
-              <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary emotion-18"
-              >
-                <input
-                  class="PrivateSwitchBase-input emotion-19"
-                  name="Barfoo Memberplan"
-                  type="radio"
-                  value="2"
-                />
-                <span
-                  class="emotion-20"
-                >
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-21"
-                    data-testid="RadioButtonUncheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-                    />
-                  </svg>
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-37"
-                    data-testid="RadioButtonCheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
-                    />
-                  </svg>
-                </span>
-              </span>
-            </div>
-            <span
-              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
-            >
               Barfoo Memberplan
             </span>
           </label>
@@ -2084,7 +2021,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-85:focus::-ms-input-
             class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-9"
           >
             <div
-              class="emotion-25 emotion-11"
+              class="emotion-10 emotion-11"
             >
               <div
                 class="emotion-12 emotion-13"
@@ -2097,7 +2034,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-85:focus::-ms-input-
                 <small
                   class="emotion-16 emotion-17"
                 >
-                  Ab CHF 12.- pro Monat
+                  Ab CHF 8.- pro Monat
                 </small>
               </div>
               <span
@@ -2125,7 +2062,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-85:focus::-ms-input-
                   </svg>
                   <svg
                     aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-37"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-22"
                     data-testid="RadioButtonCheckedIcon"
                     focusable="false"
                     viewBox="0 0 24 24"
@@ -2141,6 +2078,70 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-85:focus::-ms-input-
               class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
             >
               Foobaz Memberplan
+            </span>
+          </label>
+          <label
+            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-9"
+          >
+            <div
+              class="emotion-40 emotion-11"
+            >
+              <div
+                class="emotion-12 emotion-13"
+              >
+                <span
+                  class="emotion-14 emotion-15"
+                >
+                  Foobar Memberplan
+                </span>
+                <small
+                  class="emotion-16 emotion-17"
+                >
+                  Ab CHF 12.- pro Monat
+                </small>
+              </div>
+              <span
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary emotion-18"
+              >
+                <input
+                  checked=""
+                  class="PrivateSwitchBase-input emotion-19"
+                  name="Foobar Memberplan"
+                  type="radio"
+                  value="123"
+                />
+                <span
+                  class="emotion-20"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-21"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-52"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
+                </span>
+              </span>
+            </div>
+            <span
+              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
+            >
+              Foobar Memberplan
             </span>
           </label>
         </div>
@@ -2445,7 +2446,7 @@ https://unsplash.it/200/100 200w"
           <span
             class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
           >
-            Automatisch Erneuern
+            Automatisch erneuern
           </span>
         </label>
       </div>
@@ -2455,7 +2456,7 @@ https://unsplash.it/200/100 200w"
       tabindex="0"
       type="submit"
     >
-      Monatlich für CHF 5.- Abonieren
+      Monatlich für CHF 12.- Abonnieren
       <span
         class="MuiTouchRipple-root emotion-101"
       />
@@ -2564,8 +2565,6 @@ exports[`Subscribe should render LoggedOut 1`] = `
   background-color: #f5f5f5;
   border-radius: 4px;
   border: 1px solid rgba(0, 0, 0, 0.12);
-  border-color: #1976d2;
-  background-color: rgb(220, 234, 248);
 }
 
 .emotion-12 {
@@ -2701,12 +2700,12 @@ exports[`Subscribe should render LoggedOut 1`] = `
   font-size: 1.5rem;
   left: 0;
   position: absolute;
-  -webkit-transform: scale(1);
-  -moz-transform: scale(1);
-  -ms-transform: scale(1);
-  transform: scale(1);
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  -webkit-transform: scale(0);
+  -moz-transform: scale(0);
+  -ms-transform: scale(0);
+  transform: scale(0);
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
 }
 
 .emotion-23 {
@@ -2718,7 +2717,7 @@ exports[`Subscribe should render LoggedOut 1`] = `
   letter-spacing: 0.00938em;
 }
 
-.emotion-25 {
+.emotion-40 {
   display: grid;
   grid-template-columns: 1fr auto;
   -webkit-align-items: center;
@@ -2730,9 +2729,11 @@ exports[`Subscribe should render LoggedOut 1`] = `
   background-color: #f5f5f5;
   border-radius: 4px;
   border: 1px solid rgba(0, 0, 0, 0.12);
+  border-color: #1976d2;
+  background-color: rgb(220, 234, 248);
 }
 
-.emotion-37 {
+.emotion-52 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -2749,19 +2750,20 @@ exports[`Subscribe should render LoggedOut 1`] = `
   font-size: 1.5rem;
   left: 0;
   position: absolute;
-  -webkit-transform: scale(0);
-  -moz-transform: scale(0);
-  -ms-transform: scale(0);
-  transform: scale(0);
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  -webkit-transform: scale(1);
+  -moz-transform: scale(1);
+  -ms-transform: scale(1);
+  transform: scale(1);
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
 }
 
 .emotion-54 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
 }
 
 .emotion-58 {
@@ -4363,7 +4365,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-142:focus::-ms-input
                 <span
                   class="emotion-14 emotion-15"
                 >
-                  Foobar Memberplan
+                  Barfoo Memberplan
                 </span>
                 <small
                   class="emotion-16 emotion-17"
@@ -4372,14 +4374,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-142:focus::-ms-input
                 </small>
               </div>
               <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary emotion-18"
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary emotion-18"
               >
                 <input
-                  checked=""
                   class="PrivateSwitchBase-input emotion-19"
-                  name="Foobar Memberplan"
+                  name="Barfoo Memberplan"
                   type="radio"
-                  value="123"
+                  value="2"
                 />
                 <span
                   class="emotion-20"
@@ -4412,69 +4413,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-142:focus::-ms-input
             <span
               class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
             >
-              Foobar Memberplan
-            </span>
-          </label>
-          <label
-            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-9"
-          >
-            <div
-              class="emotion-25 emotion-11"
-            >
-              <div
-                class="emotion-12 emotion-13"
-              >
-                <span
-                  class="emotion-14 emotion-15"
-                >
-                  Barfoo Memberplan
-                </span>
-                <small
-                  class="emotion-16 emotion-17"
-                >
-                  Ab CHF 8.- pro Monat
-                </small>
-              </div>
-              <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary emotion-18"
-              >
-                <input
-                  class="PrivateSwitchBase-input emotion-19"
-                  name="Barfoo Memberplan"
-                  type="radio"
-                  value="2"
-                />
-                <span
-                  class="emotion-20"
-                >
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-21"
-                    data-testid="RadioButtonUncheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-                    />
-                  </svg>
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-37"
-                    data-testid="RadioButtonCheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
-                    />
-                  </svg>
-                </span>
-              </span>
-            </div>
-            <span
-              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
-            >
               Barfoo Memberplan
             </span>
           </label>
@@ -4482,7 +4420,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-142:focus::-ms-input
             class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-9"
           >
             <div
-              class="emotion-25 emotion-11"
+              class="emotion-10 emotion-11"
             >
               <div
                 class="emotion-12 emotion-13"
@@ -4495,7 +4433,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-142:focus::-ms-input
                 <small
                   class="emotion-16 emotion-17"
                 >
-                  Ab CHF 12.- pro Monat
+                  Ab CHF 8.- pro Monat
                 </small>
               </div>
               <span
@@ -4523,7 +4461,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-142:focus::-ms-input
                   </svg>
                   <svg
                     aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-37"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-22"
                     data-testid="RadioButtonCheckedIcon"
                     focusable="false"
                     viewBox="0 0 24 24"
@@ -4539,6 +4477,70 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-142:focus::-ms-input
               class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
             >
               Foobaz Memberplan
+            </span>
+          </label>
+          <label
+            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-9"
+          >
+            <div
+              class="emotion-40 emotion-11"
+            >
+              <div
+                class="emotion-12 emotion-13"
+              >
+                <span
+                  class="emotion-14 emotion-15"
+                >
+                  Foobar Memberplan
+                </span>
+                <small
+                  class="emotion-16 emotion-17"
+                >
+                  Ab CHF 12.- pro Monat
+                </small>
+              </div>
+              <span
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary emotion-18"
+              >
+                <input
+                  checked=""
+                  class="PrivateSwitchBase-input emotion-19"
+                  name="Foobar Memberplan"
+                  type="radio"
+                  value="123"
+                />
+                <span
+                  class="emotion-20"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-21"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-52"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
+                </span>
+              </span>
+            </div>
+            <span
+              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
+            >
+              Foobar Memberplan
             </span>
           </label>
         </div>
@@ -5181,7 +5183,7 @@ https://unsplash.it/200/100 200w"
           <span
             class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
           >
-            Automatisch Erneuern
+            Automatisch erneuern
           </span>
         </label>
       </div>
@@ -5299,7 +5301,7 @@ https://unsplash.it/200/100 200w"
       tabindex="0"
       type="submit"
     >
-      Monatlich für CHF 5.- Abonieren
+      Monatlich für CHF 12.- Abonnieren
       <span
         class="MuiTouchRipple-root emotion-104"
       />
@@ -5408,8 +5410,6 @@ exports[`Subscribe should render OnlyAddress 1`] = `
   background-color: #f5f5f5;
   border-radius: 4px;
   border: 1px solid rgba(0, 0, 0, 0.12);
-  border-color: #1976d2;
-  background-color: rgb(220, 234, 248);
 }
 
 .emotion-12 {
@@ -5545,12 +5545,12 @@ exports[`Subscribe should render OnlyAddress 1`] = `
   font-size: 1.5rem;
   left: 0;
   position: absolute;
-  -webkit-transform: scale(1);
-  -moz-transform: scale(1);
-  -ms-transform: scale(1);
-  transform: scale(1);
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  -webkit-transform: scale(0);
+  -moz-transform: scale(0);
+  -ms-transform: scale(0);
+  transform: scale(0);
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
 }
 
 .emotion-23 {
@@ -5562,7 +5562,7 @@ exports[`Subscribe should render OnlyAddress 1`] = `
   letter-spacing: 0.00938em;
 }
 
-.emotion-25 {
+.emotion-40 {
   display: grid;
   grid-template-columns: 1fr auto;
   -webkit-align-items: center;
@@ -5574,9 +5574,11 @@ exports[`Subscribe should render OnlyAddress 1`] = `
   background-color: #f5f5f5;
   border-radius: 4px;
   border: 1px solid rgba(0, 0, 0, 0.12);
+  border-color: #1976d2;
+  background-color: rgb(220, 234, 248);
 }
 
-.emotion-37 {
+.emotion-52 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -5593,19 +5595,20 @@ exports[`Subscribe should render OnlyAddress 1`] = `
   font-size: 1.5rem;
   left: 0;
   position: absolute;
-  -webkit-transform: scale(0);
-  -moz-transform: scale(0);
-  -ms-transform: scale(0);
-  transform: scale(0);
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  -webkit-transform: scale(1);
+  -moz-transform: scale(1);
+  -ms-transform: scale(1);
+  transform: scale(1);
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
 }
 
 .emotion-54 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
 }
 
 .emotion-58 {
@@ -6951,7 +6954,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-127:focus::-ms-input
                 <span
                   class="emotion-14 emotion-15"
                 >
-                  Foobar Memberplan
+                  Barfoo Memberplan
                 </span>
                 <small
                   class="emotion-16 emotion-17"
@@ -6960,14 +6963,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-127:focus::-ms-input
                 </small>
               </div>
               <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary emotion-18"
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary emotion-18"
               >
                 <input
-                  checked=""
                   class="PrivateSwitchBase-input emotion-19"
-                  name="Foobar Memberplan"
+                  name="Barfoo Memberplan"
                   type="radio"
-                  value="123"
+                  value="2"
                 />
                 <span
                   class="emotion-20"
@@ -7000,69 +7002,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-127:focus::-ms-input
             <span
               class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
             >
-              Foobar Memberplan
-            </span>
-          </label>
-          <label
-            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-9"
-          >
-            <div
-              class="emotion-25 emotion-11"
-            >
-              <div
-                class="emotion-12 emotion-13"
-              >
-                <span
-                  class="emotion-14 emotion-15"
-                >
-                  Barfoo Memberplan
-                </span>
-                <small
-                  class="emotion-16 emotion-17"
-                >
-                  Ab CHF 8.- pro Monat
-                </small>
-              </div>
-              <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary emotion-18"
-              >
-                <input
-                  class="PrivateSwitchBase-input emotion-19"
-                  name="Barfoo Memberplan"
-                  type="radio"
-                  value="2"
-                />
-                <span
-                  class="emotion-20"
-                >
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-21"
-                    data-testid="RadioButtonUncheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-                    />
-                  </svg>
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-37"
-                    data-testid="RadioButtonCheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
-                    />
-                  </svg>
-                </span>
-              </span>
-            </div>
-            <span
-              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
-            >
               Barfoo Memberplan
             </span>
           </label>
@@ -7070,7 +7009,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-127:focus::-ms-input
             class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-9"
           >
             <div
-              class="emotion-25 emotion-11"
+              class="emotion-10 emotion-11"
             >
               <div
                 class="emotion-12 emotion-13"
@@ -7083,7 +7022,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-127:focus::-ms-input
                 <small
                   class="emotion-16 emotion-17"
                 >
-                  Ab CHF 12.- pro Monat
+                  Ab CHF 8.- pro Monat
                 </small>
               </div>
               <span
@@ -7111,7 +7050,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-127:focus::-ms-input
                   </svg>
                   <svg
                     aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-37"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-22"
                     data-testid="RadioButtonCheckedIcon"
                     focusable="false"
                     viewBox="0 0 24 24"
@@ -7127,6 +7066,70 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-127:focus::-ms-input
               class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
             >
               Foobaz Memberplan
+            </span>
+          </label>
+          <label
+            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-9"
+          >
+            <div
+              class="emotion-40 emotion-11"
+            >
+              <div
+                class="emotion-12 emotion-13"
+              >
+                <span
+                  class="emotion-14 emotion-15"
+                >
+                  Foobar Memberplan
+                </span>
+                <small
+                  class="emotion-16 emotion-17"
+                >
+                  Ab CHF 12.- pro Monat
+                </small>
+              </div>
+              <span
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary emotion-18"
+              >
+                <input
+                  checked=""
+                  class="PrivateSwitchBase-input emotion-19"
+                  name="Foobar Memberplan"
+                  type="radio"
+                  value="123"
+                />
+                <span
+                  class="emotion-20"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-21"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-52"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
+                </span>
+              </span>
+            </div>
+            <span
+              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
+            >
+              Foobar Memberplan
             </span>
           </label>
         </div>
@@ -7665,7 +7668,7 @@ https://unsplash.it/200/100 200w"
           <span
             class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
           >
-            Automatisch Erneuern
+            Automatisch erneuern
           </span>
         </label>
       </div>
@@ -7783,7 +7786,7 @@ https://unsplash.it/200/100 200w"
       tabindex="0"
       type="submit"
     >
-      Monatlich für CHF 5.- Abonieren
+      Monatlich für CHF 12.- Abonnieren
       <span
         class="MuiTouchRipple-root emotion-143"
       />
@@ -8439,8 +8442,6 @@ exports[`Subscribe should render OnlyFirstName 1`] = `
   background-color: #f5f5f5;
   border-radius: 4px;
   border: 1px solid rgba(0, 0, 0, 0.12);
-  border-color: #1976d2;
-  background-color: rgb(220, 234, 248);
 }
 
 .emotion-12 {
@@ -8576,12 +8577,12 @@ exports[`Subscribe should render OnlyFirstName 1`] = `
   font-size: 1.5rem;
   left: 0;
   position: absolute;
-  -webkit-transform: scale(1);
-  -moz-transform: scale(1);
-  -ms-transform: scale(1);
-  transform: scale(1);
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  -webkit-transform: scale(0);
+  -moz-transform: scale(0);
+  -ms-transform: scale(0);
+  transform: scale(0);
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
 }
 
 .emotion-23 {
@@ -8593,7 +8594,7 @@ exports[`Subscribe should render OnlyFirstName 1`] = `
   letter-spacing: 0.00938em;
 }
 
-.emotion-25 {
+.emotion-40 {
   display: grid;
   grid-template-columns: 1fr auto;
   -webkit-align-items: center;
@@ -8605,9 +8606,11 @@ exports[`Subscribe should render OnlyFirstName 1`] = `
   background-color: #f5f5f5;
   border-radius: 4px;
   border: 1px solid rgba(0, 0, 0, 0.12);
+  border-color: #1976d2;
+  background-color: rgb(220, 234, 248);
 }
 
-.emotion-37 {
+.emotion-52 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -8624,19 +8627,20 @@ exports[`Subscribe should render OnlyFirstName 1`] = `
   font-size: 1.5rem;
   left: 0;
   position: absolute;
-  -webkit-transform: scale(0);
-  -moz-transform: scale(0);
-  -ms-transform: scale(0);
-  transform: scale(0);
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  -webkit-transform: scale(1);
+  -moz-transform: scale(1);
+  -ms-transform: scale(1);
+  transform: scale(1);
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
 }
 
 .emotion-54 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
 }
 
 .emotion-58 {
@@ -9928,7 +9932,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-107:focus::-ms-input
                 <span
                   class="emotion-14 emotion-15"
                 >
-                  Foobar Memberplan
+                  Barfoo Memberplan
                 </span>
                 <small
                   class="emotion-16 emotion-17"
@@ -9937,14 +9941,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-107:focus::-ms-input
                 </small>
               </div>
               <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary emotion-18"
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary emotion-18"
               >
                 <input
-                  checked=""
                   class="PrivateSwitchBase-input emotion-19"
-                  name="Foobar Memberplan"
+                  name="Barfoo Memberplan"
                   type="radio"
-                  value="123"
+                  value="2"
                 />
                 <span
                   class="emotion-20"
@@ -9977,69 +9980,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-107:focus::-ms-input
             <span
               class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
             >
-              Foobar Memberplan
-            </span>
-          </label>
-          <label
-            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-9"
-          >
-            <div
-              class="emotion-25 emotion-11"
-            >
-              <div
-                class="emotion-12 emotion-13"
-              >
-                <span
-                  class="emotion-14 emotion-15"
-                >
-                  Barfoo Memberplan
-                </span>
-                <small
-                  class="emotion-16 emotion-17"
-                >
-                  Ab CHF 8.- pro Monat
-                </small>
-              </div>
-              <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary emotion-18"
-              >
-                <input
-                  class="PrivateSwitchBase-input emotion-19"
-                  name="Barfoo Memberplan"
-                  type="radio"
-                  value="2"
-                />
-                <span
-                  class="emotion-20"
-                >
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-21"
-                    data-testid="RadioButtonUncheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-                    />
-                  </svg>
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-37"
-                    data-testid="RadioButtonCheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
-                    />
-                  </svg>
-                </span>
-              </span>
-            </div>
-            <span
-              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
-            >
               Barfoo Memberplan
             </span>
           </label>
@@ -10047,7 +9987,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-107:focus::-ms-input
             class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-9"
           >
             <div
-              class="emotion-25 emotion-11"
+              class="emotion-10 emotion-11"
             >
               <div
                 class="emotion-12 emotion-13"
@@ -10060,7 +10000,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-107:focus::-ms-input
                 <small
                   class="emotion-16 emotion-17"
                 >
-                  Ab CHF 12.- pro Monat
+                  Ab CHF 8.- pro Monat
                 </small>
               </div>
               <span
@@ -10088,7 +10028,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-107:focus::-ms-input
                   </svg>
                   <svg
                     aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-37"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-22"
                     data-testid="RadioButtonCheckedIcon"
                     focusable="false"
                     viewBox="0 0 24 24"
@@ -10104,6 +10044,70 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-107:focus::-ms-input
               class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
             >
               Foobaz Memberplan
+            </span>
+          </label>
+          <label
+            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-9"
+          >
+            <div
+              class="emotion-40 emotion-11"
+            >
+              <div
+                class="emotion-12 emotion-13"
+              >
+                <span
+                  class="emotion-14 emotion-15"
+                >
+                  Foobar Memberplan
+                </span>
+                <small
+                  class="emotion-16 emotion-17"
+                >
+                  Ab CHF 12.- pro Monat
+                </small>
+              </div>
+              <span
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary emotion-18"
+              >
+                <input
+                  checked=""
+                  class="PrivateSwitchBase-input emotion-19"
+                  name="Foobar Memberplan"
+                  type="radio"
+                  value="123"
+                />
+                <span
+                  class="emotion-20"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-21"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-52"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
+                </span>
+              </span>
+            </div>
+            <span
+              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
+            >
+              Foobar Memberplan
             </span>
           </label>
         </div>
@@ -10527,7 +10531,7 @@ https://unsplash.it/200/100 200w"
           <span
             class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
           >
-            Automatisch Erneuern
+            Automatisch erneuern
           </span>
         </label>
       </div>
@@ -10645,7 +10649,7 @@ https://unsplash.it/200/100 200w"
       tabindex="0"
       type="submit"
     >
-      Monatlich für CHF 5.- Abonieren
+      Monatlich für CHF 12.- Abonnieren
       <span
         class="MuiTouchRipple-root emotion-123"
       />
@@ -11076,8 +11080,6 @@ exports[`Subscribe should render OnlyPassword 1`] = `
   background-color: #f5f5f5;
   border-radius: 4px;
   border: 1px solid rgba(0, 0, 0, 0.12);
-  border-color: #1976d2;
-  background-color: rgb(220, 234, 248);
 }
 
 .emotion-12 {
@@ -11213,12 +11215,12 @@ exports[`Subscribe should render OnlyPassword 1`] = `
   font-size: 1.5rem;
   left: 0;
   position: absolute;
-  -webkit-transform: scale(1);
-  -moz-transform: scale(1);
-  -ms-transform: scale(1);
-  transform: scale(1);
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  -webkit-transform: scale(0);
+  -moz-transform: scale(0);
+  -ms-transform: scale(0);
+  transform: scale(0);
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
 }
 
 .emotion-23 {
@@ -11230,7 +11232,7 @@ exports[`Subscribe should render OnlyPassword 1`] = `
   letter-spacing: 0.00938em;
 }
 
-.emotion-25 {
+.emotion-40 {
   display: grid;
   grid-template-columns: 1fr auto;
   -webkit-align-items: center;
@@ -11242,9 +11244,11 @@ exports[`Subscribe should render OnlyPassword 1`] = `
   background-color: #f5f5f5;
   border-radius: 4px;
   border: 1px solid rgba(0, 0, 0, 0.12);
+  border-color: #1976d2;
+  background-color: rgb(220, 234, 248);
 }
 
-.emotion-37 {
+.emotion-52 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -11261,19 +11265,20 @@ exports[`Subscribe should render OnlyPassword 1`] = `
   font-size: 1.5rem;
   left: 0;
   position: absolute;
-  -webkit-transform: scale(0);
-  -moz-transform: scale(0);
-  -ms-transform: scale(0);
-  transform: scale(0);
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  -webkit-transform: scale(1);
+  -moz-transform: scale(1);
+  -ms-transform: scale(1);
+  transform: scale(1);
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
 }
 
 .emotion-54 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
 }
 
 .emotion-58 {
@@ -12821,7 +12826,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-110:focus::-ms-input
                 <span
                   class="emotion-14 emotion-15"
                 >
-                  Foobar Memberplan
+                  Barfoo Memberplan
                 </span>
                 <small
                   class="emotion-16 emotion-17"
@@ -12830,14 +12835,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-110:focus::-ms-input
                 </small>
               </div>
               <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary emotion-18"
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary emotion-18"
               >
                 <input
-                  checked=""
                   class="PrivateSwitchBase-input emotion-19"
-                  name="Foobar Memberplan"
+                  name="Barfoo Memberplan"
                   type="radio"
-                  value="123"
+                  value="2"
                 />
                 <span
                   class="emotion-20"
@@ -12870,69 +12874,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-110:focus::-ms-input
             <span
               class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
             >
-              Foobar Memberplan
-            </span>
-          </label>
-          <label
-            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-9"
-          >
-            <div
-              class="emotion-25 emotion-11"
-            >
-              <div
-                class="emotion-12 emotion-13"
-              >
-                <span
-                  class="emotion-14 emotion-15"
-                >
-                  Barfoo Memberplan
-                </span>
-                <small
-                  class="emotion-16 emotion-17"
-                >
-                  Ab CHF 8.- pro Monat
-                </small>
-              </div>
-              <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary emotion-18"
-              >
-                <input
-                  class="PrivateSwitchBase-input emotion-19"
-                  name="Barfoo Memberplan"
-                  type="radio"
-                  value="2"
-                />
-                <span
-                  class="emotion-20"
-                >
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-21"
-                    data-testid="RadioButtonUncheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-                    />
-                  </svg>
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-37"
-                    data-testid="RadioButtonCheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
-                    />
-                  </svg>
-                </span>
-              </span>
-            </div>
-            <span
-              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
-            >
               Barfoo Memberplan
             </span>
           </label>
@@ -12940,7 +12881,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-110:focus::-ms-input
             class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-9"
           >
             <div
-              class="emotion-25 emotion-11"
+              class="emotion-10 emotion-11"
             >
               <div
                 class="emotion-12 emotion-13"
@@ -12953,7 +12894,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-110:focus::-ms-input
                 <small
                   class="emotion-16 emotion-17"
                 >
-                  Ab CHF 12.- pro Monat
+                  Ab CHF 8.- pro Monat
                 </small>
               </div>
               <span
@@ -12981,7 +12922,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-110:focus::-ms-input
                   </svg>
                   <svg
                     aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-37"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-22"
                     data-testid="RadioButtonCheckedIcon"
                     focusable="false"
                     viewBox="0 0 24 24"
@@ -12997,6 +12938,70 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-110:focus::-ms-input
               class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
             >
               Foobaz Memberplan
+            </span>
+          </label>
+          <label
+            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-9"
+          >
+            <div
+              class="emotion-40 emotion-11"
+            >
+              <div
+                class="emotion-12 emotion-13"
+              >
+                <span
+                  class="emotion-14 emotion-15"
+                >
+                  Foobar Memberplan
+                </span>
+                <small
+                  class="emotion-16 emotion-17"
+                >
+                  Ab CHF 12.- pro Monat
+                </small>
+              </div>
+              <span
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary emotion-18"
+              >
+                <input
+                  checked=""
+                  class="PrivateSwitchBase-input emotion-19"
+                  name="Foobar Memberplan"
+                  type="radio"
+                  value="123"
+                />
+                <span
+                  class="emotion-20"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-21"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-52"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
+                </span>
+              </span>
+            </div>
+            <span
+              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
+            >
+              Foobar Memberplan
             </span>
           </label>
         </div>
@@ -13450,7 +13455,7 @@ https://unsplash.it/200/100 200w"
           <span
             class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
           >
-            Automatisch Erneuern
+            Automatisch erneuern
           </span>
         </label>
       </div>
@@ -13568,7 +13573,7 @@ https://unsplash.it/200/100 200w"
       tabindex="0"
       type="submit"
     >
-      Monatlich für CHF 5.- Abonieren
+      Monatlich für CHF 12.- Abonnieren
       <span
         class="MuiTouchRipple-root emotion-98"
       />
@@ -14004,8 +14009,6 @@ exports[`Subscribe should render OnlyPreferredName 1`] = `
   background-color: #f5f5f5;
   border-radius: 4px;
   border: 1px solid rgba(0, 0, 0, 0.12);
-  border-color: #1976d2;
-  background-color: rgb(220, 234, 248);
 }
 
 .emotion-12 {
@@ -14141,12 +14144,12 @@ exports[`Subscribe should render OnlyPreferredName 1`] = `
   font-size: 1.5rem;
   left: 0;
   position: absolute;
-  -webkit-transform: scale(1);
-  -moz-transform: scale(1);
-  -ms-transform: scale(1);
-  transform: scale(1);
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  -webkit-transform: scale(0);
+  -moz-transform: scale(0);
+  -ms-transform: scale(0);
+  transform: scale(0);
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
 }
 
 .emotion-23 {
@@ -14158,7 +14161,7 @@ exports[`Subscribe should render OnlyPreferredName 1`] = `
   letter-spacing: 0.00938em;
 }
 
-.emotion-25 {
+.emotion-40 {
   display: grid;
   grid-template-columns: 1fr auto;
   -webkit-align-items: center;
@@ -14170,9 +14173,11 @@ exports[`Subscribe should render OnlyPreferredName 1`] = `
   background-color: #f5f5f5;
   border-radius: 4px;
   border: 1px solid rgba(0, 0, 0, 0.12);
+  border-color: #1976d2;
+  background-color: rgb(220, 234, 248);
 }
 
-.emotion-37 {
+.emotion-52 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -14189,19 +14194,20 @@ exports[`Subscribe should render OnlyPreferredName 1`] = `
   font-size: 1.5rem;
   left: 0;
   position: absolute;
-  -webkit-transform: scale(0);
-  -moz-transform: scale(0);
-  -ms-transform: scale(0);
-  transform: scale(0);
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  -webkit-transform: scale(1);
+  -moz-transform: scale(1);
+  -ms-transform: scale(1);
+  transform: scale(1);
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
 }
 
 .emotion-54 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
 }
 
 .emotion-58 {
@@ -15493,7 +15499,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-107:focus::-ms-input
                 <span
                   class="emotion-14 emotion-15"
                 >
-                  Foobar Memberplan
+                  Barfoo Memberplan
                 </span>
                 <small
                   class="emotion-16 emotion-17"
@@ -15502,14 +15508,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-107:focus::-ms-input
                 </small>
               </div>
               <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary emotion-18"
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary emotion-18"
               >
                 <input
-                  checked=""
                   class="PrivateSwitchBase-input emotion-19"
-                  name="Foobar Memberplan"
+                  name="Barfoo Memberplan"
                   type="radio"
-                  value="123"
+                  value="2"
                 />
                 <span
                   class="emotion-20"
@@ -15542,69 +15547,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-107:focus::-ms-input
             <span
               class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
             >
-              Foobar Memberplan
-            </span>
-          </label>
-          <label
-            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-9"
-          >
-            <div
-              class="emotion-25 emotion-11"
-            >
-              <div
-                class="emotion-12 emotion-13"
-              >
-                <span
-                  class="emotion-14 emotion-15"
-                >
-                  Barfoo Memberplan
-                </span>
-                <small
-                  class="emotion-16 emotion-17"
-                >
-                  Ab CHF 8.- pro Monat
-                </small>
-              </div>
-              <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary emotion-18"
-              >
-                <input
-                  class="PrivateSwitchBase-input emotion-19"
-                  name="Barfoo Memberplan"
-                  type="radio"
-                  value="2"
-                />
-                <span
-                  class="emotion-20"
-                >
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-21"
-                    data-testid="RadioButtonUncheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-                    />
-                  </svg>
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-37"
-                    data-testid="RadioButtonCheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
-                    />
-                  </svg>
-                </span>
-              </span>
-            </div>
-            <span
-              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
-            >
               Barfoo Memberplan
             </span>
           </label>
@@ -15612,7 +15554,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-107:focus::-ms-input
             class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-9"
           >
             <div
-              class="emotion-25 emotion-11"
+              class="emotion-10 emotion-11"
             >
               <div
                 class="emotion-12 emotion-13"
@@ -15625,7 +15567,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-107:focus::-ms-input
                 <small
                   class="emotion-16 emotion-17"
                 >
-                  Ab CHF 12.- pro Monat
+                  Ab CHF 8.- pro Monat
                 </small>
               </div>
               <span
@@ -15653,7 +15595,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-107:focus::-ms-input
                   </svg>
                   <svg
                     aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-37"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-22"
                     data-testid="RadioButtonCheckedIcon"
                     focusable="false"
                     viewBox="0 0 24 24"
@@ -15669,6 +15611,70 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-107:focus::-ms-input
               class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
             >
               Foobaz Memberplan
+            </span>
+          </label>
+          <label
+            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-9"
+          >
+            <div
+              class="emotion-40 emotion-11"
+            >
+              <div
+                class="emotion-12 emotion-13"
+              >
+                <span
+                  class="emotion-14 emotion-15"
+                >
+                  Foobar Memberplan
+                </span>
+                <small
+                  class="emotion-16 emotion-17"
+                >
+                  Ab CHF 12.- pro Monat
+                </small>
+              </div>
+              <span
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary emotion-18"
+              >
+                <input
+                  checked=""
+                  class="PrivateSwitchBase-input emotion-19"
+                  name="Foobar Memberplan"
+                  type="radio"
+                  value="123"
+                />
+                <span
+                  class="emotion-20"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-21"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-52"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
+                </span>
+              </span>
+            </div>
+            <span
+              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
+            >
+              Foobar Memberplan
             </span>
           </label>
         </div>
@@ -16091,7 +16097,7 @@ https://unsplash.it/200/100 200w"
           <span
             class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
           >
-            Automatisch Erneuern
+            Automatisch erneuern
           </span>
         </label>
       </div>
@@ -16209,7 +16215,7 @@ https://unsplash.it/200/100 200w"
       tabindex="0"
       type="submit"
     >
-      Monatlich für CHF 5.- Abonieren
+      Monatlich für CHF 12.- Abonnieren
       <span
         class="MuiTouchRipple-root emotion-123"
       />
@@ -16602,8 +16608,6 @@ exports[`Subscribe should render OnlyRequired 1`] = `
   background-color: #f5f5f5;
   border-radius: 4px;
   border: 1px solid rgba(0, 0, 0, 0.12);
-  border-color: #1976d2;
-  background-color: rgb(220, 234, 248);
 }
 
 .emotion-12 {
@@ -16739,12 +16743,12 @@ exports[`Subscribe should render OnlyRequired 1`] = `
   font-size: 1.5rem;
   left: 0;
   position: absolute;
-  -webkit-transform: scale(1);
-  -moz-transform: scale(1);
-  -ms-transform: scale(1);
-  transform: scale(1);
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  -webkit-transform: scale(0);
+  -moz-transform: scale(0);
+  -ms-transform: scale(0);
+  transform: scale(0);
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
 }
 
 .emotion-23 {
@@ -16756,7 +16760,7 @@ exports[`Subscribe should render OnlyRequired 1`] = `
   letter-spacing: 0.00938em;
 }
 
-.emotion-25 {
+.emotion-40 {
   display: grid;
   grid-template-columns: 1fr auto;
   -webkit-align-items: center;
@@ -16768,9 +16772,11 @@ exports[`Subscribe should render OnlyRequired 1`] = `
   background-color: #f5f5f5;
   border-radius: 4px;
   border: 1px solid rgba(0, 0, 0, 0.12);
+  border-color: #1976d2;
+  background-color: rgb(220, 234, 248);
 }
 
-.emotion-37 {
+.emotion-52 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -16787,19 +16793,20 @@ exports[`Subscribe should render OnlyRequired 1`] = `
   font-size: 1.5rem;
   left: 0;
   position: absolute;
-  -webkit-transform: scale(0);
-  -moz-transform: scale(0);
-  -ms-transform: scale(0);
-  transform: scale(0);
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  -webkit-transform: scale(1);
+  -moz-transform: scale(1);
+  -ms-transform: scale(1);
+  transform: scale(1);
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
 }
 
 .emotion-54 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
 }
 
 .emotion-58 {
@@ -18091,7 +18098,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-101:focus::-ms-input
                 <span
                   class="emotion-14 emotion-15"
                 >
-                  Foobar Memberplan
+                  Barfoo Memberplan
                 </span>
                 <small
                   class="emotion-16 emotion-17"
@@ -18100,14 +18107,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-101:focus::-ms-input
                 </small>
               </div>
               <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary emotion-18"
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary emotion-18"
               >
                 <input
-                  checked=""
                   class="PrivateSwitchBase-input emotion-19"
-                  name="Foobar Memberplan"
+                  name="Barfoo Memberplan"
                   type="radio"
-                  value="123"
+                  value="2"
                 />
                 <span
                   class="emotion-20"
@@ -18140,69 +18146,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-101:focus::-ms-input
             <span
               class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
             >
-              Foobar Memberplan
-            </span>
-          </label>
-          <label
-            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-9"
-          >
-            <div
-              class="emotion-25 emotion-11"
-            >
-              <div
-                class="emotion-12 emotion-13"
-              >
-                <span
-                  class="emotion-14 emotion-15"
-                >
-                  Barfoo Memberplan
-                </span>
-                <small
-                  class="emotion-16 emotion-17"
-                >
-                  Ab CHF 8.- pro Monat
-                </small>
-              </div>
-              <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary emotion-18"
-              >
-                <input
-                  class="PrivateSwitchBase-input emotion-19"
-                  name="Barfoo Memberplan"
-                  type="radio"
-                  value="2"
-                />
-                <span
-                  class="emotion-20"
-                >
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-21"
-                    data-testid="RadioButtonUncheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-                    />
-                  </svg>
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-37"
-                    data-testid="RadioButtonCheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
-                    />
-                  </svg>
-                </span>
-              </span>
-            </div>
-            <span
-              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
-            >
               Barfoo Memberplan
             </span>
           </label>
@@ -18210,7 +18153,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-101:focus::-ms-input
             class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-9"
           >
             <div
-              class="emotion-25 emotion-11"
+              class="emotion-10 emotion-11"
             >
               <div
                 class="emotion-12 emotion-13"
@@ -18223,7 +18166,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-101:focus::-ms-input
                 <small
                   class="emotion-16 emotion-17"
                 >
-                  Ab CHF 12.- pro Monat
+                  Ab CHF 8.- pro Monat
                 </small>
               </div>
               <span
@@ -18251,7 +18194,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-101:focus::-ms-input
                   </svg>
                   <svg
                     aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-37"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-22"
                     data-testid="RadioButtonCheckedIcon"
                     focusable="false"
                     viewBox="0 0 24 24"
@@ -18267,6 +18210,70 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-101:focus::-ms-input
               class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
             >
               Foobaz Memberplan
+            </span>
+          </label>
+          <label
+            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-9"
+          >
+            <div
+              class="emotion-40 emotion-11"
+            >
+              <div
+                class="emotion-12 emotion-13"
+              >
+                <span
+                  class="emotion-14 emotion-15"
+                >
+                  Foobar Memberplan
+                </span>
+                <small
+                  class="emotion-16 emotion-17"
+                >
+                  Ab CHF 12.- pro Monat
+                </small>
+              </div>
+              <span
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary emotion-18"
+              >
+                <input
+                  checked=""
+                  class="PrivateSwitchBase-input emotion-19"
+                  name="Foobar Memberplan"
+                  type="radio"
+                  value="123"
+                />
+                <span
+                  class="emotion-20"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-21"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-52"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
+                </span>
+              </span>
+            </div>
+            <span
+              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
+            >
+              Foobar Memberplan
             </span>
           </label>
         </div>
@@ -18653,7 +18660,7 @@ https://unsplash.it/200/100 200w"
           <span
             class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
           >
-            Automatisch Erneuern
+            Automatisch erneuern
           </span>
         </label>
       </div>
@@ -18771,7 +18778,7 @@ https://unsplash.it/200/100 200w"
       tabindex="0"
       type="submit"
     >
-      Monatlich für CHF 5.- Abonieren
+      Monatlich für CHF 12.- Abonnieren
       <span
         class="MuiTouchRipple-root emotion-117"
       />
@@ -19033,46 +19040,7 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
 - First value
 + Second value
 
-@@ -20,11 +20,11 @@
-          >
-            <label
-              class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
-            >
-              <div
--               class="css-146nkty-MemberPlanItemWrapper eofgi43"
-+               class="css-19eiwdu-MemberPlanItemWrapper eofgi43"
-              >
-                <div
-                  class="css-1deqsbg-MemberPlanItemContent eofgi42"
-                >
-                  <span
-@@ -37,11 +37,11 @@
-                  >
-                    Ab CHF 5.- pro Monat
-                  </small>
-                </div>
-                <span
--                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-+                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
-                >
-                  <input
-                    checked=""
-                    class="PrivateSwitchBase-input css-1m9pwf3"
-                    name="Foobar Memberplan"
-@@ -62,11 +62,11 @@
-                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-                      />
-                    </svg>
-                    <svg
-                      aria-hidden="true"
--                     class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-11zohuh-MuiSvgIcon-root"
-+                     class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hhw7if-MuiSvgIcon-root"
-                      data-testid="RadioButtonCheckedIcon"
-                      focusable="false"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-@@ -147,11 +147,11 @@
+@@ -83,11 +83,11 @@
             </label>
             <label
               class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
@@ -19085,9 +19053,9 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
                   class="css-1deqsbg-MemberPlanItemContent eofgi42"
                 >
                   <span
-@@ -164,11 +164,11 @@
+@@ -100,11 +100,11 @@
                   >
-                    Ab CHF 12.- pro Monat
+                    Ab CHF 8.- pro Monat
                   </small>
                 </div>
                 <span
@@ -19098,7 +19066,7 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
                     class="PrivateSwitchBase-input css-1m9pwf3"
                     name="Foobaz Memberplan"
                     type="radio"
-@@ -188,11 +188,11 @@
+@@ -124,11 +124,11 @@
                         d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
                       />
                     </svg>
@@ -19106,6 +19074,45 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
                       aria-hidden="true"
 -                     class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hhw7if-MuiSvgIcon-root"
 +                     class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-11zohuh-MuiSvgIcon-root"
+                      data-testid="RadioButtonCheckedIcon"
+                      focusable="false"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+@@ -146,11 +146,11 @@
+            </label>
+            <label
+              class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
+            >
+              <div
+-               class="css-146nkty-MemberPlanItemWrapper eofgi43"
++               class="css-19eiwdu-MemberPlanItemWrapper eofgi43"
+              >
+                <div
+                  class="css-1deqsbg-MemberPlanItemContent eofgi42"
+                >
+                  <span
+@@ -163,11 +163,11 @@
+                  >
+                    Ab CHF 12.- pro Monat
+                  </small>
+                </div>
+                <span
+-                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
++                 class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-19x3w69-MuiButtonBase-root-MuiRadio-root"
+                >
+                  <input
+                    checked=""
+                    class="PrivateSwitchBase-input css-1m9pwf3"
+                    name="Foobar Memberplan"
+@@ -188,11 +188,11 @@
+                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                      />
+                    </svg>
+                    <svg
+                      aria-hidden="true"
+-                     class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-11zohuh-MuiSvgIcon-root"
++                     class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hhw7if-MuiSvgIcon-root"
                       data-testid="RadioButtonCheckedIcon"
                       focusable="false"
                       viewBox="0 0 24 24"
@@ -19260,8 +19267,8 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
         tabindex="0"
         type="submit"
       >
--       Monatlich für CHF 5.- Abonieren
-+       Monatlich für CHF 12.- Abonieren
+-       Monatlich für CHF 12.- Abonnieren
++       Monatlich für CHF 8.- Abonnieren
         <span
           class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
         />
@@ -19379,7 +19386,7 @@ exports[`Subscribe should render ResetPaymentOptionsOnPaymentMethodChange 1`] = 
 -             class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-ahj2mt-MuiTypography-root"
 +             class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label Mui-disabled css-ahj2mt-MuiTypography-root"
             >
-              Automatisch Erneuern
+              Automatisch erneuern
             </span>
           </label>
         </div>"
@@ -19485,8 +19492,6 @@ exports[`Subscribe should render WithChallengeError 1`] = `
   background-color: #f5f5f5;
   border-radius: 4px;
   border: 1px solid rgba(0, 0, 0, 0.12);
-  border-color: #1976d2;
-  background-color: rgb(220, 234, 248);
 }
 
 .emotion-12 {
@@ -19622,12 +19627,12 @@ exports[`Subscribe should render WithChallengeError 1`] = `
   font-size: 1.5rem;
   left: 0;
   position: absolute;
-  -webkit-transform: scale(1);
-  -moz-transform: scale(1);
-  -ms-transform: scale(1);
-  transform: scale(1);
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  -webkit-transform: scale(0);
+  -moz-transform: scale(0);
+  -ms-transform: scale(0);
+  transform: scale(0);
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
 }
 
 .emotion-23 {
@@ -19639,7 +19644,7 @@ exports[`Subscribe should render WithChallengeError 1`] = `
   letter-spacing: 0.00938em;
 }
 
-.emotion-25 {
+.emotion-40 {
   display: grid;
   grid-template-columns: 1fr auto;
   -webkit-align-items: center;
@@ -19651,9 +19656,11 @@ exports[`Subscribe should render WithChallengeError 1`] = `
   background-color: #f5f5f5;
   border-radius: 4px;
   border: 1px solid rgba(0, 0, 0, 0.12);
+  border-color: #1976d2;
+  background-color: rgb(220, 234, 248);
 }
 
-.emotion-37 {
+.emotion-52 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -19670,19 +19677,20 @@ exports[`Subscribe should render WithChallengeError 1`] = `
   font-size: 1.5rem;
   left: 0;
   position: absolute;
-  -webkit-transform: scale(0);
-  -moz-transform: scale(0);
-  -ms-transform: scale(0);
-  transform: scale(0);
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  -webkit-transform: scale(1);
+  -moz-transform: scale(1);
+  -ms-transform: scale(1);
+  transform: scale(1);
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
 }
 
 .emotion-54 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
 }
 
 .emotion-58 {
@@ -21320,7 +21328,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-142:focus::-ms-input
                 <span
                   class="emotion-14 emotion-15"
                 >
-                  Foobar Memberplan
+                  Barfoo Memberplan
                 </span>
                 <small
                   class="emotion-16 emotion-17"
@@ -21329,14 +21337,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-142:focus::-ms-input
                 </small>
               </div>
               <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary emotion-18"
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary emotion-18"
               >
                 <input
-                  checked=""
                   class="PrivateSwitchBase-input emotion-19"
-                  name="Foobar Memberplan"
+                  name="Barfoo Memberplan"
                   type="radio"
-                  value="123"
+                  value="2"
                 />
                 <span
                   class="emotion-20"
@@ -21369,69 +21376,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-142:focus::-ms-input
             <span
               class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
             >
-              Foobar Memberplan
-            </span>
-          </label>
-          <label
-            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-9"
-          >
-            <div
-              class="emotion-25 emotion-11"
-            >
-              <div
-                class="emotion-12 emotion-13"
-              >
-                <span
-                  class="emotion-14 emotion-15"
-                >
-                  Barfoo Memberplan
-                </span>
-                <small
-                  class="emotion-16 emotion-17"
-                >
-                  Ab CHF 8.- pro Monat
-                </small>
-              </div>
-              <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary emotion-18"
-              >
-                <input
-                  class="PrivateSwitchBase-input emotion-19"
-                  name="Barfoo Memberplan"
-                  type="radio"
-                  value="2"
-                />
-                <span
-                  class="emotion-20"
-                >
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-21"
-                    data-testid="RadioButtonUncheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-                    />
-                  </svg>
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-37"
-                    data-testid="RadioButtonCheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
-                    />
-                  </svg>
-                </span>
-              </span>
-            </div>
-            <span
-              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
-            >
               Barfoo Memberplan
             </span>
           </label>
@@ -21439,7 +21383,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-142:focus::-ms-input
             class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-9"
           >
             <div
-              class="emotion-25 emotion-11"
+              class="emotion-10 emotion-11"
             >
               <div
                 class="emotion-12 emotion-13"
@@ -21452,7 +21396,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-142:focus::-ms-input
                 <small
                   class="emotion-16 emotion-17"
                 >
-                  Ab CHF 12.- pro Monat
+                  Ab CHF 8.- pro Monat
                 </small>
               </div>
               <span
@@ -21480,7 +21424,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-142:focus::-ms-input
                   </svg>
                   <svg
                     aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-37"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-22"
                     data-testid="RadioButtonCheckedIcon"
                     focusable="false"
                     viewBox="0 0 24 24"
@@ -21496,6 +21440,70 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-142:focus::-ms-input
               class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
             >
               Foobaz Memberplan
+            </span>
+          </label>
+          <label
+            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-9"
+          >
+            <div
+              class="emotion-40 emotion-11"
+            >
+              <div
+                class="emotion-12 emotion-13"
+              >
+                <span
+                  class="emotion-14 emotion-15"
+                >
+                  Foobar Memberplan
+                </span>
+                <small
+                  class="emotion-16 emotion-17"
+                >
+                  Ab CHF 12.- pro Monat
+                </small>
+              </div>
+              <span
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary emotion-18"
+              >
+                <input
+                  checked=""
+                  class="PrivateSwitchBase-input emotion-19"
+                  name="Foobar Memberplan"
+                  type="radio"
+                  value="123"
+                />
+                <span
+                  class="emotion-20"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-21"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-52"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
+                </span>
+              </span>
+            </div>
+            <span
+              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
+            >
+              Foobar Memberplan
             </span>
           </label>
         </div>
@@ -22138,7 +22146,7 @@ https://unsplash.it/200/100 200w"
           <span
             class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
           >
-            Automatisch Erneuern
+            Automatisch erneuern
           </span>
         </label>
       </div>
@@ -22182,7 +22190,7 @@ https://unsplash.it/200/100 200w"
       tabindex="0"
       type="submit"
     >
-      Monatlich für CHF 5.- Abonieren
+      Monatlich für CHF 12.- Abonnieren
       <span
         class="MuiTouchRipple-root emotion-104"
       />
@@ -22291,8 +22299,6 @@ exports[`Subscribe should render WithChallengeLoading 1`] = `
   background-color: #f5f5f5;
   border-radius: 4px;
   border: 1px solid rgba(0, 0, 0, 0.12);
-  border-color: #1976d2;
-  background-color: rgb(220, 234, 248);
 }
 
 .emotion-12 {
@@ -22428,12 +22434,12 @@ exports[`Subscribe should render WithChallengeLoading 1`] = `
   font-size: 1.5rem;
   left: 0;
   position: absolute;
-  -webkit-transform: scale(1);
-  -moz-transform: scale(1);
-  -ms-transform: scale(1);
-  transform: scale(1);
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  -webkit-transform: scale(0);
+  -moz-transform: scale(0);
+  -ms-transform: scale(0);
+  transform: scale(0);
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
 }
 
 .emotion-23 {
@@ -22445,7 +22451,7 @@ exports[`Subscribe should render WithChallengeLoading 1`] = `
   letter-spacing: 0.00938em;
 }
 
-.emotion-25 {
+.emotion-40 {
   display: grid;
   grid-template-columns: 1fr auto;
   -webkit-align-items: center;
@@ -22457,9 +22463,11 @@ exports[`Subscribe should render WithChallengeLoading 1`] = `
   background-color: #f5f5f5;
   border-radius: 4px;
   border: 1px solid rgba(0, 0, 0, 0.12);
+  border-color: #1976d2;
+  background-color: rgb(220, 234, 248);
 }
 
-.emotion-37 {
+.emotion-52 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -22476,19 +22484,20 @@ exports[`Subscribe should render WithChallengeLoading 1`] = `
   font-size: 1.5rem;
   left: 0;
   position: absolute;
-  -webkit-transform: scale(0);
-  -moz-transform: scale(0);
-  -ms-transform: scale(0);
-  transform: scale(0);
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  -webkit-transform: scale(1);
+  -moz-transform: scale(1);
+  -ms-transform: scale(1);
+  transform: scale(1);
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
 }
 
 .emotion-54 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
 }
 
 .emotion-58 {
@@ -24067,7 +24076,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-142:focus::-ms-input
                 <span
                   class="emotion-14 emotion-15"
                 >
-                  Foobar Memberplan
+                  Barfoo Memberplan
                 </span>
                 <small
                   class="emotion-16 emotion-17"
@@ -24076,14 +24085,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-142:focus::-ms-input
                 </small>
               </div>
               <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary emotion-18"
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary emotion-18"
               >
                 <input
-                  checked=""
                   class="PrivateSwitchBase-input emotion-19"
-                  name="Foobar Memberplan"
+                  name="Barfoo Memberplan"
                   type="radio"
-                  value="123"
+                  value="2"
                 />
                 <span
                   class="emotion-20"
@@ -24116,69 +24124,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-142:focus::-ms-input
             <span
               class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
             >
-              Foobar Memberplan
-            </span>
-          </label>
-          <label
-            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-9"
-          >
-            <div
-              class="emotion-25 emotion-11"
-            >
-              <div
-                class="emotion-12 emotion-13"
-              >
-                <span
-                  class="emotion-14 emotion-15"
-                >
-                  Barfoo Memberplan
-                </span>
-                <small
-                  class="emotion-16 emotion-17"
-                >
-                  Ab CHF 8.- pro Monat
-                </small>
-              </div>
-              <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary emotion-18"
-              >
-                <input
-                  class="PrivateSwitchBase-input emotion-19"
-                  name="Barfoo Memberplan"
-                  type="radio"
-                  value="2"
-                />
-                <span
-                  class="emotion-20"
-                >
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-21"
-                    data-testid="RadioButtonUncheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-                    />
-                  </svg>
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-37"
-                    data-testid="RadioButtonCheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
-                    />
-                  </svg>
-                </span>
-              </span>
-            </div>
-            <span
-              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
-            >
               Barfoo Memberplan
             </span>
           </label>
@@ -24186,7 +24131,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-142:focus::-ms-input
             class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-9"
           >
             <div
-              class="emotion-25 emotion-11"
+              class="emotion-10 emotion-11"
             >
               <div
                 class="emotion-12 emotion-13"
@@ -24199,7 +24144,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-142:focus::-ms-input
                 <small
                   class="emotion-16 emotion-17"
                 >
-                  Ab CHF 12.- pro Monat
+                  Ab CHF 8.- pro Monat
                 </small>
               </div>
               <span
@@ -24227,7 +24172,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-142:focus::-ms-input
                   </svg>
                   <svg
                     aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-37"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-22"
                     data-testid="RadioButtonCheckedIcon"
                     focusable="false"
                     viewBox="0 0 24 24"
@@ -24243,6 +24188,70 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-142:focus::-ms-input
               class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
             >
               Foobaz Memberplan
+            </span>
+          </label>
+          <label
+            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-9"
+          >
+            <div
+              class="emotion-40 emotion-11"
+            >
+              <div
+                class="emotion-12 emotion-13"
+              >
+                <span
+                  class="emotion-14 emotion-15"
+                >
+                  Foobar Memberplan
+                </span>
+                <small
+                  class="emotion-16 emotion-17"
+                >
+                  Ab CHF 12.- pro Monat
+                </small>
+              </div>
+              <span
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary emotion-18"
+              >
+                <input
+                  checked=""
+                  class="PrivateSwitchBase-input emotion-19"
+                  name="Foobar Memberplan"
+                  type="radio"
+                  value="123"
+                />
+                <span
+                  class="emotion-20"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-21"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-52"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
+                </span>
+              </span>
+            </div>
+            <span
+              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
+            >
+              Foobar Memberplan
             </span>
           </label>
         </div>
@@ -24885,7 +24894,7 @@ https://unsplash.it/200/100 200w"
           <span
             class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
           >
-            Automatisch Erneuern
+            Automatisch erneuern
           </span>
         </label>
       </div>
@@ -24905,7 +24914,7 @@ https://unsplash.it/200/100 200w"
       tabindex="-1"
       type="submit"
     >
-      Monatlich für CHF 5.- Abonieren
+      Monatlich für CHF 12.- Abonnieren
     </button>
   </form>
 </DocumentFragment>
@@ -25011,8 +25020,6 @@ exports[`Subscribe should render WithClassName 1`] = `
   background-color: #f5f5f5;
   border-radius: 4px;
   border: 1px solid rgba(0, 0, 0, 0.12);
-  border-color: #1976d2;
-  background-color: rgb(220, 234, 248);
 }
 
 .emotion-12 {
@@ -25148,12 +25155,12 @@ exports[`Subscribe should render WithClassName 1`] = `
   font-size: 1.5rem;
   left: 0;
   position: absolute;
-  -webkit-transform: scale(1);
-  -moz-transform: scale(1);
-  -ms-transform: scale(1);
-  transform: scale(1);
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  -webkit-transform: scale(0);
+  -moz-transform: scale(0);
+  -ms-transform: scale(0);
+  transform: scale(0);
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
 }
 
 .emotion-23 {
@@ -25165,7 +25172,7 @@ exports[`Subscribe should render WithClassName 1`] = `
   letter-spacing: 0.00938em;
 }
 
-.emotion-25 {
+.emotion-40 {
   display: grid;
   grid-template-columns: 1fr auto;
   -webkit-align-items: center;
@@ -25177,9 +25184,11 @@ exports[`Subscribe should render WithClassName 1`] = `
   background-color: #f5f5f5;
   border-radius: 4px;
   border: 1px solid rgba(0, 0, 0, 0.12);
+  border-color: #1976d2;
+  background-color: rgb(220, 234, 248);
 }
 
-.emotion-37 {
+.emotion-52 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -25196,19 +25205,20 @@ exports[`Subscribe should render WithClassName 1`] = `
   font-size: 1.5rem;
   left: 0;
   position: absolute;
-  -webkit-transform: scale(0);
-  -moz-transform: scale(0);
-  -ms-transform: scale(0);
-  transform: scale(0);
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  -webkit-transform: scale(1);
+  -moz-transform: scale(1);
+  -ms-transform: scale(1);
+  transform: scale(1);
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
 }
 
 .emotion-54 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
 }
 
 .emotion-58 {
@@ -26810,7 +26820,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-142:focus::-ms-input
                 <span
                   class="emotion-14 emotion-15"
                 >
-                  Foobar Memberplan
+                  Barfoo Memberplan
                 </span>
                 <small
                   class="emotion-16 emotion-17"
@@ -26819,14 +26829,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-142:focus::-ms-input
                 </small>
               </div>
               <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary emotion-18"
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary emotion-18"
               >
                 <input
-                  checked=""
                   class="PrivateSwitchBase-input emotion-19"
-                  name="Foobar Memberplan"
+                  name="Barfoo Memberplan"
                   type="radio"
-                  value="123"
+                  value="2"
                 />
                 <span
                   class="emotion-20"
@@ -26859,69 +26868,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-142:focus::-ms-input
             <span
               class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
             >
-              Foobar Memberplan
-            </span>
-          </label>
-          <label
-            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-9"
-          >
-            <div
-              class="emotion-25 emotion-11"
-            >
-              <div
-                class="emotion-12 emotion-13"
-              >
-                <span
-                  class="emotion-14 emotion-15"
-                >
-                  Barfoo Memberplan
-                </span>
-                <small
-                  class="emotion-16 emotion-17"
-                >
-                  Ab CHF 8.- pro Monat
-                </small>
-              </div>
-              <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary emotion-18"
-              >
-                <input
-                  class="PrivateSwitchBase-input emotion-19"
-                  name="Barfoo Memberplan"
-                  type="radio"
-                  value="2"
-                />
-                <span
-                  class="emotion-20"
-                >
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-21"
-                    data-testid="RadioButtonUncheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-                    />
-                  </svg>
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-37"
-                    data-testid="RadioButtonCheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
-                    />
-                  </svg>
-                </span>
-              </span>
-            </div>
-            <span
-              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
-            >
               Barfoo Memberplan
             </span>
           </label>
@@ -26929,7 +26875,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-142:focus::-ms-input
             class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-9"
           >
             <div
-              class="emotion-25 emotion-11"
+              class="emotion-10 emotion-11"
             >
               <div
                 class="emotion-12 emotion-13"
@@ -26942,7 +26888,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-142:focus::-ms-input
                 <small
                   class="emotion-16 emotion-17"
                 >
-                  Ab CHF 12.- pro Monat
+                  Ab CHF 8.- pro Monat
                 </small>
               </div>
               <span
@@ -26970,7 +26916,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-142:focus::-ms-input
                   </svg>
                   <svg
                     aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-37"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-22"
                     data-testid="RadioButtonCheckedIcon"
                     focusable="false"
                     viewBox="0 0 24 24"
@@ -26986,6 +26932,70 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-142:focus::-ms-input
               class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
             >
               Foobaz Memberplan
+            </span>
+          </label>
+          <label
+            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-9"
+          >
+            <div
+              class="emotion-40 emotion-11"
+            >
+              <div
+                class="emotion-12 emotion-13"
+              >
+                <span
+                  class="emotion-14 emotion-15"
+                >
+                  Foobar Memberplan
+                </span>
+                <small
+                  class="emotion-16 emotion-17"
+                >
+                  Ab CHF 12.- pro Monat
+                </small>
+              </div>
+              <span
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary emotion-18"
+              >
+                <input
+                  checked=""
+                  class="PrivateSwitchBase-input emotion-19"
+                  name="Foobar Memberplan"
+                  type="radio"
+                  value="123"
+                />
+                <span
+                  class="emotion-20"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-21"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-52"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
+                </span>
+              </span>
+            </div>
+            <span
+              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
+            >
+              Foobar Memberplan
             </span>
           </label>
         </div>
@@ -27628,7 +27638,7 @@ https://unsplash.it/200/100 200w"
           <span
             class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
           >
-            Automatisch Erneuern
+            Automatisch erneuern
           </span>
         </label>
       </div>
@@ -27746,7 +27756,7 @@ https://unsplash.it/200/100 200w"
       tabindex="0"
       type="submit"
     >
-      Monatlich für CHF 5.- Abonieren
+      Monatlich für CHF 12.- Abonnieren
       <span
         class="MuiTouchRipple-root emotion-104"
       />
@@ -28026,8 +28036,6 @@ exports[`Subscribe should render WithEmotion 1`] = `
   background-color: #f5f5f5;
   border-radius: 4px;
   border: 1px solid rgba(0, 0, 0, 0.12);
-  border-color: #1976d2;
-  background-color: rgb(220, 234, 248);
 }
 
 .emotion-12 {
@@ -28163,12 +28171,12 @@ exports[`Subscribe should render WithEmotion 1`] = `
   font-size: 1.5rem;
   left: 0;
   position: absolute;
-  -webkit-transform: scale(1);
-  -moz-transform: scale(1);
-  -ms-transform: scale(1);
-  transform: scale(1);
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  -webkit-transform: scale(0);
+  -moz-transform: scale(0);
+  -ms-transform: scale(0);
+  transform: scale(0);
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
 }
 
 .emotion-23 {
@@ -28180,7 +28188,7 @@ exports[`Subscribe should render WithEmotion 1`] = `
   letter-spacing: 0.00938em;
 }
 
-.emotion-25 {
+.emotion-40 {
   display: grid;
   grid-template-columns: 1fr auto;
   -webkit-align-items: center;
@@ -28192,9 +28200,11 @@ exports[`Subscribe should render WithEmotion 1`] = `
   background-color: #f5f5f5;
   border-radius: 4px;
   border: 1px solid rgba(0, 0, 0, 0.12);
+  border-color: #1976d2;
+  background-color: rgb(220, 234, 248);
 }
 
-.emotion-37 {
+.emotion-52 {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -28211,19 +28221,20 @@ exports[`Subscribe should render WithEmotion 1`] = `
   font-size: 1.5rem;
   left: 0;
   position: absolute;
-  -webkit-transform: scale(0);
-  -moz-transform: scale(0);
-  -ms-transform: scale(0);
-  transform: scale(0);
-  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
-  transition: transform 150ms cubic-bezier(0.4, 0, 1, 1) 0ms;
+  -webkit-transform: scale(1);
+  -moz-transform: scale(1);
+  -ms-transform: scale(1);
+  transform: scale(1);
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.0, 0, 0.2, 1) 0ms;
 }
 
 .emotion-54 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
 }
 
 .emotion-58 {
@@ -29825,7 +29836,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-142:focus::-ms-input
                 <span
                   class="emotion-14 emotion-15"
                 >
-                  Foobar Memberplan
+                  Barfoo Memberplan
                 </span>
                 <small
                   class="emotion-16 emotion-17"
@@ -29834,14 +29845,13 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-142:focus::-ms-input
                 </small>
               </div>
               <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary emotion-18"
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary emotion-18"
               >
                 <input
-                  checked=""
                   class="PrivateSwitchBase-input emotion-19"
-                  name="Foobar Memberplan"
+                  name="Barfoo Memberplan"
                   type="radio"
-                  value="123"
+                  value="2"
                 />
                 <span
                   class="emotion-20"
@@ -29874,69 +29884,6 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-142:focus::-ms-input
             <span
               class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
             >
-              Foobar Memberplan
-            </span>
-          </label>
-          <label
-            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-9"
-          >
-            <div
-              class="emotion-25 emotion-11"
-            >
-              <div
-                class="emotion-12 emotion-13"
-              >
-                <span
-                  class="emotion-14 emotion-15"
-                >
-                  Barfoo Memberplan
-                </span>
-                <small
-                  class="emotion-16 emotion-17"
-                >
-                  Ab CHF 8.- pro Monat
-                </small>
-              </div>
-              <span
-                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary emotion-18"
-              >
-                <input
-                  class="PrivateSwitchBase-input emotion-19"
-                  name="Barfoo Memberplan"
-                  type="radio"
-                  value="2"
-                />
-                <span
-                  class="emotion-20"
-                >
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-21"
-                    data-testid="RadioButtonUncheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
-                    />
-                  </svg>
-                  <svg
-                    aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-37"
-                    data-testid="RadioButtonCheckedIcon"
-                    focusable="false"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
-                    />
-                  </svg>
-                </span>
-              </span>
-            </div>
-            <span
-              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
-            >
               Barfoo Memberplan
             </span>
           </label>
@@ -29944,7 +29891,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-142:focus::-ms-input
             class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-9"
           >
             <div
-              class="emotion-25 emotion-11"
+              class="emotion-10 emotion-11"
             >
               <div
                 class="emotion-12 emotion-13"
@@ -29957,7 +29904,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-142:focus::-ms-input
                 <small
                   class="emotion-16 emotion-17"
                 >
-                  Ab CHF 12.- pro Monat
+                  Ab CHF 8.- pro Monat
                 </small>
               </div>
               <span
@@ -29985,7 +29932,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-142:focus::-ms-input
                   </svg>
                   <svg
                     aria-hidden="true"
-                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-37"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-22"
                     data-testid="RadioButtonCheckedIcon"
                     focusable="false"
                     viewBox="0 0 24 24"
@@ -30001,6 +29948,70 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-142:focus::-ms-input
               class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
             >
               Foobaz Memberplan
+            </span>
+          </label>
+          <label
+            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd emotion-9"
+          >
+            <div
+              class="emotion-40 emotion-11"
+            >
+              <div
+                class="emotion-12 emotion-13"
+              >
+                <span
+                  class="emotion-14 emotion-15"
+                >
+                  Foobar Memberplan
+                </span>
+                <small
+                  class="emotion-16 emotion-17"
+                >
+                  Ab CHF 12.- pro Monat
+                </small>
+              </div>
+              <span
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary emotion-18"
+              >
+                <input
+                  checked=""
+                  class="PrivateSwitchBase-input emotion-19"
+                  name="Foobar Memberplan"
+                  type="radio"
+                  value="123"
+                />
+                <span
+                  class="emotion-20"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-21"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium emotion-52"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
+                </span>
+              </span>
+            </div>
+            <span
+              class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
+            >
+              Foobar Memberplan
             </span>
           </label>
         </div>
@@ -30643,7 +30654,7 @@ https://unsplash.it/200/100 200w"
           <span
             class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label emotion-23"
           >
-            Automatisch Erneuern
+            Automatisch erneuern
           </span>
         </label>
       </div>
@@ -30761,7 +30772,7 @@ https://unsplash.it/200/100 200w"
       tabindex="0"
       type="submit"
     >
-      Monatlich für CHF 5.- Abonieren
+      Monatlich für CHF 12.- Abonnieren
       <span
         class="MuiTouchRipple-root emotion-104"
       />
@@ -31145,7 +31156,7 @@ exports[`Subscribe should render WithSubscribeError 1`] = `
 + Second value
 
 @@ -513,10 +513,35 @@
-              Automatisch Erneuern
+              Automatisch erneuern
             </span>
           </label>
         </div>

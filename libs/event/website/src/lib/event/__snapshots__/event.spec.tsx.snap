@@ -9,9 +9,10 @@ exports[`Event should render Default 1`] = `
 
 .emotion-2 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
   aspect-ratio: 16/9;
   object-fit: cover;
 }
@@ -624,7 +625,7 @@ exports[`Event should render WithError 1`] = `
 -     </script>
 -     <img
 -       alt="DSC07717"
--       class="css-1c1klla-ImageWrapper-Event e1shv2yg0"
+-       class="css-f7a9ma-ImageWrapper-Event e1shv2yg0"
 -       loading="lazy"
 -       srcset="https://unsplash.it/800/400 800w,
 - https://unsplash.it/500/300 500w,
@@ -1103,7 +1104,7 @@ exports[`Event should render WithLoading 1`] = `
 -     </script>
 -     <img
 -       alt="DSC07717"
--       class="css-1c1klla-ImageWrapper-Event e1shv2yg0"
+-       class="css-f7a9ma-ImageWrapper-Event e1shv2yg0"
 -       loading="lazy"
 -       srcset="https://unsplash.it/800/400 800w,
 - https://unsplash.it/500/300 500w,
@@ -1557,7 +1558,7 @@ exports[`Event should render WithoutImage 1`] = `
       </script>
 -     <img
 -       alt="DSC07717"
--       class="css-1c1klla-ImageWrapper-Event e1shv2yg0"
+-       class="css-f7a9ma-ImageWrapper-Event e1shv2yg0"
 -       loading="lazy"
 -       srcset="https://unsplash.it/800/400 800w,
 - https://unsplash.it/500/300 500w,

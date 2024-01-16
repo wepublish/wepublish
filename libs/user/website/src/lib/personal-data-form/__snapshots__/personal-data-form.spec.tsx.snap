@@ -49,9 +49,10 @@ exports[`Registration Form should render Default 1`] = `
 
 .emotion-10 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
   width: 150px;
   height: 150px;
   border-radius: 100%;
@@ -1800,7 +1801,7 @@ exports[`Registration Form should render Filled 1`] = `
                     Passwort
                   </span>
                 </legend>
-@@ -467,28 +467,29 @@
+@@ -467,12 +467,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -1808,21 +1809,14 @@ exports[`Registration Form should render Filled 1`] = `
             <label
 -             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
 -             data-shrink="false"
-+             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-error MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
++             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 +             data-shrink="true"
               for=":r12:"
               id=":r12:-label"
             >
               Passwort wiederholen
             </label>
-            <div
--             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd css-154xyx0-MuiInputBase-root-MuiOutlinedInput-root"
-+             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary Mui-error MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd css-154xyx0-MuiInputBase-root-MuiOutlinedInput-root"
-            >
-              <input
--               aria-invalid="false"
-+               aria-describedby=":r12:-helper-text"
-+               aria-invalid="true"
+@@ -484,11 +484,11 @@
                 autocomplete="new-password"
                 class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r12:"
@@ -1835,7 +1829,7 @@ exports[`Registration Form should render Filled 1`] = `
                 class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1laqsz7-MuiInputAdornment-root"
               >
                 <button
-@@ -521,18 +522,24 @@
+@@ -521,11 +521,11 @@
               <fieldset
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
@@ -1847,71 +1841,12 @@ exports[`Registration Form should render Filled 1`] = `
                   <span>
                     Passwort wiederholen
                   </span>
-                </legend>
-              </fieldset>
-            </div>
-+           <p
-+             class="MuiFormHelperText-root Mui-error MuiFormHelperText-sizeMedium MuiFormHelperText-contained MuiFormHelperText-filled css-1wc848c-MuiFormHelperText-root"
-+             id=":r12:-helper-text"
-+           >
-+             Passwörter stimmen nicht überein.
-+           </p>
-          </div>
-        </div>
-        <div
-          class="css-v0juod-PersonalDataEmailWrapper en9lwew1"
-        >"
+                </legend>"
 `;
 
 exports[`Registration Form should render Invalid 1`] = `
 "Snapshot Diff:
-- First value
-+ Second value
-
-@@ -467,22 +467,23 @@
-          </div>
-          <div
-            class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
-          >
-            <label
--             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
-+             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-error MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
-              data-shrink="false"
-              for=":r1e:"
-              id=":r1e:-label"
-            >
-              Passwort wiederholen
-            </label>
-            <div
--             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd css-154xyx0-MuiInputBase-root-MuiOutlinedInput-root"
-+             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary Mui-error MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd css-154xyx0-MuiInputBase-root-MuiOutlinedInput-root"
-            >
-              <input
--               aria-invalid="false"
-+               aria-describedby=":r1e:-helper-text"
-+               aria-invalid="true"
-                autocomplete="new-password"
-                class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r1e:"
-                name="passwordRepeated"
-                type="password"
-@@ -529,10 +530,16 @@
-                    Passwort wiederholen
-                  </span>
-                </legend>
-              </fieldset>
-            </div>
-+           <p
-+             class="MuiFormHelperText-root Mui-error MuiFormHelperText-sizeMedium MuiFormHelperText-contained css-1wc848c-MuiFormHelperText-root"
-+             id=":r1e:-helper-text"
-+           >
-+             Passwörter stimmen nicht überein.
-+           </p>
-          </div>
-        </div>
-        <div
-          class="css-v0juod-PersonalDataEmailWrapper en9lwew1"
-        >"
+Compared values have no visual difference."
 `;
 
 exports[`Registration Form should render OnlyAddress 1`] = `
@@ -1935,7 +1870,7 @@ exports[`Registration Form should render OnlyAddress 1`] = `
 -           >
 -             <img
 -               alt="DSC07717"
--               class="css-1lykaea-ImageWrapper-ImageUpload e1shv2yg0"
+-               class="css-nbsgpq-ImageWrapper-ImageUpload e1shv2yg0"
 -               loading="lazy"
 -               srcset="https://unsplash.it/800/400 800w,
 - https://unsplash.it/500/300 500w,
@@ -2543,7 +2478,7 @@ exports[`Registration Form should render OnlyFirstName 1`] = `
 -           >
 -             <img
 -               alt="DSC07717"
--               class="css-1lykaea-ImageWrapper-ImageUpload e1shv2yg0"
+-               class="css-nbsgpq-ImageWrapper-ImageUpload e1shv2yg0"
 -               loading="lazy"
 -               srcset="https://unsplash.it/800/400 800w,
 - https://unsplash.it/500/300 500w,
@@ -3142,7 +3077,7 @@ exports[`Registration Form should render OnlyFlair 1`] = `
 -           >
 -             <img
 -               alt="DSC07717"
--               class="css-1lykaea-ImageWrapper-ImageUpload e1shv2yg0"
+-               class="css-nbsgpq-ImageWrapper-ImageUpload e1shv2yg0"
 -               loading="lazy"
 -               srcset="https://unsplash.it/800/400 800w,
 - https://unsplash.it/500/300 500w,
@@ -3747,7 +3682,7 @@ exports[`Registration Form should render OnlyPassword 1`] = `
 -           >
 -             <img
 -               alt="DSC07717"
--               class="css-1lykaea-ImageWrapper-ImageUpload e1shv2yg0"
+-               class="css-nbsgpq-ImageWrapper-ImageUpload e1shv2yg0"
 -               loading="lazy"
 -               srcset="https://unsplash.it/800/400 800w,
 - https://unsplash.it/500/300 500w,
@@ -4270,7 +4205,7 @@ exports[`Registration Form should render OnlyPasswordFilled 1`] = `
                     Passwort
                   </span>
                 </legend>
-@@ -119,28 +119,29 @@
+@@ -119,12 +119,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -4278,21 +4213,14 @@ exports[`Registration Form should render OnlyPasswordFilled 1`] = `
             <label
 -             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
 -             data-shrink="false"
-+             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-error MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
++             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 +             data-shrink="true"
               for=":r2q:"
               id=":r2q:-label"
             >
               Passwort wiederholen
             </label>
-            <div
--             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd css-154xyx0-MuiInputBase-root-MuiOutlinedInput-root"
-+             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary Mui-error MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd css-154xyx0-MuiInputBase-root-MuiOutlinedInput-root"
-            >
-              <input
--               aria-invalid="false"
-+               aria-describedby=":r2q:-helper-text"
-+               aria-invalid="true"
+@@ -136,11 +136,11 @@
                 autocomplete="new-password"
                 class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r2q:"
@@ -4305,7 +4233,7 @@ exports[`Registration Form should render OnlyPasswordFilled 1`] = `
                 class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1laqsz7-MuiInputAdornment-root"
               >
                 <button
-@@ -173,18 +174,24 @@
+@@ -173,11 +173,11 @@
               <fieldset
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
@@ -4317,71 +4245,12 @@ exports[`Registration Form should render OnlyPasswordFilled 1`] = `
                   <span>
                     Passwort wiederholen
                   </span>
-                </legend>
-              </fieldset>
-            </div>
-+           <p
-+             class="MuiFormHelperText-root Mui-error MuiFormHelperText-sizeMedium MuiFormHelperText-contained MuiFormHelperText-filled css-1wc848c-MuiFormHelperText-root"
-+             id=":r2q:-helper-text"
-+           >
-+             Passwörter stimmen nicht überein.
-+           </p>
-          </div>
-        </div>
-        <div
-          class="css-v0juod-PersonalDataEmailWrapper en9lwew1"
-        >"
+                </legend>"
 `;
 
 exports[`Registration Form should render OnlyPasswordInvalid 1`] = `
 "Snapshot Diff:
-- First value
-+ Second value
-
-@@ -119,22 +119,23 @@
-          </div>
-          <div
-            class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
-          >
-            <label
--             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
-+             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-error MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
-              data-shrink="false"
-              for=":r2u:"
-              id=":r2u:-label"
-            >
-              Passwort wiederholen
-            </label>
-            <div
--             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd css-154xyx0-MuiInputBase-root-MuiOutlinedInput-root"
-+             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary Mui-error MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd css-154xyx0-MuiInputBase-root-MuiOutlinedInput-root"
-            >
-              <input
--               aria-invalid="false"
-+               aria-describedby=":r2u:-helper-text"
-+               aria-invalid="true"
-                autocomplete="new-password"
-                class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r2u:"
-                name="passwordRepeated"
-                type="password"
-@@ -181,10 +182,16 @@
-                    Passwort wiederholen
-                  </span>
-                </legend>
-              </fieldset>
-            </div>
-+           <p
-+             class="MuiFormHelperText-root Mui-error MuiFormHelperText-sizeMedium MuiFormHelperText-contained css-1wc848c-MuiFormHelperText-root"
-+             id=":r2u:-helper-text"
-+           >
-+             Passwörter stimmen nicht überein.
-+           </p>
-          </div>
-        </div>
-        <div
-          class="css-v0juod-PersonalDataEmailWrapper en9lwew1"
-        >"
+Compared values have no visual difference."
 `;
 
 exports[`Registration Form should render OnlyPreferredName 1`] = `
@@ -4405,7 +4274,7 @@ exports[`Registration Form should render OnlyPreferredName 1`] = `
 -           >
 -             <img
 -               alt="DSC07717"
--               class="css-1lykaea-ImageWrapper-ImageUpload e1shv2yg0"
+-               class="css-nbsgpq-ImageWrapper-ImageUpload e1shv2yg0"
 -               loading="lazy"
 -               srcset="https://unsplash.it/800/400 800w,
 - https://unsplash.it/500/300 500w,
@@ -5027,7 +4896,7 @@ exports[`Registration Form should render OnlyRequired 1`] = `
 -           >
 -             <img
 -               alt="DSC07717"
--               class="css-1lykaea-ImageWrapper-ImageUpload e1shv2yg0"
+-               class="css-nbsgpq-ImageWrapper-ImageUpload e1shv2yg0"
 -               loading="lazy"
 -               srcset="https://unsplash.it/800/400 800w,
 - https://unsplash.it/500/300 500w,
@@ -6088,7 +5957,7 @@ exports[`Registration Form should render WithMediaEmail 1`] = `
 +         >
 +           <a
 +             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
-+             href="mailto:some@email.com&subject=Email Änderung&body=Guten Tag, %0D%0A. Ich würde gerne meine Email von some-example@mail.com zu  >>Neue Email hier einfügen<< %0D%0A Liebe Grüsse"
++             href="mailto:some@email.com?subject=Email Änderung&body=Guten Tag, %0D%0A. Ich würde gerne meine Email von some-example@mail.com zu  >>Neue Email hier einfügen<< %0D%0A Liebe Grüsse"
 +           >
 +             Klicke hier um deine Email zu ändern
 +           </a>
@@ -6223,7 +6092,7 @@ exports[`Registration Form should render WithUpdateError 1`] = `
                     Passwort
                   </span>
                 </legend>
-@@ -467,28 +467,29 @@
+@@ -467,12 +467,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -6231,21 +6100,14 @@ exports[`Registration Form should render WithUpdateError 1`] = `
             <label
 -             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
 -             data-shrink="false"
-+             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-error MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
++             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 +             data-shrink="true"
               for=":r51:"
               id=":r51:-label"
             >
               Passwort wiederholen
             </label>
-            <div
--             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd css-154xyx0-MuiInputBase-root-MuiOutlinedInput-root"
-+             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary Mui-error MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd css-154xyx0-MuiInputBase-root-MuiOutlinedInput-root"
-            >
-              <input
--               aria-invalid="false"
-+               aria-describedby=":r51:-helper-text"
-+               aria-invalid="true"
+@@ -484,11 +484,11 @@
                 autocomplete="new-password"
                 class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r51:"
@@ -6258,7 +6120,7 @@ exports[`Registration Form should render WithUpdateError 1`] = `
                 class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1laqsz7-MuiInputAdornment-root"
               >
                 <button
-@@ -521,18 +522,24 @@
+@@ -521,11 +521,11 @@
               <fieldset
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
@@ -6271,19 +6133,44 @@ exports[`Registration Form should render WithUpdateError 1`] = `
                     Passwort wiederholen
                   </span>
                 </legend>
+@@ -569,12 +569,37 @@
+                  <span>
+                    Email (nicht bearbeitbar)
+                  </span>
+                </legend>
               </fieldset>
-            </div>
-+           <p
-+             class="MuiFormHelperText-root Mui-error MuiFormHelperText-sizeMedium MuiFormHelperText-contained MuiFormHelperText-filled css-1wc848c-MuiFormHelperText-root"
-+             id=":r51:-helper-text"
-+           >
-+             Passwörter stimmen nicht überein.
-+           </p>
-          </div>
++           </div>
++         </div>
++       </div>
+      </div>
++     <div
++       class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-standardError MuiAlert-standard css-1hdyuqk-MuiPaper-root-MuiAlert-root"
++       role="alert"
++     >
++       <div
++         class="MuiAlert-icon css-1ytlwq5-MuiAlert-icon"
++       >
++         <svg
++           aria-hidden="true"
++           class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit css-1vooibu-MuiSvgIcon-root"
++           data-testid="ErrorOutlineIcon"
++           focusable="false"
++           viewBox="0 0 24 24"
++         >
++           <path
++             d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
++           />
++         </svg>
         </div>
-        <div
-          class="css-v0juod-PersonalDataEmailWrapper en9lwew1"
-        >"
++       <div
++         class="MuiAlert-message css-1pxa9xg-MuiAlert-message"
++       >
++         Foobar
+        </div>
+      </div>
+      <button
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-w2m5ha-MuiButtonBase-root-MuiButton-root-PersonalDataForm"
+        tabindex="0""
 `;
 
 exports[`Registration Form should render WithUpdateLoading 1`] = `
@@ -6410,7 +6297,7 @@ exports[`Registration Form should render WithUpdateLoading 1`] = `
                     Passwort
                   </span>
                 </legend>
-@@ -467,28 +467,29 @@
+@@ -467,12 +467,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -6418,21 +6305,14 @@ exports[`Registration Form should render WithUpdateLoading 1`] = `
             <label
 -             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-14s5rfu-MuiFormLabel-root-MuiInputLabel-root"
 -             data-shrink="false"
-+             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary Mui-error MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
++             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1jy569b-MuiFormLabel-root-MuiInputLabel-root"
 +             data-shrink="true"
               for=":r5d:"
               id=":r5d:-label"
             >
               Passwort wiederholen
             </label>
-            <div
--             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd css-154xyx0-MuiInputBase-root-MuiOutlinedInput-root"
-+             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary Mui-error MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedEnd css-154xyx0-MuiInputBase-root-MuiOutlinedInput-root"
-            >
-              <input
--               aria-invalid="false"
-+               aria-describedby=":r5d:-helper-text"
-+               aria-invalid="true"
+@@ -484,11 +484,11 @@
                 autocomplete="new-password"
                 class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r5d:"
@@ -6445,7 +6325,7 @@ exports[`Registration Form should render WithUpdateLoading 1`] = `
                 class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1laqsz7-MuiInputAdornment-root"
               >
                 <button
-@@ -521,18 +522,24 @@
+@@ -521,11 +521,11 @@
               <fieldset
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
@@ -6457,18 +6337,5 @@ exports[`Registration Form should render WithUpdateLoading 1`] = `
                   <span>
                     Passwort wiederholen
                   </span>
-                </legend>
-              </fieldset>
-            </div>
-+           <p
-+             class="MuiFormHelperText-root Mui-error MuiFormHelperText-sizeMedium MuiFormHelperText-contained MuiFormHelperText-filled css-1wc848c-MuiFormHelperText-root"
-+             id=":r5d:-helper-text"
-+           >
-+             Passwörter stimmen nicht überein.
-+           </p>
-          </div>
-        </div>
-        <div
-          class="css-v0juod-PersonalDataEmailWrapper en9lwew1"
-        >"
+                </legend>"
 `;

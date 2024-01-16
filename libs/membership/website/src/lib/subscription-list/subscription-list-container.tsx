@@ -8,6 +8,8 @@ import {
   useSubscriptionsQuery
 } from '@wepublish/website/api'
 import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {produce} from 'immer'
+import {useMemo} from 'react'
 
 export type SubscriptionListContainerProps = {
   successURL: string
@@ -40,16 +42,19 @@ export function SubscriptionListContainer({
     }
   })
 
+  const filteredSubscriptions = useMemo(
+    () =>
+      produce(data, draftData => {
+        if (filter && draftData?.subscriptions) {
+          draftData.subscriptions = filter(draftData.subscriptions)
+        }
+      }),
+    [data, filter]
+  )
+
   return (
     <SubscriptionList
-      data={
-        filter && data?.subscriptions
-          ? {
-              ...data,
-              subscriptions: filter(data.subscriptions)
-            }
-          : data
-      }
+      data={filteredSubscriptions}
       loading={loading}
       error={error}
       className={className}

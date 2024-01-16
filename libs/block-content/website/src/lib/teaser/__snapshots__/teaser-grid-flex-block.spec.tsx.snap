@@ -58,9 +58,10 @@ exports[`Teaser Grid Flex Block should render Default 1`] = `
 
 .emotion-7 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
   height: 100%;
   width: 100%;
   object-fit: cover;

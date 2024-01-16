@@ -19,9 +19,10 @@ exports[`Comment should render AnonymousUser 1`] = `
 
 .emotion-4 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
   width: 46px;
   height: 46px;
   border-radius: 50%;
@@ -153,9 +154,10 @@ exports[`Comment should render PendingApproval 1`] = `
 
 .emotion-4 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
   width: 46px;
   height: 46px;
   border-radius: 50%;
@@ -319,9 +321,10 @@ exports[`Comment should render PendingUserChanges 1`] = `
 
 .emotion-4 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
   width: 46px;
   height: 46px;
   border-radius: 50%;
@@ -485,9 +488,10 @@ exports[`Comment should render Rejected 1`] = `
 
 .emotion-4 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
   width: 46px;
   height: 46px;
   border-radius: 50%;
@@ -651,9 +655,10 @@ exports[`Comment should render VerifiedUser 1`] = `
 
 .emotion-4 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
   width: 46px;
   height: 46px;
   border-radius: 50%;
@@ -817,9 +822,10 @@ exports[`Comment should render WithClassName 1`] = `
 
 .emotion-4 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
   width: 46px;
   height: 46px;
   border-radius: 50%;
@@ -983,9 +989,10 @@ exports[`Comment should render WithEmotion 1`] = `
 
 .emotion-4 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
   width: 46px;
   height: 46px;
   border-radius: 50%;
@@ -1149,9 +1156,10 @@ exports[`Comment should render WithoutFlair 1`] = `
 
 .emotion-4 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
   width: 46px;
   height: 46px;
   border-radius: 50%;
@@ -1485,9 +1493,10 @@ exports[`Comment should render WithoutPreferredName 1`] = `
 
 .emotion-4 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
   width: 46px;
   height: 46px;
   border-radius: 50%;
@@ -1651,9 +1660,10 @@ exports[`Comment should render WithoutSource 1`] = `
 
 .emotion-4 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
   width: 46px;
   height: 46px;
   border-radius: 50%;

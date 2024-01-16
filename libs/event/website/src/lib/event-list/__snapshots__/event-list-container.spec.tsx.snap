@@ -42,9 +42,10 @@ exports[`EventList Container should render Default 1`] = `
 
 .emotion-7 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
 }
 
 .emotion-9 {

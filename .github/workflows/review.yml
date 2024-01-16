@@ -1,0 +1,29 @@
+name: Review
+
+on:
+  pull_request:
+    types: [ opened, synchronize, reopened]
+
+concurrency:
+  group: review-${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  publish-docker-image:
+    name: Docker
+    uses: ./.github/workflows/publish-docker-image.yml
+    with:
+      tags: |
+        ghcr.io/wepublish/wepublish:${{ github.sha }}
+      storybook_tags: |
+        ghcr.io/wepublish/storybook:${{ github.sha }}
+    secrets: inherit
+
+  review_deployment:
+    name: Deployment
+    uses: ./.github/workflows/review-deployment.yml
+    needs: publish-docker-image
+    with:
+      app_image: ghcr.io/wepublish/wepublish:${{ github.sha }}
+      storybook_image: ghcr.io/wepublish/storybook:${{ github.sha }}
+    secrets: inherit

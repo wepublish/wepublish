@@ -2,14 +2,14 @@ import {Container, css, styled} from '@mui/material'
 import {BuilderFooterProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {navigationLinkToUrl} from '../link-to-url'
 
-const FooterWrapper = styled('footer')`
+export const FooterWrapper = styled('footer')`
   align-self: flex-end;
   color: ${({theme}) => theme.palette.secondary.contrastText};
   background-color: ${({theme}) => theme.palette.secondary.main};
   padding: ${({theme}) => theme.spacing(2)};
 `
 
-const FooterInnerWrapper = styled(Container)`
+export const FooterInnerWrapper = styled(Container)`
   display: grid;
   gap: ${({theme}) => theme.spacing(4)};
   justify-content: center;
@@ -23,7 +23,7 @@ const FooterInnerWrapper = styled(Container)`
   `}
 `
 
-const FooterLinks = styled('nav')`
+export const FooterLinks = styled('nav')`
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: ${({theme}) => theme.spacing(4)};

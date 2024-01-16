@@ -14,6 +14,7 @@ export enum SettingName {
   PEERING_TIMEOUT_MS = 'peeringTimeoutInMs',
   INVOICE_REMINDER_FREQ = 'invoiceFreqReminder',
   INVOICE_REMINDER_MAX_TRIES = 'invoiceReminderMaxTries',
+  MAIL_PROVIDER_NAME = 'mailProviderName',
 
   MAKE_NEW_SUBSCRIBERS_API_PUBLIC = 'makeNewSubscribersApiPublic',
   MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC = 'makeActiveSubscribersApiPublic',
@@ -26,8 +27,6 @@ export enum SettingName {
 
   ALLOW_COMMENT_EDITING = 'allowCommentEditing'
 }
-
-export type SettingInput<T = unknown> = Pick<Setting<T>, 'value'>
 
 export type CreateSettingArgs<T> = Omit<Setting<T>, 'id'>
 

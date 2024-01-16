@@ -476,9 +476,10 @@ exports[`Comment List Item should render Default 1`] = `
 
 .emotion-4 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
   width: 46px;
   height: 46px;
   border-radius: 50%;
@@ -1885,7 +1886,7 @@ exports[`Comment List Item should render Nested 1`] = `
 +         >
 +           <img
 +             alt="DSC07717"
-+             class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
++             class="css-fy51ct-ImageWrapper-avatarStyles e1shv2yg0"
 +             loading="lazy"
 +             srcset="https://unsplash.it/800/800 800w,
 + https://unsplash.it/500/500 500w,
@@ -2052,7 +2053,7 @@ exports[`Comment List Item should render Nested 1`] = `
 +             >
 +               <img
 +                 alt="DSC07717"
-+                 class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
++                 class="css-fy51ct-ImageWrapper-avatarStyles e1shv2yg0"
 +                 loading="lazy"
 +                 srcset="https://unsplash.it/800/800 800w,
 + https://unsplash.it/500/500 500w,
@@ -2164,7 +2165,7 @@ exports[`Comment List Item should render Nested 1`] = `
 +         >
 +           <img
 +             alt="DSC07717"
-+             class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
++             class="css-fy51ct-ImageWrapper-avatarStyles e1shv2yg0"
 +             loading="lazy"
 +             srcset="https://unsplash.it/800/800 800w,
 + https://unsplash.it/500/500 500w,
@@ -2276,7 +2277,7 @@ exports[`Comment List Item should render Nested 1`] = `
 +             >
 +               <img
 +                 alt="DSC07717"
-+                 class="css-7gh4r4-ImageWrapper-avatarStyles e1shv2yg0"
++                 class="css-fy51ct-ImageWrapper-avatarStyles e1shv2yg0"
 +                 loading="lazy"
 +                 srcset="https://unsplash.it/800/800 800w,
 + https://unsplash.it/500/500 500w,

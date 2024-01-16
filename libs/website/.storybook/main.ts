@@ -1,4 +1,14 @@
 import {StorybookConfig} from '@storybook/react-webpack5'
+import {configureSort} from 'storybook-multilevel-sort'
+
+configureSort({
+  storyOrder: {
+    'getting started': {},
+    components: {
+      event: null
+    }
+  }
+})
 
 export default {
   framework: {
@@ -10,6 +20,7 @@ export default {
   },
   stories: ['../../**/src/lib/**/*.mdx', '../../**/src/lib/**/*.stories.@(js|jsx|ts|tsx)'],
   addons: [
+    // eslint-disable-next-line storybook/no-uninstalled-addons
     '@nx/react/plugins/storybook',
     '@storybook/addon-essentials',
     'storybook-addon-apollo-client',

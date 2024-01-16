@@ -1,4 +1,5 @@
-import {addDateMock, runStorybookContainerTests} from '@wepublish/testing'
+import {addDateMock} from '@wepublish/testing'
+import {runStorybookContainerTests} from '@wepublish/testing/website'
 import * as stories from './subscription-list-container.stories'
 
 describe('SubscriptionList Container', () => {

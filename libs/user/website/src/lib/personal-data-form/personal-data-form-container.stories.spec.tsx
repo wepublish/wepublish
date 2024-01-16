@@ -1,4 +1,4 @@
-import {runStorybookContainerTests} from '@wepublish/testing'
+import {runStorybookContainerTests} from '@wepublish/testing/website'
 import * as stories from './personal-data-form-container.stories'
 
 describe('Personal Data Form Container', () => {

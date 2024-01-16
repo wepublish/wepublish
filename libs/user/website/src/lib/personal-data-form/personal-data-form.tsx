@@ -7,7 +7,7 @@ import {
   useAsyncAction,
   useWebsiteBuilder
 } from '@wepublish/website/builder'
-import {useReducer, useState} from 'react'
+import {useMemo, useReducer, useState} from 'react'
 import {Controller, useForm} from 'react-hook-form'
 import {MdVisibility, MdVisibilityOff} from 'react-icons/md'
 import {OptionalKeysOf} from 'type-fest'
@@ -132,24 +132,36 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
     elements: {TextField, Alert, Button, Paragraph, ImageUpload, Link, IconButton}
   } = useWebsiteBuilder()
   const theme = useTheme()
-  const [showPassword, togglePassword] = useReducer(state => !state, false)
-  const [showRepeatPassword, toggleRepeatPassword] = useReducer(state => !state, false)
-
-  const fieldsToDisplay = fields.reduce(
-    (obj, field) => ({...obj, [field]: true}),
-    {} as Record<OptionalKeysOf<PersonalDataFormFields>, true>
-  )
-
-  const validationSchema = requiredSchema
-    .merge(schema.pick(fieldsToDisplay))
-    .refine(data => data.password === data.passwordRepeated, {
-      message: 'Passwörter stimmen nicht überein.',
-      path: ['passwordRepeated']
-    })
-
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error>()
   const callAction = useAsyncAction(setLoading, setError)
+  const [showPassword, togglePassword] = useReducer(state => !state, false)
+  const [showRepeatPassword, toggleRepeatPassword] = useReducer(state => !state, false)
+
+  const fieldsToDisplay = useMemo(
+    () =>
+      fields.reduce(
+        (obj, field) => ({...obj, [field]: true}),
+        {} as Record<OptionalKeysOf<PersonalDataFormFields>, true>
+      ),
+    [fields]
+  )
+
+  const validationSchema = useMemo(
+    () =>
+      requiredSchema
+        .merge(
+          schema.pick({
+            ...fieldsToDisplay,
+            passwordRepeated: true
+          })
+        )
+        .refine(data => data.password === data.passwordRepeated, {
+          message: 'Passwörter stimmen nicht überein.',
+          path: ['passwordRepeated']
+        }),
+    [fieldsToDisplay, schema]
+  )
 
   const {handleSubmit, control} = useForm<PersonalDataFormFields>({
     resolver: zodResolver(validationSchema),
@@ -407,7 +419,7 @@ export function PersonalDataForm<T extends BuilderPersonalDataFormFields>({
           {mediaEmail && (
             <RequestEmail>
               <Link
-                href={`mailto:${mediaEmail}&subject=Email Änderung&body=Guten Tag, %0D%0A. Ich würde gerne meine Email von ${initialUser.email} zu  >>Neue Email hier einfügen<< %0D%0A Liebe Grüsse`}>
+                href={`mailto:${mediaEmail}?subject=Email Änderung&body=Guten Tag, %0D%0A. Ich würde gerne meine Email von ${initialUser.email} zu  >>Neue Email hier einfügen<< %0D%0A Liebe Grüsse`}>
                 Klicke hier um deine Email zu ändern
               </Link>
             </RequestEmail>

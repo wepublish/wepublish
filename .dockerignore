@@ -4,3 +4,8 @@ dist
 .changelog
 coverage
 .env
+Dockerfile
+.github
+.dockerignore
+.git
+.idea

@@ -1,3 +1,4 @@
 export * from './lib/act-wait'
 export * from './lib/mock-date'
-export * from './lib/run-storybook-test'
+export * from './lib/prisma-utils'
+export * from './__generated__/fabbrica'

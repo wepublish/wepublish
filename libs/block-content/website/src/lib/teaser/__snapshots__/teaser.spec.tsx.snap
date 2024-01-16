@@ -34,9 +34,10 @@ exports[`Teaser Article should render Default 1`] = `
 
 .emotion-5 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
   height: 100%;
   width: 100%;
   object-fit: cover;
@@ -227,7 +228,7 @@ exports[`Teaser Article should render WithoutImageWithoutBlock 1`] = `
         >
 -         <img
 -           alt="An image description"
--           class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
+-           class="css-f4dbqy-ImageWrapper-Teaser e1shv2yg0"
 -           loading="lazy"
 -           srcset="https://unsplash.it/800/800 800w,
 - https://unsplash.it/500/500 500w,
@@ -336,9 +337,10 @@ exports[`Teaser Custom should render Default 1`] = `
 
 .emotion-5 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
   height: 100%;
   width: 100%;
   object-fit: cover;
@@ -439,7 +441,7 @@ exports[`Teaser Custom should render WithoutImage 1`] = `
         >
 -         <img
 -           alt="An image description"
--           class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
+-           class="css-f4dbqy-ImageWrapper-Teaser e1shv2yg0"
 -           loading="lazy"
 -           srcset="https://unsplash.it/800/800 800w,
 - https://unsplash.it/500/500 500w,
@@ -528,9 +530,10 @@ exports[`Teaser Event should render Default 1`] = `
 
 .emotion-5 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
   height: 100%;
   width: 100%;
   object-fit: cover;
@@ -684,7 +687,7 @@ exports[`Teaser Event should render WithoutImageWithoutEventImage 1`] = `
         >
 -         <img
 -           alt="An image description"
--           class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
+-           class="css-f4dbqy-ImageWrapper-Teaser e1shv2yg0"
 -           loading="lazy"
 -           srcset="https://unsplash.it/800/800 800w,
 - https://unsplash.it/500/500 500w,
@@ -773,9 +776,10 @@ exports[`Teaser Page should render Default 1`] = `
 
 .emotion-5 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
   height: 100%;
   width: 100%;
   object-fit: cover;
@@ -989,9 +993,10 @@ exports[`Teaser PeerArticle should render Default 1`] = `
 
 .emotion-5 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
   height: 100%;
   width: 100%;
   object-fit: cover;
@@ -1129,7 +1134,7 @@ exports[`Teaser PeerArticle should render WithoutImageWithoutBlock 1`] = `
         >
 -         <img
 -           alt="An image description"
--           class="css-17etez2-ImageWrapper-Teaser e1shv2yg0"
+-           class="css-f4dbqy-ImageWrapper-Teaser e1shv2yg0"
 -           loading="lazy"
 -           srcset="https://unsplash.it/800/800 800w,
 - https://unsplash.it/500/500 500w,
@@ -1218,9 +1223,10 @@ exports[`Teaser should render WithClassName 1`] = `
 
 .emotion-5 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
   height: 100%;
   width: 100%;
   object-fit: cover;
@@ -1320,9 +1326,10 @@ exports[`Teaser should render WithEmotion 1`] = `
 
 .emotion-5 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
   height: 100%;
   width: 100%;
   object-fit: cover;

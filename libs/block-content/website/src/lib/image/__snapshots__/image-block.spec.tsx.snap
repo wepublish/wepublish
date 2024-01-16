@@ -9,9 +9,10 @@ exports[`Image Block should render Default 1`] = `
 
 .emotion-2 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
 }
 
 <figure
@@ -47,7 +48,7 @@ exports[`Image Block should render WithClassName 1`] = `
     >
       <img
         alt="An image description"
-        class="css-oph4oo-ImageWrapper e1shv2yg0"
+        class="css-19cwsz4-ImageWrapper e1shv2yg0"
         loading="lazy""
 `;
 

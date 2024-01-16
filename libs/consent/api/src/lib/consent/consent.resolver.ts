@@ -1,20 +1,17 @@
 import {Args, Mutation, Query, Resolver} from '@nestjs/graphql'
 import {
   CanCreateConsent,
-  CanUpdateConsent,
   CanDeleteConsent,
+  CanUpdateConsent,
   Permissions
 } from '@wepublish/permissions/api'
-import {Consent, ConsentInput, ConsentFilter} from './consent.model'
+import {Consent, ConsentFilter, CreateConsentInput, UpdateConsentInput} from './consent.model'
 import {ConsentService} from './consent.service'
 
 @Resolver()
 export class ConsentResolver {
   constructor(private consents: ConsentService) {}
 
-  /*
-  Queries
- */
   @Query(returns => [Consent], {
     name: 'consents',
     description: `
@@ -35,9 +32,6 @@ export class ConsentResolver {
     return this.consents.consent(id)
   }
 
-  /*
-  Mutations
- */
   @Mutation(returns => Consent, {
     name: 'createConsent',
     description: `
@@ -45,7 +39,7 @@ export class ConsentResolver {
     `
   })
   @Permissions(CanCreateConsent)
-  createConsent(@Args('consent') consent: ConsentInput) {
+  createConsent(@Args() consent: CreateConsentInput) {
     return this.consents.createConsent(consent)
   }
 
@@ -56,8 +50,8 @@ export class ConsentResolver {
     `
   })
   @Permissions(CanUpdateConsent)
-  updateConsent(@Args('id') id: string, @Args('consent') consent: ConsentInput) {
-    return this.consents.updateConsent({id, consent})
+  updateConsent(@Args() consent: UpdateConsentInput) {
+    return this.consents.updateConsent(consent)
   }
 
   @Mutation(returns => Consent, {

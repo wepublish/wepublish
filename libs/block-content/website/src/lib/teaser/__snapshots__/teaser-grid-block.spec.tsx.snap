@@ -47,9 +47,10 @@ exports[`Teaser Grid Block should render OneColumn 1`] = `
 
 .emotion-7 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
   height: 100%;
   width: 100%;
   object-fit: cover;
@@ -289,9 +290,10 @@ exports[`Teaser Grid Block should render ThreeColumns 1`] = `
 
 .emotion-7 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
   height: 100%;
   width: 100%;
   object-fit: cover;
@@ -529,9 +531,10 @@ exports[`Teaser Grid Block should render WithClassName 1`] = `
 
 .emotion-7 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
   height: 100%;
   width: 100%;
   object-fit: cover;
@@ -769,9 +772,10 @@ exports[`Teaser Grid Block should render WithEmotion 1`] = `
 
 .emotion-7 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
   height: 100%;
   width: 100%;
   object-fit: cover;

@@ -9,10 +9,10 @@ import {
 import {
   createCheckedPermissionComponent,
   PermissionControl,
-  slugify,
   toggleRequiredLabel,
   useAuthorisation
 } from '@wepublish/ui/editor'
+import {slugify} from '@wepublish/utils'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Drawer, Form, Message, Panel, Schema, SelectPicker, toaster, Toggle} from 'rsuite'

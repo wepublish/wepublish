@@ -48,9 +48,10 @@ exports[`Listicle Block should render Default 1`] = `
 
 .emotion-7 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
 }
 
 .emotion-11 {
@@ -301,7 +302,7 @@ exports[`Listicle Block should render WithoutImage 1`] = `
         </h3>
 -       <img
 -         alt="DSC07717"
--         class="css-1sg8o3u-ImageWrapper e1shv2yg0"
+-         class="css-cibo30-ImageWrapper e1shv2yg0"
 -         loading="lazy"
 -         srcset="https://unsplash.it/800/400 800w,
 - https://unsplash.it/500/300 500w,
@@ -322,7 +323,7 @@ exports[`Listicle Block should render WithoutImage 1`] = `
         </h3>
 -       <img
 -         alt="DSC07717"
--         class="css-1sg8o3u-ImageWrapper e1shv2yg0"
+-         class="css-cibo30-ImageWrapper e1shv2yg0"
 -         loading="lazy"
 -         srcset="https://unsplash.it/800/400 800w,
 - https://unsplash.it/500/300 500w,

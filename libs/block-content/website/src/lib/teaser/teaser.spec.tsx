@@ -1,4 +1,4 @@
-import {runStorybookTests} from '@wepublish/testing'
+import {runStorybookTests} from '@wepublish/testing/website'
 import * as articleStories from './teaser.article.stories'
 import * as customStories from './teaser.custom.stories'
 import * as eventStories from './teaser.event.stories'

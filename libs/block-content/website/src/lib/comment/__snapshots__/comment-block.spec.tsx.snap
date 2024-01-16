@@ -24,9 +24,10 @@ exports[`Comment List should render Default 1`] = `
 
 .emotion-6 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
   width: 46px;
   height: 46px;
   border-radius: 50%;

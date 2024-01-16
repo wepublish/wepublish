@@ -59,9 +59,10 @@ exports[`ArticleList should render Default 1`] = `
 
 .emotion-5 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
   min-height: inherit;
   object-fit: cover;
 }
@@ -544,7 +545,7 @@ exports[`ArticleList should render WithError 1`] = `
 -       >
 -         <img
 -           alt="DSC07717"
--           class="css-v2aane-ImageWrapper-ArticleListItem e1shv2yg0"
+-           class="css-11fw878-ImageWrapper-ArticleListItem e1shv2yg0"
 -           loading="lazy"
 -           srcset="https://unsplash.it/800/800 800w,
 - https://unsplash.it/500/500 500w,
@@ -582,7 +583,7 @@ exports[`ArticleList should render WithError 1`] = `
 -       >
 -         <img
 -           alt="DSC07717"
--           class="css-v2aane-ImageWrapper-ArticleListItem e1shv2yg0"
+-           class="css-11fw878-ImageWrapper-ArticleListItem e1shv2yg0"
 -           loading="lazy"
 -           srcset="https://unsplash.it/800/800 800w,
 - https://unsplash.it/500/500 500w,
@@ -620,7 +621,7 @@ exports[`ArticleList should render WithError 1`] = `
 -       >
 -         <img
 -           alt="DSC07717"
--           class="css-v2aane-ImageWrapper-ArticleListItem e1shv2yg0"
+-           class="css-11fw878-ImageWrapper-ArticleListItem e1shv2yg0"
 -           loading="lazy"
 -           srcset="https://unsplash.it/800/800 800w,
 - https://unsplash.it/500/500 500w,
@@ -658,7 +659,7 @@ exports[`ArticleList should render WithError 1`] = `
 -       >
 -         <img
 -           alt="DSC07717"
--           class="css-v2aane-ImageWrapper-ArticleListItem e1shv2yg0"
+-           class="css-11fw878-ImageWrapper-ArticleListItem e1shv2yg0"
 -           loading="lazy"
 -           srcset="https://unsplash.it/800/800 800w,
 - https://unsplash.it/500/500 500w,
@@ -696,7 +697,7 @@ exports[`ArticleList should render WithError 1`] = `
 -       >
 -         <img
 -           alt="DSC07717"
--           class="css-v2aane-ImageWrapper-ArticleListItem e1shv2yg0"
+-           class="css-11fw878-ImageWrapper-ArticleListItem e1shv2yg0"
 -           loading="lazy"
 -           srcset="https://unsplash.it/800/800 800w,
 - https://unsplash.it/500/500 500w,
@@ -734,7 +735,7 @@ exports[`ArticleList should render WithError 1`] = `
 -       >
 -         <img
 -           alt="DSC07717"
--           class="css-v2aane-ImageWrapper-ArticleListItem e1shv2yg0"
+-           class="css-11fw878-ImageWrapper-ArticleListItem e1shv2yg0"
 -           loading="lazy"
 -           srcset="https://unsplash.it/800/800 800w,
 - https://unsplash.it/500/500 500w,
@@ -772,7 +773,7 @@ exports[`ArticleList should render WithError 1`] = `
 -       >
 -         <img
 -           alt="DSC07717"
--           class="css-v2aane-ImageWrapper-ArticleListItem e1shv2yg0"
+-           class="css-11fw878-ImageWrapper-ArticleListItem e1shv2yg0"
 -           loading="lazy"
 -           srcset="https://unsplash.it/800/800 800w,
 - https://unsplash.it/500/500 500w,
@@ -810,7 +811,7 @@ exports[`ArticleList should render WithError 1`] = `
 -       >
 -         <img
 -           alt="DSC07717"
--           class="css-v2aane-ImageWrapper-ArticleListItem e1shv2yg0"
+-           class="css-11fw878-ImageWrapper-ArticleListItem e1shv2yg0"
 -           loading="lazy"
 -           srcset="https://unsplash.it/800/800 800w,
 - https://unsplash.it/500/500 500w,
@@ -848,7 +849,7 @@ exports[`ArticleList should render WithError 1`] = `
 -       >
 -         <img
 -           alt="DSC07717"
--           class="css-v2aane-ImageWrapper-ArticleListItem e1shv2yg0"
+-           class="css-11fw878-ImageWrapper-ArticleListItem e1shv2yg0"
 -           loading="lazy"
 -           srcset="https://unsplash.it/800/800 800w,
 - https://unsplash.it/500/500 500w,
@@ -886,7 +887,7 @@ exports[`ArticleList should render WithError 1`] = `
 -       >
 -         <img
 -           alt="DSC07717"
--           class="css-v2aane-ImageWrapper-ArticleListItem e1shv2yg0"
+-           class="css-11fw878-ImageWrapper-ArticleListItem e1shv2yg0"
 -           loading="lazy"
 -           srcset="https://unsplash.it/800/800 800w,
 - https://unsplash.it/500/500 500w,
@@ -924,7 +925,7 @@ exports[`ArticleList should render WithError 1`] = `
 -       >
 -         <img
 -           alt="DSC07717"
--           class="css-v2aane-ImageWrapper-ArticleListItem e1shv2yg0"
+-           class="css-11fw878-ImageWrapper-ArticleListItem e1shv2yg0"
 -           loading="lazy"
 -           srcset="https://unsplash.it/800/800 800w,
 - https://unsplash.it/500/500 500w,
@@ -975,7 +976,7 @@ exports[`ArticleList should render WithLoading 1`] = `
 -       >
 -         <img
 -           alt="DSC07717"
--           class="css-v2aane-ImageWrapper-ArticleListItem e1shv2yg0"
+-           class="css-11fw878-ImageWrapper-ArticleListItem e1shv2yg0"
 -           loading="lazy"
 -           srcset="https://unsplash.it/800/800 800w,
 - https://unsplash.it/500/500 500w,
@@ -1013,7 +1014,7 @@ exports[`ArticleList should render WithLoading 1`] = `
 -       >
 -         <img
 -           alt="DSC07717"
--           class="css-v2aane-ImageWrapper-ArticleListItem e1shv2yg0"
+-           class="css-11fw878-ImageWrapper-ArticleListItem e1shv2yg0"
 -           loading="lazy"
 -           srcset="https://unsplash.it/800/800 800w,
 - https://unsplash.it/500/500 500w,
@@ -1051,7 +1052,7 @@ exports[`ArticleList should render WithLoading 1`] = `
 -       >
 -         <img
 -           alt="DSC07717"
--           class="css-v2aane-ImageWrapper-ArticleListItem e1shv2yg0"
+-           class="css-11fw878-ImageWrapper-ArticleListItem e1shv2yg0"
 -           loading="lazy"
 -           srcset="https://unsplash.it/800/800 800w,
 - https://unsplash.it/500/500 500w,
@@ -1089,7 +1090,7 @@ exports[`ArticleList should render WithLoading 1`] = `
 -       >
 -         <img
 -           alt="DSC07717"
--           class="css-v2aane-ImageWrapper-ArticleListItem e1shv2yg0"
+-           class="css-11fw878-ImageWrapper-ArticleListItem e1shv2yg0"
 -           loading="lazy"
 -           srcset="https://unsplash.it/800/800 800w,
 - https://unsplash.it/500/500 500w,
@@ -1127,7 +1128,7 @@ exports[`ArticleList should render WithLoading 1`] = `
 -       >
 -         <img
 -           alt="DSC07717"
--           class="css-v2aane-ImageWrapper-ArticleListItem e1shv2yg0"
+-           class="css-11fw878-ImageWrapper-ArticleListItem e1shv2yg0"
 -           loading="lazy"
 -           srcset="https://unsplash.it/800/800 800w,
 - https://unsplash.it/500/500 500w,
@@ -1165,7 +1166,7 @@ exports[`ArticleList should render WithLoading 1`] = `
 -       >
 -         <img
 -           alt="DSC07717"
--           class="css-v2aane-ImageWrapper-ArticleListItem e1shv2yg0"
+-           class="css-11fw878-ImageWrapper-ArticleListItem e1shv2yg0"
 -           loading="lazy"
 -           srcset="https://unsplash.it/800/800 800w,
 - https://unsplash.it/500/500 500w,
@@ -1203,7 +1204,7 @@ exports[`ArticleList should render WithLoading 1`] = `
 -       >
 -         <img
 -           alt="DSC07717"
--           class="css-v2aane-ImageWrapper-ArticleListItem e1shv2yg0"
+-           class="css-11fw878-ImageWrapper-ArticleListItem e1shv2yg0"
 -           loading="lazy"
 -           srcset="https://unsplash.it/800/800 800w,
 - https://unsplash.it/500/500 500w,
@@ -1241,7 +1242,7 @@ exports[`ArticleList should render WithLoading 1`] = `
 -       >
 -         <img
 -           alt="DSC07717"
--           class="css-v2aane-ImageWrapper-ArticleListItem e1shv2yg0"
+-           class="css-11fw878-ImageWrapper-ArticleListItem e1shv2yg0"
 -           loading="lazy"
 -           srcset="https://unsplash.it/800/800 800w,
 - https://unsplash.it/500/500 500w,
@@ -1279,7 +1280,7 @@ exports[`ArticleList should render WithLoading 1`] = `
 -       >
 -         <img
 -           alt="DSC07717"
--           class="css-v2aane-ImageWrapper-ArticleListItem e1shv2yg0"
+-           class="css-11fw878-ImageWrapper-ArticleListItem e1shv2yg0"
 -           loading="lazy"
 -           srcset="https://unsplash.it/800/800 800w,
 - https://unsplash.it/500/500 500w,
@@ -1317,7 +1318,7 @@ exports[`ArticleList should render WithLoading 1`] = `
 -       >
 -         <img
 -           alt="DSC07717"
--           class="css-v2aane-ImageWrapper-ArticleListItem e1shv2yg0"
+-           class="css-11fw878-ImageWrapper-ArticleListItem e1shv2yg0"
 -           loading="lazy"
 -           srcset="https://unsplash.it/800/800 800w,
 - https://unsplash.it/500/500 500w,
@@ -1355,7 +1356,7 @@ exports[`ArticleList should render WithLoading 1`] = `
 -       >
 -         <img
 -           alt="DSC07717"
--           class="css-v2aane-ImageWrapper-ArticleListItem e1shv2yg0"
+-           class="css-11fw878-ImageWrapper-ArticleListItem e1shv2yg0"
 -           loading="lazy"
 -           srcset="https://unsplash.it/800/800 800w,
 - https://unsplash.it/500/500 500w,

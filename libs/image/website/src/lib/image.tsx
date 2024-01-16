@@ -3,6 +3,7 @@ import {FullImageFragment} from '@wepublish/website/api'
 import {BuilderImageProps} from '@wepublish/website/builder'
 
 declare module 'react' {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   interface HTMLAttributes<T> {
     fetchPriority?: 'high' | 'low' | 'auto'
   }
@@ -26,9 +27,12 @@ export const imageToSquareImageItems = (image: FullImageFragment): ImageItem[] =
 
 export const ImageWrapper = styled('img')<{aspectRatio: number}>`
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto ${({aspectRatio}) => aspectRatio};
+  // Sets a max height for images so that they will not be too tall
+  // and makes them not distorted
+  max-height: 80lvh;
+  object-fit: contain;
 `
 
 export function Image({

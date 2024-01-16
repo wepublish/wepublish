@@ -88,9 +88,10 @@ exports[`Article Container should render ById 1`] = `
 
 .emotion-25 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
 }
 
 .emotion-27 {
@@ -248,9 +249,10 @@ exports[`Article Container should render ById 1`] = `
 
 .emotion-89 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
 }
 
 @media (max-width:899.95px) {
@@ -453,9 +455,10 @@ exports[`Article Container should render ById 1`] = `
 
 .emotion-144 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
   height: 100%;
   width: 100%;
   object-fit: cover;
@@ -481,9 +484,10 @@ exports[`Article Container should render ById 1`] = `
 
 .emotion-159 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 1.4998125234345707;
+  max-height: 80lvh;
+  object-fit: contain;
   height: 100%;
   width: 100%;
   object-fit: cover;
@@ -896,9 +900,10 @@ exports[`Article Container should render ById 1`] = `
 
 .emotion-399 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
   border-radius: 50%;
 }
 

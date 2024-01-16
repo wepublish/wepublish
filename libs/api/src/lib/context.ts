@@ -1,5 +1,9 @@
+import {ExecutionRequest, Executor} from '@graphql-tools/utils'
+import {schemaFromExecutor, wrapSchema} from '@graphql-tools/wrap'
 import {
   Author,
+  Comment,
+  CommentRatingSystemAnswer,
   Event,
   Image,
   MailLog,
@@ -9,58 +13,48 @@ import {
   Peer,
   PrismaClient,
   User,
-  UserRole,
-  Comment,
-  CommentRatingSystemAnswer
+  UserRole
 } from '@prisma/client'
 import {
-  AuthenticationService,
   AuthSession,
   AuthSessionType,
+  AuthenticationService,
   TokenSession,
   UserSession
 } from '@wepublish/authentication/api'
+import {MediaAdapter} from '@wepublish/image/api'
+import {BaseMailProvider, MailContext, MailContextOptions} from '@wepublish/mail/api'
+import {InvoiceWithItems, PaymentProvider} from '@wepublish/payment/api'
+import {SettingName} from '@wepublish/settings/api'
+import {GenerateJWTProps, generateJWT, logger} from '@wepublish/utils/api'
 import AbortController from 'abort-controller'
 import {AuthenticationError} from 'apollo-server-express'
 import crypto from 'crypto'
 import DataLoader from 'dataloader'
 import {GraphQLError, GraphQLSchema, print} from 'graphql'
-import {
-  Fetcher,
-  IFetcherOperation,
-  introspectSchema,
-  makeRemoteExecutableSchema
-} from 'graphql-tools'
 import {IncomingMessage} from 'http'
-import jwt, {SignOptions} from 'jsonwebtoken'
+import jwt from 'jsonwebtoken'
 import NodeCache from 'node-cache'
 import fetch from 'node-fetch'
 import {Client, Issuer} from 'openid-client'
-import url from 'url'
 import {ChallengeProvider} from './challenges/challengeProvider'
 import {
   ArticleWithRevisions,
-  articleWithRevisionsToPublicArticle,
-  PublicArticle
+  PublicArticle,
+  articleWithRevisionsToPublicArticle
 } from './db/article'
 import {DefaultBcryptHashCostFactor, DefaultSessionTTL} from './db/common'
-import {InvoiceWithItems} from './db/invoice'
 import {MemberPlanWithPaymentMethods} from './db/memberPlan'
 import {NavigationWithLinks} from './db/navigation'
-import {PageWithRevisions, pageWithRevisionsToPublicPage, PublicPage} from './db/page'
+import {PageWithRevisions, PublicPage, pageWithRevisionsToPublicPage} from './db/page'
+import {SubscriptionWithRelations} from './db/subscription'
 import {TokenExpiredError} from './error'
 import {getEvent} from './graphql/event/event.query'
+import {createSafeHostUrl} from './graphql/peer/create-safe-host-url'
 import {FullPoll, getPoll} from './graphql/poll/poll.public-queries'
 import {Hooks} from './hooks'
-import {MailContext, MailContextOptions} from './mails/mailContext'
-import {BaseMailProvider} from './mails/mailProvider'
-import {MediaAdapter} from '@wepublish/image/api'
 import {MemberContext} from './memberContext'
-import {PaymentProvider} from './payments/paymentProvider'
-import {logger} from './server'
 import {URLAdapter} from './urlAdapter'
-import {SettingName} from '@wepublish/settings/api'
-import {SubscriptionWithRelations} from './db/subscription'
 
 /**
  * Peered article cache configuration and setup
@@ -150,11 +144,15 @@ export interface Context {
   getOauth2Clients(): Promise<OAuth2Clients[]>
 
   authenticate(): AuthSession
+
   authenticateToken(): TokenSession
+
   authenticateUser(): UserSession
+
   optionalAuthenticateUser(): UserSession | null
 
-  generateJWT(props: GenerateJWTProps): string
+  generateJWT(props: Pick<GenerateJWTProps, 'id' | 'audience' | 'expiresInMinutes'>): string
+
   verifyJWT(token: string): string
 
   createPaymentWithProvider(props: CreatePaymentWithProvider): Promise<Payment>
@@ -193,7 +191,7 @@ export interface ContextOptions {
   readonly prisma: PrismaClient
   readonly mediaAdapter: MediaAdapter
   readonly urlAdapter: URLAdapter
-  readonly mailProvider?: BaseMailProvider
+  readonly mailProvider: BaseMailProvider
   readonly mailContextOptions: MailContextOptions
   readonly oauth2Providers: Oauth2Provider[]
   readonly paymentProviders: PaymentProvider[]
@@ -216,12 +214,6 @@ export interface CreatePaymentWithProvider {
   saveCustomer: boolean
   successURL?: string
   failureURL?: string
-}
-
-export interface GenerateJWTProps {
-  id: string
-  audience?: string
-  expiresInMinutes?: number
 }
 
 const createOptionalsArray = <Data, Attribute extends keyof Data, Key extends Data[Attribute]>(
@@ -583,7 +575,7 @@ export async function contextFromRequest(
         ids as string[],
         await prisma.mailLog.findMany({
           where: {
-            id: {
+            mailIdentifier: {
               in: ids as string[]
             }
           }
@@ -627,11 +619,15 @@ export async function contextFromRequest(
               )?.value as number) ||
               parseInt(process.env.PEERING_TIMEOUT_IN_MS as string) ||
               10 * 1000 // 10 Seconds timeout in  ms
-            const fetcher = createFetcher(peer.hostURL, peer.token, peerTimeout)
+            const fetcher = createFetcher(
+              createSafeHostUrl(peer.hostURL, 'v1'),
+              peer.token,
+              peerTimeout
+            )
 
-            return makeRemoteExecutableSchema({
-              schema: await introspectSchema(fetcher),
-              fetcher
+            return wrapSchema({
+              schema: await schemaFromExecutor(fetcher),
+              executor: fetcher
             })
           } catch (err) {
             console.error(err)
@@ -663,14 +659,14 @@ export async function contextFromRequest(
               10 * 1000 // 10 Seconds timeout in  ms
 
             const fetcher = createFetcher(
-              url.resolve(peer.hostURL, 'admin'),
+              createSafeHostUrl(peer.hostURL, 'v1/admin'),
               peer.token,
               peerTimeout
             )
 
-            return makeRemoteExecutableSchema({
-              schema: await introspectSchema(fetcher),
-              fetcher
+            return wrapSchema({
+              schema: await schemaFromExecutor(fetcher),
+              executor: fetcher
             })
           } catch (err) {
             console.error(err)
@@ -877,20 +873,19 @@ export async function contextFromRequest(
     prisma,
     mailProvider,
     defaultFromAddress: mailContextOptions.defaultFromAddress,
-    defaultReplyToAddress: mailContextOptions.defaultReplyToAddress,
-    mailTemplateMaps: mailContextOptions.mailTemplateMaps,
-    mailTemplatesPath: mailContextOptions.mailTemplatesPath
+    defaultReplyToAddress: mailContextOptions.defaultReplyToAddress
   })
 
-  const generateJWT = (props: GenerateJWTProps): string => {
+  const generateJWTWrapper: Context['generateJWT'] = ({expiresInMinutes, audience, id}): string => {
     if (!process.env.JWT_SECRET_KEY) throw new Error('No JWT_SECRET_KEY defined in environment.')
-    const jwtOptions: SignOptions = {
+
+    return generateJWT({
+      id,
+      secret: process.env.JWT_SECRET_KEY,
       issuer: hostURL,
-      audience: props.audience ?? websiteURL,
-      algorithm: 'HS256',
-      expiresIn: `${props.expiresInMinutes || 15}m`
-    }
-    return jwt.sign({sub: props.id}, process.env.JWT_SECRET_KEY, jwtOptions)
+      audience: audience ?? websiteURL,
+      expiresInMinutes
+    })
   }
 
   const verifyJWT = (token: string): string => {
@@ -905,7 +900,7 @@ export async function contextFromRequest(
     paymentProviders,
     mailContext,
     getLoginUrlForUser(user: User): string {
-      const jwt = generateJWT({
+      const jwt = generateJWTWrapper({
         id: user.id,
         expiresInMinutes: 10080 // One week in minutes
       })
@@ -987,7 +982,7 @@ export async function contextFromRequest(
       return session
     },
 
-    generateJWT,
+    generateJWT: generateJWTWrapper,
 
     verifyJWT,
 
@@ -1037,6 +1032,16 @@ export async function contextFromRequest(
       })
 
       if (!updatedPayment) throw new Error('Error during updating payment') // TODO: this check needs to be removed
+
+      // Mark invoice as paid
+      if (intent.state === PaymentState.paid) {
+        await prisma.invoice.update({
+          where: {id: invoice.id},
+          data: {
+            paidAt: new Date()
+          }
+        })
+      }
 
       return updatedPayment as Payment
     },
@@ -1117,12 +1122,12 @@ async function loadFreshData(params: PeerQueryParams) {
   }
 }
 
-export function createFetcher(hostURL: string, token: string, peerTimeOut: number): Fetcher {
+export function createFetcher(hostURL: string, token: string, peerTimeOut: number): Executor {
   const loadData = async ({
     query,
     variables,
     operationName
-  }: {query: string} & Omit<IFetcherOperation, 'query' | 'context'>) => {
+  }: {query: string} & Omit<ExecutionRequest, 'document' | 'context'>) => {
     // Initialize and prepare caching
     const fetchParams: PeerQueryParams = {
       hostURL,
@@ -1145,8 +1150,8 @@ export function createFetcher(hostURL: string, token: string, peerTimeOut: numbe
     return await loadFreshData(fetchParams)
   }
 
-  return async ({query: queryDocument, variables, operationName}) => {
-    const query = print(queryDocument)
+  return async ({variables, operationName, document}) => {
+    const query = print(document)
 
     return loadData({query, variables, operationName})
   }

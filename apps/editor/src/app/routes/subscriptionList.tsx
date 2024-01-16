@@ -113,9 +113,10 @@ function SubscriptionList() {
   const [subscriptions, setSubscriptions] = useState<FullSubscriptionFragment[]>([])
 
   // double check
-  Object.keys(filter).map(el => {
-    if (filter[el as keyof SubscriptionFilter] === null)
+  Object.keys(filter).forEach(el => {
+    if (filter[el as keyof SubscriptionFilter] === null) {
       delete filter[el as keyof SubscriptionFilter]
+    }
   })
 
   const {
@@ -150,7 +151,7 @@ function SubscriptionList() {
   useEffect(() => {
     if (data?.subscriptions?.nodes) {
       setSubscriptions(data.subscriptions.nodes)
-      if (data.subscriptions.totalCount + 9 < page * limit) {
+      if (Math.ceil(data.subscriptions.totalCount / limit) < page) {
         setPage(1)
       }
     }

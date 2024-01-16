@@ -297,9 +297,10 @@ exports[`Subscription Item should render Default 1`] = `
 
 .emotion-2 {
   max-width: 100%;
-  width: 100%;
   height: auto;
   aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
 }
 
 .emotion-4 {
@@ -1033,7 +1034,7 @@ exports[`Subscription Item should render WithClassName 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-1sg8o3u-ImageWrapper e1shv2yg0"
+        class="css-cibo30-ImageWrapper e1shv2yg0"
         loading="lazy""
 `;
 
