@@ -36,7 +36,7 @@ describe('PayrexxPaymentProvider', () => {
     })
   })
 
-  describe('Webhooks', () => {
+  describe('webhookForPaymentIntent', () => {
     it('should reject unauthorized', async () => {
       const response = await payrexx.webhookForPaymentIntent({
         req: {
@@ -123,7 +123,7 @@ describe('PayrexxPaymentProvider', () => {
     })
   })
 
-  describe('Payments', () => {
+  describe('createIntent', () => {
     it('should create gateway for user without customerId', async () => {
       payrexx.gatewayClient.createGateway = jest.fn().mockResolvedValue({
         id: 1,
@@ -213,7 +213,7 @@ describe('PayrexxPaymentProvider', () => {
     })
   })
 
-  describe('Payment status checks', () => {
+  describe('checkIntentStatus', () => {
     it('should throw on unmappable transaction status', async () => {
       const transaction = {
         status: 'chargeback'
