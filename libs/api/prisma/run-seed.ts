@@ -1,6 +1,6 @@
 import {PrismaClient} from '@prisma/client'
 import {seed as rootSeed} from './seed'
-import {hashPassword} from '../src/lib/db/user'
+import {hashPassword, generateSecureRandomPassword} from '../src/lib/db/user'
 
 export async function runSeed() {
   const prisma = new PrismaClient()
@@ -11,7 +11,10 @@ export async function runSeed() {
     throw new Error('@wepublish/api seeding has not been done')
   }
 
-  console.log('Adding admin user')
+  const randomPassword = generateSecureRandomPassword(20)
+  const email = 'admin@wepublish.ch'
+
+  console.log(`Adding admin user ${email} with password: ${randomPassword}`)
   await prisma.user.upsert({
     where: {
       id: 'admin'
@@ -19,12 +22,12 @@ export async function runSeed() {
     update: {},
     create: {
       id: 'admin',
-      email: 'admin@wepublish.ch',
+      email,
       emailVerifiedAt: new Date(),
       name: 'Admin',
       active: true,
       roleIDs: [adminUserRole.id],
-      password: await hashPassword('123')
+      password: await hashPassword(randomPassword)
     }
   })
 

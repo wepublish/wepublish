@@ -2,9 +2,6 @@ default:
   general:
     apolloPlayground: true
     apolloIntrospection: true
-    initialAdmin:
-      mail: admin@wepublish.ch
-      password: 123
     bcryptHashCostFactor: 12
     urlAdapter: default
   mailProvider:

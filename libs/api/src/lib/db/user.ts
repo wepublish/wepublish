@@ -7,11 +7,26 @@ import {
 } from '@prisma/client'
 import bcrypt from 'bcrypt'
 import {DefaultBcryptHashCostFactor} from './common'
+import {randomBytes} from 'crypto'
 
 export const hashPassword = async (
   password: string,
   bcryptHashCostFactor: number = DefaultBcryptHashCostFactor
 ) => bcrypt.hash(password, bcryptHashCostFactor)
+
+export const generateSecureRandomPassword = (length: number) => {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._-'
+  let password = ''
+  const characterCount = characters.length
+
+  for (let i = 0; i < length; i++) {
+    const randomValue = randomBytes(1)[0]
+    const index = Math.floor((randomValue / 256) * characterCount)
+    password += characters[index]
+  }
+
+  return password
+}
 
 export enum UserSort {
   CreatedAt = 'createdAt',
