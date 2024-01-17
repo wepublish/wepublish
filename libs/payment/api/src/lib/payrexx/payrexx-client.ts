@@ -31,11 +31,11 @@ export class PayrexxClient {
     })
   }
 
-  private buildBaseUrl(path) {
+  private buildBaseUrl(path: string) {
     return `${this.baseUrl}${path}'?instance='${this.instance}`
   }
 
-  async get<Data = any>(path, queryParams = {}): Promise<PayrexxResponse<Data>> {
+  async get<Data = any>(path: string, queryParams = {}): Promise<PayrexxResponse<Data>> {
     const method = 'GET',
       queryStrSigned = this.buildSignedQueryString(queryParams),
       baseUrl = `${this.buildBaseUrl(path)}&${queryStrSigned}`
@@ -44,7 +44,7 @@ export class PayrexxClient {
     return await this.validateResponse(response)
   }
 
-  async post<Data = any>(path, queryParams = {}): Promise<PayrexxResponse<Data>> {
+  async post<Data = any>(path: string, queryParams = {}): Promise<PayrexxResponse<Data>> {
     const method = 'POST',
       body = this.buildSignedQueryString(queryParams),
       baseUrl = this.buildBaseUrl(path)

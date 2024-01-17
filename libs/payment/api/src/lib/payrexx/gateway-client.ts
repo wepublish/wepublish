@@ -23,7 +23,7 @@ export type Gateway = {
   hash: string
   referenceId: string
   link: string
-  invoices?: Array<{
+  invoices: Array<{
     transactions: Array<Transaction>
   }>
   preAuthorization: true

@@ -96,12 +96,13 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
 
   async createIntent(createPaymentIntentProps: CreatePaymentIntentProps): Promise<Intent> {
     if (createPaymentIntentProps.customerID) {
-      const offsiteTransaction = await this.createOffsiteTransactionIntent(createPaymentIntentProps)
-      if (offsiteTransaction.state === 'paid') {
-        return offsiteTransaction
+      const offsiteTransactionIntent = await this.createOffsiteTransactionIntent(
+        createPaymentIntentProps
+      )
+      if (offsiteTransactionIntent.state === 'paid') {
+        return offsiteTransactionIntent
       }
     }
-
     return this.createGatewayIntent(createPaymentIntentProps)
   }
 
@@ -124,31 +125,33 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
     throw new Error('Payrexx Gateway/Transaction not found')
   }
 
-  x
-
   private async createOffsiteTransactionIntent({
     customerID,
     invoice,
     paymentID,
     successURL
-  }: CreatePaymentIntentProps) {
+  }: CreatePaymentIntentProps): Promise<Intent> {
     const amount = invoice.items.reduce(
       (accumulator, {amount, quantity}) => accumulator + amount * quantity,
       0
     )
     const transaction = await this.transactionClient.chargePreAuthorizedTransaction(
-      parseInt(customerID),
+      parseInt(customerID as string),
       {
         amount,
         referenceId: paymentID
       }
     )
+    const state = this.mapPayrexxEventToPaymentStatus(transaction.status)
+    if (state === null) {
+      throw new Error('Invalid payrexx transaction status')
+    }
 
     return {
       intentID: transaction.id.toString(),
-      intentSecret: successURL,
+      intentSecret: successURL ?? '',
       intentData: JSON.stringify(transaction),
-      state: this.mapPayrexxEventToPaymentStatus(transaction.status)
+      state
     }
   }
 
@@ -172,9 +175,9 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
           value: invoice.mail
         }
       },
-      successRedirectUrl: successURL,
-      failedRedirectUrl: failureURL,
-      cancelRedirectUrl: failureURL,
+      successRedirectUrl: successURL as string,
+      failedRedirectUrl: failureURL as string,
+      cancelRedirectUrl: failureURL as string,
       vatRate: this.vatRate,
       currency: 'CHF',
       preAuthorization: true,
