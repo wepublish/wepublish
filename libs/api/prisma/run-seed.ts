@@ -17,11 +17,10 @@ export async function runSeed() {
   console.log(`Adding admin user ${email} with password: ${randomPassword}`)
   await prisma.user.upsert({
     where: {
-      id: 'admin'
+      email
     },
     update: {},
     create: {
-      id: 'admin',
       email,
       emailVerifiedAt: new Date(),
       name: 'Admin',
