@@ -33,6 +33,7 @@ import FormData from 'form-data'
 import Mailgun from 'mailgun.js'
 import {URL} from 'url'
 import {SlackMailProvider} from '../app/slack-mail-provider'
+import {loadAsync} from 'node-yaml-config'
 
 @Global()
 @Module({
@@ -49,55 +50,48 @@ import {SlackMailProvider} from '../app/slack-mail-provider'
     PrismaModule,
     MailsModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: (config: ConfigService) => {
+      useFactory: async (config: ConfigService) => {
+        const configFile = await loadAsync(config.getOrThrow('CONFIG_FILE_PATH'))
+        const mailProviderRaw = configFile.mailProvider
         let mailProvider
-        if (
-          config.get('MAILGUN_API_KEY') &&
-          config.get('MAILGUN_BASE_DOMAIN') &&
-          config.get('MAILGUN_MAIL_DOMAIN')
-        ) {
-          const mailgunClient = new Mailgun(FormData).client({
-            username: 'api',
-            key: config.get('MAILGUN_API_KEY')
-          })
-          mailProvider = new MailgunMailProvider({
-            id: 'mailgun',
-            name: 'Mailgun',
-            fromAddress:
-              config.get('MAILGUN_FROM_ADDRESS') ||
-              config.get('DEFAULT_FROM_ADDRESS') ||
-              'dev@wepublish.ch',
-            webhookEndpointSecret: config.get('MAILGUN_WEBHOOK_SECRET') || '',
-            baseDomain: config.get('MAILGUN_BASE_DOMAIN'),
-            mailDomain: config.get('MAILGUN_MAIL_DOMAIN'),
-            apiKey: config.get('MAILGUN_API_KEY'),
-            incomingRequestHandler: bodyParser.json(),
-            mailgunClient
-          })
-        }
-
-        if (config.get('MAILCHIMP_API_KEY')) {
-          mailProvider = new MailchimpMailProvider({
-            id: 'mailchimp',
-            name: 'Mailchimp',
-            fromAddress:
-              config.get('MAILCHIMP_FROM_ADDRESS') ||
-              config.get('DEFAULT_FROM_ADDRESS') ||
-              'dev@wepublish.ch',
-            webhookEndpointSecret: config.get('MAILCHIMP_WEBHOOK_SECRET') || '',
-            apiKey: config.get('MAILCHIMP_API_KEY'),
-            baseURL: '',
-            incomingRequestHandler: bodyParser.urlencoded({extended: true})
-          })
-        }
-
-        if (config.get('SLACK_DEV_MAIL_WEBHOOK_URL')) {
-          mailProvider = new SlackMailProvider({
-            id: 'slackMail',
-            name: 'Slack Mail',
-            fromAddress: 'fakeMail@wepublish.media',
-            webhookURL: config.get('SLACK_DEV_MAIL_WEBHOOK_URL')
-          })
+        if (mailProviderRaw) {
+          if (mailProviderRaw.id === 'mailgun') {
+            const mailgunClient = new Mailgun(FormData).client({
+              username: 'api',
+              key: mailProviderRaw.apiKey,
+              url: `https://${mailProviderRaw.baseDomain}`
+            })
+            mailProvider = new MailgunMailProvider({
+              id: 'mailgun',
+              name: 'Mailgun',
+              fromAddress: mailProviderRaw.fromAddress,
+              webhookEndpointSecret: mailProviderRaw.webhookEndpointSecret,
+              baseDomain: mailProviderRaw.baseDomain,
+              mailDomain: mailProviderRaw.mailDomain,
+              apiKey: mailProviderRaw.apiKey,
+              incomingRequestHandler: bodyParser.json(),
+              mailgunClient
+            })
+          } else if (mailProviderRaw.id === 'mailchimp') {
+            mailProvider = new MailchimpMailProvider({
+              id: 'mailchimp',
+              name: 'Mailchimp',
+              fromAddress: mailProviderRaw.fromAddress,
+              webhookEndpointSecret: mailProviderRaw.webhookEndpointSecret,
+              apiKey: mailProviderRaw.apiKey,
+              baseURL: mailProviderRaw.baseURL,
+              incomingRequestHandler: bodyParser.urlencoded({extended: true})
+            })
+          } else if (mailProviderRaw.id === 'slackMail') {
+            mailProvider = new SlackMailProvider({
+              id: mailProviderRaw.id,
+              name: mailProviderRaw.name,
+              fromAddress: mailProviderRaw.fromAddress,
+              webhookURL: mailProviderRaw.webhookURL
+            })
+          } else {
+            throw new Error(`Unknown payment provider type defined: ${mailProviderRaw.id}`)
+          }
         }
 
         if (!mailProvider) {
@@ -105,8 +99,8 @@ import {SlackMailProvider} from '../app/slack-mail-provider'
         }
 
         return {
-          defaultFromAddress: config.getOrThrow('DEFAULT_FROM_ADDRESS'),
-          defaultReplyToAddress: config.getOrThrow('DEFAULT_REPLY_TO_ADDRESS'),
+          defaultFromAddress: configFile.mailProvider.fromAddress,
+          defaultReplyToAddress: configFile.mailProvider.replyToAddress,
           mailProvider
         }
       },
@@ -115,116 +109,93 @@ import {SlackMailProvider} from '../app/slack-mail-provider'
     }),
     PaymentsModule.registerAsync({
       imports: [ConfigModule, PrismaModule],
-      useFactory: (config: ConfigService, prisma: PrismaService) => {
+      useFactory: async (config: ConfigService, prisma: PrismaService) => {
         const paymentProviders: PaymentProvider[] = []
-
-        if (
-          config.get('BEXIO_API_KEY') &&
-          config.get('BEXIO_USER_ID') &&
-          config.get('BEXIO_COUNTRY_ID') &&
-          config.get('BEXIO_INVOICE_TEMPLATE') &&
-          config.get('BEXIO_UNIT_ID') &&
-          config.get('BEXIO_TAX_ID') &&
-          config.get('BEXIO_ACCOUNT_ID')
-        ) {
-          paymentProviders.push(
-            new BexioPaymentProvider({
-              id: 'bexio',
-              name: 'Bexio Invoice',
-              offSessionPayments: false,
-              apiKey: config.get('BEXIO_API_KEY'),
-              userId: parseInt(config.get('BEXIO_USER_ID')),
-              countryId: parseInt(config.get('BEXIO_COUNTRY_ID')),
-              invoiceTemplateNewMembership: config.get('BEXIO_INVOICE_TEMPLATE'),
-              invoiceTemplateRenewalMembership: config.get('BEXIO_INVOICE_TEMPLATE'),
-              unitId: parseInt(config.get('BEXIO_UNIT_ID')),
-              taxId: parseInt(config.get('BEXIO_TAX_ID')),
-              accountId: parseInt(config.get('BEXIO_ACCOUNT_ID')),
-              invoiceTitleNewMembership: config.get('BEXIO_INVOICE_TITLE_NEW') || 'New Invoice',
-              invoiceTitleRenewalMembership:
-                config.get('BEXIO_INVOICE_TITLE_RENEW') || 'New Invoice',
-              invoiceMailSubjectNewMembership:
-                config.get('BEXIO_INVOICE_MAIL_SUBJECT_NEW') || 'Invoice for :memberPlan.name:',
-              // [Network Link] is required by bexio => you can use replacer for user, subscription and memberPlan as you see in the example (any db fields are possible)
-              invoiceMailBodyNewMembership:
-                config.get('BEXIO_INVOICE_MAIL_BODY_NEW') ||
-                'Hello :user.firstname:\n\nThank you for subscribing to :memberPlan.name:.\nYou can view your invoice here: [Network Link]\n\nBest wishes from the Wepublish team',
-              invoiceMailSubjectRenewalMembership:
-                config.get('BEXIO_INVOICE_MAIL_SUBJECT_RENEW') || 'Invoice for :memberPlan.name:',
-              // [Network Link] is required by bexio => you can use replacer for user, subscription and memberPlan as you see in the example (any db fields are possible)
-              invoiceMailBodyRenewalMembership:
-                config.get('BEXIO_INVOICE_MAIL_BODY_RENEW') ||
-                'Hello :user.firstname:\n\nThank you for subscribing to :memberPlan.name:.\nYou can view your invoice here: [Network Link]\n\nBest wishes from the Wepublish team',
-              markInvoiceAsOpen: false,
-              prisma
-            })
-          )
+        const configFile = await loadAsync(config.getOrThrow('CONFIG_FILE_PATH'))
+        const paymentProvidersRaw = configFile.paymentProviders
+        if (paymentProvidersRaw) {
+          for (const paymentProvider of paymentProvidersRaw) {
+            if (paymentProvider.type === 'stripe_checkout') {
+              paymentProviders.push(
+                new StripeCheckoutPaymentProvider({
+                  id: paymentProvider.id,
+                  name: paymentProvider.name,
+                  offSessionPayments: paymentProvider.offSessionPayments,
+                  secretKey: paymentProvider.secretKey,
+                  webhookEndpointSecret: paymentProvider.webhookEndpointSecret,
+                  incomingRequestHandler: bodyParser.raw({type: 'application/json'})
+                })
+              )
+            } else if (paymentProvider.type === 'stripe') {
+              paymentProviders.push(
+                new StripePaymentProvider({
+                  id: paymentProvider.id,
+                  name: paymentProvider.name,
+                  offSessionPayments: paymentProvider.offSessionPayments,
+                  secretKey: paymentProvider.secretKey,
+                  webhookEndpointSecret: paymentProvider.webhookEndpointSecret,
+                  incomingRequestHandler: bodyParser.raw({type: 'application/json'})
+                })
+              )
+            } else if (paymentProvider.type === 'payrexx') {
+              paymentProviders.push(
+                new PayrexxPaymentProvider({
+                  id: paymentProvider.id,
+                  name: paymentProvider.name,
+                  offSessionPayments: paymentProvider.offSessionPayments,
+                  instanceName: paymentProvider.instanceName,
+                  instanceAPISecret: paymentProvider.instanceAPISecret,
+                  psp: paymentProvider.psp,
+                  pm: paymentProvider.pm,
+                  vatRate: paymentProvider.vatRate,
+                  incomingRequestHandler: bodyParser.json()
+                })
+              )
+            } else if (paymentProvider.type === 'payrexx-subscription') {
+              paymentProviders.push(
+                new PayrexxSubscriptionPaymentProvider({
+                  id: paymentProvider.id,
+                  name: paymentProvider.name,
+                  offSessionPayments: true,
+                  instanceName: paymentProvider.instanceName,
+                  instanceAPISecret: paymentProvider.instanceAPISecret,
+                  webhookSecret: paymentProvider.webhookEndpointSecret,
+                  prisma
+                })
+              )
+            } else if (paymentProvider.type === 'bexio') {
+              paymentProviders.push(
+                new BexioPaymentProvider({
+                  id: paymentProvider.id,
+                  name: paymentProvider.name,
+                  offSessionPayments: false,
+                  apiKey: paymentProvider.apiKey,
+                  userId: paymentProvider.userId,
+                  countryId: paymentProvider.countryId,
+                  invoiceTemplateNewMembership: paymentProvider.invoiceTemplateNewMembership,
+                  invoiceTemplateRenewalMembership:
+                    paymentProvider.invoiceTemplateRenewalMembership,
+                  unitId: paymentProvider.unitId,
+                  taxId: paymentProvider.taxId,
+                  accountId: paymentProvider.accountId,
+                  invoiceTitleNewMembership: paymentProvider.invoiceTitleNewMembership,
+                  invoiceTitleRenewalMembership: paymentProvider.invoiceTitleRenewalMembership,
+                  invoiceMailSubjectNewMembership: paymentProvider.invoiceMailSubjectNewMembership,
+                  invoiceMailBodyNewMembership: paymentProvider.invoiceMailBodyNewMembership,
+                  invoiceMailSubjectRenewalMembership:
+                    paymentProvider.invoiceMailSubjectRenewalMembership,
+                  invoiceMailBodyRenewalMembership:
+                    paymentProvider.invoiceMailBodyRenewalMembership,
+                  markInvoiceAsOpen: paymentProvider.markInvoiceAsOpen,
+                  prisma
+                })
+              )
+            } else {
+              throw new Error(`Unknown payment provider type defined: ${paymentProvider.type}`)
+            }
+          }
         }
 
-        if (
-          config.get('STRIPE_SECRET_KEY') &&
-          config.get('STRIPE_CHECKOUT_WEBHOOK_SECRET') &&
-          config.get('STRIPE_WEBHOOK_SECRET')
-        ) {
-          paymentProviders.push(
-            new StripeCheckoutPaymentProvider({
-              id: 'stripe_checkout',
-              name: 'Stripe Checkout',
-              offSessionPayments: false,
-              secretKey: config.get('STRIPE_SECRET_KEY'),
-              webhookEndpointSecret: config.get('STRIPE_CHECKOUT_WEBHOOK_SECRET'),
-              incomingRequestHandler: bodyParser.raw({type: 'application/json'})
-            }),
-            new StripePaymentProvider({
-              id: 'stripe',
-              name: 'Stripe',
-              offSessionPayments: true,
-              secretKey: config.get('STRIPE_SECRET_KEY'),
-              webhookEndpointSecret: config.get('STRIPE_WEBHOOK_SECRET'),
-              incomingRequestHandler: bodyParser.raw({type: 'application/json'})
-            })
-          )
-        }
-
-        if (
-          config.get('PAYREXX_INSTANCE_NAME') &&
-          config.get('PAYREXX_API_SECRET') &&
-          config.get('PAYREXX_WEBHOOK_SECRET')
-        ) {
-          paymentProviders.push(
-            new PayrexxPaymentProvider({
-              id: 'payrexx',
-              name: 'Payrexx',
-              offSessionPayments: false,
-              instanceName: config.get('PAYREXX_INSTANCE_NAME'),
-              instanceAPISecret: config.get('PAYREXX_API_SECRET'),
-              psp: [0, 15, 17, 2, 3, 36],
-              pm: [
-                'postfinance_card',
-                'postfinance_efinance',
-                // "mastercard",
-                // "visa",
-                'twint',
-                // "invoice",
-                'paypal'
-              ],
-              vatRate: 7.7,
-              incomingRequestHandler: bodyParser.json()
-            })
-          )
-          paymentProviders.push(
-            new PayrexxSubscriptionPaymentProvider({
-              id: 'payrexx-subscription',
-              name: 'Payrexx Subscription',
-              offSessionPayments: false,
-              instanceName: config.get('PAYREXX_INSTANCE_NAME'),
-              instanceAPISecret: config.get('PAYREXX_API_SECRET'),
-              incomingRequestHandler: bodyParser.json(),
-              webhookSecret: config.get('PAYREXX_WEBHOOK_SECRET'),
-              prisma
-            })
-          )
-        }
         return {paymentProviders}
       },
       inject: [ConfigService, PrismaService],
