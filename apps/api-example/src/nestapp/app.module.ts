@@ -84,8 +84,8 @@ import {loadAsync} from 'node-yaml-config'
             })
           } else if (mailProviderRaw.id === 'slackMail') {
             mailProvider = new SlackMailProvider({
-              id: mailProviderRaw.id,
-              name: mailProviderRaw.name,
+              id: 'slackMail',
+              name: 'Slack Mail',
               fromAddress: mailProviderRaw.fromAddress,
               webhookURL: mailProviderRaw.webhookURL
             })

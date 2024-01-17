@@ -15,6 +15,7 @@ import * as process from 'process'
 import {Application} from 'express'
 import {loadAsync} from 'node-yaml-config'
 import {DefaultURLAdapter, BajourURLAdapter, TsriURLAdapter} from '../urlAdapters'
+const MS_PER_DAY = 24 * 60 * 60 * 1000
 
 type RunServerProps = {
   expressApp: Application
@@ -33,7 +34,7 @@ export async function runServer({
    * Load User specific configuration
    */
 
-  const config = await loadAsync('/wepublish/config.yaml')
+  const config = await loadAsync(process.env.CONFIG_FILE_PATH)
 
   /*
    * Basic configuration
@@ -146,7 +147,7 @@ export async function runServer({
    * Load session time to live (TTL)
    */
   const sessionTTLDays = config.general.sessionTTLDays ? config.general.sessionTTLDays : 7
-  const sessionTTL = sessionTTLDays * 24 * 60 * 60 * 1000
+  const sessionTTL = sessionTTLDays * MS_PER_DAY
 
   const server = new WepublishServer(
     {
