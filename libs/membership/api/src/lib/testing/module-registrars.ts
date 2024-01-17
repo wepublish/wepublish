@@ -86,7 +86,7 @@ export function registerPaymentsModule(): DynamicModule {
           new PayrexxPaymentProvider({
             id: 'payrexx',
             name: 'Payrexx',
-            offSessionPayments: true,
+            offSessionPayments: false,
             gatewayClient: payrexxFactory.gatewayClient,
             transactionClient: payrexxFactory.transactionClient,
             webhookApiKey: config.getOrThrow('PAYREXX_WEBHOOK_SECRET'),
