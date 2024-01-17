@@ -1,6 +1,6 @@
+import {css} from '@emotion/react'
 import {Rating as MuiRating, styled, useTheme} from '@mui/material'
 import {ComponentProps} from 'react'
-import {css} from '@emotion/react'
 import {useHover} from 'react-aria'
 import {MdStar, MdStarBorder} from 'react-icons/md'
 

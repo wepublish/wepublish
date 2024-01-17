@@ -1,6 +1,7 @@
-import {render} from '@testing-library/react'
-import * as stories from './text-field.stories'
 import {composeStories} from '@storybook/react'
+import {render} from '@testing-library/react'
+
+import * as stories from './text-field.stories'
 
 const storiesCmp = composeStories(stories)
 

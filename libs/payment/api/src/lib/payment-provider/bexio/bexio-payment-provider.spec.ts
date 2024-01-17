@@ -1,10 +1,40 @@
 import {BexioPaymentProvider} from './bexio-payment-provider'
-import {PaymentState, PrismaClient} from '@prisma/client'
-import fetch from 'jest-fetch-mock'
+import {PaymentPeriodicity, PaymentState, PrismaClient} from '@prisma/client'
+import {CreatePaymentIntentProps} from '../payment-provider'
 
-jest.setMock('node-fetch', fetch)
 jest.mock('axios')
-jest.mock('@prisma/client')
+
+const mockFindFirst = jest.fn()
+const mockFindUnique = jest.fn()
+
+jest.mock('@prisma/client', () => {
+  const originalModule = jest.requireActual('@prisma/client')
+  return {
+    __esModule: true,
+    ...originalModule,
+    PrismaClient: jest.fn().mockImplementation(() => ({
+      payment: {
+        findFirst: mockFindFirst
+      },
+      invoice: {
+        findUnique: mockFindUnique
+      }
+    }))
+  }
+})
+
+jest.mock('node-fetch', () =>
+  jest.fn(() =>
+    Promise.resolve({
+      json: () => Promise.resolve({kb_item_status_id: 9, payment_type_id: 123, contact_id: 321}),
+      status: 200
+    })
+  )
+)
+
+const mockBexioContactSearch = jest.fn()
+const mockBexioContactCreate = jest.fn()
+const mockBexioContactEdit = jest.fn()
 
 jest.mock('bexio', () => {
   const ContactsStatic = {
@@ -16,7 +46,9 @@ jest.mock('bexio', () => {
   const Bexio = jest.fn().mockImplementation(() => {
     return {
       contacts: {
-        search: jest.fn()
+        search: mockBexioContactSearch,
+        create: mockBexioContactCreate,
+        edit: mockBexioContactEdit
       },
       invoices: {
         create: jest.fn().mockImplementation(() => ({
@@ -93,13 +125,9 @@ describe('BexioPaymentProvider', () => {
 
   describe('Checking intent status', () => {
     it('should check intent status correctly and return the values from fetch', async () => {
-      global.fetch = jest.fn(() =>
-        Promise.resolve({
-          json: () =>
-            Promise.resolve({data: {kb_item_status_id: 9, payment_type_id: 123, contact_id: 321}}),
-          status: 200
-        })
-      ) as jest.Mock
+      mockFindFirst.mockResolvedValue({
+        id: '123'
+      })
 
       const bexioPaymentProvider = new BexioPaymentProvider(mockProps)
       const res = await bexioPaymentProvider.checkIntentStatus({intentID: '123'})
@@ -108,5 +136,165 @@ describe('BexioPaymentProvider', () => {
       expect(res.customerID).toEqual('321')
       expect(res.paymentID).toEqual('123')
     })
+
+    it('should check intent status but payment is missing', async () => {
+      mockFindFirst.mockResolvedValue(null)
+
+      await expect(async () => {
+        const bexioPaymentProvider = new BexioPaymentProvider(mockProps)
+        await bexioPaymentProvider.checkIntentStatus({intentID: '123'})
+      }).rejects.toThrow('While checking intent, payment not found!')
+    })
+  })
+
+  describe('Test intent creation', () => {
+    it('should throw error if subscriptionId is null', async () => {
+      const props: CreatePaymentIntentProps = {
+        invoice: {
+          description: '',
+          paidAt: null,
+          canceledAt: null,
+          scheduledDeactivationAt: null,
+          manuallySetAsPaidByUserId: null,
+          subscriptionID: null,
+          createdAt: new Date(),
+          dueAt: new Date(),
+          id: '123',
+          items: [],
+          mail: 'dev@wepublish.com',
+          modifiedAt: new Date()
+        },
+        paymentID: '123',
+        saveCustomer: true
+      }
+      await expect(async () => {
+        const bexioPaymentProvider = new BexioPaymentProvider(mockProps)
+        await bexioPaymentProvider.createIntent(props)
+      }).rejects.toThrow('No subscriptionID associated with the provided invoice')
+    })
+  })
+  it('should throw error if invoice is not found', async () => {
+    mockFindUnique.mockResolvedValue({
+      id: '123'
+    })
+    const props: CreatePaymentIntentProps = {
+      invoice: {
+        description: '',
+        paidAt: null,
+        canceledAt: null,
+        scheduledDeactivationAt: null,
+        manuallySetAsPaidByUserId: null,
+        subscriptionID: '123',
+        createdAt: new Date(),
+        dueAt: new Date(),
+        id: '123',
+        items: [],
+        mail: 'dev@wepublish.com',
+        modifiedAt: new Date()
+      },
+      paymentID: '123',
+      saveCustomer: true
+    }
+    await expect(async () => {
+      const bexioPaymentProvider = new BexioPaymentProvider(mockProps)
+      await bexioPaymentProvider.createIntent(props)
+    }).rejects.toThrow(
+      `Bexio payment adapter didn't find the invoice, subscription or user! {"id":"123"}`
+    )
+  })
+  it('should create new contact and new invoice', async () => {
+    mockFindUnique.mockResolvedValue({
+      subscription: {
+        user: {
+          email: 'dev@wepublish.ch',
+          name: 'name',
+          firstName: 'firstName'
+        },
+        memberPlan: {
+          name: 'Plan Name'
+        },
+        monthlyAmount: 10,
+        paymentPeriodicity: PaymentPeriodicity.yearly
+      }
+    })
+
+    mockBexioContactSearch.mockResolvedValue([])
+    mockBexioContactCreate.mockResolvedValue({
+      id: '123',
+      mail: 'dev@wepublish.ch'
+    })
+
+    const props: CreatePaymentIntentProps = {
+      invoice: {
+        description: '',
+        paidAt: null,
+        canceledAt: null,
+        scheduledDeactivationAt: null,
+        manuallySetAsPaidByUserId: null,
+        subscriptionID: '123',
+        createdAt: new Date(),
+        dueAt: new Date(),
+        id: '123',
+        items: [],
+        mail: 'dev@wepublish.com',
+        modifiedAt: new Date()
+      },
+      paymentID: '123',
+      saveCustomer: true
+    }
+    const bexioPaymentProvider = new BexioPaymentProvider(mockProps)
+    await bexioPaymentProvider.createIntent(props)
+  })
+
+  it('should create new invoice for existing contact', async () => {
+    mockFindUnique.mockResolvedValue({
+      subscription: {
+        user: {
+          email: 'dev@wepublish.ch',
+          name: 'name',
+          firstName: 'firstName'
+        },
+        memberPlan: {
+          name: 'Plan Name'
+        },
+        monthlyAmount: 10,
+        paymentPeriodicity: PaymentPeriodicity.yearly
+      }
+    })
+
+    mockBexioContactSearch.mockResolvedValue([
+      {
+        nr: '123'
+      }
+    ])
+
+    mockBexioContactEdit.mockResolvedValue({
+      id: '123',
+      mail: 'dev@wepublish.ch'
+    })
+
+    const props: CreatePaymentIntentProps = {
+      invoice: {
+        description: '',
+        paidAt: null,
+        canceledAt: null,
+        scheduledDeactivationAt: null,
+        manuallySetAsPaidByUserId: null,
+        subscriptionID: '123',
+        createdAt: new Date(),
+        dueAt: new Date(),
+        id: '123',
+        items: [],
+        mail: 'dev@wepublish.com',
+        modifiedAt: new Date()
+      },
+      paymentID: '123',
+      saveCustomer: true
+    }
+    const bexioPaymentProvider = new BexioPaymentProvider(mockProps)
+    const res = await bexioPaymentProvider.createIntent(props)
+    expect(res.intentID).toEqual('testid')
+    expect(res.intentSecret).toEqual('')
+    expect(res.state).toEqual(PaymentState.submitted)
   })
 })
