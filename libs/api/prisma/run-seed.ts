@@ -14,21 +14,31 @@ export async function runSeed() {
   const randomPassword = generateSecureRandomPassword(20)
   const email = 'admin@wepublish.ch'
 
-  console.log(`Adding admin user ${email} with password: ${randomPassword}`)
-  await prisma.user.upsert({
+  const admin = await prisma.user.findUnique({
     where: {
-      email
-    },
-    update: {},
-    create: {
-      email,
-      emailVerifiedAt: new Date(),
-      name: 'Admin',
-      active: true,
-      roleIDs: [adminUserRole.id],
-      password: await hashPassword(randomPassword)
+      id: 'admin'
     }
   })
+  if (!admin) {
+    console.log(`Bootstrapping initial admin user ${email} with password: ${randomPassword}`)
+    await prisma.user.upsert({
+      where: {
+        id: 'admin'
+      },
+      update: {},
+      create: {
+        id: 'admin',
+        email,
+        emailVerifiedAt: new Date(),
+        name: 'Admin',
+        active: true,
+        roleIDs: [adminUserRole.id],
+        password: await hashPassword(randomPassword)
+      }
+    })
+  } else {
+    console.log('Skipping bootstrapping of initial admin user because the user already exist...')
+  }
 
   await prisma.$disconnect()
 }
