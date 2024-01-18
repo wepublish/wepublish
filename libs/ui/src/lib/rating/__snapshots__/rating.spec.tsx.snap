@@ -2,21 +2,179 @@
 
 exports[`Rating should render Rating 1`] = `
 <DocumentFragment>
-  <div
-    class="MuiStack-root css-3l5917-MuiStack-root"
+  .emotion-0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  gap: 8px;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
+}
+
+.emotion-1 .MuiRating-iconFilled {
+  color: #1976d2;
+}
+
+.emotion-1 .MuiRating-iconHover {
+  color: #1976d2;
+}
+
+.emotion-1 .MuiRating-iconEmpty {
+  color: #bdbdbd;
+}
+
+.emotion-2 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  position: relative;
+  font-size: 1.5rem;
+  color: #faaf00;
+  cursor: pointer;
+  text-align: left;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.emotion-2.Mui-disabled {
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+.emotion-2.Mui-focusVisible .MuiRating-iconActive {
+  outline: 1px solid #999;
+}
+
+.emotion-2 .MuiRating-visuallyHidden {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.emotion-3 {
+  cursor: inherit;
+}
+
+.emotion-4 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  pointer-events: none;
+  color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-17 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-transition: -webkit-transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: transform 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  pointer-events: none;
+}
+
+.emotion-28 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  position: relative;
+  font-size: 1.5rem;
+  color: #faaf00;
+  cursor: pointer;
+  text-align: left;
+  -webkit-tap-highlight-color: transparent;
+  pointer-events: none;
+}
+
+.emotion-28.Mui-disabled {
+  opacity: 0.38;
+  pointer-events: none;
+}
+
+.emotion-28.Mui-focusVisible .MuiRating-iconActive {
+  outline: 1px solid #999;
+}
+
+.emotion-28 .MuiRating-visuallyHidden {
+  border: 0;
+  clip: rect(0 0 0 0);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.emotion-47 .MuiRating-iconFilled {
+  color: #00F;
+}
+
+.emotion-47 .MuiRating-iconHover {
+  color: #F00;
+}
+
+.emotion-47 .MuiRating-iconEmpty {
+  color: #000;
+}
+
+.emotion-60 .MuiRating-iconFilled {
+  color: #f50;
+}
+
+.emotion-60 .MuiRating-iconHover {
+  color: #f50;
+}
+
+.emotion-60 .MuiRating-iconEmpty {
+  color: #A77;
+}
+
+.emotion-73 {
+  margin: 0;
+  font: inherit;
+  color: #1976d2;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(25, 118, 210, 0.4);
+}
+
+.emotion-73:hover {
+  text-decoration-color: inherit;
+}
+
+<div
+    class="MuiStack-root emotion-0"
   >
     <div
-      class="css-8403od"
+      class="emotion-1"
     >
       <span
-        class="MuiRating-root MuiRating-sizeMedium css-iljtu2-MuiRating-root"
+        class="MuiRating-root MuiRating-sizeMedium emotion-2"
       >
         <label
-          class="css-dqr9h-MuiRating-label"
+          class="emotion-3"
           for=":r1:"
         >
           <span
-            class="MuiRating-icon MuiRating-iconEmpty css-1c99szj-MuiRating-icon"
+            class="MuiRating-icon MuiRating-iconEmpty emotion-4"
           >
             <svg
               fill="currentColor"
@@ -50,11 +208,11 @@ exports[`Rating should render Rating 1`] = `
           value="1"
         />
         <label
-          class="css-dqr9h-MuiRating-label"
+          class="emotion-3"
           for=":r2:"
         >
           <span
-            class="MuiRating-icon MuiRating-iconEmpty css-1c99szj-MuiRating-icon"
+            class="MuiRating-icon MuiRating-iconEmpty emotion-4"
           >
             <svg
               fill="currentColor"
@@ -88,11 +246,11 @@ exports[`Rating should render Rating 1`] = `
           value="2"
         />
         <label
-          class="css-dqr9h-MuiRating-label"
+          class="emotion-3"
           for=":r3:"
         >
           <span
-            class="MuiRating-icon MuiRating-iconEmpty css-1c99szj-MuiRating-icon"
+            class="MuiRating-icon MuiRating-iconEmpty emotion-4"
           >
             <svg
               fill="currentColor"
@@ -126,11 +284,11 @@ exports[`Rating should render Rating 1`] = `
           value="3"
         />
         <label
-          class="css-dqr9h-MuiRating-label"
+          class="emotion-3"
           for=":r4:"
         >
           <span
-            class="MuiRating-icon MuiRating-iconEmpty css-1c99szj-MuiRating-icon"
+            class="MuiRating-icon MuiRating-iconEmpty emotion-4"
           >
             <svg
               fill="currentColor"
@@ -164,11 +322,11 @@ exports[`Rating should render Rating 1`] = `
           value="4"
         />
         <label
-          class="css-dqr9h-MuiRating-label"
+          class="emotion-3"
           for=":r5:"
         >
           <span
-            class="MuiRating-icon MuiRating-iconEmpty css-1c99szj-MuiRating-icon"
+            class="MuiRating-icon MuiRating-iconEmpty emotion-4"
           >
             <svg
               fill="currentColor"
@@ -202,7 +360,7 @@ exports[`Rating should render Rating 1`] = `
           value="5"
         />
         <label
-          class="MuiRating-label MuiRating-pristine css-dqr9h-MuiRating-label"
+          class="MuiRating-label MuiRating-pristine emotion-3"
         >
           <input
             checked=""
@@ -221,17 +379,17 @@ exports[`Rating should render Rating 1`] = `
       </span>
     </div>
     <div
-      class="css-8403od"
+      class="emotion-1"
     >
       <span
-        class="MuiRating-root MuiRating-sizeMedium css-iljtu2-MuiRating-root"
+        class="MuiRating-root MuiRating-sizeMedium emotion-2"
       >
         <label
-          class="css-dqr9h-MuiRating-label"
+          class="emotion-3"
           for=":r7:"
         >
           <span
-            class="MuiRating-icon MuiRating-iconFilled css-7qmtgc-MuiRating-icon"
+            class="MuiRating-icon MuiRating-iconFilled emotion-17"
           >
             <svg
               fill="currentColor"
@@ -269,11 +427,11 @@ exports[`Rating should render Rating 1`] = `
           value="1"
         />
         <label
-          class="css-dqr9h-MuiRating-label"
+          class="emotion-3"
           for=":r8:"
         >
           <span
-            class="MuiRating-icon MuiRating-iconFilled css-7qmtgc-MuiRating-icon"
+            class="MuiRating-icon MuiRating-iconFilled emotion-17"
           >
             <svg
               fill="currentColor"
@@ -311,11 +469,11 @@ exports[`Rating should render Rating 1`] = `
           value="2"
         />
         <label
-          class="css-dqr9h-MuiRating-label"
+          class="emotion-3"
           for=":r9:"
         >
           <span
-            class="MuiRating-icon MuiRating-iconFilled css-7qmtgc-MuiRating-icon"
+            class="MuiRating-icon MuiRating-iconFilled emotion-17"
           >
             <svg
               fill="currentColor"
@@ -353,11 +511,11 @@ exports[`Rating should render Rating 1`] = `
           value="3"
         />
         <label
-          class="css-dqr9h-MuiRating-label"
+          class="emotion-3"
           for=":ra:"
         >
           <span
-            class="MuiRating-icon MuiRating-iconFilled css-7qmtgc-MuiRating-icon"
+            class="MuiRating-icon MuiRating-iconFilled emotion-17"
           >
             <svg
               fill="currentColor"
@@ -396,11 +554,11 @@ exports[`Rating should render Rating 1`] = `
           value="4"
         />
         <label
-          class="css-dqr9h-MuiRating-label"
+          class="emotion-3"
           for=":rb:"
         >
           <span
-            class="MuiRating-icon MuiRating-iconEmpty css-1c99szj-MuiRating-icon"
+            class="MuiRating-icon MuiRating-iconEmpty emotion-4"
           >
             <svg
               fill="currentColor"
@@ -434,7 +592,7 @@ exports[`Rating should render Rating 1`] = `
           value="5"
         />
         <label
-          class="MuiRating-label MuiRating-pristine css-dqr9h-MuiRating-label"
+          class="MuiRating-label MuiRating-pristine emotion-3"
         >
           <input
             class="MuiRating-visuallyHidden"
@@ -452,16 +610,16 @@ exports[`Rating should render Rating 1`] = `
       </span>
     </div>
     <div
-      class="css-8403od"
+      class="emotion-1"
     >
       <span
         aria-label="4 Stars"
-        class="MuiRating-root MuiRating-sizeMedium Mui-readOnly MuiRating-readOnly css-ryrseu-MuiRating-root"
+        class="MuiRating-root MuiRating-sizeMedium Mui-readOnly MuiRating-readOnly emotion-28"
         role="img"
       >
         <span>
           <span
-            class="MuiRating-icon MuiRating-iconFilled css-7qmtgc-MuiRating-icon"
+            class="MuiRating-icon MuiRating-iconFilled emotion-17"
           >
             <svg
               fill="currentColor"
@@ -488,7 +646,7 @@ exports[`Rating should render Rating 1`] = `
         </span>
         <span>
           <span
-            class="MuiRating-icon MuiRating-iconFilled css-7qmtgc-MuiRating-icon"
+            class="MuiRating-icon MuiRating-iconFilled emotion-17"
           >
             <svg
               fill="currentColor"
@@ -515,7 +673,7 @@ exports[`Rating should render Rating 1`] = `
         </span>
         <span>
           <span
-            class="MuiRating-icon MuiRating-iconFilled css-7qmtgc-MuiRating-icon"
+            class="MuiRating-icon MuiRating-iconFilled emotion-17"
           >
             <svg
               fill="currentColor"
@@ -542,7 +700,7 @@ exports[`Rating should render Rating 1`] = `
         </span>
         <span>
           <span
-            class="MuiRating-icon MuiRating-iconFilled css-7qmtgc-MuiRating-icon"
+            class="MuiRating-icon MuiRating-iconFilled emotion-17"
           >
             <svg
               fill="currentColor"
@@ -569,7 +727,7 @@ exports[`Rating should render Rating 1`] = `
         </span>
         <span>
           <span
-            class="MuiRating-icon MuiRating-iconEmpty css-1c99szj-MuiRating-icon"
+            class="MuiRating-icon MuiRating-iconEmpty emotion-4"
           >
             <svg
               fill="currentColor"
@@ -593,17 +751,17 @@ exports[`Rating should render Rating 1`] = `
       </span>
     </div>
     <div
-      class="css-8403od"
+      class="emotion-1"
     >
       <span
-        class="MuiRating-root MuiRating-sizeMedium css-iljtu2-MuiRating-root"
+        class="MuiRating-root MuiRating-sizeMedium emotion-2"
       >
         <label
-          class="css-dqr9h-MuiRating-label"
+          class="emotion-3"
           for=":rj:"
         >
           <span
-            class="MuiRating-icon MuiRating-iconEmpty css-1c99szj-MuiRating-icon"
+            class="MuiRating-icon MuiRating-iconEmpty emotion-4"
           >
             <svg
               fill="currentColor"
@@ -637,11 +795,11 @@ exports[`Rating should render Rating 1`] = `
           value="1"
         />
         <label
-          class="css-dqr9h-MuiRating-label"
+          class="emotion-3"
           for=":rk:"
         >
           <span
-            class="MuiRating-icon MuiRating-iconEmpty css-1c99szj-MuiRating-icon"
+            class="MuiRating-icon MuiRating-iconEmpty emotion-4"
           >
             <svg
               fill="currentColor"
@@ -675,11 +833,11 @@ exports[`Rating should render Rating 1`] = `
           value="2"
         />
         <label
-          class="css-dqr9h-MuiRating-label"
+          class="emotion-3"
           for=":rl:"
         >
           <span
-            class="MuiRating-icon MuiRating-iconFilled css-7qmtgc-MuiRating-icon"
+            class="MuiRating-icon MuiRating-iconFilled emotion-17"
           >
             <svg
               fill="currentColor"
@@ -718,11 +876,11 @@ exports[`Rating should render Rating 1`] = `
           value="3"
         />
         <label
-          class="css-dqr9h-MuiRating-label"
+          class="emotion-3"
           for=":rm:"
         >
           <span
-            class="MuiRating-icon MuiRating-iconEmpty css-1c99szj-MuiRating-icon"
+            class="MuiRating-icon MuiRating-iconEmpty emotion-4"
           >
             <svg
               fill="currentColor"
@@ -756,11 +914,11 @@ exports[`Rating should render Rating 1`] = `
           value="4"
         />
         <label
-          class="css-dqr9h-MuiRating-label"
+          class="emotion-3"
           for=":rn:"
         >
           <span
-            class="MuiRating-icon MuiRating-iconEmpty css-1c99szj-MuiRating-icon"
+            class="MuiRating-icon MuiRating-iconEmpty emotion-4"
           >
             <svg
               fill="currentColor"
@@ -794,7 +952,7 @@ exports[`Rating should render Rating 1`] = `
           value="5"
         />
         <label
-          class="MuiRating-label MuiRating-pristine css-dqr9h-MuiRating-label"
+          class="MuiRating-label MuiRating-pristine emotion-3"
         >
           <input
             class="MuiRating-visuallyHidden"
@@ -812,17 +970,17 @@ exports[`Rating should render Rating 1`] = `
       </span>
     </div>
     <div
-      class="css-1nznkxt"
+      class="emotion-47"
     >
       <span
-        class="MuiRating-root MuiRating-sizeMedium css-iljtu2-MuiRating-root"
+        class="MuiRating-root MuiRating-sizeMedium emotion-2"
       >
         <label
-          class="css-dqr9h-MuiRating-label"
+          class="emotion-3"
           for=":rp:"
         >
           <span
-            class="MuiRating-icon MuiRating-iconFilled css-7qmtgc-MuiRating-icon"
+            class="MuiRating-icon MuiRating-iconFilled emotion-17"
           >
             <svg
               fill="currentColor"
@@ -860,11 +1018,11 @@ exports[`Rating should render Rating 1`] = `
           value="1"
         />
         <label
-          class="css-dqr9h-MuiRating-label"
+          class="emotion-3"
           for=":rq:"
         >
           <span
-            class="MuiRating-icon MuiRating-iconFilled css-7qmtgc-MuiRating-icon"
+            class="MuiRating-icon MuiRating-iconFilled emotion-17"
           >
             <svg
               fill="currentColor"
@@ -903,11 +1061,11 @@ exports[`Rating should render Rating 1`] = `
           value="2"
         />
         <label
-          class="css-dqr9h-MuiRating-label"
+          class="emotion-3"
           for=":rr:"
         >
           <span
-            class="MuiRating-icon MuiRating-iconEmpty css-1c99szj-MuiRating-icon"
+            class="MuiRating-icon MuiRating-iconEmpty emotion-4"
           >
             <svg
               fill="currentColor"
@@ -941,11 +1099,11 @@ exports[`Rating should render Rating 1`] = `
           value="3"
         />
         <label
-          class="css-dqr9h-MuiRating-label"
+          class="emotion-3"
           for=":rs:"
         >
           <span
-            class="MuiRating-icon MuiRating-iconEmpty css-1c99szj-MuiRating-icon"
+            class="MuiRating-icon MuiRating-iconEmpty emotion-4"
           >
             <svg
               fill="currentColor"
@@ -979,11 +1137,11 @@ exports[`Rating should render Rating 1`] = `
           value="4"
         />
         <label
-          class="css-dqr9h-MuiRating-label"
+          class="emotion-3"
           for=":rt:"
         >
           <span
-            class="MuiRating-icon MuiRating-iconEmpty css-1c99szj-MuiRating-icon"
+            class="MuiRating-icon MuiRating-iconEmpty emotion-4"
           >
             <svg
               fill="currentColor"
@@ -1017,7 +1175,7 @@ exports[`Rating should render Rating 1`] = `
           value="5"
         />
         <label
-          class="MuiRating-label MuiRating-pristine css-dqr9h-MuiRating-label"
+          class="MuiRating-label MuiRating-pristine emotion-3"
         >
           <input
             class="MuiRating-visuallyHidden"
@@ -1035,17 +1193,17 @@ exports[`Rating should render Rating 1`] = `
       </span>
     </div>
     <div
-      class="css-klhxiq"
+      class="emotion-60"
     >
       <span
-        class="MuiRating-root MuiRating-sizeMedium css-iljtu2-MuiRating-root"
+        class="MuiRating-root MuiRating-sizeMedium emotion-2"
       >
         <label
-          class="css-dqr9h-MuiRating-label"
+          class="emotion-3"
           for=":rv:"
         >
           <span
-            class="MuiRating-icon MuiRating-iconFilled css-7qmtgc-MuiRating-icon"
+            class="MuiRating-icon MuiRating-iconFilled emotion-17"
           >
             <svg
               fill="currentColor"
@@ -1080,11 +1238,11 @@ exports[`Rating should render Rating 1`] = `
           value="1"
         />
         <label
-          class="css-dqr9h-MuiRating-label"
+          class="emotion-3"
           for=":r10:"
         >
           <span
-            class="MuiRating-icon MuiRating-iconEmpty css-1c99szj-MuiRating-icon"
+            class="MuiRating-icon MuiRating-iconEmpty emotion-4"
           >
             <svg
               fill="currentColor"
@@ -1118,11 +1276,11 @@ exports[`Rating should render Rating 1`] = `
           value="2"
         />
         <label
-          class="css-dqr9h-MuiRating-label"
+          class="emotion-3"
           for=":r11:"
         >
           <span
-            class="MuiRating-icon MuiRating-iconEmpty css-1c99szj-MuiRating-icon"
+            class="MuiRating-icon MuiRating-iconEmpty emotion-4"
           >
             <svg
               fill="currentColor"
@@ -1156,11 +1314,11 @@ exports[`Rating should render Rating 1`] = `
           value="3"
         />
         <label
-          class="css-dqr9h-MuiRating-label"
+          class="emotion-3"
           for=":r12:"
         >
           <span
-            class="MuiRating-icon MuiRating-iconEmpty css-1c99szj-MuiRating-icon"
+            class="MuiRating-icon MuiRating-iconEmpty emotion-4"
           >
             <svg
               fill="currentColor"
@@ -1194,11 +1352,11 @@ exports[`Rating should render Rating 1`] = `
           value="4"
         />
         <label
-          class="css-dqr9h-MuiRating-label"
+          class="emotion-3"
           for=":r13:"
         >
           <span
-            class="MuiRating-icon MuiRating-iconEmpty css-1c99szj-MuiRating-icon"
+            class="MuiRating-icon MuiRating-iconEmpty emotion-4"
           >
             <svg
               fill="currentColor"
@@ -1232,7 +1390,7 @@ exports[`Rating should render Rating 1`] = `
           value="5"
         />
         <label
-          class="MuiRating-label MuiRating-pristine css-dqr9h-MuiRating-label"
+          class="MuiRating-label MuiRating-pristine emotion-3"
         >
           <input
             class="MuiRating-visuallyHidden"
@@ -1251,7 +1409,7 @@ exports[`Rating should render Rating 1`] = `
     </div>
     <br />
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-73"
       href="https://mui.com/material-ui/react-rating/"
       target="_blank"
     >

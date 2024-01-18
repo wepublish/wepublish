@@ -3,15 +3,20 @@
 exports[`Facebook Post Block should render Default 1`] = `
 <DocumentFragment>
   <div
-    class="css-1jn5h8s-FacebookPostBlockWrapper e2wfn2e0"
+    class="emotion-0 emotion-1"
   />
 </DocumentFragment>
 `;
 
 exports[`Facebook Post Block should render WithClassName 1`] = `
-<DocumentFragment>
-  <div
-    class="extra-classname css-1jn5h8s-FacebookPostBlockWrapper e2wfn2e0"
-  />
-</DocumentFragment>
+"Snapshot Diff:
+- First value
++ Second value
+
+  <DocumentFragment>
+    <div
+-     class="css-1jn5h8s-FacebookPostBlockWrapper e2wfn2e0"
++     class="extra-classname css-1jn5h8s-FacebookPostBlockWrapper e2wfn2e0"
+    />
+  </DocumentFragment>"
 `;

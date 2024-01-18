@@ -7,7 +7,7 @@ exports[`Bildwurf Ad Block should render Default 1`] = `
     src="https://media.online.bildwurf.ch/js/code.min.js"
   />
   <div
-    class="css-1ege008-BildwurfBlockWrapper e14oxtci0"
+    class="emotion-0 emotion-1"
     id="bildwurf-injection-wrapper"
   >
     <ins
@@ -19,19 +19,21 @@ exports[`Bildwurf Ad Block should render Default 1`] = `
 `;
 
 exports[`Bildwurf Ad Block should render WithClassName 1`] = `
-<DocumentFragment>
-  <script
-    data-testid="fake-script"
-    src="https://media.online.bildwurf.ch/js/code.min.js"
-  />
-  <div
-    class="extra-classname css-1ege008-BildwurfBlockWrapper e14oxtci0"
-    id="bildwurf-injection-wrapper"
-  >
-    <ins
-      class="aso-zone"
-      data-zone="77348"
+"Snapshot Diff:
+- First value
++ Second value
+
+@@ -2,11 +2,11 @@
+    <script
+      data-testid="fake-script"
+      src="https://media.online.bildwurf.ch/js/code.min.js"
     />
-  </div>
-</DocumentFragment>
+    <div
+-     class="css-1ege008-BildwurfBlockWrapper e14oxtci0"
++     class="extra-classname css-1ege008-BildwurfBlockWrapper e14oxtci0"
+      id="bildwurf-injection-wrapper"
+    >
+      <ins
+        class="aso-zone"
+        data-zone="77348""
 `;

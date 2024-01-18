@@ -3,15 +3,20 @@
 exports[`Instagram Post Block should render Default 1`] = `
 <DocumentFragment>
   <div
-    class="css-1j8we49-InstagramBlockWrapper e1drqanf0"
+    class="emotion-0 emotion-1"
   />
 </DocumentFragment>
 `;
 
 exports[`Instagram Post Block should render WithClassName 1`] = `
-<DocumentFragment>
-  <div
-    class="extra-classname css-1j8we49-InstagramBlockWrapper e1drqanf0"
-  />
-</DocumentFragment>
+"Snapshot Diff:
+- First value
++ Second value
+
+  <DocumentFragment>
+    <div
+-     class="css-1j8we49-InstagramBlockWrapper e1drqanf0"
++     class="extra-classname css-1j8we49-InstagramBlockWrapper e1drqanf0"
+    />
+  </DocumentFragment>"
 `;

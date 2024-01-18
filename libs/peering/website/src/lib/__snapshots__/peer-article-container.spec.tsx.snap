@@ -2,32 +2,28 @@
 
 exports[`PeerArticle Container should render ById 1`] = `
 <DocumentFragment>
-  <article
-    class="css-u0t3o7-ArticleWrapper es3d6yl1"
+  .emotion-0 {
+  display: grid;
+  gap: 24px;
+}
+
+<article
+    class="emotion-0 emotion-1"
   />
 </DocumentFragment>
 `;
 
 exports[`PeerArticle Container should render BySlug 1`] = `
-<DocumentFragment>
-  <article
-    class="css-u0t3o7-ArticleWrapper es3d6yl1"
-  />
-</DocumentFragment>
+"Snapshot Diff:
+Compared values have no visual difference."
 `;
 
 exports[`PeerArticle Container should render WithClassName 1`] = `
-<DocumentFragment>
-  <article
-    class="css-u0t3o7-ArticleWrapper es3d6yl1"
-  />
-</DocumentFragment>
+"Snapshot Diff:
+Compared values have no visual difference."
 `;
 
 exports[`PeerArticle Container should render WithEmotion 1`] = `
-<DocumentFragment>
-  <article
-    class="css-u0t3o7-ArticleWrapper es3d6yl1"
-  />
-</DocumentFragment>
+"Snapshot Diff:
+Compared values have no visual difference."
 `;

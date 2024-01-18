@@ -1,15 +1,6 @@
-import {composeStories} from '@storybook/react'
-import {render} from '@testing-library/react'
-
+import {runStorybookTests} from '@wepublish/testing/website'
 import * as stories from './rating.stories'
 
-const storiesCmp = composeStories(stories)
-
 describe('Rating', () => {
-  Object.entries(storiesCmp).forEach(([story, Component]) => {
-    it(`should render ${story}`, () => {
-      const {asFragment} = render(<Component />)
-      expect(asFragment()).toMatchSnapshot()
-    })
-  })
+  runStorybookTests(stories)
 })

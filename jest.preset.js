@@ -48,5 +48,6 @@ module.exports = {
       }
     ]
   },
+  snapshotSerializers: [...(nxPreset.snapshotSerializers ?? []), '@emotion/jest/serializer'],
   collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}', '!**/*.stories.{js,jsx,ts,tsx}']
 }

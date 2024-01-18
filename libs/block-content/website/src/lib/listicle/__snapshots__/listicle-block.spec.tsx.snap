@@ -2,25 +2,87 @@
 
 exports[`Listicle Block should render Default 1`] = `
 <DocumentFragment>
-  <div
-    class="css-dyjcj9-ListicleBlockWrapper e1pxt35p2"
+  .emotion-0 {
+  display: grid;
+  gap: 80px;
+  grid-template-columns: minmax(min-content, 700px);
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
+.emotion-2 {
+  display: grid;
+  gap: 16px;
+  justify-items: center;
+}
+
+.emotion-4 {
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  border-radius: 50%;
+  background-color: #1976d2;
+  color: #fff;
+  font-size: 1.5em;
+  line-height: 1;
+  width: 2em;
+  height: 2em;
+}
+
+.emotion-6 {
+  margin: 0;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 400;
+  font-size: 3rem;
+  line-height: 1.167;
+  letter-spacing: 0em;
+}
+
+.emotion-7 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+}
+
+.emotion-11 {
+  margin: 0;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  line-height: 1.5;
+  letter-spacing: 0.00938em;
+  margin-bottom: 0.35em;
+}
+
+<div
+    class="emotion-0 emotion-1"
   >
     <div
-      class="css-6lnx2c-ListicleBlockItem e1pxt35p1"
+      class="emotion-2 emotion-3"
     >
       <div
-        class="css-2thz4l-ListicleBlockItemCounter e1pxt35p0"
+        class="emotion-4 emotion-5"
       >
         1
       </div>
       <h3
-        class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 emotion-6"
       >
         Foobar
       </h3>
       <img
         alt="DSC07717"
-        class="css-cibo30-ImageWrapper e1shv2yg0"
+        class="emotion-7 emotion-8"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -29,7 +91,7 @@ https://unsplash.it/200/100 200w"
         title=""
       />
       <div
-        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+        class="emotion-9 emotion-10"
       >
         <div
           data-gramm="false"
@@ -38,7 +100,7 @@ https://unsplash.it/200/100 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-11"
             data-slate-node="element"
           >
             <span
@@ -55,21 +117,21 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-6lnx2c-ListicleBlockItem e1pxt35p1"
+      class="emotion-2 emotion-3"
     >
       <div
-        class="css-2thz4l-ListicleBlockItemCounter e1pxt35p0"
+        class="emotion-4 emotion-5"
       >
         2
       </div>
       <h3
-        class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 emotion-6"
       >
         Foobar
       </h3>
       <img
         alt="DSC07717"
-        class="css-cibo30-ImageWrapper e1shv2yg0"
+        class="emotion-7 emotion-8"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -78,7 +140,7 @@ https://unsplash.it/200/100 200w"
         title=""
       />
       <div
-        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+        class="emotion-9 emotion-10"
       >
         <div
           data-gramm="false"
@@ -87,7 +149,7 @@ https://unsplash.it/200/100 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-11"
             data-slate-node="element"
           >
             <span
@@ -104,21 +166,21 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-6lnx2c-ListicleBlockItem e1pxt35p1"
+      class="emotion-2 emotion-3"
     >
       <div
-        class="css-2thz4l-ListicleBlockItemCounter e1pxt35p0"
+        class="emotion-4 emotion-5"
       >
         3
       </div>
       <h3
-        class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 emotion-6"
       >
         Foobar
       </h3>
       <img
         alt="DSC07717"
-        class="css-cibo30-ImageWrapper e1shv2yg0"
+        class="emotion-7 emotion-8"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -127,7 +189,7 @@ https://unsplash.it/200/100 200w"
         title=""
       />
       <div
-        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+        class="emotion-9 emotion-10"
       >
         <div
           data-gramm="false"
@@ -136,7 +198,7 @@ https://unsplash.it/200/100 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-11"
             data-slate-node="element"
           >
             <span
@@ -153,21 +215,21 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-6lnx2c-ListicleBlockItem e1pxt35p1"
+      class="emotion-2 emotion-3"
     >
       <div
-        class="css-2thz4l-ListicleBlockItemCounter e1pxt35p0"
+        class="emotion-4 emotion-5"
       >
         4
       </div>
       <h3
-        class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 emotion-6"
       >
         Foobar
       </h3>
       <img
         alt="DSC07717"
-        class="css-cibo30-ImageWrapper e1shv2yg0"
+        class="emotion-7 emotion-8"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -176,7 +238,7 @@ https://unsplash.it/200/100 200w"
         title=""
       />
       <div
-        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+        class="emotion-9 emotion-10"
       >
         <div
           data-gramm="false"
@@ -185,7 +247,7 @@ https://unsplash.it/200/100 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-11"
             data-slate-node="element"
           >
             <span
@@ -206,596 +268,72 @@ https://unsplash.it/200/100 200w"
 `;
 
 exports[`Listicle Block should render WithClassName 1`] = `
-<DocumentFragment>
-  <div
-    class="extra-classname css-dyjcj9-ListicleBlockWrapper e1pxt35p2"
-  >
+"Snapshot Diff:
+- First value
++ Second value
+
+@@ -1,8 +1,8 @@
+  <DocumentFragment>
     <div
-      class="css-6lnx2c-ListicleBlockItem e1pxt35p1"
+-     class="css-dyjcj9-ListicleBlockWrapper e1pxt35p2"
++     class="extra-classname css-dyjcj9-ListicleBlockWrapper e1pxt35p2"
     >
       <div
-        class="css-2thz4l-ListicleBlockItemCounter e1pxt35p0"
+        class="css-6lnx2c-ListicleBlockItem e1pxt35p1"
       >
-        1
-      </div>
-      <h3
-        class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
-      >
-        Foobar
-      </h3>
-      <img
-        alt="DSC07717"
-        class="css-cibo30-ImageWrapper e1shv2yg0"
-        loading="lazy"
-        srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-        title=""
-      />
-      <div
-        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
-      >
-        <div
-          data-gramm="false"
-          data-slate-editor="true"
-          data-slate-node="value"
-          style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-        >
-          <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-            data-slate-node="element"
-          >
-            <span
-              data-slate-node="text"
-            >
-              <span
-                data-slate-string="true"
-              >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </span>
-            </span>
-          </p>
-        </div>
-      </div>
-    </div>
-    <div
-      class="css-6lnx2c-ListicleBlockItem e1pxt35p1"
-    >
-      <div
-        class="css-2thz4l-ListicleBlockItemCounter e1pxt35p0"
-      >
-        2
-      </div>
-      <h3
-        class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
-      >
-        Foobar
-      </h3>
-      <img
-        alt="DSC07717"
-        class="css-cibo30-ImageWrapper e1shv2yg0"
-        loading="lazy"
-        srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-        title=""
-      />
-      <div
-        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
-      >
-        <div
-          data-gramm="false"
-          data-slate-editor="true"
-          data-slate-node="value"
-          style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-        >
-          <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-            data-slate-node="element"
-          >
-            <span
-              data-slate-node="text"
-            >
-              <span
-                data-slate-string="true"
-              >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </span>
-            </span>
-          </p>
-        </div>
-      </div>
-    </div>
-    <div
-      class="css-6lnx2c-ListicleBlockItem e1pxt35p1"
-    >
-      <div
-        class="css-2thz4l-ListicleBlockItemCounter e1pxt35p0"
-      >
-        3
-      </div>
-      <h3
-        class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
-      >
-        Foobar
-      </h3>
-      <img
-        alt="DSC07717"
-        class="css-cibo30-ImageWrapper e1shv2yg0"
-        loading="lazy"
-        srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-        title=""
-      />
-      <div
-        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
-      >
-        <div
-          data-gramm="false"
-          data-slate-editor="true"
-          data-slate-node="value"
-          style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-        >
-          <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-            data-slate-node="element"
-          >
-            <span
-              data-slate-node="text"
-            >
-              <span
-                data-slate-string="true"
-              >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </span>
-            </span>
-          </p>
-        </div>
-      </div>
-    </div>
-    <div
-      class="css-6lnx2c-ListicleBlockItem e1pxt35p1"
-    >
-      <div
-        class="css-2thz4l-ListicleBlockItemCounter e1pxt35p0"
-      >
-        4
-      </div>
-      <h3
-        class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
-      >
-        Foobar
-      </h3>
-      <img
-        alt="DSC07717"
-        class="css-cibo30-ImageWrapper e1shv2yg0"
-        loading="lazy"
-        srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-        title=""
-      />
-      <div
-        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
-      >
-        <div
-          data-gramm="false"
-          data-slate-editor="true"
-          data-slate-node="value"
-          style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-        >
-          <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-            data-slate-node="element"
-          >
-            <span
-              data-slate-node="text"
-            >
-              <span
-                data-slate-string="true"
-              >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </span>
-            </span>
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-</DocumentFragment>
+        <div"
 `;
 
 exports[`Listicle Block should render WithEmotion 1`] = `
-<DocumentFragment>
-  <div
-    class="css-dyjcj9-ListicleBlockWrapper e1pxt35p2"
-  >
-    <div
-      class="css-6lnx2c-ListicleBlockItem e1pxt35p1"
-    >
-      <div
-        class="css-2thz4l-ListicleBlockItemCounter e1pxt35p0"
-      >
-        1
-      </div>
-      <h3
-        class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
-      >
-        Foobar
-      </h3>
-      <img
-        alt="DSC07717"
-        class="css-cibo30-ImageWrapper e1shv2yg0"
-        loading="lazy"
-        srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-        title=""
-      />
-      <div
-        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
-      >
-        <div
-          data-gramm="false"
-          data-slate-editor="true"
-          data-slate-node="value"
-          style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-        >
-          <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-            data-slate-node="element"
-          >
-            <span
-              data-slate-node="text"
-            >
-              <span
-                data-slate-string="true"
-              >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </span>
-            </span>
-          </p>
-        </div>
-      </div>
-    </div>
-    <div
-      class="css-6lnx2c-ListicleBlockItem e1pxt35p1"
-    >
-      <div
-        class="css-2thz4l-ListicleBlockItemCounter e1pxt35p0"
-      >
-        2
-      </div>
-      <h3
-        class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
-      >
-        Foobar
-      </h3>
-      <img
-        alt="DSC07717"
-        class="css-cibo30-ImageWrapper e1shv2yg0"
-        loading="lazy"
-        srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-        title=""
-      />
-      <div
-        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
-      >
-        <div
-          data-gramm="false"
-          data-slate-editor="true"
-          data-slate-node="value"
-          style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-        >
-          <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-            data-slate-node="element"
-          >
-            <span
-              data-slate-node="text"
-            >
-              <span
-                data-slate-string="true"
-              >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </span>
-            </span>
-          </p>
-        </div>
-      </div>
-    </div>
-    <div
-      class="css-6lnx2c-ListicleBlockItem e1pxt35p1"
-    >
-      <div
-        class="css-2thz4l-ListicleBlockItemCounter e1pxt35p0"
-      >
-        3
-      </div>
-      <h3
-        class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
-      >
-        Foobar
-      </h3>
-      <img
-        alt="DSC07717"
-        class="css-cibo30-ImageWrapper e1shv2yg0"
-        loading="lazy"
-        srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-        title=""
-      />
-      <div
-        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
-      >
-        <div
-          data-gramm="false"
-          data-slate-editor="true"
-          data-slate-node="value"
-          style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-        >
-          <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-            data-slate-node="element"
-          >
-            <span
-              data-slate-node="text"
-            >
-              <span
-                data-slate-string="true"
-              >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </span>
-            </span>
-          </p>
-        </div>
-      </div>
-    </div>
-    <div
-      class="css-6lnx2c-ListicleBlockItem e1pxt35p1"
-    >
-      <div
-        class="css-2thz4l-ListicleBlockItemCounter e1pxt35p0"
-      >
-        4
-      </div>
-      <h3
-        class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
-      >
-        Foobar
-      </h3>
-      <img
-        alt="DSC07717"
-        class="css-cibo30-ImageWrapper e1shv2yg0"
-        loading="lazy"
-        srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-        title=""
-      />
-      <div
-        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
-      >
-        <div
-          data-gramm="false"
-          data-slate-editor="true"
-          data-slate-node="value"
-          style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-        >
-          <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-            data-slate-node="element"
-          >
-            <span
-              data-slate-node="text"
-            >
-              <span
-                data-slate-string="true"
-              >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </span>
-            </span>
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-</DocumentFragment>
+"Snapshot Diff:
+Compared values have no visual difference."
 `;
 
 exports[`Listicle Block should render WithoutImage 1`] = `
-<DocumentFragment>
-  <div
-    class="css-dyjcj9-ListicleBlockWrapper e1pxt35p2"
-  >
-    <div
-      class="css-6lnx2c-ListicleBlockItem e1pxt35p1"
-    >
-      <div
-        class="css-2thz4l-ListicleBlockItemCounter e1pxt35p0"
-      >
-        1
-      </div>
-      <h3
-        class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
-      >
-        Foobar
-      </h3>
-      <img
-        alt="DSC07717"
-        class="css-cibo30-ImageWrapper e1shv2yg0"
-        loading="lazy"
-        srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-        title=""
-      />
-      <div
-        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
-      >
-        <div
-          data-gramm="false"
-          data-slate-editor="true"
-          data-slate-node="value"
-          style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+"Snapshot Diff:
+- First value
++ Second value
+
+@@ -62,20 +62,10 @@
+        <h3
+          class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
         >
-          <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-            data-slate-node="element"
-          >
-            <span
-              data-slate-node="text"
-            >
-              <span
-                data-slate-string="true"
-              >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </span>
-            </span>
-          </p>
-        </div>
-      </div>
-    </div>
-    <div
-      class="css-6lnx2c-ListicleBlockItem e1pxt35p1"
-    >
-      <div
-        class="css-2thz4l-ListicleBlockItemCounter e1pxt35p0"
-      >
-        2
-      </div>
-      <h3
-        class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
-      >
-        Foobar
-      </h3>
-      <div
-        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
-      >
+          Foobar
+        </h3>
+-       <img
+-         alt="DSC07717"
+-         class="css-cibo30-ImageWrapper e1shv2yg0"
+-         loading="lazy"
+-         srcset="https://unsplash.it/800/400 800w,
+- https://unsplash.it/500/300 500w,
+- https://unsplash.it/300/200 300w,
+- https://unsplash.it/200/100 200w"
+-         title=""
+-       />
         <div
-          data-gramm="false"
-          data-slate-editor="true"
-          data-slate-node="value"
-          style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+          class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
         >
-          <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-            data-slate-node="element"
-          >
-            <span
-              data-slate-node="text"
-            >
-              <span
-                data-slate-string="true"
-              >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </span>
-            </span>
-          </p>
-        </div>
-      </div>
-    </div>
-    <div
-      class="css-6lnx2c-ListicleBlockItem e1pxt35p1"
-    >
-      <div
-        class="css-2thz4l-ListicleBlockItemCounter e1pxt35p0"
-      >
-        3
-      </div>
-      <h3
-        class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
-      >
-        Foobar
-      </h3>
-      <img
-        alt="DSC07717"
-        class="css-cibo30-ImageWrapper e1shv2yg0"
-        loading="lazy"
-        srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
-        title=""
-      />
-      <div
-        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
-      >
+          <div
+            data-gramm="false"
+@@ -160,20 +150,10 @@
+        <h3
+          class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
+        >
+          Foobar
+        </h3>
+-       <img
+-         alt="DSC07717"
+-         class="css-cibo30-ImageWrapper e1shv2yg0"
+-         loading="lazy"
+-         srcset="https://unsplash.it/800/400 800w,
+- https://unsplash.it/500/300 500w,
+- https://unsplash.it/300/200 300w,
+- https://unsplash.it/200/100 200w"
+-         title=""
+-       />
         <div
-          data-gramm="false"
-          data-slate-editor="true"
-          data-slate-node="value"
-          style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+          class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
         >
-          <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-            data-slate-node="element"
-          >
-            <span
-              data-slate-node="text"
-            >
-              <span
-                data-slate-string="true"
-              >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </span>
-            </span>
-          </p>
-        </div>
-      </div>
-    </div>
-    <div
-      class="css-6lnx2c-ListicleBlockItem e1pxt35p1"
-    >
-      <div
-        class="css-2thz4l-ListicleBlockItemCounter e1pxt35p0"
-      >
-        4
-      </div>
-      <h3
-        class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
-      >
-        Foobar
-      </h3>
-      <div
-        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
-      >
-        <div
-          data-gramm="false"
-          data-slate-editor="true"
-          data-slate-node="value"
-          style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
-        >
-          <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
-            data-slate-node="element"
-          >
-            <span
-              data-slate-node="text"
-            >
-              <span
-                data-slate-string="true"
-              >
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-              </span>
-            </span>
-          </p>
-        </div>
-      </div>
-    </div>
-  </div>
-</DocumentFragment>
+          <div
+            data-gramm="false""
 `;
