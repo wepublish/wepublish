@@ -23,7 +23,7 @@ default:
       name: Payrexx # Required for stripe_checkout / stripe / payrexx /bexio
       offSessionPayments: true # Required for stripe_checkout / stripe / payrexx
       secretKey: secret # Required for stripe_checkout / stripe
-      webhookEndpointSecret: secret # Required for stripe_checkout / stripe
+      webhookApiKey: secret
       instanceName: name  # Required for payrexx
       instanceAPISecret: secret # Required for payrexx
       psp: # Required for payrexx
