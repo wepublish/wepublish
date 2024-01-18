@@ -1,4 +1,5 @@
 import {AuthSessionType} from '@wepublish/authentication/api'
+import {SortOrder, logger} from '@wepublish/utils/api'
 import {UserInputError} from 'apollo-server-express'
 import {
   GraphQLID,
@@ -11,11 +12,9 @@ import {
 import {Context} from '../context'
 import {ArticleSort} from '../db/article'
 import {AuthorSort} from '../db/author'
-import {SortOrder} from '../db/common'
 import {MemberPlanSort} from '../db/memberPlan'
 import {PageSort, PublicPage} from '../db/page'
 import {NotFound} from '../error'
-import {logger} from '@wepublish/utils/api'
 import {delegateToPeerSchema} from '../utility'
 import {
   GraphQLPublicArticle,

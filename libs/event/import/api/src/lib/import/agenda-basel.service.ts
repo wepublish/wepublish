@@ -3,7 +3,7 @@ import {Inject, Injectable} from '@nestjs/common'
 import {Prisma, PrismaClient} from '@prisma/client'
 import {ImageFetcherService, MediaAdapterService} from '@wepublish/image/api'
 import {Cache} from 'cache-manager'
-import {Event} from './events-import.model'
+import {EventFromSource} from './events-import.model'
 import {CreateEventParams, EventsProvider, ImportedEventParams} from './events-import.service'
 import {fetchAndParseKulturagenda} from './kulturagenda-parser'
 
@@ -20,7 +20,7 @@ export class AgendaBaselService implements EventsProvider {
   readonly url = 'https://www.agendabasel.ch/xmlexport/kzexport-basel.xml'
 
   private async getEvents() {
-    const cachedEvents = await this.cacheManager.get<Event[]>('agenda-basel-events')
+    const cachedEvents = await this.cacheManager.get<EventFromSource[]>('agenda-basel-events')
 
     if (cachedEvents) {
       return cachedEvents
@@ -34,12 +34,12 @@ export class AgendaBaselService implements EventsProvider {
     return events
   }
 
-  async importedEvents(): Promise<Event[]> {
+  async importedEvents(): Promise<EventFromSource[]> {
     const parsedEvents = await this.getEvents()
     return parsedEvents
   }
 
-  async importedEvent({id}: ImportedEventParams): Promise<Event> {
+  async importedEvent({id}: ImportedEventParams): Promise<EventFromSource> {
     const parsedEvents = await this.getEvents()
 
     const event = parsedEvents.find(e => e.id === id)

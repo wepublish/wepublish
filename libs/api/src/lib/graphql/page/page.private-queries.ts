@@ -6,6 +6,7 @@ import {NotFound} from '../../error'
 import {authorise} from '../permissions'
 import {CanGetPage, CanGetPagePreviewLink, CanGetPages} from '@wepublish/permissions/api'
 import {getPages} from './page.queries'
+import {SortOrder} from '@wepublish/utils/api'
 
 export const getPageById = (
   id: string,
@@ -46,7 +47,7 @@ export const getPagePreviewLink = async (
 export const getAdminPages = (
   filter: Partial<PageFilter>,
   sortedField: PageSort,
-  order: 1 | -1,
+  order: SortOrder,
   cursorId: string | null,
   skip: number,
   take: number,
