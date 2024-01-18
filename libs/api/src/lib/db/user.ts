@@ -21,8 +21,8 @@ export const generateSecureRandomPassword = (length: number) => {
 
   for (let i = 0; i < length; i++) {
     const randomValue = randomBytes(1)[0]
-    const index = Math.floor((randomValue / 256) * characterCount)
-    password += characters[index]
+    const index = randomValue % characterCount
+    password += characters.charAt(index)
   }
 
   return password
