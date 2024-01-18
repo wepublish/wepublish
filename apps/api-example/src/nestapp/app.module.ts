@@ -25,7 +25,8 @@ import {
   SettingModule,
   StripeCheckoutPaymentProvider,
   StripePaymentProvider,
-  BexioPaymentProvider
+  BexioPaymentProvider,
+  PayrexxFactory
 } from '@wepublish/api'
 import {ApiModule, PrismaModule, PrismaService} from '@wepublish/nest-modules'
 import bodyParser from 'body-parser'
@@ -138,13 +139,20 @@ import {loadAsync} from 'node-yaml-config'
                 })
               )
             } else if (paymentProvider.type === 'payrexx') {
+              const payrexxFactory = new PayrexxFactory({
+                baseUrl: 'https://api.payrexx.com/v1.0/',
+                instance: paymentProvider.instanceName,
+                secret: paymentProvider.instanceAPISecret
+              })
+
               paymentProviders.push(
                 new PayrexxPaymentProvider({
                   id: paymentProvider.id,
                   name: paymentProvider.name,
                   offSessionPayments: paymentProvider.offSessionPayments,
-                  instanceName: paymentProvider.instanceName,
-                  instanceAPISecret: paymentProvider.instanceAPISecret,
+                  transactionClient: payrexxFactory.transactionClient,
+                  gatewayClient: payrexxFactory.gatewayClient,
+                  webhookApiKey: paymentProvider.webhookApiKey,
                   psp: paymentProvider.psp,
                   pm: paymentProvider.pm,
                   vatRate: paymentProvider.vatRate,
@@ -195,7 +203,6 @@ import {loadAsync} from 'node-yaml-config'
             }
           }
         }
-
         return {paymentProviders}
       },
       inject: [ConfigService, PrismaService],

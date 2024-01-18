@@ -214,6 +214,7 @@ export interface CreatePaymentWithProvider {
   saveCustomer: boolean
   successURL?: string
   failureURL?: string
+  user?: User
 }
 
 const createOptionalsArray = <Data, Attribute extends keyof Data, Key extends Data[Attribute]>(
@@ -991,7 +992,8 @@ export async function contextFromRequest(
       invoice,
       saveCustomer,
       failureURL,
-      successURL
+      successURL,
+      user
     }: CreatePaymentWithProvider): Promise<Payment> {
       const paymentMethod = await loaders.activePaymentMethodsByID.load(paymentMethodID)
       const paymentProvider = paymentProviders.find(
@@ -1010,12 +1012,22 @@ export async function contextFromRequest(
         }
       })
 
+      const customer = user
+        ? await prisma.paymentProviderCustomer.findFirst({
+            where: {
+              userId: user.id,
+              paymentProviderID: paymentMethod.paymentProviderID
+            }
+          })
+        : null
+
       const intent = await paymentProvider.createIntent({
         paymentID: payment.id,
         invoice,
         saveCustomer,
         successURL,
-        failureURL
+        failureURL,
+        customerID: customer?.customerID
       })
 
       const updatedPayment = await prisma.payment.update({
