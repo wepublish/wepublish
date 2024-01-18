@@ -107,6 +107,10 @@ jobs:
               SLACK_DEV_MAIL_WEBHOOK_URL: 'SLACK_DEV_MAIL_WEBHOOK_URL'
               DEFAULT_FROM_ADDRESS: 'dev@wepublish.ch'
               DEFAULT_REPLY_TO_ADDRESS: 'dev@wepublish.ch'
+              PAYREXX_INSTANCE_NAME: wepublish-sandbox
+              PAYREXX_PAYMENT_METHODS: visa,mastercard
+              PAYREXX_API_SECRET: ${{ secrets.PAYREXX_API_SECRET }}
+              PAYREXX_WEBHOOK_SECRET: ${{ secrets.PAYREXX_WEBHOOK_SECRET }}
           editor:
             env:
               PEER_BY_DEFAULT: "true"
