@@ -293,6 +293,31 @@ export function SubscriptionListFilter({
         </Group>
         <Group style={formInputStyle}>
           <DateRangePicker
+            key={`cancellation-date-${resetFilterKey}`}
+            placeholder={t('userSubscriptionEdit.deactivation.cancellation')}
+            block
+            placement="auto"
+            onChange={value => {
+              if (value && value[0] && value[1]) {
+                updateFilter({
+                  cancellationDateFrom: {
+                    date: value[0]?.toISOString(),
+                    comparison: DateFilterComparison.Greater
+                  },
+                  cancellationDateTo: {
+                    date: value[1]?.toISOString(),
+                    comparison: DateFilterComparison.Lower
+                  }
+                })
+              }
+            }}
+            onClean={() =>
+              updateFilter({cancellationDateFrom: undefined, cancellationDateTo: undefined})
+            }
+          />
+        </Group>
+        <Group style={formInputStyle}>
+          <DateRangePicker
             key={`paid-until-${resetFilterKey}`}
             placeholder={t('userSubscriptionEdit.paidUntil')}
             block
