@@ -6,6 +6,6 @@ export type BuilderNavbarProps = PropsWithChildren<
   Pick<QueryResult<NavigationListQuery>, 'data' | 'loading' | 'error'> & {
     className?: string
     slug: string
-    categorySlugs: string[]
+    categorySlugs: string[][]
   }
 >

@@ -11,21 +11,35 @@ const navigation = {
   links: [
     {
       __typename: 'PageNavigationLink',
-      label: 'Home',
+      label: 'Gesellschaft',
       page: {
         url: '/'
       }
     },
     {
       __typename: 'ArticleNavigationLink',
-      label: 'Artikel',
+      label: 'Politik',
+      article: {
+        url: '/a/abcd'
+      }
+    },
+    {
+      __typename: 'ArticleNavigationLink',
+      label: 'Kultur',
+      article: {
+        url: '/a/abcd'
+      }
+    },
+    {
+      __typename: 'ArticleNavigationLink',
+      label: 'Tsüri-News',
       article: {
         url: '/a/abcd'
       }
     },
     {
       __typename: 'ExternalNavigationLink',
-      label: 'Google',
+      label: 'Was lauft?',
       url: 'https://google.com'
     }
   ]
@@ -34,16 +48,100 @@ const navigation = {
 const navigations = [
   navigation,
   {
-    ...navigation,
     id: '1234-1234',
-    key: 'categories',
-    name: 'Kategorien'
+    key: 'guides',
+    name: 'Guides',
+    links: [
+      {
+        __typename: 'PageNavigationLink',
+        label: 'Agenda',
+        page: {
+          url: '/'
+        }
+      },
+      {
+        __typename: 'ExternalNavigationLink',
+        label: 'Denkmal.org',
+        url: 'https://google.com'
+      },
+      {
+        __typename: 'ArticleNavigationLink',
+        label: 'Tsüri Guide',
+        article: {
+          url: '/a/abcd'
+        }
+      }
+    ]
   },
   {
-    ...navigation,
+    id: '12345-12345',
+    key: 'fokusthema',
+    name: 'Fokusthema',
+    links: [
+      {
+        __typename: 'PageNavigationLink',
+        label: 'Mobilität',
+        page: {
+          url: '/'
+        }
+      },
+      {
+        __typename: 'ArticleNavigationLink',
+        label: 'Bildung',
+        article: {
+          url: '/a/abcd'
+        }
+      },
+      {
+        __typename: 'ArticleNavigationLink',
+        label: 'Konsum',
+        article: {
+          url: '/a/abcd'
+        }
+      },
+      {
+        __typename: 'ArticleNavigationLink',
+        label: 'Archive',
+        article: {
+          url: '/a/abcd'
+        }
+      }
+    ]
+  },
+  {
     id: '12345-12345',
     key: 'about',
-    name: 'Über Uns'
+    name: 'Über Uns',
+    links: [
+      {
+        __typename: 'PageNavigationLink',
+        label: 'Team',
+        page: {
+          url: '/team/'
+        }
+      },
+      {
+        __typename: 'PageNavigationLink',
+        label: 'Über Uns',
+        page: {
+          url: '/about-us/'
+        }
+      },
+      {
+        __typename: 'PageNavigationLink',
+        label: 'Kontakt',
+        article: {
+          url: '/contact/'
+        }
+      },
+      {
+        __typename: 'PageNavigationLink',
+        label: 'Jobs',
+        article: {
+          url: '/jobs/'
+        }
+      }
+    ]
   }
 ] as Navigation[]
 
@@ -59,7 +157,7 @@ export const Default = {
     },
     loading: false,
     slug: 'main',
-    categorySlugs: ['categories', 'about']
+    categorySlugs: [['guides', 'fokusthema'], ['about']]
   }
 }
 
@@ -70,7 +168,7 @@ export const WithLoading = {
     },
     loading: true,
     slug: 'main',
-    categorySlugs: ['categories', 'about']
+    categorySlugs: [['guides', 'fokusthema'], ['about']]
   }
 }
 
@@ -84,7 +182,7 @@ export const WithError = {
       errorMessage: 'Foobar'
     }),
     slug: 'main',
-    categorySlugs: ['categories', 'about']
+    categorySlugs: [['guides', 'fokusthema'], ['about']]
   }
 }
 
@@ -95,7 +193,7 @@ export const WithClassName = {
     },
     className: 'extra-classname',
     slug: 'main',
-    categorySlugs: ['categories', 'about']
+    categorySlugs: [['guides', 'fokusthema'], ['about']]
   }
 }
 
@@ -108,7 +206,7 @@ export const WithEmotion = {
       background-color: #eee;
     `,
     slug: 'main',
-    categorySlugs: ['categories', 'about']
+    categorySlugs: [['guides', 'fokusthema'], ['about']]
   }
 }
 

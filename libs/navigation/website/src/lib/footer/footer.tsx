@@ -1,66 +1,218 @@
-import {Container, css, styled} from '@mui/material'
+import {Theme, Toolbar, css, styled, useTheme} from '@mui/material'
+import {FullNavigationFragment} from '@wepublish/website/api'
 import {BuilderFooterProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {navigationLinkToUrl} from '../link-to-url'
 
 export const FooterWrapper = styled('footer')`
-  align-self: flex-end;
-  color: ${({theme}) => theme.palette.secondary.contrastText};
-  background-color: ${({theme}) => theme.palette.secondary.main};
-  padding: ${({theme}) => theme.spacing(2)};
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
 `
 
-export const FooterInnerWrapper = styled(Container)`
+export const FooterInnerWrapper = styled(Toolbar)`
   display: grid;
-  gap: ${({theme}) => theme.spacing(4)};
-  justify-content: center;
   align-items: center;
+  grid-auto-flow: column;
+  justify-content: space-between;
+  justify-items: center;
 
   ${({theme}) => css`
     ${theme.breakpoints.up('md')} {
-      justify-content: space-between;
-      grid-template-columns: auto auto;
+      grid-auto-columns: 1fr;
     }
   `}
 `
 
-export const FooterLinks = styled('nav')`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  column-gap: ${({theme}) => theme.spacing(4)};
-  row-gap: ${({theme}) => theme.spacing(2)};
+export const FooterMain = styled('div')`
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-self: start;
+  gap: ${({theme}) => theme.spacing(2)};
+`
 
-  ${({theme}) => css`
-    ${theme.breakpoints.up('md')} {
-      display: flex;
-      flex-flow: row wrap;
+export const FooterMainItems = styled('div')<{show: boolean}>`
+  display: none;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  gap: ${({theme}) => theme.spacing(2)};
+  font-weight: ${({theme}) => theme.typography.fontWeightMedium};
+  font-size: 1.125rem;
+  text-transform: uppercase;
+
+  ${({theme, show}) => css`
+    ${theme.breakpoints.up('sm')} {
+      display: ${show ? 'none' : 'grid'};
     }
   `}
 `
 
-export function Footer({className, slug, data, loading, error, children}: BuilderFooterProps) {
-  const {
-    elements: {Link}
-  } = useWebsiteBuilder()
+export function Footer({
+  className,
+  children,
+  categorySlugs,
+  slug,
+  data,
+  loading,
+  error
+}: BuilderFooterProps) {
+  const mainItems = data?.navigations?.find(({key}) => key === slug)
 
-  const navigation = data?.navigations?.find(navigation => navigation.key === slug)
+  const categories = categorySlugs.map(categorySlugArray => {
+    return categorySlugArray.reduce((navigations, categorySlug) => {
+      const navItem = data?.navigations?.find(({key}) => key === categorySlug)
+
+      if (navItem) {
+        navigations.push(navItem)
+      }
+
+      return navigations
+    }, [] as FullNavigationFragment[])
+  })
 
   return (
     <FooterWrapper className={className}>
-      <FooterInnerWrapper>
-        {children}
+      <NavPaper main={mainItems} categories={categories} />
+    </FooterWrapper>
+  )
+}
 
-        <FooterLinks>
-          {navigation?.links.map((link, index) => {
+const NavPaperWrapper = styled('div')`
+  padding: ${({theme}) => theme.spacing(2.5)};
+  background-color: ${({theme}) => theme.palette.grey[800]};
+  color: ${({theme}) => theme.palette.primary.contrastText};
+  display: grid;
+  gap: ${({theme}) => theme.spacing(3)};
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  transform: translateY(100%);
+  overflow: hidden;
+  grid-row-gap: ${({theme}) => theme.spacing(8)};
+
+  ${({theme}) => css`
+    ${theme.breakpoints.up('md')} {
+      gap: ${theme.spacing(6)};
+      grid-row-gap: ${theme.spacing(12)};
+      grid-template-columns: 1fr 1fr;
+      padding: calc(100% / 12) calc(100% / 6);
+    }
+  `}
+`
+
+const NavPaperCategory = styled('div')`
+  display: grid;
+  gap: ${({theme}) => theme.spacing(1)};
+  grid-auto-rows: max-content;
+`
+
+const Name = styled('span')`
+  text-transform: uppercase;
+  font-weight: 300;
+  font-size: 14px;
+`
+const Separator = styled('div')`
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 50%;
+  background-color: ${({theme}) => theme.palette.common.black};
+  z-index: -1;
+  transform: translateY(-2rem);
+`
+
+const LinksGroup = styled('div')`
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: ${({theme}) => theme.spacing(3)};
+
+  ${({theme}) => css`
+    ${theme.breakpoints.up('sm')} {
+      grid-template-columns: 1fr 1fr;
+    }
+  `}
+`
+
+const navPaperLinkStyling = (theme: Theme) => css`
+  ${theme.breakpoints.up('sm')} {
+    border-bottom: 0;
+  }
+`
+
+const NavPaperCategoryLinks = styled('div')`
+  display: grid;
+  font-weight: ${({theme}) => theme.typography.fontWeightMedium};
+  font-size: ${({theme}) => theme.typography.h6.fontSize};
+`
+
+const NavPaperMainLinks = styled(NavPaperCategoryLinks)`
+  gap: ${({theme}) => theme.spacing(1)};
+`
+
+const NavPaper = ({
+  main,
+  categories
+}: {
+  main: FullNavigationFragment | null | undefined
+  categories: FullNavigationFragment[][]
+}) => {
+  const {
+    elements: {Link, H4, H6}
+  } = useWebsiteBuilder()
+  const theme = useTheme()
+
+  return (
+    <NavPaperWrapper>
+      {!!main?.links.length && (
+        <NavPaperMainLinks>
+          {main.links.map((link, index) => {
             const url = navigationLinkToUrl(link)
 
             return (
               <Link href={url} key={index} color="inherit" underline="none">
-                {link.label}
+                <H4>{link.label}</H4>
               </Link>
             )
           })}
-        </FooterLinks>
-      </FooterInnerWrapper>
-    </FooterWrapper>
+        </NavPaperMainLinks>
+      )}
+
+      {!!categories.length && (
+        <>
+          {categories.map((categoryArray, arrayIndex) => (
+            <LinksGroup key={`category-group-${arrayIndex}`}>
+              {/* Render Separator for every array except the first one */}
+              {arrayIndex > 0 && <Separator />}
+              {categoryArray.map(nav => (
+                <NavPaperCategory key={nav.id}>
+                  <Name>{nav.name}</Name>
+
+                  <NavPaperCategoryLinks>
+                    {nav.links?.map((link, index) => {
+                      const url = navigationLinkToUrl(link)
+
+                      return (
+                        <Link
+                          href={url}
+                          key={index}
+                          color="inherit"
+                          underline="none"
+                          css={navPaperLinkStyling(theme)}>
+                          <H6>{link.label}</H6>
+                        </Link>
+                      )
+                    })}
+                  </NavPaperCategoryLinks>
+                </NavPaperCategory>
+              ))}
+            </LinksGroup>
+          ))}
+        </>
+      )}
+    </NavPaperWrapper>
   )
 }

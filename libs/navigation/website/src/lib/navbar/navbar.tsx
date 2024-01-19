@@ -16,7 +16,7 @@ export const NavbarWrapper = styled('nav')`
 const appBarStyles = (theme: Theme, isMenuOpen: boolean) =>
   isMenuOpen
     ? css`
-        background-color: ${theme.palette.primary.main};
+        background-color: ${theme.palette.background.paper};
         color: ${theme.palette.primary.contrastText};
       `
     : null
@@ -43,7 +43,7 @@ export const NavbarMain = styled('div')`
   gap: ${({theme}) => theme.spacing(2)};
 `
 
-export const NavbarMainItems = styled('div')`
+export const NavbarMainItems = styled('div')<{show: boolean}>`
   display: none;
   grid-auto-flow: column;
   grid-auto-columns: max-content;
@@ -52,11 +52,18 @@ export const NavbarMainItems = styled('div')`
   font-size: 1.125rem;
   text-transform: uppercase;
 
-  ${({theme}) => css`
+  ${({theme, show}) => css`
     ${theme.breakpoints.up('sm')} {
-      display: grid;
+      display: ${show ? 'none' : 'grid'};
     }
   `}
+`
+
+const IconButtonWrapper = styled('div')`
+  background-color: #e91e63;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `
 
 export function Navbar({
@@ -76,15 +83,18 @@ export function Navbar({
   const toggleMenu = useCallback(() => setMenuOpen(isOpen => !isOpen), [])
 
   const mainItems = data?.navigations?.find(({key}) => key === slug)
-  const categories = categorySlugs.reduce((navigations, categorySlug) => {
-    const navItem = data?.navigations?.find(({key}) => key === categorySlug)
 
-    if (navItem) {
-      navigations.push(navItem)
-    }
+  const categories = categorySlugs.map(categorySlugArray => {
+    return categorySlugArray.reduce((navigations, categorySlug) => {
+      const navItem = data?.navigations?.find(({key}) => key === categorySlug)
 
-    return navigations
-  }, [] as FullNavigationFragment[])
+      if (navItem) {
+        navigations.push(navItem)
+      }
+
+      return navigations
+    }, [] as FullNavigationFragment[])
+  })
 
   return (
     <NavbarWrapper className={className}>
@@ -95,17 +105,14 @@ export function Navbar({
         css={appBarStyles(theme, isMenuOpen)}>
         <NavbarInnerWrapper>
           <NavbarMain>
-            <IconButton
-              size="large"
-              color={isMenuOpen ? 'inherit' : 'primary'}
-              edge="start"
-              aria-label="Menu"
-              onClick={toggleMenu}>
-              {!isMenuOpen && <MdMenu />}
-              {isMenuOpen && <MdClose />}
-            </IconButton>
+            <IconButtonWrapper>
+              <IconButton size="large" color="secondary" aria-label="Menu" onClick={toggleMenu}>
+                {!isMenuOpen && <MdMenu />}
+                {isMenuOpen && <MdClose />}
+              </IconButton>
+            </IconButtonWrapper>
 
-            <NavbarMainItems>
+            <NavbarMainItems show={isMenuOpen}>
               {mainItems?.links?.map((link, index) => {
                 const url = navigationLinkToUrl(link)
 
@@ -136,7 +143,7 @@ export function Navbar({
 
 export const NavPaperWrapper = styled('div')`
   padding: ${({theme}) => theme.spacing(2.5)};
-  background-color: ${({theme}) => theme.palette.primary.main};
+  background-color: ${({theme}) => theme.palette.background.paper};
   color: ${({theme}) => theme.palette.primary.contrastText};
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};
@@ -145,29 +152,54 @@ export const NavPaperWrapper = styled('div')`
   left: 0;
   right: 0;
   transform: translateY(100%);
-`
-
-export const NavPaperCategoryList = styled('div')`
-  display: grid;
-  gap: ${({theme}) => theme.spacing(3)};
 
   ${({theme}) => css`
-    ${theme.breakpoints.up('sm')} {
-      grid-auto-flow: column;
-      grid-auto-columns: max-content;
+    ${theme.breakpoints.up('md')} {
+      gap: ${theme.spacing(6)};
+      grid-row-gap: ${theme.spacing(12)};
+      grid-template-columns: 1fr 1fr;
+      padding-left: calc(100% / 6);
+      padding-right: calc(100% / 6);
     }
   `}
 `
 
 export const NavPaperCategory = styled('div')`
   display: grid;
-  gap: ${({theme}) => theme.spacing(2)};
+  gap: ${({theme}) => theme.spacing(1)};
   grid-auto-rows: max-content;
 `
 
-const navPaperLinkStyling = (theme: Theme) => css`
-  border-bottom: 2px solid currentColor;
+export const Name = styled('span')`
+  text-transform: uppercase;
+  font-weight: 300;
+  font-size: 14px;
+`
+export const Separator = styled('div')`
+  width: 100%;
+  height: 1px;
+  background-color: white;
 
+  ${({theme}) => css`
+    ${theme.breakpoints.up('sm')} {
+      display: none;
+    }
+  `}
+`
+
+export const LinksGroup = styled('div')`
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: ${({theme}) => theme.spacing(3)};
+
+  ${({theme}) => css`
+    ${theme.breakpoints.up('sm')} {
+      grid-template-columns: 1fr 1fr;
+    }
+  `}
+`
+
+const navPaperLinkStyling = (theme: Theme) => css`
   ${theme.breakpoints.up('sm')} {
     border-bottom: 0;
   }
@@ -175,18 +207,12 @@ const navPaperLinkStyling = (theme: Theme) => css`
 
 export const NavPaperCategoryLinks = styled('div')`
   display: grid;
-  gap: ${({theme}) => theme.spacing(2)};
-  text-transform: uppercase;
   font-weight: ${({theme}) => theme.typography.fontWeightMedium};
   font-size: ${({theme}) => theme.typography.h6.fontSize};
 `
 
 export const NavPaperMainLinks = styled(NavPaperCategoryLinks)`
-  ${({theme}) => css`
-    ${theme.breakpoints.up('sm')} {
-      display: none;
-    }
-  `}
+  gap: ${({theme}) => theme.spacing(1)};
 `
 
 const NavPaper = ({
@@ -195,11 +221,11 @@ const NavPaper = ({
   closeMenu
 }: {
   main: FullNavigationFragment | null | undefined
-  categories: FullNavigationFragment[]
+  categories: FullNavigationFragment[][]
   closeMenu: () => void
 }) => {
   const {
-    elements: {Link, H5}
+    elements: {Link, H4, H6}
   } = useWebsiteBuilder()
   const theme = useTheme()
 
@@ -212,7 +238,7 @@ const NavPaper = ({
 
             return (
               <Link href={url} key={index} color="inherit" underline="none" onClick={closeMenu}>
-                {link.label}
+                <H4>{link.label}</H4>
               </Link>
             )
           })}
@@ -220,31 +246,37 @@ const NavPaper = ({
       )}
 
       {!!categories.length && (
-        <NavPaperCategoryList>
-          {categories.map(nav => (
-            <NavPaperCategory key={nav.id}>
-              <H5 component="div">{nav.name}</H5>
+        <>
+          {categories.map((categoryArray, arrayIndex) => (
+            <LinksGroup key={`category-group-${arrayIndex}`}>
+              {/* Render Separator for every array except the first one */}
+              {arrayIndex > 0 && <Separator />}
+              {categoryArray.map(nav => (
+                <NavPaperCategory key={nav.id}>
+                  <Name>{nav.name}</Name>
 
-              <NavPaperCategoryLinks>
-                {nav.links?.map((link, index) => {
-                  const url = navigationLinkToUrl(link)
+                  <NavPaperCategoryLinks>
+                    {nav.links?.map((link, index) => {
+                      const url = navigationLinkToUrl(link)
 
-                  return (
-                    <Link
-                      href={url}
-                      key={index}
-                      color="inherit"
-                      underline="none"
-                      css={navPaperLinkStyling(theme)}
-                      onClick={closeMenu}>
-                      {link.label}
-                    </Link>
-                  )
-                })}
-              </NavPaperCategoryLinks>
-            </NavPaperCategory>
+                      return (
+                        <Link
+                          href={url}
+                          key={index}
+                          color="inherit"
+                          underline="none"
+                          css={navPaperLinkStyling(theme)}
+                          onClick={closeMenu}>
+                          <H6>{link.label}</H6>
+                        </Link>
+                      )
+                    })}
+                  </NavPaperCategoryLinks>
+                </NavPaperCategory>
+              ))}
+            </LinksGroup>
           ))}
-        </NavPaperCategoryList>
+        </>
       )}
     </NavPaperWrapper>
   )

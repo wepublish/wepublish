@@ -266,7 +266,7 @@
     "mapped-replacer": "^1.2.1",
     "matomo-tracker": "^3.0.0-beta.0",
     "nanoid": "^2.1.7",
-    "next": "~13.5.1",
+    "next": "~13.4.7",
     "node-cache": "^5.1.2",
     "node-fetch": "2.6.7",
     "openid-client": "^3.14.0",
