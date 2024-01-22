@@ -1,7 +1,6 @@
 import fs from 'fs'
 import YAML from 'yaml'
 import {MappedReplacer} from 'mapped-replacer'
-import {addToStringReplaceMap} from '../../../libs/payment/api/src/lib/payment-provider/bexio/bexio-utils'
 
 type General = {
   apolloPlayground: boolean
@@ -99,11 +98,11 @@ export async function readConfig(path: string): Promise<Config> {
   const file = fs.readFileSync(path, 'utf8')
   const replacers = extractReplacer(file)
   for (const replacer of replacers) {
-    let insertValue = process.env[replacer]
+    const insertValue = process.env[replacer]
     if (typeof insertValue === 'undefined') {
       throw new Error(`In config yaml used envoirment variable <${replacer}> not definded! `)
     }
-    stringReplaceMap.addRule(`$\{${replacer}\}`, `${insertValue}`)
+    stringReplaceMap.addRule(`$\{${replacer}}`, `${insertValue}`)
   }
   return YAML.parse(stringReplaceMap.replace(file))
 }
