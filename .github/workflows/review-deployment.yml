@@ -111,6 +111,7 @@ jobs:
               PAYREXX_PAYMENT_METHODS: visa,mastercard
               PAYREXX_API_SECRET: ${{ secrets.PAYREXX_API_SECRET }}
               PAYREXX_WEBHOOK_SECRET: ${{ secrets.PAYREXX_WEBHOOK_SECRET }}
+              CONFIG_FILE_PATH: '/home/node/wepublish/apps/api-example/src/default.yaml'
           editor:
             env:
               PEER_BY_DEFAULT: "true"
