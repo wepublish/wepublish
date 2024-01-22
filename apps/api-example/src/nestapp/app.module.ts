@@ -35,6 +35,7 @@ import Mailgun from 'mailgun.js'
 import {URL} from 'url'
 import {SlackMailProvider} from '../app/slack-mail-provider'
 import {readConfig} from '../readConfig'
+import {EventModule} from '@wepublish/event/api'
 
 @Global()
 @Module({
@@ -215,6 +216,7 @@ import {readConfig} from '../readConfig'
     PermissionModule,
     ConsentModule,
     SettingModule,
+    EventModule,
     EventsImportModule.registerAsync({
       useFactory: (agendaBasel: AgendaBaselService, kulturZueri: KulturZueriService) => [
         agendaBasel,

@@ -32,6 +32,7 @@ import {GraphQLPeer} from './peer'
 import {GraphQLPublicComment} from './comment/comment'
 import {AuthSessionType} from '@wepublish/authentication/api'
 import {getPublicCommentsForItemById} from './comment/comment.public-queries'
+import {SortOrder} from '@wepublish/utils/api'
 
 export const GraphQLArticleFilter = new GraphQLInputObjectType({
   name: 'ArticleFilter',
@@ -348,7 +349,7 @@ export const GraphQLPublicArticle: GraphQLObjectType<PublicArticle, Context> =
               id,
               userId,
               null,
-              -1,
+              SortOrder.Descending,
               commentRatingSystemAnswers,
               comment
             )

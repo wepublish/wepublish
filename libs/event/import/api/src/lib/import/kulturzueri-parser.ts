@@ -3,7 +3,7 @@ import {isBefore, startOfDay} from 'date-fns'
 import fetch from 'node-fetch'
 import {htmlToSlate} from 'slate-serializers'
 import xml2js from 'xml2js'
-import {Event} from './events-import.model'
+import {EventFromSource} from './events-import.model'
 import {XMLEventType} from './xmlTypes'
 
 export const getFallbackDesc = (source: string) => `<p>Event imported from ${source}</p>`
@@ -25,7 +25,7 @@ export async function getXMLfromURL(url: string) {
 export const fetchAndParseKulturzueri = async (
   urlToQuery: string,
   source: string
-): Promise<Event[]> => {
+): Promise<EventFromSource[]> => {
   const eventsParsedXML = await getXMLfromURL(urlToQuery)
   const events = eventsParsedXML['kdz:exportActivities']?.Activities[0]?.Activity
 

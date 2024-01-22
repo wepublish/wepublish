@@ -12,6 +12,7 @@ import {ArticleFilter, ArticleSort, ArticleWithRevisions} from '../../db/article
 import {NotAuthorisedError, NotFound, UserInputError} from '../../error'
 import {authorise} from '../permissions'
 import {getArticles} from './article.queries'
+import {SortOrder} from '@wepublish/utils/api'
 
 export const getArticleById = async (
   id: string,
@@ -64,7 +65,7 @@ export const getArticlePreviewLink = async (
 export const getAdminArticles = async (
   filter: Partial<ArticleFilter>,
   sortedField: ArticleSort,
-  order: 1 | -1,
+  order: SortOrder,
   cursorId: string | null,
   skip: number,
   take: number,

@@ -7,6 +7,7 @@ import {authorise} from '../permissions'
 import {CanGetSubscription, CanGetSubscriptions, CanGetUsers} from '@wepublish/permissions/api'
 import {createSubscriptionFilter, getSubscriptions} from './subscription.queries'
 import {format, lastDayOfMonth, startOfMonth, subMonths} from 'date-fns'
+import {SortOrder} from '@wepublish/utils/api'
 
 export const getSubscriptionById = (
   id: string,
@@ -31,7 +32,7 @@ export const getSubscriptionById = (
 export const getAdminSubscriptions = (
   filter: Partial<SubscriptionFilter>,
   sortedField: SubscriptionSort,
-  order: 1 | -1,
+  order: SortOrder,
   cursorId: string | null,
   skip: number,
   take: number,

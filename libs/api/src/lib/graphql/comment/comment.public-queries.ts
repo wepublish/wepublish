@@ -9,6 +9,7 @@ import {
 import {ascend, descend, sortWith} from 'ramda'
 import {Context} from '../../context'
 import {CalculatedRating, PublicCommentSort} from '../../db/comment'
+import {SortOrder} from '@wepublish/utils/api'
 
 export const mapCommentToPublicComment = (comment: Comment & {revisions: CommentsRevisions[]}) => {
   const {revisions} = comment
@@ -82,7 +83,7 @@ export const getPublicCommentsForItemById = async (
   itemId: string,
   userId: string | null,
   sort: PublicCommentSort | null,
-  order: 1 | -1,
+  order: SortOrder,
   commentRatingSystemAnswers: Context['loaders']['commentRatingSystemAnswers'],
   comment: PrismaClient['comment']
 ) => {
@@ -112,7 +113,7 @@ export const getPublicCommentsForItemById = async (
   }))
 
   if (sort === PublicCommentSort.Rating) {
-    if (order === 1) {
+    if (order === SortOrder.Ascending) {
       return sortCommentsByRating(ascend)(commentsWithRating)
     }
 

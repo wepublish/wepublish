@@ -32,14 +32,14 @@ export class PayrexxClient {
   }
 
   private buildBaseUrl(path: string) {
-    return `${this.baseUrl}${path}'?instance='${this.instance}`
+    return `${this.baseUrl}${path}?instance=${this.instance}`
   }
 
   async get<Data = any>(path: string, queryParams = {}): Promise<PayrexxResponse<Data>> {
     const method = 'GET',
       queryStrSigned = this.buildSignedQueryString(queryParams),
       baseUrl = `${this.buildBaseUrl(path)}&${queryStrSigned}`
-    console.log({message: 'Payrexx GET request issued', path, queryParams})
+    //console.log({message: 'Payrexx GET request issued', path, queryParams})
     const response = await fetch(baseUrl, {method})
     return await this.validateResponse(response)
   }
@@ -48,7 +48,7 @@ export class PayrexxClient {
     const method = 'POST',
       body = this.buildSignedQueryString(queryParams),
       baseUrl = this.buildBaseUrl(path)
-    console.log({message: 'Payrexx POST request issued', path, queryParams})
+    //console.log({message: 'Payrexx POST request issued', path, queryParams})
     const response = await fetch(baseUrl, {method, body})
     return await this.validateResponse(response)
   }
