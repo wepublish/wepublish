@@ -720,7 +720,8 @@
       "userConsents": "Consentement de l'utilisateur",
       "userRoles": "Rôles d'utilisateur/utilisatrice",
       "users": "Utilisateur/Utilisatrices",
-      "usersAndMembers": "Utilisateur & Abonnements"
+      "usersAndMembers": "Utilisateur & Abonnements",
+      "authorTags": "Tags"
     },
     "navigation": {
       "overview": {

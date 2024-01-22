@@ -17,7 +17,8 @@ export const GraphQLTagType = new GraphQLEnumType({
   name: 'TagType',
   values: {
     Comment: {value: TagType.Comment},
-    Event: {value: TagType.Event}
+    Event: {value: TagType.Event},
+    Author: {value: TagType.Author}
   }
 })
 

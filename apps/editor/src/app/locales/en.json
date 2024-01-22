@@ -757,7 +757,8 @@
       "userConsents": "User Consents",
       "userRoles": "User Roles",
       "users": "Users",
-      "usersAndMembers": "Users & Subscriptions"
+      "usersAndMembers": "Users & Subscriptions",
+      "authorTags": "Tags"
     },
     "navigation": {
       "overview": {

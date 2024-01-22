@@ -2447,6 +2447,7 @@ export enum TagSort {
 }
 
 export enum TagType {
+  Author = 'Author',
   Comment = 'Comment',
   Event = 'Event'
 }
