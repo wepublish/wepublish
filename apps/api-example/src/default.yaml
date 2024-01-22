@@ -41,6 +41,18 @@ paymentProviders:
       - 'invoice'
       - 'paypal'
     vatRate: 8.1 # Required for payrexx
+  - type: stripe
+    id: stripe
+    name: Stripe
+    offSessionPayments: true
+    secretKey: key
+    webhookEndpointSecret: wh_secret
+  - type: stripe_checkout
+    id: stripe-checkout
+    name: Stripe checkout
+    offSessionPayments: false
+    secretKey: key
+    webhookEndpointSecret: wh_secret
   - type: payrexx-subscription
     id: payrexx-subscription
     name: payrexx-subscription
