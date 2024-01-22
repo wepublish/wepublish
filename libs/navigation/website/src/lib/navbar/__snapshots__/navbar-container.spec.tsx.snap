@@ -3,19 +3,19 @@
 exports[`Navbar Container should render Default 1`] = `
 <DocumentFragment>
   <nav
-    class="css-1xe741k-NavbarWrapper ei6evl211"
+    class="css-1xe741k-NavbarWrapper ei6evl212"
   >
     <header
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-a5d5mw-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl210 css-15e8tal-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl211 css-15e8tal-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
-          class="css-kfwxas-NavbarMain ei6evl29"
+          class="css-kfwxas-NavbarMain ei6evl210"
         >
           <div
-            class="css-9l1kex-IconButtonWrapper ei6evl27"
+            class="css-9l1kex-IconButtonWrapper ei6evl28"
           >
             <button
               aria-label="Menu"
@@ -46,7 +46,7 @@ exports[`Navbar Container should render Default 1`] = `
             </button>
           </div>
           <div
-            class="css-pd0s4t-NavbarMainItems ei6evl28"
+            class="css-pd0s4t-NavbarMainItems ei6evl29"
           />
         </div>
       </div>
@@ -58,19 +58,19 @@ exports[`Navbar Container should render Default 1`] = `
 exports[`Navbar Container should render WithClassName 1`] = `
 <DocumentFragment>
   <nav
-    class="extra-classname css-1xe741k-NavbarWrapper ei6evl211"
+    class="extra-classname css-1xe741k-NavbarWrapper ei6evl212"
   >
     <header
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-a5d5mw-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl210 css-15e8tal-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl211 css-15e8tal-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
-          class="css-kfwxas-NavbarMain ei6evl29"
+          class="css-kfwxas-NavbarMain ei6evl210"
         >
           <div
-            class="css-9l1kex-IconButtonWrapper ei6evl27"
+            class="css-9l1kex-IconButtonWrapper ei6evl28"
           >
             <button
               aria-label="Menu"
@@ -101,7 +101,7 @@ exports[`Navbar Container should render WithClassName 1`] = `
             </button>
           </div>
           <div
-            class="css-pd0s4t-NavbarMainItems ei6evl28"
+            class="css-pd0s4t-NavbarMainItems ei6evl29"
           />
         </div>
       </div>
@@ -113,19 +113,19 @@ exports[`Navbar Container should render WithClassName 1`] = `
 exports[`Navbar Container should render WithEmotion 1`] = `
 <DocumentFragment>
   <nav
-    class="css-1xe741k-NavbarWrapper ei6evl211"
+    class="css-1xe741k-NavbarWrapper ei6evl212"
   >
     <header
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-a5d5mw-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl210 css-15e8tal-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl211 css-15e8tal-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
-          class="css-kfwxas-NavbarMain ei6evl29"
+          class="css-kfwxas-NavbarMain ei6evl210"
         >
           <div
-            class="css-9l1kex-IconButtonWrapper ei6evl27"
+            class="css-9l1kex-IconButtonWrapper ei6evl28"
           >
             <button
               aria-label="Menu"
@@ -156,7 +156,7 @@ exports[`Navbar Container should render WithEmotion 1`] = `
             </button>
           </div>
           <div
-            class="css-pd0s4t-NavbarMainItems ei6evl28"
+            class="css-pd0s4t-NavbarMainItems ei6evl29"
           />
         </div>
       </div>

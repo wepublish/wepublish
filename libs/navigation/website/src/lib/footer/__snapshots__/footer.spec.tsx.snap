@@ -6,10 +6,10 @@ exports[`Footer should render Default 1`] = `
     class="css-dl99x8-FooterWrapper enubu9x10"
   >
     <div
-      class="css-tidgsi-NavPaperWrapper enubu9x6"
+      class="css-1fc6zou-FooterPaperWrapper enubu9x6"
     >
       <div
-        class="css-19mx2sw-NavPaperCategoryLinks-NavPaperMainLinks enubu9x0"
+        class="css-14jv7nw-FooterPaperCategoryLinks-FooterPaperMainLinks enubu9x0"
       >
         <a
           class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
@@ -66,7 +66,7 @@ exports[`Footer should render Default 1`] = `
         class="css-41fvzk-LinksGroup enubu9x2"
       >
         <div
-          class="css-1mczich-NavPaperCategory enubu9x5"
+          class="css-1fj6oko-FooterPaperCategory enubu9x5"
         >
           <span
             class="css-1it6p7u-Name enubu9x4"
@@ -74,7 +74,7 @@ exports[`Footer should render Default 1`] = `
             Guides
           </span>
           <div
-            class="css-yg503k-NavPaperCategoryLinks enubu9x1"
+            class="css-hty802-FooterPaperCategoryLinks enubu9x1"
           >
             <a
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
@@ -109,7 +109,7 @@ exports[`Footer should render Default 1`] = `
           </div>
         </div>
         <div
-          class="css-1mczich-NavPaperCategory enubu9x5"
+          class="css-1fj6oko-FooterPaperCategory enubu9x5"
         >
           <span
             class="css-1it6p7u-Name enubu9x4"
@@ -117,7 +117,7 @@ exports[`Footer should render Default 1`] = `
             Fokusthema
           </span>
           <div
-            class="css-yg503k-NavPaperCategoryLinks enubu9x1"
+            class="css-hty802-FooterPaperCategoryLinks enubu9x1"
           >
             <a
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
@@ -169,7 +169,7 @@ exports[`Footer should render Default 1`] = `
           class="css-3hkus2-Separator enubu9x3"
         />
         <div
-          class="css-1mczich-NavPaperCategory enubu9x5"
+          class="css-1fj6oko-FooterPaperCategory enubu9x5"
         >
           <span
             class="css-1it6p7u-Name enubu9x4"
@@ -177,7 +177,7 @@ exports[`Footer should render Default 1`] = `
             Über Uns
           </span>
           <div
-            class="css-yg503k-NavPaperCategoryLinks enubu9x1"
+            class="css-hty802-FooterPaperCategoryLinks enubu9x1"
           >
             <a
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
@@ -231,10 +231,10 @@ exports[`Footer should render WithClassName 1`] = `
     class="extra-classname css-dl99x8-FooterWrapper enubu9x10"
   >
     <div
-      class="css-tidgsi-NavPaperWrapper enubu9x6"
+      class="css-1fc6zou-FooterPaperWrapper enubu9x6"
     >
       <div
-        class="css-19mx2sw-NavPaperCategoryLinks-NavPaperMainLinks enubu9x0"
+        class="css-14jv7nw-FooterPaperCategoryLinks-FooterPaperMainLinks enubu9x0"
       >
         <a
           class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
@@ -291,7 +291,7 @@ exports[`Footer should render WithClassName 1`] = `
         class="css-41fvzk-LinksGroup enubu9x2"
       >
         <div
-          class="css-1mczich-NavPaperCategory enubu9x5"
+          class="css-1fj6oko-FooterPaperCategory enubu9x5"
         >
           <span
             class="css-1it6p7u-Name enubu9x4"
@@ -299,7 +299,7 @@ exports[`Footer should render WithClassName 1`] = `
             Guides
           </span>
           <div
-            class="css-yg503k-NavPaperCategoryLinks enubu9x1"
+            class="css-hty802-FooterPaperCategoryLinks enubu9x1"
           >
             <a
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
@@ -334,7 +334,7 @@ exports[`Footer should render WithClassName 1`] = `
           </div>
         </div>
         <div
-          class="css-1mczich-NavPaperCategory enubu9x5"
+          class="css-1fj6oko-FooterPaperCategory enubu9x5"
         >
           <span
             class="css-1it6p7u-Name enubu9x4"
@@ -342,7 +342,7 @@ exports[`Footer should render WithClassName 1`] = `
             Fokusthema
           </span>
           <div
-            class="css-yg503k-NavPaperCategoryLinks enubu9x1"
+            class="css-hty802-FooterPaperCategoryLinks enubu9x1"
           >
             <a
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
@@ -394,7 +394,7 @@ exports[`Footer should render WithClassName 1`] = `
           class="css-3hkus2-Separator enubu9x3"
         />
         <div
-          class="css-1mczich-NavPaperCategory enubu9x5"
+          class="css-1fj6oko-FooterPaperCategory enubu9x5"
         >
           <span
             class="css-1it6p7u-Name enubu9x4"
@@ -402,7 +402,7 @@ exports[`Footer should render WithClassName 1`] = `
             Über Uns
           </span>
           <div
-            class="css-yg503k-NavPaperCategoryLinks enubu9x1"
+            class="css-hty802-FooterPaperCategoryLinks enubu9x1"
           >
             <a
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
@@ -456,10 +456,10 @@ exports[`Footer should render WithEmotion 1`] = `
     class="css-dl99x8-FooterWrapper enubu9x10"
   >
     <div
-      class="css-tidgsi-NavPaperWrapper enubu9x6"
+      class="css-1fc6zou-FooterPaperWrapper enubu9x6"
     >
       <div
-        class="css-19mx2sw-NavPaperCategoryLinks-NavPaperMainLinks enubu9x0"
+        class="css-14jv7nw-FooterPaperCategoryLinks-FooterPaperMainLinks enubu9x0"
       >
         <a
           class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
@@ -516,7 +516,7 @@ exports[`Footer should render WithEmotion 1`] = `
         class="css-41fvzk-LinksGroup enubu9x2"
       >
         <div
-          class="css-1mczich-NavPaperCategory enubu9x5"
+          class="css-1fj6oko-FooterPaperCategory enubu9x5"
         >
           <span
             class="css-1it6p7u-Name enubu9x4"
@@ -524,7 +524,7 @@ exports[`Footer should render WithEmotion 1`] = `
             Guides
           </span>
           <div
-            class="css-yg503k-NavPaperCategoryLinks enubu9x1"
+            class="css-hty802-FooterPaperCategoryLinks enubu9x1"
           >
             <a
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
@@ -559,7 +559,7 @@ exports[`Footer should render WithEmotion 1`] = `
           </div>
         </div>
         <div
-          class="css-1mczich-NavPaperCategory enubu9x5"
+          class="css-1fj6oko-FooterPaperCategory enubu9x5"
         >
           <span
             class="css-1it6p7u-Name enubu9x4"
@@ -567,7 +567,7 @@ exports[`Footer should render WithEmotion 1`] = `
             Fokusthema
           </span>
           <div
-            class="css-yg503k-NavPaperCategoryLinks enubu9x1"
+            class="css-hty802-FooterPaperCategoryLinks enubu9x1"
           >
             <a
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
@@ -619,7 +619,7 @@ exports[`Footer should render WithEmotion 1`] = `
           class="css-3hkus2-Separator enubu9x3"
         />
         <div
-          class="css-1mczich-NavPaperCategory enubu9x5"
+          class="css-1fj6oko-FooterPaperCategory enubu9x5"
         >
           <span
             class="css-1it6p7u-Name enubu9x4"
@@ -627,7 +627,7 @@ exports[`Footer should render WithEmotion 1`] = `
             Über Uns
           </span>
           <div
-            class="css-yg503k-NavPaperCategoryLinks enubu9x1"
+            class="css-hty802-FooterPaperCategoryLinks enubu9x1"
           >
             <a
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
@@ -681,7 +681,7 @@ exports[`Footer should render WithError 1`] = `
     class="css-dl99x8-FooterWrapper enubu9x10"
   >
     <div
-      class="css-tidgsi-NavPaperWrapper enubu9x6"
+      class="css-1fc6zou-FooterPaperWrapper enubu9x6"
     >
       <div
         class="css-41fvzk-LinksGroup enubu9x2"
@@ -704,7 +704,7 @@ exports[`Footer should render WithLoading 1`] = `
     class="css-dl99x8-FooterWrapper enubu9x10"
   >
     <div
-      class="css-tidgsi-NavPaperWrapper enubu9x6"
+      class="css-1fc6zou-FooterPaperWrapper enubu9x6"
     >
       <div
         class="css-41fvzk-LinksGroup enubu9x2"
@@ -727,7 +727,7 @@ exports[`Footer should render WithoutItems 1`] = `
     class="css-dl99x8-FooterWrapper enubu9x10"
   >
     <div
-      class="css-tidgsi-NavPaperWrapper enubu9x6"
+      class="css-1fc6zou-FooterPaperWrapper enubu9x6"
     />
   </footer>
 </DocumentFragment>

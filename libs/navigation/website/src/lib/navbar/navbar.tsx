@@ -129,13 +129,16 @@ export function Navbar({
               })}
             </NavbarMainItems>
           </NavbarMain>
-
-          {children}
         </NavbarInnerWrapper>
       </AppBar>
 
       {isMenuOpen && Boolean(mainItems || categories?.length) && (
-        <NavPaper main={mainItems} categories={categories} closeMenu={toggleMenu} />
+        <NavPaper
+          main={mainItems}
+          categories={categories}
+          closeMenu={toggleMenu}
+          children={children}
+        />
       )}
     </NavbarWrapper>
   )
@@ -158,8 +161,7 @@ export const NavPaperWrapper = styled('div')`
       gap: ${theme.spacing(6)};
       grid-row-gap: ${theme.spacing(12)};
       grid-template-columns: 1fr 1fr;
-      padding-left: calc(100% / 6);
-      padding-right: calc(100% / 6);
+      padding: ${theme.spacing(2.5)} calc(100% / 6) calc(100% / 12);
     }
   `}
 `
@@ -215,14 +217,39 @@ export const NavPaperMainLinks = styled(NavPaperCategoryLinks)`
   gap: ${({theme}) => theme.spacing(1)};
 `
 
+export const NavPaperChildrenWrapper = styled('div')`
+  position: relative;
+  padding: ${({theme}) => theme.spacing(1.5)};
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
+  justify-items: center;
+  left: 0;
+  top: 0;
+  width: 100%;
+
+  ${({theme}) => css`
+    ${theme.breakpoints.up('md')} {
+      position: absolute;
+      grid-template-columns: auto;
+      justify-items: start;
+      width: calc(100% / 6);
+      gap: ${theme.spacing(3)};
+      padding-top: ${theme.spacing(10)};
+      padding-left: ${theme.spacing(4.5)};
+    }
+  `}
+`
+
 const NavPaper = ({
   main,
   categories,
-  closeMenu
+  closeMenu,
+  children
 }: {
   main: FullNavigationFragment | null | undefined
   categories: FullNavigationFragment[][]
   closeMenu: () => void
+  children: React.ReactNode
 }) => {
   const {
     elements: {Link, H4, H6}
@@ -231,6 +258,7 @@ const NavPaper = ({
 
   return (
     <NavPaperWrapper>
+      {children && <NavPaperChildrenWrapper>{children}</NavPaperChildrenWrapper>}
       {!!main?.links.length && (
         <NavPaperMainLinks>
           {main.links.map((link, index) => {
@@ -244,7 +272,6 @@ const NavPaper = ({
           })}
         </NavPaperMainLinks>
       )}
-
       {!!categories.length && (
         <>
           {categories.map((categoryArray, arrayIndex) => (

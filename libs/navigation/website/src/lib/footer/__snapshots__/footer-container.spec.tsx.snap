@@ -6,7 +6,7 @@ exports[`Footer Container should render Default 1`] = `
     class="css-dl99x8-FooterWrapper enubu9x10"
   >
     <div
-      class="css-tidgsi-NavPaperWrapper enubu9x6"
+      class="css-1fc6zou-FooterPaperWrapper enubu9x6"
     >
       <div
         class="css-41fvzk-LinksGroup enubu9x2"
@@ -29,7 +29,7 @@ exports[`Footer Container should render WithClassName 1`] = `
     class="extra-classname css-dl99x8-FooterWrapper enubu9x10"
   >
     <div
-      class="css-tidgsi-NavPaperWrapper enubu9x6"
+      class="css-1fc6zou-FooterPaperWrapper enubu9x6"
     >
       <div
         class="css-41fvzk-LinksGroup enubu9x2"
@@ -52,7 +52,7 @@ exports[`Footer Container should render WithEmotion 1`] = `
     class="css-dl99x8-FooterWrapper enubu9x10"
   >
     <div
-      class="css-tidgsi-NavPaperWrapper enubu9x6"
+      class="css-1fc6zou-FooterPaperWrapper enubu9x6"
     >
       <div
         class="css-41fvzk-LinksGroup enubu9x2"

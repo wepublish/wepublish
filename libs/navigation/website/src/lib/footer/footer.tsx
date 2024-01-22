@@ -49,15 +49,7 @@ export const FooterMainItems = styled('div')<{show: boolean}>`
   `}
 `
 
-export function Footer({
-  className,
-  children,
-  categorySlugs,
-  slug,
-  data,
-  loading,
-  error
-}: BuilderFooterProps) {
+export function Footer({className, categorySlugs, slug, data, loading, error}: BuilderFooterProps) {
   const mainItems = data?.navigations?.find(({key}) => key === slug)
 
   const categories = categorySlugs.map(categorySlugArray => {
@@ -74,12 +66,12 @@ export function Footer({
 
   return (
     <FooterWrapper className={className}>
-      <NavPaper main={mainItems} categories={categories} />
+      <FooterPaper main={mainItems} categories={categories} />
     </FooterWrapper>
   )
 }
 
-const NavPaperWrapper = styled('div')`
+const FooterPaperWrapper = styled('div')`
   padding: ${({theme}) => theme.spacing(2.5)};
   background-color: ${({theme}) => theme.palette.grey[800]};
   color: ${({theme}) => theme.palette.primary.contrastText};
@@ -103,7 +95,7 @@ const NavPaperWrapper = styled('div')`
   `}
 `
 
-const NavPaperCategory = styled('div')`
+const FooterPaperCategory = styled('div')`
   display: grid;
   gap: ${({theme}) => theme.spacing(1)};
   grid-auto-rows: max-content;
@@ -143,17 +135,17 @@ const navPaperLinkStyling = (theme: Theme) => css`
   }
 `
 
-const NavPaperCategoryLinks = styled('div')`
+const FooterPaperCategoryLinks = styled('div')`
   display: grid;
   font-weight: ${({theme}) => theme.typography.fontWeightMedium};
   font-size: ${({theme}) => theme.typography.h6.fontSize};
 `
 
-const NavPaperMainLinks = styled(NavPaperCategoryLinks)`
+const FooterPaperMainLinks = styled(FooterPaperCategoryLinks)`
   gap: ${({theme}) => theme.spacing(1)};
 `
 
-const NavPaper = ({
+const FooterPaper = ({
   main,
   categories
 }: {
@@ -166,9 +158,9 @@ const NavPaper = ({
   const theme = useTheme()
 
   return (
-    <NavPaperWrapper>
+    <FooterPaperWrapper>
       {!!main?.links.length && (
-        <NavPaperMainLinks>
+        <FooterPaperMainLinks>
           {main.links.map((link, index) => {
             const url = navigationLinkToUrl(link)
 
@@ -178,7 +170,7 @@ const NavPaper = ({
               </Link>
             )
           })}
-        </NavPaperMainLinks>
+        </FooterPaperMainLinks>
       )}
 
       {!!categories.length && (
@@ -188,10 +180,10 @@ const NavPaper = ({
               {/* Render Separator for every array except the first one */}
               {arrayIndex > 0 && <Separator />}
               {categoryArray.map(nav => (
-                <NavPaperCategory key={nav.id}>
+                <FooterPaperCategory key={nav.id}>
                   <Name>{nav.name}</Name>
 
-                  <NavPaperCategoryLinks>
+                  <FooterPaperCategoryLinks>
                     {nav.links?.map((link, index) => {
                       const url = navigationLinkToUrl(link)
 
@@ -206,13 +198,13 @@ const NavPaper = ({
                         </Link>
                       )
                     })}
-                  </NavPaperCategoryLinks>
-                </NavPaperCategory>
+                  </FooterPaperCategoryLinks>
+                </FooterPaperCategory>
               ))}
             </LinksGroup>
           ))}
         </>
       )}
-    </NavPaperWrapper>
+    </FooterPaperWrapper>
   )
 }

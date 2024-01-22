@@ -3,6 +3,7 @@ import {Meta} from '@storybook/react'
 import {FullNavigationFragment, Navigation} from '@wepublish/website/api'
 import {Navbar} from './navbar'
 import {css} from '@emotion/react'
+import {Md60FpsSelect, MdInvertColors, MdSecurity} from 'react-icons/md'
 
 const navigation = {
   id: 'cldx7kcpi1168oapxftiqsh0p',
@@ -157,6 +158,24 @@ export const Default = {
     },
     loading: false,
     slug: 'main',
+    categorySlugs: [['guides', 'fokusthema'], ['about']]
+  }
+}
+
+export const WithChildren = {
+  args: {
+    data: {
+      navigations
+    },
+    loading: false,
+    slug: 'main',
+    children: [
+      <>
+        <MdInvertColors size="32" />
+        <Md60FpsSelect size="32" />
+        <MdSecurity size="32" />
+      </>
+    ],
     categorySlugs: [['guides', 'fokusthema'], ['about']]
   }
 }
