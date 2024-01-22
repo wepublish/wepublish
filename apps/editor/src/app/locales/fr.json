@@ -209,7 +209,8 @@
         "link": "Lien",
         "links": "Liens",
         "name": "Nom",
-        "title": "Titre"
+        "title": "Titre",
+        "tags": "Tags"
       }
     },
     "blocks": {

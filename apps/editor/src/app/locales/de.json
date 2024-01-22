@@ -203,7 +203,8 @@
         "link": "Link",
         "links": "Links",
         "name": "Name",
-        "title": "Titel"
+        "title": "Titel",
+        "tags": "Tags"
       }
     },
     "blocks": {

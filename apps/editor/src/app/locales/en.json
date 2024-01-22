@@ -204,7 +204,8 @@
         "link": "Link",
         "links": "Links",
         "name": "Name",
-        "title": "Title"
+        "title": "Title",
+        "tags": "Tags"
       }
     },
     "blocks": {
