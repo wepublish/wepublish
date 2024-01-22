@@ -117,6 +117,7 @@ export type AuthorConnection = {
 
 export type AuthorFilter = {
   name?: InputMaybe<Scalars['String']>;
+  tagIds?: InputMaybe<Array<Scalars['ID']>>;
 };
 
 export type AuthorLink = {

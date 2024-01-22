@@ -74,7 +74,8 @@ export const GraphQLAuthor = new GraphQLObjectType<Author, Context>({
 export const GraphQLAuthorFilter = new GraphQLInputObjectType({
   name: 'AuthorFilter',
   fields: {
-    name: {type: GraphQLString}
+    name: {type: GraphQLString},
+    tagIds: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))}
   }
 })
 
