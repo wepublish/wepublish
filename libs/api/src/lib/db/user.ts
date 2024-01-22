@@ -18,13 +18,15 @@ export const generateSecureRandomPassword = (length: number) => {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._-'
   let password = ''
   const characterCount = characters.length
+  const maxValidValue = 256 - (256 % characterCount)
 
-  for (let i = 0; i < length; i++) {
+  while (password.length < length) {
     const randomValue = randomBytes(1)[0]
-    const index = randomValue % characterCount
-    password += characters.charAt(index)
+    if (randomValue < maxValidValue) {
+      const index = randomValue % characterCount
+      password += characters.charAt(index)
+    }
   }
-
   return password
 }
 
