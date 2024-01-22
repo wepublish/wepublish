@@ -172,6 +172,7 @@ export type Author = {
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   slug: Scalars['Slug'];
+  tags?: Maybe<Array<Tag>>;
   url: Scalars['String'];
 };
 
@@ -199,6 +200,7 @@ export type AuthorInput = {
   links?: InputMaybe<Array<AuthorLinkInput>>;
   name: Scalars['String'];
   slug: Scalars['Slug'];
+  tagIds?: InputMaybe<Array<Scalars['ID']>>;
 };
 
 export type AuthorLink = {

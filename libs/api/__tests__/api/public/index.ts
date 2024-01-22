@@ -104,6 +104,7 @@ export type Author = {
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   slug: Scalars['Slug'];
+  tags?: Maybe<Array<Tag>>;
   url: Scalars['String'];
 };
 
@@ -1160,7 +1161,12 @@ export type QueryPeerArticleArgs = {
 
 
 export type QueryPhraseArgs = {
+  articleSort?: InputMaybe<ArticleSort>;
+  order?: InputMaybe<SortOrder>;
+  pageSort?: InputMaybe<PublishedPageSort>;
   query: Scalars['String'];
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 

@@ -5,6 +5,7 @@ import type { ArticleRevisionSocialMediaAuthor } from "@prisma/client";
 import type { Article } from "@prisma/client";
 import type { AuthorsLinks } from "@prisma/client";
 import type { Author } from "@prisma/client";
+import type { TaggedAuthors } from "@prisma/client";
 import type { FocalPoint } from "@prisma/client";
 import type { Image } from "@prisma/client";
 import type { CommentsRevisions } from "@prisma/client";
@@ -385,6 +386,7 @@ type AuthorFactoryDefineInput = {
     image?: AuthorimageFactory | Prisma.ImageCreateNestedOneWithoutAuthorInput;
     articlesAsAuthor?: Prisma.ArticleRevisionAuthorCreateNestedManyWithoutAuthorInput;
     articlesAsSocialMediaAuthor?: Prisma.ArticleRevisionSocialMediaAuthorCreateNestedManyWithoutAuthorInput;
+    tags?: Prisma.TaggedAuthorsCreateNestedManyWithoutAuthorInput;
 };
 type AuthorFactoryDefineOptions = {
     defaultData?: Resolver<AuthorFactoryDefineInput, BuildDataOptions>;
@@ -415,6 +417,49 @@ export interface AuthorFactoryInterface<TOptions extends AuthorFactoryDefineOpti
  * @returns factory {@link AuthorFactoryInterface}
  */
 export declare function defineAuthorFactory<TOptions extends AuthorFactoryDefineOptions>(options?: TOptions): AuthorFactoryInterface<TOptions>;
+type TaggedAuthorsauthorFactory = {
+    _factoryFor: "Author";
+    build: () => PromiseLike<Prisma.AuthorCreateNestedOneWithoutTagsInput["create"]>;
+};
+type TaggedAuthorstagFactory = {
+    _factoryFor: "Tag";
+    build: () => PromiseLike<Prisma.TagCreateNestedOneWithoutAuthorsInput["create"]>;
+};
+type TaggedAuthorsFactoryDefineInput = {
+    createdAt?: Date;
+    modifiedAt?: Date;
+    author: TaggedAuthorsauthorFactory | Prisma.AuthorCreateNestedOneWithoutTagsInput;
+    tag: TaggedAuthorstagFactory | Prisma.TagCreateNestedOneWithoutAuthorsInput;
+};
+type TaggedAuthorsFactoryDefineOptions = {
+    defaultData: Resolver<TaggedAuthorsFactoryDefineInput, BuildDataOptions>;
+    traits?: {
+        [traitName: string | symbol]: {
+            data: Resolver<Partial<TaggedAuthorsFactoryDefineInput>, BuildDataOptions>;
+        };
+    };
+};
+type TaggedAuthorsTraitKeys<TOptions extends TaggedAuthorsFactoryDefineOptions> = keyof TOptions["traits"];
+export interface TaggedAuthorsFactoryInterfaceWithoutTraits {
+    readonly _factoryFor: "TaggedAuthors";
+    build(inputData?: Partial<Prisma.TaggedAuthorsCreateInput>): PromiseLike<Prisma.TaggedAuthorsCreateInput>;
+    buildCreateInput(inputData?: Partial<Prisma.TaggedAuthorsCreateInput>): PromiseLike<Prisma.TaggedAuthorsCreateInput>;
+    buildList(inputData: number | readonly Partial<Prisma.TaggedAuthorsCreateInput>[]): PromiseLike<Prisma.TaggedAuthorsCreateInput[]>;
+    pickForConnect(inputData: TaggedAuthors): Pick<TaggedAuthors, "authorId" | "tagId">;
+    create(inputData?: Partial<Prisma.TaggedAuthorsCreateInput>): PromiseLike<TaggedAuthors>;
+    createList(inputData: number | readonly Partial<Prisma.TaggedAuthorsCreateInput>[]): PromiseLike<TaggedAuthors[]>;
+    createForConnect(inputData?: Partial<Prisma.TaggedAuthorsCreateInput>): PromiseLike<Pick<TaggedAuthors, "authorId" | "tagId">>;
+}
+export interface TaggedAuthorsFactoryInterface<TOptions extends TaggedAuthorsFactoryDefineOptions = TaggedAuthorsFactoryDefineOptions> extends TaggedAuthorsFactoryInterfaceWithoutTraits {
+    use(name: TaggedAuthorsTraitKeys<TOptions>, ...names: readonly TaggedAuthorsTraitKeys<TOptions>[]): TaggedAuthorsFactoryInterfaceWithoutTraits;
+}
+/**
+ * Define factory for {@link TaggedAuthors} model.
+ *
+ * @param options
+ * @returns factory {@link TaggedAuthorsFactoryInterface}
+ */
+export declare function defineTaggedAuthorsFactory<TOptions extends TaggedAuthorsFactoryDefineOptions>(options: TOptions): TaggedAuthorsFactoryInterface<TOptions>;
 type FocalPointimageFactory = {
     _factoryFor: "Image";
     build: () => PromiseLike<Prisma.ImageCreateNestedOneWithoutFocalPointInput["create"]>;
@@ -1946,6 +1991,7 @@ type TagFactoryDefineInput = {
     tag?: string | null;
     comments?: Prisma.TaggedCommentsCreateNestedManyWithoutTagInput;
     events?: Prisma.TaggedEventsCreateNestedManyWithoutTagInput;
+    authors?: Prisma.TaggedAuthorsCreateNestedManyWithoutTagInput;
 };
 type TagFactoryDefineOptions = {
     defaultData?: Resolver<TagFactoryDefineInput, BuildDataOptions>;

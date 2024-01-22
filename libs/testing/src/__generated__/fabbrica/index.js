@@ -121,6 +121,21 @@ const modelFieldDefinitions = [{
                 name: "articlesAsSocialMediaAuthor",
                 type: "ArticleRevisionSocialMediaAuthor",
                 relationName: "ArticleRevisionSocialMediaAuthorToAuthor"
+            }, {
+                name: "tags",
+                type: "TaggedAuthors",
+                relationName: "AuthorToTaggedAuthors"
+            }]
+    }, {
+        name: "TaggedAuthors",
+        fields: [{
+                name: "author",
+                type: "Author",
+                relationName: "AuthorToTaggedAuthors"
+            }, {
+                name: "tag",
+                type: "Tag",
+                relationName: "TagToTaggedAuthors"
             }]
     }, {
         name: "FocalPoint",
@@ -583,6 +598,10 @@ const modelFieldDefinitions = [{
                 name: "events",
                 type: "TaggedEvents",
                 relationName: "TagToTaggedEvents"
+            }, {
+                name: "authors",
+                type: "TaggedAuthors",
+                relationName: "TagToTaggedAuthors"
             }]
     }, {
         name: "Poll",
@@ -1270,6 +1289,79 @@ function defineAuthorFactoryInternal({ defaultData: defaultDataResolver, traits:
  */
 export function defineAuthorFactory(options) {
     return defineAuthorFactoryInternal(options !== null && options !== void 0 ? options : {});
+}
+function isTaggedAuthorsauthorFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Author";
+}
+function isTaggedAuthorstagFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Tag";
+}
+function autoGenerateTaggedAuthorsScalarsOrEnums({ seq }) {
+    return {};
+}
+function defineTaggedAuthorsFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("TaggedAuthors", modelFieldDefinitions);
+        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateTaggedAuthorsScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                author: isTaggedAuthorsauthorFactory(defaultData.author) ? {
+                    create: yield defaultData.author.build()
+                } : defaultData.author,
+                tag: isTaggedAuthorstagFactory(defaultData.tag) ? {
+                    create: yield defaultData.tag.build()
+                } : defaultData.tag
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
+            authorId: inputData.authorId,
+            tagId: inputData.tagId
+        });
+        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().taggedAuthors.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
+        return {
+            _factoryFor: "TaggedAuthors",
+            build,
+            buildList,
+            buildCreateInput: build,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
+        };
+    };
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
+    };
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
+}
+/**
+ * Define factory for {@link TaggedAuthors} model.
+ *
+ * @param options
+ * @returns factory {@link TaggedAuthorsFactoryInterface}
+ */
+export function defineTaggedAuthorsFactory(options) {
+    return defineTaggedAuthorsFactoryInternal(options);
 }
 function isFocalPointimageFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Image";
