@@ -34,7 +34,7 @@ import FormData from 'form-data'
 import Mailgun from 'mailgun.js'
 import {URL} from 'url'
 import {SlackMailProvider} from '../app/slack-mail-provider'
-import {loadAsync} from 'node-yaml-config'
+import {readConfig} from '../readConfig'
 
 @Global()
 @Module({
@@ -52,7 +52,7 @@ import {loadAsync} from 'node-yaml-config'
     MailsModule.registerAsync({
       imports: [ConfigModule],
       useFactory: async (config: ConfigService) => {
-        const configFile = await loadAsync(config.getOrThrow('CONFIG_FILE_PATH'))
+        const configFile = await readConfig(config.getOrThrow('CONFIG_FILE_PATH'))
         const mailProviderRaw = configFile.mailProvider
         let mailProvider
         if (mailProviderRaw) {
@@ -112,7 +112,7 @@ import {loadAsync} from 'node-yaml-config'
       imports: [ConfigModule, PrismaModule],
       useFactory: async (config: ConfigService, prisma: PrismaService) => {
         const paymentProviders: PaymentProvider[] = []
-        const configFile = await loadAsync(config.getOrThrow('CONFIG_FILE_PATH'))
+        const configFile = await readConfig(config.getOrThrow('CONFIG_FILE_PATH'))
         const paymentProvidersRaw = configFile.paymentProviders
         if (paymentProvidersRaw) {
           for (const paymentProvider of paymentProvidersRaw) {

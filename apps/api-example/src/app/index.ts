@@ -13,8 +13,8 @@ import {createWriteStream} from 'pino-sentry'
 import pinoStackdriver from 'pino-stackdriver'
 import * as process from 'process'
 import {Application} from 'express'
-import {loadAsync} from 'node-yaml-config'
 import {DefaultURLAdapter, BajourURLAdapter, TsriURLAdapter} from '../urlAdapters'
+import {readConfig} from '../readConfig'
 const MS_PER_DAY = 24 * 60 * 60 * 1000
 
 type RunServerProps = {
@@ -34,7 +34,7 @@ export async function runServer({
    * Load User specific configuration
    */
 
-  const config = await loadAsync(process.env.CONFIG_FILE_PATH)
+  const config = await readConfig(process.env.CONFIG_FILE_PATH)
 
   /*
    * Basic configuration
