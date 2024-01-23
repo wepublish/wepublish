@@ -178,7 +178,7 @@ export const Name = styled('span')`
   font-size: 14px;
 `
 
-export const Separator = styled('div')`
+export const Separator = styled('hr')`
   width: 100%;
   height: 1px;
   background-color: white;
