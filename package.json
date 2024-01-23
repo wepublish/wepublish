@@ -11,6 +11,8 @@
     "clean:media": "docker-compose exec media rm -rf ./.media",
     "lint": "nx run-many --target=lint",
     "build": "nx run-many --targets=build",
+    "docker:build:api": "npx nx run-many --targets=build --exclude=api-example",
+    "docker:build:editor": "npx nx run-many --targets=build --projects=editor",
     "i18n": "node_modules/i18next-parser/bin/cli.js --config i18next-parser.config.js",
     "test": "nx affected:test --base master --parallel=false",
     "test-all": "nx run-many --target=test --parallel=10 --runInBand",
