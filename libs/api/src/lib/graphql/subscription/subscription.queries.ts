@@ -1,7 +1,7 @@
 import {Prisma, PrismaClient, Subscription} from '@prisma/client'
-import {ConnectionResult, MaxResultsPerPage} from '../../db/common'
+import {ConnectionResult} from '../../db/common'
 import {SubscriptionFilter, SubscriptionSort} from '../../db/subscription'
-import {getSortOrder, SortOrder} from '../queries/sort'
+import {SortOrder, getMaxTake, graphQLSortOrderToPrisma} from '@wepublish/utils/api'
 import {mapDateFilterToPrisma} from '../utils'
 
 export const createSubscriptionOrder = (
@@ -11,12 +11,12 @@ export const createSubscriptionOrder = (
   switch (field) {
     case SubscriptionSort.CreatedAt:
       return {
-        createdAt: sortOrder
+        createdAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case SubscriptionSort.ModifiedAt:
       return {
-        modifiedAt: sortOrder
+        modifiedAt: graphQLSortOrderToPrisma(sortOrder)
       }
   }
 }
@@ -243,13 +243,13 @@ export const createSubscriptionFilter = (
 export const getSubscriptions = async (
   filter: Partial<SubscriptionFilter>,
   sortedField: SubscriptionSort,
-  order: 1 | -1,
+  order: SortOrder,
   cursorId: string | null,
   skip: number,
   take: number,
   subscription: PrismaClient['subscription']
 ): Promise<ConnectionResult<Subscription>> => {
-  const orderBy = createSubscriptionOrder(sortedField, getSortOrder(order))
+  const orderBy = createSubscriptionOrder(sortedField, order)
   const where = createSubscriptionFilter(filter)
 
   const [totalCount, subscriptions] = await Promise.all([
@@ -260,7 +260,7 @@ export const getSubscriptions = async (
     subscription.findMany({
       where,
       skip,
-      take: Math.min(take, MaxResultsPerPage) + 1,
+      take: getMaxTake(take) + 1,
       orderBy,
       cursor: cursorId ? {id: cursorId} : undefined,
       include: {

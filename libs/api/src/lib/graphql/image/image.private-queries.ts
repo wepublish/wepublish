@@ -4,6 +4,7 @@ import {authorise} from '../permissions'
 import {CanGetImage, CanGetImages} from '@wepublish/permissions/api'
 import {PrismaClient} from '@prisma/client'
 import {getImages} from './image.queries'
+import {SortOrder} from '@wepublish/utils/api'
 
 export const getImageById = (
   id: string,
@@ -19,7 +20,7 @@ export const getImageById = (
 export const getAdminImages = async (
   filter: Partial<ImageFilter>,
   sortedField: ImageSort,
-  order: 1 | -1,
+  order: SortOrder,
   cursorId: string | null,
   skip: number,
   take: number,

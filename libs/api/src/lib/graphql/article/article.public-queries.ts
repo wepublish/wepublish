@@ -2,13 +2,13 @@ import {PrismaClient} from '@prisma/client'
 import {Context} from '../../context'
 import {ArticleFilter, ArticleSort, PublicArticle} from '../../db/article'
 import {AuthSessionType} from '@wepublish/authentication/api'
-import {logger} from '@wepublish/utils/api'
+import {SortOrder, logger} from '@wepublish/utils/api'
 import {getArticles} from './article.queries'
 
 export const getPublishedArticles = async (
   filter: Partial<ArticleFilter>,
   sortedField: ArticleSort,
-  order: 1 | -1,
+  order: SortOrder,
   cursorId: string | null,
   skip: number,
   take: number,

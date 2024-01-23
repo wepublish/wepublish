@@ -783,7 +783,7 @@ describe('SubscriptionController', () => {
     }
   })
 
-  it('Charge invoice:No offsession payment provider', async () => {
+  it('Charge invoice: No offsession payment provider', async () => {
     const {testableInvoice, actions} = await createDataForChargeFunction('payrexx')
     const answer = await subscriptionService.chargeInvoice(testableInvoice!, actions)
     expect(answer.action).toBeUndefined()

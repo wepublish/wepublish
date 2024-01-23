@@ -1,7 +1,7 @@
 import {Prisma, PrismaClient} from '@prisma/client'
-import {ConnectionResult, MaxResultsPerPage} from '../../db/common'
+import {ConnectionResult} from '../../db/common'
 import {PageFilter, PageSort, PageWithRevisions} from '../../db/page'
-import {getSortOrder, SortOrder} from '../queries/sort'
+import {SortOrder, getMaxTake, graphQLSortOrderToPrisma} from '@wepublish/utils/api'
 import {mapDateFilterToPrisma} from '../utils'
 
 export const createPageOrder = (
@@ -11,32 +11,32 @@ export const createPageOrder = (
   switch (field) {
     case PageSort.CreatedAt:
       return {
-        createdAt: sortOrder
+        createdAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case PageSort.ModifiedAt:
       return {
-        modifiedAt: sortOrder
+        modifiedAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case PageSort.PublishedAt:
       return {
         published: {
-          publishedAt: sortOrder
+          publishedAt: graphQLSortOrderToPrisma(sortOrder)
         }
       }
 
     case PageSort.UpdatedAt:
       return {
         published: {
-          updatedAt: sortOrder
+          updatedAt: graphQLSortOrderToPrisma(sortOrder)
         }
       }
 
     case PageSort.PublishAt:
       return {
         pending: {
-          publishAt: sortOrder
+          publishAt: graphQLSortOrderToPrisma(sortOrder)
         }
       }
   }
@@ -190,13 +190,13 @@ export const createPageFilter = (filter: Partial<PageFilter>): Prisma.PageWhereI
 export const getPages = async (
   filter: Partial<PageFilter>,
   sortedField: PageSort,
-  order: 1 | -1,
+  order: SortOrder,
   cursorId: string | null,
   skip: number,
   take: number,
   page: PrismaClient['page']
 ): Promise<ConnectionResult<PageWithRevisions>> => {
-  const orderBy = createPageOrder(sortedField, getSortOrder(order))
+  const orderBy = createPageOrder(sortedField, order)
   const where = createPageFilter(filter)
 
   const [totalCount, pages] = await Promise.all([
@@ -207,7 +207,7 @@ export const getPages = async (
     page.findMany({
       where,
       skip,
-      take: Math.min(take, MaxResultsPerPage) + 1,
+      take: getMaxTake(take) + 1,
       orderBy,
       cursor: cursorId ? {id: cursorId} : undefined,
       include: {

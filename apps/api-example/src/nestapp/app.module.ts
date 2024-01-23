@@ -25,7 +25,8 @@ import {
   SettingModule,
   StripeCheckoutPaymentProvider,
   StripePaymentProvider,
-  BexioPaymentProvider
+  BexioPaymentProvider,
+  PayrexxFactory
 } from '@wepublish/api'
 import {ApiModule, PrismaModule, PrismaService} from '@wepublish/nest-modules'
 import bodyParser from 'body-parser'
@@ -33,6 +34,7 @@ import FormData from 'form-data'
 import Mailgun from 'mailgun.js'
 import {URL} from 'url'
 import {SlackMailProvider} from '../app/slack-mail-provider'
+import {EventModule} from '@wepublish/event/api'
 
 @Global()
 @Module({
@@ -191,23 +193,23 @@ import {SlackMailProvider} from '../app/slack-mail-provider'
           config.get('PAYREXX_API_SECRET') &&
           config.get('PAYREXX_WEBHOOK_SECRET')
         ) {
+          const payrexxFactory = new PayrexxFactory({
+            baseUrl: 'https://api.payrexx.com/v1.0/',
+            instance: config.getOrThrow('PAYREXX_INSTANCE_NAME'),
+            secret: config.getOrThrow('PAYREXX_API_SECRET')
+          })
           paymentProviders.push(
             new PayrexxPaymentProvider({
               id: 'payrexx',
               name: 'Payrexx',
-              offSessionPayments: false,
-              instanceName: config.get('PAYREXX_INSTANCE_NAME'),
-              instanceAPISecret: config.get('PAYREXX_API_SECRET'),
+              offSessionPayments: true,
+              transactionClient: payrexxFactory.transactionClient,
+              gatewayClient: payrexxFactory.gatewayClient,
+              webhookApiKey: config.getOrThrow('PAYREXX_WEBHOOK_SECRET'),
               psp: [0, 15, 17, 2, 3, 36],
-              pm: [
-                'postfinance_card',
-                'postfinance_efinance',
-                // "mastercard",
-                // "visa",
-                'twint',
-                // "invoice",
-                'paypal'
-              ],
+              pm: config.get('PAYREXX_PAYMENT_METHODS')
+                ? config.get('PAYREXX_PAYMENT_METHODS').split(',')
+                : ['postfinance_card', 'postfinance_efinance', 'twint', 'paypal'],
               vatRate: 7.7,
               incomingRequestHandler: bodyParser.json()
             })
@@ -237,6 +239,7 @@ import {SlackMailProvider} from '../app/slack-mail-provider'
     PermissionModule,
     ConsentModule,
     SettingModule,
+    EventModule,
     EventsImportModule.registerAsync({
       useFactory: (agendaBasel: AgendaBaselService, kulturZueri: KulturZueriService) => [
         agendaBasel,

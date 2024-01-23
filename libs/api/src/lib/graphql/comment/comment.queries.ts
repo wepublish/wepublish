@@ -1,7 +1,7 @@
 import {Comment, Prisma, PrismaClient} from '@prisma/client'
 import {CommentFilter, CommentSort} from '../../db/comment'
-import {ConnectionResult, MaxResultsPerPage} from '../../db/common'
-import {getSortOrder, SortOrder} from '../queries/sort'
+import {ConnectionResult} from '../../db/common'
+import {SortOrder, getMaxTake, graphQLSortOrderToPrisma} from '@wepublish/utils/api'
 
 export const createCommentOrder = (
   field: CommentSort,
@@ -10,12 +10,12 @@ export const createCommentOrder = (
   switch (field) {
     case CommentSort.CreatedAt:
       return {
-        createdAt: sortOrder
+        createdAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case CommentSort.ModifiedAt:
       return {
-        modifiedAt: sortOrder
+        modifiedAt: graphQLSortOrderToPrisma(sortOrder)
       }
   }
 }
@@ -95,13 +95,13 @@ export const createCommentFilter = (filter: Partial<CommentFilter>): Prisma.Comm
 export const getComments = async (
   filter: Partial<CommentFilter>,
   sortedField: CommentSort,
-  order: 1 | -1,
+  order: SortOrder,
   cursorId: string | null,
   skip: number,
   take: number,
   comment: PrismaClient['comment']
 ): Promise<ConnectionResult<Comment>> => {
-  const orderBy = createCommentOrder(sortedField, getSortOrder(order))
+  const orderBy = createCommentOrder(sortedField, order)
   const where = createCommentFilter(filter)
 
   const [totalCount, comments] = await Promise.all([
@@ -112,7 +112,7 @@ export const getComments = async (
     comment.findMany({
       where,
       skip,
-      take: Math.min(take, MaxResultsPerPage) + 1,
+      take: getMaxTake(take) + 1,
       orderBy,
       cursor: cursorId ? {id: cursorId} : undefined,
       include: {
