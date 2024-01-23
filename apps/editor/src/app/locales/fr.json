@@ -209,7 +209,8 @@
         "link": "Lien",
         "links": "Liens",
         "name": "Nom",
-        "title": "Titre"
+        "title": "Titre",
+        "tags": "Tags"
       }
     },
     "blocks": {
@@ -720,7 +721,8 @@
       "userConsents": "Consentement de l'utilisateur",
       "userRoles": "Rôles d'utilisateur/utilisatrice",
       "users": "Utilisateur/Utilisatrices",
-      "usersAndMembers": "Utilisateur & Abonnements"
+      "usersAndMembers": "Utilisateur & Abonnements",
+      "authorTags": "Tags"
     },
     "navigation": {
       "overview": {

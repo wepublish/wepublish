@@ -443,6 +443,16 @@ export function App() {
                 </Base>
               }
             />
+
+            <Route
+              path="authors/tags"
+              element={
+                <Base>
+                  <TagList type={TagType.Author} />
+                </Base>
+              }
+            />
+
             {/* Users Routes */}
             <Route
               path="users"

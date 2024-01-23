@@ -18,6 +18,7 @@ import {GraphQLSlug} from './slug'
 import {GraphQLRichText} from '@wepublish/richtext/api'
 import {GraphQLDateTime} from 'graphql-scalars'
 import {createProxyingResolver} from '../utility'
+import {GraphQLTag} from './tag/tag'
 
 export const GraphQLAuthorLink = new GraphQLObjectType<Author, Context>({
   name: 'AuthorLink',
@@ -51,6 +52,21 @@ export const GraphQLAuthor = new GraphQLObjectType<Author, Context>({
       resolve: createProxyingResolver(({imageID}, args, {loaders}) => {
         return imageID ? loaders.images.load(imageID) : null
       })
+    },
+    tags: {
+      type: new GraphQLList(new GraphQLNonNull(GraphQLTag)),
+      resolve: createProxyingResolver(async ({id}, _, {prisma: {tag}}) => {
+        const tags = await tag.findMany({
+          where: {
+            authors: {
+              some: {
+                authorId: id
+              }
+            }
+          }
+        })
+        return tags
+      })
     }
   }
 })
@@ -58,7 +74,8 @@ export const GraphQLAuthor = new GraphQLObjectType<Author, Context>({
 export const GraphQLAuthorFilter = new GraphQLInputObjectType({
   name: 'AuthorFilter',
   fields: {
-    name: {type: GraphQLString}
+    name: {type: GraphQLString},
+    tagIds: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))}
   }
 })
 
@@ -96,6 +113,7 @@ export const GraphQLAuthorInput = new GraphQLInputObjectType({
     links: {type: new GraphQLList(new GraphQLNonNull(GraphQLAuthorLinkInput))},
     bio: {type: GraphQLRichText},
     jobTitle: {type: GraphQLString},
-    imageID: {type: GraphQLID}
+    imageID: {type: GraphQLID},
+    tagIds: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))}
   }
 })

@@ -155,10 +155,24 @@ model Author {
   articlesAsAuthor            ArticleRevisionAuthor[]
   articlesAsSocialMediaAuthor ArticleRevisionSocialMediaAuthor[]
 
+  tags  TaggedAuthors[]
+
   @@index([createdAt])
   @@index([modifiedAt])
   @@index([name])
   @@map("authors")
+}
+
+model TaggedAuthors {
+  author     Author   @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId   String
+  tag        Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  tagId      String
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  @@id([authorId, tagId])
+  @@map("authors.tagged-authors")
 }
 
 model FocalPoint {
@@ -852,6 +866,7 @@ model Setting {
 enum TagType {
   Comment @map("comment")
   Event   @map("event")
+  Author  @map("author")
 }
 
 model Tag {
@@ -862,8 +877,9 @@ model Tag {
   type TagType
   tag  String?
 
-  comments TaggedComments[]
-  events   TaggedEvents[]
+  comments  TaggedComments[]
+  events    TaggedEvents[]
+  authors   TaggedAuthors[]
 
   @@unique([type, tag])
   @@map("tags")
