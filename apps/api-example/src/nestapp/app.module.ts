@@ -117,7 +117,7 @@ import {EventModule} from '@wepublish/event/api'
         const paymentProvidersRaw = configFile.paymentProviders
         if (paymentProvidersRaw) {
           for (const paymentProvider of paymentProvidersRaw) {
-            if (paymentProvider.type === 'stripe_checkout') {
+            if (paymentProvider.type === 'stripe-checkout') {
               paymentProviders.push(
                 new StripeCheckoutPaymentProvider({
                   id: paymentProvider.id,

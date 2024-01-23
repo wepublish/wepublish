@@ -17,11 +17,11 @@ OAuthProviders:
     scopes:
       - 'openid profile email'
 paymentProviders:
-  - type: payrexx # Allowed are stripe_checkout / stripe / payrexx / bexio
-    id: payrexx # Required for stripe_checkout / stripe / payrexx /bexio
-    name: Payrexx # Required for stripe_checkout / stripe / payrexx /bexio
-    offSessionPayments: true # Required for stripe_checkout / stripe / payrexx
-    secretKey: secret # Required for stripe_checkout / stripe
+  - type: payrexx # Allowed are stripe-checkout / stripe / payrexx / bexio
+    id: payrexx # Required for stripe-checkout / stripe / payrexx /bexio
+    name: Payrexx # Required for stripe-checkout / stripe / payrexx /bexio
+    offSessionPayments: true # Required for stripe-checkout / stripe / payrexx
+    secretKey: secret # Required for stripe-checkout / stripe
     webhookApiKey: secret
     instanceName: name  # Required for payrexx
     instanceAPISecret: secret # Required for payrexx
