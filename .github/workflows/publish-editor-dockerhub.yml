@@ -1,8 +1,9 @@
 name: Build and Push DockerHub Editor Image
 
 on:
-  pull_request:
-    types: [ opened, synchronize, reopened]
+  push:
+    tags:
+      - '*'  # Trigger on any tag push
 
 jobs:
   build-and-push-editor:
@@ -20,6 +21,10 @@ jobs:
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
+
+      - name: Extract tag name
+        id: tagname
+        run: echo "TAG_NAME=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
       - name: Build and Push Docker Image
         uses: docker/build-push-action@v2
