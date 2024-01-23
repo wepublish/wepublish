@@ -3,7 +3,7 @@ name: Build and Push DockerHub Editor Image
 on:
   push:
     tags:
-      - '*'  # Trigger on any tag push
+      - '*'
 
 jobs:
   build-and-push-editor:
@@ -32,7 +32,7 @@ jobs:
           context: .
           file: ./docker/Dockerfile
           push: true
-          tags: wepublishch/editor:test
+          tags: wepublishch/editor:${{ env.TAG_NAME }}
           target: editor
 
       - name: Image digest
