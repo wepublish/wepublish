@@ -1,11 +1,11 @@
-name: Build and Push DockerHub Editor Image
+name: Build and Push DockerHub API Image
 
 on:
   pull_request:
     types: [ opened, synchronize, reopened]
 
 jobs:
-  build-and-push-editor:
+  build-and-push-api:
     runs-on: ubuntu-latest
 
     steps:
@@ -27,8 +27,8 @@ jobs:
           context: .
           file: ./docker/Dockerfile
           push: true
-          tags: wepublishch/editor:test
-          target: editor
+          tags: wepublishch/api:test
+          target: api
 
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
