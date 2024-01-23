@@ -2374,6 +2374,8 @@ export type SubscriptionFilter = {
   autoRenew?: InputMaybe<Scalars['Boolean']>;
   deactivationDateFrom?: InputMaybe<DateFilter>;
   deactivationDateTo?: InputMaybe<DateFilter>;
+  cancellationDateFrom?: InputMaybe<DateFilter>;
+  cancellationDateTo?: InputMaybe<DateFilter>;
   deactivationReason?: InputMaybe<SubscriptionDeactivationReason>;
   memberPlanID?: InputMaybe<Scalars['String']>;
   paidUntil?: InputMaybe<DateFilter>;
