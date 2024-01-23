@@ -276,7 +276,7 @@ const NavPaper = ({
       {!!categories.length && (
         <>
           {categories.map((categoryArray, arrayIndex) => (
-            <LinksGroup key={`category-group-${arrayIndex}`}>
+            <LinksGroup key={arrayIndex}>
               {/* Render Separator for every array except the first one */}
               {arrayIndex > 0 && <Separator />}
               {categoryArray.map(nav => (
