@@ -5,7 +5,6 @@ import {
   FullAuthorFragment,
   ImageRefFragment,
   Maybe,
-  Tag,
   TagType,
   useAuthorQuery,
   useCreateAuthorMutation,
@@ -41,8 +40,6 @@ import {
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
 import {ImageSelectPanel} from './imageSelectPanel'
 import {ImageEditPanel} from './imageEditPanel'
-import FormGroup from 'rsuite/FormGroup'
-import FormControlLabel from 'rsuite/FormControlLabel'
 import FormControl from 'rsuite/FormControl'
 
 const {ControlLabel, Group, Control} = RForm
