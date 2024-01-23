@@ -59,7 +59,7 @@ export const NavbarMainItems = styled('div')<{show: boolean}>`
   `}
 `
 
-const IconButtonWrapper = styled('div')`
+export const NavbarIconButtonWrapper = styled('div')`
   background-color: #e91e63;
   display: flex;
   justify-content: center;
