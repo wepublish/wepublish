@@ -259,6 +259,7 @@ const NavPaper = ({
   return (
     <NavPaperWrapper>
       {children && <NavPaperChildrenWrapper>{children}</NavPaperChildrenWrapper>}
+      
       {!!main?.links.length && (
         <NavPaperMainLinks>
           {main.links.map((link, index) => {
