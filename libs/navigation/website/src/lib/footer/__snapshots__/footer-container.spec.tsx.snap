@@ -6,7 +6,7 @@ exports[`Footer Container should render Default 1`] = `
     class="css-dl99x8-FooterWrapper enubu9x10"
   >
     <div
-      class="css-1fc6zou-FooterPaperWrapper enubu9x6"
+      class="css-1fxijoh-FooterPaperWrapper enubu9x6"
     >
       <div
         class="css-41fvzk-LinksGroup enubu9x2"
@@ -15,7 +15,7 @@ exports[`Footer Container should render Default 1`] = `
         class="css-41fvzk-LinksGroup enubu9x2"
       >
         <div
-          class="css-3hkus2-Separator enubu9x3"
+          class="css-85dbd7-FooterSeparator enubu9x3"
         />
       </div>
     </div>
@@ -29,7 +29,7 @@ exports[`Footer Container should render WithClassName 1`] = `
     class="extra-classname css-dl99x8-FooterWrapper enubu9x10"
   >
     <div
-      class="css-1fc6zou-FooterPaperWrapper enubu9x6"
+      class="css-1fxijoh-FooterPaperWrapper enubu9x6"
     >
       <div
         class="css-41fvzk-LinksGroup enubu9x2"
@@ -38,7 +38,7 @@ exports[`Footer Container should render WithClassName 1`] = `
         class="css-41fvzk-LinksGroup enubu9x2"
       >
         <div
-          class="css-3hkus2-Separator enubu9x3"
+          class="css-85dbd7-FooterSeparator enubu9x3"
         />
       </div>
     </div>
@@ -52,7 +52,7 @@ exports[`Footer Container should render WithEmotion 1`] = `
     class="css-dl99x8-FooterWrapper enubu9x10"
   >
     <div
-      class="css-1fc6zou-FooterPaperWrapper enubu9x6"
+      class="css-1fxijoh-FooterPaperWrapper enubu9x6"
     >
       <div
         class="css-41fvzk-LinksGroup enubu9x2"
@@ -61,7 +61,7 @@ exports[`Footer Container should render WithEmotion 1`] = `
         class="css-41fvzk-LinksGroup enubu9x2"
       >
         <div
-          class="css-3hkus2-Separator enubu9x3"
+          class="css-85dbd7-FooterSeparator enubu9x3"
         />
       </div>
     </div>

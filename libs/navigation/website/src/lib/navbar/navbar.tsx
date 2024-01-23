@@ -30,6 +30,7 @@ export const NavbarInnerWrapper = styled(Toolbar)`
 
   ${({theme}) => css`
     ${theme.breakpoints.up('md')} {
+      padding-left: 0;
       grid-auto-columns: 1fr;
     }
   `}
@@ -54,7 +55,7 @@ export const NavbarMainItems = styled('div')<{show: boolean}>`
 
   ${({theme, show}) => css`
     ${theme.breakpoints.up('sm')} {
-      display: ${show ? 'none' : 'grid'};
+      display: ${show && 'grid'};
     }
   `}
 `
@@ -105,12 +106,12 @@ export function Navbar({
         css={appBarStyles(theme, isMenuOpen)}>
         <NavbarInnerWrapper>
           <NavbarMain>
-            <IconButtonWrapper>
+            <NavbarIconButtonWrapper>
               <IconButton size="large" color="secondary" aria-label="Menu" onClick={toggleMenu}>
                 {!isMenuOpen && <MdMenu />}
                 {isMenuOpen && <MdClose />}
               </IconButton>
-            </IconButtonWrapper>
+            </NavbarIconButtonWrapper>
 
             <NavbarMainItems show={isMenuOpen}>
               {mainItems?.links?.map((link, index) => {
@@ -133,12 +134,9 @@ export function Navbar({
       </AppBar>
 
       {isMenuOpen && Boolean(mainItems || categories?.length) && (
-        <NavPaper
-          main={mainItems}
-          categories={categories}
-          closeMenu={toggleMenu}
-          children={children}
-        />
+        <NavPaper main={mainItems} categories={categories} closeMenu={toggleMenu}>
+          {children}
+        </NavPaper>
       )}
     </NavbarWrapper>
   )
@@ -159,7 +157,7 @@ export const NavPaperWrapper = styled('div')`
   ${({theme}) => css`
     ${theme.breakpoints.up('md')} {
       gap: ${theme.spacing(6)};
-      grid-row-gap: ${theme.spacing(12)};
+      row-gap: ${theme.spacing(12)};
       grid-template-columns: 1fr 1fr;
       padding: ${theme.spacing(2.5)} calc(100% / 6) calc(100% / 12);
     }
@@ -172,13 +170,13 @@ export const NavPaperCategory = styled('div')`
   grid-auto-rows: max-content;
 `
 
-export const Name = styled('span')`
+export const NavPaperName = styled('span')`
   text-transform: uppercase;
   font-weight: 300;
   font-size: 14px;
 `
 
-export const Separator = styled('hr')`
+export const NavPaperSeparator = styled('hr')`
   width: 100%;
   height: 1px;
   background-color: white;
@@ -190,7 +188,7 @@ export const Separator = styled('hr')`
   `}
 `
 
-export const LinksGroup = styled('div')`
+export const NavPaperLinksGroup = styled('div')`
   display: grid;
   grid-template-columns: 1fr;
   gap: ${({theme}) => theme.spacing(3)};
@@ -224,8 +222,6 @@ export const NavPaperChildrenWrapper = styled('div')`
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(40px, 1fr));
   justify-items: center;
-  left: 0;
-  top: 0;
   width: 100%;
 
   ${({theme}) => css`
@@ -236,7 +232,7 @@ export const NavPaperChildrenWrapper = styled('div')`
       width: calc(100% / 6);
       gap: ${theme.spacing(3)};
       padding-top: ${theme.spacing(10)};
-      padding-left: ${theme.spacing(4.5)};
+      padding-left: ${theme.spacing(2)};
     }
   `}
 `
@@ -260,7 +256,7 @@ const NavPaper = ({
   return (
     <NavPaperWrapper>
       {children && <NavPaperChildrenWrapper>{children}</NavPaperChildrenWrapper>}
-      
+
       {!!main?.links.length && (
         <NavPaperMainLinks>
           {main.links.map((link, index) => {
@@ -277,12 +273,11 @@ const NavPaper = ({
       {!!categories.length && (
         <>
           {categories.map((categoryArray, arrayIndex) => (
-            <LinksGroup key={arrayIndex}>
-              {/* Render Separator for every array except the first one */}
-              {arrayIndex > 0 && <Separator />}
+            <NavPaperLinksGroup key={arrayIndex}>
+              {arrayIndex > 0 && <NavPaperSeparator />}
               {categoryArray.map(nav => (
                 <NavPaperCategory key={nav.id}>
-                  <Name>{nav.name}</Name>
+                  <NavPaperName>{nav.name}</NavPaperName>
 
                   <NavPaperCategoryLinks>
                     {nav.links?.map((link, index) => {
@@ -303,7 +298,7 @@ const NavPaper = ({
                   </NavPaperCategoryLinks>
                 </NavPaperCategory>
               ))}
-            </LinksGroup>
+            </NavPaperLinksGroup>
           ))}
         </>
       )}

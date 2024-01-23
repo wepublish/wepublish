@@ -9,13 +9,13 @@ exports[`Navbar should render Default 1`] = `
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-a5d5mw-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl211 css-15e8tal-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl211 css-12qyr8e-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
           class="css-kfwxas-NavbarMain ei6evl210"
         >
           <div
-            class="css-9l1kex-IconButtonWrapper ei6evl28"
+            class="css-viaoz8-NavbarIconButtonWrapper ei6evl28"
           >
             <button
               aria-label="Menu"
@@ -46,7 +46,7 @@ exports[`Navbar should render Default 1`] = `
             </button>
           </div>
           <div
-            class="css-pd0s4t-NavbarMainItems ei6evl29"
+            class="css-1h1il1q-NavbarMainItems ei6evl29"
           >
             <a
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
@@ -95,13 +95,13 @@ exports[`Navbar should render WithChildren 1`] = `
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-a5d5mw-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl211 css-15e8tal-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl211 css-12qyr8e-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
           class="css-kfwxas-NavbarMain ei6evl210"
         >
           <div
-            class="css-9l1kex-IconButtonWrapper ei6evl28"
+            class="css-viaoz8-NavbarIconButtonWrapper ei6evl28"
           >
             <button
               aria-label="Menu"
@@ -132,7 +132,7 @@ exports[`Navbar should render WithChildren 1`] = `
             </button>
           </div>
           <div
-            class="css-pd0s4t-NavbarMainItems ei6evl29"
+            class="css-1h1il1q-NavbarMainItems ei6evl29"
           >
             <a
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
@@ -181,13 +181,13 @@ exports[`Navbar should render WithClassName 1`] = `
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-a5d5mw-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl211 css-15e8tal-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl211 css-12qyr8e-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
           class="css-kfwxas-NavbarMain ei6evl210"
         >
           <div
-            class="css-9l1kex-IconButtonWrapper ei6evl28"
+            class="css-viaoz8-NavbarIconButtonWrapper ei6evl28"
           >
             <button
               aria-label="Menu"
@@ -218,7 +218,7 @@ exports[`Navbar should render WithClassName 1`] = `
             </button>
           </div>
           <div
-            class="css-pd0s4t-NavbarMainItems ei6evl29"
+            class="css-1h1il1q-NavbarMainItems ei6evl29"
           >
             <a
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
@@ -267,13 +267,13 @@ exports[`Navbar should render WithEmotion 1`] = `
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-a5d5mw-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl211 css-15e8tal-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl211 css-12qyr8e-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
           class="css-kfwxas-NavbarMain ei6evl210"
         >
           <div
-            class="css-9l1kex-IconButtonWrapper ei6evl28"
+            class="css-viaoz8-NavbarIconButtonWrapper ei6evl28"
           >
             <button
               aria-label="Menu"
@@ -304,7 +304,7 @@ exports[`Navbar should render WithEmotion 1`] = `
             </button>
           </div>
           <div
-            class="css-pd0s4t-NavbarMainItems ei6evl29"
+            class="css-1h1il1q-NavbarMainItems ei6evl29"
           >
             <a
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
@@ -353,13 +353,13 @@ exports[`Navbar should render WithError 1`] = `
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-a5d5mw-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl211 css-15e8tal-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl211 css-12qyr8e-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
           class="css-kfwxas-NavbarMain ei6evl210"
         >
           <div
-            class="css-9l1kex-IconButtonWrapper ei6evl28"
+            class="css-viaoz8-NavbarIconButtonWrapper ei6evl28"
           >
             <button
               aria-label="Menu"
@@ -390,7 +390,7 @@ exports[`Navbar should render WithError 1`] = `
             </button>
           </div>
           <div
-            class="css-pd0s4t-NavbarMainItems ei6evl29"
+            class="css-1h1il1q-NavbarMainItems ei6evl29"
           />
         </div>
       </div>
@@ -408,13 +408,13 @@ exports[`Navbar should render WithLoading 1`] = `
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-a5d5mw-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl211 css-15e8tal-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl211 css-12qyr8e-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
           class="css-kfwxas-NavbarMain ei6evl210"
         >
           <div
-            class="css-9l1kex-IconButtonWrapper ei6evl28"
+            class="css-viaoz8-NavbarIconButtonWrapper ei6evl28"
           >
             <button
               aria-label="Menu"
@@ -445,7 +445,7 @@ exports[`Navbar should render WithLoading 1`] = `
             </button>
           </div>
           <div
-            class="css-pd0s4t-NavbarMainItems ei6evl29"
+            class="css-1h1il1q-NavbarMainItems ei6evl29"
           />
         </div>
       </div>
@@ -463,13 +463,13 @@ exports[`Navbar should render WithoutItems 1`] = `
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-a5d5mw-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl211 css-15e8tal-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl211 css-12qyr8e-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
           class="css-kfwxas-NavbarMain ei6evl210"
         >
           <div
-            class="css-9l1kex-IconButtonWrapper ei6evl28"
+            class="css-viaoz8-NavbarIconButtonWrapper ei6evl28"
           >
             <button
               aria-label="Menu"
@@ -500,7 +500,7 @@ exports[`Navbar should render WithoutItems 1`] = `
             </button>
           </div>
           <div
-            class="css-pd0s4t-NavbarMainItems ei6evl29"
+            class="css-1h1il1q-NavbarMainItems ei6evl29"
           />
         </div>
       </div>

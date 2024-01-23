@@ -44,7 +44,7 @@ export const FooterMainItems = styled('div')<{show: boolean}>`
 
   ${({theme, show}) => css`
     ${theme.breakpoints.up('sm')} {
-      display: ${show ? 'none' : 'grid'};
+      display: ${show && 'grid'};
     }
   `}
 `
@@ -71,7 +71,7 @@ export function Footer({className, categorySlugs, slug, data, loading, error}: B
   )
 }
 
-const FooterPaperWrapper = styled('div')`
+export const FooterPaperWrapper = styled('div')`
   padding: ${({theme}) => theme.spacing(2.5)};
   background-color: ${({theme}) => theme.palette.grey[800]};
   color: ${({theme}) => theme.palette.primary.contrastText};
@@ -83,30 +83,30 @@ const FooterPaperWrapper = styled('div')`
   right: 0;
   transform: translateY(100%);
   overflow: hidden;
-  grid-row-gap: ${({theme}) => theme.spacing(8)};
+  row-gap: ${({theme}) => theme.spacing(8)};
 
   ${({theme}) => css`
     ${theme.breakpoints.up('md')} {
       gap: ${theme.spacing(6)};
-      grid-row-gap: ${theme.spacing(12)};
+      row-gap: ${theme.spacing(12)};
       grid-template-columns: 1fr 1fr;
       padding: calc(100% / 12) calc(100% / 6);
     }
   `}
 `
 
-const FooterPaperCategory = styled('div')`
+export const FooterPaperCategory = styled('div')`
   display: grid;
   gap: ${({theme}) => theme.spacing(1)};
   grid-auto-rows: max-content;
 `
 
-const Name = styled('span')`
+export const FooterName = styled('span')`
   text-transform: uppercase;
   font-weight: 300;
   font-size: 14px;
 `
-const Separator = styled('div')`
+export const FooterSeparator = styled('div')`
   position: absolute;
   left: 0;
   right: 0;
@@ -117,7 +117,7 @@ const Separator = styled('div')`
   transform: translateY(-2rem);
 `
 
-const LinksGroup = styled('div')`
+export const LinksGroup = styled('div')`
   display: grid;
   grid-template-columns: 1fr;
   gap: ${({theme}) => theme.spacing(3)};
@@ -177,11 +177,10 @@ const FooterPaper = ({
         <>
           {categories.map((categoryArray, arrayIndex) => (
             <LinksGroup key={`category-group-${arrayIndex}`}>
-              {/* Render Separator for every array except the first one */}
-              {arrayIndex > 0 && <Separator />}
+              {arrayIndex > 0 && <FooterSeparator />}
               {categoryArray.map(nav => (
                 <FooterPaperCategory key={nav.id}>
-                  <Name>{nav.name}</Name>
+                  <FooterName>{nav.name}</FooterName>
 
                   <FooterPaperCategoryLinks>
                     {nav.links?.map((link, index) => {
@@ -193,7 +192,7 @@ const FooterPaper = ({
                           key={index}
                           color="inherit"
                           underline="none"
-                          css={navPaperLinkStyling(theme)}>
+                          css={footerPaperLinkStyling(theme)}>
                           <H6>{link.label}</H6>
                         </Link>
                       )

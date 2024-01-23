@@ -6,7 +6,7 @@ exports[`Footer should render Default 1`] = `
     class="css-dl99x8-FooterWrapper enubu9x10"
   >
     <div
-      class="css-1fc6zou-FooterPaperWrapper enubu9x6"
+      class="css-1fxijoh-FooterPaperWrapper enubu9x6"
     >
       <div
         class="css-14jv7nw-FooterPaperCategoryLinks-FooterPaperMainLinks enubu9x0"
@@ -69,7 +69,7 @@ exports[`Footer should render Default 1`] = `
           class="css-1fj6oko-FooterPaperCategory enubu9x5"
         >
           <span
-            class="css-1it6p7u-Name enubu9x4"
+            class="css-11gynt8-FooterName enubu9x4"
           >
             Guides
           </span>
@@ -112,7 +112,7 @@ exports[`Footer should render Default 1`] = `
           class="css-1fj6oko-FooterPaperCategory enubu9x5"
         >
           <span
-            class="css-1it6p7u-Name enubu9x4"
+            class="css-11gynt8-FooterName enubu9x4"
           >
             Fokusthema
           </span>
@@ -166,13 +166,13 @@ exports[`Footer should render Default 1`] = `
         class="css-41fvzk-LinksGroup enubu9x2"
       >
         <div
-          class="css-3hkus2-Separator enubu9x3"
+          class="css-85dbd7-FooterSeparator enubu9x3"
         />
         <div
           class="css-1fj6oko-FooterPaperCategory enubu9x5"
         >
           <span
-            class="css-1it6p7u-Name enubu9x4"
+            class="css-11gynt8-FooterName enubu9x4"
           >
             Über Uns
           </span>
@@ -231,7 +231,7 @@ exports[`Footer should render WithClassName 1`] = `
     class="extra-classname css-dl99x8-FooterWrapper enubu9x10"
   >
     <div
-      class="css-1fc6zou-FooterPaperWrapper enubu9x6"
+      class="css-1fxijoh-FooterPaperWrapper enubu9x6"
     >
       <div
         class="css-14jv7nw-FooterPaperCategoryLinks-FooterPaperMainLinks enubu9x0"
@@ -294,7 +294,7 @@ exports[`Footer should render WithClassName 1`] = `
           class="css-1fj6oko-FooterPaperCategory enubu9x5"
         >
           <span
-            class="css-1it6p7u-Name enubu9x4"
+            class="css-11gynt8-FooterName enubu9x4"
           >
             Guides
           </span>
@@ -337,7 +337,7 @@ exports[`Footer should render WithClassName 1`] = `
           class="css-1fj6oko-FooterPaperCategory enubu9x5"
         >
           <span
-            class="css-1it6p7u-Name enubu9x4"
+            class="css-11gynt8-FooterName enubu9x4"
           >
             Fokusthema
           </span>
@@ -391,13 +391,13 @@ exports[`Footer should render WithClassName 1`] = `
         class="css-41fvzk-LinksGroup enubu9x2"
       >
         <div
-          class="css-3hkus2-Separator enubu9x3"
+          class="css-85dbd7-FooterSeparator enubu9x3"
         />
         <div
           class="css-1fj6oko-FooterPaperCategory enubu9x5"
         >
           <span
-            class="css-1it6p7u-Name enubu9x4"
+            class="css-11gynt8-FooterName enubu9x4"
           >
             Über Uns
           </span>
@@ -456,7 +456,7 @@ exports[`Footer should render WithEmotion 1`] = `
     class="css-dl99x8-FooterWrapper enubu9x10"
   >
     <div
-      class="css-1fc6zou-FooterPaperWrapper enubu9x6"
+      class="css-1fxijoh-FooterPaperWrapper enubu9x6"
     >
       <div
         class="css-14jv7nw-FooterPaperCategoryLinks-FooterPaperMainLinks enubu9x0"
@@ -519,7 +519,7 @@ exports[`Footer should render WithEmotion 1`] = `
           class="css-1fj6oko-FooterPaperCategory enubu9x5"
         >
           <span
-            class="css-1it6p7u-Name enubu9x4"
+            class="css-11gynt8-FooterName enubu9x4"
           >
             Guides
           </span>
@@ -562,7 +562,7 @@ exports[`Footer should render WithEmotion 1`] = `
           class="css-1fj6oko-FooterPaperCategory enubu9x5"
         >
           <span
-            class="css-1it6p7u-Name enubu9x4"
+            class="css-11gynt8-FooterName enubu9x4"
           >
             Fokusthema
           </span>
@@ -616,13 +616,13 @@ exports[`Footer should render WithEmotion 1`] = `
         class="css-41fvzk-LinksGroup enubu9x2"
       >
         <div
-          class="css-3hkus2-Separator enubu9x3"
+          class="css-85dbd7-FooterSeparator enubu9x3"
         />
         <div
           class="css-1fj6oko-FooterPaperCategory enubu9x5"
         >
           <span
-            class="css-1it6p7u-Name enubu9x4"
+            class="css-11gynt8-FooterName enubu9x4"
           >
             Über Uns
           </span>
@@ -681,7 +681,7 @@ exports[`Footer should render WithError 1`] = `
     class="css-dl99x8-FooterWrapper enubu9x10"
   >
     <div
-      class="css-1fc6zou-FooterPaperWrapper enubu9x6"
+      class="css-1fxijoh-FooterPaperWrapper enubu9x6"
     >
       <div
         class="css-41fvzk-LinksGroup enubu9x2"
@@ -690,7 +690,7 @@ exports[`Footer should render WithError 1`] = `
         class="css-41fvzk-LinksGroup enubu9x2"
       >
         <div
-          class="css-3hkus2-Separator enubu9x3"
+          class="css-85dbd7-FooterSeparator enubu9x3"
         />
       </div>
     </div>
@@ -704,7 +704,7 @@ exports[`Footer should render WithLoading 1`] = `
     class="css-dl99x8-FooterWrapper enubu9x10"
   >
     <div
-      class="css-1fc6zou-FooterPaperWrapper enubu9x6"
+      class="css-1fxijoh-FooterPaperWrapper enubu9x6"
     >
       <div
         class="css-41fvzk-LinksGroup enubu9x2"
@@ -713,7 +713,7 @@ exports[`Footer should render WithLoading 1`] = `
         class="css-41fvzk-LinksGroup enubu9x2"
       >
         <div
-          class="css-3hkus2-Separator enubu9x3"
+          class="css-85dbd7-FooterSeparator enubu9x3"
         />
       </div>
     </div>
@@ -727,7 +727,7 @@ exports[`Footer should render WithoutItems 1`] = `
     class="css-dl99x8-FooterWrapper enubu9x10"
   >
     <div
-      class="css-1fc6zou-FooterPaperWrapper enubu9x6"
+      class="css-1fxijoh-FooterPaperWrapper enubu9x6"
     />
   </footer>
 </DocumentFragment>
