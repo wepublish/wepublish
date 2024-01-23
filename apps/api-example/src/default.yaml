@@ -47,15 +47,15 @@ paymentProviders:
     offSessionPayments: true
     secretKey: key
     webhookEndpointSecret: wh_secret
-  - type: stripe_checkout
+  - type: stripe-checkout
     id: stripe-checkout
-    name: Stripe checkout
+    name: Stripe Checkout
     offSessionPayments: false
     secretKey: key
     webhookEndpointSecret: wh_secret
   - type: payrexx-subscription
     id: payrexx-subscription
-    name: payrexx-subscription
+    name: Payrexx Subscription
     webhookEndpointSecret: secret
     instanceName: wepublish-dev
     instanceAPISecret: secret
