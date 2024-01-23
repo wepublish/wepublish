@@ -129,7 +129,7 @@ const LinksGroup = styled('div')`
   `}
 `
 
-const navPaperLinkStyling = (theme: Theme) => css`
+const footerPaperLinkStyling = (theme: Theme) => css`
   ${theme.breakpoints.up('sm')} {
     border-bottom: 0;
   }
