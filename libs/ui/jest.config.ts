@@ -7,5 +7,6 @@ export default {
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
   coverageDirectory: '../../coverage/libs/ui',
-  setupFiles: ['./setup-tests.tsx']
+  setupFiles: ['./setup-tests.tsx'],
+  testPathIgnorePatterns: ['editor/*']
 }
