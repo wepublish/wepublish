@@ -166,7 +166,9 @@ const FooterPaper = ({
 
             return (
               <Link href={url} key={index} color="inherit" underline="none">
-                <H4>{link.label}</H4>
+                <H4 component="span" css={{fontWeight: '700'}}>
+                  {link.label}
+                </H4>
               </Link>
             )
           })}
@@ -193,7 +195,9 @@ const FooterPaper = ({
                           color="inherit"
                           underline="none"
                           css={footerPaperLinkStyling(theme)}>
-                          <H6>{link.label}</H6>
+                          <H6 component="span" css={{fontWeight: '700'}}>
+                            {link.label}
+                          </H6>
                         </Link>
                       )
                     })}

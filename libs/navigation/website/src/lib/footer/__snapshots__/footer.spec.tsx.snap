@@ -15,51 +15,51 @@ exports[`Footer should render Default 1`] = `
           class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
           href="/"
         >
-          <h4
-            class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
+          <span
+            class="MuiTypography-root MuiTypography-h4 css-1vn71jb-MuiTypography-root-FooterPaper"
           >
             Gesellschaft
-          </h4>
+          </span>
         </a>
         <a
           class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
           href="/a/abcd"
         >
-          <h4
-            class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
+          <span
+            class="MuiTypography-root MuiTypography-h4 css-1vn71jb-MuiTypography-root-FooterPaper"
           >
             Politik
-          </h4>
+          </span>
         </a>
         <a
           class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
           href="/a/abcd"
         >
-          <h4
-            class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
+          <span
+            class="MuiTypography-root MuiTypography-h4 css-1vn71jb-MuiTypography-root-FooterPaper"
           >
             Kultur
-          </h4>
+          </span>
         </a>
         <a
           class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
           href="/a/abcd"
         >
-          <h4
-            class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
+          <span
+            class="MuiTypography-root MuiTypography-h4 css-1vn71jb-MuiTypography-root-FooterPaper"
           >
             Tsüri-News
-          </h4>
+          </span>
         </a>
         <a
           class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
           href="https://google.com"
         >
-          <h4
-            class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
+          <span
+            class="MuiTypography-root MuiTypography-h4 css-1vn71jb-MuiTypography-root-FooterPaper"
           >
             Was lauft?
-          </h4>
+          </span>
         </a>
       </div>
       <div
@@ -80,31 +80,31 @@ exports[`Footer should render Default 1`] = `
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/"
             >
-              <h6
-                class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-rm2jb6-MuiTypography-root-FooterPaper"
               >
                 Agenda
-              </h6>
+              </span>
             </a>
             <a
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="https://google.com"
             >
-              <h6
-                class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-rm2jb6-MuiTypography-root-FooterPaper"
               >
                 Denkmal.org
-              </h6>
+              </span>
             </a>
             <a
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/a/abcd"
             >
-              <h6
-                class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-rm2jb6-MuiTypography-root-FooterPaper"
               >
                 Tsüri Guide
-              </h6>
+              </span>
             </a>
           </div>
         </div>
@@ -123,41 +123,41 @@ exports[`Footer should render Default 1`] = `
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/"
             >
-              <h6
-                class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-rm2jb6-MuiTypography-root-FooterPaper"
               >
                 Mobilität
-              </h6>
+              </span>
             </a>
             <a
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/a/abcd"
             >
-              <h6
-                class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-rm2jb6-MuiTypography-root-FooterPaper"
               >
                 Bildung
-              </h6>
+              </span>
             </a>
             <a
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/a/abcd"
             >
-              <h6
-                class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-rm2jb6-MuiTypography-root-FooterPaper"
               >
                 Konsum
-              </h6>
+              </span>
             </a>
             <a
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/a/abcd"
             >
-              <h6
-                class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-rm2jb6-MuiTypography-root-FooterPaper"
               >
                 Archive
-              </h6>
+              </span>
             </a>
           </div>
         </div>
@@ -183,39 +183,39 @@ exports[`Footer should render Default 1`] = `
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/team/"
             >
-              <h6
-                class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-rm2jb6-MuiTypography-root-FooterPaper"
               >
                 Team
-              </h6>
+              </span>
             </a>
             <a
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/about-us/"
             >
-              <h6
-                class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-rm2jb6-MuiTypography-root-FooterPaper"
               >
                 Über Uns
-              </h6>
+              </span>
             </a>
             <a
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
             >
-              <h6
-                class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-rm2jb6-MuiTypography-root-FooterPaper"
               >
                 Kontakt
-              </h6>
+              </span>
             </a>
             <a
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
             >
-              <h6
-                class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-rm2jb6-MuiTypography-root-FooterPaper"
               >
                 Jobs
-              </h6>
+              </span>
             </a>
           </div>
         </div>
@@ -240,51 +240,51 @@ exports[`Footer should render WithClassName 1`] = `
           class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
           href="/"
         >
-          <h4
-            class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
+          <span
+            class="MuiTypography-root MuiTypography-h4 css-1vn71jb-MuiTypography-root-FooterPaper"
           >
             Gesellschaft
-          </h4>
+          </span>
         </a>
         <a
           class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
           href="/a/abcd"
         >
-          <h4
-            class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
+          <span
+            class="MuiTypography-root MuiTypography-h4 css-1vn71jb-MuiTypography-root-FooterPaper"
           >
             Politik
-          </h4>
+          </span>
         </a>
         <a
           class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
           href="/a/abcd"
         >
-          <h4
-            class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
+          <span
+            class="MuiTypography-root MuiTypography-h4 css-1vn71jb-MuiTypography-root-FooterPaper"
           >
             Kultur
-          </h4>
+          </span>
         </a>
         <a
           class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
           href="/a/abcd"
         >
-          <h4
-            class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
+          <span
+            class="MuiTypography-root MuiTypography-h4 css-1vn71jb-MuiTypography-root-FooterPaper"
           >
             Tsüri-News
-          </h4>
+          </span>
         </a>
         <a
           class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
           href="https://google.com"
         >
-          <h4
-            class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
+          <span
+            class="MuiTypography-root MuiTypography-h4 css-1vn71jb-MuiTypography-root-FooterPaper"
           >
             Was lauft?
-          </h4>
+          </span>
         </a>
       </div>
       <div
@@ -305,31 +305,31 @@ exports[`Footer should render WithClassName 1`] = `
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/"
             >
-              <h6
-                class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-rm2jb6-MuiTypography-root-FooterPaper"
               >
                 Agenda
-              </h6>
+              </span>
             </a>
             <a
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="https://google.com"
             >
-              <h6
-                class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-rm2jb6-MuiTypography-root-FooterPaper"
               >
                 Denkmal.org
-              </h6>
+              </span>
             </a>
             <a
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/a/abcd"
             >
-              <h6
-                class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-rm2jb6-MuiTypography-root-FooterPaper"
               >
                 Tsüri Guide
-              </h6>
+              </span>
             </a>
           </div>
         </div>
@@ -348,41 +348,41 @@ exports[`Footer should render WithClassName 1`] = `
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/"
             >
-              <h6
-                class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-rm2jb6-MuiTypography-root-FooterPaper"
               >
                 Mobilität
-              </h6>
+              </span>
             </a>
             <a
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/a/abcd"
             >
-              <h6
-                class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-rm2jb6-MuiTypography-root-FooterPaper"
               >
                 Bildung
-              </h6>
+              </span>
             </a>
             <a
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/a/abcd"
             >
-              <h6
-                class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-rm2jb6-MuiTypography-root-FooterPaper"
               >
                 Konsum
-              </h6>
+              </span>
             </a>
             <a
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/a/abcd"
             >
-              <h6
-                class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-rm2jb6-MuiTypography-root-FooterPaper"
               >
                 Archive
-              </h6>
+              </span>
             </a>
           </div>
         </div>
@@ -408,39 +408,39 @@ exports[`Footer should render WithClassName 1`] = `
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/team/"
             >
-              <h6
-                class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-rm2jb6-MuiTypography-root-FooterPaper"
               >
                 Team
-              </h6>
+              </span>
             </a>
             <a
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/about-us/"
             >
-              <h6
-                class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-rm2jb6-MuiTypography-root-FooterPaper"
               >
                 Über Uns
-              </h6>
+              </span>
             </a>
             <a
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
             >
-              <h6
-                class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-rm2jb6-MuiTypography-root-FooterPaper"
               >
                 Kontakt
-              </h6>
+              </span>
             </a>
             <a
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
             >
-              <h6
-                class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-rm2jb6-MuiTypography-root-FooterPaper"
               >
                 Jobs
-              </h6>
+              </span>
             </a>
           </div>
         </div>
@@ -465,51 +465,51 @@ exports[`Footer should render WithEmotion 1`] = `
           class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
           href="/"
         >
-          <h4
-            class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
+          <span
+            class="MuiTypography-root MuiTypography-h4 css-1vn71jb-MuiTypography-root-FooterPaper"
           >
             Gesellschaft
-          </h4>
+          </span>
         </a>
         <a
           class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
           href="/a/abcd"
         >
-          <h4
-            class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
+          <span
+            class="MuiTypography-root MuiTypography-h4 css-1vn71jb-MuiTypography-root-FooterPaper"
           >
             Politik
-          </h4>
+          </span>
         </a>
         <a
           class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
           href="/a/abcd"
         >
-          <h4
-            class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
+          <span
+            class="MuiTypography-root MuiTypography-h4 css-1vn71jb-MuiTypography-root-FooterPaper"
           >
             Kultur
-          </h4>
+          </span>
         </a>
         <a
           class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
           href="/a/abcd"
         >
-          <h4
-            class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
+          <span
+            class="MuiTypography-root MuiTypography-h4 css-1vn71jb-MuiTypography-root-FooterPaper"
           >
             Tsüri-News
-          </h4>
+          </span>
         </a>
         <a
           class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
           href="https://google.com"
         >
-          <h4
-            class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
+          <span
+            class="MuiTypography-root MuiTypography-h4 css-1vn71jb-MuiTypography-root-FooterPaper"
           >
             Was lauft?
-          </h4>
+          </span>
         </a>
       </div>
       <div
@@ -530,31 +530,31 @@ exports[`Footer should render WithEmotion 1`] = `
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/"
             >
-              <h6
-                class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-rm2jb6-MuiTypography-root-FooterPaper"
               >
                 Agenda
-              </h6>
+              </span>
             </a>
             <a
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="https://google.com"
             >
-              <h6
-                class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-rm2jb6-MuiTypography-root-FooterPaper"
               >
                 Denkmal.org
-              </h6>
+              </span>
             </a>
             <a
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/a/abcd"
             >
-              <h6
-                class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-rm2jb6-MuiTypography-root-FooterPaper"
               >
                 Tsüri Guide
-              </h6>
+              </span>
             </a>
           </div>
         </div>
@@ -573,41 +573,41 @@ exports[`Footer should render WithEmotion 1`] = `
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/"
             >
-              <h6
-                class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-rm2jb6-MuiTypography-root-FooterPaper"
               >
                 Mobilität
-              </h6>
+              </span>
             </a>
             <a
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/a/abcd"
             >
-              <h6
-                class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-rm2jb6-MuiTypography-root-FooterPaper"
               >
                 Bildung
-              </h6>
+              </span>
             </a>
             <a
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/a/abcd"
             >
-              <h6
-                class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-rm2jb6-MuiTypography-root-FooterPaper"
               >
                 Konsum
-              </h6>
+              </span>
             </a>
             <a
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/a/abcd"
             >
-              <h6
-                class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-rm2jb6-MuiTypography-root-FooterPaper"
               >
                 Archive
-              </h6>
+              </span>
             </a>
           </div>
         </div>
@@ -633,39 +633,39 @@ exports[`Footer should render WithEmotion 1`] = `
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/team/"
             >
-              <h6
-                class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-rm2jb6-MuiTypography-root-FooterPaper"
               >
                 Team
-              </h6>
+              </span>
             </a>
             <a
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/about-us/"
             >
-              <h6
-                class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-rm2jb6-MuiTypography-root-FooterPaper"
               >
                 Über Uns
-              </h6>
+              </span>
             </a>
             <a
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
             >
-              <h6
-                class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-rm2jb6-MuiTypography-root-FooterPaper"
               >
                 Kontakt
-              </h6>
+              </span>
             </a>
             <a
               class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
             >
-              <h6
-                class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-rm2jb6-MuiTypography-root-FooterPaper"
               >
                 Jobs
-              </h6>
+              </span>
             </a>
           </div>
         </div>

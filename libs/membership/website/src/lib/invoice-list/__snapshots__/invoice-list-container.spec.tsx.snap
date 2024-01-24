@@ -143,7 +143,7 @@ exports[`InvoiceList Container should render Default 1`] = `
         <h6
           class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         >
-          Offene Rechnung für Foobar Memberplan
+          Bezahlte Rechnung für Foobar Memberplan
         </h6>
         <ul
           class="css-579onz-InvoiceListItemMeta e7di52m2"
@@ -247,20 +247,14 @@ exports[`InvoiceList Container should render Default 1`] = `
              Betrag von CHF 500.-
           </li>
         </ul>
-        <div
-          class="css-lst8rm-InvoiceListItemActions e7di52m0"
-        >
-          <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-14wjwic-MuiButtonBase-root-MuiButton-root"
-            tabindex="0"
-            type="button"
+        <strong>
+          Bezahlt am 
+          <time
+            datetime="2023-01-01"
           >
-            Jetzt Bezahlen
-            <span
-              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-            />
-          </button>
-        </div>
+            01.01.2023 00:00
+          </time>
+        </strong>
       </div>
     </div>
   </article>
