@@ -40,7 +40,7 @@ https://unsplash.it/200/200 200w"
           </h1>
         </header>
         <p
-          class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         >
           Lead
         </p>
@@ -145,7 +145,7 @@ https://unsplash.it/200/200 200w"
           </h1>
         </header>
         <p
-          class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         >
           Lead
         </p>
@@ -239,7 +239,7 @@ https://unsplash.it/200/200 200w"
           </h1>
         </header>
         <p
-          class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         >
           Lead
         </p>
@@ -294,7 +294,7 @@ https://unsplash.it/200/200 200w"
           </h1>
         </header>
         <p
-          class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         >
           Lead
         </p>
@@ -339,7 +339,7 @@ exports[`Teaser Article should render WithoutImageWithoutBlock 1`] = `
           </h1>
         </header>
         <p
-          class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         >
           Lead
         </p>
@@ -394,7 +394,7 @@ https://unsplash.it/200/200 200w"
           </h1>
         </header>
         <p
-          class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         >
           Lead from block
         </p>
@@ -449,7 +449,7 @@ https://unsplash.it/200/200 200w"
           </h1>
         </header>
         <p
-          class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         >
           Lead
         </p>
@@ -504,7 +504,7 @@ https://unsplash.it/200/200 200w"
           </h1>
         </header>
         <p
-          class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         >
           Lead
         </p>
@@ -553,7 +553,7 @@ https://unsplash.it/200/200 200w"
           </h1>
         </header>
         <p
-          class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         >
           Lead
         </p>
@@ -626,7 +626,7 @@ exports[`Teaser Custom should render WithoutImage 1`] = `
           </h1>
         </header>
         <p
-          class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         >
           Lead
         </p>
@@ -670,7 +670,7 @@ https://unsplash.it/200/200 200w"
           </h1>
         </header>
         <p
-          class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         >
           Lead
         </p>
@@ -714,7 +714,7 @@ https://unsplash.it/200/200 200w"
           </h1>
         </header>
         <p
-          class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         >
           Lead
         </p>
@@ -764,7 +764,7 @@ https://unsplash.it/200/200 200w"
           </h1>
         </header>
         <p
-          class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         >
           Lead
         </p>
@@ -859,7 +859,7 @@ https://unsplash.it/200/200 200w"
           </h1>
         </header>
         <p
-          class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         >
           Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo cons
         </p>
@@ -954,7 +954,7 @@ https://unsplash.it/200/200 200w"
           </h1>
         </header>
         <p
-          class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         >
           Lead
         </p>
@@ -994,7 +994,7 @@ exports[`Teaser Event should render WithoutImageWithoutEventImage 1`] = `
           </h1>
         </header>
         <p
-          class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         >
           Lead
         </p>
@@ -1044,7 +1044,7 @@ https://unsplash.it/200/200 200w"
           </h1>
         </header>
         <p
-          class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         >
           Lead
         </p>
@@ -1094,7 +1094,7 @@ https://unsplash.it/200/200 200w"
           </h1>
         </header>
         <p
-          class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         >
           Lead
         </p>
@@ -1138,7 +1138,7 @@ https://unsplash.it/200/200 200w"
           </h1>
         </header>
         <p
-          class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         >
           Lead
         </p>
@@ -1260,7 +1260,7 @@ https://unsplash.it/200/200 200w"
           </h1>
         </header>
         <p
-          class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         >
           Lead
         </p>
@@ -1304,7 +1304,7 @@ https://unsplash.it/200/200 200w"
           </h1>
         </header>
         <p
-          class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         >
           Lead
         </p>
@@ -1348,7 +1348,7 @@ https://unsplash.it/200/200 200w"
           </h1>
         </header>
         <p
-          class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         >
           Lead from block
         </p>
@@ -1392,7 +1392,7 @@ https://unsplash.it/200/200 200w"
           </h1>
         </header>
         <p
-          class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         >
           Lead
         </p>
@@ -1436,7 +1436,7 @@ https://unsplash.it/200/200 200w"
           </h1>
         </header>
         <p
-          class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         >
           Lead
         </p>
@@ -1480,7 +1480,7 @@ https://unsplash.it/200/200 200w"
           </h1>
         </header>
         <p
-          class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         >
           Lead
         </p>
@@ -1563,7 +1563,7 @@ https://unsplash.it/200/200 200w"
           </h1>
         </header>
         <p
-          class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         >
           Lead
         </p>
@@ -1646,7 +1646,7 @@ https://unsplash.it/200/200 200w"
           </h1>
         </header>
         <p
-          class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         >
           Lead
         </p>
@@ -1690,7 +1690,7 @@ https://unsplash.it/200/200 200w"
           </h1>
         </header>
         <p
-          class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         >
           Lead
         </p>
@@ -1724,7 +1724,7 @@ exports[`Teaser PeerArticle should render WithoutImageWithoutBlock 1`] = `
           </h1>
         </header>
         <p
-          class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         >
           Lead
         </p>
@@ -1768,7 +1768,7 @@ https://unsplash.it/200/200 200w"
           </h1>
         </header>
         <p
-          class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         >
           Lead
         </p>
@@ -1812,7 +1812,7 @@ https://unsplash.it/200/200 200w"
           </h1>
         </header>
         <p
-          class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         >
           Lead
         </p>
@@ -1856,7 +1856,7 @@ https://unsplash.it/200/200 200w"
           </h1>
         </header>
         <p
-          class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         >
           Lead
         </p>
@@ -1900,7 +1900,7 @@ https://unsplash.it/200/200 200w"
           </h1>
         </header>
         <p
-          class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         >
           Lead
         </p>

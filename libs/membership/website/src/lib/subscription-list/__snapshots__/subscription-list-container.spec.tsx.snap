@@ -73,7 +73,7 @@ exports[`SubscriptionList Container should render Cancel 1`] = `
 -             />
 -           </button>
 -           <button
--             class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-8jiqq9-MuiButtonBase-root-MuiButton-root"
+-             class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-14wjwic-MuiButtonBase-root-MuiButton-root"
 -             tabindex="0"
 -             type="button"
 -           >
@@ -162,7 +162,7 @@ exports[`SubscriptionList Container should render CancelWithInvoiceList 1`] = `
 -             />
 -           </button>
 -           <button
--             class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-8jiqq9-MuiButtonBase-root-MuiButton-root"
+-             class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-14wjwic-MuiButtonBase-root-MuiButton-root"
 -             tabindex="0"
 -             type="button"
 -           >
@@ -181,7 +181,7 @@ exports[`SubscriptionList Container should render CancelWithInvoiceList 1`] = `
           class="css-kkg48e-InvoiceListItemContent e7di52m3"
         >
           <h6
-            class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
           >
 -           Offene Rechnung für Foobar Memberplan
 +           Stornierte Rechnung für Foobar Memberplan
@@ -204,7 +204,7 @@ exports[`SubscriptionList Container should render CancelWithInvoiceList 1`] = `
 +             datetime="2023-01-01T00:00:00.000Z"
             >
 -           <button
--             class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-8jiqq9-MuiButtonBase-root-MuiButton-root"
+-             class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-14wjwic-MuiButtonBase-root-MuiButton-root"
 -             tabindex="0"
 -             type="button"
 -           >
@@ -245,7 +245,7 @@ https://unsplash.it/200/100 200w"
         class="css-6l2m0q-SubscriptionListItemContent eere75z3"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         >
           Foobar Memberplan
         </h6>
@@ -376,7 +376,7 @@ https://unsplash.it/200/100 200w"
             </svg>
              
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
               href="https://example.com"
             >
               Details & Zahlungen
@@ -397,7 +397,7 @@ https://unsplash.it/200/100 200w"
             />
           </button>
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-8jiqq9-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-14wjwic-MuiButtonBase-root-MuiButton-root"
             tabindex="0"
             type="button"
           >
@@ -445,7 +445,7 @@ https://unsplash.it/200/100 200w"
         class="css-6l2m0q-SubscriptionListItemContent eere75z3"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         >
           Foobar Memberplan
         </h6>
@@ -569,7 +569,7 @@ https://unsplash.it/200/100 200w"
             </svg>
              
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
               href="https://example.com"
             >
               Details & Zahlungen
@@ -590,7 +590,7 @@ https://unsplash.it/200/100 200w"
             />
           </button>
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-8jiqq9-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-14wjwic-MuiButtonBase-root-MuiButton-root"
             tabindex="0"
             type="button"
           >
@@ -628,7 +628,7 @@ https://unsplash.it/200/100 200w"
         class="css-6l2m0q-SubscriptionListItemContent eere75z3"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         >
           Foobar Memberplan
         </h6>
@@ -759,7 +759,7 @@ https://unsplash.it/200/100 200w"
             </svg>
              
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
               href="https://example.com"
             >
               Details & Zahlungen
@@ -780,7 +780,7 @@ https://unsplash.it/200/100 200w"
             />
           </button>
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-8jiqq9-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-14wjwic-MuiButtonBase-root-MuiButton-root"
             tabindex="0"
             type="button"
           >
@@ -818,7 +818,7 @@ https://unsplash.it/200/100 200w"
         class="css-6l2m0q-SubscriptionListItemContent eere75z3"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         >
           Foobar Memberplan
         </h6>
@@ -949,7 +949,7 @@ https://unsplash.it/200/100 200w"
             </svg>
              
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
               href="https://example.com"
             >
               Details & Zahlungen
@@ -970,7 +970,7 @@ https://unsplash.it/200/100 200w"
             />
           </button>
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-8jiqq9-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-14wjwic-MuiButtonBase-root-MuiButton-root"
             tabindex="0"
             type="button"
           >

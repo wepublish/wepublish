@@ -3,16 +3,16 @@
 exports[`Navbar Container should render Default 1`] = `
 <DocumentFragment>
   <nav
-    class="css-1xe741k-NavbarWrapper ei6evl212"
+    class="css-1xe741k-NavbarWrapper ei6evl211"
   >
     <header
-      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-a5d5mw-MuiPaper-root-MuiAppBar-root"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl211 css-12qyr8e-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl210 css-12qyr8e-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
-          class="css-kfwxas-NavbarMain ei6evl210"
+          class="css-kfwxas-NavbarMain ei6evl29"
         >
           <div
             class="css-viaoz8-NavbarIconButtonWrapper ei6evl28"
@@ -45,9 +45,6 @@ exports[`Navbar Container should render Default 1`] = `
               />
             </button>
           </div>
-          <div
-            class="css-1h1il1q-NavbarMainItems ei6evl29"
-          />
         </div>
       </div>
     </header>
@@ -58,16 +55,16 @@ exports[`Navbar Container should render Default 1`] = `
 exports[`Navbar Container should render WithClassName 1`] = `
 <DocumentFragment>
   <nav
-    class="extra-classname css-1xe741k-NavbarWrapper ei6evl212"
+    class="extra-classname css-1xe741k-NavbarWrapper ei6evl211"
   >
     <header
-      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-a5d5mw-MuiPaper-root-MuiAppBar-root"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl211 css-12qyr8e-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl210 css-12qyr8e-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
-          class="css-kfwxas-NavbarMain ei6evl210"
+          class="css-kfwxas-NavbarMain ei6evl29"
         >
           <div
             class="css-viaoz8-NavbarIconButtonWrapper ei6evl28"
@@ -100,9 +97,6 @@ exports[`Navbar Container should render WithClassName 1`] = `
               />
             </button>
           </div>
-          <div
-            class="css-1h1il1q-NavbarMainItems ei6evl29"
-          />
         </div>
       </div>
     </header>
@@ -113,16 +107,16 @@ exports[`Navbar Container should render WithClassName 1`] = `
 exports[`Navbar Container should render WithEmotion 1`] = `
 <DocumentFragment>
   <nav
-    class="css-1xe741k-NavbarWrapper ei6evl212"
+    class="css-1xe741k-NavbarWrapper ei6evl211"
   >
     <header
-      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-a5d5mw-MuiPaper-root-MuiAppBar-root"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl211 css-12qyr8e-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl210 css-12qyr8e-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
-          class="css-kfwxas-NavbarMain ei6evl210"
+          class="css-kfwxas-NavbarMain ei6evl29"
         >
           <div
             class="css-viaoz8-NavbarIconButtonWrapper ei6evl28"
@@ -155,9 +149,6 @@ exports[`Navbar Container should render WithEmotion 1`] = `
               />
             </button>
           </div>
-          <div
-            class="css-1h1il1q-NavbarMainItems ei6evl29"
-          />
         </div>
       </div>
     </header>

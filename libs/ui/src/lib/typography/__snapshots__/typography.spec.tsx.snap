@@ -18,7 +18,7 @@ exports[`Typography should render Default 1`] = `
     H3
   </h3>
   <h4
-    class="MuiTypography-root MuiTypography-h4 css-1vaqyff-MuiTypography-root"
+    class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
   >
     H4
   </h4>
@@ -28,7 +28,7 @@ exports[`Typography should render Default 1`] = `
     H5
   </h5>
   <h6
-    class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+    class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
   >
     H6
   </h6>
@@ -58,7 +58,7 @@ exports[`Typography should render Styling 1`] = `
     H4 with styling of H3
   </h4>
   <h3
-    class="MuiTypography-root MuiTypography-h4 css-1vaqyff-MuiTypography-root"
+    class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
   >
     H3 with styling of H4
   </h3>
@@ -68,7 +68,7 @@ exports[`Typography should render Styling 1`] = `
     H2 with styling of H5
   </h2>
   <h1
-    class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+    class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
   >
     H1 with styling of H6
   </h1>

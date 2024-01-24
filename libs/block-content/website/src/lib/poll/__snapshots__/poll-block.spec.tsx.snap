@@ -6,7 +6,7 @@ exports[`Poll Block should render AlreadyVoted 1`] = `
     class="css-nrshve-PollBlockWrapper ecm33wf3"
   >
     <h1
-      class="MuiTypography-root MuiTypography-h4 css-1vaqyff-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
     >
       Question
     </h1>
@@ -79,7 +79,7 @@ exports[`Poll Block should render AnonymousAlreadyVoted 1`] = `
     class="css-nrshve-PollBlockWrapper ecm33wf3"
   >
     <h1
-      class="MuiTypography-root MuiTypography-h4 css-1vaqyff-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
     >
       Question
     </h1>
@@ -192,7 +192,7 @@ exports[`Poll Block should render AnonymousVoting 1`] = `
     class="css-nrshve-PollBlockWrapper ecm33wf3"
   >
     <h1
-      class="MuiTypography-root MuiTypography-h4 css-1vaqyff-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
     >
       Question
     </h1>
@@ -366,7 +366,7 @@ exports[`Poll Block should render Default 1`] = `
     class="css-nrshve-PollBlockWrapper ecm33wf3"
   >
     <h1
-      class="MuiTypography-root MuiTypography-h4 css-1vaqyff-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
     >
       Question
     </h1>
@@ -479,7 +479,7 @@ exports[`Poll Block should render Voting 1`] = `
     class="css-nrshve-PollBlockWrapper ecm33wf3"
   >
     <h1
-      class="MuiTypography-root MuiTypography-h4 css-1vaqyff-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
     >
       Question
     </h1>
@@ -552,7 +552,7 @@ exports[`Poll Block should render VotingClosed 1`] = `
     class="css-nrshve-PollBlockWrapper ecm33wf3"
   >
     <h1
-      class="MuiTypography-root MuiTypography-h4 css-1vaqyff-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
     >
       Question
     </h1>
@@ -763,7 +763,7 @@ exports[`Poll Block should render WithClassName 1`] = `
     class="extra-classname css-nrshve-PollBlockWrapper ecm33wf3"
   >
     <h1
-      class="MuiTypography-root MuiTypography-h4 css-1vaqyff-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
     >
       Question
     </h1>
@@ -876,7 +876,7 @@ exports[`Poll Block should render WithEmotion 1`] = `
     class="css-nrshve-PollBlockWrapper ecm33wf3"
   >
     <h1
-      class="MuiTypography-root MuiTypography-h4 css-1vaqyff-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
     >
       Question
     </h1>
@@ -994,7 +994,7 @@ exports[`Poll Block should render WithError 1`] = `
         </div>
       </div>
       <div
-+       class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-standardError MuiAlert-standard css-du5jxe-MuiPaper-root-MuiAlert-root"
++       class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-standardError MuiAlert-standard css-1fv2bvb-MuiPaper-root-MuiAlert-root"
 +       role="alert"
 +     >
 +       <div
@@ -1019,7 +1019,7 @@ exports[`Poll Block should render WithError 1`] = `
 +       </div>
 +     </div>
 +     <div
-+       class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-standardError MuiAlert-standard css-du5jxe-MuiPaper-root-MuiAlert-root"
++       class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-standardError MuiAlert-standard css-1fv2bvb-MuiPaper-root-MuiAlert-root"
 +       role="alert"
 +     >
 +       <div

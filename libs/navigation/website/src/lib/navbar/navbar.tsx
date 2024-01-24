@@ -16,7 +16,7 @@ export const NavbarWrapper = styled('nav')`
 const appBarStyles = (theme: Theme, isMenuOpen: boolean) =>
   isMenuOpen
     ? css`
-        background-color: ${theme.palette.background.paper};
+        background-color: ${theme.palette.primary.main};
         color: ${theme.palette.primary.contrastText};
       `
     : null
@@ -44,41 +44,17 @@ export const NavbarMain = styled('div')`
   gap: ${({theme}) => theme.spacing(2)};
 `
 
-export const NavbarMainItems = styled('div')<{show: boolean}>`
-  display: none;
-  grid-auto-flow: column;
-  grid-auto-columns: max-content;
-  gap: ${({theme}) => theme.spacing(2)};
-  font-weight: ${({theme}) => theme.typography.fontWeightMedium};
-  font-size: 1.125rem;
-  text-transform: uppercase;
-
-  ${({theme, show}) => css`
-    ${theme.breakpoints.up('sm')} {
-      display: ${show && 'grid'};
-    }
-  `}
-`
-
 export const NavbarIconButtonWrapper = styled('div')`
-  background-color: #e91e63;
+  background-color: ${({theme}) => theme.palette.primary.main};
   display: flex;
   justify-content: center;
   align-items: center;
 `
 
-export function Navbar({
-  className,
-  children,
-  categorySlugs,
-  slug,
-  data,
-  loading,
-  error
-}: BuilderNavbarProps) {
+export function Navbar({className, children, categorySlugs, slug, data}: BuilderNavbarProps) {
   const theme = useTheme()
   const {
-    elements: {IconButton, Link}
+    elements: {IconButton}
   } = useWebsiteBuilder()
   const [isMenuOpen, setMenuOpen] = useState(false)
   const toggleMenu = useCallback(() => setMenuOpen(isOpen => !isOpen), [])
@@ -112,23 +88,6 @@ export function Navbar({
                 {isMenuOpen && <MdClose />}
               </IconButton>
             </NavbarIconButtonWrapper>
-
-            <NavbarMainItems show={isMenuOpen}>
-              {mainItems?.links?.map((link, index) => {
-                const url = navigationLinkToUrl(link)
-
-                return (
-                  <Link
-                    href={url}
-                    key={index}
-                    color="inherit"
-                    underline="none"
-                    onClick={() => setMenuOpen(false)}>
-                    {link.label}
-                  </Link>
-                )
-              })}
-            </NavbarMainItems>
           </NavbarMain>
         </NavbarInnerWrapper>
       </AppBar>
@@ -144,7 +103,7 @@ export function Navbar({
 
 export const NavPaperWrapper = styled('div')`
   padding: ${({theme}) => theme.spacing(2.5)};
-  background-color: ${({theme}) => theme.palette.background.paper};
+  background-color: ${({theme}) => theme.palette.primary.main};
   color: ${({theme}) => theme.palette.primary.contrastText};
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};
@@ -173,13 +132,13 @@ export const NavPaperCategory = styled('div')`
 export const NavPaperName = styled('span')`
   text-transform: uppercase;
   font-weight: 300;
-  font-size: 14px;
+  font-size: ${({theme}) => theme.typography.body2};
 `
 
 export const NavPaperSeparator = styled('hr')`
   width: 100%;
   height: 1px;
-  background-color: white;
+  background-color: ${({theme}) => theme.palette.common.white};
 
   ${({theme}) => css`
     ${theme.breakpoints.up('sm')} {
@@ -264,7 +223,9 @@ const NavPaper = ({
 
             return (
               <Link href={url} key={index} color="inherit" underline="none" onClick={closeMenu}>
-                <H4>{link.label}</H4>
+                <H4 component="span" css={{fontWeight: '700'}}>
+                  {link.label}
+                </H4>
               </Link>
             )
           })}
@@ -291,7 +252,9 @@ const NavPaper = ({
                           underline="none"
                           css={navPaperLinkStyling(theme)}
                           onClick={closeMenu}>
-                          <H6>{link.label}</H6>
+                          <H6 component="span" css={{fontWeight: '700'}}>
+                            {link.label}
+                          </H6>
                         </Link>
                       )
                     })}

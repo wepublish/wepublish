@@ -12,7 +12,7 @@ exports[`Richtext Block should render Default 1`] = `
       style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
     >
       <h2
-        class="MuiTypography-root MuiTypography-h4 css-1vaqyff-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
         data-slate-node="element"
       >
         <span
@@ -40,7 +40,7 @@ exports[`Richtext Block should render Default 1`] = `
         </span>
       </h3>
       <h4
-        class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         data-slate-node="element"
       >
         <span
@@ -341,7 +341,7 @@ exports[`Richtext Block should render Default 1`] = `
           </span>
         </span>
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
           data-slate-node="element"
           href="https://google.com"
           rel="noreferrer"
@@ -385,7 +385,7 @@ exports[`Richtext Block should render WithClassName 1`] = `
       style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
     >
       <h2
-        class="MuiTypography-root MuiTypography-h4 css-1vaqyff-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
         data-slate-node="element"
       >
         <span
@@ -413,7 +413,7 @@ exports[`Richtext Block should render WithClassName 1`] = `
         </span>
       </h3>
       <h4
-        class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         data-slate-node="element"
       >
         <span
@@ -714,7 +714,7 @@ exports[`Richtext Block should render WithClassName 1`] = `
           </span>
         </span>
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
           data-slate-node="element"
           href="https://google.com"
           rel="noreferrer"
@@ -758,7 +758,7 @@ exports[`Richtext Block should render WithEmotion 1`] = `
       style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
     >
       <h2
-        class="MuiTypography-root MuiTypography-h4 css-1vaqyff-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
         data-slate-node="element"
       >
         <span
@@ -786,7 +786,7 @@ exports[`Richtext Block should render WithEmotion 1`] = `
         </span>
       </h3>
       <h4
-        class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
         data-slate-node="element"
       >
         <span
@@ -1087,7 +1087,7 @@ exports[`Richtext Block should render WithEmotion 1`] = `
           </span>
         </span>
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
           data-slate-node="element"
           href="https://google.com"
           rel="noreferrer"

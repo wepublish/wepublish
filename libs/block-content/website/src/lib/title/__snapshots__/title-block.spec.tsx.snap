@@ -11,7 +11,7 @@ exports[`Title Block should render Default 1`] = `
       This is a title
     </h1>
     <p
-      class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
     >
       This is a lead
     </p>
@@ -30,7 +30,7 @@ exports[`Title Block should render WithClassName 1`] = `
       This is a title
     </h1>
     <p
-      class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
     >
       This is a lead
     </p>
@@ -49,7 +49,7 @@ exports[`Title Block should render WithEmotion 1`] = `
       This is a title
     </h1>
     <p
-      class="MuiTypography-root MuiTypography-h6 css-fv3wrn-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
     >
       This is a lead
     </p>

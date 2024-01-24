@@ -3,16 +3,16 @@
 exports[`Navbar should render Default 1`] = `
 <DocumentFragment>
   <nav
-    class="css-1xe741k-NavbarWrapper ei6evl212"
+    class="css-1xe741k-NavbarWrapper ei6evl211"
   >
     <header
-      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-a5d5mw-MuiPaper-root-MuiAppBar-root"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl211 css-12qyr8e-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl210 css-12qyr8e-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
-          class="css-kfwxas-NavbarMain ei6evl210"
+          class="css-kfwxas-NavbarMain ei6evl29"
         >
           <div
             class="css-viaoz8-NavbarIconButtonWrapper ei6evl28"
@@ -44,40 +44,6 @@ exports[`Navbar should render Default 1`] = `
                 class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
               />
             </button>
-          </div>
-          <div
-            class="css-1h1il1q-NavbarMainItems ei6evl29"
-          >
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
-              href="/"
-            >
-              Gesellschaft
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
-              href="/a/abcd"
-            >
-              Politik
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
-              href="/a/abcd"
-            >
-              Kultur
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
-              href="/a/abcd"
-            >
-              Tsüri-News
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
-              href="https://google.com"
-            >
-              Was lauft?
-            </a>
           </div>
         </div>
       </div>
@@ -89,16 +55,16 @@ exports[`Navbar should render Default 1`] = `
 exports[`Navbar should render WithChildren 1`] = `
 <DocumentFragment>
   <nav
-    class="css-1xe741k-NavbarWrapper ei6evl212"
+    class="css-1xe741k-NavbarWrapper ei6evl211"
   >
     <header
-      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-a5d5mw-MuiPaper-root-MuiAppBar-root"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl211 css-12qyr8e-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl210 css-12qyr8e-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
-          class="css-kfwxas-NavbarMain ei6evl210"
+          class="css-kfwxas-NavbarMain ei6evl29"
         >
           <div
             class="css-viaoz8-NavbarIconButtonWrapper ei6evl28"
@@ -130,40 +96,6 @@ exports[`Navbar should render WithChildren 1`] = `
                 class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
               />
             </button>
-          </div>
-          <div
-            class="css-1h1il1q-NavbarMainItems ei6evl29"
-          >
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
-              href="/"
-            >
-              Gesellschaft
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
-              href="/a/abcd"
-            >
-              Politik
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
-              href="/a/abcd"
-            >
-              Kultur
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
-              href="/a/abcd"
-            >
-              Tsüri-News
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
-              href="https://google.com"
-            >
-              Was lauft?
-            </a>
           </div>
         </div>
       </div>
@@ -175,16 +107,16 @@ exports[`Navbar should render WithChildren 1`] = `
 exports[`Navbar should render WithClassName 1`] = `
 <DocumentFragment>
   <nav
-    class="extra-classname css-1xe741k-NavbarWrapper ei6evl212"
+    class="extra-classname css-1xe741k-NavbarWrapper ei6evl211"
   >
     <header
-      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-a5d5mw-MuiPaper-root-MuiAppBar-root"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl211 css-12qyr8e-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl210 css-12qyr8e-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
-          class="css-kfwxas-NavbarMain ei6evl210"
+          class="css-kfwxas-NavbarMain ei6evl29"
         >
           <div
             class="css-viaoz8-NavbarIconButtonWrapper ei6evl28"
@@ -216,40 +148,6 @@ exports[`Navbar should render WithClassName 1`] = `
                 class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
               />
             </button>
-          </div>
-          <div
-            class="css-1h1il1q-NavbarMainItems ei6evl29"
-          >
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
-              href="/"
-            >
-              Gesellschaft
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
-              href="/a/abcd"
-            >
-              Politik
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
-              href="/a/abcd"
-            >
-              Kultur
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
-              href="/a/abcd"
-            >
-              Tsüri-News
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
-              href="https://google.com"
-            >
-              Was lauft?
-            </a>
           </div>
         </div>
       </div>
@@ -261,16 +159,16 @@ exports[`Navbar should render WithClassName 1`] = `
 exports[`Navbar should render WithEmotion 1`] = `
 <DocumentFragment>
   <nav
-    class="css-1xe741k-NavbarWrapper ei6evl212"
+    class="css-1xe741k-NavbarWrapper ei6evl211"
   >
     <header
-      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-a5d5mw-MuiPaper-root-MuiAppBar-root"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl211 css-12qyr8e-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl210 css-12qyr8e-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
-          class="css-kfwxas-NavbarMain ei6evl210"
+          class="css-kfwxas-NavbarMain ei6evl29"
         >
           <div
             class="css-viaoz8-NavbarIconButtonWrapper ei6evl28"
@@ -302,40 +200,6 @@ exports[`Navbar should render WithEmotion 1`] = `
                 class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
               />
             </button>
-          </div>
-          <div
-            class="css-1h1il1q-NavbarMainItems ei6evl29"
-          >
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
-              href="/"
-            >
-              Gesellschaft
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
-              href="/a/abcd"
-            >
-              Politik
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
-              href="/a/abcd"
-            >
-              Kultur
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
-              href="/a/abcd"
-            >
-              Tsüri-News
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
-              href="https://google.com"
-            >
-              Was lauft?
-            </a>
           </div>
         </div>
       </div>
@@ -347,16 +211,16 @@ exports[`Navbar should render WithEmotion 1`] = `
 exports[`Navbar should render WithError 1`] = `
 <DocumentFragment>
   <nav
-    class="css-1xe741k-NavbarWrapper ei6evl212"
+    class="css-1xe741k-NavbarWrapper ei6evl211"
   >
     <header
-      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-a5d5mw-MuiPaper-root-MuiAppBar-root"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl211 css-12qyr8e-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl210 css-12qyr8e-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
-          class="css-kfwxas-NavbarMain ei6evl210"
+          class="css-kfwxas-NavbarMain ei6evl29"
         >
           <div
             class="css-viaoz8-NavbarIconButtonWrapper ei6evl28"
@@ -389,9 +253,6 @@ exports[`Navbar should render WithError 1`] = `
               />
             </button>
           </div>
-          <div
-            class="css-1h1il1q-NavbarMainItems ei6evl29"
-          />
         </div>
       </div>
     </header>
@@ -402,16 +263,16 @@ exports[`Navbar should render WithError 1`] = `
 exports[`Navbar should render WithLoading 1`] = `
 <DocumentFragment>
   <nav
-    class="css-1xe741k-NavbarWrapper ei6evl212"
+    class="css-1xe741k-NavbarWrapper ei6evl211"
   >
     <header
-      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-a5d5mw-MuiPaper-root-MuiAppBar-root"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl211 css-12qyr8e-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl210 css-12qyr8e-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
-          class="css-kfwxas-NavbarMain ei6evl210"
+          class="css-kfwxas-NavbarMain ei6evl29"
         >
           <div
             class="css-viaoz8-NavbarIconButtonWrapper ei6evl28"
@@ -444,9 +305,6 @@ exports[`Navbar should render WithLoading 1`] = `
               />
             </button>
           </div>
-          <div
-            class="css-1h1il1q-NavbarMainItems ei6evl29"
-          />
         </div>
       </div>
     </header>
@@ -457,16 +315,16 @@ exports[`Navbar should render WithLoading 1`] = `
 exports[`Navbar should render WithoutItems 1`] = `
 <DocumentFragment>
   <nav
-    class="css-1xe741k-NavbarWrapper ei6evl212"
+    class="css-1xe741k-NavbarWrapper ei6evl211"
   >
     <header
-      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-a5d5mw-MuiPaper-root-MuiAppBar-root"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl211 css-12qyr8e-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl210 css-12qyr8e-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
-          class="css-kfwxas-NavbarMain ei6evl210"
+          class="css-kfwxas-NavbarMain ei6evl29"
         >
           <div
             class="css-viaoz8-NavbarIconButtonWrapper ei6evl28"
@@ -499,9 +357,6 @@ exports[`Navbar should render WithoutItems 1`] = `
               />
             </button>
           </div>
-          <div
-            class="css-1h1il1q-NavbarMainItems ei6evl29"
-          />
         </div>
       </div>
     </header>

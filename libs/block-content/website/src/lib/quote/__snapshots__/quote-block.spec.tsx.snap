@@ -6,7 +6,7 @@ exports[`Quote Block should render Default 1`] = `
     class="css-pjzed4-QuoteBlockWrapper e1ugt7gl0"
   >
     <p
-      class="MuiTypography-root MuiTypography-h4 css-1vaqyff-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
     >
       «This is a quote»
     </p>
@@ -25,7 +25,7 @@ exports[`Quote Block should render WithClassName 1`] = `
     class="extra-classname css-pjzed4-QuoteBlockWrapper e1ugt7gl0"
   >
     <p
-      class="MuiTypography-root MuiTypography-h4 css-1vaqyff-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
     >
       «This is a quote»
     </p>
@@ -44,7 +44,7 @@ exports[`Quote Block should render WithEmotion 1`] = `
     class="css-pjzed4-QuoteBlockWrapper e1ugt7gl0"
   >
     <p
-      class="MuiTypography-root MuiTypography-h4 css-1vaqyff-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
     >
       «This is a quote»
     </p>
