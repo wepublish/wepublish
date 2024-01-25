@@ -63,13 +63,11 @@ type TeaserTypeProps =
       teaser?: Teaser | null
       alignment: FlexAlignment
       numColumns?: never
-      index?: never
     }
   | {
       teaser?: Teaser | null
       alignment: FlexAlignment
       numColumns: number
-      index: number
     }
 
 export type BuilderTeaserProps = TeaserTypeProps & {className?: string}

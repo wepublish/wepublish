@@ -172,6 +172,7 @@ export type Author = {
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   slug: Scalars['Slug'];
+  tags?: Maybe<Array<Tag>>;
   url: Scalars['String'];
 };
 
@@ -190,6 +191,7 @@ export type AuthorCreatedAction = {
 
 export type AuthorFilter = {
   name?: InputMaybe<Scalars['String']>;
+  tagIds?: InputMaybe<Array<Scalars['ID']>>;
 };
 
 export type AuthorInput = {
@@ -199,6 +201,7 @@ export type AuthorInput = {
   links?: InputMaybe<Array<AuthorLinkInput>>;
   name: Scalars['String'];
   slug: Scalars['Slug'];
+  tagIds?: InputMaybe<Array<Scalars['ID']>>;
 };
 
 export type AuthorLink = {
@@ -2372,6 +2375,8 @@ export enum SubscriptionDeactivationReason {
 
 export type SubscriptionFilter = {
   autoRenew?: InputMaybe<Scalars['Boolean']>;
+  cancellationDateFrom?: InputMaybe<DateFilter>;
+  cancellationDateTo?: InputMaybe<DateFilter>;
   deactivationDateFrom?: InputMaybe<DateFilter>;
   deactivationDateTo?: InputMaybe<DateFilter>;
   deactivationReason?: InputMaybe<SubscriptionDeactivationReason>;
@@ -2443,6 +2448,7 @@ export enum TagSort {
 }
 
 export enum TagType {
+  Author = 'Author',
   Comment = 'Comment',
   Event = 'Event'
 }

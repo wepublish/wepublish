@@ -56,7 +56,7 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
           {image && (
             <ImagePanel image={image}>
               <Dropdown
-                renderToggle={(props: unknown, ref: React.Ref<HTMLButtonElement>) => (
+                renderToggle={(props: object, ref: React.Ref<HTMLButtonElement>) => (
                   <IconButton {...props} ref={ref} icon={<MdBuild />} circle appearance="subtle" />
                 )}>
                 <Dropdown.Item onClick={() => setChooseModalOpen(true)}>

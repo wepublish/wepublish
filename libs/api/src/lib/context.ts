@@ -26,7 +26,7 @@ import {MediaAdapter} from '@wepublish/image/api'
 import {BaseMailProvider, MailContext, MailContextOptions} from '@wepublish/mail/api'
 import {InvoiceWithItems, PaymentProvider} from '@wepublish/payment/api'
 import {SettingName} from '@wepublish/settings/api'
-import {GenerateJWTProps, generateJWT, logger} from '@wepublish/utils/api'
+import {GenerateJWTProps, createOptionalsArray, generateJWT, logger} from '@wepublish/utils/api'
 import AbortController from 'abort-controller'
 import {AuthenticationError} from 'apollo-server-express'
 import crypto from 'crypto'
@@ -214,16 +214,7 @@ export interface CreatePaymentWithProvider {
   saveCustomer: boolean
   successURL?: string
   failureURL?: string
-}
-
-const createOptionalsArray = <Data, Attribute extends keyof Data, Key extends Data[Attribute]>(
-  keys: Key[],
-  data: Data[],
-  attribute: Attribute
-): Array<Data | null> => {
-  const dataMap = Object.fromEntries(data.map(entry => [entry[attribute], entry]))
-
-  return keys.map(id => dataMap[id] ?? null)
+  user?: User
 }
 
 export async function contextFromRequest(
@@ -991,7 +982,8 @@ export async function contextFromRequest(
       invoice,
       saveCustomer,
       failureURL,
-      successURL
+      successURL,
+      user
     }: CreatePaymentWithProvider): Promise<Payment> {
       const paymentMethod = await loaders.activePaymentMethodsByID.load(paymentMethodID)
       const paymentProvider = paymentProviders.find(
@@ -1010,12 +1002,22 @@ export async function contextFromRequest(
         }
       })
 
+      const customer = user
+        ? await prisma.paymentProviderCustomer.findFirst({
+            where: {
+              userId: user.id,
+              paymentProviderID: paymentMethod.paymentProviderID
+            }
+          })
+        : null
+
       const intent = await paymentProvider.createIntent({
         paymentID: payment.id,
         invoice,
         saveCustomer,
         successURL,
-        failureURL
+        failureURL,
+        customerID: customer?.customerID
       })
 
       const updatedPayment = await prisma.payment.update({

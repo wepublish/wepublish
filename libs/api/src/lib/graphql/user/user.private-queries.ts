@@ -7,6 +7,7 @@ import {PrismaClient} from '@prisma/client'
 import {UserFilter, UserSort} from '../../db/user'
 import {unselectPassword} from '@wepublish/user/api'
 import {getUsers} from './user.queries'
+import {SortOrder} from '@wepublish/utils/api'
 
 export const getMe = (authenticate: Context['authenticate']) => {
   const session = authenticate()
@@ -37,7 +38,7 @@ export const getUserById = (
 export const getAdminUsers = async (
   filter: Partial<UserFilter>,
   sortedField: UserSort,
-  order: 1 | -1,
+  order: SortOrder,
   cursorId: string | null,
   skip: number,
   take: number,

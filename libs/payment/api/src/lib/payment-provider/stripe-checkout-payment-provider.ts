@@ -8,7 +8,8 @@ import {
   Intent,
   IntentState,
   PaymentProviderProps,
-  WebhookForPaymentIntentProps
+  WebhookForPaymentIntentProps,
+  WebhookResponse
 } from './payment-provider'
 
 export interface StripeCheckoutPaymentProviderProps extends PaymentProviderProps {
@@ -49,11 +50,16 @@ export class StripeCheckoutPaymentProvider extends BasePaymentProvider {
     return this.stripe.webhooks.constructEvent(body, signature, this.webhookEndpointSecret)
   }
 
-  async webhookForPaymentIntent(props: WebhookForPaymentIntentProps): Promise<IntentState[]> {
+  async webhookForPaymentIntent(props: WebhookForPaymentIntentProps): Promise<WebhookResponse> {
     const signature = props.req.headers['stripe-signature'] as string
     const event = this.getWebhookEvent(props.req.body, signature)
 
-    if (!event.type.startsWith('checkout.session')) throw new Error(`Can not handle ${event.type}`)
+    if (!event.type.startsWith('checkout.session')) {
+      return {
+        status: 200,
+        message: `Skipping handling ${event.type}`
+      }
+    }
 
     const session = event.data.object as Stripe.Checkout.Session
     const intentStates: IntentState[] = []
@@ -70,7 +76,10 @@ export class StripeCheckoutPaymentProvider extends BasePaymentProvider {
         }
       }
     }
-    return intentStates
+    return {
+      status: 200,
+      paymentStates: intentStates
+    }
   }
 
   async createIntent(props: CreatePaymentIntentProps): Promise<Intent> {

@@ -3,8 +3,8 @@ import {ArticleSort, articleWithRevisionsToPublicArticle} from '../../db/article
 import {PageSort, pageWithRevisionsToPublicPage} from '../../db/page'
 import {Context} from '../../context'
 import {createPageOrder} from '../page/page.queries'
-import {getSortOrder} from '../queries/sort'
 import {createArticleOrder} from '../article/article.queries'
+import {SortOrder} from '@wepublish/utils/api'
 
 export const queryPhrase = async (
   query: string,
@@ -15,14 +15,14 @@ export const queryPhrase = async (
   skip: number,
   pageSort: PageSort,
   articleSort: ArticleSort,
-  order: 1 | -1
+  order: SortOrder
 ) => {
   // Default add & if no specific query is given to prevent search to fail!
   query = query.replace(' ', '&')
 
   const [foundArticleIds, foundPageIds] = await Promise.all([
     prisma.$queryRaw<{id: string}[]>`
-      SELECT a.id FROM articles a 
+      SELECT a.id FROM articles a
       JOIN public."articles.revisions" ar on a."publishedId" = ar.id
       WHERE to_tsvector('english', ar.title) ||  jsonb_to_tsvector(
          'english',
@@ -64,7 +64,7 @@ export const queryPhrase = async (
           }
         }
       },
-      orderBy: createArticleOrder(articleSort, getSortOrder(order))
+      orderBy: createArticleOrder(articleSort, order)
     }),
 
     prisma.page.findMany({
@@ -80,7 +80,7 @@ export const queryPhrase = async (
           }
         }
       },
-      orderBy: createPageOrder(pageSort, getSortOrder(order))
+      orderBy: createPageOrder(pageSort, order)
     })
   ])
 

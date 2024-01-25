@@ -1,7 +1,7 @@
 import {Invoice, Prisma, PrismaClient} from '@prisma/client'
-import {ConnectionResult, DateFilterComparison, MaxResultsPerPage} from '../../db/common'
+import {ConnectionResult, DateFilterComparison} from '../../db/common'
 import {InvoiceFilter, InvoiceSort} from '../../db/invoice'
-import {getSortOrder, SortOrder} from '../queries/sort'
+import {SortOrder, getMaxTake, graphQLSortOrderToPrisma} from '@wepublish/utils/api'
 
 export const createInvoiceOrder = (
   field: InvoiceSort,
@@ -10,17 +10,17 @@ export const createInvoiceOrder = (
   switch (field) {
     case InvoiceSort.CreatedAt:
       return {
-        createdAt: sortOrder
+        createdAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case InvoiceSort.ModifiedAt:
       return {
-        modifiedAt: sortOrder
+        modifiedAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case InvoiceSort.PaidAt:
       return {
-        paidAt: sortOrder
+        paidAt: graphQLSortOrderToPrisma(sortOrder)
       }
   }
 }
@@ -105,13 +105,13 @@ export const createInvoiceFilter = (filter: Partial<InvoiceFilter>): Prisma.Invo
 export const getInvoices = async (
   filter: Partial<InvoiceFilter>,
   sortedField: InvoiceSort,
-  order: 1 | -1,
+  order: SortOrder,
   cursorId: string | null,
   skip: number,
   take: number,
   invoice: PrismaClient['invoice']
 ): Promise<ConnectionResult<Invoice>> => {
-  const orderBy = createInvoiceOrder(sortedField, getSortOrder(order))
+  const orderBy = createInvoiceOrder(sortedField, order)
   const where = createInvoiceFilter(filter)
 
   const [totalCount, invoices] = await Promise.all([
@@ -122,7 +122,7 @@ export const getInvoices = async (
     invoice.findMany({
       where,
       skip,
-      take: Math.min(take, MaxResultsPerPage) + 1,
+      take: getMaxTake(take) + 1,
       orderBy,
       cursor: cursorId ? {id: cursorId} : undefined,
       include: {

@@ -2,12 +2,13 @@ import {Args, Int, Mutation, Query, Resolver} from '@nestjs/graphql'
 import {
   ImportedEventFilter,
   ImportedEventsDocument,
-  Event,
+  EventFromSource,
   SingleEventFilter,
-  CreateEventArgs,
+  ImportEventArgs,
   ImportedEventSort
 } from './events-import.model'
 import {EventsImportService} from './events-import.service'
+import {SortOrder} from '@wepublish/utils/api'
 
 @Resolver()
 export class EventsImportResolver {
@@ -21,7 +22,7 @@ export class EventsImportResolver {
   })
   importedEvents(
     @Args('filter', {nullable: true}) filter: ImportedEventFilter,
-    @Args('order', {nullable: true, type: () => Int}) order: 1 | -1,
+    @Args('order', {nullable: true, type: () => Int}) order: SortOrder,
     @Args('skip', {nullable: true, type: () => Int}) skip: number,
     @Args('take', {nullable: true, type: () => Int}) take: number,
     @Args('sort', {nullable: true, type: () => ImportedEventSort}) sort: ImportedEventSort
@@ -29,8 +30,7 @@ export class EventsImportResolver {
     return this.events.importedEvents({filter, order, skip, take, sort})
   }
 
-  @Query(returns => Event, {
-    name: 'importedEvent',
+  @Query(returns => EventFromSource, {
     description: `
       Returns a more detailed version of a single importable event, by id and source.
     `
@@ -40,7 +40,6 @@ export class EventsImportResolver {
   }
 
   @Query(returns => [String], {
-    name: 'importedEventsIds',
     description: `
       Returns a list of external source ids of already imported events.
     `
@@ -50,23 +49,21 @@ export class EventsImportResolver {
   }
 
   @Query(returns => [String], {
-    name: 'eventProviders',
     description: `
       Returns a list of Importable Event Providers
     `
   })
-  providers() {
+  eventProviders() {
     return this.events.getProviders()
   }
 
   @Mutation(returns => String, {
-    name: 'createEvent',
     description: `
       Creates and event based on data from importable events list and an id and provider.
       Also, uploads an image to WePublish Image library.
     `
   })
-  createEventFromSource(@Args() filter: CreateEventArgs) {
+  importEvent(@Args() filter: ImportEventArgs) {
     return this.events.createEventFromSource(filter)
   }
 }
