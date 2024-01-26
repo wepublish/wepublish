@@ -877,7 +877,13 @@ export const GraphQLQuoteBlock = new GraphQLObjectType<QuoteBlock, Context>({
   name: 'QuoteBlock',
   fields: {
     quote: {type: GraphQLString},
-    author: {type: GraphQLString}
+    author: {type: GraphQLString},
+    image: {
+      type: GraphQLImage,
+      resolve: createProxyingResolver(({imageID}, _args, {loaders}) => {
+        return imageID ? loaders.images.load(imageID) : null
+      })
+    }
   },
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.Quote
@@ -944,7 +950,8 @@ export const GraphQLQuoteBlockInput = new GraphQLInputObjectType({
   name: 'QuoteBlockInput',
   fields: {
     quote: {type: GraphQLString},
-    author: {type: GraphQLString}
+    author: {type: GraphQLString},
+    imageID: {type: GraphQLID}
   }
 })
 
