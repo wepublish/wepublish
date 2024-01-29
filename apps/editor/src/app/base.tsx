@@ -369,20 +369,40 @@ export function Base({children}: BaseProps) {
                   </Nav.Item>
                 </PermissionControl>
 
-                <PermissionControl
-                  qualifyingPermissions={[
-                    'CAN_GET_AUTHORS',
-                    'CAN_GET_AUTHOR',
-                    'CAN_CREATE_AUTHOR',
-                    'CAN_DELETE_AUTHOR'
-                  ]}>
-                  <Nav.Item
-                    as={NavLink}
-                    href="/authors"
-                    icon={<MdGroup />}
-                    active={path === 'authors'}>
-                    {t('navbar.authors')}
-                  </Nav.Item>
+                <PermissionControl qualifyingPermissions={['CAN_GET_AUTHORS', 'CAN_GET_TAGS']}>
+                  <Nav.Menu eventKey={'authors'} title={t('navbar.authors')} icon={<MdGroup />}>
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        'CAN_GET_AUTHORS',
+                        'CAN_GET_AUTHOR',
+                        'CAN_CREATE_AUTHOR',
+                        'CAN_DELETE_AUTHOR'
+                      ]}>
+                      <Nav.Item
+                        as={NavLink}
+                        href="/authors"
+                        icon={<MdGroup />}
+                        active={path === 'authors'}>
+                        {t('navbar.authors')}
+                      </Nav.Item>
+                    </PermissionControl>
+
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        'CAN_GET_TAGS',
+                        'CAN_CREATE_TAG',
+                        'CAN_UPDATE_TAG',
+                        'CAN_DELETE_TAG'
+                      ]}>
+                      <Nav.Item
+                        as={NavLink}
+                        href="/authors/tags"
+                        icon={<MdSell />}
+                        active={path === 'authors/tags'}>
+                        {t('navbar.authorTags')}
+                      </Nav.Item>
+                    </PermissionControl>
+                  </Nav.Menu>
                 </PermissionControl>
 
                 <PermissionControl

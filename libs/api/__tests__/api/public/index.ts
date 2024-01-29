@@ -104,6 +104,7 @@ export type Author = {
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   slug: Scalars['Slug'];
+  tags?: Maybe<Array<Tag>>;
   url: Scalars['String'];
 };
 
@@ -116,6 +117,7 @@ export type AuthorConnection = {
 
 export type AuthorFilter = {
   name?: InputMaybe<Scalars['String']>;
+  tagIds?: InputMaybe<Array<Scalars['ID']>>;
 };
 
 export type AuthorLink = {
@@ -1160,7 +1162,12 @@ export type QueryPeerArticleArgs = {
 
 
 export type QueryPhraseArgs = {
+  articleSort?: InputMaybe<ArticleSort>;
+  order?: InputMaybe<SortOrder>;
+  pageSort?: InputMaybe<PublishedPageSort>;
   query: Scalars['String'];
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
 };
 
 
@@ -1331,6 +1338,7 @@ export enum TagSort {
 }
 
 export enum TagType {
+  Author = 'Author',
   Comment = 'Comment',
   Event = 'Event'
 }

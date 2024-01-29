@@ -13,6 +13,11 @@ fragment FullAuthor on Author {
     url
   }
 
+  tags {
+    id
+    tag
+  }
+
   image {
     ...FullImage
   }

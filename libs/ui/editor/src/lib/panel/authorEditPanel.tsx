@@ -5,12 +5,13 @@ import {
   FullAuthorFragment,
   ImageRefFragment,
   Maybe,
+  TagType,
   useAuthorQuery,
   useCreateAuthorMutation,
   useUpdateAuthorMutation
 } from '@wepublish/editor/api'
 import {slugify} from '@wepublish/utils'
-import {useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdLink} from 'react-icons/md'
 import {
@@ -33,11 +34,13 @@ import {
   ListValue,
   PermissionControl,
   createCheckedPermissionComponent,
-  useAuthorisation
+  useAuthorisation,
+  SelectTags
 } from '../atoms'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
 import {ImageSelectPanel} from './imageSelectPanel'
 import {ImageEditPanel} from './imageEditPanel'
+import FormControl from 'rsuite/FormControl'
 
 const {ControlLabel, Group, Control} = RForm
 
@@ -64,6 +67,7 @@ export interface AuthorEditPanelProps {
 
 function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
   const [name, setName] = useState('')
+  const [tagIds, setTagIds] = useState<string[]>([])
   const [slug, setSlug] = useState('')
   const [jobTitle, setJobTitle] = useState('')
   const [image, setImage] = useState<Maybe<ImageRefFragment>>()
@@ -101,6 +105,7 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
   useEffect(() => {
     if (data?.author) {
       setName(data.author.name)
+      setTagIds(data.author.tags?.map(tag => tag.id) || [])
       setSlug(data.author.slug)
       setJobTitle(data.author.jobTitle ?? '')
       setImage(data.author.image)
@@ -144,7 +149,8 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
             jobTitle,
             imageID: image?.id || null,
             links: links.map(({value}) => value),
-            bio
+            bio,
+            tagIds
           }
         }
       })
@@ -159,7 +165,8 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
             jobTitle,
             imageID: image?.id,
             links: links.map(({value}) => value),
-            bio
+            bio,
+            tagIds
           }
         }
       })
@@ -277,6 +284,16 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
                   </Controls>
                 )}
               </ListInput>
+            </Panel>
+
+            <Panel header={t('authors.panels.tags')}>
+              <FormControl
+                name="tagIds"
+                selectedTags={tagIds}
+                setSelectedTags={(newTagIds: string[]) => setTagIds(newTagIds)}
+                tagType={TagType.Author}
+                accepter={SelectTags}
+              />
             </Panel>
             <Panel header={t('authors.panels.bioInformation')}>
               <div className="richTextFrame">
