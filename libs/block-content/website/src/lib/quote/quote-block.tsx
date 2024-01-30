@@ -17,9 +17,13 @@ export const QuoteBlockWrapper = styled('blockquote')<{withImage: boolean}>`
   display: grid;
   gap: ${({theme}) => theme.spacing(2)};
 
-  ${({theme}) => theme.breakpoints.up('md')} {
-    grid-template-columns: ${({withImage}) => (withImage ? '1fr 2fr' : null)};
-  }
+  ${({theme, withImage}) =>
+    withImage &&
+    css`
+      ${theme.breakpoints.up('md')} {
+        grid-template-columns: 1fr 2fr;
+      }
+    `}
 `
 
 export const QuoteContent = styled('div')`
