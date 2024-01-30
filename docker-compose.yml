@@ -15,19 +15,6 @@ services:
     restart: on-failure
     networks:
       - app-tier
-  website:
-    build:
-      context: .
-    ports:
-      - '127.0.0.1:4200:8000'
-    command: ['npx', '@wepublish/website-example']
-    environment:
-      NODE_ENV: production
-      API_URL: http://api:8000
-    depends_on:
-      - api
-    networks:
-      - app-tier
   api:
     image: wepublishch/api:master
     ports:

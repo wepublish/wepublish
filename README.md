@@ -147,7 +147,7 @@ npm i
 npm run build
 ```
 
-4a. Test wepublish (the initial admin passsword is green printed in the log at first startup)
+4a. Test wepublish (the initial admin login is red printed in the log at first startup)
 ```sh
 npm run try
 ```
