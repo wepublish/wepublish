@@ -18,7 +18,6 @@ const generateSecureRandomPassword = (length: number) => {
   }
   return password
 }
-
 export async function runSeed() {
   const prisma = new PrismaClient()
   await prisma.$connect()
@@ -41,7 +40,6 @@ export async function runSeed() {
       '\x1b[31m\x1b[1m%s\x1b[0m',
       `Bootstrapping initial admin user ${email} with password: ${randomPassword}`
     )
-
     await prisma.user.upsert({
       where: {
         id: 'admin'
