@@ -6,7 +6,7 @@ exports[`Rating should render Rating 1`] = `
     class="MuiStack-root css-3l5917-MuiStack-root"
   >
     <div
-      class="css-8403od"
+      class="css-152x6fn"
     >
       <span
         class="MuiRating-root MuiRating-sizeMedium css-iljtu2-MuiRating-root"
@@ -221,7 +221,7 @@ exports[`Rating should render Rating 1`] = `
       </span>
     </div>
     <div
-      class="css-8403od"
+      class="css-152x6fn"
     >
       <span
         class="MuiRating-root MuiRating-sizeMedium css-iljtu2-MuiRating-root"
@@ -452,7 +452,7 @@ exports[`Rating should render Rating 1`] = `
       </span>
     </div>
     <div
-      class="css-8403od"
+      class="css-152x6fn"
     >
       <span
         aria-label="4 Stars"
@@ -593,7 +593,7 @@ exports[`Rating should render Rating 1`] = `
       </span>
     </div>
     <div
-      class="css-8403od"
+      class="css-152x6fn"
     >
       <span
         class="MuiRating-root MuiRating-sizeMedium css-iljtu2-MuiRating-root"
@@ -1251,7 +1251,7 @@ exports[`Rating should render Rating 1`] = `
     </div>
     <br />
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
       href="https://mui.com/material-ui/react-rating/"
       target="_blank"
     >

@@ -1,6 +1,6 @@
 import {css} from '@emotion/react'
 import {Meta} from '@storybook/react'
-import {Navigation, NavigationListDocument} from '@wepublish/website/api'
+import {FullNavigationFragment, Navigation, NavigationListDocument} from '@wepublish/website/api'
 import {FooterContainer} from './footer-container'
 
 const children = (
@@ -15,40 +15,145 @@ const children = (
 )
 
 const navigation = {
-  __typename: 'Navigation',
   id: 'cldx7kcpi1168oapxftiqsh0p',
-  key: 'footer',
+  key: 'main',
   name: 'main',
   links: [
     {
       __typename: 'PageNavigationLink',
-      label: 'Home',
+      label: 'Gesellschaft',
       page: {
-        __typename: 'Page',
-        id: '1234-1234',
-        slug: 'slug',
-        url: '/',
-        blocks: []
+        url: '/'
       }
     },
     {
       __typename: 'ArticleNavigationLink',
-      label: 'Impressum',
+      label: 'Politik',
       article: {
-        __typename: 'Article',
-        id: '1234-1234',
-        slug: 'slug',
-        url: '/a/impressum',
-        blocks: []
+        url: '/a/abcd'
+      }
+    },
+    {
+      __typename: 'ArticleNavigationLink',
+      label: 'Kultur',
+      article: {
+        url: '/a/abcd'
+      }
+    },
+    {
+      __typename: 'ArticleNavigationLink',
+      label: 'Tsüri-News',
+      article: {
+        url: '/a/abcd'
       }
     },
     {
       __typename: 'ExternalNavigationLink',
-      label: 'FAQ',
+      label: 'Was lauft?',
       url: 'https://google.com'
     }
   ]
-} as Navigation
+} as FullNavigationFragment
+
+const navigations = [
+  navigation,
+  {
+    id: '1234-1234',
+    key: 'guides',
+    name: 'Guides',
+    links: [
+      {
+        __typename: 'PageNavigationLink',
+        label: 'Agenda',
+        page: {
+          url: '/'
+        }
+      },
+      {
+        __typename: 'ExternalNavigationLink',
+        label: 'Denkmal.org',
+        url: 'https://google.com'
+      },
+      {
+        __typename: 'ArticleNavigationLink',
+        label: 'Tsüri Guide',
+        article: {
+          url: '/a/abcd'
+        }
+      }
+    ]
+  },
+  {
+    id: '12345-12345',
+    key: 'fokusthema',
+    name: 'Fokusthema',
+    links: [
+      {
+        __typename: 'PageNavigationLink',
+        label: 'Mobilität',
+        page: {
+          url: '/'
+        }
+      },
+      {
+        __typename: 'ArticleNavigationLink',
+        label: 'Bildung',
+        article: {
+          url: '/a/abcd'
+        }
+      },
+      {
+        __typename: 'ArticleNavigationLink',
+        label: 'Konsum',
+        article: {
+          url: '/a/abcd'
+        }
+      },
+      {
+        __typename: 'ArticleNavigationLink',
+        label: 'Archive',
+        article: {
+          url: '/a/abcd'
+        }
+      }
+    ]
+  },
+  {
+    id: '12345-12345',
+    key: 'about',
+    name: 'Über Uns',
+    links: [
+      {
+        __typename: 'PageNavigationLink',
+        label: 'Team',
+        page: {
+          url: '/team/'
+        }
+      },
+      {
+        __typename: 'PageNavigationLink',
+        label: 'Über Uns',
+        page: {
+          url: '/about-us/'
+        }
+      },
+      {
+        __typename: 'PageNavigationLink',
+        label: 'Kontakt',
+        article: {
+          url: '/contact/'
+        }
+      },
+      {
+        __typename: 'PageNavigationLink',
+        label: 'Jobs',
+        article: {
+          url: '/jobs/'
+        }
+      }
+    ]
+  }
+] as Navigation[]
 
 export default {
   component: FooterContainer,
@@ -58,6 +163,7 @@ export default {
 export const Default = {
   args: {
     slug: 'footer',
+    categorySlugs: [['guides', 'fokusthema'], ['about']],
     children
   },
 
@@ -70,7 +176,7 @@ export const Default = {
           },
           result: {
             data: {
-              navigations: [navigation]
+              navigations
             }
           }
         }
