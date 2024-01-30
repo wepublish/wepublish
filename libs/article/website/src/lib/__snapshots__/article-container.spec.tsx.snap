@@ -1052,26 +1052,6 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
             />
-            <time
-              class="css-3uu3f-TeaserDate e18of27r1"
-              datetime="2023-01-01T00:00:00.000Z"
-            >
-              01.01.2023
-            </time>
-            <header
-              class="css-4se2pd-TeaserTitle e18of27r2"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
-              >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
@@ -1085,18 +1065,18 @@ https://unsplash.it/200/200 200w"
                 class="css-1wh9s95-TeaserTitles e18of27r6"
               >
                 <div
-                  class="MuiTypography-root MuiTypography-h6 css-12tow8s-TeaserPreTitle-MuiTypography-root e18of27r4"
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
                 >
                   Pre Title
                 </div>
                 <h1
-                  class="MuiTypography-root MuiTypography-h5 css-1y9wlva-TeaserTitle-MuiTypography-root e18of27r5"
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
                 >
                   Title
                 </h1>
               </header>
               <p
-                class="MuiTypography-root MuiTypography-h6 css-1fjsap5-TeaserLead-MuiTypography-root e18of27r3"
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
               >
                 Lead
               </p>
@@ -1131,26 +1111,6 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
             />
-            <time
-              class="css-3uu3f-TeaserDate e18of27r1"
-              datetime="2023-01-01T00:00:00.000Z"
-            >
-              01.01.2023
-            </time>
-            <header
-              class="css-4se2pd-TeaserTitle e18of27r2"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
-              >
-                Chur solidarisiert sich mit der Ukraine
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
-            </p>
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
@@ -1164,13 +1124,13 @@ https://unsplash.it/200/200 200w"
                 class="css-1wh9s95-TeaserTitles e18of27r6"
               >
                 <h1
-                  class="MuiTypography-root MuiTypography-h5 css-1y9wlva-TeaserTitle-MuiTypography-root e18of27r5"
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
                 >
                   Chur solidarisiert sich mit der Ukraine
                 </h1>
               </header>
               <p
-                class="MuiTypography-root MuiTypography-h6 css-1fjsap5-TeaserLead-MuiTypography-root e18of27r3"
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
               >
                 Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
               </p>
@@ -1208,17 +1168,26 @@ https://unsplash.it/200/200 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
+                <div
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
+                >
+                  Pre Title
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Title
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              >
+                Lead
+              </p>
+            </div>
           </div>
         </a>
       </article>
@@ -1247,15 +1216,19 @@ https://unsplash.it/200/100 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Das ist ein Titel
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            />
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Das ist ein Titel
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              />
+            </div>
           </div>
         </a>
       </article>
@@ -1284,17 +1257,26 @@ https://unsplash.it/200/200 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
+                <div
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
+                >
+                  Pre Title
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Title
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              >
+                Lead
+              </p>
+            </div>
           </div>
         </a>
       </article>
@@ -1324,26 +1306,6 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
             />
-            <time
-              class="css-3uu3f-TeaserDate e18of27r1"
-              datetime="2023-01-01T00:00:00.000Z"
-            >
-              01.01.2023
-            </time>
-            <header
-              class="css-4se2pd-TeaserTitle e18of27r2"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
-              >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
@@ -1357,18 +1319,18 @@ https://unsplash.it/200/200 200w"
                 class="css-1wh9s95-TeaserTitles e18of27r6"
               >
                 <div
-                  class="MuiTypography-root MuiTypography-h6 css-12tow8s-TeaserPreTitle-MuiTypography-root e18of27r4"
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
                 >
                   Pre Title
                 </div>
                 <h1
-                  class="MuiTypography-root MuiTypography-h5 css-1y9wlva-TeaserTitle-MuiTypography-root e18of27r5"
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
                 >
                   Title
                 </h1>
               </header>
               <p
-                class="MuiTypography-root MuiTypography-h6 css-1fjsap5-TeaserLead-MuiTypography-root e18of27r3"
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
               >
                 Lead
               </p>
@@ -1403,26 +1365,6 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
             />
-            <time
-              class="css-3uu3f-TeaserDate e18of27r1"
-              datetime="2023-01-01T00:00:00.000Z"
-            >
-              01.01.2023
-            </time>
-            <header
-              class="css-4se2pd-TeaserTitle e18of27r2"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
-              >
-                Chur solidarisiert sich mit der Ukraine
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
-            </p>
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
@@ -1436,13 +1378,13 @@ https://unsplash.it/200/200 200w"
                 class="css-1wh9s95-TeaserTitles e18of27r6"
               >
                 <h1
-                  class="MuiTypography-root MuiTypography-h5 css-1y9wlva-TeaserTitle-MuiTypography-root e18of27r5"
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
                 >
                   Chur solidarisiert sich mit der Ukraine
                 </h1>
               </header>
               <p
-                class="MuiTypography-root MuiTypography-h6 css-1fjsap5-TeaserLead-MuiTypography-root e18of27r3"
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
               >
                 Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
               </p>
@@ -1480,17 +1422,26 @@ https://unsplash.it/200/200 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
+                <div
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
+                >
+                  Pre Title
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Title
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              >
+                Lead
+              </p>
+            </div>
           </div>
         </a>
       </article>
@@ -1519,15 +1470,19 @@ https://unsplash.it/200/100 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Das ist ein Titel
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            />
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Das ist ein Titel
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              />
+            </div>
           </div>
         </a>
       </article>
@@ -1556,17 +1511,26 @@ https://unsplash.it/200/200 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
+                <div
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
+                >
+                  Pre Title
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Title
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              >
+                Lead
+              </p>
+            </div>
           </div>
         </a>
       </article>
@@ -1596,26 +1560,6 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
             />
-            <time
-              class="css-3uu3f-TeaserDate e18of27r1"
-              datetime="2023-01-01T00:00:00.000Z"
-            >
-              01.01.2023
-            </time>
-            <header
-              class="css-4se2pd-TeaserTitle e18of27r2"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
-              >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
@@ -1629,18 +1573,18 @@ https://unsplash.it/200/100 200w"
                 class="css-1wh9s95-TeaserTitles e18of27r6"
               >
                 <div
-                  class="MuiTypography-root MuiTypography-h6 css-12tow8s-TeaserPreTitle-MuiTypography-root e18of27r4"
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
                 >
                   Pre Title
                 </div>
                 <h1
-                  class="MuiTypography-root MuiTypography-h5 css-1y9wlva-TeaserTitle-MuiTypography-root e18of27r5"
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
                 >
                   Title
                 </h1>
               </header>
               <p
-                class="MuiTypography-root MuiTypography-h6 css-1fjsap5-TeaserLead-MuiTypography-root e18of27r3"
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
               >
                 Lead
               </p>
@@ -1675,26 +1619,6 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
             />
-            <time
-              class="css-3uu3f-TeaserDate e18of27r1"
-              datetime="2023-01-01T00:00:00.000Z"
-            >
-              01.01.2023
-            </time>
-            <header
-              class="css-4se2pd-TeaserTitle e18of27r2"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
-              >
-                Chur solidarisiert sich mit der Ukraine
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
-            </p>
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
@@ -1708,13 +1632,13 @@ https://unsplash.it/200/100 200w"
                 class="css-1wh9s95-TeaserTitles e18of27r6"
               >
                 <h1
-                  class="MuiTypography-root MuiTypography-h5 css-1y9wlva-TeaserTitle-MuiTypography-root e18of27r5"
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
                 >
                   Chur solidarisiert sich mit der Ukraine
                 </h1>
               </header>
               <p
-                class="MuiTypography-root MuiTypography-h6 css-1fjsap5-TeaserLead-MuiTypography-root e18of27r3"
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
               >
                 Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
               </p>
@@ -1752,15 +1676,19 @@ https://unsplash.it/200/100 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Das ist ein Titel
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            />
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Das ist ein Titel
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              />
+            </div>
           </div>
         </a>
       </article>
@@ -1789,17 +1717,26 @@ https://unsplash.it/200/100 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
+                <div
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
+                >
+                  Pre Title
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Title
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              >
+                Lead
+              </p>
+            </div>
           </div>
         </a>
       </article>
@@ -1828,17 +1765,26 @@ https://unsplash.it/200/100 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
+                <div
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
+                >
+                  Pre Title
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Title
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              >
+                Lead
+              </p>
+            </div>
           </div>
         </a>
       </article>
@@ -3281,26 +3227,6 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
             />
-            <time
-              class="css-3uu3f-TeaserDate e18of27r1"
-              datetime="2023-01-01T00:00:00.000Z"
-            >
-              01.01.2023
-            </time>
-            <header
-              class="css-4se2pd-TeaserTitle e18of27r2"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
-              >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
@@ -3314,18 +3240,18 @@ https://unsplash.it/200/200 200w"
                 class="css-1wh9s95-TeaserTitles e18of27r6"
               >
                 <div
-                  class="MuiTypography-root MuiTypography-h6 css-12tow8s-TeaserPreTitle-MuiTypography-root e18of27r4"
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
                 >
                   Pre Title
                 </div>
                 <h1
-                  class="MuiTypography-root MuiTypography-h5 css-1y9wlva-TeaserTitle-MuiTypography-root e18of27r5"
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
                 >
                   Title
                 </h1>
               </header>
               <p
-                class="MuiTypography-root MuiTypography-h6 css-1fjsap5-TeaserLead-MuiTypography-root e18of27r3"
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
               >
                 Lead
               </p>
@@ -3360,26 +3286,6 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
             />
-            <time
-              class="css-3uu3f-TeaserDate e18of27r1"
-              datetime="2023-01-01T00:00:00.000Z"
-            >
-              01.01.2023
-            </time>
-            <header
-              class="css-4se2pd-TeaserTitle e18of27r2"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
-              >
-                Chur solidarisiert sich mit der Ukraine
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
-            </p>
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
@@ -3393,13 +3299,13 @@ https://unsplash.it/200/200 200w"
                 class="css-1wh9s95-TeaserTitles e18of27r6"
               >
                 <h1
-                  class="MuiTypography-root MuiTypography-h5 css-1y9wlva-TeaserTitle-MuiTypography-root e18of27r5"
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
                 >
                   Chur solidarisiert sich mit der Ukraine
                 </h1>
               </header>
               <p
-                class="MuiTypography-root MuiTypography-h6 css-1fjsap5-TeaserLead-MuiTypography-root e18of27r3"
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
               >
                 Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
               </p>
@@ -3437,17 +3343,26 @@ https://unsplash.it/200/200 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
+                <div
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
+                >
+                  Pre Title
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Title
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              >
+                Lead
+              </p>
+            </div>
           </div>
         </a>
       </article>
@@ -3476,15 +3391,19 @@ https://unsplash.it/200/100 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Das ist ein Titel
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            />
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Das ist ein Titel
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              />
+            </div>
           </div>
         </a>
       </article>
@@ -3513,17 +3432,26 @@ https://unsplash.it/200/200 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
+                <div
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
+                >
+                  Pre Title
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Title
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              >
+                Lead
+              </p>
+            </div>
           </div>
         </a>
       </article>
@@ -3553,26 +3481,6 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
             />
-            <time
-              class="css-3uu3f-TeaserDate e18of27r1"
-              datetime="2023-01-01T00:00:00.000Z"
-            >
-              01.01.2023
-            </time>
-            <header
-              class="css-4se2pd-TeaserTitle e18of27r2"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
-              >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
@@ -3586,18 +3494,18 @@ https://unsplash.it/200/200 200w"
                 class="css-1wh9s95-TeaserTitles e18of27r6"
               >
                 <div
-                  class="MuiTypography-root MuiTypography-h6 css-12tow8s-TeaserPreTitle-MuiTypography-root e18of27r4"
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
                 >
                   Pre Title
                 </div>
                 <h1
-                  class="MuiTypography-root MuiTypography-h5 css-1y9wlva-TeaserTitle-MuiTypography-root e18of27r5"
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
                 >
                   Title
                 </h1>
               </header>
               <p
-                class="MuiTypography-root MuiTypography-h6 css-1fjsap5-TeaserLead-MuiTypography-root e18of27r3"
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
               >
                 Lead
               </p>
@@ -3632,26 +3540,6 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
             />
-            <time
-              class="css-3uu3f-TeaserDate e18of27r1"
-              datetime="2023-01-01T00:00:00.000Z"
-            >
-              01.01.2023
-            </time>
-            <header
-              class="css-4se2pd-TeaserTitle e18of27r2"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
-              >
-                Chur solidarisiert sich mit der Ukraine
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
-            </p>
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
@@ -3665,13 +3553,13 @@ https://unsplash.it/200/200 200w"
                 class="css-1wh9s95-TeaserTitles e18of27r6"
               >
                 <h1
-                  class="MuiTypography-root MuiTypography-h5 css-1y9wlva-TeaserTitle-MuiTypography-root e18of27r5"
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
                 >
                   Chur solidarisiert sich mit der Ukraine
                 </h1>
               </header>
               <p
-                class="MuiTypography-root MuiTypography-h6 css-1fjsap5-TeaserLead-MuiTypography-root e18of27r3"
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
               >
                 Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
               </p>
@@ -3709,17 +3597,26 @@ https://unsplash.it/200/200 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
+                <div
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
+                >
+                  Pre Title
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Title
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              >
+                Lead
+              </p>
+            </div>
           </div>
         </a>
       </article>
@@ -3748,15 +3645,19 @@ https://unsplash.it/200/100 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Das ist ein Titel
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            />
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Das ist ein Titel
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              />
+            </div>
           </div>
         </a>
       </article>
@@ -3785,17 +3686,26 @@ https://unsplash.it/200/200 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
+                <div
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
+                >
+                  Pre Title
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Title
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              >
+                Lead
+              </p>
+            </div>
           </div>
         </a>
       </article>
@@ -3825,26 +3735,6 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
             />
-            <time
-              class="css-3uu3f-TeaserDate e18of27r1"
-              datetime="2023-01-01T00:00:00.000Z"
-            >
-              01.01.2023
-            </time>
-            <header
-              class="css-4se2pd-TeaserTitle e18of27r2"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
-              >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
@@ -3858,18 +3748,18 @@ https://unsplash.it/200/100 200w"
                 class="css-1wh9s95-TeaserTitles e18of27r6"
               >
                 <div
-                  class="MuiTypography-root MuiTypography-h6 css-12tow8s-TeaserPreTitle-MuiTypography-root e18of27r4"
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
                 >
                   Pre Title
                 </div>
                 <h1
-                  class="MuiTypography-root MuiTypography-h5 css-1y9wlva-TeaserTitle-MuiTypography-root e18of27r5"
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
                 >
                   Title
                 </h1>
               </header>
               <p
-                class="MuiTypography-root MuiTypography-h6 css-1fjsap5-TeaserLead-MuiTypography-root e18of27r3"
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
               >
                 Lead
               </p>
@@ -3904,26 +3794,6 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
             />
-            <time
-              class="css-3uu3f-TeaserDate e18of27r1"
-              datetime="2023-01-01T00:00:00.000Z"
-            >
-              01.01.2023
-            </time>
-            <header
-              class="css-4se2pd-TeaserTitle e18of27r2"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
-              >
-                Chur solidarisiert sich mit der Ukraine
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
-            </p>
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
@@ -3937,13 +3807,13 @@ https://unsplash.it/200/100 200w"
                 class="css-1wh9s95-TeaserTitles e18of27r6"
               >
                 <h1
-                  class="MuiTypography-root MuiTypography-h5 css-1y9wlva-TeaserTitle-MuiTypography-root e18of27r5"
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
                 >
                   Chur solidarisiert sich mit der Ukraine
                 </h1>
               </header>
               <p
-                class="MuiTypography-root MuiTypography-h6 css-1fjsap5-TeaserLead-MuiTypography-root e18of27r3"
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
               >
                 Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
               </p>
@@ -3981,15 +3851,19 @@ https://unsplash.it/200/100 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Das ist ein Titel
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            />
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Das ist ein Titel
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              />
+            </div>
           </div>
         </a>
       </article>
@@ -4018,17 +3892,26 @@ https://unsplash.it/200/100 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
+                <div
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
+                >
+                  Pre Title
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Title
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              >
+                Lead
+              </p>
+            </div>
           </div>
         </a>
       </article>
@@ -4057,17 +3940,26 @@ https://unsplash.it/200/100 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
+                <div
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
+                >
+                  Pre Title
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Title
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              >
+                Lead
+              </p>
+            </div>
           </div>
         </a>
       </article>
@@ -5510,26 +5402,6 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
             />
-            <time
-              class="css-3uu3f-TeaserDate e18of27r1"
-              datetime="2023-01-01T00:00:00.000Z"
-            >
-              01.01.2023
-            </time>
-            <header
-              class="css-4se2pd-TeaserTitle e18of27r2"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
-              >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
@@ -5543,18 +5415,18 @@ https://unsplash.it/200/200 200w"
                 class="css-1wh9s95-TeaserTitles e18of27r6"
               >
                 <div
-                  class="MuiTypography-root MuiTypography-h6 css-12tow8s-TeaserPreTitle-MuiTypography-root e18of27r4"
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
                 >
                   Pre Title
                 </div>
                 <h1
-                  class="MuiTypography-root MuiTypography-h5 css-1y9wlva-TeaserTitle-MuiTypography-root e18of27r5"
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
                 >
                   Title
                 </h1>
               </header>
               <p
-                class="MuiTypography-root MuiTypography-h6 css-1fjsap5-TeaserLead-MuiTypography-root e18of27r3"
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
               >
                 Lead
               </p>
@@ -5589,26 +5461,6 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
             />
-            <time
-              class="css-3uu3f-TeaserDate e18of27r1"
-              datetime="2023-01-01T00:00:00.000Z"
-            >
-              01.01.2023
-            </time>
-            <header
-              class="css-4se2pd-TeaserTitle e18of27r2"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
-              >
-                Chur solidarisiert sich mit der Ukraine
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
-            </p>
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
@@ -5622,13 +5474,13 @@ https://unsplash.it/200/200 200w"
                 class="css-1wh9s95-TeaserTitles e18of27r6"
               >
                 <h1
-                  class="MuiTypography-root MuiTypography-h5 css-1y9wlva-TeaserTitle-MuiTypography-root e18of27r5"
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
                 >
                   Chur solidarisiert sich mit der Ukraine
                 </h1>
               </header>
               <p
-                class="MuiTypography-root MuiTypography-h6 css-1fjsap5-TeaserLead-MuiTypography-root e18of27r3"
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
               >
                 Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
               </p>
@@ -5666,17 +5518,26 @@ https://unsplash.it/200/200 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
+                <div
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
+                >
+                  Pre Title
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Title
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              >
+                Lead
+              </p>
+            </div>
           </div>
         </a>
       </article>
@@ -5705,15 +5566,19 @@ https://unsplash.it/200/100 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Das ist ein Titel
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            />
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Das ist ein Titel
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              />
+            </div>
           </div>
         </a>
       </article>
@@ -5742,17 +5607,26 @@ https://unsplash.it/200/200 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
+                <div
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
+                >
+                  Pre Title
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Title
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              >
+                Lead
+              </p>
+            </div>
           </div>
         </a>
       </article>
@@ -5782,26 +5656,6 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
             />
-            <time
-              class="css-3uu3f-TeaserDate e18of27r1"
-              datetime="2023-01-01T00:00:00.000Z"
-            >
-              01.01.2023
-            </time>
-            <header
-              class="css-4se2pd-TeaserTitle e18of27r2"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
-              >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
@@ -5815,18 +5669,18 @@ https://unsplash.it/200/200 200w"
                 class="css-1wh9s95-TeaserTitles e18of27r6"
               >
                 <div
-                  class="MuiTypography-root MuiTypography-h6 css-12tow8s-TeaserPreTitle-MuiTypography-root e18of27r4"
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
                 >
                   Pre Title
                 </div>
                 <h1
-                  class="MuiTypography-root MuiTypography-h5 css-1y9wlva-TeaserTitle-MuiTypography-root e18of27r5"
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
                 >
                   Title
                 </h1>
               </header>
               <p
-                class="MuiTypography-root MuiTypography-h6 css-1fjsap5-TeaserLead-MuiTypography-root e18of27r3"
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
               >
                 Lead
               </p>
@@ -5861,26 +5715,6 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
             />
-            <time
-              class="css-3uu3f-TeaserDate e18of27r1"
-              datetime="2023-01-01T00:00:00.000Z"
-            >
-              01.01.2023
-            </time>
-            <header
-              class="css-4se2pd-TeaserTitle e18of27r2"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
-              >
-                Chur solidarisiert sich mit der Ukraine
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
-            </p>
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
@@ -5894,13 +5728,13 @@ https://unsplash.it/200/200 200w"
                 class="css-1wh9s95-TeaserTitles e18of27r6"
               >
                 <h1
-                  class="MuiTypography-root MuiTypography-h5 css-1y9wlva-TeaserTitle-MuiTypography-root e18of27r5"
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
                 >
                   Chur solidarisiert sich mit der Ukraine
                 </h1>
               </header>
               <p
-                class="MuiTypography-root MuiTypography-h6 css-1fjsap5-TeaserLead-MuiTypography-root e18of27r3"
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
               >
                 Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
               </p>
@@ -5938,17 +5772,26 @@ https://unsplash.it/200/200 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
+                <div
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
+                >
+                  Pre Title
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Title
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              >
+                Lead
+              </p>
+            </div>
           </div>
         </a>
       </article>
@@ -5977,15 +5820,19 @@ https://unsplash.it/200/100 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Das ist ein Titel
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            />
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Das ist ein Titel
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              />
+            </div>
           </div>
         </a>
       </article>
@@ -6014,17 +5861,26 @@ https://unsplash.it/200/200 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
+                <div
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
+                >
+                  Pre Title
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Title
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              >
+                Lead
+              </p>
+            </div>
           </div>
         </a>
       </article>
@@ -6054,26 +5910,6 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
             />
-            <time
-              class="css-3uu3f-TeaserDate e18of27r1"
-              datetime="2023-01-01T00:00:00.000Z"
-            >
-              01.01.2023
-            </time>
-            <header
-              class="css-4se2pd-TeaserTitle e18of27r2"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
-              >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
@@ -6087,18 +5923,18 @@ https://unsplash.it/200/100 200w"
                 class="css-1wh9s95-TeaserTitles e18of27r6"
               >
                 <div
-                  class="MuiTypography-root MuiTypography-h6 css-12tow8s-TeaserPreTitle-MuiTypography-root e18of27r4"
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
                 >
                   Pre Title
                 </div>
                 <h1
-                  class="MuiTypography-root MuiTypography-h5 css-1y9wlva-TeaserTitle-MuiTypography-root e18of27r5"
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
                 >
                   Title
                 </h1>
               </header>
               <p
-                class="MuiTypography-root MuiTypography-h6 css-1fjsap5-TeaserLead-MuiTypography-root e18of27r3"
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
               >
                 Lead
               </p>
@@ -6133,26 +5969,6 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
             />
-            <time
-              class="css-3uu3f-TeaserDate e18of27r1"
-              datetime="2023-01-01T00:00:00.000Z"
-            >
-              01.01.2023
-            </time>
-            <header
-              class="css-4se2pd-TeaserTitle e18of27r2"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
-              >
-                Chur solidarisiert sich mit der Ukraine
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
-            </p>
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
@@ -6166,13 +5982,13 @@ https://unsplash.it/200/100 200w"
                 class="css-1wh9s95-TeaserTitles e18of27r6"
               >
                 <h1
-                  class="MuiTypography-root MuiTypography-h5 css-1y9wlva-TeaserTitle-MuiTypography-root e18of27r5"
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
                 >
                   Chur solidarisiert sich mit der Ukraine
                 </h1>
               </header>
               <p
-                class="MuiTypography-root MuiTypography-h6 css-1fjsap5-TeaserLead-MuiTypography-root e18of27r3"
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
               >
                 Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
               </p>
@@ -6210,15 +6026,19 @@ https://unsplash.it/200/100 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Das ist ein Titel
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            />
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Das ist ein Titel
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              />
+            </div>
           </div>
         </a>
       </article>
@@ -6247,17 +6067,26 @@ https://unsplash.it/200/100 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
+                <div
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
+                >
+                  Pre Title
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Title
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              >
+                Lead
+              </p>
+            </div>
           </div>
         </a>
       </article>
@@ -6286,17 +6115,26 @@ https://unsplash.it/200/100 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
+                <div
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
+                >
+                  Pre Title
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Title
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              >
+                Lead
+              </p>
+            </div>
           </div>
         </a>
       </article>
@@ -7742,26 +7580,6 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
             />
-            <time
-              class="css-3uu3f-TeaserDate e18of27r1"
-              datetime="2023-01-01T00:00:00.000Z"
-            >
-              01.01.2023
-            </time>
-            <header
-              class="css-4se2pd-TeaserTitle e18of27r2"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
-              >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
@@ -7775,18 +7593,18 @@ https://unsplash.it/200/200 200w"
                 class="css-1wh9s95-TeaserTitles e18of27r6"
               >
                 <div
-                  class="MuiTypography-root MuiTypography-h6 css-12tow8s-TeaserPreTitle-MuiTypography-root e18of27r4"
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
                 >
                   Pre Title
                 </div>
                 <h1
-                  class="MuiTypography-root MuiTypography-h5 css-1y9wlva-TeaserTitle-MuiTypography-root e18of27r5"
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
                 >
                   Title
                 </h1>
               </header>
               <p
-                class="MuiTypography-root MuiTypography-h6 css-1fjsap5-TeaserLead-MuiTypography-root e18of27r3"
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
               >
                 Lead
               </p>
@@ -7821,26 +7639,6 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
             />
-            <time
-              class="css-3uu3f-TeaserDate e18of27r1"
-              datetime="2023-01-01T00:00:00.000Z"
-            >
-              01.01.2023
-            </time>
-            <header
-              class="css-4se2pd-TeaserTitle e18of27r2"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
-              >
-                Chur solidarisiert sich mit der Ukraine
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
-            </p>
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
@@ -7854,13 +7652,13 @@ https://unsplash.it/200/200 200w"
                 class="css-1wh9s95-TeaserTitles e18of27r6"
               >
                 <h1
-                  class="MuiTypography-root MuiTypography-h5 css-1y9wlva-TeaserTitle-MuiTypography-root e18of27r5"
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
                 >
                   Chur solidarisiert sich mit der Ukraine
                 </h1>
               </header>
               <p
-                class="MuiTypography-root MuiTypography-h6 css-1fjsap5-TeaserLead-MuiTypography-root e18of27r3"
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
               >
                 Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
               </p>
@@ -7898,17 +7696,26 @@ https://unsplash.it/200/200 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
+                <div
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
+                >
+                  Pre Title
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Title
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              >
+                Lead
+              </p>
+            </div>
           </div>
         </a>
       </article>
@@ -7937,15 +7744,19 @@ https://unsplash.it/200/100 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Das ist ein Titel
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            />
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Das ist ein Titel
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              />
+            </div>
           </div>
         </a>
       </article>
@@ -7974,17 +7785,26 @@ https://unsplash.it/200/200 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
+                <div
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
+                >
+                  Pre Title
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Title
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              >
+                Lead
+              </p>
+            </div>
           </div>
         </a>
       </article>
@@ -8014,26 +7834,6 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
             />
-            <time
-              class="css-3uu3f-TeaserDate e18of27r1"
-              datetime="2023-01-01T00:00:00.000Z"
-            >
-              01.01.2023
-            </time>
-            <header
-              class="css-4se2pd-TeaserTitle e18of27r2"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
-              >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
@@ -8047,18 +7847,18 @@ https://unsplash.it/200/200 200w"
                 class="css-1wh9s95-TeaserTitles e18of27r6"
               >
                 <div
-                  class="MuiTypography-root MuiTypography-h6 css-12tow8s-TeaserPreTitle-MuiTypography-root e18of27r4"
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
                 >
                   Pre Title
                 </div>
                 <h1
-                  class="MuiTypography-root MuiTypography-h5 css-1y9wlva-TeaserTitle-MuiTypography-root e18of27r5"
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
                 >
                   Title
                 </h1>
               </header>
               <p
-                class="MuiTypography-root MuiTypography-h6 css-1fjsap5-TeaserLead-MuiTypography-root e18of27r3"
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
               >
                 Lead
               </p>
@@ -8093,26 +7893,6 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
             />
-            <time
-              class="css-3uu3f-TeaserDate e18of27r1"
-              datetime="2023-01-01T00:00:00.000Z"
-            >
-              01.01.2023
-            </time>
-            <header
-              class="css-4se2pd-TeaserTitle e18of27r2"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
-              >
-                Chur solidarisiert sich mit der Ukraine
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
-            </p>
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
@@ -8126,13 +7906,13 @@ https://unsplash.it/200/200 200w"
                 class="css-1wh9s95-TeaserTitles e18of27r6"
               >
                 <h1
-                  class="MuiTypography-root MuiTypography-h5 css-1y9wlva-TeaserTitle-MuiTypography-root e18of27r5"
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
                 >
                   Chur solidarisiert sich mit der Ukraine
                 </h1>
               </header>
               <p
-                class="MuiTypography-root MuiTypography-h6 css-1fjsap5-TeaserLead-MuiTypography-root e18of27r3"
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
               >
                 Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
               </p>
@@ -8170,17 +7950,26 @@ https://unsplash.it/200/200 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
+                <div
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
+                >
+                  Pre Title
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Title
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              >
+                Lead
+              </p>
+            </div>
           </div>
         </a>
       </article>
@@ -8209,15 +7998,19 @@ https://unsplash.it/200/100 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Das ist ein Titel
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            />
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Das ist ein Titel
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              />
+            </div>
           </div>
         </a>
       </article>
@@ -8246,17 +8039,26 @@ https://unsplash.it/200/200 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
+                <div
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
+                >
+                  Pre Title
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Title
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              >
+                Lead
+              </p>
+            </div>
           </div>
         </a>
       </article>
@@ -8286,26 +8088,6 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
             />
-            <time
-              class="css-3uu3f-TeaserDate e18of27r1"
-              datetime="2023-01-01T00:00:00.000Z"
-            >
-              01.01.2023
-            </time>
-            <header
-              class="css-4se2pd-TeaserTitle e18of27r2"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
-              >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
@@ -8319,18 +8101,18 @@ https://unsplash.it/200/100 200w"
                 class="css-1wh9s95-TeaserTitles e18of27r6"
               >
                 <div
-                  class="MuiTypography-root MuiTypography-h6 css-12tow8s-TeaserPreTitle-MuiTypography-root e18of27r4"
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
                 >
                   Pre Title
                 </div>
                 <h1
-                  class="MuiTypography-root MuiTypography-h5 css-1y9wlva-TeaserTitle-MuiTypography-root e18of27r5"
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
                 >
                   Title
                 </h1>
               </header>
               <p
-                class="MuiTypography-root MuiTypography-h6 css-1fjsap5-TeaserLead-MuiTypography-root e18of27r3"
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
               >
                 Lead
               </p>
@@ -8365,26 +8147,6 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
             />
-            <time
-              class="css-3uu3f-TeaserDate e18of27r1"
-              datetime="2023-01-01T00:00:00.000Z"
-            >
-              01.01.2023
-            </time>
-            <header
-              class="css-4se2pd-TeaserTitle e18of27r2"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
-              >
-                Chur solidarisiert sich mit der Ukraine
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
-            </p>
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
@@ -8398,13 +8160,13 @@ https://unsplash.it/200/100 200w"
                 class="css-1wh9s95-TeaserTitles e18of27r6"
               >
                 <h1
-                  class="MuiTypography-root MuiTypography-h5 css-1y9wlva-TeaserTitle-MuiTypography-root e18of27r5"
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
                 >
                   Chur solidarisiert sich mit der Ukraine
                 </h1>
               </header>
               <p
-                class="MuiTypography-root MuiTypography-h6 css-1fjsap5-TeaserLead-MuiTypography-root e18of27r3"
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
               >
                 Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
               </p>
@@ -8442,15 +8204,19 @@ https://unsplash.it/200/100 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Das ist ein Titel
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            />
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Das ist ein Titel
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              />
+            </div>
           </div>
         </a>
       </article>
@@ -8479,17 +8245,26 @@ https://unsplash.it/200/100 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
+                <div
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
+                >
+                  Pre Title
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Title
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              >
+                Lead
+              </p>
+            </div>
           </div>
         </a>
       </article>
@@ -8518,17 +8293,26 @@ https://unsplash.it/200/100 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
+                <div
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
+                >
+                  Pre Title
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Title
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              >
+                Lead
+              </p>
+            </div>
           </div>
         </a>
       </article>
@@ -9971,26 +9755,6 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
             />
-            <time
-              class="css-3uu3f-TeaserDate e18of27r1"
-              datetime="2023-01-01T00:00:00.000Z"
-            >
-              01.01.2023
-            </time>
-            <header
-              class="css-4se2pd-TeaserTitle e18of27r2"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
-              >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
@@ -10004,18 +9768,18 @@ https://unsplash.it/200/200 200w"
                 class="css-1wh9s95-TeaserTitles e18of27r6"
               >
                 <div
-                  class="MuiTypography-root MuiTypography-h6 css-12tow8s-TeaserPreTitle-MuiTypography-root e18of27r4"
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
                 >
                   Pre Title
                 </div>
                 <h1
-                  class="MuiTypography-root MuiTypography-h5 css-1y9wlva-TeaserTitle-MuiTypography-root e18of27r5"
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
                 >
                   Title
                 </h1>
               </header>
               <p
-                class="MuiTypography-root MuiTypography-h6 css-1fjsap5-TeaserLead-MuiTypography-root e18of27r3"
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
               >
                 Lead
               </p>
@@ -10050,26 +9814,6 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
             />
-            <time
-              class="css-3uu3f-TeaserDate e18of27r1"
-              datetime="2023-01-01T00:00:00.000Z"
-            >
-              01.01.2023
-            </time>
-            <header
-              class="css-4se2pd-TeaserTitle e18of27r2"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
-              >
-                Chur solidarisiert sich mit der Ukraine
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
-            </p>
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
@@ -10083,13 +9827,13 @@ https://unsplash.it/200/200 200w"
                 class="css-1wh9s95-TeaserTitles e18of27r6"
               >
                 <h1
-                  class="MuiTypography-root MuiTypography-h5 css-1y9wlva-TeaserTitle-MuiTypography-root e18of27r5"
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
                 >
                   Chur solidarisiert sich mit der Ukraine
                 </h1>
               </header>
               <p
-                class="MuiTypography-root MuiTypography-h6 css-1fjsap5-TeaserLead-MuiTypography-root e18of27r3"
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
               >
                 Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
               </p>
@@ -10127,17 +9871,26 @@ https://unsplash.it/200/200 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
+                <div
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
+                >
+                  Pre Title
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Title
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              >
+                Lead
+              </p>
+            </div>
           </div>
         </a>
       </article>
@@ -10166,15 +9919,19 @@ https://unsplash.it/200/100 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Das ist ein Titel
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            />
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Das ist ein Titel
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              />
+            </div>
           </div>
         </a>
       </article>
@@ -10203,17 +9960,26 @@ https://unsplash.it/200/200 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
+                <div
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
+                >
+                  Pre Title
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Title
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              >
+                Lead
+              </p>
+            </div>
           </div>
         </a>
       </article>
@@ -10243,26 +10009,6 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title=""
             />
-            <time
-              class="css-3uu3f-TeaserDate e18of27r1"
-              datetime="2023-01-01T00:00:00.000Z"
-            >
-              01.01.2023
-            </time>
-            <header
-              class="css-4se2pd-TeaserTitle e18of27r2"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
-              >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
@@ -10276,18 +10022,18 @@ https://unsplash.it/200/200 200w"
                 class="css-1wh9s95-TeaserTitles e18of27r6"
               >
                 <div
-                  class="MuiTypography-root MuiTypography-h6 css-12tow8s-TeaserPreTitle-MuiTypography-root e18of27r4"
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
                 >
                   Pre Title
                 </div>
                 <h1
-                  class="MuiTypography-root MuiTypography-h5 css-1y9wlva-TeaserTitle-MuiTypography-root e18of27r5"
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
                 >
                   Title
                 </h1>
               </header>
               <p
-                class="MuiTypography-root MuiTypography-h6 css-1fjsap5-TeaserLead-MuiTypography-root e18of27r3"
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
               >
                 Lead
               </p>
@@ -10322,26 +10068,6 @@ https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
               title="SCHWEIZ UKRAINE RUSSLAND KRIEG PROTEST"
             />
-            <time
-              class="css-3uu3f-TeaserDate e18of27r1"
-              datetime="2023-01-01T00:00:00.000Z"
-            >
-              01.01.2023
-            </time>
-            <header
-              class="css-4se2pd-TeaserTitle e18of27r2"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
-              >
-                Chur solidarisiert sich mit der Ukraine
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
-            </p>
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
@@ -10355,13 +10081,13 @@ https://unsplash.it/200/200 200w"
                 class="css-1wh9s95-TeaserTitles e18of27r6"
               >
                 <h1
-                  class="MuiTypography-root MuiTypography-h5 css-1y9wlva-TeaserTitle-MuiTypography-root e18of27r5"
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
                 >
                   Chur solidarisiert sich mit der Ukraine
                 </h1>
               </header>
               <p
-                class="MuiTypography-root MuiTypography-h6 css-1fjsap5-TeaserLead-MuiTypography-root e18of27r3"
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
               >
                 Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
               </p>
@@ -10399,17 +10125,26 @@ https://unsplash.it/200/200 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
+                <div
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
+                >
+                  Pre Title
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Title
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              >
+                Lead
+              </p>
+            </div>
           </div>
         </a>
       </article>
@@ -10438,15 +10173,19 @@ https://unsplash.it/200/100 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Das ist ein Titel
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            />
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Das ist ein Titel
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              />
+            </div>
           </div>
         </a>
       </article>
@@ -10475,17 +10214,26 @@ https://unsplash.it/200/200 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
+                <div
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
+                >
+                  Pre Title
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Title
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              >
+                Lead
+              </p>
+            </div>
           </div>
         </a>
       </article>
@@ -10515,26 +10263,6 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
             />
-            <time
-              class="css-3uu3f-TeaserDate e18of27r1"
-              datetime="2023-01-01T00:00:00.000Z"
-            >
-              01.01.2023
-            </time>
-            <header
-              class="css-4se2pd-TeaserTitle e18of27r2"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
-              >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
@@ -10548,18 +10276,18 @@ https://unsplash.it/200/100 200w"
                 class="css-1wh9s95-TeaserTitles e18of27r6"
               >
                 <div
-                  class="MuiTypography-root MuiTypography-h6 css-12tow8s-TeaserPreTitle-MuiTypography-root e18of27r4"
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
                 >
                   Pre Title
                 </div>
                 <h1
-                  class="MuiTypography-root MuiTypography-h5 css-1y9wlva-TeaserTitle-MuiTypography-root e18of27r5"
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
                 >
                   Title
                 </h1>
               </header>
               <p
-                class="MuiTypography-root MuiTypography-h6 css-1fjsap5-TeaserLead-MuiTypography-root e18of27r3"
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
               >
                 Lead
               </p>
@@ -10594,26 +10322,6 @@ https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
               title=""
             />
-            <time
-              class="css-3uu3f-TeaserDate e18of27r1"
-              datetime="2023-01-01T00:00:00.000Z"
-            >
-              01.01.2023
-            </time>
-            <header
-              class="css-4se2pd-TeaserTitle e18of27r2"
-            >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
-              >
-                Chur solidarisiert sich mit der Ukraine
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
-            </p>
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
@@ -10627,13 +10335,13 @@ https://unsplash.it/200/100 200w"
                 class="css-1wh9s95-TeaserTitles e18of27r6"
               >
                 <h1
-                  class="MuiTypography-root MuiTypography-h5 css-1y9wlva-TeaserTitle-MuiTypography-root e18of27r5"
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
                 >
                   Chur solidarisiert sich mit der Ukraine
                 </h1>
               </header>
               <p
-                class="MuiTypography-root MuiTypography-h6 css-1fjsap5-TeaserLead-MuiTypography-root e18of27r3"
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
               >
                 Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
               </p>
@@ -10671,15 +10379,19 @@ https://unsplash.it/200/100 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Das ist ein Titel
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            />
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Das ist ein Titel
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              />
+            </div>
           </div>
         </a>
       </article>
@@ -10708,17 +10420,26 @@ https://unsplash.it/200/100 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
+                <div
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
+                >
+                  Pre Title
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Title
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              >
+                Lead
+              </p>
+            </div>
           </div>
         </a>
       </article>
@@ -10747,17 +10468,26 @@ https://unsplash.it/200/100 200w"
             <div
               class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
             >
-              <h1
-                class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+              <header
+                class="css-1wh9s95-TeaserTitles e18of27r6"
               >
-                Pre Title: Title
-              </h1>
-            </header>
-            <p
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-            >
-              Lead
-            </p>
+                <div
+                  class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
+                >
+                  Pre Title
+                </div>
+                <h1
+                  class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+                >
+                  Title
+                </h1>
+              </header>
+              <p
+                class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+              >
+                Lead
+              </p>
+            </div>
           </div>
         </a>
       </article>

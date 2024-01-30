@@ -30,22 +30,32 @@ https://unsplash.it/200/200 200w"
           <div
             class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
           >
-            01.01.2023
-          </time>
-          <header
-            class="css-4se2pd-TeaserTitle e18of27r2"
-          >
-            <h1
-              class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+            <time
+              class="css-3uu3f-TeaserDate e18of27r2"
+              datetime="2023-01-01T00:00:00.000Z"
             >
-              Pre Title: Title
-            </h1>
-          </header>
-          <p
-            class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-          >
-            Lead
-          </p>
+              01.01.2023
+            </time>
+            <header
+              class="css-1wh9s95-TeaserTitles e18of27r6"
+            >
+              <div
+                class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
+              >
+                Pre Title
+              </div>
+              <h1
+                class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+              >
+                Title
+              </h1>
+            </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+            >
+              Lead
+            </p>
+          </div>
         </div>
       </a>
     </article>
@@ -74,17 +84,26 @@ https://unsplash.it/200/200 200w"
           <div
             class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
           >
-            <h1
-              class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+            <header
+              class="css-1wh9s95-TeaserTitles e18of27r6"
             >
-              Pre Title: Title
-            </h1>
-          </header>
-          <p
-            class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-          >
-            Lead
-          </p>
+              <div
+                class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
+              >
+                Pre Title
+              </div>
+              <h1
+                class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+              >
+                Title
+              </h1>
+            </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+            >
+              Lead
+            </p>
+          </div>
         </div>
       </a>
     </article>
@@ -113,17 +132,21 @@ https://unsplash.it/200/200 200w"
           <div
             class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
           >
-            <h1
-              class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+            <header
+              class="css-1wh9s95-TeaserTitles e18of27r6"
             >
-              Teambesprechung vom 23.05.
-            </h1>
-          </header>
-          <p
-            class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-          >
-            Lead
-          </p>
+              <h1
+                class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+              >
+                Teambesprechung vom 23.05.
+              </h1>
+            </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+            >
+              Lead
+            </p>
+          </div>
         </div>
       </a>
     </article>
@@ -161,22 +184,32 @@ https://unsplash.it/200/200 200w"
           <div
             class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
           >
-            01.01.2023
-          </time>
-          <header
-            class="css-4se2pd-TeaserTitle e18of27r2"
-          >
-            <h1
-              class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+            <time
+              class="css-3uu3f-TeaserDate e18of27r2"
+              datetime="2023-01-01T00:00:00.000Z"
             >
-              Pre Title: Title
-            </h1>
-          </header>
-          <p
-            class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-          >
-            Lead
-          </p>
+              01.01.2023
+            </time>
+            <header
+              class="css-1wh9s95-TeaserTitles e18of27r6"
+            >
+              <div
+                class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
+              >
+                Pre Title
+              </div>
+              <h1
+                class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+              >
+                Title
+              </h1>
+            </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+            >
+              Lead
+            </p>
+          </div>
         </div>
       </a>
     </article>
@@ -205,17 +238,26 @@ https://unsplash.it/200/200 200w"
           <div
             class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
           >
-            <h1
-              class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+            <header
+              class="css-1wh9s95-TeaserTitles e18of27r6"
             >
-              Pre Title: Title
-            </h1>
-          </header>
-          <p
-            class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-          >
-            Lead
-          </p>
+              <div
+                class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
+              >
+                Pre Title
+              </div>
+              <h1
+                class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+              >
+                Title
+              </h1>
+            </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+            >
+              Lead
+            </p>
+          </div>
         </div>
       </a>
     </article>
@@ -244,17 +286,21 @@ https://unsplash.it/200/200 200w"
           <div
             class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
           >
-            <h1
-              class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+            <header
+              class="css-1wh9s95-TeaserTitles e18of27r6"
             >
-              Teambesprechung vom 23.05.
-            </h1>
-          </header>
-          <p
-            class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-          >
-            Lead
-          </p>
+              <h1
+                class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+              >
+                Teambesprechung vom 23.05.
+              </h1>
+            </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+            >
+              Lead
+            </p>
+          </div>
         </div>
       </a>
     </article>
@@ -292,22 +338,32 @@ https://unsplash.it/200/200 200w"
           <div
             class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
           >
-            01.01.2023
-          </time>
-          <header
-            class="css-4se2pd-TeaserTitle e18of27r2"
-          >
-            <h1
-              class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+            <time
+              class="css-3uu3f-TeaserDate e18of27r2"
+              datetime="2023-01-01T00:00:00.000Z"
             >
-              Pre Title: Title
-            </h1>
-          </header>
-          <p
-            class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-          >
-            Lead
-          </p>
+              01.01.2023
+            </time>
+            <header
+              class="css-1wh9s95-TeaserTitles e18of27r6"
+            >
+              <div
+                class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
+              >
+                Pre Title
+              </div>
+              <h1
+                class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+              >
+                Title
+              </h1>
+            </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+            >
+              Lead
+            </p>
+          </div>
         </div>
       </a>
     </article>
@@ -336,17 +392,26 @@ https://unsplash.it/200/200 200w"
           <div
             class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
           >
-            <h1
-              class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+            <header
+              class="css-1wh9s95-TeaserTitles e18of27r6"
             >
-              Pre Title: Title
-            </h1>
-          </header>
-          <p
-            class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-          >
-            Lead
-          </p>
+              <div
+                class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
+              >
+                Pre Title
+              </div>
+              <h1
+                class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+              >
+                Title
+              </h1>
+            </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+            >
+              Lead
+            </p>
+          </div>
         </div>
       </a>
     </article>
@@ -375,17 +440,21 @@ https://unsplash.it/200/200 200w"
           <div
             class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
           >
-            <h1
-              class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+            <header
+              class="css-1wh9s95-TeaserTitles e18of27r6"
             >
-              Teambesprechung vom 23.05.
-            </h1>
-          </header>
-          <p
-            class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-          >
-            Lead
-          </p>
+              <h1
+                class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+              >
+                Teambesprechung vom 23.05.
+              </h1>
+            </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+            >
+              Lead
+            </p>
+          </div>
         </div>
       </a>
     </article>
@@ -423,22 +492,32 @@ https://unsplash.it/200/200 200w"
           <div
             class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
           >
-            01.01.2023
-          </time>
-          <header
-            class="css-4se2pd-TeaserTitle e18of27r2"
-          >
-            <h1
-              class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+            <time
+              class="css-3uu3f-TeaserDate e18of27r2"
+              datetime="2023-01-01T00:00:00.000Z"
             >
-              Pre Title: Title
-            </h1>
-          </header>
-          <p
-            class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-          >
-            Lead
-          </p>
+              01.01.2023
+            </time>
+            <header
+              class="css-1wh9s95-TeaserTitles e18of27r6"
+            >
+              <div
+                class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
+              >
+                Pre Title
+              </div>
+              <h1
+                class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+              >
+                Title
+              </h1>
+            </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+            >
+              Lead
+            </p>
+          </div>
         </div>
       </a>
     </article>
@@ -467,17 +546,26 @@ https://unsplash.it/200/200 200w"
           <div
             class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
           >
-            <h1
-              class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+            <header
+              class="css-1wh9s95-TeaserTitles e18of27r6"
             >
-              Pre Title: Title
-            </h1>
-          </header>
-          <p
-            class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-          >
-            Lead
-          </p>
+              <div
+                class="MuiTypography-root MuiTypography-h6 css-6mjx2d-TeaserPreTitle-MuiTypography-root e18of27r4"
+              >
+                Pre Title
+              </div>
+              <h1
+                class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+              >
+                Title
+              </h1>
+            </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+            >
+              Lead
+            </p>
+          </div>
         </div>
       </a>
     </article>
@@ -506,17 +594,21 @@ https://unsplash.it/200/200 200w"
           <div
             class="css-1ehmv4q-TeaserInnerWrapper-TeaserContent e18of27r0"
           >
-            <h1
-              class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+            <header
+              class="css-1wh9s95-TeaserTitles e18of27r6"
             >
-              Teambesprechung vom 23.05.
-            </h1>
-          </header>
-          <p
-            class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
-          >
-            Lead
-          </p>
+              <h1
+                class="MuiTypography-root MuiTypography-h5 css-6qopad-TeaserTitle-MuiTypography-root e18of27r5"
+              >
+                Teambesprechung vom 23.05.
+              </h1>
+            </header>
+            <p
+              class="MuiTypography-root MuiTypography-h6 css-hj6uc5-TeaserLead-MuiTypography-root e18of27r3"
+            >
+              Lead
+            </p>
+          </div>
         </div>
       </a>
     </article>
