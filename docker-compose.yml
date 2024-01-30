@@ -5,6 +5,16 @@ networks:
     driver: bridge
 
 services:
+  migration:
+    image: wepublishch/migration:master
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://postgres@database:5432/wepublish?schema=public
+    depends_on:
+      - database
+    restart: on-failure
+    networks:
+      - app-tier
   website:
     build:
       context: .
@@ -19,41 +29,37 @@ services:
     networks:
       - app-tier
   api:
-    build:
-      context: .
+    image: wepublishch/api:master
     ports:
-      - '127.0.0.1:4000:8000'
-    command: ['node', 'dist/apps/api-example/main.js']
+      - '127.0.0.1:4000:4000'
     environment:
-      NODE_ENV: production
+      CONFIG_FILE_PATH: /config.yaml
+      DATABASE_URL: postgresql://postgres@database:5432/wepublish?schema=public
       HOST_URL: http://localhost:4000
       MEDIA_SERVER_URL: http://localhost:4100
       MEDIA_SERVER_INTERNAL_URL: http://media:4100
       MEDIA_SERVER_TOKEN: secret
-      DATABASE_URL: postgresql://postgres@database:5432/wepublish?schema=public
-      OAUTH_GOOGLE_CLIENT_ID: 617896178757-i6ldn0nni9qtle8o6eu76lv93d78nvfi.apps.googleusercontent.com
-      OAUTH_GOOGLE_CLIENT_KEY: t267ZLqkV9dacrkPQp_pF-G2
-      OAUTH_GOOGLE_REDIRECT_URL: http://localhost:4000/auth/google
       WEBSITE_URL: http://localhost:4200
       JWT_SECRET_KEY: ThisIsSuperSecret
+    env_file: .env
+    volumes:
+      - ./apps/api-example/src/default.yaml:/config.yaml
     depends_on:
       - database
+      - migration
       - media
     networks:
       - app-tier
   editor:
-    build:
-      context: .
+    image: wepublishch/editor:master
     ports:
-      - '127.0.0.1:3006:8000'
-    command: ['node', 'dist/apps/editor/main.js']
+      - '127.0.0.1:3000:3000'
     environment:
       NODE_ENV: production
       ADDRESS: 0.0.0.0
       API_URL: http://localhost:4000
     depends_on:
       - api
-
   media:
     image: ghcr.io/wepublish/karma-media-server:latest
     ports:
@@ -63,7 +69,6 @@ services:
       NUM_CLUSTERS: 1
       STORAGE_PATH: ./.media
       TOKEN: secret
-
   database:
     image: bitnami/postgresql:14
     platform: linux/amd64

@@ -1,11 +1,40 @@
+#######
+## API
+#######
+
 FROM node:16.20.2-bookworm-slim as build-api
 WORKDIR /wepublish
 COPY . .
-RUN npm ci && \
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends openssl && \
+    npm ci && \
     npm install -g pkg && \
     npm run docker:build:api && \
     cp docker/api_build_package.json package.json && \
     pkg -C Brotli package.json
+
+FROM debian:bookworm-slim as api
+MAINTAINER WePublish Foundation
+ENV NODE_ENV=production
+ENV ADDRESS=0.0.0.0
+ENV PORT=4000
+WORKDIR /wepublish
+RUN groupadd -r wepublish && \
+    useradd -r -g wepublish -d /wepublish wepublish && \
+    chown -R wepublish:wepublish /wepublish && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends openssl && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+COPY --chown=wepublish:wepublish --from=build-api /wepublish/api /wepublish
+COPY --chown=wepublish:wepublish  --from=build-api /wepublish/node_modules/bcrypt node_modules/bcrypt
+EXPOSE 4000
+USER wepublish
+CMD /wepublish/api
+
+#######
+## Editor
+#######
 
 FROM node:16.20.2-bookworm-slim as build-editor
 WORKDIR /wepublish
@@ -20,29 +49,47 @@ FROM debian:bookworm-slim as editor
 MAINTAINER WePublish Foundation
 ENV NODE_ENV=production
 ENV ADDRESS=0.0.0.0
-ENV PORT=3001
+ENV PORT=3000
 WORKDIR /wepublish
 RUN groupadd -r wepublish && \
     useradd -r -g wepublish -d /wepublish wepublish && \
     chown -R wepublish:wepublish /wepublish
 COPY --chown=wepublish:wepublish --from=build-editor /wepublish/editor /wepublish
 COPY --chown=wepublish:wepublish --from=build-editor /wepublish/dist/apps/editor/browser dist/apps/editor/browser
-EXPOSE 3001
+EXPOSE 3000
+USER wepublish
 CMD /wepublish/editor
 
-FROM debian:bookworm-slim as api
-MAINTAINER WePublish Foundation
+#######
+## Migations
+#######
+FROM node:16.20.2-bookworm-slim as build-migration
 ENV NODE_ENV=production
-ENV ADDRESS=0.0.0.0
-ENV PORT=3000
 WORKDIR /wepublish
+COPY libs/settings/api/src/lib/setting.ts settings/api/src/lib/setting.ts
+COPY libs/api/prisma/run-seed.ts api/prisma/run-seed.ts
+COPY libs/api/prisma/seed.ts api/prisma/seed.ts
+COPY docker/tsconfig.yaml_seed tsconfig.yaml
+RUN npm install prisma @prisma/client @types/node bcrypt typescript && \
+    npx tsc -p tsconfig.yaml
+
+FROM node:16.20.2-bookworm-slim as migration
+ENV NODE_ENV=production
+MAINTAINER WePublish Foundation
+WORKDIR /wepublish
+COPY --from=build-migration /wepublish/dist ./dist
+COPY libs/api/prisma/migrations prisma/migrations
+COPY libs/api/prisma/schema.prisma prisma/schema.prisma
+COPY docker/migrate_start.sh start.sh
 RUN groupadd -r wepublish && \
     useradd -r -g wepublish -d /wepublish wepublish && \
-    chown -R wepublish:wepublish /wepublish
-COPY --chown=wepublish:wepublish --from=build-api /wepublish/api /wepublish
-COPY --chown=wepublish:wepublish  --from=build-api /wepublish/node_modules/bcrypt node_modules/bcrypt
+    apt-get update && \
+    apt-get install -y --no-install-recommends openssl && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/* && \
+    npm install prisma bcrypt && \
+    perl -i -0777 -pe 's/generator fabbrica \{\n  provider = "prisma-fabbrica"\n  output   = "\.\.\/\.\.\/testing\/src\/__generated__\/fabbrica"\n\}//gs' prisma/schema.prisma && \
+    npx prisma generate \
 USER wepublish
-EXPOSE 3000
-CMD /wepublish/api
-
+CMD ["bash", "./start.sh"]
 
