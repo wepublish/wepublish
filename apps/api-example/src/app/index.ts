@@ -5,14 +5,17 @@ import {
   MediaAdapter,
   Oauth2Provider,
   PaymentProvider,
+  URLAdapter,
   WepublishServer
 } from '@wepublish/api'
 import pinoMultiStream from 'pino-multi-stream'
 import {createWriteStream} from 'pino-sentry'
 import pinoStackdriver from 'pino-stackdriver'
 import * as process from 'process'
-import {ExampleURLAdapter} from './url-adapter'
 import {Application} from 'express'
+import {DefaultURLAdapter, BajourURLAdapter, TsriURLAdapter} from '../urlAdapters'
+import {readConfig} from '../readConfig'
+const MS_PER_DAY = 24 * 60 * 60 * 1000
 
 type RunServerProps = {
   expressApp: Application
@@ -27,46 +30,57 @@ export async function runServer({
   mailProvider,
   paymentProviders
 }: RunServerProps) {
+  /*
+   * Load User specific configuration
+   */
+
+  const config = await readConfig(process.env.CONFIG_FILE_PATH)
+
+  /*
+   * Basic configuration
+   */
+
   if (!process.env.DATABASE_URL) throw new Error('No DATABASE_URL defined in environment.')
   if (!process.env.HOST_URL) throw new Error('No HOST_URL defined in environment.')
-
+  if (!process.env.WEBSITE_URL) throw new Error('No WEBSITE_URL defined in environment.')
   const hostURL = process.env.HOST_URL
-  const websiteURL = process.env.WEBSITE_URL ?? 'https://wepublish.ch'
-
-  const port = process.env.PORT ? parseInt(process.env.PORT) : undefined
+  const websiteURL = process.env.WEBSITE_URL
+  const port = process.env.PORT ? parseInt(process.env.PORT) : 3002
   const address = process.env.ADDRESS ? process.env.ADDRESS : 'localhost'
 
-  if (!process.env.MEDIA_SERVER_URL) {
-    throw new Error('No MEDIA_SERVER_URL defined in environment.')
-  }
+  /*
+   * Media Adapter configuration
+   */
 
-  if (!process.env.MEDIA_SERVER_TOKEN) {
+  if (!process.env.MEDIA_SERVER_URL) throw new Error('No MEDIA_SERVER_URL defined in environment.')
+  if (!process.env.MEDIA_SERVER_TOKEN)
     throw new Error('No MEDIA_SERVER_TOKEN defined in environment.')
-  }
+
+  /*
+   * Connect to database
+   */
 
   const prisma = new PrismaClient()
   await prisma.$connect()
 
+  /*
+   * Load OAuth Providers
+   */
+
   const oauth2Providers: Oauth2Provider[] = []
-  if (
-    process.env.OAUTH_GOOGLE_DISCOVERY_URL &&
-    process.env.OAUTH_GOOGLE_CLIENT_ID &&
-    process.env.OAUTH_GOOGLE_CLIENT_KEY &&
-    process.env.OAUTH_GOOGLE_REDIRECT_URL
-  ) {
-    oauth2Providers.push({
-      name: 'google',
-      discoverUrl: process.env.OAUTH_GOOGLE_DISCOVERY_URL,
-      clientId: process.env.OAUTH_GOOGLE_CLIENT_ID,
-      clientKey: process.env.OAUTH_GOOGLE_CLIENT_KEY,
-      redirectUri: [process.env.OAUTH_GOOGLE_REDIRECT_URL],
-      scopes: ['openid profile email']
-    })
+  const Oauth2ProvidersRaw = config.OAuthProviders
+  if (Oauth2ProvidersRaw) {
+    for (const provider of Oauth2ProvidersRaw) {
+      oauth2Providers.push(provider)
+    }
   }
+
+  /*
+   * Load logging providers
+   */
 
   const prettyStream = pinoMultiStream.prettyStream()
   const streams: pinoMultiStream.Streams = [{stream: prettyStream}]
-
   if (process.env.GOOGLE_PROJECT) {
     streams.push({
       level: 'info',
@@ -92,35 +106,68 @@ export async function runServer({
     level: 'debug'
   })
 
-  const challenge = new AlgebraicCaptchaChallenge('changeMe', 600, {
-    width: 200,
-    height: 200,
-    background: '#ffffff',
-    noise: 5,
-    minValue: 1,
-    maxValue: 10,
-    operandAmount: 1,
-    operandTypes: ['+', '-'],
-    mode: 'formula',
-    targetSymbol: '?'
-  })
+  /*
+   * Load correct URL adapter
+   */
+
+  // Load default
+  let urlAdapter: URLAdapter = new DefaultURLAdapter({websiteURL})
+
+  // Load Bajour
+  if (config.general.urlAdapter === 'bajour') {
+    const blocksHost = process.env.BLOCKS_HOST
+    if (!blocksHost) throw new Error('No BLOCKS_HOST defined in environment.')
+    urlAdapter = new BajourURLAdapter({websiteURL, blocksHost})
+  }
+  if (config.general.urlAdapter === 'tsri') {
+    urlAdapter = new TsriURLAdapter({websiteURL})
+  }
+
+  /**
+   * Challenge
+   */
+  const challenge = new AlgebraicCaptchaChallenge(
+    config.challenge.secret,
+    config.challenge.validTime,
+    {
+      width: config.challenge.width,
+      height: config.challenge.height,
+      background: config.challenge.background,
+      noise: config.challenge.noise,
+      minValue: config.challenge.minValue,
+      maxValue: config.challenge.maxValue,
+      operandAmount: config.challenge.operandAmount,
+      operandTypes: config.challenge.operandTypes,
+      mode: config.challenge.mode,
+      targetSymbol: config.challenge.targetSymbol
+    }
+  )
+
+  /**
+   * Load session time to live (TTL)
+   */
+  const sessionTTLDays = config.general.sessionTTLDays ? config.general.sessionTTLDays : 7
+  const sessionTTL = sessionTTLDays * MS_PER_DAY
 
   const server = new WepublishServer(
     {
       hostURL,
       websiteURL,
+      sessionTTL,
       mediaAdapter,
       prisma,
       oauth2Providers,
       mailProvider,
       mailContextOptions: {
-        defaultFromAddress: process.env.DEFAULT_FROM_ADDRESS || 'dev@wepublish.ch',
-        defaultReplyToAddress: process.env.DEFAULT_REPLY_TO_ADDRESS || 'reply-to@wepublish.ch'
+        defaultFromAddress: config.mailProvider.fromAddress || 'dev@wepublish.ch',
+        defaultReplyToAddress: config.mailProvider.replyToAddress || 'reply-to@wepublish.ch'
       },
       paymentProviders,
-      urlAdapter: new ExampleURLAdapter({websiteURL}),
-      playground: true,
-      introspection: true,
+      urlAdapter: urlAdapter,
+      playground: config.general.apolloPlayground ? config.general.apolloPlayground : false,
+      introspection: config.general.apolloIntrospection
+        ? config.general.apolloIntrospection
+        : false,
       logger,
       challenge
     },
