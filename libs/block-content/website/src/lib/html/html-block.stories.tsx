@@ -22,6 +22,12 @@ export const WithScript = {
   }
 }
 
+export const Empty = {
+  args: {
+    html: ``
+  }
+}
+
 export const WithClassName = {
   args: {
     html: '<div style="color: red;">This is a html embed</div>',

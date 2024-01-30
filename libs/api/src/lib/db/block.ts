@@ -186,6 +186,7 @@ export interface QuoteBlock {
   type: BlockType.Quote
   quote?: string
   author?: string
+  imageID?: string
 }
 
 export enum TeaserType {
