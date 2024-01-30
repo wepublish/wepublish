@@ -6,12 +6,12 @@ exports[`Quote Block should render Default 1`] = `
     class="css-pjzed4-QuoteBlockWrapper e1ugt7gl0"
   >
     <p
-      class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
     >
       «This is a quote»
     </p>
     <cite
-      class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
     >
       John Doe
     </cite>
@@ -25,12 +25,12 @@ exports[`Quote Block should render WithClassName 1`] = `
     class="extra-classname css-pjzed4-QuoteBlockWrapper e1ugt7gl0"
   >
     <p
-      class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
     >
       «This is a quote»
     </p>
     <cite
-      class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
     >
       John Doe
     </cite>
@@ -44,12 +44,12 @@ exports[`Quote Block should render WithEmotion 1`] = `
     class="css-pjzed4-QuoteBlockWrapper e1ugt7gl0"
   >
     <p
-      class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
     >
       «This is a quote»
     </p>
     <cite
-      class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
     >
       John Doe
     </cite>
