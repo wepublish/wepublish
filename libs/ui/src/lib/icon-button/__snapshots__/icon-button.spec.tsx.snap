@@ -6,7 +6,7 @@ exports[`IconButton should render IconButton 1`] = `
     class="MuiStack-root css-3l5917-MuiStack-root"
   >
     <button
-      class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-78trlr-MuiButtonBase-root-MuiIconButton-root"
+      class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-whz9ym-MuiButtonBase-root-MuiIconButton-root"
       tabindex="0"
       type="button"
     >
@@ -33,7 +33,7 @@ exports[`IconButton should render IconButton 1`] = `
     </button>
     <br />
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
       href="https://mui.com/material-ui/react-button/#icon-button"
       target="_blank"
     >

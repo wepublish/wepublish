@@ -38,8 +38,24 @@ const createNameFilter = (filter: Partial<AuthorFilter>): Prisma.AuthorWhereInpu
   return {}
 }
 
+const createTagIdsFilter = (filter?: Partial<AuthorFilter>): Prisma.AuthorWhereInput => {
+  if (filter?.tagIds?.length) {
+    return {
+      tags: {
+        some: {
+          tagId: {
+            in: filter?.tagIds
+          }
+        }
+      }
+    }
+  }
+
+  return {}
+}
+
 export const createAuthorFilter = (filter: Partial<AuthorFilter>): Prisma.AuthorWhereInput => ({
-  AND: [createNameFilter(filter)]
+  AND: [createNameFilter(filter), createTagIdsFilter(filter)]
 })
 
 export const getAuthors = async (

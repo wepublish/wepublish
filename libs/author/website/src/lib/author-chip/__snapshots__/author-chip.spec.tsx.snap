@@ -28,7 +28,7 @@ https://unsplash.it/200/200 200w"
         <strong>
           Von 
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
             href="https://example.com"
           >
             Foobar
@@ -73,7 +73,7 @@ https://unsplash.it/200/200 200w"
         <strong>
           Von 
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
             href="https://example.com"
           >
             Foobar
@@ -118,7 +118,7 @@ https://unsplash.it/200/200 200w"
         <strong>
           Von 
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
             href="https://example.com"
           >
             Foobar
@@ -152,7 +152,7 @@ exports[`Author Chip should render WithoutImage 1`] = `
         <strong>
           Von 
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
             href="https://example.com"
           >
             Foobar
@@ -197,7 +197,7 @@ https://unsplash.it/200/200 200w"
         <strong>
           Von 
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1xylxj1-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
             href="https://example.com"
           >
             Foobar
