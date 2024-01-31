@@ -39,7 +39,7 @@ export async function runSeed() {
     if (overriddenPw) {
       console.log(
         '\x1b[31m\x1b[1m%s\x1b[0m',
-        `!!!!!!!!!!!!!!!!!! WARNING: UNSECUREq PASSWORD IS OVERRIDDEN WITH ENV VARIABLE !!!!!!!!!!!!!!!!!! `
+        `!!!!!!!!!!!!!!!!!! WARNING: UNSECURE PASSWORD IS OVERRIDDEN WITH ENV VARIABLE !!!!!!!!!!!!!!!!!! `
       )
       password = overriddenPw
     }
