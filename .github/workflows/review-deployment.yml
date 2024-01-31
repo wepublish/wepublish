@@ -135,7 +135,7 @@ jobs:
               BEXIO_UNIT_ID: '1'
               BEXIO_TAX_ID: '17'
               BEXIO_ACCOUNT_ID: '139'
-              CONFIG_FILE_PATH: '/home/node/wepublish/apps/api-example/src/default.yaml'
+              CONFIG_FILE_PATH: '/wepublish/config/default.yaml'
           editor:
             image: ${{ inputs.editor_image }}
             env:

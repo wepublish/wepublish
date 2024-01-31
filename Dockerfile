@@ -80,6 +80,7 @@ WORKDIR /wepublish
 COPY --from=build-migration /wepublish/dist ./dist
 COPY libs/api/prisma/migrations prisma/migrations
 COPY libs/api/prisma/schema.prisma prisma/schema.prisma
+COPY apps/website-example/src/default.yaml config/default.yaml
 COPY docker/migrate_start.sh start.sh
 RUN groupadd -r wepublish && \
     useradd -r -g wepublish -d /wepublish wepublish && \

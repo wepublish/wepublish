@@ -23,6 +23,7 @@ spec:
         app.kubernetes.io/name: {{ include "helm.name" . }}-migration
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
+      restartPolicy: OnFailure
       {{- if .Values.deployment.imagePullSecret }}
       imagePullSecrets:
         - name: {{ .Values.deployment.imagePullSecret }}
