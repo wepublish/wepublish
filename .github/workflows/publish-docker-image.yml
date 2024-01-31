@@ -14,7 +14,7 @@ on:
         type: string
 
 jobs:
-  build-and-push-docker:
+  build-and-push-docker-api:
     name: Build and push
     runs-on: ubuntu-latest
     steps:
@@ -32,6 +32,18 @@ jobs:
           target: api
           push: true
           tags: ${{ inputs.api_tag }}
+  build-and-push-docker-editor:
+    name: Build and push
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-qemu-action@v1
+      - uses: docker/setup-buildx-action@v1
+      - uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - uses: docker/build-push-action@v2
         with:
           target: editor
