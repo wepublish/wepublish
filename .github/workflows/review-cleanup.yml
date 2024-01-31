@@ -41,13 +41,12 @@ jobs:
 
       - name: Delete review environment
         run: |
-          if helm get all review-${{ github.event.pull_request.number }}-app -n reviews; then
-            helm uninstall review-${{ github.event.pull_request.number }}-app -n reviews; 
-          fi
-          if helm get all review-${{ github.event.pull_request.number }}-media-server -n reviews; then 
-            helm uninstall review-${{ github.event.pull_request.number }}-media-server -n reviews; 
-          fi
-          if helm get all review-${{ github.event.pull_request.number }}-database -n reviews; then 
-            helm uninstall review-${{ github.event.pull_request.number }}-database -n reviews; 
-          fi
+          PR_NUM=${{ github.event.pull_request.number }}
+          
+          # Delete Helm releases if they exist
+          helm get all review-$PR_NUM-app -n reviews && helm uninstall review-$PR_NUM-app -n reviews
+          helm get all review-$PR_NUM-media-server -n reviews && helm uninstall review-$PR_NUM-media-server -n reviews
+          helm get all review-$PR_NUM-database -n reviews && helm uninstall review-$PR_NUM-database -n reviews
+          # Delete PVCs associated with the PR
+          kubectl get pvc -n reviews | grep "\-$PR_NUM\-" | awk '{print $1}' | xargs -r kubectl delete pvc -n reviews
           
