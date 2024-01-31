@@ -9,6 +9,9 @@ on:
       api_tag:
         required: true
         type: string
+      migration_tag:
+        required: true
+        type: string
       storybook_tags:
         required: true
         type: string
@@ -49,6 +52,23 @@ jobs:
           target: editor
           push: true
           tags: ${{ inputs.editor_tag }}
+  build-and-push-docker-migration:
+    name: Build and push migration
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-qemu-action@v1
+      - uses: docker/setup-buildx-action@v1
+      - uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - uses: docker/build-push-action@v2
+        with:
+          target: migration
+          push: true
+          tags: ${{ inputs.migration_tag }}
 
   build-and-push-storybook:
     name: Build and push storybook

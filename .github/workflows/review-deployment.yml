@@ -9,6 +9,9 @@ on:
       api_image:
         required: true
         type: string
+      migration_image:
+        required: true
+        type: string
       storybook_image:
         required: true
         type: string
@@ -100,6 +103,10 @@ jobs:
               EDITOR_URL: ${EDITOR_URL}
               WEBSITE_URL: ${WEBSITE_URL}
               MEDIA_SERVER_URL: ${MEDIA_SERVER_URL}
+          migration:
+            image: ${{ inputs.migration_image }}
+            env:
+              DATABASE_URL: postgres://postgres:foo@review-${{ github.event.pull_request.number }}-database-postgresql.reviews.svc.cluster.local:5432/wepublish?schema=public
           api:
             image: ${{ inputs.api_image }}
             env:

@@ -1,5 +1,4 @@
 deployment:
-  image: ghcr.io/wepublish/wepublish
   imagePullPolicy: Always
   imagePullSecret:
   env:
@@ -9,6 +8,7 @@ deployment:
     MEDIA_SERVER_URL: https://media
 
 api:
+  image: ghcr.io/wepublish/wepublish
   env:
     GOOGLE_APPLICATION_CREDENTIALS: /var/secrets/google/key.json
     DATABASE_URL: postgres://
@@ -21,7 +21,16 @@ api:
   properties: {}
   replicaCount: 1
 
+migration:
+  image: ghcr.io/wepublish/wepublish
+  env:
+    DATABASE_URL: postgres://
+  envFromSecretRefName:
+  properties: {}
+  replicaCount: 1
+
 editor:
+  image: ghcr.io/wepublish/wepublish
   env:
     PEER_BY_DEFAULT: "true"
   envFromSecretRefName:

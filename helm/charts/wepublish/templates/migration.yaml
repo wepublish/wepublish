@@ -1,0 +1,63 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "helm.fullname" . }}-migration
+  labels:
+    app.kubernetes.io/name: {{ include "helm.name" . }}-migration
+    helm.sh/chart: {{ include "helm.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    {{- with .Values.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "helm.name" . }}-migration
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "helm.name" . }}-migration
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      {{- if .Values.deployment.imagePullSecret }}
+      imagePullSecrets:
+        - name: {{ .Values.deployment.imagePullSecret }}
+      {{- end }}
+      containers:
+        - name: {{ include "helm.fullname" . }}
+          image: {{ .Values.migration.image }}
+          imagePullPolicy: {{ .Values.deployment.imagePullPolicy }}
+          envFrom:
+            - secretRef:
+                name: {{ include "helm.fullname" . }}-migration-environment-{{ .Release.Revision }}
+            {{- if .Values.migration.envFromSecretRefName }}
+            - secretRef:
+                name: {{ .Values.migration.envFromSecretRefName }}
+            {{- end }}
+          {{- with .Values.api.properties }}
+          {{- toYaml . | nindent 10 }}
+          {{- end }}
+
+
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: {{ include "helm.fullname" . }}-migration-environment-{{ .Release.Revision }}
+  labels:
+    app.kubernetes.io/name: {{ include "helm.fullname" . }}-migration-environment-{{ .Release.Revision }}
+    helm.sh/chart: {{ include "helm.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    {{- with .Values.labels }}
+    {{- toYaml . | nindent 4 }}
+    {{- end }}
+type: Opaque
+data:
+  {{- range $name, $value := merge .Values.migration.env .Values.deployment.env }}
+  {{ $name }}: "{{ $value | b64enc }}"
+  {{- end }}

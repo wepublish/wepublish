@@ -15,6 +15,7 @@ jobs:
     with:
       editor_tag: ghcr.io/wepublish/wepublish:editor-${{ github.sha }}
       api_tag: ghcr.io/wepublish/wepublish:api-${{ github.sha }}
+      migration_tag: ghcr.io/wepublish/wepublish:migration-${{ github.sha }}
       storybook_tags: |
         ghcr.io/wepublish/storybook:${{ github.sha }}
     secrets: inherit
@@ -26,5 +27,6 @@ jobs:
     with:
       editor_image: ghcr.io/wepublish/wepublish:editor-${{ github.sha }}
       api_image: ghcr.io/wepublish/wepublish:api-${{ github.sha }}
+      migration_image: ghcr.io/wepublish/wepublish:migration-${{ github.sha }}
       storybook_image: ghcr.io/wepublish/storybook:${{ github.sha }}
     secrets: inherit
