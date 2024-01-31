@@ -1,8 +1,9 @@
 import {ApiV1, SubscribeContainer} from '@wepublish/website'
 import {NextPageContext} from 'next'
+import getConfig from 'next/config'
+
 import {ssrAuthLink} from '../components/should-be-website-builder/auth-link'
 import {getSessionTokenProps} from '../components/should-be-website-builder/get-session-token-props'
-import getConfig from 'next/config'
 
 export default function Mitmachen() {
   return <SubscribeContainer failureURL="/" successURL="/" />

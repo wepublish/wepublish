@@ -1,4 +1,4 @@
-import {CssBaseline, ThemeProvider, styled, Icon} from '@mui/material'
+import {CssBaseline, styled, ThemeProvider} from '@mui/material'
 import {
   ApiV1,
   FooterContainer,
@@ -12,24 +12,24 @@ import {de} from 'date-fns/locale'
 import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import {AppProps} from 'next/app'
+import getConfig from 'next/config'
+import {Roboto} from 'next/font/google'
 import Head from 'next/head'
+import Image from 'next/image'
 import Script from 'next/script'
 import {initReactI18next} from 'react-i18next'
+import {MdFacebook, MdMail} from 'react-icons/md'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
+
 import {MainGrid} from '../components/layout/main-grid'
 import {authLink} from '../components/should-be-website-builder/auth-link'
 import {NextWepublishLink} from '../components/should-be-website-builder/next-wepublish-link'
 import {SessionProvider} from '../components/should-be-website-builder/session.provider'
 import {BajourTeaser} from '../components/website-builder-overwrites/blocks/teaser'
 import {TeaserGridStyled} from '../components/website-builder-styled/blocks/teaser-grid-styled'
-import {Roboto} from 'next/font/google'
-
 import theme from '../styles/theme'
-import getConfig from 'next/config'
-import {MdFacebook, MdMail} from 'react-icons/md'
-import Image from 'next/image'
 
 setDefaultOptions({
   locale: de

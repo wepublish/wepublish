@@ -1,9 +1,10 @@
-import {Container} from '../../../components/layout/container'
 import {capitalize} from '@mui/material'
 import {ApiV1, ArticleListContainer, useWebsiteBuilder} from '@wepublish/website'
 import {GetStaticPaths, GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
+
+import {Container} from '../../../components/layout/container'
 
 export default function ArticleListByTag() {
   const {
