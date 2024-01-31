@@ -13,8 +13,7 @@ jobs:
     name: Docker
     uses: ./.github/workflows/publish-docker-image.yml
     with:
-      tags: |
-        ghcr.io/wepublish/wepublish:${{ github.sha }}
+      tags: ghcr.io/wepublish/wepublish:${{ github.sha }}
       storybook_tags: |
         ghcr.io/wepublish/storybook:${{ github.sha }}
     secrets: inherit
