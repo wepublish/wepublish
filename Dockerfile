@@ -26,6 +26,7 @@ RUN groupadd -r wepublish && \
     apt-get install -y --no-install-recommends openssl && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
+COPY --chown=wepublish:wepublish apps/api-example/src/default.yaml /wepublish/config/default.yaml
 COPY --chown=wepublish:wepublish --from=build-api /wepublish/api /wepublish
 COPY --chown=wepublish:wepublish  --from=build-api /wepublish/node_modules/bcrypt node_modules/bcrypt
 EXPOSE 4000
@@ -80,7 +81,6 @@ WORKDIR /wepublish
 COPY --from=build-migration /wepublish/dist ./dist
 COPY libs/api/prisma/migrations prisma/migrations
 COPY libs/api/prisma/schema.prisma prisma/schema.prisma
-COPY apps/api-example/src/default.yaml config/default.yaml
 COPY docker/migrate_start.sh start.sh
 RUN groupadd -r wepublish && \
     useradd -r -g wepublish -d /wepublish wepublish && \
