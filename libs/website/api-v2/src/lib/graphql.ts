@@ -28,6 +28,33 @@ export type AllowedSettingVals = {
   stringChoice?: Maybe<Array<Scalars['String']>>;
 };
 
+export type BlockStyle = {
+  __typename?: 'BlockStyle';
+  blocks: Array<BlockType>;
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+};
+
+export enum BlockType {
+  Comment = 'Comment',
+  Embed = 'Embed',
+  Event = 'Event',
+  Html = 'HTML',
+  Image = 'Image',
+  ImageGallery = 'ImageGallery',
+  LinkPageBreak = 'LinkPageBreak',
+  Listicle = 'Listicle',
+  Poll = 'Poll',
+  Quote = 'Quote',
+  RichText = 'RichText',
+  TeaserGrid1 = 'TeaserGrid1',
+  TeaserGrid6 = 'TeaserGrid6',
+  TeaserGridFlex = 'TeaserGridFlex',
+  Title = 'Title'
+}
+
 export type Consent = {
   __typename?: 'Consent';
   createdAt: Scalars['DateTime'];
@@ -199,6 +226,8 @@ export type MemberPlanRef = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  /** Creates a new block style. */
+  createBlockStyle: BlockStyle;
   /**
    *
    *       Create a new consent.
@@ -218,6 +247,8 @@ export type Mutation = {
    *
    */
   createUserConsent: UserConsent;
+  /** Deletes an existing block style. */
+  deleteBlockStyle: BlockStyle;
   /**
    *
    *       Deletes an existing consent.
@@ -247,6 +278,8 @@ export type Mutation = {
   syncTemplates?: Maybe<Scalars['Boolean']>;
   /** Sends a test email for the given event */
   testSystemMail: Scalars['Boolean'];
+  /** Updates an existing block style. */
+  updateBlockStyle: BlockStyle;
   /**
    *
    *       Updates an existing consent.
@@ -270,6 +303,12 @@ export type Mutation = {
    *
    */
   updateUserConsent: UserConsent;
+};
+
+
+export type MutationCreateBlockStyleArgs = {
+  blocks: Array<BlockType>;
+  name: Scalars['String'];
 };
 
 
@@ -314,6 +353,11 @@ export type MutationCreateUserConsentArgs = {
 };
 
 
+export type MutationDeleteBlockStyleArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationDeleteConsentArgs = {
   id: Scalars['String'];
 };
@@ -347,6 +391,13 @@ export type MutationImportEventArgs = {
 
 export type MutationTestSystemMailArgs = {
   event: UserEvent;
+};
+
+
+export type MutationUpdateBlockStyleArgs = {
+  blocks?: InputMaybe<Array<BlockType>>;
+  id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -452,6 +503,8 @@ export type Query = {
    *
    */
   activeSubscribers: Array<DashboardSubscription>;
+  /** Returns a list of block styles. */
+  blockStyles: Array<BlockStyle>;
   /**
    *
    *       Returns a consent by id.

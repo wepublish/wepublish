@@ -2,11 +2,13 @@ fragment BlockWithoutTeaser on Block {
   __typename
 
   ... on TitleBlock {
+    blockStyle
     title
     lead
   }
 
   ... on ImageBlock {
+    blockStyle
     caption
     image {
       ...FullImage
@@ -14,6 +16,7 @@ fragment BlockWithoutTeaser on Block {
   }
 
   ... on ImageGalleryBlock {
+    blockStyle
     images {
       caption
       image {
@@ -23,6 +26,7 @@ fragment BlockWithoutTeaser on Block {
   }
 
   ... on QuoteBlock {
+    blockStyle
     quote
     author
     image {
@@ -31,26 +35,31 @@ fragment BlockWithoutTeaser on Block {
   }
 
   ... on RichTextBlock {
+    blockStyle
     richText
   }
 
   ... on HTMLBlock {
+    blockStyle
     html
   }
 
   ... on EventBlock {
+    blockStyle
     events {
       ...FullEvent
     }
   }
 
   ... on PollBlock {
+    blockStyle
     poll {
       ...FullPoll
     }
   }
 
   ... on ListicleBlock {
+    blockStyle
     items {
       title
       richText
@@ -61,6 +70,7 @@ fragment BlockWithoutTeaser on Block {
   }
 
   ... on LinkPageBreakBlock {
+    blockStyle
     text
     richText
     layoutOption
@@ -76,50 +86,61 @@ fragment BlockWithoutTeaser on Block {
   }
 
   ... on FacebookPostBlock {
+    blockStyle
     userID
     postID
   }
 
   ... on FacebookVideoBlock {
+    blockStyle
     userID
     videoID
   }
 
   ... on InstagramPostBlock {
+    blockStyle
     postID
   }
 
   ... on TwitterTweetBlock {
+    blockStyle
     userID
     tweetID
   }
 
   ... on VimeoVideoBlock {
+    blockStyle
     videoID
   }
 
   ... on YouTubeVideoBlock {
+    blockStyle
     videoID
   }
 
   ... on SoundCloudTrackBlock {
+    blockStyle
     trackID
   }
 
   ... on PolisConversationBlock {
+    blockStyle
     conversationID
   }
 
   ... on TikTokVideoBlock {
+    blockStyle
     userID
     videoID
   }
 
   ... on BildwurfAdBlock {
+    blockStyle
     zoneID
   }
 
   ... on EmbedBlock {
+    blockStyle
     url
     title
     width
@@ -232,6 +253,7 @@ fragment FullBlock on Block {
   ...BlockWithoutTeaser
 
   ... on TeaserGridFlexBlock {
+    blockStyle
     flexTeasers {
       alignment {
         x
@@ -247,6 +269,7 @@ fragment FullBlock on Block {
   }
 
   ... on TeaserGridBlock {
+    blockStyle
     teasers {
       ...FullTeaser
     }

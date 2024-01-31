@@ -761,6 +761,9 @@ const modelFieldDefinitions = [{
     }, {
         name: "PeriodicJob",
         fields: []
+    }, {
+        name: "BlockStyle",
+        fields: []
     }];
 function isMetadataPropertyArticleRevisionFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "ArticleRevision";
@@ -4717,4 +4720,65 @@ function definePeriodicJobFactoryInternal({ defaultData: defaultDataResolver, tr
  */
 export function definePeriodicJobFactory(options) {
     return definePeriodicJobFactoryInternal(options !== null && options !== void 0 ? options : {});
+}
+function autoGenerateBlockStyleScalarsOrEnums({ seq }) {
+    return {
+        name: getScalarFieldValueGenerator().String({ modelName: "BlockStyle", fieldName: "name", isId: false, isUnique: true, seq })
+    };
+}
+function defineBlockStyleFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("BlockStyle", modelFieldDefinitions);
+        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateBlockStyleScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {};
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
+            id: inputData.id
+        });
+        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().blockStyle.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
+        return {
+            _factoryFor: "BlockStyle",
+            build,
+            buildList,
+            buildCreateInput: build,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
+        };
+    };
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
+    };
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
+}
+/**
+ * Define factory for {@link BlockStyle} model.
+ *
+ * @param options
+ * @returns factory {@link BlockStyleFactoryInterface}
+ */
+export function defineBlockStyleFactory(options) {
+    return defineBlockStyleFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
