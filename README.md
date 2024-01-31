@@ -33,7 +33,7 @@
     <img src="assets/wepublish.svg" alt="Logo" width="245" height="43">
   </a>
 
-  <h3 align="center">we.publish</h3>
+<h3 align="center">we.publish</h3>
 
   <p align="center">
     Open Source Headless CMS for Publishers and News Rooms
@@ -92,7 +92,6 @@ TBD
 - [Website](https://demo.wepublish.media)
 - [API](https://api.demo.wepublish.media)
 
-
 ## Preview (Next)
 
 - [Editor](https://editor.next.wepublish.media)
@@ -100,7 +99,6 @@ TBD
   - password: `123`
 - [Website](https://next.wepublish.media)
 - [API](https://api.next.wepublish.media)
-
 
 ## Development (Master)
 
@@ -181,8 +179,10 @@ npx run-p watch:api watch:api-example watch:editor
 
 ## Contributing
 
-Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
-A good place to start is with an issue that has the label [good first issue](https://github.com/wepublish/wepublish/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22).
+Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any
+contributions you make are **greatly appreciated**.
+A good place to start is with an issue that has the
+label [good first issue](https://github.com/wepublish/wepublish/issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22).
 
 1. Fork the Project
 2. Create your Feature Branch (`git checkout -b f/AmazingFeature`)
@@ -226,28 +226,54 @@ Website: [https://www.wepublish.ch/](https://www.wepublish.ch/)
 <!-- https://www.markdownguide.org/basic-syntax/#reference-style-links -->
 
 [cicd-shield]: https://github.com/wepublish/wepublish/workflows/CI%2FCD/badge.svg
+
 [cicd-url]: https://github.com/wepublish/wepublish/actions?query=workflow%3ACI%2FCD
+
 [tag-shield]: https://img.shields.io/github/v/tag/wepublish/wepublish?style=flat
+
 [tag-url]: https://github.com/wepublish/wepublish/tags
+
 [contributors-shield]: https://img.shields.io/github/contributors/wepublish/wepublish.svg?style=flat
+
 [contributors-url]: https://github.com/wepublish/wepublish/graphs/contributors
+
 [forks-shield]: https://img.shields.io/github/forks/wepublish/wepublish.svg?style=flat
+
 [forks-url]: https://github.com/wepublish/wepublish/network/members
+
 [stars-shield]: https://img.shields.io/github/stars/wepublish/wepublish.svg?style=flat
+
 [stars-url]: https://github.com/wepublish/wepublish/stargazers
+
 [issues-shield]: https://img.shields.io/github/issues/wepublish/wepublish.svg?style=flat
+
 [issues-url]: https://github.com/github_username/repo/issues
+
 [license-shield]: https://img.shields.io/github/license/github_username/repo.svg?style=flat
+
 [license-url]: https://github.com/wepublish/wepublish/blob/master/LICENSE.txt
+
 [linkedin-shield]: https://img.shields.io/badge/-LinkedIn-black.svg?style=flat&logo=linkedin&colorB=555
+
 [linkedin-url]: https://linkedin.com/company/we-publish
+
 [product-screenshot]: images/screenshot.png
+
 [node-download-url]: https://nodejs.org/en/download/current/
+
 [docker-download-url]: https://www.docker.com/get-started
+
 [vscode-download-url]: https://code.visualstudio.com/Download
+
 [vscode-prettier-download-url]: https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode
+
 [package-json-url]: package.json
+
 [faq-md-url]: FAQ.md
+
 [code-of-conduct-url]: CODE_OF_CONDUCT.md
+
 [documentation-url]: docs/README.md
 
+
+Alteration
