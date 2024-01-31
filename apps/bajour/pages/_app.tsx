@@ -1,28 +1,35 @@
-import {CssBaseline, ThemeProvider} from '@mui/material'
-import {ApiV1, WebsiteBuilderProvider, WebsiteProvider} from '@wepublish/website'
+import {CssBaseline, styled, ThemeProvider} from '@mui/material'
+import {
+  ApiV1,
+  FooterContainer,
+  FooterPaperWrapper,
+  NavbarContainer,
+  WebsiteBuilderProvider,
+  WebsiteProvider
+} from '@wepublish/website'
 import {format, setDefaultOptions} from 'date-fns'
 import {de} from 'date-fns/locale'
 import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import {AppProps} from 'next/app'
+import getConfig from 'next/config'
+import {Roboto} from 'next/font/google'
 import Head from 'next/head'
+import Image from 'next/image'
 import Script from 'next/script'
 import {initReactI18next} from 'react-i18next'
+import {MdFacebook, MdMail} from 'react-icons/md'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
-import {BajourFooter} from '../components/layout/footer/bajour-footer'
-import {BajourHeader} from '../components/layout/header/bajour-header'
+
 import {MainGrid} from '../components/layout/main-grid'
 import {authLink} from '../components/should-be-website-builder/auth-link'
 import {NextWepublishLink} from '../components/should-be-website-builder/next-wepublish-link'
 import {SessionProvider} from '../components/should-be-website-builder/session.provider'
 import {BajourTeaser} from '../components/website-builder-overwrites/blocks/teaser'
 import {TeaserGridStyled} from '../components/website-builder-styled/blocks/teaser-grid-styled'
-import {Roboto} from 'next/font/google'
-
 import theme from '../styles/theme'
-import getConfig from 'next/config'
 
 setDefaultOptions({
   locale: de
@@ -57,6 +64,20 @@ const roboto = Roboto({
 type CustomAppProps = AppProps<{
   sessionToken?: ApiV1.UserSession
 }>
+
+const NavBar = styled(NavbarContainer)`
+  z-index: 11;
+`
+
+const Footer = styled(FooterContainer)`
+  ${FooterPaperWrapper} {
+    color: ${({theme}) => theme.palette.common.white};
+  }
+`
+
+const ButtonLink = styled('a')`
+  color: initial;
+`
 
 function CustomApp({Component, pageProps}: CustomAppProps) {
   return (
@@ -94,11 +115,30 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               <CssBaseline />
 
               <MainGrid className={roboto.className}>
-                <BajourHeader />
+                <NavBar slug="main" categorySlugs={[['basel-briefing', 'other'], ['about-us']]}>
+                  <>
+                    <ButtonLink href="https://www.facebook.com/bajourbasel">
+                      <MdFacebook size="32" />
+                    </ButtonLink>
+                    <ButtonLink>
+                      <ButtonLink href="https://twitter.com/bajourbasel">
+                        <Image
+                          src="/images/twitter-logo.svg"
+                          alt="twitter-logo"
+                          width={32}
+                          height={32}
+                        />
+                      </ButtonLink>
+                    </ButtonLink>
+                    <ButtonLink href="mailto:info@bajour.ch">
+                      <MdMail size="32" />
+                    </ButtonLink>
+                  </>
+                </NavBar>
 
                 <Component {...pageProps} />
 
-                <BajourFooter />
+                <Footer slug="main" categorySlugs={[['basel-briefing', 'other'], ['about-us']]} />
               </MainGrid>
             </ThemeProvider>
           </WebsiteBuilderProvider>

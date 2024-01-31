@@ -1,9 +1,10 @@
 import {ApiV1, BuilderTeaserProps, Teaser} from '@wepublish/website'
+
 import {ColTeaser} from './col-teaser'
 import {ColTeaserLight} from './col-teaser-light'
 import {ColTeaserText} from './col-teaser-text'
-import {TeaserOverwrite} from './teaser-overwrite'
 import {SingleTeaser} from './single-teaser'
+import {TeaserOverwrite} from './teaser-overwrite'
 
 export const BajourTeaser = (props: BuilderTeaserProps) => {
   if (!props.numColumns) {

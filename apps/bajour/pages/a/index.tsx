@@ -1,7 +1,8 @@
-import {Container} from '../../components/layout/container'
 import {ApiV1, ArticleListContainer} from '@wepublish/website'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
+
+import {Container} from '../../components/layout/container'
 
 export default function ArticleList() {
   return (

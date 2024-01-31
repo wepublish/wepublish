@@ -1,7 +1,7 @@
 import {generateFeed} from '@wepublish/website'
 import {ApiV1} from '@wepublish/website'
-import {NextApiRequest} from 'next'
 import {Feed} from 'feed'
+import {NextApiRequest} from 'next'
 import getConfig from 'next/config'
 
 export const getFeed = async (req: NextApiRequest): Promise<Feed> => {

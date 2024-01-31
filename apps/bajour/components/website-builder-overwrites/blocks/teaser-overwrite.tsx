@@ -9,9 +9,11 @@ import {
   selectTeaserUrl,
   useWebsiteBuilder
 } from '@wepublish/website'
+import {ApiV1} from '@wepublish/website'
+
 import {
-  LinkAndGridContainer,
   AuthorsAndDate,
+  LinkAndGridContainer,
   ReadMoreButton,
   SingleLine,
   TeaserContentStyled,
@@ -23,7 +25,6 @@ import {
   TextLine,
   TitleLine
 } from './teaser-overwrite.style'
-import {ApiV1} from '@wepublish/website'
 
 export function TeaserOverwrite({className, teaser, numColumns}: BuilderTeaserProps) {
   const title = teaser && selectTeaserTitle(teaser)

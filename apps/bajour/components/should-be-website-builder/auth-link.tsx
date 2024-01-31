@@ -1,5 +1,6 @@
 import {ApolloLink} from '@apollo/client'
 import {getCookie} from 'cookies-next'
+
 import {AuthTokenStorageKey} from './session.provider'
 
 export const authLink = new ApolloLink((operation, forward) => {

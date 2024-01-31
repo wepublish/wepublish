@@ -1,4 +1,4 @@
-import {Chip, capitalize, styled} from '@mui/material'
+import {capitalize, Chip, styled} from '@mui/material'
 import {
   ApiV1,
   ArticleContainer,
@@ -8,9 +8,10 @@ import {
   useWebsiteBuilder
 } from '@wepublish/website'
 import {GetStaticPaths, GetStaticProps} from 'next'
-import {useRouter} from 'next/router'
-import {Container} from '../../components/layout/container'
 import getConfig from 'next/config'
+import {useRouter} from 'next/router'
+
+import {Container} from '../../components/layout/container'
 
 export const ArticleTagList = styled('div')`
   display: grid;

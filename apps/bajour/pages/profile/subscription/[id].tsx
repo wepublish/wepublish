@@ -6,12 +6,13 @@ import {
   useWebsiteBuilder
 } from '@wepublish/website'
 import {NextPageContext} from 'next'
+import getConfig from 'next/config'
 import {useRouter} from 'next/router'
+
 import {Container} from '../../../components/layout/container'
 import {withAuthGuard} from '../../../components/should-be-website-builder/auth-guard'
 import {ssrAuthLink} from '../../../components/should-be-website-builder/auth-link'
 import {getSessionTokenProps} from '../../../components/should-be-website-builder/get-session-token-props'
-import getConfig from 'next/config'
 
 const SubscriptionsWrapper = styled(Container)`
   display: grid;

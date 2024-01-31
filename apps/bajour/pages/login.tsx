@@ -9,10 +9,11 @@ import {
 } from '@wepublish/website'
 import {deleteCookie, getCookie, setCookie} from 'cookies-next'
 import {GetServerSideProps} from 'next'
+import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {useEffect} from 'react'
+
 import {IntendedRouteStorageKey} from '../components/should-be-website-builder/auth-guard'
-import getConfig from 'next/config'
 
 const LoginWrapper = styled('div')`
   display: grid;

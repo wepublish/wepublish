@@ -1,12 +1,13 @@
 import {styled} from '@mui/material'
+
 import {TeaserOverwrite} from './teaser-overwrite'
 import {
+  fluidTypography,
   TeaserContentStyled,
   TeaserImgStyled,
   TeaserLeadStyled,
   TeaserTitlesStyled,
-  TextLine,
-  fluidTypography
+  TextLine
 } from './teaser-overwrite.style'
 
 export const ColTeaserText = styled(TeaserOverwrite)`

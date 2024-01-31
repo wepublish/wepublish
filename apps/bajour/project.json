@@ -23,6 +23,7 @@
       "defaultConfiguration": "development",
       "options": {
         "buildTarget": "bajour:build",
+        "port": 4201,
         "dev": true
       },
       "configurations": {
