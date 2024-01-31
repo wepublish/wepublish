@@ -54,12 +54,11 @@ spec:
       {{- end }}
       containers:
         - name: {{ include "helm.fullname" . }}
-          image: {{ .Values.deployment.image }}
+          image: {{ .Values.editor.image }}
           imagePullPolicy: {{ .Values.deployment.imagePullPolicy }}
-          command: ['node', 'dist/apps/editor/main.js']
           ports:
             - name: http
-              containerPort: 8000
+              containerPort: 3000
               protocol: TCP
           envFrom:
             - secretRef:

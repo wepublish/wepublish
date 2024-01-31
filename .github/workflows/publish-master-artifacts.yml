@@ -18,8 +18,19 @@ jobs:
     needs: date_sha_tag
     uses: ./.github/workflows/publish-docker-image.yml
     with:
-      tags: |
-        ghcr.io/wepublish/wepublish:master-${{ needs.date_sha_tag.outputs.tag }}
+      migration_tags: |
+        ghcr.io/wepublish/migration:master-${{ needs.date_sha_tag.outputs.tag }}
+        wepublishch/migration:master
+      api_tags: |
+        ghcr.io/wepublish/api:master-${{ needs.date_sha_tag.outputs.tag }}
+        wepublishch/api:master
+      editor_tags: |
+        ghcr.io/wepublish/editor:master-${{ needs.date_sha_tag.outputs.tag }}
+        wepublishch/editor:master
       storybook_tags: |
         ghcr.io/wepublish/storybook:master-${{ needs.date_sha_tag.outputs.tag }}
+        wepublishch/storybook:master
+      website_tags: |
+        ghcr.io/wepublish/website:master-${{ needs.date_sha_tag.outputs.tag }}
+        wepublishch/website:master
     secrets: inherit

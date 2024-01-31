@@ -147,7 +147,12 @@ npm i
 npm run build
 ```
 
-4. Run the project (starts a postgresql with Docker)
+4a. Test wepublish (the initial admin login is red printed in the log at first startup)
+```sh
+npm run try
+```
+
+4b. Run the project (starts a postgresql with Docker)
 
 ```sh
 npm run dev
