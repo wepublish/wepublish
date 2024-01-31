@@ -27,18 +27,26 @@ export async function runSeed() {
     throw new Error('@wepublish/api seeding has not been done')
   }
 
-  const randomPassword = generateSecureRandomPassword(20)
-  const email = 'admin@wepublish.ch'
-
   const admin = await prisma.user.findUnique({
     where: {
       id: 'admin'
     }
   })
   if (!admin) {
+    const email = 'admin@wepublish.ch'
+    const overriddenPw = process.env.OVERRIDE_ADMIN_PW
+    let password = generateSecureRandomPassword(20)
+    if (overriddenPw) {
+      console.log(
+        '\x1b[31m\x1b[1m%s\x1b[0m',
+        `!!!!!!!!!!!!!!!!!! WARNING: UNSECUREq PASSWORD IS OVERRIDDEN WITH ENV VARIABLE !!!!!!!!!!!!!!!!!! `
+      )
+      password = overriddenPw
+    }
+
     console.log(
       '\x1b[31m\x1b[1m%s\x1b[0m',
-      `Bootstrapping initial admin user ${email} with password: ${randomPassword}`
+      `Bootstrapping initial admin user ${email} with password: ${password}`
     )
     await prisma.user.upsert({
       where: {
@@ -52,7 +60,7 @@ export async function runSeed() {
         name: 'Admin',
         active: true,
         roleIDs: [adminUserRole.id],
-        password: await bcrypt.hash(randomPassword, 11)
+        password: await bcrypt.hash(password, 11)
       }
     })
   } else {

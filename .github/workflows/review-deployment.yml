@@ -110,6 +110,7 @@ jobs:
             image: ${{ inputs.migration_image }}
             env:
               DATABASE_URL: postgres://postgres:foo@review-${{ github.event.pull_request.number }}-database-postgresql.reviews.svc.cluster.local:5432/wepublish?schema=public
+              OVERRIDE_ADMIN_PW: '123'
           api:
             image: ${{ inputs.api_image }}
             env:
