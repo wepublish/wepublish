@@ -15,6 +15,9 @@ on:
       storybook_image:
         required: true
         type: string
+      website_image:
+        required: true
+        type: string
 
 jobs:
   helm_deployment:
@@ -138,6 +141,7 @@ jobs:
             env:
               PEER_BY_DEFAULT: "true"
           website:
+            image: ${{ inputs.website_image }}
             enabled: true
           storybook:
             enabled: true

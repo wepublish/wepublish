@@ -13,11 +13,16 @@ jobs:
     name: Docker
     uses: ./.github/workflows/publish-docker-image.yml
     with:
-      editor_tag: ghcr.io/wepublish/wepublish:editor-${{ github.sha }}
-      api_tag: ghcr.io/wepublish/wepublish:api-${{ github.sha }}
-      migration_tag: ghcr.io/wepublish/wepublish:migration-${{ github.sha }}
+      editor_tags: |
+        ghcr.io/wepublish/editor:${{ github.sha }}
+      api_tags: |
+        ghcr.io/wepublish/api:${{ github.sha }}
+      migration_tags: |
+        ghcr.io/wepublish/migration:${{ github.sha }}
       storybook_tags: |
         ghcr.io/wepublish/storybook:${{ github.sha }}
+      website_tags: |
+        ghcr.io/wepublish/website:${{ github.sha }}
     secrets: inherit
 
   review_deployment:
@@ -25,8 +30,9 @@ jobs:
     uses: ./.github/workflows/review-deployment.yml
     needs: publish-docker-image
     with:
-      editor_image: ghcr.io/wepublish/wepublish:editor-${{ github.sha }}
-      api_image: ghcr.io/wepublish/wepublish:api-${{ github.sha }}
-      migration_image: ghcr.io/wepublish/wepublish:migration-${{ github.sha }}
+      editor_image: ghcr.io/wepublish/editor:${{ github.sha }}
+      api_image: ghcr.io/wepublish/api:${{ github.sha }}
+      migration_image: ghcr.io/wepublish/migration:${{ github.sha }}
       storybook_image: ghcr.io/wepublish/storybook:${{ github.sha }}
+      website_image: ghcr.io/wepublish/website:${{ github.sha }}
     secrets: inherit
