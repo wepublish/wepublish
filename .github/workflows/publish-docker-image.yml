@@ -3,7 +3,10 @@ name: Publish docker image
 on:
   workflow_call:
     inputs:
-      tags:
+      editor_tag:
+        required: true
+        type: string
+      api_tag:
         required: true
         type: string
       storybook_tags:
@@ -28,13 +31,12 @@ jobs:
         with:
           target: api
           push: true
-          tags: ${{ inputs.tags }}-api
-            - uses: docker/build-push-action@v2
+          tags: ${{ inputs.api_tag }}
       - uses: docker/build-push-action@v2
         with:
           target: editor
           push: true
-          tags: ${{ inputs.tags }}-editor
+          tags: ${{ inputs.editor_tag }}
 
   build-and-push-storybook:
     name: Build and push storybook
