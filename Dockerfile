@@ -28,7 +28,7 @@ RUN groupadd -r wepublish && \
     rm -rf /var/lib/apt/lists/*
 COPY --chown=wepublish:wepublish apps/api-example/src/default.yaml /wepublish/config/default.yaml
 COPY --chown=wepublish:wepublish --from=build-api /wepublish/api /wepublish
-COPY --chown=wepublish:wepublish  --from=build-api /wepublish/node_modules/bcrypt node_modules/bcrypt
+COPY --chown=wepublish:wepublish --from=build-api /wepublish/node_modules/bcrypt node_modules/bcrypt
 EXPOSE 4000
 USER wepublish
 CMD /wepublish/api
@@ -62,7 +62,7 @@ USER wepublish
 CMD /wepublish/editor
 
 #######
-## Migations
+## Migrations
 #######
 FROM node:16.20.2-bookworm-slim as build-migration
 ENV NODE_ENV=production
