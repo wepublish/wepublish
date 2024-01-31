@@ -8,7 +8,7 @@ deployment:
     MEDIA_SERVER_URL: https://media
 
 api:
-  image: ghcr.io/wepublish/wepublish
+  image: ghcr.io/wepublish/api
   env:
     GOOGLE_APPLICATION_CREDENTIALS: /var/secrets/google/key.json
     DATABASE_URL: postgres://
@@ -22,7 +22,7 @@ api:
   replicaCount: 1
 
 migration:
-  image: ghcr.io/wepublish/wepublish
+  image: ghcr.io/wepublish/migration
   env:
     DATABASE_URL: postgres://
   envFromSecretRefName:
@@ -30,7 +30,7 @@ migration:
   replicaCount: 1
 
 editor:
-  image: ghcr.io/wepublish/wepublish
+  image: ghcr.io/wepublish/editor
   env:
     PEER_BY_DEFAULT: "true"
   envFromSecretRefName:
@@ -39,6 +39,7 @@ editor:
 
 website:
   enabled: false
+  image: ghcr.io/wepublish/website
   env:
     NODE_ENV: production
   envFromSecretRefName:
