@@ -1,5 +1,6 @@
 import {Button, styled} from '@mui/material'
 import {Image, TeaserContent, TeaserLead, TeaserPreTitle, TeaserTitle} from '@wepublish/website'
+
 import {NextWepublishLink} from '../../should-be-website-builder/next-wepublish-link'
 
 export const fluidTypography = (minSize: number, maxSize: number): string => {

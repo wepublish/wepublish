@@ -1,7 +1,8 @@
-import {GetServerSidePropsContext, NextPageContext} from 'next'
-import {AuthTokenStorageKey} from './session.provider'
-import {getCookie} from 'cookies-next'
 import {ApiV1} from '@wepublish/website'
+import {getCookie} from 'cookies-next'
+import {GetServerSidePropsContext, NextPageContext} from 'next'
+
+import {AuthTokenStorageKey} from './session.provider'
 
 export const getSessionTokenProps = async (
   ctx: GetServerSidePropsContext | NextPageContext
