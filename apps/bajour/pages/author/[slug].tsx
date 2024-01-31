@@ -1,8 +1,9 @@
-import {Container} from '../../components/layout/container'
 import {ApiV1, ArticleListContainer, AuthorContainer, useWebsiteBuilder} from '@wepublish/website'
 import {GetStaticPaths, GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
+
+import {Container} from '../../components/layout/container'
 
 export default function AuthorBySlug() {
   const {

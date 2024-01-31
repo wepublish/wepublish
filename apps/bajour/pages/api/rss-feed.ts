@@ -1,5 +1,6 @@
-import {getFeed} from '../../components/should-be-website-builder/feed'
 import {NextApiRequest, NextApiResponse} from 'next'
+
+import {getFeed} from '../../components/should-be-website-builder/feed'
 
 export const config = {
   regions: ['all']

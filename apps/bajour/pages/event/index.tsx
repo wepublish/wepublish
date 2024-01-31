@@ -1,11 +1,12 @@
-import {Container} from '../../components/layout/container'
-import {Checkbox, FormControlLabel, FormGroup, css, styled} from '@mui/material'
+import {Checkbox, css, FormControlLabel, FormGroup, styled} from '@mui/material'
 import {DateTimePicker, LocalizationProvider} from '@mui/x-date-pickers'
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns'
 import {ApiV1, EventListContainer} from '@wepublish/website'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {Reducer, useReducer} from 'react'
+
+import {Container} from '../../components/layout/container'
 
 const Filter = styled('div')`
   display: grid;
