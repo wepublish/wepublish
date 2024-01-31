@@ -3,10 +3,19 @@ name: Review deployment
 on:
   workflow_call:
     inputs:
-      app_image:
+      editor_image:
+        required: true
+        type: string
+      api_image:
+        required: true
+        type: string
+      migration_image:
         required: true
         type: string
       storybook_image:
+        required: true
+        type: string
+      website_image:
         required: true
         type: string
 
@@ -92,13 +101,18 @@ jobs:
         run: |
           cat > values.yaml <<EOF
           deployment:
-            image: ${{ inputs.app_image }}
             env:
               API_URL: ${API_URL}
               EDITOR_URL: ${EDITOR_URL}
               WEBSITE_URL: ${WEBSITE_URL}
               MEDIA_SERVER_URL: ${MEDIA_SERVER_URL}
+          migration:
+            image: ${{ inputs.migration_image }}
+            env:
+              DATABASE_URL: postgres://postgres:foo@review-${{ github.event.pull_request.number }}-database-postgresql.reviews.svc.cluster.local:5432/wepublish?schema=public
+              OVERRIDE_ADMIN_PW: '123'
           api:
+            image: ${{ inputs.api_image }}
             env:
               GOOGLE_APPLICATION_CREDENTIALS: /var/secrets/google/key.json
               DATABASE_URL: postgres://postgres:foo@review-${{ github.event.pull_request.number }}-database-postgresql.reviews.svc.cluster.local:5432/wepublish?schema=public
@@ -111,10 +125,24 @@ jobs:
               PAYREXX_PAYMENT_METHODS: visa,mastercard
               PAYREXX_API_SECRET: ${{ secrets.PAYREXX_API_SECRET }}
               PAYREXX_WEBHOOK_SECRET: ${{ secrets.PAYREXX_WEBHOOK_SECRET }}
+              OAUTH_GOOGLE_DISCOVERY_URL: 'https://accounts.google.com'
+              OAUTH_GOOGLE_CLIENT_ID: '617896178757-i6ldn0nni9qtle8o6eu76lv93d78nvfi.apps.googleusercontent.com'
+              OAUTH_GOOGLE_CLIENT_KEY: 't267ZLqkV9dacrkPQp_pF-G2'
+              OAUTH_GOOGLE_REDIRECT_URL: ${WEBSITE_URL}/auth/google
+              BEXIO_API_KEY: 'secret'
+              BEXIO_USER_ID: '1'
+              BEXIO_COUNTRY_ID: '1'
+              BEXIO_INVOICE_TEMPLATE: 'template-name'
+              BEXIO_UNIT_ID: '1'
+              BEXIO_TAX_ID: '17'
+              BEXIO_ACCOUNT_ID: '139'
+              CONFIG_FILE_PATH: '/wepublish/config/default.yaml'
           editor:
+            image: ${{ inputs.editor_image }}
             env:
               PEER_BY_DEFAULT: "true"
           website:
+            image: ${{ inputs.website_image }}
             enabled: true
           storybook:
             enabled: true

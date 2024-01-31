@@ -25,6 +25,9 @@ fragment BlockWithoutTeaser on Block {
   ... on QuoteBlock {
     quote
     author
+    image {
+      ...FullImage
+    }
   }
 
   ... on RichTextBlock {

@@ -83,7 +83,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
 
   [BlockType.Quote]: {
     field: props => <QuoteBlock {...props} />,
-    defaultValue: {quote: '', author: ''},
+    defaultValue: {quote: '', author: '', image: null},
     label: 'blocks.quote.label',
     icon: <MdFormatQuote />
   },

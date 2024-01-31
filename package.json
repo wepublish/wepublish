@@ -24,6 +24,7 @@
     "changelog": "node -r dotenv/config ./node_modules/.bin/lerna-changelog",
     "publish": "lerna publish from-package --ignore-scripts --no-verify-access",
     "start:docker": "docker-compose up --detach database pgadmin media",
+    "try": "docker-compose up database migration api editor media",
     "prettier": "prettier --write \"{packages,services}/**/*.{js,ts,tsx,json}\"",
     "prepare": "prisma generate"
   },

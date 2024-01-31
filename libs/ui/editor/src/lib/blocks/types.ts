@@ -94,6 +94,7 @@ export interface CommentBlockValue {
 export interface QuoteBlockValue {
   quote: string
   author: string
+  image?: ImageRefFragment | null
 }
 
 export interface LinkPageBreakBlockValue {
@@ -421,7 +422,8 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
       return {
         quote: {
           quote: block.value.quote || undefined,
-          author: block.value.author || undefined
+          author: block.value.author || undefined,
+          imageID: block.value.image?.id || undefined
         }
       }
 
@@ -819,7 +821,7 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
       return {
         key,
         type: BlockType.Quote,
-        value: {quote: block.quote ?? '', author: block.author ?? ''}
+        value: {quote: block.quote ?? '', author: block.author ?? '', image: block.image ?? null}
       }
 
     case 'FacebookPostBlock':
