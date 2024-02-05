@@ -295,7 +295,7 @@
       },
       "listicle": {
         "title": "Titre",
-        "label": ""
+        "label": "Listicle"
       },
       "poll": {
         "edit": "Edit poll block",
