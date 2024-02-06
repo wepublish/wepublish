@@ -138,7 +138,6 @@ export class MailgunMailProvider extends BaseMailProvider {
         } else {
           serializedValue = JSON.stringify(value).substring(0, 15000)
         }
-        console.log(serializedValue)
         form.append(`v:${key}`, serializedValue)
       }
     }
