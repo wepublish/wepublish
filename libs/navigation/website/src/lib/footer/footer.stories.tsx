@@ -1,18 +1,8 @@
 import {ApolloError} from '@apollo/client'
 import {Meta} from '@storybook/react'
-import {Navigation} from '@wepublish/website/api'
+import {FullNavigationFragment, Navigation} from '@wepublish/website/api'
 import {Footer} from './footer'
-
-const children = (
-  <svg
-    viewBox="0 0 100 100"
-    width={50}
-    height={50}
-    style={{justifySelf: 'center'}}
-    xmlns="http://www.w3.org/2000/svg">
-    <circle cx="50" cy="50" r="50" fill="#fff" />
-  </svg>
-)
+import {css} from '@emotion/react'
 
 const navigation = {
   id: 'cldx7kcpi1168oapxftiqsh0p',
@@ -21,25 +11,139 @@ const navigation = {
   links: [
     {
       __typename: 'PageNavigationLink',
-      label: 'Home',
+      label: 'Gesellschaft',
       page: {
         url: '/'
       }
     },
     {
       __typename: 'ArticleNavigationLink',
-      label: 'Impressum',
+      label: 'Politik',
       article: {
-        url: '/a/impressum'
+        url: '/a/abcd'
+      }
+    },
+    {
+      __typename: 'ArticleNavigationLink',
+      label: 'Kultur',
+      article: {
+        url: '/a/abcd'
+      }
+    },
+    {
+      __typename: 'ArticleNavigationLink',
+      label: 'Tsüri-News',
+      article: {
+        url: '/a/abcd'
       }
     },
     {
       __typename: 'ExternalNavigationLink',
-      label: 'FAQ',
+      label: 'Was lauft?',
       url: 'https://google.com'
     }
   ]
-} as Navigation
+} as FullNavigationFragment
+
+const navigations = [
+  navigation,
+  {
+    id: '1234-1234',
+    key: 'guides',
+    name: 'Guides',
+    links: [
+      {
+        __typename: 'PageNavigationLink',
+        label: 'Agenda',
+        page: {
+          url: '/'
+        }
+      },
+      {
+        __typename: 'ExternalNavigationLink',
+        label: 'Denkmal.org',
+        url: 'https://google.com'
+      },
+      {
+        __typename: 'ArticleNavigationLink',
+        label: 'Tsüri Guide',
+        article: {
+          url: '/a/abcd'
+        }
+      }
+    ]
+  },
+  {
+    id: '12345-12345',
+    key: 'fokusthema',
+    name: 'Fokusthema',
+    links: [
+      {
+        __typename: 'PageNavigationLink',
+        label: 'Mobilität',
+        page: {
+          url: '/'
+        }
+      },
+      {
+        __typename: 'ArticleNavigationLink',
+        label: 'Bildung',
+        article: {
+          url: '/a/abcd'
+        }
+      },
+      {
+        __typename: 'ArticleNavigationLink',
+        label: 'Konsum',
+        article: {
+          url: '/a/abcd'
+        }
+      },
+      {
+        __typename: 'ArticleNavigationLink',
+        label: 'Archive',
+        article: {
+          url: '/a/abcd'
+        }
+      }
+    ]
+  },
+  {
+    id: '12345-12345',
+    key: 'about',
+    name: 'Über Uns',
+    links: [
+      {
+        __typename: 'PageNavigationLink',
+        label: 'Team',
+        page: {
+          url: '/team/'
+        }
+      },
+      {
+        __typename: 'PageNavigationLink',
+        label: 'Über Uns',
+        page: {
+          url: '/about-us/'
+        }
+      },
+      {
+        __typename: 'PageNavigationLink',
+        label: 'Kontakt',
+        article: {
+          url: '/contact/'
+        }
+      },
+      {
+        __typename: 'PageNavigationLink',
+        label: 'Jobs',
+        article: {
+          url: '/jobs/'
+        }
+      }
+    ]
+  }
+] as Navigation[]
 
 export default {
   component: Footer,
@@ -49,35 +153,70 @@ export default {
 export const Default = {
   args: {
     data: {
-      navigations: [navigation]
+      navigations
     },
     loading: false,
-    children,
-    slug: 'main'
+    slug: 'main',
+    categorySlugs: [['guides', 'fokusthema'], ['about']]
   }
 }
 
 export const WithLoading = {
-  ...Default,
   args: {
-    ...Default.args,
     data: {
-      navigation: null
+      navigations: null
     },
-    loading: true
+    loading: true,
+    slug: 'main',
+    categorySlugs: [['guides', 'fokusthema'], ['about']]
   }
 }
 
 export const WithError = {
-  ...Default,
   args: {
-    ...Default.args,
     data: {
-      navigation: null
+      navigations: null
     },
     loading: false,
     error: new ApolloError({
       errorMessage: 'Foobar'
-    })
+    }),
+    slug: 'main',
+    categorySlugs: [['guides', 'fokusthema'], ['about']]
+  }
+}
+
+export const WithClassName = {
+  args: {
+    data: {
+      navigations
+    },
+    className: 'extra-classname',
+    slug: 'main',
+    categorySlugs: [['guides', 'fokusthema'], ['about']]
+  }
+}
+
+export const WithEmotion = {
+  args: {
+    data: {
+      navigations
+    },
+    css: css`
+      background-color: #eee;
+    `,
+    slug: 'main',
+    categorySlugs: [['guides', 'fokusthema'], ['about']]
+  }
+}
+
+export const WithoutItems = {
+  args: {
+    data: {
+      navigations
+    },
+    loading: false,
+    slug: '',
+    categorySlugs: []
   }
 }

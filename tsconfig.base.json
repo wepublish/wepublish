@@ -12,10 +12,7 @@
     "importHelpers": true,
     "target": "es2015",
     "module": "esnext",
-    "lib": [
-      "es2017",
-      "dom"
-    ],
+    "lib": ["es2017", "dom"],
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
@@ -31,11 +28,12 @@
       "@wepublish/comments/website": ["libs/comments/website/src/index.ts"],
       "@wepublish/consent/api": ["libs/consent/api/src/index.ts"],
       "@wepublish/consent/editor": ["libs/consent/editor/src/index.ts"],
-      "@wepublish/editor/api-v2": ["libs/editor/api-v2/src/index.ts"],
       "@wepublish/editor/api": ["libs/editor/api/src/index.ts"],
-      "@wepublish/event/website": ["libs/event/website/src/index.ts"],
+      "@wepublish/editor/api-v2": ["libs/editor/api-v2/src/index.ts"],
+      "@wepublish/event/api": ["libs/event/api/src/index.ts"],
       "@wepublish/event/import/api": ["libs/event/import/api/src/index.ts"],
       "@wepublish/event/import/editor": ["libs/event/import/editor/src/index.ts"],
+      "@wepublish/event/website": ["libs/event/website/src/index.ts"],
       "@wepublish/feed/website": ["libs/feed/website/src/index.ts"],
       "@wepublish/image/api": ["libs/image/api/src/index.ts"],
       "@wepublish/image/website": ["libs/image/website/src/index.ts"],
@@ -62,16 +60,13 @@
       "@wepublish/user/api": ["libs/user/api/src/index.ts"],
       "@wepublish/user/website": ["libs/user/website/src/index.ts"],
       "@wepublish/user/website/server": ["libs/user/website/src/server.ts"],
-      "@wepublish/utils/api": ["libs/utils/api/src/index.ts"],
       "@wepublish/utils": ["libs/utils/src/index.ts"],
+      "@wepublish/utils/api": ["libs/utils/api/src/index.ts"],
       "@wepublish/website": ["libs/website/src/index.ts"],
       "@wepublish/website/api": ["libs/website/api/src/index.ts"],
       "@wepublish/website/api-v2": ["libs/website/api-v2/src/index.ts"],
       "@wepublish/website/builder": ["libs/website/builder/src/index.ts"]
     }
   },
-  "exclude": [
-    "node_modules",
-    "tmp"
-  ]
+  "exclude": ["node_modules", "tmp"]
 }

@@ -1,7 +1,7 @@
 import {Prisma, PrismaClient, UserRole} from '@prisma/client'
-import {ConnectionResult, MaxResultsPerPage} from '../../db/common'
+import {ConnectionResult} from '../../db/common'
 import {UserRoleFilter, UserRoleSort} from '../../db/userRole'
-import {getSortOrder, SortOrder} from '../queries/sort'
+import {SortOrder, getMaxTake, graphQLSortOrderToPrisma} from '@wepublish/utils/api'
 
 export const createUserRoleOrder = (
   field: UserRoleSort,
@@ -10,12 +10,12 @@ export const createUserRoleOrder = (
   switch (field) {
     case UserRoleSort.CreatedAt:
       return {
-        createdAt: sortOrder
+        createdAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case UserRoleSort.ModifiedAt:
       return {
-        modifiedAt: sortOrder
+        modifiedAt: graphQLSortOrderToPrisma(sortOrder)
       }
   }
 }
@@ -39,13 +39,13 @@ export const createUserRoleFilter = (
 export const getUserRoles = async (
   filter: Partial<UserRoleFilter>,
   sortedField: UserRoleSort,
-  order: 1 | -1,
+  order: SortOrder,
   cursorId: string | null,
   skip: number,
   take: number,
   userRole: PrismaClient['userRole']
 ): Promise<ConnectionResult<UserRole>> => {
-  const orderBy = createUserRoleOrder(sortedField, getSortOrder(order))
+  const orderBy = createUserRoleOrder(sortedField, order)
   const where = createUserRoleFilter(filter)
 
   const [totalCount, userroles] = await Promise.all([
@@ -56,7 +56,7 @@ export const getUserRoles = async (
     userRole.findMany({
       where,
       skip,
-      take: Math.min(take, MaxResultsPerPage) + 1,
+      take: getMaxTake(take) + 1,
       orderBy,
       cursor: cursorId ? {id: cursorId} : undefined
     })

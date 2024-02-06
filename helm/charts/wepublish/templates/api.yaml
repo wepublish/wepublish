@@ -54,13 +54,11 @@ spec:
       {{- end }}
       containers:
         - name: {{ include "helm.fullname" . }}
-          image: {{ .Values.deployment.image }}
+          image: {{ .Values.api.image }}
           imagePullPolicy: {{ .Values.deployment.imagePullPolicy }}
-          command: ['/bin/sh']
-          args: ['-c', 'npx prisma migrate deploy && npx tsx libs/api/prisma/run-seed.ts && node dist/apps/api-example/main.js']
           ports:
             - name: http
-              containerPort: 8000
+              containerPort: 4000
               protocol: TCP
           env:
             - name: HOST_URL

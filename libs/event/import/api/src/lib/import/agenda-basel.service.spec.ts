@@ -1,10 +1,10 @@
-import {Test, TestingModule} from '@nestjs/testing'
-import {CACHE_MANAGER} from '@nestjs/cache-manager'
-import {PrismaClient} from '@prisma/client'
-import {EVENT_IMPORT_PROVIDER} from './events-import.service'
-import {AgendaBaselService} from './agenda-basel.service'
 import {HttpService} from '@nestjs/axios'
+import {CACHE_MANAGER} from '@nestjs/cache-manager'
+import {Test, TestingModule} from '@nestjs/testing'
+import {PrismaClient} from '@prisma/client'
 import {ImageFetcherService, MediaAdapterService} from '@wepublish/image/api'
+import {AgendaBaselService} from './agenda-basel.service'
+import {EVENT_IMPORT_PROVIDER} from './events-import.service'
 
 describe('AgendaBaselService', () => {
   let service: AgendaBaselService

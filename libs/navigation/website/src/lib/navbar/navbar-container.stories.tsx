@@ -54,7 +54,7 @@ export default {
 export const Default = {
   args: {
     slug: 'main',
-    categorySlugs: ['categories', 'about']
+    categorySlugs: [['guides', 'fokusthema'], ['about']]
   },
 
   parameters: {
@@ -78,7 +78,7 @@ export const Default = {
 export const WithClassName = {
   args: {
     slug: 'main',
-    categorySlugs: ['categories', 'about'],
+    categorySlugs: [['guides', 'fokusthema'], ['about']],
     className: 'extra-classname'
   },
 
@@ -106,7 +106,7 @@ export const WithEmotion = {
       background-color: #eee;
     `,
     slug: 'main',
-    categorySlugs: ['categories', 'about']
+    categorySlugs: [['guides', 'fokusthema'], ['about']]
   },
 
   parameters: {

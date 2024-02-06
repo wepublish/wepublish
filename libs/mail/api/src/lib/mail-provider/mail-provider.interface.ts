@@ -16,7 +16,7 @@ export interface SendMailProps {
   message?: string
   messageHtml?: string
   template?: string
-  templateData?: Record<string, string>
+  templateData?: Record<string, any>
 }
 
 export interface MailLogStatus {

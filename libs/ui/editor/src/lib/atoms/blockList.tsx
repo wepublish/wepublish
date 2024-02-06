@@ -170,11 +170,11 @@ export function BlockList<V extends BlockListValue>({
 
   const handleItemChange = useCallback(
     (index: number, itemValue: React.SetStateAction<BlockListValue>) => {
-      onChange((value: any) =>
-        Object.assign([], value, {
+      onChange((value: any) => {
+        return Object.assign([], value, {
           [index]: isFunctionalUpdate(itemValue) ? itemValue(value[index]) : itemValue
         })
-      )
+      })
     },
     [onChange]
   )

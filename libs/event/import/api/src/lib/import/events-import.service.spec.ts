@@ -1,11 +1,12 @@
-import {Test, TestingModule} from '@nestjs/testing'
 import {CACHE_MANAGER} from '@nestjs/cache-manager'
-import {PrismaClient} from '@prisma/client'
-import {EVENT_IMPORT_PROVIDER, EventsImportService} from './events-import.service'
-import {AgendaBaselService} from './agenda-basel.service'
-import {Event, EventStatus, ImportedEventSort} from './events-import.model'
+import {Test, TestingModule} from '@nestjs/testing'
+import {EventStatus, PrismaClient} from '@prisma/client'
+import {SortOrder} from '@wepublish/utils/api'
 import {Cache} from 'cache-manager'
 import {Node} from 'slate'
+import {AgendaBaselService} from './agenda-basel.service'
+import {EventFromSource, ImportedEventSort} from './events-import.model'
+import {EVENT_IMPORT_PROVIDER, EventsImportService} from './events-import.service'
 import {KulturZueriService} from './kultur-zueri.service'
 
 describe('EventsImportService', () => {
@@ -45,7 +46,7 @@ describe('EventsImportService', () => {
     cacheManager = module.get<Cache>(CACHE_MANAGER)
   })
 
-  const mockEvent: Event = {
+  const mockEvent: EventFromSource = {
     id: '1',
     createdAt: new Date(),
     modifiedAt: new Date(),
@@ -75,7 +76,7 @@ describe('EventsImportService', () => {
       jest.spyOn(service, 'importedEvents').mockResolvedValueOnce(mockEventsDocument)
       const result = await service.importedEvents({
         filter: {} as any,
-        order: 1,
+        order: SortOrder.Ascending,
         skip: 0,
         take: 10,
         sort: ImportedEventSort.CREATED_AT

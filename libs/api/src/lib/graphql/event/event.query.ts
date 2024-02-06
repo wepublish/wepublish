@@ -1,6 +1,5 @@
 import {Prisma, PrismaClient} from '@prisma/client'
-import {MaxResultsPerPage} from '../../db/common'
-import {getSortOrder, SortOrder} from '../queries/sort'
+import {SortOrder, getMaxTake, graphQLSortOrderToPrisma} from '@wepublish/utils/api'
 
 export const getEvent = (id: string, event: PrismaClient['event']) => {
   return event.findUnique({
@@ -31,23 +30,23 @@ export const createEventOrder = (
   switch (field) {
     case EventSort.ModifiedAt:
       return {
-        modifiedAt: sortOrder
+        modifiedAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case EventSort.CreatedAt:
       return {
-        createdAt: sortOrder
+        createdAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case EventSort.EndsAt:
       return {
-        endsAt: sortOrder
+        endsAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case EventSort.StartsAt:
     default:
       return {
-        startsAt: sortOrder
+        startsAt: graphQLSortOrderToPrisma(sortOrder)
       }
   }
 }
@@ -179,13 +178,13 @@ export const createEventFilter = (filter?: Partial<EventFilter>): Prisma.EventWh
 export const getEvents = async (
   filter: Partial<EventFilter>,
   sortedField: EventSort,
-  order: 1 | -1,
+  order: SortOrder,
   cursorId: string | null,
   skip: number,
   take: number,
   event: PrismaClient['event']
 ) => {
-  const orderBy = createEventOrder(sortedField, getSortOrder(order))
+  const orderBy = createEventOrder(sortedField, order)
   const where = createEventFilter(filter)
 
   const [totalCount, events] = await Promise.all([
@@ -196,7 +195,7 @@ export const getEvents = async (
     event.findMany({
       where,
       skip,
-      take: Math.min(take, MaxResultsPerPage) + 1,
+      take: getMaxTake(take) + 1,
       orderBy,
       cursor: cursorId ? {id: cursorId} : undefined
     })

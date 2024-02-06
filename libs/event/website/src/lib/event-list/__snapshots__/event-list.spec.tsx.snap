@@ -6,7 +6,7 @@ exports[`EventList should render Default 1`] = `
     class="css-1hdjk0a-EventListWrapper e1kgsg4h0"
   >
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-9ztkv6-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
@@ -66,7 +66,7 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
           >
             Cool concert
           </h1>
@@ -80,7 +80,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
                 data-slate-node="element"
               >
                 <span
@@ -171,7 +171,7 @@ https://unsplash.it/200/100 200w"
       </article>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-9ztkv6-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
@@ -231,7 +231,7 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
           >
             Cool concert
           </h1>
@@ -245,7 +245,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
                 data-slate-node="element"
               >
                 <span
@@ -336,7 +336,7 @@ https://unsplash.it/200/100 200w"
       </article>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-9ztkv6-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
@@ -396,7 +396,7 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
           >
             Cool concert
           </h1>
@@ -410,7 +410,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
                 data-slate-node="element"
               >
                 <span
@@ -501,7 +501,7 @@ https://unsplash.it/200/100 200w"
       </article>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-9ztkv6-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
@@ -561,7 +561,7 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
           >
             Cool concert
           </h1>
@@ -575,7 +575,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
                 data-slate-node="element"
               >
                 <span
@@ -666,7 +666,7 @@ https://unsplash.it/200/100 200w"
       </article>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-9ztkv6-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
@@ -726,7 +726,7 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
           >
             Cool concert
           </h1>
@@ -740,7 +740,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
                 data-slate-node="element"
               >
                 <span
@@ -840,7 +840,7 @@ exports[`EventList should render WithClassName 1`] = `
     class="extra-classname css-1hdjk0a-EventListWrapper e1kgsg4h0"
   >
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-9ztkv6-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
@@ -900,7 +900,7 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
           >
             Cool concert
           </h1>
@@ -914,7 +914,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
                 data-slate-node="element"
               >
                 <span
@@ -1005,7 +1005,7 @@ https://unsplash.it/200/100 200w"
       </article>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-9ztkv6-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
@@ -1065,7 +1065,7 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
           >
             Cool concert
           </h1>
@@ -1079,7 +1079,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
                 data-slate-node="element"
               >
                 <span
@@ -1170,7 +1170,7 @@ https://unsplash.it/200/100 200w"
       </article>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-9ztkv6-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
@@ -1230,7 +1230,7 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
           >
             Cool concert
           </h1>
@@ -1244,7 +1244,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
                 data-slate-node="element"
               >
                 <span
@@ -1335,7 +1335,7 @@ https://unsplash.it/200/100 200w"
       </article>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-9ztkv6-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
@@ -1395,7 +1395,7 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
           >
             Cool concert
           </h1>
@@ -1409,7 +1409,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
                 data-slate-node="element"
               >
                 <span
@@ -1500,7 +1500,7 @@ https://unsplash.it/200/100 200w"
       </article>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-9ztkv6-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
@@ -1560,7 +1560,7 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
           >
             Cool concert
           </h1>
@@ -1574,7 +1574,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
                 data-slate-node="element"
               >
                 <span
@@ -1674,7 +1674,7 @@ exports[`EventList should render WithEmotion 1`] = `
     class="css-1hdjk0a-EventListWrapper e1kgsg4h0"
   >
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-9ztkv6-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
@@ -1734,7 +1734,7 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
           >
             Cool concert
           </h1>
@@ -1748,7 +1748,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
                 data-slate-node="element"
               >
                 <span
@@ -1839,7 +1839,7 @@ https://unsplash.it/200/100 200w"
       </article>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-9ztkv6-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
@@ -1899,7 +1899,7 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
           >
             Cool concert
           </h1>
@@ -1913,7 +1913,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
                 data-slate-node="element"
               >
                 <span
@@ -2004,7 +2004,7 @@ https://unsplash.it/200/100 200w"
       </article>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-9ztkv6-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
@@ -2064,7 +2064,7 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
           >
             Cool concert
           </h1>
@@ -2078,7 +2078,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
                 data-slate-node="element"
               >
                 <span
@@ -2169,7 +2169,7 @@ https://unsplash.it/200/100 200w"
       </article>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-9ztkv6-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
@@ -2229,7 +2229,7 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
           >
             Cool concert
           </h1>
@@ -2243,7 +2243,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
                 data-slate-node="element"
               >
                 <span
@@ -2334,7 +2334,7 @@ https://unsplash.it/200/100 200w"
       </article>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-9ztkv6-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
@@ -2394,7 +2394,7 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
           >
             Cool concert
           </h1>
@@ -2408,7 +2408,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
                 data-slate-node="element"
               >
                 <span
@@ -2524,7 +2524,7 @@ exports[`EventList should render WithoutImage 1`] = `
     class="css-1hdjk0a-EventListWrapper e1kgsg4h0"
   >
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-9ztkv6-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
@@ -2573,7 +2573,7 @@ exports[`EventList should render WithoutImage 1`] = `
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
           >
             Cool concert
           </h1>
@@ -2587,7 +2587,7 @@ exports[`EventList should render WithoutImage 1`] = `
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
                 data-slate-node="element"
               >
                 <span
@@ -2678,7 +2678,7 @@ exports[`EventList should render WithoutImage 1`] = `
       </article>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-9ztkv6-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
@@ -2738,7 +2738,7 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
           >
             Cool concert
           </h1>
@@ -2752,7 +2752,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
                 data-slate-node="element"
               >
                 <span
@@ -2843,7 +2843,7 @@ https://unsplash.it/200/100 200w"
       </article>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-9ztkv6-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
@@ -2892,7 +2892,7 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
           >
             Cool concert
           </h1>
@@ -2906,7 +2906,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
                 data-slate-node="element"
               >
                 <span
@@ -2997,7 +2997,7 @@ https://unsplash.it/200/100 200w"
       </article>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-9ztkv6-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
@@ -3057,7 +3057,7 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
           >
             Cool concert
           </h1>
@@ -3071,7 +3071,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
                 data-slate-node="element"
               >
                 <span
@@ -3162,7 +3162,7 @@ https://unsplash.it/200/100 200w"
       </article>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-4wstp6-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-9ztkv6-MuiTypography-root-MuiLink-root-EventListItem"
       href="https://example.com"
     >
       <article
@@ -3211,7 +3211,7 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-5lbw0b-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
           >
             Cool concert
           </h1>
@@ -3225,7 +3225,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-d3wcwz-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
                 data-slate-node="element"
               >
                 <span

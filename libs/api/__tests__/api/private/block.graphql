@@ -84,6 +84,9 @@ fragment FullBlock on Block {
   ... on QuoteBlock {
     quote
     author
+    image {
+      ...ImageRef
+    }
   }
 
   ... on LinkPageBreakBlock {

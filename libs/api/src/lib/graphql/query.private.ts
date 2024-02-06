@@ -3,6 +3,7 @@ import {
   CanGetPeerArticle,
   CanLoginAsOtherUser
 } from '@wepublish/permissions/api'
+import {SortOrder} from '@wepublish/utils/api'
 import {
   GraphQLID,
   GraphQLInt,
@@ -15,7 +16,6 @@ import {Context} from '../context'
 import {ArticleSort} from '../db/article'
 import {AuthorSort} from '../db/author'
 import {CommentSort} from '../db/comment'
-import {SortOrder} from '../db/common'
 import {ImageSort} from '../db/image'
 import {InvoiceSort} from '../db/invoice'
 import {MemberPlanSort} from '../db/memberPlan'
@@ -26,6 +26,8 @@ import {UserSort} from '../db/user'
 import {UserRoleSort} from '../db/userRole'
 import {GivenTokeExpiryToLongError, UserIdNotFound} from '../error'
 import {delegateToPeerSchema} from '../utility'
+import {GraphQLAction} from './action'
+import {getActions} from './action/action.private-queries'
 import {
   GraphQLArticle,
   GraphQLArticleConnection,
@@ -69,8 +71,8 @@ import {getAdminImages, getImageById} from './image/image.private-queries'
 import {
   GraphQLInvoice,
   GraphQLInvoiceConnection,
-  GraphQLinvoiceFilter,
-  GraphQLInvoiceSort
+  GraphQLInvoiceSort,
+  GraphQLinvoiceFilter
 } from './invoice'
 import {getAdminInvoices, getInvoiceById} from './invoice/invoice.private-queries'
 import {
@@ -114,7 +116,7 @@ import {
   GraphQLPollFilter,
   GraphQLPollSort
 } from './poll/poll'
-import {getPolls, PollSort} from './poll/poll.private-queries'
+import {PollSort, getPolls} from './poll/poll.private-queries'
 import {getPoll} from './poll/poll.public-queries'
 import {GraphQLSession} from './session'
 import {getSessionsForUser} from './session/session.private-queries'
@@ -122,17 +124,17 @@ import {GraphQLSetting} from './setting'
 import {getSetting, getSettings} from './setting/setting.private-queries'
 import {GraphQLSlug} from './slug'
 import {
+  GraphQLSubscribersPerMonth,
   GraphQLSubscription,
   GraphQLSubscriptionConnection,
   GraphQLSubscriptionFilter,
-  GraphQLSubscriptionSort,
-  GraphQLSubscribersPerMonth
+  GraphQLSubscriptionSort
 } from './subscription'
 import {
   getAdminSubscriptions,
+  getNewSubscribersPerMonth,
   getSubscriptionById,
-  getSubscriptionsAsCSV,
-  getNewSubscribersPerMonth
+  getSubscriptionsAsCSV
 } from './subscription/subscription.private-queries'
 import {GraphQLTagConnection, GraphQLTagFilter, GraphQLTagSort} from './tag/tag'
 import {getTags} from './tag/tag.private-query'
@@ -149,8 +151,6 @@ import {
   GraphQLUserRoleFilter,
   GraphQLUserRoleSort
 } from './userRole'
-import {GraphQLAction} from './action'
-import {getActions} from './action/action.private-queries'
 
 export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
   name: 'Query',

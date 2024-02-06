@@ -203,7 +203,8 @@
         "link": "Link",
         "links": "Links",
         "name": "Name",
-        "title": "Titel"
+        "title": "Titel",
+        "tags": "Tags"
       }
     },
     "blocks": {
@@ -742,7 +743,8 @@
       "userConsents": "User-Konsens",
       "userRoles": "Userrollen",
       "users": "User",
-      "usersAndMembers": "User & Abos"
+      "usersAndMembers": "User & Abos",
+      "authorTags": "Tags"
     },
     "navigation": {
       "overview": {
@@ -1219,6 +1221,7 @@
         "date": "Deaktivierung",
         "help": "Deaktivierte Abonnements können bis zum \"bezahlt bis\"-Datum gebraucht werden. Aber sie werden nicht automatisch erneuert auch wenn die automatische Erneuerung gewählt ist. Einmal deaktiviert, kann das Abo nicht reaktiviert werden.",
         "isDeactivated": "Das Abonnement ist seit {{date, ccc PP p}} deaktiviert und kann nicht mehr bearbeitet werden. Allenfalls kann ein neues Abo gelöst werden.",
+        "cancellation": "Stornierungsdatum",
         "modalMessage": {
           "activated": "Willst du das Abonnement von \"{{userName}}\" deaktiviern mit der Emailadresse \"{{userEmail}}\"?"
         },

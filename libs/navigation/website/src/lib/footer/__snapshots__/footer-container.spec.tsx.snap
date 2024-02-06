@@ -3,47 +3,21 @@
 exports[`Footer Container should render Default 1`] = `
 <DocumentFragment>
   <footer
-    class="css-5rtvk-FooterWrapper enubu9x2"
+    class="css-dl99x8-FooterWrapper enubu9x10"
   >
     <div
-      class="MuiContainer-root MuiContainer-maxWidthLg enubu9x1 css-1iuxm26-MuiContainer-root-FooterInnerWrapper"
+      class="css-1fxijoh-FooterPaperWrapper enubu9x6"
     >
-      <svg
-        height="50"
-        style="justify-self: center;"
-        viewBox="0 0 100 100"
-        width="50"
-        xmlns="http://www.w3.org/2000/svg"
+      <div
+        class="css-41fvzk-LinksGroup enubu9x2"
+      />
+      <div
+        class="css-41fvzk-LinksGroup enubu9x2"
       >
-        <circle
-          cx="50"
-          cy="50"
-          fill="#fff"
-          r="50"
+        <div
+          class="css-85dbd7-FooterSeparator enubu9x3"
         />
-      </svg>
-      <nav
-        class="css-1svnta4-FooterLinks enubu9x0"
-      >
-        <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
-          href="/"
-        >
-          Home
-        </a>
-        <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
-          href="/a/impressum"
-        >
-          Impressum
-        </a>
-        <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
-          href="https://google.com"
-        >
-          FAQ
-        </a>
-      </nav>
+      </div>
     </div>
   </footer>
 </DocumentFragment>
@@ -52,47 +26,21 @@ exports[`Footer Container should render Default 1`] = `
 exports[`Footer Container should render WithClassName 1`] = `
 <DocumentFragment>
   <footer
-    class="extra-classname css-5rtvk-FooterWrapper enubu9x2"
+    class="extra-classname css-dl99x8-FooterWrapper enubu9x10"
   >
     <div
-      class="MuiContainer-root MuiContainer-maxWidthLg enubu9x1 css-1iuxm26-MuiContainer-root-FooterInnerWrapper"
+      class="css-1fxijoh-FooterPaperWrapper enubu9x6"
     >
-      <svg
-        height="50"
-        style="justify-self: center;"
-        viewBox="0 0 100 100"
-        width="50"
-        xmlns="http://www.w3.org/2000/svg"
+      <div
+        class="css-41fvzk-LinksGroup enubu9x2"
+      />
+      <div
+        class="css-41fvzk-LinksGroup enubu9x2"
       >
-        <circle
-          cx="50"
-          cy="50"
-          fill="#fff"
-          r="50"
+        <div
+          class="css-85dbd7-FooterSeparator enubu9x3"
         />
-      </svg>
-      <nav
-        class="css-1svnta4-FooterLinks enubu9x0"
-      >
-        <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
-          href="/"
-        >
-          Home
-        </a>
-        <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
-          href="/a/impressum"
-        >
-          Impressum
-        </a>
-        <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
-          href="https://google.com"
-        >
-          FAQ
-        </a>
-      </nav>
+      </div>
     </div>
   </footer>
 </DocumentFragment>
@@ -101,47 +49,21 @@ exports[`Footer Container should render WithClassName 1`] = `
 exports[`Footer Container should render WithEmotion 1`] = `
 <DocumentFragment>
   <footer
-    class="css-5rtvk-FooterWrapper enubu9x2"
+    class="css-dl99x8-FooterWrapper enubu9x10"
   >
     <div
-      class="MuiContainer-root MuiContainer-maxWidthLg enubu9x1 css-1iuxm26-MuiContainer-root-FooterInnerWrapper"
+      class="css-1fxijoh-FooterPaperWrapper enubu9x6"
     >
-      <svg
-        height="50"
-        style="justify-self: center;"
-        viewBox="0 0 100 100"
-        width="50"
-        xmlns="http://www.w3.org/2000/svg"
+      <div
+        class="css-41fvzk-LinksGroup enubu9x2"
+      />
+      <div
+        class="css-41fvzk-LinksGroup enubu9x2"
       >
-        <circle
-          cx="50"
-          cy="50"
-          fill="#fff"
-          r="50"
+        <div
+          class="css-85dbd7-FooterSeparator enubu9x3"
         />
-      </svg>
-      <nav
-        class="css-1svnta4-FooterLinks enubu9x0"
-      >
-        <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
-          href="/"
-        >
-          Home
-        </a>
-        <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
-          href="/a/impressum"
-        >
-          Impressum
-        </a>
-        <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
-          href="https://google.com"
-        >
-          FAQ
-        </a>
-      </nav>
+      </div>
     </div>
   </footer>
 </DocumentFragment>
