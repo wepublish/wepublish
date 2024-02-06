@@ -130,12 +130,13 @@ export class MailgunMailProvider extends BaseMailProvider {
       form.append('template', props.template)
 
       for (const [key, value] of Object.entries(props.templateData || {})) {
-        form.append(`v:${key}`, JSON.stringify(value))
+        const stringToPass = JSON.stringify(value)
+        // Enforce max length of 16kb per key => https://documentation.mailgun.com/en/latest/api-sending.html
+        form.append(`v:${key}`, stringToPass.substring(0, 15000))
       }
     }
 
     form.append('v:mail_log_id', props.mailLogID)
-    console.log(inspect(form))
     return new Promise((resolve, reject) => {
       form.submit(
         {
@@ -149,8 +150,6 @@ export class MailgunMailProvider extends BaseMailProvider {
           }
         },
         (err, res) => {
-          console.log('RES:' + inspect(res))
-          console.log('ERR:' + inspect(err))
           return err || res.statusCode !== 200 ? reject(err || res) : resolve()
         }
       )
