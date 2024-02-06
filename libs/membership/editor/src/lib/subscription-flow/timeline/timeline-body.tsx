@@ -46,7 +46,9 @@ export function TimelineBody({days, subscriptionFlow, eventIcons, eventColors}: 
   }
 
   return (
-    <div>
+    // Not useless in this case
+    // eslint-disable-next-line react/jsx-no-useless-fragment
+    <>
       {days &&
         mailTemplates &&
         days.map(day => {
@@ -89,6 +91,6 @@ export function TimelineBody({days, subscriptionFlow, eventIcons, eventColors}: 
             </TableCellBottom>
           )
         })}
-    </div>
+    </>
   )
 }
