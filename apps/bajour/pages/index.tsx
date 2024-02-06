@@ -1,6 +1,6 @@
 import {styled} from '@mui/material'
 import {ApiV1, PageContainer} from '@wepublish/website'
-import {GetServerSideProps, GetStaticProps} from 'next'
+import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 
 import {
@@ -40,16 +40,6 @@ async function fetchMailChimpCampaigns(
   } catch (e) {
     console.warn(e)
     return []
-  }
-}
-
-export const getServerSideProps: GetServerSideProps = async context => {
-  const apiKey = process.env.MAILCHIMP_API_KEY || ''
-  const server = process.env.MAILCHIMP_SERVER_PREFIX || ''
-  const mcCampaigns = await fetchMailChimpCampaigns(apiKey, server)
-
-  return {
-    props: {mcCampaigns} // will be passed to the page component as props
   }
 }
 
@@ -96,7 +86,11 @@ export const getStaticProps: GetStaticProps = async () => {
     })
   ])
 
-  const props = ApiV1.addClientCacheToV1Props(client, {})
+  const apiKey = process.env.MAILCHIMP_API_KEY || ''
+  const server = process.env.MAILCHIMP_SERVER_PREFIX || ''
+  const mcCampaigns = await fetchMailChimpCampaigns(apiKey, server)
+
+  const props = ApiV1.addClientCacheToV1Props(client, {mcCampaigns})
 
   return {
     props,
