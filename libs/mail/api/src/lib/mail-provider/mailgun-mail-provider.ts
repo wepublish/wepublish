@@ -11,6 +11,7 @@ import {
   WithExternalId
 } from './mail-provider.interface'
 import {BaseMailProvider, MailProviderProps} from './base-mail-provider'
+import {inspect} from 'util'
 
 export interface MailgunMailProviderProps extends MailProviderProps {
   apiKey: string
@@ -134,7 +135,7 @@ export class MailgunMailProvider extends BaseMailProvider {
     }
 
     form.append('v:mail_log_id', props.mailLogID)
-
+    console.log(inspect(form))
     return new Promise((resolve, reject) => {
       form.submit(
         {
@@ -148,6 +149,8 @@ export class MailgunMailProvider extends BaseMailProvider {
           }
         },
         (err, res) => {
+          console.log('RES:' + inspect(res))
+          console.log('ERR:' + inspect(err))
           return err || res.statusCode !== 200 ? reject(err || res) : resolve()
         }
       )
