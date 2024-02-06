@@ -1,7 +1,7 @@
 import {Button, styled} from '@mui/material'
 import {BuilderTeaserProps, Image, TeaserWrapper} from '@wepublish/website'
-import {FullImageFragment} from '@wepublish/website/api'
 
+import {useMailChimpCampaigns} from '../../context/MailChimpContext'
 import {NextWepublishLink} from '../should-be-website-builder/next-wepublish-link'
 import {fluidTypography} from '../website-builder-overwrites/blocks/teaser-overwrite.style'
 import BaselBg from './basel.jpeg'
@@ -17,15 +17,12 @@ const baselBriefingBg = {
   width: 500,
   mimeType: 'image/jpg',
   tags: [],
-  description: 'An image description',
-  title: 'An image title',
-  filename: 'An image filename',
   url: BaselBg.src,
   bigURL: BaselBg.src,
   largeURL: BaselBg.src,
   mediumURL: BaselBg.src,
   smallURL: BaselBg.src
-} as FullImageFragment
+}
 
 export const BajourBriefingStyled = styled('div')`
   display: grid;
@@ -234,6 +231,9 @@ export const Avatar = styled(Image)`
 
 const BaselBriefing = (props: BuilderTeaserProps) => {
   const {alignment /*, className, numColumns, */, teaser} = props
+  const mcCampaigns = useMailChimpCampaigns()
+
+  console.log('mcCampaigns', mcCampaigns)
 
   // const {
   //   date,
@@ -245,7 +245,7 @@ const BaselBriefing = (props: BuilderTeaserProps) => {
   //   return null
   // }
 
-  const {image, lead, title, preTitle, contentUrl} = teaser ?? {}
+  const {image /*, lead, title, preTitle, contentUrl */} = teaser ?? {}
 
   console.log('teaser', teaser)
 
@@ -261,7 +261,7 @@ const BaselBriefing = (props: BuilderTeaserProps) => {
       <BajourBriefingStyled>
         <LinkWrapper color="inherit" underline="none" href={baselBriefingUrl}>
           <BriefingContainer>
-            {image && <TeaserBackground image={baselBriefingBg} />}
+            {baselBriefingBg && <TeaserBackground image={baselBriefingBg} />}
             <Heading>
               <BaselBriefingTitle>Basel Briefing</BaselBriefingTitle>
               <BaselBriefingSubtitle>Das wichtigste für den tag</BaselBriefingSubtitle>
@@ -276,7 +276,7 @@ const BaselBriefing = (props: BuilderTeaserProps) => {
           <TeaserContentWrapper>
             <TeaserContentStyled>
               <TeaserContentInterior>
-                <Avatar image={image} />
+                {image && <Avatar image={image} />}
 
                 <Author>
                   {authors?.length && (
