@@ -1,15 +1,9 @@
-import {styled} from '@mui/material'
-import {BuilderTeaserProps, Image, TeaserWrapper, useWebsiteBuilder} from '@wepublish/website'
+import {Button, styled} from '@mui/material'
+import {BuilderTeaserProps, Image, TeaserWrapper} from '@wepublish/website'
 import {FullImageFragment} from '@wepublish/website/api'
 
-import {
-  AuthorsAndDate,
-  fluidTypography,
-  LinkAndGridContainer,
-  ReadMoreButton,
-  TeaserContentStyled,
-  TeaserImgStyled
-} from '../website-builder-overwrites/blocks/teaser-overwrite.style'
+import {NextWepublishLink} from '../should-be-website-builder/next-wepublish-link'
+import {fluidTypography} from '../website-builder-overwrites/blocks/teaser-overwrite.style'
 import BaselBg from './basel.jpeg'
 
 const baselBriefingBg = {
@@ -41,78 +35,67 @@ export const BajourBriefingStyled = styled('div')`
   align-items: stretch;
   position: relative;
   padding-top: 2rem;
+`
 
-  ${LinkAndGridContainer} {
-    grid-template-columns: 1fr;
-    spacing: ${({theme}) => theme.spacing(2)};
-  }
-
-  ${TeaserImgStyled} {
-    position: absolute;
-    z-index: -1;
-    border-radius: 1rem 1rem 0 0;
-    aspect-ratio: 4/3;
-  }
-
-  ${TeaserContentStyled} {
-    padding: ${({theme}) => theme.spacing(1)};
-    grid-template-columns: repeat(12, 1fr);
-  }
-
-  ${AuthorsAndDate} {
-    font-size: ${fluidTypography(8, 22)};
-  }
-
-  ${ReadMoreButton} {
-    color: #ff2362;
-  }
+const TeaserBackground = styled(Image)`
+  width: 100%;
+  object-fit: cover;
+  position: absolute;
+  z-index: -1;
+  border-radius: 1rem 1rem 0 0;
+  aspect-ratio: 4/3;
 
   ${({theme}) => theme.breakpoints.up('sm')} {
-    ${TeaserContentStyled} {
-      grid-column: 2/11;
-      padding: ${({theme}) => `${theme.spacing(2)} ${theme.spacing(1.5)} ${theme.spacing(1.5)}`};
-    }
-
-    /* ${({theme}) => theme.breakpoints.up('sm')} { */
-    ${TeaserImgStyled} {
-      aspect-ratio: 2.5/1;
-    }
-    /* } */
+    aspect-ratio: 2.5/1;
   }
 
   ${({theme}) => theme.breakpoints.up('md')} {
-    ${TeaserContentStyled} {
-      grid-column: 3/9;
-    }
-
-    ${TeaserImgStyled} {
-      aspect-ratio: 3/1;
-    }
-
-    ${LinkAndGridContainer} {
-      aspect-ratio: 5/2;
-    }
+    aspect-ratio: 3/1;
   }
 
   ${({theme}) => theme.breakpoints.up('lg')} {
-    ${TeaserImgStyled} {
-      border-radius: 2rem 2rem 0 0;
-    }
+    border-radius: 2rem 2rem 0 0;
   }
 
   ${({theme}) => theme.breakpoints.up('xl')} {
-    ${TeaserContentStyled} {
-      grid-column: 5/8;
-    }
-
-    ${TeaserImgStyled} {
-      grid-column: 3/12;
-    }
+    grid-column: 3/12;
   }
 `
 
+const LinkWrapper = styled(NextWepublishLink)`
+  grid-column: -1/1;
+  display: grid;
+  grid-template-columns: repeat(24, 1fr);
+  grid-template-rows: auto;
+  align-items: center;
+  grid-template-columns: 1fr;
+  spacing: ${({theme}) => theme.spacing(2)};
+`
+
 const TeaserContentWrapper = styled('div')`
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
   width: 100%;
+`
+
+const ReadMoreButton = styled(Button)`
+  justify-self: end;
+  color: #ff2362;
+`
+
+const TeaserContentStyled = styled('div')`
+  padding: ${({theme}) => theme.spacing(1)};
+  grid-template-columns: repeat(12, 1fr);
+  grid-column: 3/13;
+
+  ${({theme}) => theme.breakpoints.up('sm')} {
+    grid-column: 3/12;
+    padding: ${({theme}) => `${theme.spacing(2)} ${theme.spacing(1.5)} ${theme.spacing(1.5)}`};
+  }
+
+  ${({theme}) => theme.breakpoints.up('xl')} {
+    grid-column: 5/8;
+  }
 `
 
 const Heading = styled('div')`
@@ -220,6 +203,10 @@ const TeaserContentInterior = styled('div')`
   }
 `
 
+const Author = styled('div')`
+  font-size: ${fluidTypography(8, 22)};
+`
+
 export const Avatar = styled(Image)`
   position: absolute;
   border-radius: 50%;
@@ -246,19 +233,19 @@ export const Avatar = styled(Image)`
 `
 
 const BaselBriefing = (props: BuilderTeaserProps) => {
-  const {alignment, className, numColumns, teaser} = props
+  const {alignment /*, className, numColumns, */, teaser} = props
 
-  const {
-    date,
-    elements: {H2, H4, H5, H6, Link, Image}
-  } = useWebsiteBuilder()
+  // const {
+  //   date,
+  //   elements: {H2, H4, H5, H6, Link, Image}
+  // } = useWebsiteBuilder()
 
   // uncomment once ready
-  // if (!shouldDisplayBajourBriefing()) {
+  // if (!shouldDisplayBaselBriefing()) {
   //   return null
   // }
 
-  const {image, lead, title, preTitle, contentUrl} = teaser
+  const {image, lead, title, preTitle, contentUrl} = teaser ?? {}
 
   console.log('teaser', teaser)
 
@@ -272,9 +259,9 @@ const BaselBriefing = (props: BuilderTeaserProps) => {
   return (
     <TeaserWrapper {...alignment}>
       <BajourBriefingStyled>
-        <LinkAndGridContainer color="inherit" underline="none" href={baselBriefingUrl}>
+        <LinkWrapper color="inherit" underline="none" href={baselBriefingUrl}>
           <BriefingContainer>
-            {image && <TeaserImgStyled image={baselBriefingBg} />}
+            {image && <TeaserBackground image={baselBriefingBg} />}
             <Heading>
               <BaselBriefingTitle>Basel Briefing</BaselBriefingTitle>
               <BaselBriefingSubtitle>Das wichtigste für den tag</BaselBriefingSubtitle>
@@ -291,14 +278,14 @@ const BaselBriefing = (props: BuilderTeaserProps) => {
               <TeaserContentInterior>
                 <Avatar image={image} />
 
-                <AuthorsAndDate>
+                <Author>
                   {authors?.length && (
                     <>
                       Heute von <br />
                       {authors[0]}
                     </>
                   )}
-                </AuthorsAndDate>
+                </Author>
 
                 <ReadMoreButton variant="outlined" color="inherit" size="small">
                   Ganzes Briefing
@@ -306,7 +293,7 @@ const BaselBriefing = (props: BuilderTeaserProps) => {
               </TeaserContentInterior>
             </TeaserContentStyled>
           </TeaserContentWrapper>
-        </LinkAndGridContainer>
+        </LinkWrapper>
       </BajourBriefingStyled>
     </TeaserWrapper>
   )

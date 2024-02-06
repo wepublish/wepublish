@@ -1,4 +1,4 @@
-const shouldDisplayBajourBriefing = (): boolean => {
+const shouldDisplayBaselBriefing = (): boolean => {
   const now = new Date()
 
   // Swiss time is UTC+1 or UTC+2 (when daylight saving time is in effect)
@@ -9,4 +9,4 @@ const shouldDisplayBajourBriefing = (): boolean => {
   return hour >= 6 && hour < 11
 }
 
-export default shouldDisplayBajourBriefing
+export default shouldDisplayBaselBriefing
