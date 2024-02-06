@@ -11,7 +11,6 @@ import {
   WithExternalId
 } from './mail-provider.interface'
 import {BaseMailProvider, MailProviderProps} from './base-mail-provider'
-import {inspect} from 'util'
 
 export interface MailgunMailProviderProps extends MailProviderProps {
   apiKey: string
