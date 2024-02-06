@@ -29,7 +29,6 @@ import {NextWepublishLink} from '../components/should-be-website-builder/next-we
 import {SessionProvider} from '../components/should-be-website-builder/session.provider'
 import {BajourTeaser} from '../components/website-builder-overwrites/blocks/teaser'
 import {TeaserGridStyled} from '../components/website-builder-styled/blocks/teaser-grid-styled'
-import {MailChimpProvider} from '../context/MailChimpContext'
 import theme from '../styles/theme'
 
 setDefaultOptions({
@@ -113,36 +112,34 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               TeaserGrid: TeaserGridStyled
             }}>
             <ThemeProvider theme={theme}>
-              <MailChimpProvider>
-                <CssBaseline />
+              <CssBaseline />
 
-                <MainGrid className={roboto.className}>
-                  <NavBar slug="main" categorySlugs={[['basel-briefing', 'other'], ['about-us']]}>
-                    <>
-                      <ButtonLink href="https://www.facebook.com/bajourbasel">
-                        <MdFacebook size="32" />
+              <MainGrid className={roboto.className}>
+                <NavBar slug="main" categorySlugs={[['basel-briefing', 'other'], ['about-us']]}>
+                  <>
+                    <ButtonLink href="https://www.facebook.com/bajourbasel">
+                      <MdFacebook size="32" />
+                    </ButtonLink>
+                    <ButtonLink>
+                      <ButtonLink href="https://twitter.com/bajourbasel">
+                        <Image
+                          src="/images/twitter-logo.svg"
+                          alt="twitter-logo"
+                          width={32}
+                          height={32}
+                        />
                       </ButtonLink>
-                      <ButtonLink>
-                        <ButtonLink href="https://twitter.com/bajourbasel">
-                          <Image
-                            src="/images/twitter-logo.svg"
-                            alt="twitter-logo"
-                            width={32}
-                            height={32}
-                          />
-                        </ButtonLink>
-                      </ButtonLink>
-                      <ButtonLink href="mailto:info@bajour.ch">
-                        <MdMail size="32" />
-                      </ButtonLink>
-                    </>
-                  </NavBar>
+                    </ButtonLink>
+                    <ButtonLink href="mailto:info@bajour.ch">
+                      <MdMail size="32" />
+                    </ButtonLink>
+                  </>
+                </NavBar>
 
-                  <Component {...pageProps} />
+                <Component {...pageProps} />
 
-                  <Footer slug="main" categorySlugs={[['basel-briefing', 'other'], ['about-us']]} />
-                </MainGrid>
-              </MailChimpProvider>
+                <Footer slug="main" categorySlugs={[['basel-briefing', 'other'], ['about-us']]} />
+              </MainGrid>
             </ThemeProvider>
           </WebsiteBuilderProvider>
         </WebsiteProvider>
