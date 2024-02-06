@@ -8,8 +8,6 @@ import {SingleTeaser} from './single-teaser'
 import {TeaserOverwrite} from './teaser-overwrite'
 
 export const BajourTeaser = (props: BuilderTeaserProps) => {
-  console.log('props.teaser', props.teaser)
-
   if (
     props.teaser?.__typename === 'CustomTeaser' &&
     props.teaser?.properties[0].key === 'BaselBriefing'

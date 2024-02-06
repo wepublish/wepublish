@@ -12,7 +12,7 @@ import {
 } from '../website-builder-overwrites/blocks/teaser-overwrite.style'
 import BaselBg from './basel.jpeg'
 
-const image = {
+const baselBriefingBg = {
   id: '1234',
   createdAt: new Date('2023-01-01').toDateString(),
   modifiedAt: new Date('2023-01-01').toDateString(),
@@ -70,7 +70,6 @@ export const BajourBriefingStyled = styled('div')`
   ${({theme}) => theme.breakpoints.up('sm')} {
     ${TeaserContentStyled} {
       grid-column: 2/11;
-      /* margin-top: calc(-32px - (2 * 2 * 8px)); */
       padding: ${({theme}) => `${theme.spacing(2)} ${theme.spacing(1.5)} ${theme.spacing(1.5)}`};
     }
 
@@ -87,11 +86,17 @@ export const BajourBriefingStyled = styled('div')`
     }
 
     ${TeaserImgStyled} {
-      aspect-ratio: 5/2;
+      aspect-ratio: 3/1;
     }
 
     ${LinkAndGridContainer} {
       aspect-ratio: 5/2;
+    }
+  }
+
+  ${({theme}) => theme.breakpoints.up('lg')} {
+    ${TeaserImgStyled} {
+      border-radius: 2rem 2rem 0 0;
     }
   }
 
@@ -120,6 +125,10 @@ const Heading = styled('div')`
   ${({theme}) => theme.breakpoints.up('sm')} {
     margin-top: 5rem;
   }
+
+  ${({theme}) => theme.breakpoints.up('lg')} {
+    margin-top: 7rem;
+  }
 `
 
 const BaselBriefingTitle = styled('span')`
@@ -127,15 +136,19 @@ const BaselBriefingTitle = styled('span')`
   font-size: 2rem;
   text-transform: uppercase;
 
-  /* ${({theme}) => theme.breakpoints.up('sm')} {
+  ${({theme}) => theme.breakpoints.up('lg')} {
     font-size: 3rem;
-  } */
+  }
 `
 
 const BaselBriefingSubtitle = styled('span')`
   font-weight: bold;
   font-size: 0.8rem;
   text-transform: uppercase;
+
+  ${({theme}) => theme.breakpoints.up('lg')} {
+    font-size: 1.2rem;
+  }
 `
 
 const BriefingTextWrapper = styled('div')`
@@ -154,6 +167,15 @@ const Briefing = styled('div')`
 
   ${({theme}) => theme.breakpoints.up('sm')} {
     grid-column: 3/12;
+    border-radius: 1rem 1rem 0 0;
+    padding: ${({theme}) =>
+      `${theme.spacing(2)} ${theme.spacing(2)} ${theme.spacing(2)} ${theme.spacing(4)}`};
+  }
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    border-radius: 2rem 2rem 0 0;
+    padding: ${({theme}) =>
+      `${theme.spacing(2)} ${theme.spacing(2)} ${theme.spacing(2)} ${theme.spacing(4)}`};
   }
 `
 const Welcome = styled('div')`
@@ -171,13 +193,17 @@ const BriefingContainer = styled('div')`
   ${({theme}) => theme.breakpoints.up('sm')} {
     aspect-ratio: 2.5/1;
   }
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    aspect-ratio: 3/1;
+  }
 `
 
 const TeaserContentInterior = styled('div')`
   position: relative;
   grid-column: 3/13;
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 3fr 4fr;
   padding: ${({theme}) =>
     `${theme.spacing(1)} ${theme.spacing(1)} ${theme.spacing(1)} ${theme.spacing(3.5)}`};
   border-bottom-right-radius: ${({theme}) => theme.spacing(2)};
@@ -186,6 +212,11 @@ const TeaserContentInterior = styled('div')`
 
   ${({theme}) => theme.breakpoints.up('sm')} {
     grid-column: 3/12;
+  }
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    padding: ${({theme}) =>
+      `${theme.spacing(1.5)} ${theme.spacing(1.5)} ${theme.spacing(1.5)} ${theme.spacing(5)}`};
   }
 `
 
@@ -205,6 +236,13 @@ export const Avatar = styled(Image)`
     left: -130px;
     top: -48px;
   }
+
+  ${({theme}) => theme.breakpoints.up('lg')} {
+    width: ${({theme}) => theme.spacing(24)};
+    height: ${({theme}) => theme.spacing(24)};
+    left: -182px;
+    top: -66px;
+  }
 `
 
 const BaselBriefing = (props: BuilderTeaserProps) => {
@@ -220,24 +258,23 @@ const BaselBriefing = (props: BuilderTeaserProps) => {
   //   return null
   // }
 
+  const {image, lead, title, preTitle, contentUrl} = teaser
+
+  console.log('teaser', teaser)
+
   const baselBriefingUrl = 'https://www.something.com'
-  const publishDate = new Date('1.2.2020').toDateString()
-  const preTitle = 'This is a pretitle'
-  const title = 'This is a Title'
-  const authors = ['Wacek', 'Placek']
-  const lead = 'something something lead'
+  const authors = ['Handsome Man']
 
   const welcome = 'Guten morgen!'
   const briefingText =
     'Wie hat sich Dein Arbeitsalltag seit der Pandemie verändert? Ich gehöre zu den Privilegierten, deren Job während Corona weiterlief – ja fast florierte. In der Zwischenzeit hat sich das Meiste wieder einge-pendelt. Alles beim Alten – ausser dass ich neu einen Tag pro Woche im Homeoffice arbeite.'
-  console.log('siema')
 
   return (
     <TeaserWrapper {...alignment}>
       <BajourBriefingStyled>
         <LinkAndGridContainer color="inherit" underline="none" href={baselBriefingUrl}>
           <BriefingContainer>
-            {image && <TeaserImgStyled image={image} />}
+            {image && <TeaserImgStyled image={baselBriefingBg} />}
             <Heading>
               <BaselBriefingTitle>Basel Briefing</BaselBriefingTitle>
               <BaselBriefingSubtitle>Das wichtigste für den tag</BaselBriefingSubtitle>
@@ -258,7 +295,7 @@ const BaselBriefing = (props: BuilderTeaserProps) => {
                   {authors?.length && (
                     <>
                       Heute von <br />
-                      {authors?.join(', ')},
+                      {authors[0]}
                     </>
                   )}
                 </AuthorsAndDate>
