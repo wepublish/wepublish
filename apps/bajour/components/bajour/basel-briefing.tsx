@@ -4,9 +4,12 @@ import {BuilderTeaserProps, Image, TeaserWrapper} from '@wepublish/website'
 import {useMailChimpCampaigns} from '../../context/MailChimpContext'
 import {NextWepublishLink} from '../should-be-website-builder/next-wepublish-link'
 import {fluidTypography} from '../website-builder-overwrites/blocks/teaser-overwrite.style'
-import BaselBg from './basel.jpeg'
+import BaselBg from './basel.jpg'
+import FasnachtBg from './fasnacht.jpg'
+import FcbBg from './fcb.jpg'
+import {BriefingType} from './isBriefing'
 
-const baselBriefingBg = {
+const baselBg = {
   id: '1234',
   createdAt: new Date('2023-01-01').toDateString(),
   modifiedAt: new Date('2023-01-01').toDateString(),
@@ -24,6 +27,42 @@ const baselBriefingBg = {
   smallURL: BaselBg.src
 }
 
+const fcbBg = {
+  id: '1234',
+  createdAt: new Date('2023-01-01').toDateString(),
+  modifiedAt: new Date('2023-01-01').toDateString(),
+  extension: '.jpg',
+  fileSize: 1,
+  format: '',
+  height: 500,
+  width: 500,
+  mimeType: 'image/jpg',
+  tags: [],
+  url: FcbBg.src,
+  bigURL: FcbBg.src,
+  largeURL: FcbBg.src,
+  mediumURL: FcbBg.src,
+  smallURL: FcbBg.src
+}
+
+const fasnachtBg = {
+  id: '1234',
+  createdAt: new Date('2023-01-01').toDateString(),
+  modifiedAt: new Date('2023-01-01').toDateString(),
+  extension: '.jpg',
+  fileSize: 1,
+  format: '',
+  height: 500,
+  width: 500,
+  mimeType: 'image/jpg',
+  tags: [],
+  url: FasnachtBg.src,
+  bigURL: FasnachtBg.src,
+  largeURL: FasnachtBg.src,
+  mediumURL: FasnachtBg.src,
+  smallURL: FasnachtBg.src
+}
+
 export const BajourBriefingStyled = styled('div')`
   display: grid;
   column-gap: 16px;
@@ -33,6 +72,35 @@ export const BajourBriefingStyled = styled('div')`
   position: relative;
   padding-top: 2rem;
 `
+
+const getValuesBasedOnBriefing = (briefing: BriefingType) => {
+  switch (briefing) {
+    case BriefingType.BaselBriefing: {
+      return {
+        title: 'Basel Briefing',
+        subtitle: 'Das wichtigste für den tag',
+        backgroundImage: baselBg,
+        welcome: 'Guten morgen!'
+      }
+    }
+    case BriefingType.FCB_Briefing: {
+      return {
+        title: 'FCB Briefing',
+        subtitle: 'DAS WICHTIGSTE VOR JEDEM SPIEL',
+        backgroundImage: fcbBg,
+        welcome: 'Guten morgen!'
+      }
+    }
+    case BriefingType.FasnachtsBriefing: {
+      return {
+        title: 'FASNACHTS-BRIEFING',
+        subtitle: 'DEINE FASNÄCHTLICHE GRUNDVERSORGUNG',
+        backgroundImage: fasnachtBg,
+        welcome: 'Guten morgen!'
+      }
+    }
+  }
+}
 
 const TeaserBackground = styled(Image)`
   width: 100%;
@@ -230,64 +298,68 @@ export const Avatar = styled(Image)`
 `
 
 const BaselBriefing = (props: BuilderTeaserProps) => {
-  const {alignment /*, className, numColumns, */, teaser} = props
+  const {alignment, teaser} = props
   const mcCampaigns = useMailChimpCampaigns()
 
-  console.log('mcCampaigns', mcCampaigns)
-
-  // const {
-  //   date,
-  //   elements: {H2, H4, H5, H6, Link, Image}
-  // } = useWebsiteBuilder()
+  // not used for now?
+  // console.log('mcCampaigns', mcCampaigns)
 
   // uncomment once ready
   // if (!shouldDisplayBaselBriefing()) {
   //   return null
   // }
 
-  const {image /*, lead, title, preTitle, contentUrl */} = teaser ?? {}
+  const {image, lead, title, contentUrl} = teaser ?? {}
 
-  console.log('teaser', teaser)
+  const briefingDynamicValues = {
+    authorAvatar: image,
+    authorName: lead,
+    briefingContent: title,
+    contentUrl: contentUrl || ''
+  }
 
-  const baselBriefingUrl = 'https://www.something.com'
-  const authors = ['Handsome Man']
+  const values = getValuesBasedOnBriefing(teaser?.properties[0].key)
 
-  const welcome = 'Guten morgen!'
-  const briefingText =
-    'Wie hat sich Dein Arbeitsalltag seit der Pandemie verändert? Ich gehöre zu den Privilegierten, deren Job während Corona weiterlief – ja fast florierte. In der Zwischenzeit hat sich das Meiste wieder einge-pendelt. Alles beim Alten – ausser dass ich neu einen Tag pro Woche im Homeoffice arbeite.'
+  if (!briefingDynamicValues || !values) {
+    return null
+  }
 
   return (
     <TeaserWrapper {...alignment}>
       <BajourBriefingStyled>
-        <LinkWrapper color="inherit" underline="none" href={baselBriefingUrl}>
+        <LinkWrapper color="inherit" underline="none" href={briefingDynamicValues.contentUrl}>
           <BriefingContainer>
-            {baselBriefingBg && <TeaserBackground image={baselBriefingBg} />}
+            {values.backgroundImage && <TeaserBackground image={values.backgroundImage} />}
             <Heading>
-              <BaselBriefingTitle>Basel Briefing</BaselBriefingTitle>
-              <BaselBriefingSubtitle>Das wichtigste für den tag</BaselBriefingSubtitle>
+              <BaselBriefingTitle>{values.title}</BaselBriefingTitle>
+              <BaselBriefingSubtitle>{values.subtitle}</BaselBriefingSubtitle>
             </Heading>
             <BriefingTextWrapper>
               <Briefing>
-                <Welcome>{welcome}</Welcome>
-                <BriefingText>{briefingText}</BriefingText>
+                <Welcome>{values.welcome}</Welcome>
+                <BriefingText>{briefingDynamicValues.briefingContent}</BriefingText>
               </Briefing>
             </BriefingTextWrapper>
           </BriefingContainer>
           <TeaserContentWrapper>
             <TeaserContentStyled>
               <TeaserContentInterior>
-                {image && <Avatar image={image} />}
+                {briefingDynamicValues.authorAvatar && (
+                  <Avatar image={briefingDynamicValues.authorAvatar} />
+                )}
 
-                <Author>
-                  {authors?.length && (
-                    <>
-                      Heute von <br />
-                      {authors[0]}
-                    </>
-                  )}
-                </Author>
+                {briefingDynamicValues.authorName && (
+                  <Author>
+                    Heute von <br />
+                    {briefingDynamicValues.authorName}
+                  </Author>
+                )}
 
-                <ReadMoreButton variant="outlined" color="inherit" size="small">
+                <ReadMoreButton
+                  variant="outlined"
+                  color="inherit"
+                  size="small"
+                  href={briefingDynamicValues.contentUrl}>
                   Ganzes Briefing
                 </ReadMoreButton>
               </TeaserContentInterior>

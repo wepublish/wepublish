@@ -1,6 +1,7 @@
 import {ApiV1, BuilderTeaserProps, Teaser} from '@wepublish/website'
 
 import {BaselBriefing} from '../../bajour/basel-briefing'
+import {isBriefing} from '../../bajour/isBriefing'
 import {ColTeaser} from './col-teaser'
 import {ColTeaserLight} from './col-teaser-light'
 import {ColTeaserText} from './col-teaser-text'
@@ -8,10 +9,7 @@ import {SingleTeaser} from './single-teaser'
 import {TeaserOverwrite} from './teaser-overwrite'
 
 export const BajourTeaser = (props: BuilderTeaserProps) => {
-  if (
-    props.teaser?.__typename === 'CustomTeaser' &&
-    props.teaser?.properties[0].key === 'BaselBriefing'
-  ) {
+  if (isBriefing(props.teaser)) {
     return <BaselBriefing {...props} />
   }
 
