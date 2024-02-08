@@ -83,6 +83,8 @@ const getValuesBasedOnBriefing = (briefing: BriefingType) => {
         welcome: 'Guten morgen!'
       }
     }
+    
+
     case BriefingType.FCB_Briefing: {
       return {
         title: 'FCB Briefing',
@@ -91,6 +93,7 @@ const getValuesBasedOnBriefing = (briefing: BriefingType) => {
         welcome: 'Guten morgen!'
       }
     }
+
     case BriefingType.FasnachtsBriefing: {
       return {
         title: 'FASNACHTS-BRIEFING',
@@ -330,10 +333,12 @@ const BaselBriefing = (props: BuilderTeaserProps) => {
         <LinkWrapper color="inherit" underline="none" href={briefingDynamicValues.contentUrl}>
           <BriefingContainer>
             {values.backgroundImage && <TeaserBackground image={values.backgroundImage} />}
+
             <Heading>
               <BaselBriefingTitle>{values.title}</BaselBriefingTitle>
               <BaselBriefingSubtitle>{values.subtitle}</BaselBriefingSubtitle>
             </Heading>
+
             <BriefingTextWrapper>
               <Briefing>
                 <Welcome>{values.welcome}</Welcome>
@@ -341,6 +346,7 @@ const BaselBriefing = (props: BuilderTeaserProps) => {
               </Briefing>
             </BriefingTextWrapper>
           </BriefingContainer>
+
           <TeaserContentWrapper>
             <TeaserContentStyled>
               <TeaserContentInterior>

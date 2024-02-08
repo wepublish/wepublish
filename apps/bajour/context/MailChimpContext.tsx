@@ -4,9 +4,11 @@ export interface MailchimpConfig {
   apiKey: string
   server: string
 }
+
 export interface MailChimpCampaignResponse {
   campaigns: MailChimpCampaign[]
 }
+
 export interface MailChimpCampaign {
   id: string
   long_archive_url: string
@@ -31,5 +33,6 @@ export const useMailChimpCampaigns = (): MailChimpCampaign[] => {
   if (context === undefined) {
     throw new Error('useMailChimpCampaigns must be used within a MailChimpProvider')
   }
+  
   return context
 }

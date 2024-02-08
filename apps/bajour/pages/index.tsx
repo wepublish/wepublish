@@ -19,10 +19,12 @@ async function fetchMailChimpCampaigns(
     console.warn('No Mailchimp API key provided!')
     return []
   }
+  
   if (!server) {
     console.warn('No Mailchimp server prefix provided!')
     return []
   }
+  
   try {
     mailchimp.setConfig({
       apiKey,
@@ -36,6 +38,7 @@ async function fetchMailChimpCampaigns(
       folder_id: '90c02813e1',
       fields: ['campaigns.id', 'campaigns.long_archive_url', 'campaigns.settings.subject_line']
     })) as MailChimpCampaignResponse
+
     return campaigns
   } catch (e) {
     console.warn(e)
