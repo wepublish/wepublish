@@ -83,7 +83,6 @@ const getValuesBasedOnBriefing = (briefing: BriefingType) => {
         welcome: 'Guten morgen!'
       }
     }
-    
 
     case BriefingType.FCB_Briefing: {
       return {
