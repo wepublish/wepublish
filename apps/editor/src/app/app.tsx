@@ -59,6 +59,7 @@ import {UserRoleList} from './routes/userRoles/userRoleList'
 import {UserEditView} from './routes/users/userEditView'
 import {UserList} from './routes/users/userList'
 import {LocalStorageKey} from './utility'
+import {BlockStyleList} from './routes/blockStyles/blockStyleList'
 
 const LogoutMutation = gql`
   mutation Logout {
@@ -267,6 +268,16 @@ export function App() {
             />
             <Route path="pages/create" element={<PageEditor />} />
             <Route path="pages/edit/:id" element={<PageEditor />} />
+            {/* BlockStyle Routes */}
+            <Route
+              path="block-content/styles"
+              element={
+                <Base>
+                  <BlockStyleList />
+                </Base>
+              }
+            />
+
             {/* Poll Routes */}
             <Route
               path="polls"

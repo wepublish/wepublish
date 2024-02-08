@@ -66,7 +66,7 @@ export function SelectTags({name, tagType, selectedTags, setSelectedTags}: Selec
       label: tag.tag || t('comments.edit.unnamedTag'),
       value: tag.id
     }))
-  }, [tagsData])
+  }, [tagsData, t])
 
   return (
     <TagPicker

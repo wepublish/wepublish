@@ -715,6 +715,7 @@
       "authors": "Autor*innen",
       "blocks": {
         "polls": "Umfrage",
+        "blockStyles": "Block Styling",
         "topMenu": "Inhalts-Blöcke"
       },
       "commentRating": "Bewertungssystem",

@@ -21,7 +21,7 @@ import {Editable, ReactEditor, Slate, withReact} from 'slate-react'
 import {BlockProps} from '../../atoms/blockList'
 import {EmojiPicker} from '../../atoms/emojiPicker'
 import {H1Icon, H2Icon, H3Icon, SubMenuButton, Toolbar, ToolbarDivider} from '../../atoms/toolbar'
-import {RichTextBlockValue} from '../types'
+import {BaseBlockValue, RichTextBlockValue} from '../types'
 import {BlockFormat, InlineFormat, TextFormat} from './editor/formats'
 import {withNormalizeNode} from './editor/normalizing'
 import {withRichText, withTable} from './editor/plugins'
@@ -43,7 +43,7 @@ const Divider = styled(ToolbarDivider)`
   height: 1.8em;
 `
 
-export interface RichTextBlockProps extends BlockProps<RichTextBlockValue> {
+export interface RichTextBlockProps extends BlockProps<RichTextBlockValue['richText']> {
   displayOnly?: boolean
   showCharCount?: boolean
   displayOneLine?: boolean
@@ -205,6 +205,6 @@ export const RichTextBlock = memo(function RichTextBlock({
   )
 })
 
-export function createDefaultValue(): RichTextBlockValue {
+export function createDefaultValue(): RichTextBlockValue['richText'] {
   return WepublishEditor.createDefaultValue()
 }

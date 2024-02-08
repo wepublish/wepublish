@@ -19,7 +19,9 @@ import {VimeoVideoEmbed} from './embeds/vimeo'
 import {YouTubeVideoEmbed} from './embeds/youTube'
 import {EmbedBlockValue, EmbedType} from './types'
 
-const Panel = styled(RPanel)<{isEmpty: boolean}>`
+const Panel = styled(RPanel, {
+  shouldForwardProp: prop => prop !== 'isEmpty'
+})<{isEmpty: boolean}>`
   display: grid;
   height: ${({isEmpty}) => (isEmpty ? '300px' : undefined)};
   padding: 0;
