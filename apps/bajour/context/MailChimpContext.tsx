@@ -32,7 +32,7 @@ export const useMailChimpCampaigns = (): MailChimpCampaign[] => {
   const context = useContext(MailChimpContext)
   
   if (context == null) {
-    throw new Error('useMailChimpCampaigns must be used within a MailChimpProvider')
+    throw new Error('MailChimpContext has not been provided.')
   }
   
   return context
