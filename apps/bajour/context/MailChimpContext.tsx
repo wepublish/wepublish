@@ -30,7 +30,8 @@ export const MailChimpProvider: React.FC<{
 
 export const useMailChimpCampaigns = (): MailChimpCampaign[] => {
   const context = useContext(MailChimpContext)
-  if (context === undefined) {
+  
+  if (context == null) {
     throw new Error('useMailChimpCampaigns must be used within a MailChimpProvider')
   }
   
