@@ -224,6 +224,7 @@
     "@quramy/prisma-fabbrica": "^1.0.2",
     "@types/cache-manager": "^4.0.2",
     "@types/js-cookie": "^3.0.2",
+    "@types/mailchimp__mailchimp_marketing": "^3.0.18",
     "@types/xml2js": "^0.4.11",
     "@wepublish/analytics": "1.0.0-alpha.3",
     "abort-controller": "^3.0.0",

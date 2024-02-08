@@ -1,2 +1,2 @@
 export * from './basel-briefing'
-export * from './isBriefing'
+export * from './is-briefing'

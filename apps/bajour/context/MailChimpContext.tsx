@@ -1,4 +1,6 @@
-import React, {createContext, useContext} from 'react'
+import {createContext, PropsWithChildren, useContext} from 'react'
+
+type MailChimpProviderProps = PropsWithChildren<{campaigns: MailChimpCampaign[]}>
 
 export interface MailchimpConfig {
   apiKey: string
@@ -21,19 +23,16 @@ export interface MailChimpCampaignSettings {
 
 const MailChimpContext = createContext<MailChimpCampaign[]>([])
 
-export const MailChimpProvider: React.FC<{
-  children: React.ReactNode
-  campaigns: MailChimpCampaign[]
-}> = ({children, campaigns}) => {
+export const MailChimpProvider = ({children, campaigns}: MailChimpProviderProps) => {
   return <MailChimpContext.Provider value={campaigns}>{children}</MailChimpContext.Provider>
 }
 
 export const useMailChimpCampaigns = (): MailChimpCampaign[] => {
   const context = useContext(MailChimpContext)
-  
+
   if (context == null) {
     throw new Error('MailChimpContext has not been provided.')
   }
-  
+
   return context
 }

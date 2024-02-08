@@ -15,16 +15,6 @@ async function fetchMailChimpCampaigns(
   apiKey: string,
   server: string
 ): Promise<MailChimpCampaign[]> {
-  if (!apiKey) {
-    console.warn('No Mailchimp API key provided!')
-    return []
-  }
-  
-  if (!server) {
-    console.warn('No Mailchimp server prefix provided!')
-    return []
-  }
-  
   try {
     mailchimp.setConfig({
       apiKey,
@@ -32,10 +22,10 @@ async function fetchMailChimpCampaigns(
     } as MailchimpConfig)
     const {campaigns} = (await mailchimp.campaigns.list({
       count: 4,
-      sort_field: 'send_time',
+      sortField: 'send_time',
       status: 'sent',
-      sort_dir: 'DESC',
-      folder_id: '90c02813e1',
+      sortDir: 'DESC',
+      folderId: '90c02813e1',
       fields: ['campaigns.id', 'campaigns.long_archive_url', 'campaigns.settings.subject_line']
     })) as MailChimpCampaignResponse
 

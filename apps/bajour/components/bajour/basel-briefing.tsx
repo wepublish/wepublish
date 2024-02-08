@@ -1,13 +1,27 @@
 import {Button, styled} from '@mui/material'
 import {BuilderTeaserProps, Image, TeaserWrapper} from '@wepublish/website'
 
-import {useMailChimpCampaigns} from '../../context/MailChimpContext'
+import shouldDisplayBaselBriefing from '../../utils/should-display-basel-briefing'
 import {NextWepublishLink} from '../should-be-website-builder/next-wepublish-link'
 import {fluidTypography} from '../website-builder-overwrites/blocks/teaser-overwrite.style'
 import BaselBg from './basel.jpg'
 import FasnachtBg from './fasnacht.jpg'
 import FcbBg from './fcb.jpg'
-import {BriefingType} from './isBriefing'
+import {BriefingType} from './is-briefing'
+
+type Property = {
+  key: string
+  value: string
+}
+
+type BaselBriefingProps = Omit<BuilderTeaserProps, 'teaser'> & {
+  // has to be any as we cannot import CustomTeaser from @wepublish/website/api
+  teaser?: any
+}
+
+function isCustomTeaser(teaser: any) {
+  return teaser && teaser.__typename === 'CustomTeaser'
+}
 
 const baselBg = {
   id: '1234',
@@ -299,31 +313,39 @@ export const Avatar = styled(Image)`
   }
 `
 
-const BaselBriefing = (props: BuilderTeaserProps) => {
-  const {alignment, teaser} = props
-  const mcCampaigns = useMailChimpCampaigns()
+const BaselBriefing = ({alignment, teaser}: BaselBriefingProps) => {
+  if (!isCustomTeaser(teaser)) {
+    return null
+  }
 
-  // not used for now?
-  // console.log('mcCampaigns', mcCampaigns)
+  let showFrom = undefined
+  let showUntil = undefined
+  teaser?.properties.map((prop: Property) => {
+    if (prop.key === 'showFrom') {
+      showFrom = prop.value
+    }
+    if (prop.key === 'showUntil') {
+      showUntil = prop.value
+    }
+  })
 
-  // uncomment once ready
-  // if (!shouldDisplayBaselBriefing()) {
-  //   return null
-  // }
+  if (!shouldDisplayBaselBriefing(showFrom, showUntil)) {
+    return null
+  }
 
   const {image, lead, title, contentUrl} = teaser ?? {}
+
+  const values = getValuesBasedOnBriefing(teaser?.properties[0].key)
+
+  if (!lead || !title || !contentUrl || image || !values) {
+    return null
+  }
 
   const briefingDynamicValues = {
     authorAvatar: image,
     authorName: lead,
     briefingContent: title,
     contentUrl: contentUrl || ''
-  }
-
-  const values = getValuesBasedOnBriefing(teaser?.properties[0].key)
-
-  if (!briefingDynamicValues || !values) {
-    return null
   }
 
   return (
@@ -360,11 +382,7 @@ const BaselBriefing = (props: BuilderTeaserProps) => {
                   </Author>
                 )}
 
-                <ReadMoreButton
-                  variant="outlined"
-                  color="inherit"
-                  size="small"
-                  href={briefingDynamicValues.contentUrl}>
+                <ReadMoreButton variant="outlined" color="inherit" size="small">
                   Ganzes Briefing
                 </ReadMoreButton>
               </TeaserContentInterior>

@@ -1,7 +1,7 @@
 import {ApiV1, BuilderTeaserProps, Teaser} from '@wepublish/website'
 
 import {BaselBriefing} from '../../bajour/basel-briefing'
-import {isBriefing} from '../../bajour/isBriefing'
+import {isBriefing} from '../../bajour/is-briefing'
 import {ColTeaser} from './col-teaser'
 import {ColTeaserLight} from './col-teaser-light'
 import {ColTeaserText} from './col-teaser-text'
