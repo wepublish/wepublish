@@ -91,19 +91,23 @@ fragment FullBlock on Block {
   __typename
 
   ... on TitleBlock {
+    blockStyle
     title
     lead
   }
 
   ... on HTMLBlock {
+    blockStyle
     html
   }
 
   ... on RichTextBlock {
+    blockStyle
     richText
   }
 
   ... on QuoteBlock {
+    blockStyle
     quote
     author
     image {
@@ -112,6 +116,7 @@ fragment FullBlock on Block {
   }
 
   ... on LinkPageBreakBlock {
+    blockStyle
     text
     linkText
     linkURL
@@ -127,6 +132,7 @@ fragment FullBlock on Block {
   }
 
   ... on PollBlock {
+    blockStyle
     poll {
       id
       question
@@ -134,6 +140,7 @@ fragment FullBlock on Block {
   }
 
   ... on EventBlock {
+    blockStyle
     filter {
       tags
       events
@@ -144,6 +151,7 @@ fragment FullBlock on Block {
   }
 
   ... on CommentBlock {
+    blockStyle
     filter {
       item
       tags
@@ -155,6 +163,7 @@ fragment FullBlock on Block {
   }
 
   ... on ImageBlock {
+    blockStyle
     caption
     image {
       ...ImageRef
@@ -162,6 +171,7 @@ fragment FullBlock on Block {
   }
 
   ... on ImageGalleryBlock {
+    blockStyle
     images {
       caption
       image {
@@ -171,6 +181,7 @@ fragment FullBlock on Block {
   }
 
   ... on ListicleBlock {
+    blockStyle
     items {
       title
       image {
@@ -181,50 +192,61 @@ fragment FullBlock on Block {
   }
 
   ... on FacebookPostBlock {
+    blockStyle
     userID
     postID
   }
 
   ... on FacebookVideoBlock {
+    blockStyle
     userID
     videoID
   }
 
   ... on InstagramPostBlock {
+    blockStyle
     postID
   }
 
   ... on TwitterTweetBlock {
+    blockStyle
     userID
     tweetID
   }
 
   ... on VimeoVideoBlock {
+    blockStyle
     videoID
   }
 
   ... on YouTubeVideoBlock {
+    blockStyle
     videoID
   }
 
   ... on SoundCloudTrackBlock {
+    blockStyle
     trackID
   }
 
   ... on PolisConversationBlock {
+    blockStyle
     conversationID
   }
 
   ... on TikTokVideoBlock {
+    blockStyle
     userID
     videoID
   }
 
   ... on BildwurfAdBlock {
+    blockStyle
     zoneID
   }
 
   ... on EmbedBlock {
+    blockStyle
     url
     title
     width
@@ -234,6 +256,7 @@ fragment FullBlock on Block {
   }
 
   ... on TeaserGridBlock {
+    blockStyle
     teasers {
       ...FullTeaser
     }
@@ -241,6 +264,7 @@ fragment FullBlock on Block {
   }
 
   ... on TeaserGridFlexBlock {
+    blockStyle
     flexTeasers {
       alignment {
         i

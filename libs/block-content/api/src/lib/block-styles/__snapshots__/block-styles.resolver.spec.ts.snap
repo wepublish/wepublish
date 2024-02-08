@@ -1,0 +1,75 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BlockStyleService blockStyles 1`] = `[]`;
+
+exports[`BlockStyleService blockStyles 2`] = `
+[
+  {
+    "blocks": [
+      "Event",
+    ],
+    "id": "1234",
+    "name": "Name",
+  },
+]
+`;
+
+exports[`BlockStyleService create 1`] = `
+[
+  {
+    "blocks": [
+      "Event",
+    ],
+    "name": "Name",
+  },
+]
+`;
+
+exports[`BlockStyleService create 2`] = `
+{
+  "blocks": [
+    "Event",
+  ],
+  "id": "1234",
+  "name": "Name",
+}
+`;
+
+exports[`BlockStyleService delete 1`] = `
+[
+  "1234",
+]
+`;
+
+exports[`BlockStyleService delete 2`] = `
+{
+  "blocks": [
+    "Event",
+  ],
+  "id": "1234",
+  "name": "Name",
+}
+`;
+
+exports[`BlockStyleService update 1`] = `
+[
+  {
+    "blocks": [
+      "Comment",
+      "Event",
+    ],
+    "id": "1234",
+    "name": "Bar",
+  },
+]
+`;
+
+exports[`BlockStyleService update 2`] = `
+{
+  "blocks": [
+    "Event",
+  ],
+  "id": "1234",
+  "name": "Bar",
+}
+`;

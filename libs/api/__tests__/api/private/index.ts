@@ -240,10 +240,12 @@ export type BaseNavigationLink = {
 
 export type BildwurfAdBlock = {
   __typename?: 'BildwurfAdBlock';
+  blockStyle?: Maybe<Scalars['String']>;
   zoneID: Scalars['String'];
 };
 
 export type BildwurfAdBlockInput = {
+  blockStyle?: InputMaybe<Scalars['String']>;
   zoneID: Scalars['String'];
 };
 
@@ -306,6 +308,7 @@ export enum CommentAuthorType {
 
 export type CommentBlock = {
   __typename?: 'CommentBlock';
+  blockStyle?: Maybe<Scalars['String']>;
   comments: Array<Comment>;
   filter: CommentBlockFilter;
 };
@@ -318,6 +321,7 @@ export type CommentBlockFilter = {
 };
 
 export type CommentBlockInput = {
+  blockStyle?: InputMaybe<Scalars['String']>;
   filter: CommentBlockInputFilter;
 };
 
@@ -450,6 +454,7 @@ export enum DateFilterComparison {
 
 export type EmbedBlock = {
   __typename?: 'EmbedBlock';
+  blockStyle?: Maybe<Scalars['String']>;
   height?: Maybe<Scalars['Int']>;
   sandbox?: Maybe<Scalars['String']>;
   styleCustom?: Maybe<Scalars['String']>;
@@ -459,6 +464,7 @@ export type EmbedBlock = {
 };
 
 export type EmbedBlockInput = {
+  blockStyle?: InputMaybe<Scalars['String']>;
   height?: InputMaybe<Scalars['Int']>;
   sandbox?: InputMaybe<Scalars['String']>;
   styleCustom?: InputMaybe<Scalars['String']>;
@@ -485,6 +491,7 @@ export type Event = {
 
 export type EventBlock = {
   __typename?: 'EventBlock';
+  blockStyle?: Maybe<Scalars['String']>;
   events: Array<Event>;
   filter: EventBlockFilter;
 };
@@ -496,6 +503,7 @@ export type EventBlockFilter = {
 };
 
 export type EventBlockInput = {
+  blockStyle?: InputMaybe<Scalars['String']>;
   filter: EventBlockInputFilter;
 };
 
@@ -572,22 +580,26 @@ export type ExternalNavigationLinkInput = {
 
 export type FacebookPostBlock = {
   __typename?: 'FacebookPostBlock';
+  blockStyle?: Maybe<Scalars['String']>;
   postID: Scalars['String'];
   userID: Scalars['String'];
 };
 
 export type FacebookPostBlockInput = {
+  blockStyle?: InputMaybe<Scalars['String']>;
   postID: Scalars['String'];
   userID: Scalars['String'];
 };
 
 export type FacebookVideoBlock = {
   __typename?: 'FacebookVideoBlock';
+  blockStyle?: Maybe<Scalars['String']>;
   userID: Scalars['String'];
   videoID: Scalars['String'];
 };
 
 export type FacebookVideoBlockInput = {
+  blockStyle?: InputMaybe<Scalars['String']>;
   userID: Scalars['String'];
   videoID: Scalars['String'];
 };
@@ -619,6 +631,7 @@ export type FlexTeaser = {
 
 export type FlexTeaserInput = {
   alignment: FlexAlignmentInput;
+  blockStyle?: InputMaybe<Scalars['String']>;
   teaser?: InputMaybe<TeaserInput>;
 };
 
@@ -653,10 +666,12 @@ export type GalleryImageEdgeInput = {
 
 export type HtmlBlock = {
   __typename?: 'HTMLBlock';
+  blockStyle?: Maybe<Scalars['String']>;
   html?: Maybe<Scalars['String']>;
 };
 
 export type HtmlBlockInput = {
+  blockStyle?: InputMaybe<Scalars['String']>;
   html?: InputMaybe<Scalars['String']>;
 };
 
@@ -690,11 +705,13 @@ export type ImageTransformUrlArgs = {
 
 export type ImageBlock = {
   __typename?: 'ImageBlock';
+  blockStyle?: Maybe<Scalars['String']>;
   caption?: Maybe<Scalars['String']>;
   image?: Maybe<Image>;
 };
 
 export type ImageBlockInput = {
+  blockStyle?: InputMaybe<Scalars['String']>;
   caption?: InputMaybe<Scalars['String']>;
   imageID?: InputMaybe<Scalars['ID']>;
 };
@@ -713,10 +730,12 @@ export type ImageFilter = {
 
 export type ImageGalleryBlock = {
   __typename?: 'ImageGalleryBlock';
+  blockStyle?: Maybe<Scalars['String']>;
   images: Array<GalleryImageEdge>;
 };
 
 export type ImageGalleryBlockInput = {
+  blockStyle?: InputMaybe<Scalars['String']>;
   images?: InputMaybe<Array<InputMaybe<GalleryImageEdgeInput>>>;
 };
 
@@ -754,10 +773,12 @@ export type InputPoint = {
 
 export type InstagramPostBlock = {
   __typename?: 'InstagramPostBlock';
+  blockStyle?: Maybe<Scalars['String']>;
   postID: Scalars['String'];
 };
 
 export type InstagramPostBlockInput = {
+  blockStyle?: InputMaybe<Scalars['String']>;
   postID: Scalars['String'];
 };
 
@@ -832,6 +853,7 @@ export type JwtToken = {
 
 export type LinkPageBreakBlock = {
   __typename?: 'LinkPageBreakBlock';
+  blockStyle?: Maybe<Scalars['String']>;
   hideButton: Scalars['Boolean'];
   image?: Maybe<Image>;
   layoutOption?: Maybe<Scalars['String']>;
@@ -845,6 +867,7 @@ export type LinkPageBreakBlock = {
 };
 
 export type LinkPageBreakBlockInput = {
+  blockStyle?: InputMaybe<Scalars['String']>;
   hideButton: Scalars['Boolean'];
   imageID?: InputMaybe<Scalars['ID']>;
   layoutOption?: InputMaybe<Scalars['String']>;
@@ -859,10 +882,12 @@ export type LinkPageBreakBlockInput = {
 
 export type ListicleBlock = {
   __typename?: 'ListicleBlock';
+  blockStyle?: Maybe<Scalars['String']>;
   items: Array<ListicleItem>;
 };
 
 export type ListicleBlockInput = {
+  blockStyle?: InputMaybe<Scalars['String']>;
   items?: InputMaybe<Array<InputMaybe<ListicleItemInput>>>;
 };
 
@@ -1789,10 +1814,12 @@ export type Point = {
 
 export type PolisConversationBlock = {
   __typename?: 'PolisConversationBlock';
+  blockStyle?: Maybe<Scalars['String']>;
   conversationID: Scalars['String'];
 };
 
 export type PolisConversationBlockInput = {
+  blockStyle?: InputMaybe<Scalars['String']>;
   conversationID: Scalars['String'];
 };
 
@@ -1821,10 +1848,12 @@ export type PollAnswerWithVoteCount = {
 
 export type PollBlock = {
   __typename?: 'PollBlock';
+  blockStyle?: Maybe<Scalars['String']>;
   poll?: Maybe<FullPoll>;
 };
 
 export type PollBlockInput = {
+  blockStyle?: InputMaybe<Scalars['String']>;
   pollId?: InputMaybe<Scalars['ID']>;
 };
 
@@ -2233,12 +2262,14 @@ export type QueryUsersArgs = {
 export type QuoteBlock = {
   __typename?: 'QuoteBlock';
   author?: Maybe<Scalars['String']>;
+  blockStyle?: Maybe<Scalars['String']>;
   image?: Maybe<Image>;
   quote?: Maybe<Scalars['String']>;
 };
 
 export type QuoteBlockInput = {
   author?: InputMaybe<Scalars['String']>;
+  blockStyle?: InputMaybe<Scalars['String']>;
   imageID?: InputMaybe<Scalars['ID']>;
   quote?: InputMaybe<Scalars['String']>;
 };
@@ -2249,10 +2280,12 @@ export enum RatingSystemType {
 
 export type RichTextBlock = {
   __typename?: 'RichTextBlock';
+  blockStyle?: Maybe<Scalars['String']>;
   richText: Scalars['RichText'];
 };
 
 export type RichTextBlockInput = {
+  blockStyle?: InputMaybe<Scalars['String']>;
   richText: Scalars['RichText'];
 };
 
@@ -2315,10 +2348,12 @@ export enum SortOrder {
 
 export type SoundCloudTrackBlock = {
   __typename?: 'SoundCloudTrackBlock';
+  blockStyle?: Maybe<Scalars['String']>;
   trackID: Scalars['String'];
 };
 
 export type SoundCloudTrackBlockInput = {
+  blockStyle?: InputMaybe<Scalars['String']>;
   trackID: Scalars['String'];
 };
 
@@ -2459,21 +2494,25 @@ export type Teaser = ArticleTeaser | CustomTeaser | EventTeaser | PageTeaser | P
 
 export type TeaserGridBlock = {
   __typename?: 'TeaserGridBlock';
+  blockStyle?: Maybe<Scalars['String']>;
   numColumns: Scalars['Int'];
   teasers: Array<Maybe<Teaser>>;
 };
 
 export type TeaserGridBlockInput = {
+  blockStyle?: InputMaybe<Scalars['String']>;
   numColumns: Scalars['Int'];
   teasers: Array<InputMaybe<TeaserInput>>;
 };
 
 export type TeaserGridFlexBlock = {
   __typename?: 'TeaserGridFlexBlock';
+  blockStyle?: Maybe<Scalars['String']>;
   flexTeasers: Array<Maybe<FlexTeaser>>;
 };
 
 export type TeaserGridFlexBlockInput = {
+  blockStyle?: InputMaybe<Scalars['String']>;
   flexTeasers: Array<FlexTeaserInput>;
 };
 
@@ -2493,22 +2532,26 @@ export enum TeaserStyle {
 
 export type TikTokVideoBlock = {
   __typename?: 'TikTokVideoBlock';
+  blockStyle?: Maybe<Scalars['String']>;
   userID: Scalars['String'];
   videoID: Scalars['String'];
 };
 
 export type TikTokVideoBlockInput = {
+  blockStyle?: InputMaybe<Scalars['String']>;
   userID: Scalars['String'];
   videoID: Scalars['String'];
 };
 
 export type TitleBlock = {
   __typename?: 'TitleBlock';
+  blockStyle?: Maybe<Scalars['String']>;
   lead?: Maybe<Scalars['String']>;
   title?: Maybe<Scalars['String']>;
 };
 
 export type TitleBlockInput = {
+  blockStyle?: InputMaybe<Scalars['String']>;
   lead?: InputMaybe<Scalars['String']>;
   title?: InputMaybe<Scalars['String']>;
 };
@@ -2527,11 +2570,13 @@ export type TokenInput = {
 
 export type TwitterTweetBlock = {
   __typename?: 'TwitterTweetBlock';
+  blockStyle?: Maybe<Scalars['String']>;
   tweetID: Scalars['String'];
   userID: Scalars['String'];
 };
 
 export type TwitterTweetBlockInput = {
+  blockStyle?: InputMaybe<Scalars['String']>;
   tweetID: Scalars['String'];
   userID: Scalars['String'];
 };
@@ -2731,19 +2776,23 @@ export type UserSubscription = {
 
 export type VimeoVideoBlock = {
   __typename?: 'VimeoVideoBlock';
+  blockStyle?: Maybe<Scalars['String']>;
   videoID: Scalars['String'];
 };
 
 export type VimeoVideoBlockInput = {
+  blockStyle?: InputMaybe<Scalars['String']>;
   videoID: Scalars['String'];
 };
 
 export type YouTubeVideoBlock = {
   __typename?: 'YouTubeVideoBlock';
+  blockStyle?: Maybe<Scalars['String']>;
   videoID: Scalars['String'];
 };
 
 export type YouTubeVideoBlockInput = {
+  blockStyle?: InputMaybe<Scalars['String']>;
   videoID: Scalars['String'];
 };
 

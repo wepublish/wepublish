@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`BlockStylesService should create a block style 1`] = `
+[
+  {
+    "data": {
+      "blocks": [
+        "Event",
+      ],
+      "name": "Name",
+    },
+  },
+]
+`;
+
+exports[`BlockStylesService should delete a block style 1`] = `
+[
+  {
+    "where": {
+      "id": "1234",
+    },
+  },
+]
+`;
+
+exports[`BlockStylesService should return all block styles 1`] = `
+[
+  {
+    "id": "123",
+  },
+  {
+    "id": "321",
+  },
+]
+`;
+
+exports[`BlockStylesService should update a block style 1`] = `
+[
+  {
+    "data": {
+      "blocks": [
+        "Event",
+      ],
+      "name": "Name",
+    },
+    "where": {
+      "id": "123",
+    },
+  },
+]
+`;
