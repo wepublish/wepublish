@@ -17,6 +17,7 @@ api:
     SENTRY_DSN: ''
     DEFAULT_FROM_ADDRESS: ''
     DEFAULT_REPLY_TO_ADDRESS: ''
+    CONFIG_FILE_PATH: '/wepublish/config/default.yaml'
   envFromSecretRefName:
   properties: {}
   replicaCount: 1
