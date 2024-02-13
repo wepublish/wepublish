@@ -1,7 +1,21 @@
 import {css, styled} from '@mui/material'
 import {TeaserGridBlock} from '@wepublish/website'
 
-export const TeaserGridStyled = styled(TeaserGridBlock)`
+import {BestOfWePublish} from '../../bajour/best-of-wepublish'
+
+export const TeaserGridStyled = props => {
+  if (
+    props.teasers.length === 6 &&
+    props.teasers[0].style === 'DEFAULT' &&
+    props.teasers[0].__typename === 'PeerArticleTeaser'
+  ) {
+    return <BestOfWePublish {...props} />
+  }
+
+  return <TeaserGridStyledCss {...props} />
+}
+
+export const TeaserGridStyledCss = styled(TeaserGridBlock)`
   ${({numColumns, theme}) =>
     numColumns > 1 &&
     css`
