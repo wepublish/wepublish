@@ -211,7 +211,7 @@ const BestOfWePublish = ({numColumns, teasers, blockStyle, className}: BestOfWeP
           const values = {
             image: teaser?.image || teaser?.article?.image,
             href: teaser?.article?.url,
-            title: teaser?.title || teaser?.article.title,
+            title: teaser?.title || teaser?.article?.title,
             peerName: teaser?.peer?.name,
             peerLogo: teaser?.peer?.profile?.logo.squareSmallURL || ''
           }
