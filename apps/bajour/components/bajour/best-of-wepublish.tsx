@@ -48,7 +48,7 @@ const PeerLogoWrapper = styled('div')`
   width: 3rem;
 
   ${({theme}) => theme.breakpoints.up('md')} {
-    width: auto;
+    width: 4rem;
     padding-right: 0.6rem;
     padding-bottom: 0.6rem;
   }
@@ -141,7 +141,7 @@ const Content = styled('div')`
 
   > div {
     // no other way of doing it and maintining current design i.e. line clamp and box would make the white bg 100% wide
-    max-height: 82.5px;
+    max-height: 78px;
     overflow: hidden;
   }
 
@@ -154,6 +154,10 @@ const Content = styled('div')`
   ${({theme}) => theme.breakpoints.up('md')} {
     bottom: 0.8rem;
     left: 0.8rem;
+
+    > div {
+      max-height: 82.5px;
+    }
   }
 `
 
@@ -208,21 +212,22 @@ const BestOfWePublish = ({numColumns, teasers, blockStyle, className}: BestOfWeP
             image: teaser?.image || teaser?.article?.image,
             href: teaser?.article?.url,
             title: teaser?.title || teaser?.article.title,
-            peerName: teaser?.peer?.name
+            peerName: teaser?.peer?.name,
+            peerLogo: teaser?.peer?.profile?.logo.squareSmallURL || ''
           }
 
           return (
             <LinkWrapper color="inherit" underline="none" href={values.href} key={values.title}>
               <PeerLogoWrapper>
-                <Image
-                  src={babaNews}
+                {/* not possible to use next/image with dynamic domains */}
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={values.peerLogo}
                   alt="Peer logo"
                   style={{
                     width: '100%',
                     height: 'auto'
                   }}
-                  width={500}
-                  height={300}
                 />
               </PeerLogoWrapper>
               <InnerContainer>
