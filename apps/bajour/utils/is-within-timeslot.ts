@@ -1,4 +1,4 @@
-const shouldDisplayBaselBriefing = (showFrom = '6:00', showUntil = '11:00'): boolean => {
+const isWithinTimeslot = (showFrom = '6:00', showUntil = '11:00'): boolean => {
   const now = new Date()
 
   const [showFromHour, showFromMinutes] = showFrom.split(':').map(Number)
@@ -16,4 +16,4 @@ const shouldDisplayBaselBriefing = (showFrom = '6:00', showUntil = '11:00'): boo
   return isAfterStart && isBeforeEnd
 }
 
-export default shouldDisplayBaselBriefing
+export default isWithinTimeslot

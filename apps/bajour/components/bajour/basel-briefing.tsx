@@ -1,7 +1,7 @@
 import {Button, styled} from '@mui/material'
-import {BuilderTeaserProps, Image, TeaserWrapper} from '@wepublish/website'
+import {ApiV1, BuilderTeaserProps, Image, TeaserWrapper} from '@wepublish/website'
 
-import shouldDisplayBaselBriefing from '../../utils/should-display-basel-briefing'
+import isWithinTimeslot from '../../utils/is-within-timeslot'
 import {NextWepublishLink} from '../should-be-website-builder/next-wepublish-link'
 import {fluidTypography} from '../website-builder-overwrites/blocks/teaser-overwrite.style'
 import BaselBg from './basel.jpg'
@@ -15,12 +15,7 @@ type Property = {
 }
 
 type BaselBriefingProps = Omit<BuilderTeaserProps, 'teaser'> & {
-  // has to be any as we cannot import CustomTeaser from @wepublish/website/api
-  teaser?: any
-}
-
-function isCustomTeaser(teaser: any) {
-  return teaser && teaser.__typename === 'CustomTeaser'
+  teaser?: ApiV1.CustomTeaser
 }
 
 const baselBg = {
@@ -223,7 +218,7 @@ const BriefingTextWrapper = styled('div')`
 
 const Briefing = styled('div')`
   color: ${({theme}) => theme.palette.common.white};
-  background-color: rgba(0, 0, 0, 0.25);
+  background-color: rgba(0, 0, 0, 0.35);
   padding: ${({theme}) =>
     `${theme.spacing(0.5)} ${theme.spacing(2)} ${theme.spacing(2)} ${theme.spacing(2)}`};
   font-size: ${fluidTypography(12, 26)};
@@ -314,10 +309,6 @@ export const Avatar = styled(Image)`
 `
 
 const BaselBriefing = ({alignment, teaser}: BaselBriefingProps) => {
-  if (!isCustomTeaser(teaser)) {
-    return null
-  }
-
   let showFrom = undefined
   let showUntil = undefined
   teaser?.properties.map((prop: Property) => {
@@ -329,15 +320,19 @@ const BaselBriefing = ({alignment, teaser}: BaselBriefingProps) => {
     }
   })
 
-  if (!shouldDisplayBaselBriefing(showFrom, showUntil)) {
+  if (!isWithinTimeslot(showFrom, showUntil)) {
     return null
   }
 
-  const {image, lead, title, contentUrl} = teaser ?? {}
+  if (!teaser) {
+    return null
+  }
 
-  const values = getValuesBasedOnBriefing(teaser?.properties[0].key)
+  const {image, lead, title, contentUrl} = teaser
 
-  if (!lead || !title || !contentUrl || image || !values) {
+  const values = getValuesBasedOnBriefing(teaser.properties[0].key as BriefingType)
+
+  if (!lead || !title || !contentUrl || !image || !values) {
     return null
   }
 
