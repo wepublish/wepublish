@@ -34,6 +34,7 @@ import {Login} from './login'
 import {ArticleEditor} from './routes/articles/articleEditor'
 import {ArticleList} from './routes/articles/articleList'
 import {AuthorList} from './routes/authors/authorList'
+import {BlockStyleList} from './routes/blockStyles/blockStyleList'
 import {CommentRatingEditView} from './routes/commentRatings/commentRatingEditView'
 import {CommentEditView} from './routes/comments/commentEditView'
 import {CommentList} from './routes/comments/commentList'
@@ -59,7 +60,6 @@ import {UserRoleList} from './routes/userRoles/userRoleList'
 import {UserEditView} from './routes/users/userEditView'
 import {UserList} from './routes/users/userList'
 import {LocalStorageKey} from './utility'
-import {BlockStyleList} from './routes/blockStyles/blockStyleList'
 
 const LogoutMutation = gql`
   mutation Logout {
