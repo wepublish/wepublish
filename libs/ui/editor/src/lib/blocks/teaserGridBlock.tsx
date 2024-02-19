@@ -29,7 +29,9 @@ const SortableContainerComponent = styled.div<{numColumns: number}>`
   user-select: none;
 `
 
-const Panel = styled(RPanel)<{showGrabCursor: boolean}>`
+const Panel = styled(RPanel, {
+  shouldForwardProp: prop => prop !== 'showGrabCursor'
+})<{showGrabCursor: boolean}>`
   display: grid;
   cursor: ${({showGrabCursor}) => showGrabCursor && 'grab'};
   height: 300px;

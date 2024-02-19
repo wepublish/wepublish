@@ -10,7 +10,9 @@ import {PlaceholderInput} from '../atoms/placeholderInput'
 import {HtmlEditPanel} from '../panel/htmlEditPanel'
 import {HTMLBlockValue} from './types'
 
-const Panel = styled(RPanel)<{isEmpty: boolean}>`
+const Panel = styled(RPanel, {
+  shouldForwardProp: prop => prop !== 'isEmpty'
+})<{isEmpty: boolean}>`
   display: grid;
   height: ${({isEmpty}) => (isEmpty ? '200px' : undefined)};
   padding: 0;

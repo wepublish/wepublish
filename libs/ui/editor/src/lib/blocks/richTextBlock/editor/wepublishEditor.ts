@@ -54,7 +54,7 @@ export const WepublishEditor = {
     }
   },
 
-  createDefaultValue(): RichTextBlockValue {
+  createDefaultValue(): RichTextBlockValue['richText'] {
     return [emptyTextParagraph()]
   },
 

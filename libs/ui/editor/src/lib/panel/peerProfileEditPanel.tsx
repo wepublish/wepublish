@@ -56,7 +56,9 @@ function PeerInfoEditPanel({onClose, onSave}: ImageEditPanelProps) {
   const [name, setName] = useState('')
   const [themeColor, setThemeColor] = useState('')
   const [themeFontColor, setThemeFontColor] = useState('')
-  const [callToActionText, setCallToActionText] = useState<RichTextBlockValue>(createDefaultValue())
+  const [callToActionText, setCallToActionText] = useState<RichTextBlockValue['richText']>(
+    createDefaultValue()
+  )
   const [callToActionTextURL, setCallToActionTextURL] = useState('')
   const [callToActionImage, setCallToActionImage] = useState<Maybe<ImageRefFragment>>()
   const [callToActionImageURL, setCallToActionImageURL] = useState('')

@@ -698,7 +698,7 @@ export const CanCreateBlockStyle: Permission = {
 }
 
 export const CanUpdateBlockStyle: Permission = {
-  id: 'CAN_UPDATE_EVENT',
+  id: 'CAN_UPDATE_BLOCK_STYLE',
   description: 'Allows to update a block style',
   deprecated: false
 }
