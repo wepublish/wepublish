@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-  displayName: 'mail-api',
+  displayName: 'health-api',
   preset: '../../../jest.preset.js',
   globals: {},
   testEnvironment: 'node',
