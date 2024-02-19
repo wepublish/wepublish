@@ -56,7 +56,7 @@ export function ListicleItemElement({value, onChange}: FieldProps<ListicleItem>)
   const {t} = useTranslation()
 
   const handleRichTextChange = useCallback(
-    (richText: React.SetStateAction<RichTextBlockValue>) =>
+    (richText: React.SetStateAction<RichTextBlockValue['richText']>) =>
       onChange(value => ({
         ...value,
         richText: isFunctionalUpdate(richText) ? richText(value.richText) : richText

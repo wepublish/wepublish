@@ -32,33 +32,48 @@ import {createDefaultValue, RichTextBlock} from './richTextBlock/rich-text-block
 import {TeaserGridBlock} from './teaserGridBlock'
 import {TeaserGridFlexBlock} from './teaserGridFlexBlock'
 import {TitleBlock} from './titleBlock'
-import {BlockType, BlockValue, EmbedType} from './types'
+import {BlockValue, EmbedType} from './types'
+import {BlockType} from '@wepublish/editor/api-v2'
+import {isFunctionalUpdate} from '../utility'
 
 export const BlockMap: BlockMapForValue<BlockValue> = {
   [BlockType.Title]: {
     field: props => <TitleBlock {...props} />,
-    defaultValue: {title: '', lead: ''},
+    defaultValue: {title: '', lead: '', blockStyle: undefined},
     label: 'blocks.title.label',
     icon: <MdTitle />
   },
 
   [BlockType.RichText]: {
-    field: props => <RichTextBlock {...props} />,
-    defaultValue: createDefaultValue,
+    field: props => (
+      <RichTextBlock
+        {...props}
+        value={props.value.richText}
+        onChange={fieldValue =>
+          props.onChange({
+            ...props.value,
+            richText: isFunctionalUpdate(fieldValue) ? fieldValue(props.value.richText) : fieldValue
+          })
+        }
+      />
+    ),
+    defaultValue: {
+      richText: createDefaultValue()
+    },
     label: 'blocks.richText.label',
     icon: <MdFormatColorText />
   },
 
   [BlockType.Image]: {
     field: props => <ImageBlock {...props} />,
-    defaultValue: {image: null, caption: ''},
+    defaultValue: {image: null, caption: '', blockStyle: undefined},
     label: 'blocks.image.label',
     icon: <MdPhoto />
   },
 
   [BlockType.ImageGallery]: {
     field: props => <ImageGalleryBlock {...props} />,
-    defaultValue: {images: [{caption: '', image: null}]},
+    defaultValue: {images: [{caption: '', image: null}], blockStyle: undefined},
     label: 'blocks.imageGallery.label',
     icon: <MdPhotoLibrary />
   },
@@ -75,7 +90,8 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
             richText: createDefaultValue()
           }
         }
-      ]
+      ],
+      blockStyle: undefined
     },
     label: 'blocks.listicle.label',
     icon: <MdViewList />
@@ -83,7 +99,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
 
   [BlockType.Quote]: {
     field: props => <QuoteBlock {...props} />,
-    defaultValue: {quote: '', author: '', image: null},
+    defaultValue: {quote: '', author: '', image: null, blockStyle: undefined},
     label: 'blocks.quote.label',
     icon: <MdFormatQuote />
   },
@@ -100,7 +116,8 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
       templateOption: 'none',
       richText: createDefaultValue(),
       image: undefined,
-      hideButton: false
+      hideButton: false,
+      blockStyle: undefined
     },
     label: 'blocks.linkPageBreak.label',
     icon: <MdCoffee />
@@ -108,14 +125,14 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
 
   [BlockType.Embed]: {
     field: props => <EmbedBlock {...props} />,
-    defaultValue: {type: EmbedType.Other},
+    defaultValue: {type: EmbedType.Other, blockStyle: undefined},
     label: 'blocks.embeds.label',
     icon: <MdIntegrationInstructions />
   },
 
   [BlockType.TeaserGrid1]: {
     field: props => <TeaserGridBlock {...props} />,
-    defaultValue: {numColumns: 1, teasers: [[nanoid(), null]]},
+    defaultValue: {numColumns: 1, teasers: [[nanoid(), null]], blockStyle: undefined},
     label: 'blocks.teaserGrid1.label',
     icon: <MdFilter1 />
   },
@@ -131,7 +148,8 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
         [nanoid(), null],
         [nanoid(), null],
         [nanoid(), null]
-      ]
+      ],
+      blockStyle: undefined
     },
     label: 'blocks.teaserGrid6.label',
     icon: <MdFilter6 />
@@ -157,36 +175,37 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
           alignment: {i: nanoid(), x: 8, y: 0, w: 4, h: 6, static: false},
           teaser: null
         }
-      ]
+      ],
+      blockStyle: undefined
     },
     label: 'blocks.teaserFlexGrid.label',
     icon: <MdViewQuilt />
   },
 
-  [BlockType.HTMLBlock]: {
+  [BlockType.Html]: {
     field: props => <HTMLBlock {...props} />,
-    defaultValue: {html: ''},
+    defaultValue: {html: '', blockStyle: undefined},
     label: 'blocks.html.label',
     icon: <MdCode />
   },
 
-  [BlockType.PollBlock]: {
+  [BlockType.Poll]: {
     field: props => <PollBlock {...props} />,
-    defaultValue: {poll: null},
+    defaultValue: {poll: null, blockStyle: undefined},
     label: 'blocks.poll.label',
     icon: <MdQueryStats />
   },
 
-  [BlockType.CommentBlock]: {
+  [BlockType.Comment]: {
     field: props => <CommentBlock {...props} />,
-    defaultValue: {filter: {}, comments: []},
+    defaultValue: {filter: {}, comments: [], blockStyle: undefined},
     label: 'blocks.comment.label',
     icon: <MdComment />
   },
 
-  [BlockType.EventBlock]: {
+  [BlockType.Event]: {
     field: props => <EventBlock {...props} />,
-    defaultValue: {filter: {}, events: []},
+    defaultValue: {filter: {}, events: [], blockStyle: undefined},
     label: 'blocks.event.label',
     icon: <MdEvent />
   }

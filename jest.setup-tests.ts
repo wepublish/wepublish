@@ -1,3 +1,5 @@
+import fetch from 'cross-fetch'
+
 const originalConsoleError = console.error
 const originalConsoleWarn = console.warn
 
@@ -39,4 +41,8 @@ global.console.warn = (message, ...optionalParams) => {
   }
 
   originalConsoleWarn(message, ...optionalParams)
+}
+
+if (global.fetch === undefined) {
+  global.fetch = fetch
 }
