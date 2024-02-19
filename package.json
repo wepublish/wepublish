@@ -219,6 +219,7 @@
     "@nestjs/passport": "10.0.0",
     "@nestjs/platform-express": "^10.1.0",
     "@nestjs/schedule": "^2.2.0",
+    "@nestjs/terminus": "^10.2.3",
     "@prisma/client": "^5.0.0",
     "@quramy/prisma-fabbrica": "^1.0.2",
     "@types/cache-manager": "^4.0.2",
