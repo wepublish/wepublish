@@ -229,7 +229,8 @@ export class PeriodicJobService {
 
     const invoices = await this.prismaService.invoice.findMany({
       where: {subscriptionID: subscriptionsWithEvent.id},
-      orderBy: {createdAt: 'desc'}
+      orderBy: {createdAt: 'desc'},
+      take: 2
     })
 
     for (const event of subscriptionDictionary) {
