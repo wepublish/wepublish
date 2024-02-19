@@ -1,0 +1,11 @@
+# fragment FullStat on Setting {
+#   id
+#   name
+#   value
+# }
+
+query StatsList {
+  stats {
+    ...Stats
+  }
+}

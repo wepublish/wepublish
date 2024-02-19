@@ -2032,6 +2032,395 @@ export const FullPropertyFragmentDoc = gql`
   value
 }
     `;
+export const ArticleWithoutBlocksFragmentDoc = gql`
+    fragment ArticleWithoutBlocks on Article {
+  id
+  publishedAt
+  updatedAt
+  preTitle
+  title
+  lead
+  slug
+  breaking
+  lead
+  publishedAt
+  tags
+  title
+  url
+  authors {
+    ...FullAuthor
+  }
+  image {
+    ...FullImage
+  }
+  socialMediaDescription
+  socialMediaTitle
+  socialMediaImage {
+    ...FullImage
+  }
+  properties {
+    ...FullProperty
+  }
+}
+    ${FullAuthorFragmentDoc}
+${FullImageFragmentDoc}
+${FullPropertyFragmentDoc}`;
+export const FullEventFragmentDoc = gql`
+    fragment FullEvent on Event {
+  id
+  name
+  description
+  status
+  location
+  image {
+    ...FullImage
+  }
+  tags {
+    id
+    tag
+  }
+  startsAt
+  endsAt
+  url
+}
+    ${FullImageFragmentDoc}`;
+export const FullPollFragmentDoc = gql`
+    fragment FullPoll on FullPoll {
+  id
+  question
+  opensAt
+  closedAt
+  infoText
+  answers {
+    id
+    pollId
+    answer
+    votes
+  }
+  externalVoteSources {
+    id
+    voteAmounts {
+      id
+      answerId
+      amount
+    }
+  }
+}
+    `;
+export const BlockWithoutTeaserFragmentDoc = gql`
+    fragment BlockWithoutTeaser on Block {
+  __typename
+  ... on TitleBlock {
+    title
+    lead
+  }
+  ... on ImageBlock {
+    caption
+    image {
+      ...FullImage
+    }
+  }
+  ... on ImageGalleryBlock {
+    images {
+      caption
+      image {
+        ...FullImage
+      }
+    }
+  }
+  ... on QuoteBlock {
+    quote
+    author
+    image {
+      ...FullImage
+    }
+  }
+  ... on RichTextBlock {
+    richText
+  }
+  ... on HTMLBlock {
+    html
+  }
+  ... on EventBlock {
+    events {
+      ...FullEvent
+    }
+  }
+  ... on PollBlock {
+    poll {
+      ...FullPoll
+    }
+  }
+  ... on ListicleBlock {
+    items {
+      title
+      richText
+      image {
+        ...FullImage
+      }
+    }
+  }
+  ... on LinkPageBreakBlock {
+    text
+    richText
+    layoutOption
+    hideButton
+    linkTarget
+    linkText
+    linkURL
+    styleOption
+    templateOption
+    image {
+      ...FullImage
+    }
+  }
+  ... on FacebookPostBlock {
+    userID
+    postID
+  }
+  ... on FacebookVideoBlock {
+    userID
+    videoID
+  }
+  ... on InstagramPostBlock {
+    postID
+  }
+  ... on TwitterTweetBlock {
+    userID
+    tweetID
+  }
+  ... on VimeoVideoBlock {
+    videoID
+  }
+  ... on YouTubeVideoBlock {
+    videoID
+  }
+  ... on SoundCloudTrackBlock {
+    trackID
+  }
+  ... on PolisConversationBlock {
+    conversationID
+  }
+  ... on TikTokVideoBlock {
+    userID
+    videoID
+  }
+  ... on BildwurfAdBlock {
+    zoneID
+  }
+  ... on EmbedBlock {
+    url
+    title
+    width
+    height
+    styleCustom
+    sandbox
+  }
+}
+    ${FullImageFragmentDoc}
+${FullEventFragmentDoc}
+${FullPollFragmentDoc}`;
+export const FullPeerProfileFragmentDoc = gql`
+    fragment FullPeerProfile on PeerProfile {
+  name
+  logo {
+    ...FullImage
+  }
+  themeColor
+  themeFontColor
+  hostURL
+  websiteURL
+  callToActionText
+  callToActionURL
+  callToActionImageURL
+  callToActionImage {
+    ...FullImage
+  }
+}
+    ${FullImageFragmentDoc}`;
+export const FullPeerFragmentDoc = gql`
+    fragment FullPeer on Peer {
+  id
+  createdAt
+  modifiedAt
+  name
+  slug
+  isDisabled
+  hostURL
+  profile {
+    ...FullPeerProfile
+  }
+}
+    ${FullPeerProfileFragmentDoc}`;
+export const PageWithoutBlocksFragmentDoc = gql`
+    fragment PageWithoutBlocks on Page {
+  id
+  slug
+  description
+  tags
+  title
+  url
+  image {
+    ...FullImage
+  }
+  socialMediaDescription
+  socialMediaTitle
+  socialMediaImage {
+    ...FullImage
+  }
+  properties {
+    ...FullProperty
+  }
+}
+    ${FullImageFragmentDoc}
+${FullPropertyFragmentDoc}`;
+export const FullTeaserFragmentDoc = gql`
+    fragment FullTeaser on Teaser {
+  ... on ArticleTeaser {
+    style
+    image {
+      ...FullImage
+    }
+    preTitle
+    title
+    lead
+    article {
+      ...ArticleWithoutBlocks
+      blocks {
+        ...BlockWithoutTeaser
+      }
+    }
+  }
+  ... on PeerArticleTeaser {
+    style
+    image {
+      ...FullImage
+    }
+    preTitle
+    title
+    lead
+    peer {
+      ...FullPeer
+    }
+    article {
+      ...ArticleWithoutBlocks
+      blocks {
+        ...BlockWithoutTeaser
+      }
+    }
+  }
+  ... on PageTeaser {
+    style
+    image {
+      ...FullImage
+    }
+    preTitle
+    title
+    lead
+    page {
+      ...PageWithoutBlocks
+      blocks {
+        ...BlockWithoutTeaser
+      }
+    }
+  }
+  ... on EventTeaser {
+    style
+    image {
+      ...FullImage
+    }
+    preTitle
+    title
+    lead
+    event {
+      ...FullEvent
+    }
+  }
+  ... on CustomTeaser {
+    style
+    image {
+      ...FullImage
+    }
+    preTitle
+    title
+    lead
+    contentUrl
+    properties {
+      key
+      value
+    }
+  }
+}
+    ${FullImageFragmentDoc}
+${ArticleWithoutBlocksFragmentDoc}
+${BlockWithoutTeaserFragmentDoc}
+${FullPeerFragmentDoc}
+${PageWithoutBlocksFragmentDoc}
+${FullEventFragmentDoc}`;
+export const FullBlockFragmentDoc = gql`
+    fragment FullBlock on Block {
+  ...BlockWithoutTeaser
+  ... on TeaserGridFlexBlock {
+    flexTeasers {
+      alignment {
+        x
+        y
+        w
+        h
+      }
+      teaser {
+        ...FullTeaser
+      }
+    }
+  }
+  ... on TeaserGridBlock {
+    teasers {
+      ...FullTeaser
+    }
+    numColumns
+  }
+}
+    ${BlockWithoutTeaserFragmentDoc}
+${FullTeaserFragmentDoc}`;
+export const FullArticleFragmentDoc = gql`
+    fragment FullArticle on Article {
+  ...ArticleWithoutBlocks
+  blocks {
+    ...FullBlock
+  }
+}
+    ${ArticleWithoutBlocksFragmentDoc}
+${FullBlockFragmentDoc}`;
+export const FullTagFragmentDoc = gql`
+    fragment FullTag on Tag {
+  id
+  tag
+  type
+}
+    `;
+export const FullAddressFragmentDoc = gql`
+    fragment FullAddress on UserAddress {
+  company
+  streetAddress
+  streetAddress2
+  zipCode
+  city
+  country
+}
+    `;
+export const FullPaymentProviderCustomerFragmentDoc = gql`
+    fragment FullPaymentProviderCustomer on PaymentProviderCustomer {
+  paymentProviderID
+  customerID
+}
+    `;
+export const FullOAuth2AccountFragmentDoc = gql`
+    fragment FullOAuth2Account on OAuth2Account {
+  type
+  provider
+  scope
+}
+    `;
 export const FullUserFragmentDoc = gql`
     fragment FullUser on User {
   id
