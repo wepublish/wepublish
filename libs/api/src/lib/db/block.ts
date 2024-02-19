@@ -1,4 +1,4 @@
-import {PollAnswer, Prisma} from '@prisma/client'
+import {BlockStyle, PollAnswer, Prisma} from '@prisma/client'
 import {RichTextNode} from '@wepublish/richtext/api'
 import {MapDiscriminatedUnion} from '../utility'
 
@@ -35,82 +35,86 @@ export enum BlockType {
   Event = 'event'
 }
 
-export interface RichTextBlock {
+export interface BaseBlock {
+  blockStyle?: BlockStyle['id']
+}
+
+export interface RichTextBlock extends BaseBlock {
   type: BlockType.RichText
   richText: RichTextNode[]
 }
 
-export interface ImageBlock {
+export interface ImageBlock extends BaseBlock {
   type: BlockType.Image
   caption?: string
   imageID?: string
 }
 
-export interface ImageCaptionEdge {
+export interface ImageCaptionEdge extends BaseBlock {
   caption: string
   imageID: string
 }
 
-export interface ImageGalleryBlock {
+export interface ImageGalleryBlock extends BaseBlock {
   type: BlockType.ImageGallery
   images: ImageCaptionEdge[]
 }
 
-export interface FacebookPostBlock {
+export interface FacebookPostBlock extends BaseBlock {
   type: BlockType.FacebookPost
   userID: string
   postID: string
 }
 
-export interface FacebookVideoBlock {
+export interface FacebookVideoBlock extends BaseBlock {
   type: BlockType.FacebookVideo
   userID: string
   videoID: string
 }
 
-export interface InstagramPostBlock {
+export interface InstagramPostBlock extends BaseBlock {
   type: BlockType.InstagramPost
   postID: string
 }
 
-export interface TwitterTweetBlock {
+export interface TwitterTweetBlock extends BaseBlock {
   type: BlockType.TwitterTweet
   userID: string
   tweetID: string
 }
 
-export interface VimeoVideoBlock {
+export interface VimeoVideoBlock extends BaseBlock {
   type: BlockType.VimeoVideo
   videoID: string
 }
 
-export interface YouTubeVideoBlock {
+export interface YouTubeVideoBlock extends BaseBlock {
   type: BlockType.YouTubeVideo
   videoID: string
 }
 
-export interface SoundCloudTrackBlock {
+export interface SoundCloudTrackBlock extends BaseBlock {
   type: BlockType.SoundCloudTrack
   trackID: string
 }
 
-export interface PolisConversationBlock {
+export interface PolisConversationBlock extends BaseBlock {
   type: BlockType.PolisConversation
   conversationID: string
 }
 
-export interface TikTokVideoBlock {
+export interface TikTokVideoBlock extends BaseBlock {
   type: BlockType.TikTokVideo
   videoID: string
   userID: string
 }
 
-export interface BildwurfAdBlock {
+export interface BildwurfAdBlock extends BaseBlock {
   type: BlockType.BildwurfAd
   zoneID: string
 }
 
-export interface EmbedBlock {
+export interface EmbedBlock extends BaseBlock {
   type: BlockType.Embed
   url?: string
   title?: string
@@ -120,7 +124,7 @@ export interface EmbedBlock {
   sandbox?: string
 }
 
-export interface HTMLBlock {
+export interface HTMLBlock extends BaseBlock {
   type: BlockType.HTML
   html: string
 }
@@ -129,12 +133,12 @@ export type PollAnswerWithVoteCount = PollAnswer & {
   votes: number
 }
 
-export interface PollBlock {
+export interface PollBlock extends BaseBlock {
   type: BlockType.Poll
   pollId: string
 }
 
-export interface EventBlock {
+export interface EventBlock extends BaseBlock {
   type: BlockType.Event
   filter: Partial<{
     tags: string[]
@@ -142,7 +146,7 @@ export interface EventBlock {
   }>
 }
 
-export interface CommentBlock {
+export interface CommentBlock extends BaseBlock {
   type: BlockType.Comment
   filter: Partial<{
     item: string
@@ -151,18 +155,18 @@ export interface CommentBlock {
   }>
 }
 
-export interface ListicleItem {
+export interface ListicleItem extends BaseBlock {
   title: string
   imageID?: string
   richText: RichTextNode[]
 }
 
-export interface ListicleBlock {
+export interface ListicleBlock extends BaseBlock {
   type: BlockType.Listicle
   items: ListicleItem[]
 }
 
-export interface LinkPageBreakBlock {
+export interface LinkPageBreakBlock extends BaseBlock {
   type: BlockType.LinkPageBreak
   text: string
   richText: RichTextNode[]
@@ -176,13 +180,13 @@ export interface LinkPageBreakBlock {
   imageID?: string
 }
 
-export interface TitleBlock {
+export interface TitleBlock extends BaseBlock {
   type: BlockType.Title
   title?: string
   lead?: string
 }
 
-export interface QuoteBlock {
+export interface QuoteBlock extends BaseBlock {
   type: BlockType.Quote
   quote?: string
   author?: string
@@ -262,7 +266,7 @@ export interface CustomTeaser {
 
 export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser | CustomTeaser | EventTeaser
 
-export interface TeaserGridBlock {
+export interface TeaserGridBlock extends BaseBlock {
   type: BlockType.TeaserGrid
   teasers: Teaser[]
   numColumns: number
@@ -282,7 +286,7 @@ export interface FlexTeaser {
   teaser: Teaser | null
 }
 
-export interface TeaserGridFlexBlock {
+export interface TeaserGridFlexBlock extends BaseBlock {
   type: BlockType.TeaserGridFlex
   flexTeasers: FlexTeaser[]
 }

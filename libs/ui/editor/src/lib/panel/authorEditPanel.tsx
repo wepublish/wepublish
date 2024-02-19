@@ -71,7 +71,7 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
   const [slug, setSlug] = useState('')
   const [jobTitle, setJobTitle] = useState('')
   const [image, setImage] = useState<Maybe<ImageRefFragment>>()
-  const [bio, setBio] = useState<RichTextBlockValue>(createDefaultValue())
+  const [bio, setBio] = useState<RichTextBlockValue['richText']>(createDefaultValue())
   const [links, setLinks] = useState<ListValue<AuthorLink>[]>([
     {id: generateID(), value: {title: '', url: ''}}
   ])

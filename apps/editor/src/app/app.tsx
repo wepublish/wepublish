@@ -34,6 +34,7 @@ import {Login} from './login'
 import {ArticleEditor} from './routes/articles/articleEditor'
 import {ArticleList} from './routes/articles/articleList'
 import {AuthorList} from './routes/authors/authorList'
+import {BlockStyleList} from './routes/blockStyles/blockStyleList'
 import {CommentRatingEditView} from './routes/commentRatings/commentRatingEditView'
 import {CommentEditView} from './routes/comments/commentEditView'
 import {CommentList} from './routes/comments/commentList'
@@ -267,6 +268,16 @@ export function App() {
             />
             <Route path="pages/create" element={<PageEditor />} />
             <Route path="pages/edit/:id" element={<PageEditor />} />
+            {/* BlockStyle Routes */}
+            <Route
+              path="block-content/styles"
+              element={
+                <Base>
+                  <BlockStyleList />
+                </Base>
+              }
+            />
+
             {/* Poll Routes */}
             <Route
               path="polls"

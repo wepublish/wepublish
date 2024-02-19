@@ -1,6 +1,8 @@
 import {ApiV1, BuilderTeaserProps, Teaser} from '@wepublish/website'
 
 import {Archive} from '../../bajour/archive'
+import {BaselBriefing} from '../../bajour/basel-briefing'
+import {isBriefing} from '../../bajour/is-briefing'
 import {ColTeaser} from './col-teaser'
 import {ColTeaserLight} from './col-teaser-light'
 import {ColTeaserText} from './col-teaser-text'
@@ -14,6 +16,10 @@ export const BajourTeaser = (props: BuilderTeaserProps) => {
     props.teaser.style === ApiV1.TeaserStyle.Light
   ) {
     return <Archive {...props} />
+  }
+
+  if (isBriefing(props.teaser)) {
+    return <BaselBriefing {...props} />
   }
 
   if (!props.numColumns) {

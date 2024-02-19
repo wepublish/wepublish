@@ -294,7 +294,8 @@
         "title": "Titre"
       },
       "listicle": {
-        "title": "Titre"
+        "title": "Titre",
+        "label": "Listicle"
       },
       "poll": {
         "edit": "Edit poll block",

@@ -43,7 +43,9 @@ const ButtonToolbar = styled(RButtonToolbar)`
   position: absolute;
 `
 
-const Panel = styled(RPanel)<{showGrabCursor: boolean}>`
+const Panel = styled(RPanel, {
+  shouldForwardProp: prop => prop !== 'showGrabCursor'
+})<{showGrabCursor: boolean}>`
   display: grid;
   cursor: ${({showGrabCursor}) => showGrabCursor && 'grab'};
   height: inherit;
@@ -91,6 +93,8 @@ export function TeaserGridFlexBlock({value, onChange}: BlockProps<TeaserGridFlex
   const [isDragging, setIsDragging] = useState(false)
 
   const {flexTeasers} = value
+
+  console.log(flexTeasers)
 
   const {t} = useTranslation()
 
@@ -198,7 +202,7 @@ export function TeaserGridFlexBlock({value, onChange}: BlockProps<TeaserGridFlex
         cols={12}
         rowHeight={30}
         layout={flexTeasers.map(ft => ft.alignment)}
-        width={800}>
+        width={640}>
         {flexTeasers.map(flexTeaser => (
           <div key={flexTeaser.alignment.i}>
             <FlexTeaserBlock
@@ -214,6 +218,7 @@ export function TeaserGridFlexBlock({value, onChange}: BlockProps<TeaserGridFlex
               }}
               onRemove={() => handleRemoveTeaser(flexTeaser.alignment.i)}
             />
+
             <ButtonToolbar>
               {!flexTeaser.teaser && (
                 <IconButtonTooltip caption={t('blocks.flexTeaser.removeBlock')}>
@@ -226,6 +231,7 @@ export function TeaserGridFlexBlock({value, onChange}: BlockProps<TeaserGridFlex
                   />
                 </IconButtonTooltip>
               )}
+
               <IconButtonTooltip
                 caption={
                   !flexTeaser.alignment.static

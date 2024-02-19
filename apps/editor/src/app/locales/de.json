@@ -288,7 +288,8 @@
         "title": "Titel"
       },
       "listicle": {
-        "title": "Titel"
+        "title": "Titel",
+        "label": "Listicle"
       },
       "poll": {
         "edit": "Bearbeiten",
@@ -715,6 +716,7 @@
       "authors": "Autor*innen",
       "blocks": {
         "polls": "Umfrage",
+        "blockStyles": "Block Styling",
         "topMenu": "Inhalts-Blöcke"
       },
       "commentRating": "Bewertungssystem",

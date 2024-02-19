@@ -156,7 +156,7 @@ export function MemberPlanForm({
                     }
                     setMemberPlan({
                       ...memberPlan,
-                      description: (newDescription as RichTextBlockValue) || []
+                      description: (newDescription as RichTextBlockValue['richText']) || []
                     })
                   }}
                 />
