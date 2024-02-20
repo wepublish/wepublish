@@ -10,6 +10,7 @@ import {
   MailChimpProvider
 } from '../context/MailChimpContext'
 import mailchimp from '../services/mailchimp'
+import TestStats from './test-stats'
 
 async function fetchMailChimpCampaigns(
   apiKey: string,
@@ -57,7 +58,9 @@ const Homepage = styled(PageContainer)`
 const Index: React.FC<{mcCampaigns: MailChimpCampaign[]}> = ({mcCampaigns}) => {
   return (
     <MailChimpProvider campaigns={mcCampaigns}>
-      <Homepage slug={'home'} />
+      <Homepage slug={'home'}>
+        <TestStats />
+      </Homepage>
     </MailChimpProvider>
   )
 }

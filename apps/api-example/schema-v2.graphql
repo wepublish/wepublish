@@ -435,9 +435,9 @@ enum SortOrder {
 }
 
 type Stats {
-  articlesCount: Float!
-  authorsCount: Float!
-  earliestArticle: DateTime!
+  articlesCount: Int!
+  authorsCount: Int!
+  earliestArticle: DateTime
 }
 
 enum SubscriptionDeactivationReason {

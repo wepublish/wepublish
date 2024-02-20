@@ -1,13 +1,13 @@
-import {Field, ObjectType} from '@nestjs/graphql'
+import {Field, ObjectType, Int} from '@nestjs/graphql'
 
 @ObjectType()
 export class Stats {
-  @Field()
+  @Field(type => Int)
   authorsCount!: number
 
-  @Field()
+  @Field(type => Int)
   articlesCount!: number
 
-  @Field()
-  earliestArticle!: Date
+  @Field({nullable: true})
+  earliestArticle?: Date
 }
