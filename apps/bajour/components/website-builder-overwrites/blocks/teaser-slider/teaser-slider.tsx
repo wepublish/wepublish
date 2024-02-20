@@ -4,6 +4,7 @@ import {css, styled, useMediaQuery, useTheme} from '@mui/material'
 import {
   ApiV1,
   BuilderTeaserGridBlockProps,
+  hasBlockStyle,
   isFilledTeaser,
   isTeaserGridBlock
 } from '@wepublish/website'
@@ -13,10 +14,8 @@ import {useState} from 'react'
 
 import {TeaserSlide} from './teaser-slide'
 
-const hasStyle = (blockStyle: string) => (block: ApiV1.Block) => block.blockStyle === blockStyle
-
 export const isTeaserSlider = (block: ApiV1.Block): block is ApiV1.TeaserGridBlock =>
-  allPass([hasStyle('Slider'), isTeaserGridBlock])(block)
+  allPass([hasBlockStyle('Slider'), isTeaserGridBlock])(block)
 
 export const SliderContainer = styled('div')`
   display: grid;

@@ -951,21 +951,30 @@ https://unsplash.it/200/100 200w"
       data-theme="dark"
     >
       <div
-        class="react-tweet-theme root"
+        class="react-tweet-theme root root"
       >
         <article
           class="article"
         >
+          <span
+            class="skeleton"
+            style="height: 3rem; margin-bottom: 0.75rem;"
+          />
+          <span
+            class="skeleton"
+            style="height: 6rem; margin: 0.5rem 0px;"
+          />
           <div
-            class="root"
-          >
-            <h3>
-              Tweet not found
-            </h3>
-            <p>
-              The embedded tweet could not be found…
-            </p>
-          </div>
+            style="margin: 0.5rem 0px;"
+          />
+          <span
+            class="skeleton"
+            style="height: 2rem;"
+          />
+          <span
+            class="skeleton"
+            style="height: 2rem; border-radius: 9999px; margin-top: 0.5rem;"
+          />
         </article>
       </div>
     </div>
@@ -2897,21 +2906,30 @@ https://unsplash.it/200/100 200w"
       data-theme="dark"
     >
       <div
-        class="react-tweet-theme root"
+        class="react-tweet-theme root root"
       >
         <article
           class="article"
         >
+          <span
+            class="skeleton"
+            style="height: 3rem; margin-bottom: 0.75rem;"
+          />
+          <span
+            class="skeleton"
+            style="height: 6rem; margin: 0.5rem 0px;"
+          />
           <div
-            class="root"
-          >
-            <h3>
-              Tweet not found
-            </h3>
-            <p>
-              The embedded tweet could not be found…
-            </p>
-          </div>
+            style="margin: 0.5rem 0px;"
+          />
+          <span
+            class="skeleton"
+            style="height: 2rem;"
+          />
+          <span
+            class="skeleton"
+            style="height: 2rem; border-radius: 9999px; margin-top: 0.5rem;"
+          />
         </article>
       </div>
     </div>
@@ -4843,21 +4861,30 @@ https://unsplash.it/200/100 200w"
       data-theme="dark"
     >
       <div
-        class="react-tweet-theme root"
+        class="react-tweet-theme root root"
       >
         <article
           class="article"
         >
+          <span
+            class="skeleton"
+            style="height: 3rem; margin-bottom: 0.75rem;"
+          />
+          <span
+            class="skeleton"
+            style="height: 6rem; margin: 0.5rem 0px;"
+          />
           <div
-            class="root"
-          >
-            <h3>
-              Tweet not found
-            </h3>
-            <p>
-              The embedded tweet could not be found…
-            </p>
-          </div>
+            style="margin: 0.5rem 0px;"
+          />
+          <span
+            class="skeleton"
+            style="height: 2rem;"
+          />
+          <span
+            class="skeleton"
+            style="height: 2rem; border-radius: 9999px; margin-top: 0.5rem;"
+          />
         </article>
       </div>
     </div>
@@ -6792,21 +6819,30 @@ https://unsplash.it/200/100 200w"
       data-theme="dark"
     >
       <div
-        class="react-tweet-theme root"
+        class="react-tweet-theme root root"
       >
         <article
           class="article"
         >
+          <span
+            class="skeleton"
+            style="height: 3rem; margin-bottom: 0.75rem;"
+          />
+          <span
+            class="skeleton"
+            style="height: 6rem; margin: 0.5rem 0px;"
+          />
           <div
-            class="root"
-          >
-            <h3>
-              Tweet not found
-            </h3>
-            <p>
-              The embedded tweet could not be found…
-            </p>
-          </div>
+            style="margin: 0.5rem 0px;"
+          />
+          <span
+            class="skeleton"
+            style="height: 2rem;"
+          />
+          <span
+            class="skeleton"
+            style="height: 2rem; border-radius: 9999px; margin-top: 0.5rem;"
+          />
         </article>
       </div>
     </div>
@@ -8744,14 +8780,323 @@ https://unsplash.it/200/100 200w"
           class="article"
         >
           <div
+            class="header"
+          >
+            <a
+              class="avatar"
+              href="https://twitter.com/WePublish_media/status/1600079498845863937"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <div
+                class="avatarOverflow"
+              >
+                <img
+                  alt="We.Publish"
+                  height="48"
+                  src="https://pbs.twimg.com/profile_images/889419093849378818/fDDrqoAT_normal.jpg"
+                  width="48"
+                />
+              </div>
+              <div
+                class="avatarOverflow"
+              >
+                <div
+                  class="avatarShadow"
+                />
+              </div>
+            </a>
+            <div
+              class="author"
+            >
+              <a
+                class="authorLink"
+                href="https://twitter.com/WePublish_media/status/1600079498845863937"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                <div
+                  class="authorLinkText"
+                >
+                  <span
+                    title="We.Publish"
+                  >
+                    We.Publish
+                  </span>
+                </div>
+              </a>
+              <div
+                class="authorMeta"
+              >
+                <a
+                  class="username"
+                  href="https://twitter.com/WePublish_media/status/1600079498845863937"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  <span
+                    title="@WePublish_media"
+                  >
+                    @WePublish_media
+                  </span>
+                </a>
+                <div
+                  class="authorFollow"
+                >
+                  <span
+                    class="separator"
+                  >
+                    ·
+                  </span>
+                  <a
+                    class="follow"
+                    href="https://twitter.com/intent/follow?screen_name=WePublish_media"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    Follow
+                  </a>
+                </div>
+              </div>
+            </div>
+            <a
+              aria-label="View on Twitter"
+              class="brand"
+              href="https://twitter.com/WePublish_media/status/1600079498845863937"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <svg
+                aria-hidden="true"
+                class="twitterIcon"
+                viewBox="0 0 24 24"
+              >
+                <g>
+                  <path
+                    d="M23.643 4.937c-.835.37-1.732.62-2.675.733.962-.576 1.7-1.49 2.048-2.578-.9.534-1.897.922-2.958 1.13-.85-.904-2.06-1.47-3.4-1.47-2.572 0-4.658 2.086-4.658 4.66 0 .364.042.718.12 1.06-3.873-.195-7.304-2.05-9.602-4.868-.4.69-.63 1.49-.63 2.342 0 1.616.823 3.043 2.072 3.878-.764-.025-1.482-.234-2.11-.583v.06c0 2.257 1.605 4.14 3.737 4.568-.392.106-.803.162-1.227.162-.3 0-.593-.028-.877-.082.593 1.85 2.313 3.198 4.352 3.234-1.595 1.25-3.604 1.995-5.786 1.995-.376 0-.747-.022-1.112-.065 2.062 1.323 4.51 2.093 7.14 2.093 8.57 0 13.255-7.098 13.255-13.254 0-.2-.005-.402-.014-.602.91-.658 1.7-1.477 2.323-2.41z"
+                  />
+                </g>
+              </svg>
+            </a>
+          </div>
+          <p
             class="root"
           >
-            <h3>
-              Tweet not found
-            </h3>
-            <p>
-              The embedded tweet could not be found…
-            </p>
+            <span>
+              Das war der zweite Rethink Journalism Hackathon - es war uns ein Fest! Unser herzlicher Dank geht an alle Teilnehmenden, Unterstützer:innen und Partner:innen. 
+            </span>
+            <a
+              class="root"
+              href="https://twitter.com/hashtag/rejoha22"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              #rejoha22
+            </a>
+            <span>
+               
+            </span>
+            <a
+              class="root"
+              href="https://twitter.com/OpendataCH"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              @OpendataCH
+            </a>
+            <span>
+               
+            </span>
+            <a
+              class="root"
+              href="https://twitter.com/hauptstadt_be"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              @hauptstadt_be
+            </a>
+            <span>
+               
+            </span>
+            <a
+              class="root"
+              href="https://twitter.com/Tsueri_ch"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              @Tsueri_ch
+            </a>
+            <span>
+               
+            </span>
+            <a
+              class="root"
+              href="https://twitter.com/BajourBasel"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              @BajourBasel
+            </a>
+            <span>
+                
+            </span>
+            <a
+              class="root"
+              href="https://youtu.be/1HLBuIuT_Uc"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              youtu.be/1HLBuIuT_Uc
+            </a>
+            <span>
+               via 
+            </span>
+            <a
+              class="root"
+              href="https://twitter.com/YouTube"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              @YouTube
+            </a>
+          </p>
+          <div
+            class="info"
+          >
+            <a
+              aria-label="10:47 AM · Dec 6, 2022"
+              class="root"
+              href="https://twitter.com/WePublish_media/status/1600079498845863937"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <time
+                datetime="2022-12-06T10:47:35.000Z"
+              >
+                10:47 AM · Dec 6, 2022
+              </time>
+            </a>
+            <a
+              aria-label="Twitter for Websites, Ads Information and Privacy"
+              class="infoLink"
+              href="https://help.twitter.com/en/twitter-for-websites-ads-info-and-privacy"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <svg
+                aria-hidden="true"
+                class="infoIcon"
+                viewBox="0 0 24 24"
+              >
+                <g>
+                  <path
+                    d="M13.5 8.5c0 .83-.67 1.5-1.5 1.5s-1.5-.67-1.5-1.5S11.17 7 12 7s1.5.67 1.5 1.5zM13 17v-5h-2v5h2zm-1 5.25c5.66 0 10.25-4.59 10.25-10.25S17.66 1.75 12 1.75 1.75 6.34 1.75 12 6.34 22.25 12 22.25zM20.25 12c0 4.56-3.69 8.25-8.25 8.25S3.75 16.56 3.75 12 7.44 3.75 12 3.75s8.25 3.69 8.25 8.25z"
+                  />
+                </g>
+              </svg>
+            </a>
+          </div>
+          <div
+            class="actions"
+          >
+            <a
+              aria-label="Like. This Tweet has 10 likes"
+              class="like"
+              href="https://twitter.com/intent/like?tweet_id=1600079498845863937"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <div
+                class="likeIconWrapper"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="likeIcon"
+                  viewBox="0 0 24 24"
+                >
+                  <g>
+                    <path
+                      d="M20.884 13.19c-1.351 2.48-4.001 5.12-8.379 7.67l-.503.3-.504-.3c-4.379-2.55-7.029-5.19-8.382-7.67-1.36-2.5-1.41-4.86-.514-6.67.887-1.79 2.647-2.91 4.601-3.01 1.651-.09 3.368.56 4.798 2.01 1.429-1.45 3.146-2.1 4.796-2.01 1.954.1 3.714 1.22 4.601 3.01.896 1.81.846 4.17-.514 6.67z"
+                    />
+                  </g>
+                </svg>
+              </div>
+              <span
+                class="likeCount"
+              >
+                10
+              </span>
+            </a>
+            <a
+              aria-label="Reply to this Tweet on Twitter"
+              class="reply"
+              href="https://twitter.com/intent/tweet?in_reply_to=1600079498845863937"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <div
+                class="replyIconWrapper"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="replyIcon"
+                  viewBox="0 0 24 24"
+                >
+                  <g>
+                    <path
+                      d="M1.751 10c0-4.42 3.584-8 8.005-8h4.366c4.49 0 8.129 3.64 8.129 8.13 0 2.96-1.607 5.68-4.196 7.11l-8.054 4.46v-3.69h-.067c-4.49.1-8.183-3.51-8.183-8.01z"
+                    />
+                  </g>
+                </svg>
+              </div>
+              <span
+                class="replyText"
+              >
+                Reply
+              </span>
+            </a>
+            <button
+              aria-label="Copy link"
+              class="copy"
+              type="button"
+            >
+              <div
+                class="copyIconWrapper"
+              >
+                <svg
+                  aria-hidden="true"
+                  class="copyIcon"
+                  viewBox="0 0 24 24"
+                >
+                  <g>
+                    <path
+                      d="M18.36 5.64c-1.95-1.96-5.11-1.96-7.07 0L9.88 7.05 8.46 5.64l1.42-1.42c2.73-2.73 7.16-2.73 9.9 0 2.73 2.74 2.73 7.17 0 9.9l-1.42 1.42-1.41-1.42 1.41-1.41c1.96-1.96 1.96-5.12 0-7.07zm-2.12 3.53l-7.07 7.07-1.41-1.41 7.07-7.07 1.41 1.41zm-12.02.71l1.42-1.42 1.41 1.42-1.41 1.41c-1.96 1.96-1.96 5.12 0 7.07 1.95 1.96 5.11 1.96 7.07 0l1.41-1.41 1.42 1.41-1.42 1.42c-2.73 2.73-7.16 2.73-9.9 0-2.73-2.74-2.73-7.17 0-9.9z"
+                    />
+                  </g>
+                </svg>
+              </div>
+              <span
+                class="copyText"
+              >
+                Copy link
+              </span>
+            </button>
+          </div>
+          <div
+            class="replies"
+          >
+            <a
+              class="link"
+              href="https://twitter.com/WePublish_media/status/1600079498845863937"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              <span
+                class="text"
+              >
+                Read more on Twitter
+              </span>
+            </a>
           </div>
         </article>
       </div>

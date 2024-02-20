@@ -9,7 +9,7 @@ exports[`Navbar should render Default 1`] = `
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl210 css-12qyr8e-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl210 css-6mkhdq-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
           class="css-kfwxas-NavbarMain ei6evl29"
@@ -61,7 +61,7 @@ exports[`Navbar should render WithChildren 1`] = `
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl210 css-12qyr8e-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl210 css-6mkhdq-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
           class="css-kfwxas-NavbarMain ei6evl29"
@@ -113,7 +113,7 @@ exports[`Navbar should render WithClassName 1`] = `
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl210 css-12qyr8e-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl210 css-6mkhdq-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
           class="css-kfwxas-NavbarMain ei6evl29"
@@ -165,7 +165,7 @@ exports[`Navbar should render WithEmotion 1`] = `
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl210 css-12qyr8e-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl210 css-6mkhdq-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
           class="css-kfwxas-NavbarMain ei6evl29"
@@ -217,7 +217,7 @@ exports[`Navbar should render WithError 1`] = `
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl210 css-12qyr8e-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl210 css-6mkhdq-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
           class="css-kfwxas-NavbarMain ei6evl29"
@@ -269,7 +269,7 @@ exports[`Navbar should render WithLoading 1`] = `
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl210 css-12qyr8e-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl210 css-6mkhdq-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
           class="css-kfwxas-NavbarMain ei6evl29"
@@ -321,7 +321,7 @@ exports[`Navbar should render WithoutItems 1`] = `
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl210 css-12qyr8e-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl210 css-6mkhdq-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
           class="css-kfwxas-NavbarMain ei6evl29"
