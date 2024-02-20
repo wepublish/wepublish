@@ -1,7 +1,0 @@
-# query Stats {
-#   stats {
-#     articlesCount
-#     authorsCount
-#     earliestArticle
-#   }
-# }
