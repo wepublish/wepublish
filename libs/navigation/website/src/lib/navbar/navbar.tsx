@@ -27,9 +27,11 @@ export const NavbarInnerWrapper = styled(Toolbar)`
   grid-auto-flow: column;
   justify-content: space-between;
   justify-items: center;
+  min-height: unset;
 
   ${({theme}) => css`
     ${theme.breakpoints.up('md')} {
+      min-height: unset;
       padding-left: 0;
       grid-auto-columns: 1fr;
     }
