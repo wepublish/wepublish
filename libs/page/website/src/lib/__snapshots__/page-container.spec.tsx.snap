@@ -951,21 +951,30 @@ https://unsplash.it/200/100 200w"
       data-theme="dark"
     >
       <div
-        class="react-tweet-theme root"
+        class="react-tweet-theme root root"
       >
         <article
           class="article"
         >
+          <span
+            class="skeleton"
+            style="height: 3rem; margin-bottom: 0.75rem;"
+          />
+          <span
+            class="skeleton"
+            style="height: 6rem; margin: 0.5rem 0px;"
+          />
           <div
-            class="root"
-          >
-            <h3>
-              Tweet not found
-            </h3>
-            <p>
-              The embedded tweet could not be found…
-            </p>
-          </div>
+            style="margin: 0.5rem 0px;"
+          />
+          <span
+            class="skeleton"
+            style="height: 2rem;"
+          />
+          <span
+            class="skeleton"
+            style="height: 2rem; border-radius: 9999px; margin-top: 0.5rem;"
+          />
         </article>
       </div>
     </div>
@@ -2897,21 +2906,30 @@ https://unsplash.it/200/100 200w"
       data-theme="dark"
     >
       <div
-        class="react-tweet-theme root"
+        class="react-tweet-theme root root"
       >
         <article
           class="article"
         >
+          <span
+            class="skeleton"
+            style="height: 3rem; margin-bottom: 0.75rem;"
+          />
+          <span
+            class="skeleton"
+            style="height: 6rem; margin: 0.5rem 0px;"
+          />
           <div
-            class="root"
-          >
-            <h3>
-              Tweet not found
-            </h3>
-            <p>
-              The embedded tweet could not be found…
-            </p>
-          </div>
+            style="margin: 0.5rem 0px;"
+          />
+          <span
+            class="skeleton"
+            style="height: 2rem;"
+          />
+          <span
+            class="skeleton"
+            style="height: 2rem; border-radius: 9999px; margin-top: 0.5rem;"
+          />
         </article>
       </div>
     </div>
@@ -4843,21 +4861,30 @@ https://unsplash.it/200/100 200w"
       data-theme="dark"
     >
       <div
-        class="react-tweet-theme root"
+        class="react-tweet-theme root root"
       >
         <article
           class="article"
         >
+          <span
+            class="skeleton"
+            style="height: 3rem; margin-bottom: 0.75rem;"
+          />
+          <span
+            class="skeleton"
+            style="height: 6rem; margin: 0.5rem 0px;"
+          />
           <div
-            class="root"
-          >
-            <h3>
-              Tweet not found
-            </h3>
-            <p>
-              The embedded tweet could not be found…
-            </p>
-          </div>
+            style="margin: 0.5rem 0px;"
+          />
+          <span
+            class="skeleton"
+            style="height: 2rem;"
+          />
+          <span
+            class="skeleton"
+            style="height: 2rem; border-radius: 9999px; margin-top: 0.5rem;"
+          />
         </article>
       </div>
     </div>
@@ -6792,21 +6819,30 @@ https://unsplash.it/200/100 200w"
       data-theme="dark"
     >
       <div
-        class="react-tweet-theme root"
+        class="react-tweet-theme root root"
       >
         <article
           class="article"
         >
+          <span
+            class="skeleton"
+            style="height: 3rem; margin-bottom: 0.75rem;"
+          />
+          <span
+            class="skeleton"
+            style="height: 6rem; margin: 0.5rem 0px;"
+          />
           <div
-            class="root"
-          >
-            <h3>
-              Tweet not found
-            </h3>
-            <p>
-              The embedded tweet could not be found…
-            </p>
-          </div>
+            style="margin: 0.5rem 0px;"
+          />
+          <span
+            class="skeleton"
+            style="height: 2rem;"
+          />
+          <span
+            class="skeleton"
+            style="height: 2rem; border-radius: 9999px; margin-top: 0.5rem;"
+          />
         </article>
       </div>
     </div>
@@ -8738,21 +8774,30 @@ https://unsplash.it/200/100 200w"
       data-theme="dark"
     >
       <div
-        class="react-tweet-theme root"
+        class="react-tweet-theme root root"
       >
         <article
           class="article"
         >
+          <span
+            class="skeleton"
+            style="height: 3rem; margin-bottom: 0.75rem;"
+          />
+          <span
+            class="skeleton"
+            style="height: 6rem; margin: 0.5rem 0px;"
+          />
           <div
-            class="root"
-          >
-            <h3>
-              Tweet not found
-            </h3>
-            <p>
-              The embedded tweet could not be found…
-            </p>
-          </div>
+            style="margin: 0.5rem 0px;"
+          />
+          <span
+            class="skeleton"
+            style="height: 2rem;"
+          />
+          <span
+            class="skeleton"
+            style="height: 2rem; border-radius: 9999px; margin-top: 0.5rem;"
+          />
         </article>
       </div>
     </div>
