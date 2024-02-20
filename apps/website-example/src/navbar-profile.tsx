@@ -1,7 +1,5 @@
 import {ClickAwayListener, Menu, MenuItem, css, styled} from '@mui/material'
 import {useUser, useWebsiteBuilder} from '@wepublish/website'
-import {useStatsQuery, useV2ApiClient} from '@wepublish/website/api-v2'
-import getConfig from 'next/config'
 import {useState} from 'react'
 import {MdAccountCircle} from 'react-icons/md'
 
@@ -28,25 +26,6 @@ const avataStyles = css`
 `
 
 export const NavBarProfile = () => {
-  const {publicRuntimeConfig} = getConfig()
-  const client = useV2ApiClient(publicRuntimeConfig.env.API_URL!)
-  // const client = useMemo(() => useV2ApiClient(), [])
-  console.log('here')
-  const {loading, data} = useStatsQuery({
-    client,
-    variables: {},
-    onError: err => {
-      console.log('error', err)
-    }
-    // onCompleted: data => {
-    // console.log('data', data)
-    // if (data.consent) {
-    //   setConsent(mapApiDataToInput(data.consent))
-    // }
-    // }
-  })
-
-  console.log('data', data)
   const {
     elements: {Button, IconButton, Link, Image}
   } = useWebsiteBuilder()
