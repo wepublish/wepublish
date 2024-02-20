@@ -599,6 +599,8 @@ export type Query = {
    *
    */
   settingsList: Array<Setting>;
+  /** Returns a few basic, newsroom-related stats. */
+  stats: Stats;
   /** Returns all subscription flows */
   subscriptionFlows: Array<SubscriptionFlowModel>;
   /** Returns all mail flows */
@@ -775,6 +777,13 @@ export enum SortOrder {
   Ascending = 'Ascending',
   Descending = 'Descending'
 }
+
+export type Stats = {
+  __typename?: 'Stats';
+  articlesCount: Scalars['Float'];
+  authorsCount: Scalars['Float'];
+  earliestArticle: Scalars['DateTime'];
+};
 
 export enum SubscriptionDeactivationReason {
   InvoiceNotPaid = 'invoiceNotPaid',

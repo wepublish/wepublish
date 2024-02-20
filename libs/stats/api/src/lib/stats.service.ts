@@ -6,8 +6,8 @@ export class StatsService {
   constructor(private prisma: PrismaClient) {}
 
   async getStats() {
-    const authorsCount = this.prisma.author.count()
-    const articlesCount = this.prisma.article.count()
+    const authorsCount = await this.prisma.author.count()
+    const articlesCount = await this.prisma.article.count()
 
     const earliestArticle = await this.prisma.articleRevision.findFirst({
       where: {
@@ -24,11 +24,9 @@ export class StatsService {
     })
 
     return {
-      stats: {
-        authorsCount,
-        articlesCount,
-        earliestArticle
-      }
+      authorsCount,
+      articlesCount,
+      earliestArticle: earliestArticle?.publishedAt
     }
   }
 }

@@ -599,6 +599,8 @@ export type Query = {
    *
    */
   settingsList: Array<Setting>;
+  /** Returns a few basic, newsroom-related stats. */
+  stats: Stats;
   /** Returns all subscription flows */
   subscriptionFlows: Array<SubscriptionFlowModel>;
   /** Returns all mail flows */
@@ -776,6 +778,13 @@ export enum SortOrder {
   Descending = 'Descending'
 }
 
+export type Stats = {
+  __typename?: 'Stats';
+  articlesCount: Scalars['Float'];
+  authorsCount: Scalars['Float'];
+  earliestArticle: Scalars['DateTime'];
+};
+
 export enum SubscriptionDeactivationReason {
   InvoiceNotPaid = 'invoiceNotPaid',
   None = 'none',
@@ -865,6 +874,11 @@ export type RevenueQueryVariables = Exact<{
 
 export type RevenueQuery = { __typename?: 'Query', revenue: Array<{ __typename?: 'DashboardInvoice', amount: number, paidAt?: string | null, memberPlan?: string | null }> };
 
+export type StatsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type StatsQuery = { __typename?: 'Query', stats: { __typename?: 'Stats', articlesCount: number, authorsCount: number, earliestArticle: string } };
+
 export type VersionInformationQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -909,6 +923,42 @@ export function useRevenueLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Re
 export type RevenueQueryHookResult = ReturnType<typeof useRevenueQuery>;
 export type RevenueLazyQueryHookResult = ReturnType<typeof useRevenueLazyQuery>;
 export type RevenueQueryResult = Apollo.QueryResult<RevenueQuery, RevenueQueryVariables>;
+export const StatsDocument = gql`
+    query Stats {
+  stats {
+    articlesCount
+    authorsCount
+    earliestArticle
+  }
+}
+    `;
+
+/**
+ * __useStatsQuery__
+ *
+ * To run a query within a React component, call `useStatsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useStatsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useStatsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useStatsQuery(baseOptions?: Apollo.QueryHookOptions<StatsQuery, StatsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<StatsQuery, StatsQueryVariables>(StatsDocument, options);
+      }
+export function useStatsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<StatsQuery, StatsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<StatsQuery, StatsQueryVariables>(StatsDocument, options);
+        }
+export type StatsQueryHookResult = ReturnType<typeof useStatsQuery>;
+export type StatsLazyQueryHookResult = ReturnType<typeof useStatsLazyQuery>;
+export type StatsQueryResult = Apollo.QueryResult<StatsQuery, StatsQueryVariables>;
 export const VersionInformationDocument = gql`
     query VersionInformation {
   versionInformation {

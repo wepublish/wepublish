@@ -1,11 +1,7 @@
-# fragment FullStat on Setting {
-#   id
-#   name
-#   value
+# query Stats {
+#   stats {
+#     articlesCount
+#     authorsCount
+#     earliestArticle
+#   }
 # }
-
-query StatsList {
-  stats {
-    ...Stats
-  }
-}

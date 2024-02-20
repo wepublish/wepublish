@@ -367,6 +367,9 @@ type Query {
   "\n      Returns all settings.\n    "
   settingsList(filter: SettingFilter): [Setting!]!
 
+  """Returns a few basic, newsroom-related stats."""
+  stats: Stats!
+
   """Returns all subscription flows"""
   subscriptionFlows(defaultFlowOnly: Boolean!, memberPlanId: String): [SubscriptionFlowModel!]!
 
@@ -429,6 +432,12 @@ input SingleEventFilter {
 enum SortOrder {
   Ascending
   Descending
+}
+
+type Stats {
+  articlesCount: Float!
+  authorsCount: Float!
+  earliestArticle: DateTime!
 }
 
 enum SubscriptionDeactivationReason {
