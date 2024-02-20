@@ -48,7 +48,7 @@ services:
     depends_on:
       - api
   media:
-    image: ghcr.io/wepublish/karma-media-server:latest
+    image: seccomch/wep-media-light:latest
     ports:
       - '127.0.0.1:4100:4100'
       - '127.0.0.1:4101:4100'
