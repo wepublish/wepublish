@@ -10,9 +10,10 @@ import {SingleTeaser} from './single-teaser'
 import {TeaserOverwrite} from './teaser-overwrite'
 
 export const BajourTeaser = (props: BuilderTeaserProps) => {
-  if (isBriefing(props.teaser)) {
-    return <BaselBriefing {...props} />
-  }
+  console.log('props', props)
+  // if (isBriefing(props)) {
+  //   return <BaselBriefing {...props} />
+  // }
 
   // ApiV1.TeaserStyle.Default will be changed to e.g. BestOfWePublish or Archive
   if (

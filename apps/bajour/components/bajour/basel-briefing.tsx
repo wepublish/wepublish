@@ -1,5 +1,5 @@
 import {Button, styled} from '@mui/material'
-import {ApiV1, BuilderTeaserProps, Image, TeaserWrapper} from '@wepublish/website'
+import {ApiV1, BuilderTeaserProps, Image, TeaserWrapper /*, ApiV2 */} from '@wepublish/website'
 
 import isWithinTimeslot from '../../utils/is-within-timeslot'
 import {NextWepublishLink} from '../should-be-website-builder/next-wepublish-link'
@@ -319,6 +319,21 @@ const BaselBriefing = ({alignment, teaser}: BaselBriefingProps) => {
       showUntil = prop.value
     }
   })
+
+  // const {loading, data} = ApiV2.useStatsQuery({
+  //   // client,
+  //   variables: {},
+  //   onError: err => {
+  //     console.log('error', err)
+  //   },
+  //   onCompleted: data => {
+  //     console.log('data', data)
+  //     // if (data.consent) {
+  //     //   setConsent(mapApiDataToInput(data.consent))
+  //     // }
+  //   }
+  // })
+  // console.log('data', data)
 
   if (!isWithinTimeslot(showFrom, showUntil)) {
     return null
