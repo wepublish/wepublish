@@ -730,6 +730,7 @@
       "authors": "Authors",
       "blocks": {
         "polls": "Polls",
+        "blockStyles": "Block Styling",
         "topMenu": "Content Blocks"
       },
       "commentRating": "Rating System",
@@ -1364,6 +1365,15 @@
       "subscriptionStartsAt": "Subscription starts at {{date}}",
       "subscriptionTitle": "{{memberPlanName}} / No. {{subscriptionId}}",
       "unexpectedErrorNoInvoice": "Unexpected error: invoice not available."
+    },
+    "blockStyles": {
+      "style": "Style",
+      "title": "Block Styles",
+      "createBlockStyle": "Create new style",
+      "placeholder": "Style name",
+      "areYouSure": "Are you sure?",
+      "areYouSureBody": "The style \"{{ blockStyle }}\" will be deleted permanently and can not be reversed.",
+      "areYouSureConfirmation": "Delete style"
     },
     "yes": "Yes"
   }

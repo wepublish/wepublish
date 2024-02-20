@@ -24,6 +24,7 @@
       "@wepublish/authentication/api": ["libs/authentication/api/src/index.ts"],
       "@wepublish/authentication/website": ["libs/authentication/website/src/index.ts"],
       "@wepublish/author/website": ["libs/author/website/src/index.ts"],
+      "@wepublish/block-content/api": ["libs/block-content/api/src/index.ts"],
       "@wepublish/block-content/website": ["libs/block-content/website/src/index.ts"],
       "@wepublish/comments/website": ["libs/comments/website/src/index.ts"],
       "@wepublish/consent/api": ["libs/consent/api/src/index.ts"],
@@ -66,7 +67,8 @@
       "@wepublish/website": ["libs/website/src/index.ts"],
       "@wepublish/website/api": ["libs/website/api/src/index.ts"],
       "@wepublish/website/api-v2": ["libs/website/api-v2/src/index.ts"],
-      "@wepublish/website/builder": ["libs/website/builder/src/index.ts"]
+      "@wepublish/website/builder": ["libs/website/builder/src/index.ts"],
+      "@wepublish/health": ["libs/health/api/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

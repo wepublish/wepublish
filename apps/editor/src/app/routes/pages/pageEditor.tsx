@@ -68,11 +68,15 @@ const Legend = styled.legend`
   margin: 0px auto;
 `
 
-const FieldSet = styled.fieldset<{stateColor: string}>`
+const FieldSet = styled('fieldset', {
+  shouldForwardProp: prop => prop !== 'stateColor'
+})<{stateColor: string}>`
   border-color: ${({stateColor}) => stateColor};
 `
 
-const Tag = styled(RTag)<{stateColor: string}>`
+const Tag = styled(RTag, {
+  shouldForwardProp: prop => prop !== 'stateColor'
+})<{stateColor: string}>`
   background-color: ${({stateColor}) => stateColor};
 `
 

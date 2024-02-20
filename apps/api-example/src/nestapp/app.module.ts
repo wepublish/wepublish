@@ -26,7 +26,8 @@ import {
   StripeCheckoutPaymentProvider,
   StripePaymentProvider,
   BexioPaymentProvider,
-  PayrexxFactory
+  PayrexxFactory,
+  HealthModule
 } from '@wepublish/api'
 import {ApiModule, PrismaModule, PrismaService} from '@wepublish/nest-modules'
 import bodyParser from 'body-parser'
@@ -36,6 +37,7 @@ import {URL} from 'url'
 import {SlackMailProvider} from '../app/slack-mail-provider'
 import {readConfig} from '../readConfig'
 import {EventModule} from '@wepublish/event/api'
+import {BlockStylesModule} from '@wepublish/block-content/api'
 
 @Global()
 @Module({
@@ -217,6 +219,7 @@ import {EventModule} from '@wepublish/event/api'
     ConsentModule,
     SettingModule,
     EventModule,
+    BlockStylesModule,
     EventsImportModule.registerAsync({
       useFactory: (agendaBasel: AgendaBaselService, kulturZueri: KulturZueriService) => [
         agendaBasel,
@@ -225,7 +228,8 @@ import {EventModule} from '@wepublish/event/api'
       inject: [AgendaBaselService, KulturZueriService]
     }),
     ScheduleModule.forRoot(),
-    ConfigModule.forRoot()
+    ConfigModule.forRoot(),
+    HealthModule
   ],
   exports: [MediaAdapterService],
   providers: [

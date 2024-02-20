@@ -163,7 +163,7 @@ export async function runServer({
         defaultReplyToAddress: config.mailProvider.replyToAddress || 'reply-to@wepublish.ch'
       },
       paymentProviders,
-      urlAdapter: urlAdapter,
+      urlAdapter,
       playground: config.general.apolloPlayground ? config.general.apolloPlayground : false,
       introspection: config.general.apolloIntrospection
         ? config.general.apolloIntrospection

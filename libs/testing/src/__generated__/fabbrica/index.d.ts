@@ -54,6 +54,7 @@ import type { SubscriptionFlow } from "@prisma/client";
 import type { SubscriptionInterval } from "@prisma/client";
 import type { MailTemplate } from "@prisma/client";
 import type { PeriodicJob } from "@prisma/client";
+import type { BlockStyle } from "@prisma/client";
 import type { CommentItemType } from "@prisma/client";
 import type { CommentRejectionReason } from "@prisma/client";
 import type { CommentState } from "@prisma/client";
@@ -67,6 +68,7 @@ import type { TagType } from "@prisma/client";
 import type { EventStatus } from "@prisma/client";
 import type { UserEvent } from "@prisma/client";
 import type { SubscriptionEvent } from "@prisma/client";
+import type { BlockType } from "@prisma/client";
 import { Prisma } from "@prisma/client";
 import { Resolver } from "@quramy/prisma-fabbrica/lib/internal";
 export { initialize, resetSequence, registerScalarFieldValueGenerator, resetScalarFieldValueGenerator } from "@quramy/prisma-fabbrica/lib/internal";
@@ -2627,3 +2629,39 @@ export interface PeriodicJobFactoryInterface<TOptions extends PeriodicJobFactory
  * @returns factory {@link PeriodicJobFactoryInterface}
  */
 export declare function definePeriodicJobFactory<TOptions extends PeriodicJobFactoryDefineOptions>(options?: TOptions): PeriodicJobFactoryInterface<TOptions>;
+type BlockStyleFactoryDefineInput = {
+    id?: string;
+    createdAt?: Date;
+    modifiedAt?: Date;
+    name?: string;
+    blocks?: Prisma.BlockStyleCreateblocksInput | Prisma.Enumerable<BlockType>;
+};
+type BlockStyleFactoryDefineOptions = {
+    defaultData?: Resolver<BlockStyleFactoryDefineInput, BuildDataOptions>;
+    traits?: {
+        [traitName: string | symbol]: {
+            data: Resolver<Partial<BlockStyleFactoryDefineInput>, BuildDataOptions>;
+        };
+    };
+};
+type BlockStyleTraitKeys<TOptions extends BlockStyleFactoryDefineOptions> = keyof TOptions["traits"];
+export interface BlockStyleFactoryInterfaceWithoutTraits {
+    readonly _factoryFor: "BlockStyle";
+    build(inputData?: Partial<Prisma.BlockStyleCreateInput>): PromiseLike<Prisma.BlockStyleCreateInput>;
+    buildCreateInput(inputData?: Partial<Prisma.BlockStyleCreateInput>): PromiseLike<Prisma.BlockStyleCreateInput>;
+    buildList(inputData: number | readonly Partial<Prisma.BlockStyleCreateInput>[]): PromiseLike<Prisma.BlockStyleCreateInput[]>;
+    pickForConnect(inputData: BlockStyle): Pick<BlockStyle, "id">;
+    create(inputData?: Partial<Prisma.BlockStyleCreateInput>): PromiseLike<BlockStyle>;
+    createList(inputData: number | readonly Partial<Prisma.BlockStyleCreateInput>[]): PromiseLike<BlockStyle[]>;
+    createForConnect(inputData?: Partial<Prisma.BlockStyleCreateInput>): PromiseLike<Pick<BlockStyle, "id">>;
+}
+export interface BlockStyleFactoryInterface<TOptions extends BlockStyleFactoryDefineOptions = BlockStyleFactoryDefineOptions> extends BlockStyleFactoryInterfaceWithoutTraits {
+    use(name: BlockStyleTraitKeys<TOptions>, ...names: readonly BlockStyleTraitKeys<TOptions>[]): BlockStyleFactoryInterfaceWithoutTraits;
+}
+/**
+ * Define factory for {@link BlockStyle} model.
+ *
+ * @param options
+ * @returns factory {@link BlockStyleFactoryInterface}
+ */
+export declare function defineBlockStyleFactory<TOptions extends BlockStyleFactoryDefineOptions>(options?: TOptions): BlockStyleFactoryInterface<TOptions>;

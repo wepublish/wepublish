@@ -28,6 +28,33 @@ export type AllowedSettingVals = {
   stringChoice?: Maybe<Array<Scalars['String']>>;
 };
 
+export type BlockStyle = {
+  __typename?: 'BlockStyle';
+  blocks: Array<BlockType>;
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+};
+
+export enum BlockType {
+  Comment = 'Comment',
+  Embed = 'Embed',
+  Event = 'Event',
+  Html = 'HTML',
+  Image = 'Image',
+  ImageGallery = 'ImageGallery',
+  LinkPageBreak = 'LinkPageBreak',
+  Listicle = 'Listicle',
+  Poll = 'Poll',
+  Quote = 'Quote',
+  RichText = 'RichText',
+  TeaserGrid1 = 'TeaserGrid1',
+  TeaserGrid6 = 'TeaserGrid6',
+  TeaserGridFlex = 'TeaserGridFlex',
+  Title = 'Title'
+}
+
 export type Consent = {
   __typename?: 'Consent';
   createdAt: Scalars['DateTime'];
@@ -199,6 +226,8 @@ export type MemberPlanRef = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  /** Creates a new block style. */
+  createBlockStyle: BlockStyle;
   /**
    *
    *       Create a new consent.
@@ -218,6 +247,8 @@ export type Mutation = {
    *
    */
   createUserConsent: UserConsent;
+  /** Deletes an existing block style. */
+  deleteBlockStyle: BlockStyle;
   /**
    *
    *       Deletes an existing consent.
@@ -247,6 +278,8 @@ export type Mutation = {
   syncTemplates?: Maybe<Scalars['Boolean']>;
   /** Sends a test email for the given event */
   testSystemMail: Scalars['Boolean'];
+  /** Updates an existing block style. */
+  updateBlockStyle: BlockStyle;
   /**
    *
    *       Updates an existing consent.
@@ -270,6 +303,12 @@ export type Mutation = {
    *
    */
   updateUserConsent: UserConsent;
+};
+
+
+export type MutationCreateBlockStyleArgs = {
+  blocks: Array<BlockType>;
+  name: Scalars['String'];
 };
 
 
@@ -314,6 +353,11 @@ export type MutationCreateUserConsentArgs = {
 };
 
 
+export type MutationDeleteBlockStyleArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationDeleteConsentArgs = {
   id: Scalars['String'];
 };
@@ -347,6 +391,13 @@ export type MutationImportEventArgs = {
 
 export type MutationTestSystemMailArgs = {
   event: UserEvent;
+};
+
+
+export type MutationUpdateBlockStyleArgs = {
+  blocks?: InputMaybe<Array<BlockType>>;
+  id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -452,6 +503,8 @@ export type Query = {
    *
    */
   activeSubscribers: Array<DashboardSubscription>;
+  /** Returns a list of block styles. */
+  blockStyles: Array<BlockStyle>;
   /**
    *
    *       Returns a consent by id.
@@ -804,6 +857,37 @@ export type VersionInformation = {
   version: Scalars['String'];
 };
 
+export type FullBlockStyleFragment = { __typename?: 'BlockStyle', id: string, createdAt: string, modifiedAt: string, name: string, blocks: Array<BlockType> };
+
+export type BlockStylesQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type BlockStylesQuery = { __typename?: 'Query', blockStyles: Array<{ __typename?: 'BlockStyle', id: string, createdAt: string, modifiedAt: string, name: string, blocks: Array<BlockType> }> };
+
+export type CreateBlockStyleMutationVariables = Exact<{
+  name: Scalars['String'];
+  blocks: Array<BlockType> | BlockType;
+}>;
+
+
+export type CreateBlockStyleMutation = { __typename?: 'Mutation', createBlockStyle: { __typename?: 'BlockStyle', id: string, createdAt: string, modifiedAt: string, name: string, blocks: Array<BlockType> } };
+
+export type UpdateBlockStyleMutationVariables = Exact<{
+  id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
+  blocks: Array<BlockType> | BlockType;
+}>;
+
+
+export type UpdateBlockStyleMutation = { __typename?: 'Mutation', updateBlockStyle: { __typename?: 'BlockStyle', id: string, createdAt: string, modifiedAt: string, name: string, blocks: Array<BlockType> } };
+
+export type DeleteBlockStyleMutationVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type DeleteBlockStyleMutation = { __typename?: 'Mutation', deleteBlockStyle: { __typename?: 'BlockStyle', id: string, createdAt: string, modifiedAt: string, name: string, blocks: Array<BlockType> } };
+
 export type FullConsentFragment = { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string };
 
 export type FullUserConsentFragment = { __typename?: 'UserConsent', id: string, value: boolean, createdAt: string, modifiedAt: string, consent: { __typename?: 'Consent', id: string, name: string, slug: string, defaultValue: boolean, createdAt: string, modifiedAt: string }, user: { __typename?: 'User', id: string, name: string, firstName?: string | null, email: string } };
@@ -1060,6 +1144,15 @@ export type VersionInformationQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type VersionInformationQuery = { __typename?: 'Query', versionInformation: { __typename?: 'VersionInformation', version: string } };
 
+export const FullBlockStyleFragmentDoc = gql`
+    fragment FullBlockStyle on BlockStyle {
+  id
+  createdAt
+  modifiedAt
+  name
+  blocks
+}
+    `;
 export const FullConsentFragmentDoc = gql`
     fragment FullConsent on Consent {
   id
@@ -1186,6 +1279,142 @@ export const SystemMailFragmentDoc = gql`
   }
 }
     ${MailTemplateRefFragmentDoc}`;
+export const BlockStylesDocument = gql`
+    query BlockStyles {
+  blockStyles {
+    ...FullBlockStyle
+  }
+}
+    ${FullBlockStyleFragmentDoc}`;
+
+/**
+ * __useBlockStylesQuery__
+ *
+ * To run a query within a React component, call `useBlockStylesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useBlockStylesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useBlockStylesQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useBlockStylesQuery(baseOptions?: Apollo.QueryHookOptions<BlockStylesQuery, BlockStylesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<BlockStylesQuery, BlockStylesQueryVariables>(BlockStylesDocument, options);
+      }
+export function useBlockStylesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<BlockStylesQuery, BlockStylesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<BlockStylesQuery, BlockStylesQueryVariables>(BlockStylesDocument, options);
+        }
+export type BlockStylesQueryHookResult = ReturnType<typeof useBlockStylesQuery>;
+export type BlockStylesLazyQueryHookResult = ReturnType<typeof useBlockStylesLazyQuery>;
+export type BlockStylesQueryResult = Apollo.QueryResult<BlockStylesQuery, BlockStylesQueryVariables>;
+export const CreateBlockStyleDocument = gql`
+    mutation CreateBlockStyle($name: String!, $blocks: [BlockType!]!) {
+  createBlockStyle(name: $name, blocks: $blocks) {
+    ...FullBlockStyle
+  }
+}
+    ${FullBlockStyleFragmentDoc}`;
+export type CreateBlockStyleMutationFn = Apollo.MutationFunction<CreateBlockStyleMutation, CreateBlockStyleMutationVariables>;
+
+/**
+ * __useCreateBlockStyleMutation__
+ *
+ * To run a mutation, you first call `useCreateBlockStyleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateBlockStyleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createBlockStyleMutation, { data, loading, error }] = useCreateBlockStyleMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *      blocks: // value for 'blocks'
+ *   },
+ * });
+ */
+export function useCreateBlockStyleMutation(baseOptions?: Apollo.MutationHookOptions<CreateBlockStyleMutation, CreateBlockStyleMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateBlockStyleMutation, CreateBlockStyleMutationVariables>(CreateBlockStyleDocument, options);
+      }
+export type CreateBlockStyleMutationHookResult = ReturnType<typeof useCreateBlockStyleMutation>;
+export type CreateBlockStyleMutationResult = Apollo.MutationResult<CreateBlockStyleMutation>;
+export type CreateBlockStyleMutationOptions = Apollo.BaseMutationOptions<CreateBlockStyleMutation, CreateBlockStyleMutationVariables>;
+export const UpdateBlockStyleDocument = gql`
+    mutation UpdateBlockStyle($id: String!, $name: String, $blocks: [BlockType!]!) {
+  updateBlockStyle(id: $id, name: $name, blocks: $blocks) {
+    ...FullBlockStyle
+  }
+}
+    ${FullBlockStyleFragmentDoc}`;
+export type UpdateBlockStyleMutationFn = Apollo.MutationFunction<UpdateBlockStyleMutation, UpdateBlockStyleMutationVariables>;
+
+/**
+ * __useUpdateBlockStyleMutation__
+ *
+ * To run a mutation, you first call `useUpdateBlockStyleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateBlockStyleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateBlockStyleMutation, { data, loading, error }] = useUpdateBlockStyleMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      name: // value for 'name'
+ *      blocks: // value for 'blocks'
+ *   },
+ * });
+ */
+export function useUpdateBlockStyleMutation(baseOptions?: Apollo.MutationHookOptions<UpdateBlockStyleMutation, UpdateBlockStyleMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateBlockStyleMutation, UpdateBlockStyleMutationVariables>(UpdateBlockStyleDocument, options);
+      }
+export type UpdateBlockStyleMutationHookResult = ReturnType<typeof useUpdateBlockStyleMutation>;
+export type UpdateBlockStyleMutationResult = Apollo.MutationResult<UpdateBlockStyleMutation>;
+export type UpdateBlockStyleMutationOptions = Apollo.BaseMutationOptions<UpdateBlockStyleMutation, UpdateBlockStyleMutationVariables>;
+export const DeleteBlockStyleDocument = gql`
+    mutation DeleteBlockStyle($id: String!) {
+  deleteBlockStyle(id: $id) {
+    ...FullBlockStyle
+  }
+}
+    ${FullBlockStyleFragmentDoc}`;
+export type DeleteBlockStyleMutationFn = Apollo.MutationFunction<DeleteBlockStyleMutation, DeleteBlockStyleMutationVariables>;
+
+/**
+ * __useDeleteBlockStyleMutation__
+ *
+ * To run a mutation, you first call `useDeleteBlockStyleMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteBlockStyleMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteBlockStyleMutation, { data, loading, error }] = useDeleteBlockStyleMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteBlockStyleMutation(baseOptions?: Apollo.MutationHookOptions<DeleteBlockStyleMutation, DeleteBlockStyleMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteBlockStyleMutation, DeleteBlockStyleMutationVariables>(DeleteBlockStyleDocument, options);
+      }
+export type DeleteBlockStyleMutationHookResult = ReturnType<typeof useDeleteBlockStyleMutation>;
+export type DeleteBlockStyleMutationResult = Apollo.MutationResult<DeleteBlockStyleMutation>;
+export type DeleteBlockStyleMutationOptions = Apollo.BaseMutationOptions<DeleteBlockStyleMutation, DeleteBlockStyleMutationVariables>;
 export const ConsentsDocument = gql`
     query Consents {
   consents {

@@ -155,7 +155,7 @@ model Author {
   articlesAsAuthor            ArticleRevisionAuthor[]
   articlesAsSocialMediaAuthor ArticleRevisionSocialMediaAuthor[]
 
-  tags  TaggedAuthors[]
+  tags TaggedAuthors[]
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -877,9 +877,9 @@ model Tag {
   type TagType
   tag  String?
 
-  comments  TaggedComments[]
-  events    TaggedEvents[]
-  authors   TaggedAuthors[]
+  comments TaggedComments[]
+  events   TaggedEvents[]
+  authors  TaggedAuthors[]
 
   @@unique([type, tag])
   @@map("tags")
@@ -1142,4 +1142,33 @@ model PeriodicJob {
   error                String?
 
   @@map("periodic_jobs")
+}
+
+enum BlockType {
+  RichText       @map("richText")
+  Title          @map("title")
+  Image          @map("image")
+  ImageGallery   @map("imageGallery")
+  Listicle       @map("listicle")
+  Quote          @map("quote")
+  Embed          @map("embed")
+  LinkPageBreak  @map("linkPageBreak")
+  TeaserGrid1    @map("teaserGrid1")
+  TeaserGrid6    @map("teaserGrid6")
+  TeaserGridFlex @map("teaserGridFlex")
+  HTML           @map("html")
+  Poll           @map("poll")
+  Comment        @map("comment")
+  Event          @map("event")
+}
+
+model BlockStyle {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  name   String      @unique
+  blocks BlockType[]
+
+  @@map("block-content.styles")
 }

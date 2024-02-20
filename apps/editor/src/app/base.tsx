@@ -34,6 +34,7 @@ import {
   MdSettings,
   MdSettingsInputAntenna,
   MdStar,
+  MdStyle,
   MdTranslate,
   MdVpnKey
 } from 'react-icons/md'
@@ -215,18 +216,47 @@ export function Base({children}: BaseProps) {
                 </PermissionControl>
 
                 <PermissionControl
-                  qualifyingPermissions={['CAN_GET_POLL', 'CAN_CREATE_POLL', 'CAN_DELETE_POLL']}>
+                  qualifyingPermissions={[
+                    'CAN_GET_POLL',
+                    'CAN_CREATE_POLL',
+                    'CAN_DELETE_POLL',
+                    'CAN_CREATE_BLOCK_STYLE',
+                    'CAN_UPDATE_BLOCK_STYLE',
+                    'CAN_DELETE_BLOCK_STYLE'
+                  ]}>
                   <Nav.Menu
-                    eventKey={'poll'}
+                    eventKey={'block-content'}
                     title={t('navbar.blocks.topMenu')}
                     icon={<MdOutlineGridView />}>
-                    <Nav.Item
-                      as={NavLink}
-                      href="/polls"
-                      active={path === 'polls'}
-                      icon={<MdQueryStats />}>
-                      {t('navbar.blocks.polls')}
-                    </Nav.Item>
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        'CAN_GET_POLL',
+                        'CAN_CREATE_POLL',
+                        'CAN_DELETE_POLL'
+                      ]}>
+                      <Nav.Item
+                        as={NavLink}
+                        href="/polls"
+                        active={path === 'polls'}
+                        icon={<MdQueryStats />}>
+                        {t('navbar.blocks.polls')}
+                      </Nav.Item>
+                    </PermissionControl>
+
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        'CAN_CREATE_BLOCK_STYLE',
+                        'CAN_UPDATE_BLOCK_STYLE',
+                        'CAN_DELETE_BLOCK_STYLE'
+                      ]}>
+                      <Nav.Item
+                        as={NavLink}
+                        href="/block-content/styles"
+                        active={path === 'block-content/styles'}
+                        icon={<MdStyle />}>
+                        {t('navbar.blocks.blockStyles')}
+                      </Nav.Item>
+                    </PermissionControl>
                   </Nav.Menu>
                 </PermissionControl>
 
