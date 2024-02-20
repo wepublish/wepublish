@@ -1,5 +1,4 @@
-import {ApiV1, BuilderTeaserProps, isTeaserGridBlock} from '@wepublish/website'
-
+import {ApiV1, isTeaserGridBlock} from '@wepublish/website'
 // import {BaselBriefingProps} from './basel-briefing'
 import {allPass} from 'ramda'
 

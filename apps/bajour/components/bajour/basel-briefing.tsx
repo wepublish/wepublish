@@ -9,13 +9,8 @@ import FasnachtBg from './fasnacht.jpg'
 import FcbBg from './fcb.jpg'
 import {BriefingType} from './is-briefing'
 
-type Property = {
-  key: string
-  value: string
-}
-
-type BaselBriefingProps = Omit<BuilderTeaserProps, 'teaser'> & {
-  teaser?: ApiV1.CustomTeaser
+export type BaselBriefingProps = BuilderTeaserProps & {
+  teaser?: ApiV1.CustomTeaser | null
 }
 
 const baselBg = {
@@ -311,10 +306,12 @@ export const Avatar = styled(Image)`
 const BaselBriefing = ({alignment, teaser}: BaselBriefingProps) => {
   let showFrom = undefined
   let showUntil = undefined
-  teaser?.properties.map((prop: Property) => {
+
+  teaser?.properties.forEach(prop => {
     if (prop.key === 'showFrom') {
       showFrom = prop.value
     }
+
     if (prop.key === 'showUntil') {
       showUntil = prop.value
     }
