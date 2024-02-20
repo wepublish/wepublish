@@ -101,7 +101,7 @@ export const EventForm = ({event, onChange, create}: EventFormProps) => {
               <Form.Control
                 name="description"
                 value={event.description || []}
-                onChange={(description: RichTextBlockValue) => onChange({description})}
+                onChange={(description: RichTextBlockValue['richText']) => onChange({description})}
                 accepter={RichTextBlock}
               />
             </Panel>

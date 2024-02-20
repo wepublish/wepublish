@@ -31,7 +31,7 @@ export const TeaserInnerWrapper = styled('div')`
   grid-auto-rows: max-content;
 `
 
-const teaserTitle = (teaser: TeaserType) => {
+export const selectTeaserTitle = (teaser: TeaserType) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
       const titleBlock = teaser.page?.blocks.find(isTitleBlock)
@@ -52,7 +52,7 @@ const teaserTitle = (teaser: TeaserType) => {
   }
 }
 
-const teaserPreTitle = (teaser: TeaserType) => {
+export const selectTeaserPreTitle = (teaser: TeaserType) => {
   switch (teaser.__typename) {
     case 'PeerArticleTeaser':
     case 'ArticleTeaser':
@@ -64,7 +64,7 @@ const teaserPreTitle = (teaser: TeaserType) => {
   }
 }
 
-const teaserLead = (teaser: TeaserType) => {
+export const selectTeaserLead = (teaser: TeaserType) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
       const titleBlock = teaser.page?.blocks.find(isTitleBlock)
@@ -85,7 +85,7 @@ const teaserLead = (teaser: TeaserType) => {
   }
 }
 
-const teaserUrl = (teaser: TeaserType) => {
+export const selectTeaserUrl = (teaser: TeaserType) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
       return teaser.page?.url
@@ -103,7 +103,7 @@ const teaserUrl = (teaser: TeaserType) => {
   }
 }
 
-const teaserImage = (teaser: TeaserType) => {
+export const selectTeaserImage = (teaser: TeaserType) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
       const imageBlock = teaser.page?.blocks.find(isImageBlock)
@@ -124,7 +124,7 @@ const teaserImage = (teaser: TeaserType) => {
   }
 }
 
-const teaserDate = (teaser: TeaserType) => {
+export const selectTeaserDate = (teaser: TeaserType) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
       return teaser.page?.publishedAt
@@ -143,7 +143,7 @@ const teaserDate = (teaser: TeaserType) => {
   }
 }
 
-const teaserAuthors = (teaser: TeaserType) => {
+export const selectTeaserAuthors = (teaser: TeaserType) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
       return null
@@ -169,7 +169,10 @@ const teaserLinkStyles = css`
   display: grid;
 `
 
-export const TeaserTitle = styled('header')``
+export const TeaserTitles = styled('header')``
+export const TeaserTitle = styled('h1')``
+export const TeaserPreTitle = styled('div')``
+export const TeaserLead = styled('p')``
 
 export const TeaserDate = styled('time')``
 
@@ -177,14 +180,16 @@ export const TeaserAuthors = styled('div')`
   margin-top: ${({theme}) => theme.spacing(2)};
 `
 
+export const TeaserContent = styled(TeaserInnerWrapper)``
+
 export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
-  const title = teaser && teaserTitle(teaser)
-  const preTitle = teaser && teaserPreTitle(teaser)
-  const lead = teaser && teaserLead(teaser)
-  const href = (teaser && teaserUrl(teaser)) ?? ''
-  const image = teaser && teaserImage(teaser)
-  const publishDate = teaser && teaserDate(teaser)
-  const authors = teaser && teaserAuthors(teaser)
+  const title = teaser && selectTeaserTitle(teaser)
+  const preTitle = teaser && selectTeaserPreTitle(teaser)
+  const lead = teaser && selectTeaserLead(teaser)
+  const href = (teaser && selectTeaserUrl(teaser)) ?? ''
+  const image = teaser && selectTeaserImage(teaser)
+  const publishDate = teaser && selectTeaserDate(teaser)
+  const authors = teaser && selectTeaserAuthors(teaser)
 
   const {
     date,
@@ -197,22 +202,22 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
         <TeaserInnerWrapper className={className}>
           {image && <Image image={image} css={teaserImageStyles} />}
 
-          {publishDate && (
-            <TeaserDate dateTime={publishDate}>
-              {date.format(new Date(publishDate), false)}
-            </TeaserDate>
-          )}
+          <TeaserContent>
+            {publishDate && (
+              <TeaserDate dateTime={publishDate}>
+                {date.format(new Date(publishDate), false)}
+              </TeaserDate>
+            )}
 
-          <TeaserTitle>
-            <H5 component="h1">
-              {preTitle && `${preTitle}: `}
-              {title}
-            </H5>
-          </TeaserTitle>
+            <TeaserTitles>
+              {preTitle && <H6 component={TeaserPreTitle}>{preTitle}</H6>}
+              <H5 component={TeaserTitle}>{title}</H5>
+            </TeaserTitles>
 
-          {teaser?.style !== TeaserStyle.Light && <H6 component="p">{lead}</H6>}
+            {teaser?.style !== TeaserStyle.Light && <H6 component={TeaserLead}>{lead}</H6>}
 
-          {!!authors?.length && <TeaserAuthors>{authors?.join(', ')}</TeaserAuthors>}
+            {!!authors?.length && <TeaserAuthors>{authors?.join(', ')}</TeaserAuthors>}
+          </TeaserContent>
         </TeaserInnerWrapper>
       </Link>
     </TeaserWrapper>

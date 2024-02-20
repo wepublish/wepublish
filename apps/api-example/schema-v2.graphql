@@ -7,6 +7,32 @@ type AllowedSettingVals {
   stringChoice: [String!]
 }
 
+type BlockStyle {
+  blocks: [BlockType!]!
+  createdAt: DateTime!
+  id: String!
+  modifiedAt: DateTime!
+  name: String!
+}
+
+enum BlockType {
+  Comment
+  Embed
+  Event
+  HTML
+  Image
+  ImageGallery
+  LinkPageBreak
+  Listicle
+  Poll
+  Quote
+  RichText
+  TeaserGrid1
+  TeaserGrid6
+  TeaserGridFlex
+  Title
+}
+
 type Consent {
   createdAt: DateTime!
   defaultValue: Boolean!
@@ -173,6 +199,9 @@ type MemberPlanRef {
 }
 
 type Mutation {
+  """Creates a new block style."""
+  createBlockStyle(blocks: [BlockType!]!, name: String!): BlockStyle!
+
   "\n      Create a new consent.\n    "
   createConsent(defaultValue: Boolean!, name: String!, slug: String!): Consent!
 
@@ -187,6 +216,9 @@ type Mutation {
 
   "\n      Creates a new userConsent based on input.\n      Returns created userConsent.\n    "
   createUserConsent(consentId: String!, userId: String!, value: Boolean!): UserConsent!
+
+  """Deletes an existing block style."""
+  deleteBlockStyle(id: String!): BlockStyle!
 
   "\n      Deletes an existing consent.\n    "
   deleteConsent(id: String!): Consent!
@@ -209,6 +241,9 @@ type Mutation {
 
   """Sends a test email for the given event"""
   testSystemMail(event: UserEvent!): Boolean!
+
+  """Updates an existing block style."""
+  updateBlockStyle(blocks: [BlockType!], id: String!, name: String): BlockStyle!
 
   "\n      Updates an existing consent.\n    "
   updateConsent(defaultValue: Boolean, id: String!, name: String, slug: String): Consent!
@@ -272,6 +307,9 @@ type PeriodicJob {
 type Query {
   "\n      Returns all active subscribers.\n      Includes subscribers with a cancelled but not run out subscription.\n    "
   activeSubscribers: [DashboardSubscription!]!
+
+  """Returns a list of block styles."""
+  blockStyles: [BlockStyle!]!
 
   "\n      Returns a consent by id.\n    "
   consent(id: String!): Consent!

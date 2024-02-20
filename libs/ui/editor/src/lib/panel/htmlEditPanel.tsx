@@ -45,7 +45,7 @@ export function HtmlEditPanel({value, onClose, onConfirm}: HtmlEditPanelProps) {
           rows={3}
           placeholder={t('blocks.html.placeholder')}
           value={htmlBlock.html}
-          onChange={input => setHtmlBlock({html: input})}
+          onChange={input => setHtmlBlock({...htmlBlock, html: input})}
         />
         <Warning>
           <span>{t('blocks.html.warning')}</span>

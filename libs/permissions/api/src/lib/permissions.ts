@@ -688,6 +688,27 @@ export const CanGetPeriodicJobLog: Permission = {
   deprecated: false
 }
 
+/**
+ * Block Styles
+ */
+export const CanCreateBlockStyle: Permission = {
+  id: 'CAN_CREATE_BLOCK_STYLE',
+  description: 'Allows to create a block style',
+  deprecated: false
+}
+
+export const CanUpdateBlockStyle: Permission = {
+  id: 'CAN_UPDATE_BLOCK_STYLE',
+  description: 'Allows to update a block style',
+  deprecated: false
+}
+
+export const CanDeleteBlockStyle: Permission = {
+  id: 'CAN_DELETE_BLOCK_STYLE',
+  description: 'Allows to delete a block style',
+  deprecated: false
+}
+
 export const AllPermissions: Permission[] = [
   CanTakeActionOnComment,
   CanCreateNavigation,
@@ -792,7 +813,10 @@ export const AllPermissions: Permission[] = [
   CanSyncMailTemplates,
   CanGetSystemMails,
   CanUpdateSystemMails,
-  CanCreateApprovedComment
+  CanCreateApprovedComment,
+  CanCreateBlockStyle,
+  CanUpdateBlockStyle,
+  CanDeleteBlockStyle
 ]
 
 export const EditorPermissions: Permission[] = [

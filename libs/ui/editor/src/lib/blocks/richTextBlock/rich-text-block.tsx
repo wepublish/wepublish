@@ -43,7 +43,7 @@ const Divider = styled(ToolbarDivider)`
   height: 1.8em;
 `
 
-export interface RichTextBlockProps extends BlockProps<RichTextBlockValue> {
+export interface RichTextBlockProps extends BlockProps<RichTextBlockValue['richText']> {
   displayOnly?: boolean
   showCharCount?: boolean
   displayOneLine?: boolean
@@ -205,6 +205,6 @@ export const RichTextBlock = memo(function RichTextBlock({
   )
 })
 
-export function createDefaultValue(): RichTextBlockValue {
+export function createDefaultValue(): RichTextBlockValue['richText'] {
   return WepublishEditor.createDefaultValue()
 }

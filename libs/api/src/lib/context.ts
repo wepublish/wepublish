@@ -55,6 +55,7 @@ import {FullPoll, getPoll} from './graphql/poll/poll.public-queries'
 import {Hooks} from './hooks'
 import {MemberContext} from './memberContext'
 import {URLAdapter} from './urlAdapter'
+import {BlockStylesDataloaderService} from '@wepublish/block-content/api'
 
 /**
  * Peered article cache configuration and setup
@@ -113,6 +114,8 @@ export interface DataLoaderContext {
   readonly commentRatingSystemAnswers: DataLoader<1, CommentRatingSystemAnswer[]>
   readonly subscriptionsById: DataLoader<string, SubscriptionWithRelations | null>
   readonly usersById: DataLoader<string, User | null>
+
+  readonly blockStyleById: BlockStylesDataloaderService
 }
 
 export interface OAuth2Clients {
@@ -857,7 +860,9 @@ export async function contextFromRequest(
         }),
         'id'
       )
-    )
+    ),
+
+    blockStyleById: new BlockStylesDataloaderService(prisma)
   }
 
   const mailContext = new MailContext({
