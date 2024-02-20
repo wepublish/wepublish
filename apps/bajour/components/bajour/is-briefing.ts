@@ -1,12 +1,16 @@
 import {BuilderTeaserProps} from '@wepublish/website'
 
+import {BaselBriefingProps} from './basel-briefing'
+
 export enum BriefingType {
   BaselBriefing = 'BaselBriefing',
   FCB_Briefing = 'FCB-Briefing',
   FasnachtsBriefing = 'FasnachtsBriefing'
 }
 
-export const isBriefing = (teaser: BuilderTeaserProps['teaser']) => {
+export const isBriefing = (props: BuilderTeaserProps): props is BaselBriefingProps => {
+  const {teaser} = props
+
   // todo the logic will be aligned once we finishg the block "style" property
   if (teaser?.__typename === 'CustomTeaser') {
     if (
@@ -16,7 +20,7 @@ export const isBriefing = (teaser: BuilderTeaserProps['teaser']) => {
     ) {
       return true
     }
-    return false
   }
+
   return false
 }
