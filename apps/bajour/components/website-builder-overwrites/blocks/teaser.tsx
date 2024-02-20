@@ -9,7 +9,7 @@ import {SingleTeaser} from './single-teaser'
 import {TeaserOverwrite} from './teaser-overwrite'
 
 export const BajourTeaser = (props: BuilderTeaserProps) => {
-  if (isBriefing(props.teaser)) {
+  if (isBriefing(props)) {
     return <BaselBriefing {...props} />
   }
 

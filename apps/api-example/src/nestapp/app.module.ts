@@ -26,7 +26,8 @@ import {
   StripeCheckoutPaymentProvider,
   StripePaymentProvider,
   BexioPaymentProvider,
-  PayrexxFactory
+  PayrexxFactory,
+  HealthModule
 } from '@wepublish/api'
 import {ApiModule, PrismaModule, PrismaService} from '@wepublish/nest-modules'
 import bodyParser from 'body-parser'
@@ -227,7 +228,8 @@ import {BlockStylesModule} from '@wepublish/block-content/api'
       inject: [AgendaBaselService, KulturZueriService]
     }),
     ScheduleModule.forRoot(),
-    ConfigModule.forRoot()
+    ConfigModule.forRoot(),
+    HealthModule
   ],
   exports: [MediaAdapterService],
   providers: [
