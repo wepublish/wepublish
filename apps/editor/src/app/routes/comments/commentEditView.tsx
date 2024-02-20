@@ -9,6 +9,15 @@ import {
   useRatingSystemQuery,
   useUpdateCommentMutation
 } from '@wepublish/editor/api'
+import {
+  CommentDeleteBtn,
+  CommentHistory,
+  CommentStateDropdown,
+  CommentUser,
+  createCheckedPermissionComponent,
+  SelectTags,
+  SingleViewTitle
+} from '@wepublish/ui/editor'
 import {memo, useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdVisibility} from 'react-icons/md'
@@ -27,24 +36,8 @@ import {
   toaster
 } from 'rsuite'
 
-import {CommentDeleteBtn} from '../../atoms/comment/commentDeleteBtn'
-import {CommentHistory} from '../../atoms/comment/commentHistory'
-import {CommentStateDropdown} from '../../atoms/comment/commentStateDropdown'
-import {CommentUser} from '../../atoms/comment/commentUser'
-import {ModelTitle} from '../../atoms/modelTitle'
-import {createCheckedPermissionComponent} from '../../atoms/permissionControl'
-import {SelectTags} from '../../atoms/tag/selectTags'
-
 const ColNoMargin = styled(RCol)`
   margin-top: 0px;
-`
-
-const Col = styled(RCol)`
-  margin-top: 20px;
-`
-
-const Panel = styled(RPanel)`
-  width: 100%;
 `
 
 const FlexItem = styled(FlexboxGrid.Item)`
@@ -211,7 +204,7 @@ const CommentEditView = memo(() => {
       fluid
       disabled={loading}
       style={{maxHeight: 'calc(100vh - 135px)', maxWidth: 'calc(100vw - 260px - 80px)'}}>
-      <ModelTitle
+      <SingleViewTitle
         loading={loading}
         title={t('comments.edit.title')}
         loadingTitle={t('comments.edit.title')}

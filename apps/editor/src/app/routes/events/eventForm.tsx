@@ -5,17 +5,18 @@ import {
   MutationUpdateEventArgs,
   TagType
 } from '@wepublish/editor/api'
+import {
+  ChooseEditImage,
+  DateTimePicker,
+  ImageEditPanel,
+  ImageSelectPanel,
+  RichTextBlock,
+  RichTextBlockValue,
+  SelectTags
+} from '@wepublish/ui/editor'
 import React, {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Drawer, Form, Panel, SelectPicker} from 'rsuite'
-
-import {ChooseEditImage} from '../../atoms/chooseEditImage'
-import {DateTimePicker} from '../../atoms/dateTimePicker'
-import {SelectTags} from '../../atoms/tag/selectTags'
-import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
-import {RichTextBlockValue} from '../../blocks/types'
-import {ImageEditPanel} from '../../panel/imageEditPanel'
-import {ImageSelectPanel} from '../../panel/imageSelectPanel'
 
 type EventFormData = (MutationCreateEventArgs | MutationUpdateEventArgs) & {
   image?: ImageRefFragment | null
@@ -45,6 +46,17 @@ export const EventForm = ({event, onChange, create}: EventFormProps) => {
               onChange={(name: string) => onChange({name})}
             />
           </Form.Group>
+
+          {event.externalSourceName && (
+            <Form.Group controlId="externalSourceName">
+              <Form.ControlLabel>{t('event.form.externalSource')}</Form.ControlLabel>
+              <Form.Control
+                name="externalSourceName"
+                value={event.externalSourceName ?? ''}
+                disabled
+              />
+            </Form.Group>
+          )}
 
           <Form.Group controlId="location">
             <Form.ControlLabel>{t('event.form.location')}</Form.ControlLabel>

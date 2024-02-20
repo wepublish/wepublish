@@ -1,0 +1,53 @@
+import {Meta, Story, Canvas, CodeOrSourceMdx} from '@storybook/blocks'
+import * as stories from './event-list-container.stories'
+import LinkTo from '@storybook/addon-links/react'
+
+<Meta of={stories} />
+
+# Event List Container
+
+> The Event List Container gets events and renders it as an <LinkTo kind="Components/EventList" story="Default">EventList component</LinkTo>.
+
+## Override `EventList`
+
+To replace the `EventList` component that is being rendered by a custom component, one can override it like this:
+
+<CodeOrSourceMdx>
+```typescript
+import {WebsiteBuilderProvider, BuilderEventListProps, EventListContainer} from '@wepublish/website'
+
+const MyEventList = (props: BuilderEventListProps) => <div>My Event List</div>
+
+export default function () {
+  return (
+    <WebsiteBuilderProvider EventList={MyEventList}>
+      <EventListContainer />
+    </WebsiteBuilderProvider>
+  )
+}
+```
+</CodeOrSourceMdx>
+
+## Override `EventListItem`
+
+To replace the `EventListItem` component that is being rendered by a custom component, one can override it like this:
+
+<CodeOrSourceMdx>
+```typescript
+import {WebsiteBuilderProvider, BuilderEventListItemProps, EventListContainer} from '@wepublish/website'
+
+const MyEventListItem = (props: BuilderEventListItemProps) => <div>My Event List Item</div>
+
+export default function () {
+  return (
+    <WebsiteBuilderProvider EventListItem={MyEventListItem}>
+      <EventListContainer />
+    </WebsiteBuilderProvider>
+  )
+}
+```
+</CodeOrSourceMdx>
+
+<Canvas>
+  <Story of={stories.Default} />
+</Canvas>

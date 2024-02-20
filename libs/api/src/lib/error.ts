@@ -1,5 +1,4 @@
 import {ApolloError} from 'apollo-server-express'
-import {MAX_COMMENT_LENGTH} from './utility'
 
 export enum ErrorCode {
   TokenExpired = 'TOKEN_EXPIRED',
@@ -131,9 +130,9 @@ export class DuplicateArticleSlugError extends ApolloError {
 }
 
 export class CommentLengthError extends ApolloError {
-  constructor() {
+  constructor(maxCommentLength: number) {
     super(
-      `Comment length should not exceed ${MAX_COMMENT_LENGTH} characters.`,
+      `Comment length should not exceed ${maxCommentLength} characters.`,
       ErrorCode.CommentLengthError
     )
   }

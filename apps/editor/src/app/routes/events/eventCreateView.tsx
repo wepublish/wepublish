@@ -4,12 +4,12 @@ import {
   MutationCreateEventArgs,
   useCreateEventMutation
 } from '@wepublish/editor/api'
+import {SingleViewTitle} from '@wepublish/ui/editor'
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useNavigate} from 'react-router-dom'
 import {Form, Message, Schema, toaster} from 'rsuite'
 
-import {ModelTitle} from '../../atoms/modelTitle'
 import {EventForm} from './eventForm'
 
 const onErrorToast = (error: ApolloError) => {
@@ -26,8 +26,7 @@ export const EventCreateView = () => {
 
   const closePath = '/events'
   const [event, setEvent] = useState({
-    name: '',
-    startsAt: new Date().toISOString()
+    name: ''
   } as MutationCreateEventArgs & {image?: ImageRefFragment | null})
 
   const [shouldClose, setShouldClose] = useState(false)
@@ -62,7 +61,7 @@ export const EventCreateView = () => {
       model={validationModel}
       disabled={loading}
       onSubmit={validationPassed => validationPassed && onSubmit()}>
-      <ModelTitle
+      <SingleViewTitle
         loading={loading}
         title={t('event.create.title')}
         loadingTitle={t('event.create.title')}

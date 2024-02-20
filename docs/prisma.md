@@ -11,7 +11,7 @@ In that space you can add the path to the schema and seeding that should be exec
 ```json
 "prisma": {
   "schema": "@wepublish/api/prisma/schema.prisma",
-  "seed": "npx ts-node seed.ts"
+  "seed": "npx tsx seed.ts"
 },
 ```
 
@@ -180,6 +180,13 @@ You can reset the database by running the following command:
 ```sh
 npx prisma migrate reset
 ```
+
+## Prototype Prisma schema
+```sh
+npx prisma db push
+```
+
+Also see https://www.prisma.io/docs/concepts/components/prisma-migrate/db-push
 
 This will completely wipe the database, migrate and seed it.
 

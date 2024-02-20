@@ -9,8 +9,13 @@ import {
   GraphQLBoolean,
   GraphQLID
 } from 'graphql'
-import {UserSort} from '../db/user'
-import {GraphQLMetadataProperty, GraphQLMetadataPropertyInput, GraphQLPageInfo} from './common'
+import {UserSort, UserWithRelations} from '../db/user'
+import {
+  GraphQLMetadataProperty,
+  GraphQLMetadataPropertyPublic,
+  GraphQLMetadataPropertyInput,
+  GraphQLPageInfo
+} from './common'
 import {Context} from '../context'
 import {GraphQLUserRole} from './userRole'
 import {GraphQLDateTime} from 'graphql-scalars'
@@ -22,6 +27,7 @@ import {GraphQLSubscriptionPeriod} from './subscriptionPeriods'
 import {GraphQLInvoice} from './invoice'
 import {createProxyingResolver} from '../utility'
 import {GraphQLImage, GraphQLUploadImageInput} from './image'
+import {isMeBySession} from './utils'
 
 export const GraphQLUserAddress = new GraphQLObjectType({
   name: 'UserAddress',
@@ -38,38 +44,40 @@ export const GraphQLUserAddress = new GraphQLObjectType({
 export const GraphQLPaymentProviderCustomer = new GraphQLObjectType({
   name: 'PaymentProviderCustomer',
   fields: {
-    paymentProviderID: {type: GraphQLNonNull(GraphQLString)},
-    customerID: {type: GraphQLNonNull(GraphQLString)}
+    paymentProviderID: {type: new GraphQLNonNull(GraphQLString)},
+    customerID: {type: new GraphQLNonNull(GraphQLString)}
   }
 })
 
 export const GraphQLOAuth2Account = new GraphQLObjectType({
   name: 'OAuth2Account',
   fields: {
-    type: {type: GraphQLNonNull(GraphQLString)},
-    provider: {type: GraphQLNonNull(GraphQLString)},
-    scope: {type: GraphQLNonNull(GraphQLString)}
+    type: {type: new GraphQLNonNull(GraphQLString)},
+    provider: {type: new GraphQLNonNull(GraphQLString)},
+    scope: {type: new GraphQLNonNull(GraphQLString)}
   }
 })
 
 const GraphQLUserSubscription = new GraphQLObjectType<Subscription, Context>({
   name: 'UserSubscription',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLID)},
-    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    paymentPeriodicity: {type: GraphQLNonNull(GraphQLPaymentPeriodicity)},
-    monthlyAmount: {type: GraphQLNonNull(GraphQLInt)},
-    autoRenew: {type: GraphQLNonNull(GraphQLBoolean)},
-    startsAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    id: {type: new GraphQLNonNull(GraphQLID)},
+    createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
+    modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
+    paymentPeriodicity: {type: new GraphQLNonNull(GraphQLPaymentPeriodicity)},
+    monthlyAmount: {type: new GraphQLNonNull(GraphQLInt)},
+    autoRenew: {type: new GraphQLNonNull(GraphQLBoolean)},
+    startsAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     paidUntil: {type: GraphQLDateTime},
-    properties: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataProperty)))},
+    properties: {
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLMetadataProperty)))
+    },
     deactivation: {type: GraphQLSubscriptionDeactivation},
     periods: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLSubscriptionPeriod)))
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLSubscriptionPeriod)))
     },
     memberPlan: {
-      type: GraphQLNonNull(GraphQLMemberPlan),
+      type: new GraphQLNonNull(GraphQLMemberPlan),
       resolve({memberPlanID}, args, {prisma}) {
         return prisma.memberPlan.findUnique({
           where: {
@@ -79,7 +87,7 @@ const GraphQLUserSubscription = new GraphQLObjectType<Subscription, Context>({
       }
     },
     invoices: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLInvoice))),
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLInvoice))),
       resolve({id: subscriptionId}, args, {prisma}) {
         return prisma.invoice.findMany({
           where: {
@@ -97,18 +105,19 @@ const GraphQLUserSubscription = new GraphQLObjectType<Subscription, Context>({
 export const GraphQLUser = new GraphQLObjectType<User, Context>({
   name: 'User',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLString)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
 
-    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    modifiedAt: {type: GraphQLNonNull(GraphQLDateTime)},
+    createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
+    modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
 
-    name: {type: GraphQLNonNull(GraphQLString)},
+    name: {type: new GraphQLNonNull(GraphQLString)},
     firstName: {type: GraphQLString},
-    email: {type: GraphQLNonNull(GraphQLString)},
+    email: {type: new GraphQLNonNull(GraphQLString)},
     emailVerifiedAt: {type: GraphQLDateTime},
 
     preferredName: {type: GraphQLString},
     address: {type: GraphQLUserAddress},
+    flair: {type: GraphQLString},
 
     userImage: {
       type: GraphQLImage,
@@ -123,25 +132,27 @@ export const GraphQLUser = new GraphQLObjectType<User, Context>({
       )
     },
 
-    active: {type: GraphQLNonNull(GraphQLBoolean)},
+    active: {type: new GraphQLNonNull(GraphQLBoolean)},
     lastLogin: {type: GraphQLDateTime},
 
-    properties: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataProperty)))},
+    properties: {
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLMetadataProperty)))
+    },
 
     roles: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLUserRole))),
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLUserRole))),
       resolve({roleIDs}, args, {loaders}) {
         return Promise.all(roleIDs.map(roleID => loaders.userRolesByID.load(roleID)))
       }
     },
     paymentProviderCustomers: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentProviderCustomer)))
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPaymentProviderCustomer)))
     },
     oauth2Accounts: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLOAuth2Account)))
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLOAuth2Account)))
     },
     subscriptions: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLUserSubscription))),
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLUserSubscription))),
       resolve: createProxyingResolver(({id: userId}, _, {prisma}) => {
         return prisma.subscription.findMany({
           where: {
@@ -158,20 +169,37 @@ export const GraphQLUser = new GraphQLObjectType<User, Context>({
   }
 })
 
-export const GraphQLPublicUser = new GraphQLObjectType<User, Context>({
+export const GraphQLPublicUser = new GraphQLObjectType<UserWithRelations, Context>({
   name: 'User',
   fields: {
-    id: {type: GraphQLNonNull(GraphQLString)},
-    name: {type: GraphQLNonNull(GraphQLString)},
+    id: {type: new GraphQLNonNull(GraphQLString)},
+    name: {type: new GraphQLNonNull(GraphQLString)},
     firstName: {type: GraphQLString},
-    email: {type: GraphQLNonNull(GraphQLString)},
+    email: {
+      type: new GraphQLNonNull(GraphQLString),
+      resolve: createProxyingResolver(({email, id}, _, {session}) =>
+        email && isMeBySession(id, session) ? email : ''
+      )
+    },
     preferredName: {type: GraphQLString},
-    address: {type: GraphQLUserAddress},
+    address: {
+      type: GraphQLUserAddress,
+      resolve: createProxyingResolver(({address, id}, _, {session}) =>
+        address && isMeBySession(id, session) ? address : ''
+      )
+    },
+    flair: {type: GraphQLString},
     paymentProviderCustomers: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLPaymentProviderCustomer)))
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLPaymentProviderCustomer))),
+      resolve: createProxyingResolver(({id, paymentProviderCustomers}, _, {session}) =>
+        id && isMeBySession(id, session) ? paymentProviderCustomers : []
+      )
     },
     oauth2Accounts: {
-      type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLOAuth2Account)))
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLOAuth2Account))),
+      resolve: createProxyingResolver(({id, oauth2Accounts}, _, {session}) =>
+        id && isMeBySession(id, session) ? oauth2Accounts : []
+      )
     },
     image: {
       type: GraphQLImage,
@@ -184,6 +212,11 @@ export const GraphQLPublicUser = new GraphQLObjectType<User, Context>({
             })
           : null
       )
+    },
+    properties: {
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLMetadataPropertyPublic))),
+      resolve: ({properties}) =>
+        properties.filter(property => property.public).map(({key, value}) => ({key, value}))
     }
   }
 })
@@ -193,7 +226,7 @@ export const GraphQLUserFilter = new GraphQLInputObjectType({
   fields: {
     name: {type: GraphQLString},
     text: {type: GraphQLString},
-    userRole: {type: GraphQLList(GraphQLString)}
+    userRole: {type: new GraphQLList(GraphQLString)}
   }
 })
 
@@ -210,9 +243,9 @@ export const GraphQLUserSort = new GraphQLEnumType({
 export const GraphQLUserConnection = new GraphQLObjectType<any, Context>({
   name: 'UserConnection',
   fields: {
-    nodes: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLUser)))},
-    pageInfo: {type: GraphQLNonNull(GraphQLPageInfo)},
-    totalCount: {type: GraphQLNonNull(GraphQLInt)}
+    nodes: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLUser)))},
+    pageInfo: {type: new GraphQLNonNull(GraphQLPageInfo)},
+    totalCount: {type: new GraphQLNonNull(GraphQLInt)}
   }
 })
 
@@ -231,32 +264,36 @@ export const GraphQLUserAddressInput = new GraphQLInputObjectType({
 export const GraphQLUserInput = new GraphQLInputObjectType({
   name: 'UserInput',
   fields: {
-    name: {type: GraphQLNonNull(GraphQLString)},
+    name: {type: new GraphQLNonNull(GraphQLString)},
     firstName: {type: GraphQLString},
-    email: {type: GraphQLNonNull(GraphQLString)},
+    email: {type: new GraphQLNonNull(GraphQLString)},
     emailVerifiedAt: {type: GraphQLDateTime},
 
     preferredName: {type: GraphQLString},
     address: {type: GraphQLUserAddressInput},
+    flair: {type: GraphQLString},
 
     userImageID: {type: GraphQLID},
 
-    active: {type: GraphQLNonNull(GraphQLBoolean)},
+    active: {type: new GraphQLNonNull(GraphQLBoolean)},
 
-    properties: {type: GraphQLNonNull(GraphQLList(GraphQLNonNull(GraphQLMetadataPropertyInput)))},
+    properties: {
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLMetadataPropertyInput)))
+    },
 
-    roleIDs: {type: GraphQLList(GraphQLNonNull(GraphQLString))}
+    roleIDs: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))}
   }
 })
 
 export const GraphQLPublicUserInput = new GraphQLInputObjectType({
   name: 'UserInput',
   fields: {
-    name: {type: GraphQLNonNull(GraphQLString)},
+    name: {type: new GraphQLNonNull(GraphQLString)},
     firstName: {type: GraphQLString},
-    email: {type: GraphQLNonNull(GraphQLString)},
+    email: {type: new GraphQLNonNull(GraphQLString)},
     preferredName: {type: GraphQLString},
     address: {type: GraphQLUserAddressInput},
+    flair: {type: GraphQLString},
     uploadImageInput: {type: GraphQLUploadImageInput}
   }
 })
@@ -264,33 +301,33 @@ export const GraphQLPublicUserInput = new GraphQLInputObjectType({
 export const GraphQLPaymentProviderCustomerInput = new GraphQLInputObjectType({
   name: 'PaymentProviderCustomerInput',
   fields: {
-    paymentProviderID: {type: GraphQLNonNull(GraphQLString)},
-    customerID: {type: GraphQLNonNull(GraphQLString)}
+    paymentProviderID: {type: new GraphQLNonNull(GraphQLString)},
+    customerID: {type: new GraphQLNonNull(GraphQLString)}
   }
 })
 
 export const GraphQLUserSession = new GraphQLObjectType({
   name: 'UserSession',
   fields: {
-    token: {type: GraphQLNonNull(GraphQLString)},
-    createdAt: {type: GraphQLNonNull(GraphQLDateTime)},
-    expiresAt: {type: GraphQLNonNull(GraphQLDateTime)}
+    token: {type: new GraphQLNonNull(GraphQLString)},
+    createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
+    expiresAt: {type: new GraphQLNonNull(GraphQLDateTime)}
   }
 })
 
 export const GraphQLMemberRegistration = new GraphQLObjectType({
   name: 'Registration',
   fields: {
-    user: {type: GraphQLNonNull(GraphQLPublicUser)},
-    session: {type: GraphQLNonNull(GraphQLUserSession)}
+    user: {type: new GraphQLNonNull(GraphQLPublicUser)},
+    session: {type: new GraphQLNonNull(GraphQLUserSession)}
   }
 })
 
 export const GraphQLMemberRegistrationAndPayment = new GraphQLObjectType({
   name: 'RegistrationAndPayment',
   fields: {
-    payment: {type: GraphQLNonNull(GraphQLPublicPayment)},
-    user: {type: GraphQLNonNull(GraphQLPublicUser)},
-    session: {type: GraphQLNonNull(GraphQLUserSession)}
+    payment: {type: new GraphQLNonNull(GraphQLPublicPayment)},
+    user: {type: new GraphQLNonNull(GraphQLPublicUser)},
+    session: {type: new GraphQLNonNull(GraphQLUserSession)}
   }
 })

@@ -15,10 +15,14 @@
     "**/*.spec.js",
     "**/*.test.jsx",
     "**/*.spec.jsx",
-    "**/*.d.ts"
+    "**/*.d.ts",
+    "../../libs/ui/editor/src/lib/panel/__tests__/userRoleEditPanel.test.tsx",
+    "../../libs/ui/editor/src/lib/panel/__tests__/tokenGeneratePanel.test.tsx",
+    "../../libs/ui/editor/src/lib/panel/__tests__/peerEditPanel.test.tsx",
+    "../../libs/ui/editor/src/lib/panel/__tests__/authorEditPanel.test.tsx"
   ],
   "files": [
-    "../../node_modules/@nrwl/react/typings/cssmodule.d.ts",
-    "../../node_modules/@nrwl/react/typings/image.d.ts"
+    "../../node_modules/@nx/react/typings/cssmodule.d.ts",
+    "../../node_modules/@nx/react/typings/image.d.ts"
   ]
 }

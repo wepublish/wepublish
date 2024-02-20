@@ -2,16 +2,18 @@
 export default {
   displayName: 'membership-api',
   preset: '../../../jest.preset.js',
-  globals: {
-    'ts-jest': {
-      tsconfig: '<rootDir>/tsconfig.spec.json'
-    }
-  },
+  globals: {},
   testEnvironment: 'node',
   transform: {
-    '^.+\\.[tj]s$': 'ts-jest'
+    '^.+\\.[tj]s$': [
+      'ts-jest',
+      {
+        tsconfig: '<rootDir>/tsconfig.spec.json'
+      }
+    ]
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../../coverage/libs/membership/api',
-  globalSetup: '<rootDir>/setup-database.js'
+  globalSetup: '<rootDir>/setup-database.js',
+  maxWorkers: 1
 }

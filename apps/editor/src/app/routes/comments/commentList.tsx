@@ -6,30 +6,28 @@ import {
   FullCommentFragment,
   useCommentListQuery
 } from '@wepublish/editor/api'
+import {
+  CommentStateDropdown,
+  createCheckedPermissionComponent,
+  CreateCommentBtn,
+  DEFAULT_MAX_TABLE_PAGES,
+  DEFAULT_TABLE_PAGE_SIZES,
+  IconButtonTooltip,
+  ListViewContainer,
+  ListViewFilterArea,
+  ListViewHeader,
+  mapTableSortTypeToGraphQLSortOrder,
+  PermissionControl,
+  RichTextBlock,
+  Table,
+  TableWrapper
+} from '@wepublish/ui/editor'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdEdit} from 'react-icons/md'
 import {Link} from 'react-router-dom'
 import {IconButton, Pagination, Table as RTable, Toggle} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
-
-import {CommentStateDropdown} from '../../atoms/comment/commentStateDropdown'
-import {CreateCommentBtn} from '../../atoms/comment/createCommentBtn'
-import {IconButtonTooltip} from '../../atoms/iconButtonTooltip'
-import {createCheckedPermissionComponent, PermissionControl} from '../../atoms/permissionControl'
-import {RichTextBlock} from '../../blocks/richTextBlock/richTextBlock'
-import {
-  ListViewContainer,
-  ListViewFilterArea,
-  ListViewHeader,
-  Table,
-  TableWrapper
-} from '../../ui/listView'
-import {
-  DEFAULT_MAX_TABLE_PAGES,
-  DEFAULT_TABLE_PAGE_SIZES,
-  mapTableSortTypeToGraphQLSortOrder
-} from '../../utility'
 
 const {Column, HeaderCell, Cell} = RTable
 
@@ -217,21 +215,19 @@ function CommentList() {
           <Column width={350} align="left" verticalAlign="middle" resizable>
             <HeaderCell>{t('comments.overview.text')}</HeaderCell>
             <Cell dataKey="revisions">
-              {(rowData: RowDataType<FullCommentFragment>) => (
-                <>
-                  {rowData.revisions?.length ? (
-                    <RichTextBlock
-                      displayOnly
-                      displayOneLine
-                      disabled
-                      onChange={() => {
-                        return undefined
-                      }}
-                      value={rowData.revisions[rowData.revisions?.length - 1]?.text || []}
-                    />
-                  ) : null}
-                </>
-              )}
+              {(rowData: RowDataType<FullCommentFragment>) =>
+                rowData.revisions?.length ? (
+                  <RichTextBlock
+                    displayOnly
+                    displayOneLine
+                    disabled
+                    onChange={() => {
+                      return undefined
+                    }}
+                    value={rowData.revisions[rowData.revisions?.length - 1]?.text || []}
+                  />
+                ) : null
+              }
             </Cell>
           </Column>
           {/* eslint-disable-next-line i18next/no-literal-string */}

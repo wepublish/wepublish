@@ -1,5 +1,18 @@
 import {ApolloError} from '@apollo/client'
-import {Event, useEventListQuery} from '@wepublish/editor/api'
+import {Event, EventFilter, useEventListQuery} from '@wepublish/editor/api'
+import {
+  createCheckedPermissionComponent,
+  DEFAULT_MAX_TABLE_PAGES,
+  DEFAULT_TABLE_PAGE_SIZES,
+  ListFilters,
+  ListViewActions,
+  ListViewContainer,
+  ListViewHeader,
+  PermissionControl,
+  Table,
+  TableWrapper
+} from '@wepublish/ui/editor'
+import {format as formatDate} from 'date-fns'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete} from 'react-icons/md'
@@ -7,32 +20,21 @@ import {Link} from 'react-router-dom'
 import {IconButton, Message, Pagination, Table as RTable, toaster} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
-import {createCheckedPermissionComponent, PermissionControl} from '../../atoms/permissionControl'
-import {
-  ListViewActions,
-  ListViewContainer,
-  ListViewHeader,
-  Table,
-  TableWrapper
-} from '../../ui/listView'
-import {DEFAULT_MAX_TABLE_PAGES, DEFAULT_TABLE_PAGE_SIZES} from '../../utility'
 import {DeleteEventModal} from './deleteEventModal'
 
 const {Column, HeaderCell, Cell} = RTable
 
 export function EventStartsAtView({startsAt}: {startsAt: string}) {
   const startsAtDate = new Date(startsAt)
-  const {t} = useTranslation()
-
-  return <>{t('event.list.startsAt', {startsAt: startsAtDate})}</>
+  return <time dateTime={startsAtDate.toISOString()}>{formatDate(startsAtDate, 'PPP p')}</time>
 }
 
 export function EventEndsAtView({endsAt}: {endsAt: string | null | undefined}) {
   const endsAtDate = endsAt ? new Date(endsAt) : undefined
   const {t} = useTranslation()
 
-  if (endsAt) {
-    return <>{t('event.list.endsAt', {endsAt: endsAtDate})}</>
+  if (endsAtDate) {
+    return <time dateTime={endsAtDate.toISOString()}>{formatDate(endsAtDate, 'PPP p')}</time>
   }
   return <>{t('event.list.endsAtNone')}</>
 }
@@ -48,26 +50,31 @@ const onErrorToast = (error: ApolloError) => {
 }
 
 function EventListView() {
+  const [filter, setFilter] = useState({} as EventFilter)
   const {t} = useTranslation()
   const [eventDelete, setEventDelete] = useState<Event | undefined>(undefined)
   const [page, setPage] = useState<number>(1)
   const [limit, setLimit] = useState<number>(10)
 
-  const {data, loading, refetch} = useEventListQuery({
+  const eventListVariables = {
+    filter: filter || undefined,
+    take: limit,
+    skip: (page - 1) * limit
+  }
+
+  const {
+    data,
+    loading: isLoading,
+    refetch
+  } = useEventListQuery({
     fetchPolicy: 'no-cache',
-    variables: {
-      take: limit,
-      skip: (page - 1) * limit
-    },
+    variables: eventListVariables,
     onError: onErrorToast
   })
 
   useEffect(() => {
-    refetch({
-      take: limit,
-      skip: (page - 1) * limit
-    })
-  }, [page, limit])
+    refetch(eventListVariables)
+  }, [page, limit, filter])
 
   return (
     <>
@@ -85,10 +92,16 @@ function EventListView() {
             </Link>
           </ListViewActions>
         </PermissionControl>
+        <ListFilters
+          fields={['dates', 'name', 'location']}
+          filter={filter}
+          isLoading={isLoading}
+          onSetFilter={filter => setFilter(filter)}
+        />
       </ListViewContainer>
 
       <TableWrapper>
-        <Table fillHeight loading={loading} data={data?.events?.nodes || []}>
+        <Table fillHeight loading={isLoading} data={data?.events?.nodes || []}>
           <Column width={200} resizable>
             <HeaderCell>{t('event.list.name')}</HeaderCell>
             <Cell>
@@ -99,17 +112,22 @@ function EventListView() {
           </Column>
 
           <Column width={250} resizable>
-            <HeaderCell>{t('event.list.startsAt')}</HeaderCell>
+            <HeaderCell>{t('event.list.startsAtHeader')}</HeaderCell>
             <Cell>
               {(rowData: RowDataType<Event>) => <EventStartsAtView startsAt={rowData.startsAt} />}
             </Cell>
           </Column>
 
           <Column width={250} resizable>
-            <HeaderCell>{t('event.list.endsAt')}</HeaderCell>
+            <HeaderCell>{t('event.list.endsAtHeader')}</HeaderCell>
             <Cell>
               {(rowData: RowDataType<Event>) => <EventEndsAtView endsAt={rowData.endsAt} />}
             </Cell>
+          </Column>
+
+          <Column width={150} resizable>
+            <HeaderCell>{t('event.list.source')}</HeaderCell>
+            <Cell>{(rowData: RowDataType<Event>) => rowData.externalSourceName}</Cell>
           </Column>
 
           <Column resizable>

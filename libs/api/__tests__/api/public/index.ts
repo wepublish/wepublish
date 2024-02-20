@@ -19,12 +19,19 @@ export type Scalars = {
   RichText: Node[];
   Slug: string;
   Upload: File;
+  Value: any;
   VoteValue: number;
+};
+
+export type AllowedSettingVals = {
+  __typename?: 'AllowedSettingVals';
+  boolChoice?: Maybe<Scalars['Boolean']>;
+  stringChoice?: Maybe<Array<Maybe<Scalars['String']>>>;
 };
 
 export type Article = {
   __typename?: 'Article';
-  authors: Array<Maybe<Author>>;
+  authors: Array<Author>;
   blocks: Array<Block>;
   breaking: Scalars['Boolean'];
   canonicalUrl?: Maybe<Scalars['String']>;
@@ -139,11 +146,11 @@ export type BildwurfAdBlock = {
   zoneID: Scalars['String'];
 };
 
-export type Block = BildwurfAdBlock | CommentBlock | EmbedBlock | EventBlock | FacebookPostBlock | HtmlBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | LinkPageBreakBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | TeaserGridBlock | TeaserGridFlexBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock;
+export type Block = BildwurfAdBlock | CommentBlock | EmbedBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HtmlBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | LinkPageBreakBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | TeaserGridBlock | TeaserGridFlexBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock;
 
 export type CalculatedRating = {
   __typename?: 'CalculatedRating';
-  answer?: Maybe<CommentRatingSystemAnswer>;
+  answer: CommentRatingSystemAnswer;
   count: Scalars['Int'];
   mean: Scalars['Float'];
   total: Scalars['Int'];
@@ -164,8 +171,8 @@ export type ChallengeInput = {
 export type Comment = {
   __typename?: 'Comment';
   authorType: CommentAuthorType;
-  calculatedRatings?: Maybe<Array<Maybe<CalculatedRating>>>;
-  children?: Maybe<Array<Maybe<Comment>>>;
+  calculatedRatings: Array<CalculatedRating>;
+  children: Array<Comment>;
   createdAt: Scalars['DateTime'];
   guestUserImage?: Maybe<Image>;
   guestUsername?: Maybe<Scalars['String']>;
@@ -173,7 +180,7 @@ export type Comment = {
   itemID: Scalars['ID'];
   itemType: CommentItemType;
   lead?: Maybe<Scalars['String']>;
-  modifiedAt: Scalars['DateTime'];
+  modifiedAt?: Maybe<Scalars['DateTime']>;
   overriddenRatings: Array<OverriddenRating>;
   parentID?: Maybe<Scalars['ID']>;
   peerId?: Maybe<Scalars['ID']>;
@@ -184,6 +191,7 @@ export type Comment = {
   text?: Maybe<Scalars['RichText']>;
   title?: Maybe<Scalars['String']>;
   user?: Maybe<User>;
+  userRatings: Array<CommentRating>;
 };
 
 export enum CommentAuthorType {
@@ -217,14 +225,14 @@ export enum CommentItemType {
 
 export type CommentRating = {
   __typename?: 'CommentRating';
-  answer?: Maybe<CommentRatingSystemAnswer>;
+  answer: CommentRatingSystemAnswer;
   commentId: Scalars['ID'];
   createdAt: Scalars['DateTime'];
   disabled?: Maybe<Scalars['Boolean']>;
   fingerprint?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   userId?: Maybe<Scalars['ID']>;
-  value?: Maybe<Scalars['Int']>;
+  value: Scalars['Int'];
 };
 
 export type CommentRatingSystemAnswer = {
@@ -248,7 +256,9 @@ export enum CommentState {
 
 export type CommentUpdateInput = {
   id: Scalars['ID'];
-  text: Scalars['RichText'];
+  lead?: InputMaybe<Scalars['String']>;
+  text?: InputMaybe<Scalars['RichText']>;
+  title?: InputMaybe<Scalars['String']>;
 };
 
 export type CustomTeaser = {
@@ -276,6 +286,8 @@ export type Event = {
   __typename?: 'Event';
   description?: Maybe<Scalars['RichText']>;
   endsAt?: Maybe<Scalars['DateTime']>;
+  externalSourceId?: Maybe<Scalars['String']>;
+  externalSourceName?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   image?: Maybe<Image>;
   location?: Maybe<Scalars['String']>;
@@ -283,6 +295,7 @@ export type Event = {
   startsAt: Scalars['DateTime'];
   status: EventStatus;
   tags?: Maybe<Array<Tag>>;
+  url: Scalars['String'];
 };
 
 export type EventBlock = {
@@ -306,6 +319,8 @@ export type EventConnection = {
 
 export type EventFilter = {
   from?: InputMaybe<Scalars['DateTime']>;
+  location?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
   tags?: InputMaybe<Array<Scalars['ID']>>;
   to?: InputMaybe<Scalars['DateTime']>;
   upcomingOnly?: InputMaybe<Scalars['Boolean']>;
@@ -325,6 +340,16 @@ export enum EventStatus {
   Scheduled = 'SCHEDULED'
 }
 
+export type EventTeaser = {
+  __typename?: 'EventTeaser';
+  event?: Maybe<Event>;
+  image?: Maybe<Image>;
+  lead?: Maybe<Scalars['String']>;
+  preTitle?: Maybe<Scalars['String']>;
+  style: TeaserStyle;
+  title?: Maybe<Scalars['String']>;
+};
+
 export type ExternalNavigationLink = BaseNavigationLink & {
   __typename?: 'ExternalNavigationLink';
   label: Scalars['String'];
@@ -335,6 +360,12 @@ export type FacebookPostBlock = {
   __typename?: 'FacebookPostBlock';
   postID: Scalars['String'];
   userID: Scalars['String'];
+};
+
+export type FacebookVideoBlock = {
+  __typename?: 'FacebookVideoBlock';
+  userID: Scalars['String'];
+  videoID: Scalars['String'];
 };
 
 export type FlexAlignment = {
@@ -360,9 +391,9 @@ export type FullCommentRatingSystem = {
 
 export type FullPoll = {
   __typename?: 'FullPoll';
-  answers?: Maybe<Array<PollAnswerWithVoteCount>>;
+  answers: Array<PollAnswerWithVoteCount>;
   closedAt?: Maybe<Scalars['DateTime']>;
-  externalVoteSources?: Maybe<Array<PollExternalVoteSource>>;
+  externalVoteSources: Array<PollExternalVoteSource>;
   id: Scalars['ID'];
   infoText?: Maybe<Scalars['RichText']>;
   opensAt: Scalars['DateTime'];
@@ -456,11 +487,13 @@ export type Invoice = {
   canceledAt?: Maybe<Scalars['DateTime']>;
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['String']>;
+  dueAt: Scalars['DateTime'];
   id: Scalars['ID'];
   items: Array<InvoiceItem>;
   mail: Scalars['String'];
   modifiedAt: Scalars['DateTime'];
   paidAt?: Maybe<Scalars['DateTime']>;
+  subscription?: Maybe<Subscription>;
   subscriptionID: Scalars['ID'];
   total: Scalars['Int'];
 };
@@ -540,6 +573,8 @@ export type Mutation = {
   cancelUserSubscription?: Maybe<Subscription>;
   /** This mutation allows to create payment by taking an input of type PaymentFromInvoiceInput. */
   createPaymentFromInvoice?: Maybe<Payment>;
+  /** This mutation allows to create payment by referencing a subscription. */
+  createPaymentFromSubscription?: Maybe<Payment>;
   createSession: SessionWithToken;
   createSessionWithJWT: SessionWithToken;
   createSessionWithOAuth2Code: SessionWithToken;
@@ -548,7 +583,7 @@ export type Mutation = {
   /** This mutation extends an subscription early */
   extendSubscription: Payment;
   /** This mutation allows to rate a comment. Supports logged in and anonymous */
-  rateComment: CommentRating;
+  rateComment: Comment;
   /** This mutation allows to register a new member, */
   registerMember: Registration;
   /** This mutation allows to register a new member, select a member plan, payment method and create an invoice.  */
@@ -589,6 +624,13 @@ export type MutationCreatePaymentFromInvoiceArgs = {
 };
 
 
+export type MutationCreatePaymentFromSubscriptionArgs = {
+  failureURL?: InputMaybe<Scalars['String']>;
+  subscriptionId?: InputMaybe<Scalars['ID']>;
+  successURL?: InputMaybe<Scalars['String']>;
+};
+
+
 export type MutationCreateSessionArgs = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -623,7 +665,7 @@ export type MutationCreateSubscriptionArgs = {
 
 export type MutationExtendSubscriptionArgs = {
   failureURL?: InputMaybe<Scalars['String']>;
-  subscriptionId: Scalars['String'];
+  subscriptionId: Scalars['ID'];
   successURL?: InputMaybe<Scalars['String']>;
 };
 
@@ -784,7 +826,7 @@ export type Payment = {
 
 export type PaymentFromInvoiceInput = {
   failureURL?: InputMaybe<Scalars['String']>;
-  invoiceID: Scalars['String'];
+  invoiceID: Scalars['ID'];
   paymentMethodID?: InputMaybe<Scalars['ID']>;
   paymentMethodSlug?: InputMaybe<Scalars['Slug']>;
   successURL?: InputMaybe<Scalars['String']>;
@@ -897,7 +939,7 @@ export type PollBlock = {
 
 export type PollExternalVote = {
   __typename?: 'PollExternalVote';
-  amount?: Maybe<Scalars['VoteValue']>;
+  amount: Scalars['VoteValue'];
   answerId: Scalars['ID'];
   id: Scalars['ID'];
 };
@@ -906,14 +948,16 @@ export type PollExternalVoteSource = {
   __typename?: 'PollExternalVoteSource';
   id: Scalars['ID'];
   source?: Maybe<Scalars['String']>;
-  voteAmounts?: Maybe<Array<PollExternalVote>>;
+  voteAmounts: Array<PollExternalVote>;
 };
 
 export type PollVote = {
   __typename?: 'PollVote';
+  answerId: Scalars['String'];
   createdAt: Scalars['DateTime'];
-  disabled?: Maybe<Scalars['Boolean']>;
+  disabled: Scalars['Boolean'];
   fingerprint?: Maybe<Scalars['String']>;
+  pollId: Scalars['ID'];
 };
 
 export type PublicProperties = {
@@ -958,6 +1002,8 @@ export type Query = {
   event: Event;
   /** This query returns a list of events */
   events?: Maybe<EventConnection>;
+  /** This query returns a list of original ids of imported events */
+  importedEventsIds?: Maybe<Array<Maybe<Scalars['String']>>>;
   /** This query returns the invoices  of the authenticated user. */
   invoices: Array<Invoice>;
   /** This query returns the user. */
@@ -985,12 +1031,12 @@ export type Query = {
   /** This query returns a poll with all the needed data */
   poll: FullPoll;
   ratingSystem: FullCommentRatingSystem;
+  setting?: Maybe<Setting>;
+  settings: Array<Setting>;
   /** This query returns the subscriptions of the authenticated user. */
   subscriptions: Array<Subscription>;
   /** This query returns a list of tags */
   tags?: Maybe<TagConnection>;
-  /** This query returns the value of a comments answer rating if the user has already rated it. */
-  userCommentRatings: Array<Maybe<CommentRating>>;
   /** This query returns the answerId of a poll if the user has already voted on it. */
   userPollVote?: Maybe<Scalars['ID']>;
 };
@@ -1123,6 +1169,11 @@ export type QueryPollArgs = {
 };
 
 
+export type QuerySettingArgs = {
+  name: Scalars['String'];
+};
+
+
 export type QueryTagsArgs = {
   cursor?: InputMaybe<Scalars['ID']>;
   filter?: InputMaybe<TagFilter>;
@@ -1130,11 +1181,6 @@ export type QueryTagsArgs = {
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<TagSort>;
   take?: InputMaybe<Scalars['Int']>;
-};
-
-
-export type QueryUserCommentRatingsArgs = {
-  commentId: Scalars['ID'];
 };
 
 
@@ -1178,6 +1224,41 @@ export type SessionWithToken = {
   user: User;
 };
 
+export type Setting = {
+  __typename?: 'Setting';
+  id: Scalars['ID'];
+  name: SettingName;
+  settingRestriction?: Maybe<SettingRestriction>;
+  value: Scalars['Value'];
+};
+
+export enum SettingName {
+  AllowCommentEditing = 'ALLOW_COMMENT_EDITING',
+  AllowGuestCommenting = 'ALLOW_GUEST_COMMENTING',
+  AllowGuestCommentRating = 'ALLOW_GUEST_COMMENT_RATING',
+  AllowGuestPollVoting = 'ALLOW_GUEST_POLL_VOTING',
+  CommentCharLimit = 'COMMENT_CHAR_LIMIT',
+  InvoiceReminderFreq = 'INVOICE_REMINDER_FREQ',
+  InvoiceReminderMaxTries = 'INVOICE_REMINDER_MAX_TRIES',
+  MakeActiveSubscribersApiPublic = 'MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC',
+  MakeExpectedRevenueApiPublic = 'MAKE_EXPECTED_REVENUE_API_PUBLIC',
+  MakeNewDeactivationsApiPublic = 'MAKE_NEW_DEACTIVATIONS_API_PUBLIC',
+  MakeNewSubscribersApiPublic = 'MAKE_NEW_SUBSCRIBERS_API_PUBLIC',
+  MakeRenewingSubscribersApiPublic = 'MAKE_RENEWING_SUBSCRIBERS_API_PUBLIC',
+  MakeRevenueApiPublic = 'MAKE_REVENUE_API_PUBLIC',
+  PeeringTimeoutMs = 'PEERING_TIMEOUT_MS',
+  ResetPasswordJwtExpiresMin = 'RESET_PASSWORD_JWT_EXPIRES_MIN',
+  SendLoginJwtExpiresMin = 'SEND_LOGIN_JWT_EXPIRES_MIN'
+}
+
+export type SettingRestriction = {
+  __typename?: 'SettingRestriction';
+  allowedValues?: Maybe<AllowedSettingVals>;
+  inputLength?: Maybe<Scalars['Int']>;
+  maxValue?: Maybe<Scalars['Int']>;
+  minValue?: Maybe<Scalars['Int']>;
+};
+
 export enum SortOrder {
   Ascending = 'ASCENDING',
   Descending = 'DESCENDING'
@@ -1200,6 +1281,7 @@ export type Subscription = {
   paymentPeriodicity: PaymentPeriodicity;
   properties: Array<PublicProperties>;
   startsAt: Scalars['DateTime'];
+  url: Scalars['String'];
 };
 
 export type SubscriptionDeactivation = {
@@ -1253,7 +1335,7 @@ export enum TagType {
   Event = 'Event'
 }
 
-export type Teaser = ArticleTeaser | CustomTeaser | PageTeaser | PeerArticleTeaser;
+export type Teaser = ArticleTeaser | CustomTeaser | EventTeaser | PageTeaser | PeerArticleTeaser;
 
 export type TeaserGridBlock = {
   __typename?: 'TeaserGridBlock';
@@ -1307,12 +1389,14 @@ export type User = {
   address?: Maybe<UserAddress>;
   email: Scalars['String'];
   firstName?: Maybe<Scalars['String']>;
+  flair?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   image?: Maybe<Image>;
   name: Scalars['String'];
   oauth2Accounts: Array<OAuth2Account>;
   paymentProviderCustomers: Array<PaymentProviderCustomer>;
   preferredName?: Maybe<Scalars['String']>;
+  properties: Array<PublicProperties>;
 };
 
 export type UserAddress = {
@@ -1338,6 +1422,7 @@ export type UserInput = {
   address?: InputMaybe<UserAddressInput>;
   email: Scalars['String'];
   firstName?: InputMaybe<Scalars['String']>;
+  flair?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
   preferredName?: InputMaybe<Scalars['String']>;
   uploadImageInput?: InputMaybe<UploadImageInput>;
@@ -1382,7 +1467,7 @@ export type ArticleQueryVariables = Exact<{
 }>;
 
 
-export type ArticleQuery = { __typename?: 'Query', article?: { __typename?: 'Article', id: string, updatedAt: string, publishedAt: string, slug: string, url: string, preTitle?: string | null, title: string, lead?: string | null, tags: Array<string>, breaking: boolean, properties: Array<{ __typename?: 'PublicProperties', key: string, value: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, authors: Array<{ __typename?: 'Author', id: string, name: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null>, blocks: Array<{ __typename: 'BildwurfAdBlock' } | { __typename: 'CommentBlock' } | { __typename: 'EmbedBlock', url?: string | null, title?: string | null, width?: number | null, height?: number | null, styleCustom?: string | null, sandbox?: string | null } | { __typename: 'EventBlock' } | { __typename: 'FacebookPostBlock', userID: string, postID: string } | { __typename: 'HTMLBlock' } | { __typename: 'ImageBlock', caption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | { __typename: 'ImageGalleryBlock', images: Array<{ __typename?: 'GalleryImageEdge', caption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> } | { __typename: 'InstagramPostBlock', postID: string } | { __typename: 'LinkPageBreakBlock', text?: string | null, linkText?: string | null, linkURL?: string | null } | { __typename: 'ListicleBlock', items: Array<{ __typename?: 'ListicleItem', title: string, richText: Node[], image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> } | { __typename: 'PolisConversationBlock' } | { __typename: 'PollBlock' } | { __typename: 'QuoteBlock', quote?: string | null, author?: string | null } | { __typename: 'RichTextBlock', richText: Node[] } | { __typename: 'SoundCloudTrackBlock', trackID: string } | { __typename: 'TeaserGridBlock', numColumns: number, teasers: Array<{ __typename?: 'ArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, article?: { __typename?: 'Article', id: string, publishedAt: string, updatedAt: string, tags: Array<string>, preTitle?: string | null, title: string, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | { __typename?: 'CustomTeaser' } | { __typename?: 'PageTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, page?: { __typename?: 'Page', id: string, publishedAt: string, updatedAt: string, title: string, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | { __typename?: 'PeerArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, articleID: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null, article?: { __typename?: 'Article', id: string, publishedAt: string, updatedAt: string, tags: Array<string>, preTitle?: string | null, title: string, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null> } | { __typename: 'TeaserGridFlexBlock' } | { __typename: 'TikTokVideoBlock' } | { __typename: 'TitleBlock', title?: string | null, lead?: string | null } | { __typename: 'TwitterTweetBlock', userID: string, tweetID: string } | { __typename: 'VimeoVideoBlock', videoID: string } | { __typename: 'YouTubeVideoBlock', videoID: string }> } | null };
+export type ArticleQuery = { __typename?: 'Query', article?: { __typename?: 'Article', id: string, updatedAt: string, publishedAt: string, slug: string, url: string, preTitle?: string | null, title: string, lead?: string | null, tags: Array<string>, breaking: boolean, properties: Array<{ __typename?: 'PublicProperties', key: string, value: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, authors: Array<{ __typename?: 'Author', id: string, name: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, blocks: Array<{ __typename: 'BildwurfAdBlock' } | { __typename: 'CommentBlock' } | { __typename: 'EmbedBlock', url?: string | null, title?: string | null, width?: number | null, height?: number | null, styleCustom?: string | null, sandbox?: string | null } | { __typename: 'EventBlock' } | { __typename: 'FacebookPostBlock', userID: string, postID: string } | { __typename: 'FacebookVideoBlock' } | { __typename: 'HTMLBlock' } | { __typename: 'ImageBlock', caption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | { __typename: 'ImageGalleryBlock', images: Array<{ __typename?: 'GalleryImageEdge', caption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> } | { __typename: 'InstagramPostBlock', postID: string } | { __typename: 'LinkPageBreakBlock', text?: string | null, linkText?: string | null, linkURL?: string | null } | { __typename: 'ListicleBlock', items: Array<{ __typename?: 'ListicleItem', title: string, richText: Node[], image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> } | { __typename: 'PolisConversationBlock' } | { __typename: 'PollBlock' } | { __typename: 'QuoteBlock', quote?: string | null, author?: string | null } | { __typename: 'RichTextBlock', richText: Node[] } | { __typename: 'SoundCloudTrackBlock', trackID: string } | { __typename: 'TeaserGridBlock', numColumns: number, teasers: Array<{ __typename?: 'ArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, article?: { __typename?: 'Article', id: string, publishedAt: string, updatedAt: string, tags: Array<string>, preTitle?: string | null, title: string, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | { __typename?: 'CustomTeaser' } | { __typename?: 'EventTeaser' } | { __typename?: 'PageTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, page?: { __typename?: 'Page', id: string, publishedAt: string, updatedAt: string, title: string, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | { __typename?: 'PeerArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, articleID: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null, article?: { __typename?: 'Article', id: string, publishedAt: string, updatedAt: string, tags: Array<string>, preTitle?: string | null, title: string, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null> } | { __typename: 'TeaserGridFlexBlock' } | { __typename: 'TikTokVideoBlock' } | { __typename: 'TitleBlock', title?: string | null, lead?: string | null } | { __typename: 'TwitterTweetBlock', userID: string, tweetID: string } | { __typename: 'VimeoVideoBlock', videoID: string } | { __typename: 'YouTubeVideoBlock', videoID: string }> } | null };
 
 export type PeerArticleQueryVariables = Exact<{
   id: Scalars['ID'];
@@ -1391,7 +1476,7 @@ export type PeerArticleQueryVariables = Exact<{
 }>;
 
 
-export type PeerArticleQuery = { __typename?: 'Query', peerArticle?: { __typename?: 'Article', id: string, updatedAt: string, publishedAt: string, slug: string, url: string, preTitle?: string | null, title: string, lead?: string | null, tags: Array<string>, breaking: boolean, properties: Array<{ __typename?: 'PublicProperties', key: string, value: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, authors: Array<{ __typename?: 'Author', id: string, name: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null>, blocks: Array<{ __typename: 'BildwurfAdBlock' } | { __typename: 'CommentBlock' } | { __typename: 'EmbedBlock', url?: string | null, title?: string | null, width?: number | null, height?: number | null, styleCustom?: string | null, sandbox?: string | null } | { __typename: 'EventBlock' } | { __typename: 'FacebookPostBlock', userID: string, postID: string } | { __typename: 'HTMLBlock' } | { __typename: 'ImageBlock', caption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | { __typename: 'ImageGalleryBlock', images: Array<{ __typename?: 'GalleryImageEdge', caption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> } | { __typename: 'InstagramPostBlock', postID: string } | { __typename: 'LinkPageBreakBlock', text?: string | null, linkText?: string | null, linkURL?: string | null } | { __typename: 'ListicleBlock', items: Array<{ __typename?: 'ListicleItem', title: string, richText: Node[], image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> } | { __typename: 'PolisConversationBlock' } | { __typename: 'PollBlock' } | { __typename: 'QuoteBlock', quote?: string | null, author?: string | null } | { __typename: 'RichTextBlock', richText: Node[] } | { __typename: 'SoundCloudTrackBlock', trackID: string } | { __typename: 'TeaserGridBlock', numColumns: number, teasers: Array<{ __typename?: 'ArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, article?: { __typename?: 'Article', id: string, publishedAt: string, updatedAt: string, tags: Array<string>, preTitle?: string | null, title: string, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | { __typename?: 'CustomTeaser' } | { __typename?: 'PageTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, page?: { __typename?: 'Page', id: string, publishedAt: string, updatedAt: string, title: string, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | { __typename?: 'PeerArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, articleID: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null, article?: { __typename?: 'Article', id: string, publishedAt: string, updatedAt: string, tags: Array<string>, preTitle?: string | null, title: string, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null> } | { __typename: 'TeaserGridFlexBlock' } | { __typename: 'TikTokVideoBlock' } | { __typename: 'TitleBlock', title?: string | null, lead?: string | null } | { __typename: 'TwitterTweetBlock', userID: string, tweetID: string } | { __typename: 'VimeoVideoBlock', videoID: string } | { __typename: 'YouTubeVideoBlock', videoID: string }> } | null };
+export type PeerArticleQuery = { __typename?: 'Query', peerArticle?: { __typename?: 'Article', id: string, updatedAt: string, publishedAt: string, slug: string, url: string, preTitle?: string | null, title: string, lead?: string | null, tags: Array<string>, breaking: boolean, properties: Array<{ __typename?: 'PublicProperties', key: string, value: string }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, authors: Array<{ __typename?: 'Author', id: string, name: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }>, blocks: Array<{ __typename: 'BildwurfAdBlock' } | { __typename: 'CommentBlock' } | { __typename: 'EmbedBlock', url?: string | null, title?: string | null, width?: number | null, height?: number | null, styleCustom?: string | null, sandbox?: string | null } | { __typename: 'EventBlock' } | { __typename: 'FacebookPostBlock', userID: string, postID: string } | { __typename: 'FacebookVideoBlock' } | { __typename: 'HTMLBlock' } | { __typename: 'ImageBlock', caption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | { __typename: 'ImageGalleryBlock', images: Array<{ __typename?: 'GalleryImageEdge', caption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> } | { __typename: 'InstagramPostBlock', postID: string } | { __typename: 'LinkPageBreakBlock', text?: string | null, linkText?: string | null, linkURL?: string | null } | { __typename: 'ListicleBlock', items: Array<{ __typename?: 'ListicleItem', title: string, richText: Node[], image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> } | { __typename: 'PolisConversationBlock' } | { __typename: 'PollBlock' } | { __typename: 'QuoteBlock', quote?: string | null, author?: string | null } | { __typename: 'RichTextBlock', richText: Node[] } | { __typename: 'SoundCloudTrackBlock', trackID: string } | { __typename: 'TeaserGridBlock', numColumns: number, teasers: Array<{ __typename?: 'ArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, article?: { __typename?: 'Article', id: string, publishedAt: string, updatedAt: string, tags: Array<string>, preTitle?: string | null, title: string, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | { __typename?: 'CustomTeaser' } | { __typename?: 'EventTeaser' } | { __typename?: 'PageTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, page?: { __typename?: 'Page', id: string, publishedAt: string, updatedAt: string, title: string, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | { __typename?: 'PeerArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, articleID: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null, article?: { __typename?: 'Article', id: string, publishedAt: string, updatedAt: string, tags: Array<string>, preTitle?: string | null, title: string, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null> } | { __typename: 'TeaserGridFlexBlock' } | { __typename: 'TikTokVideoBlock' } | { __typename: 'TitleBlock', title?: string | null, lead?: string | null } | { __typename: 'TwitterTweetBlock', userID: string, tweetID: string } | { __typename: 'VimeoVideoBlock', videoID: string } | { __typename: 'YouTubeVideoBlock', videoID: string }> } | null };
 
 export type AuthorRefFragment = { __typename?: 'Author', id: string, name: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
 
@@ -1418,11 +1503,13 @@ type FullTeaser_ArticleTeaser_Fragment = { __typename?: 'ArticleTeaser', style: 
 
 type FullTeaser_CustomTeaser_Fragment = { __typename?: 'CustomTeaser' };
 
+type FullTeaser_EventTeaser_Fragment = { __typename?: 'EventTeaser' };
+
 type FullTeaser_PageTeaser_Fragment = { __typename?: 'PageTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, page?: { __typename?: 'Page', id: string, publishedAt: string, updatedAt: string, title: string, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
 
 type FullTeaser_PeerArticleTeaser_Fragment = { __typename?: 'PeerArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, articleID: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null, article?: { __typename?: 'Article', id: string, publishedAt: string, updatedAt: string, tags: Array<string>, preTitle?: string | null, title: string, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null };
 
-export type FullTeaserFragment = FullTeaser_ArticleTeaser_Fragment | FullTeaser_CustomTeaser_Fragment | FullTeaser_PageTeaser_Fragment | FullTeaser_PeerArticleTeaser_Fragment;
+export type FullTeaserFragment = FullTeaser_ArticleTeaser_Fragment | FullTeaser_CustomTeaser_Fragment | FullTeaser_EventTeaser_Fragment | FullTeaser_PageTeaser_Fragment | FullTeaser_PeerArticleTeaser_Fragment;
 
 type FullBlock_BildwurfAdBlock_Fragment = { __typename: 'BildwurfAdBlock' };
 
@@ -1433,6 +1520,8 @@ type FullBlock_EmbedBlock_Fragment = { __typename: 'EmbedBlock', url?: string | 
 type FullBlock_EventBlock_Fragment = { __typename: 'EventBlock' };
 
 type FullBlock_FacebookPostBlock_Fragment = { __typename: 'FacebookPostBlock', userID: string, postID: string };
+
+type FullBlock_FacebookVideoBlock_Fragment = { __typename: 'FacebookVideoBlock' };
 
 type FullBlock_HtmlBlock_Fragment = { __typename: 'HTMLBlock' };
 
@@ -1456,7 +1545,7 @@ type FullBlock_RichTextBlock_Fragment = { __typename: 'RichTextBlock', richText:
 
 type FullBlock_SoundCloudTrackBlock_Fragment = { __typename: 'SoundCloudTrackBlock', trackID: string };
 
-type FullBlock_TeaserGridBlock_Fragment = { __typename: 'TeaserGridBlock', numColumns: number, teasers: Array<{ __typename?: 'ArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, article?: { __typename?: 'Article', id: string, publishedAt: string, updatedAt: string, tags: Array<string>, preTitle?: string | null, title: string, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | { __typename?: 'CustomTeaser' } | { __typename?: 'PageTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, page?: { __typename?: 'Page', id: string, publishedAt: string, updatedAt: string, title: string, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | { __typename?: 'PeerArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, articleID: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null, article?: { __typename?: 'Article', id: string, publishedAt: string, updatedAt: string, tags: Array<string>, preTitle?: string | null, title: string, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null> };
+type FullBlock_TeaserGridBlock_Fragment = { __typename: 'TeaserGridBlock', numColumns: number, teasers: Array<{ __typename?: 'ArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, article?: { __typename?: 'Article', id: string, publishedAt: string, updatedAt: string, tags: Array<string>, preTitle?: string | null, title: string, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | { __typename?: 'CustomTeaser' } | { __typename?: 'EventTeaser' } | { __typename?: 'PageTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, page?: { __typename?: 'Page', id: string, publishedAt: string, updatedAt: string, title: string, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | { __typename?: 'PeerArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, articleID: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null, article?: { __typename?: 'Article', id: string, publishedAt: string, updatedAt: string, tags: Array<string>, preTitle?: string | null, title: string, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null> };
 
 type FullBlock_TeaserGridFlexBlock_Fragment = { __typename: 'TeaserGridFlexBlock' };
 
@@ -1470,16 +1559,29 @@ type FullBlock_VimeoVideoBlock_Fragment = { __typename: 'VimeoVideoBlock', video
 
 type FullBlock_YouTubeVideoBlock_Fragment = { __typename: 'YouTubeVideoBlock', videoID: string };
 
-export type FullBlockFragment = FullBlock_BildwurfAdBlock_Fragment | FullBlock_CommentBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_EventBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_HtmlBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_PollBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_RichTextBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_TeaserGridFlexBlock_Fragment | FullBlock_TikTokVideoBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment;
+export type FullBlockFragment = FullBlock_BildwurfAdBlock_Fragment | FullBlock_CommentBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_EventBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_HtmlBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_PollBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_RichTextBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_TeaserGridFlexBlock_Fragment | FullBlock_TikTokVideoBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment;
 
-export type MutationCommentFragment = { __typename?: 'Comment', itemID: string, itemType: CommentItemType, text?: Node[] | null, parentID?: string | null, user?: { __typename?: 'User', id: string } | null };
+export type FullCommentUserFragment = { __typename?: 'User', id: string, name: string, firstName?: string | null, preferredName?: string | null, flair?: string | null, email: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null } | null };
+
+export type MutationCommentFragment = { __typename?: 'Comment', id: string, itemID: string, itemType: CommentItemType, state: CommentState, text?: Node[] | null, parentID?: string | null, user?: { __typename?: 'User', id: string } | null };
+
+export type FullCommentFragment = { __typename?: 'Comment', id: string, createdAt: string, modifiedAt?: string | null, itemID: string, itemType: CommentItemType, user?: { __typename?: 'User', id: string, name: string, firstName?: string | null, preferredName?: string | null, flair?: string | null, email: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null } | null } | null };
 
 export type AddCommentMutationVariables = Exact<{
   input: CommentInput;
 }>;
 
 
-export type AddCommentMutation = { __typename?: 'Mutation', addComment: { __typename?: 'Comment', itemID: string, itemType: CommentItemType, text?: Node[] | null, parentID?: string | null, user?: { __typename?: 'User', id: string } | null } };
+export type AddCommentMutation = { __typename?: 'Mutation', addComment: { __typename?: 'Comment', id: string, itemID: string, itemType: CommentItemType, state: CommentState, text?: Node[] | null, parentID?: string | null, user?: { __typename?: 'User', id: string } | null } };
+
+export type CommentsQueryVariables = Exact<{
+  itemID: Scalars['ID'];
+  order?: InputMaybe<SortOrder>;
+  sort?: InputMaybe<CommentSort>;
+}>;
+
+
+export type CommentsQuery = { __typename?: 'Query', comments: Array<{ __typename?: 'Comment', id: string, createdAt: string, modifiedAt?: string | null, itemID: string, itemType: CommentItemType, user?: { __typename?: 'User', id: string, name: string, firstName?: string | null, preferredName?: string | null, flair?: string | null, email: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null } | null } | null }> };
 
 export type EventRefFragment = { __typename?: 'Event', id: string, name: string, description?: Node[] | null, status: EventStatus, location?: string | null, startsAt: string, endsAt?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, tags?: Array<{ __typename?: 'Tag', id: string, tag?: string | null }> | null };
 
@@ -1524,7 +1626,7 @@ export type PageQueryVariables = Exact<{
 }>;
 
 
-export type PageQuery = { __typename?: 'Query', page?: { __typename?: 'Page', id: string, publishedAt: string, updatedAt: string, slug: string, title: string, description?: string | null, tags: Array<string>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'PublicProperties', key: string, value: string }>, blocks: Array<{ __typename: 'BildwurfAdBlock' } | { __typename: 'CommentBlock' } | { __typename: 'EmbedBlock', url?: string | null, title?: string | null, width?: number | null, height?: number | null, styleCustom?: string | null, sandbox?: string | null } | { __typename: 'EventBlock' } | { __typename: 'FacebookPostBlock', userID: string, postID: string } | { __typename: 'HTMLBlock' } | { __typename: 'ImageBlock', caption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | { __typename: 'ImageGalleryBlock', images: Array<{ __typename?: 'GalleryImageEdge', caption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> } | { __typename: 'InstagramPostBlock', postID: string } | { __typename: 'LinkPageBreakBlock', text?: string | null, linkText?: string | null, linkURL?: string | null } | { __typename: 'ListicleBlock', items: Array<{ __typename?: 'ListicleItem', title: string, richText: Node[], image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> } | { __typename: 'PolisConversationBlock' } | { __typename: 'PollBlock' } | { __typename: 'QuoteBlock', quote?: string | null, author?: string | null } | { __typename: 'RichTextBlock', richText: Node[] } | { __typename: 'SoundCloudTrackBlock', trackID: string } | { __typename: 'TeaserGridBlock', numColumns: number, teasers: Array<{ __typename?: 'ArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, article?: { __typename?: 'Article', id: string, publishedAt: string, updatedAt: string, tags: Array<string>, preTitle?: string | null, title: string, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | { __typename?: 'CustomTeaser' } | { __typename?: 'PageTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, page?: { __typename?: 'Page', id: string, publishedAt: string, updatedAt: string, title: string, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | { __typename?: 'PeerArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, articleID: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null, article?: { __typename?: 'Article', id: string, publishedAt: string, updatedAt: string, tags: Array<string>, preTitle?: string | null, title: string, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null> } | { __typename: 'TeaserGridFlexBlock' } | { __typename: 'TikTokVideoBlock' } | { __typename: 'TitleBlock', title?: string | null, lead?: string | null } | { __typename: 'TwitterTweetBlock', userID: string, tweetID: string } | { __typename: 'VimeoVideoBlock', videoID: string } | { __typename: 'YouTubeVideoBlock', videoID: string }> } | null };
+export type PageQuery = { __typename?: 'Query', page?: { __typename?: 'Page', id: string, publishedAt: string, updatedAt: string, slug: string, title: string, description?: string | null, tags: Array<string>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'PublicProperties', key: string, value: string }>, blocks: Array<{ __typename: 'BildwurfAdBlock' } | { __typename: 'CommentBlock' } | { __typename: 'EmbedBlock', url?: string | null, title?: string | null, width?: number | null, height?: number | null, styleCustom?: string | null, sandbox?: string | null } | { __typename: 'EventBlock' } | { __typename: 'FacebookPostBlock', userID: string, postID: string } | { __typename: 'FacebookVideoBlock' } | { __typename: 'HTMLBlock' } | { __typename: 'ImageBlock', caption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | { __typename: 'ImageGalleryBlock', images: Array<{ __typename?: 'GalleryImageEdge', caption?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> } | { __typename: 'InstagramPostBlock', postID: string } | { __typename: 'LinkPageBreakBlock', text?: string | null, linkText?: string | null, linkURL?: string | null } | { __typename: 'ListicleBlock', items: Array<{ __typename?: 'ListicleItem', title: string, richText: Node[], image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }> } | { __typename: 'PolisConversationBlock' } | { __typename: 'PollBlock' } | { __typename: 'QuoteBlock', quote?: string | null, author?: string | null } | { __typename: 'RichTextBlock', richText: Node[] } | { __typename: 'SoundCloudTrackBlock', trackID: string } | { __typename: 'TeaserGridBlock', numColumns: number, teasers: Array<{ __typename?: 'ArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, article?: { __typename?: 'Article', id: string, publishedAt: string, updatedAt: string, tags: Array<string>, preTitle?: string | null, title: string, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | { __typename?: 'CustomTeaser' } | { __typename?: 'EventTeaser' } | { __typename?: 'PageTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, page?: { __typename?: 'Page', id: string, publishedAt: string, updatedAt: string, title: string, description?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | { __typename?: 'PeerArticleTeaser', style: TeaserStyle, preTitle?: string | null, title?: string | null, lead?: string | null, articleID: string, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, peer?: { __typename?: 'Peer', id: string, name: string, slug: string, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null, article?: { __typename?: 'Article', id: string, publishedAt: string, updatedAt: string, tags: Array<string>, preTitle?: string | null, title: string, lead?: string | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null } | null } | null> } | { __typename: 'TeaserGridFlexBlock' } | { __typename: 'TikTokVideoBlock' } | { __typename: 'TitleBlock', title?: string | null, lead?: string | null } | { __typename: 'TwitterTweetBlock', userID: string, tweetID: string } | { __typename: 'VimeoVideoBlock', videoID: string } | { __typename: 'YouTubeVideoBlock', videoID: string }> } | null };
 
 export type FullPeerProfileFragment = { __typename?: 'PeerProfile', name: string, hostURL: string, themeColor: string, themeFontColor: string, logo?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null };
 
@@ -1549,7 +1651,7 @@ export type PhraseQueryVariables = Exact<{
 }>;
 
 
-export type PhraseQuery = { __typename?: 'Query', phrase?: { __typename?: 'Phrase', articles: Array<{ __typename?: 'Article', id: string, slug: string, title: string, blocks: Array<{ __typename?: 'BildwurfAdBlock' } | { __typename?: 'CommentBlock' } | { __typename?: 'EmbedBlock' } | { __typename?: 'EventBlock' } | { __typename?: 'FacebookPostBlock' } | { __typename?: 'HTMLBlock' } | { __typename?: 'ImageBlock' } | { __typename?: 'ImageGalleryBlock' } | { __typename?: 'InstagramPostBlock' } | { __typename?: 'LinkPageBreakBlock' } | { __typename?: 'ListicleBlock' } | { __typename?: 'PolisConversationBlock' } | { __typename?: 'PollBlock' } | { __typename?: 'QuoteBlock' } | { __typename?: 'RichTextBlock', richText: Node[] } | { __typename?: 'SoundCloudTrackBlock' } | { __typename?: 'TeaserGridBlock' } | { __typename?: 'TeaserGridFlexBlock' } | { __typename?: 'TikTokVideoBlock' } | { __typename?: 'TitleBlock' } | { __typename?: 'TwitterTweetBlock' } | { __typename?: 'VimeoVideoBlock' } | { __typename?: 'YouTubeVideoBlock' }> }>, pages: Array<{ __typename?: 'Page', id: string, slug: string, title: string, blocks: Array<{ __typename?: 'BildwurfAdBlock' } | { __typename?: 'CommentBlock' } | { __typename?: 'EmbedBlock' } | { __typename?: 'EventBlock' } | { __typename?: 'FacebookPostBlock' } | { __typename?: 'HTMLBlock' } | { __typename?: 'ImageBlock' } | { __typename?: 'ImageGalleryBlock' } | { __typename?: 'InstagramPostBlock' } | { __typename?: 'LinkPageBreakBlock' } | { __typename?: 'ListicleBlock' } | { __typename?: 'PolisConversationBlock' } | { __typename?: 'PollBlock' } | { __typename?: 'QuoteBlock' } | { __typename?: 'RichTextBlock', richText: Node[] } | { __typename?: 'SoundCloudTrackBlock' } | { __typename?: 'TeaserGridBlock' } | { __typename?: 'TeaserGridFlexBlock' } | { __typename?: 'TikTokVideoBlock' } | { __typename?: 'TitleBlock' } | { __typename?: 'TwitterTweetBlock' } | { __typename?: 'VimeoVideoBlock' } | { __typename?: 'YouTubeVideoBlock' }> }> } | null };
+export type PhraseQuery = { __typename?: 'Query', phrase?: { __typename?: 'Phrase', articles: Array<{ __typename?: 'Article', id: string, slug: string, title: string, blocks: Array<{ __typename?: 'BildwurfAdBlock' } | { __typename?: 'CommentBlock' } | { __typename?: 'EmbedBlock' } | { __typename?: 'EventBlock' } | { __typename?: 'FacebookPostBlock' } | { __typename?: 'FacebookVideoBlock' } | { __typename?: 'HTMLBlock' } | { __typename?: 'ImageBlock' } | { __typename?: 'ImageGalleryBlock' } | { __typename?: 'InstagramPostBlock' } | { __typename?: 'LinkPageBreakBlock' } | { __typename?: 'ListicleBlock' } | { __typename?: 'PolisConversationBlock' } | { __typename?: 'PollBlock' } | { __typename?: 'QuoteBlock' } | { __typename?: 'RichTextBlock', richText: Node[] } | { __typename?: 'SoundCloudTrackBlock' } | { __typename?: 'TeaserGridBlock' } | { __typename?: 'TeaserGridFlexBlock' } | { __typename?: 'TikTokVideoBlock' } | { __typename?: 'TitleBlock' } | { __typename?: 'TwitterTweetBlock' } | { __typename?: 'VimeoVideoBlock' } | { __typename?: 'YouTubeVideoBlock' }> }>, pages: Array<{ __typename?: 'Page', id: string, slug: string, title: string, blocks: Array<{ __typename?: 'BildwurfAdBlock' } | { __typename?: 'CommentBlock' } | { __typename?: 'EmbedBlock' } | { __typename?: 'EventBlock' } | { __typename?: 'FacebookPostBlock' } | { __typename?: 'FacebookVideoBlock' } | { __typename?: 'HTMLBlock' } | { __typename?: 'ImageBlock' } | { __typename?: 'ImageGalleryBlock' } | { __typename?: 'InstagramPostBlock' } | { __typename?: 'LinkPageBreakBlock' } | { __typename?: 'ListicleBlock' } | { __typename?: 'PolisConversationBlock' } | { __typename?: 'PollBlock' } | { __typename?: 'QuoteBlock' } | { __typename?: 'RichTextBlock', richText: Node[] } | { __typename?: 'SoundCloudTrackBlock' } | { __typename?: 'TeaserGridBlock' } | { __typename?: 'TeaserGridFlexBlock' } | { __typename?: 'TikTokVideoBlock' } | { __typename?: 'TitleBlock' } | { __typename?: 'TwitterTweetBlock' } | { __typename?: 'VimeoVideoBlock' } | { __typename?: 'YouTubeVideoBlock' }> }> } | null };
 
 export type FullUserFragment = { __typename?: 'User', name: string, email: string };
 
@@ -1567,6 +1669,13 @@ export type CreateSessionWithJwtMutationVariables = Exact<{
 
 
 export type CreateSessionWithJwtMutation = { __typename?: 'Mutation', createSessionWithJWT: { __typename?: 'SessionWithToken', token: string, user: { __typename?: 'User', email: string } } };
+
+export type UpdatePaymentProviderCustomersMutationVariables = Exact<{
+  customers: Array<PaymentProviderCustomerInput> | PaymentProviderCustomerInput;
+}>;
+
+
+export type UpdatePaymentProviderCustomersMutation = { __typename?: 'Mutation', updatePaymentProviderCustomers: Array<{ __typename?: 'PaymentProviderCustomer', customerID: string, paymentProviderID: string }> };
 
 export const ImageUrLs = gql`
     fragment ImageURLs on Image {
@@ -1794,8 +1903,10 @@ export const FullBlock = gql`
 ${FullTeaser}`;
 export const MutationComment = gql`
     fragment MutationComment on Comment {
+  id
   itemID
   itemType
+  state
   user {
     id
   }
@@ -1803,24 +1914,6 @@ export const MutationComment = gql`
   parentID
 }
     `;
-export const EventRef = gql`
-    fragment EventRef on Event {
-  id
-  name
-  description
-  status
-  location
-  image {
-    ...ImageRef
-  }
-  tags {
-    id
-    tag
-  }
-  startsAt
-  endsAt
-}
-    ${ImageRef}`;
 export const FullImage = gql`
     fragment FullImage on Image {
   id
@@ -1841,6 +1934,49 @@ export const FullImage = gql`
     y
   }
   ...ImageRef
+}
+    ${ImageRef}`;
+export const FullCommentUser = gql`
+    fragment FullCommentUser on User {
+  id
+  name
+  firstName
+  preferredName
+  flair
+  email
+  image {
+    ...FullImage
+  }
+}
+    ${FullImage}`;
+export const FullComment = gql`
+    fragment FullComment on Comment {
+  id
+  user {
+    ...FullCommentUser
+  }
+  createdAt
+  modifiedAt
+  itemID
+  itemType
+}
+    ${FullCommentUser}`;
+export const EventRef = gql`
+    fragment EventRef on Event {
+  id
+  name
+  description
+  status
+  location
+  image {
+    ...ImageRef
+  }
+  tags {
+    id
+    tag
+  }
+  startsAt
+  endsAt
 }
     ${ImageRef}`;
 export const FullUser = gql`
@@ -1957,6 +2093,13 @@ export const AddComment = gql`
   }
 }
     ${MutationComment}`;
+export const Comments = gql`
+    query Comments($itemID: ID!, $order: SortOrder, $sort: CommentSort) {
+  comments(itemId: $itemID, order: $order, sort: $sort) {
+    ...FullComment
+  }
+}
+    ${FullComment}`;
 export const EventList = gql`
     query EventList($filter: EventFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: EventSort) {
   events(
@@ -2084,6 +2227,14 @@ export const CreateSessionWithJwt = gql`
       email
     }
     token
+  }
+}
+    `;
+export const UpdatePaymentProviderCustomers = gql`
+    mutation UpdatePaymentProviderCustomers($customers: [PaymentProviderCustomerInput!]!) {
+  updatePaymentProviderCustomers(input: $customers) {
+    customerID
+    paymentProviderID
   }
 }
     `;

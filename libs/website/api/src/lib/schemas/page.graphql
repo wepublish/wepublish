@@ -1,0 +1,36 @@
+fragment PageWithoutBlocks on Page {
+  id
+  slug
+  description
+  tags
+  title
+  url
+
+  image {
+    ...FullImage
+  }
+
+  socialMediaDescription
+  socialMediaTitle
+  socialMediaImage {
+    ...FullImage
+  }
+
+  properties {
+    ...FullProperty
+  }
+}
+
+fragment FullPage on Page {
+  ...PageWithoutBlocks
+
+  blocks {
+    ...FullBlock
+  }
+}
+
+query Page($slug: Slug, $id: ID) {
+  page(slug: $slug, id: $id) {
+    ...FullPage
+  }
+}

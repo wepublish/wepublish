@@ -3,9 +3,9 @@ export default {
   displayName: 'ui',
   preset: '../../jest.preset.js',
   transform: {
-    '^(?!.*\\.(js|jsx|ts|tsx|css|json)$)': '@nrwl/react/plugins/jest',
-    '^.+\\.[tj]sx?$': ['babel-jest', {presets: ['@nrwl/react/babel']}]
+    '^.+\\.[tj]sx?$': ['@swc/jest', {jsc: {transform: {react: {runtime: 'automatic'}}}}]
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
-  coverageDirectory: '../../coverage/libs/ui'
+  coverageDirectory: '../../coverage/libs/ui',
+  setupFiles: ['./setup-tests.tsx']
 }

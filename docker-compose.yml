@@ -9,14 +9,11 @@ services:
     build:
       context: .
     ports:
-      - 4200:8000
+      - '127.0.0.1:4200:8000'
     command: ['npx', '@wepublish/website-example']
     environment:
       NODE_ENV: production
-      CANONICAL_HOST: http://localhost:4200
       API_URL: http://api:8000
-      ALLOWED_HOSTS: localhost
-      NUM_WORKERS: 1
     depends_on:
       - api
     networks:
@@ -25,7 +22,7 @@ services:
     build:
       context: .
     ports:
-      - 4000:8000
+      - '127.0.0.1:4000:8000'
     command: ['node', 'dist/apps/api-example/main.js']
     environment:
       NODE_ENV: production
@@ -48,7 +45,7 @@ services:
     build:
       context: .
     ports:
-      - 3006:8000
+      - '127.0.0.1:3006:8000'
     command: ['node', 'dist/apps/editor/main.js']
     environment:
       NODE_ENV: production
@@ -60,8 +57,8 @@ services:
   media:
     image: ghcr.io/wepublish/karma-media-server:latest
     ports:
-      - 4100:4100
-      - 4101:4100
+      - '127.0.0.1:4100:4100'
+      - '127.0.0.1:4101:4100'
     environment:
       NUM_CLUSTERS: 1
       STORAGE_PATH: ./.media
@@ -71,7 +68,7 @@ services:
     image: bitnami/postgresql:14
     platform: linux/amd64
     ports:
-      - '5432:5432'
+      - '127.0.0.1:5432:5432'
     volumes:
       - 'database_data:/bitnami/postgresql'
     environment:
@@ -89,7 +86,7 @@ services:
       PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
       PGADMIN_CONFIG_SERVER_MODE: 'False'
     ports:
-      - "8000:80"
+      - "127.0.0.1:8000:80"
     depends_on:
       - database
     networks:

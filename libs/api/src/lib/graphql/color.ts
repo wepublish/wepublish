@@ -17,8 +17,10 @@ export const GraphQLColor = new GraphQLScalarType({
   },
 
   parseLiteral(literal) {
-    const value: string = valueFromAST(literal, GraphQLNonNull(GraphQLString))
+    const value = valueFromAST(literal, new GraphQLNonNull(GraphQLString)) as string
+
     if (!value.match(ColorRegexp)) throw new Error('Invalid hex color string.')
+
     return value
   }
 })

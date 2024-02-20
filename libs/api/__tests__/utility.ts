@@ -1,4 +1,4 @@
-import {CommentItemType, Peer, PrismaClient} from '@prisma/client'
+import {CommentItemType, Event, Peer, PrismaClient, Subscription} from '@prisma/client'
 import {ApolloServer} from 'apollo-server-express'
 import * as crypto from 'crypto'
 import {URL} from 'url'
@@ -14,7 +14,8 @@ import {
   PublicComment,
   PublicPage,
   URLAdapter,
-  DefaultSessionTTL
+  DefaultSessionTTL,
+  FakeMailProvider
 } from '../src'
 import {createUserSession} from '../src/lib/graphql/session/session.mutation'
 
@@ -41,6 +42,10 @@ class ExampleURLAdapter implements URLAdapter {
     return `https://demo.wepublish.ch/author/${author.slug || author.id}`
   }
 
+  getEventURL(event: Event): string {
+    return `https://demo.wepublish.ch/events/${event.id}`
+  }
+
   getArticlePreviewURL(token: string): string {
     return `https://demo.wepulish.ch/article/preview/${token}`
   }
@@ -64,13 +69,13 @@ class ExampleURLAdapter implements URLAdapter {
   getLoginURL(token: string): string {
     return `https://demo.wepublish.ch/login/${token}`
   }
+
+  getSubscriptionURL(subscription: Subscription): string {
+    return `https://demo.wepublish.ch/profile/subscription/${subscription.id}`
+  }
 }
 
 export async function createGraphQLTestClientWithPrisma(): Promise<TestClient> {
-  if (!process.env.DATABASE_URL) {
-    throw new Error('DATABASE_URL not defined')
-  }
-
   const prisma = new PrismaClient()
   await prisma.$connect()
 
@@ -78,6 +83,35 @@ export async function createGraphQLTestClientWithPrisma(): Promise<TestClient> {
     where: {
       email: 'dev@wepublish.ch'
     }
+  })
+
+  const userSession = await createUserSession(
+    adminUser,
+    DefaultSessionTTL,
+    prisma.session,
+    prisma.userRole
+  )
+
+  const request: any = {
+    headers: {
+      authorization: `Bearer ${userSession?.token}`
+    }
+  }
+  return await createGraphQLTestClient(request)
+}
+
+export async function createGraphQLTestClient(overwriteRequest?: any): Promise<TestClient> {
+  if (!process.env.DATABASE_URL) {
+    throw new Error('DATABASE_URL not defined')
+  }
+
+  const prisma = new PrismaClient()
+  await prisma.$connect()
+
+  const mailProvider = new FakeMailProvider({
+    id: 'fakeMail',
+    name: 'Fake Mail',
+    fromAddress: 'fakeMail@wepublish.media'
   })
 
   const mediaAdapter: KarmaMediaAdapter = {
@@ -92,34 +126,21 @@ export async function createGraphQLTestClientWithPrisma(): Promise<TestClient> {
     _uploadImage: jest.fn()
   }
 
-  const userSession = await createUserSession(
-    adminUser!,
-    DefaultSessionTTL,
-    prisma.session,
-    prisma.userRole
-  )
-
-  const request: any = {
-    headers: {
-      authorization: `Bearer ${userSession?.token}`
-    }
-  }
-
   const challenge = new AlgebraicCaptchaChallenge('secret', 600, {})
 
   const testServerPublic = new ApolloServer({
     schema: GraphQLWepublishPublicSchema,
     introspection: false,
-    context: async () =>
-      await contextFromRequest(request, {
+    context: async ({req}) =>
+      await contextFromRequest(overwriteRequest ? overwriteRequest : req, {
         hostURL: 'https://fakeURL',
         websiteURL: 'https://fakeurl',
         prisma,
         mediaAdapter,
+        mailProvider,
         mailContextOptions: {
           defaultFromAddress: 'dev@fake.org',
-          defaultReplyToAddress: 'reply-to@fake.org',
-          mailTemplateMaps: []
+          defaultReplyToAddress: 'reply-to@fake.org'
         },
         urlAdapter: new ExampleURLAdapter(),
         oauth2Providers: [],
@@ -131,16 +152,16 @@ export async function createGraphQLTestClientWithPrisma(): Promise<TestClient> {
   const testServerPrivate = new ApolloServer({
     schema: GraphQLWepublishSchema,
     introspection: false,
-    context: async () =>
-      await contextFromRequest(request, {
+    context: async ({req}) =>
+      await contextFromRequest(overwriteRequest ? overwriteRequest : req, {
         hostURL: 'https://fakeURL',
         websiteURL: 'https://fakeurl',
         prisma,
         mediaAdapter,
+        mailProvider,
         mailContextOptions: {
           defaultFromAddress: 'dev@fake.org',
-          defaultReplyToAddress: 'reply-to@fake.org',
-          mailTemplateMaps: []
+          defaultReplyToAddress: 'reply-to@fake.org'
         },
         urlAdapter: new ExampleURLAdapter(),
         oauth2Providers: [],

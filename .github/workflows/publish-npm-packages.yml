@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: "Checkout"
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
 
@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: '16'
           registry-url: 'https://registry.npmjs.org/'
-          cache: npm
+          cache: 'npm'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 
@@ -28,8 +28,11 @@ jobs:
           npm config set registry 'https://registry.npmjs.org'
           npm set '//registry.npmjs.org/:_authToken' '${{ secrets.NPM_AUTH_TOKEN }}'
 
-      - name: "npm install"
+      - name: "Install dependencies"
         run: npm ci
+
+      - name: "Build packages"
+        run: npm run build -- --exclude=website-example
 
       - if: |
           contains(github.ref, 'tags/') && contains(github.ref, 'alpha')

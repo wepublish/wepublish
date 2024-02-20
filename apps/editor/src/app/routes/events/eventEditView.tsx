@@ -7,12 +7,12 @@ import {
   useEventQuery,
   useUpdateEventMutation
 } from '@wepublish/editor/api'
+import {SingleViewTitle} from '@wepublish/ui/editor'
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {useNavigate, useParams} from 'react-router-dom'
 import {Form, Message, Schema, toaster} from 'rsuite'
 
-import {ModelTitle} from '../../atoms/modelTitle'
 import {EventForm} from './eventForm'
 
 const onErrorToast = (error: ApolloError) => {
@@ -73,6 +73,9 @@ export const EventEditView = () => {
 
   const onSubmit = () => {
     const {image, ...eventWithoutImage} = event!
+    if (!eventWithoutImage.endsAt) {
+      eventWithoutImage.endsAt = null
+    }
     updateEvent({variables: eventWithoutImage})
   }
 
@@ -91,7 +94,7 @@ export const EventEditView = () => {
       model={validationModel}
       disabled={loading}
       onSubmit={validationPassed => validationPassed && onSubmit()}>
-      <ModelTitle
+      <SingleViewTitle
         loading={loading}
         title={t('event.edit.title')}
         loadingTitle={t('event.edit.title')}

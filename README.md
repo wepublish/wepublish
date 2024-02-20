@@ -63,6 +63,7 @@
 - [Usage](#usage)
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
+- [Docs](#docs)
 - [Code of Conduct](#code-of-conduct)
 - [License](#license)
 - [Contact](#contact)
@@ -83,13 +84,31 @@ TBD
 - [TypeScript](https://www.typescriptlang.org/)
 - :green_heart:
 
-## Demo
+## Demo (Stable)
 
 - [Editor](https://editor.demo.wepublish.media)
   - username: `dev@wepublish.ch`
   - password: `123`
 - [Website](https://demo.wepublish.media)
 - [API](https://api.demo.wepublish.media)
+
+
+## Preview (Next)
+
+- [Editor](https://editor.next.wepublish.media)
+  - username: `admin@wepublish.ch`
+  - password: `123`
+- [Website](https://next.wepublish.media)
+- [API](https://api.next.wepublish.media)
+
+
+## Development (Master)
+
+- [Editor](https://editor.dev.wepublish.media)
+  - username: `admin@wepublish.ch`
+  - password: `123`
+- [Website](https://dev.wepublish.media)
+- [API](https://api.dev.wepublish.media)
 
 ## Packages
 

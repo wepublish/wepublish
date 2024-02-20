@@ -1,0 +1,252 @@
+fragment BlockWithoutTeaser on Block {
+  __typename
+
+  ... on TitleBlock {
+    title
+    lead
+  }
+
+  ... on ImageBlock {
+    caption
+    image {
+      ...FullImage
+    }
+  }
+
+  ... on ImageGalleryBlock {
+    images {
+      caption
+      image {
+        ...FullImage
+      }
+    }
+  }
+
+  ... on QuoteBlock {
+    quote
+    author
+  }
+
+  ... on RichTextBlock {
+    richText
+  }
+
+  ... on HTMLBlock {
+    html
+  }
+
+  ... on EventBlock {
+    events {
+      ...FullEvent
+    }
+  }
+
+  ... on PollBlock {
+    poll {
+      ...FullPoll
+    }
+  }
+
+  ... on ListicleBlock {
+    items {
+      title
+      richText
+      image {
+        ...FullImage
+      }
+    }
+  }
+
+  ... on LinkPageBreakBlock {
+    text
+    richText
+    layoutOption
+    hideButton
+    linkTarget
+    linkText
+    linkURL
+    styleOption
+    templateOption
+    image {
+      ...FullImage
+    }
+  }
+
+  ... on FacebookPostBlock {
+    userID
+    postID
+  }
+
+  ... on FacebookVideoBlock {
+    userID
+    videoID
+  }
+
+  ... on InstagramPostBlock {
+    postID
+  }
+
+  ... on TwitterTweetBlock {
+    userID
+    tweetID
+  }
+
+  ... on VimeoVideoBlock {
+    videoID
+  }
+
+  ... on YouTubeVideoBlock {
+    videoID
+  }
+
+  ... on SoundCloudTrackBlock {
+    trackID
+  }
+
+  ... on PolisConversationBlock {
+    conversationID
+  }
+
+  ... on TikTokVideoBlock {
+    userID
+    videoID
+  }
+
+  ... on BildwurfAdBlock {
+    zoneID
+  }
+
+  ... on EmbedBlock {
+    url
+    title
+    width
+    height
+    styleCustom
+    sandbox
+  }
+}
+
+fragment FullTeaser on Teaser {
+  ... on ArticleTeaser {
+    style
+
+    image {
+      ...FullImage
+    }
+
+    preTitle
+    title
+    lead
+
+    article {
+      ...ArticleWithoutBlocks
+
+      blocks {
+        ...BlockWithoutTeaser
+      }
+    }
+  }
+
+  ... on PeerArticleTeaser {
+    style
+
+    image {
+      ...FullImage
+    }
+
+    preTitle
+    title
+    lead
+
+    peer {
+      ...FullPeer
+    }
+
+    article {
+      ...ArticleWithoutBlocks
+
+      blocks {
+        ...BlockWithoutTeaser
+      }
+    }
+  }
+
+  ... on PageTeaser {
+    style
+
+    image {
+      ...FullImage
+    }
+
+    preTitle
+    title
+    lead
+
+    page {
+      ...PageWithoutBlocks
+
+      blocks {
+        ...BlockWithoutTeaser
+      }
+    }
+  }
+
+  ... on EventTeaser {
+    style
+
+    image {
+      ...FullImage
+    }
+
+    preTitle
+    title
+    lead
+
+    event {
+      ...FullEvent
+    }
+  }
+
+  ... on CustomTeaser {
+    style
+
+    image {
+      ...FullImage
+    }
+
+    preTitle
+    title
+    lead
+    contentUrl
+    properties {
+      key
+      value
+    }
+  }
+}
+
+fragment FullBlock on Block {
+  ...BlockWithoutTeaser
+
+  ... on TeaserGridFlexBlock {
+    flexTeasers {
+      alignment {
+        x
+        y
+        w
+        h
+      }
+
+      teaser {
+        ...FullTeaser
+      }
+    }
+  }
+
+  ... on TeaserGridBlock {
+    teasers {
+      ...FullTeaser
+    }
+    numColumns
+  }
+}

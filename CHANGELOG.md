@@ -1,5 +1,230 @@
 # Change Log
 
+## Release 10.1.0 (2024-01-18)
+
+#### :heart: New Feature
+* [#1117](https://github.com/wepublish/wepublish/pull/1117) WPC:1414: Support Payrexx offsite transactions with preauthorization ([@antkiewiczk](https://github.com/antkiewiczk))
+
+#### :bug: Bug Fix
+* [#1119](https://github.com/wepublish/wepublish/pull/1119) Bexio fixes ([@elias-summermatter](https://github.com/elias-summermatter))
+* [#1129](https://github.com/wepublish/wepublish/pull/1129) fix(editor): missing permission controls for comments & events ([@Itrulia](https://github.com/Itrulia))
+* [#1126](https://github.com/wepublish/wepublish/pull/1126) fix(website): possible full reload when using relative links ([@Itrulia](https://github.com/Itrulia))
+
+#### :nail_care: Polish
+* [#1127](https://github.com/wepublish/wepublish/pull/1127) WPC-1014: Linting refactor ([@antkiewiczk](https://github.com/antkiewiczk))
+* [#1133](https://github.com/wepublish/wepublish/pull/1133) WPC-1442: Translations cleanup ([@antkiewiczk](https://github.com/antkiewiczk))
+
+#### :memo: Documentation
+* [#1116](https://github.com/wepublish/wepublish/pull/1116) docs(website): usage website builder documentation ([@Itrulia](https://github.com/Itrulia))
+
+#### :house: Internal
+* [#1138](https://github.com/wepublish/wepublish/pull/1138) WPC-1199: move stuff from editor to libs/ui ([@antkiewiczk](https://github.com/antkiewiczk))
+* [#1140](https://github.com/wepublish/wepublish/pull/1140) chore: upgraded typescript and removed rsuite hack ([@Itrulia](https://github.com/Itrulia))
+* [#1141](https://github.com/wepublish/wepublish/pull/1141) ci: lower parallelization of website tests ([@Itrulia](https://github.com/Itrulia))
+* [#1139](https://github.com/wepublish/wepublish/pull/1139) split running test jobs ([@elias-summermatter](https://github.com/elias-summermatter))
+
+#### Committers: 5
+- Elias Summermatter ([@elias-summermatter](https://github.com/elias-summermatter))
+- Itrulia ([@Itrulia](https://github.com/Itrulia))
+- Kamil Antkiewicz ([@antkiewiczk](https://github.com/antkiewiczk))
+- Tomasz Durka ([@tomaszdurka](https://github.com/tomaszdurka))
+- [@michael-scheurer](https://github.com/michael-scheurer)
+
+## v10.0.0 (2023-11-29)
+
+#### :boom: Breaking Change
+
+* [#1107](https://github.com/wepublish/wepublish/pull/1107) Subscription feature
+  branch ([@Itrulia](https://github.com/Itrulia))
+* [#1064](https://github.com/wepublish/wepublish/pull/1064) feat(comments-website): added comment
+  rating ([@Itrulia](https://github.com/Itrulia))
+* [#1030](https://github.com/wepublish/wepublish/pull/1030) feat(memberships-website): added invoice list and
+  subscription list ([@Itrulia](https://github.com/Itrulia))
+* [#927](https://github.com/wepublish/wepublish/pull/927) feat(api): add event to url
+  adapter ([@Itrulia](https://github.com/Itrulia))
+
+#### :heart: New Feature
+
+* [#1107](https://github.com/wepublish/wepublish/pull/1107) Subscription feature
+  branch ([@Itrulia](https://github.com/Itrulia))
+* [#1071](https://github.com/wepublish/wepublish/pull/1071) Move settings to
+  v2 ([@antkiewiczk](https://github.com/antkiewiczk))
+* [#1064](https://github.com/wepublish/wepublish/pull/1064) feat(comments-website): added comment
+  rating ([@Itrulia](https://github.com/Itrulia))
+* [#1054](https://github.com/wepublish/wepublish/pull/1054) feat(membership-website): implemented
+  subscribe ([@Itrulia](https://github.com/Itrulia))
+* [#1050](https://github.com/wepublish/wepublish/pull/1050) WPC-1054: Comment
+  Block ([@antkiewiczk](https://github.com/antkiewiczk))
+* [#1043](https://github.com/wepublish/wepublish/pull/1043) feat: tsri example
+  website ([@Itrulia](https://github.com/Itrulia))
+* [#1040](https://github.com/wepublish/wepublish/pull/1040) WPC-1330, WPC-1256: Events filters, add
+  Kulturzueri ([@antkiewiczk](https://github.com/antkiewiczk))
+* [#1042](https://github.com/wepublish/wepublish/pull/1042) refactor(website-example): performance, image and seo
+  improvements ([@Itrulia](https://github.com/Itrulia))
+* [#1033](https://github.com/wepublish/wepublish/pull/1033) [WPC-1329]: Personal data
+  form ([@antkiewiczk](https://github.com/antkiewiczk))
+* [#1030](https://github.com/wepublish/wepublish/pull/1030) feat(memberships-website): added invoice list and
+  subscription list ([@Itrulia](https://github.com/Itrulia))
+* [#957](https://github.com/wepublish/wepublish/pull/957) Allow auto approve
+  comments ([@penk85](https://github.com/penk85))
+* [#1016](https://github.com/wepublish/wepublish/pull/1016) feat(block-content-website): anonymous poll block voting &
+  embed cleanup ([@Itrulia](https://github.com/Itrulia))
+* [#1002](https://github.com/wepublish/wepublish/pull/1002) WPC-1068: Embed block + other embeds
+  blocks ([@antkiewiczk](https://github.com/antkiewiczk))
+* [#999](https://github.com/wepublish/wepublish/pull/999) WPC-1034: Article list (website
+  builder) ([@antkiewiczk](https://github.com/antkiewiczk))
+* [#1013](https://github.com/wepublish/wepublish/pull/1013) feat(block-content-website): implemented event
+  block ([@Itrulia](https://github.com/Itrulia))
+* [#1000](https://github.com/wepublish/wepublish/pull/1000) feat(block-content-website): implemented poll
+  block ([@Itrulia](https://github.com/Itrulia))
+* [#1012](https://github.com/wepublish/wepublish/pull/1012) feat(block-content-website): implemented listicle
+  block ([@Itrulia](https://github.com/Itrulia))
+* [#1005](https://github.com/wepublish/wepublish/pull/1005) feat(richtext/feed-website): implemented rss/atom/json
+  feeds ([@Itrulia](https://github.com/Itrulia))
+* [#998](https://github.com/wepublish/wepublish/pull/998) feat(peering-website): implemented peering
+  information ([@Itrulia](https://github.com/Itrulia))
+* [#1003](https://github.com/wepublish/wepublish/pull/1003) feat(website): add apollo cache for
+  SSR ([@Itrulia](https://github.com/Itrulia))
+* [#994](https://github.com/wepublish/wepublish/pull/994) feat(comments-website): implemented writing and editing
+  comments ([@Itrulia](https://github.com/Itrulia))
+* [#995](https://github.com/wepublish/wepublish/pull/995) feat(block-content-website): implemented image gallery
+  block ([@Itrulia](https://github.com/Itrulia))
+* [#988](https://github.com/wepublish/wepublish/pull/988) feat(comments-website): implemented displaying
+  comments ([@Itrulia](https://github.com/Itrulia))
+* [#984](https://github.com/wepublish/wepublish/pull/984) feat(article-website/page-website): implemented
+  SEO ([@Itrulia](https://github.com/Itrulia))
+* [#982](https://github.com/wepublish/wepublish/pull/982) feat(block-content-website): implemented teaser grid
+  block ([@Itrulia](https://github.com/Itrulia))
+* [#980](https://github.com/wepublish/wepublish/pull/980) feat(navigation-website): implemented
+  navbar ([@Itrulia](https://github.com/Itrulia))
+* [#962](https://github.com/wepublish/wepublish/pull/962) feat(website): new example
+  website ([@Itrulia](https://github.com/Itrulia))
+* [#977](https://github.com/wepublish/wepublish/pull/977) feat(website): make the block renderer
+  overrideable ([@Itrulia](https://github.com/Itrulia))
+* [#939](https://github.com/wepublish/wepublish/pull/939) feat(website): blocks
+  implementation ([@Itrulia](https://github.com/Itrulia))
+* [#945](https://github.com/wepublish/wepublish/pull/945) feat(website): session context
+  implementation ([@Itrulia](https://github.com/Itrulia))
+* [#938](https://github.com/wepublish/wepublish/pull/938) feat(website): footer
+  implementation ([@Itrulia](https://github.com/Itrulia))
+* [#937](https://github.com/wepublish/wepublish/pull/937) chore: upgrade nx, improve storybook implementation, and other
+  misc. ([@Itrulia](https://github.com/Itrulia))
+* [#932](https://github.com/wepublish/wepublish/pull/932) WPC-1124: Event
+  Teaser ([@antkiewiczk](https://github.com/antkiewiczk))
+* [#910](https://github.com/wepublish/wepublish/pull/910) Add gallery view to image
+  list ([@penk85](https://github.com/penk85))
+* [#927](https://github.com/wepublish/wepublish/pull/927) feat(api): add event to url
+  adapter ([@Itrulia](https://github.com/Itrulia))
+* [#897](https://github.com/wepublish/wepublish/pull/897) Change comment character
+  limit ([@penk85](https://github.com/penk85))
+* [#895](https://github.com/wepublish/wepublish/pull/895) Allow user to edit own
+  comment ([@penk85](https://github.com/penk85))
+* [#885](https://github.com/wepublish/wepublish/pull/885) feat(api-example): allow mailchimp and add env var for
+  sender ([@Itrulia](https://github.com/Itrulia))
+
+#### :bug: Bug Fix
+
+* [#1104](https://github.com/wepublish/wepublish/pull/1104) fix(website): use PNG instead of fake WEBP as it breaks
+  safari ([@Itrulia](https://github.com/Itrulia))
+* [#1052](https://github.com/wepublish/wepublish/pull/1052) WPC-1347, WPC-1350: Events bug
+  fixes ([@antkiewiczk](https://github.com/antkiewiczk))
+* [#1010](https://github.com/wepublish/wepublish/pull/1010) fix(api): facebook video block missing in public
+  API ([@Itrulia](https://github.com/Itrulia))
+* [#1008](https://github.com/wepublish/wepublish/pull/1008) fix(authors-website): fixed alignment of list as they were
+  left aligned before ([@Itrulia](https://github.com/Itrulia))
+* [#993](https://github.com/wepublish/wepublish/pull/993) fix(api): extra DB
+  requests ([@Itrulia](https://github.com/Itrulia))
+* [#954](https://github.com/wepublish/wepublish/pull/954) fix(api): unique constraint violation when publishing article
+  pending ([@Itrulia](https://github.com/Itrulia))
+* [#964](https://github.com/wepublish/wepublish/pull/964) fix(api): updatePaymentProviderCustomers prisma mutation was
+  broken ([@Itrulia](https://github.com/Itrulia))
+* [#959](https://github.com/wepublish/wepublish/pull/959) fix(membership-api): active subscribers was ignoring
+  paidUntil ([@Itrulia](https://github.com/Itrulia))
+* [#941](https://github.com/wepublish/wepublish/pull/941) Fix metadata panel add new
+  author ([@penk85](https://github.com/penk85))
+* [#948](https://github.com/wepublish/wepublish/pull/948) add public properties on public
+  user ([@penk85](https://github.com/penk85))
+* [#940](https://github.com/wepublish/wepublish/pull/940) Public pages query fix ([@penk85](https://github.com/penk85))
+* [#933](https://github.com/wepublish/wepublish/pull/933) WPC-1200 set apollo security
+  setting ([@elias-summermatter](https://github.com/elias-summermatter))
+* [#931](https://github.com/wepublish/wepublish/pull/931)
+  WPC-1198-fixing-error-in-migration-to-convert-jsonb_array-to-jsonb ([@elias-summermatter](https://github.com/elias-summermatter))
+* [#900](https://github.com/wepublish/wepublish/pull/900) b/WPC-1155 Urgent bug in invoice mark as manually
+  paid ([@elias-summermatter](https://github.com/elias-summermatter))
+* [#887](https://github.com/wepublish/wepublish/pull/887) WPC-1099: Improved user first/lastname
+  search ([@elias-summermatter](https://github.com/elias-summermatter))
+* [#903](https://github.com/wepublish/wepublish/pull/903) build(js): fix the same library being moved by nx using a
+  patch ([@Itrulia](https://github.com/Itrulia))
+* [#898](https://github.com/wepublish/wepublish/pull/898) Add bg color to
+  datepicker ([@penk85](https://github.com/penk85))
+* [#890](https://github.com/wepublish/wepublish/pull/890) Security fix expose docker-compose ports only
+  localy ([@elias-summermatter](https://github.com/elias-summermatter))
+* [#885](https://github.com/wepublish/wepublish/pull/885) feat(api-example): allow mailchimp and add env var for
+  sender ([@Itrulia](https://github.com/Itrulia))
+* [#889](https://github.com/wepublish/wepublish/pull/889) WPC-1101: Fixed peering url to represent rewrite to nestjs (
+  v1/v2) ([@elias-summermatter](https://github.com/elias-summermatter))
+
+#### :nail_care: Polish
+
+* [#935](https://github.com/wepublish/wepublish/pull/935) timepicker alignment ([@penk85](https://github.com/penk85))
+* [#898](https://github.com/wepublish/wepublish/pull/898) Add bg color to
+  datepicker ([@penk85](https://github.com/penk85))
+
+#### :memo: Documentation
+
+* [#888](https://github.com/wepublish/wepublish/pull/888) WPC-1087- Added credentials to
+  readme ([@elias-summermatter](https://github.com/elias-summermatter))
+
+#### :house: Internal
+
+* [#1101](https://github.com/wepublish/wepublish/pull/1101) Fix test db
+  config ([@antkiewiczk](https://github.com/antkiewiczk))
+* [#1059](https://github.com/wepublish/wepublish/pull/1059) ci: dont collect coverage from
+  storybook ([@Itrulia](https://github.com/Itrulia))
+* [#1058](https://github.com/wepublish/wepublish/pull/1058) chore: upgrade nx ([@Itrulia](https://github.com/Itrulia))
+* [#1045](https://github.com/wepublish/wepublish/pull/1045) test/ci: improve test parallelization, hide expected "
+  errors" ([@Itrulia](https://github.com/Itrulia))
+* [#1041](https://github.com/wepublish/wepublish/pull/1041) feat(example-api/api): added api example seeding for PRs,
+  local etc. ([@Itrulia](https://github.com/Itrulia))
+* [#1034](https://github.com/wepublish/wepublish/pull/1034) [WPC-1282]: disable overlay
+  runtimeErrors ([@antkiewiczk](https://github.com/antkiewiczk))
+* [#1031](https://github.com/wepublish/wepublish/pull/1031) refactor(website): remove on queries and add children to
+  article/page ([@Itrulia](https://github.com/Itrulia))
+* [#1024](https://github.com/wepublish/wepublish/pull/1024) test: replace swc with babel due to issues with mui &
+  bindings ([@Itrulia](https://github.com/Itrulia))
+* [#1020](https://github.com/wepublish/wepublish/pull/1020) refactor(api-example): send people to front
+  page ([@Itrulia](https://github.com/Itrulia))
+* [#1001](https://github.com/wepublish/wepublish/pull/1001) chore: upgrade nx to
+  latest ([@Itrulia](https://github.com/Itrulia))
+* [#1004](https://github.com/wepublish/wepublish/pull/1004) chore(api): upgrade
+  prisma ([@Itrulia](https://github.com/Itrulia))
+* [#1006](https://github.com/wepublish/wepublish/pull/1006) ci: added code coverage & reworked generate
+  commands ([@Itrulia](https://github.com/Itrulia))
+* [#978](https://github.com/wepublish/wepublish/pull/978) refactor(storybook): move from tools to libs to satisify
+  IDEs ([@Itrulia](https://github.com/Itrulia))
+* [#918](https://github.com/wepublish/wepublish/pull/918) test(membership-api): improve
+  cleanup ([@Itrulia](https://github.com/Itrulia))
+* [#966](https://github.com/wepublish/wepublish/pull/966) chore(editor): upgrade
+  i18next ([@Itrulia](https://github.com/Itrulia))
+* [#967](https://github.com/wepublish/wepublish/pull/967) chore(api): replace joi with
+  zod ([@Itrulia](https://github.com/Itrulia))
+* [#971](https://github.com/wepublish/wepublish/pull/971) chore: add code coverage ci config to all
+  project.json ([@Itrulia](https://github.com/Itrulia))
+* [#903](https://github.com/wepublish/wepublish/pull/903) build(js): fix the same library being moved by nx using a
+  patch ([@Itrulia](https://github.com/Itrulia))
+* [#904](https://github.com/wepublish/wepublish/pull/904) test(membership-api): fix testing db
+  name ([@Itrulia](https://github.com/Itrulia))
+
+#### Committers: 7
+
+- Elias Summermatter ([@elias-summermatter](https://github.com/elias-summermatter))
+- Itrulia ([@Itrulia](https://github.com/Itrulia))
+- Kamil Antkiewicz ([@antkiewiczk](https://github.com/antkiewiczk))
+- Penina Cheshin ([@penk85](https://github.com/penk85))
+- Tomasz Durka ([@tomaszdurka](https://github.com/tomaszdurka))
+- [@LaurentAe](https://github.com/LaurentAe)
+- [@michael-scheurer](https://github.com/michael-scheurer)
+
 ## 9.3.0 (2023-11-27)
 
 #### :bug: Bug Fix

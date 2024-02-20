@@ -42,13 +42,13 @@ export const CanGetAuthor: Permission = {
 
 export const CanGetAuthors: Permission = {
   id: 'CAN_GET_AUTHORS',
-  description: 'Allows to all authors',
+  description: 'Allows to get all authors',
   deprecated: false
 }
 
 export const CanDeleteAuthor: Permission = {
-  id: 'CAN_DELETE_AUTHORS',
-  description: 'Allows to delete authors',
+  id: 'CAN_DELETE_AUTHOR',
+  description: 'Allows to delete a single author',
   deprecated: false
 }
 
@@ -127,6 +127,12 @@ export const CanPublishArticle: Permission = {
 export const CanDeleteArticle: Permission = {
   id: 'CAN_DELETE_ARTICLE',
   description: 'Allows to delete articles',
+  deprecated: false
+}
+
+export const CanCreateApprovedComment: Permission = {
+  id: 'CAN_CREATE_APPROVED_COMMENT',
+  description: 'Allows to leave comment without pending approval',
   deprecated: false
 }
 
@@ -448,6 +454,12 @@ export const CanDeleteSubscription: Permission = {
   deprecated: false
 }
 
+export const CanCancelSubscription: Permission = {
+  id: 'CAN_DELETE_SUBSCRIPTION',
+  description: 'Allows to delete a subscription',
+  deprecated: false
+}
+
 export const CanLoginAsOtherUser: Permission = {
   id: 'CAN_LOGIN_AS_OTHER_USER',
   description: 'Allows to login as other user',
@@ -562,6 +574,120 @@ export const CanDeleteEvent: Permission = {
   deprecated: false
 }
 
+export const CanGetConsent: Permission = {
+  id: 'CAN_GET_CONSENT',
+  description: 'Allows to get a consent',
+  deprecated: false
+}
+
+export const CanCreateConsent: Permission = {
+  id: 'CAN_CREATE_CONSENT',
+  description: 'Allows to create a consent',
+  deprecated: false
+}
+
+export const CanUpdateConsent: Permission = {
+  id: 'CAN_UPDATE_CONSENT',
+  description: 'Allows to update a consent',
+  deprecated: false
+}
+
+export const CanDeleteConsent: Permission = {
+  id: 'CAN_DELETE_CONSENT',
+  description: 'Allows to delete a consent',
+  deprecated: false
+}
+
+export const CanGetUserConsent: Permission = {
+  id: 'CAN_GET_USER_CONSENT',
+  description: 'Allows to get a consent',
+  deprecated: false
+}
+
+export const CanCreateUserConsent: Permission = {
+  id: 'CAN_CREATE_USER_CONSENT',
+  description: 'Allows to create a consent',
+  deprecated: false
+}
+
+export const CanUpdateUserConsent: Permission = {
+  id: 'CAN_UPDATE_USER_CONSENT',
+  description: 'Allows to update a consent',
+  deprecated: false
+}
+
+export const CanDeleteUserConsent: Permission = {
+  id: 'CAN_DELETE_USER_CONSENT',
+  description: 'Allows to delete a consent',
+  deprecated: false
+}
+
+/**
+ * Subscription Settings
+ */
+export const CanGetSubscriptionFlows: Permission = {
+  id: 'CAN_GET_SUBSCRIPTION_FLOWS',
+  description: 'Allows to get subscription flows.',
+  deprecated: false
+}
+
+export const CanUpdateSubscriptionFlow: Permission = {
+  id: 'CAN_UPDATE_SUBSCRIPTION_FLOW',
+  description: 'Allows to update subscription flow.',
+  deprecated: false
+}
+
+export const CanCreateSubscriptionFlow: Permission = {
+  id: 'CAN_CREATE_SUBSCRIPTION_FLOW',
+  description: 'Allows to create a new subscription flow.',
+  deprecated: false
+}
+
+export const CanDeleteSubscriptionFlow: Permission = {
+  id: 'CAN_DELETE_SUBSCRIPTION_FLOW',
+  description: 'Allows to delete a subscription flow.',
+  deprecated: false
+}
+
+/**
+ * Mail templates
+ */
+export const CanGetMailTemplates: Permission = {
+  id: 'CAN_GET_MAIL-TEMPLATES',
+  description: 'Allows to get mail templates.',
+  deprecated: false
+}
+
+export const CanSyncMailTemplates: Permission = {
+  id: 'CAN_SYNC_MAIL-TEMPLATES',
+  description: 'Allowed to synchronize mail templates from mail provider.',
+  deprecated: false
+}
+
+/**
+ * System mails
+ */
+export const CanGetSystemMails: Permission = {
+  id: 'CAN_GET_SYSTEM_MAILS',
+  description: 'Allows to get system mail list.',
+  deprecated: false
+}
+
+export const CanUpdateSystemMails: Permission = {
+  id: 'CAN_UPDATE_SYSTEM_MAILS',
+  description: 'Allows user to edit and save a system mail.',
+  deprecated: false
+}
+
+/**
+ * Periodic Job
+ */
+export const CanGetPeriodicJobLog: Permission = {
+  id: 'CAN_GET_PERIODIC_JOB_LOG',
+  description: 'Allows to get the periodic job log',
+  deprecated: false
+}
+
 export const AllPermissions: Permission[] = [
   CanTakeActionOnComment,
   CanCreateNavigation,
@@ -653,7 +779,20 @@ export const AllPermissions: Permission[] = [
   CanGetEvent,
   CanUpdateEvent,
   CanDeleteEvent,
-  CanCreateEvent
+  CanCreateConsent,
+  CanUpdateConsent,
+  CanDeleteConsent,
+  CanCreateEvent,
+  CanGetSubscriptionFlows,
+  CanUpdateSubscriptionFlow,
+  CanCreateSubscriptionFlow,
+  CanDeleteSubscriptionFlow,
+  CanGetMailTemplates,
+  CanGetPeriodicJobLog,
+  CanSyncMailTemplates,
+  CanGetSystemMails,
+  CanUpdateSystemMails,
+  CanCreateApprovedComment
 ]
 
 export const EditorPermissions: Permission[] = [
@@ -696,7 +835,15 @@ export const EditorPermissions: Permission[] = [
   CanGetEvent,
   CanUpdateEvent,
   CanDeleteEvent,
-  CanCreateEvent
+  CanCreateEvent,
+  CanCreateConsent,
+  CanUpdateConsent,
+  CanDeleteConsent,
+  CanCreateEvent,
+  CanGetSubscriptionFlows,
+  CanGetMailTemplates,
+  CanGetPeriodicJobLog,
+  CanCreateApprovedComment
 ]
 
 export const PeerPermissions: Permission[] = [

@@ -1,18 +1,18 @@
 {
   "root": true,
   "ignorePatterns": ["**/*"],
-  "plugins": ["@nrwl/nx", "unused-imports"],
+  "plugins": ["@nx", "unused-imports"],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
       "rules": {
-        "@typescript-eslint/no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": ["error", {"args": "none"}],
         "unused-imports/no-unused-imports": "error",
         "object-shorthand": "warn",
-        "@nrwl/nx/enforce-module-boundaries": [
+        "@nx/enforce-module-boundaries": [
           "error",
           {
-            "enforceBuildableLibDependency": true,
+            "enforceBuildableLibDependency": false,
             "allow": [],
             "depConstraints": [
               {
@@ -26,12 +26,12 @@
     },
     {
       "files": ["*.ts", "*.tsx"],
-      "extends": ["plugin:@nrwl/nx/typescript"],
+      "extends": ["plugin:@nx/typescript"],
       "rules": {}
     },
     {
       "files": ["*.js", "*.jsx"],
-      "extends": ["plugin:@nrwl/nx/javascript"],
+      "extends": ["plugin:@nx/javascript"],
       "rules": {}
     },
     {
@@ -41,5 +41,6 @@
       },
       "rules": {}
     }
-  ]
+  ],
+  "extends": ["plugin:storybook/recommended"]
 }

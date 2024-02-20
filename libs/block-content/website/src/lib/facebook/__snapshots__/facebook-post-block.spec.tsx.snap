@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Facebook Post Block should render Default 1`] = `
+<DocumentFragment>
+  <div
+    class="css-1jn5h8s-FacebookPostBlockWrapper e2wfn2e0"
+  />
+</DocumentFragment>
+`;
+
+exports[`Facebook Post Block should render WithClassName 1`] = `
+<DocumentFragment>
+  <div
+    class="extra-classname css-1jn5h8s-FacebookPostBlockWrapper e2wfn2e0"
+  />
+</DocumentFragment>
+`;

@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`OrderedList should render successfully 1`] = `
+<body>
+  <div>
+    <ol>
+      <li>
+        Foobar
+      </li>
+    </ol>
+  </div>
+</body>
+`;
+
+exports[`UnorderedList should render successfully 1`] = `
+<body>
+  <div>
+    <ul>
+      <li>
+        Foobar
+      </li>
+    </ul>
+  </div>
+</body>
+`;

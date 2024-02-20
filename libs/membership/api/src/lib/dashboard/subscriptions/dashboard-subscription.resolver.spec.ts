@@ -3,7 +3,7 @@ import {INestApplication, Module} from '@nestjs/common'
 import request from 'supertest'
 import {GraphQLModule} from '@nestjs/graphql'
 import {ApolloDriverConfig, ApolloDriver} from '@nestjs/apollo'
-import {PrismaClient, Prisma} from '@prisma/client'
+import {PrismaClient, Prisma, Subscription} from '@prisma/client'
 import {PrismaModule} from '@wepublish/nest-modules'
 import {DashboardSubscriptionResolver} from './dashboard-subscription.resolver'
 import {DashboardSubscriptionService} from './dashboard-subscription.service'
@@ -13,7 +13,8 @@ import {DashboardSubscriptionService} from './dashboard-subscription.service'
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: true,
-      path: '/'
+      path: '/',
+      cache: 'bounded'
     }),
     PrismaModule
   ],
@@ -76,6 +77,7 @@ const newDeactivationsQuery = `
 `
 
 describe('DashboardSubscriptionResolver', () => {
+  let subscriptionsToDelete: Subscription[] = []
   let app: INestApplication
   let prisma: PrismaClient
 
@@ -90,7 +92,19 @@ describe('DashboardSubscriptionResolver', () => {
   })
 
   beforeEach(async () => {
-    await prisma.subscription.deleteMany({})
+    subscriptionsToDelete = []
+  })
+
+  afterEach(async () => {
+    const ids = subscriptionsToDelete.map(sub => sub.id)
+
+    await prisma.subscription.deleteMany({
+      where: {
+        id: {
+          in: ids
+        }
+      }
+    })
   })
 
   afterAll(async () => {
@@ -198,7 +212,9 @@ describe('DashboardSubscriptionResolver', () => {
       }
     ]
 
-    await Promise.all(mockData.map(data => prisma.subscription.create({data})))
+    for (const data of mockData) {
+      subscriptionsToDelete.push(await prisma.subscription.create({data}))
+    }
 
     await request(app.getHttpServer())
       .post('')
@@ -230,7 +246,7 @@ describe('DashboardSubscriptionResolver', () => {
         monthlyAmount: 50,
         paymentPeriodicity: 'monthly',
         startsAt: new Date('2023-01-01'),
-        paidUntil: new Date('2023-02-01'),
+        paidUntil: new Date('2043-02-01'),
         paymentMethod: {
           create: paymentMethod
         },
@@ -261,10 +277,30 @@ describe('DashboardSubscriptionResolver', () => {
         }
       },
       {
+        autoRenew: true,
+        monthlyAmount: 50,
+        paymentPeriodicity: 'monthly',
+        startsAt: new Date('2023-01-01'),
+        paidUntil: new Date('2023-02-01'),
+        paymentMethod: {
+          create: paymentMethod
+        },
+        memberPlan: {
+          connect: {
+            slug: 'foo'
+          }
+        },
+        user: {
+          connect: {
+            email: 'foo@wepublish.ch'
+          }
+        }
+      },
+      {
         autoRenew: false,
         monthlyAmount: 50,
         paymentPeriodicity: 'monthly',
-        startsAt: new Date('2023-02-02'),
+        startsAt: new Date('2023-01-01'),
         paidUntil: new Date('2023-02-02'),
         deactivation: {
           create: {
@@ -300,6 +336,7 @@ describe('DashboardSubscriptionResolver', () => {
         monthlyAmount: 500,
         paymentPeriodicity: 'monthly',
         startsAt: new Date('2023-02-03'),
+        paidUntil: new Date('2043-02-01'),
         paymentMethod: {
           create: paymentMethod
         },
@@ -316,16 +353,14 @@ describe('DashboardSubscriptionResolver', () => {
       }
     ]
 
-    await Promise.all(mockData.map(data => prisma.subscription.create({data})))
+    for (const data of mockData) {
+      subscriptionsToDelete.push(await prisma.subscription.create({data}))
+    }
 
     await request(app.getHttpServer())
       .post('')
       .send({
-        query: activeSubscribersQuery,
-        variables: {
-          start: new Date('2023-01-01').toISOString(),
-          end: new Date('2023-02-01').toISOString()
-        }
+        query: activeSubscribersQuery
       })
       .expect(200)
       .expect(res => {
@@ -455,7 +490,9 @@ describe('DashboardSubscriptionResolver', () => {
       }
     ]
 
-    await Promise.all(mockData.map(data => prisma.subscription.create({data})))
+    for (const data of mockData) {
+      subscriptionsToDelete.push(await prisma.subscription.create({data}))
+    }
 
     await request(app.getHttpServer())
       .post('')
@@ -553,7 +590,9 @@ describe('DashboardSubscriptionResolver', () => {
       }
     ]
 
-    await Promise.all(mockData.map(data => prisma.subscription.create({data})))
+    for (const data of mockData) {
+      subscriptionsToDelete.push(await prisma.subscription.create({data}))
+    }
 
     await request(app.getHttpServer())
       .post('')

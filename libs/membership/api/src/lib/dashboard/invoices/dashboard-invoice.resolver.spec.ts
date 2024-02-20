@@ -3,7 +3,7 @@ import {INestApplication, Module} from '@nestjs/common'
 import request from 'supertest'
 import {GraphQLModule} from '@nestjs/graphql'
 import {ApolloDriverConfig, ApolloDriver} from '@nestjs/apollo'
-import {PrismaClient} from '@prisma/client'
+import {Invoice, PrismaClient} from '@prisma/client'
 import {PrismaModule} from '@wepublish/nest-modules'
 import {DashboardInvoiceResolver} from './dashboard-invoice.resolver'
 import {DashboardInvoiceService} from './dashboard-invoice.service'
@@ -13,7 +13,8 @@ import {DashboardInvoiceService} from './dashboard-invoice.service'
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,
       autoSchemaFile: true,
-      path: '/'
+      path: '/',
+      cache: 'bounded'
     }),
     PrismaModule
   ],
@@ -44,6 +45,7 @@ const expectedRevenueQuery = `
 `
 
 describe('DashboardInvoiceResolver', () => {
+  let invoicesToDelete: Invoice[] = []
   let app: INestApplication
   let prisma: PrismaClient
 
@@ -58,7 +60,19 @@ describe('DashboardInvoiceResolver', () => {
   })
 
   beforeEach(async () => {
-    await prisma.invoice.deleteMany({})
+    invoicesToDelete = []
+  })
+
+  afterEach(async () => {
+    const ids = invoicesToDelete.map(invoice => invoice.id)
+
+    await prisma.invoice.deleteMany({
+      where: {
+        id: {
+          in: ids
+        }
+      }
+    })
   })
 
   afterAll(async () => {
@@ -70,6 +84,7 @@ describe('DashboardInvoiceResolver', () => {
       {
         dueAt: new Date('2023-01-01 12:00:00'),
         paidAt: new Date('2023-01-01 12:00:00'),
+        scheduledDeactivationAt: new Date('2023-01-07 12:00:00'),
         mail: 'foo@wepublish.ch',
         items: {
           createMany: {
@@ -91,6 +106,7 @@ describe('DashboardInvoiceResolver', () => {
       {
         dueAt: new Date('2023-01-01 12:00:00'),
         paidAt: new Date('2023-01-02 12:00:00'),
+        scheduledDeactivationAt: new Date('2023-01-07 12:00:00'),
         mail: 'foo@wepublish.ch',
         items: {
           createMany: {
@@ -107,6 +123,7 @@ describe('DashboardInvoiceResolver', () => {
       {
         dueAt: new Date('2023-01-01 12:00:00'),
         paidAt: new Date('2023-02-01 12:00:00'),
+        scheduledDeactivationAt: new Date('2023-01-07 12:00:00'),
         mail: 'foo@wepublish.ch',
         items: {
           createMany: {
@@ -123,6 +140,7 @@ describe('DashboardInvoiceResolver', () => {
       {
         dueAt: new Date('2023-01-01 12:00:00'),
         paidAt: new Date('2023-01-01 12:00:00'),
+        scheduledDeactivationAt: new Date('2023-01-07 12:00:00'),
         mail: 'foo@wepublish.ch',
         manuallySetAsPaidByUserId: '123',
         items: {
@@ -139,6 +157,7 @@ describe('DashboardInvoiceResolver', () => {
       },
       {
         dueAt: new Date('2023-01-01 12:00:00'),
+        scheduledDeactivationAt: new Date('2023-01-07 12:00:00'),
         mail: 'foo@wepublish.ch',
         items: {
           createMany: {
@@ -154,7 +173,9 @@ describe('DashboardInvoiceResolver', () => {
       }
     ]
 
-    await Promise.all(mockData.map(data => prisma.invoice.create({data})))
+    for (const data of mockData) {
+      invoicesToDelete.push(await prisma.invoice.create({data}))
+    }
 
     await request(app.getHttpServer())
       .post('')
@@ -176,6 +197,7 @@ describe('DashboardInvoiceResolver', () => {
       {
         dueAt: new Date('2023-01-01 12:00:00'),
         paidAt: new Date('2023-01-01 12:00:00'),
+        scheduledDeactivationAt: new Date('2023-01-07 12:00:00'),
         mail: 'foo@wepublish.ch',
         items: {
           createMany: {
@@ -196,6 +218,7 @@ describe('DashboardInvoiceResolver', () => {
       },
       {
         dueAt: new Date('2023-01-02 12:00:00'),
+        scheduledDeactivationAt: new Date('2023-01-07 12:00:00'),
         mail: 'foo@wepublish.ch',
         items: {
           createMany: {
@@ -211,6 +234,7 @@ describe('DashboardInvoiceResolver', () => {
       },
       {
         dueAt: new Date('2023-02-01 12:00:00'),
+        scheduledDeactivationAt: new Date('2023-01-07 12:00:00'),
         mail: 'foo@wepublish.ch',
         items: {
           createMany: {
@@ -226,6 +250,7 @@ describe('DashboardInvoiceResolver', () => {
       },
       {
         dueAt: new Date('2023-01-01 12:00:00'),
+        scheduledDeactivationAt: new Date('2023-01-07 12:00:00'),
         mail: 'foo@wepublish.ch',
         manuallySetAsPaidByUserId: '123',
         items: {
@@ -244,6 +269,7 @@ describe('DashboardInvoiceResolver', () => {
         dueAt: new Date('2023-01-01 12:00:00'),
         mail: 'foo@wepublish.ch',
         canceledAt: new Date('2023-01-01 11:00:00'),
+        scheduledDeactivationAt: new Date('2023-01-07 12:00:00'),
         items: {
           createMany: {
             data: [
@@ -258,7 +284,9 @@ describe('DashboardInvoiceResolver', () => {
       }
     ]
 
-    await Promise.all(mockData.map(data => prisma.invoice.create({data})))
+    for (const data of mockData) {
+      invoicesToDelete.push(await prisma.invoice.create({data}))
+    }
 
     await request(app.getHttpServer())
       .post('')

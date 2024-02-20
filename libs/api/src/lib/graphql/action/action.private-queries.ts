@@ -39,8 +39,9 @@ export const getActions = async (
   const articles = hasPermission(CanGetArticles, roles)
     ? article
         .findMany({
-          take: 5,
-          include: {draft: true, pending: true, published: true}
+          take: 50,
+          include: {draft: true, pending: true, published: true},
+          orderBy: {createdAt: 'desc'}
         })
         .then(val =>
           val.map((article: Article) => {
@@ -55,8 +56,9 @@ export const getActions = async (
   const pages = hasPermission(CanGetPages, roles)
     ? page
         .findMany({
-          take: 5,
-          include: {draft: true, pending: true, published: true}
+          take: 50,
+          include: {draft: true, pending: true, published: true},
+          orderBy: {createdAt: 'desc'}
         })
         .then(val =>
           val.map((page: Page) => {
@@ -69,18 +71,20 @@ export const getActions = async (
         )
     : []
   const comments = hasPermission(CanGetComments, roles)
-    ? comment.findMany({take: 5, include: {revisions: true}}).then(val =>
-        val.map((comment: Comment) => {
-          return {
-            date: comment.createdAt,
-            actionType: ActionType.CommentCreated,
-            id: comment.id
-          }
-        })
-      )
+    ? comment
+        .findMany({take: 50, include: {revisions: true}, orderBy: {createdAt: 'desc'}})
+        .then(val =>
+          val.map((comment: Comment) => {
+            return {
+              date: comment.createdAt,
+              actionType: ActionType.CommentCreated,
+              id: comment.id
+            }
+          })
+        )
     : []
   const authors = hasPermission(CanGetAuthors, roles)
-    ? author.findMany({take: 5}).then(val =>
+    ? author.findMany({take: 50, orderBy: {createdAt: 'desc'}}).then(val =>
         val.map((author: Author) => {
           return {
             date: author.createdAt,
@@ -91,7 +95,7 @@ export const getActions = async (
       )
     : []
   const subscriptions = hasPermission(CanGetSubscriptions, roles)
-    ? subscription.findMany({take: 5}).then(val =>
+    ? subscription.findMany({take: 50, orderBy: {createdAt: 'desc'}}).then(val =>
         val.map((subscription: Subscription) => {
           return {
             date: subscription.createdAt,
@@ -102,7 +106,7 @@ export const getActions = async (
       )
     : []
   const polls = hasPermission(CanGetPoll, roles)
-    ? poll.findMany({take: 5}).then(val =>
+    ? poll.findMany({take: 50, orderBy: {createdAt: 'desc'}}).then(val =>
         val.map((poll: Poll) => {
           return {
             date: poll.opensAt,
@@ -113,7 +117,7 @@ export const getActions = async (
       )
     : []
   const users = hasPermission(CanGetUsers, roles)
-    ? user.findMany({take: 5}).then(val =>
+    ? user.findMany({take: 50, orderBy: {createdAt: 'desc'}}).then(val =>
         val.map((user: User) => {
           return {
             date: user.createdAt,
@@ -124,7 +128,7 @@ export const getActions = async (
       )
     : []
   const events = hasPermission(CanGetEvent, roles)
-    ? event.findMany({take: 5}).then(val =>
+    ? event.findMany({take: 50, orderBy: {createdAt: 'desc'}}).then(val =>
         val.map((event: Event) => {
           return {
             date: event.createdAt,
@@ -138,5 +142,7 @@ export const getActions = async (
     await Promise.all([articles, pages, comments, authors, subscriptions, polls, users, events])
   ).flat()
 
-  return actions.sort((v1: Action, v2: Action) => v2.date.getTime() - v1.date.getTime())
+  return actions
+    .sort((v1: Action, v2: Action) => v2.date.getTime() - v1.date.getTime())
+    .slice(0, 50)
 }

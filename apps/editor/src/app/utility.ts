@@ -1,4 +1,4 @@
-import {ApolloClient, HttpLink, InMemoryCache} from '@apollo/client'
+import {ApolloClient, ApolloLink, createHttpLink, InMemoryCache} from '@apollo/client'
 import {PaymentPeriodicity, SortOrder} from '@wepublish/editor/api'
 import {DocumentNode, OperationDefinitionNode} from 'graphql'
 import nanoid from 'nanoid'
@@ -42,49 +42,6 @@ export const addOrUpdateOneInArray = (
 
 export function generateID(): string {
   return nanoid()
-}
-
-// https://gist.github.com/mathewbyrne/1280286#gistcomment-2588056
-export function slugify(str: string) {
-  return str
-    .toLowerCase()
-    .trim()
-    .replace(/[ÀÁÂÃÅÆĀĂĄẠẢẤẦẨẪẬẮẰẲẴẶ]/gi, 'a')
-    .replace(/[Ä]/gi, 'ae')
-
-    .replace(/[ÇĆĈČ]/gi, 'c')
-    .replace(/[ÐĎĐÞ]/gi, 'd')
-    .replace(/[ÈÉÊËĒĔĖĘĚẸẺẼẾỀỂỄỆ]/gi, 'e')
-    .replace(/[ĜĞĢǴ]/gi, 'g')
-    .replace(/[ĤḦ]/gi, 'h')
-    .replace(/[ÌÍÎÏĨĪĮİỈỊ]/gi, 'i')
-    .replace(/[Ĵ]/gi, 'j')
-    .replace(/[Ĳ]/gi, 'ij')
-    .replace(/[Ķ]/gi, 'k')
-    .replace(/[ĹĻĽŁ]/gi, 'l')
-    .replace(/[Ḿ]/gi, 'm')
-    .replace(/[ÑŃŅŇ]/gi, 'n')
-    .replace(/[ÒÓÔÕØŌŎŐỌỎỐỒỔỖỘỚỜỞỠỢǪǬƠ]/gi, 'o')
-    .replace(/[ŒÖ]/gi, 'oe')
-
-    .replace(/[ṕ]/gi, 'p')
-    .replace(/[ŔŖŘ]/gi, 'r')
-    .replace(/[ŚŜŞŠ]/gi, 's')
-    .replace(/[ß]/gi, 'ss')
-    .replace(/[ŢŤ]/gi, 't')
-    .replace(/[ÙÚÛŨŪŬŮŰŲỤỦỨỪỬỮỰƯ]/gi, 'u')
-    .replace(/[Ü]/gi, 'ue')
-
-    .replace(/[ẂŴẀẄ]/gi, 'w')
-    .replace(/[ẍ]/gi, 'x')
-    .replace(/[ÝŶŸỲỴỶỸ]/gi, 'y')
-    .replace(/[ŹŻŽ]/gi, 'z')
-    .replace(/[·/_,:;\\']/gi, '-')
-    .replace(/\s+/g, '-')
-    .replace(/[^\w\-]+/g, '') //eslint-disable-line
-    .replace(/--+/g, '-')
-    .replace(/^-+/, '')
-    .replace(/-+$/, '')
 }
 
 export function useScript(src: string, checkIfLoaded: () => boolean, crossOrigin = false) {
@@ -223,11 +180,25 @@ export function getSettings(): ClientSettings {
     : defaultSettings
 }
 
+const authLink = new ApolloLink((operation, forward) => {
+  const token = localStorage.getItem(LocalStorageKey.SessionToken)
+  const context = operation.getContext()
+
+  operation.setContext({
+    headers: {
+      authorization: token ? `Bearer ${token}` : '',
+      ...context.headers
+    },
+    credentials: 'include',
+    ...context
+  })
+  return forward(operation)
+})
+
 export function getApiClientV2() {
   const {apiURL} = getSettings()
-  const link = new HttpLink({uri: `${apiURL}/v2`})
   return new ApolloClient({
-    link,
+    link: authLink.concat(createHttpLink({uri: `${apiURL}/v2`, fetch})),
     cache: new InMemoryCache()
   })
 }

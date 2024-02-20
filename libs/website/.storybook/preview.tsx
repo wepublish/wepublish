@@ -1,18 +1,7 @@
-import {MockedProvider} from '@apollo/client/testing' // Use for Apollo Version 3+
-import {ComponentType} from 'react'
-import {WebsiteProvider} from '../src/lib/website.provider'
+import {Preview} from '@storybook/react'
+import {decorators, parameters} from '@wepublish/storybook'
 
-export const parameters = {
-  apolloClient: {
-    MockedProvider,
-    addTypename: false
-  }
-}
-
-const withMuiTheme = (Story: ComponentType) => (
-  <WebsiteProvider>
-    <Story />
-  </WebsiteProvider>
-)
-
-export const decorators = [withMuiTheme]
+export default {
+  decorators,
+  parameters
+} as Preview
