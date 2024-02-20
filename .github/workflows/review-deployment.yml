@@ -64,7 +64,7 @@ jobs:
         run: |
           cat > values.yaml <<EOF
           deployment:
-            image: ghcr.io/wepublish/karma-media-server:latest
+            image: seccomch/wep-media-light:latest
             env:
               TOKEN: media-token
               DEBUG: 'false'
