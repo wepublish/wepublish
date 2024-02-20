@@ -1,5 +1,35 @@
 # Change Log
 
+## Release 10.1.0 (2024-01-18)
+
+#### :heart: New Feature
+* [#1117](https://github.com/wepublish/wepublish/pull/1117) WPC:1414: Support Payrexx offsite transactions with preauthorization ([@antkiewiczk](https://github.com/antkiewiczk))
+
+#### :bug: Bug Fix
+* [#1119](https://github.com/wepublish/wepublish/pull/1119) Bexio fixes ([@elias-summermatter](https://github.com/elias-summermatter))
+* [#1129](https://github.com/wepublish/wepublish/pull/1129) fix(editor): missing permission controls for comments & events ([@Itrulia](https://github.com/Itrulia))
+* [#1126](https://github.com/wepublish/wepublish/pull/1126) fix(website): possible full reload when using relative links ([@Itrulia](https://github.com/Itrulia))
+
+#### :nail_care: Polish
+* [#1127](https://github.com/wepublish/wepublish/pull/1127) WPC-1014: Linting refactor ([@antkiewiczk](https://github.com/antkiewiczk))
+* [#1133](https://github.com/wepublish/wepublish/pull/1133) WPC-1442: Translations cleanup ([@antkiewiczk](https://github.com/antkiewiczk))
+
+#### :memo: Documentation
+* [#1116](https://github.com/wepublish/wepublish/pull/1116) docs(website): usage website builder documentation ([@Itrulia](https://github.com/Itrulia))
+
+#### :house: Internal
+* [#1138](https://github.com/wepublish/wepublish/pull/1138) WPC-1199: move stuff from editor to libs/ui ([@antkiewiczk](https://github.com/antkiewiczk))
+* [#1140](https://github.com/wepublish/wepublish/pull/1140) chore: upgraded typescript and removed rsuite hack ([@Itrulia](https://github.com/Itrulia))
+* [#1141](https://github.com/wepublish/wepublish/pull/1141) ci: lower parallelization of website tests ([@Itrulia](https://github.com/Itrulia))
+* [#1139](https://github.com/wepublish/wepublish/pull/1139) split running test jobs ([@elias-summermatter](https://github.com/elias-summermatter))
+
+#### Committers: 5
+- Elias Summermatter ([@elias-summermatter](https://github.com/elias-summermatter))
+- Itrulia ([@Itrulia](https://github.com/Itrulia))
+- Kamil Antkiewicz ([@antkiewiczk](https://github.com/antkiewiczk))
+- Tomasz Durka ([@tomaszdurka](https://github.com/tomaszdurka))
+- [@michael-scheurer](https://github.com/michael-scheurer)
+
 ## v10.0.0 (2023-11-29)
 
 #### :boom: Breaking Change
