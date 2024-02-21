@@ -7,6 +7,7 @@ networks:
 services:
   migration:
     image: wepublishch/migration:master
+    platform: linux/amd64
     environment:
       NODE_ENV: production
       DATABASE_URL: postgresql://postgres@database:5432/wepublish?schema=public
@@ -17,6 +18,7 @@ services:
       - app-tier
   api:
     image: wepublishch/api:master
+    platform: linux/amd64
     ports:
       - '127.0.0.1:4000:4000'
     environment:
@@ -39,6 +41,7 @@ services:
       - app-tier
   editor:
     image: wepublishch/editor:master
+    platform: linux/amd64
     ports:
       - '127.0.0.1:3000:3000'
     environment:
@@ -49,6 +52,7 @@ services:
       - api
   media:
     image: seccomch/wep-media-light:latest
+    platform: linux/amd64
     ports:
       - '127.0.0.1:4100:4100'
       - '127.0.0.1:4101:4100'
@@ -71,6 +75,7 @@ services:
 
   pgadmin:
     image: dpage/pgadmin4
+    platform: linux/amd64
     restart: always
     environment:
       PGADMIN_DEFAULT_EMAIL: 'admin@admin.com'
