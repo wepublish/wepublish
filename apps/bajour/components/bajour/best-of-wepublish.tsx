@@ -1,13 +1,10 @@
 import {styled} from '@mui/material'
-import {BuilderTeaserGridBlockProps, Image as BuilderImage} from '@wepublish/website'
-import Image from 'next/image'
+import {ApiV1, BuilderTeaserGridBlockProps, Image as BuilderImage} from '@wepublish/website'
 
 import {NextWepublishLink} from '../should-be-website-builder/next-wepublish-link'
-import babaNews from './peers-logos/baba-news.png'
 
-type BestOfWePublishProps = Omit<BuilderTeaserGridBlockProps, 'teasers'> & {
-  // has to be any as we cannot import CustomTeaser from @wepublish/website/api
-  teasers: any[]
+export type BestOfWePublishProps = Omit<BuilderTeaserGridBlockProps, 'teasers'> & {
+  teasers?: Array<ApiV1.PeerArticleTeaser>
 }
 
 const BestOfWePublishWrapper = styled('div')`
@@ -207,13 +204,13 @@ const BestOfWePublish = ({numColumns, teasers, blockStyle, className}: BestOfWeP
         <span>Best of We.Publish</span>
       </BestOfWePublishHeader>
       <Wrapper>
-        {teasers.map(teaser => {
+        {teasers?.map(teaser => {
           const values = {
             image: teaser?.image || teaser?.article?.image,
             href: teaser?.article?.url,
             title: teaser?.title || teaser?.article?.title,
             peerName: teaser?.peer?.name,
-            peerLogo: teaser?.peer?.profile?.logo.squareSmallURL || ''
+            peerLogo: teaser?.peer?.profile?.logo?.squareSmallURL || ''
           }
 
           return (

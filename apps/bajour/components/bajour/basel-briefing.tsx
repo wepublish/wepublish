@@ -1,5 +1,11 @@
 import {Button, styled} from '@mui/material'
-import {ApiV1, BuilderTeaserProps, Image, TeaserWrapper /*, ApiV2 */} from '@wepublish/website'
+import {
+  alignmentForTeaserBlock,
+  ApiV1,
+  BuilderTeaserGridBlockProps,
+  Image,
+  TeaserWrapper
+} from '@wepublish/website'
 
 import isWithinTimeslot from '../../utils/is-within-timeslot'
 import {NextWepublishLink} from '../should-be-website-builder/next-wepublish-link'
@@ -9,8 +15,8 @@ import FasnachtBg from './fasnacht.jpg'
 import FcbBg from './fcb.jpg'
 import {BriefingType} from './is-briefing'
 
-export type BaselBriefingProps = BuilderTeaserProps & {
-  teaser?: ApiV1.CustomTeaser | null
+export type BaselBriefingProps = Omit<BuilderTeaserGridBlockProps, 'teasers'> & {
+  teasers?: Array<ApiV1.CustomTeaser>
 }
 
 const baselBg = {
@@ -88,7 +94,7 @@ const getValuesBasedOnBriefing = (briefing: BriefingType) => {
       }
     }
 
-    case BriefingType.FCB_Briefing: {
+    case BriefingType.FCBBriefing: {
       return {
         title: 'FCB Briefing',
         subtitle: 'DAS WICHTIGSTE VOR JEDEM SPIEL',
@@ -303,10 +309,11 @@ export const Avatar = styled(Image)`
   }
 `
 
-const BaselBriefing = ({alignment, teaser}: BaselBriefingProps) => {
+const BaselBriefing = ({teasers, blockStyle, numColumns}: BaselBriefingProps) => {
   let showFrom = undefined
   let showUntil = undefined
 
+  const teaser = teasers && teasers[0]
   teaser?.properties.forEach(prop => {
     if (prop.key === 'showFrom') {
       showFrom = prop.value
@@ -317,33 +324,15 @@ const BaselBriefing = ({alignment, teaser}: BaselBriefingProps) => {
     }
   })
 
-  // const {loading, data} = ApiV2.useStatsQuery({
-  //   // client,
-  //   variables: {},
-  //   onError: err => {
-  //     console.log('error', err)
-  //   },
-  //   onCompleted: data => {
-  //     console.log('data', data)
-  //     // if (data.consent) {
-  //     //   setConsent(mapApiDataToInput(data.consent))
-  //     // }
-  //   }
-  // })
-  // console.log('data', data)
-
   if (!isWithinTimeslot(showFrom, showUntil)) {
     return null
   }
-
   if (!teaser) {
     return null
   }
 
   const {image, lead, title, contentUrl} = teaser
-
-  const values = getValuesBasedOnBriefing(teaser.properties[0].key as BriefingType)
-
+  const values = getValuesBasedOnBriefing(blockStyle as BriefingType)
   if (!lead || !title || !contentUrl || !image || !values) {
     return null
   }
@@ -354,6 +343,8 @@ const BaselBriefing = ({alignment, teaser}: BaselBriefingProps) => {
     briefingContent: title,
     contentUrl: contentUrl || ''
   }
+
+  const alignment = alignmentForTeaserBlock(1, numColumns)
 
   return (
     <TeaserWrapper {...alignment}>
