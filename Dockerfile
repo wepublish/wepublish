@@ -2,7 +2,7 @@
 ## API
 #######
 
-FROM node:16.20.2-bookworm-slim as build-api
+FROM node:18.19.1-bookworm-slim as build-api
 WORKDIR /wepublish
 COPY . .
 RUN apt-get update && \
@@ -37,7 +37,7 @@ CMD /wepublish/api
 ## Editor
 #######
 
-FROM node:16.20.2-bookworm-slim as build-editor
+FROM node:18.19.1-bookworm-slim as build-editor
 WORKDIR /wepublish
 COPY . .
 RUN npm ci && \
@@ -64,7 +64,7 @@ CMD /wepublish/editor
 #######
 ## Migrations
 #######
-FROM node:16.20.2-bookworm-slim as build-migration
+FROM node:18.19.1-bookworm-slim as build-migration
 ENV NODE_ENV=production
 WORKDIR /wepublish
 COPY libs/settings/api/src/lib/setting.ts settings/api/src/lib/setting.ts
@@ -74,7 +74,7 @@ COPY docker/tsconfig.yaml_seed tsconfig.yaml
 RUN npm install prisma @prisma/client @types/node bcrypt typescript && \
     npx tsc -p tsconfig.yaml
 
-FROM node:16.20.2-bookworm-slim as migration
+FROM node:18.19.1-bookworm-slim as migration
 ENV NODE_ENV=production
 MAINTAINER WePublish Foundation
 WORKDIR /wepublish
@@ -98,7 +98,7 @@ CMD ["bash", "./start.sh"]
 #######
 ## Website
 #######
-FROM node:16.20.2-bookworm-slim as website
+FROM node:18.19.1-bookworm-slim as website
 MAINTAINER WePublish Foundation
 ENV ADDRESS=0.0.0.0
 ENV PORT=4200
@@ -112,7 +112,7 @@ CMD ["npx", "nx", "serve", "website-example"]
 ## Storybook
 ######
 
-FROM ghcr.io/wepublish/node:16.1 as dependencies
+FROM ghcr.io/wepublish/node:18.1 as dependencies
 RUN apk update
 USER node
 RUN mkdir -p /home/node/wepublish
