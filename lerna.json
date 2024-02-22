@@ -18,7 +18,8 @@
       "allowBranch": [
         "master",
         "r/*"
-      ]
+      ],
+      "changelog": false
     },
     "publish": {
       "ignoreChanges": [
