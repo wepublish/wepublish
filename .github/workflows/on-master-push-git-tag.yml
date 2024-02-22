@@ -1,8 +1,6 @@
 name: Release git tag
 
 on:
-  pull_request:
-
   push:
     branches:
       - master
