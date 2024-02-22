@@ -3,11 +3,11 @@ name: Release git tag
 on:
   pull_request:
 
-#  push:
-#    branches:
-#      - master
-#    paths:
-#      - 'CHANGELOG.md'
+  push:
+    branches:
+      - master
+    paths:
+      - 'CHANGELOG.md'
 
 jobs:
   release:
@@ -25,15 +25,11 @@ jobs:
         with:
           cmd: 'jq .version lerna.json -r'
 
-      - name: Show my version
-        run: 'echo "version ${{ steps.version.outputs.value }}"'
-
-
       - name: GitHub Tag
         id: tag_version
         uses: mathieudutour/github-tag-action@v6.1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          custom_tag: 10.1.0-alpha.12
+          custom_tag: ${{ steps.version.outputs.value }}
 
 
