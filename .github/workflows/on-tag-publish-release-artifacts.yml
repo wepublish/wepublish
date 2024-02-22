@@ -19,7 +19,7 @@ jobs:
     if: |
       contains(github.ref, 'tags/') && contains(github.ref, 'alpha')
     needs: release_version
-    uses: ./.github/workflows/publish-docker-image.yml
+    uses: ./.github/workflows/on-demand-publish-docker-image.yml
     with:
       editor_tags: |
         ghcr.io/wepublish/editor:${{ needs.release_version.outputs.version }}
@@ -42,7 +42,7 @@ jobs:
     if: |
       contains(github.ref, 'tags/') && !contains(github.ref, 'alpha')
     needs: release_version
-    uses: ./.github/workflows/publish-docker-image.yml
+    uses: ./.github/workflows/on-demand-publish-docker-image.yml
     with:
       editor_tags: |
         ghcr.io/wepublish/editor:${{ needs.release_version.outputs.version }}

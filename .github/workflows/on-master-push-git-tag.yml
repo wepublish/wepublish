@@ -1,0 +1,35 @@
+name: Release git tag
+
+on:
+  pull_request:
+
+  push:
+    branches:
+      - master
+    paths:
+      - 'CHANGELOG.md'
+
+jobs:
+  release:
+    name: Release git tag
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'write'
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract version from lerna.json
+        uses: sergeysova/jq-action@v2
+        id: version
+        with:
+          cmd: 'jq .version lerna.json -r'
+
+      - name: GitHub Tag
+        id: tag_version
+        uses: mathieudutour/github-tag-action@v6.1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          custom_tag: ${{ steps.version.outputs.value }}
+
+
