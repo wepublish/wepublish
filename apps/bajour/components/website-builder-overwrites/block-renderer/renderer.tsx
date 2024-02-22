@@ -4,12 +4,13 @@ import {anyPass} from 'ramda'
 import {
   BaselBriefing,
   BaselBriefingProps,
+  BestOfWePublish,
+  BestOfWePublishProps,
   isBaselBriefing,
+  isBestOfWePublish,
   isFasnachtsBriefing,
   isFCBBriefing
 } from '../../bajour'
-import {BestOfWePublish, BestOfWePublishProps} from '../../bajour/best-of-wepublish'
-import {isBestOfWePublish} from '../../bajour/is-best-of-wepublish'
 
 const isAnyBriefing = (block: ApiV1.Block): block is ApiV1.TeaserGridBlock =>
   anyPass([isBaselBriefing, isFCBBriefing, isFasnachtsBriefing])(block)
