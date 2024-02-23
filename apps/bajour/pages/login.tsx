@@ -13,7 +13,7 @@ import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {useEffect} from 'react'
 
-import {IntendedRouteStorageKey} from '../components/should-be-website-builder/auth-guard'
+import {IntendedRouteStorageKey} from '../../../libs/utils/website/src/lib/auth-guard'
 
 const LoginWrapper = styled('div')`
   display: grid;
@@ -37,7 +37,7 @@ export default function Login({sessionToken}: LoginProps) {
     if (hasUser) {
       const intendedRoute = getCookie(IntendedRouteStorageKey)?.toString()
       deleteCookie(IntendedRouteStorageKey)
-      const route = intendedRoute ?? '/'
+      const route = intendedRoute ?? '/profile'
 
       router.push(route)
     }

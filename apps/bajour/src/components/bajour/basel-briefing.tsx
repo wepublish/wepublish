@@ -2,7 +2,7 @@ import {Button, styled} from '@mui/material'
 import {ApiV1, BuilderTeaserProps, Image, TeaserWrapper} from '@wepublish/website'
 
 import isWithinTimeslot from '../../utils/is-within-timeslot'
-import {NextWepublishLink} from '../should-be-website-builder/next-wepublish-link'
+import {NextWepublishLink} from '../../../../../libs/utils/website/src/lib/next-wepublish-link'
 import {fluidTypography} from '../website-builder-overwrites/blocks/teaser-overwrite.style'
 import BaselBg from './basel.jpg'
 import FasnachtBg from './fasnacht.jpg'

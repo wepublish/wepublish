@@ -231,40 +231,39 @@ const NavPaper = ({
           })}
         </NavPaperMainLinks>
       )}
-      {!!categories.length && (
-        <>
-          {categories.map((categoryArray, arrayIndex) => (
-            <NavPaperLinksGroup key={arrayIndex}>
-              {arrayIndex > 0 && <NavPaperSeparator />}
-              {categoryArray.map(nav => (
-                <NavPaperCategory key={nav.id}>
-                  <NavPaperName>{nav.name}</NavPaperName>
 
-                  <NavPaperCategoryLinks>
-                    {nav.links?.map((link, index) => {
-                      const url = navigationLinkToUrl(link)
+      {!!categories.length &&
+        categories.map((categoryArray, arrayIndex) => (
+          <NavPaperLinksGroup key={arrayIndex}>
+            {arrayIndex > 0 && <NavPaperSeparator />}
 
-                      return (
-                        <Link
-                          href={url}
-                          key={index}
-                          color="inherit"
-                          underline="none"
-                          css={navPaperLinkStyling(theme)}
-                          onClick={closeMenu}>
-                          <H6 component="span" css={{fontWeight: '700'}}>
-                            {link.label}
-                          </H6>
-                        </Link>
-                      )
-                    })}
-                  </NavPaperCategoryLinks>
-                </NavPaperCategory>
-              ))}
-            </NavPaperLinksGroup>
-          ))}
-        </>
-      )}
+            {categoryArray.map(nav => (
+              <NavPaperCategory key={nav.id}>
+                <NavPaperName>{nav.name}</NavPaperName>
+
+                <NavPaperCategoryLinks>
+                  {nav.links?.map((link, index) => {
+                    const url = navigationLinkToUrl(link)
+
+                    return (
+                      <Link
+                        href={url}
+                        key={index}
+                        color="inherit"
+                        underline="none"
+                        css={navPaperLinkStyling(theme)}
+                        onClick={closeMenu}>
+                        <H6 component="span" css={{fontWeight: '700'}}>
+                          {link.label}
+                        </H6>
+                      </Link>
+                    )
+                  })}
+                </NavPaperCategoryLinks>
+              </NavPaperCategory>
+            ))}
+          </NavPaperLinksGroup>
+        ))}
     </NavPaperWrapper>
   )
 }

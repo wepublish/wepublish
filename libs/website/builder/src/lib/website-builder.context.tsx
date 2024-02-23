@@ -195,7 +195,10 @@ export type WebsiteBuilderProps = {
     format: (date: Date, includeTime?: boolean) => string
   }
 
-  locale: string
+  meta: {
+    siteTitle: string
+    locale: string
+  }
 }
 
 const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
@@ -296,7 +299,10 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     format: date => date.toString()
   },
 
-  locale: 'ch-DE'
+  meta: {
+    siteTitle: 'Newsroom Name',
+    locale: 'ch-DE'
+  }
 })
 
 export const useWebsiteBuilder = () => {

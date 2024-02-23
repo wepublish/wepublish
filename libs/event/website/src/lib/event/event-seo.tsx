@@ -41,12 +41,16 @@ export const getEventSEO = (event: Event) => {
 }
 
 export const EventSEO = ({event}: BuilderEventSEOProps) => {
-  const {Head, Script} = useWebsiteBuilder()
+  const {meta, Head, Script} = useWebsiteBuilder()
   const seo = useMemo(() => getEventSEO(event), [event])
+
+  const title = `${seo.title ? `${seo.title} —` : ``} ${meta.siteTitle}`
 
   return (
     <>
       <Head>
+        <title key="title">{title}</title>
+
         <meta key={'og:type'} property="og:type" content={seo.type} />
         <meta key={'og:title'} property="og:title" content={seo.title} />
 
