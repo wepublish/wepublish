@@ -8,6 +8,9 @@ exports[`Article should render Default 1`] = `
     <div
       data-testid="fake-head"
     >
+      <title>
+        socialMediaTitle — Newsroom Name
+      </title>
       <meta
         content="article"
         property="og:type"
@@ -2285,6 +2288,9 @@ exports[`Article should render WithChildren 1`] = `
     <div
       data-testid="fake-head"
     >
+      <title>
+        socialMediaTitle — Newsroom Name
+      </title>
       <meta
         content="article"
         property="og:type"
@@ -4565,6 +4571,9 @@ exports[`Article should render WithClassName 1`] = `
     <div
       data-testid="fake-head"
     >
+      <title>
+        socialMediaTitle — Newsroom Name
+      </title>
       <meta
         content="article"
         property="og:type"
@@ -6842,6 +6851,9 @@ exports[`Article should render WithEmotion 1`] = `
     <div
       data-testid="fake-head"
     >
+      <title>
+        socialMediaTitle — Newsroom Name
+      </title>
       <meta
         content="article"
         property="og:type"
@@ -9143,6 +9155,9 @@ exports[`Article should render WithoutAuthors 1`] = `
     <div
       data-testid="fake-head"
     >
+      <title>
+        socialMediaTitle — Newsroom Name
+      </title>
       <meta
         content="article"
         property="og:type"
@@ -11324,6 +11339,9 @@ exports[`Article should render WithoutImageMetadata 1`] = `
     <div
       data-testid="fake-head"
     >
+      <title>
+        socialMediaTitle — Newsroom Name
+      </title>
       <meta
         content="article"
         property="og:type"
@@ -13601,6 +13619,9 @@ exports[`Article should render WithoutLead 1`] = `
     <div
       data-testid="fake-head"
     >
+      <title>
+        socialMediaTitle — Newsroom Name
+      </title>
       <meta
         content="article"
         property="og:type"
@@ -15874,6 +15895,9 @@ exports[`Article should render WithoutSocialMedia 1`] = `
     <div
       data-testid="fake-head"
     >
+      <title>
+        title — Newsroom Name
+      </title>
       <meta
         content="article"
         property="og:type"

@@ -12,7 +12,7 @@ export const getFeed = async (req: NextApiRequest): Promise<Feed> => {
     link: `${siteUrl + req.url}`,
     title: 'Bajour',
     ttl: 10, // in minutes
-    copyright: 'We.Publish',
+    copyright: 'Bajour.ch',
     categories: ['Bajour', 'CMS', 'Journalism', 'Journalismus', 'Basel'],
     updated: new Date(),
     feedLinks: {

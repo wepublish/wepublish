@@ -100,7 +100,7 @@ export const Subscribe = <T extends BuilderUserFormFields>({
   onSubscribeWithRegister
 }: BuilderSubscribeProps<T>) => {
   const {
-    locale,
+    meta: {locale},
     elements: {Alert, Button, TextField, H5},
     MemberPlanPicker,
     PaymentMethodPicker,

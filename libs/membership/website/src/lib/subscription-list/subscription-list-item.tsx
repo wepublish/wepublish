@@ -72,7 +72,7 @@ export function SubscriptionListItem({
   className
 }: BuilderSubscriptionListItemProps) {
   const {
-    locale,
+    meta: {locale},
     elements: {Image, H6, Button, Link, Alert},
     date
   } = useWebsiteBuilder()
