@@ -18,7 +18,7 @@ export const BajourTeaser = (props: BuilderTeaserProps) => {
     return <Archive {...props} />
   }
 
-  if (isBriefing(props.teaser)) {
+  if (isBriefing(props)) {
     return <BaselBriefing {...props} />
   }
 

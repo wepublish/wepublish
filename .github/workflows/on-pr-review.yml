@@ -1,27 +1,33 @@
-name: Review deployment
+name: Review
 
 on:
-  workflow_call:
-    inputs:
-      editor_image:
-        required: true
-        type: string
-      api_image:
-        required: true
-        type: string
-      migration_image:
-        required: true
-        type: string
-      storybook_image:
-        required: true
-        type: string
-      website_image:
-        required: true
-        type: string
+  pull_request:
+    types: [ opened, synchronize, reopened]
+
+concurrency:
+  group: review-${{ github.head_ref }}
+  cancel-in-progress: true
 
 jobs:
+  publish-docker-image:
+    name: Docker
+    uses: ./.github/workflows/on-demand-publish-docker-image.yml
+    with:
+      editor_tags: |
+        ghcr.io/wepublish/editor:${{ github.sha }}
+      api_tags: |
+        ghcr.io/wepublish/api:${{ github.sha }}
+      migration_tags: |
+        ghcr.io/wepublish/migration:${{ github.sha }}
+      storybook_tags: |
+        ghcr.io/wepublish/storybook:${{ github.sha }}
+      website_tags: |
+        ghcr.io/wepublish/website:${{ github.sha }}
+    secrets: inherit
+
   helm_deployment:
-    name: Helm
+    name: Helm deployment
+    needs: publish-docker-image
     runs-on: ubuntu-latest
     permissions:
       contents: 'read'
@@ -64,7 +70,7 @@ jobs:
         run: |
           cat > values.yaml <<EOF
           deployment:
-            image: ghcr.io/wepublish/karma-media-server:latest
+            image: seccomch/wep-media-light:latest
             env:
               TOKEN: media-token
               DEBUG: 'false'
@@ -107,12 +113,12 @@ jobs:
               WEBSITE_URL: ${WEBSITE_URL}
               MEDIA_SERVER_URL: ${MEDIA_SERVER_URL}
           migration:
-            image: ${{ inputs.migration_image }}
+            image: ghcr.io/wepublish/migration:${{ github.sha }}
             env:
               DATABASE_URL: postgres://postgres:foo@review-${{ github.event.pull_request.number }}-database-postgresql.reviews.svc.cluster.local:5432/wepublish?schema=public
               OVERRIDE_ADMIN_PW: '123'
           api:
-            image: ${{ inputs.api_image }}
+            image: ghcr.io/wepublish/api:${{ github.sha }}
             env:
               GOOGLE_APPLICATION_CREDENTIALS: /var/secrets/google/key.json
               DATABASE_URL: postgres://postgres:foo@review-${{ github.event.pull_request.number }}-database-postgresql.reviews.svc.cluster.local:5432/wepublish?schema=public
@@ -138,21 +144,21 @@ jobs:
               BEXIO_ACCOUNT_ID: '139'
               CONFIG_FILE_PATH: '/wepublish/config/default.yaml'
           editor:
-            image: ${{ inputs.editor_image }}
+            image: ghcr.io/wepublish/editor:${{ github.sha }}
             env:
               PEER_BY_DEFAULT: "true"
           website:
-            image: ${{ inputs.website_image }}
+            image: ghcr.io/wepublish/website:${{ github.sha }}
             enabled: true
           storybook:
             enabled: true
-            image: ${{ inputs.storybook_image }}
+            image: ghcr.io/wepublish/storybook:${{ github.sha }}
             url: ${STORYBOOK_URL}
           EOF
           export POD_NAME=review-${{ github.event.pull_request.number }}-app
           if [[ ! -z $(helm ls -a -n reviews |grep ${POD_NAME} |grep -v "deployed ") ]]; then helm uninstall -n reviews ${POD_NAME}; fi
           helm upgrade --install ${POD_NAME} ./helm/charts/wepublish -n reviews -f values.yaml --wait
-          
+
 
   notify:
     name: Notify
@@ -205,3 +211,4 @@ jobs:
           cd ./config
           npm ci
           node ./notify-jira.js
+

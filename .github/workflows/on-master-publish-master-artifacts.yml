@@ -16,7 +16,7 @@ jobs:
 
   publish_master_docker:
     needs: date_sha_tag
-    uses: ./.github/workflows/publish-docker-image.yml
+    uses: ./.github/workflows/on-demand-publish-docker-image.yml
     with:
       migration_tags: |
         ghcr.io/wepublish/migration:master-${{ needs.date_sha_tag.outputs.tag }}
