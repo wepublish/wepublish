@@ -14,7 +14,7 @@ import possibleTypes from './graphql'
 
 import {ComponentType, memo, useMemo} from 'react'
 import {createUploadLink} from 'apollo-upload-client'
-import {remoteUrlToLocal} from './absolute-url-to-relative'
+import {absoluteUrlToRelative} from './absolute-url-to-relative'
 
 export const V1_CLIENT_STATE_PROP_NAME = '__APOLLO_STATE_V1__'
 
@@ -74,7 +74,7 @@ const createV1ApiClient = (
     link,
     cache: new InMemoryCache({
       possibleTypes: possibleTypes.possibleTypes,
-      typePolicies: remoteUrlToLocal,
+      typePolicies: absoluteUrlToRelative,
       ...cacheConfig
     }).restore(cache ?? {}),
     ssrMode: typeof window === 'undefined',

@@ -11,7 +11,7 @@ const absoluteToRelative = (url: string) => {
   }
 }
 
-export const remoteUrlToLocal: InMemoryCacheConfig['typePolicies'] = {
+export const absoluteUrlToRelative: InMemoryCacheConfig['typePolicies'] = {
   Page: {
     fields: {
       url: {
