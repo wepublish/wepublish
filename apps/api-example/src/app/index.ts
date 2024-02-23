@@ -119,6 +119,7 @@ export async function runServer({
     if (!blocksHost) throw new Error('No BLOCKS_HOST defined in environment.')
     urlAdapter = new BajourURLAdapter({websiteURL, blocksHost})
   }
+
   if (config.general.urlAdapter === 'tsri') {
     urlAdapter = new TsriURLAdapter({websiteURL})
   }
