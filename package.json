@@ -2,7 +2,7 @@
   "name": "wepublish",
   "private": true,
   "engines": {
-    "node": "^16.0.0"
+    "node": "^18.0.0"
   },
   "scripts": {
     "migrate": "prisma migrate deploy && prisma db seed",
@@ -207,7 +207,6 @@
     "@graphql-tools/schema": "^10.0.0",
     "@graphql-tools/wrap": "^10.0.1",
     "@hookform/resolvers": "^3.1.1",
-    "@mailchimp/mailchimp_marketing": "^3.0.80",
     "@mailchimp/mailchimp_transactional": "^1.0.50",
     "@mui/material": "^5.14.9",
     "@nestjs/apollo": "^12.0.7",
@@ -225,7 +224,6 @@
     "@quramy/prisma-fabbrica": "^1.0.2",
     "@types/cache-manager": "^4.0.2",
     "@types/js-cookie": "^3.0.2",
-    "@types/mailchimp__mailchimp_marketing": "^3.0.18",
     "@types/xml2js": "^0.4.11",
     "@wepublish/analytics": "1.0.0-alpha.3",
     "abort-controller": "^3.0.0",
@@ -304,7 +302,7 @@
     "recharts": "^2.5.0",
     "reflect-metadata": "^0.1.13",
     "regenerator-runtime": "0.13.7",
-    "rsuite": "^5.40.0",
+    "rsuite": "5.40.0",
     "rxjs": "^7.8.0",
     "slate": "^0.58.1",
     "slate-history": "^0.58.1",

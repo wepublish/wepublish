@@ -169,13 +169,11 @@ export const TeaserSlider = ({teasers}: BuilderTeaserGridBlockProps) => {
       <SliderInnerBackground />
 
       <SliderInnerContainer ref={ref} className="keen-slider">
-        <SliderInnerContainer ref={ref} className="keen-slider">
-          {filledTeasers.map((teaser, index) => (
-            <div key={index} className="keen-slider__slide">
-              {<TeaserSlide teaser={teaser} />}
-            </div>
-          ))}
-        </SliderInnerContainer>
+        {filledTeasers.map((teaser, index) => (
+          <div key={index} className="keen-slider__slide">
+            {<TeaserSlide teaser={teaser} />}
+          </div>
+        ))}
       </SliderInnerContainer>
 
       {loaded && sliderRef.current && (
