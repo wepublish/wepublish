@@ -1,8 +1,5 @@
 import {ApiV1, BuilderTeaserProps, Teaser} from '@wepublish/website'
 
-import {Archive} from '../../bajour/archive'
-import {BaselBriefing} from '../../bajour/basel-briefing'
-import {isBriefing} from '../../bajour/is-briefing'
 import {ColTeaser} from './col-teaser'
 import {ColTeaserLight} from './col-teaser-light'
 import {ColTeaserText} from './col-teaser-text'
@@ -10,18 +7,6 @@ import {SingleTeaser} from './single-teaser'
 import {TeaserOverwrite} from './teaser-overwrite'
 
 export const BajourTeaser = (props: BuilderTeaserProps) => {
-  // ApiV1.TeaserStyle.Light will be changed to Archive
-  if (
-    props.teaser?.__typename === 'PeerArticleTeaser' &&
-    props.teaser.style === ApiV1.TeaserStyle.Light
-  ) {
-    return <Archive {...props} />
-  }
-
-  if (isBriefing(props)) {
-    return <BaselBriefing {...props} />
-  }
-
   if (!props.numColumns) {
     return <Teaser {...props} />
   }

@@ -1,13 +1,9 @@
 import {styled} from '@mui/material'
-import {BuilderTeaserGridBlockProps, Image as BuilderImage} from '@wepublish/website'
+import {ApiV1, BuilderTeaserGridBlockProps} from '@wepublish/website'
 import Image from 'next/image'
 
-// import {NextWepublishLink} from '../should-be-website-builder/next-wepublish-link'
-// import babaNews from './peers-logos/baba-news.png'
-
-type ArchiveProps = Omit<BuilderTeaserGridBlockProps, 'teasers'> & {
-  // has to be any as we cannot import CustomTeaser from @wepublish/website/api
-  teasers: any[]
+export type ArchiveProps = Omit<BuilderTeaserGridBlockProps, 'teasers'> & {
+  teasers: ApiV1.ArticleTeaser[] | ApiV1.PeerArticleTeaser[]
 }
 
 const ArchiveWrapper = styled('div')`
@@ -160,7 +156,7 @@ const Highlights = styled('span')`
   }
 `
 
-const Archive = ({numColumns, teasers, blockStyle, className}: ArchiveProps) => {
+const Archive = ({teasers}: ArchiveProps) => {
   return (
     <div>
       <ArchiveWrapper>
@@ -190,7 +186,13 @@ const Archive = ({numColumns, teasers, blockStyle, className}: ArchiveProps) => 
       </ArchiveWrapper>
       <CarouselWrapper>
         <Highlights>Unsere Highlights</Highlights>
-        <div style={{height: '300px'}}>Carousel goes here</div>
+        {/* todo add "slider" here */}
+        {teasers.map((teaser, i) => {
+          const values = {
+            title: teaser?.title || teaser?.article?.title || 'Teaser title'
+          }
+          return <div key={values.title + i}>{values.title}</div>
+        })}
       </CarouselWrapper>
     </div>
   )
