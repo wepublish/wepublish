@@ -86,7 +86,7 @@ const WePublishEcosystem = styled('b')`
 const MoreButton = styled('a')`
   padding: 0.5rem 1.5rem;
   background-color: white;
-  border: 3px solid #ffbaba;
+  border: 3px solid currentColor;
   color: #ffbaba;
   border-radius: 0.5rem;
   font-size: 20px;
