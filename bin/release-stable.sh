@@ -20,4 +20,4 @@ git fetch --tags
 
 # Bump versions
 git commit -am "chore(release): ${VERSION}"
-npx lerna version --amend --yes ${VERSION}
+npx lerna version ${VERSION} --amend --yes

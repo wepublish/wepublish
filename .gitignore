@@ -5,6 +5,7 @@ node_modules
 npm-debug.log
 .media
 .changelog
+.CHANGELOG-next.md
 coverage/
 screenshots
 
