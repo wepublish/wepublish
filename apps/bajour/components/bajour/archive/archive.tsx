@@ -7,10 +7,10 @@ export type ArchiveProps = Omit<BuilderTeaserGridBlockProps, 'teasers'> & {
 }
 
 const ArchiveWrapper = styled('div')`
-  margin: 2rem 0;
+  margin: ${({theme}) => theme.spacing(4)} 0;
   display: grid;
-  grid-gap: 2rem;
-  padding: 0 1rem;
+  grid-gap: ${({theme}) => theme.spacing(4)};
+  padding: 0 ${({theme}) => theme.spacing(2)};
   justify-content: center;
   grid-template-columns: repeat(6, 1fr);
   grid-template-rows: auto auto;
@@ -37,12 +37,12 @@ const BestOfBajour = styled('div')`
 `
 
 const BajourLogo = styled(Image)`
-  margin: 0 0.5rem 0 1rem;
+  margin: 0 ${({theme}) => theme.spacing(1)} 0 ${({theme}) => theme.spacing(2)};
   width: 100px;
   height: 65px;
 
   ${({theme}) => theme.breakpoints.up('md')} {
-    margin: 0 1rem 0 1.5rem;
+    margin: 0 ${({theme}) => theme.spacing(2)} 0 ${({theme}) => theme.spacing(3)};
     width: 250px;
     height: 150px;
   }
@@ -71,36 +71,36 @@ const Timeline = styled('div')`
 const Articles = styled('div')`
   grid-column: 1/2;
   text-align: right;
-  padding-right: 1.5rem;
+  padding-right: ${({theme}) => theme.spacing(3)};
   display: flex;
   flex-direction: column;
 
   ${({theme}) => theme.breakpoints.up('md')} {
-    padding-right: 3rem;
+    padding-right: ${({theme}) => theme.spacing(6)};
   }
 `
 
 const Authors = styled('div')`
   grid-column: 2/3;
   text-align: left;
-  padding-left: 1.5rem;
+  padding-left: ${({theme}) => theme.spacing(3)};
   display: flex;
   flex-direction: column;
 
   ${({theme}) => theme.breakpoints.up('md')} {
-    padding-left: 3rem;
+    padding-left: ${({theme}) => theme.spacing(6)};
   }
 `
 
 const Years = styled('div')`
   grid-column: 1/2;
   text-align: right;
-  padding-right: 1.5rem;
+  padding-right: ${({theme}) => theme.spacing(3)};
   display: flex;
   flex-direction: column;
 
   ${({theme}) => theme.breakpoints.up('md')} {
-    padding-right: 3rem;
+    padding-right: ${({theme}) => theme.spacing(6)};
   }
 `
 
@@ -118,16 +118,16 @@ const Axis = styled('div')`
   top: -15%;
   left: 50%;
   transform: translateX(-50%);
-  width: 1rem;
+  width: ${({theme}) => theme.spacing(2)};
   background-color: ${({theme}) => theme.palette.secondary.main};
   height: 135%;
-  border-radius: 1rem;
+  border-radius: ${({theme}) => theme.spacing(2)};
   border: 4px solid white;
   z-index: 10;
 
   ${({theme}) => theme.breakpoints.up('md')} {
-    width: 1.5rem;
-    border: 5px solid white;
+    width: ${({theme}) => theme.spacing(3)};
+    border: 5px solid ${({theme}) => theme.palette.common.white};
   }
 `
 
@@ -135,7 +135,7 @@ const CarouselWrapper = styled('div')`
   position: relative;
   background-color: green;
   width: 100%;
-  top: -1rem;
+  top: -${({theme}) => theme.spacing(2)};
 
   ${({theme}) => theme.breakpoints.up('md')} {
     top: 0;
@@ -144,14 +144,14 @@ const CarouselWrapper = styled('div')`
 
 const Highlights = styled('span')`
   position: absolute;
-  top: -1.5rem;
+  top: -${({theme}) => theme.spacing(3)};
   left: 5%;
   font-size: 13px;
   font-weight: bold;
   color: ${({theme}) => theme.palette.secondary.main};
 
   ${({theme}) => theme.breakpoints.up('md')} {
-    top: -3.5rem;
+    top: -${({theme}) => theme.spacing(7)};
     font-size: 35px;
   }
 `
