@@ -18,7 +18,7 @@ const PeerLogoWrapper = styled('div')`
   left: 0;
   padding-right: ${({theme}) => theme.spacing(1)};
   padding-bottom: ${({theme}) => theme.spacing(1)};
-  background-color: white;
+  background-color: ${({theme}) => theme.palette.common.white};
   z-index: 1;
   width: 3rem;
 
@@ -75,7 +75,7 @@ const ContentElement = styled('div')`
 
 const ContentText = styled('span')`
   color: #2b2e34;
-  background: white;
+  background: ${({theme}) => theme.palette.common.white};
   padding: 1px ${({theme}) => theme.spacing(4)} 0.5px 0;
 `
 
