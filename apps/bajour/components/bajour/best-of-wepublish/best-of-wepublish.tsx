@@ -12,7 +12,7 @@ const BestOfWePublishWrapper = styled('div')`
   margin: 2rem 0;
   display: grid;
   grid-gap: 2rem;
-  padding: 0 1rem;
+  padding: 0 ${({theme}) => theme.spacing(2)};
 
   ${({theme}) => theme.breakpoints.up('md')} {
     padding: 0;
@@ -36,12 +36,12 @@ const BestOfWePublishHeader = styled('div')`
 `
 
 const HeaderText = styled('span')`
-  background-color: white;
+  background-color: ${({theme}) => theme.palette.common.white};
   color: #ffbaba;
   font-size: 1.4rem;
   font-weight: bold;
   margin-left: 20%;
-  padding: 0 1rem;
+  padding: 0 ${({theme}) => theme.spacing(2)};
   display: inline-block;
 
   ${({theme}) => theme.breakpoints.up('md')} {
@@ -57,25 +57,27 @@ const BestOfWePublishFooter = styled('div')`
 `
 
 const FooterSeparator = styled('div')`
-  background-color: white;
+  background-color: ${({theme}) => theme.palette.common.white};
   color: #ffbaba;
   margin-left: 7%;
-  padding: 0 0.3rem;
+  padding: 0 ${({theme}) => theme.spacing(0.5)};
   display: inline-block;
   height: 100%;
 
   ${({theme}) => theme.breakpoints.up('md')} {
-    padding: 0 1rem;
+    padding: 0 ${({theme}) => theme.spacing(2)};
   }
 `
 
 const FooterContent = styled('span')`
   font-weight: 300;
-  padding: 0.5rem 0 2rem 1rem;
+  padding: ${({theme}) => theme.spacing(1)} 0 ${({theme}) => theme.spacing(4)}
+    ${({theme}) => theme.spacing(2)};
   display: inline-block;
 
   ${({theme}) => theme.breakpoints.up('md')} {
-    padding: 0.5rem 0 3rem 1.5rem;
+    padding: ${({theme}) => theme.spacing(1)} 0 ${({theme}) => theme.spacing(6)}
+      ${({theme}) => theme.spacing(3)};
   }
 `
 
@@ -84,8 +86,8 @@ const WePublishEcosystem = styled('b')`
 `
 
 const MoreButton = styled('a')`
-  padding: 0.5rem 1.5rem;
-  background-color: white;
+  padding: ${({theme}) => theme.spacing(1)} ${({theme}) => theme.spacing(3)};
+  background-color: ${({theme}) => theme.palette.common.white};
   border: 3px solid currentColor;
   color: #ffbaba;
   border-radius: 0.5rem;
@@ -97,7 +99,7 @@ const MoreButton = styled('a')`
 
   ${({theme}) => theme.breakpoints.up('md')} {
     border-radius: 1rem;
-    padding: 1rem 2.5rem;
+    padding: ${({theme}) => theme.spacing(2)} ${({theme}) => theme.spacing(5)};
     font-size: 27px;
     right: 5%;
     bottom: -30%;

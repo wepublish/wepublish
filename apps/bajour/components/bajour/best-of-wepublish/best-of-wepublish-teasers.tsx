@@ -3,7 +3,7 @@ import {ApiV1, Image as BuilderImage} from '@wepublish/website'
 
 import {NextWepublishLink} from '../../should-be-website-builder/next-wepublish-link'
 
-interface Props {
+interface BestOfWePublishTeasersProps {
   teasers?: ApiV1.PeerArticleTeaser[]
 }
 
@@ -16,16 +16,14 @@ const PeerLogoWrapper = styled('div')`
   position: absolute;
   top: 0;
   left: 0;
-  padding-right: 0.4rem;
-  padding-bottom: 0.4rem;
+  padding-right: ${({theme}) => theme.spacing(1)};
+  padding-bottom: ${({theme}) => theme.spacing(1)};
   background-color: white;
   z-index: 1;
   width: 3rem;
 
   ${({theme}) => theme.breakpoints.up('md')} {
     width: 4rem;
-    padding-right: 0.6rem;
-    padding-bottom: 0.6rem;
   }
 `
 
@@ -36,13 +34,13 @@ const LinkWrapper = styled(NextWepublishLink)`
   align-items: center;
   grid-template-columns: 1fr;
   spacing: ${({theme}) => theme.spacing(2)};
-  padding-top: 1rem;
-  padding-left: 1rem;
+  padding-top: ${({theme}) => theme.spacing(2)};
+  padding-left: ${({theme}) => theme.spacing(2)};
   position: relative;
 
   ${({theme}) => theme.breakpoints.up('md')} {
-    padding-top: 2rem;
-    padding-left: 2rem;
+    padding-top: ${({theme}) => theme.spacing(4)};
+    padding-left: ${({theme}) => theme.spacing(4)};
   }
 `
 
@@ -78,7 +76,7 @@ const ContentElement = styled('div')`
 const ContentText = styled('span')`
   color: #2b2e34;
   background: white;
-  padding: 1px 2rem 0.5px 0;
+  padding: 1px ${({theme}) => theme.spacing(4)} 0.5px 0;
 `
 
 const Title = styled(ContentText)`
@@ -99,7 +97,7 @@ const Peer = styled(ContentText)`
   }
 `
 
-const BestOfWePublishTeasers = ({teasers}: Props) => {
+const BestOfWePublishTeasers = ({teasers}: BestOfWePublishTeasersProps) => {
   return (
     <>
       {teasers?.map(teaser => {
