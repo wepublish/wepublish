@@ -40,6 +40,7 @@ if [[ $CURRENT_BRANCH != $NEXT_STABLE_VERSION_BRANCH ]]; then
     exit 1
   fi
   git checkout -b ${NEXT_STABLE_VERSION_BRANCH}
+  git push -u origin ${NEXT_STABLE_VERSION_BRANCH}
 fi
 
 # Define increment or prerelease
