@@ -19,7 +19,7 @@ LAST_TAG=$(git describe --tags --abbrev=0)
 
 # Create changelog and determing increment type
 echo "Determine increment type vs ${CURRENT_BRANCH}"
-npx lerna-changelog --from=${LAST_STABLE_TAG} >>.CHANGELOG-next.md
+npx lerna-changelog --from=${LAST_STABLE_TAG} > .CHANGELOG-next.md
 if [[ $(cat .CHANGELOG-next.md | grep "#### :" | grep "Breaking") ]]; then
   INCREMENT=major
 elif [[ $(cat .CHANGELOG-next.md | grep "#### :" | grep -v "Bux Fix") ]]; then
@@ -27,7 +27,6 @@ elif [[ $(cat .CHANGELOG-next.md | grep "#### :" | grep -v "Bux Fix") ]]; then
 else
   INCREMENT=patch
 fi
-rm .CHANGELOG-next.md
 
 NEXT_STABLE_VERSION=$(semver -i ${INCREMENT} ${LAST_STABLE_TAG})
 NEXT_STABLE_VERSION_BRANCH=r/release-${NEXT_STABLE_VERSION}
@@ -36,10 +35,11 @@ NEXT_STABLE_VERSION_BRANCH=r/release-${NEXT_STABLE_VERSION}
 if [[ $CURRENT_BRANCH != $NEXT_STABLE_VERSION_BRANCH ]]; then
   echo "Checkout target release branch: ${NEXT_STABLE_VERSION_BRANCH}"
   if [[ $(git branch | grep "${NEXT_STABLE_VERSION_BRANCH}") ]]; then
-    echo "Branch ${NEXT_STABLE_VERSION_BRANCH} already exists, checkout the branch and rerun command"
+  echo "Branch ${NEXT_STABLE_VERSION_BRANCH} already exists, checkout the branch and rerun command"
     exit 1
   fi
   git checkout -b ${NEXT_STABLE_VERSION_BRANCH}
+  git push -u origin ${NEXT_STABLE_VERSION_BRANCH}
 fi
 
 # Define increment or prerelease
@@ -49,4 +49,13 @@ else
   NEXT_INCREMENT="prerelease"
 fi
 
-lerna version $NEXT_INCREMENT
+echo "Creating new ${NEXT_INCREMENT} version"
+lerna version $NEXT_INCREMENT --no-push
+
+echo "Adjusting related PR"
+if [[ $(gh pr view) ]]; then
+  gh pr create --title "Release ${NEXT_STABLE_VERSION}" --body-file .CHANGELOG-next.md
+else
+  gh pr edit --body-file .CHANGELOG-next.md
+fi
+rm .CHANGELOG-next.md
