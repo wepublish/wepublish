@@ -1,11 +1,5 @@
 import {Button, styled} from '@mui/material'
-import {
-  alignmentForTeaserBlock,
-  ApiV1,
-  BuilderTeaserGridBlockProps,
-  Image,
-  TeaserWrapper
-} from '@wepublish/website'
+import {ApiV1, BuilderTeaserGridBlockProps, Image} from '@wepublish/website'
 
 import isWithinTimeslot from '../../../utils/is-within-timeslot'
 import {NextWepublishLink} from '../../should-be-website-builder/next-wepublish-link'
@@ -73,16 +67,6 @@ const fasnachtBg = {
   smallURL: FasnachtBg.src
 }
 
-export const BajourBriefingStyled = styled('div')`
-  display: grid;
-  column-gap: 16px;
-  row-gap: 40px;
-  grid-template-columns: 1fr;
-  align-items: stretch;
-  position: relative;
-  padding-top: 2rem;
-`
-
 const getValuesBasedOnBriefing = (briefing: BriefingType) => {
   switch (briefing) {
     case BriefingType.BaselBriefing: {
@@ -113,6 +97,25 @@ const getValuesBasedOnBriefing = (briefing: BriefingType) => {
     }
   }
 }
+
+export const BaselBriefingStyled = styled('div')`
+  display: grid;
+  column-gap: 16px;
+  row-gap: 40px;
+  grid-template-columns: 1fr;
+  align-items: stretch;
+  position: relative;
+  padding-top: 2rem;
+  margin-bottom: ${({theme}) => theme.spacing(1)};
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    margin-bottom: ${({theme}) => theme.spacing(4)};
+  }
+
+  ${({theme}) => theme.breakpoints.up('lg')} {
+    margin-bottom: ${({theme}) => theme.spacing(6)};
+  }
+`
 
 const TeaserBackground = styled(Image)`
   width: 100%;
@@ -309,7 +312,7 @@ export const Avatar = styled(Image)`
   }
 `
 
-const BaselBriefing = ({teasers, blockStyle, numColumns}: BaselBriefingProps) => {
+const BaselBriefing = ({teasers, blockStyle}: BaselBriefingProps) => {
   let showFrom = undefined
   let showUntil = undefined
 
@@ -344,51 +347,47 @@ const BaselBriefing = ({teasers, blockStyle, numColumns}: BaselBriefingProps) =>
     contentUrl: contentUrl || ''
   }
 
-  const alignment = alignmentForTeaserBlock(1, numColumns)
-
   return (
-    <TeaserWrapper {...alignment}>
-      <BajourBriefingStyled>
-        <LinkWrapper color="inherit" underline="none" href={briefingDynamicValues.contentUrl}>
-          <BriefingContainer>
-            {values.backgroundImage && <TeaserBackground image={values.backgroundImage} />}
+    <BaselBriefingStyled>
+      <LinkWrapper color="inherit" underline="none" href={briefingDynamicValues.contentUrl}>
+        <BriefingContainer>
+          {values.backgroundImage && <TeaserBackground image={values.backgroundImage} />}
 
-            <Heading>
-              <BaselBriefingTitle>{values.title}</BaselBriefingTitle>
-              <BaselBriefingSubtitle>{values.subtitle}</BaselBriefingSubtitle>
-            </Heading>
+          <Heading>
+            <BaselBriefingTitle>{values.title}</BaselBriefingTitle>
+            <BaselBriefingSubtitle>{values.subtitle}</BaselBriefingSubtitle>
+          </Heading>
 
-            <BriefingTextWrapper>
-              <Briefing>
-                <Welcome>{values.welcome}</Welcome>
-                <BriefingText>{briefingDynamicValues.briefingContent}</BriefingText>
-              </Briefing>
-            </BriefingTextWrapper>
-          </BriefingContainer>
+          <BriefingTextWrapper>
+            <Briefing>
+              <Welcome>{values.welcome}</Welcome>
+              <BriefingText>{briefingDynamicValues.briefingContent}</BriefingText>
+            </Briefing>
+          </BriefingTextWrapper>
+        </BriefingContainer>
 
-          <TeaserContentWrapper>
-            <TeaserContentStyled>
-              <TeaserContentInterior>
-                {briefingDynamicValues.authorAvatar && (
-                  <Avatar image={briefingDynamicValues.authorAvatar} />
-                )}
+        <TeaserContentWrapper>
+          <TeaserContentStyled>
+            <TeaserContentInterior>
+              {briefingDynamicValues.authorAvatar && (
+                <Avatar image={briefingDynamicValues.authorAvatar} />
+              )}
 
-                {briefingDynamicValues.authorName && (
-                  <Author>
-                    Heute von <br />
-                    {briefingDynamicValues.authorName}
-                  </Author>
-                )}
+              {briefingDynamicValues.authorName && (
+                <Author>
+                  Heute von <br />
+                  {briefingDynamicValues.authorName}
+                </Author>
+              )}
 
-                <ReadMoreButton variant="outlined" color="inherit" size="small">
-                  Ganzes Briefing
-                </ReadMoreButton>
-              </TeaserContentInterior>
-            </TeaserContentStyled>
-          </TeaserContentWrapper>
-        </LinkWrapper>
-      </BajourBriefingStyled>
-    </TeaserWrapper>
+              <ReadMoreButton variant="outlined" color="inherit" size="small">
+                Ganzes Briefing
+              </ReadMoreButton>
+            </TeaserContentInterior>
+          </TeaserContentStyled>
+        </TeaserContentWrapper>
+      </LinkWrapper>
+    </BaselBriefingStyled>
   )
 }
 

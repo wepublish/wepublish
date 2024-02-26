@@ -1,13 +1,13 @@
 import {styled} from '@mui/material'
-import {ApiV1, Image as BuilderImage} from '@wepublish/website'
+import {ApiV1, Image} from '@wepublish/website'
 
 import {NextWepublishLink} from '../../should-be-website-builder/next-wepublish-link'
 
-interface BestOfWePublishTeasersProps {
-  teasers?: ApiV1.PeerArticleTeaser[]
+interface BestOfWePublishTeaserProps {
+  teaser?: ApiV1.PeerArticleTeaser
 }
 
-const TeaserBackground = styled(BuilderImage)`
+const TeaserBackground = styled(Image)`
   width: 100%;
   object-fit: cover;
 `
@@ -33,7 +33,6 @@ const LinkWrapper = styled(NextWepublishLink)`
   grid-template-rows: auto;
   align-items: center;
   grid-template-columns: 1fr;
-  spacing: ${({theme}) => theme.spacing(2)};
   padding-top: ${({theme}) => theme.spacing(2)};
   padding-left: ${({theme}) => theme.spacing(2)};
   position: relative;
@@ -97,48 +96,33 @@ const Peer = styled(ContentText)`
   }
 `
 
-const BestOfWePublishTeasers = ({teasers}: BestOfWePublishTeasersProps) => {
-  return (
-    <>
-      {teasers?.map(teaser => {
-        const values = {
-          image: teaser?.image || teaser?.article?.image,
-          href: teaser?.article?.url,
-          title: teaser?.title || teaser?.article?.title,
-          peerName: teaser?.peer?.name,
-          peerLogo: (teaser?.peer?.profile?.logo as ApiV1.FullImageFragment)?.squareSmallURL || ''
-        }
+const BestOfWePublishTeaser = ({teaser}: BestOfWePublishTeaserProps) => {
+  const values = {
+    image: teaser?.image || teaser?.article?.image,
+    href: teaser?.article?.url,
+    title: teaser?.title || teaser?.article?.title,
+    peerName: teaser?.peer?.name,
+    peerLogo: teaser?.peer?.profile?.logo as ApiV1.FullImageFragment
+  }
 
-        return (
-          <LinkWrapper color="inherit" underline="none" href={values.href} key={values.title}>
-            <PeerLogoWrapper>
-              {/* not possible to use next/image with dynamic domains */}
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={values.peerLogo}
-                alt="Peer logo"
-                style={{
-                  width: '100%',
-                  height: 'auto'
-                }}
-              />
-            </PeerLogoWrapper>
-            <InnerContainer>
-              {values.image && <TeaserBackground image={values.image} />}
-              <Content>
-                <ContentElement>
-                  <Title>{values.title}</Title>
-                </ContentElement>
-                <ContentElement>
-                  <Peer>by {values.peerName}</Peer>
-                </ContentElement>
-              </Content>
-            </InnerContainer>
-          </LinkWrapper>
-        )
-      })}
-    </>
+  return (
+    <LinkWrapper color="inherit" underline="none" href={values.href} key={values.title}>
+      <PeerLogoWrapper>
+        <Image image={values.peerLogo} />
+      </PeerLogoWrapper>
+      <InnerContainer>
+        {values.image && <TeaserBackground image={values.image} />}
+        <Content>
+          <ContentElement>
+            <Title>{values.title}</Title>
+          </ContentElement>
+          <ContentElement>
+            <Peer>by {values.peerName}</Peer>
+          </ContentElement>
+        </Content>
+      </InnerContainer>
+    </LinkWrapper>
   )
 }
 
-export {BestOfWePublishTeasers}
+export {BestOfWePublishTeaser}

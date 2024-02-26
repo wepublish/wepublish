@@ -1,15 +1,14 @@
 import {styled} from '@mui/material'
 import {ApiV1, BuilderTeaserGridBlockProps} from '@wepublish/website'
 
-import {BestOfWePublishTeasers} from './best-of-wepublish-teasers'
+import {BestOfWePublishTeaser} from './best-of-wepublish-teaser'
 
 export type BestOfWePublishProps = Omit<BuilderTeaserGridBlockProps, 'teasers'> & {
   teasers?: Array<ApiV1.PeerArticleTeaser>
 }
 
 const BestOfWePublishWrapper = styled('div')`
-  grid-column: 1/13;
-  margin: 2rem 0;
+  margin: ${({theme}) => `${theme.spacing(4)} 0 ${theme.spacing(6)} 0`};
   display: grid;
   grid-gap: 2rem;
   padding: 0 ${({theme}) => theme.spacing(2)};
@@ -51,33 +50,33 @@ const HeaderText = styled('span')`
 
 const BestOfWePublishFooter = styled('div')`
   position: relative;
-  display: flex;
   width: 100%;
-  background-color: #ffbaba;
-`
-
-const FooterSeparator = styled('div')`
-  background-color: ${({theme}) => theme.palette.common.white};
-  color: #ffbaba;
-  margin-left: 7%;
-  padding: 0 ${({theme}) => theme.spacing(0.5)};
-  display: inline-block;
-  height: 100%;
+  padding-left: calc(7% + ${({theme}) => theme.spacing(4)});
+  background-image: linear-gradient(
+    to left,
+    #ffbaba calc(93% - ${({theme}) => theme.spacing(2)}),
+    ${({theme}) => theme.palette.common.white} calc(93% - ${({theme}) => theme.spacing(2)}) 93%,
+    #ffbaba 93%
+  );
 
   ${({theme}) => theme.breakpoints.up('md')} {
-    padding: 0 ${({theme}) => theme.spacing(2)};
+    background-image: linear-gradient(
+      to left,
+      #ffbaba calc(93% - ${({theme}) => theme.spacing(4)}),
+      ${({theme}) => theme.palette.common.white} calc(93% - ${({theme}) => theme.spacing(4)}) 93%,
+      #ffbaba 93%
+    );
   }
+  margin-bottom: ${({theme}) => theme.spacing(3)};
 `
 
 const FooterContent = styled('span')`
   font-weight: 300;
-  padding: ${({theme}) => theme.spacing(1)} 0 ${({theme}) => theme.spacing(4)}
-    ${({theme}) => theme.spacing(2)};
+  padding: ${({theme}) => `${theme.spacing(1)} 0 ${theme.spacing(4)} ${theme.spacing(2)}`};
   display: inline-block;
 
   ${({theme}) => theme.breakpoints.up('md')} {
-    padding: ${({theme}) => theme.spacing(1)} 0 ${({theme}) => theme.spacing(6)}
-      ${({theme}) => theme.spacing(3)};
+    padding: ${({theme}) => `${theme.spacing(1)} 0 ${theme.spacing(6)} ${theme.spacing(3)}`};
   }
 `
 
@@ -86,11 +85,11 @@ const WePublishEcosystem = styled('b')`
 `
 
 const MoreButton = styled('a')`
-  padding: ${({theme}) => theme.spacing(1)} ${({theme}) => theme.spacing(3)};
+  padding: ${({theme}) => `${theme.spacing(1)} ${theme.spacing(3)}`};
   background-color: ${({theme}) => theme.palette.common.white};
   border: 3px solid currentColor;
   color: #ffbaba;
-  border-radius: 0.5rem;
+  border-radius: ${({theme}) => theme.spacing(1)};
   font-size: 20px;
   position: absolute;
   right: 2%;
@@ -99,7 +98,7 @@ const MoreButton = styled('a')`
 
   ${({theme}) => theme.breakpoints.up('md')} {
     border-radius: 1rem;
-    padding: ${({theme}) => theme.spacing(2)} ${({theme}) => theme.spacing(5)};
+    padding: ${({theme}) => `${theme.spacing(2)}} ${theme.spacing(5)}`};
     font-size: 27px;
     right: 5%;
     bottom: -30%;
@@ -112,10 +111,11 @@ const BestOfWePublish = ({teasers}: BestOfWePublishProps) => (
       <HeaderText>Best of We.Publish</HeaderText>
     </BestOfWePublishHeader>
     <Wrapper>
-      <BestOfWePublishTeasers teasers={teasers} />
+      {teasers?.map(teaser => (
+        <BestOfWePublishTeaser teaser={teaser} key={teaser.articleID} />
+      ))}
     </Wrapper>
     <BestOfWePublishFooter>
-      <FooterSeparator />
       <FooterContent>
         <WePublishEcosystem>We.Publish – Ökosystem für Schweizer Medien</WePublishEcosystem>
         <div>Die We.Publish Foundation fördert unabhängige journalistische</div>
