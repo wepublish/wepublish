@@ -149,6 +149,7 @@ export const selectTeaserAuthors = (teaser: TeaserType) => {
       return null
     }
 
+    case 'PeerArticleTeaser':
     case 'ArticleTeaser': {
       return teaser.article?.authors.map(author => author.name)
     }

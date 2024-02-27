@@ -25,7 +25,7 @@ export const TeaserGridBlockWrapper = styled('div')<Pick<TeaserGridBlockType, 'n
     `}
 `
 
-const alignmentForTeaserBlock = (index: number, numColumns: number): FlexAlignment => {
+export const alignmentForTeaserBlock = (index: number, numColumns: number): FlexAlignment => {
   const columnIndex = index % numColumns
   const rowIndex = Math.floor(index / numColumns)
 

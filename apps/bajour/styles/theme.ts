@@ -18,10 +18,10 @@ const theme = createTheme({
   },
   palette: {
     primary: {
-      main: '#FDDDD2'
+      main: '#FDDDD2' // light orange
     },
     secondary: {
-      main: '#FF0D62'
+      main: '#FF0D62' // bajour pink
     }
   },
   components: {

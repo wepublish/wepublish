@@ -1,6 +1,17 @@
-import {styled} from '@mui/material'
-import {ApiV1, BuilderTeaserGridBlockProps} from '@wepublish/website'
+import {Button, styled} from '@mui/material'
+import {
+  ApiV1,
+  BuilderTeaserGridBlockProps,
+  selectTeaserAuthors,
+  selectTeaserLead,
+  selectTeaserTitle,
+  selectTeaserUrl,
+  useWebsiteBuilder
+} from '@wepublish/website'
 import Image from 'next/image'
+import {useState} from 'react'
+
+import {ArchiveSlider} from './archive-slider'
 
 export type ArchiveProps = Omit<BuilderTeaserGridBlockProps, 'teasers'> & {
   teasers: ApiV1.ArticleTeaser[] | ApiV1.PeerArticleTeaser[]
@@ -122,7 +133,7 @@ const Axis = styled('div')`
   background-color: ${({theme}) => theme.palette.secondary.main};
   height: 135%;
   border-radius: ${({theme}) => theme.spacing(2)};
-  border: 4px solid white;
+  border: 4px solid ${({theme}) => theme.palette.common.white};
   z-index: 10;
 
   ${({theme}) => theme.breakpoints.up('md')} {
@@ -133,7 +144,6 @@ const Axis = styled('div')`
 
 const CarouselWrapper = styled('div')`
   position: relative;
-  background-color: green;
   width: 100%;
   top: -${({theme}) => theme.spacing(2)};
 
@@ -156,7 +166,59 @@ const Highlights = styled('span')`
   }
 `
 
+const CurrentTeaser = styled('div')`
+  padding: ${({theme}) => theme.spacing(3)};
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    padding: ${({theme}) => theme.spacing(7)};
+  }
+`
+
+const ReadMoreButton = styled(Button)`
+  justify-self: end;
+  color: ${({theme}) => theme.palette.secondary.main};
+`
+
+const Author = styled('div')`
+  font-weight: 300;
+  font-style: italic;
+  font-size: 17px;
+  margin-bottom: ${({theme}) => theme.spacing(2)};
+`
+
+const Title = styled('div')`
+  font-size: 20px;
+  font-weight: 700;
+`
+
+const Lead = styled('div')`
+  margin-bottom: ${({theme}) => theme.spacing(3)};
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    max-width: 75%;
+  }
+`
+
+const LinkWrapper = styled('div')`
+  text-align: right;
+
+  ${({theme}) => theme.breakpoints.up('sm')} {
+    text-align: left;
+  }
+`
+
 const Archive = ({teasers}: ArchiveProps) => {
+  const [currentTeaser, setCurrentTeaser] = useState(teasers[2])
+
+  const title = currentTeaser && selectTeaserTitle(currentTeaser)
+  const lead = currentTeaser && selectTeaserLead(currentTeaser)
+  const href = (currentTeaser && selectTeaserUrl(currentTeaser)) ?? ''
+  const authors = currentTeaser && selectTeaserAuthors(currentTeaser)
+
+  const {
+    elements: {Link}
+  } = useWebsiteBuilder()
+
   return (
     <div>
       <ArchiveWrapper>
@@ -186,14 +248,20 @@ const Archive = ({teasers}: ArchiveProps) => {
       </ArchiveWrapper>
       <CarouselWrapper>
         <Highlights>Unsere Highlights</Highlights>
-        {/* todo add "slider" here */}
-        {teasers.map((teaser, i) => {
-          const values = {
-            title: teaser?.title || teaser?.article?.title || 'Teaser title'
-          }
-          return <div key={values.title + i}>{values.title}</div>
-        })}
+        <ArchiveSlider teasers={teasers} setTeaser={setCurrentTeaser} />
       </CarouselWrapper>
+      <CurrentTeaser>
+        <Title>{title}</Title>
+        {authors?.length ? <Author>von {authors?.join(', ')}</Author> : null}
+        <Lead>{lead}</Lead>
+        <LinkWrapper>
+          <Link href={href} target="_blank">
+            <ReadMoreButton variant="outlined" color="inherit">
+              Weiterlesen
+            </ReadMoreButton>
+          </Link>
+        </LinkWrapper>
+      </CurrentTeaser>
     </div>
   )
 }
