@@ -23,6 +23,7 @@
       "defaultConfiguration": "development",
       "options": {
         "buildTarget": "gruppetto:build",
+        "port": 4202,
         "dev": true
       },
       "configurations": {
