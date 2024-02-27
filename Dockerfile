@@ -31,7 +31,7 @@ COPY --chown=wepublish:wepublish --from=build-api /wepublish/api /wepublish
 COPY --chown=wepublish:wepublish --from=build-api /wepublish/node_modules/bcrypt node_modules/bcrypt
 EXPOSE 4000
 USER wepublish
-CMD sleep 240 && /wepublish/api
+CMD /wepublish/api
 
 #######
 ## Editor
