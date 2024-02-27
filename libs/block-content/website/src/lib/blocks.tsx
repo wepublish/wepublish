@@ -1,5 +1,5 @@
 import {BuilderBlockRendererProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {Block as BlockType} from '@wepublish/website/api'
+import {Block, Block as BlockType} from '@wepublish/website/api'
 import {isHtmlBlock} from './html/html-block'
 import {isImageBlock} from './image/image-block'
 import {isQuoteBlock} from './quote/quote-block'
@@ -25,6 +25,9 @@ import {isListicleBlock} from './listicle/listicle-block'
 import {isEventBlock} from './event/event-block'
 import {isPolisConversationBlock} from './polis-conversation/polis-conversation-block'
 import {isBreakBlock} from './break/break-block'
+
+export const hasBlockStyle = (blockStyle: string) => (block: Block) =>
+  block.blockStyle === blockStyle
 
 export const BlockRenderer = ({block}: BuilderBlockRendererProps) => {
   const {blocks} = useWebsiteBuilder()

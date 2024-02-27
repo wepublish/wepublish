@@ -49,7 +49,8 @@ import {BlockStylesModule} from '@wepublish/block-content/api'
       sortSchema: true,
       path: 'v2',
       cache: 'bounded',
-      playground: process.env.NODE_ENV === 'development'
+      playground: process.env.NODE_ENV === 'development',
+      allowBatchedHttpRequests: true
     }),
     PrismaModule,
     MailsModule.registerAsync({

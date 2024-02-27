@@ -1,5 +1,9 @@
 import {createTheme} from '@mui/material'
 
+const {
+  palette: {augmentColor}
+} = createTheme()
+
 const theme = createTheme({
   typography: {
     fontFamily: 'Roboto, sans-serif',
@@ -17,18 +21,22 @@ const theme = createTheme({
     }
   },
   palette: {
-    primary: {
-      main: '#FDDDD2' // light orange
-    },
-    secondary: {
-      main: '#FF0D62' // bajour pink
-    }
+    primary: augmentColor({color: {main: '#FDDDD2'}}),
+    error: augmentColor({color: {main: '#FF0D62'}})
   },
   components: {
     MuiButton: {
       styleOverrides: {
         root: {
           borderRadius: '12px'
+        },
+        outlinedError: {
+          borderWidth: '3px',
+          borderColor: '#FF0D62',
+          fontWeight: 'bold',
+          ':hover': {
+            borderWidth: '3px'
+          }
         }
       }
     }
