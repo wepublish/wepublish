@@ -17,10 +17,96 @@ api:
     SENTRY_DSN: ''
     DEFAULT_FROM_ADDRESS: ''
     DEFAULT_REPLY_TO_ADDRESS: ''
-    CONFIG_FILE_PATH: '/wepublish/config/default.yaml'
   envFromSecretRefName:
   properties: {}
   replicaCount: 1
+  config:
+    general:
+      apolloPlayground: true
+      apolloIntrospection: true
+      bcryptHashCostFactor: 12
+      urlAdapter: default
+    mailProvider:
+      id: slackMail
+      fromAddress: dev@wepublish.ch # Required for mailchimp/mailgun
+      webhookURL: ${SLACK_DEV_MAIL_WEBHOOK_URL}
+#    OAuthProviders:
+#      - name: 'google'
+#        discoverUrl: ${OAUTH_GOOGLE_DISCOVERY_URL}
+#        clientId: ${OAUTH_GOOGLE_CLIENT_ID}
+#        clientKey: ${OAUTH_GOOGLE_CLIENT_KEY}
+#        redirectUri:
+#          - ${OAUTH_GOOGLE_REDIRECT_URL}
+#        scopes:
+#          - 'openid profile email'
+    paymentProviders:
+#      - type: payrexx # Allowed are stripe-checkout / stripe / payrexx / bexio
+#        id: payrexx # Required for stripe-checkout / stripe / payrexx /bexio
+#        name: Payrexx # Required for stripe-checkout / stripe / payrexx /bexio
+#        offSessionPayments: true # Required for stripe-checkout / stripe / payrexx
+#        secretKey: secret # Required for stripe-checkout / stripe
+#        webhookApiKey: secret
+#        instanceName: name  # Required for payrexx
+#        instanceAPISecret: secret # Required for payrexx
+#        psp: [0, 15, 17, 2, 3, 36]  # Required for payrexx
+#        pm: # Required for payrexx
+#          - 'postfinance_card'
+#          - 'postfinance_efinance'
+#          - 'mastercard'
+#          - 'visa'
+#          - 'twint'
+#          - 'invoice'
+#          - 'paypal'
+#        vatRate: 8.1 # Required for payrexx
+#      - type: stripe
+#        id: stripe
+#        name: Stripe
+#        offSessionPayments: true
+#        secretKey: key
+#        webhookEndpointSecret: wh_secret
+#      - type: stripe-checkout
+#        id: stripe-checkout
+#        name: Stripe Checkout
+#        offSessionPayments: false
+#        secretKey: key
+#        webhookEndpointSecret: wh_secret
+#      - type: payrexx-subscription
+#        id: payrexx-subscription
+#        name: Payrexx Subscription
+#        webhookEndpointSecret: secret
+#        instanceName: wepublish-dev
+#        instanceAPISecret: secret
+#      - type: bexio
+#        id: bexio
+#        name: Bexio
+#        apiKey: ${BEXIO_API_KEY}
+#        userId: ${BEXIO_USER_ID}
+#        countryId: ${BEXIO_COUNTRY_ID}
+#        invoiceTemplateNewMembership: ${BEXIO_INVOICE_TEMPLATE}
+#        invoiceTemplateRenewalMembership: ${BEXIO_INVOICE_TEMPLATE}
+#        unitId: ${BEXIO_UNIT_ID}
+#        taxId: ${BEXIO_TAX_ID}
+#        accountId: ${BEXIO_ACCOUNT_ID}
+#        invoiceTitleNewMembership: "New Invoice"
+#        invoiceTitleRenewalMembership: "New Invoice"
+#        invoiceMailSubjectNewMembership: "Invoice for :memberPlan.name:"
+#        invoiceMailBodyNewMembership: "Hello :user.firstname:\n\nThank you for subscribing to :memberPlan.name:.\nYou can view your invoice here: [Network Link]\n\nBest wishes from the Wepublish team"
+#        invoiceMailSubjectRenewalMembership: "Invoice for :memberPlan.name:"
+#        invoiceMailBodyRenewalMembership: "Hello :user.firstname:\n\nThank you for subscribing to :memberPlan.name:.\nYou can view your invoice here: [Network Link]\n\nBest wishes from the Wepublish team"
+#        markInvoiceAsOpen: False
+    challenge:
+      secret: 'secret'
+      validTime: 600
+      width: 200
+      height: 200
+      background: '#ffffff'
+      noise: 5
+      minValue: 1
+      maxValue: 10
+      operandAmount: 1
+      operandTypes: ['+', '-']
+      mode: 'formula'
+      targetSymbol: '?'
 
 migration:
   image: ghcr.io/wepublish/migration
