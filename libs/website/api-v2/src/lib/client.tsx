@@ -5,17 +5,26 @@ import {
   DefaultOptions,
   InMemoryCache,
   InMemoryCacheConfig,
-  NormalizedCacheObject
+  NormalizedCacheObject,
+  split
 } from '@apollo/client'
 import {BatchHttpLink} from '@apollo/client/link/batch-http'
 import {mergeDeepLeft} from 'ramda'
 import possibleTypes from './graphql'
 
 import {ComponentType, memo, useMemo} from 'react'
+import {createUploadLink} from 'apollo-upload-client'
 
 export const V2_CLIENT_STATE_PROP_NAME = '__APOLLO_STATE_V2__'
 
 let CACHED_CLIENT: ApolloClient<NormalizedCacheObject>
+
+const isFile = (value: unknown): boolean =>
+  Boolean(
+    (typeof File !== 'undefined' && value instanceof File) ||
+      (typeof Blob !== 'undefined' && value instanceof Blob) ||
+      (value && typeof value === 'object' && Object.values(value).some(isFile))
+  )
 
 const createV2ApiClient = (
   apiUrl: string,
@@ -23,7 +32,15 @@ const createV2ApiClient = (
   cacheConfig?: InMemoryCacheConfig,
   cache?: NormalizedCacheObject
 ) => {
-  const httpLink = new BatchHttpLink({uri: `${apiUrl}/v2`, batchMax: 5, batchInterval: 20})
+  // If operation is uploading a file, use the upload link, else use the batch http
+  const httpLink = split(
+    ({variables}) => isFile(variables),
+    createUploadLink({
+      uri: `${apiUrl}/v2`
+    }),
+    new BatchHttpLink({uri: `${apiUrl}/v2`, batchMax: 5, batchInterval: 20})
+  )
+
   const link = [...links, httpLink].reduce(
     (links: ApolloLink | undefined, link) => (links ? links.concat(link) : link),
     undefined

@@ -3,6 +3,8 @@ import {ApiV1, PageContainer} from '@wepublish/website'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 
+import {SliderContainer} from '../components/website-builder-overwrites/blocks/teaser-slider/teaser-slider'
+
 const Homepage = styled(PageContainer)`
   grid-column: -1/1;
   gap: ${({theme}) => theme.spacing(3)};
@@ -13,6 +15,14 @@ const Homepage = styled(PageContainer)`
 
   ${({theme}) => theme.breakpoints.up('md')} {
     gap: ${({theme}) => theme.spacing(5)};
+
+    ${SliderContainer} {
+      padding-left: calc(100% / 12);
+      padding-right: calc(100% / 12);
+    }
+  }
+
+  ${({theme}) => theme.breakpoints.up('lg')} {
     grid-column: 2/3;
   }
 
