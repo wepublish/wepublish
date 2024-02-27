@@ -124,25 +124,8 @@ jobs:
               DATABASE_URL: postgres://postgres:foo@review-${{ github.event.pull_request.number }}-database-postgresql.reviews.svc.cluster.local:5432/wepublish?schema=public
               MEDIA_SERVER_TOKEN: 'media-token'
               JWT_SECRET_KEY: 'jwt-token'
-              SLACK_DEV_MAIL_WEBHOOK_URL: 'SLACK_DEV_MAIL_WEBHOOK_URL'
               DEFAULT_FROM_ADDRESS: 'dev@wepublish.ch'
               DEFAULT_REPLY_TO_ADDRESS: 'dev@wepublish.ch'
-              PAYREXX_INSTANCE_NAME: wepublish-sandbox
-              PAYREXX_PAYMENT_METHODS: visa,mastercard
-              PAYREXX_API_SECRET: ${{ secrets.PAYREXX_API_SECRET }}
-              PAYREXX_WEBHOOK_SECRET: ${{ secrets.PAYREXX_WEBHOOK_SECRET }}
-              OAUTH_GOOGLE_DISCOVERY_URL: 'https://accounts.google.com'
-              OAUTH_GOOGLE_CLIENT_ID: '617896178757-i6ldn0nni9qtle8o6eu76lv93d78nvfi.apps.googleusercontent.com'
-              OAUTH_GOOGLE_CLIENT_KEY: 't267ZLqkV9dacrkPQp_pF-G2'
-              OAUTH_GOOGLE_REDIRECT_URL: ${WEBSITE_URL}/auth/google
-              BEXIO_API_KEY: 'secret'
-              BEXIO_USER_ID: '1'
-              BEXIO_COUNTRY_ID: '1'
-              BEXIO_INVOICE_TEMPLATE: 'template-name'
-              BEXIO_UNIT_ID: '1'
-              BEXIO_TAX_ID: '17'
-              BEXIO_ACCOUNT_ID: '139'
-              CONFIG_FILE_PATH: '/wepublish/config/default.yaml'
             config:
               general:
                 apolloPlayground: true
@@ -152,64 +135,61 @@ jobs:
               mailProvider:
                 id: slackMail
                 fromAddress: dev@wepublish.ch
-                webhookURL: ${SLACK_DEV_MAIL_WEBHOOK_URL}
+                webhookURL: 'SLACK_DEV_MAIL_WEBHOOK_URL'
               OAuthProviders:
                 - name: 'google'
-                  discoverUrl: ${OAUTH_GOOGLE_DISCOVERY_URL}
-                  clientId: ${OAUTH_GOOGLE_CLIENT_ID}
-                  clientKey: ${OAUTH_GOOGLE_CLIENT_KEY}
+                  discoverUrl: 'https://accounts.google.com'
+                  clientId: '617896178757-i6ldn0nni9qtle8o6eu76lv93d78nvfi.apps.googleusercontent.com'
+                  clientKey: 't267ZLqkV9dacrkPQp_pF-G2'
                   redirectUri:
-                    - ${OAUTH_GOOGLE_REDIRECT_URL}
+                    - ${WEBSITE_URL}/auth/google
                   scopes:
                     - 'openid profile email'
+          
               paymentProviders:
                 - type: payrexx
                   id: payrexx
                   name: Payrexx
                   offSessionPayments: true
-                  secretKey: secret
-                  webhookApiKey: secret
-                  instanceName: name
-                  instanceAPISecret: secret
-                  psp: [0, 15, 17, 2, 3, 36]
-                  pm:
-                    - 'postfinance_card'
-                    - 'postfinance_efinance'
-                    - 'mastercard'
-                    - 'visa'
-                    - 'twint'
-                    - 'invoice'
-                    - 'paypal'
+                  instanceName: wepublish-sandbox
+                  instanceAPISecret: ${{ secrets.PAYREXX_API_SECRET }}
+                  webhookApiKey: ${{ secrets.PAYREXX_WEBHOOK_SECRET }}
+                  psp: [ 0, 15, 17, 2, 3, 36 ]
+                  pm: ['visa', 'mastercard']
                   vatRate: 8.1
+          
                 - type: stripe
                   id: stripe
                   name: Stripe
                   offSessionPayments: true
                   secretKey: key
                   webhookEndpointSecret: wh_secret
+          
                 - type: stripe-checkout
                   id: stripe-checkout
                   name: Stripe Checkout
                   offSessionPayments: false
                   secretKey: key
                   webhookEndpointSecret: wh_secret
+          
                 - type: payrexx-subscription
                   id: payrexx-subscription
                   name: Payrexx Subscription
-                  webhookEndpointSecret: secret
-                  instanceName: wepublish-dev
-                  instanceAPISecret: secret
+                  instanceName: wepublish-sandbox
+                  instanceAPISecret: ${{ secrets.PAYREXX_API_SECRET }}
+                  webhookEndpointSecret: ${{ secrets.PAYREXX_WEBHOOK_SECRET }}
+          
                 - type: bexio
                   id: bexio
                   name: Bexio
-                  apiKey: ${BEXIO_API_KEY}
-                  userId: ${BEXIO_USER_ID}
-                  countryId: ${BEXIO_COUNTRY_ID}
-                  invoiceTemplateNewMembership: ${BEXIO_INVOICE_TEMPLATE}
-                  invoiceTemplateRenewalMembership: ${BEXIO_INVOICE_TEMPLATE}
-                  unitId: ${BEXIO_UNIT_ID}
-                  taxId: ${BEXIO_TAX_ID}
-                  accountId: ${BEXIO_ACCOUNT_ID}
+                  apiKey: secret
+                  userId: '1'
+                  countryId: '1'
+                  invoiceTemplateNewMembership: 'template-name'
+                  invoiceTemplateRenewalMembership: 'template-name'
+                  unitId: '1'
+                  taxId: '17'
+                  accountId: '139'
                   invoiceTitleNewMembership: "New Invoice"
                   invoiceTitleRenewalMembership: "New Invoice"
                   invoiceMailSubjectNewMembership: "Invoice for :memberPlan.name:"
@@ -217,6 +197,7 @@ jobs:
                   invoiceMailSubjectRenewalMembership: "Invoice for :memberPlan.name:"
                   invoiceMailBodyRenewalMembership: "Hello :user.firstname:\n\nThank you for subscribing to :memberPlan.name:.\nYou can view your invoice here: [Network Link]\n\nBest wishes from the Wepublish team"
                   markInvoiceAsOpen: False
+          
               challenge:
                 secret: 'secret'
                 validTime: 600
@@ -227,7 +208,7 @@ jobs:
                 minValue: 1
                 maxValue: 10
                 operandAmount: 1
-                operandTypes: ['+', '-']
+                operandTypes: [ '+', '-' ]
                 mode: 'formula'
                 targetSymbol: '?'
           editor:

@@ -28,28 +28,27 @@ api:
       urlAdapter: default
     mailProvider:
       id: slackMail
-      fromAddress: dev@wepublish.ch # Required for mailchimp/mailgun
-      webhookURL: ${SLACK_DEV_MAIL_WEBHOOK_URL}
-#    OAuthProviders:
+      fromAddress: dev@wepublish.dev
+      webhookURL: 'SLACK_DEV_MAIL_WEBHOOK_URL'
+    OAuthProviders: []
 #      - name: 'google'
-#        discoverUrl: ${OAUTH_GOOGLE_DISCOVERY_URL}
-#        clientId: ${OAUTH_GOOGLE_CLIENT_ID}
-#        clientKey: ${OAUTH_GOOGLE_CLIENT_KEY}
+#        discoverUrl: 'OAUTH_GOOGLE_DISCOVERY_URL'
+#        clientId: 'OAUTH_GOOGLE_CLIENT_ID'
+#        clientKey: 'OAUTH_GOOGLE_CLIENT_KEY'
 #        redirectUri:
-#          - ${OAUTH_GOOGLE_REDIRECT_URL}
+#          - 'OAUTH_GOOGLE_REDIRECT_URL'
 #        scopes:
 #          - 'openid profile email'
-    paymentProviders:
-#      - type: payrexx # Allowed are stripe-checkout / stripe / payrexx / bexio
-#        id: payrexx # Required for stripe-checkout / stripe / payrexx /bexio
-#        name: Payrexx # Required for stripe-checkout / stripe / payrexx /bexio
-#        offSessionPayments: true # Required for stripe-checkout / stripe / payrexx
-#        secretKey: secret # Required for stripe-checkout / stripe
+    paymentProviders: []
+#      - type: payrexx
+#        id: payrexx
+#        name: Payrexx
+#        offSessionPayments: true
+#        instanceName: instance-name
+#        instanceAPISecret: secret
 #        webhookApiKey: secret
-#        instanceName: name  # Required for payrexx
-#        instanceAPISecret: secret # Required for payrexx
-#        psp: [0, 15, 17, 2, 3, 36]  # Required for payrexx
-#        pm: # Required for payrexx
+#        psp: [ 0, 15, 17, 2, 3, 36 ]
+#        pm:
 #          - 'postfinance_card'
 #          - 'postfinance_efinance'
 #          - 'mastercard'
@@ -57,36 +56,40 @@ api:
 #          - 'twint'
 #          - 'invoice'
 #          - 'paypal'
-#        vatRate: 8.1 # Required for payrexx
+#        vatRate: 8.1
+
 #      - type: stripe
 #        id: stripe
 #        name: Stripe
 #        offSessionPayments: true
 #        secretKey: key
 #        webhookEndpointSecret: wh_secret
+#
 #      - type: stripe-checkout
 #        id: stripe-checkout
 #        name: Stripe Checkout
 #        offSessionPayments: false
 #        secretKey: key
 #        webhookEndpointSecret: wh_secret
+#
 #      - type: payrexx-subscription
 #        id: payrexx-subscription
 #        name: Payrexx Subscription
+#        instanceName: wepublish-sandbox
+#        instanceAPISecret: mqwJOkjXUnV7SDuLRlGabwjgrlBhvC
 #        webhookEndpointSecret: secret
-#        instanceName: wepublish-dev
-#        instanceAPISecret: secret
+#
 #      - type: bexio
 #        id: bexio
 #        name: Bexio
-#        apiKey: ${BEXIO_API_KEY}
-#        userId: ${BEXIO_USER_ID}
-#        countryId: ${BEXIO_COUNTRY_ID}
-#        invoiceTemplateNewMembership: ${BEXIO_INVOICE_TEMPLATE}
-#        invoiceTemplateRenewalMembership: ${BEXIO_INVOICE_TEMPLATE}
-#        unitId: ${BEXIO_UNIT_ID}
-#        taxId: ${BEXIO_TAX_ID}
-#        accountId: ${BEXIO_ACCOUNT_ID}
+#        apiKey: secret
+#        userId: '1'
+#        countryId: '1'
+#        invoiceTemplateNewMembership: 'template-name'
+#        invoiceTemplateRenewalMembership: 'template-name'
+#        unitId: '1'
+#        taxId: '17'
+#        accountId: '139'
 #        invoiceTitleNewMembership: "New Invoice"
 #        invoiceTitleRenewalMembership: "New Invoice"
 #        invoiceMailSubjectNewMembership: "Invoice for :memberPlan.name:"
@@ -94,6 +97,7 @@ api:
 #        invoiceMailSubjectRenewalMembership: "Invoice for :memberPlan.name:"
 #        invoiceMailBodyRenewalMembership: "Hello :user.firstname:\n\nThank you for subscribing to :memberPlan.name:.\nYou can view your invoice here: [Network Link]\n\nBest wishes from the Wepublish team"
 #        markInvoiceAsOpen: False
+
     challenge:
       secret: 'secret'
       validTime: 600
@@ -104,7 +108,7 @@ api:
       minValue: 1
       maxValue: 10
       operandAmount: 1
-      operandTypes: ['+', '-']
+      operandTypes: [ '+', '-' ]
       mode: 'formula'
       targetSymbol: '?'
 
