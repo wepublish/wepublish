@@ -70,6 +70,14 @@ spec:
           {{- with .Values.editor.properties }}
           {{- toYaml . | nindent 10 }}
           {{- end }}
+          volumeMounts:
+            - name: {{ include "helm.fullname" . }}-config
+              mountPath: /wepublish/config
+              readOnly: true
+      volumes:
+        - name: {{ include "helm.fullname" . }}-config
+          configMap:
+            name: {{ include "helm.fullname" . }}-api-config-{{ .Release.Revision }}
 
 
 ---
