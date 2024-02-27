@@ -60,14 +60,6 @@ spec:
             - name: http
               containerPort: 4000
               protocol: TCP
-          env:
-            - name: HOST_URL
-              valueFrom:
-                secretKeyRef:
-                  name: {{ include "helm.fullname" . }}-api-environment-{{ .Release.Revision }}
-                  key: API_URL
-            - name: CONFIG_FILE_PATH
-              value: /wepublish/config/application.yaml
           envFrom:
             - secretRef:
                 name: {{ include "helm.fullname" . }}-api-environment-{{ .Release.Revision }}
@@ -78,6 +70,14 @@ spec:
           {{- with .Values.api.properties }}
           {{- toYaml . | nindent 10 }}
           {{- end }}
+          env:
+            - name: HOST_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ include "helm.fullname" . }}-api-environment-{{ .Release.Revision }}
+                  key: API_URL
+            - name: CONFIG_FILE_PATH
+              value: /wepublish/config/application.yaml
           volumeMounts:
             - name: {{ include "helm.fullname" . }}-config
               mountPath: /wepublish/config
