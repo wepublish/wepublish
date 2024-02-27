@@ -1,4 +1,4 @@
-import {css, styled, Theme} from '@mui/material'
+import {css, styled} from '@mui/material'
 import {
   ApiV1,
   BuilderTeaserProps,
@@ -80,15 +80,13 @@ const ContentElement = styled('div')`
   }
 `
 
-const contentText = (theme: Theme) => css`
+const ContentText = styled('span')`
   color: #2b2e34;
-  background: ${theme.palette.common.white};
-  padding: 1px ${theme.spacing(4)} 0.5px 0;
+  background: ${({theme}) => theme.palette.common.white};
+  padding: 1px ${({theme}) => theme.spacing(4)} 0.5px 0;
 `
 
-const Title = styled('span')`
-  ${({theme}) => contentText(theme)};
-
+const Title = styled(ContentText)`
   font-size: 14px;
   font-weight: 600;
 
@@ -97,9 +95,7 @@ const Title = styled('span')`
   }
 `
 
-const Peer = styled('span')`
-  ${({theme}) => contentText(theme)};
-
+const Peer = styled(ContentText)`
   font-size: 12px;
   font-weight: 600;
 
