@@ -57,8 +57,10 @@ lerna version $NEXT_VERSION
 npx lerna-changelog --from=${LAST_STABLE_TAG} > .CHANGELOG-next.md
 echo "Adjusting related PR"
 if [[ $(gh pr view) ]]; then
+  echo 'Creating PR'
   gh pr create --title "Release ${NEXT_STABLE_VERSION}" --body-file .CHANGELOG-next.md
 else
+  echo 'Editing PR body'
   gh pr edit --body-file .CHANGELOG-next.md
 fi
 rm .CHANGELOG-next.md
