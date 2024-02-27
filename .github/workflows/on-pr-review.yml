@@ -66,6 +66,19 @@ jobs:
         run: |
           kubectl create namespace reviews --dry-run=client -o yaml | kubectl apply -f -
 
+      - name: Helm deploy mino server
+        run: |
+          cat > values.yaml <<EOF
+          accessKey: accessKey
+          secretKey: secretKey
+          persistence:
+            enabled: false
+          service:
+            type: LoadBalancer
+            port: 9000
+          EOF
+          helm upgrade --install review-${{ github.event.pull_request.number }}-minio bitnami/minio -n reviews -f values.yaml    
+
       - name: Helm deploy media-server
         run: |
           cat > values.yaml <<EOF
