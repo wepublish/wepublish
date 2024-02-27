@@ -94,7 +94,7 @@ jobs:
               AWS_S3_SECRET_ACCESS_KEY: secretKey
               AWS_S3_BUCKET: data-store
               AWS_S3_REGION: us-east-1
-              AWS_S3_ENDPOINT: review-${{ github.event.pull_request.number }}-minio.reviews.svc.cluster.local
+              AWS_S3_ENDPOINT: https://review-${{ github.event.pull_request.number }}-minio.reviews.svc.cluster.local
             replicaCount: 1
           service:
             type: ClusterIP
@@ -104,7 +104,7 @@ jobs:
             host: media-${{ github.event.pull_request.number }}.reviews.wepublish.dev
             path: /
           pvc:
-            storage: 1Gi
+            storage: 20Gi
           labels: { }
           EOF
           helm upgrade --install review-${{ github.event.pull_request.number }}-media-server karma-media-server --repo https://gitlab.com/api/v4/projects/38941346/packages/helm/stable -n reviews -f values.yaml
