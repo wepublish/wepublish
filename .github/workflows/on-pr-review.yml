@@ -77,7 +77,8 @@ jobs:
             type: LoadBalancer
             port: 9000
           EOF
-          helm upgrade --install review-${{ github.event.pull_request.number }}-minio bitnami/minio -n reviews -f values.yaml oci://registry-1.docker.io/bitnamicharts/minio
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm upgrade --install review-${{ github.event.pull_request.number }}-minio bitnami/minio -n reviews -f values.yaml
 
       - name: Helm deploy media-server
         run: |
