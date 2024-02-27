@@ -31,19 +31,50 @@ type OAuthProvider = {
   scopes: string[]
 }
 
-type PaymentProvider = {
+type Payrexx = {
+  type: 'payrexx'
   id: string
-  type: string
   name: string
-  offSessionPayments: boolean
-  secretKey: string
-  webhookEndpointSecret: string
   instanceName: string
   instanceAPISecret: string
+  offSessionPayments: boolean
   webhookApiKey: string
   psp: number[]
   pm: string[]
   vatRate: number
+}
+
+type PayrexxSubscription = {
+  type: 'payrexx-subscription'
+  id: string
+  name: string
+  instanceName: string
+  instanceAPISecret: string
+  webhookEndpointSecret: string
+}
+
+type Stripe = {
+  type: 'stripe'
+  id: string
+  name: string
+  offSessionPayments: boolean
+  secretKey: string
+  webhookEndpointSecret: string
+}
+
+type StripeCheckout = {
+  type: 'stripe-checkout'
+  id: string
+  name: string
+  offSessionPayments: boolean
+  secretKey: string
+  webhookEndpointSecret: string
+}
+
+type Bexio = {
+  type: 'bexio'
+  id: string
+  name: string
   apiKey: string
   userId: number
   countryId: number
@@ -60,6 +91,8 @@ type PaymentProvider = {
   invoiceMailBodyRenewalMembership: string
   markInvoiceAsOpen: boolean
 }
+
+type PaymentProvider = Payrexx | PayrexxSubscription | Stripe | StripeCheckout | Bexio
 
 type Challenge = {
   secret: string
