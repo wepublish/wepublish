@@ -3,6 +3,7 @@ import {ApiV1, PageContainer} from '@wepublish/website'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 
+import {BestOfWePublishWrapper} from '../components/bajour/best-of-wepublish/best-of-wepublish'
 import {
   MailChimpCampaign,
   MailChimpCampaignResponse,
@@ -40,6 +41,11 @@ const Homepage = styled(PageContainer)`
   grid-column: -1/1;
   gap: ${({theme}) => theme.spacing(3)};
 
+  ${BestOfWePublishWrapper} {
+    padding-left: calc(100% / 24);
+    padding-right: calc(100% / 24);
+  }
+
   ${({theme}) => theme.breakpoints.up('sm')} {
     gap: ${({theme}) => theme.spacing(6)};
   }
@@ -47,6 +53,10 @@ const Homepage = styled(PageContainer)`
   ${({theme}) => theme.breakpoints.up('md')} {
     gap: ${({theme}) => theme.spacing(5)};
     grid-column: 2/3;
+
+    ${BestOfWePublishWrapper} {
+      padding: 0;
+    }
   }
 
   ${({theme}) => theme.breakpoints.up('xl')} {

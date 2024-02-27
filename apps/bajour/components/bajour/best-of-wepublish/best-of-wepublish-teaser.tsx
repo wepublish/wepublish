@@ -1,13 +1,22 @@
-import {styled} from '@mui/material'
-import {ApiV1, Image} from '@wepublish/website'
+import {css, styled} from '@mui/material'
+import {
+  ApiV1,
+  BuilderTeaserProps,
+  Image as BuilderImage,
+  selectTeaserImage,
+  selectTeaserTitle,
+  selectTeaserUrl,
+  TeaserWrapper,
+  useWebsiteBuilder
+} from '@wepublish/website'
 
 import {NextWepublishLink} from '../../should-be-website-builder/next-wepublish-link'
 
-interface BestOfWePublishTeaserProps {
-  teaser?: ApiV1.PeerArticleTeaser
+type BestOfWePublishTeaserProps = BuilderTeaserProps & {
+  teaser: ApiV1.PeerArticleTeaser
 }
 
-const TeaserBackground = styled(Image)`
+const TeaserBackground = styled(BuilderImage)`
   width: 100%;
   object-fit: cover;
 `
@@ -19,11 +28,11 @@ const PeerLogoWrapper = styled('div')`
   padding-right: ${({theme}) => theme.spacing(1)};
   padding-bottom: ${({theme}) => theme.spacing(1)};
   background-color: ${({theme}) => theme.palette.common.white};
+  width: ${({theme}) => theme.spacing(6)};
   z-index: 1;
-  width: 3rem;
 
   ${({theme}) => theme.breakpoints.up('md')} {
-    width: 4rem;
+    width: ${({theme}) => theme.spacing(8)};
   }
 `
 
@@ -51,14 +60,13 @@ const InnerContainer = styled('div')`
 
 const Content = styled('div')`
   display: inline-block;
-  margin: 0.2rem;
+  margin: ${({theme}) => theme.spacing(0.5)};
   position: absolute;
   bottom: 0;
   left: 0;
 
   ${({theme}) => theme.breakpoints.up('md')} {
-    bottom: 0.8rem;
-    left: 0.8rem;
+    margin: ${({theme}) => theme.spacing(2)};
   }
 `
 
@@ -96,33 +104,40 @@ const Peer = styled(ContentText)`
   }
 `
 
-const BestOfWePublishTeaser = ({teaser}: BestOfWePublishTeaserProps) => {
-  const values = {
-    image: teaser?.image || teaser?.article?.image,
-    href: teaser?.article?.url,
-    title: teaser?.title || teaser?.article?.title,
-    peerName: teaser?.peer?.name,
-    peerLogo: teaser?.peer?.profile?.logo as ApiV1.FullImageFragment
-  }
+const imageStyles = css`
+  aspect-ratio: 4/3;
+`
+
+export const BestOfWePublishTeaser = ({teaser, alignment}: BestOfWePublishTeaserProps) => {
+  const {
+    elements: {Image}
+  } = useWebsiteBuilder()
+
+  const title = teaser && selectTeaserTitle(teaser)
+  const href = (teaser && selectTeaserUrl(teaser)) ?? ''
+  const image = teaser && selectTeaserImage(teaser)
+  const peerName = teaser.peer?.name
+  const peerLogo = teaser.peer?.profile?.logo
 
   return (
-    <LinkWrapper color="inherit" underline="none" href={values.href} key={values.title}>
-      <PeerLogoWrapper>
-        <Image image={values.peerLogo} />
-      </PeerLogoWrapper>
-      <InnerContainer>
-        {values.image && <TeaserBackground image={values.image} />}
-        <Content>
-          <ContentElement>
-            <Title>{values.title}</Title>
-          </ContentElement>
-          <ContentElement>
-            <Peer>by {values.peerName}</Peer>
-          </ContentElement>
-        </Content>
-      </InnerContainer>
-    </LinkWrapper>
+    <TeaserWrapper {...alignment}>
+      <LinkWrapper color="inherit" underline="none" href={href} key={title}>
+        <PeerLogoWrapper>{peerLogo && <Image image={peerLogo} square />}</PeerLogoWrapper>
+
+        <InnerContainer>
+          {image && <TeaserBackground image={image} css={imageStyles} />}
+
+          <Content>
+            <ContentElement>
+              <Title>{title}</Title>
+            </ContentElement>
+
+            <ContentElement>
+              <Peer>by {peerName}</Peer>
+            </ContentElement>
+          </Content>
+        </InnerContainer>
+      </LinkWrapper>
+    </TeaserWrapper>
   )
 }
-
-export {BestOfWePublishTeaser}
