@@ -3,6 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/api/src",
   "projectType": "library",
+  "tags": ["publishable"],
   "targets": {
     "lint": {
       "executor": "@nx/linter:eslint",
@@ -40,6 +41,5 @@
         "updateBuildableProjectDepsInPackageJson": true
       }
     }
-  },
-  "tags": []
+  }
 }
