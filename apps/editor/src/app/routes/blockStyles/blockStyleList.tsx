@@ -84,7 +84,7 @@ const mapBlockStyleToFormValue = (blockStyles: BlockStyle[] | null | undefined) 
     return obj
   }, {} as Record<string, BlockStyle>) ?? {}
 
-const blockstyleFormValueReducer = (
+const blockStyleFormValueReducer = (
   state: Record<string, BlockStyle>,
   action: BlockStyleListActions
 ): typeof state => {
@@ -128,8 +128,8 @@ const client = getApiClientV2()
 
 const BlockStyleList = memo(() => {
   const {t} = useTranslation()
-  const [formValue, dispatchFormValue] = useReducer(blockstyleFormValueReducer, {})
-  const [apiValue, dispatchApiValue] = useReducer(blockstyleFormValueReducer, {})
+  const [formValue, dispatchFormValue] = useReducer(blockStyleFormValueReducer, {})
+  const [apiValue, dispatchApiValue] = useReducer(blockStyleFormValueReducer, {})
   const [blockstyleToDelete, setBlockStyleToDelete] = useState<string | null>(null)
 
   const hasEmptyStyle = Object.values(apiValue).some(style => !style.name)

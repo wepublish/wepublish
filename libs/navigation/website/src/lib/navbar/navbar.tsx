@@ -1,7 +1,7 @@
 import {AppBar, Theme, Toolbar, css, styled, useTheme} from '@mui/material'
 import {FullNavigationFragment} from '@wepublish/website/api'
 import {BuilderNavbarProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {useCallback, useState} from 'react'
+import {PropsWithChildren, useCallback, useState} from 'react'
 import {MdClose, MdMenu} from 'react-icons/md'
 import {navigationLinkToUrl} from '../link-to-url'
 
@@ -27,9 +27,11 @@ export const NavbarInnerWrapper = styled(Toolbar)`
   grid-auto-flow: column;
   justify-content: space-between;
   justify-items: center;
+  min-height: unset;
 
   ${({theme}) => css`
     ${theme.breakpoints.up('md')} {
+      min-height: unset;
       padding-left: 0;
       grid-auto-columns: 1fr;
     }
@@ -201,12 +203,11 @@ const NavPaper = ({
   categories,
   closeMenu,
   children
-}: {
+}: PropsWithChildren<{
   main: FullNavigationFragment | null | undefined
   categories: FullNavigationFragment[][]
   closeMenu: () => void
-  children: React.ReactNode
-}) => {
+}>) => {
   const {
     elements: {Link, H4, H6}
   } = useWebsiteBuilder()

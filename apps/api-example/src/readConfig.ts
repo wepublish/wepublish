@@ -115,5 +115,5 @@ export async function readConfig(path: string): Promise<Config> {
     stringReplaceMap.addRule(`$\{${replacer}}`, `${insertValue}`)
   }
 
-  return YAML.parse(stringReplaceMap.replace(file))
+  return YAML.parse(stringReplaceMap.rulesCount() ? stringReplaceMap.replace(file) : file)
 }

@@ -24,6 +24,7 @@ import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {MainGrid} from '../src/components/layout/main-grid'
+import {BajourBlockRenderer} from '../src/components/website-builder-overwrites/block-renderer/block-renderer'
 import {BajourTeaser} from '../src/components/website-builder-overwrites/blocks/teaser'
 import {TeaserGridStyled} from '../src/components/website-builder-styled/blocks/teaser-grid-styled'
 import theme from '../src/styles/theme'
@@ -64,10 +65,13 @@ type CustomAppProps = AppProps<{
 }>
 
 const NavBar = styled(NavbarContainer)`
+  grid-column: -1/1;
   z-index: 11;
 `
 
 const Footer = styled(FooterContainer)`
+  grid-column: -1/1;
+
   ${FooterPaperWrapper} {
     color: ${({theme}) => theme.palette.common.white};
   }
@@ -111,6 +115,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
             elements={{Link: NextWepublishLink}}
             date={{format: dateFormatter}}
             blocks={{
+              Renderer: BajourBlockRenderer,
               Teaser: BajourTeaser,
               TeaserGrid: TeaserGridStyled
             }}>
