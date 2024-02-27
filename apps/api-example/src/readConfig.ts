@@ -9,6 +9,7 @@ type General = {
   urlAdapter: string
   sessionTTLDays: number
 }
+
 type MailProvider = {
   id: string
   fromAddress: string
@@ -20,6 +21,7 @@ type MailProvider = {
   mailDomain: string
   baseURL: string
 }
+
 type OAuthProvider = {
   name: string
   discoverUrl: string
@@ -28,6 +30,7 @@ type OAuthProvider = {
   redirectUri: string[]
   scopes: string[]
 }
+
 type PaymentProvider = {
   id: string
   type: string
@@ -57,6 +60,7 @@ type PaymentProvider = {
   invoiceMailBodyRenewalMembership: string
   markInvoiceAsOpen: boolean
 }
+
 type Challenge = {
   secret: string
   validTime: number
@@ -84,12 +88,15 @@ function extractReplacer(input: string): string[] {
   const regex = /\${\s*(.*?)\s*}/g
   let matches
   const results: string[] = []
+
   while ((matches = regex.exec(input)) !== null) {
     if (matches.index === regex.lastIndex) {
       regex.lastIndex++
     }
+
     results.push(matches[1])
   }
+
   return results
 }
 
@@ -97,12 +104,16 @@ export async function readConfig(path: string): Promise<Config> {
   const stringReplaceMap = new MappedReplacer()
   const file = fs.readFileSync(path, 'utf8')
   const replacers = extractReplacer(file)
+
   for (const replacer of replacers) {
     const insertValue = process.env[replacer]
+
     if (typeof insertValue === 'undefined') {
       throw new Error(`In config yaml used envoirment variable <${replacer}> not definded! `)
     }
+
     stringReplaceMap.addRule(`$\{${replacer}}`, `${insertValue}`)
   }
-  return YAML.parse(stringReplaceMap.replace(file))
+
+  return YAML.parse(stringReplaceMap.rulesCount() ? stringReplaceMap.replace(file) : file)
 }
