@@ -16,7 +16,7 @@ import FcbBg from './fcb.jpg'
 import {BriefingType} from './is-briefing'
 
 export type BaselBriefingProps = Omit<BuilderTeaserGridBlockProps, 'teasers'> & {
-  teasers?: Array<ApiV1.CustomTeaser>
+  teasers?: ApiV1.CustomTeaser[]
 }
 
 const baselBg = {
@@ -80,7 +80,7 @@ export const BajourBriefingStyled = styled('div')`
   grid-template-columns: 1fr;
   align-items: stretch;
   position: relative;
-  padding-top: 2rem;
+  padding-top: ${({theme}) => theme.spacing(4)};
 `
 
 const getValuesBasedOnBriefing = (briefing: BriefingType) => {
@@ -119,7 +119,7 @@ const TeaserBackground = styled(Image)`
   object-fit: cover;
   position: absolute;
   z-index: -1;
-  border-radius: 1rem 1rem 0 0;
+  border-radius: ${({theme}) => theme.spacing(2)} ${({theme}) => theme.spacing(2)} 0 0;
   aspect-ratio: 4/3;
 
   ${({theme}) => theme.breakpoints.up('sm')} {
@@ -131,7 +131,7 @@ const TeaserBackground = styled(Image)`
   }
 
   ${({theme}) => theme.breakpoints.up('lg')} {
-    border-radius: 2rem 2rem 0 0;
+    border-radius: ${({theme}) => theme.spacing(4)} ${({theme}) => theme.spacing(4)} 0 0;
   }
 
   ${({theme}) => theme.breakpoints.up('xl')} {
@@ -146,7 +146,6 @@ const LinkWrapper = styled(NextWepublishLink)`
   grid-template-rows: auto;
   align-items: center;
   grid-template-columns: 1fr;
-  spacing: ${({theme}) => theme.spacing(2)};
 `
 
 const TeaserContentWrapper = styled('div')`
@@ -176,24 +175,24 @@ const TeaserContentStyled = styled('div')`
 `
 
 const Heading = styled('div')`
-  margin-top: 2rem;
+  margin-top: ${({theme}) => theme.spacing(4)};
   color: ${({theme}) => theme.palette.common.white};
   display: grid;
   width: 100%;
   text-align: center;
 
   ${({theme}) => theme.breakpoints.up('sm')} {
-    margin-top: 5rem;
+    margin-top: ${({theme}) => theme.spacing(10)};
   }
 
   ${({theme}) => theme.breakpoints.up('lg')} {
-    margin-top: 7rem;
+    margin-top: ${({theme}) => theme.spacing(14)};
   }
 `
 
 const BaselBriefingTitle = styled('span')`
   font-weight: bold;
-  font-size: 2rem;
+  font-size: ${({theme}) => theme.spacing(4)};
   text-transform: uppercase;
 
   ${({theme}) => theme.breakpoints.up('lg')} {
@@ -207,7 +206,7 @@ const BaselBriefingSubtitle = styled('span')`
   text-transform: uppercase;
 
   ${({theme}) => theme.breakpoints.up('lg')} {
-    font-size: 1.2rem;
+    font-size: 1 ${({theme}) => theme.spacing(4)};
   }
 `
 
@@ -227,17 +226,18 @@ const Briefing = styled('div')`
 
   ${({theme}) => theme.breakpoints.up('sm')} {
     grid-column: 3/12;
-    border-radius: 1rem 1rem 0 0;
+    border-radius: ${({theme}) => theme.spacing(2)} ${({theme}) => theme.spacing(2)} 0 0;
     padding: ${({theme}) =>
       `${theme.spacing(2)} ${theme.spacing(2)} ${theme.spacing(2)} ${theme.spacing(4)}`};
   }
 
   ${({theme}) => theme.breakpoints.up('md')} {
-    border-radius: 2rem 2rem 0 0;
+    border-radius: ${({theme}) => theme.spacing(4)} ${({theme}) => theme.spacing(4)} 0 0;
     padding: ${({theme}) =>
       `${theme.spacing(2)} ${theme.spacing(2)} ${theme.spacing(2)} ${theme.spacing(4)}`};
   }
 `
+
 const Welcome = styled('div')`
   font-weight: bold;
 `
@@ -327,12 +327,14 @@ const BaselBriefing = ({teasers, blockStyle, numColumns}: BaselBriefingProps) =>
   if (!isWithinTimeslot(showFrom, showUntil)) {
     return null
   }
+
   if (!teaser) {
     return null
   }
 
   const {image, lead, title, contentUrl} = teaser
   const values = getValuesBasedOnBriefing(blockStyle as BriefingType)
+
   if (!lead || !title || !contentUrl || !image || !values) {
     return null
   }
