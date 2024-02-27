@@ -55,7 +55,6 @@ echo "Creating new ${NEXT_INCREMENT} version ${NEXT_VERSION}"
 lerna version $NEXT_VERSION
 
 npx lerna-changelog --from=${LAST_STABLE_TAG} > .CHANGELOG-next.md
-echo "Adjusting related PR"
 if [[ $(gh pr view) ]]; then
   echo 'Editing PR body'
   gh pr edit --body-file .CHANGELOG-next.md
