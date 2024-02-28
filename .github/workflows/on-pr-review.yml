@@ -39,6 +39,8 @@ jobs:
       WEBSITE_URL: https://website-${{ github.event.pull_request.number }}.reviews.wepublish.dev
       MEDIA_SERVER_URL: https://media-${{ github.event.pull_request.number }}.reviews.wepublish.dev
       STORYBOOK_URL: https://storybook-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+      S3_ACCESS_KEY_ID: accessKey
+      S3_SECRET_ACCESS_KEY: secretKey
 
     steps:
       - uses: actions/checkout@v3
@@ -69,8 +71,10 @@ jobs:
       - name: Helm deploy minio server
         run: |
           cat > values.yaml <<EOF
-          accessKey: accessKey
-          secretKey: secretKey
+          auth:
+            rootUser: ${S3_ACCESS_KEY_ID}
+            rootPassword: ${S3_SECRET_ACCESS_KEY}
+          disableWebUI: true
           defaultBuckets: "data-store"
           persistence:
             enabled: false
@@ -90,8 +94,8 @@ jobs:
               TOKEN: media-token
               DEBUG: 'false'
               NUM_CLUSTERS: '1'
-              AWS_S3_ACCESS_KEY_ID: 'accessKey'
-              AWS_S3_SECRET_ACCESS_KEY: 'secretKey'
+              AWS_S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID}
+              AWS_S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY}
               AWS_S3_BUCKET: 'data-store'
               AWS_S3_REGION: 'us-east-1'
               AWS_S3_ENDPOINT: 'http://review-${{ github.event.pull_request.number }}-minio.reviews.svc.cluster.local:9000'
