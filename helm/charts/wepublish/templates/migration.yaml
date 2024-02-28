@@ -2,9 +2,9 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "helm.fullname" . }}-migration
+  name: {{ include "helm.fullname" . }}-migration-{{ .Release.Revision }}
   labels:
-    app.kubernetes.io/name: {{ include "helm.name" . }}-migration
+    app.kubernetes.io/name: {{ include "helm.name" . }}-migration-{{ .Release.Revision }}
     helm.sh/chart: {{ include "helm.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
