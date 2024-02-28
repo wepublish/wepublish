@@ -94,7 +94,7 @@ jobs:
               AWS_S3_SECRET_ACCESS_KEY: 'secretKey'
               AWS_S3_BUCKET: 'data-store'
               AWS_S3_REGION: 'us-east-1'
-              AWS_S3_ENDPOINT: 'https://review-${{ github.event.pull_request.number }}-minio.reviews.svc.cluster.local'
+              AWS_S3_ENDPOINT: 'http://review-${{ github.event.pull_request.number }}-minio.reviews.svc.cluster.local:9000'
               AWS_S3_FORCE_PATH_STYLE: 'true'
             replicaCount: 1
           service:
