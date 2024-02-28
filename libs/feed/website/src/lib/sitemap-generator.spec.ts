@@ -1,5 +1,4 @@
 import {Article, Author, FullImageFragment} from '@wepublish/website/api'
-import {generateFeed} from './feed-generator'
 import {generateSitemap} from './sitemap-generator'
 
 const image = {
