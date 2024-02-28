@@ -9,7 +9,7 @@ export const getFeed = async (req: NextApiRequest): Promise<Feed> => {
 
   const generate = await generateFeed({
     id: `${siteUrl + req.url}`,
-    link: `${siteUrl + req.url}`,
+    link: siteUrl,
     title: 'Bajour',
     ttl: 10, // in minutes
     copyright: 'Bajour.ch',

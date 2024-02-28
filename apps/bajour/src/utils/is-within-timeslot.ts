@@ -1,4 +1,4 @@
-const isWithinTimeslot = (showFrom = '6:00', showUntil = '11:00'): boolean => {
+export const isWithinTimeslot = (showFrom = '6:00', showUntil = '11:00'): boolean => {
   const now = new Date()
 
   const [showFromHour, showFromMinutes] = showFrom.split(':').map(Number)
@@ -15,5 +15,3 @@ const isWithinTimeslot = (showFrom = '6:00', showUntil = '11:00'): boolean => {
 
   return isAfterStart && isBeforeEnd
 }
-
-export default isWithinTimeslot

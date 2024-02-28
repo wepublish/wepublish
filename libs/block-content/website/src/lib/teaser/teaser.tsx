@@ -107,13 +107,13 @@ export const selectTeaserImage = (teaser: TeaserType) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
       const imageBlock = teaser.page?.blocks.find(isImageBlock)
-      return teaser.image ?? imageBlock?.image
+      return teaser.image ?? imageBlock?.image ?? teaser?.page?.image
     }
 
     case 'PeerArticleTeaser':
     case 'ArticleTeaser': {
       const imageBlock = teaser.article?.blocks.find(isImageBlock)
-      return teaser.image ?? imageBlock?.image
+      return teaser.image ?? imageBlock?.image ?? teaser?.article?.image
     }
 
     case 'EventTeaser':
