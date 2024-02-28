@@ -151,7 +151,7 @@ const TeaserContentWrapper = styled('div')`
 
 const ReadMoreButton = styled(Button)`
   justify-self: end;
-  color: ${({theme}) => theme.palette.secondary.main};
+  color: ${({theme}) => theme.palette.error.main};
 `
 
 const TeaserContentStyled = styled('div')`

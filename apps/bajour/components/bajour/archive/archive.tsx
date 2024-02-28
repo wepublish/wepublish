@@ -61,14 +61,14 @@ const BajourLogo = styled(Image)`
 
 const ArchivText = styled('span')`
   font-weight: 600;
-  color: ${({theme}) => theme.palette.secondary.main};
+  color: ${({theme}) => theme.palette.error.main};
 `
 
 const Timeline = styled('div')`
   position: relative;
   font-weight: 600;
   display: grid;
-  color: ${({theme}) => theme.palette.secondary.main};
+  color: ${({theme}) => theme.palette.error.main};
   grid-column: 3/7;
   grid-row: 2/3;
   grid-template-columns: 1fr 1fr;
@@ -130,7 +130,7 @@ const Axis = styled('div')`
   left: 50%;
   transform: translateX(-50%);
   width: ${({theme}) => theme.spacing(2)};
-  background-color: ${({theme}) => theme.palette.secondary.main};
+  background-color: ${({theme}) => theme.palette.error.main};
   height: 135%;
   border-radius: ${({theme}) => theme.spacing(2)};
   border: 4px solid ${({theme}) => theme.palette.common.white};
@@ -158,7 +158,7 @@ const Highlights = styled('span')`
   left: 5%;
   font-size: 13px;
   font-weight: bold;
-  color: ${({theme}) => theme.palette.secondary.main};
+  color: ${({theme}) => theme.palette.error.main};
 
   ${({theme}) => theme.breakpoints.up('md')} {
     top: -${({theme}) => theme.spacing(7)};
@@ -176,7 +176,7 @@ const CurrentTeaser = styled('div')`
 
 const ReadMoreButton = styled(Button)`
   justify-self: end;
-  color: ${({theme}) => theme.palette.secondary.main};
+  color: ${({theme}) => theme.palette.error.main};
 `
 
 const Author = styled('div')`

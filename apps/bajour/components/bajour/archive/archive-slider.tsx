@@ -102,7 +102,7 @@ const ArchiveDate = styled('div')`
   writing-mode: vertical-rl;
   transform: rotateZ(-180deg);
   font-size: 8px;
-  color: ${({theme}) => theme.palette.secondary.main};
+  color: ${({theme}) => theme.palette.error.main};
   text-transform: uppercase;
   font-weight: bold;
   padding-top: ${({theme}) => theme.spacing(1.5)};
