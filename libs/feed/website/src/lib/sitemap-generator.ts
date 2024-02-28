@@ -26,19 +26,22 @@ export const generateSitemap =
             <priority>1.0</priority>
         </url>
 
-        ${pageUrls.map(
-          pageUrl =>
-            `<url>
+        ${pageUrls
+          .map(
+            pageUrl =>
+              `<url>
                 <loc>${pageUrl}</loc>
                 <changefreq>weekly</changefreq>
                 <priority>0.8</priority>
             </url>`
-        )}
+          )
+          .join('\n')}
 
-        ${articles.map(article => {
-          const seo = getArticleSEO(article)
+        ${articles
+          .map(article => {
+            const seo = getArticleSEO(article)
 
-          return `
+            return `
             <url>
                 <loc>${article.url}</loc>
 
@@ -53,7 +56,8 @@ export const generateSitemap =
                 </news:news>
             </url>
         `
-        })}
+          })
+          .join('\n')}
     </urlset>
     `
 

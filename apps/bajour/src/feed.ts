@@ -23,7 +23,9 @@ export const getFeed = async (req: NextApiRequest): Promise<Feed> => {
   })
 
   const {publicRuntimeConfig} = getConfig()
-  const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
+  const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [], {
+    typePolicies: {}
+  })
 
   const {data} = await client.query({
     query: ApiV1.ArticleListDocument,
