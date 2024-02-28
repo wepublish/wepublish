@@ -51,6 +51,7 @@ export const generateFeed =
     const Feed = (await import('feed')).Feed
     const feed = new Feed({
       language: 'de',
+      description: '',
       ...config,
       generator: 'We.Publish (https://github.com/wepublish/wepublish)'
     })

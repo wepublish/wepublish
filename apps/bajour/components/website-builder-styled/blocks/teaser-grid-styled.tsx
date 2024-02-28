@@ -1,7 +1,9 @@
 import {css, styled} from '@mui/material'
 import {TeaserGridBlock} from '@wepublish/website'
 
-export const TeaserGridStyled = styled(TeaserGridBlock)`
+export const TeaserGridStyled = (props: any) => <TeaserGridStyledCss {...props} />
+
+export const TeaserGridStyledCss = styled(TeaserGridBlock)`
   ${({numColumns, theme}) =>
     numColumns > 1 &&
     css`
