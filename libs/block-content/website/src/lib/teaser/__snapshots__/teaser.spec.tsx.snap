@@ -1754,6 +1754,11 @@ https://unsplash.it/200/200 200w"
           >
             Lead
           </p>
+          <div
+            class="css-hg1qbe-TeaserAuthors e18of27r1"
+          >
+            Foobar, Foobar
+          </div>
         </div>
       </div>
     </a>
@@ -1802,6 +1807,11 @@ https://unsplash.it/200/200 200w"
               Title
             </h1>
           </header>
+          <div
+            class="css-hg1qbe-TeaserAuthors e18of27r1"
+          >
+            Foobar, Foobar
+          </div>
         </div>
       </div>
     </a>
@@ -1903,6 +1913,11 @@ https://unsplash.it/200/200 200w"
               Title
             </h1>
           </header>
+          <div
+            class="css-hg1qbe-TeaserAuthors e18of27r1"
+          >
+            Foobar, Foobar
+          </div>
         </div>
       </div>
     </a>
@@ -1956,6 +1971,11 @@ https://unsplash.it/200/200 200w"
           >
             Lead
           </p>
+          <div
+            class="css-hg1qbe-TeaserAuthors e18of27r1"
+          >
+            Foobar, Foobar
+          </div>
         </div>
       </div>
     </a>
@@ -2009,6 +2029,11 @@ https://unsplash.it/200/200 200w"
           >
             Lead
           </p>
+          <div
+            class="css-hg1qbe-TeaserAuthors e18of27r1"
+          >
+            Foobar, Foobar
+          </div>
         </div>
       </div>
     </a>
@@ -2052,6 +2077,11 @@ exports[`Teaser PeerArticle should render WithoutImageWithoutBlock 1`] = `
           >
             Lead
           </p>
+          <div
+            class="css-hg1qbe-TeaserAuthors e18of27r1"
+          >
+            Foobar, Foobar
+          </div>
         </div>
       </div>
     </a>
@@ -2105,6 +2135,11 @@ https://unsplash.it/200/200 200w"
           >
             Lead
           </p>
+          <div
+            class="css-hg1qbe-TeaserAuthors e18of27r1"
+          >
+            Foobar, Foobar
+          </div>
         </div>
       </div>
     </a>
@@ -2158,6 +2193,11 @@ https://unsplash.it/200/200 200w"
           >
             Lead
           </p>
+          <div
+            class="css-hg1qbe-TeaserAuthors e18of27r1"
+          >
+            Foobar, Foobar
+          </div>
         </div>
       </div>
     </a>
