@@ -1,6 +1,6 @@
 import {NextApiRequest, NextApiResponse} from 'next'
 
-import {getFeed} from '../../components/should-be-website-builder/feed'
+import {getSitemap} from '../../src/sitemap'
 
 export const config = {
   regions: ['all']
@@ -13,5 +13,5 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     .setHeader('Cache-Control', 'public, s-maxage=60')
     .setHeader('CDN-Cache-Control', 'public, s-maxage=60')
     .setHeader('Vercel-CDN-Cache-Control', 'public, s-maxage=3600')
-    .send((await getFeed(req)).rss2())
+    .send(await getSitemap(req))
 }
