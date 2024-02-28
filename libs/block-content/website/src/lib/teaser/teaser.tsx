@@ -91,9 +91,11 @@ export const selectTeaserUrl = (teaser: TeaserType) => {
       return teaser.page?.url
     }
 
-    case 'PeerArticleTeaser':
     case 'ArticleTeaser':
       return teaser.article?.url
+
+    case 'PeerArticleTeaser':
+      return teaser.peeredArticleURL
 
     case 'EventTeaser':
       return teaser.event?.url
