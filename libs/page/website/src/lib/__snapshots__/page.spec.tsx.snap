@@ -8,6 +8,9 @@ exports[`Page should render Default 1`] = `
     <div
       data-testid="fake-head"
     >
+      <title>
+        socialMediaTitle — Newsroom Name
+      </title>
       <meta
         content="website"
         property="og:type"
@@ -2140,6 +2143,9 @@ exports[`Page should render WithChildren 1`] = `
     <div
       data-testid="fake-head"
     >
+      <title>
+        socialMediaTitle — Newsroom Name
+      </title>
       <meta
         content="website"
         property="og:type"
@@ -4275,6 +4281,9 @@ exports[`Page should render WithClassName 1`] = `
     <div
       data-testid="fake-head"
     >
+      <title>
+        socialMediaTitle — Newsroom Name
+      </title>
       <meta
         content="website"
         property="og:type"
@@ -6407,6 +6416,9 @@ exports[`Page should render WithEmotion 1`] = `
     <div
       data-testid="fake-head"
     >
+      <title>
+        socialMediaTitle — Newsroom Name
+      </title>
       <meta
         content="website"
         property="og:type"
@@ -8555,6 +8567,9 @@ exports[`Page should render WithoutDescription 1`] = `
     <div
       data-testid="fake-head"
     >
+      <title>
+        socialMediaTitle — Newsroom Name
+      </title>
       <meta
         content="website"
         property="og:type"
@@ -10687,6 +10702,9 @@ exports[`Page should render WithoutImageMetadata 1`] = `
     <div
       data-testid="fake-head"
     >
+      <title>
+        socialMediaTitle — Newsroom Name
+      </title>
       <meta
         content="website"
         property="og:type"
@@ -12819,6 +12837,9 @@ exports[`Page should render WithoutSocialMedia 1`] = `
     <div
       data-testid="fake-head"
     >
+      <title>
+        title — Newsroom Name
+      </title>
       <meta
         content="website"
         property="og:type"

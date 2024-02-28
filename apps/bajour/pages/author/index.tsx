@@ -2,7 +2,7 @@ import {ApiV1, AuthorListContainer} from '@wepublish/website'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 
-import {Container} from '../../components/layout/container'
+import {Container} from '../../src/components/layout/container'
 
 export default function AuthorList() {
   return (

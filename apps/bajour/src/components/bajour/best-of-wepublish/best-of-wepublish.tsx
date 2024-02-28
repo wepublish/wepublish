@@ -8,10 +8,6 @@ import {
 
 import {BestOfWePublishTeaser} from './best-of-wepublish-teaser'
 
-export type BestOfWePublishProps = BuilderTeaserGridBlockProps & {
-  teasers?: ApiV1.PeerArticleTeaser[]
-}
-
 export const BestOfWePublishWrapper = styled('article')`
   grid-column: -1/1;
   display: grid;
@@ -89,7 +85,7 @@ const MoreButton = styled('a')`
   }
 `
 
-export const BestOfWePublish = ({teasers, numColumns}: BestOfWePublishProps) => {
+export const BestOfWePublish = ({teasers, numColumns}: BuilderTeaserGridBlockProps) => {
   const filteredTeasers = teasers.filter(
     (teaser): teaser is ApiV1.PeerArticleTeaser =>
       teaser?.__typename === 'PeerArticleTeaser' && Boolean(teaser.article)

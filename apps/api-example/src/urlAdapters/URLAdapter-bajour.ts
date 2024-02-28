@@ -32,7 +32,7 @@ export class BajourURLAdapter implements URLAdapter {
   }
 
   getPublicPageURL(page: PublicPage): string {
-    return `${this.websiteURL}${page.slug}`
+    return `${this.websiteURL}/${page.slug}`
   }
 
   getAuthorURL(author: Author): string {

@@ -25,11 +25,12 @@ import {isListicleBlock} from './listicle/listicle-block'
 import {isEventBlock} from './event/event-block'
 import {isPolisConversationBlock} from './polis-conversation/polis-conversation-block'
 import {isBreakBlock} from './break/break-block'
+import {memo} from 'react'
 
 export const hasBlockStyle = (blockStyle: string) => (block: Block) =>
   block.blockStyle === blockStyle
 
-export const BlockRenderer = ({block}: BuilderBlockRendererProps) => {
+export const BlockRenderer = memo(({block}: BuilderBlockRendererProps) => {
   const {blocks} = useWebsiteBuilder()
 
   const facebookEmbedCond = cond([
@@ -76,7 +77,7 @@ export const BlockRenderer = ({block}: BuilderBlockRendererProps) => {
       [isCommentBlock, block => <blocks.Comment {...block} />]
     ])(block)
   )
-}
+})
 
 export type BlocksProp = {
   blocks: BlockType[]

@@ -1,4 +1,5 @@
 import {css, styled} from '@mui/material'
+import {NextWepublishLink} from '@wepublish/utils/website'
 import {
   ApiV1,
   BuilderTeaserProps,
@@ -9,8 +10,6 @@ import {
   TeaserWrapper,
   useWebsiteBuilder
 } from '@wepublish/website'
-
-import {NextWepublishLink} from '../../should-be-website-builder/next-wepublish-link'
 
 type BestOfWePublishTeaserProps = BuilderTeaserProps & {
   teaser: ApiV1.PeerArticleTeaser

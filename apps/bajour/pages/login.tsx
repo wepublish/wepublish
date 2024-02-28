@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import {Typography} from '@mui/material'
+import {IntendedRouteStorageKey} from '@wepublish/utils/website'
 import {
   ApiV1,
   AuthTokenStorageKey,
@@ -12,8 +13,6 @@ import {GetServerSideProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {useEffect} from 'react'
-
-import {IntendedRouteStorageKey} from '../components/should-be-website-builder/auth-guard'
 
 const LoginWrapper = styled('div')`
   display: grid;
@@ -37,7 +36,7 @@ export default function Login({sessionToken}: LoginProps) {
     if (hasUser) {
       const intendedRoute = getCookie(IntendedRouteStorageKey)?.toString()
       deleteCookie(IntendedRouteStorageKey)
-      const route = intendedRoute ?? '/'
+      const route = intendedRoute ?? '/profile'
 
       router.push(route)
     }

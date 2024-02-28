@@ -59,7 +59,7 @@ export function InvoiceListItem({
   className
 }: BuilderInvoiceListItemProps) {
   const {
-    locale,
+    meta: {locale},
     elements: {H6, Button, Alert},
     date
   } = useWebsiteBuilder()

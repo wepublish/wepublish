@@ -8,6 +8,9 @@ exports[`Page Container should render ById 1`] = `
     <div
       data-testid="fake-head"
     >
+      <title>
+        socialMediaTitle — Newsroom Name
+      </title>
       <meta
         content="website"
         property="og:type"
@@ -1939,6 +1942,9 @@ exports[`Page Container should render BySlug 1`] = `
     <div
       data-testid="fake-head"
     >
+      <title>
+        socialMediaTitle — Newsroom Name
+      </title>
       <meta
         content="website"
         property="og:type"
@@ -3870,6 +3876,9 @@ exports[`Page Container should render WithChildren 1`] = `
     <div
       data-testid="fake-head"
     >
+      <title>
+        socialMediaTitle — Newsroom Name
+      </title>
       <meta
         content="website"
         property="og:type"
@@ -5804,6 +5813,9 @@ exports[`Page Container should render WithClassName 1`] = `
     <div
       data-testid="fake-head"
     >
+      <title>
+        socialMediaTitle — Newsroom Name
+      </title>
       <meta
         content="website"
         property="og:type"
@@ -7735,6 +7747,9 @@ exports[`Page Container should render WithEmotion 1`] = `
     <div
       data-testid="fake-head"
     >
+      <title>
+        socialMediaTitle — Newsroom Name
+      </title>
       <meta
         content="website"
         property="og:type"
