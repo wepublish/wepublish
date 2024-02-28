@@ -27,7 +27,7 @@ import {MainGrid} from '../components/layout/main-grid'
 import {authLink} from '../components/should-be-website-builder/auth-link'
 import {NextWepublishLink} from '../components/should-be-website-builder/next-wepublish-link'
 import {SessionProvider} from '../components/should-be-website-builder/session.provider'
-import {BajourBlockRenderer} from '../components/website-builder-overwrites/block-renderer/renderer'
+import {BajourBlockRenderer} from '../components/website-builder-overwrites/block-renderer/block-renderer'
 import {BajourTeaser} from '../components/website-builder-overwrites/blocks/teaser'
 import {TeaserGridStyled} from '../components/website-builder-styled/blocks/teaser-grid-styled'
 import theme from '../styles/theme'
@@ -117,8 +117,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
             blocks={{
               Renderer: BajourBlockRenderer,
               Teaser: BajourTeaser,
-              TeaserGrid: TeaserGridStyled,
-              Renderer: BajourBlockRenderer
+              TeaserGrid: TeaserGridStyled
             }}>
             <ThemeProvider theme={theme}>
               <CssBaseline />

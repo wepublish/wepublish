@@ -1,13 +1,34 @@
-import {BlockRenderer, BuilderBlockRendererProps} from '@wepublish/website'
-import {cond} from 'ramda'
+import {ApiV1, BlockRenderer, BuilderBlockRendererProps} from '@wepublish/website'
+import {anyPass} from 'ramda'
 
 import {Archive, ArchiveProps, isArchive} from '../../bajour'
+import {
+  BaselBriefing,
+  BaselBriefingProps,
+  BestOfWePublish,
+  BestOfWePublishProps,
+  isBaselBriefing,
+  isBestOfWePublish,
+  isFasnachtsBriefing,
+  isFCBBriefing
+} from '../../bajour'
 import {isTeaserSlider, TeaserSlider} from '../blocks/teaser-slider/teaser-slider'
 
-const extraBlockMap = cond([
-  [isArchive, (block: ArchiveProps) => <Archive {...block} />],
-  [isTeaserSlider, block => <TeaserSlider {...block} />]
-])
+const isAnyBriefing = (block: ApiV1.Block): block is ApiV1.TeaserGridBlock =>
+  anyPass([isBaselBriefing, isFCBBriefing, isFasnachtsBriefing])(block)
+
+const extraBlockMap = (block: ApiV1.Block) => {
+  if (isBestOfWePublish(block)) {
+    return <BestOfWePublish {...(block as BestOfWePublishProps)} />
+  } else if (isAnyBriefing(block)) {
+    return <BaselBriefing {...(block as BaselBriefingProps)} />
+  } else if (isArchive(block)) {
+    return <Archive {...(block as ArchiveProps)} />
+  } else if (isTeaserSlider(block)) {
+    return <TeaserSlider {...block} />
+  }
+  return null
+}
 
 export const BajourBlockRenderer = (props: BuilderBlockRendererProps) => {
   return extraBlockMap(props.block) ?? <BlockRenderer {...props} />
