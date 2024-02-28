@@ -79,7 +79,7 @@ const nextConfig = {
       },
       {
         source: '/member-uebersicht',
-        destination: '/spende',
+        destination: '/mitmachen',
         permanent: false
       },
       {
