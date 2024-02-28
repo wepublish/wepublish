@@ -27,7 +27,7 @@ import {MainGrid} from '../components/layout/main-grid'
 import {authLink} from '../components/should-be-website-builder/auth-link'
 import {NextWepublishLink} from '../components/should-be-website-builder/next-wepublish-link'
 import {SessionProvider} from '../components/should-be-website-builder/session.provider'
-import {BajourBlockRenderer} from '../components/website-builder-overwrites/block-renderer/block-renderer'
+import {BajourBlockRenderer} from '../components/website-builder-overwrites/block-renderer/renderer'
 import {BajourTeaser} from '../components/website-builder-overwrites/blocks/teaser'
 import {TeaserGridStyled} from '../components/website-builder-styled/blocks/teaser-grid-styled'
 import theme from '../styles/theme'
@@ -93,6 +93,9 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
         <link rel="alternate" type="application/rss+xml" href="/api/rss-feed" />
         <link rel="alternate" type="application/atom+xml" href="/api/atom-feed" />
         <link rel="alternate" type="application/feed+json" href="/api/json-feed" />
+
+        {/* Sitemap */}
+        <link rel="sitemap" type="application/xml" title="Sitemap" href="/api/sitemap" />
 
         {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
