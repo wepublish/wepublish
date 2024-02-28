@@ -11,7 +11,7 @@ RUN apt-get update && \
     npm install -g pkg && \
     npx nx build api-example && \
     cp docker/api_build_package.json package.json && \
-    pkg package.json
+    pkg -C Brotli package.json
 
 FROM debian:bookworm-slim as api
 MAINTAINER WePublish Foundation
@@ -44,7 +44,7 @@ RUN npm ci && \
     npm install -g pkg && \
     npx nx build editor && \
     cp docker/editor_build_package.json package.json && \
-    pkg package.json
+    pkg -C Brotli package.json
 
 FROM debian:bookworm-slim as editor
 MAINTAINER WePublish Foundation
