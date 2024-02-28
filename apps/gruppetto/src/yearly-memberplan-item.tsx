@@ -29,3 +29,5 @@ export const YearlyMemberPlanItem = forwardRef<HTMLButtonElement, BuilderMemberP
     )
   }
 )
+
+YearlyMemberPlanItem.displayName = 'YearlyMemberPlanItem'
