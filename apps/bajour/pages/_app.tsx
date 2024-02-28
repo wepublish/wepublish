@@ -114,8 +114,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
             blocks={{
               Renderer: BajourBlockRenderer,
               Teaser: BajourTeaser,
-              TeaserGrid: TeaserGridStyled,
-              Renderer: BajourBlockRenderer
+              TeaserGrid: TeaserGridStyled
             }}>
             <ThemeProvider theme={theme}>
               <CssBaseline />
