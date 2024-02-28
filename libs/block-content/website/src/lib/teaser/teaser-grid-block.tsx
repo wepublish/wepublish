@@ -1,5 +1,10 @@
 import {css, styled} from '@mui/material'
-import {Block, FlexAlignment, TeaserGridBlock as TeaserGridBlockType} from '@wepublish/website/api'
+import {
+  Block,
+  FlexAlignment,
+  Teaser,
+  TeaserGridBlock as TeaserGridBlockType
+} from '@wepublish/website/api'
 import {BuilderTeaserGridBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
 export const isTeaserGridBlock = (block: Block): block is TeaserGridBlockType =>
@@ -25,7 +30,31 @@ export const TeaserGridBlockWrapper = styled('div')<Pick<TeaserGridBlockType, 'n
     `}
 `
 
-const alignmentForTeaserBlock = (index: number, numColumns: number): FlexAlignment => {
+// @TODO: Have API filter these out by default
+export const isFilledTeaser = (teaser: Teaser | null | undefined): teaser is Teaser => {
+  switch (teaser?.__typename) {
+    case 'ArticleTeaser':
+    case 'PeerArticleTeaser': {
+      return Boolean(teaser.article)
+    }
+
+    case 'PageTeaser': {
+      return Boolean(teaser.page)
+    }
+
+    case 'EventTeaser': {
+      return Boolean(teaser.event)
+    }
+
+    case 'CustomTeaser': {
+      return Boolean(teaser.contentUrl)
+    }
+  }
+
+  return false
+}
+
+export const alignmentForTeaserBlock = (index: number, numColumns: number): FlexAlignment => {
   const columnIndex = index % numColumns
   const rowIndex = Math.floor(index / numColumns)
 
@@ -42,9 +71,11 @@ export const TeaserGridBlock = ({numColumns, teasers, className}: BuilderTeaserG
     blocks: {Teaser}
   } = useWebsiteBuilder()
 
+  const filledTeasers = teasers.filter(isFilledTeaser)
+
   return (
     <TeaserGridBlockWrapper className={className} numColumns={numColumns}>
-      {teasers?.map((teaser, index) => (
+      {filledTeasers.map((teaser, index) => (
         <Teaser
           key={index}
           teaser={teaser}

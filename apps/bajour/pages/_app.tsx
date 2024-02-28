@@ -27,6 +27,7 @@ import {MainGrid} from '../components/layout/main-grid'
 import {authLink} from '../components/should-be-website-builder/auth-link'
 import {NextWepublishLink} from '../components/should-be-website-builder/next-wepublish-link'
 import {SessionProvider} from '../components/should-be-website-builder/session.provider'
+import {BajourBlockRenderer} from '../components/website-builder-overwrites/block-renderer/block-renderer'
 import {BajourTeaser} from '../components/website-builder-overwrites/blocks/teaser'
 import {TeaserGridStyled} from '../components/website-builder-styled/blocks/teaser-grid-styled'
 import theme from '../styles/theme'
@@ -66,10 +67,13 @@ type CustomAppProps = AppProps<{
 }>
 
 const NavBar = styled(NavbarContainer)`
+  grid-column: -1/1;
   z-index: 11;
 `
 
 const Footer = styled(FooterContainer)`
+  grid-column: -1/1;
+
   ${FooterPaperWrapper} {
     color: ${({theme}) => theme.palette.common.white};
   }
@@ -108,6 +112,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
             elements={{Link: NextWepublishLink}}
             date={{format: dateFormatter}}
             blocks={{
+              Renderer: BajourBlockRenderer,
               Teaser: BajourTeaser,
               TeaserGrid: TeaserGridStyled
             }}>
