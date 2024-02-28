@@ -67,10 +67,13 @@ type CustomAppProps = AppProps<{
 }>
 
 const NavBar = styled(NavbarContainer)`
+  grid-column: -1/1;
   z-index: 11;
 `
 
 const Footer = styled(FooterContainer)`
+  grid-column: -1/1;
+
   ${FooterPaperWrapper} {
     color: ${({theme}) => theme.palette.common.white};
   }
@@ -109,6 +112,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
             elements={{Link: NextWepublishLink}}
             date={{format: dateFormatter}}
             blocks={{
+              Renderer: BajourBlockRenderer,
               Teaser: BajourTeaser,
               TeaserGrid: TeaserGridStyled,
               Renderer: BajourBlockRenderer

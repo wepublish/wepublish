@@ -1,7 +1,9 @@
+const {resolve} = require('path')
 const nxPreset = require('@nx/jest/preset').default
 
 module.exports = {
   ...nxPreset,
+  roots: ['<rootDir>', resolve(__dirname, './__mocks__')],
   globalSetup: `${__dirname}/jest.setup.ts`,
   setupFilesAfterEnv: [`${__dirname}/jest.setup-tests.ts`],
   coverageReporters: [...nxPreset.coverageReporters, 'text', 'lcov'],
