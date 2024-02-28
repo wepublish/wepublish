@@ -9,7 +9,6 @@ import {
 } from '@wepublish/website'
 import {forwardRef} from 'react'
 
-// eslint-disable-next-line
 export const YearlyMemberPlanItem = forwardRef<HTMLButtonElement, BuilderMemberPlanItemProps>(
   ({className, id, name, amountPerMonthMin, ...props}, ref) => {
     const radioGroup = useRadioGroup()
@@ -30,3 +29,5 @@ export const YearlyMemberPlanItem = forwardRef<HTMLButtonElement, BuilderMemberP
     )
   }
 )
+
+YearlyMemberPlanItem.displayName = 'YearlyMemberPlanItem'
