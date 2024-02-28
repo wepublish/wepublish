@@ -12,7 +12,9 @@ export const getSitemap = async (req: NextApiRequest): Promise<string> => {
   })
 
   const {publicRuntimeConfig} = getConfig()
-  const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
+  const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [], {
+    typePolicies: {}
+  })
 
   const [{data: articleData}, {data: pageData}] = await Promise.all([
     client.query({
