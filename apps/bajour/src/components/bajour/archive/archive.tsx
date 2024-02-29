@@ -208,7 +208,7 @@ const LinkWrapper = styled('div')`
   }
 `
 
-const Archive = ({teasers}: ArchiveProps) => {
+export const Archive = ({teasers}: ArchiveProps) => {
   const [currentTeaser, setCurrentTeaser] = useState(teasers[2])
 
   const title = currentTeaser && selectTeaserTitle(currentTeaser)
@@ -266,5 +266,3 @@ const Archive = ({teasers}: ArchiveProps) => {
     </div>
   )
 }
-
-export {Archive}
