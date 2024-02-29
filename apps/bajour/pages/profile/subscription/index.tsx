@@ -1,4 +1,5 @@
 import {css, styled} from '@mui/material'
+import {getSessionTokenProps, ssrAuthLink, withAuthGuard} from '@wepublish/utils/website'
 import {
   ApiV1,
   InvoiceListContainer,
@@ -8,10 +9,7 @@ import {
 import {NextPageContext} from 'next'
 import getConfig from 'next/config'
 
-import {Container} from '../../../components/layout/container'
-import {withAuthGuard} from '../../../components/should-be-website-builder/auth-guard'
-import {ssrAuthLink} from '../../../components/should-be-website-builder/auth-link'
-import {getSessionTokenProps} from '../../../components/should-be-website-builder/get-session-token-props'
+import {Container} from '../../../src/components/layout/container'
 
 const SubscriptionsWrapper = styled(Container)`
   display: grid;

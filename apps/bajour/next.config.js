@@ -43,7 +43,57 @@ const nextConfig = {
       }
     }
   },
-  transpilePackages: ['@wepublish/ui', '@wepublish/website', 'react-tweet']
+  transpilePackages: ['@wepublish/ui', '@wepublish/website', 'react-tweet'],
+  async redirects() {
+    return [
+      {
+        source: '/home',
+        destination: '/',
+        permanent: false
+      },
+      {
+        source: '/a/:id/:slug',
+        destination: '/a/:slug',
+        permanent: false
+      },
+      {
+        source: '/tag/:slug',
+        destination: '/a/tag/:slug',
+        permanent: false
+      },
+      {
+        source: '/profile/dashboard',
+        destination: '/login',
+        permanent: false,
+        has: [
+          {
+            type: 'query',
+            key: 'jwt'
+          }
+        ]
+      },
+      {
+        source: '/profile/dashboard',
+        destination: '/profile',
+        permanent: false
+      },
+      {
+        source: '/member-uebersicht',
+        destination: '/mitmachen',
+        permanent: false
+      },
+      {
+        source: '/goenner-uebersicht',
+        destination: '/mitmachen',
+        permanent: false
+      },
+      {
+        source: '/spende',
+        destination: '/mitmachen',
+        permanent: false
+      }
+    ]
+  }
 }
 
 const plugins = [withNx, withBundleAnalyzer]

@@ -33,15 +33,13 @@ import {PartialDeep} from 'type-fest'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
-import {authLink} from '../src/auth-link'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import {NavBarProfile} from '../src/navbar-profile'
-import {NextWepublishLink} from '../src/next-wepublish-link'
-import {SessionProvider} from '../src/session.provider'
 import {tsriArticleStyles} from '../src/styles/tsri-article.styles'
 import {TsriBreakBlock} from '../src/tsri-break-block'
 import {TsriButton} from '../src/tsri-button'
 import {TsriParagraph} from '../src/tsri-paragraph'
+import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 
 setDefaultOptions({
   locale: de
@@ -132,6 +130,7 @@ type CustomAppProps = AppProps<{
 }>
 
 function CustomApp({Component, pageProps}: CustomAppProps) {
+  const siteTitle = 'We.Publish'
   const theme = useTheme()
   const globalStyles = useMemo(
     () => css`
@@ -154,6 +153,8 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
             <CssBaseline />
 
             <Head>
+              <title key="title">{siteTitle}</title>
+
               <title>We.Publish</title>
               <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
@@ -161,6 +162,9 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               <link rel="alternate" type="application/rss+xml" href="/api/rss-feed" />
               <link rel="alternate" type="application/atom+xml" href="/api/atom-feed" />
               <link rel="alternate" type="application/feed+json" href="/api/json-feed" />
+
+              {/* Sitemap */}
+              <link rel="sitemap" type="application/xml" title="Sitemap" href="/api/sitemap" />
 
               {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
               <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />

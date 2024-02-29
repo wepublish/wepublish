@@ -649,9 +649,9 @@ describe('SubscriptionController', () => {
   })
 
   it('mark Invoice as paid (renewal)', async () => {
-    const paidUntil = new Date()
+    const paidUntil = add(new Date(), {days: 5})
     const subscription = await SubscriptionFactory.create({
-      paidUntil: add(paidUntil, {days: 5}),
+      paidUntil,
       createdAt: sub(new Date(), {years: 1, days: 4}),
       paymentPeriodicity: PaymentPeriodicity.yearly
     })
@@ -680,13 +680,10 @@ describe('SubscriptionController', () => {
         subscription: true
       }
     })
-
     expect(invoiceMarkedAsPaid).toBeDefined()
     expect(invoiceMarkedAsPaid!.paidAt).not.toBeNull()
     expect(invoiceMarkedAsPaid!.subscription).toBeDefined()
-    expect(invoiceMarkedAsPaid!.subscription!.paidUntil).toEqual(
-      add(paidUntil, {years: 1, days: 5})
-    )
+    expect(invoiceMarkedAsPaid!.subscription!.paidUntil).toEqual(add(paidUntil, {years: 1}))
   })
 
   it('mark Invoice as paid (initial)', async () => {

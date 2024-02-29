@@ -79,12 +79,16 @@ export const getArticleSEO = (article: Article) => {
 }
 
 export const ArticleSEO = ({article}: BuilderArticleSEOProps) => {
-  const {Head, Script} = useWebsiteBuilder()
+  const {meta, Head, Script} = useWebsiteBuilder()
   const seo = useMemo(() => getArticleSEO(article), [article])
+
+  const title = `${seo.socialMediaTitle ? `${seo.socialMediaTitle} —` : ``} ${meta.siteTitle}`
 
   return (
     <>
       <Head>
+        <title key="title">{title}</title>
+
         <meta key={'og:type'} property="og:type" content={seo.type} />
 
         {seo.socialMediaTitle && (

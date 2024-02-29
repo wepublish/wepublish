@@ -1,4 +1,5 @@
 import {CssBaseline, styled, ThemeProvider} from '@mui/material'
+import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 import {
   ApiV1,
   FooterContainer,
@@ -15,7 +16,6 @@ import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import {Roboto} from 'next/font/google'
 import Head from 'next/head'
-import Image from 'next/image'
 import Script from 'next/script'
 import {initReactI18next} from 'react-i18next'
 import {MdFacebook, MdMail} from 'react-icons/md'
@@ -23,13 +23,12 @@ import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
-import {MainGrid} from '../components/layout/main-grid'
-import {authLink} from '../components/should-be-website-builder/auth-link'
-import {NextWepublishLink} from '../components/should-be-website-builder/next-wepublish-link'
-import {SessionProvider} from '../components/should-be-website-builder/session.provider'
-import {BajourTeaser} from '../components/website-builder-overwrites/blocks/teaser'
-import {TeaserGridStyled} from '../components/website-builder-styled/blocks/teaser-grid-styled'
-import theme from '../styles/theme'
+import {MainGrid} from '../src/components/layout/main-grid'
+import {BajourBlockRenderer} from '../src/components/website-builder-overwrites/block-renderer/block-renderer'
+import {BajourTeaser} from '../src/components/website-builder-overwrites/blocks/teaser'
+import {TeaserGridStyled} from '../src/components/website-builder-styled/blocks/teaser-grid-styled'
+import theme from '../src/styles/theme'
+import {ReactComponent as TwitterLogo} from '../src/twitter-logo.svg'
 
 setDefaultOptions({
   locale: de
@@ -66,10 +65,13 @@ type CustomAppProps = AppProps<{
 }>
 
 const NavBar = styled(NavbarContainer)`
+  grid-column: -1/1;
   z-index: 11;
 `
 
 const Footer = styled(FooterContainer)`
+  grid-column: -1/1;
+
   ${FooterPaperWrapper} {
     color: ${({theme}) => theme.palette.common.white};
   }
@@ -80,15 +82,22 @@ const ButtonLink = styled('a')`
 `
 
 function CustomApp({Component, pageProps}: CustomAppProps) {
+  const siteTitle = 'Bajour'
+
   return (
     <>
       <Head>
+        <title key="title">{siteTitle}</title>
+
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
         {/* Feeds */}
         <link rel="alternate" type="application/rss+xml" href="/api/rss-feed" />
         <link rel="alternate" type="application/atom+xml" href="/api/atom-feed" />
         <link rel="alternate" type="application/feed+json" href="/api/json-feed" />
+
+        {/* Sitemap */}
+        <link rel="sitemap" type="application/xml" title="Sitemap" href="/api/sitemap" />
 
         {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
         <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
@@ -103,11 +112,13 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
       <SessionProvider sessionToken={pageProps.sessionToken ?? null}>
         <WebsiteProvider>
           <WebsiteBuilderProvider
+            meta={{siteTitle}}
             Head={Head}
             Script={Script}
             elements={{Link: NextWepublishLink}}
             date={{format: dateFormatter}}
             blocks={{
+              Renderer: BajourBlockRenderer,
               Teaser: BajourTeaser,
               TeaserGrid: TeaserGridStyled
             }}>
@@ -120,16 +131,11 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
                     <ButtonLink href="https://www.facebook.com/bajourbasel">
                       <MdFacebook size="32" />
                     </ButtonLink>
-                    <ButtonLink>
-                      <ButtonLink href="https://twitter.com/bajourbasel">
-                        <Image
-                          src="/images/twitter-logo.svg"
-                          alt="twitter-logo"
-                          width={32}
-                          height={32}
-                        />
-                      </ButtonLink>
+
+                    <ButtonLink href="https://twitter.com/bajourbasel">
+                      <TwitterLogo width={32} height={32} />
                     </ButtonLink>
+
                     <ButtonLink href="mailto:info@bajour.ch">
                       <MdMail size="32" />
                     </ButtonLink>

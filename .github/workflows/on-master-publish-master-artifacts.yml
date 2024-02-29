@@ -1,0 +1,36 @@
+name: Publish master artifacts
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  date_sha_tag:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.image_tag.outputs.tag }}
+    steps:
+      - id: image_tag
+        run: echo "::set-output name=tag::$(date +%s)-${{ github.sha }}"
+
+  publish_master_docker:
+    needs: date_sha_tag
+    uses: ./.github/workflows/on-demand-publish-docker-image.yml
+    with:
+      migration_tags: |
+        ghcr.io/wepublish/migration:master-${{ needs.date_sha_tag.outputs.tag }}
+        wepublishch/migration:master
+      api_tags: |
+        ghcr.io/wepublish/api:master-${{ needs.date_sha_tag.outputs.tag }}
+        wepublishch/api:master
+      editor_tags: |
+        ghcr.io/wepublish/editor:master-${{ needs.date_sha_tag.outputs.tag }}
+        wepublishch/editor:master
+      storybook_tags: |
+        ghcr.io/wepublish/storybook:master-${{ needs.date_sha_tag.outputs.tag }}
+        wepublishch/storybook:master
+      website_tags: |
+        ghcr.io/wepublish/website:master-${{ needs.date_sha_tag.outputs.tag }}
+        wepublishch/website:master
+    secrets: inherit

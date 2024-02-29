@@ -17,7 +17,11 @@
           {
             "patterns": [
               {
-                "group": ["@wepublish/*/website", "@wepublish/website/*"],
+                "group": [
+                  "@wepublish/*/website",
+                  "@wepublish/website/*",
+                  "!@wepublish/utils/website"
+                ],
                 "message": "Please use @wepublish/website instead."
               }
             ]

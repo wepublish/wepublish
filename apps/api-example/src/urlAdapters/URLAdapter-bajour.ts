@@ -22,15 +22,17 @@ export class BajourURLAdapter implements URLAdapter {
   getArticlePreviewURL(token: string) {
     return `${this.websiteURL}/a/preview/${token}`
   }
+
   getPublicArticleURL(article: PublicArticle): string {
     return `${this.websiteURL}/a/${article.id}/${article.slug}`
   }
+
   getPeeredArticleURL(peer: Peer, article: PublicArticle): string {
     return `${this.websiteURL}/p/${peer.id}/${article.id}`
   }
 
   getPublicPageURL(page: PublicPage): string {
-    return `${this.websiteURL}${page.slug}`
+    return `${this.websiteURL}/${page.slug}`
   }
 
   getAuthorURL(author: Author): string {
@@ -45,11 +47,14 @@ export class BajourURLAdapter implements URLAdapter {
     if (comment.itemType === CommentItemType.article) {
       return `${this.websiteURL}/a/${item.id}/${item.slug}#${comment.id}`
     }
+
     return `${this.websiteURL}/${item.slug}#${comment.id}`
   }
+
   getPagePreviewURL(token: string): string {
     return `${this.websiteURL}/page/preview/${token}`
   }
+
   getLoginURL(token: string): string {
     return `${this.blocksHost}/profile/dashboard/?jwt=${token}`
   }

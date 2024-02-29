@@ -17,29 +17,34 @@ export class DefaultURLAdapter implements URLAdapter {
   }
 
   getPublicArticleURL(article: PublicArticle): string {
-    return `${this.websiteURL}/a/${article.id}/${article.slug}`
+    return `${this.websiteURL}/a/${article.slug}`
   }
 
   getPeeredArticleURL(peer: Peer, article: PublicArticle): string {
-    return `${this.websiteURL}/peer/${peer.slug}/${article.id}`
+    return `${this.websiteURL}/p/${peer.id}/${article.id}`
   }
 
   getPublicPageURL(page: PublicPage): string {
-    return `${this.websiteURL}/p/${page.id}/${page.slug}`
+    return `${this.websiteURL}/${page.slug}`
   }
 
   getAuthorURL(author: Author): string {
-    return `${this.websiteURL}/author/${author.slug || author.id}`
+    return `${this.websiteURL}/author/${author.slug}`
   }
 
   getEventURL(event: Event): string {
-    return `${this.websiteURL}/events/${event.id}`
+    return `${this.websiteURL}/event/${event.id}`
   }
 
-  getCommentURL(item: PublicArticle | PublicPage, comment: PublicComment) {
+  getCommentURL(item: PublicArticle | PublicPage, comment: PublicComment, peer?: Peer) {
     if (comment.itemType === CommentItemType.article) {
       return `${this.websiteURL}/a/${item.id}/${item.slug}#${comment.id}`
     }
+
+    if (comment.itemType === CommentItemType.peerArticle) {
+      return `${this.websiteURL}/p/${peer?.id}/${item.id}#${comment.id}`
+    }
+
     return `${this.websiteURL}/${item.slug}#${comment.id}`
   }
 
@@ -48,10 +53,10 @@ export class DefaultURLAdapter implements URLAdapter {
   }
 
   getPagePreviewURL(token: string): string {
-    return `${this.websiteURL}/p/preview/${token}`
+    return `${this.websiteURL}/${token}`
   }
 
   getLoginURL(token: string): string {
-    return `${this.websiteURL}/login/?jwt=${token}`
+    return `${this.websiteURL}/login?jwt=${token}`
   }
 }

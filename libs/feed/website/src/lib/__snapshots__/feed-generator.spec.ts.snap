@@ -6,7 +6,7 @@ exports[`should generate the RSS feed 1`] = `
     <channel>
         <title>We.Publish Feed</title>
         <link>undefined</link>
-        <description>undefined</description>
+        <description></description>
         <lastBuildDate>Sun, 01 Jan 2023 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>We.Publish (https://github.com/wepublish/wepublish)</generator>
@@ -218,6 +218,7 @@ Feed {
       "name": "Foobar",
     },
     "copyright": "We.Publish",
+    "description": "",
     "generator": "We.Publish (https://github.com/wepublish/wepublish)",
     "id": "https://wepublish.ch",
     "language": "de",

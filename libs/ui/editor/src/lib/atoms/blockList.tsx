@@ -1,7 +1,7 @@
 import styled from '@emotion/styled'
 import {BlockStyle, BlockType, getApiClientV2, useBlockStylesQuery} from '@wepublish/editor/api-v2'
 import nanoid from 'nanoid'
-import React, {Fragment, memo, ReactNode, useCallback, useMemo, useState} from 'react'
+import React, {Fragment, memo, ReactNode, useCallback, useEffect, useMemo, useState} from 'react'
 import {MdArrowDownward, MdArrowUpward, MdDelete} from 'react-icons/md'
 import {IconButton, Panel as RPanel, SelectPicker} from 'rsuite'
 
@@ -346,6 +346,12 @@ function ListItemWrapper({
     () => data?.blockStyles.find(style => [style.id, style.name].includes(value.value.blockStyle)),
     [data?.blockStyles, value.value.blockStyle]
   )
+
+  useEffect(() => {
+    if (blockStyleValue && blockStyleValue.id !== value.value.blockStyle) {
+      onStyleChange?.(blockStyleValue?.id)
+    }
+  }, [blockStyleValue, onStyleChange, value.value.blockStyle])
 
   return (
     <ListItem>

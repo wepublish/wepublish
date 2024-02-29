@@ -41,7 +41,7 @@
     <!-- <a href="https://github.com/github_username/repo_name"><strong>Explore the docs »</strong></a>-->
     <br />
     <br />
-    <a href="#demo">View Demo</a>
+    <a href="#demo-stable">View Demo</a>
     ·
     <a href="https://github.com/wepublish/wepublish/issues">Report Bug</a>
     ·
@@ -55,7 +55,7 @@
 
 - [About the Project](#about-the-project)
   - [Built With](#built-with)
-- [Demo](#demo)
+- [Demo](#demo-stable)
 - [Packages](#packages)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
@@ -92,7 +92,6 @@ TBD
 - [Website](https://demo.wepublish.media)
 - [API](https://api.demo.wepublish.media)
 
-
 ## Preview (Next)
 
 - [Editor](https://editor.next.wepublish.media)
@@ -100,7 +99,6 @@ TBD
   - password: `123`
 - [Website](https://next.wepublish.media)
 - [API](https://api.next.wepublish.media)
-
 
 ## Development (Master)
 
@@ -148,6 +146,7 @@ npm run build
 ```
 
 4a. Test wepublish (the initial admin login is red printed in the log at first startup)
+
 ```sh
 npm run try
 ```

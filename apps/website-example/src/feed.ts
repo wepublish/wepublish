@@ -8,7 +8,7 @@ export const getFeed = async (req: NextApiRequest) => {
 
   const generate = await generateFeed({
     id: `${siteUrl + req.url}`,
-    link: `${siteUrl + req.url}`,
+    link: siteUrl,
     title: 'We.Publish',
     ttl: 10, // in minutes
     copyright: 'We.Publish',
@@ -22,7 +22,9 @@ export const getFeed = async (req: NextApiRequest) => {
   })
 
   const {publicRuntimeConfig} = getConfig()
-  const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
+  const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [], {
+    typePolicies: {}
+  })
 
   const {data} = await client.query({
     query: ApiV1.ArticleListDocument,
