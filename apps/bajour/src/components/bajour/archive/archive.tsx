@@ -11,6 +11,7 @@ import {
 import Image from 'next/image'
 import {useState} from 'react'
 
+import Logo from '../../../logo.svg'
 import {ArchiveSlider} from './archive-slider'
 
 export type ArchiveProps = Omit<BuilderTeaserGridBlockProps, 'teasers'> & {
@@ -224,7 +225,7 @@ const Archive = ({teasers}: ArchiveProps) => {
       <ArchiveWrapper>
         <BestOfBajour>
           Best of
-          <BajourLogo src="/images/logo.svg" alt="bajour-logo" width={250} height={120} />
+          <BajourLogo src={Logo} alt="bajour-logo" width={250} height={120} />
           <ArchivText>Archiv</ArchivText>
         </BestOfBajour>
         <Timeline>
