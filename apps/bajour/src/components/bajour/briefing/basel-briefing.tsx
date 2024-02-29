@@ -1,8 +1,8 @@
 import {Button, styled} from '@mui/material'
+import {NextWepublishLink} from '@wepublish/utils/website'
 import {ApiV1, BuilderTeaserGridBlockProps, Image} from '@wepublish/website'
 
-import isWithinTimeslot from '../../../utils/is-within-timeslot'
-import {NextWepublishLink} from '../../should-be-website-builder/next-wepublish-link'
+import {isWithinTimeslot} from '../../../utils/is-within-timeslot'
 import {fluidTypography} from '../../website-builder-overwrites/blocks/teaser-overwrite.style'
 import BaselBg from './basel.jpg'
 import FasnachtBg from './fasnacht.jpg'
@@ -312,7 +312,7 @@ export const Avatar = styled(Image)`
   }
 `
 
-const BaselBriefing = ({teasers, blockStyle}: BaselBriefingProps) => {
+export const BaselBriefing = ({teasers, blockStyle}: BaselBriefingProps) => {
   let showFrom = undefined
   let showUntil = undefined
 
@@ -392,5 +392,3 @@ const BaselBriefing = ({teasers, blockStyle}: BaselBriefingProps) => {
     </BaselBriefingStyled>
   )
 }
-
-export {BaselBriefing}

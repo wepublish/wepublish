@@ -8,6 +8,9 @@ exports[`Event should render Default 1`] = `
     <div
       data-testid="fake-head"
     >
+      <title>
+        Cool concert — Newsroom Name
+      </title>
       <meta
         content="website"
         property="og:type"
@@ -481,6 +484,9 @@ exports[`Event should render WithClassName 1`] = `
     <div
       data-testid="fake-head"
     >
+      <title>
+        Cool concert — Newsroom Name
+      </title>
       <meta
         content="website"
         property="og:type"
@@ -954,6 +960,9 @@ exports[`Event should render WithEmotion 1`] = `
     <div
       data-testid="fake-head"
     >
+      <title>
+        Cool concert — Newsroom Name
+      </title>
       <meta
         content="website"
         property="og:type"
@@ -1479,6 +1488,9 @@ exports[`Event should render WithoutImage 1`] = `
     <div
       data-testid="fake-head"
     >
+      <title>
+        Cool concert — Newsroom Name
+      </title>
       <meta
         content="website"
         property="og:type"

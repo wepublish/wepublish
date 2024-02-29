@@ -1,4 +1,5 @@
 import {CssBaseline, styled, ThemeProvider} from '@mui/material'
+import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 import {
   ApiV1,
   FooterContainer,
@@ -15,7 +16,6 @@ import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import {Roboto} from 'next/font/google'
 import Head from 'next/head'
-import Image from 'next/image'
 import Script from 'next/script'
 import {initReactI18next} from 'react-i18next'
 import {MdFacebook, MdMail} from 'react-icons/md'
@@ -23,14 +23,12 @@ import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
-import {MainGrid} from '../components/layout/main-grid'
-import {authLink} from '../components/should-be-website-builder/auth-link'
-import {NextWepublishLink} from '../components/should-be-website-builder/next-wepublish-link'
-import {SessionProvider} from '../components/should-be-website-builder/session.provider'
-import {BajourBlockRenderer} from '../components/website-builder-overwrites/block-renderer/block-renderer'
-import {BajourTeaser} from '../components/website-builder-overwrites/blocks/teaser'
-import {TeaserGridStyled} from '../components/website-builder-styled/blocks/teaser-grid-styled'
-import theme from '../styles/theme'
+import {MainGrid} from '../src/components/layout/main-grid'
+import {BajourBlockRenderer} from '../src/components/website-builder-overwrites/block-renderer/block-renderer'
+import {BajourTeaser} from '../src/components/website-builder-overwrites/blocks/teaser'
+import {TeaserGridStyled} from '../src/components/website-builder-styled/blocks/teaser-grid-styled'
+import theme from '../src/styles/theme'
+import {ReactComponent as TwitterLogo} from '../src/twitter-logo.svg'
 
 setDefaultOptions({
   locale: de
@@ -84,9 +82,13 @@ const ButtonLink = styled('a')`
 `
 
 function CustomApp({Component, pageProps}: CustomAppProps) {
+  const siteTitle = 'Bajour'
+
   return (
     <>
       <Head>
+        <title key="title">{siteTitle}</title>
+
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
         {/* Feeds */}
@@ -110,6 +112,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
       <SessionProvider sessionToken={pageProps.sessionToken ?? null}>
         <WebsiteProvider>
           <WebsiteBuilderProvider
+            meta={{siteTitle}}
             Head={Head}
             Script={Script}
             elements={{Link: NextWepublishLink}}
@@ -128,16 +131,11 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
                     <ButtonLink href="https://www.facebook.com/bajourbasel">
                       <MdFacebook size="32" />
                     </ButtonLink>
-                    <ButtonLink>
-                      <ButtonLink href="https://twitter.com/bajourbasel">
-                        <Image
-                          src="/images/twitter-logo.svg"
-                          alt="twitter-logo"
-                          width={32}
-                          height={32}
-                        />
-                      </ButtonLink>
+
+                    <ButtonLink href="https://twitter.com/bajourbasel">
+                      <TwitterLogo width={32} height={32} />
                     </ButtonLink>
+
                     <ButtonLink href="mailto:info@bajour.ch">
                       <MdMail size="32" />
                     </ButtonLink>

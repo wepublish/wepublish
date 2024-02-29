@@ -1,6 +1,6 @@
 import {NextApiRequest, NextApiResponse} from 'next'
 
-import {getSitemap} from '../../components/should-be-website-builder/sitemap'
+import {getSitemap} from '../../src/sitemap'
 
 export const config = {
   regions: ['all']

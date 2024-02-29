@@ -12,7 +12,7 @@ export const getFeed = async (req: NextApiRequest): Promise<Feed> => {
     link: siteUrl,
     title: 'Bajour',
     ttl: 10, // in minutes
-    copyright: 'Bajour',
+    copyright: 'Bajour.ch',
     categories: ['Bajour', 'CMS', 'Journalism', 'Journalismus', 'Basel'],
     updated: new Date(),
     feedLinks: {
@@ -23,7 +23,9 @@ export const getFeed = async (req: NextApiRequest): Promise<Feed> => {
   })
 
   const {publicRuntimeConfig} = getConfig()
-  const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
+  const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [], {
+    typePolicies: {}
+  })
 
   const {data} = await client.query({
     query: ApiV1.ArticleListDocument,

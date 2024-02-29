@@ -6,7 +6,7 @@ import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {Reducer, useReducer} from 'react'
 
-import {Container} from '../../components/layout/container'
+import {Container} from '../../src/components/layout/container'
 
 const Filter = styled('div')`
   display: grid;
