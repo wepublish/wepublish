@@ -297,6 +297,7 @@ type ArticleFactoryDefineInput = {
     createdAt?: Date;
     modifiedAt?: Date;
     shared?: boolean;
+    hidden?: boolean;
     published?: ArticlepublishedFactory | Prisma.ArticleRevisionCreateNestedOneWithoutPublishedArticleInput;
     pending?: ArticlependingFactory | Prisma.ArticleRevisionCreateNestedOneWithoutPendingArticleInput;
     draft?: ArticledraftFactory | Prisma.ArticleRevisionCreateNestedOneWithoutDraftArticleInput;

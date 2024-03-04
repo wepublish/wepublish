@@ -144,6 +144,7 @@ function ArticleEditor() {
     properties: [],
     canonicalUrl: '',
     shared: peerByDefault,
+    hidden: false,
     breaking: false,
     image: undefined,
     hideAuthor: false,
@@ -190,7 +191,7 @@ function ArticleEditor() {
 
   useEffect(() => {
     if (articleData?.article) {
-      const {latest, shared, pending} = articleData.article
+      const {latest, shared, hidden, pending} = articleData.article
       const {
         slug,
         preTitle,
@@ -236,6 +237,7 @@ function ArticleEditor() {
         })),
         canonicalUrl: canonicalUrl ?? '',
         shared,
+        hidden,
         breaking,
         authors: authors.filter(author => author != null) as AuthorRefFragment[],
         image: image || undefined,
@@ -356,6 +358,7 @@ function ArticleEditor() {
       imageID: metadata.image?.id,
       breaking: metadata.breaking,
       shared: metadata.shared,
+      hidden: metadata.hidden,
       tags: metadata.tags,
       canonicalUrl: metadata.canonicalUrl,
       properties: metadata.properties,

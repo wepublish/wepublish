@@ -155,43 +155,7 @@ function PageList() {
             setSortOrder(sortType ?? 'asc')
             setSortField(sortColumn)
           }}>
-          <Column width={210} align="left" resizable sortable>
-            <HeaderCell>{t('pages.overview.publicationDate')}</HeaderCell>
-            <Cell dataKey="published">
-              {(pageRef: RowDataType<PageRefFragment>) =>
-                pageRef.published?.publishedAt
-                  ? t('pageEditor.overview.publishedAt', {
-                      publicationDate: new Date(pageRef.published.publishedAt)
-                    })
-                  : pageRef.pending?.publishAt
-                  ? t('pageEditor.overview.publishedAtIfPending', {
-                      publishedAtIfPending: new Date(pageRef.pending?.publishAt)
-                    })
-                  : t('pages.overview.notPublished')
-              }
-            </Cell>
-          </Column>
-          <Column width={210} align="left" resizable sortable>
-            <HeaderCell>{t('pages.overview.updated')}</HeaderCell>
-            <Cell dataKey="modifiedAt">
-              {({modifiedAt}: RowDataType<PageRefFragment>) =>
-                t('pageEditor.overview.modifiedAt', {
-                  modificationDate: new Date(modifiedAt)
-                })
-              }
-            </Cell>
-          </Column>
-          <Column width={400} align="left" resizable>
-            <HeaderCell>{t('pages.overview.title')}</HeaderCell>
-            <Cell>
-              {(rowData: RowDataType<PageRefFragment>) => (
-                <Link to={`/pages/edit/${rowData.id}`}>
-                  {rowData.latest.title || t('pages.overview.untitled')}
-                </Link>
-              )}
-            </Cell>
-          </Column>
-          <Column width={150} align="left" resizable>
+          <Column width={125} align="left" resizable>
             <HeaderCell>{t('pages.overview.states')}</HeaderCell>
             <Cell>
               {(rowData: RowDataType<PageRefFragment>) => {
@@ -211,6 +175,46 @@ function PageList() {
               }}
             </Cell>
           </Column>
+
+          <Column width={400} align="left" resizable>
+            <HeaderCell>{t('pages.overview.title')}</HeaderCell>
+            <Cell>
+              {(rowData: RowDataType<PageRefFragment>) => (
+                <Link to={`/pages/edit/${rowData.id}`}>
+                  {rowData.latest.title || t('pages.overview.untitled')}
+                </Link>
+              )}
+            </Cell>
+          </Column>
+
+          <Column width={210} align="left" resizable sortable>
+            <HeaderCell>{t('pages.overview.publicationDate')}</HeaderCell>
+            <Cell dataKey="published">
+              {(pageRef: RowDataType<PageRefFragment>) =>
+                pageRef.published?.publishedAt
+                  ? t('pageEditor.overview.publishedAt', {
+                      publicationDate: new Date(pageRef.published.publishedAt)
+                    })
+                  : pageRef.pending?.publishAt
+                  ? t('pageEditor.overview.publishedAtIfPending', {
+                      publishedAtIfPending: new Date(pageRef.pending?.publishAt)
+                    })
+                  : t('pages.overview.notPublished')
+              }
+            </Cell>
+          </Column>
+
+          <Column width={210} align="left" resizable sortable>
+            <HeaderCell>{t('pages.overview.updated')}</HeaderCell>
+            <Cell dataKey="modifiedAt">
+              {({modifiedAt}: RowDataType<PageRefFragment>) =>
+                t('pageEditor.overview.modifiedAt', {
+                  modificationDate: new Date(modifiedAt)
+                })
+              }
+            </Cell>
+          </Column>
+
           <Column width={200} align="center" fixed="right">
             <HeaderCell>{t('pages.overview.action')}</HeaderCell>
             <IconButtonCell>

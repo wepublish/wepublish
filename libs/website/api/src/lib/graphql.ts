@@ -65,6 +65,8 @@ export type ArticleConnection = {
 
 export type ArticleFilter = {
   authors?: InputMaybe<Array<Scalars['ID']>>;
+  includeHidden?: InputMaybe<Scalars['Boolean']>;
+  shared?: InputMaybe<Scalars['Boolean']>;
   tags?: InputMaybe<Array<Scalars['String']>>;
 };
 
