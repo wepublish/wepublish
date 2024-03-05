@@ -902,6 +902,7 @@ export type PeerArticleTeaser = {
   image?: Maybe<Image>;
   lead?: Maybe<Scalars['String']>;
   peer?: Maybe<Peer>;
+  peeredArticleURL?: Maybe<Scalars['String']>;
   preTitle?: Maybe<Scalars['String']>;
   style: TeaserStyle;
   title?: Maybe<Scalars['String']>;

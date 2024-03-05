@@ -193,6 +193,8 @@ fragment FullTeaser on Teaser {
         ...BlockWithoutTeaser
       }
     }
+
+    peeredArticleURL
   }
 
   ... on PageTeaser {

@@ -76,7 +76,8 @@ const articleTeaser = {
         image
       }
     ]
-  }
+  },
+  peeredArticleURL: 'https://example.com/p/123/1231231231'
 } as PeerArticleTeaser
 
 export const Default = {
