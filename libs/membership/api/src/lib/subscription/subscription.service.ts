@@ -61,10 +61,10 @@ export class SubscriptionService {
         deactivation: {
           is: null
         },
-        invoices: {
+        periods: {
           none: {
-            scheduledDeactivationAt: {
-              gte: sub(endOfDay(runDate), {days: 3})
+            startsAt: {
+              gt: startOfDay(runDate)
             }
           }
         },
