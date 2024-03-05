@@ -16,7 +16,7 @@ import {
 } from '@prisma/client'
 import {PrismaService} from '@wepublish/nest-modules'
 import {PaymentProvider, PaymentsService} from '@wepublish/payment/api'
-import {add, endOfDay, startOfDay, sub} from 'date-fns'
+import {add, endOfDay, startOfDay} from 'date-fns'
 import {Action} from '../subscription-event-dictionary/subscription-event-dictionary.type'
 import {mapPaymentPeriodToMonths} from '@wepublish/utils/api'
 
