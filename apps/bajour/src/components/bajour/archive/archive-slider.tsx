@@ -1,71 +1,36 @@
 import 'keen-slider/keen-slider.min.css'
 
 import {css, styled} from '@mui/material'
-import {ApiV1, selectTeaserImage, useWebsiteBuilder} from '@wepublish/website'
+import {
+  ApiV1,
+  BuilderTeaserGridBlockProps,
+  selectTeaserDate,
+  selectTeaserImage,
+  useWebsiteBuilder
+} from '@wepublish/website'
 import {useKeenSlider} from 'keen-slider/react'
-import {useState} from 'react'
-
-import {ArchiveProps} from './archive'
+import {DOMAttributes, useState} from 'react'
 
 type ArchiveSliderProps = {
-  teasers: ArchiveProps['teasers']
-  setTeaser: (teaser: ApiV1.ArticleTeaser | ApiV1.PeerArticleTeaser) => void
+  teasers: BuilderTeaserGridBlockProps['teasers']
+  setTeaser: (teaser: ApiV1.Teaser) => void
 }
-
-export const SliderContainerBig = styled('div')`
-  display: grid;
-  position: relative;
-  padding-top: ${({theme}) => theme.spacing(2)};
-  padding-bottom: ${({theme}) => theme.spacing(2)};
-  gap: ${({theme}) => theme.spacing(5)};
-
-  ${({theme}) => theme.breakpoints.up('sm')} {
-    padding-top: ${({theme}) => theme.spacing(3)};
-    padding-bottom: ${({theme}) => theme.spacing(3)};
-  }
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    padding-top: ${({theme}) => theme.spacing(5)};
-  }
-
-  ${({theme}) => theme.breakpoints.up('xl')} {
-    padding-top: ${({theme}) => theme.spacing(7)};
-  }
-`
-
-const SliderInnerContainer = styled('div')``
 
 const SliderContainer = styled('div')`
   width: 100%;
   max-width: 100vw;
   overflow: hidden;
-
-  .keen-slider {
-    display: flex;
-    flex-wrap: nowrap;
-    flex-direction: row;
-    height: 100%;
-    max-width: 100%;
-    width: 100%;
-  }
-
-  .keen-slider__slide {
-    transform: none !important; // enforce
-    min-width: 0 !important; // enforce
-    max-width: 60% !important; // enforce
-    width: auto;
-  }
 `
 
-const Slide = styled('div')<{current: boolean}>`
+const Slide = styled('div')<{isCurrent?: boolean}>`
   position: relative;
   cursor: pointer;
-  transition: flex-basis 0.3s ease-in-out, margin 0.3s ease-in-out !important;
+  transition: flex-basis 0.3s ease-in-out, margin 0.3s ease-in-out;
   height: ${({theme}) => theme.spacing(25)};
   flex-basis: 10%;
 
-  ${({theme, current}) =>
-    current &&
+  ${({theme, isCurrent}) =>
+    isCurrent &&
     css`
       flex-basis: 50%;
       margin: 0 ${theme.spacing(1)};
@@ -131,22 +96,8 @@ const imageStyles = css`
   object-fit: cover;
 `
 
-const getDate = (date: string) => {
-  const options: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  }
-  const dateObj = new Date(date)
-  return dateObj.toLocaleDateString('de-DE', options)
-}
-
 export const ArchiveSlider = ({teasers, setTeaser}: ArchiveSliderProps) => {
   const [currentSlide, setCurrentSlide] = useState(2)
-
-  const {
-    elements: {Image}
-  } = useWebsiteBuilder()
 
   const [sliderRef] = useKeenSlider({
     initial: currentSlide,
@@ -155,33 +106,49 @@ export const ArchiveSlider = ({teasers, setTeaser}: ArchiveSliderProps) => {
     slides: {
       origin: 'center',
       perView: 6
-    }
+    },
+    renderMode: 'custom'
   })
 
-  const changeSlide = (index: number) => {
-    setCurrentSlide(index)
-    setTeaser(teasers[index])
-  }
+  return (
+    <SliderContainer ref={sliderRef} className="keen-slider">
+      {teasers.map(
+        (teaser, index) =>
+          teaser && (
+            <ArchiveSlide
+              key={index}
+              teaser={teaser}
+              isCurrent={index === currentSlide}
+              onClick={() => {
+                setCurrentSlide(index)
+                setTeaser(teaser)
+              }}
+            />
+          )
+      )}
+    </SliderContainer>
+  )
+}
+
+type ArchiveSlideProps = {
+  teaser: ApiV1.Teaser
+  isCurrent: boolean
+  onClick: DOMAttributes<HTMLDivElement>['onClick']
+}
+
+const ArchiveSlide = ({teaser, onClick, isCurrent}: ArchiveSlideProps) => {
+  const {
+    elements: {Image},
+    date
+  } = useWebsiteBuilder()
+
+  const img = teaser && selectTeaserImage(teaser)
+  const publishDate = teaser && selectTeaserDate(teaser)
 
   return (
-    <SliderContainer>
-      <SliderInnerContainer ref={sliderRef} className="keen-slider">
-        {teasers.map((teaser, index) => {
-          const img = selectTeaserImage(teaser)
-          return (
-            <Slide
-              key={index}
-              className="keen-slider__slide"
-              current={index === currentSlide}
-              onClick={() => changeSlide(index)}>
-              {img && <Image image={img} css={imageStyles} />}
-              {teaser.article?.publishedAt && (
-                <ArchiveDate>{getDate(teaser.article?.publishedAt)}</ArchiveDate>
-              )}
-            </Slide>
-          )
-        })}
-      </SliderInnerContainer>
-    </SliderContainer>
+    <Slide isCurrent={isCurrent} onClick={onClick}>
+      {img && <Image image={img} css={imageStyles} />}
+      {publishDate && <ArchiveDate>{date.format(new Date(publishDate), false)}</ArchiveDate>}
+    </Slide>
   )
 }
