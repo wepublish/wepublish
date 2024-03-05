@@ -1,6 +1,5 @@
-import {Button, styled} from '@mui/material'
+import {css, styled} from '@mui/material'
 import {
-  ApiV1,
   BuilderTeaserGridBlockProps,
   selectTeaserAuthors,
   selectTeaserLead,
@@ -8,25 +7,21 @@ import {
   selectTeaserUrl,
   useWebsiteBuilder
 } from '@wepublish/website'
-import Image from 'next/image'
 import {useState} from 'react'
 
-import Logo from '../../../logo.svg'
+import {ReactComponent as Logo} from '../../../logo.svg'
 import {ArchiveSlider} from './archive-slider'
 
-export type ArchiveProps = Omit<BuilderTeaserGridBlockProps, 'teasers'> & {
-  teasers: ApiV1.ArticleTeaser[] | ApiV1.PeerArticleTeaser[]
-}
+export const ArchiveWrapper = styled('div')``
 
-const ArchiveWrapper = styled('div')`
+const StatsWrapper = styled('div')`
   margin: ${({theme}) => theme.spacing(4)} 0;
-  display: grid;
-  grid-gap: ${({theme}) => theme.spacing(4)};
   padding: 0 ${({theme}) => theme.spacing(2)};
+  display: grid;
   justify-content: center;
   grid-template-columns: repeat(6, 1fr);
-  grid-template-rows: auto auto;
-  grid-gap: ${({theme}) => theme.spacing(1)};
+  grid-auto-rows: auto;
+  gap: ${({theme}) => theme.spacing(1)};
 
   ${({theme}) => theme.breakpoints.up('md')} {
     padding: 0;
@@ -48,7 +43,7 @@ const BestOfBajour = styled('div')`
   }
 `
 
-const BajourLogo = styled(Image)`
+const BajourLogo = styled(Logo)`
   margin: 0 ${({theme}) => theme.spacing(1)} 0 ${({theme}) => theme.spacing(2)};
   width: 100px;
   height: 65px;
@@ -60,60 +55,51 @@ const BajourLogo = styled(Image)`
   }
 `
 
-const ArchivText = styled('span')`
+const ArchiveText = styled('span')`
   font-weight: 600;
   color: ${({theme}) => theme.palette.error.main};
 `
 
 const Timeline = styled('div')`
   position: relative;
-  font-weight: 600;
-  display: grid;
-  color: ${({theme}) => theme.palette.error.main};
   grid-column: 3/7;
   grid-row: 2/3;
+  display: grid;
+  grid-template-areas:
+    'articles .'
+    '. authors'
+    'years .';
   grid-template-columns: 1fr 1fr;
+  column-gap: ${({theme}) => theme.spacing(6)};
+  color: ${({theme}) => theme.palette.error.main};
+  font-weight: 600;
   font-size: 10px;
 
   ${({theme}) => theme.breakpoints.up('md')} {
+    column-gap: ${({theme}) => theme.spacing(12)};
     font-size: 27px;
   }
 `
 
 const Articles = styled('div')`
-  grid-column: 1/2;
+  grid-area: articles;
   text-align: right;
-  padding-right: ${({theme}) => theme.spacing(3)};
   display: flex;
   flex-direction: column;
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    padding-right: ${({theme}) => theme.spacing(6)};
-  }
 `
 
 const Authors = styled('div')`
-  grid-column: 2/3;
+  grid-area: authors;
   text-align: left;
-  padding-left: ${({theme}) => theme.spacing(3)};
   display: flex;
   flex-direction: column;
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    padding-left: ${({theme}) => theme.spacing(6)};
-  }
 `
 
 const Years = styled('div')`
-  grid-column: 1/2;
+  grid-area: years;
   text-align: right;
-  padding-right: ${({theme}) => theme.spacing(3)};
   display: flex;
   flex-direction: column;
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    padding-right: ${({theme}) => theme.spacing(6)};
-  }
 `
 
 const Number = styled('span')`
@@ -127,19 +113,19 @@ const Number = styled('span')`
 
 const Axis = styled('div')`
   position: absolute;
+  z-index: 10;
   top: -15%;
   left: 50%;
   transform: translateX(-50%);
+  height: 135%;
   width: ${({theme}) => theme.spacing(2)};
   background-color: ${({theme}) => theme.palette.error.main};
-  height: 135%;
   border-radius: ${({theme}) => theme.spacing(2)};
   border: 4px solid ${({theme}) => theme.palette.common.white};
-  z-index: 10;
 
   ${({theme}) => theme.breakpoints.up('md')} {
     width: ${({theme}) => theme.spacing(3)};
-    border: 5px solid ${({theme}) => theme.palette.common.white};
+    border-width: 5px;
   }
 `
 
@@ -175,9 +161,8 @@ const CurrentTeaser = styled('div')`
   }
 `
 
-const ReadMoreButton = styled(Button)`
+const buttonStyles = css`
   justify-self: end;
-  color: ${({theme}) => theme.palette.error.main};
 `
 
 const Author = styled('div')`
@@ -201,14 +186,10 @@ const Lead = styled('div')`
 `
 
 const LinkWrapper = styled('div')`
-  text-align: right;
-
-  ${({theme}) => theme.breakpoints.up('sm')} {
-    text-align: left;
-  }
+  display: grid;
 `
 
-export const Archive = ({teasers}: ArchiveProps) => {
+export const Archive = ({teasers}: BuilderTeaserGridBlockProps) => {
   const [currentTeaser, setCurrentTeaser] = useState(teasers[2])
 
   const title = currentTeaser && selectTeaserTitle(currentTeaser)
@@ -217,52 +198,60 @@ export const Archive = ({teasers}: ArchiveProps) => {
   const authors = currentTeaser && selectTeaserAuthors(currentTeaser)
 
   const {
-    elements: {Link}
+    elements: {Link, Button}
   } = useWebsiteBuilder()
 
   return (
-    <div>
-      <ArchiveWrapper>
+    <ArchiveWrapper>
+      <StatsWrapper>
         <BestOfBajour>
           Best of
-          <BajourLogo src={Logo} alt="bajour-logo" width={250} height={120} />
-          <ArchivText>Archiv</ArchivText>
+          <BajourLogo />
+          <ArchiveText>Archiv</ArchiveText>
         </BestOfBajour>
+
         <Timeline>
           <Articles>
             <Number>2586</Number>
             Artikel
           </Articles>
-          <div />
+
           <Authors>
             <Number>34</Number>
             AutorInnen
           </Authors>
-          <div />
+
           <Years>
             <Number>12</Number>
             Jahre
           </Years>
-          <div />
+
           <Axis />
         </Timeline>
-      </ArchiveWrapper>
+      </StatsWrapper>
+
       <CarouselWrapper>
         <Highlights>Unsere Highlights</Highlights>
         <ArchiveSlider teasers={teasers} setTeaser={setCurrentTeaser} />
       </CarouselWrapper>
+
       <CurrentTeaser>
         <Title>{title}</Title>
-        {authors?.length ? <Author>von {authors?.join(', ')}</Author> : null}
+        {Boolean(authors?.length) && <Author>von {authors?.join(', ')}</Author>}
+
         <Lead>{lead}</Lead>
+
         <LinkWrapper>
-          <Link href={href} target="_blank">
-            <ReadMoreButton variant="outlined" color="inherit">
-              Weiterlesen
-            </ReadMoreButton>
-          </Link>
+          <Button
+            LinkComponent={Link}
+            href={href}
+            variant="outlined"
+            color="error"
+            css={buttonStyles}>
+            Weiterlesen
+          </Button>
         </LinkWrapper>
       </CurrentTeaser>
-    </div>
+    </ArchiveWrapper>
   )
 }
