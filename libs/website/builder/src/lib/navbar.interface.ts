@@ -1,5 +1,5 @@
 import {QueryResult} from '@apollo/client'
-import {NavigationListQuery} from '@wepublish/website/api'
+import {FullImageFragment, NavigationListQuery} from '@wepublish/website/api'
 import {PropsWithChildren} from 'react'
 
 export type BuilderNavbarProps = PropsWithChildren<
@@ -7,5 +7,6 @@ export type BuilderNavbarProps = PropsWithChildren<
     className?: string
     slug: string
     categorySlugs: string[][]
+    logo?: FullImageFragment | null
   }
 >

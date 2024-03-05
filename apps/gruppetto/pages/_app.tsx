@@ -149,6 +149,9 @@ type CustomAppProps = AppProps<{
 }>
 
 function CustomApp({Component, pageProps}: CustomAppProps) {
+  const {data: peerInfoData} = ApiV1.usePeerProfileQuery({fetchPolicy: 'network-only'})
+  const logo = peerInfoData?.peerProfile.logo
+
   return (
     <SessionProvider sessionToken={pageProps.sessionToken ?? null}>
       <WebsiteProvider>
@@ -173,13 +176,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
             </Head>
 
             <Spacer>
-              <NavBar categorySlugs={[['account', 'issues', 'about-us']]} slug="main">
-                <LogoLink href="/" aria-label="Startseite">
-                  <LogoWrapper />
-                </LogoLink>
-
-                <NavBarProfile />
-              </NavBar>
+              <NavBar categorySlugs={[['account', 'issues', 'about-us']]} slug="main" logo={logo} />
 
               <main>
                 <MainSpacer maxWidth="lg">

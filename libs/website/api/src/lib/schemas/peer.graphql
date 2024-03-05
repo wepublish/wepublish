@@ -33,6 +33,12 @@ fragment FullPeer on Peer {
   }
 }
 
+query PeerProfile {
+  peerProfile {
+    ...FullPeerProfile
+  }
+}
+
 query Peer($id: ID, $slug: Slug) {
   peer(id: $id, slug: $slug) {
     ...FullPeer

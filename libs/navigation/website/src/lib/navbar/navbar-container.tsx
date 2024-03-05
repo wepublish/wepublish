@@ -7,10 +7,16 @@ import {
 import {PropsWithChildren} from 'react'
 
 export type NavbarContainerProps = PropsWithChildren<
-  Pick<BuilderNavbarProps, 'categorySlugs' | 'slug'> & BuilderContainerProps
+  Pick<BuilderNavbarProps, 'categorySlugs' | 'slug' | 'logo'> & BuilderContainerProps
 >
 
-export function NavbarContainer({className, categorySlugs, slug, children}: NavbarContainerProps) {
+export function NavbarContainer({
+  className,
+  categorySlugs,
+  slug,
+  children,
+  logo
+}: NavbarContainerProps) {
   const {Navbar} = useWebsiteBuilder()
   const {data, loading, error} = useNavigationListQuery()
 
@@ -21,7 +27,8 @@ export function NavbarContainer({className, categorySlugs, slug, children}: Navb
       data={data}
       loading={loading}
       error={error}
-      className={className}>
+      className={className}
+      logo={logo}>
       {children}
     </Navbar>
   )

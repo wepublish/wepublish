@@ -34,7 +34,6 @@ import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 import {ReactComponent as Logo} from '../src/logo.svg'
-import {NavBarProfile} from '../src/navbar-profile'
 import {tsriArticleStyles} from '../src/styles/tsri-article.styles'
 import {TsriBreakBlock} from '../src/tsri-break-block'
 import {TsriButton} from '../src/tsri-button'
@@ -139,6 +138,9 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
     [theme]
   )
 
+  const {data: peerInfoData} = ApiV1.usePeerProfileQuery({fetchPolicy: 'network-only'})
+  const logo = peerInfoData?.peerProfile.logo
+
   return (
     <SessionProvider sessionToken={pageProps.sessionToken ?? null}>
       <WebsiteProvider>
@@ -177,13 +179,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
             </Head>
 
             <Spacer>
-              <NavBar categorySlugs={[['categories', 'about-us']]} slug="main">
-                <LogoLink href="/" aria-label="Startseite">
-                  <LogoWrapper />
-                </LogoLink>
-
-                <NavBarProfile />
-              </NavBar>
+              <NavBar categorySlugs={[['categories', 'about-us']]} slug="main" logo={logo} />
 
               <main>
                 <MainSpacer maxWidth="lg">
