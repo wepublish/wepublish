@@ -1717,7 +1717,7 @@ exports[`Teaser PeerArticle should render Default 1`] = `
   >
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1szdm08-MuiTypography-root-MuiLink-root-Teaser"
-      href="https://example.com"
+      href="https://example.com/p/123/1231231231"
     >
       <div
         class="css-1xecuhw-TeaserInnerWrapper e18of27r7"
@@ -1754,6 +1754,11 @@ https://unsplash.it/200/200 200w"
           >
             Lead
           </p>
+          <div
+            class="css-hg1qbe-TeaserAuthors e18of27r1"
+          >
+            Foobar, Foobar
+          </div>
         </div>
       </div>
     </a>
@@ -1770,7 +1775,7 @@ exports[`Teaser PeerArticle should render WithLightStyle 1`] = `
   >
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1szdm08-MuiTypography-root-MuiLink-root-Teaser"
-      href="https://example.com"
+      href="https://example.com/p/123/1231231231"
     >
       <div
         class="css-1xecuhw-TeaserInnerWrapper e18of27r7"
@@ -1802,6 +1807,11 @@ https://unsplash.it/200/200 200w"
               Title
             </h1>
           </header>
+          <div
+            class="css-hg1qbe-TeaserAuthors e18of27r1"
+          >
+            Foobar, Foobar
+          </div>
         </div>
       </div>
     </a>
@@ -1818,7 +1828,7 @@ exports[`Teaser PeerArticle should render WithoutAuthors 1`] = `
   >
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1szdm08-MuiTypography-root-MuiLink-root-Teaser"
-      href="https://example.com"
+      href="https://example.com/p/123/1231231231"
     >
       <div
         class="css-1xecuhw-TeaserInnerWrapper e18of27r7"
@@ -1871,7 +1881,7 @@ exports[`Teaser PeerArticle should render WithoutBlockWithLightStyle 1`] = `
   >
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1szdm08-MuiTypography-root-MuiLink-root-Teaser"
-      href="https://example.com"
+      href="https://example.com/p/123/1231231231"
     >
       <div
         class="css-1xecuhw-TeaserInnerWrapper e18of27r7"
@@ -1903,6 +1913,11 @@ https://unsplash.it/200/200 200w"
               Title
             </h1>
           </header>
+          <div
+            class="css-hg1qbe-TeaserAuthors e18of27r1"
+          >
+            Foobar, Foobar
+          </div>
         </div>
       </div>
     </a>
@@ -1919,7 +1934,7 @@ exports[`Teaser PeerArticle should render WithoutDate 1`] = `
   >
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1szdm08-MuiTypography-root-MuiLink-root-Teaser"
-      href="https://example.com"
+      href="https://example.com/p/123/1231231231"
     >
       <div
         class="css-1xecuhw-TeaserInnerWrapper e18of27r7"
@@ -1956,6 +1971,11 @@ https://unsplash.it/200/200 200w"
           >
             Lead
           </p>
+          <div
+            class="css-hg1qbe-TeaserAuthors e18of27r1"
+          >
+            Foobar, Foobar
+          </div>
         </div>
       </div>
     </a>
@@ -1972,7 +1992,7 @@ exports[`Teaser PeerArticle should render WithoutImage 1`] = `
   >
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1szdm08-MuiTypography-root-MuiLink-root-Teaser"
-      href="https://example.com"
+      href="https://example.com/p/123/1231231231"
     >
       <div
         class="css-1xecuhw-TeaserInnerWrapper e18of27r7"
@@ -2009,6 +2029,11 @@ https://unsplash.it/200/200 200w"
           >
             Lead
           </p>
+          <div
+            class="css-hg1qbe-TeaserAuthors e18of27r1"
+          >
+            Foobar, Foobar
+          </div>
         </div>
       </div>
     </a>
@@ -2025,7 +2050,7 @@ exports[`Teaser PeerArticle should render WithoutImageWithoutBlock 1`] = `
   >
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1szdm08-MuiTypography-root-MuiLink-root-Teaser"
-      href="https://example.com"
+      href="https://example.com/p/123/1231231231"
     >
       <div
         class="css-1xecuhw-TeaserInnerWrapper e18of27r7"
@@ -2052,6 +2077,11 @@ exports[`Teaser PeerArticle should render WithoutImageWithoutBlock 1`] = `
           >
             Lead
           </p>
+          <div
+            class="css-hg1qbe-TeaserAuthors e18of27r1"
+          >
+            Foobar, Foobar
+          </div>
         </div>
       </div>
     </a>
@@ -2068,7 +2098,7 @@ exports[`Teaser PeerArticle should render WithoutPreTitle 1`] = `
   >
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1szdm08-MuiTypography-root-MuiLink-root-Teaser"
-      href="https://example.com"
+      href="https://example.com/p/123/1231231231"
     >
       <div
         class="css-1xecuhw-TeaserInnerWrapper e18of27r7"
@@ -2105,6 +2135,11 @@ https://unsplash.it/200/200 200w"
           >
             Lead
           </p>
+          <div
+            class="css-hg1qbe-TeaserAuthors e18of27r1"
+          >
+            Foobar, Foobar
+          </div>
         </div>
       </div>
     </a>
@@ -2121,7 +2156,7 @@ exports[`Teaser PeerArticle should render WithoutTitle 1`] = `
   >
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-1szdm08-MuiTypography-root-MuiLink-root-Teaser"
-      href="https://example.com"
+      href="https://example.com/p/123/1231231231"
     >
       <div
         class="css-1xecuhw-TeaserInnerWrapper e18of27r7"
@@ -2158,6 +2193,11 @@ https://unsplash.it/200/200 200w"
           >
             Lead
           </p>
+          <div
+            class="css-hg1qbe-TeaserAuthors e18of27r1"
+          >
+            Foobar, Foobar
+          </div>
         </div>
       </div>
     </a>
