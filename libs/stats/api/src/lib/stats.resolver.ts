@@ -1,23 +1,30 @@
-import {Query, Resolver} from '@nestjs/graphql'
+import {Resolver, ResolveField, Parent, Query} from '@nestjs/graphql'
 import {StatsService} from './stats.service'
 import {GraphQLISODateTime} from '@nestjs/graphql'
+import {Stats} from './stats.model'
 
-@Resolver()
+@Resolver(() => Stats)
 export class StatsResolver {
   constructor(private statsService: StatsService) {}
 
-  @Query(() => Number)
-  async authorsCount() {
+  @Query(() => Stats, {name: 'stats', nullable: true})
+  getStats() {
+    // Return a dummy object; actual data is fetched through ResolveField
+    return {}
+  }
+
+  @ResolveField(() => Number)
+  async authorsCount(@Parent() stats: Stats) {
     return this.statsService.getAuthorsCount()
   }
 
-  @Query(() => Number)
-  async articlesCount() {
+  @ResolveField(() => Number)
+  async articlesCount(@Parent() stats: Stats) {
     return this.statsService.getArticlesCount()
   }
 
-  @Query(() => GraphQLISODateTime)
-  async firstArticleDate() {
+  @ResolveField(() => GraphQLISODateTime)
+  async firstArticleDate(@Parent() stats: Stats) {
     return this.statsService.getFirstArticleDate()
   }
 }

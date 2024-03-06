@@ -503,8 +503,6 @@ export type Query = {
    *
    */
   activeSubscribers: Array<DashboardSubscription>;
-  articlesCount: Scalars['Float'];
-  authorsCount: Scalars['Float'];
   /** Returns a list of block styles. */
   blockStyles: Array<BlockStyle>;
   /**
@@ -536,7 +534,6 @@ export type Query = {
    *
    */
   expectedRevenue: Array<DashboardInvoice>;
-  firstArticleDate: Scalars['DateTime'];
   /** Returns an image by id. */
   image: Image;
   /**
@@ -602,6 +599,7 @@ export type Query = {
    *
    */
   settingsList: Array<Setting>;
+  stats?: Maybe<Stats>;
   /** Returns all subscription flows */
   subscriptionFlows: Array<SubscriptionFlowModel>;
   /** Returns all mail flows */
@@ -779,6 +777,13 @@ export enum SortOrder {
   Descending = 'Descending'
 }
 
+export type Stats = {
+  __typename?: 'Stats';
+  articlesCount: Scalars['Int'];
+  authorsCount: Scalars['Int'];
+  firstArticleDate?: Maybe<Scalars['DateTime']>;
+};
+
 export enum SubscriptionDeactivationReason {
   InvoiceNotPaid = 'invoiceNotPaid',
   None = 'none',
@@ -868,20 +873,10 @@ export type RevenueQueryVariables = Exact<{
 
 export type RevenueQuery = { __typename?: 'Query', revenue: Array<{ __typename?: 'DashboardInvoice', amount: number, paidAt?: string | null, memberPlan?: string | null }> };
 
-export type AuthorsCountQueryVariables = Exact<{ [key: string]: never; }>;
+export type StatsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type AuthorsCountQuery = { __typename?: 'Query', authorsCount: number };
-
-export type ArticlesCountQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type ArticlesCountQuery = { __typename?: 'Query', articlesCount: number };
-
-export type FirstArticleDateQueryVariables = Exact<{ [key: string]: never; }>;
-
-
-export type FirstArticleDateQuery = { __typename?: 'Query', firstArticleDate: string };
+export type StatsQuery = { __typename?: 'Query', stats?: { __typename?: 'Stats', articlesCount: number, authorsCount: number, firstArticleDate?: string | null } | null };
 
 export type VersionInformationQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -927,102 +922,42 @@ export function useRevenueLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Re
 export type RevenueQueryHookResult = ReturnType<typeof useRevenueQuery>;
 export type RevenueLazyQueryHookResult = ReturnType<typeof useRevenueLazyQuery>;
 export type RevenueQueryResult = Apollo.QueryResult<RevenueQuery, RevenueQueryVariables>;
-export const AuthorsCountDocument = gql`
-    query AuthorsCount {
-  authorsCount
+export const StatsDocument = gql`
+    query Stats {
+  stats {
+    articlesCount
+    authorsCount
+    firstArticleDate
+  }
 }
     `;
 
 /**
- * __useAuthorsCountQuery__
+ * __useStatsQuery__
  *
- * To run a query within a React component, call `useAuthorsCountQuery` and pass it any options that fit your needs.
- * When your component renders, `useAuthorsCountQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * To run a query within a React component, call `useStatsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useStatsQuery` returns an object from Apollo Client that contains loading, error, and data properties
  * you can use to render your UI.
  *
  * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
  *
  * @example
- * const { data, loading, error } = useAuthorsCountQuery({
+ * const { data, loading, error } = useStatsQuery({
  *   variables: {
  *   },
  * });
  */
-export function useAuthorsCountQuery(baseOptions?: Apollo.QueryHookOptions<AuthorsCountQuery, AuthorsCountQueryVariables>) {
+export function useStatsQuery(baseOptions?: Apollo.QueryHookOptions<StatsQuery, StatsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<AuthorsCountQuery, AuthorsCountQueryVariables>(AuthorsCountDocument, options);
+        return Apollo.useQuery<StatsQuery, StatsQueryVariables>(StatsDocument, options);
       }
-export function useAuthorsCountLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<AuthorsCountQuery, AuthorsCountQueryVariables>) {
+export function useStatsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<StatsQuery, StatsQueryVariables>) {
           const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<AuthorsCountQuery, AuthorsCountQueryVariables>(AuthorsCountDocument, options);
+          return Apollo.useLazyQuery<StatsQuery, StatsQueryVariables>(StatsDocument, options);
         }
-export type AuthorsCountQueryHookResult = ReturnType<typeof useAuthorsCountQuery>;
-export type AuthorsCountLazyQueryHookResult = ReturnType<typeof useAuthorsCountLazyQuery>;
-export type AuthorsCountQueryResult = Apollo.QueryResult<AuthorsCountQuery, AuthorsCountQueryVariables>;
-export const ArticlesCountDocument = gql`
-    query ArticlesCount {
-  articlesCount
-}
-    `;
-
-/**
- * __useArticlesCountQuery__
- *
- * To run a query within a React component, call `useArticlesCountQuery` and pass it any options that fit your needs.
- * When your component renders, `useArticlesCountQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useArticlesCountQuery({
- *   variables: {
- *   },
- * });
- */
-export function useArticlesCountQuery(baseOptions?: Apollo.QueryHookOptions<ArticlesCountQuery, ArticlesCountQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<ArticlesCountQuery, ArticlesCountQueryVariables>(ArticlesCountDocument, options);
-      }
-export function useArticlesCountLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ArticlesCountQuery, ArticlesCountQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<ArticlesCountQuery, ArticlesCountQueryVariables>(ArticlesCountDocument, options);
-        }
-export type ArticlesCountQueryHookResult = ReturnType<typeof useArticlesCountQuery>;
-export type ArticlesCountLazyQueryHookResult = ReturnType<typeof useArticlesCountLazyQuery>;
-export type ArticlesCountQueryResult = Apollo.QueryResult<ArticlesCountQuery, ArticlesCountQueryVariables>;
-export const FirstArticleDateDocument = gql`
-    query FirstArticleDate {
-  firstArticleDate
-}
-    `;
-
-/**
- * __useFirstArticleDateQuery__
- *
- * To run a query within a React component, call `useFirstArticleDateQuery` and pass it any options that fit your needs.
- * When your component renders, `useFirstArticleDateQuery` returns an object from Apollo Client that contains loading, error, and data properties
- * you can use to render your UI.
- *
- * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
- *
- * @example
- * const { data, loading, error } = useFirstArticleDateQuery({
- *   variables: {
- *   },
- * });
- */
-export function useFirstArticleDateQuery(baseOptions?: Apollo.QueryHookOptions<FirstArticleDateQuery, FirstArticleDateQueryVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useQuery<FirstArticleDateQuery, FirstArticleDateQueryVariables>(FirstArticleDateDocument, options);
-      }
-export function useFirstArticleDateLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<FirstArticleDateQuery, FirstArticleDateQueryVariables>) {
-          const options = {...defaultOptions, ...baseOptions}
-          return Apollo.useLazyQuery<FirstArticleDateQuery, FirstArticleDateQueryVariables>(FirstArticleDateDocument, options);
-        }
-export type FirstArticleDateQueryHookResult = ReturnType<typeof useFirstArticleDateQuery>;
-export type FirstArticleDateLazyQueryHookResult = ReturnType<typeof useFirstArticleDateLazyQuery>;
-export type FirstArticleDateQueryResult = Apollo.QueryResult<FirstArticleDateQuery, FirstArticleDateQueryVariables>;
+export type StatsQueryHookResult = ReturnType<typeof useStatsQuery>;
+export type StatsLazyQueryHookResult = ReturnType<typeof useStatsLazyQuery>;
+export type StatsQueryResult = Apollo.QueryResult<StatsQuery, StatsQueryVariables>;
 export const VersionInformationDocument = gql`
     query VersionInformation {
   versionInformation {

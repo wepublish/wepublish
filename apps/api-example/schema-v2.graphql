@@ -307,8 +307,6 @@ type PeriodicJob {
 type Query {
   "\n      Returns all active subscribers.\n      Includes subscribers with a cancelled but not run out subscription.\n    "
   activeSubscribers: [DashboardSubscription!]!
-  articlesCount: Float!
-  authorsCount: Float!
 
   """Returns a list of block styles."""
   blockStyles: [BlockStyle!]!
@@ -330,7 +328,6 @@ type Query {
 
   "\n      Returns the expected revenue for the time period given.\n      Excludes cancelled or manually set as paid invoices.\n    "
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
-  firstArticleDate: DateTime!
 
   """Returns an image by id."""
   image(id: String!): Image!
@@ -369,6 +366,7 @@ type Query {
 
   "\n      Returns all settings.\n    "
   settingsList(filter: SettingFilter): [Setting!]!
+  stats: Stats
 
   """Returns all subscription flows"""
   subscriptionFlows(defaultFlowOnly: Boolean!, memberPlanId: String): [SubscriptionFlowModel!]!
@@ -432,6 +430,12 @@ input SingleEventFilter {
 enum SortOrder {
   Ascending
   Descending
+}
+
+type Stats {
+  articlesCount: Int!
+  authorsCount: Int!
+  firstArticleDate: DateTime
 }
 
 enum SubscriptionDeactivationReason {

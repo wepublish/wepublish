@@ -5,7 +5,6 @@ import {StatsService} from './stats.service'
 
 @Module({
   imports: [PrismaModule],
-  providers: [StatsService, StatsResolver],
-  exports: [StatsService]
+  providers: [StatsService, StatsResolver]
 })
 export class StatsModule {}

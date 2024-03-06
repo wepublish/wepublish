@@ -10,7 +10,13 @@ export class StatsService {
   }
 
   async getArticlesCount(): Promise<number> {
-    return await this.prisma.article.count()
+    return await this.prisma.article.count({
+      where: {
+        publishedId: {
+          not: null
+        }
+      }
+    })
   }
 
   async getFirstArticleDate(): Promise<Date | null> {

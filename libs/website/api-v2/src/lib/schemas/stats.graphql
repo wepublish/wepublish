@@ -1,11 +1,7 @@
-query AuthorsCount {
-  authorsCount
-}
-
-query ArticlesCount {
-  articlesCount
-}
-
-query FirstArticleDate {
-  firstArticleDate
+query Stats {
+  stats {
+    articlesCount
+    authorsCount
+    firstArticleDate
+  }
 }

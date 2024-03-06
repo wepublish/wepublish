@@ -9,5 +9,5 @@ export class Stats {
   articlesCount!: number
 
   @Field({nullable: true})
-  earliestArticle?: Date
+  firstArticleDate?: Date
 }
