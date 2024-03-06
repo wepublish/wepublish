@@ -13,7 +13,6 @@ import {
   ApiV1,
   FooterContainer,
   NavbarContainer,
-  NavbarInnerWrapper,
   WebsiteBuilderProvider,
   WebsiteProvider
 } from '@wepublish/website'
@@ -116,31 +115,9 @@ const SocialLink = styled(NextWepublishLink)`
   justify-content: center;
 `
 
-const LogoLink = styled(NextWepublishLink)`
-  color: unset;
-  display: grid;
-  align-items: center;
-  justify-items: center;
-`
-
-const LogoWrapper = styled(Logo)`
-  fill: currentColor;
-  height: 30px;
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    height: 45px;
-  }
-`
-
 const NavBar = styled(NavbarContainer)`
-  background-color: ${({theme}) => theme.palette.background.default};
-  margin-bottom: ${({theme}) => theme.spacing(3)};
-
-  ${NavbarInnerWrapper} {
-    width: 100%;
-    max-width: ${({theme}) => `${theme.breakpoints.values['lg']}${theme.breakpoints.unit}`};
-    align-self: center;
-  }
+  grid-column: -1/1;
+  z-index: 11;
 `
 
 type CustomAppProps = AppProps<{
@@ -148,9 +125,6 @@ type CustomAppProps = AppProps<{
 }>
 
 function CustomApp({Component, pageProps}: CustomAppProps) {
-  const {data: peerInfoData} = ApiV1.usePeerProfileQuery({fetchPolicy: 'network-only'})
-  const logo = peerInfoData?.peerProfile.logo
-
   return (
     <SessionProvider sessionToken={pageProps.sessionToken ?? null}>
       <WebsiteProvider>
@@ -173,10 +147,8 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               <link rel="alternate" type="application/atom+xml" href="/api/atom-feed" />
               <link rel="alternate" type="application/feed+json" href="/api/json-feed" />
             </Head>
-
             <Spacer>
-              <NavBar categorySlugs={[['account', 'issues', 'about-us']]} slug="main" logo={logo} />
-
+              <NavBar categorySlugs={[['account', 'issues', 'about-us']]} slug="main" />
               <main>
                 <MainSpacer maxWidth="lg">
                   <Component {...pageProps} />

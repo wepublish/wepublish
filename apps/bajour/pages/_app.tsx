@@ -84,9 +84,6 @@ const ButtonLink = styled('a')`
 function CustomApp({Component, pageProps}: CustomAppProps) {
   const siteTitle = 'Bajour'
 
-  const {data: peerInfoData} = ApiV1.usePeerProfileQuery({fetchPolicy: 'network-only'})
-  const logo = peerInfoData?.peerProfile.logo
-
   return (
     <>
       <Head>
@@ -129,10 +126,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               <CssBaseline />
 
               <MainGrid className={roboto.className}>
-                <NavBar
-                  slug="main"
-                  categorySlugs={[['basel-briefing', 'other'], ['about-us']]}
-                  logo={logo}>
+                <NavBar slug="main" categorySlugs={[['basel-briefing', 'other'], ['about-us']]}>
                   <>
                     <ButtonLink href="https://www.facebook.com/bajourbasel">
                       <MdFacebook size="32" />

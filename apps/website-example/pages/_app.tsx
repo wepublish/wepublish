@@ -15,7 +15,6 @@ import {
   ApiV1,
   FooterContainer,
   NavbarContainer,
-  NavbarInnerWrapper,
   WebsiteBuilderProvider,
   WebsiteProvider
 } from '@wepublish/website'
@@ -109,14 +108,8 @@ const LogoWrapper = styled(Logo)`
 `
 
 const NavBar = styled(NavbarContainer)`
-  background-color: ${({theme}) => theme.palette.common.white};
-  margin-bottom: ${({theme}) => theme.spacing(3)};
-
-  ${NavbarInnerWrapper} {
-    width: 100%;
-    max-width: ${({theme}) => `${theme.breakpoints.values['lg']}${theme.breakpoints.unit}`};
-    align-self: center;
-  }
+  grid-column: -1/1;
+  z-index: 11;
 `
 
 const dateFormatter = (date: Date, includeTime = true) =>
@@ -137,9 +130,6 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
     `,
     [theme]
   )
-
-  const {data: peerInfoData} = ApiV1.usePeerProfileQuery({fetchPolicy: 'network-only'})
-  const logo = peerInfoData?.peerProfile.logo
 
   return (
     <SessionProvider sessionToken={pageProps.sessionToken ?? null}>
@@ -179,7 +169,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
             </Head>
 
             <Spacer>
-              <NavBar categorySlugs={[['categories', 'about-us']]} slug="main" logo={logo} />
+              <NavBar categorySlugs={[['categories', 'about-us']]} slug="main" />
 
               <main>
                 <MainSpacer maxWidth="lg">

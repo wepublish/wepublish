@@ -12,6 +12,7 @@ export const NavbarWrapper = styled('nav')`
   left: 0;
   right: 0;
   z-index: 10;
+  background-color: ${({theme}) => theme.palette.common.white};
 `
 
 const appBarStyles = (theme: Theme, isMenuOpen: boolean) =>
@@ -129,13 +130,13 @@ const LogoWrapper = styled('div')`
   width: auto;
 
   img {
-    height: 46px;
+    height: 40px;
     max-width: 200px;
   }
 
   ${({theme}) => theme.breakpoints.up('md')} {
     img {
-      height: 52px;
+      height: 48px;
       max-width: 240px;
     }
   }
