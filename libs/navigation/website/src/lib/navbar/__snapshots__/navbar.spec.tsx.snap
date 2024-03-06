@@ -3,7 +3,7 @@
 exports[`Navbar should render Default 1`] = `
 <DocumentFragment>
   <nav
-    class="css-1xe741k-NavbarWrapper ei6evl216"
+    class="css-1afpbz6-NavbarWrapper ei6evl216"
   >
     <header
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
@@ -52,7 +52,7 @@ exports[`Navbar should render Default 1`] = `
           href="/"
         >
           <div
-            class="css-ns0e2h-LogoWrapper ei6evl28"
+            class="css-13x1c9o-LogoWrapper ei6evl28"
           >
             <img
               alt="banff2"
@@ -111,7 +111,7 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
 exports[`Navbar should render WithChildren 1`] = `
 <DocumentFragment>
   <nav
-    class="css-1xe741k-NavbarWrapper ei6evl216"
+    class="css-1afpbz6-NavbarWrapper ei6evl216"
   >
     <header
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
@@ -160,7 +160,7 @@ exports[`Navbar should render WithChildren 1`] = `
           href="/"
         >
           <div
-            class="css-ns0e2h-LogoWrapper ei6evl28"
+            class="css-13x1c9o-LogoWrapper ei6evl28"
           >
             <img
               alt="banff2"
@@ -219,7 +219,7 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
 exports[`Navbar should render WithClassName 1`] = `
 <DocumentFragment>
   <nav
-    class="extra-classname css-1xe741k-NavbarWrapper ei6evl216"
+    class="extra-classname css-1afpbz6-NavbarWrapper ei6evl216"
   >
     <header
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
@@ -268,7 +268,7 @@ exports[`Navbar should render WithClassName 1`] = `
           href="/"
         >
           <div
-            class="css-ns0e2h-LogoWrapper ei6evl28"
+            class="css-13x1c9o-LogoWrapper ei6evl28"
           >
             <img
               alt="banff2"
@@ -327,7 +327,7 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
 exports[`Navbar should render WithEmotion 1`] = `
 <DocumentFragment>
   <nav
-    class="css-1xe741k-NavbarWrapper ei6evl216"
+    class="css-1afpbz6-NavbarWrapper ei6evl216"
   >
     <header
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
@@ -376,7 +376,7 @@ exports[`Navbar should render WithEmotion 1`] = `
           href="/"
         >
           <div
-            class="css-ns0e2h-LogoWrapper ei6evl28"
+            class="css-13x1c9o-LogoWrapper ei6evl28"
           >
             <img
               alt="banff2"
@@ -435,7 +435,7 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
 exports[`Navbar should render WithError 1`] = `
 <DocumentFragment>
   <nav
-    class="css-1xe741k-NavbarWrapper ei6evl216"
+    class="css-1afpbz6-NavbarWrapper ei6evl216"
   >
     <header
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
@@ -484,7 +484,7 @@ exports[`Navbar should render WithError 1`] = `
           href="/"
         >
           <div
-            class="css-ns0e2h-LogoWrapper ei6evl28"
+            class="css-13x1c9o-LogoWrapper ei6evl28"
           >
             <img
               alt="banff2"
@@ -543,7 +543,7 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
 exports[`Navbar should render WithLoading 1`] = `
 <DocumentFragment>
   <nav
-    class="css-1xe741k-NavbarWrapper ei6evl216"
+    class="css-1afpbz6-NavbarWrapper ei6evl216"
   >
     <header
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
@@ -592,7 +592,7 @@ exports[`Navbar should render WithLoading 1`] = `
           href="/"
         >
           <div
-            class="css-ns0e2h-LogoWrapper ei6evl28"
+            class="css-13x1c9o-LogoWrapper ei6evl28"
           >
             <img
               alt="banff2"
@@ -651,7 +651,7 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
 exports[`Navbar should render WithoutItems 1`] = `
 <DocumentFragment>
   <nav
-    class="css-1xe741k-NavbarWrapper ei6evl216"
+    class="css-1afpbz6-NavbarWrapper ei6evl216"
   >
     <header
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
@@ -700,7 +700,7 @@ exports[`Navbar should render WithoutItems 1`] = `
           href="/"
         >
           <div
-            class="css-ns0e2h-LogoWrapper ei6evl28"
+            class="css-13x1c9o-LogoWrapper ei6evl28"
           >
             <img
               alt="banff2"
@@ -759,7 +759,7 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
 exports[`Navbar should render WithoutLogo 1`] = `
 <DocumentFragment>
   <nav
-    class="css-1xe741k-NavbarWrapper ei6evl216"
+    class="css-1afpbz6-NavbarWrapper ei6evl216"
   >
     <header
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
