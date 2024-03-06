@@ -12,7 +12,7 @@ export const NavbarWrapper = styled('nav')`
   left: 0;
   right: 0;
   z-index: 10;
-  background-color: ${({theme}) => theme.palette.common.white};
+  background-color: ${({theme}) => theme.palette.background.default};
 `
 
 const appBarStyles = (theme: Theme, isMenuOpen: boolean) =>
@@ -34,9 +34,15 @@ export const NavbarInnerWrapper = styled(Toolbar)`
   padding: 0;
 
   ${({theme}) => css`
+    ${theme.breakpoints.up('sm')} {
+      min-height: unset;
+      padding: 0;
+      grid-auto-columns: 1fr;
+    }
+
     ${theme.breakpoints.up('md')} {
       min-height: unset;
-      padding-left: 0;
+      padding: 0;
       grid-auto-columns: 1fr;
     }
   `}
@@ -93,7 +99,7 @@ export const NavbarActions = styled('div')<{isMenuOpen?: boolean}>`
   align-items: center;
   justify-self: end;
   gap: ${({theme}) => theme.spacing(2)};
-  grid-column: 4;
+  grid-column: 5;
   justify-self: end;
 
   ${({isMenuOpen}) =>
@@ -108,6 +114,28 @@ export const NavbarIconButtonWrapper = styled('div')`
   display: flex;
   justify-content: center;
   align-items: center;
+  width: ${({theme}) => theme.spacing(6.5)};
+  height: ${({theme}) => theme.spacing(6.5)};
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    width: ${({theme}) => theme.spacing(7.5)};
+    height: ${({theme}) => theme.spacing(7.5)};
+
+    svg {
+      width: ${({theme}) => theme.spacing(4.5)};
+      height: ${({theme}) => theme.spacing(4.5)};
+    }
+  }
+
+  ${({theme}) => theme.breakpoints.up('lg')} {
+    width: ${({theme}) => theme.spacing(12.5)};
+    height: ${({theme}) => theme.spacing(12.5)};
+
+    svg {
+      width: ${({theme}) => theme.spacing(6.5)};
+      height: ${({theme}) => theme.spacing(6.5)};
+    }
+  }
 `
 
 const LogoLink = styled(Link)<{isMenuOpen?: boolean}>`
@@ -130,16 +158,27 @@ const LogoWrapper = styled('div')`
   width: auto;
 
   img {
-    height: 40px;
-    max-width: 200px;
+    height: ${({theme}) => theme.spacing(5)};
+    max-width: ${({theme}) => theme.spacing(25)};
   }
 
   ${({theme}) => theme.breakpoints.up('md')} {
     img {
-      height: 48px;
-      max-width: 240px;
+      height: ${({theme}) => theme.spacing(6)};
+      max-width: ${({theme}) => theme.spacing(30)};
     }
   }
+
+  ${({theme}) => theme.breakpoints.up('lg')} {
+    img {
+      height: ${({theme}) => theme.spacing(9)};
+      max-width: ${({theme}) => theme.spacing(38)};
+    }
+  }
+`
+
+const Spacer = styled('div')`
+  grid-column: 4;
 `
 
 export function Navbar({className, children, categorySlugs, slug, data, logo}: BuilderNavbarProps) {
@@ -175,7 +214,7 @@ export function Navbar({className, children, categorySlugs, slug, data, logo}: B
         <NavbarInnerWrapper>
           <NavbarMain>
             <NavbarIconButtonWrapper>
-              <IconButton size="large" color="secondary" aria-label="Menu" onClick={toggleMenu}>
+              <IconButton size="large" aria-label="Menu" onClick={toggleMenu} sx={{color: 'white'}}>
                 {!isMenuOpen && <MdMenu />}
                 {isMenuOpen && <MdClose />}
               </IconButton>
@@ -200,6 +239,7 @@ export function Navbar({className, children, categorySlugs, slug, data, logo}: B
               </LogoWrapper>
             </LogoLink>
           )}
+          <Spacer />
           <NavbarActions isMenuOpen={isMenuOpen}>
             <Link href="/login" aria-label="Login">
               <IconButton sx={{fontSize: '2em', color: 'black'}}>
@@ -230,6 +270,9 @@ export const NavPaperWrapper = styled('div')`
   left: 0;
   right: 0;
   transform: translateY(100%);
+  overflow-y: scroll;
+  max-height: 100vh;
+  padding-bottom: ${({theme}) => theme.spacing(10)};
 
   ${({theme}) => css`
     ${theme.breakpoints.up('md')} {
