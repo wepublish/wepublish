@@ -3,23 +3,23 @@
 exports[`Navbar should render Default 1`] = `
 <DocumentFragment>
   <nav
-    class="css-1afpbz6-NavbarWrapper ei6evl216"
+    class="css-1afpbz6-NavbarWrapper ei6evl217"
   >
     <header
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl215 css-b5glq0-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl216 css-xf9z4a-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
-          class="css-1trl8g0-NavbarMain ei6evl212"
+          class="css-1trl8g0-NavbarMain ei6evl213"
         >
           <div
-            class="css-viaoz8-NavbarIconButtonWrapper ei6evl210"
+            class="css-155aejo-NavbarIconButtonWrapper ei6evl211"
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary MuiIconButton-sizeLarge css-fro4kn-MuiButtonBase-root-MuiIconButton-root"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-15pk1uh-MuiButtonBase-root-MuiIconButton-root"
               tabindex="0"
               type="button"
             >
@@ -48,11 +48,11 @@ exports[`Navbar should render Default 1`] = `
         </div>
         <a
           aria-label="Startseite"
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways ei6evl29 css-1tu9km8-MuiTypography-root-MuiLink-root-LogoLink"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways ei6evl210 css-1tu9km8-MuiTypography-root-MuiLink-root-LogoLink"
           href="/"
         >
           <div
-            class="css-13x1c9o-LogoWrapper ei6evl28"
+            class="css-lin1uo-LogoWrapper ei6evl29"
           >
             <img
               alt="banff2"
@@ -67,7 +67,10 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
           </div>
         </a>
         <div
-          class="css-167i3qz-NavbarActions ei6evl211"
+          class="css-1cnmhjo-Spacer ei6evl28"
+        />
+        <div
+          class="css-1w9evey-NavbarActions ei6evl212"
         >
           <a
             aria-label="Login"
@@ -111,23 +114,23 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
 exports[`Navbar should render WithChildren 1`] = `
 <DocumentFragment>
   <nav
-    class="css-1afpbz6-NavbarWrapper ei6evl216"
+    class="css-1afpbz6-NavbarWrapper ei6evl217"
   >
     <header
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl215 css-b5glq0-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl216 css-xf9z4a-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
-          class="css-1trl8g0-NavbarMain ei6evl212"
+          class="css-1trl8g0-NavbarMain ei6evl213"
         >
           <div
-            class="css-viaoz8-NavbarIconButtonWrapper ei6evl210"
+            class="css-155aejo-NavbarIconButtonWrapper ei6evl211"
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary MuiIconButton-sizeLarge css-fro4kn-MuiButtonBase-root-MuiIconButton-root"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-15pk1uh-MuiButtonBase-root-MuiIconButton-root"
               tabindex="0"
               type="button"
             >
@@ -156,11 +159,11 @@ exports[`Navbar should render WithChildren 1`] = `
         </div>
         <a
           aria-label="Startseite"
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways ei6evl29 css-1tu9km8-MuiTypography-root-MuiLink-root-LogoLink"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways ei6evl210 css-1tu9km8-MuiTypography-root-MuiLink-root-LogoLink"
           href="/"
         >
           <div
-            class="css-13x1c9o-LogoWrapper ei6evl28"
+            class="css-lin1uo-LogoWrapper ei6evl29"
           >
             <img
               alt="banff2"
@@ -175,7 +178,10 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
           </div>
         </a>
         <div
-          class="css-167i3qz-NavbarActions ei6evl211"
+          class="css-1cnmhjo-Spacer ei6evl28"
+        />
+        <div
+          class="css-1w9evey-NavbarActions ei6evl212"
         >
           <a
             aria-label="Login"
@@ -219,23 +225,23 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
 exports[`Navbar should render WithClassName 1`] = `
 <DocumentFragment>
   <nav
-    class="extra-classname css-1afpbz6-NavbarWrapper ei6evl216"
+    class="extra-classname css-1afpbz6-NavbarWrapper ei6evl217"
   >
     <header
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl215 css-b5glq0-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl216 css-xf9z4a-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
-          class="css-1trl8g0-NavbarMain ei6evl212"
+          class="css-1trl8g0-NavbarMain ei6evl213"
         >
           <div
-            class="css-viaoz8-NavbarIconButtonWrapper ei6evl210"
+            class="css-155aejo-NavbarIconButtonWrapper ei6evl211"
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary MuiIconButton-sizeLarge css-fro4kn-MuiButtonBase-root-MuiIconButton-root"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-15pk1uh-MuiButtonBase-root-MuiIconButton-root"
               tabindex="0"
               type="button"
             >
@@ -264,11 +270,11 @@ exports[`Navbar should render WithClassName 1`] = `
         </div>
         <a
           aria-label="Startseite"
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways ei6evl29 css-1tu9km8-MuiTypography-root-MuiLink-root-LogoLink"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways ei6evl210 css-1tu9km8-MuiTypography-root-MuiLink-root-LogoLink"
           href="/"
         >
           <div
-            class="css-13x1c9o-LogoWrapper ei6evl28"
+            class="css-lin1uo-LogoWrapper ei6evl29"
           >
             <img
               alt="banff2"
@@ -283,7 +289,10 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
           </div>
         </a>
         <div
-          class="css-167i3qz-NavbarActions ei6evl211"
+          class="css-1cnmhjo-Spacer ei6evl28"
+        />
+        <div
+          class="css-1w9evey-NavbarActions ei6evl212"
         >
           <a
             aria-label="Login"
@@ -327,23 +336,23 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
 exports[`Navbar should render WithEmotion 1`] = `
 <DocumentFragment>
   <nav
-    class="css-1afpbz6-NavbarWrapper ei6evl216"
+    class="css-1afpbz6-NavbarWrapper ei6evl217"
   >
     <header
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl215 css-b5glq0-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl216 css-xf9z4a-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
-          class="css-1trl8g0-NavbarMain ei6evl212"
+          class="css-1trl8g0-NavbarMain ei6evl213"
         >
           <div
-            class="css-viaoz8-NavbarIconButtonWrapper ei6evl210"
+            class="css-155aejo-NavbarIconButtonWrapper ei6evl211"
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary MuiIconButton-sizeLarge css-fro4kn-MuiButtonBase-root-MuiIconButton-root"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-15pk1uh-MuiButtonBase-root-MuiIconButton-root"
               tabindex="0"
               type="button"
             >
@@ -372,11 +381,11 @@ exports[`Navbar should render WithEmotion 1`] = `
         </div>
         <a
           aria-label="Startseite"
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways ei6evl29 css-1tu9km8-MuiTypography-root-MuiLink-root-LogoLink"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways ei6evl210 css-1tu9km8-MuiTypography-root-MuiLink-root-LogoLink"
           href="/"
         >
           <div
-            class="css-13x1c9o-LogoWrapper ei6evl28"
+            class="css-lin1uo-LogoWrapper ei6evl29"
           >
             <img
               alt="banff2"
@@ -391,7 +400,10 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
           </div>
         </a>
         <div
-          class="css-167i3qz-NavbarActions ei6evl211"
+          class="css-1cnmhjo-Spacer ei6evl28"
+        />
+        <div
+          class="css-1w9evey-NavbarActions ei6evl212"
         >
           <a
             aria-label="Login"
@@ -435,23 +447,23 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
 exports[`Navbar should render WithError 1`] = `
 <DocumentFragment>
   <nav
-    class="css-1afpbz6-NavbarWrapper ei6evl216"
+    class="css-1afpbz6-NavbarWrapper ei6evl217"
   >
     <header
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl215 css-b5glq0-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl216 css-xf9z4a-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
-          class="css-1trl8g0-NavbarMain ei6evl212"
+          class="css-1trl8g0-NavbarMain ei6evl213"
         >
           <div
-            class="css-viaoz8-NavbarIconButtonWrapper ei6evl210"
+            class="css-155aejo-NavbarIconButtonWrapper ei6evl211"
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary MuiIconButton-sizeLarge css-fro4kn-MuiButtonBase-root-MuiIconButton-root"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-15pk1uh-MuiButtonBase-root-MuiIconButton-root"
               tabindex="0"
               type="button"
             >
@@ -480,11 +492,11 @@ exports[`Navbar should render WithError 1`] = `
         </div>
         <a
           aria-label="Startseite"
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways ei6evl29 css-1tu9km8-MuiTypography-root-MuiLink-root-LogoLink"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways ei6evl210 css-1tu9km8-MuiTypography-root-MuiLink-root-LogoLink"
           href="/"
         >
           <div
-            class="css-13x1c9o-LogoWrapper ei6evl28"
+            class="css-lin1uo-LogoWrapper ei6evl29"
           >
             <img
               alt="banff2"
@@ -499,7 +511,10 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
           </div>
         </a>
         <div
-          class="css-167i3qz-NavbarActions ei6evl211"
+          class="css-1cnmhjo-Spacer ei6evl28"
+        />
+        <div
+          class="css-1w9evey-NavbarActions ei6evl212"
         >
           <a
             aria-label="Login"
@@ -543,23 +558,23 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
 exports[`Navbar should render WithLoading 1`] = `
 <DocumentFragment>
   <nav
-    class="css-1afpbz6-NavbarWrapper ei6evl216"
+    class="css-1afpbz6-NavbarWrapper ei6evl217"
   >
     <header
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl215 css-b5glq0-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl216 css-xf9z4a-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
-          class="css-1trl8g0-NavbarMain ei6evl212"
+          class="css-1trl8g0-NavbarMain ei6evl213"
         >
           <div
-            class="css-viaoz8-NavbarIconButtonWrapper ei6evl210"
+            class="css-155aejo-NavbarIconButtonWrapper ei6evl211"
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary MuiIconButton-sizeLarge css-fro4kn-MuiButtonBase-root-MuiIconButton-root"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-15pk1uh-MuiButtonBase-root-MuiIconButton-root"
               tabindex="0"
               type="button"
             >
@@ -588,11 +603,11 @@ exports[`Navbar should render WithLoading 1`] = `
         </div>
         <a
           aria-label="Startseite"
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways ei6evl29 css-1tu9km8-MuiTypography-root-MuiLink-root-LogoLink"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways ei6evl210 css-1tu9km8-MuiTypography-root-MuiLink-root-LogoLink"
           href="/"
         >
           <div
-            class="css-13x1c9o-LogoWrapper ei6evl28"
+            class="css-lin1uo-LogoWrapper ei6evl29"
           >
             <img
               alt="banff2"
@@ -607,7 +622,10 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
           </div>
         </a>
         <div
-          class="css-167i3qz-NavbarActions ei6evl211"
+          class="css-1cnmhjo-Spacer ei6evl28"
+        />
+        <div
+          class="css-1w9evey-NavbarActions ei6evl212"
         >
           <a
             aria-label="Login"
@@ -651,23 +669,23 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
 exports[`Navbar should render WithoutItems 1`] = `
 <DocumentFragment>
   <nav
-    class="css-1afpbz6-NavbarWrapper ei6evl216"
+    class="css-1afpbz6-NavbarWrapper ei6evl217"
   >
     <header
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl215 css-b5glq0-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl216 css-xf9z4a-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
-          class="css-1trl8g0-NavbarMain ei6evl212"
+          class="css-1trl8g0-NavbarMain ei6evl213"
         >
           <div
-            class="css-viaoz8-NavbarIconButtonWrapper ei6evl210"
+            class="css-155aejo-NavbarIconButtonWrapper ei6evl211"
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary MuiIconButton-sizeLarge css-fro4kn-MuiButtonBase-root-MuiIconButton-root"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-15pk1uh-MuiButtonBase-root-MuiIconButton-root"
               tabindex="0"
               type="button"
             >
@@ -696,11 +714,11 @@ exports[`Navbar should render WithoutItems 1`] = `
         </div>
         <a
           aria-label="Startseite"
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways ei6evl29 css-1tu9km8-MuiTypography-root-MuiLink-root-LogoLink"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways ei6evl210 css-1tu9km8-MuiTypography-root-MuiLink-root-LogoLink"
           href="/"
         >
           <div
-            class="css-13x1c9o-LogoWrapper ei6evl28"
+            class="css-lin1uo-LogoWrapper ei6evl29"
           >
             <img
               alt="banff2"
@@ -715,7 +733,10 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
           </div>
         </a>
         <div
-          class="css-167i3qz-NavbarActions ei6evl211"
+          class="css-1cnmhjo-Spacer ei6evl28"
+        />
+        <div
+          class="css-1w9evey-NavbarActions ei6evl212"
         >
           <a
             aria-label="Login"
@@ -759,23 +780,23 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
 exports[`Navbar should render WithoutLogo 1`] = `
 <DocumentFragment>
   <nav
-    class="css-1afpbz6-NavbarWrapper ei6evl216"
+    class="css-1afpbz6-NavbarWrapper ei6evl217"
   >
     <header
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl215 css-b5glq0-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl216 css-xf9z4a-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
-          class="css-1trl8g0-NavbarMain ei6evl212"
+          class="css-1trl8g0-NavbarMain ei6evl213"
         >
           <div
-            class="css-viaoz8-NavbarIconButtonWrapper ei6evl210"
+            class="css-155aejo-NavbarIconButtonWrapper ei6evl211"
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary MuiIconButton-sizeLarge css-fro4kn-MuiButtonBase-root-MuiIconButton-root"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-15pk1uh-MuiButtonBase-root-MuiIconButton-root"
               tabindex="0"
               type="button"
             >
@@ -803,7 +824,10 @@ exports[`Navbar should render WithoutLogo 1`] = `
           </div>
         </div>
         <div
-          class="css-167i3qz-NavbarActions ei6evl211"
+          class="css-1cnmhjo-Spacer ei6evl28"
+        />
+        <div
+          class="css-1w9evey-NavbarActions ei6evl212"
         >
           <a
             aria-label="Login"
