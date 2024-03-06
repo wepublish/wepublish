@@ -272,6 +272,9 @@ export const GraphQLPublicArticle: GraphQLObjectType<PublicArticle, Context> =
           return urlAdapter.getPublicArticleURL(article)
         })
       },
+      peeredArticleURL: {
+        type: GraphQLString
+      },
 
       preTitle: {type: GraphQLString},
       title: {type: new GraphQLNonNull(GraphQLString)},

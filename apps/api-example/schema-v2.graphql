@@ -30,6 +30,7 @@ enum BlockType {
   TeaserGrid1
   TeaserGrid6
   TeaserGridFlex
+  TeaserList
   Title
 }
 

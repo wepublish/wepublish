@@ -70,6 +70,7 @@ export interface PublicArticle extends ArticleData {
   readonly publishedAt?: Date | null
 
   readonly blocks: ArticleBlock[]
+  readonly peeredArticleURL?: string
 }
 
 export interface ArticleFilter {
