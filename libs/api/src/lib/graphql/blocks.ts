@@ -378,6 +378,25 @@ export const GraphQLPublicPeerArticleTeaser = new GraphQLObjectType<PeerArticleT
           info
         })
       })
+    },
+    peeredArticleURL: {
+      type: GraphQLString,
+      resolve: createProxyingResolver(async ({peerID, articleID}, _, context, info) => {
+        const [peer, article] = await Promise.all([
+          context.loaders.peer.load(peerID),
+          delegateToPeerSchema(peerID, false, context, {
+            fieldName: 'article',
+            args: {id: articleID},
+            info
+          })
+        ])
+
+        if (!peer || !article) {
+          return null
+        }
+
+        return context.urlAdapter.getPeeredArticleURL(peer, article)
+      })
     }
   }),
   isTypeOf: createProxyingIsTypeOf(value => {

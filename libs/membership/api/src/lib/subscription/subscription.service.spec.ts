@@ -418,11 +418,19 @@ describe('SubscriptionController', () => {
     // Ensure that filter for invoices works
     await SubscriptionFactory.create({
       paidUntil: add(new Date(), {days: 1}),
-      invoices: {
+      periods: {
         create: {
-          scheduledDeactivationAt: sub(new Date(), {days: 2}),
-          mail: 'test@wepublish.com',
-          dueAt: sub(new Date(), {days: 100})
+          startsAt: add(new Date(), {days: 1}),
+          endsAt: add(new Date(), {years: 1}),
+          paymentPeriodicity: PaymentPeriodicity.yearly,
+          amount: 22,
+          invoice: {
+            create: {
+              scheduledDeactivationAt: sub(new Date(), {days: 2}),
+              mail: 'test@wepublish.com',
+              dueAt: sub(new Date(), {days: 100})
+            }
+          }
         }
       }
     })

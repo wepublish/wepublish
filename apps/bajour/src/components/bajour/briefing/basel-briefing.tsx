@@ -159,7 +159,7 @@ const TeaserContentWrapper = styled('div')`
 
 const ReadMoreButton = styled(Button)`
   justify-self: end;
-  color: #ff2362;
+  color: ${({theme}) => theme.palette.error.main};
 `
 
 const TeaserContentStyled = styled('div')`
