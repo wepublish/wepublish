@@ -46,7 +46,9 @@ export const GraphQLArticleFilter = new GraphQLInputObjectType({
     published: {type: GraphQLBoolean},
     pending: {type: GraphQLBoolean},
     authors: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
-    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))}
+    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
+    includeHidden: {type: GraphQLBoolean},
+    shared: {type: GraphQLBoolean}
   }
 })
 
@@ -54,7 +56,9 @@ export const GraphQLPublicArticleFilter = new GraphQLInputObjectType({
   name: 'ArticleFilter',
   fields: {
     authors: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
-    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))}
+    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
+    includeHidden: {type: GraphQLBoolean},
+    shared: {type: GraphQLBoolean}
   }
 })
 
@@ -98,6 +102,7 @@ export const GraphQLArticleInput = new GraphQLInputObjectType({
     authorIDs: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLID)))},
 
     shared: {type: new GraphQLNonNull(GraphQLBoolean)},
+    hidden: {type: new GraphQLNonNull(GraphQLBoolean)},
     breaking: {type: new GraphQLNonNull(GraphQLBoolean)},
 
     hideAuthor: {type: new GraphQLNonNull(GraphQLBoolean)},
@@ -201,6 +206,7 @@ export const GraphQLArticle = new GraphQLObjectType<Article, Context>({
   fields: {
     id: {type: new GraphQLNonNull(GraphQLID)},
     shared: {type: new GraphQLNonNull(GraphQLBoolean)},
+    hidden: {type: new GraphQLNonNull(GraphQLBoolean)},
 
     createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
@@ -271,6 +277,9 @@ export const GraphQLPublicArticle: GraphQLObjectType<PublicArticle, Context> =
         resolve: createProxyingResolver((article, _, {urlAdapter}) => {
           return urlAdapter.getPublicArticleURL(article)
         })
+      },
+      peeredArticleURL: {
+        type: GraphQLString
       },
 
       preTitle: {type: GraphQLString},

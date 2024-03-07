@@ -29,6 +29,9 @@ export const absoluteUrlToRelative: InMemoryCacheConfig['typePolicies'] = {
 
           return absoluteToRelative(url)
         }
+      },
+      peeredArticleURL: {
+        merge: (_, url: string) => absoluteToRelative(url)
       }
     }
   },

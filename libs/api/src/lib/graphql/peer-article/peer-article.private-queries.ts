@@ -64,7 +64,8 @@ export const getAdminPeerArticles = async (
             // Skip isn't backwards compatible since the in pre primsa it means skip pages and in prisma skip object.
             skip: articleToSkipFromEachPeer,
             filter: {
-              published: true
+              published: true,
+              shared: true
             },
             // needed for versions before prisma
             after: cursors ? base64Encode(cursors[peer.id]) : undefined,

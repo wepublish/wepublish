@@ -61,6 +61,7 @@ const articleTeaser = {
     preTitle: 'Pre Title on the article',
     lead: 'Lead on the article',
     url: 'https://example.com',
+    peeredArticleURL: 'https://example.com/p/123/1231231231',
     authors: [author, author],
     publishedAt: new Date('2023-01-01').toISOString(),
 
@@ -76,8 +77,7 @@ const articleTeaser = {
         image
       }
     ]
-  },
-  peeredArticleURL: 'https://example.com/p/123/1231231231'
+  }
 } as PeerArticleTeaser
 
 export const Default = {

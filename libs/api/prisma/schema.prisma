@@ -118,6 +118,7 @@ model Article {
   draft   ArticleRevision? @relation("draftArticleRevision", fields: [draftId], references: [id], onDelete: SetNull)
 
   shared Boolean
+  hidden Boolean @default(false)
 
   navigations NavigationLink[]
 

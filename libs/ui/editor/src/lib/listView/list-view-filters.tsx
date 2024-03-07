@@ -83,6 +83,7 @@ type Field =
   | 'text'
   | 'name'
   | 'location'
+  | 'includeHidden'
 
 export type ImportableEventFilter = {
   startsAt?: InputMaybe<Scalars['String']>
@@ -173,6 +174,7 @@ export function ListViewFilters({
     for (const [filterKey, filterValue] of Object.entries(filter)) {
       if (filterKey && filterValue) return true
     }
+
     return false
   }
 
@@ -447,6 +449,17 @@ export function ListViewFilters({
               searchable
               onSelect={value => setPeerFilter(value)}
               onClean={() => setPeerFilter('')}
+            />
+          </Group>
+        )}
+
+        {fields.includes('includeHidden') && (
+          <Group style={formInputStyle}>
+            <Toggle
+              defaultChecked={!!filter.includeHidden}
+              onChange={value => updateFilter({includeHidden: value || null})}
+              checkedChildren={t('articleList.filter.includeHidden')}
+              unCheckedChildren={t('articleList.filter.includeHidden')}
             />
           </Group>
         )}

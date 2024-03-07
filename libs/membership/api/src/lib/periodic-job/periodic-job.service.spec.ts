@@ -538,7 +538,7 @@ describe('PeriodicJobService', () => {
           },
           periods: {
             create: {
-              startsAt: subscriptionValidUntil,
+              startsAt: add(subscriptionValidUntil, {days: 10}),
               endsAt: add(subscriptionValidUntil, {months: 12}),
               paymentPeriodicity: PaymentPeriodicity.yearly,
               amount: 2400,

@@ -70,6 +70,7 @@ export interface PublicArticle extends ArticleData {
   readonly publishedAt?: Date | null
 
   readonly blocks: ArticleBlock[]
+  readonly peeredArticleURL?: string
 }
 
 export interface ArticleFilter {
@@ -84,11 +85,13 @@ export interface ArticleFilter {
   readonly shared?: boolean
   readonly authors?: string[]
   readonly tags?: string[]
+  readonly includeHidden?: boolean
 }
 
 export interface PublicArticleFilter {
   readonly authors?: string[]
   readonly tags?: string[]
+  readonly includeHidden?: boolean
 }
 
 export enum ArticleSort {

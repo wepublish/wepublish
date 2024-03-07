@@ -18,6 +18,7 @@ const generateSecureRandomPassword = (length: number) => {
   }
   return password
 }
+
 export async function runSeed() {
   const prisma = new PrismaClient()
   await prisma.$connect()
@@ -27,47 +28,51 @@ export async function runSeed() {
     throw new Error('@wepublish/api seeding has not been done')
   }
 
-  const admin = await prisma.user.findUnique({
-    where: {
-      id: 'admin'
+  const ensureAdminUserWithSetPassword = async (password: string) => {
+    const id = 'admin'
+    const data = {
+      email: 'admin@wepublish.ch',
+      name: 'WePublish Admin',
+      active: true,
+      password: await bcrypt.hash(password, 11),
+      roleIDs: [adminUserRole.id]
     }
-  })
-  if (!admin) {
-    const email = 'admin@wepublish.ch'
-    const overriddenPw = process.env.OVERRIDE_ADMIN_PW
-    let password = generateSecureRandomPassword(20)
-    if (overriddenPw) {
-      console.log(
-        '\x1b[31m\x1b[1m%s\x1b[0m',
-        `!!!!!!!!!!!!!!!!!! WARNING: UNSECURE PASSWORD IS OVERRIDDEN WITH ENV VARIABLE !!!!!!!!!!!!!!!!!! `
-      )
-      password = overriddenPw
-    }
-
-    console.log(
-      '\x1b[31m\x1b[1m%s\x1b[0m',
-      `Bootstrapping initial admin user ${email} with password: ${password}`
-    )
+    console.log('\x1b[31m\x1b[1m%s\x1b[0m', `Ensuring admin user`)
     await prisma.user.upsert({
-      where: {
-        id: 'admin'
+      where: {id},
+      update: {
+        ...data
       },
-      update: {},
       create: {
-        id: 'admin',
-        email,
+        id,
         emailVerifiedAt: new Date(),
-        name: 'Admin',
-        active: true,
-        roleIDs: [adminUserRole.id],
-        password: await bcrypt.hash(password, 11)
+        ...data
       }
     })
+  }
+
+  const ensureAdminUserWithGeneratedPassword = async () => {
+    const admin = await prisma.user.findUnique({where: {id: 'admin'}})
+    if (!admin) {
+      const password = generateSecureRandomPassword(20)
+      await ensureAdminUserWithSetPassword(password)
+      console.log(
+        '\x1b[31m\x1b[1m%s\x1b[0m',
+        `Bootstrapped initial admin user with password: ${password}`
+      )
+    } else {
+      console.log(
+        '\x1b[32m\x1b[1m%s\x1b[0m',
+        'Skipping bootstrapping of initial admin user because the user already exist...'
+      )
+    }
+  }
+
+  const setAdminPassword = process.env.OVERRIDE_ADMIN_PW
+  if (setAdminPassword) {
+    await ensureAdminUserWithSetPassword(setAdminPassword)
   } else {
-    console.log(
-      '\x1b[32m\x1b[1m%s\x1b[0m',
-      'Skipping bootstrapping of initial admin user because the user already exist...'
-    )
+    await ensureAdminUserWithGeneratedPassword()
   }
 
   await prisma.$disconnect()

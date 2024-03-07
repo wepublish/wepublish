@@ -122,7 +122,9 @@
         "url": "URL",
         "urlPlaceholder": "https://canonical-url.com",
         "value": "Value",
-        "yes": "Yes"
+        "yes": "Yes",
+        "hidden": "Hide",
+        "setAsHidden": "Hidden articles are excluded by default but can still be queried on demand."
       }
     },
     "articleList": {
@@ -139,7 +141,8 @@
         "providers": "Providers",
         "publicationDate": "Publication Date",
         "reset": "Reset Filter",
-        "title": "Filter by title"
+        "title": "Filter by title",
+        "includeHidden": "Include hidden"
       }
     },
     "articles": {
