@@ -52,7 +52,8 @@ import {
   TitleBlock,
   TwitterTweetBlock,
   VimeoVideoBlock,
-  YouTubeVideoBlock
+  YouTubeVideoBlock,
+  TeaserListBlock
 } from '../db/block'
 
 import {createProxyingIsTypeOf, createProxyingResolver, delegateToPeerSchema} from '../utility'
@@ -68,6 +69,14 @@ import {
   GraphQLMetadataPropertyPublic
 } from './common'
 import {GraphQLEvent} from './event/event'
+import {getPublishedArticles} from './article/article.public-queries'
+import {ArticleSort, PublicArticle} from '../db/article'
+import {SortOrder} from '@wepublish/utils/api'
+import {getPublishedPages} from './page/page.public-queries'
+import {PageSort, PublicPage} from '../db/page'
+import {EventSort, getEvents} from './event/event.query'
+import {getArticles} from './article/article.queries'
+import {getPages} from './page/page.queries'
 
 export const GraphQLTeaserStyle = new GraphQLEnumType({
   name: 'TeaserStyle',
@@ -495,6 +504,269 @@ export const GraphQLPublicTeaser = new GraphQLUnionType({
     GraphQLPublicEventTeaser,
     GraphQLPublicCustomTeaser
   ]
+})
+
+export const GraphQLTeaserType = new GraphQLEnumType({
+  name: 'TeaserType',
+  values: {
+    [TeaserType.Article]: {value: TeaserType.Article},
+    [TeaserType.PeerArticle]: {value: TeaserType.PeerArticle},
+    [TeaserType.Event]: {value: TeaserType.Event},
+    [TeaserType.Page]: {value: TeaserType.Page},
+    [TeaserType.Custom]: {value: TeaserType.Custom}
+  }
+})
+
+export const GraphQLTeaserListBlockFilter = new GraphQLObjectType({
+  name: 'TeaserListBlockFilter',
+  fields: {
+    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))}
+  }
+})
+
+export const GraphQLTeaserListBlockFilterInput = new GraphQLInputObjectType({
+  name: 'TeaserListBlockFilterInput',
+  fields: {
+    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))}
+  }
+})
+
+export const GraphQLTeaserListBlock = new GraphQLObjectType<TeaserListBlock, Context>({
+  name: 'TeaserListBlock',
+  fields: {
+    blockStyle: {
+      type: GraphQLString,
+      resolve: resolveBlockStyleIdToName
+    },
+    teaserType: {
+      type: GraphQLTeaserType
+    },
+    filter: {type: new GraphQLNonNull(GraphQLTeaserListBlockFilter)},
+    take: {type: GraphQLInt},
+    skip: {type: GraphQLInt},
+    teasers: {
+      type: new GraphQLNonNull(new GraphQLList(GraphQLTeaser)),
+      resolve: createProxyingResolver(
+        async ({filter, skip, take, teaserType}, _, {loaders, prisma}) => {
+          if (teaserType === TeaserType.Article) {
+            const articles = await getArticles(
+              {
+                published: true,
+                tags: filter.tags
+              },
+              ArticleSort.PublishedAt,
+              SortOrder.Descending,
+              undefined,
+              skip,
+              take,
+              prisma.article
+            )
+
+            articles.nodes.forEach(article => loaders.articles.prime(article.id, article))
+
+            return articles.nodes.map(
+              article =>
+                ({
+                  articleID: article.id,
+                  style: TeaserStyle.Default,
+                  type: TeaserType.Article,
+                  imageID: null,
+                  lead: null,
+                  title: null
+                } as ArticleTeaser)
+            )
+          }
+
+          if (teaserType === TeaserType.Page) {
+            const pages = await getPages(
+              {
+                tags: filter.tags
+              },
+              PageSort.PublishedAt,
+              SortOrder.Descending,
+              undefined,
+              skip,
+              take,
+              prisma.page
+            )
+
+            pages.nodes.forEach(page => loaders.pages.prime(page.id, page))
+
+            return pages.nodes.map(
+              page =>
+                ({
+                  pageID: page.id,
+                  style: TeaserStyle.Default,
+                  type: TeaserType.Page,
+                  imageID: null,
+                  lead: null,
+                  title: null
+                } as PageTeaser)
+            )
+          }
+
+          if (teaserType === TeaserType.Event) {
+            const pages = await getEvents(
+              {
+                tags: filter.tags
+              },
+              EventSort.StartsAt,
+              SortOrder.Descending,
+              undefined,
+              skip,
+              take,
+              prisma.event
+            )
+
+            pages.nodes.forEach(event => loaders.eventById.prime(event.id, event))
+
+            return pages.nodes.map(
+              event =>
+                ({
+                  eventID: event.id,
+                  style: TeaserStyle.Default,
+                  type: TeaserType.Event,
+                  imageID: null,
+                  lead: null,
+                  title: null
+                } as EventTeaser)
+            )
+          }
+
+          return []
+        }
+      )
+    }
+  },
+  isTypeOf: createProxyingIsTypeOf(value => {
+    return value.type === BlockType.TeaserList
+  })
+})
+
+export const GraphQLPublicTeaserListBlock = new GraphQLObjectType<TeaserListBlock, Context>({
+  name: 'TeaserListBlock',
+  fields: {
+    blockStyle: {
+      type: GraphQLString,
+      resolve: resolveBlockStyleIdToName
+    },
+    teaserType: {
+      type: GraphQLTeaserType
+    },
+    filter: {type: new GraphQLNonNull(GraphQLTeaserListBlockFilter)},
+    take: {type: GraphQLInt},
+    skip: {type: GraphQLInt},
+    teasers: {
+      type: new GraphQLNonNull(new GraphQLList(GraphQLPublicTeaser)),
+      resolve: createProxyingResolver(
+        async ({filter, skip, take, teaserType}, _, {loaders, prisma}) => {
+          if (teaserType === TeaserType.Article) {
+            const articles = await getPublishedArticles(
+              {
+                tags: filter.tags
+              },
+              ArticleSort.PublishedAt,
+              SortOrder.Descending,
+              undefined,
+              skip,
+              take,
+              prisma.article
+            )
+
+            articles.nodes.forEach(article =>
+              loaders.publicArticles.prime(article.id, article as PublicArticle)
+            )
+
+            return articles.nodes.map(
+              article =>
+                ({
+                  articleID: article.id,
+                  style: TeaserStyle.Default,
+                  type: TeaserType.Article,
+                  imageID: null,
+                  lead: null,
+                  title: null
+                } as ArticleTeaser)
+            )
+          }
+
+          if (teaserType === TeaserType.Page) {
+            const pages = await getPublishedPages(
+              {
+                tags: filter.tags
+              },
+              PageSort.PublishedAt,
+              SortOrder.Descending,
+              undefined,
+              skip,
+              take,
+              prisma.page
+            )
+
+            pages.nodes.forEach(page => loaders.publicPagesByID.prime(page.id, page as PublicPage))
+
+            return pages.nodes.map(
+              page =>
+                ({
+                  pageID: page.id,
+                  style: TeaserStyle.Default,
+                  type: TeaserType.Page,
+                  imageID: null,
+                  lead: null,
+                  title: null
+                } as PageTeaser)
+            )
+          }
+
+          if (teaserType === TeaserType.Event) {
+            const pages = await getEvents(
+              {
+                tags: filter.tags
+              },
+              EventSort.StartsAt,
+              SortOrder.Descending,
+              undefined,
+              skip,
+              take,
+              prisma.event
+            )
+
+            pages.nodes.forEach(event => loaders.eventById.prime(event.id, event))
+
+            return pages.nodes.map(
+              event =>
+                ({
+                  eventID: event.id,
+                  style: TeaserStyle.Default,
+                  type: TeaserType.Event,
+                  imageID: null,
+                  lead: null,
+                  title: null
+                } as EventTeaser)
+            )
+          }
+
+          return []
+        }
+      )
+    }
+  },
+  isTypeOf: createProxyingIsTypeOf(value => {
+    return value.type === BlockType.TeaserList
+  })
+})
+
+export const GraphQLTeaserListBlockInput = new GraphQLInputObjectType({
+  name: 'TeaserListBlockInput',
+  fields: {
+    blockStyle: {type: GraphQLString},
+    teaserType: {
+      type: GraphQLTeaserType
+    },
+    filter: {type: new GraphQLNonNull(GraphQLTeaserListBlockFilterInput)},
+    take: {type: GraphQLInt},
+    skip: {type: GraphQLInt}
+  }
 })
 
 export const GraphQLPublicTeaserGridBlock = new GraphQLObjectType<TeaserGridBlock, Context>({
@@ -1396,7 +1668,8 @@ export const GraphQLBlockInput = new GraphQLInputObjectType({
     [BlockType.Comment]: {type: GraphQLCommentBlockInput},
     [BlockType.LinkPageBreak]: {type: GraphQLLinkPageBreakBlockInput},
     [BlockType.TeaserGrid]: {type: GraphQLTeaserGridBlockInput},
-    [BlockType.TeaserGridFlex]: {type: GraphQLTeaserGridFlexBlockInput}
+    [BlockType.TeaserGridFlex]: {type: GraphQLTeaserGridFlexBlockInput},
+    [BlockType.TeaserList]: {type: GraphQLTeaserListBlockInput}
   })
 })
 
@@ -1426,7 +1699,8 @@ export const GraphQLBlock: GraphQLUnionType = new GraphQLUnionType({
     GraphQLTitleBlock,
     GraphQLQuoteBlock,
     GraphQLTeaserGridBlock,
-    GraphQLTeaserGridFlexBlock
+    GraphQLTeaserGridFlexBlock,
+    GraphQLTeaserListBlock
   ]
 })
 
@@ -1456,6 +1730,7 @@ export const GraphQLPublicBlock: GraphQLUnionType = new GraphQLUnionType({
     GraphQLTitleBlock,
     GraphQLQuoteBlock,
     GraphQLPublicTeaserGridBlock,
-    GraphQLPublicTeaserGridFlexBlock
+    GraphQLPublicTeaserGridFlexBlock,
+    GraphQLPublicTeaserListBlock
   ]
 })

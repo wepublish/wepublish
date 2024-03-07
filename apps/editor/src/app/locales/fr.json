@@ -29,7 +29,6 @@
         "addSlug": "Veuillez ajouter un slug",
         "addTag": "Appuyez Enter pour ajouter un tag",
         "allowPeerPublishing": "Permettre aux peers de publier cet article.",
-        "article": "Article",
         "articlePending": "Il y a déjà une publication en attente programmée au {{pendingPublishDate, ccc PP p}}. Une nouvelle publication remplacera cette publication.",
         "articlePreviewLink": "Lien de prévisualisation de l'article",
         "articlePreviewLinkDesc": "Le lien de prévisualisation montre toujours les dernières modifications apportées à la version préliminaire de l'article. Le lien de prévisualisation cesse de fonctionner après la publication de l'article.",
@@ -48,7 +47,6 @@
         "confirm": "Confirmer",
         "contentUrl": "URL du contenu",
         "createdAt": "{{createdAt, ccc PP p}}",
-        "custom": "personnalisé",
         "dateExplanationPopOver": "Ceci peut être utilisé pour faire référence à des articles qui seront publiés ultérieurement. Par exemple, lorsque des posts pour les réseaux sociaux sont programmés pour êtres publiés le lendemain matin.",
         "default": "Défaut",
         "displayOptions": "Options d'affichage",
@@ -81,9 +79,7 @@
         "modifiedAt": "{{modifiedAt, ccc PP pp}}",
         "no": "Non",
         "noImagesFound": "Aucune image trouvée",
-        "page": "Page",
         "pagePreviewLink": "Lien de prévisualisation de la page",
-        "peerArticle": "Pairer l'article",
         "peerDisabled": "Ce peer est actuellement désactivé",
         "peeredArticlePreview": "Prévisualisation",
         "peering": "Peering",
@@ -223,6 +219,18 @@
         "filterByTag": "Filter comments by tag",
         "label": "Commentaires",
         "title": "Edit Comment Block"
+      },
+      "teaserList": {
+        "teasers": "{{count}} Teasers loaded",
+        "teaserType": "Loading {{teaserType}} teasers",
+        "teaserTypeLabel": "Teaser Type",
+        "skip": "Skipping the first {{skip}} teasers",
+        "skipLabel": "How many teasers should be skipped",
+        "take": "Showing up to {{take}} teasers",
+        "takeLabel": "How many teasers should be loaded",
+        "tags": "Only showing with tags: {{tags}}",
+        "tagsLabel": "Which tags should be loaded",
+        "edit": "Edit teaser list block"
       },
       "embeds": {
         "label": "Intégration",
@@ -1232,6 +1240,15 @@
       "subscriptionTitle": "{{memberPlanName}} / N° {{subscriptionId}}",
       "unexpectedErrorNoInvoice": "Erreur inattendue : facture inexistante."
     },
-    "yes": "Oui"
+    "yes": "Oui",
+    "resources": {
+      "teaserType": {
+        "article": "Article",
+        "peerArticle": "Peer Article",
+        "page": "Page",
+        "event": "Event",
+        "custom": "Custom"
+      }
+    }
   }
 }

@@ -32,6 +32,9 @@ export const getStaticProps: GetStaticProps = async () => {
         sort: ApiV1.AuthorSort.Name,
         order: ApiV1.SortOrder.Ascending
       }
+    }),
+    client.query({
+      query: ApiV1.NavigationListDocument
     })
   ])
 

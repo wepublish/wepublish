@@ -53,10 +53,19 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
   const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
   await Promise.all([
     client.query({
+      query: ApiV1.NavigationListDocument
+    }),
+    client.query({
       query: ApiV1.PeerArticleDocument,
       variables: {
         peerId,
         articleId
+      }
+    }),
+    client.query({
+      query: ApiV1.PeerDocument,
+      variables: {
+        id: peerId
       }
     }),
     client.query({

@@ -13,7 +13,7 @@ export const getAdminPeerArticles = async (
   sort: ArticleSort,
   order: SortOrder,
   peerNameFilter: string,
-  stringifiedCursors: string,
+  stringifiedCursors: string | undefined | null,
   context: Context,
   info: GraphQLResolveInfo,
   take: number,

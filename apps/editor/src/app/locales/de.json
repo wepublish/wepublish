@@ -28,7 +28,6 @@
       "panels": {
         "addSlug": "Bitte Slug erfassen",
         "allowPeerPublishing": "Peers erlauben, diesen Artikel zu publizieren.",
-        "article": "Artikel",
         "articlePending": "Eine Publikation ist bereits am {{pendingPublishDate, ccc PP p}} geplant. Eine erneute Publikation überschreibt diese.",
         "articlePreviewLink": "Vorschau-Link",
         "articlePreviewLinkDesc": "Vorschau-Links zeigen immer die neuesten Änderungen im Entwurf des Artikels an. Vorschau-Links funktionieren nicht mehr, nachdem der Artikel publiziert oder geplant wurde.",
@@ -47,7 +46,6 @@
         "confirm": "Bestätigen",
         "contentUrl": "Inhalt URL",
         "createdAt": "{{createdAt, ccc PP p}}",
-        "custom": "benutzerdefinierte",
         "dateExplanationPopOver": "Dies kann verwendet werden, um auf Artikel zu verweisen, die zu einem späteren Zeitpunkt veröffentlicht werden sollen. Dies ist z. B. hilfreich, wenn Beiträge in sozialen Medien für den nächsten Morgen im Voraus geplant werden.",
         "default": "Default",
         "displayOptions": "Anzeigeoptionen",
@@ -78,9 +76,7 @@
         "modifiedAt": "{{modifiedAt, ccc PP pp}}",
         "no": "Nein",
         "noImagesFound": "Keine Bilder gefunden",
-        "page": "Seite",
         "pagePreviewLink": "Vorschau Link",
-        "peerArticle": "Artikel peeren",
         "peerDisabled": "Dieser Peer ist momentan deaktiviert",
         "peeredArticlePreview": "Vorschau",
         "peering": "Peering",
@@ -1276,6 +1272,15 @@
       "subscriptionTitle": "{{memberPlanName}} / Nr. {{subscriptionId}}",
       "unexpectedErrorNoInvoice": "Unerwarteter Fehler: Rechnung nicht vorhanden."
     },
-    "yes": "Ja"
+    "yes": "Ja",
+    "resources": {
+      "teaserType": {
+        "article": "Artikel",
+        "peerArticle": "Gepeerte Artikel",
+        "page": "Seite",
+        "event": "Event",
+        "custom": "Benutzerdefinierte"
+      }
+    }
   }
 }

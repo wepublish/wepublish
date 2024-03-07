@@ -94,8 +94,6 @@ export function TeaserGridFlexBlock({value, onChange}: BlockProps<TeaserGridFlex
 
   const {flexTeasers} = value
 
-  console.log(flexTeasers)
-
   const {t} = useTranslation()
 
   useEffect(() => {

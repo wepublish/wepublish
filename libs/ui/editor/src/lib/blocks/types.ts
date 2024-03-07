@@ -8,7 +8,8 @@ import {
   ImageRefFragment,
   PageRefFragment,
   PeerRefFragment,
-  TeaserStyle
+  TeaserStyle,
+  TeaserType
 } from '@wepublish/editor/api'
 import nanoid from 'nanoid'
 import {Node} from 'slate'
@@ -190,14 +191,6 @@ export type EmbedBlockValue =
   | BildwurfAdEmbed
   | OtherEmbed
 
-export enum TeaserType {
-  Article = 'article',
-  PeerArticle = 'peerArticle',
-  Page = 'page',
-  Custom = 'custom',
-  Event = 'event'
-}
-
 export enum MetaDataType {
   General = 'general',
   SocialMedia = 'socialMedia',
@@ -256,6 +249,16 @@ export interface EventTeaser extends EventTeaserLink, BaseTeaser {}
 
 export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser | CustomTeaser | EventTeaser
 
+export interface TeaserListBlockValue extends BaseBlockValue {
+  filter: Partial<{
+    tags: string[] | null
+  }>
+  teaserType: TeaserType
+  skip: number
+  take: number
+  teasers: Array<[string, Teaser]>
+}
+
 export interface TeaserGridBlockValue extends BaseBlockValue {
   teasers: Array<[string, Teaser | null]>
   numColumns: number
@@ -294,6 +297,8 @@ export type LinkPageBreakBlockListValue = BlockListValue<
   LinkPageBreakBlockValue
 >
 
+export type TeaserListBlockListValue = BlockListValue<BlockType.TeaserList, TeaserListBlockValue>
+
 export type TeaserGridBlock1ListValue = BlockListValue<BlockType.TeaserGrid1, TeaserGridBlockValue>
 
 export type TeaserGridBlock6ListValue = BlockListValue<BlockType.TeaserGrid6, TeaserGridBlockValue>
@@ -327,6 +332,7 @@ export type BlockValue =
   | PollBlockListValue
   | CommentBlockListValue
   | EventBlockListValue
+  | TeaserListBlockListValue
 
 export function unionMapForBlock(block: BlockValue): BlockInput {
   switch (block.type) {
@@ -546,6 +552,19 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
       break
     }
 
+    case BlockType.TeaserList:
+      return {
+        teaserList: {
+          filter: {
+            tags: block.value.filter.tags
+          },
+          take: block.value.take,
+          skip: block.value.skip,
+          blockStyle: block.value.blockStyle,
+          teaserType: block.value.teaserType
+        }
+      }
+
     case BlockType.TeaserGridFlex:
       return {
         teaserGridFlex: {
@@ -687,7 +706,8 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
                   blockStyle: block.value.blockStyle
                 }
             }
-          })
+          }),
+          blockStyle: block.value.blockStyle
         }
       }
 
@@ -974,6 +994,35 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
         value: {
           blockStyle: block.blockStyle,
           html: block.html ?? ''
+        }
+      }
+
+    case 'TeaserListBlock':
+      return {
+        key,
+        type: BlockType.TeaserList,
+        value: {
+          blockStyle: block.blockStyle,
+          filter: block.filter,
+          skip: block.skip ?? 0,
+          take: block.take ?? 6,
+          teaserType: block.teaserType ?? TeaserType.Article,
+          teasers: block.teasers.map((teaser, index) => [
+            `${index}`,
+            {
+              ...teaser,
+              type:
+                teaser?.__typename === 'ArticleTeaser'
+                  ? TeaserType.Article
+                  : teaser?.__typename === 'PeerArticleTeaser'
+                  ? TeaserType.PeerArticle
+                  : teaser?.__typename === 'PageTeaser'
+                  ? TeaserType.Page
+                  : teaser?.__typename === 'EventTeaser'
+                  ? TeaserType.Event
+                  : TeaserType.Custom
+            } as Teaser
+          ])
         }
       }
 

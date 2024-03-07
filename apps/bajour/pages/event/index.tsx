@@ -114,6 +114,9 @@ export const getStaticProps: GetStaticProps = async () => {
         sort: ApiV1.EventSort.StartsAt,
         order: ApiV1.SortOrder.Ascending
       }
+    }),
+    client.query({
+      query: ApiV1.NavigationListDocument
     })
   ])
 
