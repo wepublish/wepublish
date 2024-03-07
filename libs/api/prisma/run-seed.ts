@@ -2,7 +2,6 @@ import {PrismaClient} from '@prisma/client'
 import {seed as rootSeed} from './seed'
 import bcrypt from 'bcrypt'
 import {randomBytes} from 'crypto'
-import {DefaultBcryptHashCostFactor} from '../src/lib/db/common'
 
 const generateSecureRandomPassword = (length: number) => {
   const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789._-'
@@ -35,7 +34,7 @@ export async function runSeed() {
       email: 'admin@wepublish.ch',
       name: 'WePublish Admin',
       active: true,
-      password: await bcrypt.hash(password, DefaultBcryptHashCostFactor),
+      password: await bcrypt.hash(password, 11),
       roleIDs: [adminUserRole.id]
     }
     console.log('\x1b[31m\x1b[1m%s\x1b[0m', `Ensuring admin user`)
