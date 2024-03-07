@@ -22,21 +22,22 @@ import {StatsService} from './stats.service'
 })
 export class AppModule {}
 
-const articlesQuery = `
-  query articlesCount {
-    articlesCount
+const statsQuery = `
+  query Stats {
+    stats {
+      articlesCount
+      authorsCount
+      firstArticleDate
+    }
   }
 `
 
-const authorsQuery = `
-  query authorsCount {
-    authorsCount
-  }
-`
-
-const firstArticleDateQuery = `
-  query firstArticleDate {
-    firstArticleDate
+const statsQueryWithoutFirstArticleDate = `
+  query Stats {
+    stats {
+      articlesCount
+      authorsCount
+    }
   }
 `
 
@@ -81,51 +82,51 @@ describe('StatsResolver', () => {
     await app.close()
   })
 
-  test('getArticlesCount query', async () => {
-    const mockedValue = 123
-    statsServiceMock.getArticlesCount?.mockResolvedValue(mockedValue)
+  test('stats query', async () => {
+    const mockedArticlesValue = 123
+    const mockedAuthorsValue = 10
+    const mockedFirstArticleDateValue = new Date('2022-05-14T10:45:02.513Z')
+
+    statsServiceMock.getArticlesCount?.mockResolvedValue(mockedArticlesValue)
+    statsServiceMock.getAuthorsCount?.mockResolvedValue(mockedAuthorsValue)
+    statsServiceMock.getFirstArticleDate?.mockResolvedValue(mockedFirstArticleDateValue)
 
     await request(app.getHttpServer())
       .post('')
       .send({
-        query: articlesQuery,
+        query: statsQuery,
         variables: {}
       })
       .expect(200)
       .expect(res => {
-        expect(res.body.data.articlesCount).toEqual(mockedValue)
+        expect(res.body.data.stats).toEqual({
+          articlesCount: mockedArticlesValue,
+          authorsCount: mockedAuthorsValue,
+          firstArticleDate: mockedFirstArticleDateValue.toISOString()
+        })
       })
   })
 
-  test('getAuthorsCount query', async () => {
-    const mockedValue = 10
-    statsServiceMock.getAuthorsCount?.mockResolvedValue(mockedValue)
+  test('stats query without first article date', async () => {
+    const mockedArticlesValue = 123
+    const mockedAuthorsValue = 10
+
+    statsServiceMock.getArticlesCount?.mockResolvedValue(mockedArticlesValue)
+    statsServiceMock.getAuthorsCount?.mockResolvedValue(mockedAuthorsValue)
 
     await request(app.getHttpServer())
       .post('')
       .send({
-        query: authorsQuery,
+        query: statsQuery,
         variables: {}
       })
       .expect(200)
       .expect(res => {
-        expect(res.body.data.authorsCount).toEqual(mockedValue)
-      })
-  })
-
-  test('getFirstArticleDate query', async () => {
-    const mockedValue = new Date('2022-05-14T10:45:02.513Z')
-    statsServiceMock.getFirstArticleDate?.mockResolvedValue(mockedValue)
-
-    await request(app.getHttpServer())
-      .post('')
-      .send({
-        query: firstArticleDateQuery,
-        variables: {}
-      })
-      .expect(200)
-      .expect(res => {
-        expect(res.body.data.firstArticleDate).toEqual(mockedValue.toISOString())
+        expect(res.body.data.stats).toEqual({
+          articlesCount: mockedArticlesValue,
+          authorsCount: mockedAuthorsValue,
+          firstArticleDate: null
+        })
       })
   })
 })

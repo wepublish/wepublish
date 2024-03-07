@@ -1,6 +1,16 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`StatsService should query for article count 1`] = `[]`;
+exports[`StatsService should query for article count 1`] = `
+[
+  {
+    "where": {
+      "publishedId": {
+        "not": null,
+      },
+    },
+  },
+]
+`;
 
 exports[`StatsService should query for articleRevision findFirst 1`] = `
 [
