@@ -39,6 +39,7 @@ export type Article = {
   id: Scalars['ID'];
   image?: Maybe<Image>;
   lead?: Maybe<Scalars['String']>;
+  peeredArticleURL?: Maybe<Scalars['String']>;
   preTitle?: Maybe<Scalars['String']>;
   properties: Array<PublicProperties>;
   publishedAt: Scalars['DateTime'];
@@ -902,7 +903,6 @@ export type PeerArticleTeaser = {
   image?: Maybe<Image>;
   lead?: Maybe<Scalars['String']>;
   peer?: Maybe<Peer>;
-  peeredArticleURL?: Maybe<Scalars['String']>;
   preTitle?: Maybe<Scalars['String']>;
   style: TeaserStyle;
   title?: Maybe<Scalars['String']>;
