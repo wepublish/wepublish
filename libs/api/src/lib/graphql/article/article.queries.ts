@@ -223,6 +223,16 @@ const createAuthorFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhere
   return {}
 }
 
+const createHiddenFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
+  if (filter?.includeHidden) {
+    return {}
+  }
+
+  return {
+    hidden: false
+  }
+}
+
 export const createArticleFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => ({
   AND: [
     createTitleFilter(filter),
@@ -230,12 +240,13 @@ export const createArticleFilter = (filter: Partial<ArticleFilter>): Prisma.Arti
     createPublicationDateFromFilter(filter),
     createPublicationDateToFilter(filter),
     createLeadFilter(filter),
-    createPublishedFilter(filter),
-    createDraftFilter(filter),
-    createPendingFilter(filter),
     createSharedFilter(filter),
     createTagsFilter(filter),
-    createAuthorFilter(filter)
+    createAuthorFilter(filter),
+    createHiddenFilter(filter),
+    {
+      OR: [createPublishedFilter(filter), createDraftFilter(filter), createPendingFilter(filter)]
+    }
   ]
 })
 
