@@ -161,7 +161,7 @@ const BlockListItem = memo(function BlockListItem({
       onStyleChange={blockStyle => handleValueChange({...value.value, blockStyle})}>
       {children({
         value: value.value,
-        onChange: val => handleValueChange({...value.value, ...val}),
+        onChange: handleValueChange,
         autofocus,
         disabled,
         itemId

@@ -107,7 +107,7 @@ export interface ArticleMetadata {
   readonly canonicalUrl: string
   readonly image?: ImageRefFragment
   readonly shared: boolean
-  readonly hidden: boolean
+  readonly hidden?: boolean | null
   readonly breaking: boolean
   readonly hideAuthor: boolean
   readonly socialMediaTitle?: string
@@ -501,7 +501,7 @@ function ArticleMetadataPanel({
             <Group controlId="hidden">
               <ControlLabel>{t('articleEditor.panels.hidden')}</ControlLabel>
               <Toggle
-                checked={hidden}
+                checked={hidden ?? false}
                 disabled={!isAuthorized}
                 onChange={hidden => onChange?.({...value, hidden})}
               />

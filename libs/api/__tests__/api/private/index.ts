@@ -35,7 +35,7 @@ export type Article = {
   __typename?: 'Article';
   createdAt: Scalars['DateTime'];
   draft?: Maybe<ArticleRevision>;
-  hidden: Scalars['Boolean'];
+  hidden?: Maybe<Scalars['Boolean']>;
   id: Scalars['ID'];
   latest: ArticleRevision;
   modifiedAt: Scalars['DateTime'];
@@ -77,7 +77,7 @@ export type ArticleInput = {
   blocks: Array<BlockInput>;
   breaking: Scalars['Boolean'];
   canonicalUrl?: InputMaybe<Scalars['String']>;
-  hidden: Scalars['Boolean'];
+  hidden?: InputMaybe<Scalars['Boolean']>;
   hideAuthor: Scalars['Boolean'];
   imageID?: InputMaybe<Scalars['ID']>;
   lead?: InputMaybe<Scalars['String']>;

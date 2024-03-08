@@ -22,6 +22,7 @@ const theme = createTheme({
   },
   palette: {
     primary: augmentColor({color: {main: '#FDDDD2'}}),
+    secondary: augmentColor({color: {main: '#ffbaba'}}),
     error: augmentColor({color: {main: '#FF0D62'}})
   },
   components: {
