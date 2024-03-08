@@ -1,4 +1,6 @@
 import {styled} from '@mui/material'
+import {ApiV1, hasBlockStyle, isTeaserGridBlock} from '@wepublish/website'
+import {allPass} from 'ramda'
 
 import {TeaserOverwrite} from './teaser-overwrite'
 import {
@@ -12,7 +14,10 @@ import {
   TeaserTitlesStyled
 } from './teaser-overwrite.style'
 
-export const ColTeaserLight = styled(TeaserOverwrite)`
+export const isWideTeaser = (block: ApiV1.Block): block is ApiV1.TeaserGridBlock =>
+  allPass([hasBlockStyle('Breite Teaser'), isTeaserGridBlock])(block)
+
+export const WideTeaser = styled(TeaserOverwrite)`
   gap: ${({theme}) => theme.spacing(1.5)};
 
   ${TeaserContentStyled} {
