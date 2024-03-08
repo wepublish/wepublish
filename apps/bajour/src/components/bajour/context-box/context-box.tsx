@@ -4,7 +4,7 @@ import {BuilderBreakBlockProps, RichTextBlock} from '@wepublish/website'
 import {useState} from 'react'
 import {MdInfoOutline} from 'react-icons/md'
 
-export const ContextBoxWrapper = styled('article')<{expanded: boolean}>`
+export const ContextBoxWrapper = styled('aside')<{expanded: boolean}>`
   margin-left: 10%;
   width: ${({theme}) => theme.spacing(38)};
   grid-column: -1/1;
