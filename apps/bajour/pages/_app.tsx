@@ -26,7 +26,7 @@ import translation from 'zod-i18n-map/locales/de/zod.json'
 import {MainGrid} from '../src/components/layout/main-grid'
 import {BajourBlockRenderer} from '../src/components/website-builder-overwrites/block-renderer/block-renderer'
 import {BajourTeaser} from '../src/components/website-builder-overwrites/blocks/teaser'
-import {TeaserGridStyled} from '../src/components/website-builder-styled/blocks/teaser-grid-styled'
+import {BajourTeaserGrid} from '../src/components/website-builder-styled/blocks/teaser-grid-styled'
 import theme from '../src/styles/theme'
 import {ReactComponent as TwitterLogo} from '../src/twitter-logo.svg'
 
@@ -120,7 +120,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
             blocks={{
               Renderer: BajourBlockRenderer,
               Teaser: BajourTeaser,
-              TeaserGrid: TeaserGridStyled
+              TeaserGrid: BajourTeaserGrid
             }}>
             <ThemeProvider theme={theme}>
               <CssBaseline />

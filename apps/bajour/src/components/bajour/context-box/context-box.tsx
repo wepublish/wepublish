@@ -14,7 +14,7 @@ export const ContextBoxWrapper = styled('aside')<{expanded: boolean}>`
   height: ${({theme}) => theme.spacing(28)};
   transition: height 0.3s ease;
 
-  ${({theme, expanded}) =>
+  ${({expanded}) =>
     expanded &&
     css`
       height: auto;
@@ -89,12 +89,15 @@ export const ContextBox = ({richText, text}: BuilderBreakBlockProps) => {
         </IconWrapper>
         <ContextBoxLine />
       </ContextBoxInfo>
+
       <ContextBoxContent>
         <AllAbout>Darum geht’s:</AllAbout>
         <Title>{text}</Title>
+
         <RichTextBlockWrapper expanded={expanded}>
           <RichTextBlock richText={richText} />
         </RichTextBlockWrapper>
+
         <ReadMore onClick={() => setExpanded(expanded => !expanded)}>alles lesen</ReadMore>
       </ContextBoxContent>
     </ContextBoxWrapper>
