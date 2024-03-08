@@ -4,7 +4,6 @@ import {BuilderNavbarProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {PropsWithChildren, useCallback, useMemo, useState} from 'react'
 import {MdAccountCircle, MdClose, MdMenu} from 'react-icons/md'
 import {navigationLinkToUrl} from '../link-to-url'
-import {Link} from '@wepublish/ui'
 
 export const NavbarWrapper = styled('nav')`
   position: sticky;
@@ -139,7 +138,7 @@ export const NavbarIconButtonWrapper = styled('div')`
   }
 `
 
-export const NavbarLogoLink = styled(Link)<{isMenuOpen?: boolean}>`
+const logoLinkStyles = (isMenuOpen: boolean) => css`
   color: unset;
   display: grid;
   align-items: center;
@@ -147,11 +146,10 @@ export const NavbarLogoLink = styled(Link)<{isMenuOpen?: boolean}>`
   grid-column: 3;
   justify-self: center;
 
-  ${({isMenuOpen}) =>
-    isMenuOpen &&
-    css`
-      z-index: -1;
-    `}
+  ${isMenuOpen &&
+  css`
+    z-index: -1;
+  `}
 `
 
 export const NavbarLogoWrapper = styled('div')`
@@ -186,7 +184,7 @@ const useImageStyles = (theme: Theme) => {
 export function Navbar({className, children, categorySlugs, slug, data, logo}: BuilderNavbarProps) {
   const theme = useTheme()
   const {
-    elements: {IconButton, Image}
+    elements: {IconButton, Image, Link}
   } = useWebsiteBuilder()
   const [isMenuOpen, setMenuOpen] = useState(false)
   const toggleMenu = useCallback(() => setMenuOpen(isOpen => !isOpen), [])
@@ -240,11 +238,11 @@ export function Navbar({className, children, categorySlugs, slug, data, logo}: B
             </NavbarLinks>
           )}
           {!!logo && (
-            <NavbarLogoLink href="/" aria-label="Startseite" isMenuOpen={isMenuOpen}>
+            <Link href="/" aria-label="Startseite" css={logoLinkStyles(isMenuOpen)}>
               <NavbarLogoWrapper>
                 <Image image={logo} css={imageStyles} />
               </NavbarLogoWrapper>
-            </NavbarLogoLink>
+            </Link>
           )}
           <NavbarSpacer />
           <NavbarActions isMenuOpen={isMenuOpen}>
