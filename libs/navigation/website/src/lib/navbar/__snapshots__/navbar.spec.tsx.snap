@@ -15,11 +15,11 @@ exports[`Navbar should render Default 1`] = `
           class="css-1trl8g0-NavbarMain ei6evl213"
         >
           <div
-            class="css-155aejo-NavbarIconButtonWrapper ei6evl211"
+            class="css-1545n5p-NavbarIconButtonWrapper ei6evl211"
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-15pk1uh-MuiButtonBase-root-MuiIconButton-root"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-v0cdkb-MuiButtonBase-root-MuiIconButton-root-Navbar"
               tabindex="0"
               type="button"
             >
@@ -48,15 +48,15 @@ exports[`Navbar should render Default 1`] = `
         </div>
         <a
           aria-label="Startseite"
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways ei6evl210 css-1tu9km8-MuiTypography-root-MuiLink-root-LogoLink"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways ei6evl210 css-123wvv1-MuiTypography-root-MuiLink-root-NavbarLogoLink"
           href="/"
         >
           <div
-            class="css-lin1uo-LogoWrapper ei6evl29"
+            class="css-31ym2f-NavbarLogoWrapper ei6evl29"
           >
             <img
               alt="banff2"
-              class="css-lxcflr-ImageWrapper e1shv2yg0"
+              class="css-h6jvte-ImageWrapper-Navbar e1shv2yg0"
               loading="lazy"
               srcset="https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 800w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 500w,
@@ -67,7 +67,7 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
           </div>
         </a>
         <div
-          class="css-1cnmhjo-Spacer ei6evl28"
+          class="css-cl7riy-NavbarSpacer ei6evl28"
         />
         <div
           class="css-1w9evey-NavbarActions ei6evl212"
@@ -78,7 +78,7 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
             href="/login"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-147srhb-MuiButtonBase-root-MuiIconButton-root"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-ydzw83-MuiButtonBase-root-MuiIconButton-root-Navbar"
               tabindex="0"
               type="button"
             >
@@ -126,11 +126,11 @@ exports[`Navbar should render WithChildren 1`] = `
           class="css-1trl8g0-NavbarMain ei6evl213"
         >
           <div
-            class="css-155aejo-NavbarIconButtonWrapper ei6evl211"
+            class="css-1545n5p-NavbarIconButtonWrapper ei6evl211"
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-15pk1uh-MuiButtonBase-root-MuiIconButton-root"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-v0cdkb-MuiButtonBase-root-MuiIconButton-root-Navbar"
               tabindex="0"
               type="button"
             >
@@ -159,15 +159,15 @@ exports[`Navbar should render WithChildren 1`] = `
         </div>
         <a
           aria-label="Startseite"
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways ei6evl210 css-1tu9km8-MuiTypography-root-MuiLink-root-LogoLink"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways ei6evl210 css-123wvv1-MuiTypography-root-MuiLink-root-NavbarLogoLink"
           href="/"
         >
           <div
-            class="css-lin1uo-LogoWrapper ei6evl29"
+            class="css-31ym2f-NavbarLogoWrapper ei6evl29"
           >
             <img
               alt="banff2"
-              class="css-lxcflr-ImageWrapper e1shv2yg0"
+              class="css-h6jvte-ImageWrapper-Navbar e1shv2yg0"
               loading="lazy"
               srcset="https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 800w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 500w,
@@ -178,7 +178,7 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
           </div>
         </a>
         <div
-          class="css-1cnmhjo-Spacer ei6evl28"
+          class="css-cl7riy-NavbarSpacer ei6evl28"
         />
         <div
           class="css-1w9evey-NavbarActions ei6evl212"
@@ -189,7 +189,7 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
             href="/login"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-147srhb-MuiButtonBase-root-MuiIconButton-root"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-ydzw83-MuiButtonBase-root-MuiIconButton-root-Navbar"
               tabindex="0"
               type="button"
             >
@@ -237,11 +237,11 @@ exports[`Navbar should render WithClassName 1`] = `
           class="css-1trl8g0-NavbarMain ei6evl213"
         >
           <div
-            class="css-155aejo-NavbarIconButtonWrapper ei6evl211"
+            class="css-1545n5p-NavbarIconButtonWrapper ei6evl211"
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-15pk1uh-MuiButtonBase-root-MuiIconButton-root"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-v0cdkb-MuiButtonBase-root-MuiIconButton-root-Navbar"
               tabindex="0"
               type="button"
             >
@@ -270,15 +270,15 @@ exports[`Navbar should render WithClassName 1`] = `
         </div>
         <a
           aria-label="Startseite"
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways ei6evl210 css-1tu9km8-MuiTypography-root-MuiLink-root-LogoLink"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways ei6evl210 css-123wvv1-MuiTypography-root-MuiLink-root-NavbarLogoLink"
           href="/"
         >
           <div
-            class="css-lin1uo-LogoWrapper ei6evl29"
+            class="css-31ym2f-NavbarLogoWrapper ei6evl29"
           >
             <img
               alt="banff2"
-              class="css-lxcflr-ImageWrapper e1shv2yg0"
+              class="css-h6jvte-ImageWrapper-Navbar e1shv2yg0"
               loading="lazy"
               srcset="https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 800w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 500w,
@@ -289,7 +289,7 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
           </div>
         </a>
         <div
-          class="css-1cnmhjo-Spacer ei6evl28"
+          class="css-cl7riy-NavbarSpacer ei6evl28"
         />
         <div
           class="css-1w9evey-NavbarActions ei6evl212"
@@ -300,7 +300,7 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
             href="/login"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-147srhb-MuiButtonBase-root-MuiIconButton-root"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-ydzw83-MuiButtonBase-root-MuiIconButton-root-Navbar"
               tabindex="0"
               type="button"
             >
@@ -348,11 +348,11 @@ exports[`Navbar should render WithEmotion 1`] = `
           class="css-1trl8g0-NavbarMain ei6evl213"
         >
           <div
-            class="css-155aejo-NavbarIconButtonWrapper ei6evl211"
+            class="css-1545n5p-NavbarIconButtonWrapper ei6evl211"
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-15pk1uh-MuiButtonBase-root-MuiIconButton-root"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-v0cdkb-MuiButtonBase-root-MuiIconButton-root-Navbar"
               tabindex="0"
               type="button"
             >
@@ -381,15 +381,15 @@ exports[`Navbar should render WithEmotion 1`] = `
         </div>
         <a
           aria-label="Startseite"
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways ei6evl210 css-1tu9km8-MuiTypography-root-MuiLink-root-LogoLink"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways ei6evl210 css-123wvv1-MuiTypography-root-MuiLink-root-NavbarLogoLink"
           href="/"
         >
           <div
-            class="css-lin1uo-LogoWrapper ei6evl29"
+            class="css-31ym2f-NavbarLogoWrapper ei6evl29"
           >
             <img
               alt="banff2"
-              class="css-lxcflr-ImageWrapper e1shv2yg0"
+              class="css-h6jvte-ImageWrapper-Navbar e1shv2yg0"
               loading="lazy"
               srcset="https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 800w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 500w,
@@ -400,7 +400,7 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
           </div>
         </a>
         <div
-          class="css-1cnmhjo-Spacer ei6evl28"
+          class="css-cl7riy-NavbarSpacer ei6evl28"
         />
         <div
           class="css-1w9evey-NavbarActions ei6evl212"
@@ -411,7 +411,7 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
             href="/login"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-147srhb-MuiButtonBase-root-MuiIconButton-root"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-ydzw83-MuiButtonBase-root-MuiIconButton-root-Navbar"
               tabindex="0"
               type="button"
             >
@@ -459,11 +459,11 @@ exports[`Navbar should render WithError 1`] = `
           class="css-1trl8g0-NavbarMain ei6evl213"
         >
           <div
-            class="css-155aejo-NavbarIconButtonWrapper ei6evl211"
+            class="css-1545n5p-NavbarIconButtonWrapper ei6evl211"
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-15pk1uh-MuiButtonBase-root-MuiIconButton-root"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-v0cdkb-MuiButtonBase-root-MuiIconButton-root-Navbar"
               tabindex="0"
               type="button"
             >
@@ -492,15 +492,15 @@ exports[`Navbar should render WithError 1`] = `
         </div>
         <a
           aria-label="Startseite"
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways ei6evl210 css-1tu9km8-MuiTypography-root-MuiLink-root-LogoLink"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways ei6evl210 css-123wvv1-MuiTypography-root-MuiLink-root-NavbarLogoLink"
           href="/"
         >
           <div
-            class="css-lin1uo-LogoWrapper ei6evl29"
+            class="css-31ym2f-NavbarLogoWrapper ei6evl29"
           >
             <img
               alt="banff2"
-              class="css-lxcflr-ImageWrapper e1shv2yg0"
+              class="css-h6jvte-ImageWrapper-Navbar e1shv2yg0"
               loading="lazy"
               srcset="https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 800w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 500w,
@@ -511,7 +511,7 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
           </div>
         </a>
         <div
-          class="css-1cnmhjo-Spacer ei6evl28"
+          class="css-cl7riy-NavbarSpacer ei6evl28"
         />
         <div
           class="css-1w9evey-NavbarActions ei6evl212"
@@ -522,7 +522,7 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
             href="/login"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-147srhb-MuiButtonBase-root-MuiIconButton-root"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-ydzw83-MuiButtonBase-root-MuiIconButton-root-Navbar"
               tabindex="0"
               type="button"
             >
@@ -570,11 +570,11 @@ exports[`Navbar should render WithLoading 1`] = `
           class="css-1trl8g0-NavbarMain ei6evl213"
         >
           <div
-            class="css-155aejo-NavbarIconButtonWrapper ei6evl211"
+            class="css-1545n5p-NavbarIconButtonWrapper ei6evl211"
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-15pk1uh-MuiButtonBase-root-MuiIconButton-root"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-v0cdkb-MuiButtonBase-root-MuiIconButton-root-Navbar"
               tabindex="0"
               type="button"
             >
@@ -603,15 +603,15 @@ exports[`Navbar should render WithLoading 1`] = `
         </div>
         <a
           aria-label="Startseite"
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways ei6evl210 css-1tu9km8-MuiTypography-root-MuiLink-root-LogoLink"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways ei6evl210 css-123wvv1-MuiTypography-root-MuiLink-root-NavbarLogoLink"
           href="/"
         >
           <div
-            class="css-lin1uo-LogoWrapper ei6evl29"
+            class="css-31ym2f-NavbarLogoWrapper ei6evl29"
           >
             <img
               alt="banff2"
-              class="css-lxcflr-ImageWrapper e1shv2yg0"
+              class="css-h6jvte-ImageWrapper-Navbar e1shv2yg0"
               loading="lazy"
               srcset="https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 800w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 500w,
@@ -622,7 +622,7 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
           </div>
         </a>
         <div
-          class="css-1cnmhjo-Spacer ei6evl28"
+          class="css-cl7riy-NavbarSpacer ei6evl28"
         />
         <div
           class="css-1w9evey-NavbarActions ei6evl212"
@@ -633,7 +633,7 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
             href="/login"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-147srhb-MuiButtonBase-root-MuiIconButton-root"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-ydzw83-MuiButtonBase-root-MuiIconButton-root-Navbar"
               tabindex="0"
               type="button"
             >
@@ -681,11 +681,11 @@ exports[`Navbar should render WithoutItems 1`] = `
           class="css-1trl8g0-NavbarMain ei6evl213"
         >
           <div
-            class="css-155aejo-NavbarIconButtonWrapper ei6evl211"
+            class="css-1545n5p-NavbarIconButtonWrapper ei6evl211"
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-15pk1uh-MuiButtonBase-root-MuiIconButton-root"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-v0cdkb-MuiButtonBase-root-MuiIconButton-root-Navbar"
               tabindex="0"
               type="button"
             >
@@ -714,15 +714,15 @@ exports[`Navbar should render WithoutItems 1`] = `
         </div>
         <a
           aria-label="Startseite"
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways ei6evl210 css-1tu9km8-MuiTypography-root-MuiLink-root-LogoLink"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways ei6evl210 css-123wvv1-MuiTypography-root-MuiLink-root-NavbarLogoLink"
           href="/"
         >
           <div
-            class="css-lin1uo-LogoWrapper ei6evl29"
+            class="css-31ym2f-NavbarLogoWrapper ei6evl29"
           >
             <img
               alt="banff2"
-              class="css-lxcflr-ImageWrapper e1shv2yg0"
+              class="css-h6jvte-ImageWrapper-Navbar e1shv2yg0"
               loading="lazy"
               srcset="https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 800w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 500w,
@@ -733,7 +733,7 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
           </div>
         </a>
         <div
-          class="css-1cnmhjo-Spacer ei6evl28"
+          class="css-cl7riy-NavbarSpacer ei6evl28"
         />
         <div
           class="css-1w9evey-NavbarActions ei6evl212"
@@ -744,7 +744,7 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
             href="/login"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-147srhb-MuiButtonBase-root-MuiIconButton-root"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-ydzw83-MuiButtonBase-root-MuiIconButton-root-Navbar"
               tabindex="0"
               type="button"
             >
@@ -792,11 +792,11 @@ exports[`Navbar should render WithoutLogo 1`] = `
           class="css-1trl8g0-NavbarMain ei6evl213"
         >
           <div
-            class="css-155aejo-NavbarIconButtonWrapper ei6evl211"
+            class="css-1545n5p-NavbarIconButtonWrapper ei6evl211"
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-15pk1uh-MuiButtonBase-root-MuiIconButton-root"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-v0cdkb-MuiButtonBase-root-MuiIconButton-root-Navbar"
               tabindex="0"
               type="button"
             >
@@ -824,7 +824,7 @@ exports[`Navbar should render WithoutLogo 1`] = `
           </div>
         </div>
         <div
-          class="css-1cnmhjo-Spacer ei6evl28"
+          class="css-cl7riy-NavbarSpacer ei6evl28"
         />
         <div
           class="css-1w9evey-NavbarActions ei6evl212"
@@ -835,7 +835,7 @@ exports[`Navbar should render WithoutLogo 1`] = `
             href="/login"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-147srhb-MuiButtonBase-root-MuiIconButton-root"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-ydzw83-MuiButtonBase-root-MuiIconButton-root-Navbar"
               tabindex="0"
               type="button"
             >

@@ -15,11 +15,11 @@ exports[`Navbar Container should render Default 1`] = `
           class="css-1trl8g0-NavbarMain ei6evl213"
         >
           <div
-            class="css-155aejo-NavbarIconButtonWrapper ei6evl211"
+            class="css-1545n5p-NavbarIconButtonWrapper ei6evl211"
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-15pk1uh-MuiButtonBase-root-MuiIconButton-root"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-v0cdkb-MuiButtonBase-root-MuiIconButton-root-Navbar"
               tabindex="0"
               type="button"
             >
@@ -47,7 +47,7 @@ exports[`Navbar Container should render Default 1`] = `
           </div>
         </div>
         <div
-          class="css-1cnmhjo-Spacer ei6evl28"
+          class="css-cl7riy-NavbarSpacer ei6evl28"
         />
         <div
           class="css-1w9evey-NavbarActions ei6evl212"
@@ -58,7 +58,7 @@ exports[`Navbar Container should render Default 1`] = `
             href="/login"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-147srhb-MuiButtonBase-root-MuiIconButton-root"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-ydzw83-MuiButtonBase-root-MuiIconButton-root-Navbar"
               tabindex="0"
               type="button"
             >
@@ -106,11 +106,11 @@ exports[`Navbar Container should render WithClassName 1`] = `
           class="css-1trl8g0-NavbarMain ei6evl213"
         >
           <div
-            class="css-155aejo-NavbarIconButtonWrapper ei6evl211"
+            class="css-1545n5p-NavbarIconButtonWrapper ei6evl211"
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-15pk1uh-MuiButtonBase-root-MuiIconButton-root"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-v0cdkb-MuiButtonBase-root-MuiIconButton-root-Navbar"
               tabindex="0"
               type="button"
             >
@@ -138,7 +138,7 @@ exports[`Navbar Container should render WithClassName 1`] = `
           </div>
         </div>
         <div
-          class="css-1cnmhjo-Spacer ei6evl28"
+          class="css-cl7riy-NavbarSpacer ei6evl28"
         />
         <div
           class="css-1w9evey-NavbarActions ei6evl212"
@@ -149,7 +149,7 @@ exports[`Navbar Container should render WithClassName 1`] = `
             href="/login"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-147srhb-MuiButtonBase-root-MuiIconButton-root"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-ydzw83-MuiButtonBase-root-MuiIconButton-root-Navbar"
               tabindex="0"
               type="button"
             >
@@ -197,11 +197,11 @@ exports[`Navbar Container should render WithEmotion 1`] = `
           class="css-1trl8g0-NavbarMain ei6evl213"
         >
           <div
-            class="css-155aejo-NavbarIconButtonWrapper ei6evl211"
+            class="css-1545n5p-NavbarIconButtonWrapper ei6evl211"
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-15pk1uh-MuiButtonBase-root-MuiIconButton-root"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-v0cdkb-MuiButtonBase-root-MuiIconButton-root-Navbar"
               tabindex="0"
               type="button"
             >
@@ -229,7 +229,7 @@ exports[`Navbar Container should render WithEmotion 1`] = `
           </div>
         </div>
         <div
-          class="css-1cnmhjo-Spacer ei6evl28"
+          class="css-cl7riy-NavbarSpacer ei6evl28"
         />
         <div
           class="css-1w9evey-NavbarActions ei6evl212"
@@ -240,7 +240,7 @@ exports[`Navbar Container should render WithEmotion 1`] = `
             href="/login"
           >
             <button
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-147srhb-MuiButtonBase-root-MuiIconButton-root"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-ydzw83-MuiButtonBase-root-MuiIconButton-root-Navbar"
               tabindex="0"
               type="button"
             >
