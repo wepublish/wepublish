@@ -240,7 +240,7 @@ export function Navbar({className, children, categorySlugs, slug, data, logo}: B
           {!!logo && (
             <Link href="/" aria-label="Startseite" css={logoLinkStyles(isMenuOpen)}>
               <NavbarLogoWrapper>
-                <Image image={logo} css={imageStyles} />
+                <Image image={logo} css={imageStyles} loading="eager" fetchPriority="high" />
               </NavbarLogoWrapper>
             </Link>
           )}
