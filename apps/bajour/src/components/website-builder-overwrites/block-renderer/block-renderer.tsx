@@ -13,6 +13,8 @@ import {BestOfWePublish} from '../../bajour/best-of-wepublish/best-of-wepublish'
 import {isBestOfWePublish} from '../../bajour/best-of-wepublish/is-best-of-wepublish'
 import {BaselBriefing, BaselBriefingProps} from '../../bajour/briefing/basel-briefing'
 import {isAnyBriefing} from '../../bajour/briefing/is-briefing'
+import {ContextBox} from '../../bajour/context-box/context-box'
+import {isContextBox} from '../../bajour/context-box/is-context-box'
 import {isSmallTeaser, SmallTeaser} from '../blocks/small-teaser'
 import {isTeaserSlider, TeaserSlider} from '../blocks/teaser-slider/teaser-slider'
 import {isWideTeaser, WideTeaser} from '../blocks/wide-teaser'
@@ -25,6 +27,7 @@ export const BajourBlockRenderer = (props: BuilderBlockRendererProps) => {
   const extraBlockMap = useMemo(
     () =>
       cond([
+        [isContextBox, block => <ContextBox {...block} />],
         [isTeaserSlider, block => <TeaserSlider {...block} />],
         [isBestOfWePublish, block => <BestOfWePublish {...block} />],
         [isAnyBriefing, block => <BaselBriefing {...(block as BaselBriefingProps)} />],

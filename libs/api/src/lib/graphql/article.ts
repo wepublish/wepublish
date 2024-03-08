@@ -102,7 +102,7 @@ export const GraphQLArticleInput = new GraphQLInputObjectType({
     authorIDs: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLID)))},
 
     shared: {type: new GraphQLNonNull(GraphQLBoolean)},
-    hidden: {type: new GraphQLNonNull(GraphQLBoolean)},
+    hidden: {type: GraphQLBoolean},
     breaking: {type: new GraphQLNonNull(GraphQLBoolean)},
 
     hideAuthor: {type: new GraphQLNonNull(GraphQLBoolean)},
@@ -206,7 +206,7 @@ export const GraphQLArticle = new GraphQLObjectType<Article, Context>({
   fields: {
     id: {type: new GraphQLNonNull(GraphQLID)},
     shared: {type: new GraphQLNonNull(GraphQLBoolean)},
-    hidden: {type: new GraphQLNonNull(GraphQLBoolean)},
+    hidden: {type: GraphQLBoolean},
 
     createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},

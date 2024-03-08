@@ -358,7 +358,7 @@ function ArticleEditor() {
       imageID: metadata.image?.id,
       breaking: metadata.breaking,
       shared: metadata.shared,
-      hidden: metadata.hidden,
+      hidden: metadata.hidden ?? false,
       tags: metadata.tags,
       canonicalUrl: metadata.canonicalUrl,
       properties: metadata.properties,

@@ -45,7 +45,7 @@ export const TeaserTitlesStyled = styled(TeaserTitle)`
 `
 
 export const TitleLine = styled('hr')`
-  background-color: #ffbaba;
+  background-color: ${({theme}) => theme.palette.secondary.main};
   height: 2px;
   width: 100%;
   margin: 0;

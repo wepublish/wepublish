@@ -165,28 +165,30 @@ export const TeaserSlider = ({teasers}: BuilderTeaserGridBlockProps) => {
   })
 
   return (
-    <SliderContainer>
-      <SliderInnerBackground />
+    !!filledTeasers.length && (
+      <SliderContainer>
+        <SliderInnerBackground />
 
-      <SliderInnerContainer ref={ref} className="keen-slider">
-        {filledTeasers.map((teaser, index) => (
-          <div key={index} className="keen-slider__slide">
-            {<TeaserSlide teaser={teaser} />}
-          </div>
-        ))}
-      </SliderInnerContainer>
-
-      {loaded && sliderRef.current && (
-        <BallContainer>
-          {[...Array(sliderRef.current?.track.details.slides.length).keys()].map(idx => (
-            <Ball
-              key={idx}
-              onClick={() => sliderRef.current?.moveToIdx(idx)}
-              isActive={currentSlide === idx}
-            />
+        <SliderInnerContainer ref={ref} className="keen-slider">
+          {filledTeasers.map((teaser, index) => (
+            <div key={index} className="keen-slider__slide">
+              {<TeaserSlide teaser={teaser} />}
+            </div>
           ))}
-        </BallContainer>
-      )}
-    </SliderContainer>
+        </SliderInnerContainer>
+
+        {loaded && sliderRef.current && (
+          <BallContainer>
+            {[...Array(sliderRef.current?.track.details?.slides.length).keys()].map(idx => (
+              <Ball
+                key={idx}
+                onClick={() => sliderRef.current?.moveToIdx(idx)}
+                isActive={currentSlide === idx}
+              />
+            ))}
+          </BallContainer>
+        )}
+      </SliderContainer>
+    )
   )
 }
