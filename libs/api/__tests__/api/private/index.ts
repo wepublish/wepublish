@@ -35,7 +35,7 @@ export type Article = {
   __typename?: 'Article';
   createdAt: Scalars['DateTime'];
   draft?: Maybe<ArticleRevision>;
-  hidden: Scalars['Boolean'];
+  hidden?: Maybe<Scalars['Boolean']>;
   id: Scalars['ID'];
   latest: ArticleRevision;
   modifiedAt: Scalars['DateTime'];
