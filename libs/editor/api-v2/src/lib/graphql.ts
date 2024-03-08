@@ -52,6 +52,7 @@ export enum BlockType {
   TeaserGrid1 = 'TeaserGrid1',
   TeaserGrid6 = 'TeaserGrid6',
   TeaserGridFlex = 'TeaserGridFlex',
+  TeaserList = 'TeaserList',
   Title = 'Title'
 }
 
@@ -599,6 +600,7 @@ export type Query = {
    *
    */
   settingsList: Array<Setting>;
+  stats?: Maybe<Stats>;
   /** Returns all subscription flows */
   subscriptionFlows: Array<SubscriptionFlowModel>;
   /** Returns all mail flows */
@@ -775,6 +777,13 @@ export enum SortOrder {
   Ascending = 'Ascending',
   Descending = 'Descending'
 }
+
+export type Stats = {
+  __typename?: 'Stats';
+  articlesCount: Scalars['Int'];
+  authorsCount: Scalars['Int'];
+  firstArticleDate?: Maybe<Scalars['DateTime']>;
+};
 
 export enum SubscriptionDeactivationReason {
   InvoiceNotPaid = 'invoiceNotPaid',

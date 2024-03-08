@@ -77,6 +77,7 @@ describe('Phrases', () => {
           authorIDs: [],
           breaking: false,
           shared: false,
+          hidden: false,
           tags: [],
           canonicalUrl: '',
           properties: [],
