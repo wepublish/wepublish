@@ -206,7 +206,7 @@ export const GraphQLArticle = new GraphQLObjectType<Article, Context>({
   fields: {
     id: {type: new GraphQLNonNull(GraphQLID)},
     shared: {type: new GraphQLNonNull(GraphQLBoolean)},
-    hidden: {type: new GraphQLNonNull(GraphQLBoolean)},
+    hidden: {type: GraphQLBoolean},
 
     createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
