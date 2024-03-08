@@ -8,7 +8,7 @@ import {PlaceholderInput} from '../atoms/placeholderInput'
 import {TeaserListBlockValue} from './types'
 import styled from '@emotion/styled'
 import {ContentForTeaser} from './teaserGridBlock'
-import {TeaserListConfigPanel, useTagTypeText} from '../panel/teaserListConfigPanel'
+import {TeaserListConfigPanel, useTeaserTypeText} from '../panel/teaserListConfigPanel'
 
 const TeaserGrid = styled.div`
   display: grid;
@@ -48,7 +48,7 @@ export const TeaserListBlock = ({value, onChange, autofocus}: BlockProps<TeaserL
   const {filter, teasers, skip, take, teaserType} = value
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const {t} = useTranslation()
-  const tagTypeText = useTagTypeText()
+  const teaserTypeText = useTeaserTypeText()
 
   const isEmpty = !teasers.length
   const teasersToDisplay = teasers.slice(0, 6)
@@ -68,7 +68,7 @@ export const TeaserListBlock = ({value, onChange, autofocus}: BlockProps<TeaserL
           </IconButton>
 
           <InfoList>
-            <li>{t('blocks.teaserList.teaserType', {teaserType: tagTypeText(teaserType)})}</li>
+            <li>{t('blocks.teaserList.teaserType', {teaserType: teaserTypeText(teaserType)})}</li>
             <li>{t('blocks.teaserList.take', {take})}</li>
             <li>{t('blocks.teaserList.skip', {skip})}</li>
             {!!filter.tags?.length && (

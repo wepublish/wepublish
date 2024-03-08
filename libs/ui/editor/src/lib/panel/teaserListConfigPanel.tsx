@@ -22,7 +22,7 @@ export type TeaserListConfigPanelProps = {
   onSelect(newValue: TeaserListBlockValue): void
 }
 
-export const useTagTypeText = () => {
+export const useTeaserTypeText = () => {
   const {t} = useTranslation()
 
   return (tagType: TeaserType) => t(`resources.teaserType.${tagType}`)
@@ -35,7 +35,7 @@ export function TeaserListConfigPanel({value, onClose, onSelect}: TeaserListConf
   const [teaserType, setTeaserType] = useState(value.teaserType)
   const prevTeaserType = useRef(value.teaserType)
   const {t} = useTranslation()
-  const tagTypeText = useTagTypeText()
+  const teaserTypeText = useTeaserTypeText()
 
   const {NumberType, StringType} = Schema.Types
   const validationModel = Schema.Model({
@@ -104,9 +104,9 @@ export function TeaserListConfigPanel({value, onClose, onSelect}: TeaserListConf
             value={teaserType}
             onChange={value => setTeaserType(value!)}
             data={[
-              {label: tagTypeText(TeaserType.Article), value: TeaserType.Article},
-              {label: tagTypeText(TeaserType.Event), value: TeaserType.Event},
-              {label: tagTypeText(TeaserType.Page), value: TeaserType.Page}
+              {label: teaserTypeText(TeaserType.Article), value: TeaserType.Article},
+              {label: teaserTypeText(TeaserType.Event), value: TeaserType.Event},
+              {label: teaserTypeText(TeaserType.Page), value: TeaserType.Page}
             ]}
             css={inputStyles}
           />
