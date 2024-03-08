@@ -102,7 +102,7 @@ export const GraphQLArticleInput = new GraphQLInputObjectType({
     authorIDs: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLID)))},
 
     shared: {type: new GraphQLNonNull(GraphQLBoolean)},
-    hidden: {type: new GraphQLNonNull(GraphQLBoolean)},
+    hidden: {type: GraphQLBoolean},
     breaking: {type: new GraphQLNonNull(GraphQLBoolean)},
 
     hideAuthor: {type: new GraphQLNonNull(GraphQLBoolean)},

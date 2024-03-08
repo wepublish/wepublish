@@ -77,7 +77,7 @@ export type ArticleInput = {
   blocks: Array<BlockInput>;
   breaking: Scalars['Boolean'];
   canonicalUrl?: InputMaybe<Scalars['String']>;
-  hidden: Scalars['Boolean'];
+  hidden?: InputMaybe<Scalars['Boolean']>;
   hideAuthor: Scalars['Boolean'];
   imageID?: InputMaybe<Scalars['ID']>;
   lead?: InputMaybe<Scalars['String']>;
