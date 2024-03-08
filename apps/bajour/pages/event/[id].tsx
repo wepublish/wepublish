@@ -32,7 +32,13 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
 
   await Promise.all([
     client.query({
-      query: ApiV1.EventDocument
+      query: ApiV1.EventDocument,
+      variables: {
+        id
+      }
+    }),
+    client.query({
+      query: ApiV1.NavigationListDocument
     }),
     client.query({
       query: ApiV1.PeerProfileDocument
