@@ -1,6 +1,6 @@
 import {Button, styled} from '@mui/material'
-import {Image, TeaserContent, TeaserLead, TeaserPreTitle, TeaserTitle} from '@wepublish/website'
 import {NextWepublishLink} from '@wepublish/utils/website'
+import {Image, TeaserContent, TeaserLead, TeaserPreTitle, TeaserTitle} from '@wepublish/website'
 
 export const fluidTypography = (minSize: number, maxSize: number): string => {
   const minViewPort = 390
