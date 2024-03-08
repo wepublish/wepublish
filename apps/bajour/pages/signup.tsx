@@ -44,7 +44,11 @@ export const getStaticProps: GetStaticProps = async () => {
   }
 
   const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL, [])
-  await Promise.all([])
+  await Promise.all([
+    client.query({
+      query: ApiV1.PeerProfileDocument
+    })
+  ])
 
   const props = ApiV1.addClientCacheToV1Props(client, {})
 

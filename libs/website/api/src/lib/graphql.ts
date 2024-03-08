@@ -1892,6 +1892,11 @@ export type FullPeerProfileFragment = { __typename?: 'PeerProfile', name: string
 
 export type FullPeerFragment = { __typename?: 'Peer', id: string, createdAt: string, modifiedAt: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, themeColor: string, themeFontColor: string, hostURL: string, websiteURL: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, bigURL?: string | null, largeURL?: string | null, mediumURL?: string | null, smallURL?: string | null, squareBigURL?: string | null, squareLargeURL?: string | null, squareMediumURL?: string | null, squareSmallURL?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, bigURL?: string | null, largeURL?: string | null, mediumURL?: string | null, smallURL?: string | null, squareBigURL?: string | null, squareLargeURL?: string | null, squareMediumURL?: string | null, squareSmallURL?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null } | null } | null };
 
+export type PeerProfileQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type PeerProfileQuery = { __typename?: 'Query', peerProfile: { __typename?: 'PeerProfile', name: string, themeColor: string, themeFontColor: string, hostURL: string, websiteURL: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, bigURL?: string | null, largeURL?: string | null, mediumURL?: string | null, smallURL?: string | null, squareBigURL?: string | null, squareLargeURL?: string | null, squareMediumURL?: string | null, squareSmallURL?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, bigURL?: string | null, largeURL?: string | null, mediumURL?: string | null, smallURL?: string | null, squareBigURL?: string | null, squareLargeURL?: string | null, squareMediumURL?: string | null, squareSmallURL?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null } | null } };
+
 export type PeerQueryVariables = Exact<{
   id?: InputMaybe<Scalars['ID']>;
   slug?: InputMaybe<Scalars['Slug']>;
@@ -3904,6 +3909,40 @@ export function useSitemapPageListLazyQuery(baseOptions?: Apollo.LazyQueryHookOp
 export type SitemapPageListQueryHookResult = ReturnType<typeof useSitemapPageListQuery>;
 export type SitemapPageListLazyQueryHookResult = ReturnType<typeof useSitemapPageListLazyQuery>;
 export type SitemapPageListQueryResult = Apollo.QueryResult<SitemapPageListQuery, SitemapPageListQueryVariables>;
+export const PeerProfileDocument = gql`
+    query PeerProfile {
+  peerProfile {
+    ...FullPeerProfile
+  }
+}
+    ${FullPeerProfileFragmentDoc}`;
+
+/**
+ * __usePeerProfileQuery__
+ *
+ * To run a query within a React component, call `usePeerProfileQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePeerProfileQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePeerProfileQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function usePeerProfileQuery(baseOptions?: Apollo.QueryHookOptions<PeerProfileQuery, PeerProfileQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PeerProfileQuery, PeerProfileQueryVariables>(PeerProfileDocument, options);
+      }
+export function usePeerProfileLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PeerProfileQuery, PeerProfileQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PeerProfileQuery, PeerProfileQueryVariables>(PeerProfileDocument, options);
+        }
+export type PeerProfileQueryHookResult = ReturnType<typeof usePeerProfileQuery>;
+export type PeerProfileLazyQueryHookResult = ReturnType<typeof usePeerProfileLazyQuery>;
+export type PeerProfileQueryResult = Apollo.QueryResult<PeerProfileQuery, PeerProfileQueryVariables>;
 export const PeerDocument = gql`
     query Peer($id: ID, $slug: Slug) {
   peer(id: $id, slug: $slug) {

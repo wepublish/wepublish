@@ -146,12 +146,62 @@ const navigations = [
   }
 ] as Navigation[]
 
+const logo = {
+  __typename: 'Image',
+  id: 'U1R8wgTK8k8E576',
+  createdAt: '2024-02-28T13:13:24.792Z',
+  modifiedAt: '2024-02-28T13:13:24.792Z',
+  filename: 'banff2',
+  format: 'jpeg',
+  mimeType: 'image/jpeg',
+  extension: '.jpeg',
+  width: 1988,
+  height: 882,
+  fileSize: 438218,
+  title: null,
+  description: null,
+  tags: [],
+  source: null,
+  link: null,
+  license: null,
+  focalPoint: {
+    __typename: 'Point',
+    x: 0.5,
+    y: 0.5
+  },
+  url: 'https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png',
+  bigURL: 'https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png',
+  largeURL: 'https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png',
+  mediumURL: 'https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png',
+  smallURL: 'https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png',
+  squareBigURL:
+    'http://localhost:4100/U1R8wgTK8k8E576/t/w_800,h_800,o_png,q_1,f_0.500:0.500/banff2.png',
+  squareLargeURL:
+    'http://localhost:4100/U1R8wgTK8k8E576/t/w_500,h_500,o_png,q_1,f_0.500:0.500/banff2.png',
+  squareMediumURL:
+    'http://localhost:4100/U1R8wgTK8k8E576/t/w_300,h_300,o_png,q_1,f_0.500:0.500/banff2.png',
+  squareSmallURL:
+    'http://localhost:4100/U1R8wgTK8k8E576/t/w_200,h_200,o_png,q_1,f_0.500:0.500/banff2.png'
+}
+
 export default {
   component: Navbar,
   title: 'Components/Navbar'
 } as Meta
 
 export const Default = {
+  args: {
+    data: {
+      navigations
+    },
+    loading: false,
+    slug: 'main',
+    categorySlugs: [['guides', 'fokusthema'], ['about']],
+    logo
+  }
+}
+
+export const WithoutLogo = {
   args: {
     data: {
       navigations
@@ -169,6 +219,7 @@ export const WithChildren = {
     },
     loading: false,
     slug: 'main',
+    logo,
     children: [
       <>
         <MdInvertColors size="32" />
@@ -187,6 +238,7 @@ export const WithLoading = {
     },
     loading: true,
     slug: 'main',
+    logo,
     categorySlugs: [['guides', 'fokusthema'], ['about']]
   }
 }
@@ -201,6 +253,7 @@ export const WithError = {
       errorMessage: 'Foobar'
     }),
     slug: 'main',
+    logo,
     categorySlugs: [['guides', 'fokusthema'], ['about']]
   }
 }
@@ -212,6 +265,7 @@ export const WithClassName = {
     },
     className: 'extra-classname',
     slug: 'main',
+    logo,
     categorySlugs: [['guides', 'fokusthema'], ['about']]
   }
 }
@@ -225,6 +279,7 @@ export const WithEmotion = {
       background-color: #eee;
     `,
     slug: 'main',
+    logo,
     categorySlugs: [['guides', 'fokusthema'], ['about']]
   }
 }
@@ -236,6 +291,7 @@ export const WithoutItems = {
     },
     loading: false,
     slug: '',
+    logo,
     categorySlugs: []
   }
 }

@@ -15,7 +15,6 @@ import {
   ApiV1,
   FooterContainer,
   NavbarContainer,
-  NavbarInnerWrapper,
   WebsiteBuilderProvider,
   WebsiteProvider
 } from '@wepublish/website'
@@ -34,7 +33,6 @@ import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 import {ReactComponent as Logo} from '../src/logo.svg'
-import {NavBarProfile} from '../src/navbar-profile'
 import {tsriArticleStyles} from '../src/styles/tsri-article.styles'
 import {TsriBreakBlock} from '../src/tsri-break-block'
 import {TsriButton} from '../src/tsri-button'
@@ -110,14 +108,8 @@ const LogoWrapper = styled(Logo)`
 `
 
 const NavBar = styled(NavbarContainer)`
-  background-color: ${({theme}) => theme.palette.common.white};
-  margin-bottom: ${({theme}) => theme.spacing(3)};
-
-  ${NavbarInnerWrapper} {
-    width: 100%;
-    max-width: ${({theme}) => `${theme.breakpoints.values['lg']}${theme.breakpoints.unit}`};
-    align-self: center;
-  }
+  grid-column: -1/1;
+  z-index: 11;
 `
 
 const dateFormatter = (date: Date, includeTime = true) =>
@@ -177,13 +169,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
             </Head>
 
             <Spacer>
-              <NavBar categorySlugs={[['categories', 'about-us']]} slug="main">
-                <LogoLink href="/" aria-label="Startseite">
-                  <LogoWrapper />
-                </LogoLink>
-
-                <NavBarProfile />
-              </NavBar>
+              <NavBar categorySlugs={[['categories', 'about-us']]} slug="main" />
 
               <main>
                 <MainSpacer maxWidth="lg">

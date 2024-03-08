@@ -48,6 +48,9 @@ export const getStaticProps: GetStaticProps = async () => {
   await Promise.all([
     client.query({
       query: ApiV1.NavigationListDocument
+    }),
+    client.query({
+      query: ApiV1.PeerProfileDocument
     })
   ])
 
