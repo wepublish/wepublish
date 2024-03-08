@@ -7,11 +7,14 @@ import {BestOfWePublish} from '../../bajour/best-of-wepublish/best-of-wepublish'
 import {isBestOfWePublish} from '../../bajour/best-of-wepublish/is-best-of-wepublish'
 import {BaselBriefing, BaselBriefingProps} from '../../bajour/briefing/basel-briefing'
 import {isAnyBriefing} from '../../bajour/briefing/is-briefing'
+import {ContextBox} from '../../bajour/context-box/context-box'
+import {isContextBox} from '../../bajour/context-box/is-context-box'
 import {isTeaserSlider, TeaserSlider} from '../blocks/teaser-slider/teaser-slider'
 
 const extraBlockMap = cond([
   [isTeaserSlider, block => <TeaserSlider {...block} />],
   [isBestOfWePublish, block => <BestOfWePublish {...block} />],
+  [isContextBox, block => <ContextBox {...block} />],
   [isAnyBriefing, block => <BaselBriefing {...(block as BaselBriefingProps)} />],
   [isArchive, block => <Archive {...block} />]
 ])
