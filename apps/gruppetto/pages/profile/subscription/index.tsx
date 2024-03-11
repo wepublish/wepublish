@@ -7,9 +7,7 @@ import {
 } from '@wepublish/website'
 import {NextPageContext} from 'next'
 import getConfig from 'next/config'
-import {withAuthGuard} from '../../../src/auth-guard'
-import {ssrAuthLink} from '../../../src/auth-link'
-import {getSessionTokenProps} from '../../../src/get-session-token-props'
+import {getSessionTokenProps, ssrAuthLink, withAuthGuard} from '@wepublish/utils/website'
 
 const SubscriptionsWrapper = styled('div')`
   display: grid;

@@ -12,9 +12,32 @@ export default function PageBySlug() {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
+  const {publicRuntimeConfig} = getConfig()
+  const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
+
+  await client.query({
+    query: ApiV1.PageDocument,
+    variables: {
+      slug: 'home'
+    }
+  })
+
+  const cache = Object.values(client.cache.extract())
+  const pageSlugs = cache.reduce((slugs, storeObj) => {
+    if (storeObj?.__typename === 'Page') {
+      slugs.push((storeObj as ApiV1.Page).slug)
+    }
+
+    return slugs
+  }, [] as string[])
+
   return {
-    paths: [],
-    fallback: 'blocking'
+    paths: pageSlugs.map(slug => ({
+      params: {
+        slug
+      }
+    })),
+    fallback: true
   }
 }
 

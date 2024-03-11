@@ -1,9 +1,7 @@
 import {ApiV1, SubscriptionListContainer} from '@wepublish/website'
 import {NextPageContext} from 'next'
 import getConfig from 'next/config'
-import {withAuthGuard} from '../../../src/auth-guard'
-import {ssrAuthLink} from '../../../src/auth-link'
-import {getSessionTokenProps} from '../../../src/get-session-token-props'
+import {getSessionTokenProps, ssrAuthLink, withAuthGuard} from '@wepublish/utils/website'
 import {styled} from '@mui/material'
 
 const SubscriptionsWrapper = styled('div')`

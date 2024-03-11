@@ -29,17 +29,16 @@ import {PartialDeep} from 'type-fest'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
-import {authLink} from '../src/auth-link'
+
 import background from '../src/background.svg'
 import {GruppettoBreakBlock} from '../src/break-block'
 import {Button} from '../src/button'
 import {Footer} from '../src/footer'
 import {ReactComponent as Logo} from '../src/logo.svg'
-import {NextWepublishLink} from '../src/next-wepublish-link'
-import {SessionProvider} from '../src/session.provider'
 import {YearlyMemberPlanItem} from '../src/yearly-memberplan-item'
 import {Paragraph} from '../src/gruppetto-paragraph'
 import {SafariBugHotfixTeaser} from '../src/safari-bug-hotfix'
+import {authLink, SessionProvider, NextWepublishLink} from '@wepublish/utils/website'
 
 setDefaultOptions({
   locale: de
