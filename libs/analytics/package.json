@@ -1,6 +1,6 @@
 {
   "name": "@wepublish/analytics",
-  "version": "10.2.0-alpha.5",
+  "version": "10.2.0-alpha.6",
   "description": "Analytics plugin for publishers.",
   "keywords": [
     "matomo",
