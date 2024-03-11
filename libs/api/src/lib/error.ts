@@ -21,7 +21,8 @@ export enum ErrorCode {
   DisabledPeerError = 'DISABLED_PEER_ERROR',
   UserSubscriptionAlreadyDeactivated = 'USER_SUBSCRIPTION_ALREADY_DEACTIVATED',
   ChallengeFailed = 'ChallengeFailed',
-  InvalidSettingData = 'INVALID_SETTING_DATA'
+  InvalidSettingData = 'INVALID_SETTING_DATA',
+  PaymentAlreadyRunning = 'PAYMENT_ALREADY_RUNNING'
 }
 
 export class TokenExpiredError extends ApolloError {
@@ -246,5 +247,11 @@ export class AlreadyUnpaidInvoices extends ApolloError {
 export class PeerIdMissingCommentError extends ApolloError {
   constructor() {
     super(`Comment with itemType PeerArticle requires a peerId`)
+  }
+}
+
+export class PaymentAlreadyRunning extends ApolloError {
+  constructor(id: string) {
+    super(`Payment with id ${id} already running!`, ErrorCode.PaymentAlreadyRunning)
   }
 }
