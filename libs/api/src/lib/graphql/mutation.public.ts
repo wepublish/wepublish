@@ -18,6 +18,7 @@ import {
   CommentAuthenticationError,
   EmailAlreadyInUseError,
   InternalError,
+  InvoiceAlreadyPaidOrCanceled,
   MonthlyAmountNotEnough,
   NotAuthenticatedError,
   NotFound,
@@ -880,13 +881,17 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           throw new NotFound('PaymentMethod', paymentMethodID || paymentMethodSlug)
 
         const invoice = await prisma.invoice.findUnique({
-          where: {id: invoiceID},
+          where: {
+            id: invoiceID
+          },
           include: {
             items: true
           }
         })
 
         if (!invoice || !invoice.subscriptionID) throw new NotFound('Invoice', invoiceID)
+
+        if (invoice.paidAt || invoice.canceledAt) throw new InvoiceAlreadyPaidOrCanceled(invoiceID)
 
         const subscription = await prisma.subscription.findUnique({
           where: {
