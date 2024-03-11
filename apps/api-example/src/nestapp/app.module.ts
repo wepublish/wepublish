@@ -204,7 +204,9 @@ import {BlockStylesModule} from '@wepublish/block-content/api'
                 })
               )
             } else {
-              throw new Error(`Unknown payment provider type defined: ${paymentProvider.type}`)
+              throw new Error(
+                `Unknown payment provider type defined: ${(paymentProvider as any).type}`
+              )
             }
           }
         }
