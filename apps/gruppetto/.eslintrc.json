@@ -6,6 +6,7 @@
     "../../.eslintrc.json"
   ],
   "ignorePatterns": ["!**/*", ".next/**/*"],
+  "plugins": ["simple-import-sort"],
   "overrides": [
     {
       "files": ["*.ts", "*.tsx", "*.js", "*.jsx"],
@@ -16,12 +17,18 @@
           {
             "patterns": [
               {
-                "group": ["@wepublish/*/website", "@wepublish/website/*"],
+                "group": [
+                  "@wepublish/*/website",
+                  "@wepublish/website/*",
+                  "!@wepublish/utils/website"
+                ],
                 "message": "Please use @wepublish/website instead."
               }
             ]
           }
-        ]
+        ],
+        "simple-import-sort/imports": 1,
+        "simple-import-sort/exports": 1
       }
     },
     {

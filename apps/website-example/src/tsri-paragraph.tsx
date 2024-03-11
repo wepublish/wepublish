@@ -1,4 +1,4 @@
-import {Typography, css} from '@mui/material'
+import {css, Typography} from '@mui/material'
 import {ParagraphProps} from '@wepublish/ui'
 import {forwardRef} from 'react'
 
