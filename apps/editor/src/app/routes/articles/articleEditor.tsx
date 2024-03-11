@@ -56,6 +56,7 @@ import {
 } from 'rsuite'
 
 import {ClientSettings} from '../../../shared/types'
+import {Node} from 'slate'
 
 const IconButtonMarginTop = styled(RIconButton)`
   margin-top: 4px;
@@ -91,6 +92,18 @@ const InitialArticleBlocks: BlockValue[] = [
   {key: '0', type: BlockType.Title, value: {title: '', lead: ''}},
   {key: '1', type: BlockType.Image, value: {image: null, caption: ''}}
 ]
+
+function countRichtextChars(blocksCharLength: number, nodes: Node[]): number {
+  return nodes.reduce((charLength: number, node) => {
+    if (!node.text && !node.children) return charLength
+    // node either has text (leaf node) or children (element node)
+    if (node.text) {
+      return charLength + (node.text as string).length
+    }
+
+    return countRichtextChars(charLength, node.children as Node[])
+  }, blocksCharLength)
+}
 
 function ArticleEditor() {
   const navigate = useNavigate()
@@ -288,19 +301,8 @@ function ArticleEditor() {
       )
   }, [createError, updateError, publishError])
 
-  function countRichtextChars(blocksCharLength: number, nodes: any) {
-    return nodes.reduce((charLength: number, node: any) => {
-      if (!node.text && !node.children) return charLength
-      // node either has text (leaf node) or children (element node)
-      if (node.text) {
-        return charLength + (node.text as string).length
-      }
-      return countRichtextChars(charLength, node.children)
-    }, blocksCharLength)
-  }
-
   function countRichTextBlocksChars(block: RichTextBlockListValue) {
-    return countRichtextChars(0, block.value)
+    return countRichtextChars(0, block.value.richText)
   }
 
   function countTitleChars(block: TitleBlockListValue): number {
