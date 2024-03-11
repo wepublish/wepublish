@@ -1,4 +1,5 @@
 import {css, styled} from '@mui/material'
+import {getSessionTokenProps, ssrAuthLink, withAuthGuard} from '@wepublish/utils/website'
 import {
   ApiV1,
   InvoiceListContainer,
@@ -7,7 +8,6 @@ import {
 } from '@wepublish/website'
 import {NextPageContext} from 'next'
 import getConfig from 'next/config'
-import {getSessionTokenProps, ssrAuthLink, withAuthGuard} from '@wepublish/utils/website'
 import {useRouter} from 'next/router'
 
 const SubscriptionsWrapper = styled('div')`

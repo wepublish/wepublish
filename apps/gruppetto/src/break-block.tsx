@@ -1,4 +1,4 @@
-import {styled, css} from '@mui/material'
+import {css, styled} from '@mui/material'
 import {BreakBlock, BuilderBreakBlockProps} from '@wepublish/website'
 
 export const CTABreakBlock = styled(BreakBlock)`

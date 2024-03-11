@@ -1,4 +1,4 @@
-import {Chip, capitalize, styled} from '@mui/material'
+import {capitalize, Chip, styled} from '@mui/material'
 import {
   ApiV1,
   ArticleContainer,

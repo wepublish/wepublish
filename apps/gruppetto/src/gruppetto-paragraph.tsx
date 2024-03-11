@@ -1,5 +1,5 @@
 import {css} from '@mui/material'
-import {ParagraphProps, Paragraph as WepParagraph} from '@wepublish/ui'
+import {Paragraph as WepParagraph, ParagraphProps} from '@wepublish/ui'
 import {forwardRef} from 'react'
 
 const maxParagraphSize = css`

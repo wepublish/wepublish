@@ -1,5 +1,6 @@
-import {getFeed} from '../../src/feed'
 import {NextApiRequest, NextApiResponse} from 'next'
+
+import {getFeed} from '../../src/feed'
 
 export const config = {
   regions: ['all']

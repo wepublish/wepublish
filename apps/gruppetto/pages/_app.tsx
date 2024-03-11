@@ -9,6 +9,7 @@ import {
   ThemeProvider
 } from '@mui/material'
 import {theme} from '@wepublish/ui'
+import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 import {
   ApiV1,
   FooterContainer,
@@ -34,11 +35,10 @@ import background from '../src/background.svg'
 import {GruppettoBreakBlock} from '../src/break-block'
 import {Button} from '../src/button'
 import {Footer} from '../src/footer'
-import {ReactComponent as Logo} from '../src/logo.svg'
-import {YearlyMemberPlanItem} from '../src/yearly-memberplan-item'
 import {Paragraph} from '../src/gruppetto-paragraph'
+import {ReactComponent as Logo} from '../src/logo.svg'
 import {SafariBugHotfixTeaser} from '../src/safari-bug-hotfix'
-import {authLink, SessionProvider, NextWepublishLink} from '@wepublish/utils/website'
+import {YearlyMemberPlanItem} from '../src/yearly-memberplan-item'
 
 setDefaultOptions({
   locale: de

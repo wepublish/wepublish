@@ -147,7 +147,6 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
   }
 
   const props = ApiV1.addClientCacheToV1Props(client, {})
-  console.log(client.cache.extract())
 
   return {
     props,
