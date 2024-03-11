@@ -43,6 +43,9 @@ const nextConfig = {
       }
     }
   },
+  experimental: {
+    scrollRestoration: true
+  },
   transpilePackages: ['@wepublish/ui', '@wepublish/website', 'react-tweet'],
   async redirects() {
     return [
