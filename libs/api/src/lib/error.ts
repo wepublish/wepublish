@@ -255,3 +255,9 @@ export class PaymentAlreadyRunning extends ApolloError {
     super(`Payment with id ${id} already running!`, ErrorCode.PaymentAlreadyRunning)
   }
 }
+
+export class InvoiceAlreadyPaidOrCanceled extends ApolloError {
+  constructor(id: string) {
+    super(`Invoice with id ${id} is already paid or canceled!`, ErrorCode.UserInputError)
+  }
+}
