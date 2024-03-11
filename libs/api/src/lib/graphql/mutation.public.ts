@@ -1,4 +1,4 @@
-import {SubscriptionDeactivationReason, UserEvent} from '@prisma/client'
+import {PaymentState, SubscriptionDeactivationReason, UserEvent} from '@prisma/client'
 import {SettingName} from '@wepublish/settings/api'
 import {unselectPassword} from '@wepublish/user/api'
 import * as crypto from 'crypto'
@@ -18,9 +18,11 @@ import {
   CommentAuthenticationError,
   EmailAlreadyInUseError,
   InternalError,
+  InvoiceAlreadyPaidOrCanceled,
   MonthlyAmountNotEnough,
   NotAuthenticatedError,
   NotFound,
+  PaymentAlreadyRunning,
   SubscriptionNotFound,
   UserInputError,
   UserSubscriptionAlreadyDeactivated
@@ -71,6 +73,7 @@ import {
 } from './user/user.public-mutation'
 
 import {mailLogType} from '@wepublish/mail/api'
+import {sub} from 'date-fns'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -878,13 +881,17 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           throw new NotFound('PaymentMethod', paymentMethodID || paymentMethodSlug)
 
         const invoice = await prisma.invoice.findUnique({
-          where: {id: invoiceID},
+          where: {
+            id: invoiceID
+          },
           include: {
             items: true
           }
         })
 
         if (!invoice || !invoice.subscriptionID) throw new NotFound('Invoice', invoiceID)
+
+        if (invoice.paidAt || invoice.canceledAt) throw new InvoiceAlreadyPaidOrCanceled(invoiceID)
 
         const subscription = await prisma.subscription.findUnique({
           where: {
@@ -899,6 +906,20 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
 
         if (!subscription || subscription.userID !== user.id)
           throw new NotFound('Invoice', invoiceID)
+
+        // Prevent multiple payment of same invoice!
+        const blockingPaymnet = await prisma.payment.findFirst({
+          where: {
+            invoiceID,
+            state: {
+              in: [PaymentState.created, PaymentState.submitted, PaymentState.processing]
+            },
+            createdAt: {
+              gte: sub(new Date(), {minutes: 1})
+            }
+          }
+        })
+        if (blockingPaymnet) throw new PaymentAlreadyRunning(blockingPaymnet.id)
 
         return await createPaymentWithProvider({
           paymentMethodID: paymentMethod.id,

@@ -1,4 +1,4 @@
-import {Chip, capitalize, styled} from '@mui/material'
+import {capitalize, Chip, styled} from '@mui/material'
 import {
   ApiV1,
   ArticleContainer,
@@ -69,9 +69,32 @@ export default function ArticleBySlug() {
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {
+  const {publicRuntimeConfig} = getConfig()
+  const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
+
+  await client.query({
+    query: ApiV1.PageDocument,
+    variables: {
+      slug: 'home'
+    }
+  })
+
+  const cache = Object.values(client.cache.extract())
+  const articleSlugs = cache.reduce((slugs, storeObj) => {
+    if (storeObj?.__typename === 'Article' && !(storeObj as ApiV1.Article).peeredArticleURL) {
+      slugs.push((storeObj as ApiV1.Article).slug)
+    }
+
+    return slugs
+  }, [] as string[])
+
   return {
-    paths: [],
-    fallback: 'blocking'
+    paths: articleSlugs.map(slug => ({
+      params: {
+        slug
+      }
+    })),
+    fallback: true
   }
 }
 

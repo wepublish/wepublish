@@ -1,8 +1,8 @@
 import {styled} from '@mui/material'
+import {getSessionTokenProps, ssrAuthLink, withAuthGuard} from '@wepublish/utils/website'
 import {ApiV1, PersonalDataFormContainer, useWebsiteBuilder} from '@wepublish/website'
 import {NextPageContext} from 'next'
 import getConfig from 'next/config'
-import {getSessionTokenProps, ssrAuthLink, withAuthGuard} from '@wepublish/utils/website'
 
 const ProfileWrapper = styled('div')`
   display: grid;

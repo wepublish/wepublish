@@ -1,8 +1,7 @@
+import {getSessionTokenProps, ssrAuthLink} from '@wepublish/utils/website'
 import {ApiV1, SubscribeContainer} from '@wepublish/website'
 import {NextPageContext} from 'next'
 import getConfig from 'next/config'
-import {ssrAuthLink} from '../src/auth-link'
-import {getSessionTokenProps} from '../src/get-session-token-props'
 
 export default function Mitmachen() {
   const locationOrigin = typeof window !== 'undefined' ? location.origin : ''

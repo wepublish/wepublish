@@ -11,6 +11,7 @@ import {
   useTheme
 } from '@mui/material'
 import {theme} from '@wepublish/ui'
+import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 import {
   ApiV1,
   FooterContainer,
@@ -32,12 +33,12 @@ import {PartialDeep} from 'type-fest'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
+
 import {ReactComponent as Logo} from '../src/logo.svg'
 import {tsriArticleStyles} from '../src/styles/tsri-article.styles'
 import {TsriBreakBlock} from '../src/tsri-break-block'
 import {TsriButton} from '../src/tsri-button'
 import {TsriParagraph} from '../src/tsri-paragraph'
-import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 
 setDefaultOptions({
   locale: de

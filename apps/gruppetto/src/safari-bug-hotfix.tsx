@@ -1,5 +1,5 @@
-import {ImageWrapper, Teaser} from '@wepublish/website'
 import {styled} from '@mui/material'
+import {ImageWrapper, Teaser} from '@wepublish/website'
 
 // temporary fix until it's properly fixed
 export const SafariBugHotfixTeaser = styled(Teaser)`

@@ -12,6 +12,7 @@ import {GetServerSideProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {useEffect} from 'react'
+
 import {IntendedRouteStorageKey} from '../src/auth-guard'
 
 const LoginWrapper = styled('div')`
