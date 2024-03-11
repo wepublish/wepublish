@@ -1,7 +1,8 @@
 import {Inject, Injectable, Logger} from '@nestjs/common'
 import {Client, ClientOptions} from 'minio'
 
-export const STORAGE_CLIENT_MODULE_OPTIONS = 'STORAGE_CLIENT_MODULE_OPTIONS'
+export const STORAGE_CLIENT_MODULE_OPTIONS = Symbol('STORAGE_CLIENT_MODULE_OPTIONS')
+export const STORAGE_CLIENT_SERVICE_TOKEN = Symbol('STORAGE_CLIENT_SERVICE_TOKEN')
 
 export type StorageClientConfig = ClientOptions
 
@@ -12,6 +13,7 @@ export class StorageClient {
   private client: Client
 
   constructor(@Inject(STORAGE_CLIENT_MODULE_OPTIONS) config: StorageClientConfig) {
+    console.log('storage client', config)
     this.client = new Client(config)
   }
 

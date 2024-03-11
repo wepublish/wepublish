@@ -1,30 +1,42 @@
-import {Injectable} from '@nestjs/common'
-import {StorageClient} from '@wepublish/media/api'
+import {Inject, Injectable} from '@nestjs/common'
 import sharp from 'sharp'
 import {TransformationsDto} from './transformations.dto'
-import {Readable} from 'stream'
+import {StorageClient} from '../storage-client/storage-client.service'
+
+export const MEDIA_SERVICE_MODULE_OPTIONS = Symbol('MEDIA_SERVICE_MODULE_OPTIONS')
+export const MEDIA_SERVICE_TOKEN = Symbol('MEDIA_SERVICE_TOKEN')
+
+export type MediaServiceConfig = {
+  uploadBucket: string
+  transformationBucket: string
+}
 
 const getTransformationKey = (transformations: TransformationsDto) => {
-  return JSON.stringify(transformations, (key, value) =>
+  return JSON.stringify(transformations, (_key, value) =>
     value instanceof Object && !(value instanceof Array)
       ? Object.keys(value)
           .sort()
           .reduce((sorted, key) => {
             sorted[key] = value[key]
             return sorted
-          }, {})
+          }, {} as Record<string, unknown>)
       : value
   )
 }
 
 @Injectable()
-export class AppService {
-  constructor(private storage: StorageClient) {}
+export class MediaService {
+  constructor(
+    @Inject(MEDIA_SERVICE_MODULE_OPTIONS) private config: MediaServiceConfig,
+    private storage: StorageClient
+  ) {
+    console.log(this.config, storage)
+  }
 
-  public async getData(imageId: string, transformations: TransformationsDto) {
+  public async getImage(imageId: string, transformations: TransformationsDto) {
     const transformationsKey = getTransformationKey(transformations)
     const isAlreadyTransformed = await this.storage.hasFile(
-      'wepublish-transformed',
+      this.config.transformationBucket,
       `images/${imageId}/${transformationsKey}.webp`
     )
 
@@ -33,16 +45,22 @@ export class AppService {
     }
 
     return await Promise.all([
-      this.storage.getFile('wepublish-transformed', `images/${imageId}/${transformationsKey}.webp`),
+      this.storage.getFile(
+        this.config.transformationBucket,
+        `images/${imageId}/${transformationsKey}.webp`
+      ),
       this.storage.getFileInformation(
-        'wepublish-transformed',
+        this.config.transformationBucket,
         `images/${imageId}/${transformationsKey}.webp`
       )
     ])
   }
 
-  public async transformImage(imageId: string, transformations: TransformationsDto) {
-    const imageStream = await this.storage.getFile('wepublish-staff', `images/${imageId}.webp`)
+  private async transformImage(imageId: string, transformations: TransformationsDto) {
+    const imageStream = await this.storage.getFile(
+      this.config.uploadBucket,
+      `images/${imageId}.webp`
+    )
 
     const sharpInstance = imageStream.pipe(
       sharp({
@@ -87,20 +105,20 @@ export class AppService {
     }
 
     const transformationsKey = getTransformationKey(transformations)
+    const transformedImage = sharpInstance.webp({
+      quality: transformations.quality
+    })
+
     await this.storage.saveFile(
-      'wepublish-transformed',
+      this.config.transformationBucket,
       `images/${imageId}/${transformationsKey}.webp`,
-      sharpInstance.webp({
-        quality: transformations.quality
-      })
+      transformedImage.clone()
     )
 
     return Promise.all([
-      sharpInstance.webp({
-        quality: transformations.quality
-      }),
+      transformedImage,
       this.storage.getFileInformation(
-        'wepublish-transformed',
+        this.config.transformationBucket,
         `images/${imageId}/${transformationsKey}.webp`
       )
     ])
@@ -112,18 +130,22 @@ export class AppService {
     })
 
     await this.storage.saveFile(
-      'wepublish-staff',
+      this.config.uploadBucket,
       `images/${imageId}.webp`,
       sharpInstance.webp({
         quality: 100,
-        lossless: true
+        nearLossless: true
       })
     )
 
     return await sharpInstance.metadata()
   }
 
+  public async hasImage(imageId: string): Promise<boolean> {
+    return await this.storage.hasFile(this.config.uploadBucket, `images/${imageId}.webp`)
+  }
+
   public async deleteImage(imageId: string) {
-    return await this.storage.deleteFile('wepublish-staff', `images/${imageId}.webp`)
+    return await this.storage.deleteFile(this.config.uploadBucket, `images/${imageId}.webp`)
   }
 }

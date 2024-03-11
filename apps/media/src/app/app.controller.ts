@@ -2,6 +2,7 @@ import {
   Controller,
   Delete,
   Get,
+  NotFoundException,
   Param,
   ParseFilePipe,
   Post,
@@ -12,19 +13,21 @@ import {
   UseInterceptors
 } from '@nestjs/common'
 import {FileInterceptor} from '@nestjs/platform-express'
-import {TokenAuthGuard} from '@wepublish/media/api'
+import {
+  MediaService,
+  TokenAuthGuard,
+  TransformationsDto,
+  SupportedImagesValidator
+} from '@wepublish/media/api'
 import {Response} from 'express'
 import 'multer'
 import {v4 as uuidv4} from 'uuid'
-import {AppService} from './app.service'
-import {SupportedImagesValidator} from './supported-images-validator'
-import {TransformationsDto} from './transformations.dto'
 
 @Controller({
   version: '1'
 })
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(private readonly media: MediaService) {}
 
   @UseGuards(TokenAuthGuard)
   @Post()
@@ -40,7 +43,7 @@ export class AppController {
     uploadedFile: Express.Multer.File
   ) {
     const imageId = uuidv4()
-    const metadata = await this.appService.saveImage(imageId, uploadedFile.buffer)
+    const metadata = await this.media.saveImage(imageId, uploadedFile.buffer)
 
     res.status(201).send({
       id: imageId,
@@ -60,10 +63,19 @@ export class AppController {
     @Param('imageId') imageId: string,
     @Query() transformations: TransformationsDto
   ) {
-    const [file, stats] = await this.appService.getData(imageId, transformations)
+    const hasImage = await this.media.hasImage(imageId)
+
+    if (!hasImage) {
+      throw new NotFoundException()
+    }
+
+    const [file, stats] = await this.media.getImage(imageId, transformations)
     res.setHeader('Content-Type', 'image/webp')
-    // res.setHeader('ETag', stats.etag)
-    // res.setHeader('Cache-Control', `public, max-age=172800`) // cache for 48 hours and then re-checks the ETag
+
+    if (process.env['NODE_ENV'] === 'production') {
+      res.setHeader('ETag', stats.etag)
+      res.setHeader('Cache-Control', `public, max-age=172800`) // cache for 48 hours and then re-checks the ETag
+    }
 
     return file.pipe(res)
   }
@@ -71,7 +83,7 @@ export class AppController {
   @UseGuards(TokenAuthGuard)
   @Delete(':imageId')
   async deleteImage(@Res() res: Response, @Param('imageId') imageId: string) {
-    await this.appService.deleteImage(imageId)
+    await this.media.deleteImage(imageId)
 
     return res.sendStatus(204)
   }

@@ -23,9 +23,9 @@ export class SupportedImagesValidator extends FileValidator {
     return supportedMimeTypes.includes(file.mimetype)
   }
 
-  override buildErrorMessage(file: any): string {
+  override buildErrorMessage(file: IFile): string {
     return `The file type ${
-      file.mimeType
+      file.mimetype
     } is not supported. Only the file types ${supportedMimeTypes
       .map(mimeType => mimeType.replace('image/', ''))
       .join(', ')} are supported.`

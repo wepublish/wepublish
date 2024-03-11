@@ -104,13 +104,15 @@ export class NovaMediaAdapter implements MediaAdapter {
       const yFocalPoint =
         image.focalPoint.x > 0.6 ? 'bottom' : image.focalPoint.x < 0.4 ? 'top' : ''
 
+      const position = `${xFocalPoint} ${yFocalPoint}`.trim() || undefined
+
       queryParameters.push(
         `resize=${JSON.stringify({
           width: transformations.width,
           height: transformations.height,
           withoutEnlargement: true,
           fit: 'cover',
-          position: image.focalPoint ? `${xFocalPoint} ${yFocalPoint}` : undefined
+          position
         })}`
       )
     }

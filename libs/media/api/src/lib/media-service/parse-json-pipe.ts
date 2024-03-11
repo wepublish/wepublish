@@ -4,6 +4,7 @@ import {ArgumentMetadata, BadRequestException, Injectable, PipeTransform} from '
 export class ParseJsonPipe implements PipeTransform<string, Record<string, unknown>> {
   transform(value: string, metadata: ArgumentMetadata): Record<string, unknown> {
     const propertyName = metadata.data
+
     try {
       return JSON.parse(value)
     } catch (e) {

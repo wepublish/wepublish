@@ -2,8 +2,10 @@ import {DynamicModule, Module, ModuleMetadata, Provider, Type} from '@nestjs/com
 import {
   StorageClient,
   StorageClientConfig,
-  STORAGE_CLIENT_MODULE_OPTIONS
+  STORAGE_CLIENT_MODULE_OPTIONS,
+  STORAGE_CLIENT_SERVICE_TOKEN
 } from './storage-client.service'
+import {StorageClientConfigModule} from './storage-client-config.module'
 
 export type StorageOptionsFactory = {
   createStorageOptions(): Promise<StorageClientConfig> | StorageClientConfig
@@ -17,41 +19,64 @@ export interface StorageClientAsyncOptions extends Pick<ModuleMetadata, 'imports
 }
 
 @Module({
-  providers: [StorageClient],
-  exports: [StorageClient]
+  imports: [StorageClientConfigModule],
+  exports: [StorageClientConfigModule]
 })
 export class StorageClientModule {
-  public static register(config: StorageClientConfig): DynamicModule {
+  public static forRoot(config: StorageClientConfig): DynamicModule {
     return {
       module: StorageClientModule,
       providers: [
         {
           provide: STORAGE_CLIENT_MODULE_OPTIONS,
           useValue: config
+        },
+        {
+          provide: STORAGE_CLIENT_SERVICE_TOKEN,
+          useClass: StorageClient
+        },
+        {
+          provide: StorageClient,
+          useExisting: STORAGE_CLIENT_SERVICE_TOKEN
         }
-      ]
+      ],
+      exports: [StorageClient]
     }
   }
 
-  public static registerAsync(options: StorageClientAsyncOptions): DynamicModule {
+  public static forRootAsync(options: StorageClientAsyncOptions): DynamicModule {
     return {
       module: StorageClientModule,
-      imports: options.imports || [],
-      providers: this.createAsyncProviders(options)
+      imports: [...(options.imports || [])],
+      providers: this.createAsyncProviders(options),
+      exports: [StorageClient]
+    }
+  }
+
+  public static forFeature(): DynamicModule {
+    return {
+      module: StorageClientModule,
+      providers: [
+        {
+          provide: StorageClient,
+          useExisting: STORAGE_CLIENT_SERVICE_TOKEN
+        }
+      ],
+      exports: [StorageClient]
     }
   }
 
   private static createAsyncProviders(options: StorageClientAsyncOptions): Provider[] {
-    if (options.useExisting || options.useFactory) {
-      return [this.createAsyncOptionsProvider(options)]
-    }
-
     return [
-      this.createAsyncOptionsProvider(options),
       {
-        provide: options.useClass!,
-        useClass: options.useClass!
-      }
+        provide: STORAGE_CLIENT_SERVICE_TOKEN,
+        useClass: StorageClient
+      },
+      {
+        provide: StorageClient,
+        useExisting: STORAGE_CLIENT_SERVICE_TOKEN
+      },
+      this.createAsyncOptionsProvider(options)
     ]
   }
 

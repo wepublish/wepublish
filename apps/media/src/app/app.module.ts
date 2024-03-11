@@ -1,15 +1,21 @@
 import {Module} from '@nestjs/common'
 
 import {AppController} from './app.controller'
-import {AppService} from './app.service'
-import {StorageClientModule, TokenModule} from '@wepublish/media/api'
+import {
+  MediaService,
+  MediaServiceModule,
+  StorageClient,
+  StorageClientModule,
+  TokenModule
+} from '@wepublish/media/api'
 import {ConfigModule, ConfigService} from '@nestjs/config'
 import {MulterModule} from '@nestjs/platform-express'
 import {PassportModule} from '@nestjs/passport'
 
 @Module({
   imports: [
-    StorageClientModule.registerAsync({
+    MulterModule.register({}),
+    StorageClientModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (config: ConfigService) => ({
         endPoint: config.getOrThrow('S3_ENDPOINT'),
@@ -20,7 +26,10 @@ import {PassportModule} from '@nestjs/passport'
       }),
       inject: [ConfigService]
     }),
-    MulterModule.register({}),
+    MediaServiceModule.forRoot({
+      uploadBucket: 'wepublish-staff',
+      transformationBucket: 'wepublish-transformed'
+    }),
     TokenModule.registerAsync({
       imports: [ConfigModule, PassportModule],
       useFactory: (config: ConfigService) => ({
@@ -29,7 +38,6 @@ import {PassportModule} from '@nestjs/passport'
       inject: [ConfigService]
     })
   ],
-  controllers: [AppController],
-  providers: [AppService]
+  controllers: [AppController]
 })
 export class AppModule {}
