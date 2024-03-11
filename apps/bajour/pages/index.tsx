@@ -60,6 +60,9 @@ export const getStaticProps: GetStaticProps = async () => {
       variables: {
         slug: 'home'
       }
+    }),
+    client.query({
+      query: ApiV1.NavigationListDocument
     })
   ])
 

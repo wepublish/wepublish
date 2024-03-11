@@ -35,6 +35,7 @@ export type Article = {
   __typename?: 'Article';
   createdAt: Scalars['DateTime'];
   draft?: Maybe<ArticleRevision>;
+  hidden?: Maybe<Scalars['Boolean']>;
   id: Scalars['ID'];
   latest: ArticleRevision;
   modifiedAt: Scalars['DateTime'];
@@ -59,12 +60,14 @@ export type ArticleCreatedAction = {
 export type ArticleFilter = {
   authors?: InputMaybe<Array<Scalars['ID']>>;
   draft?: InputMaybe<Scalars['Boolean']>;
+  includeHidden?: InputMaybe<Scalars['Boolean']>;
   lead?: InputMaybe<Scalars['String']>;
   pending?: InputMaybe<Scalars['Boolean']>;
   preTitle?: InputMaybe<Scalars['String']>;
   publicationDateFrom?: InputMaybe<DateFilter>;
   publicationDateTo?: InputMaybe<DateFilter>;
   published?: InputMaybe<Scalars['Boolean']>;
+  shared?: InputMaybe<Scalars['Boolean']>;
   tags?: InputMaybe<Array<Scalars['String']>>;
   title?: InputMaybe<Scalars['String']>;
 };
@@ -74,6 +77,7 @@ export type ArticleInput = {
   blocks: Array<BlockInput>;
   breaking: Scalars['Boolean'];
   canonicalUrl?: InputMaybe<Scalars['String']>;
+  hidden?: InputMaybe<Scalars['Boolean']>;
   hideAuthor: Scalars['Boolean'];
   imageID?: InputMaybe<Scalars['ID']>;
   lead?: InputMaybe<Scalars['String']>;

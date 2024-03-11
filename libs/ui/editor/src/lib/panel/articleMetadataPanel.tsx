@@ -107,6 +107,7 @@ export interface ArticleMetadata {
   readonly canonicalUrl: string
   readonly image?: ImageRefFragment
   readonly shared: boolean
+  readonly hidden?: boolean | null
   readonly breaking: boolean
   readonly hideAuthor: boolean
   readonly socialMediaTitle?: string
@@ -145,6 +146,7 @@ function ArticleMetadataPanel({
     tags,
     authors,
     shared,
+    hidden,
     breaking,
     image,
     hideAuthor,
@@ -495,6 +497,17 @@ function ArticleMetadataPanel({
               />
               <HelpText>{t('articleEditor.panels.allowPeerPublishing')}</HelpText>
             </Group>
+
+            <Group controlId="hidden">
+              <ControlLabel>{t('articleEditor.panels.hidden')}</ControlLabel>
+              <Toggle
+                checked={hidden ?? false}
+                disabled={!isAuthorized}
+                onChange={hidden => onChange?.({...value, hidden})}
+              />
+              <HelpText>{t('articleEditor.panels.setAsHidden')}</HelpText>
+            </Group>
+
             <ControlLabel>{t('articleEditor.panels.postImage')}</ControlLabel>
             <ChooseEditImage
               header={''}

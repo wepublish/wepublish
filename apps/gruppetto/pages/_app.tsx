@@ -13,7 +13,6 @@ import {
   ApiV1,
   FooterContainer,
   NavbarContainer,
-  NavbarInnerWrapper,
   WebsiteBuilderProvider,
   WebsiteProvider
 } from '@wepublish/website'
@@ -36,7 +35,6 @@ import {GruppettoBreakBlock} from '../src/break-block'
 import {Button} from '../src/button'
 import {Footer} from '../src/footer'
 import {ReactComponent as Logo} from '../src/logo.svg'
-import {NavBarProfile} from '../src/navbar-profile'
 import {NextWepublishLink} from '../src/next-wepublish-link'
 import {SessionProvider} from '../src/session.provider'
 import {YearlyMemberPlanItem} from '../src/yearly-memberplan-item'
@@ -117,31 +115,9 @@ const SocialLink = styled(NextWepublishLink)`
   justify-content: center;
 `
 
-const LogoLink = styled(NextWepublishLink)`
-  color: unset;
-  display: grid;
-  align-items: center;
-  justify-items: center;
-`
-
-const LogoWrapper = styled(Logo)`
-  fill: currentColor;
-  height: 30px;
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    height: 45px;
-  }
-`
-
 const NavBar = styled(NavbarContainer)`
-  background-color: ${({theme}) => theme.palette.background.default};
-  margin-bottom: ${({theme}) => theme.spacing(3)};
-
-  ${NavbarInnerWrapper} {
-    width: 100%;
-    max-width: ${({theme}) => `${theme.breakpoints.values['lg']}${theme.breakpoints.unit}`};
-    align-self: center;
-  }
+  grid-column: -1/1;
+  z-index: 11;
 `
 
 type CustomAppProps = AppProps<{
@@ -171,16 +147,8 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               <link rel="alternate" type="application/atom+xml" href="/api/atom-feed" />
               <link rel="alternate" type="application/feed+json" href="/api/json-feed" />
             </Head>
-
             <Spacer>
-              <NavBar categorySlugs={[['account', 'issues', 'about-us']]} slug="main">
-                <LogoLink href="/" aria-label="Startseite">
-                  <LogoWrapper />
-                </LogoLink>
-
-                <NavBarProfile />
-              </NavBar>
-
+              <NavBar categorySlugs={[['account', 'issues', 'about-us']]} slug="main" />
               <main>
                 <MainSpacer maxWidth="lg">
                   <Component {...pageProps} />

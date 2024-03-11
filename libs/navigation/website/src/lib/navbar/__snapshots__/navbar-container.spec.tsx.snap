@@ -3,23 +3,23 @@
 exports[`Navbar Container should render Default 1`] = `
 <DocumentFragment>
   <nav
-    class="css-1xe741k-NavbarWrapper ei6evl211"
+    class="css-1afpbz6-NavbarWrapper ei6evl216"
   >
     <header
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl210 css-6mkhdq-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl215 css-xf9z4a-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
-          class="css-kfwxas-NavbarMain ei6evl29"
+          class="css-1trl8g0-NavbarMain ei6evl212"
         >
           <div
-            class="css-viaoz8-NavbarIconButtonWrapper ei6evl28"
+            class="css-1545n5p-NavbarIconButtonWrapper ei6evl210"
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary MuiIconButton-sizeLarge css-fro4kn-MuiButtonBase-root-MuiIconButton-root"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-v0cdkb-MuiButtonBase-root-MuiIconButton-root-Navbar"
               tabindex="0"
               type="button"
             >
@@ -45,6 +45,45 @@ exports[`Navbar Container should render Default 1`] = `
               />
             </button>
           </div>
+        </div>
+        <div
+          class="css-cl7riy-NavbarSpacer ei6evl28"
+        />
+        <div
+          class="css-1w9evey-NavbarActions ei6evl211"
+        >
+          <a
+            aria-label="Login"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+            href="/login"
+          >
+            <button
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-ydzw83-MuiButtonBase-root-MuiIconButton-root-Navbar"
+              tabindex="0"
+              type="button"
+            >
+              <svg
+                fill="currentColor"
+                height="1em"
+                stroke="currentColor"
+                stroke-width="0"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88a9.947 9.947 0 0112.28 0C16.43 19.18 14.03 20 12 20z"
+                />
+              </svg>
+              <span
+                class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+              />
+            </button>
+          </a>
         </div>
       </div>
     </header>
@@ -55,23 +94,23 @@ exports[`Navbar Container should render Default 1`] = `
 exports[`Navbar Container should render WithClassName 1`] = `
 <DocumentFragment>
   <nav
-    class="extra-classname css-1xe741k-NavbarWrapper ei6evl211"
+    class="extra-classname css-1afpbz6-NavbarWrapper ei6evl216"
   >
     <header
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl210 css-6mkhdq-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl215 css-xf9z4a-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
-          class="css-kfwxas-NavbarMain ei6evl29"
+          class="css-1trl8g0-NavbarMain ei6evl212"
         >
           <div
-            class="css-viaoz8-NavbarIconButtonWrapper ei6evl28"
+            class="css-1545n5p-NavbarIconButtonWrapper ei6evl210"
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary MuiIconButton-sizeLarge css-fro4kn-MuiButtonBase-root-MuiIconButton-root"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-v0cdkb-MuiButtonBase-root-MuiIconButton-root-Navbar"
               tabindex="0"
               type="button"
             >
@@ -98,6 +137,45 @@ exports[`Navbar Container should render WithClassName 1`] = `
             </button>
           </div>
         </div>
+        <div
+          class="css-cl7riy-NavbarSpacer ei6evl28"
+        />
+        <div
+          class="css-1w9evey-NavbarActions ei6evl211"
+        >
+          <a
+            aria-label="Login"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+            href="/login"
+          >
+            <button
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-ydzw83-MuiButtonBase-root-MuiIconButton-root-Navbar"
+              tabindex="0"
+              type="button"
+            >
+              <svg
+                fill="currentColor"
+                height="1em"
+                stroke="currentColor"
+                stroke-width="0"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88a9.947 9.947 0 0112.28 0C16.43 19.18 14.03 20 12 20z"
+                />
+              </svg>
+              <span
+                class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+              />
+            </button>
+          </a>
+        </div>
       </div>
     </header>
   </nav>
@@ -107,23 +185,23 @@ exports[`Navbar Container should render WithClassName 1`] = `
 exports[`Navbar Container should render WithEmotion 1`] = `
 <DocumentFragment>
   <nav
-    class="css-1xe741k-NavbarWrapper ei6evl211"
+    class="css-1afpbz6-NavbarWrapper ei6evl216"
   >
     <header
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl210 css-6mkhdq-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl215 css-xf9z4a-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
-          class="css-kfwxas-NavbarMain ei6evl29"
+          class="css-1trl8g0-NavbarMain ei6evl212"
         >
           <div
-            class="css-viaoz8-NavbarIconButtonWrapper ei6evl28"
+            class="css-1545n5p-NavbarIconButtonWrapper ei6evl210"
           >
             <button
               aria-label="Menu"
-              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-colorSecondary MuiIconButton-sizeLarge css-fro4kn-MuiButtonBase-root-MuiIconButton-root"
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeLarge css-v0cdkb-MuiButtonBase-root-MuiIconButton-root-Navbar"
               tabindex="0"
               type="button"
             >
@@ -149,6 +227,45 @@ exports[`Navbar Container should render WithEmotion 1`] = `
               />
             </button>
           </div>
+        </div>
+        <div
+          class="css-cl7riy-NavbarSpacer ei6evl28"
+        />
+        <div
+          class="css-1w9evey-NavbarActions ei6evl211"
+        >
+          <a
+            aria-label="Login"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+            href="/login"
+          >
+            <button
+              class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-ydzw83-MuiButtonBase-root-MuiIconButton-root-Navbar"
+              tabindex="0"
+              type="button"
+            >
+              <svg
+                fill="currentColor"
+                height="1em"
+                stroke="currentColor"
+                stroke-width="0"
+                viewBox="0 0 24 24"
+                width="1em"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88a9.947 9.947 0 0112.28 0C16.43 19.18 14.03 20 12 20z"
+                />
+              </svg>
+              <span
+                class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+              />
+            </button>
+          </a>
         </div>
       </div>
     </header>

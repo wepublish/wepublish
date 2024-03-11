@@ -1,6 +1,6 @@
 import {Button, styled} from '@mui/material'
-import {Image, TeaserContent, TeaserLead, TeaserPreTitle, TeaserTitle} from '@wepublish/website'
 import {NextWepublishLink} from '@wepublish/utils/website'
+import {Image, TeaserContent, TeaserLead, TeaserPreTitle, TeaserTitle} from '@wepublish/website'
 
 export const fluidTypography = (minSize: number, maxSize: number): string => {
   const minViewPort = 390
@@ -45,7 +45,7 @@ export const TeaserTitlesStyled = styled(TeaserTitle)`
 `
 
 export const TitleLine = styled('hr')`
-  background-color: #ffbaba;
+  background-color: ${({theme}) => theme.palette.secondary.main};
   height: 2px;
   width: 100%;
   margin: 0;

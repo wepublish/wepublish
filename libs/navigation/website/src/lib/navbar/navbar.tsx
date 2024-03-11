@@ -1,8 +1,8 @@
 import {AppBar, Theme, Toolbar, css, styled, useTheme} from '@mui/material'
 import {FullNavigationFragment} from '@wepublish/website/api'
 import {BuilderNavbarProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {PropsWithChildren, useCallback, useState} from 'react'
-import {MdClose, MdMenu} from 'react-icons/md'
+import {PropsWithChildren, useCallback, useMemo, useState} from 'react'
+import {MdAccountCircle, MdClose, MdMenu} from 'react-icons/md'
 import {navigationLinkToUrl} from '../link-to-url'
 
 export const NavbarWrapper = styled('nav')`
@@ -11,6 +11,7 @@ export const NavbarWrapper = styled('nav')`
   left: 0;
   right: 0;
   z-index: 10;
+  background-color: ${({theme}) => theme.palette.background.default};
 `
 
 const appBarStyles = (theme: Theme, isMenuOpen: boolean) =>
@@ -23,27 +24,88 @@ const appBarStyles = (theme: Theme, isMenuOpen: boolean) =>
 
 export const NavbarInnerWrapper = styled(Toolbar)`
   display: grid;
+  grid-template-columns: auto 1fr auto 1fr auto;
   align-items: center;
   grid-auto-flow: column;
   justify-content: space-between;
   justify-items: center;
   min-height: unset;
+  padding: 0;
 
   ${({theme}) => css`
+    ${theme.breakpoints.up('sm')} {
+      min-height: unset;
+      padding: 0;
+      grid-auto-columns: 1fr;
+    }
+
     ${theme.breakpoints.up('md')} {
       min-height: unset;
-      padding-left: 0;
+      padding: 0;
       grid-auto-columns: 1fr;
     }
   `}
 `
 
-export const NavbarMain = styled('div')`
+export const NavbarLinks = styled('div')<{isMenuOpen?: boolean}>`
+  grid-column: 2;
+  margin: 0 ${({theme}) => theme.spacing(1)};
+  display: none;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+
+  ${({isMenuOpen}) =>
+    isMenuOpen &&
+    css`
+      z-index: -1;
+    `}
+
+  @media (min-width: 740px) {
+    // custom for maximum space usage
+    display: flex;
+  }
+`
+
+export const NavbarLink = styled('a')`
+  font-size: 1rem;
+  margin: 0 ${({theme}) => theme.spacing(1)} 0 ${({theme}) => theme.spacing(2)};
+  text-decoration: none;
+  color: ${({theme}) => theme.palette.common.black};
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    font-size: 1.3rem;
+  }
+`
+
+export const NavbarMain = styled('div')<{isMenuOpen?: boolean}>`
   display: flex;
   flex-flow: row wrap;
   align-items: center;
   justify-self: start;
   gap: ${({theme}) => theme.spacing(2)};
+
+  ${({isMenuOpen}) =>
+    isMenuOpen &&
+    css`
+      z-index: -1;
+    `}
+`
+
+export const NavbarActions = styled('div')<{isMenuOpen?: boolean}>`
+  display: flex;
+  flex-flow: row wrap;
+  align-items: center;
+  justify-self: end;
+  gap: ${({theme}) => theme.spacing(2)};
+  grid-column: 5;
+  justify-self: end;
+
+  ${({isMenuOpen}) =>
+    isMenuOpen &&
+    css`
+      z-index: -1;
+    `}
 `
 
 export const NavbarIconButtonWrapper = styled('div')`
@@ -51,17 +113,85 @@ export const NavbarIconButtonWrapper = styled('div')`
   display: flex;
   justify-content: center;
   align-items: center;
+  width: ${({theme}) => theme.spacing(6.5)};
+  height: ${({theme}) => theme.spacing(6.5)};
+  color: white;
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    width: ${({theme}) => theme.spacing(7.5)};
+    height: ${({theme}) => theme.spacing(7.5)};
+
+    svg {
+      width: ${({theme}) => theme.spacing(4.5)};
+      height: ${({theme}) => theme.spacing(4.5)};
+    }
+  }
+
+  ${({theme}) => theme.breakpoints.up('lg')} {
+    width: ${({theme}) => theme.spacing(12.5)};
+    height: ${({theme}) => theme.spacing(12.5)};
+
+    svg {
+      width: ${({theme}) => theme.spacing(6.5)};
+      height: ${({theme}) => theme.spacing(6.5)};
+    }
+  }
 `
 
-export function Navbar({className, children, categorySlugs, slug, data}: BuilderNavbarProps) {
+const logoLinkStyles = (isMenuOpen: boolean) => css`
+  color: unset;
+  display: grid;
+  align-items: center;
+  justify-items: center;
+  grid-column: 3;
+  justify-self: center;
+
+  ${isMenuOpen &&
+  css`
+    z-index: -1;
+  `}
+`
+
+export const NavbarLogoWrapper = styled('div')`
+  fill: currentColor;
+  width: auto;
+`
+
+export const NavbarSpacer = styled('div')`
+  grid-column: 4;
+`
+
+const useImageStyles = (theme: Theme) => {
+  return useMemo(
+    () => css`
+      height: ${theme.spacing(5)};
+      max-width: ${theme.spacing(25)};
+
+      ${theme.breakpoints.up('md')} {
+        height: ${theme.spacing(6)};
+        max-width: ${theme.spacing(30)};
+      }
+
+      ${theme.breakpoints.up('lg')} {
+        height: ${theme.spacing(9)};
+        max-width: ${theme.spacing(38)};
+      }
+    `,
+    [theme]
+  )
+}
+
+export function Navbar({className, children, categorySlugs, slug, data, logo}: BuilderNavbarProps) {
   const theme = useTheme()
   const {
-    elements: {IconButton}
+    elements: {IconButton, Image, Link}
   } = useWebsiteBuilder()
   const [isMenuOpen, setMenuOpen] = useState(false)
   const toggleMenu = useCallback(() => setMenuOpen(isOpen => !isOpen), [])
+  const imageStyles = useImageStyles(theme)
 
   const mainItems = data?.navigations?.find(({key}) => key === slug)
+  const headerItems = data?.navigations?.find(({key}) => key === 'header')
 
   const categories = categorySlugs.map(categorySlugArray => {
     return categorySlugArray.reduce((navigations, categorySlug) => {
@@ -85,12 +215,43 @@ export function Navbar({className, children, categorySlugs, slug, data}: Builder
         <NavbarInnerWrapper>
           <NavbarMain>
             <NavbarIconButtonWrapper>
-              <IconButton size="large" color="secondary" aria-label="Menu" onClick={toggleMenu}>
+              <IconButton
+                size="large"
+                aria-label="Menu"
+                onClick={toggleMenu}
+                css={{color: 'white'}}>
                 {!isMenuOpen && <MdMenu />}
                 {isMenuOpen && <MdClose />}
               </IconButton>
             </NavbarIconButtonWrapper>
           </NavbarMain>
+          {!!headerItems?.links.length && (
+            <NavbarLinks isMenuOpen={isMenuOpen}>
+              {headerItems.links.map((link, index) => {
+                const url = navigationLinkToUrl(link)
+                return (
+                  <NavbarLink key={index} href={url}>
+                    {link.label}
+                  </NavbarLink>
+                )
+              })}
+            </NavbarLinks>
+          )}
+          {!!logo && (
+            <Link href="/" aria-label="Startseite" css={logoLinkStyles(isMenuOpen)}>
+              <NavbarLogoWrapper>
+                <Image image={logo} css={imageStyles} loading="eager" fetchPriority="high" />
+              </NavbarLogoWrapper>
+            </Link>
+          )}
+          <NavbarSpacer />
+          <NavbarActions isMenuOpen={isMenuOpen}>
+            <Link href="/login" aria-label="Login">
+              <IconButton css={{fontSize: '2em', color: 'black'}}>
+                <MdAccountCircle />
+              </IconButton>
+            </Link>
+          </NavbarActions>
         </NavbarInnerWrapper>
       </AppBar>
 
@@ -114,6 +275,9 @@ export const NavPaperWrapper = styled('div')`
   left: 0;
   right: 0;
   transform: translateY(100%);
+  overflow-y: scroll;
+  max-height: 100vh;
+  padding-bottom: ${({theme}) => theme.spacing(10)};
 
   ${({theme}) => css`
     ${theme.breakpoints.up('md')} {

@@ -126,6 +126,7 @@ function ArticleList() {
         <ListViewHeader>
           <h2>{t('articles.overview.articles')}</h2>
         </ListViewHeader>
+
         <PermissionControl qualifyingPermissions={['CAN_CREATE_ARTICLE']}>
           <ListViewActions>
             <Link to="/articles/create">
@@ -145,7 +146,8 @@ function ArticleList() {
             'authors',
             'pending',
             'published',
-            'publicationDate'
+            'publicationDate',
+            'includeHidden'
           ]}
           filter={filter}
           isLoading={isLoading}
@@ -165,56 +167,7 @@ function ArticleList() {
             setSortOrder(sortType ?? 'asc')
             setSortField(sortColumn)
           }}>
-          <Column width={210} align="left" resizable sortable>
-            <HeaderCell>{t('articles.overview.publicationDate')}</HeaderCell>
-            <Cell dataKey="published">
-              {(articleRef: RowDataType<ArticleRefFragment>) =>
-                articleRef.published?.publishedAt
-                  ? t('articleEditor.overview.publishedAt', {
-                      publicationDate: new Date(articleRef.published.publishedAt)
-                    })
-                  : articleRef.pending?.publishAt
-                  ? t('articleEditor.overview.publishedAtIfPending', {
-                      publishedAtIfPending: new Date(articleRef.pending?.publishAt)
-                    })
-                  : t('articles.overview.notPublished')
-              }
-            </Cell>
-          </Column>
-          <Column width={210} align="left" resizable sortable>
-            <HeaderCell>{t('articles.overview.updated')}</HeaderCell>
-            <Cell dataKey="modifiedAt">
-              {({modifiedAt}: RowDataType<ArticleRefFragment>) =>
-                t('articleEditor.overview.modifiedAt', {
-                  modificationDate: new Date(modifiedAt)
-                })
-              }
-            </Cell>
-          </Column>
-          <Column width={400} align="left" resizable>
-            <HeaderCell>{t('articles.overview.title')}</HeaderCell>
-            <Cell>
-              {(rowData: RowDataType<ArticleRefFragment>) => (
-                <Link to={`/articles/edit/${rowData.id}`}>
-                  {rowData.latest.title || t('articles.overview.untitled')}
-                </Link>
-              )}
-            </Cell>
-          </Column>
-          <Column width={200} align="left" resizable>
-            <HeaderCell>{t('articles.overview.authors')}</HeaderCell>
-            <Cell>
-              {(rowData: RowDataType<ArticleRefFragment>) => {
-                return (rowData as ArticleRefFragment).latest.authors.reduce(
-                  (allAuthors, author, index) => {
-                    return `${allAuthors}${index !== 0 ? ', ' : ''}${author?.name}`
-                  },
-                  ''
-                )
-              }}
-            </Cell>
-          </Column>
-          <Column width={150} align="left" resizable>
+          <Column width={125} align="left" resizable>
             <HeaderCell>{t('articles.overview.states')}</HeaderCell>
             <Cell>
               {(rowData: RowDataType<ArticleRefFragment>) => {
@@ -234,6 +187,60 @@ function ArticleList() {
               }}
             </Cell>
           </Column>
+
+          <Column width={400} align="left" resizable>
+            <HeaderCell>{t('articles.overview.title')}</HeaderCell>
+            <Cell>
+              {(rowData: RowDataType<ArticleRefFragment>) => (
+                <Link to={`/articles/edit/${rowData.id}`}>
+                  {rowData.latest.title || t('articles.overview.untitled')}
+                </Link>
+              )}
+            </Cell>
+          </Column>
+
+          <Column width={200} align="left" resizable>
+            <HeaderCell>{t('articles.overview.authors')}</HeaderCell>
+            <Cell>
+              {(rowData: RowDataType<ArticleRefFragment>) => {
+                return (rowData as ArticleRefFragment).latest.authors.reduce(
+                  (allAuthors, author, index) => {
+                    return `${allAuthors}${index !== 0 ? ', ' : ''}${author?.name}`
+                  },
+                  ''
+                )
+              }}
+            </Cell>
+          </Column>
+
+          <Column width={210} align="left" resizable sortable>
+            <HeaderCell>{t('articles.overview.publicationDate')}</HeaderCell>
+            <Cell dataKey="published">
+              {(articleRef: RowDataType<ArticleRefFragment>) =>
+                articleRef.published?.publishedAt
+                  ? t('articleEditor.overview.publishedAt', {
+                      publicationDate: new Date(articleRef.published.publishedAt)
+                    })
+                  : articleRef.pending?.publishAt
+                  ? t('articleEditor.overview.publishedAtIfPending', {
+                      publishedAtIfPending: new Date(articleRef.pending?.publishAt)
+                    })
+                  : t('articles.overview.notPublished')
+              }
+            </Cell>
+          </Column>
+
+          <Column width={210} align="left" resizable sortable>
+            <HeaderCell>{t('articles.overview.updated')}</HeaderCell>
+            <Cell dataKey="modifiedAt">
+              {({modifiedAt}: RowDataType<ArticleRefFragment>) =>
+                t('articleEditor.overview.modifiedAt', {
+                  modificationDate: new Date(modifiedAt)
+                })
+              }
+            </Cell>
+          </Column>
+
           <Column width={200} align="center" fixed="right">
             <HeaderCell>{t('articles.overview.action')}</HeaderCell>
             <IconButtonCell>

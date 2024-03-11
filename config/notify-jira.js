@@ -1,4 +1,4 @@
-const {setFailed, warning, debug} = require('@actions/core')
+const {setFailed, warning, debug, info} = require('@actions/core')
 const axios = require('axios')
 
 if (!process.env.JIRA_BASE_URL) throw new Error('Please specify JIRA_BASE_URL env')
@@ -158,12 +158,14 @@ async function main() {
                   {body: getJiraCommentBody()},
                   getHttpOptions()
                 )
+                info(`Updated comment for ${issue}`)
             } else {
                 await axios.post(
                   `${config.baseUrl}/rest/api/3/issue/${issue}/comment`,
                   {body: getJiraCommentBody()},
                   getHttpOptions()
                 )
+                info(`Created comment for ${issue}`)
             }
         } catch (e) {
             errors.push(e)

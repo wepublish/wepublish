@@ -1,4 +1,4 @@
-import {useNavigationListQuery} from '@wepublish/website/api'
+import {useNavigationListQuery, usePeerProfileQuery} from '@wepublish/website/api'
 import {
   BuilderContainerProps,
   BuilderNavbarProps,
@@ -13,6 +13,8 @@ export type NavbarContainerProps = PropsWithChildren<
 export function NavbarContainer({className, categorySlugs, slug, children}: NavbarContainerProps) {
   const {Navbar} = useWebsiteBuilder()
   const {data, loading, error} = useNavigationListQuery()
+  const {data: peerInfoData} = usePeerProfileQuery()
+  const logo = peerInfoData?.peerProfile.logo
 
   return (
     <Navbar
@@ -21,7 +23,8 @@ export function NavbarContainer({className, categorySlugs, slug, children}: Navb
       data={data}
       loading={loading}
       error={error}
-      className={className}>
+      className={className}
+      logo={logo}>
       {children}
     </Navbar>
   )

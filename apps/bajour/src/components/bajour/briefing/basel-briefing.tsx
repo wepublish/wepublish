@@ -270,7 +270,7 @@ const TeaserContentInterior = styled('div')`
   padding: ${({theme}) =>
     `${theme.spacing(1)} ${theme.spacing(1)} ${theme.spacing(1)} ${theme.spacing(3.5)}`};
   border-bottom-right-radius: ${({theme}) => theme.spacing(2)};
-  background-color: #ffbaba;
+  background-color: ${({theme}) => theme.palette.secondary.main};
   color: ${({theme}) => theme.palette.common.black};
 
   ${({theme}) => theme.breakpoints.up('sm')} {

@@ -19,7 +19,7 @@ export const BestOfWePublishWrapper = styled('article')`
 const BestOfWePublishHeader = styled('div')`
   display: grid;
   grid-template-columns: max-content;
-  color: #ffbaba;
+  color: ${({theme}) => theme.palette.secondary.main};
   background-color: currentColor;
   padding-left: 20%;
   font-size: 1.4rem;
@@ -43,9 +43,9 @@ const BestOfWePublishFooter = styled('div')`
   padding-left: calc(7% + ${({theme}) => theme.spacing(4)});
   background: linear-gradient(
     to left,
-    #ffbaba calc(93% - ${({theme}) => theme.spacing(4)}),
+    ${({theme}) => theme.palette.secondary.main} calc(93% - ${({theme}) => theme.spacing(4)}),
     ${({theme}) => theme.palette.common.white} calc(93% - ${({theme}) => theme.spacing(4)}) 93%,
-    #ffbaba 93%
+    ${({theme}) => theme.palette.secondary.main} 93%
   );
 `
 
@@ -72,7 +72,7 @@ const MoreButton = styled('a')`
   padding: ${({theme}) => theme.spacing(1)} ${({theme}) => theme.spacing(3)};
   background-color: ${({theme}) => theme.palette.common.white};
   border: 3px solid currentColor;
-  color: #ffbaba;
+  color: ${({theme}) => theme.palette.secondary.main};
   border-radius: ${({theme}) => theme.spacing(1)};
   font-size: 20px;
   text-decoration: none;
