@@ -275,4 +275,11 @@ fragment FullBlock on Block {
     }
     numColumns
   }
+
+  ... on TeaserListBlock {
+    blockStyle
+    teasers {
+      ...FullTeaser
+    }
+  }
 }
