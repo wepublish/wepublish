@@ -25,7 +25,8 @@ import {
   TeaserGridFlexBlock,
   TitleBlock,
   LinkPageBreakBlock,
-  CommentBlock
+  CommentBlock,
+  TeaserListBlock
 } from '@wepublish/website/api'
 
 export type BuilderBlockRendererProps = {block: Block}
@@ -55,6 +56,10 @@ export type BuilderTeaserGridFlexBlockProps = TeaserGridFlexBlock & {
   className?: string
 }
 export type BuilderTeaserGridBlockProps = TeaserGridBlock & {
+  className?: string
+}
+
+export type BuilderTeaserListBlockProps = TeaserListBlock & {
   className?: string
 }
 

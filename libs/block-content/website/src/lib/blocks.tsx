@@ -26,6 +26,7 @@ import {isEventBlock} from './event/event-block'
 import {isPolisConversationBlock} from './polis-conversation/polis-conversation-block'
 import {isBreakBlock} from './break/break-block'
 import {memo} from 'react'
+import {isTeaserListBlock} from './teaser/teaser-list-block'
 
 export const hasBlockStyle = (blockStyle: string) => (block: Block) =>
   block.blockStyle === blockStyle
@@ -52,7 +53,8 @@ export const BlockRenderer = memo(({block}: BuilderBlockRendererProps) => {
 
   const teaserCond = cond([
     [isTeaserGridFlexBlock, block => <blocks.TeaserGridFlex {...block} />],
-    [isTeaserGridBlock, block => <blocks.TeaserGrid {...block} />]
+    [isTeaserGridBlock, block => <blocks.TeaserGrid {...block} />],
+    [isTeaserListBlock, block => <blocks.TeaserList {...block} />]
   ])
 
   const imageCond = cond([
