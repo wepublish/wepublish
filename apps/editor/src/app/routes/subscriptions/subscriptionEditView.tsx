@@ -43,6 +43,7 @@ import {
   Button as RButton,
   Col,
   DatePicker,
+  FlexboxGrid,
   Form as RForm,
   Grid as RGrid,
   IconButton,
@@ -55,7 +56,7 @@ import {
   toaster,
   Toggle
 } from 'rsuite'
-import FormControlLabel from 'rsuite/FormControlLabel'
+import {Simulate} from 'react-dom/test-utils'
 
 const {Group, ControlLabel, Control, HelpText} = RForm
 
@@ -71,11 +72,15 @@ const Grid = styled(RGrid)`
   padding-right: 0px;
 `
 
+const RowPaddingTop = styled(Row)`
+  padding-top: 12px;
+`
+
 const UserFormGrid = styled(RGrid)`
   width: 100%;
   padding-left: 0px;
   height: calc(100vh - 160px);
-  overflow-y: scroll;
+  overflow-y: auto;
   margin-top: 2rem;
 `
 
@@ -477,135 +482,154 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
                     id ? t('userSubscriptionEdit.editTitle') : t('userSubscriptionEdit.createTitle')
                   }>
                   <Group controlId="memberPlan">
-                    <ControlLabel>
-                      {toggleRequiredLabel(t('userSubscriptionEdit.selectMemberPlan'))}
-                    </ControlLabel>
+                    <Grid fluid>
+                      <Row gutter={24}>
+                        {/* user */}
+                        <Col xs={12}>
+                          <ControlLabel>
+                            {toggleRequiredLabel(t('userSubscriptionEdit.selectUser'))}
+                          </ControlLabel>
 
-                    <Control
-                      block
-                      name="memberPlan"
-                      virtualized
-                      disabled={isDisabled || isDeactivated}
-                      data={memberPlans.map(mp => ({value: mp.id, label: mp.name}))}
-                      value={memberPlan?.id}
-                      onChange={(value: any) =>
-                        setMemberPlan(memberPlans.find(mp => mp.id === value))
-                      }
-                      accepter={SelectPicker}
-                    />
+                          <UserSearch
+                            name="user"
+                            user={user}
+                            onUpdateUser={user => {
+                              setUser(user)
+                            }}
+                          />
+                        </Col>
+                        {/* member plan */}
+                        <Col xs={12}>
+                          <ControlLabel>
+                            {toggleRequiredLabel(t('userSubscriptionEdit.selectMemberPlan'))}
+                          </ControlLabel>
+                          <Control
+                            block
+                            name="memberPlan"
+                            virtualized
+                            disabled={isDisabled || isDeactivated}
+                            data={memberPlans.map(mp => ({value: mp.id, label: mp.name}))}
+                            value={memberPlan?.id}
+                            onChange={(value: any) =>
+                              setMemberPlan(memberPlans.find(mp => mp.id === value))
+                            }
+                            accepter={SelectPicker}
+                          />
 
-                    {memberPlan && (
-                      <HelpText>
-                        <DescriptionList>
-                          <DescriptionListItem
-                            label={t('userSubscriptionEdit.memberPlanMonthlyAmount')}>
-                            {(memberPlan.amountPerMonthMin / 100).toFixed(2)}
-                          </DescriptionListItem>
-                        </DescriptionList>
-                      </HelpText>
-                    )}
-                  </Group>
+                          {memberPlan && (
+                            <HelpText>
+                              <DescriptionList>
+                                <DescriptionListItem
+                                  label={t('userSubscriptionEdit.memberPlanMonthlyAmount')}>
+                                  {(memberPlan.amountPerMonthMin / 100).toFixed(2)}
+                                </DescriptionListItem>
+                              </DescriptionList>
+                            </HelpText>
+                          )}
+                        </Col>
+                      </Row>
+                      <RowPaddingTop>
+                        {/* payment periodicity */}
+                        <Col xs={12}>
+                          <ControlLabel>
+                            {toggleRequiredLabel(t('memberPlanList.paymentPeriodicities'))}
+                          </ControlLabel>
 
-                  <Group controlId="user">
-                    <ControlLabel>
-                      {toggleRequiredLabel(t('userSubscriptionEdit.selectUser'))}
-                    </ControlLabel>
+                          <Control
+                            virtualized
+                            value={paymentPeriodicity}
+                            name="paymentPeriodicity"
+                            data={ALL_PAYMENT_PERIODICITIES.map(pp => ({
+                              value: pp,
+                              label: t(`memberPlanList.paymentPeriodicity.${pp}`)
+                            }))}
+                            disabled={isDisabled || hasNoMemberPlanSelected || isDeactivated}
+                            onChange={(value: any) => setPaymentPeriodicity(value)}
+                            block
+                            accepter={SelectPicker}
+                          />
+                        </Col>
+                        {/* monthly amount */}
+                        <Col xs={12}>
+                          <ControlLabel>
+                            {toggleRequiredLabel(t('userSubscriptionEdit.monthlyAmount'))}
+                          </ControlLabel>
 
-                    <UserSearch
-                      name="user"
-                      user={user}
-                      onUpdateUser={user => {
-                        setUser(user)
-                      }}
-                    />
-                  </Group>
+                          <CurrencyInput
+                            name="currency"
+                            currency="CHF"
+                            centAmount={monthlyAmount}
+                            onChange={centAmount => {
+                              setMonthlyAmount(centAmount)
+                            }}
+                            disabled={isDisabled || hasNoMemberPlanSelected || isDeactivated}
+                          />
+                        </Col>
+                      </RowPaddingTop>
+                      <RowPaddingTop>
+                        {/* auto renew */}
+                        <Col xs={12}>
+                          <ControlLabel>{t('userSubscriptionEdit.autoRenew')}</ControlLabel>
+                          <Toggle
+                            checked={autoRenew}
+                            disabled={isDisabled || hasNoMemberPlanSelected || isDeactivated}
+                            onChange={value => setAutoRenew(value)}
+                          />
+                          <HelpText>{t('userSubscriptionEdit.autoRenewDescription')}</HelpText>
+                        </Col>
+                        {/* payment method */}
+                        <Col xs={12}>
+                          <ControlLabel>
+                            {toggleRequiredLabel(t('userSubscriptionEdit.paymentMethod'))}
+                          </ControlLabel>
 
-                  <Group controlId="monthlyAmount">
-                    <ControlLabel>
-                      {toggleRequiredLabel(t('userSubscriptionEdit.monthlyAmount'))}
-                    </ControlLabel>
+                          <Control
+                            name="paymentMethod"
+                            block
+                            virtualized
+                            disabled={isDisabled || hasNoMemberPlanSelected || isDeactivated}
+                            data={paymentMethods.map(pm => ({value: pm.id, label: pm.name}))}
+                            value={paymentMethod?.id}
+                            onChange={(value: any) =>
+                              setPaymentMethod(paymentMethods.find(pm => pm.id === value))
+                            }
+                            accepter={SelectPicker}
+                            placement="auto"
+                          />
+                        </Col>
+                      </RowPaddingTop>
+                      <RowPaddingTop>
+                        {/* subscription start */}
+                        <Col xs={12}>
+                          <ControlLabel>{t('userSubscriptionEdit.startsAt')}</ControlLabel>
+                          <DatePicker
+                            block
+                            cleanable={false}
+                            value={startsAt}
+                            disabled={isDisabled || hasNoMemberPlanSelected || isDeactivated}
+                            onChange={value => setStartsAt(value!)}
+                          />
+                        </Col>
+                        {/* subscription paid until */}
+                        <Col xs={12}>
+                          <ControlLabel>{t('userSubscriptionEdit.paidUntil')}</ControlLabel>
+                          <DatePicker block value={paidUntil ?? undefined} disabled />
+                        </Col>
+                      </RowPaddingTop>
 
-                    <CurrencyInput
-                      name="currency"
-                      currency="CHF"
-                      centAmount={monthlyAmount}
-                      onChange={centAmount => {
-                        setMonthlyAmount(centAmount)
-                      }}
-                      disabled={isDisabled || hasNoMemberPlanSelected || isDeactivated}
-                    />
-                  </Group>
-
-                  <Group controlId="paymentPeriodicities">
-                    <ControlLabel>
-                      {toggleRequiredLabel(t('memberPlanList.paymentPeriodicities'))}
-                    </ControlLabel>
-
-                    <Control
-                      virtualized
-                      value={paymentPeriodicity}
-                      name="paymentPeriodicity"
-                      data={ALL_PAYMENT_PERIODICITIES.map(pp => ({
-                        value: pp,
-                        label: t(`memberPlanList.paymentPeriodicity.${pp}`)
-                      }))}
-                      disabled={isDisabled || hasNoMemberPlanSelected || isDeactivated}
-                      onChange={(value: any) => setPaymentPeriodicity(value)}
-                      block
-                      accepter={SelectPicker}
-                    />
-                  </Group>
-
-                  <Group controlId="autoRenew">
-                    <ControlLabel>{t('userSubscriptionEdit.autoRenew')}</ControlLabel>
-
-                    <Toggle
-                      checked={autoRenew}
-                      disabled={isDisabled || hasNoMemberPlanSelected || isDeactivated}
-                      onChange={value => setAutoRenew(value)}
-                    />
-
-                    <HelpText>{t('userSubscriptionEdit.autoRenewDescription')}</HelpText>
-                  </Group>
-
-                  <Group controlId="startsAt">
-                    <ControlLabel>{t('userSubscriptionEdit.startsAt')}</ControlLabel>
-                    <DatePicker
-                      block
-                      cleanable={false}
-                      value={startsAt}
-                      disabled={isDisabled || hasNoMemberPlanSelected || isDeactivated}
-                      onChange={value => setStartsAt(value!)}
-                    />
-                  </Group>
-
-                  <Group>
-                    <FormControlLabel>{t('userSubscriptionEdit.paymentMethod')}</FormControlLabel>
-                  </Group>
-
-                  <Group controlId="paidUntil">
-                    <ControlLabel>{t('userSubscriptionEdit.paidUntil')}</ControlLabel>
-                    <DatePicker block value={paidUntil ?? undefined} disabled />
-                  </Group>
-
-                  <Group controlId="paymentMethod">
-                    <ControlLabel>
-                      {toggleRequiredLabel(t('userSubscriptionEdit.paymentMethod'))}
-                    </ControlLabel>
-
-                    <Control
-                      name="paymentMethod"
-                      block
-                      virtualized
-                      disabled={isDisabled || hasNoMemberPlanSelected || isDeactivated}
-                      data={paymentMethods.map(pm => ({value: pm.id, label: pm.name}))}
-                      value={paymentMethod?.id}
-                      onChange={(value: any) =>
-                        setPaymentMethod(paymentMethods.find(pm => pm.id === value))
-                      }
-                      accepter={SelectPicker}
-                      placement="auto"
-                    />
+                      <RowPaddingTop>
+                        {/* unique subscription */}
+                        <Col xs={12}>
+                          <ControlLabel>
+                            {t('userSubscriptionEdit.uniqueSubscription')}
+                          </ControlLabel>
+                          <Toggle disabled />
+                          <HelpText>
+                            {t('userSubscriptionEdit.uniqueSubscriptionHelpText')}
+                          </HelpText>
+                        </Col>
+                      </RowPaddingTop>
+                    </Grid>
                   </Group>
                 </RPanel>
               </RGrid>

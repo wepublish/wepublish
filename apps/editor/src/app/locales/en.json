@@ -1367,7 +1367,9 @@
       "subscriptionIsAutoRenewed": "Subscription will be renewed automatically",
       "subscriptionStartsAt": "Subscription starts at {{date}}",
       "subscriptionTitle": "{{memberPlanName}} / No. {{subscriptionId}}",
-      "unexpectedErrorNoInvoice": "Unexpected error: invoice not available."
+      "unexpectedErrorNoInvoice": "Unexpected error: invoice not available.",
+      "uniqueSubscription": "Unique Subscription",
+      "uniqueSubscriptionHelpText": "A user can only purchase one subscription per unique subscription plan. Manual renewal by the user is not possible. Automatic renewal is possible."
     },
     "blockStyles": {
       "style": "Style",
@@ -1378,6 +1380,10 @@
       "areYouSureBody": "The style \"{{ blockStyle }}\" will be deleted permanently and can not be reversed.",
       "areYouSureConfirmation": "Delete style"
     },
-    "yes": "Yes"
+    "yes": "Yes",
+    "memberplanForm": {
+      "uniqueSubsciptionToggle": "Unique Subscription Plan",
+      "uniqueSubscriptionHelpText": "A user can only purchase one subscription of this subscription plan. A user cannot manually renew a Unique subscription. Automatic renewal is possible."
+    }
   }
 }

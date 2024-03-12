@@ -115,6 +115,13 @@ export function MemberPlanForm({
             </ColTextAlignEnd>
 
             {/* unique plan */}
+            <ColTextAlignEnd xs={12}>
+              <FormControlLabelMarginRight>
+                {t('memberplanForm.uniqueSubsciptionToggle')}
+              </FormControlLabelMarginRight>
+              <Toggle />
+              <Form.HelpText>{t('memberplanForm.uniqueSubscriptionHelpText')}</Form.HelpText>
+            </ColTextAlignEnd>
 
             <Col xs={24}>
               <Row>

@@ -1249,7 +1249,9 @@
       "paymentMethod": "Zahlungsmethode",
       "selectMemberPlan": "Memberplan",
       "selectUser": "Benutzer:in wählen",
-      "startsAt": "Abonnements-Beginn"
+      "startsAt": "Abonnements-Beginn",
+      "uniqueSubscription": "Unique-Abo",
+      "uniqueSubscriptionHelpText": "Ein Benutzer kann nur ein Abo pro Unique-Abo-Plan lösen. Die manuelle Verlängerung durch den Benutzer ist nicht möglich. Eine automatische Verlängerung ist möglich."
     },
     "userSubscriptionList": {
       "aboDetails": "Abo-Details",
@@ -1279,6 +1281,10 @@
       "subscriptionTitle": "{{memberPlanName}} / Nr. {{subscriptionId}}",
       "unexpectedErrorNoInvoice": "Unerwarteter Fehler: Rechnung nicht vorhanden."
     },
-    "yes": "Ja"
+    "yes": "Ja",
+    "memberplanForm": {
+      "uniqueSubsciptionToggle": "Unique Abo-Plan",
+      "uniqueSubscriptionHelpText": "Ein User kann nur ein Abo dieses Abo-Plans lösen. Ein User kann ein Unique-Abo nicht manuell verlängern. Die automatische Verlängerung ist möglich."
+    }
   }
 }

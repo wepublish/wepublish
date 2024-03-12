@@ -1205,7 +1205,9 @@
       "paymentMethod": "Mode de paiement",
       "selectMemberPlan": "Plan de membre",
       "selectUser": "Sélectionner l'utilisateur·trice",
-      "startsAt": "Début de l'abonnement"
+      "startsAt": "Début de l'abonnement",
+      "uniqueSubscription": "Abonnement unique",
+      "uniqueSubscriptionHelpText": "Un utilisateur ne peut souscrire qu'un seul abonnement par plan d'abonnement unique. Le renouvellement manuel par l'utilisateur n'est pas possible. Le renouvellement automatique est possible."
     },
     "userSubscriptionList": {
       "aboDetails": "Détails de l'abonnement",
@@ -1235,6 +1237,10 @@
       "subscriptionTitle": "{{memberPlanName}} / N° {{subscriptionId}}",
       "unexpectedErrorNoInvoice": "Erreur inattendue : facture inexistante."
     },
-    "yes": "Oui"
+    "yes": "Oui",
+    "memberplanForm": {
+      "uniqueSubsciptionToggle": "Plan d'abonnement unique",
+      "uniqueSubscriptionHelpText": "Un utilisateur ne peut souscrire qu'un seul abonnement à ce plan d'abonnement. Un utilisateur ne peut pas prolonger manuellement un abonnement unique. Le renouvellement automatique est possible."
+    }
   }
 }
