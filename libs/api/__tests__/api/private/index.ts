@@ -1684,7 +1684,7 @@ export type PaymentMethod = {
   id: Scalars['ID'];
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
-  paymentProvider: PaymentProvider;
+  paymentProvider?: Maybe<PaymentProvider>;
   slug: Scalars['Slug'];
 };
 
