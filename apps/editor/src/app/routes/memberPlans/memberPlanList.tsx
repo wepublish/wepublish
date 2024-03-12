@@ -109,7 +109,7 @@ function MemberPlanList() {
               )}
             </PaddedCell>
           </Column>
-          <Column width={200} align="center" fixed="right">
+          <Column width={400} align="center" fixed="right">
             <HeaderCell>{t('memberPlanList.editFlowShort')}</HeaderCell>
             <RCell>
               {(rowData: RowDataType<FullMemberPlanFragment>) => (
