@@ -886,7 +886,8 @@
         "unpublishPage": "Unpublish Page?",
         "untitled": "Untitled",
         "updatedAt": "Updated At",
-        "updatedAtDate": "{{updatedAtDate, ccc PP pp}}"
+        "updatedAtDate": "{{updatedAtDate, ccc PP pp}}",
+        "providerName": "Payment Provider"
       }
     },
     "paymentMethodList": {

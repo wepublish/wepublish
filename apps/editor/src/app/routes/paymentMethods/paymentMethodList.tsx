@@ -27,6 +27,9 @@ import {RowDataType} from 'rsuite-table'
 
 const {Column, HeaderCell, Cell: RCell} = RTable
 
+const hasBrokenPaymentProvider = ({paymentProvider}: FullPaymentMethodFragment) =>
+  Boolean(paymentProvider)
+
 function PaymentMethodList() {
   const {t} = useTranslation()
   const location = useLocation()
@@ -93,6 +96,15 @@ function PaymentMethodList() {
 
       <TableWrapper>
         <Table fillHeight loading={isLoading} data={paymentMethods}>
+          <Column width={40} align="left">
+            <HeaderCell>{''}</HeaderCell>
+            <RCell>
+              {(rowData: RowDataType<FullPaymentMethodFragment>) =>
+                hasBrokenPaymentProvider(rowData as FullPaymentMethodFragment) ? `✅` : `❌`
+              }
+            </RCell>
+          </Column>
+
           <Column width={200} align="left" resizable>
             <HeaderCell>{t('paymentMethodList.name')}</HeaderCell>
             <RCell>
@@ -103,6 +115,16 @@ function PaymentMethodList() {
               )}
             </RCell>
           </Column>
+
+          <Column width={200} align="left" resizable>
+            <HeaderCell>{t('paymentMethodList.providerName')}</HeaderCell>
+            <RCell>
+              {(rowData: RowDataType<FullPaymentMethodFragment>) => (
+                <div>{rowData.paymentProvider?.name}</div>
+              )}
+            </RCell>
+          </Column>
+
           <Column width={100} align="center" fixed="right">
             <HeaderCell>{t('paymentMethodList.action')}</HeaderCell>
             <PaddedCell>
