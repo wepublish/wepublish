@@ -1339,7 +1339,9 @@
       "paymentMethod": "Payment Method",
       "selectMemberPlan": "Member Plan",
       "selectUser": "Select User",
-      "startsAt": "Subscription Start"
+      "startsAt": "Subscription Start",
+      "uniqueSubscription": "Unique Subscription",
+      "uniqueSubscriptionHelpText": "A user can only purchase one subscription per unique subscription plan. Manual renewal by the user is not possible. Automatic renewal is possible."
     },
     "userSubscriptionList": {
       "aboDetails": "Subscription details",
@@ -1367,9 +1369,7 @@
       "subscriptionIsAutoRenewed": "Subscription will be renewed automatically",
       "subscriptionStartsAt": "Subscription starts at {{date}}",
       "subscriptionTitle": "{{memberPlanName}} / No. {{subscriptionId}}",
-      "unexpectedErrorNoInvoice": "Unexpected error: invoice not available.",
-      "uniqueSubscription": "Unique Subscription",
-      "uniqueSubscriptionHelpText": "A user can only purchase one subscription per unique subscription plan. Manual renewal by the user is not possible. Automatic renewal is possible."
+      "unexpectedErrorNoInvoice": "Unexpected error: invoice not available."
     },
     "blockStyles": {
       "style": "Style",

@@ -703,6 +703,8 @@
       "action": "Aktionen",
       "createNew": "Neuer Memberplan",
       "deleteModalTitle": "Memberplan löschen",
+      "editFlow": "Kommunikationsfluss bearbeiten",
+      "editFlowShort": "Kommunikationsfluss",
       "name": "Name",
       "paymentMethods": "Mögliche Zahlungsmethoden",
       "paymentPeriodicities": "Zahlungsperiodizitäten",

@@ -114,7 +114,7 @@ function MemberPlanList() {
             <RCell>
               {(rowData: RowDataType<FullMemberPlanFragment>) => (
                 <PermissionControl qualifyingPermissions={['CAN_GET_SUBSCRIPTION_FLOWS']}>
-                  <IconButtonTooltip caption={t('delete')}>
+                  <IconButtonTooltip caption={t('memberPlanList.editFlow')}>
                     <Link to={`/communicationflows/edit/${rowData.id}`}>
                       {t('memberPlanList.editFlow')}
                     </Link>
