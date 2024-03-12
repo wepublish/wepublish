@@ -114,6 +114,8 @@ export function MemberPlanForm({
               <Form.HelpText>{t('memberPlanEdit.activeDescription')}</Form.HelpText>
             </ColTextAlignEnd>
 
+            {/* unique plan */}
+
             <Col xs={24}>
               <Row>
                 {/* name */}
