@@ -52,6 +52,7 @@ export enum BlockType {
   TeaserGrid1 = 'TeaserGrid1',
   TeaserGrid6 = 'TeaserGrid6',
   TeaserGridFlex = 'TeaserGridFlex',
+  TeaserList = 'TeaserList',
   Title = 'Title'
 }
 

@@ -16,13 +16,20 @@ const Pagination = styled(RPagination)`
 `
 
 interface SelectTagsProps {
+  className?: string
   name?: string
   tagType: TagType
   selectedTags?: string[] | null
   setSelectedTags(tags: string[]): void
 }
 
-export function SelectTags({name, tagType, selectedTags, setSelectedTags}: SelectTagsProps) {
+export function SelectTags({
+  className,
+  name,
+  tagType,
+  selectedTags,
+  setSelectedTags
+}: SelectTagsProps) {
   const {t} = useTranslation()
   const [page, setPage] = useState(1)
 
@@ -72,6 +79,7 @@ export function SelectTags({name, tagType, selectedTags, setSelectedTags}: Selec
     <TagPicker
       block
       virtualized
+      className={className}
       name={name}
       value={selectedTags}
       data={availableTags}

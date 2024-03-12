@@ -55,7 +55,6 @@ services:
     platform: linux/amd64
     ports:
       - '127.0.0.1:4100:4100'
-      - '127.0.0.1:4101:4100'
     environment:
       NUM_CLUSTERS: 1
       TOKEN: secret
@@ -66,6 +65,8 @@ services:
       AWS_S3_ENDPOINT: 'http://storage:9000'
       AWS_STORAGE_CLASS: 'REDUCED_REDUNDANCY'
       AWS_S3_FORCE_PATH_STYLE: 'true'
+    depends_on:
+      - storage
     networks:
       - app-tier
 
@@ -81,6 +82,7 @@ services:
       - POSTGRESQL_DATABASE=wepublish
     networks:
       - app-tier
+
   storage:
     image: bitnami/minio:latest
     platform: linux/amd64
@@ -95,6 +97,7 @@ services:
       - storage_data:/bitnami/minio/data/
     networks:
       - app-tier
+
   pgadmin:
     image: dpage/pgadmin4
     platform: linux/amd64
@@ -105,7 +108,7 @@ services:
       PGADMIN_CONFIG_MASTER_PASSWORD_REQUIRED: 'False'
       PGADMIN_CONFIG_SERVER_MODE: 'False'
     ports:
-      - "127.0.0.1:8000:80"
+      - '127.0.0.1:8000:80'
     depends_on:
       - database
     networks:

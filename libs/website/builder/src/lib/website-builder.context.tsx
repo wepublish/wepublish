@@ -43,6 +43,7 @@ import {
   BuilderSoundCloudTrackBlockProps,
   BuilderTeaserGridBlockProps,
   BuilderTeaserGridFlexBlockProps,
+  BuilderTeaserListBlockProps,
   BuilderTeaserProps,
   BuilderTikTokVideoBlockProps,
   BuilderTitleBlockProps,
@@ -187,6 +188,7 @@ export type WebsiteBuilderProps = {
     Listicle: ComponentType<BuilderListicleBlockProps>
     TeaserGridFlex: ComponentType<BuilderTeaserGridFlexBlockProps>
     TeaserGrid: ComponentType<BuilderTeaserGridBlockProps>
+    TeaserList: ComponentType<BuilderTeaserListBlockProps>
     Teaser: ComponentType<BuilderTeaserProps>
     Comment: ComponentType<BuilderCommentBlockProps>
   }
@@ -291,6 +293,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     Listicle: NoComponent,
     TeaserGridFlex: NoComponent,
     TeaserGrid: NoComponent,
+    TeaserList: NoComponent,
     Teaser: NoComponent,
     Break: NoComponent
   },

@@ -28,7 +28,6 @@
       "panels": {
         "addSlug": "Please add a slug",
         "allowPeerPublishing": "Allow peers to publish this article.",
-        "article": "Article",
         "articlePending": "There is already a pending publication scheduled at {{pendingPublishDate, ccc PP p}}. Publishing again will override that publication.",
         "articlePreviewLink": "Article Preview Link",
         "articlePreviewLinkDesc": "Preview Links always shows the latest changes in the draft of the article. Preview Links stop working after you publish the article.",
@@ -47,7 +46,6 @@
         "confirm": "Confirm",
         "contentUrl": "Content URL",
         "createdAt": "{{createdAt, ccc PP p}}",
-        "custom": "Custom",
         "dateExplanationPopOver": "This can be used to reference articles that will be published at a later time. For example, helpful when scheduling social media posts in advance for the next morning.",
         "default": "Default",
         "displayOptions": "Display Options",
@@ -63,7 +61,6 @@
         "enterSocialMediaTitle": "Please enter a title for social media",
         "enterTag": "Please enter a tag",
         "enterTitle": "Please enter a title",
-        "event": "Event",
         "general": "General",
         "hideAuthors": "Hide Authors",
         "image": "Image",
@@ -79,9 +76,7 @@
         "modifiedAt": "{{modifiedAt, ccc PP pp}}",
         "no": "No",
         "noImagesFound": "No Images found",
-        "page": "Page",
         "pagePreviewLink": "Page Preview Link",
-        "peerArticle": "Peer Article",
         "peerDisabled": "Currently this peer is disabled",
         "peeredArticlePreview": "Preview",
         "peering": "Peering",
@@ -221,6 +216,18 @@
         "filterByTag": "Filter comments by tag",
         "label": "Comments",
         "title": "Edit Comment Block"
+      },
+      "teaserList": {
+        "teasers": "{{count}} Teasers loaded",
+        "teaserType": "Loading {{teaserType}} teasers",
+        "teaserTypeLabel": "Teaser Type",
+        "skip": "Skipping the first {{skip}} teasers",
+        "skipLabel": "How many teasers should be skipped",
+        "take": "Showing up to {{take}} teasers",
+        "takeLabel": "How many teasers should be loaded",
+        "tags": "Only showing with tags: {{tags}}",
+        "tagsLabel": "Which tags should be loaded",
+        "edit": "Edit teaser list block"
       },
       "embeds": {
         "label": "Embed",
@@ -1378,6 +1385,15 @@
       "areYouSureBody": "The style \"{{ blockStyle }}\" will be deleted permanently and can not be reversed.",
       "areYouSureConfirmation": "Delete style"
     },
-    "yes": "Yes"
+    "yes": "Yes",
+    "resources": {
+      "teaserType": {
+        "article": "Article",
+        "peerArticle": "Peer Article",
+        "page": "Page",
+        "event": "Event",
+        "custom": "Custom"
+      }
+    }
   }
 }
