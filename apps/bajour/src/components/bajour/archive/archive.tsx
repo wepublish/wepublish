@@ -1,5 +1,6 @@
 import {css, styled} from '@mui/material'
 import {
+  ApiV2,
   BuilderTeaserGridBlockProps,
   selectTeaserAuthors,
   selectTeaserLead,
@@ -7,6 +8,7 @@ import {
   selectTeaserUrl,
   useWebsiteBuilder
 } from '@wepublish/website'
+import getConfig from 'next/config'
 import {useState} from 'react'
 
 import {ReactComponent as Logo} from '../../../logo.svg'
@@ -197,6 +199,20 @@ export const Archive = ({teasers}: BuilderTeaserGridBlockProps) => {
   const href = (currentTeaser && selectTeaserUrl(currentTeaser)) ?? ''
   const authors = currentTeaser && selectTeaserAuthors(currentTeaser)
 
+  const {data} = ApiV2.useStatsQuery({
+    // client,
+    variables: {},
+    onError: err => {
+      console.log('error', err)
+    },
+    onCompleted: data => {
+      console.log('data.stats', data.stats)
+      // if (data.consent) {
+      //   setConsent(mapApiDataToInput(data.consent))
+      // }
+    }
+  })
+
   const {
     elements: {Link, Button}
   } = useWebsiteBuilder()
@@ -255,3 +271,8 @@ export const Archive = ({teasers}: BuilderTeaserGridBlockProps) => {
     </ArchiveWrapper>
   )
 }
+
+const {publicRuntimeConfig} = getConfig()
+const ConnectedApp = ApiV2.createWithV2ApiClient(publicRuntimeConfig.env.API_URL!)(Archive)
+
+export {ConnectedApp as default}
