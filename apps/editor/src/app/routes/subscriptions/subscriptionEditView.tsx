@@ -43,7 +43,6 @@ import {
   Button as RButton,
   Col,
   DatePicker,
-  FlexboxGrid,
   Form as RForm,
   Grid as RGrid,
   IconButton,
@@ -56,7 +55,6 @@ import {
   toaster,
   Toggle
 } from 'rsuite'
-import {Simulate} from 'react-dom/test-utils'
 
 const {Group, ControlLabel, Control, HelpText} = RForm
 

@@ -261,3 +261,9 @@ export class InvoiceAlreadyPaidOrCanceled extends ApolloError {
     super(`Invoice with id ${id} is already paid or canceled!`, ErrorCode.UserInputError)
   }
 }
+
+export class SubscriptionNotExtendable extends ApolloError {
+  constructor(id: string) {
+    super(`Subscription with id ${id} is not extendable!`, ErrorCode.UserInputError)
+  }
+}

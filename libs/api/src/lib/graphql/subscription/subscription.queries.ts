@@ -199,6 +199,18 @@ const createAutoRenewFilter = (
   return {}
 }
 
+const createExtendableFilter = (
+  filter: Partial<SubscriptionFilter>
+): Prisma.SubscriptionWhereInput => {
+  if (filter?.extendable != null) {
+    return {
+      extendable: filter.extendable
+    }
+  }
+
+  return {}
+}
+
 const createPaymentPeriodicityFilter = (
   filter: Partial<SubscriptionFilter>
 ): Prisma.SubscriptionWhereInput => {
@@ -280,7 +292,8 @@ export const createSubscriptionFilter = (
     createPaymentMethodFilter(filter),
     createMemberPlanFilter(filter),
     createHasAddressFilter(filter),
-    createUserFilter(filter)
+    createUserFilter(filter),
+    createExtendableFilter(filter)
   ]
 })
 

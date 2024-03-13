@@ -482,6 +482,10 @@ model MemberPlan {
   active                  Boolean
   amountPerMonthMin       Float
   availablePaymentMethods AvailablePaymentMethod[]
+  extendable              Boolean @default(true)
+  maxCount                Int?
+
+
 
   imageID String?
   image   Image?  @relation(fields: [imageID], references: [id])
@@ -737,6 +741,7 @@ model Subscription {
   periods            SubscriptionPeriod[]
   properties         MetadataProperty[]
   deactivation       SubscriptionDeactivation?
+  extendable         Boolean @default(true)
 
   paymentMethodID String
   paymentMethod   PaymentMethod @relation(fields: [paymentMethodID], references: [id])
