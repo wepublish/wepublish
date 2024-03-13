@@ -9,6 +9,7 @@ import {GetStaticPaths, GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 
+import BriefingNewsletter from '../../../src/components/bajour/briefing-newsletter/briefing-newsletter'
 import {Container} from '../../../src/components/layout/container'
 
 export function PeerArticleById() {
@@ -19,21 +20,23 @@ export function PeerArticleById() {
   const {
     elements: {H3}
   } = useWebsiteBuilder()
-
   return (
-    <Container>
-      <PeerArticleContainer peerId={peerId as string} articleId={articleId as string} />
+    <>
+      <Container>
+        <PeerArticleContainer peerId={peerId as string} articleId={articleId as string} />
 
-      <ArticleWrapper>
-        <H3 component={'h2'}>Kommentare</H3>
+        <ArticleWrapper>
+          <H3 component={'h2'}>Kommentare</H3>
 
-        <CommentListContainer
-          id={articleId as string}
-          type={ApiV1.CommentItemType.PeerArticle}
-          peerId={peerId as string}
-        />
-      </ArticleWrapper>
-    </Container>
+          <CommentListContainer
+            id={articleId as string}
+            type={ApiV1.CommentItemType.PeerArticle}
+            peerId={peerId as string}
+          />
+        </ArticleWrapper>
+      </Container>
+      <BriefingNewsletter />
+    </>
   )
 }
 
