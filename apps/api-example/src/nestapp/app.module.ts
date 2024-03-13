@@ -96,7 +96,7 @@ import {BlockStylesModule} from '@wepublish/block-content/api'
               webhookURL: mailProviderRaw.webhookURL
             })
           } else {
-            throw new Error(`Unknown payment provider type defined: ${mailProviderRaw.id}`)
+            throw new Error(`Unknown mail provider type defined: ${mailProviderRaw.id}`)
           }
         }
 
