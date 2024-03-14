@@ -849,7 +849,8 @@
         "unpublishPage": "Dépublier la page ?",
         "untitled": "Sans titre",
         "updatedAt": "Mis à jour le",
-        "updatedAtDate": "{{updatedAtDate, ccc PP pp}}"
+        "updatedAtDate": "{{updatedAtDate, ccc PP pp}}",
+        "providerName": "Payment Provider"
       }
     },
     "paymentMethodList": {
