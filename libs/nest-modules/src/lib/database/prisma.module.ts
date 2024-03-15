@@ -10,7 +10,7 @@ import {PrismaClient} from '@prisma/client'
     },
     PrismaService
   ],
-  exports: [PrismaClient, PrismaService]
+  exports: [PrismaClient]
 })
 export class PrismaModule {
   // https://github.com/prisma/prisma/discussions/4399#discussioncomment-3126122
