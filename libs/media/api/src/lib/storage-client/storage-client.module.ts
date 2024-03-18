@@ -20,7 +20,13 @@ export interface StorageClientAsyncOptions extends Pick<ModuleMetadata, 'imports
 
 @Module({
   imports: [StorageClientConfigModule],
-  exports: [StorageClientConfigModule]
+  providers: [
+    {
+      provide: StorageClient,
+      useExisting: STORAGE_CLIENT_SERVICE_TOKEN
+    }
+  ],
+  exports: [StorageClientConfigModule, StorageClient]
 })
 export class StorageClientModule {
   public static forRoot(config: StorageClientConfig): DynamicModule {
@@ -34,10 +40,6 @@ export class StorageClientModule {
         {
           provide: STORAGE_CLIENT_SERVICE_TOKEN,
           useClass: StorageClient
-        },
-        {
-          provide: StorageClient,
-          useExisting: STORAGE_CLIENT_SERVICE_TOKEN
         }
       ],
       exports: [StorageClient]
@@ -53,28 +55,11 @@ export class StorageClientModule {
     }
   }
 
-  public static forFeature(): DynamicModule {
-    return {
-      module: StorageClientModule,
-      providers: [
-        {
-          provide: StorageClient,
-          useExisting: STORAGE_CLIENT_SERVICE_TOKEN
-        }
-      ],
-      exports: [StorageClient]
-    }
-  }
-
   private static createAsyncProviders(options: StorageClientAsyncOptions): Provider[] {
     return [
       {
         provide: STORAGE_CLIENT_SERVICE_TOKEN,
         useClass: StorageClient
-      },
-      {
-        provide: StorageClient,
-        useExisting: STORAGE_CLIENT_SERVICE_TOKEN
       },
       this.createAsyncOptionsProvider(options)
     ]

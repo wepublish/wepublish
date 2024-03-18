@@ -20,14 +20,20 @@ export interface MediaServiceAsyncOptions extends Pick<ModuleMetadata, 'imports'
 }
 
 @Module({
-  imports: [MediaServiceConfigModule],
-  exports: [MediaServiceConfigModule]
+  imports: [MediaServiceConfigModule, StorageClientModule],
+  providers: [
+    {
+      provide: MediaService,
+      useExisting: MEDIA_SERVICE_TOKEN
+    }
+  ],
+  exports: [MediaServiceConfigModule, MediaService]
 })
 export class MediaServiceModule {
   public static forRoot(config: MediaServiceConfig): DynamicModule {
     return {
       module: MediaServiceModule,
-      imports: [StorageClientModule.forFeature()],
+      imports: [StorageClientModule],
       providers: [
         {
           provide: MEDIA_SERVICE_MODULE_OPTIONS,
@@ -36,35 +42,16 @@ export class MediaServiceModule {
         {
           provide: MEDIA_SERVICE_TOKEN,
           useClass: MediaService
-        },
-        {
-          provide: MediaService,
-          useExisting: MEDIA_SERVICE_TOKEN
         }
-      ],
-      exports: [MediaService]
+      ]
     }
   }
 
   public static forRootAsync(options: MediaServiceAsyncOptions): DynamicModule {
     return {
       module: MediaServiceModule,
-      imports: [StorageClientModule.forFeature(), ...(options.imports || [])],
-      providers: this.createAsyncProviders(options),
-      exports: [MediaService]
-    }
-  }
-
-  public static forFeature(): DynamicModule {
-    return {
-      module: MediaServiceModule,
-      imports: [StorageClientModule.forFeature()],
-      providers: [
-        {
-          provide: MediaService,
-          useExisting: MEDIA_SERVICE_TOKEN
-        }
-      ]
+      imports: [StorageClientModule, ...(options.imports || [])],
+      providers: this.createAsyncProviders(options)
     }
   }
 
@@ -73,10 +60,6 @@ export class MediaServiceModule {
       {
         provide: MEDIA_SERVICE_TOKEN,
         useClass: MediaService
-      },
-      {
-        provide: MediaService,
-        useExisting: MEDIA_SERVICE_TOKEN
       },
       this.createAsyncOptionsProvider(options)
     ]

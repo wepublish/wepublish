@@ -1,5 +1,9 @@
 import {Global, Module} from '@nestjs/common'
-import {STORAGE_CLIENT_MODULE_OPTIONS, STORAGE_CLIENT_SERVICE_TOKEN} from './storage-client.service'
+import {
+  STORAGE_CLIENT_MODULE_OPTIONS,
+  STORAGE_CLIENT_SERVICE_TOKEN,
+  StorageClient
+} from './storage-client.service'
 
 @Global()
 @Module({
@@ -10,7 +14,7 @@ import {STORAGE_CLIENT_MODULE_OPTIONS, STORAGE_CLIENT_SERVICE_TOKEN} from './sto
     },
     {
       provide: STORAGE_CLIENT_SERVICE_TOKEN,
-      useFactory: () => ({})
+      useClass: StorageClient
     }
   ],
   exports: [STORAGE_CLIENT_MODULE_OPTIONS, STORAGE_CLIENT_SERVICE_TOKEN]

@@ -14,7 +14,8 @@ export class StorageClient {
 
   constructor(@Inject(STORAGE_CLIENT_MODULE_OPTIONS) config: StorageClientConfig) {
     console.log('storage client', config)
-    this.client = new Client(config)
+    // this.client = new Client(config)
+    this.client = {} as any
   }
 
   public async hasFile(...params: Parameters<Client['statObject']>): Promise<boolean> {

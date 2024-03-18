@@ -30,7 +30,7 @@ export class MediaService {
     @Inject(MEDIA_SERVICE_MODULE_OPTIONS) private config: MediaServiceConfig,
     private storage: StorageClient
   ) {
-    console.log(this.config, storage)
+    console.log('media service', this.config)
   }
 
   public async getImage(imageId: string, transformations: TransformationsDto) {
