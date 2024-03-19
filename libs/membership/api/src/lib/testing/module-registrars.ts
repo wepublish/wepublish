@@ -1,6 +1,6 @@
 import {PrismaClient} from '@prisma/client'
 import {DynamicModule} from '@nestjs/common'
-import {PrismaModule, PrismaService} from '@wepublish/nest-modules'
+import {PrismaModule} from '@wepublish/nest-modules'
 import {FakeMailProvider, MailsModule} from '@wepublish/mail/api'
 import {
   PaymentProvider,
@@ -15,16 +15,7 @@ import bodyParser from 'body-parser'
 import {ConfigModule, ConfigService} from '@nestjs/config'
 
 export function registerPrismaModule(prismaClient: PrismaClient): DynamicModule {
-  return {
-    module: PrismaModule,
-    providers: [
-      {
-        provide: PrismaClient,
-        useFactory: () => prismaClient as PrismaService
-      }
-    ],
-    exports: [PrismaService]
-  }
+  return PrismaModule.forTest(prismaClient)
 }
 
 export function registerMailsModule(): DynamicModule {
@@ -44,7 +35,7 @@ export function registerMailsModule(): DynamicModule {
 export function registerPaymentsModule(): DynamicModule {
   return PaymentsModule.registerAsync({
     imports: [ConfigModule, PrismaModule],
-    useFactory: (config: ConfigService, prisma: PrismaService) => {
+    useFactory: (config: ConfigService, prisma: PrismaClient) => {
       const paymentProviders: PaymentProvider[] = []
 
       if (
@@ -112,6 +103,6 @@ export function registerPaymentsModule(): DynamicModule {
 
       return {paymentProviders}
     },
-    inject: [ConfigService, PrismaService]
+    inject: [ConfigService, PrismaClient]
   })
 }

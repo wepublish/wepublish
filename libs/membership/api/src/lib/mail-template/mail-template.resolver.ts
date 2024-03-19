@@ -1,14 +1,14 @@
 import {Mutation, Parent, Query, ResolveField, Resolver} from '@nestjs/graphql'
 import {MailContext, MailTemplateStatus} from '@wepublish/mail/api'
-import {PrismaService} from '@wepublish/nest-modules'
 import {CanGetMailTemplates, CanSyncMailTemplates, Permissions} from '@wepublish/permissions/api'
 import {MailTemplateSyncService} from './mail-template-sync.service'
 import {MailProviderModel, MailTemplateWithUrlAndStatusModel} from './mail-template.model'
+import {PrismaClient} from '@prisma/client'
 
 @Resolver(() => MailTemplateWithUrlAndStatusModel)
 export class MailTemplatesResolver {
   constructor(
-    private prismaService: PrismaService,
+    private prismaService: PrismaClient,
     private syncService: MailTemplateSyncService,
     private mailContext: MailContext
   ) {}
