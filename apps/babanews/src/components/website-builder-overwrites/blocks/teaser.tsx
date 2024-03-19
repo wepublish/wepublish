@@ -1,4 +1,4 @@
-import {BuilderTeaserProps, Teaser} from '@wepublish/website'
+import {BuilderTeaserProps} from '@wepublish/website'
 
 // import {ColTeaser} from './col-teaser'
 import {SingleTeaser} from './single-teaser'
