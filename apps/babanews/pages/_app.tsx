@@ -1,20 +1,9 @@
-import {
-  Container,
-  createTheme,
-  css,
-  CssBaseline,
-  GlobalStyles,
-  styled,
-  Theme,
-  ThemeOptions,
-  ThemeProvider,
-  useTheme
-} from '@mui/material'
-import {theme} from '@wepublish/ui'
+import {CssBaseline, styled, ThemeProvider} from '@mui/material'
 import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 import {
   ApiV1,
   FooterContainer,
+  FooterPaperWrapper,
   NavbarContainer,
   WebsiteBuilderProvider,
   WebsiteProvider
@@ -27,18 +16,15 @@ import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
 import Script from 'next/script'
-import {useMemo} from 'react'
 import {initReactI18next} from 'react-i18next'
-import {PartialDeep} from 'type-fest'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
-import {ReactComponent as Logo} from '../src/logo.svg'
-import {tsriArticleStyles} from '../src/styles/tsri-article.styles'
-import {TsriBreakBlock} from '../src/tsri-break-block'
-import {TsriButton} from '../src/tsri-button'
-import {TsriParagraph} from '../src/tsri-paragraph'
+import {BabanewsBlockRenderer} from '../src/components/website-builder-overwrites/block-renderer/block-renderer'
+import {BabanewsTeaser} from '../src/components/website-builder-overwrites/blocks/teaser'
+import {BabanewsTeaserList} from '../src/components/website-builder-styled/blocks/teaser-list-styled'
+import theme from '../src/styles/theme'
 
 setDefaultOptions({
   locale: de
@@ -57,54 +43,11 @@ i18next
   })
 z.setErrorMap(zodI18nMap)
 
-const websiteExampleTheme = createTheme(theme, {
-  typography: {
-    h1: {
-      fontWeight: theme.typography.fontWeightMedium
-    },
-    h2: {
-      fontWeight: theme.typography.fontWeightMedium
-    }
-  },
-  breakpoints: {
-    values: {
-      lg: 1310
-    }
-  }
-} as PartialDeep<Theme> | ThemeOptions)
+const Footer = styled(FooterContainer)`
+  grid-column: -1/1;
 
-const Spacer = styled('div')`
-  display: grid;
-  align-items: flex-start;
-  grid-template-rows: min-content 1fr min-content;
-  gap: ${({theme}) => theme.spacing(3)};
-  min-height: 100vh;
-`
-
-const MainSpacer = styled(Container)`
-  display: grid;
-  gap: ${({theme}) => theme.spacing(5)};
-
-  ${({theme}) => css`
-    ${theme.breakpoints.up('md')} {
-      gap: ${theme.spacing(10)};
-    }
-  `}
-`
-
-const LogoLink = styled(NextWepublishLink)`
-  color: unset;
-  display: grid;
-  align-items: center;
-  justify-items: center;
-`
-
-const LogoWrapper = styled(Logo)`
-  fill: currentColor;
-  height: 30px;
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    height: 45px;
+  ${FooterPaperWrapper} {
+    color: ${({theme}) => theme.palette.common.white};
   }
 `
 
@@ -123,14 +66,7 @@ type CustomAppProps = AppProps<{
 }>
 
 function CustomApp({Component, pageProps}: CustomAppProps) {
-  const siteTitle = 'We.Publish'
-  const theme = useTheme()
-  const globalStyles = useMemo(
-    () => css`
-      ${tsriArticleStyles(theme)}
-    `,
-    [theme]
-  )
+  const siteTitle = 'baba news'
 
   return (
     <SessionProvider sessionToken={pageProps.sessionToken ?? null}>
@@ -138,17 +74,18 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
         <WebsiteBuilderProvider
           Head={Head}
           Script={Script}
-          elements={{Link: NextWepublishLink, Button: TsriButton, Paragraph: TsriParagraph}}
+          elements={{Link: NextWepublishLink}}
           date={{format: dateFormatter}}
-          blocks={{Break: TsriBreakBlock}}>
-          <ThemeProvider theme={websiteExampleTheme}>
-            <GlobalStyles styles={globalStyles} />
+          blocks={{
+            Renderer: BabanewsBlockRenderer,
+            Teaser: BabanewsTeaser,
+            TeaserList: BabanewsTeaserList
+          }}>
+          <ThemeProvider theme={theme}>
             <CssBaseline />
-
             <Head>
               <title key="title">{siteTitle}</title>
 
-              <title>We.Publish</title>
               <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
               {/* Feeds */}
@@ -168,22 +105,11 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               <meta name="msapplication-TileColor" content="#ffffff" />
               <meta name="theme-color" content="#ffffff" />
             </Head>
+            <NavBar categorySlugs={[['categories', 'about-us']]} slug="main" />
 
-            <Spacer>
-              <NavBar categorySlugs={[['categories', 'about-us']]} slug="main" />
+            <Component {...pageProps} />
 
-              <main>
-                <MainSpacer maxWidth="lg">
-                  <Component {...pageProps} />
-                </MainSpacer>
-              </main>
-
-              <FooterContainer slug="footer" categorySlugs={[['categories', 'about-us']]}>
-                <LogoLink href="/" aria-label="Startseite">
-                  <LogoWrapper />
-                </LogoLink>
-              </FooterContainer>
-            </Spacer>
+            <Footer slug="main" categorySlugs={[['basel-briefing', 'other'], ['about-us']]} />
           </ThemeProvider>
         </WebsiteBuilderProvider>
       </WebsiteProvider>

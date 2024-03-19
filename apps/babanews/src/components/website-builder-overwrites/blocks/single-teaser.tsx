@@ -13,16 +13,21 @@ import {
 } from './teaser-overwrite.style'
 
 export const SingleTeaser = styled(TeaserOverwrite)`
+  column-gap: ${({theme}) => theme.spacing(3)};
+  align-items: start;
+
   ${TeaserContentStyled} {
-    margin-top: calc(-20px - (2 * 2 * 4px));
-    padding: ${({theme}) => theme.spacing(1)};
     background: white;
-    grid-column: 2/23;
+    grid-column: 1/13;
+  }
+
+  ${TeaserImgStyled} {
+    grid-column: 1/13;
+    aspect-ratio: 1.8/1;
   }
 
   ${TeaserPreTitleStyled} {
-    font-size: ${fluidTypography(17, 30)};
-    font-style: italic;
+    font-size: ${fluidTypography(17, 22)};
   }
 
   ${TeaserTitlesStyled} {
@@ -31,15 +36,16 @@ export const SingleTeaser = styled(TeaserOverwrite)`
   }
 
   ${AuthorsAndDate} {
-    font-size: ${fluidTypography(14, 22)};
+    font-size: ${fluidTypography(11, 22)};
+    font-weight: 500;
   }
 
   ${TeaserLeadStyled} {
     margin-top: ${({theme}) => theme.spacing(1)};
     margin-bottom: ${({theme}) => theme.spacing(1)};
-    font-style: italic;
     font-weight: 300;
-    font-size: ${fluidTypography(15, 32)};
+    font-size: ${fluidTypography(12, 32)};
+    line-height: 1.3;
   }
 
   ${SingleLine} {
@@ -51,10 +57,16 @@ export const SingleTeaser = styled(TeaserOverwrite)`
   }
 
   ${({theme}) => theme.breakpoints.up('sm')} {
+    row-gap: ${({theme}) => theme.spacing(2)};
+
+    ${TeaserImgStyled} {
+      grid-column: 1/7;
+      aspect-ratio: 1.8/1;
+    }
+
     ${TeaserContentStyled} {
-      grid-column: 2/11;
-      margin-top: calc(-32px - (2 * 2 * 8px));
-      padding: ${({theme}) => `${theme.spacing(2)} ${theme.spacing(1.5)} ${theme.spacing(1.5)}`};
+      grid-column: 7/13;
+      padding: ${({theme}) => `0 ${theme.spacing(1.5)} ${theme.spacing(1.5)}`};
     }
 
     ${SingleLine} {
@@ -66,21 +78,11 @@ export const SingleTeaser = styled(TeaserOverwrite)`
 
   ${({theme}) => theme.breakpoints.up('md')} {
     ${TeaserContentStyled} {
-      grid-column: 3/9;
+      grid-column: 7/13;
     }
 
     ${TeaserImgStyled} {
-      aspect-ratio: 5/2;
+      aspect-ratio: 3/2;
     }
   }
-
-  /* ${({theme}) => theme.breakpoints.up('xl')} {
-    ${TeaserContentStyled} {
-      grid-column: 5/8;
-    }
-
-    ${TeaserImgStyled} {
-      grid-column: 3/12;
-    }
-  } */
 `
