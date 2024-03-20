@@ -44,7 +44,7 @@ const createTitleFilter = (filter: Partial<ImageFilter>): Prisma.ImageWhereInput
 }
 
 const createTagsFilter = (filter: Partial<ImageFilter>): Prisma.ImageWhereInput => {
-  if (filter?.tags) {
+  if (filter?.tags?.length) {
     return {
       tags: {
         hasSome: filter.tags
