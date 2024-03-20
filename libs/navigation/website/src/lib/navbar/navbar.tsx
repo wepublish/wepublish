@@ -14,13 +14,20 @@ export const NavbarWrapper = styled('nav')`
   background-color: ${({theme}) => theme.palette.background.default};
 `
 
-const appBarStyles = (theme: Theme, isMenuOpen: boolean) =>
-  isMenuOpen
-    ? css`
-        background-color: ${theme.palette.primary.main};
-        color: ${theme.palette.primary.contrastText};
-      `
-    : null
+const useAppBarStyles = (isMenuOpen: boolean) => {
+  const theme = useTheme()
+
+  return useMemo(
+    () =>
+      isMenuOpen
+        ? css`
+            background-color: ${theme.palette.primary.main};
+            color: ${theme.palette.primary.contrastText};
+          `
+        : null,
+    [theme, isMenuOpen]
+  )
+}
 
 export const NavbarInnerWrapper = styled(Toolbar)`
   display: grid;
@@ -67,16 +74,23 @@ export const NavbarLinks = styled('div')<{isMenuOpen?: boolean}>`
   }
 `
 
-export const NavbarLink = styled('a')`
-  font-size: 1rem;
-  margin: 0 ${({theme}) => theme.spacing(1)} 0 ${({theme}) => theme.spacing(2)};
-  text-decoration: none;
-  color: ${({theme}) => theme.palette.common.black};
+const useNavbarLinkStyles = () => {
+  const theme = useTheme()
 
-  ${({theme}) => theme.breakpoints.up('md')} {
-    font-size: 1.3rem;
-  }
-`
+  return useMemo(
+    () => css`
+      font-size: 1rem;
+      margin: 0 ${theme.spacing(1)} 0 ${theme.spacing(2)};
+      text-decoration: none;
+      color: ${theme.palette.common.black};
+
+      ${theme.breakpoints.up('md')} {
+        font-size: 1.3rem;
+      }
+    `,
+    [theme]
+  )
+}
 
 export const NavbarMain = styled('div')<{isMenuOpen?: boolean}>`
   display: flex;
@@ -115,42 +129,43 @@ export const NavbarIconButtonWrapper = styled('div')`
   align-items: center;
   width: ${({theme}) => theme.spacing(6.5)};
   height: ${({theme}) => theme.spacing(6.5)};
-  color: white;
+  color: ${({theme}) => theme.palette.common.white};
 
   ${({theme}) => theme.breakpoints.up('md')} {
-    width: ${({theme}) => theme.spacing(7.5)};
     height: ${({theme}) => theme.spacing(7.5)};
 
     svg {
-      width: ${({theme}) => theme.spacing(4.5)};
       height: ${({theme}) => theme.spacing(4.5)};
     }
   }
 
   ${({theme}) => theme.breakpoints.up('lg')} {
-    width: ${({theme}) => theme.spacing(12.5)};
     height: ${({theme}) => theme.spacing(12.5)};
 
     svg {
-      width: ${({theme}) => theme.spacing(6.5)};
       height: ${({theme}) => theme.spacing(6.5)};
     }
   }
 `
 
-const logoLinkStyles = (isMenuOpen: boolean) => css`
-  color: unset;
-  display: grid;
-  align-items: center;
-  justify-items: center;
-  grid-column: 3;
-  justify-self: center;
+const useLogoLinkStyles = (isMenuOpen: boolean) => {
+  return useMemo(
+    () => css`
+      color: unset;
+      display: grid;
+      align-items: center;
+      justify-items: center;
+      grid-column: 3;
+      justify-self: center;
 
-  ${isMenuOpen &&
-  css`
-    z-index: -1;
-  `}
-`
+      ${isMenuOpen &&
+      css`
+        z-index: -1;
+      `}
+    `,
+    [isMenuOpen]
+  )
+}
 
 export const NavbarLogoWrapper = styled('div')`
   fill: currentColor;
@@ -161,19 +176,18 @@ export const NavbarSpacer = styled('div')`
   grid-column: 4;
 `
 
-const useImageStyles = (theme: Theme) => {
+const useImageStyles = () => {
+  const theme = useTheme()
+
   return useMemo(
     () => css`
-      height: ${theme.spacing(5)};
       max-width: ${theme.spacing(25)};
 
       ${theme.breakpoints.up('md')} {
-        height: ${theme.spacing(6)};
         max-width: ${theme.spacing(30)};
       }
 
       ${theme.breakpoints.up('lg')} {
-        height: ${theme.spacing(9)};
         max-width: ${theme.spacing(38)};
       }
     `,
@@ -182,36 +196,40 @@ const useImageStyles = (theme: Theme) => {
 }
 
 export function Navbar({className, children, categorySlugs, slug, data, logo}: BuilderNavbarProps) {
-  const theme = useTheme()
-  const {
-    elements: {IconButton, Image, Link}
-  } = useWebsiteBuilder()
   const [isMenuOpen, setMenuOpen] = useState(false)
   const toggleMenu = useCallback(() => setMenuOpen(isOpen => !isOpen), [])
-  const imageStyles = useImageStyles(theme)
+
+  const imageStyles = useImageStyles()
+  const appBarStyles = useAppBarStyles(isMenuOpen)
+  const logoLinkStyles = useLogoLinkStyles(isMenuOpen)
+  const navbarLinkStyles = useNavbarLinkStyles()
 
   const mainItems = data?.navigations?.find(({key}) => key === slug)
   const headerItems = data?.navigations?.find(({key}) => key === 'header')
 
-  const categories = categorySlugs.map(categorySlugArray => {
-    return categorySlugArray.reduce((navigations, categorySlug) => {
-      const navItem = data?.navigations?.find(({key}) => key === categorySlug)
+  const categories = useMemo(
+    () =>
+      categorySlugs.map(categorySlugArray =>
+        categorySlugArray.reduce((navigations, categorySlug) => {
+          const navItem = data?.navigations?.find(({key}) => key === categorySlug)
 
-      if (navItem) {
-        navigations.push(navItem)
-      }
+          if (navItem) {
+            navigations.push(navItem)
+          }
 
-      return navigations
-    }, [] as FullNavigationFragment[])
-  })
+          return navigations
+        }, [] as FullNavigationFragment[])
+      ),
+    [categorySlugs, data?.navigations]
+  )
+
+  const {
+    elements: {IconButton, Image, Link}
+  } = useWebsiteBuilder()
 
   return (
     <NavbarWrapper className={className}>
-      <AppBar
-        position="static"
-        elevation={0}
-        color={'transparent'}
-        css={appBarStyles(theme, isMenuOpen)}>
+      <AppBar position="static" elevation={0} color={'transparent'} css={appBarStyles}>
         <NavbarInnerWrapper>
           <NavbarMain>
             <NavbarIconButtonWrapper>
@@ -225,26 +243,27 @@ export function Navbar({className, children, categorySlugs, slug, data, logo}: B
               </IconButton>
             </NavbarIconButtonWrapper>
           </NavbarMain>
+
           {!!headerItems?.links.length && (
             <NavbarLinks isMenuOpen={isMenuOpen}>
-              {headerItems.links.map((link, index) => {
-                const url = navigationLinkToUrl(link)
-                return (
-                  <NavbarLink key={index} href={url}>
-                    {link.label}
-                  </NavbarLink>
-                )
-              })}
+              {headerItems.links.map((link, index) => (
+                <Link key={index} css={navbarLinkStyles} href={navigationLinkToUrl(link)}>
+                  {link.label}
+                </Link>
+              ))}
             </NavbarLinks>
           )}
+
           {!!logo && (
-            <Link href="/" aria-label="Startseite" css={logoLinkStyles(isMenuOpen)}>
+            <Link href="/" aria-label="Startseite" css={logoLinkStyles}>
               <NavbarLogoWrapper>
                 <Image image={logo} css={imageStyles} loading="eager" fetchPriority="high" />
               </NavbarLogoWrapper>
             </Link>
           )}
+
           <NavbarSpacer />
+
           <NavbarActions isMenuOpen={isMenuOpen}>
             <Link href="/login" aria-label="Login">
               <IconButton css={{fontSize: '2em', color: 'black'}}>
