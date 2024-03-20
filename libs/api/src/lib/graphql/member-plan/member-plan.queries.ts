@@ -41,7 +41,7 @@ const createActiveFilter = (filter: Partial<MemberPlanFilter>): Prisma.MemberPla
 }
 
 const createTagsFilter = (filter: Partial<MemberPlanFilter>): Prisma.MemberPlanWhereInput => {
-  if (filter?.tags) {
+  if (filter?.tags?.length) {
     return {
       tags: {
         hasSome: filter.tags

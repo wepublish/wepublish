@@ -224,6 +224,7 @@
         "title": "Edit Comment Block"
       },
       "teaserList": {
+        "label": "Teaser List",
         "teasers": "{{count}} Teasers loaded",
         "teaserType": "Loading {{teaserType}} teasers",
         "teaserTypeLabel": "Teaser Type",

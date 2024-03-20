@@ -186,7 +186,7 @@ const createSharedFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhere
 }
 
 const createTagsFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
-  if (filter?.tags) {
+  if (filter?.tags?.length) {
     const hasTags = {
       is: {
         tags: {hasSome: filter.tags}
