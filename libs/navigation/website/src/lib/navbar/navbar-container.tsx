@@ -7,10 +7,16 @@ import {
 import {PropsWithChildren} from 'react'
 
 export type NavbarContainerProps = PropsWithChildren<
-  Pick<BuilderNavbarProps, 'categorySlugs' | 'slug'> & BuilderContainerProps
+  Pick<BuilderNavbarProps, 'categorySlugs' | 'slug' | 'headerSlug'> & BuilderContainerProps
 >
 
-export function NavbarContainer({className, categorySlugs, slug, children}: NavbarContainerProps) {
+export function NavbarContainer({
+  className,
+  categorySlugs,
+  headerSlug,
+  slug,
+  children
+}: NavbarContainerProps) {
   const {Navbar} = useWebsiteBuilder()
   const {data, loading, error} = useNavigationListQuery()
   const {data: peerInfoData} = usePeerProfileQuery()
@@ -18,6 +24,7 @@ export function NavbarContainer({className, categorySlugs, slug, children}: Navb
 
   return (
     <Navbar
+      headerSlug={headerSlug}
       categorySlugs={categorySlugs}
       slug={slug}
       data={data}

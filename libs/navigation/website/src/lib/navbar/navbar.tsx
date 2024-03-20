@@ -199,7 +199,15 @@ const useImageStyles = () => {
   )
 }
 
-export function Navbar({className, children, categorySlugs, slug, data, logo}: BuilderNavbarProps) {
+export function Navbar({
+  className,
+  children,
+  categorySlugs,
+  slug,
+  headerSlug,
+  data,
+  logo
+}: BuilderNavbarProps) {
   const [isMenuOpen, setMenuOpen] = useState(false)
   const toggleMenu = useCallback(() => setMenuOpen(isOpen => !isOpen), [])
 
@@ -209,7 +217,7 @@ export function Navbar({className, children, categorySlugs, slug, data, logo}: B
   const navbarLinkStyles = useNavbarLinkStyles()
 
   const mainItems = data?.navigations?.find(({key}) => key === slug)
-  const headerItems = data?.navigations?.find(({key}) => key === 'header')
+  const headerItems = data?.navigations?.find(({key}) => key === headerSlug)
 
   const categories = useMemo(
     () =>

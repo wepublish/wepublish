@@ -47,6 +47,26 @@ exports[`Navbar Container should render Default 1`] = `
           </div>
         </div>
         <div
+          class="css-lp67xt-NavbarLinks ei6evl213"
+        >
+          <a
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
+          >
+            Home
+          </a>
+          <a
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
+          >
+            Artikel
+          </a>
+          <a
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
+            href="https://google.com"
+          >
+            Google
+          </a>
+        </div>
+        <div
           class="css-cl7riy-NavbarSpacer ei6evl28"
         />
         <div
@@ -138,6 +158,26 @@ exports[`Navbar Container should render WithClassName 1`] = `
           </div>
         </div>
         <div
+          class="css-lp67xt-NavbarLinks ei6evl213"
+        >
+          <a
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
+          >
+            Home
+          </a>
+          <a
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
+          >
+            Artikel
+          </a>
+          <a
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
+            href="https://google.com"
+          >
+            Google
+          </a>
+        </div>
+        <div
           class="css-cl7riy-NavbarSpacer ei6evl28"
         />
         <div
@@ -227,6 +267,26 @@ exports[`Navbar Container should render WithEmotion 1`] = `
               />
             </button>
           </div>
+        </div>
+        <div
+          class="css-lp67xt-NavbarLinks ei6evl213"
+        >
+          <a
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
+          >
+            Home
+          </a>
+          <a
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
+          >
+            Artikel
+          </a>
+          <a
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
+            href="https://google.com"
+          >
+            Google
+          </a>
         </div>
         <div
           class="css-cl7riy-NavbarSpacer ei6evl28"

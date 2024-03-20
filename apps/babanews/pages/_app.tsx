@@ -170,7 +170,11 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
             </Head>
 
             <Spacer>
-              <NavBar categorySlugs={[['categories', 'about-us']]} slug="main" />
+              <NavBar
+                categorySlugs={[['categories', 'about-us']]}
+                slug="main"
+                headerSlug="header"
+              />
 
               <main>
                 <MainSpacer maxWidth="lg">

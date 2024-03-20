@@ -46,6 +46,22 @@ exports[`Navbar should render Default 1`] = `
             </button>
           </div>
         </div>
+        <div
+          class="css-lp67xt-NavbarLinks ei6evl213"
+        >
+          <a
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
+            href="/foo/"
+          >
+            Foo
+          </a>
+          <a
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
+            href="/bar"
+          >
+            Bar
+          </a>
+        </div>
         <a
           aria-label="Startseite"
           class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-g9hqhg-MuiTypography-root-MuiLink-root-Navbar"
@@ -156,6 +172,22 @@ exports[`Navbar should render WithChildren 1`] = `
               />
             </button>
           </div>
+        </div>
+        <div
+          class="css-lp67xt-NavbarLinks ei6evl213"
+        >
+          <a
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
+            href="/foo/"
+          >
+            Foo
+          </a>
+          <a
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
+            href="/bar"
+          >
+            Bar
+          </a>
         </div>
         <a
           aria-label="Startseite"
@@ -268,6 +300,22 @@ exports[`Navbar should render WithClassName 1`] = `
             </button>
           </div>
         </div>
+        <div
+          class="css-lp67xt-NavbarLinks ei6evl213"
+        >
+          <a
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
+            href="/foo/"
+          >
+            Foo
+          </a>
+          <a
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
+            href="/bar"
+          >
+            Bar
+          </a>
+        </div>
         <a
           aria-label="Startseite"
           class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-g9hqhg-MuiTypography-root-MuiLink-root-Navbar"
@@ -378,6 +426,22 @@ exports[`Navbar should render WithEmotion 1`] = `
               />
             </button>
           </div>
+        </div>
+        <div
+          class="css-lp67xt-NavbarLinks ei6evl213"
+        >
+          <a
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
+            href="/foo/"
+          >
+            Foo
+          </a>
+          <a
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
+            href="/bar"
+          >
+            Bar
+          </a>
         </div>
         <a
           aria-label="Startseite"
@@ -822,6 +886,22 @@ exports[`Navbar should render WithoutLogo 1`] = `
               />
             </button>
           </div>
+        </div>
+        <div
+          class="css-lp67xt-NavbarLinks ei6evl213"
+        >
+          <a
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
+            href="/foo/"
+          >
+            Foo
+          </a>
+          <a
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
+            href="/bar"
+          >
+            Bar
+          </a>
         </div>
         <div
           class="css-cl7riy-NavbarSpacer ei6evl28"
