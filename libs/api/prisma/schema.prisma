@@ -1162,6 +1162,7 @@ enum BlockType {
   TeaserGrid1    @map("teaserGrid1")
   TeaserGrid6    @map("teaserGrid6")
   TeaserGridFlex @map("teaserGridFlex")
+  TeaserList     @map("teaserList")
   HTML           @map("html")
   Poll           @map("poll")
   Comment        @map("comment")

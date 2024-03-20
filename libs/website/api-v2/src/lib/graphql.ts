@@ -52,6 +52,7 @@ export enum BlockType {
   TeaserGrid1 = 'TeaserGrid1',
   TeaserGrid6 = 'TeaserGrid6',
   TeaserGridFlex = 'TeaserGridFlex',
+  TeaserList = 'TeaserList',
   Title = 'Title'
 }
 
@@ -1002,4 +1003,3 @@ export type VersionInformationQueryResult = Apollo.QueryResult<VersionInformatio
   "possibleTypes": {}
 };
       export default result;
-    

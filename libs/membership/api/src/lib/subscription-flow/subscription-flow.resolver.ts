@@ -1,5 +1,4 @@
 import {Args, Int, Mutation, Parent, Query, ResolveField, Resolver} from '@nestjs/graphql'
-import {PrismaService} from '@wepublish/nest-modules'
 import {
   CanCreateSubscriptionFlow,
   CanDeleteSubscriptionFlow,
@@ -17,12 +16,13 @@ import {
   SubscriptionIntervalCreateInput,
   SubscriptionIntervalUpdateInput
 } from './subscription-flow.model'
+import {PrismaClient} from '@prisma/client'
 
 @Resolver(() => SubscriptionFlowModel)
 export class SubscriptionFlowResolver {
   constructor(
     private readonly subscriptionFlowService: SubscriptionFlowService,
-    private readonly prismaService: PrismaService
+    private readonly prismaService: PrismaClient
   ) {}
 
   @Permissions(CanGetSubscriptionFlows)

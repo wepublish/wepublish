@@ -29,6 +29,11 @@ import {RowDataType} from 'rsuite-table'
 
 const {Column, HeaderCell, Cell: RCell} = RTable
 
+const hasBrokenPaymentProvider = (memberPlan: FullMemberPlanFragment) =>
+  memberPlan.availablePaymentMethods.every(({paymentMethods}) =>
+    paymentMethods.every(({paymentProvider}) => Boolean(paymentProvider))
+  )
+
 function MemberPlanList() {
   const {t} = useTranslation()
   const [filter, setFilter] = useState('')
@@ -58,6 +63,7 @@ function MemberPlanList() {
         <ListViewHeader>
           <h2>{t('memberPlanList.title')}</h2>
         </ListViewHeader>
+
         <PermissionControl qualifyingPermissions={['CAN_CREATE_MEMBER_PLAN']}>
           <ListViewActions>
             <Link to="/memberplans/create">
@@ -67,6 +73,7 @@ function MemberPlanList() {
             </Link>
           </ListViewActions>
         </PermissionControl>
+
         <ListViewFilterArea>
           <InputGroup>
             <Input value={filter} onChange={value => setFilter(value)} />
@@ -79,6 +86,15 @@ function MemberPlanList() {
 
       <TableWrapper>
         <Table fillHeight loading={isLoading} data={memberPlans}>
+          <Column width={40} align="left">
+            <HeaderCell>{''}</HeaderCell>
+            <RCell>
+              {(rowData: RowDataType<FullMemberPlanFragment>) =>
+                hasBrokenPaymentProvider(rowData as FullMemberPlanFragment) ? `✅` : `❌`
+              }
+            </RCell>
+          </Column>
+
           <Column width={200} align="left" resizable>
             <HeaderCell>{t('memberPlanList.name')}</HeaderCell>
             <RCell>
@@ -87,6 +103,7 @@ function MemberPlanList() {
               )}
             </RCell>
           </Column>
+
           <Column width={100} align="center">
             <HeaderCell>{t('memberPlanList.action')}</HeaderCell>
             <PaddedCell>

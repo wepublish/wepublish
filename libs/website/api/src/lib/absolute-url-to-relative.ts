@@ -22,7 +22,13 @@ export const absoluteUrlToRelative: InMemoryCacheConfig['typePolicies'] = {
   Article: {
     fields: {
       url: {
-        merge: (_, url: string) => absoluteToRelative(url)
+        merge: (_, url: string, options) => {
+          if (options.variables?.peerId) {
+            return url
+          }
+
+          return absoluteToRelative(url)
+        }
       },
       peeredArticleURL: {
         merge: (_, url: string) => absoluteToRelative(url)

@@ -9,6 +9,7 @@ import {
   PeerArticle,
   SortOrder,
   TeaserStyle,
+  TeaserType,
   useArticleListQuery,
   useEventListQuery,
   usePageListQuery,
@@ -44,7 +45,7 @@ import {
 
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {ListInput, ListValue} from '../atoms/listInput'
-import {Teaser, TeaserLink, TeaserType} from '../blocks/types'
+import {Teaser, TeaserLink} from '../blocks/types'
 import {generateID} from '../utility'
 import {ImageEditPanel} from './imageEditPanel'
 import {ImageSelectPanel} from './imageSelectPanel'
@@ -630,19 +631,19 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
       <Drawer.Body>
         <Nav appearance="tabs" activeKey={type} onSelect={type => setType(type)}>
           <RNav.Item eventKey={TeaserType.Article} icon={<MdDescription />}>
-            {t('articleEditor.panels.article')}
+            {t('resources.teaserType.article')}
           </RNav.Item>
           <RNav.Item eventKey={TeaserType.PeerArticle} icon={<MdFileCopy />}>
-            {t('articleEditor.panels.peerArticle')}
+            {t('resources.teaserType.peerArticle')}
           </RNav.Item>
           <RNav.Item eventKey={TeaserType.Page} icon={<MdDashboard />}>
-            {t('articleEditor.panels.page')}
+            {t('resources.teaserType.page')}
           </RNav.Item>
           <RNav.Item eventKey={TeaserType.Event} icon={<MdEvent />}>
-            {t('articleEditor.panels.event')}
+            {t('resources.teaserType.event')}
           </RNav.Item>
           <RNav.Item eventKey={TeaserType.Custom} icon={<MdSettings />}>
-            {t('articleEditor.panels.custom')}
+            {t('resources.teaserType.custom')}
           </RNav.Item>
         </Nav>
 

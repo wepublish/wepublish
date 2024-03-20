@@ -1,6 +1,5 @@
 import {Logger} from '@nestjs/common'
-import {MailLogState, User} from '@prisma/client'
-import {PrismaService} from '@wepublish/nest-modules'
+import {MailLogState, PrismaClient, User} from '@prisma/client'
 import {generateJWT} from '@wepublish/utils/api'
 import {randomUUID} from 'crypto'
 import {MailContext} from './mail-context'
@@ -27,7 +26,7 @@ export class MailController {
   private readonly logger = new Logger('MailController')
 
   constructor(
-    private readonly prismaService: PrismaService,
+    private readonly prismaService: PrismaClient,
     private readonly mailContext: MailContext,
     private readonly config: MailControllerConfig
   ) {}
