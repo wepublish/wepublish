@@ -132,18 +132,20 @@ export const NavbarIconButtonWrapper = styled('div')`
   color: ${({theme}) => theme.palette.common.white};
 
   ${({theme}) => theme.breakpoints.up('md')} {
+    width: ${({theme}) => theme.spacing(7.5)};
     height: ${({theme}) => theme.spacing(7.5)};
 
     svg {
-      height: ${({theme}) => theme.spacing(4.5)};
+      font-size: ${({theme}) => theme.spacing(4.5)};
     }
   }
 
   ${({theme}) => theme.breakpoints.up('lg')} {
+    width: ${({theme}) => theme.spacing(12.5)};
     height: ${({theme}) => theme.spacing(12.5)};
 
     svg {
-      height: ${({theme}) => theme.spacing(6.5)};
+      font-size: ${({theme}) => theme.spacing(6.5)};
     }
   }
 `
@@ -178,16 +180,18 @@ export const NavbarSpacer = styled('div')`
 
 const useImageStyles = () => {
   const theme = useTheme()
-
   return useMemo(
     () => css`
+      max-height: ${theme.spacing(5)};
       max-width: ${theme.spacing(25)};
 
       ${theme.breakpoints.up('md')} {
+        max-height: ${theme.spacing(6)};
         max-width: ${theme.spacing(30)};
       }
 
       ${theme.breakpoints.up('lg')} {
+        max-height: ${theme.spacing(9)};
         max-width: ${theme.spacing(38)};
       }
     `,
