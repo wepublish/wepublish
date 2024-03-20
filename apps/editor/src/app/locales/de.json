@@ -868,6 +868,7 @@
       "active": "Aktiv",
       "activeDescription": "Macht die Methode verfügbar",
       "adapter": "Zahlungsadapter",
+      "providerName": "Zahlungsanbieter",
       "createNew": "Neue Zahlungsmethode",
       "createTitle": "Zahlungsmethode erstellen",
       "deleteModalTitle": "Zahlungsmethode löschen",

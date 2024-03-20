@@ -6,6 +6,7 @@ import {
   PaymentMethod,
   PaymentProviderCustomer,
   PeriodicJob,
+  PrismaClient,
   Subscription,
   SubscriptionDeactivationReason,
   SubscriptionEvent,
@@ -13,7 +14,6 @@ import {
   User
 } from '@prisma/client'
 import {MailContext, MailController, mailLogType} from '@wepublish/mail/api'
-import {PrismaService} from '@wepublish/nest-modules'
 import {PaymentsService} from '@wepublish/payment/api'
 import {add, addDays, differenceInDays, endOfDay, set, startOfDay, sub, subMinutes} from 'date-fns'
 import {inspect} from 'util'
@@ -36,7 +36,7 @@ export class PeriodicJobService {
   private randomNumberRangeForConcurrency = FIVE_MINUTES_IN_MS
 
   constructor(
-    private readonly prismaService: PrismaService,
+    private readonly prismaService: PrismaClient,
     private readonly mailContext: MailContext,
     private readonly subscriptionController: SubscriptionService,
     private readonly payments: PaymentsService

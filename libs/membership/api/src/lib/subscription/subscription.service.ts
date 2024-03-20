@@ -7,6 +7,7 @@ import {
   PaymentPeriodicity,
   PaymentProviderCustomer,
   PaymentState,
+  PrismaClient,
   Subscription,
   SubscriptionDeactivation,
   SubscriptionDeactivationReason,
@@ -14,7 +15,6 @@ import {
   SubscriptionPeriod,
   User
 } from '@prisma/client'
-import {PrismaService} from '@wepublish/nest-modules'
 import {PaymentProvider, PaymentsService} from '@wepublish/payment/api'
 import {add, endOfDay, startOfDay} from 'date-fns'
 import {Action} from '../subscription-event-dictionary/subscription-event-dictionary.type'
@@ -37,7 +37,7 @@ interface PeriodBounds {
 @Injectable()
 export class SubscriptionService {
   constructor(
-    private readonly prismaService: PrismaService,
+    private readonly prismaService: PrismaClient,
     private readonly payments: PaymentsService
   ) {}
 

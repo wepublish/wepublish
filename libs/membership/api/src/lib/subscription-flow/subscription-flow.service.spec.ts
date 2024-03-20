@@ -1,6 +1,6 @@
 import {Test, TestingModule} from '@nestjs/testing'
 import {PaymentPeriodicity, PrismaClient, SubscriptionEvent} from '@prisma/client'
-import {PrismaModule, PrismaService} from '@wepublish/nest-modules'
+import {PrismaModule} from '@wepublish/nest-modules'
 import {
   clearDatabase,
   defineMailTemplateFactory,
@@ -37,7 +37,7 @@ describe('SubscriptionFlowService', () => {
         registerMailsModule(),
         registerPaymentsModule()
       ],
-      providers: [PrismaService, SubscriptionFlowService, PeriodicJobService, SubscriptionService]
+      providers: [SubscriptionFlowService, PeriodicJobService, SubscriptionService]
     }).compile()
 
     service = module.get<SubscriptionFlowService>(SubscriptionFlowService)

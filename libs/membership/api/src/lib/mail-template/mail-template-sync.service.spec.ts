@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {Test, TestingModule} from '@nestjs/testing'
-import {MailTemplate} from '@prisma/client'
+import {MailTemplate, PrismaClient} from '@prisma/client'
 import {MailContext, MailProvider, MailProviderTemplate} from '@wepublish/mail/api'
 import {MailTemplateSyncService} from './mail-template-sync.service'
-import {PrismaService} from '@wepublish/nest-modules'
 
 const mockTemplate1: MailTemplate = {
   id: 'b9172f6b-b650-4053-a013-5a9430c95b9f',
@@ -66,7 +65,7 @@ describe('MailTemplateSyncService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         MailTemplateSyncService,
-        {provide: PrismaService, useValue: prismaServiceMock},
+        {provide: PrismaClient, useValue: prismaServiceMock},
         {provide: MailContext, useValue: mailContextMock}
       ]
     }).compile()

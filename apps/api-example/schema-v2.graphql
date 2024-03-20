@@ -131,9 +131,7 @@ type FocalPoint {
   y: Float!
 }
 
-"""
-Setting Value
-"""
+"""Setting Value"""
 scalar GraphQLSettingValueType
 
 type Image {
@@ -202,71 +200,37 @@ type MemberPlanRef {
 }
 
 type Mutation {
-  """
-  Creates a new block style.
-  """
+  """Creates a new block style."""
   createBlockStyle(blocks: [BlockType!]!, name: String!): BlockStyle!
 
   "\n      Create a new consent.\n    "
   createConsent(defaultValue: Boolean!, name: String!, slug: String!): Consent!
 
-  """
-  Creates a new event.
-  """
-  createEvent(
-    description: RichText
-    endsAt: DateTime
-    imageId: String
-    location: String
-    name: String!
-    startsAt: DateTime!
-    tagIds: [String!]
-  ): Event!
+  """Creates a new event."""
+  createEvent(description: RichText, endsAt: DateTime, imageId: String, location: String, name: String!, startsAt: DateTime!, tagIds: [String!]): Event!
 
-  """
-  Create a new subscription flow
-  """
-  createSubscriptionFlow(
-    autoRenewal: [Boolean!]!
-    memberPlanId: String!
-    paymentMethodIds: [String!]!
-    periodicities: [PaymentPeriodicity!]!
-  ): [SubscriptionFlowModel!]!
+  """Create a new subscription flow"""
+  createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
 
-  """
-  Create a subscription interval
-  """
-  createSubscriptionInterval(
-    daysAwayFromEnding: Int
-    event: SubscriptionEvent!
-    mailTemplateId: String
-    subscriptionFlowId: String!
-  ): [SubscriptionFlowModel!]!
+  """Create a subscription interval"""
+  createSubscriptionInterval(daysAwayFromEnding: Int, event: SubscriptionEvent!, mailTemplateId: String, subscriptionFlowId: String!): [SubscriptionFlowModel!]!
 
   "\n      Creates a new userConsent based on input.\n      Returns created userConsent.\n    "
   createUserConsent(consentId: String!, userId: String!, value: Boolean!): UserConsent!
 
-  """
-  Deletes an existing block style.
-  """
+  """Deletes an existing block style."""
   deleteBlockStyle(id: String!): BlockStyle!
 
   "\n      Deletes an existing consent.\n    "
   deleteConsent(id: String!): Consent!
 
-  """
-  Deletes an existing event.
-  """
+  """Deletes an existing event."""
   deleteEvent(id: String!): Event!
 
-  """
-  Delete an existing subscription flow
-  """
+  """Delete an existing subscription flow"""
   deleteSubscriptionFlow(id: String!): [SubscriptionFlowModel!]!
 
-  """
-  Delete an existing subscription interval
-  """
+  """Delete an existing subscription interval"""
   deleteSubscriptionInterval(id: String!): [SubscriptionFlowModel!]!
 
   "\n      Delete an existing userConsent by id.\n      Returns deleted userConsent.\n    "
@@ -276,60 +240,28 @@ type Mutation {
   importEvent(id: String!, source: String!): String!
   syncTemplates: Boolean
 
-  """
-  Sends a test email for the given event
-  """
+  """Sends a test email for the given event"""
   testSystemMail(event: UserEvent!): Boolean!
 
-  """
-  Updates an existing block style.
-  """
+  """Updates an existing block style."""
   updateBlockStyle(blocks: [BlockType!], id: String!, name: String): BlockStyle!
 
   "\n      Updates an existing consent.\n    "
   updateConsent(defaultValue: Boolean, id: String!, name: String, slug: String): Consent!
 
-  """
-  Updates an existing event.
-  """
-  updateEvent(
-    description: RichText
-    endsAt: DateTime
-    id: String!
-    imageId: String
-    location: String
-    name: String
-    startsAt: DateTime
-    tagIds: [String!]
-  ): Event!
+  """Updates an existing event."""
+  updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, location: String, name: String, startsAt: DateTime, tagIds: [String!]): Event!
 
-  """
-  Updates an existing setting.
-  """
+  """Updates an existing setting."""
   updateSetting(name: SettingName!, value: GraphQLSettingValueType!): Setting!
 
-  """
-  Update an existing subscription flow
-  """
-  updateSubscriptionFlow(
-    autoRenewal: [Boolean!]
-    id: String!
-    paymentMethodIds: [String!]
-    periodicities: [PaymentPeriodicity!]
-  ): [SubscriptionFlowModel!]!
+  """Update an existing subscription flow"""
+  updateSubscriptionFlow(autoRenewal: [Boolean!], id: String!, paymentMethodIds: [String!], periodicities: [PaymentPeriodicity!]): [SubscriptionFlowModel!]!
 
-  """
-  Update an existing subscription interval
-  """
-  updateSubscriptionInterval(
-    daysAwayFromEnding: Int
-    id: String!
-    mailTemplateId: String
-  ): [SubscriptionFlowModel!]!
+  """Update an existing subscription interval"""
+  updateSubscriptionInterval(daysAwayFromEnding: Int, id: String!, mailTemplateId: String): [SubscriptionFlowModel!]!
 
-  """
-  Updates an existing mail flow
-  """
+  """Updates an existing mail flow"""
   updateSystemMail(event: UserEvent!, mailTemplateId: String!): [SystemMailModel!]!
 
   "\n      Updates an existing userConsent based on input.\n      Returns updated userConsent.\n    "
@@ -377,9 +309,7 @@ type Query {
   "\n      Returns all active subscribers.\n      Includes subscribers with a cancelled but not run out subscription.\n    "
   activeSubscribers: [DashboardSubscription!]!
 
-  """
-  Returns a list of block styles.
-  """
+  """Returns a list of block styles."""
   blockStyles: [BlockStyle!]!
 
   "\n      Returns a consent by id.\n    "
@@ -388,52 +318,31 @@ type Query {
   "\n      Returns all consents.\n    "
   consents(filter: ConsentFilter): [Consent!]!
 
-  """
-  Returns a event by id.
-  """
+  """Returns a event by id."""
   event(id: String!): Event!
 
   "\n      Returns a list of Importable Event Providers\n    "
   eventProviders: [String!]!
 
-  """
-  Returns a paginated list of events based on the filters given.
-  """
-  events(
-    cursorId: String
-    filter: EventFilter
-    order: SortOrder = Ascending
-    skip: Int = 0
-    sort: EventSort = StartsAt
-    take: Int = 10
-  ): PaginatedEvents!
+  """Returns a paginated list of events based on the filters given."""
+  events(cursorId: String, filter: EventFilter, order: SortOrder = Ascending, skip: Int = 0, sort: EventSort = StartsAt, take: Int = 10): PaginatedEvents!
 
   "\n      Returns the expected revenue for the time period given.\n      Excludes cancelled or manually set as paid invoices.\n    "
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
 
-  """
-  Returns an image by id.
-  """
+  """Returns an image by id."""
   image(id: String!): Image!
 
   "\n      Returns a more detailed version of a single importable event, by id and source.\n    "
   importedEvent(filter: SingleEventFilter!): EventFromSource!
 
   "\n      Returns a list of imported events from external sources, transformed to match our model.\n    "
-  importedEvents(
-    filter: ImportedEventFilter
-    order: Int
-    skip: Int
-    sort: ImportedEventSort
-    take: Int
-  ): ImportedEventsDocument!
+  importedEvents(filter: ImportedEventFilter, order: Int, skip: Int, sort: ImportedEventSort, take: Int): ImportedEventsDocument!
 
   "\n      Returns a list of external source ids of already imported events.\n    "
   importedEventsIds: [String!]!
 
-  """
-  Return all mail templates
-  """
+  """Return all mail templates"""
   mailTemplates: [MailTemplateWithUrlAndStatusModel!]!
 
   "\n      Returns all new deactivations in a given timeframe.\n      This considers the time the deactivation was made, not when the subscription runs out.\n    "
@@ -442,9 +351,7 @@ type Query {
   "\n      Returns all new subscribers in a given timeframe.\n      Includes already deactivated ones.\n    "
   newSubscribers(end: DateTime, start: DateTime!): [DashboardSubscription!]!
 
-  """
-  Returns all payment methods
-  """
+  """Returns all payment methods"""
   paymentMethods: [PaymentMethodRef!]!
   periodicJobLog(skip: Int, take: Int = 10): [PeriodicJob!]!
   provider: MailProviderModel!
@@ -462,14 +369,10 @@ type Query {
   settingsList(filter: SettingFilter): [Setting!]!
   stats: Stats
 
-  """
-  Returns all subscription flows
-  """
+  """Returns all subscription flows"""
   subscriptionFlows(defaultFlowOnly: Boolean!, memberPlanId: String): [SubscriptionFlowModel!]!
 
-  """
-  Returns all mail flows
-  """
+  """Returns all mail flows"""
   systemMails: [SystemMailModel!]!
 
   "\n      Returns a single userConsent by id.\n    "
