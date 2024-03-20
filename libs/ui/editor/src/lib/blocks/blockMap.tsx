@@ -6,6 +6,7 @@ import {
   MdEvent,
   MdFilter1,
   MdFilter6,
+  MdFilter9Plus,
   MdFormatColorText,
   MdFormatQuote,
   MdIntegrationInstructions,
@@ -143,7 +144,7 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
       teaserType: TeaserType.Article
     },
     label: 'blocks.teaserList.label',
-    icon: <MdEvent />
+    icon: <MdFilter9Plus />
   },
 
   [BlockType.TeaserGrid1]: {

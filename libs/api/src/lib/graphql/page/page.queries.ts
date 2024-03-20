@@ -159,7 +159,7 @@ const createPendingFilter = (filter: Partial<PageFilter>): Prisma.PageWhereInput
 }
 
 const createTagsFilter = (filter: Partial<PageFilter>): Prisma.PageWhereInput => {
-  if (filter?.tags) {
+  if (filter?.tags?.length) {
     const hasTags = {
       is: {
         tags: {hasSome: filter.tags}
