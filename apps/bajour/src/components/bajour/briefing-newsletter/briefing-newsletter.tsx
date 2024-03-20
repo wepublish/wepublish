@@ -137,7 +137,7 @@ const BriefingNewsletter = () => {
         <Background src={BaselBriefingBg} alt="Basel Briefing" fill />
         <Heading>
           <BaselBriefingTitle>Basel Briefing</BaselBriefingTitle>
-          <BaselBriefingSubtitle>Das wichtigste für den tag</BaselBriefingSubtitle>
+          <BaselBriefingSubtitle>Das wichtigste für den Tag</BaselBriefingSubtitle>
         </Heading>
         <a href="https://labs.bajour.ch/react/baselbriefing" target="_blank">
           <BaselBriefingButton>JETZT ABONNIEREN</BaselBriefingButton>
