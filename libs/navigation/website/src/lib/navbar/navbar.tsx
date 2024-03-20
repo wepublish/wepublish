@@ -136,8 +136,7 @@ export const NavbarIconButtonWrapper = styled('div')`
     height: ${({theme}) => theme.spacing(7.5)};
 
     svg {
-      width: ${({theme}) => theme.spacing(4.5)};
-      height: ${({theme}) => theme.spacing(4.5)};
+      font-size: ${({theme}) => theme.spacing(4.5)};
     }
   }
 
@@ -146,8 +145,7 @@ export const NavbarIconButtonWrapper = styled('div')`
     height: ${({theme}) => theme.spacing(12.5)};
 
     svg {
-      width: ${({theme}) => theme.spacing(6.5)};
-      height: ${({theme}) => theme.spacing(6.5)};
+      font-size: ${({theme}) => theme.spacing(6.5)};
     }
   }
 `

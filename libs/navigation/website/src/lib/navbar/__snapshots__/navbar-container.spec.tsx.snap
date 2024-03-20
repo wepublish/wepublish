@@ -15,7 +15,7 @@ exports[`Navbar Container should render Default 1`] = `
           class="css-1trl8g0-NavbarMain ei6evl212"
         >
           <div
-            class="css-t733qi-NavbarIconButtonWrapper ei6evl210"
+            class="css-1g6nmgg-NavbarIconButtonWrapper ei6evl210"
           >
             <button
               aria-label="Menu"
@@ -106,7 +106,7 @@ exports[`Navbar Container should render WithClassName 1`] = `
           class="css-1trl8g0-NavbarMain ei6evl212"
         >
           <div
-            class="css-t733qi-NavbarIconButtonWrapper ei6evl210"
+            class="css-1g6nmgg-NavbarIconButtonWrapper ei6evl210"
           >
             <button
               aria-label="Menu"
@@ -197,7 +197,7 @@ exports[`Navbar Container should render WithEmotion 1`] = `
           class="css-1trl8g0-NavbarMain ei6evl212"
         >
           <div
-            class="css-t733qi-NavbarIconButtonWrapper ei6evl210"
+            class="css-1g6nmgg-NavbarIconButtonWrapper ei6evl210"
           >
             <button
               aria-label="Menu"
