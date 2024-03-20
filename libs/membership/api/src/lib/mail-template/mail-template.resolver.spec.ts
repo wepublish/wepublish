@@ -1,7 +1,6 @@
 import {Test, TestingModule} from '@nestjs/testing'
-import {MailTemplate} from '@prisma/client'
+import {MailTemplate, PrismaClient} from '@prisma/client'
 import {MailContext, MailProvider, MailTemplateStatus} from '@wepublish/mail/api'
-import {PrismaService} from '@wepublish/nest-modules'
 import {MailTemplateSyncService} from './mail-template-sync.service'
 import {MailTemplatesResolver} from './mail-template.resolver'
 import {INestApplication, Module} from '@nestjs/common'
@@ -85,7 +84,6 @@ const syncServiceMock = {
     registerPaymentsModule()
   ],
   providers: [
-    PrismaService,
     MailTemplatesResolver,
     MailTemplateSyncService,
     {
@@ -112,7 +110,7 @@ describe('MailTemplatesResolver', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         MailTemplatesResolver,
-        {provide: PrismaService, useValue: prismaServiceMock},
+        {provide: PrismaClient, useValue: prismaServiceMock},
         {provide: MailTemplateSyncService, useValue: syncServiceMock},
         {provide: MailContext, useValue: mailContextMock}
       ]

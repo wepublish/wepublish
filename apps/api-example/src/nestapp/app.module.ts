@@ -30,7 +30,7 @@ import {
   PayrexxFactory,
   HealthModule
 } from '@wepublish/api'
-import {ApiModule, PrismaModule, PrismaService} from '@wepublish/nest-modules'
+import {ApiModule, PrismaModule} from '@wepublish/nest-modules'
 import bodyParser from 'body-parser'
 import FormData from 'form-data'
 import Mailgun from 'mailgun.js'
@@ -39,6 +39,7 @@ import {SlackMailProvider} from '../app/slack-mail-provider'
 import {readConfig} from '../readConfig'
 import {EventModule} from '@wepublish/event/api'
 import {BlockStylesModule} from '@wepublish/block-content/api'
+import {PrismaClient} from '@prisma/client'
 
 @Global()
 @Module({
@@ -115,7 +116,7 @@ import {BlockStylesModule} from '@wepublish/block-content/api'
     }),
     PaymentsModule.registerAsync({
       imports: [ConfigModule, PrismaModule],
-      useFactory: async (config: ConfigService, prisma: PrismaService) => {
+      useFactory: async (config: ConfigService, prisma: PrismaClient) => {
         const paymentProviders: PaymentProvider[] = []
         const configFile = await readConfig(config.getOrThrow('CONFIG_FILE_PATH'))
         const paymentProvidersRaw = configFile.paymentProviders
@@ -212,7 +213,7 @@ import {BlockStylesModule} from '@wepublish/block-content/api'
         }
         return {paymentProviders}
       },
-      inject: [ConfigService, PrismaService],
+      inject: [ConfigService, PrismaClient],
       global: true
     }),
     ApiModule,

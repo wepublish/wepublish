@@ -3,19 +3,19 @@
 exports[`Navbar Container should render Default 1`] = `
 <DocumentFragment>
   <nav
-    class="css-1afpbz6-NavbarWrapper ei6evl216"
+    class="css-1afpbz6-NavbarWrapper ei6evl215"
   >
     <header
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl215 css-xf9z4a-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl214 css-xf9z4a-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
           class="css-1trl8g0-NavbarMain ei6evl212"
         >
           <div
-            class="css-1545n5p-NavbarIconButtonWrapper ei6evl210"
+            class="css-1w4874g-NavbarIconButtonWrapper ei6evl210"
           >
             <button
               aria-label="Menu"
@@ -94,19 +94,19 @@ exports[`Navbar Container should render Default 1`] = `
 exports[`Navbar Container should render WithClassName 1`] = `
 <DocumentFragment>
   <nav
-    class="extra-classname css-1afpbz6-NavbarWrapper ei6evl216"
+    class="extra-classname css-1afpbz6-NavbarWrapper ei6evl215"
   >
     <header
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl215 css-xf9z4a-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl214 css-xf9z4a-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
           class="css-1trl8g0-NavbarMain ei6evl212"
         >
           <div
-            class="css-1545n5p-NavbarIconButtonWrapper ei6evl210"
+            class="css-1w4874g-NavbarIconButtonWrapper ei6evl210"
           >
             <button
               aria-label="Menu"
@@ -185,19 +185,19 @@ exports[`Navbar Container should render WithClassName 1`] = `
 exports[`Navbar Container should render WithEmotion 1`] = `
 <DocumentFragment>
   <nav
-    class="css-1afpbz6-NavbarWrapper ei6evl216"
+    class="css-1afpbz6-NavbarWrapper ei6evl215"
   >
     <header
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl215 css-xf9z4a-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl214 css-xf9z4a-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
           class="css-1trl8g0-NavbarMain ei6evl212"
         >
           <div
-            class="css-1545n5p-NavbarIconButtonWrapper ei6evl210"
+            class="css-1w4874g-NavbarIconButtonWrapper ei6evl210"
           >
             <button
               aria-label="Menu"

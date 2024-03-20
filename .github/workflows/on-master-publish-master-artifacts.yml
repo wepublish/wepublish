@@ -20,17 +20,22 @@ jobs:
     with:
       migration_tags: |
         ghcr.io/wepublish/migration:master-${{ needs.date_sha_tag.outputs.tag }}
+        ghcr.io/wepublish/migration:master
         wepublishch/migration:master
       api_tags: |
         ghcr.io/wepublish/api:master-${{ needs.date_sha_tag.outputs.tag }}
+        ghcr.io/wepublish/api:master
         wepublishch/api:master
       editor_tags: |
         ghcr.io/wepublish/editor:master-${{ needs.date_sha_tag.outputs.tag }}
+        ghcr.io/wepublish/editor:master
         wepublishch/editor:master
       storybook_tags: |
         ghcr.io/wepublish/storybook:master-${{ needs.date_sha_tag.outputs.tag }}
+        ghcr.io/wepublish/storybook:master
         wepublishch/storybook:master
       website_tags: |
         ghcr.io/wepublish/website:master-${{ needs.date_sha_tag.outputs.tag }}
+        ghcr.io/wepublish/website:master
         wepublishch/website:master
     secrets: inherit

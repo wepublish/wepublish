@@ -4,7 +4,7 @@ import {APP_GUARD} from '@nestjs/core'
 import {GraphQLModule} from '@nestjs/graphql'
 import {Test, TestingModule} from '@nestjs/testing'
 import {PaymentPeriodicity, PrismaClient, SubscriptionEvent} from '@prisma/client'
-import {PrismaModule, PrismaService} from '@wepublish/nest-modules'
+import {PrismaModule} from '@wepublish/nest-modules'
 import {PermissionsGuard} from '@wepublish/permissions/api'
 import {
   clearDatabase,
@@ -137,7 +137,6 @@ const paymentMethodsQuery = `
   ],
   providers: [
     SubscriptionFlowResolver,
-    PrismaService,
     SubscriptionFlowService,
     PeriodicJobService,
     SubscriptionService,
@@ -162,7 +161,6 @@ export class AppUnauthenticatedModule {}
   ],
   providers: [
     SubscriptionFlowResolver,
-    PrismaService,
     SubscriptionFlowService,
     PeriodicJobService,
     SubscriptionService,

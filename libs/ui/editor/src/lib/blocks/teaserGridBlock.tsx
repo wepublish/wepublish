@@ -1,5 +1,10 @@
 import styled from '@emotion/styled'
-import {ImageRefFragment, PeerWithProfileFragment, TeaserStyle} from '@wepublish/editor/api'
+import {
+  ImageRefFragment,
+  PeerWithProfileFragment,
+  TeaserStyle,
+  TeaserType
+} from '@wepublish/editor/api'
 import arrayMove from 'array-move'
 import nanoid from 'nanoid'
 import {ReactNode, useState} from 'react'
@@ -16,7 +21,7 @@ import {PlaceholderInput} from '../atoms/placeholderInput'
 import {Typography} from '../atoms/typography'
 import {TeaserEditPanel} from '../panel/teaserEditPanel'
 import {TeaserSelectAndEditPanel} from '../panel/teaserSelectAndEditPanel'
-import {Teaser as TeaserTypeMixed, TeaserGridBlockValue, TeaserType} from './types'
+import {Teaser as TeaserTypeMixed, TeaserGridBlockValue} from './types'
 
 const IconButton = styled(RIconButton)`
   margin: 10px;
