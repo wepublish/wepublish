@@ -1,6 +1,5 @@
 import {Args, Mutation, Query, Resolver} from '@nestjs/graphql'
-import {User, UserEvent, UserFlowMail} from '@prisma/client'
-import {PrismaService} from '@wepublish/nest-modules'
+import {PrismaClient, User, UserEvent, UserFlowMail} from '@prisma/client'
 import {CurrentUser} from '../user.decorator'
 import {SystemMailModel, SystemMailUpdateInput} from './system-mail.model'
 import {MailContext, mailLogType} from '@wepublish/mail/api'
@@ -8,7 +7,7 @@ import {NotFoundException} from '@nestjs/common'
 
 @Resolver(() => SystemMailModel)
 export class SystemMailResolver {
-  constructor(private prismaService: PrismaService, private readonly mailContext: MailContext) {}
+  constructor(private prismaService: PrismaClient, private readonly mailContext: MailContext) {}
 
   @Query(() => [SystemMailModel], {description: `Returns all mail flows`})
   async systemMails() {

@@ -71,7 +71,7 @@ function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditPanelPro
       setSlug(data.paymentMethod.slug)
       setDescription(data.paymentMethod.description)
       setActive(data.paymentMethod.active)
-      setPaymentProvider(data.paymentMethod.paymentProvider)
+      setPaymentProvider(data.paymentMethod.paymentProvider ?? undefined)
     }
   }, [data?.paymentMethod])
 

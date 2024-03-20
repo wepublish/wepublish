@@ -255,6 +255,19 @@ fragment FullBlock on Block {
     sandbox
   }
 
+  ... on TeaserListBlock {
+    blockStyle
+    teaserType
+    teasers {
+      ...FullTeaser
+    }
+    take
+    skip
+    filter {
+      tags
+    }
+  }
+
   ... on TeaserGridBlock {
     blockStyle
     teasers {

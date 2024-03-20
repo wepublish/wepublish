@@ -19,7 +19,7 @@ import nock from 'nock'
 
 import {forwardRef} from '@nestjs/common'
 import {Test, TestingModule} from '@nestjs/testing'
-import {PrismaModule, PrismaService} from '@wepublish/nest-modules'
+import {PrismaModule} from '@wepublish/nest-modules'
 import {PaymentsService} from '@wepublish/payment/api'
 import {clearDatabase, clearFullDatabase} from '@wepublish/testing'
 import {add, sub} from 'date-fns'
@@ -331,7 +331,7 @@ describe('SubscriptionController', () => {
       'users'
     ])
 
-    subscriptionService = new SubscriptionService(prismaClient as PrismaService, paymentsService)
+    subscriptionService = new SubscriptionService(prismaClient, paymentsService)
 
     // Create deactivated subscription
     await SubscriptionFactory.create({

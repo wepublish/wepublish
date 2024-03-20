@@ -29,6 +29,7 @@ export enum BlockType {
   LinkPageBreak = 'linkPageBreak',
   TeaserGrid = 'teaserGrid',
   TeaserGridFlex = 'teaserGridFlex',
+  TeaserList = 'teaserList',
   HTML = 'html',
   Poll = 'poll',
   Comment = 'comment',
@@ -198,7 +199,6 @@ export enum TeaserType {
   PeerArticle = 'peerArticle',
   Page = 'page',
   Event = 'event',
-  External = 'external',
   Custom = 'custom'
 }
 
@@ -265,6 +265,16 @@ export interface CustomTeaser {
 }
 
 export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser | CustomTeaser | EventTeaser
+
+export interface TeaserListBlock extends BaseBlock {
+  type: BlockType.TeaserList
+  teaserType: TeaserType
+  skip: number
+  take: number
+  filter: Partial<{
+    tags: string[]
+  }>
+}
 
 export interface TeaserGridBlock extends BaseBlock {
   type: BlockType.TeaserGrid

@@ -35,6 +35,8 @@ import {TitleBlock} from './titleBlock'
 import {BlockValue, EmbedType} from './types'
 import {BlockType} from '@wepublish/editor/api-v2'
 import {isFunctionalUpdate} from '../utility'
+import {TeaserListBlock} from './teaserListBlock'
+import {TeaserType} from '@wepublish/editor/api'
 
 export const BlockMap: BlockMapForValue<BlockValue> = {
   [BlockType.Title]: {
@@ -128,6 +130,20 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     defaultValue: {type: EmbedType.Other, blockStyle: undefined},
     label: 'blocks.embeds.label',
     icon: <MdIntegrationInstructions />
+  },
+
+  [BlockType.TeaserList]: {
+    field: props => <TeaserListBlock {...props} />,
+    defaultValue: {
+      filter: {},
+      blockStyle: undefined,
+      teasers: [],
+      skip: 0,
+      take: 6,
+      teaserType: TeaserType.Article
+    },
+    label: 'blocks.teaserList.label',
+    icon: <MdEvent />
   },
 
   [BlockType.TeaserGrid1]: {
