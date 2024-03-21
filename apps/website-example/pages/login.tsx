@@ -33,15 +33,15 @@ export default function Login({sessionToken}: LoginProps) {
     if (sessionToken) {
       setToken(sessionToken)
     }
+  }, [sessionToken, setToken])
 
-    if (hasUser) {
-      const intendedRoute = getCookie(IntendedRouteStorageKey)?.toString()
-      deleteCookie(IntendedRouteStorageKey)
-      const route = intendedRoute ?? '/'
+  if (hasUser) {
+    const intendedRoute = getCookie(IntendedRouteStorageKey)?.toString()
+    deleteCookie(IntendedRouteStorageKey)
+    const route = intendedRoute ?? '/profile'
 
-      router.push(route)
-    }
-  }, [router, hasUser, sessionToken, setToken])
+    router.replace(route)
+  }
 
   return (
     <LoginWrapper>
