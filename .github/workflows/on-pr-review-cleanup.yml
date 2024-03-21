@@ -57,7 +57,6 @@ jobs:
     runs-on: ubuntu-latest
     continue-on-error: true
     env:
-      VERCEL_API_TOKEN: ${{ secrets.VERCEL_API_TOKEN }}
       BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
     steps:
       - uses: actions/checkout@v3
@@ -69,6 +68,6 @@ jobs:
       - run: |
           for PROJECT in $(ls apps | grep -v example | grep -v editor)
           do
-            vercel --token=$VERCEL_API_TOKEN link --project $PROJECT --scope wepublish --token --yes
-            vercel --token=$VERCEL_API_TOKEN env ls | grep "Preview ($BRANCH_NAME)" && vercel --token=$VERCEL_API_TOKEN env rm API_URL preview $BRANCH_NAME --yes
+            vercel --token=${{ secrets.VERCEL_API_TOKEN }} link --project $PROJECT --scope wepublish --token --yes
+            vercel --token=${{ secrets.VERCEL_API_TOKEN }} env ls | grep "Preview ($BRANCH_NAME)" && vercel --token=${{ secrets.VERCEL_API_TOKEN }} env rm API_URL preview $BRANCH_NAME --yes
           done
