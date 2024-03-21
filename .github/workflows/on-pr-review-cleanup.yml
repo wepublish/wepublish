@@ -50,4 +50,25 @@ jobs:
           helm get all review-$PR_NUM-minio -n reviews && helm uninstall review-$PR_NUM-minio -n reviews
           # Delete PVCs associated with the PR
           kubectl get pvc -n reviews | grep "\-$PR_NUM\-" | awk '{print $1}' | xargs -r kubectl delete pvc -n reviews
-          
+  
+
+  remove_vercel_variables:
+    name: Remove vercel env variables
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    env:
+      VERCEL_API_TOKEN: ${{ secrets.VERCEL_API_TOKEN }}
+      BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: npm
+      - run: npm i -g vercel
+      - run: |
+          for PROJECT in $(ls apps | grep -v example | grep -v editor)
+          do
+            vercel --token=$VERCEL_API_TOKEN link --project $PROJECT --scope wepublish --token --yes
+            vercel --token=$VERCEL_API_TOKEN env ls | grep "Preview ($BRANCH_NAME)" && vercel --token=$VERCEL_API_TOKEN env rm API_URL preview $BRANCH_NAME --yes
+          done

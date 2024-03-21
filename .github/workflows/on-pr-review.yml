@@ -254,6 +254,30 @@ jobs:
           if [[ ! -z $(helm ls -a -n reviews |grep ${POD_NAME} |grep -v "deployed ") ]]; then helm uninstall -n reviews ${POD_NAME}; fi
           helm upgrade --install ${POD_NAME} ./helm/charts/wepublish -n reviews -f values.yaml --wait
 
+  vercel_variables:
+    name: Set vercel env variables
+    needs: helm_deployment
+    if: ${{ needs.helm_deployment.result == 'success' }}
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    env:
+      VERCEL_API_TOKEN: ${{ secrets.VERCEL_API_TOKEN }}
+      BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
+      API_URL: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: npm
+      - run: npm i -g vercel
+      - run: |
+          for PROJECT in $(ls apps | grep -v example | grep -v editor)
+          do
+            vercel --token=$VERCEL_API_TOKEN link --project $PROJECT --scope wepublish --token --yes
+            vercel --token=$VERCEL_API_TOKEN env ls | grep "Preview ($BRANCH_NAME)" || echo "$API_URL" | vercel --token=$VERCEL_API_TOKEN env add API_URL preview $BRANCH_NAME --yes
+          done
 
   notify:
     name: Notify
