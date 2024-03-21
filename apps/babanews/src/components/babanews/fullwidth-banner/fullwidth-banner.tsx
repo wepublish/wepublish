@@ -21,5 +21,5 @@ export const FullWidthBanner = ({richText, text, image}: BuilderBreakBlockProps)
   const {
     elements: {Image}
   } = useWebsiteBuilder()
-  return <Banner>{image && <Image image={image} alt="banner-image" css={styles} />}</Banner>
+  return <Banner>{image && <Image image={image} css={styles} />}</Banner>
 }
