@@ -3,19 +3,19 @@
 exports[`Navbar Container should render Default 1`] = `
 <DocumentFragment>
   <nav
-    class="css-1afpbz6-NavbarWrapper ei6evl215"
+    class="css-1afpbz6-NavbarWrapper ei6evl216"
   >
     <header
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl214 css-xf9z4a-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl215 css-xf9z4a-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
-          class="css-1trl8g0-NavbarMain ei6evl212"
+          class="css-1trl8g0-NavbarMain ei6evl213"
         >
           <div
-            class="css-1g6nmgg-NavbarIconButtonWrapper ei6evl210"
+            class="css-1g6nmgg-NavbarIconButtonWrapper ei6evl211"
           >
             <button
               aria-label="Menu"
@@ -47,30 +47,30 @@ exports[`Navbar Container should render Default 1`] = `
           </div>
         </div>
         <div
-          class="css-lp67xt-NavbarLinks ei6evl213"
+          class="css-lp67xt-NavbarLinks ei6evl214"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
           >
             Home
           </a>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
           >
             Artikel
           </a>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
             href="https://google.com"
           >
             Google
           </a>
         </div>
         <div
-          class="css-cl7riy-NavbarSpacer ei6evl28"
+          class="css-cl7riy-NavbarSpacer ei6evl29"
         />
         <div
-          class="css-1w9evey-NavbarActions ei6evl211"
+          class="css-1w9evey-NavbarActions ei6evl212"
         >
           <a
             aria-label="Login"
@@ -114,19 +114,19 @@ exports[`Navbar Container should render Default 1`] = `
 exports[`Navbar Container should render WithClassName 1`] = `
 <DocumentFragment>
   <nav
-    class="extra-classname css-1afpbz6-NavbarWrapper ei6evl215"
+    class="extra-classname css-1afpbz6-NavbarWrapper ei6evl216"
   >
     <header
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl214 css-xf9z4a-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl215 css-xf9z4a-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
-          class="css-1trl8g0-NavbarMain ei6evl212"
+          class="css-1trl8g0-NavbarMain ei6evl213"
         >
           <div
-            class="css-1g6nmgg-NavbarIconButtonWrapper ei6evl210"
+            class="css-1g6nmgg-NavbarIconButtonWrapper ei6evl211"
           >
             <button
               aria-label="Menu"
@@ -158,30 +158,30 @@ exports[`Navbar Container should render WithClassName 1`] = `
           </div>
         </div>
         <div
-          class="css-lp67xt-NavbarLinks ei6evl213"
+          class="css-lp67xt-NavbarLinks ei6evl214"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
           >
             Home
           </a>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
           >
             Artikel
           </a>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
             href="https://google.com"
           >
             Google
           </a>
         </div>
         <div
-          class="css-cl7riy-NavbarSpacer ei6evl28"
+          class="css-cl7riy-NavbarSpacer ei6evl29"
         />
         <div
-          class="css-1w9evey-NavbarActions ei6evl211"
+          class="css-1w9evey-NavbarActions ei6evl212"
         >
           <a
             aria-label="Login"
@@ -225,19 +225,19 @@ exports[`Navbar Container should render WithClassName 1`] = `
 exports[`Navbar Container should render WithEmotion 1`] = `
 <DocumentFragment>
   <nav
-    class="css-1afpbz6-NavbarWrapper ei6evl215"
+    class="css-1afpbz6-NavbarWrapper ei6evl216"
   >
     <header
       class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation0 MuiAppBar-root MuiAppBar-colorTransparent MuiAppBar-positionStatic css-o9rtii-MuiPaper-root-MuiAppBar-root"
     >
       <div
-        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl214 css-xf9z4a-MuiToolbar-root-NavbarInnerWrapper"
+        class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular ei6evl215 css-xf9z4a-MuiToolbar-root-NavbarInnerWrapper"
       >
         <div
-          class="css-1trl8g0-NavbarMain ei6evl212"
+          class="css-1trl8g0-NavbarMain ei6evl213"
         >
           <div
-            class="css-1g6nmgg-NavbarIconButtonWrapper ei6evl210"
+            class="css-1g6nmgg-NavbarIconButtonWrapper ei6evl211"
           >
             <button
               aria-label="Menu"
@@ -269,30 +269,30 @@ exports[`Navbar Container should render WithEmotion 1`] = `
           </div>
         </div>
         <div
-          class="css-lp67xt-NavbarLinks ei6evl213"
+          class="css-lp67xt-NavbarLinks ei6evl214"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
           >
             Home
           </a>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
           >
             Artikel
           </a>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
             href="https://google.com"
           >
             Google
           </a>
         </div>
         <div
-          class="css-cl7riy-NavbarSpacer ei6evl28"
+          class="css-cl7riy-NavbarSpacer ei6evl29"
         />
         <div
-          class="css-1w9evey-NavbarActions ei6evl211"
+          class="css-1w9evey-NavbarActions ei6evl212"
         >
           <a
             aria-label="Login"

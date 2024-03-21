@@ -9,5 +9,8 @@ export type BuilderNavbarProps = PropsWithChildren<
     headerSlug: string
     categorySlugs: string[][]
     logo?: FullImageFragment | null
+    loginUrl?: string
+    profileUrl?: string
+    subscriptionsUrl?: string
   }
 >

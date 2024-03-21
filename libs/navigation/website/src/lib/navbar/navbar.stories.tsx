@@ -4,6 +4,7 @@ import {FullNavigationFragment, Navigation} from '@wepublish/website/api'
 import {Navbar} from './navbar'
 import {css} from '@emotion/react'
 import {Md60FpsSelect, MdInvertColors, MdSecurity} from 'react-icons/md'
+import {WithUserDecorator} from '@wepublish/storybook'
 
 const navigation = {
   id: 'cldx7kcpi1168oapxftiqsh0p',
@@ -221,6 +222,11 @@ export const Default = {
     headerSlug: 'header',
     logo
   }
+}
+
+export const WithLoggedIn = {
+  ...Default,
+  decorators: [WithUserDecorator(null)]
 }
 
 export const WithoutLogo = {
