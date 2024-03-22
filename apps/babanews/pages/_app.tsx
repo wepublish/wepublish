@@ -115,7 +115,11 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               <meta name="theme-color" content="#ffffff" />
             </Head>
             <div className={hankenGrotesk.className}>
-              <NavBar categorySlugs={[['categories', 'about-us']]} slug="main" />
+              <NavBar
+                categorySlugs={[['categories', 'about-us']]}
+                slug="main"
+                headerSlug="header"
+              />
 
               <Component {...pageProps} />
 

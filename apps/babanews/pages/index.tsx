@@ -33,7 +33,7 @@ const Frontpage = styled(PageContainer)`
 `
 
 export default function Index() {
-  return <Frontpage slug={'home'} />
+  return <Frontpage slug={''} />
 }
 
 export const getStaticProps: GetStaticProps = async () => {
