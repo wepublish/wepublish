@@ -11,7 +11,7 @@ const AuthGuard = ({children}: PropsWithChildren) => {
   const router = useRouter()
   const {hasUser} = useUser()
 
-  if (!hasUser) {
+  if (!hasUser && typeof window !== 'undefined') {
     setCookie(IntendedRouteStorageKey, router.asPath, {
       expires: add(new Date(), {
         seconds: IntendedRouteExpiryInSeconds
@@ -19,11 +19,13 @@ const AuthGuard = ({children}: PropsWithChildren) => {
     })
 
     router.push('/login')
-
-    return <Fragment />
   }
 
-  return <>{children}</>
+  if (hasUser) {
+    return <>{children}</>
+  }
+
+  return <Fragment />
 }
 
 export const withAuthGuard = <P extends object>(Cmp: ComponentType<P>) =>
