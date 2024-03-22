@@ -35,7 +35,7 @@ export default function Login({sessionToken}: LoginProps) {
     }
   }, [sessionToken, setToken])
 
-  if (hasUser) {
+  if (hasUser && typeof window !== 'undefined') {
     const intendedRoute = getCookie(IntendedRouteStorageKey)?.toString()
     deleteCookie(IntendedRouteStorageKey)
     const route = intendedRoute ?? '/profile'
