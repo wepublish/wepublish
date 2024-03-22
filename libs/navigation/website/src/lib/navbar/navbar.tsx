@@ -2,8 +2,9 @@ import {AppBar, Theme, Toolbar, css, styled, useTheme} from '@mui/material'
 import {FullNavigationFragment} from '@wepublish/website/api'
 import {BuilderNavbarProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {PropsWithChildren, useCallback, useMemo, useState} from 'react'
-import {MdAccountCircle, MdClose, MdMenu} from 'react-icons/md'
+import {MdAccountCircle, MdClose, MdMenu, MdOutlinePayments} from 'react-icons/md'
 import {navigationLinkToUrl} from '../link-to-url'
+import {useUser} from '@wepublish/authentication/website'
 
 export const NavbarWrapper = styled('nav')`
   position: sticky;
@@ -199,7 +200,19 @@ const useImageStyles = () => {
   )
 }
 
-export function Navbar({className, children, categorySlugs, slug, data, logo}: BuilderNavbarProps) {
+export function Navbar({
+  className,
+  children,
+  categorySlugs,
+  slug,
+  headerSlug,
+  data,
+  logo,
+  loginUrl = '/login',
+  profileUrl = '/profile',
+  subscriptionsUrl = '/profile/subscription'
+}: BuilderNavbarProps) {
+  const {hasUser} = useUser()
   const [isMenuOpen, setMenuOpen] = useState(false)
   const toggleMenu = useCallback(() => setMenuOpen(isOpen => !isOpen), [])
 
@@ -209,7 +222,7 @@ export function Navbar({className, children, categorySlugs, slug, data, logo}: B
   const navbarLinkStyles = useNavbarLinkStyles()
 
   const mainItems = data?.navigations?.find(({key}) => key === slug)
-  const headerItems = data?.navigations?.find(({key}) => key === 'header')
+  const headerItems = data?.navigations?.find(({key}) => key === headerSlug)
 
   const categories = useMemo(
     () =>
@@ -269,7 +282,15 @@ export function Navbar({className, children, categorySlugs, slug, data, logo}: B
           <NavbarSpacer />
 
           <NavbarActions isMenuOpen={isMenuOpen}>
-            <Link href="/login" aria-label="Login">
+            {hasUser && (
+              <Link href={subscriptionsUrl} aria-label={hasUser ? 'Profil' : 'Login'}>
+                <IconButton css={{fontSize: '2em', color: 'black'}}>
+                  <MdOutlinePayments />
+                </IconButton>
+              </Link>
+            )}
+
+            <Link href={hasUser ? profileUrl : loginUrl} aria-label={hasUser ? 'Profil' : 'Login'}>
               <IconButton css={{fontSize: '2em', color: 'black'}}>
                 <MdAccountCircle />
               </IconButton>
@@ -279,7 +300,12 @@ export function Navbar({className, children, categorySlugs, slug, data, logo}: B
       </AppBar>
 
       {isMenuOpen && Boolean(mainItems || categories?.length) && (
-        <NavPaper main={mainItems} categories={categories} closeMenu={toggleMenu}>
+        <NavPaper
+          profileUrl={profileUrl}
+          loginUrl={loginUrl}
+          main={mainItems}
+          categories={categories}
+          closeMenu={toggleMenu}>
           {children}
         </NavPaper>
       )}
@@ -385,19 +411,31 @@ export const NavPaperChildrenWrapper = styled('div')`
   `}
 `
 
+export const NavPaperActions = styled('div')`
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  gap: ${({theme}) => theme.spacing(2)};
+`
+
 const NavPaper = ({
   main,
   categories,
+  loginUrl,
+  profileUrl,
   closeMenu,
   children
 }: PropsWithChildren<{
+  loginUrl: string
+  profileUrl: string
   main: FullNavigationFragment | null | undefined
   categories: FullNavigationFragment[][]
   closeMenu: () => void
 }>) => {
   const {
-    elements: {Link, H4, H6}
+    elements: {Link, Button, H4, H6}
   } = useWebsiteBuilder()
+  const {hasUser, logout} = useUser()
   const theme = useTheme()
 
   return (
@@ -417,6 +455,42 @@ const NavPaper = ({
               </Link>
             )
           })}
+
+          <NavPaperActions>
+            {!hasUser && (
+              <Button
+                LinkComponent={Link}
+                href={loginUrl}
+                variant="contained"
+                color="secondary"
+                onClick={closeMenu}>
+                Login
+              </Button>
+            )}
+
+            {hasUser && (
+              <>
+                <Button
+                  LinkComponent={Link}
+                  href={profileUrl}
+                  variant="contained"
+                  color="secondary"
+                  onClick={closeMenu}>
+                  Mein Konto
+                </Button>
+
+                <Button
+                  onClick={() => {
+                    logout()
+                    closeMenu()
+                  }}
+                  variant="outlined"
+                  color="secondary">
+                  Logout
+                </Button>
+              </>
+            )}
+          </NavPaperActions>
         </NavPaperMainLinks>
       )}
 

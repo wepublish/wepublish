@@ -126,7 +126,10 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               <CssBaseline />
 
               <MainGrid className={roboto.className}>
-                <NavBar slug="main" categorySlugs={[['basel-briefing', 'other'], ['about-us']]}>
+                <NavBar
+                  slug="main"
+                  categorySlugs={[['basel-briefing', 'other'], ['about-us']]}
+                  headerSlug="header">
                   <>
                     <ButtonLink href="https://www.facebook.com/bajourbasel">
                       <MdFacebook size="32" />

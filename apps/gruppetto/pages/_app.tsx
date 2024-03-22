@@ -146,8 +146,14 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               <link rel="alternate" type="application/atom+xml" href="/api/atom-feed" />
               <link rel="alternate" type="application/feed+json" href="/api/json-feed" />
             </Head>
+
             <Spacer>
-              <NavBar categorySlugs={[['account', 'issues', 'about-us']]} slug="main" />
+              <NavBar
+                categorySlugs={[['account', 'issues', 'about-us']]}
+                slug="main"
+                headerSlug="header"
+              />
+
               <main>
                 <MainSpacer maxWidth="lg">
                   <Component {...pageProps} />
