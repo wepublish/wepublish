@@ -257,7 +257,6 @@ jobs:
   deploy_to_vercel:
     name: Deploy to vercel
     runs-on: ubuntu-latest
-    continue-on-error: true
     strategy:
       matrix:
         project: [ "babanews", "bajour", "gruppetto" ]
