@@ -272,7 +272,7 @@ jobs:
           
   deploy_to_vercel:
     name: Deploy to vercel
-#    needs: helm_deployment
+    needs: [find_vercel_apps]
 #    if: ${{ needs.helm_deployment.result == 'success' }}
     runs-on: ubuntu-latest
     strategy:
