@@ -259,6 +259,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       API_URL: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
     strategy:
       matrix:
         project: ["babanews", "bajour", "gruppetto"]
@@ -273,12 +274,11 @@ jobs:
               workflow_id: 'on-demand-deploy-vercel.yml',
               ref: 'main',
               inputs: {
-                api_url: env.process.API_URL,
+                api_url: process.env.API_URL,
                 project: '${{ matrix.project }}'
               }
             });
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
 
 #  notify:
 #    name: Notify
