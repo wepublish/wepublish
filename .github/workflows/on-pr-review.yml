@@ -279,55 +279,56 @@ jobs:
           WEBSITE_URL: review-${{ github.event.pull_request.number }}.${{ matrix.project }}-staging.vercel.app
 
 
-#  notify:
-#    name: Notify
+  notify:
+    name: Notify
 #    needs: helm_deployment
 #    if: ${{ needs.helm_deployment.result == 'success' }}
-#    runs-on: ubuntu-latest
-#    continue-on-error: true
-#
-#    env:
-#      API_URL: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.dev
-#      EDITOR_URL: https://editor-${{ github.event.pull_request.number }}.reviews.wepublish.dev
-#      WEBSITE_URL: https://website-${{ github.event.pull_request.number }}.reviews.wepublish.dev
-#      MEDIA_SERVER_URL: https://media-${{ github.event.pull_request.number }}.reviews.wepublish.dev
-#
-#    steps:
-#      - uses: actions/checkout@v3
-#      - uses: actions/setup-node@v3
-#        with:
-#          node-version: '18'
-#          cache: npm
-#
-#      - name: Create Deployment Text
-#        id: deploymentComment
-#        env:
-#          BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
-#          PR_NUMBER: ${{ github.event.pull_request.number }}
-#        run: |
-#          cd ./config
-#          npm ci
-#          OUTPUT=$(node ./notify-github.js)
-#          OUTPUT="${OUTPUT//$'\n'/'%0A'}"
-#          OUTPUT="${OUTPUT//$'\r'/'%0D'}"
-#          echo "::set-OUTPUT name=result::$OUTPUT"
-#
-#      - uses: marocchino/sticky-pull-request-comment@v2
-#        with:
-#          message: |
-#            ${{ steps.deploymentComment.outputs.result }}
-#
-#      - name: Notify Jira
-#        env:
-#          BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
-#          PR_NUMBER: ${{ github.event.pull_request.number }}
-#          PR_TITLE: ${{ github.event.pull_request.title }}
-#          PR_BODY: ${{ github.event.pull_request.body }}
-#          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
-#          JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
-#          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
-#        run: |
-#          cd ./config
-#          npm ci
-#          node ./notify-jira.js
-#
+    runs-on: ubuntu-latest
+    continue-on-error: true
+
+    env:
+      API_URL: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+      EDITOR_URL: https://editor-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+      WEBSITE_URL: https://website-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+      MEDIA_SERVER_URL: https://media-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: npm
+
+      - name: Create Deployment Text
+        id: deploymentComment
+        env:
+          BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          WEBSITE_CLIENT_URL_PATTERN: "review-${{ github.event.pull_request.number }}.{APP}-staging.vercel.app"
+        run: |
+          cd ./config
+          npm ci
+          OUTPUT=$(node ./notify-github.js)
+          OUTPUT="${OUTPUT//$'\n'/'%0A'}"
+          OUTPUT="${OUTPUT//$'\r'/'%0D'}"
+          echo "::set-OUTPUT name=result::$OUTPUT"
+
+      - uses: marocchino/sticky-pull-request-comment@v2
+        with:
+          message: |
+            ${{ steps.deploymentComment.outputs.result }}
+
+      - name: Notify Jira
+        env:
+          BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+          JIRA_BASE_URL: ${{ secrets.JIRA_BASE_URL }}
+          JIRA_USER_EMAIL: ${{ secrets.JIRA_USER_EMAIL }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_API_TOKEN }}
+        run: |
+          cd ./config
+          npm ci
+          node ./notify-jira.js
+
