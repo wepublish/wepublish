@@ -257,6 +257,19 @@ jobs:
 #          if [[ ! -z $(helm ls -a -n reviews |grep ${POD_NAME} |grep -v "deployed ") ]]; then helm uninstall -n reviews ${POD_NAME}; fi
 #          helm upgrade --install ${POD_NAME} ./helm/charts/wepublish -n reviews -f values.yaml --wait
 
+
+  find_vercel_apps:
+    name: Find Vercel apps
+    runs-on: ubuntu-latest
+    outputs:
+      projects: ${{ steps.matrix.outputs.value }}
+    steps:
+      - id: projects
+        run: |
+          echo "value=[\"babanews\", \"bajour\", \"gruppetto\"]" >> $GITHUB_OUTPUT
+      - run: |
+          echo "${{ steps.projects.outputs.value }}"
+          
   deploy_to_vercel:
     name: Deploy to vercel
 #    needs: helm_deployment
@@ -264,7 +277,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        project: [ "babanews", "bajour", "gruppetto" ]
+        project: ${{fromJSON(needs.find_vercel_apps.outputs.projects)}}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -283,8 +296,8 @@ jobs:
 
   notify:
     name: Notify
-#    needs: helm_deployment
-#    if: ${{ needs.helm_deployment.result == 'success' }}
+    needs: [find_vercel_apps, deploy_to_vercel]
+    if: ${{ needs.deploy_to_vercel.result == 'success' }}
     runs-on: ubuntu-latest
     continue-on-error: true
 
@@ -298,9 +311,10 @@ jobs:
       - name: Create Deployment Text
         id: deploymentComment
         env:
+          PROJECTS: ${{ needs.find_vercel_apps.outputs.projects }}
           BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
-          WEBSITE_CLIENT_URL_PATTERN: "review-${{ github.event.pull_request.number }}.{APP}-staging.vercel.app"
+          PROJECT_URL_PATTERN: "{PROJECT}-review-${{ github.event.pull_request.number }}.wepublish.vercel.app"
         run: |
           cd ./config
           npm ci

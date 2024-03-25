@@ -9,7 +9,8 @@ async function main() {
         EDITOR_URL,
         WEBSITE_URL,
         MEDIA_SERVER_URL,
-        WEBSITE_CLIENT_URL_PATTERN
+        PROJECTS,
+        PROJECT_URL_PATTERN,
     } = process.env
 
     let deploymentMessage = `<a href="https://github.com/wepublish/wepublish/pull/${PR_NUMBER}">PR ${PR_NUMBER}</a> with branch \`${BRANCH_NAME}\` has been deployed to:
@@ -17,16 +18,14 @@ async function main() {
   - Editor: ${EDITOR_URL}
   - Public API: ${API_URL}/v1
   - Private API: ${API_URL}/v1/admin
-  - Media: ${MEDIA_SERVER_URL}`
+  - Media: ${MEDIA_SERVER_URL}
+`
 
-    const ignoreList = ['api-example', 'website-example', 'editor'];
-    const files = await readdir(__dirname + '/apps');
-    for (const app of files) {
-        if (!ignoreList.includes(app)) {
-            deploymentMessage += `\n- ${app}: ${WEBSITE_CLIENT_URL_PATTERN.replace('{APP}', app)}`
-        }
+    const projects = JSON.parse(PROJECTS);
+    for (const project of projects) {
+        deploymentMessage += `
+  - ${project}: ${PROJECT_URL_PATTERN.replace('{PROJECT}', project)}`
     }
-
     console.log(deploymentMessage)
 }
 
