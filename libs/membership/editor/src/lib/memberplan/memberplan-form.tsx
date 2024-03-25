@@ -45,8 +45,11 @@ const ColTextAlignEnd = styled(Col)`
   text-align: end;
 `
 
-const FormControlLabelMarginRight = styled(Form.ControlLabel)`
+const FormControlLabelMarginRight = styled(ControlLabel)`
   margin-right: 10px;
+`
+const FormControlLabelMarginLeft = styled(ControlLabel)`
+  margin-left: 10px;
 `
 
 const PanelWidth100 = styled(Panel)`
@@ -399,13 +402,15 @@ export function MemberPlanForm({
           <RowPaddingTop>
             {/* extendable */}
             <Col xs={12}>
-              <FormControlLabelMarginRight>
-                {t('memberplanForm.extendableToggle')}
-              </FormControlLabelMarginRight>
               <Toggle
                 checked={memberPlan?.extendable}
                 onChange={extendable => setExtendable(extendable)}
               />
+              <FormControlLabelMarginLeft>
+                {memberPlan?.extendable
+                  ? t('memberplanForm.extendableToggle')
+                  : t('memberplanForm.nonExtendableToggle')}
+              </FormControlLabelMarginLeft>
               <HelpText>{t('memberplanForm.extendableHelpText')}</HelpText>
             </Col>
             {/* max count */}

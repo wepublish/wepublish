@@ -1341,7 +1341,7 @@
         "willBeDeactivated": "The subscription will be deactivated on {{date, ccc PP p}}"
       },
       "editTitle": "Edit Subscription",
-      "memberPlanMonthlyAmount": "Monthly Amount (CHF)",
+      "memberPlanMonthlyAmount": "Minimal Monthly Amount (CHF)",
       "monthlyAmount": "Monthly amount",
       "paidUntil": "Paid Until",
       "paymentMethod": "Payment Method",
@@ -1393,12 +1393,20 @@
       "trialSubscription": "Advanced settings",
       "configureTrialBtn": "Configure for trial subscriptions",
       "extendableToggle": "Extendable",
+      "nonExtendableToggle": "Not extendable",
       "extendableHelpText": "Determine whether a user's subscription can be renewed - automatically or manually - or not. As a rule, trial subscriptions cannot be renewed.",
       "maxCount": "Maximum number of subscriptions per user",
       "maxCountHelpText": "Limit the number of subscriptions that a user can purchase for this subscription plan. This also includes deactivated subscriptions.",
       "trialMemberplanAlert": "This subscription plan is configured for trial subscriptions.",
       "forceAutoRenewNotPossible": "Automatic renewal is not possible because the subscription plan is not extendable.",
       "trialSubscriptionNotPossible": "The subscription plan must remain renewable because an automatic renewal is forced in a payment setting. You can of course change this."
+    },
+    "subscriptionEditView": {
+      "additionalSettingsTitle": "Advanced settings",
+      "trialSubscriptionConfigured": "This subscription is configured as a trial subscription.",
+      "nonExtendableNotCompatibleWithAutoRenew": "An automatically renewing subscription must be renewable. Change one of these parameters.",
+      "configureAsTrialSubscription": "Configure as a trial subscription",
+      "subscriptionTrialNotPossible": "The subscription cannot be configured as a trial subscription. To do so, change the settings of the subscription plan."
     },
     "resources": {
       "teaserType": {

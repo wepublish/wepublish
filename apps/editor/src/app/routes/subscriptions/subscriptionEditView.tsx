@@ -35,9 +35,9 @@ import {
   UserSearch,
   UserSubscriptionDeactivatePanel
 } from '@wepublish/ui/editor'
-import {useEffect, useState} from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdChevronLeft, MdKeyboardArrowDown, MdUnpublished} from 'react-icons/md'
+import {MdAutoFixHigh, MdCheck, MdChevronLeft, MdUnpublished} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {
   Button as RButton,
@@ -55,12 +55,16 @@ import {
   toaster,
   Toggle
 } from 'rsuite'
-import {Accordion, AccordionDetails, AccordionSummary} from '@mui/material'
+import {Alert} from '@mui/material'
 
 const {Group, ControlLabel, Control, HelpText} = RForm
 
 const Form = styled(RForm)`
   height: 100%;
+`
+
+const FormControlLabelMarginLeft = styled(ControlLabel)`
+  margin-left: 10px;
 `
 
 const Button = styled(RButton)`
@@ -163,7 +167,7 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
   })
 
   /**
-   * Loading the invoices of the current subscription
+   * Loading the invoices for the current subscription
    */
   useEffect(() => {
     const tmpInvoices = invoicesData?.invoices?.nodes
@@ -235,30 +239,14 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
     skip: editedUserId === undefined
   })
 
+  /**
+   * USE EFFECT HOOKS
+   */
   useEffect(() => {
     if (editedUserData) {
       setUser(editedUserData.user)
     }
   }, [editedUserData])
-
-  const isDeactivated = deactivation?.date ? new Date(deactivation.date) < new Date() : false
-
-  const isDisabled =
-    isLoading ||
-    isLoadingInvoices ||
-    isCreating ||
-    isMemberPlanLoading ||
-    isUpdating ||
-    isCancel ||
-    isPaymentMethodLoading ||
-    loadError !== undefined ||
-    loadErrorInvoices !== undefined ||
-    createError !== undefined ||
-    loadMemberPlanError !== undefined ||
-    paymentMethodLoadError !== undefined ||
-    !isAuthorized
-
-  const hasNoMemberPlanSelected = memberPlan === undefined
 
   useEffect(() => {
     if (memberPlanData?.memberPlans?.nodes) {
@@ -295,6 +283,65 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
     cancelError
   ])
 
+  /**
+   * MEMOS
+   */
+  const isDeactivated = useMemo<boolean>(() => {
+    return deactivation?.date ? new Date(deactivation.date) < new Date() : false
+  }, [deactivation?.date])
+
+  const isDisabled: boolean = useMemo<boolean>(() => {
+    return (
+      isLoading ||
+      isLoadingInvoices ||
+      isCreating ||
+      isMemberPlanLoading ||
+      isUpdating ||
+      isCancel ||
+      isPaymentMethodLoading ||
+      loadError !== undefined ||
+      loadErrorInvoices !== undefined ||
+      createError !== undefined ||
+      loadMemberPlanError !== undefined ||
+      paymentMethodLoadError !== undefined ||
+      !isAuthorized
+    )
+  }, [
+    isLoading,
+    isLoadingInvoices,
+    isCreating,
+    isMemberPlanLoading,
+    isUpdating,
+    isCancel,
+    isPaymentMethodLoading,
+    loadError,
+    loadErrorInvoices,
+    createError,
+    loadMemberPlanError,
+    paymentMethodLoadError,
+    isAuthorized
+  ])
+
+  const hasNoMemberPlanSelected: boolean = useMemo<boolean>(
+    () => memberPlan === undefined,
+    [memberPlan]
+  )
+
+  const goBackLink: string = useMemo<string>(
+    () => (editedUserId ? `/users/edit/${editedUserId}` : '/subscriptions'),
+    [editedUserId]
+  )
+
+  const isTrialMemberPlan: boolean = useMemo<boolean>(
+    () => !!memberPlan?.maxCount,
+    [memberPlan?.extendable, memberPlan?.maxCount]
+  )
+
+  const isTrialSubscription: boolean = useMemo<boolean>(
+    () => !autoRenew && !extendable,
+    [autoRenew, extendable]
+  )
+
   const inputBase = {
     monthlyAmount,
     paymentPeriodicity,
@@ -304,7 +351,28 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
     extendable
   }
 
-  const goBackLink = editedUserId ? `/users/edit/${editedUserId}` : '/subscriptions'
+  /**
+   * Function to check either extendable or autoRenew flag to be compatible.
+   * Database would rise an error if extendable is false and autoRenew is true at the same time.
+   * We want to catch that already in front-end with meaningful explanation.
+   * @param checkExtendable
+   * @param checkAutoRenew
+   */
+  function checkTrialSubscription(
+    checkExtendable: boolean = extendable,
+    checkAutoRenew: boolean = autoRenew
+  ): boolean {
+    if (!checkExtendable && checkAutoRenew) {
+      toaster.push(
+        <Message type="error" showIcon closable>
+          {t('subscriptionEditView.nonExtendableNotCompatibleWithAutoRenew')}
+        </Message>,
+        {duration: 6000}
+      )
+      return false
+    }
+    return true
+  }
 
   async function handleSave() {
     if (!memberPlan) return
@@ -589,7 +657,11 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
                           <Toggle
                             checked={autoRenew}
                             disabled={isDisabled || hasNoMemberPlanSelected || isDeactivated}
-                            onChange={value => setAutoRenew(value)}
+                            onChange={value =>
+                              setAutoRenew(() =>
+                                checkTrialSubscription(extendable, value) ? value : autoRenew
+                              )
+                            }
                           />
                           <HelpText>{t('userSubscriptionEdit.autoRenewDescription')}</HelpText>
                         </Col>
@@ -612,25 +684,69 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
                           <DatePicker block value={paidUntil ?? undefined} disabled />
                         </Col>
                       </RowPaddingTop>
-
-                      <RowPaddingTop></RowPaddingTop>
-                      <RowPaddingTop>
-                        <Col xs={24}>
-                          <Accordion variant={'outlined'}>
-                            <AccordionSummary
-                              id="panel1-header"
-                              aria-controls="panel1-content"
-                              expandIcon={<MdKeyboardArrowDown />}>
-                              {t('subscriptionEditView.additionalSettingsTitle')}
-                            </AccordionSummary>
-                            <AccordionDetails></AccordionDetails>
-                          </Accordion>
-                        </Col>
-                      </RowPaddingTop>
                     </Grid>
                   </Group>
                 </RPanel>
               </RGrid>
+            </Col>
+
+            <Col xs={12}>
+              <Grid fluid>
+                <RPanel bordered header={t('subscriptionEditView.additionalSettingsTitle')}>
+                  <Grid fluid>
+                    <Row>
+                      <Col xs={24}>
+                        {/* trial member plan & trial subscription */}
+                        {isTrialMemberPlan && isTrialSubscription && (
+                          <Alert icon={<MdCheck />} severity="success">
+                            {t('subscriptionEditView.trialSubscriptionConfigured')}
+                          </Alert>
+                        )}
+                        {/* trial member plan but not a trial subscription */}
+                        {isTrialMemberPlan && !isTrialSubscription && (
+                          <Button
+                            startIcon={<MdAutoFixHigh />}
+                            disabled={isTrialSubscription}
+                            onClick={() => {
+                              setAutoRenew(false)
+                              setExtendable(false)
+                            }}
+                            color={'green'}>
+                            {t('subscriptionEditView.configureAsTrialSubscription')}
+                          </Button>
+                        )}
+                        {/* not a trial member plan. Trial subscription not possible */}
+                        {!isTrialMemberPlan && !isLoading && (
+                          <Alert severity="info">
+                            {t('subscriptionEditView.subscriptionTrialNotPossible')}
+                          </Alert>
+                        )}
+                      </Col>
+                    </Row>
+                    <RowPaddingTop>
+                      {/* extendable */}
+                      <Col xs={12}>
+                        <Toggle
+                          checked={extendable}
+                          onChange={updatedExtendable =>
+                            setExtendable(() =>
+                              checkTrialSubscription(updatedExtendable)
+                                ? updatedExtendable
+                                : extendable
+                            )
+                          }
+                        />
+                        <FormControlLabelMarginLeft>
+                          {extendable
+                            ? t('memberplanForm.extendableToggle')
+                            : t('memberplanForm.nonExtendableToggle')}
+                        </FormControlLabelMarginLeft>
+                        <HelpText>{t('memberplanForm.extendableHelpText')}</HelpText>
+                      </Col>
+                    </RowPaddingTop>
+                  </Grid>
+                </RPanel>
+              </Grid>
             </Col>
 
             <Col xs={12}>
