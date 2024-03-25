@@ -9,15 +9,15 @@ import {
   useMemberPlanListQuery,
   usePaymentMethodListQuery
 } from '@wepublish/editor/api'
-import {useEffect, useState} from 'react'
+import React, {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdClose} from 'react-icons/md'
-import {Button, DateRangePicker, Form as RForm, SelectPicker} from 'rsuite'
+import {Button, DateRangePicker, Form as RForm, SelectPicker, Toggle} from 'rsuite'
 
 import {ALL_PAYMENT_PERIODICITIES} from '../../utility'
 import {UserSearch} from './userSearch'
 
-const {Group} = RForm
+const {Group, ControlLabel} = RForm
 
 const Form = styled(RForm)`
   display: flex;
@@ -32,6 +32,10 @@ const CloseIcon = styled(MdClose)`
 const FormGroup = styled(Group)`
   margin-right: 15px;
   margin-top: 15px;
+`
+
+const FormControlLabelMarginLeft = styled(ControlLabel)`
+  margin-left: 10px;
 `
 
 export interface SubscriptionListFilterProps {
@@ -337,6 +341,27 @@ export function SubscriptionListFilter({
               }
             }}
             onClean={() => updateFilter({paidUntilFrom: undefined, paidUntilTo: undefined})}
+          />
+        </Group>
+        <Group style={formInputStyle}>
+          <SelectPicker
+            key={`extendable-${resetFilterKey}`}
+            placeholder={t('subscriptionListFilter.extendable')}
+            label={t('subscriptionListFilter.extendable')}
+            searchable={false}
+            data={[
+              {
+                value: 'true',
+                label: t('yes')
+              },
+              {
+                value: 'false',
+                label: t('no')
+              }
+            ]}
+            block
+            placement="auto"
+            onChange={value => updateFilter({extendable: value === null ? null : value === 'true'})}
           />
         </Group>
       </Form>

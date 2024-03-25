@@ -1300,6 +1300,9 @@
       "configureAsTrialSubscription": "Als Probeabo konfigurieren",
       "subscriptionTrialNotPossible": "Das Abo kann nicht als Probeabo konfiguriert werden. Ändere hierzu die Einstellungen des Abo-Plans."
     },
+    "subscriptionListFilter": {
+      "extendable": "Verlängerbar"
+    },
     "resources": {
       "teaserType": {
         "article": "Artikel",
