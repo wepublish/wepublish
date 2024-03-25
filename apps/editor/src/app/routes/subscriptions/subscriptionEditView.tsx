@@ -37,7 +37,7 @@ import {
 } from '@wepublish/ui/editor'
 import React, {useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdAutoFixHigh, MdCheck, MdChevronLeft, MdUnpublished} from 'react-icons/md'
+import {MdAutoFixHigh, MdCheck, MdChevronLeft, MdOpenInNew, MdUnpublished} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {
   Button as RButton,
@@ -551,7 +551,14 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
                         {/* user */}
                         <Col xs={12}>
                           <ControlLabel>
-                            {toggleRequiredLabel(t('userSubscriptionEdit.selectUser'))}
+                            {user?.id ? (
+                              <Link to={`/users/edit/${user.id}`} target="_blank">
+                                {toggleRequiredLabel(t('userSubscriptionEdit.selectUser'))}{' '}
+                                <MdOpenInNew style={{marginLeft: '4px'}} />
+                              </Link>
+                            ) : (
+                              <p>{toggleRequiredLabel(t('userSubscriptionEdit.selectUser'))}</p>
+                            )}
                           </ControlLabel>
 
                           <UserSearch
@@ -565,7 +572,16 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
                         {/* member plan */}
                         <Col xs={12}>
                           <ControlLabel>
-                            {toggleRequiredLabel(t('userSubscriptionEdit.selectMemberPlan'))}
+                            {memberPlan?.id ? (
+                              <Link to={`/memberplans/edit/${memberPlan?.id}`} target="_blank">
+                                {toggleRequiredLabel(t('userSubscriptionEdit.selectMemberPlan'))}
+                                <MdOpenInNew style={{marginLeft: '4px'}} />
+                              </Link>
+                            ) : (
+                              <p>
+                                {toggleRequiredLabel(t('userSubscriptionEdit.selectMemberPlan'))}
+                              </p>
+                            )}
                           </ControlLabel>
                           <Control
                             block
