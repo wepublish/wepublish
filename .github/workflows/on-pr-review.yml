@@ -254,49 +254,25 @@ jobs:
 #          if [[ ! -z $(helm ls -a -n reviews |grep ${POD_NAME} |grep -v "deployed ") ]]; then helm uninstall -n reviews ${POD_NAME}; fi
 #          helm upgrade --install ${POD_NAME} ./helm/charts/wepublish -n reviews -f values.yaml --wait
 
-
-  deploy_vercel:
+  deploy_to_vercel:
+    name: Deploy to vercel
     runs-on: ubuntu-latest
+    continue-on-error: true
+    matrix:
+      project: [ "babanews", "bajour", "gruppetto" ]
     env:
       API_URL: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.dev
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    strategy:
-      matrix:
-        project: ["babanews", "bajour", "gruppetto"]
     steps:
-      - name: Trigger Deploy Workflow
-        uses: actions/github-script@v5
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
         with:
-          script: |
-            github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'on-demand-deploy-vercel.yml',
-              ref: context.payload.pull_request.head.ref,
-              inputs: {
-                api_url: process.env.API_URL,
-                project: '${{ matrix.project }}'
-              }
-            });
-  
-
-#  deploy_to_vercel:
-#    name: Build and deploy
-#    runs-on: ubuntu-latest
-#    continue-on-error: true
-#    env:
-#      API_URL: ${{ inputs.api_url }}
-#    steps:
-#      - uses: actions/checkout@v3
-#      - uses: actions/setup-node@v3
-#        with:
-#          node-version: '18'
-#          cache: npm
-#      - run: npm i -g vercel
-#      - run: |
-#          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" link --project {{ inputs.project }} --scope wepublish --yes
-#          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" build --yes
-#          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" deploy --prebuilt --yes --no-wait
+          node-version: '18'
+          cache: npm
+      - run: npm i -g vercel
+      - run: |
+          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" link --project {{ matrix.project }} --scope wepublish --yes
+          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" build --yes
+          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" deploy --prebuilt --yes
 
 
 #  notify:
