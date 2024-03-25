@@ -271,7 +271,7 @@ jobs:
           cache: npm
       - run: npm i -g vercel
       - run: |
-          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" link --project {{ matrix.project }} --scope wepublish --yes
+          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" link --project ${{ matrix.project }} --scope wepublish --yes
           vercel --token "${{ secrets.VERCEL_API_TOKEN }}" build --yes
           vercel --token "${{ secrets.VERCEL_API_TOKEN }}" deploy --prebuilt --yes
 
