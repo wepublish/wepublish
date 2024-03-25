@@ -262,9 +262,6 @@ jobs:
     strategy:
       matrix:
         project: [ "babanews", "bajour", "gruppetto" ]
-    env:
-      API_URL: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.dev
-      URL_SUFFIX: ${{ github.event.pull_request.number }}.reviews.wepublish.dev
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -275,8 +272,11 @@ jobs:
       - run: |
           vercel --token "${{ secrets.VERCEL_API_TOKEN }}" link --project ${{ matrix.project }} --scope wepublish --yes
           vercel --token "${{ secrets.VERCEL_API_TOKEN }}" build --yes
-          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" deploy --prebuilt --no-wait --yes > deployment_url
-          echo "{${{ matrix.project }}_url}={$(cat deployment_url)}" >> $GITHUB_STATE
+          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" deploy --prebuilt --yes > deployment_url 
+          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" alias $(cat deployment_url)
+        env:
+          API_URL: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+          WEBSITE_URL: review-${{ github.event.pull_request.number }}.${{ matrix.project }}-staging.vercel.app
 
 
 #  notify:
