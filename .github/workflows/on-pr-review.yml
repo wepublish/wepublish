@@ -9,21 +9,21 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  publish-docker-image:
-    name: Docker
-    uses: ./.github/workflows/on-demand-publish-docker-image.yml
-    with:
-      editor_tags: |
-        ghcr.io/wepublish/editor:${{ github.sha }}
-      api_tags: |
-        ghcr.io/wepublish/api:${{ github.sha }}
-      migration_tags: |
-        ghcr.io/wepublish/migration:${{ github.sha }}
-      storybook_tags: |
-        ghcr.io/wepublish/storybook:${{ github.sha }}
-      website_tags: |
-        ghcr.io/wepublish/website:${{ github.sha }}
-    secrets: inherit
+#  publish-docker-image:
+#    name: Docker
+#    uses: ./.github/workflows/on-demand-publish-docker-image.yml
+#    with:
+#      editor_tags: |
+#        ghcr.io/wepublish/editor:${{ github.sha }}
+#      api_tags: |
+#        ghcr.io/wepublish/api:${{ github.sha }}
+#      migration_tags: |
+#        ghcr.io/wepublish/migration:${{ github.sha }}
+#      storybook_tags: |
+#        ghcr.io/wepublish/storybook:${{ github.sha }}
+#      website_tags: |
+#        ghcr.io/wepublish/website:${{ github.sha }}
+#    secrets: inherit
 
 #  helm_deployment:
 #    name: Helm deployment
@@ -275,7 +275,7 @@ jobs:
           for PROJECT in $(ls apps | grep -v example | grep -v editor)
           do
             echo vercel --token="${{ secrets.VERCEL_API_TOKEN }}" link --project ${PROJECT} --scope wepublish --token --yes
-            vercel --token="${{ secrets.VERCEL_API_TOKEN }}" link --project ${PROJECT} --scope wepublish --token --yes
+            vercel --token="foo" link --project ${PROJECT} --scope wepublish --token --yes
             vercel --token="${{ secrets.VERCEL_API_TOKEN }}" env ls | grep "Preview (${BRANCH_NAME})" || echo "${API_URL}" | vercel --token=${{ secrets.VERCEL_API_TOKEN }} env add API_URL preview $BRANCH_NAME --yes
           done
 
