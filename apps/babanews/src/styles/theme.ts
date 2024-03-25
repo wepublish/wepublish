@@ -6,7 +6,7 @@ const {
 
 const theme = createTheme({
   typography: {
-    fontFamily: 'Roboto, sans-serif',
+    fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
     body1: {
       lineHeight: 1.25
     }
