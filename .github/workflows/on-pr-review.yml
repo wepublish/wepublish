@@ -289,7 +289,7 @@ jobs:
       - run: |
           vercel --token "${{ secrets.VERCEL_API_TOKEN }}" link --project ${{ matrix.project }} --scope wepublish --yes
           vercel --token "${{ secrets.VERCEL_API_TOKEN }}" build --yes
-          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" deploy --prebuilt --yes --no-wait > deployment_url 
+          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" deploy --prebuilt --yes > deployment_url 
           vercel --token "${{ secrets.VERCEL_API_TOKEN }}" alias set $(cat deployment_url) ${{ matrix.project }}${PROJECT_URL_SUFFIX} --scope wepublish --yes
 
   notify:
