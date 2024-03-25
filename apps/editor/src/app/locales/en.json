@@ -716,7 +716,8 @@
       "saveBtnTitle": "Save",
       "slug": "Slug",
       "slugRequired": "Slug required",
-      "tags": "Tags"
+      "tags": "Tags",
+      "savedChanges": "Saved"
     },
     "memberPlanList": {
       "action": "Actions",

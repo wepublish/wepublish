@@ -156,6 +156,13 @@ function MemberPlanEdit() {
         variables: {
           id: memberPlanId,
           input: memberPlanInput
+        },
+        onCompleted: data => {
+          toaster.push(
+            <Message type="success" closable>
+              {t('memberPlanEdit.savedChanges')}
+            </Message>
+          )
         }
       })
     } else {
@@ -165,6 +172,11 @@ function MemberPlanEdit() {
           input: memberPlanInput
         },
         onCompleted: data => {
+          toaster.push(
+            <Message type="success" closable>
+              {t('memberPlanEdit.savedChanges')}
+            </Message>
+          )
           navigate(`/memberplans/edit/${data.createMemberPlan?.id}`)
         }
       })

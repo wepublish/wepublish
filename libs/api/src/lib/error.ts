@@ -267,3 +267,9 @@ export class SubscriptionNotExtendable extends ApolloError {
     super(`Subscription with id ${id} is not extendable!`, ErrorCode.UserInputError)
   }
 }
+
+export class InvalidMemberPlanSettings extends ApolloError {
+  constructor() {
+    super(`Memberplan cannot be non-renewable and auto-renew at the same time.`)
+  }
+}

@@ -693,7 +693,8 @@
       "saveBtnTitle": "Speichern",
       "slug": "Slug",
       "slugRequired": "Slug erforderlich",
-      "tags": "Tags"
+      "tags": "Tags",
+      "savedChanges": "Gespeichert"
     },
     "memberPlanList": {
       "action": "Aktionen",
