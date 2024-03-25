@@ -268,11 +268,11 @@ jobs:
         uses: actions/github-script@v5
         with:
           script: |
-            github.actions.createWorkflowDispatch({
+            github.rest.actions.createWorkflowDispatch({
               owner: context.repo.owner,
               repo: context.repo.repo,
               workflow_id: 'on-demand-deploy-vercel.yml',
-              ref: 'main',
+              ref: context.ref,
               inputs: {
                 api_url: process.env.API_URL,
                 project: '${{ matrix.project }}'
