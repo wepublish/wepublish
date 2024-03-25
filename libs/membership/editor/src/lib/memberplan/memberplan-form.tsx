@@ -38,7 +38,6 @@ import {
 } from '@wepublish/ui/editor'
 import {MdAutoFixHigh, MdCheck} from 'react-icons/md'
 import {Alert} from '@mui/material'
-import {T} from 'ramda'
 
 const {ControlLabel, HelpText} = RForm
 
@@ -86,21 +85,12 @@ export function MemberPlanForm({
     [memberPlan]
   )
 
-  /**
-   * Method to set default member plan settings for regular trial subscription.
-   * This is a function for user convenience.
-   */
-  function preDefineTrialSubscription(): void {
-    const success = setExtendable(true)
-    if (!success) {
-      return
-    }
-    setMaxCount(1)
-  }
-
-  function setExtendable(extendable: boolean): boolean {
+  function setExtendable(
+    extendable: boolean,
+    updatedMemberPlan: FullMemberPlanFragment | undefined | null = memberPlan
+  ): void {
     // a subscription plan must be extendable if at least one payment methods requires auto renew
-    const forcedAutoRenewPaymentMethods = !!availablePaymentMethods.find(
+    const forcedAutoRenewPaymentMethods = !!availablePaymentMethods?.find(
       apm => apm.value.forceAutoRenewal
     )
     if (forcedAutoRenewPaymentMethods) {
@@ -110,31 +100,19 @@ export function MemberPlanForm({
         </Message>,
         {duration: 6000}
       )
-      return false
+      return
     }
-    if (!memberPlan) {
-      return false
+    if (!updatedMemberPlan) {
+      return
     }
     // update extendable prop of the member plan
     setMemberPlan({
-      ...memberPlan,
+      ...updatedMemberPlan,
       extendable
     })
-    return true
   }
 
-  function setMaxCount(maxCount: number): boolean {
-    if (!memberPlan) {
-      return false
-    }
-    setMemberPlan({
-      ...memberPlan,
-      maxCount
-    })
-    return true
-  }
-
-  function changeForeAutoRenewal(
+  function setForceAutoRenewal(
     forceAutoRenewal: boolean,
     onChange: React.Dispatch<React.SetStateAction<AvailablePaymentMethod>>,
     availablePaymentMethod: AvailablePaymentMethod
@@ -335,7 +313,7 @@ export function MemberPlanForm({
                           checked={value.forceAutoRenewal}
                           disabled={loading}
                           onChange={forceAutoRenewal =>
-                            changeForeAutoRenewal(forceAutoRenewal, onChange, value)
+                            setForceAutoRenewal(forceAutoRenewal, onChange, value)
                           }
                         />
                         <Form.HelpText>{t('memberPlanEdit.autoRenewalDescription')}</Form.HelpText>
@@ -408,7 +386,9 @@ export function MemberPlanForm({
               ) : (
                 <Button
                   startIcon={<MdAutoFixHigh />}
-                  onClick={preDefineTrialSubscription}
+                  onClick={() =>
+                    setExtendable(false, memberPlan ? {...memberPlan, maxCount: 1} : undefined)
+                  }
                   disabled={isTrialSubscription}
                   color={'green'}>
                   {t('memberplanForm.configureTrialBtn')}
