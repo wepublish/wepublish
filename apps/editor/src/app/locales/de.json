@@ -217,6 +217,19 @@
         "label": "Kommentare",
         "title": "Kommentarblock Bearbeiten"
       },
+      "teaserList": {
+        "label": "Teaser Liste",
+        "teasers": "{{count}} Teaser geladen",
+        "teaserType": "{{teaserType}} Teaser werden geladen",
+        "teaserTypeLabel": "Teaser-Typ",
+        "skip": "Die ersten {{skip}} Teaser überspringen",
+        "skipLabel": "Wieviele Teaser sollen übersprungen werden",
+        "take": "Bis zu {{take}} Teaser anzeigen",
+        "takeLabel": "Wieviele Teaser sollten geladen werden",
+        "tags": "Nur mit diesen Tags anzeigen: {{tags}}",
+        "tagsLabel": "Welche Tags sollten geladen werden",
+        "edit": "Teaser Liste bearbeiten"
+      },
       "embeds": {
         "label": "Embed",
         "overview": {

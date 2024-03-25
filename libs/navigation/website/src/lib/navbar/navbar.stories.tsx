@@ -4,6 +4,7 @@ import {FullNavigationFragment, Navigation} from '@wepublish/website/api'
 import {Navbar} from './navbar'
 import {css} from '@emotion/react'
 import {Md60FpsSelect, MdInvertColors, MdSecurity} from 'react-icons/md'
+import {WithUserDecorator} from '@wepublish/storybook'
 
 const navigation = {
   id: 'cldx7kcpi1168oapxftiqsh0p',
@@ -110,7 +111,7 @@ const navigations = [
     ]
   },
   {
-    id: '12345-12345',
+    id: '123456-123456',
     key: 'about',
     name: 'Über Uns',
     links: [
@@ -140,6 +141,27 @@ const navigations = [
         label: 'Jobs',
         article: {
           url: '/jobs/'
+        }
+      }
+    ]
+  },
+  {
+    id: '123456-123456',
+    key: 'header',
+    name: 'Header',
+    links: [
+      {
+        __typename: 'PageNavigationLink',
+        label: 'Foo',
+        page: {
+          url: '/foo/'
+        }
+      },
+      {
+        __typename: 'PageNavigationLink',
+        label: 'Bar',
+        page: {
+          url: '/bar'
         }
       }
     ]
@@ -197,101 +219,87 @@ export const Default = {
     loading: false,
     slug: 'main',
     categorySlugs: [['guides', 'fokusthema'], ['about']],
+    headerSlug: 'header',
     logo
   }
 }
 
+export const WithLoggedIn = {
+  ...Default,
+  decorators: [WithUserDecorator(null)]
+}
+
 export const WithoutLogo = {
+  ...Default,
   args: {
-    data: {
-      navigations
-    },
-    loading: false,
-    slug: 'main',
-    categorySlugs: [['guides', 'fokusthema'], ['about']]
+    ...Default.args,
+    logo: undefined
   }
 }
 
 export const WithChildren = {
+  ...Default,
   args: {
-    data: {
-      navigations
-    },
-    loading: false,
-    slug: 'main',
-    logo,
+    ...Default.args,
     children: [
       <>
         <MdInvertColors size="32" />
         <Md60FpsSelect size="32" />
         <MdSecurity size="32" />
       </>
-    ],
-    categorySlugs: [['guides', 'fokusthema'], ['about']]
+    ]
   }
 }
 
 export const WithLoading = {
+  ...Default,
   args: {
+    ...Default.args,
     data: {
       navigations: null
     },
-    loading: true,
-    slug: 'main',
-    logo,
-    categorySlugs: [['guides', 'fokusthema'], ['about']]
+    loading: true
   }
 }
 
 export const WithError = {
+  ...Default,
   args: {
+    ...Default.args,
     data: {
       navigations: null
     },
     loading: false,
     error: new ApolloError({
       errorMessage: 'Foobar'
-    }),
-    slug: 'main',
-    logo,
-    categorySlugs: [['guides', 'fokusthema'], ['about']]
+    })
   }
 }
 
 export const WithClassName = {
+  ...Default,
   args: {
-    data: {
-      navigations
-    },
-    className: 'extra-classname',
-    slug: 'main',
-    logo,
-    categorySlugs: [['guides', 'fokusthema'], ['about']]
+    ...Default.args,
+    className: 'extra-classname'
   }
 }
 
 export const WithEmotion = {
+  ...Default,
   args: {
-    data: {
-      navigations
-    },
+    ...Default.args,
     css: css`
       background-color: #eee;
-    `,
-    slug: 'main',
-    logo,
-    categorySlugs: [['guides', 'fokusthema'], ['about']]
+    `
   }
 }
 
 export const WithoutItems = {
+  ...Default,
   args: {
-    data: {
-      navigations
-    },
-    loading: false,
+    ...Default.args,
     slug: '',
-    logo,
-    categorySlugs: []
+    categorySlugs: [],
+    headerSlug: ''
   }
 }

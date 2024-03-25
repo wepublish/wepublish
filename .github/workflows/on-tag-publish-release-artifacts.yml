@@ -23,18 +23,23 @@ jobs:
     with:
       editor_tags: |
         ghcr.io/wepublish/editor:${{ needs.release_version.outputs.version }}
+        ghcr.io/wepublish/editor:next
         wepublishch/editor:${{ needs.release_version.outputs.version }}
       api_tags: |
         ghcr.io/wepublish/api:${{ needs.release_version.outputs.version }}
+        ghcr.io/wepublish/api:next
         wepublishch/api:${{ needs.release_version.outputs.version }}
       migration_tags: |
         ghcr.io/wepublish/migration:${{ needs.release_version.outputs.version }}
+        ghcr.io/wepublish/migration:next
         wepublishch/migration:${{ needs.release_version.outputs.version }}
       storybook_tags: |
         ghcr.io/wepublish/storybook:${{ needs.release_version.outputs.version }}
+        ghcr.io/wepublish/storybook:next
         wepublishch/storybook:${{ needs.release_version.outputs.version }}
       website_tags: |
         ghcr.io/wepublish/website:${{ needs.release_version.outputs.version }}
+        ghcr.io/wepublish/website:next
         wepublishch/website:${{ needs.release_version.outputs.version }}
     secrets: inherit
 
