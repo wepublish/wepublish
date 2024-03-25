@@ -2,7 +2,7 @@ import {Context} from '../../context'
 import {authorise} from '../permissions'
 import {CanCreateMemberPlan, CanDeleteMemberPlan} from '@wepublish/permissions/api'
 import {PrismaClient, Prisma} from '@prisma/client'
-import {InvalidMemberPlanSettings} from '@wepublish/api'
+import {InvalidMemberPlanSettings} from '../../error'
 
 export const deleteMemberPlanById = async (
   id: string,
