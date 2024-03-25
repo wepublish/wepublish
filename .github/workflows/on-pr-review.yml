@@ -275,7 +275,8 @@ jobs:
       - run: |
           vercel --token "${{ secrets.VERCEL_API_TOKEN }}" link --project ${{ matrix.project }} --scope wepublish --yes
           vercel --token "${{ secrets.VERCEL_API_TOKEN }}" build --yes
-          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" deploy --prebuilt --no-wait --yes
+          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" deploy --prebuilt --no-wait --yes > deployment_url
+          echo "{${{ matrix.project }}_url}={$(cat deployment_url)}" >> $GITHUB_STATE
 
 
 #  notify:
