@@ -1,6 +1,17 @@
 name: Deploy to Vercel
 
 on:
+  workflow_dispatch:
+    inputs:
+      api_url:
+        description: API_URL env variable
+        required: true
+        type: string
+      project:
+        description: Project name
+        required: true
+        type: string
+
   workflow_call:
     inputs:
       api_url:
