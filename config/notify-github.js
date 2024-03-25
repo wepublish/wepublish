@@ -16,6 +16,7 @@ async function main() {
     let deploymentMessage = `<a href="https://github.com/wepublish/wepublish/pull/${PR_NUMBER}">PR ${PR_NUMBER}</a> with branch \`${BRANCH_NAME}\` has been deployed to:
 
 <h2>Main</h2>
+
   - Website: ${WEBSITE_URL}
   - Editor: ${EDITOR_URL}
   - Public API: ${API_URL}/v1
