@@ -262,7 +262,7 @@ jobs:
     name: Find Vercel apps
     runs-on: ubuntu-latest
     outputs:
-      projects: ${{ steps.matrix.outputs.value }}
+      projects: ${{ steps.projects.outputs.value }}
     steps:
       - id: projects
         run: |
