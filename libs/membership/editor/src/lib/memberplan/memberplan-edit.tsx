@@ -88,7 +88,9 @@ function MemberPlanEdit() {
       active: true,
       tags: [],
       slug: '',
-      name: ''
+      name: '',
+      extendable: true,
+      maxCount: undefined
     }
 
     setMemberPlan(initMemberPlan)
@@ -143,7 +145,9 @@ function MemberPlanEdit() {
         forceAutoRenewal: value.forceAutoRenewal,
         paymentMethodIDs: value.paymentMethods.map((pm: PaymentMethod) => pm.id)
       })),
-      amountPerMonthMin: memberPlan.amountPerMonthMin
+      amountPerMonthMin: memberPlan.amountPerMonthMin,
+      extendable: memberPlan.extendable,
+      maxCount: memberPlan.maxCount
     }
 
     // update member plan

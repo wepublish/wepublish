@@ -916,8 +916,10 @@ export type MemberPlan = {
   availablePaymentMethods: Array<AvailablePaymentMethod>;
   createdAt: Scalars['DateTime'];
   description?: Maybe<Scalars['RichText']>;
+  extendable: Scalars['Boolean'];
   id: Scalars['ID'];
   image?: Maybe<Image>;
+  maxCount?: Maybe<Scalars['Int']>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   slug: Scalars['String'];
@@ -942,7 +944,9 @@ export type MemberPlanInput = {
   amountPerMonthMin: Scalars['Int'];
   availablePaymentMethods: Array<AvailablePaymentMethodInput>;
   description?: InputMaybe<Scalars['RichText']>;
+  extendable: Scalars['Boolean'];
   imageID?: InputMaybe<Scalars['ID']>;
+  maxCount?: InputMaybe<Scalars['Int']>;
   name: Scalars['String'];
   slug: Scalars['String'];
   tags?: InputMaybe<Array<Scalars['String']>>;
@@ -2373,6 +2377,7 @@ export type Subscription = {
   autoRenew: Scalars['Boolean'];
   createdAt: Scalars['DateTime'];
   deactivation?: Maybe<SubscriptionDeactivation>;
+  extendable: Scalars['Boolean'];
   id: Scalars['ID'];
   memberPlan: MemberPlan;
   modifiedAt: Scalars['DateTime'];
@@ -2422,6 +2427,7 @@ export type SubscriptionFilter = {
   deactivationDateFrom?: InputMaybe<DateFilter>;
   deactivationDateTo?: InputMaybe<DateFilter>;
   deactivationReason?: InputMaybe<SubscriptionDeactivationReason>;
+  extendable?: InputMaybe<Scalars['Boolean']>;
   memberPlanID?: InputMaybe<Scalars['String']>;
   paidUntil?: InputMaybe<DateFilter>;
   paidUntilFrom?: InputMaybe<DateFilter>;
@@ -2438,6 +2444,7 @@ export type SubscriptionFilter = {
 export type SubscriptionInput = {
   autoRenew: Scalars['Boolean'];
   deactivation?: InputMaybe<SubscriptionDeactivationInput>;
+  extendable: Scalars['Boolean'];
   memberPlanID: Scalars['String'];
   monthlyAmount: Scalars['Int'];
   paidUntil?: InputMaybe<Scalars['DateTime']>;

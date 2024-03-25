@@ -37,7 +37,7 @@ import {
 } from '@wepublish/ui/editor'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {MdChevronLeft, MdUnpublished} from 'react-icons/md'
+import {MdChevronLeft, MdKeyboardArrowDown, MdUnpublished} from 'react-icons/md'
 import {Link, useLocation, useNavigate, useParams} from 'react-router-dom'
 import {
   Button as RButton,
@@ -55,6 +55,7 @@ import {
   toaster,
   Toggle
 } from 'rsuite'
+import {Accordion, AccordionDetails, AccordionSummary} from '@mui/material'
 
 const {Group, ControlLabel, Control, HelpText} = RForm
 
@@ -126,12 +127,12 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
   const [paymentMethod, setPaymentMethod] = useState<FullPaymentMethodFragment>()
   const [properties, setProperties] = useState<MetadataPropertyFragment[]>([])
   const [deactivation, setDeactivation] = useState<DeactivationFragment | null>()
+  const [extendable, setExtendable] = useState<boolean>(false)
 
   const [memberPlans, setMemberPlans] = useState<FullMemberPlanFragment[]>([])
   const [paymentMethods, setPaymentMethods] = useState<FullPaymentMethodFragment[]>([])
 
   const [invoices, setInvoices] = useState<InvoiceFragment[] | undefined>(undefined)
-  const [unpaidInvoices, setUnpaidInvoices] = useState<number | undefined>(undefined)
 
   /**
    * Loading the subscription
@@ -168,11 +169,6 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
     const tmpInvoices = invoicesData?.invoices?.nodes
     if (tmpInvoices) {
       setInvoices(tmpInvoices)
-      // count unpaid invoices
-      const unpaidInvoices = tmpInvoices.filter(
-        tmpInvoice => !tmpInvoice.paidAt && !tmpInvoice.canceledAt
-      )
-      setUnpaidInvoices(unpaidInvoices.length)
     }
   }, [invoicesData?.invoices?.nodes])
 
@@ -200,6 +196,7 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
       }))
     )
     setDeactivation(subscription.deactivation)
+    setExtendable(subscription.extendable)
   }
 
   const {
@@ -303,7 +300,8 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
     paymentPeriodicity,
     autoRenew,
     startsAt: startsAt.toISOString(),
-    properties
+    properties,
+    extendable
   }
 
   const goBackLink = editedUserId ? `/users/edit/${editedUserId}` : '/subscriptions'
@@ -565,16 +563,6 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
                         </Col>
                       </RowPaddingTop>
                       <RowPaddingTop>
-                        {/* auto renew */}
-                        <Col xs={12}>
-                          <ControlLabel>{t('userSubscriptionEdit.autoRenew')}</ControlLabel>
-                          <Toggle
-                            checked={autoRenew}
-                            disabled={isDisabled || hasNoMemberPlanSelected || isDeactivated}
-                            onChange={value => setAutoRenew(value)}
-                          />
-                          <HelpText>{t('userSubscriptionEdit.autoRenewDescription')}</HelpText>
-                        </Col>
                         {/* payment method */}
                         <Col xs={12}>
                           <ControlLabel>
@@ -594,6 +582,16 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
                             accepter={SelectPicker}
                             placement="auto"
                           />
+                        </Col>
+                        {/* auto renew */}
+                        <Col xs={12}>
+                          <ControlLabel>{t('userSubscriptionEdit.autoRenew')}</ControlLabel>
+                          <Toggle
+                            checked={autoRenew}
+                            disabled={isDisabled || hasNoMemberPlanSelected || isDeactivated}
+                            onChange={value => setAutoRenew(value)}
+                          />
+                          <HelpText>{t('userSubscriptionEdit.autoRenewDescription')}</HelpText>
                         </Col>
                       </RowPaddingTop>
                       <RowPaddingTop>
@@ -615,16 +613,18 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
                         </Col>
                       </RowPaddingTop>
 
+                      <RowPaddingTop></RowPaddingTop>
                       <RowPaddingTop>
-                        {/* unique subscription */}
-                        <Col xs={12}>
-                          <ControlLabel>
-                            {t('userSubscriptionEdit.uniqueSubscription')}
-                          </ControlLabel>
-                          <Toggle disabled />
-                          <HelpText>
-                            {t('userSubscriptionEdit.uniqueSubscriptionHelpText')}
-                          </HelpText>
+                        <Col xs={24}>
+                          <Accordion variant={'outlined'}>
+                            <AccordionSummary
+                              id="panel1-header"
+                              aria-controls="panel1-content"
+                              expandIcon={<MdKeyboardArrowDown />}>
+                              {t('subscriptionEditView.additionalSettingsTitle')}
+                            </AccordionSummary>
+                            <AccordionDetails></AccordionDetails>
+                          </Accordion>
                         </Col>
                       </RowPaddingTop>
                     </Grid>

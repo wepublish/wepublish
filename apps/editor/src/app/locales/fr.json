@@ -1248,8 +1248,15 @@
     },
     "yes": "Oui",
     "memberplanForm": {
-      "uniqueSubsciptionToggle": "Plan d'abonnement unique",
-      "uniqueSubscriptionHelpText": "Un utilisateur ne peut souscrire qu'un seul abonnement à ce plan d'abonnement. Un utilisateur ne peut pas prolonger manuellement un abonnement unique. Le renouvellement automatique est possible."
+      "trialSubscription": "Réglages avancés",
+      "configureTrialBtn": "Configurer abonnements d'essai",
+      "extendableToggle": "Extensible",
+      "extendableHelpText": "Détermine si l'abonnement d'un utilisateur peut être renouvelé - automatiquement ou manuellement - ou non. En règle générale, les abonnements d'essai ne peuvent pas être prolongés.",
+      "maxCount": "Nombre maximum d'abonnements par utilisateur",
+      "maxCountHelpText": "Limite le nombre d'abonnements qu'un:e utilisateur:trice peut souscrire pour ce plan d'abonnement. Cela inclut les abonnements désactivés.",
+      "trialMemberplanAlert": "Ce plan d'abonnement est configuré pour des abonnements d'essai.",
+      "forceAutoRenewNotPossible": "Le renouvellement automatique n'est pas possible, car le plan d'abonnement n'est pas extensible.",
+      "trialSubscriptionNotPossible": "Le plan d'abonnement doit rester extensible, car un renouvellement automatique est paramétré dans un paramètre de paiement. Tu peux bien sûr changer cela."
     },
     "resources": {
       "teaserType": {

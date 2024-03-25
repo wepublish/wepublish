@@ -1,4 +1,4 @@
-import {Dispatch, SetStateAction, useState} from 'react'
+import React, {Dispatch, SetStateAction, useMemo, useState} from 'react'
 import {
   AvailablePaymentMethod,
   FullMemberPlanFragment,
@@ -6,7 +6,22 @@ import {
   ImageRefFragment,
   PaymentMethod
 } from '@wepublish/editor/api'
-import {CheckPicker, Col, Divider, Drawer, Form, Panel, Row, TagPicker, Toggle} from 'rsuite'
+import {
+  Button,
+  CheckPicker,
+  Col,
+  Divider,
+  Drawer,
+  Form as RForm,
+  Form,
+  Input,
+  Message,
+  Panel,
+  Row,
+  TagPicker,
+  toaster,
+  Toggle
+} from 'rsuite'
 import {useTranslation} from 'react-i18next'
 import styled from '@emotion/styled'
 import {slugify} from '@wepublish/utils'
@@ -21,6 +36,11 @@ import {
   RichTextBlock,
   RichTextBlockValue
 } from '@wepublish/ui/editor'
+import {MdAutoFixHigh, MdCheck} from 'react-icons/md'
+import {Alert} from '@mui/material'
+import {T} from 'ramda'
+
+const {ControlLabel, HelpText} = RForm
 
 const ColTextAlignEnd = styled(Col)`
   text-align: end;
@@ -32,6 +52,10 @@ const FormControlLabelMarginRight = styled(Form.ControlLabel)`
 
 const PanelWidth100 = styled(Panel)`
   width: 100%;
+`
+
+const RowPaddingTop = styled(Row)`
+  padding-top: 12px;
 `
 
 interface MemberPlanFormProps {
@@ -56,6 +80,78 @@ export function MemberPlanForm({
   const {t} = useTranslation()
   const [isChooseModalOpen, setChooseModalOpen] = useState(false)
   const [isEditModalOpen, setEditModalOpen] = useState(false)
+
+  const isTrialSubscription = useMemo(
+    () => !memberPlan?.extendable && !!memberPlan?.maxCount,
+    [memberPlan]
+  )
+
+  /**
+   * Method to set default member plan settings for regular trial subscription.
+   * This is a function for user convenience.
+   */
+  function preDefineTrialSubscription(): void {
+    const success = setExtendable(true)
+    if (!success) {
+      return
+    }
+    setMaxCount(1)
+  }
+
+  function setExtendable(extendable: boolean): boolean {
+    // a subscription plan must be extendable if at least one payment methods requires auto renew
+    const forcedAutoRenewPaymentMethods = !!availablePaymentMethods.find(
+      apm => apm.value.forceAutoRenewal
+    )
+    if (forcedAutoRenewPaymentMethods) {
+      toaster.push(
+        <Message type="error" showIcon closable>
+          {t('memberplanForm.trialSubscriptionNotPossible')}
+        </Message>,
+        {duration: 6000}
+      )
+      return false
+    }
+    if (!memberPlan) {
+      return false
+    }
+    // update extendable prop of the member plan
+    setMemberPlan({
+      ...memberPlan,
+      extendable
+    })
+    return true
+  }
+
+  function setMaxCount(maxCount: number): boolean {
+    if (!memberPlan) {
+      return false
+    }
+    setMemberPlan({
+      ...memberPlan,
+      maxCount
+    })
+    return true
+  }
+
+  function changeForeAutoRenewal(
+    forceAutoRenewal: boolean,
+    onChange: React.Dispatch<React.SetStateAction<AvailablePaymentMethod>>,
+    availablePaymentMethod: AvailablePaymentMethod
+  ): void {
+    // if subscription plan ist not extendable, a subscription can not be forced to be auto-renew.
+    if (!memberPlan?.extendable && forceAutoRenewal) {
+      // inform user
+      toaster.push(
+        <Message type="error" showIcon closable>
+          {t('memberplanForm.forceAutoRenewNotPossible')}
+        </Message>
+      )
+      // cancel action
+      return
+    }
+    onChange({...availablePaymentMethod, forceAutoRenewal})
+  }
 
   function updateName(name: string | undefined) {
     setMemberPlan(memberPlan => {
@@ -112,15 +208,6 @@ export function MemberPlanForm({
                 }}
               />
               <Form.HelpText>{t('memberPlanEdit.activeDescription')}</Form.HelpText>
-            </ColTextAlignEnd>
-
-            {/* unique plan */}
-            <ColTextAlignEnd xs={12}>
-              <FormControlLabelMarginRight>
-                {t('memberplanForm.uniqueSubsciptionToggle')}
-              </FormControlLabelMarginRight>
-              <Toggle />
-              <Form.HelpText>{t('memberplanForm.uniqueSubscriptionHelpText')}</Form.HelpText>
             </ColTextAlignEnd>
 
             <Col xs={24}>
@@ -247,7 +334,9 @@ export function MemberPlanForm({
                         <Toggle
                           checked={value.forceAutoRenewal}
                           disabled={loading}
-                          onChange={forceAutoRenewal => onChange({...value, forceAutoRenewal})}
+                          onChange={forceAutoRenewal =>
+                            changeForeAutoRenewal(forceAutoRenewal, onChange, value)
+                          }
                         />
                         <Form.HelpText>{t('memberPlanEdit.autoRenewalDescription')}</Form.HelpText>
                       </Col>
@@ -304,6 +393,59 @@ export function MemberPlanForm({
               </ListInput>
             </Col>
           </Row>
+        </Panel>
+      </Col>
+
+      <Col xs={12}>
+        <Panel header={t('memberplanForm.trialSubscription')} bordered>
+          {/* automatically configure trial subscription */}
+          <Row>
+            <Col xs={24}>
+              {isTrialSubscription ? (
+                <Alert icon={<MdCheck />} severity="success">
+                  {t('memberplanForm.trialMemberplanAlert')}
+                </Alert>
+              ) : (
+                <Button
+                  startIcon={<MdAutoFixHigh />}
+                  onClick={preDefineTrialSubscription}
+                  disabled={isTrialSubscription}
+                  color={'green'}>
+                  {t('memberplanForm.configureTrialBtn')}
+                </Button>
+              )}
+            </Col>
+          </Row>
+          <RowPaddingTop>
+            {/* extendable */}
+            <Col xs={12}>
+              <FormControlLabelMarginRight>
+                {t('memberplanForm.extendableToggle')}
+              </FormControlLabelMarginRight>
+              <Toggle
+                checked={memberPlan?.extendable}
+                onChange={extendable => setExtendable(extendable)}
+              />
+              <HelpText>{t('memberplanForm.extendableHelpText')}</HelpText>
+            </Col>
+            {/* max count */}
+            <Col xs={12}>
+              <ControlLabel>{t('memberplanForm.maxCount')}</ControlLabel>
+              <Input
+                placeholder={t('memberplanForm.maxCount')}
+                type={'number'}
+                min={0}
+                value={memberPlan?.maxCount || undefined}
+                onChange={maxCount => {
+                  if (!memberPlan) {
+                    return
+                  }
+                  setMemberPlan({...memberPlan, maxCount: Number(maxCount) || null})
+                }}
+              />
+              <HelpText>{t('memberplanForm.maxCountHelpText')}</HelpText>
+            </Col>
+          </RowPaddingTop>
         </Panel>
       </Col>
 

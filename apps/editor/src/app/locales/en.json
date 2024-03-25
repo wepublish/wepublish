@@ -1390,8 +1390,15 @@
     },
     "yes": "Yes",
     "memberplanForm": {
-      "uniqueSubsciptionToggle": "Unique Subscription Plan",
-      "uniqueSubscriptionHelpText": "A user can only purchase one subscription of this subscription plan. A user cannot manually renew a Unique subscription. Automatic renewal is possible."
+      "trialSubscription": "Advanced settings",
+      "configureTrialBtn": "Configure for trial subscriptions",
+      "extendableToggle": "Extendable",
+      "extendableHelpText": "Determine whether a user's subscription can be renewed - automatically or manually - or not. As a rule, trial subscriptions cannot be renewed.",
+      "maxCount": "Maximum number of subscriptions per user",
+      "maxCountHelpText": "Limit the number of subscriptions that a user can purchase for this subscription plan. This also includes deactivated subscriptions.",
+      "trialMemberplanAlert": "This subscription plan is configured for trial subscriptions.",
+      "forceAutoRenewNotPossible": "Automatic renewal is not possible because the subscription plan is not extendable.",
+      "trialSubscriptionNotPossible": "The subscription plan must remain renewable because an automatic renewal is forced in a payment setting. You can of course change this."
     },
     "resources": {
       "teaserType": {

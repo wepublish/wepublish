@@ -1282,8 +1282,15 @@
     },
     "yes": "Ja",
     "memberplanForm": {
-      "uniqueSubsciptionToggle": "Unique Abo-Plan",
-      "uniqueSubscriptionHelpText": "Ein User kann nur ein Abo dieses Abo-Plans lösen. Ein User kann ein Unique-Abo nicht manuell verlängern. Die automatische Verlängerung ist möglich."
+      "trialSubscription": "Erweiterte Einstellungen",
+      "configureTrialBtn": "Für Test-Abos konfigurieren",
+      "extendableToggle": "Verlängerbar",
+      "extendableHelpText": "Bestimme, ob ein Abo eines Benutzers - automatisch oder manuell - verlängert werden kann oder nicht. Testabos können in der Regel nicht verlängert werden.",
+      "maxCount": "Maximale Anzahl Abos pro Benutzer:in",
+      "maxCountHelpText": "Limitiere die Anzahl Abos, welche ein:e Benutzer:in für diesen Abo-Plan lösen kann. Dazu zählen auch deaktivierte Abos.",
+      "trialMemberplanAlert": "Dieser Abo-Plan ist für Testabos konfiguriert.",
+      "forceAutoRenewNotPossible": "Automatische Erneuerung ist nicht möglich, weil der Abo-Plan nicht verlängerbar ist.",
+      "trialSubscriptionNotPossible": "Der Abo-Plan muss verlängerbar bleiben, weil in einer Zahlungseinstellung eine automatische Verlängerung eingestellt ist. Du kannst das natürlich ändern."
     },
     "resources": {
       "teaserType": {

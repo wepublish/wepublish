@@ -557,8 +557,10 @@ export type MemberPlan = {
   amountPerMonthMin: Scalars['Int'];
   availablePaymentMethods: Array<AvailablePaymentMethod>;
   description?: Maybe<Scalars['RichText']>;
+  extendable: Scalars['Boolean'];
   id: Scalars['ID'];
   image?: Maybe<Image>;
+  maxCount?: Maybe<Scalars['Int']>;
   name: Scalars['String'];
   slug: Scalars['String'];
   tags?: Maybe<Array<Scalars['String']>>;
