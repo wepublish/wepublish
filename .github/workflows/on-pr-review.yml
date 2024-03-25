@@ -271,12 +271,11 @@ jobs:
           cache: npm
       - run: npm i -g vercel
       - run: |
-        
           for PROJECT in $(ls apps | grep -v example | grep -v editor)
           do
             vercel --token "${{ secrets.VERCEL_API_TOKEN }}" link --project ${PROJECT} --scope wepublish --yes
             vercel build --yes
-            vercel --token "${{ secrets.VERCEL_API_TOKEN }}" deploy --prebuilt --yes
+            vercel --token "${{ secrets.VERCEL_API_TOKEN }}" deploy --prebuilt --yes --wait
            done
 
 #  notify:
