@@ -1266,6 +1266,9 @@
       "configureAsTrialSubscription": "Configurer comme abonnement d'essai",
       "subscriptionTrialNotPossible": "L'abonnement ne peut pas être configuré comme abonnement d'essai. Pour ce faire, modifie les paramètres du plan d'abonnement."
     },
+    "subscriptionListFilter": {
+      "extendable": "Extensible"
+    },
     "resources": {
       "teaserType": {
         "article": "Article",

@@ -1408,6 +1408,9 @@
       "configureAsTrialSubscription": "Configure as a trial subscription",
       "subscriptionTrialNotPossible": "The subscription cannot be configured as a trial subscription. To do so, change the settings of the subscription plan."
     },
+    "subscriptionListFilter": {
+      "extendable": "Extendable"
+    },
     "resources": {
       "teaserType": {
         "article": "Article",
