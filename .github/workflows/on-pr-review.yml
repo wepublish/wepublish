@@ -254,29 +254,31 @@ jobs:
 #          if [[ ! -z $(helm ls -a -n reviews |grep ${POD_NAME} |grep -v "deployed ") ]]; then helm uninstall -n reviews ${POD_NAME}; fi
 #          helm upgrade --install ${POD_NAME} ./helm/charts/wepublish -n reviews -f values.yaml --wait
 
-  vercel_variables:
-    name: Set vercel env variables
-#    needs: helm_deployment
-#    if: ${{ needs.helm_deployment.result == 'success' }}
+
+  deploy_vercel:
     runs-on: ubuntu-latest
-    continue-on-error: true
     env:
-      BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
       API_URL: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+    strategy:
+      matrix:
+        project: ["babanews", "bajour", "gruppetto"]
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - name: Trigger Deploy Workflow
+        uses: actions/github-script@v5
         with:
-          node-version: '18'
-          cache: npm
-      - run: npm i -g vercel
-      - run: |
-          for PROJECT in $(ls apps | grep -v example | grep -v editor)
-          do
-            vercel --token "${{ secrets.VERCEL_API_TOKEN }}" link --project ${PROJECT} --scope wepublish --yes
-            vercel --token "${{ secrets.VERCEL_API_TOKEN }}" build --yes
-            vercel --token "${{ secrets.VERCEL_API_TOKEN }}" deploy --prebuilt --yes --no-wait
-           done
+          script: |
+            github.actions.createWorkflowDispatch({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              workflow_id: 'on-demand-deploy-vercel.yml',
+              ref: 'main',
+              inputs: {
+                api_url: env.process.API_URL,
+                project: '${{ matrix.project }}'
+              }
+            });
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 #  notify:
 #    name: Notify

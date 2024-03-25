@@ -1,0 +1,30 @@
+name: Deploy to Vercel
+
+on:
+  workflow_call:
+    inputs:
+      api_url:
+        required: true
+        type: string
+      project:
+        required: true
+        type: string
+
+jobs:
+  deploy:
+    name: Build and deploy
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    env:
+      API_URL: ${{ inputs.api_url }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: npm
+      - run: npm i -g vercel
+      - run: |
+          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" link --project {{ inputs.project }} --scope wepublish --yes
+          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" build --yes
+          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" deploy --prebuilt --yes --no-wait
