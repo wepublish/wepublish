@@ -1204,7 +1204,7 @@
       "createdSuccess": "Created successfully",
       "deletedSuccess": "Deleted successfully",
       "updatedSuccess": "Updated successfully",
-      "updateError": "There was an error, please try again"
+      "updateError": "There was an error, please try again: {{error}}"
     },
     "tokenList": {
       "overview": {

@@ -217,7 +217,7 @@ export class MemberContext implements MemberContext {
           }
         })
 
-        // only return the invoice if it hasn't been canceled. Otherwise
+        // only return the invoice if it hasn't been canceled. Otherwise,
         // create a new period and a new invoice
         if (!invoice?.canceledAt) {
           return invoice
@@ -286,7 +286,9 @@ export class MemberContext implements MemberContext {
               amount,
               quantity: 1
             }
-          }
+          },
+          // mark invoices with amount 0 as paid
+          paidAt: amount === 0 ? new Date() : undefined
         },
         include: {
           items: true
@@ -647,9 +649,9 @@ export class MemberContext implements MemberContext {
 
     if (memberPlan.maxCount && memberPlan.maxCount <= memberPlanSubscriptionCount) {
       throw new Error(
-        `Subscription count exceeded limit [${memberPlanSubscriptionCount + 1}/${
+        `Subscription count exceeded limit (given: ${memberPlanSubscriptionCount + 1} | max: ${
           memberPlan.maxCount
-        }] for ${memberPlanId} memberplan!`
+        }) for ${memberPlanId} memberplan!`
       )
     }
 

@@ -56,6 +56,7 @@ import {
   Toggle
 } from 'rsuite'
 import {Alert} from '@mui/material'
+import {ApolloError} from '@apollo/client'
 
 const {Group, ControlLabel, Control, HelpText} = RForm
 
@@ -222,13 +223,11 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
     fetchPolicy: 'network-only'
   })
 
-  const [updateSubscription, {loading: isUpdating, error: updateError}] =
-    useUpdateSubscriptionMutation()
+  const [updateSubscription, {loading: isUpdating}] = useUpdateSubscriptionMutation()
   const [cancelSubscription, {loading: isCancel, error: cancelError}] =
     useCancelSubscriptionMutation()
 
-  const [createSubscription, {loading: isCreating, error: createError}] =
-    useCreateSubscriptionMutation()
+  const [createSubscription, {loading: isCreating}] = useCreateSubscriptionMutation()
 
   /**
    * fetch edited user from api
@@ -264,24 +263,16 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
     const error =
       loadError?.message ??
       loadMemberPlanError?.message ??
-      updateError?.message ??
       paymentMethodLoadError?.message ??
       loadErrorInvoices?.message ??
       cancelError?.message
     if (error)
       toaster.push(
-        <Message type="error" showIcon closable duration={0}>
+        <Message type="error" showIcon closable>
           {error}
         </Message>
       )
-  }, [
-    loadError,
-    updateError,
-    loadMemberPlanError,
-    paymentMethodLoadError,
-    loadErrorInvoices,
-    cancelError
-  ])
+  }, [loadError, loadMemberPlanError, paymentMethodLoadError, loadErrorInvoices, cancelError])
 
   /**
    * MEMOS
@@ -301,7 +292,6 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
       isPaymentMethodLoading ||
       loadError !== undefined ||
       loadErrorInvoices !== undefined ||
-      createError !== undefined ||
       loadMemberPlanError !== undefined ||
       paymentMethodLoadError !== undefined ||
       !isAuthorized
@@ -316,7 +306,6 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
     isPaymentMethodLoading,
     loadError,
     loadErrorInvoices,
-    createError,
     loadMemberPlanError,
     paymentMethodLoadError,
     isAuthorized
@@ -419,7 +408,7 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
       }
 
       toaster.push(
-        <Message type="success" showIcon closable duration={2000}>
+        <Message type="success" showIcon closable>
           {id ? `${t('toast.updatedSuccess')}` : `${t('toast.createdSuccess')}`}
         </Message>
       )
@@ -430,9 +419,10 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
       }
     } catch (e) {
       toaster.push(
-        <Message type="error" showIcon closable duration={2000}>
-          {t('toast.updateError', {error: e})}
-        </Message>
+        <Message type="error" showIcon closable>
+          {t('toast.updateError', {error: (e as ApolloError)?.message})}
+        </Message>,
+        {duration: 6000}
       )
     }
   }
@@ -591,7 +581,12 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
                             data={memberPlans.map(mp => ({value: mp.id, label: mp.name}))}
                             value={memberPlan?.id}
                             onChange={(value: any) =>
-                              setMemberPlan(memberPlans.find(mp => mp.id === value))
+                              setMemberPlan(() => {
+                                const foundMemberPlan = memberPlans.find(mp => mp.id === value)
+                                if (!foundMemberPlan) return
+                                setMonthlyAmount(foundMemberPlan.amountPerMonthMin)
+                                return foundMemberPlan
+                              })
                             }
                             accepter={SelectPicker}
                           />
