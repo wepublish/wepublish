@@ -258,8 +258,9 @@ jobs:
     name: Deploy to vercel
     runs-on: ubuntu-latest
     continue-on-error: true
-    matrix:
-      project: [ "babanews", "bajour", "gruppetto" ]
+    strategy:
+      matrix:
+        project: [ "babanews", "bajour", "gruppetto" ]
     env:
       API_URL: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.dev
     steps:
