@@ -4,6 +4,7 @@ import {NavbarContainer} from './navbar-container'
 import {css} from '@emotion/react'
 
 const navigation = {
+  __typename: 'Navigation',
   id: 'cldx7kcpi1168oapxftiqsh0p',
   key: 'main',
   name: 'main',
@@ -43,6 +44,12 @@ const navigations = [
     id: '12345-12345',
     key: 'about',
     name: 'Über Uns'
+  },
+  {
+    ...navigation,
+    id: '123456-123456',
+    key: 'header',
+    name: 'Header'
   }
 ] as Navigation[]
 
@@ -54,7 +61,8 @@ export default {
 export const Default = {
   args: {
     slug: 'main',
-    categorySlugs: [['guides', 'fokusthema'], ['about']]
+    categorySlugs: [['categories'], ['about']],
+    headerSlug: 'header'
   },
 
   parameters: {
@@ -76,53 +84,19 @@ export const Default = {
 }
 
 export const WithClassName = {
+  ...Default,
   args: {
-    slug: 'main',
-    categorySlugs: [['guides', 'fokusthema'], ['about']],
+    ...Default.args,
     className: 'extra-classname'
-  },
-
-  parameters: {
-    apolloClient: {
-      mocks: [
-        {
-          request: {
-            query: NavigationListDocument
-          },
-          result: {
-            data: {
-              navigations
-            }
-          }
-        }
-      ]
-    }
   }
 }
 
 export const WithEmotion = {
+  ...Default,
   args: {
+    ...Default.args,
     css: css`
       background-color: #eee;
-    `,
-    slug: 'main',
-    categorySlugs: [['guides', 'fokusthema'], ['about']]
-  },
-
-  parameters: {
-    apolloClient: {
-      mocks: [
-        {
-          request: {
-            query: NavigationListDocument
-          },
-          result: {
-            data: {
-              navigations
-            }
-          }
-        }
-      ]
-    }
+    `
   }
 }

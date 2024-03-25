@@ -11,6 +11,7 @@ import {GetStaticPaths, GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 
+import {BriefingNewsletter} from '../../src/components/bajour/briefing-newsletter/briefing-newsletter'
 import {Container} from '../../src/components/layout/container'
 
 export const ArticleTagList = styled('div')`
@@ -49,6 +50,8 @@ export default function ArticleBySlug() {
           ))}
         </ArticleTagList>
       </ArticleContainer>
+
+      <BriefingNewsletter />
 
       {data?.article && (
         <>

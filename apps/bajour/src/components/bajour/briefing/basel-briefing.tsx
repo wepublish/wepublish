@@ -266,6 +266,7 @@ const TeaserContentInterior = styled('div')`
   position: relative;
   grid-column: 3/13;
   display: grid;
+  align-items: center;
   grid-template-columns: 3fr 4fr;
   padding: ${({theme}) =>
     `${theme.spacing(1)} ${theme.spacing(1)} ${theme.spacing(1)} ${theme.spacing(3.5)}`};
