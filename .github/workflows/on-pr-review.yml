@@ -263,7 +263,6 @@ jobs:
     env:
       BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
       API_URL: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.dev
-
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -272,11 +271,13 @@ jobs:
           cache: npm
       - run: npm i -g vercel
       - run: |
+        
           for PROJECT in $(ls apps | grep -v example | grep -v editor)
           do
             vercel --token "${{ secrets.VERCEL_API_TOKEN }}" link --project ${PROJECT} --scope wepublish --yes
-            vercel --token "${{ secrets.VERCEL_API_TOKEN }}" env ls | grep "Preview (${BRANCH_NAME})" || echo "${API_URL}" | vercel --token=${{ secrets.VERCEL_API_TOKEN }} env add API_URL preview $BRANCH_NAME --yes
-          done
+            vercel build --yes
+            vercel --token "${{ secrets.VERCEL_API_TOKEN }}" deploy --prebuilt --yes
+           done
 
 #  notify:
 #    name: Notify
