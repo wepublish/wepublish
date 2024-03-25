@@ -274,9 +274,8 @@ jobs:
       - run: |
           for PROJECT in $(ls apps | grep -v example | grep -v editor)
           do
-            echo vercel --token="${{ secrets.VERCEL_API_TOKEN }}" link --project ${PROJECT} --scope wepublish --token --yes
-            vercel --token="foo" link --project ${PROJECT} --scope wepublish --token --yes
-            vercel --token="${{ secrets.VERCEL_API_TOKEN }}" env ls | grep "Preview (${BRANCH_NAME})" || echo "${API_URL}" | vercel --token=${{ secrets.VERCEL_API_TOKEN }} env add API_URL preview $BRANCH_NAME --yes
+            vercel --token "${{ secrets.VERCEL_API_TOKEN }}" link --project ${PROJECT} --scope wepublish --yes
+            vercel --token "${{ secrets.VERCEL_API_TOKEN }}" env ls | grep "Preview (${BRANCH_NAME})" || echo "${API_URL}" | vercel --token=${{ secrets.VERCEL_API_TOKEN }} env add API_URL preview $BRANCH_NAME --yes
           done
 
 #  notify:
