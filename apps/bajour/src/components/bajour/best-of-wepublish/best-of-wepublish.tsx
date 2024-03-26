@@ -19,7 +19,7 @@ export const BestOfWePublishWrapper = styled('article')`
 const BestOfWePublishHeader = styled('div')`
   display: grid;
   grid-template-columns: max-content;
-  color: ${({theme}) => theme.palette.secondary.main};
+  color: ${({theme}) => theme.palette.secondary.dark};
   background-color: currentColor;
   padding-left: 20%;
   font-size: 1.4rem;
@@ -43,9 +43,9 @@ const BestOfWePublishFooter = styled('div')`
   padding-left: calc(7% + ${({theme}) => theme.spacing(4)});
   background: linear-gradient(
     to left,
-    ${({theme}) => theme.palette.secondary.main} calc(93% - ${({theme}) => theme.spacing(4)}),
+    ${({theme}) => theme.palette.secondary.dark} calc(93% - ${({theme}) => theme.spacing(4)}),
     ${({theme}) => theme.palette.common.white} calc(93% - ${({theme}) => theme.spacing(4)}) 93%,
-    ${({theme}) => theme.palette.secondary.main} 93%
+    ${({theme}) => theme.palette.secondary.dark} 93%
   );
 `
 
@@ -72,7 +72,7 @@ const MoreButton = styled('a')`
   padding: ${({theme}) => theme.spacing(1)} ${({theme}) => theme.spacing(3)};
   background-color: ${({theme}) => theme.palette.common.white};
   border: 3px solid currentColor;
-  color: ${({theme}) => theme.palette.secondary.main};
+  color: ${({theme}) => theme.palette.secondary.dark};
   border-radius: ${({theme}) => theme.spacing(1)};
   font-size: 20px;
   text-decoration: none;

@@ -6,15 +6,14 @@ import {
   AuthorListQueryVariables,
   Author
 } from '@wepublish/website/api'
-import {ComponentType} from 'react'
 
 export type BuilderAuthorProps = Pick<QueryResult<AuthorQuery>, 'data' | 'loading' | 'error'> & {
   className?: string
-  authorLinks?: ComponentType<BuilderAuthorLinksProps>
 }
 
 export type BuilderAuthorChipProps = {
   author: FullAuthorFragment
+  publishedAt: string | null | undefined
   className?: string
 }
 
@@ -32,5 +31,6 @@ export type BuilderAuthorListProps = Pick<
 }
 
 export type BuilderAuthorLinksProps = {
+  className?: string
   links: Exclude<Exclude<AuthorQuery['author'], null | undefined>['links'], null | undefined>
 }

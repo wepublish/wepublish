@@ -19,29 +19,29 @@ export function RenderElement({
   element
 }: BuilderRenderElementProps): JSX.Element {
   const {
-    elements: {H4, H5, H6, Paragraph, UnorderedList, OrderedList, ListItem}
+    elements: {H3, H4, H5, Paragraph, UnorderedList, OrderedList, ListItem}
   } = useWebsiteBuilder()
 
   switch (element.type) {
     case BlockFormat.H1:
       return (
-        <H4 component="h2" {...attributes}>
+        <H3 component="h2" {...attributes} gutterBottom>
           {children}
-        </H4>
+        </H3>
       )
 
     case BlockFormat.H2:
       return (
-        <H5 component="h3" {...attributes}>
+        <H4 component="h3" {...attributes} gutterBottom>
           {children}
-        </H5>
+        </H4>
       )
 
     case BlockFormat.H3:
       return (
-        <H6 component="h4" {...attributes}>
+        <H5 component="h4" {...attributes} gutterBottom>
           {children}
-        </H6>
+        </H5>
       )
 
     case BlockFormat.UnorderedList:

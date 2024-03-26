@@ -3,8 +3,6 @@ import {Meta} from '@storybook/react'
 import {AuthorQuery} from '@wepublish/website/api'
 import {Author} from './author'
 import {css} from '@emotion/react'
-import {BuilderAuthorLinksProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {Box} from '@mui/material'
 
 const author = {
   __typename: 'Author',
@@ -268,34 +266,6 @@ export default {
 export const Default = {
   args: {
     data: {author}
-  }
-}
-
-export const WithCustomAuthorLinks = {
-  args: {
-    data: {author},
-    authorLinks: function AuthorLinks({links}: BuilderAuthorLinksProps) {
-      const {
-        elements: {Link}
-      } = useWebsiteBuilder()
-
-      return (
-        <Box sx={{display: 'grid', gap: 1, gridTemplateColumns: 'repeat(12, max-content)'}}>
-          {links.map((link, index) => (
-            <Link key={index} href={link.url} target="__blank" title={link.title}>
-              <svg
-                viewBox="0 0 100 100"
-                width={24}
-                height={24}
-                style={{justifySelf: 'center'}}
-                xmlns="http://www.w3.org/2000/svg">
-                <circle cx="50" cy="50" r="50" fill="#000" />
-              </svg>
-            </Link>
-          ))}
-        </Box>
-      )
-    }
   }
 }
 

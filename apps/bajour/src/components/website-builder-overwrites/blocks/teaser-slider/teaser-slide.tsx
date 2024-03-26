@@ -101,7 +101,7 @@ export const TeaserSlide = ({teaser, className}: Omit<BuilderTeaserProps, 'align
           LinkComponent={Link}
           href={href}
           variant="outlined"
-          color="error"
+          color="primary"
           css={buttonStyles}>
           Weiterlesen
         </Button>

@@ -22,7 +22,7 @@ export const ContextBoxWrapper = styled('aside')<{expanded: boolean}>`
 `
 
 const AllAbout = styled('div')`
-  color: ${({theme}) => theme.palette.secondary.main};
+  color: ${({theme}) => theme.palette.secondary.dark};
   font-weight: 600;
   margin-bottom: ${({theme}) => theme.spacing(1)};
   margin-top: ${({theme}) => theme.spacing(1)};
@@ -52,7 +52,7 @@ const RichTextBlockWrapper = styled('div')<{expanded: boolean}>`
 `
 
 const ContextBoxInfo = styled('div')`
-  color: ${({theme}) => theme.palette.secondary.main};
+  color: ${({theme}) => theme.palette.secondary.dark};
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -69,14 +69,14 @@ const ContextBoxContent = styled('div')``
 const ReadMore = styled(Button)`
   margin-top: ${({theme}) => theme.spacing(1)};
   color: ${({theme}) => theme.palette.common.white};
-  background-color: ${({theme}) => theme.palette.secondary.main};
+  background-color: ${({theme}) => theme.palette.secondary.dark};
 `
 
 const ContextBoxLine = styled('div')`
   width: ${({theme}) => theme.spacing(1)};
   height: 100%;
   margin-top: ${({theme}) => theme.spacing(1)};
-  background-color: ${({theme}) => theme.palette.secondary.main};
+  background-color: ${({theme}) => theme.palette.secondary.dark};
 `
 
 export const ContextBox = ({richText, text}: BuilderBreakBlockProps) => {

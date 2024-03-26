@@ -28,7 +28,7 @@ import {BajourBlockRenderer} from '../src/components/website-builder-overwrites/
 import {BajourTeaser} from '../src/components/website-builder-overwrites/blocks/teaser'
 import {BajourTeaserGrid} from '../src/components/website-builder-styled/blocks/teaser-grid-styled'
 import theme from '../src/styles/theme'
-import {ReactComponent as TwitterLogo} from '../src/twitter-logo.svg'
+import {FaTwitter} from 'react-icons/fa6'
 
 setDefaultOptions({
   locale: de
@@ -78,7 +78,7 @@ const Footer = styled(FooterContainer)`
 `
 
 const ButtonLink = styled('a')`
-  color: initial;
+  color: ${({theme}) => theme.palette.primary.contrastText};
 `
 
 function CustomApp({Component, pageProps}: CustomAppProps) {
@@ -136,7 +136,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
                     </ButtonLink>
 
                     <ButtonLink href="https://twitter.com/bajourbasel">
-                      <TwitterLogo width={32} height={32} />
+                      <FaTwitter size="32" />
                     </ButtonLink>
 
                     <ButtonLink href="mailto:info@bajour.ch">

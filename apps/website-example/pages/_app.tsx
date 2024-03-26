@@ -25,6 +25,7 @@ import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import {AppProps} from 'next/app'
 import getConfig from 'next/config'
+import {Hanken_Grotesk, Merriweather} from 'next/font/google'
 import Head from 'next/head'
 import Script from 'next/script'
 import {useMemo} from 'react'
@@ -118,6 +119,22 @@ const dateFormatter = (date: Date, includeTime = true) =>
     ? `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
     : format(date, 'dd. MMMM yyyy')
 
+const hankenGrotesk = Hanken_Grotesk({
+  weight: ['100', '300', '400', '500', '700', '900'],
+  style: ['italic', 'normal'],
+  subsets: ['latin'],
+  display: 'swap',
+  preload: true
+})
+
+const merriweather = Merriweather({
+  weight: ['300', '400', '700', '900'],
+  style: ['italic', 'normal'],
+  subsets: ['latin'],
+  display: 'swap',
+  preload: true
+})
+
 type CustomAppProps = AppProps<{
   sessionToken?: ApiV1.UserSession
 }>
@@ -169,7 +186,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               <meta name="theme-color" content="#ffffff" />
             </Head>
 
-            <Spacer>
+            <Spacer className={[hankenGrotesk.className, merriweather.className].join(' ')}>
               <NavBar
                 categorySlugs={[['categories', 'about-us']]}
                 slug="main"

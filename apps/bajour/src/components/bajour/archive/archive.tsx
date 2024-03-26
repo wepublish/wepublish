@@ -57,7 +57,7 @@ const BajourLogo = styled(Logo)`
 
 const ArchiveText = styled('span')`
   font-weight: 600;
-  color: ${({theme}) => theme.palette.error.main};
+  color: ${({theme}) => theme.palette.primary.main};
 `
 
 const Timeline = styled('div')`
@@ -71,7 +71,7 @@ const Timeline = styled('div')`
     'years .';
   grid-template-columns: 1fr 1fr;
   column-gap: ${({theme}) => theme.spacing(6)};
-  color: ${({theme}) => theme.palette.error.main};
+  color: ${({theme}) => theme.palette.primary.main};
   font-weight: 600;
   font-size: 10px;
 
@@ -119,7 +119,7 @@ const Axis = styled('div')`
   transform: translateX(-50%);
   height: 135%;
   width: ${({theme}) => theme.spacing(2)};
-  background-color: ${({theme}) => theme.palette.error.main};
+  background-color: ${({theme}) => theme.palette.primary.main};
   border-radius: ${({theme}) => theme.spacing(2)};
   border: 4px solid ${({theme}) => theme.palette.common.white};
 
@@ -145,7 +145,7 @@ const Highlights = styled('span')`
   left: 5%;
   font-size: 13px;
   font-weight: bold;
-  color: ${({theme}) => theme.palette.error.main};
+  color: ${({theme}) => theme.palette.primary.main};
 
   ${({theme}) => theme.breakpoints.up('md')} {
     top: -${({theme}) => theme.spacing(7)};
@@ -246,7 +246,7 @@ export const Archive = ({teasers}: BuilderTeaserGridBlockProps) => {
             LinkComponent={Link}
             href={href}
             variant="outlined"
-            color="error"
+            color="primary"
             css={buttonStyles}>
             Weiterlesen
           </Button>
