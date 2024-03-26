@@ -18,7 +18,7 @@ env:
   PROJECT_URL_SUFFIX: -review-${{ github.event.pull_request.number }}.wepublish.vercel.app
 
 jobs:
-  publish-docker-image:
+  publish_docker_image:
     name: Docker
     uses: ./.github/workflows/on-demand-publish-docker-image.yml
     with:
@@ -34,9 +34,8 @@ jobs:
         ghcr.io/wepublish/website:${{ github.sha }}
     secrets: inherit
 
-  helm_deployment:
-    name: Helm deployment
-    needs: [publish-docker-image]
+  helm_deployment_deps:
+    name: Helm deployment dependencies
     runs-on: ubuntu-latest
     permissions:
       contents: 'read'
@@ -133,6 +132,38 @@ jobs:
                 database: wepublish
           EOF
           helm upgrade --install review-${{ github.event.pull_request.number }}-database oci://registry-1.docker.io/bitnamicharts/postgresql -n reviews -f values.yaml --wait
+
+    
+
+  helm_deployment:
+    name: Helm deployment
+    needs: [publish_docker_image, helm_deployment_deps]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: '3.12.3'
+
+      - name: Authenticate kubectl
+        uses: 'google-github-actions/auth@v1'
+        with:
+          project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
+          workload_identity_provider: ${{ secrets.GCLOUD_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}
+
+      - name: Prepare kubectl
+        uses: 'google-github-actions/get-gke-credentials@v1'
+        with:
+          project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
+          cluster_name: development
+          location: europe-west6
 
       - name: Helm deploy app
         run: |
