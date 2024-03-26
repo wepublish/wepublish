@@ -9,7 +9,8 @@ let testServerPublic: ApolloServer
 let prisma: PrismaClient
 
 let paymentMethod: PaymentMethod | undefined
-let memberPlan: MemberPlan | undefined
+let trialMemberPlan: MemberPlan | undefined
+let normalMemberPlan: MemberPlan | undefined
 let user: User | undefined
 
 beforeAll(async () => {
@@ -33,16 +34,31 @@ beforeAll(async () => {
       }
     })
 
-    memberPlan = await prisma.memberPlan.create({
+    const baseMemberPlan = {
+      active: true,
+      name: 'Member Plan Name',
+      description: 'member plan description'
+    }
+
+    trialMemberPlan = await prisma.memberPlan.create({
       data: {
-        id: 'memberplan-id',
-        active: true,
-        amountPerMonthMin: 0,
+        ...baseMemberPlan,
+        id: 'trial-memberplan-id',
+        slug: 'trial-memberplan-slug',
         extendable: false,
         maxCount: 1,
-        name: 'Member Plan Name',
-        slug: 'memberplan-slug',
-        description: 'member plan description'
+        amountPerMonthMin: 0
+      }
+    })
+
+    normalMemberPlan = await prisma.memberPlan.create({
+      data: {
+        ...baseMemberPlan,
+        id: 'normal-memberplan-id',
+        slug: 'normal-memberplan-slug',
+        extendable: true,
+        maxCount: null,
+        amountPerMonthMin: 1
       }
     })
 
@@ -57,13 +73,13 @@ beforeAll(async () => {
     })
   } catch (error) {
     console.log('Error', error)
-    throw new Error('Error during test setup')
+    throw new Error(error.toString())
   }
 })
 
 describe('Subscriptions', () => {
   describe('PRIVATE', () => {
-    test('invoice of trial subscription is marked as paid.', async () => {
+    test('invoice of free subscription is marked as paid.', async () => {
       const trialSubscription: SubscriptionInput = {
         autoRenew: false,
         extendable: false,
@@ -71,7 +87,7 @@ describe('Subscriptions', () => {
         userID: user.id,
         paymentMethodID: paymentMethod.id,
         paymentPeriodicity: PaymentPeriodicity.Monthly,
-        memberPlanID: memberPlan.id,
+        memberPlanID: trialMemberPlan.id,
         properties: [],
         startsAt: new Date().toISOString()
       }
@@ -99,6 +115,43 @@ describe('Subscriptions', () => {
 
       // expect a trial subscription's invoice to be paid at not null
       expect(invoice.paidAt).not.toBe(null)
+    })
+
+    test('invoice of normal subscription is not paid', async () => {
+      const normalSubscription: SubscriptionInput = {
+        autoRenew: true,
+        extendable: true,
+        monthlyAmount: 1,
+        userID: user.id,
+        paymentMethodID: paymentMethod.id,
+        paymentPeriodicity: PaymentPeriodicity.Monthly,
+        memberPlanID: normalMemberPlan.id,
+        properties: [],
+        startsAt: new Date().toISOString()
+      }
+
+      const result = await testServerPrivate.executeOperation({
+        query: CreateSubscription,
+        variables: {
+          input: {
+            ...normalSubscription
+          }
+        }
+      })
+      const createdNormalSubscription = result.data.createSubscription
+
+      const invoice = await prisma.invoice.findFirst({
+        where: {
+          subscription: {
+            id: {
+              equals: createdNormalSubscription.id
+            }
+          }
+        }
+      })
+
+      // invoice should be not paid
+      expect(invoice.paidAt).toBe(null)
     })
   })
 })
