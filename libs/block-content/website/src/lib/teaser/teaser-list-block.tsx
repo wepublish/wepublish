@@ -33,7 +33,7 @@ export const TeaserListBlock = ({teasers, className}: BuilderTeaserListBlockProp
   return (
     <TeaserListBlockWrapper className={className}>
       {teasers.map((teaser, index) => (
-        <Teaser key={index} teaser={teaser} alignment={alignmentForTeaserBlock(index, 3)} />
+        <Teaser key={index} teaser={teaser} alignment={alignmentForTeaserBlock(index, 1)} />
       ))}
     </TeaserListBlockWrapper>
   )

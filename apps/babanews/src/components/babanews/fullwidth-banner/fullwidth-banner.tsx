@@ -15,7 +15,7 @@ const imageStyles = (theme: Theme) => css`
   object-fit: cover;
 `
 
-export const FullWidthBanner = ({richText, text, image}: BuilderBreakBlockProps) => {
+export const FullWidthBanner = ({image}: BuilderBreakBlockProps) => {
   const theme = useTheme()
   const styles = useMemo(() => imageStyles(theme), [theme])
   const {

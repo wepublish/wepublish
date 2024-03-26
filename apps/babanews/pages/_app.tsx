@@ -24,6 +24,7 @@ import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {BabanewsBlockRenderer} from '../src/components/website-builder-overwrites/block-renderer/block-renderer'
 import {BabanewsTeaser} from '../src/components/website-builder-overwrites/blocks/teaser'
+import {BabanewsTeaserGrid} from '../src/components/website-builder-styled/blocks/teaser-grid-styled'
 import {BabanewsTeaserList} from '../src/components/website-builder-styled/blocks/teaser-list-styled'
 import theme from '../src/styles/theme'
 
@@ -88,7 +89,8 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
           blocks={{
             Renderer: BabanewsBlockRenderer,
             Teaser: BabanewsTeaser,
-            TeaserList: BabanewsTeaserList
+            TeaserList: BabanewsTeaserList,
+            TeaserGrid: BabanewsTeaserGrid
           }}>
           <ThemeProvider theme={theme}>
             <CssBaseline />
