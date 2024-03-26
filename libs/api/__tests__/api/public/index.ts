@@ -1624,6 +1624,11 @@ type FullBlock_YouTubeVideoBlock_Fragment = { __typename: 'YouTubeVideoBlock', v
 
 export type FullBlockFragment = FullBlock_BildwurfAdBlock_Fragment | FullBlock_CommentBlock_Fragment | FullBlock_EmbedBlock_Fragment | FullBlock_EventBlock_Fragment | FullBlock_FacebookPostBlock_Fragment | FullBlock_FacebookVideoBlock_Fragment | FullBlock_HtmlBlock_Fragment | FullBlock_ImageBlock_Fragment | FullBlock_ImageGalleryBlock_Fragment | FullBlock_InstagramPostBlock_Fragment | FullBlock_LinkPageBreakBlock_Fragment | FullBlock_ListicleBlock_Fragment | FullBlock_PolisConversationBlock_Fragment | FullBlock_PollBlock_Fragment | FullBlock_QuoteBlock_Fragment | FullBlock_RichTextBlock_Fragment | FullBlock_SoundCloudTrackBlock_Fragment | FullBlock_TeaserGridBlock_Fragment | FullBlock_TeaserGridFlexBlock_Fragment | FullBlock_TeaserListBlock_Fragment | FullBlock_TikTokVideoBlock_Fragment | FullBlock_TitleBlock_Fragment | FullBlock_TwitterTweetBlock_Fragment | FullBlock_VimeoVideoBlock_Fragment | FullBlock_YouTubeVideoBlock_Fragment;
 
+export type ChallengeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type ChallengeQuery = { __typename?: 'Query', challenge: { __typename?: 'Challenge', challenge?: string | null, challengeID?: string | null, validUntil?: string | null } };
+
 export type FullCommentUserFragment = { __typename?: 'User', id: string, name: string, firstName?: string | null, preferredName?: string | null, flair?: string | null, email: string, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, extension: string, width: number, height: number, fileSize: number, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, title?: string | null, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null } | null };
 
 export type MutationCommentFragment = { __typename?: 'Comment', id: string, itemID: string, itemType: CommentItemType, state: CommentState, text?: Node[] | null, parentID?: string | null, user?: { __typename?: 'User', id: string } | null };
@@ -1739,6 +1744,20 @@ export type UpdatePaymentProviderCustomersMutationVariables = Exact<{
 
 
 export type UpdatePaymentProviderCustomersMutation = { __typename?: 'Mutation', updatePaymentProviderCustomers: Array<{ __typename?: 'PaymentProviderCustomer', customerID: string, paymentProviderID: string }> };
+
+export type RegisterMemberAndReceivePaymentMutationVariables = Exact<{
+  name: Scalars['String'];
+  email: Scalars['String'];
+  autoRenew: Scalars['Boolean'];
+  paymentPeriodicity: PaymentPeriodicity;
+  monthlyAmount: Scalars['Int'];
+  challengeAnswer: ChallengeInput;
+  paymentMethodId?: InputMaybe<Scalars['ID']>;
+  memberPlanId?: InputMaybe<Scalars['ID']>;
+}>;
+
+
+export type RegisterMemberAndReceivePaymentMutation = { __typename?: 'Mutation', registerMemberAndReceivePayment: { __typename?: 'RegistrationAndPayment', payment: { __typename?: 'Payment', id: string }, user: { __typename?: 'User', id: string } } };
 
 export const ImageUrLs = gql`
     fragment ImageURLs on Image {
@@ -2152,6 +2171,15 @@ export const Author = gql`
   }
 }
     ${FullAuthor}`;
+export const Challenge = gql`
+    query Challenge {
+  challenge {
+    challenge
+    challengeID
+    validUntil
+  }
+}
+    `;
 export const AddComment = gql`
     mutation AddComment($input: CommentInput!) {
   addComment(input: $input) {
@@ -2301,6 +2329,27 @@ export const UpdatePaymentProviderCustomers = gql`
   updatePaymentProviderCustomers(input: $customers) {
     customerID
     paymentProviderID
+  }
+}
+    `;
+export const RegisterMemberAndReceivePayment = gql`
+    mutation RegisterMemberAndReceivePayment($name: String!, $email: String!, $autoRenew: Boolean!, $paymentPeriodicity: PaymentPeriodicity!, $monthlyAmount: Int!, $challengeAnswer: ChallengeInput!, $paymentMethodId: ID, $memberPlanId: ID) {
+  registerMemberAndReceivePayment(
+    name: $name
+    email: $email
+    autoRenew: $autoRenew
+    paymentPeriodicity: $paymentPeriodicity
+    monthlyAmount: $monthlyAmount
+    challengeAnswer: $challengeAnswer
+    paymentMethodID: $paymentMethodId
+    memberPlanID: $memberPlanId
+  ) {
+    payment {
+      id
+    }
+    user {
+      id
+    }
   }
 }
     `;

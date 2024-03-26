@@ -15,14 +15,32 @@ import {
   PublicPage,
   URLAdapter,
   DefaultSessionTTL,
-  FakeMailProvider
+  FakeMailProvider,
+  WebhookForPaymentIntentProps,
+  CreatePaymentIntentProps,
+  Intent,
+  PayrexxPaymentProvider,
+  GatewayClient,
+  TransactionClient
 } from '../src'
 import {createUserSession} from '../src/lib/graphql/session/session.mutation'
+import {PaymentProvider} from '@wepublish/editor/api'
+import bodyParser from 'body-parser'
+import {WebhookResponse} from 'mailgun.js/interfaces/Webhooks'
+import {PartialDeep} from 'type-fest'
+import Mock = jest.Mock
+import {
+  CreateGatewayRequestData,
+  Gateway,
+  GatewayStatus
+} from '../../payment/api/src/lib/payrexx/gateway-client'
+import {Transaction} from '../../payment/api/src/lib/payrexx/transaction-client'
 
 export interface TestClient {
   testServerPublic: ApolloServer
   testServerPrivate: ApolloServer
   prisma: PrismaClient
+  challenge: AlgebraicCaptchaChallenge
 }
 
 class ExampleURLAdapter implements URLAdapter {
@@ -128,6 +146,53 @@ export async function createGraphQLTestClient(overwriteRequest?: any): Promise<T
 
   const challenge = new AlgebraicCaptchaChallenge('secret', 600, {})
 
+  /**
+   * Create mock payment adapter to be used along with test server.
+   * @param implementation
+   */
+  function mockInstance<Type = unknown>(implementation?: PartialDeep<Type>) {
+    return new (jest.fn().mockImplementation(() => implementation) as Mock<Type>)() as Type
+  }
+  const mockGatewayClient = mockInstance<GatewayClient>({
+    createGateway: async (requestData: CreateGatewayRequestData): Promise<Gateway> => {
+      return {
+        id: 1234,
+        status: 'confirmed',
+        hash: '1234',
+        referenceId: '1234',
+        link: 'link',
+        invoices: [],
+        preAuthorization: true,
+        fields: [],
+        psp: [1],
+        pm: ['1'],
+        amount: 1,
+        currency: 'chf',
+        vatRate: 7.7,
+        sku: 'sku',
+        applicationFee: 10,
+        createdAt: 1234567890
+      }
+    },
+    getGateway: jest.fn()
+  })
+  const mockTransactionClient = mockInstance<TransactionClient>({
+    retrieveTransaction: jest.fn(),
+    chargePreAuthorizedTransaction: jest.fn()
+  })
+
+  const mockPaymentProvider = new PayrexxPaymentProvider({
+    id: 'testing-payment-provider-id',
+    name: 'Payrexx Testing Payment Provider',
+    vatRate: 25,
+    gatewayClient: mockGatewayClient,
+    transactionClient: mockTransactionClient,
+    psp: [14],
+    offSessionPayments: true,
+    webhookApiKey: 'secret',
+    pm: ['foo']
+  })
+
   const testServerPublic = new ApolloServer({
     schema: GraphQLWepublishPublicSchema,
     introspection: false,
@@ -144,7 +209,7 @@ export async function createGraphQLTestClient(overwriteRequest?: any): Promise<T
         },
         urlAdapter: new ExampleURLAdapter(),
         oauth2Providers: [],
-        paymentProviders: [],
+        paymentProviders: [mockPaymentProvider],
         challenge
       })
   })
@@ -165,7 +230,7 @@ export async function createGraphQLTestClient(overwriteRequest?: any): Promise<T
         },
         urlAdapter: new ExampleURLAdapter(),
         oauth2Providers: [],
-        paymentProviders: [],
+        paymentProviders: [mockPaymentProvider],
         challenge
       })
   })
@@ -173,7 +238,8 @@ export async function createGraphQLTestClient(overwriteRequest?: any): Promise<T
   return {
     testServerPublic,
     testServerPrivate,
-    prisma
+    prisma,
+    challenge
   }
 }
 
