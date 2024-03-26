@@ -3354,6 +3354,13 @@ export type DeletePeerMutationVariables = Exact<{
 
 export type DeletePeerMutation = { __typename?: 'Mutation', deletePeer?: { __typename?: 'Peer', id: string, name: string, isDisabled?: boolean | null, slug: string, hostURL: string } | null };
 
+export type CreateSubscriptionMutationVariables = Exact<{
+  input: SubscriptionInput;
+}>;
+
+
+export type CreateSubscriptionMutation = { __typename?: 'Mutation', createSubscription?: { __typename?: 'Subscription', autoRenew: boolean, id: string } | null };
+
 export type TagListQueryVariables = Exact<{
   filter?: InputMaybe<TagFilter>;
   cursor?: InputMaybe<Scalars['ID']>;
@@ -4582,6 +4589,14 @@ export const DeletePeer = gql`
   }
 }
     ${PeerRef}`;
+export const CreateSubscription = gql`
+    mutation CreateSubscription($input: SubscriptionInput!) {
+  createSubscription(input: $input) {
+    autoRenew
+    id
+  }
+}
+    `;
 export const TagList = gql`
     query TagList($filter: TagFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: TagSort) {
   tags(

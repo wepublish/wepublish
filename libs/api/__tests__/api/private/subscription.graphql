@@ -1,0 +1,6 @@
+mutation CreateSubscription($input: SubscriptionInput!) {
+    createSubscription(input: $input) {
+        autoRenew
+        id
+    }
+}
