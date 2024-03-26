@@ -8,6 +8,15 @@ concurrency:
   group: review-${{ github.head_ref }}
   cancel-in-progress: true
 
+
+env:
+  API_URL: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+  EDITOR_URL: https://editor-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+  WEBSITE_URL: https://website-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+  MEDIA_SERVER_URL: https://media-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+  STORYBOOK_URL: https://storybook-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+  PROJECT_URL_SUFFIX: -review-${{ github.event.pull_request.number }}.wepublish.vercel.app
+
 jobs:
   publish-docker-image:
     name: Docker
@@ -27,18 +36,13 @@ jobs:
 
   helm_deployment:
     name: Helm deployment
-    needs: publish-docker-image
+    needs: [publish-docker-image]
     runs-on: ubuntu-latest
     permissions:
       contents: 'read'
       id-token: 'write'
 
     env:
-      API_URL: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.dev
-      EDITOR_URL: https://editor-${{ github.event.pull_request.number }}.reviews.wepublish.dev
-      WEBSITE_URL: https://website-${{ github.event.pull_request.number }}.reviews.wepublish.dev
-      MEDIA_SERVER_URL: https://media-${{ github.event.pull_request.number }}.reviews.wepublish.dev
-      STORYBOOK_URL: https://storybook-${{ github.event.pull_request.number }}.reviews.wepublish.dev
       S3_ACCESS_KEY_ID: accessKey
       S3_SECRET_ACCESS_KEY: secretKey
       S3_BUCKET: data-store
@@ -114,7 +118,7 @@ jobs:
             enabled: false
           labels: { }
           EOF
-          helm upgrade --install review-${{ github.event.pull_request.number }}-media-server karma-media-server --repo https://gitlab.com/api/v4/projects/38941346/packages/helm/stable -n reviews -f values.yaml --version 1.0.6 
+          helm upgrade --install review-${{ github.event.pull_request.number }}-media-server karma-media-server --repo https://gitlab.com/api/v4/projects/38941346/packages/helm/stable -n reviews -f values.yaml --version 1.0.6
 
       - name: Helm deploy database
         run: |
@@ -172,7 +176,7 @@ jobs:
                     - ${WEBSITE_URL}/auth/google
                   scopes:
                     - 'openid profile email'
-          
+
               paymentProviders:
                 - type: payrexx
                   id: payrexx
@@ -184,28 +188,28 @@ jobs:
                   psp: [ 0, 15, 17, 2, 3, 36 ]
                   pm: ['visa', 'mastercard']
                   vatRate: 8.1
-          
+
                 - type: stripe
                   id: stripe
                   name: Stripe
                   offSessionPayments: true
                   secretKey: key
                   webhookEndpointSecret: wh_secret
-          
+
                 - type: stripe-checkout
                   id: stripe-checkout
                   name: Stripe Checkout
                   offSessionPayments: false
                   secretKey: key
                   webhookEndpointSecret: wh_secret
-          
+
                 - type: payrexx-subscription
                   id: payrexx-subscription
                   name: Payrexx Subscription
                   instanceName: wepublish-sandbox
                   instanceAPISecret: ${{ secrets.PAYREXX_API_SECRET }}
                   webhookEndpointSecret: ${{ secrets.PAYREXX_WEBHOOK_SECRET }}
-          
+
                 - type: bexio
                   id: bexio
                   name: Bexio
@@ -224,7 +228,7 @@ jobs:
                   invoiceMailSubjectRenewalMembership: "Invoice for :memberPlan.name:"
                   invoiceMailBodyRenewalMembership: "Hello :user.firstname:\n\nThank you for subscribing to :memberPlan.name:.\nYou can view your invoice here: [Network Link]\n\nBest wishes from the Wepublish team"
                   markInvoiceAsOpen: False
-          
+
               challenge:
                 secret: 'secret'
                 validTime: 600
@@ -255,18 +259,45 @@ jobs:
           helm upgrade --install ${POD_NAME} ./helm/charts/wepublish -n reviews -f values.yaml --wait
 
 
-  notify:
-    name: Notify
-    needs: helm_deployment
+  find_vercel_apps:
+    name: Find Vercel apps
+    runs-on: ubuntu-latest
+    outputs:
+      projects: ${{ steps.projects.outputs.value }}
+    steps:
+      - id: projects
+        run: |
+          echo "value=[\"babanews\", \"bajour\", \"gruppetto\"]" >> $GITHUB_OUTPUT
+      - run: |
+          echo "${{ steps.projects.outputs.value }}"
+          
+  deploy_to_vercel:
+    name: Deploy to Vercel
+    needs: [find_vercel_apps, helm_deployment]
     if: ${{ needs.helm_deployment.result == 'success' }}
     runs-on: ubuntu-latest
-    continue-on-error: true
+    strategy:
+      matrix:
+        project: ${{fromJSON(needs.find_vercel_apps.outputs.projects)}}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          cache: npm
+      - run: npm i -g vercel
+      - run: |
+          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" link --project ${{ matrix.project }} --scope wepublish --yes
+          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" build --yes
+          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" deploy --prebuilt --yes > deployment_url 
+          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" alias set $(cat deployment_url) ${{ matrix.project }}${PROJECT_URL_SUFFIX} --scope wepublish --yes
 
-    env:
-      API_URL: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.dev
-      EDITOR_URL: https://editor-${{ github.event.pull_request.number }}.reviews.wepublish.dev
-      WEBSITE_URL: https://website-${{ github.event.pull_request.number }}.reviews.wepublish.dev
-      MEDIA_SERVER_URL: https://media-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+  notify:
+    name: Notify
+    needs: [find_vercel_apps, deploy_to_vercel]
+    if: ${{ needs.deploy_to_vercel.result == 'success' }}
+    runs-on: ubuntu-latest
+    continue-on-error: true
 
     steps:
       - uses: actions/checkout@v3
@@ -278,6 +309,7 @@ jobs:
       - name: Create Deployment Text
         id: deploymentComment
         env:
+          PROJECTS: ${{ needs.find_vercel_apps.outputs.projects }}
           BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
