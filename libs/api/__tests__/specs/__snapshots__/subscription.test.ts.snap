@@ -1,0 +1,16 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Subscriptions PRIVATE trial subscription can be created 1`] = `
+{
+  "data": undefined,
+  "errors": [
+    [UserInputError: Variable "$input" got invalid value "3/26/2024" at "input.startsAt"; DateTime cannot represent an invalid date-time-string 3/26/2024.],
+  ],
+  "extensions": undefined,
+  "http": {
+    "headers": Headers {
+      Symbol(map): {},
+    },
+  },
+}
+`;
