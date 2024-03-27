@@ -33,9 +33,7 @@ import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import background from '../src/background.svg'
 import {GruppettoBreakBlock} from '../src/break-block'
-import {Button} from '../src/button'
 import {Footer} from '../src/footer'
-import {Paragraph} from '../src/gruppetto-paragraph'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import {SafariBugHotfixTeaser} from '../src/safari-bug-hotfix'
 import {YearlyMemberPlanItem} from '../src/yearly-memberplan-item'
@@ -132,7 +130,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
           Script={Script}
           Footer={Footer}
           MemberPlanItem={YearlyMemberPlanItem}
-          elements={{Link: NextWepublishLink, Button, Paragraph}}
+          elements={{Link: NextWepublishLink}}
           blocks={{Break: GruppettoBreakBlock, Teaser: SafariBugHotfixTeaser}}>
           <ThemeProvider theme={gruppettoTheme}>
             <CssBaseline />

@@ -17,7 +17,7 @@ export const ArticleWrapper = styled('article')`
   display: grid;
   gap: ${({theme}) => theme.spacing(7)};
 
-  ${({theme}) => theme.breakpoints.up('lg')} {
+  ${({theme}) => theme.breakpoints.up('md')} {
     grid-template-columns: repeat(12, 1fr);
 
     & > * {

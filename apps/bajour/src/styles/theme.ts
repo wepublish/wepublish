@@ -29,9 +29,6 @@ const theme = createTheme(WepTheme, {
   components: {
     MuiButton: {
       styleOverrides: {
-        root: {
-          borderRadius: '12px'
-        },
         outlinedPrimary: {
           borderWidth: '3px',
           borderColor: '#FF0D62',

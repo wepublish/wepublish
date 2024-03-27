@@ -16,7 +16,8 @@ export const AuthorChipDivider = styled('hr')`
 export const AuthorChipAuthorWrapper = styled('div')`
   display: grid;
   gap: ${({theme}) => theme.spacing(1)};
-  grid-template-columns: 40px 1fr;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
   align-items: end;
 `
 
@@ -29,6 +30,7 @@ export const AuthorChipMetaWrapper = styled('div')`
 
 export const AuthorChipImageWrapper = styled('div')`
   display: grid;
+  width: 40px;
 `
 
 export const AuthorChipContentWrapper = styled('div')`
@@ -55,9 +57,11 @@ export function AuthorChip({className, author, publishedAt}: BuilderAuthorChipPr
   return (
     <AuthorChipWrapper className={className}>
       <AuthorChipAuthorWrapper>
-        <AuthorChipImageWrapper>
-          {author.image && <Image image={author.image} square css={imageStyles} />}
-        </AuthorChipImageWrapper>
+        {author.image && (
+          <AuthorChipImageWrapper>
+            <Image image={author.image} square css={imageStyles} />
+          </AuthorChipImageWrapper>
+        )}
 
         <AuthorChipContentWrapper>
           <AuthorChipName>
@@ -72,7 +76,9 @@ export function AuthorChip({className, author, publishedAt}: BuilderAuthorChipPr
 
       <AuthorChipMetaWrapper>
         {publishedAt && (
-          <time dateTime={publishedAt}>{date.format(new Date(publishedAt), false)}</time>
+          <time suppressHydrationWarning dateTime={publishedAt}>
+            {date.format(new Date(publishedAt), false)}
+          </time>
         )}
 
         {!!author.links?.length && <AuthorLinks links={author.links} />}

@@ -1,4 +1,5 @@
-import {createTheme} from '@mui/material'
+import {CSSObject, createTheme} from '@mui/material'
+import {BorderRadius} from '../../editor/src/lib/atoms/helpers'
 
 export const theme = createTheme({
   typography: {
@@ -47,13 +48,43 @@ export const theme = createTheme({
     }
   },
   components: {
-    MuiIconButton: {
+    MuiButton: {
       styleOverrides: {
-        root: ({ownerState}) => ({
-          ...(ownerState.color === 'secondary' && {
-            color: '#fff'
-          })
-        })
+        root: ({ownerState, theme}) => {
+          const baseStyles: CSSObject = {
+            borderRadius: '30px',
+            textTransform: 'initial',
+            boxShadow: 'none'
+          }
+
+          if (ownerState.color === 'secondary') {
+            if (ownerState.variant === 'outlined') {
+              return {
+                ...baseStyles,
+                color: theme.palette.common.white,
+                borderColor: 'currentcolor',
+                borderWidth: '2px',
+                ':hover': {
+                  borderWidth: '2px',
+                  borderColor: 'currentcolor'
+                }
+              }
+            }
+
+            if (ownerState.variant === 'contained') {
+              return {
+                ...baseStyles,
+                fontWeight: 700,
+                backgroundColor: theme.palette.common.white,
+                color: theme.palette.common.black,
+                ':hover': {
+                  backgroundColor: theme.palette.common.white,
+                  boxShadow: 'none'
+                }
+              }
+            }
+          }
+        }
       }
     }
   }
