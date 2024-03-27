@@ -7,7 +7,10 @@ import {
   RegisterMemberAndReceivePayment,
   RegisterMemberAndReceivePaymentMutationVariables
 } from '../api/public'
-import {AlgebraicCaptchaChallenge, TestingChallengeAnswer} from '@wepublish/api'
+import {
+  AlgebraicCaptchaChallenge,
+  TestingChallengeAnswer
+} from '../../src/lib/challenges/algebraicCaptchaChallenge'
 
 let testServerPrivate: ApolloServer
 let testServerPublic: ApolloServer

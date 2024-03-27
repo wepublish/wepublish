@@ -23,7 +23,7 @@ import {
 import {createUserSession} from '../src/lib/graphql/session/session.mutation'
 import {PartialDeep} from 'type-fest'
 import Mock = jest.Mock
-import {CreateGatewayRequestData, Gateway} from '../../payment/api/src/lib/payrexx/gateway-client'
+import {CreateGatewayRequestData, Gateway} from '@wepublish/payment/payrexx'
 
 export interface TestClient {
   testServerPublic: ApolloServer
