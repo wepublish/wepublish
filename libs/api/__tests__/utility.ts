@@ -16,25 +16,14 @@ import {
   URLAdapter,
   DefaultSessionTTL,
   FakeMailProvider,
-  WebhookForPaymentIntentProps,
-  CreatePaymentIntentProps,
-  Intent,
   PayrexxPaymentProvider,
   GatewayClient,
   TransactionClient
 } from '../src'
 import {createUserSession} from '../src/lib/graphql/session/session.mutation'
-import {PaymentProvider} from '@wepublish/editor/api'
-import bodyParser from 'body-parser'
-import {WebhookResponse} from 'mailgun.js/interfaces/Webhooks'
 import {PartialDeep} from 'type-fest'
 import Mock = jest.Mock
-import {
-  CreateGatewayRequestData,
-  Gateway,
-  GatewayStatus
-} from '../../payment/api/src/lib/payrexx/gateway-client'
-import {Transaction} from '../../payment/api/src/lib/payrexx/transaction-client'
+import {CreateGatewayRequestData, Gateway} from '../../payment/api/src/lib/payrexx/gateway-client'
 
 export interface TestClient {
   testServerPublic: ApolloServer
