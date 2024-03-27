@@ -4,15 +4,15 @@ import {
   ImageWrapperStyled,
   PreTitleStyled,
   Teaser,
-  TeaserAuthors,
+  // TeaserAuthors,
   TeaserContentStyled,
-  TeaserDate,
-  TeaserLead,
-  TeaserPreTitle,
+  // TeaserDate,
+  // TeaserLead,
+  // TeaserPreTitle,
   TeaserPreTitleNoContent,
-  TeaserPreTitleStyled,
-  TeaserTitle,
-  TeaserWrapper
+  TeaserPreTitleStyled
+  // TeaserTitle,
+  // TeaserWrapper
 } from '@wepublish/website'
 
 export const TeaserImgStyled = styled(Image)`
