@@ -3359,7 +3359,7 @@ export type CreateSubscriptionMutationVariables = Exact<{
 }>;
 
 
-export type CreateSubscriptionMutation = { __typename?: 'Mutation', createSubscription?: { __typename?: 'Subscription', autoRenew: boolean, id: string } | null };
+export type CreateSubscriptionMutation = { __typename?: 'Mutation', createSubscription?: { __typename?: 'Subscription', autoRenew: boolean, id: string, paidUntil?: string | null, monthlyAmount: number, extendable: boolean, user?: { __typename?: 'User', id: string } | null, memberPlan: { __typename?: 'MemberPlan', id: string }, paymentMethod: { __typename?: 'PaymentMethod', id: string } } | null };
 
 export type TagListQueryVariables = Exact<{
   filter?: InputMaybe<TagFilter>;
@@ -4594,6 +4594,18 @@ export const CreateSubscription = gql`
   createSubscription(input: $input) {
     autoRenew
     id
+    paidUntil
+    user {
+      id
+    }
+    monthlyAmount
+    memberPlan {
+      id
+    }
+    extendable
+    paymentMethod {
+      id
+    }
   }
 }
     `;

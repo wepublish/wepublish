@@ -286,9 +286,7 @@ export class MemberContext implements MemberContext {
               amount,
               quantity: 1
             }
-          },
-          // mark invoices with amount 0 as paid
-          paidAt: amount === 0 ? new Date() : undefined
+          }
         },
         include: {
           items: true

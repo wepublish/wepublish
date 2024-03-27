@@ -1757,7 +1757,7 @@ export type RegisterMemberAndReceivePaymentMutationVariables = Exact<{
 }>;
 
 
-export type RegisterMemberAndReceivePaymentMutation = { __typename?: 'Mutation', registerMemberAndReceivePayment: { __typename?: 'RegistrationAndPayment', payment: { __typename?: 'Payment', id: string }, user: { __typename?: 'User', id: string } } };
+export type RegisterMemberAndReceivePaymentMutation = { __typename?: 'Mutation', registerMemberAndReceivePayment: { __typename?: 'RegistrationAndPayment', payment: { __typename?: 'Payment', id: string }, user: { __typename?: 'User', id: string }, session: { __typename?: 'UserSession', token: string } } };
 
 export const ImageUrLs = gql`
     fragment ImageURLs on Image {
@@ -2349,6 +2349,9 @@ export const RegisterMemberAndReceivePayment = gql`
     }
     user {
       id
+    }
+    session {
+      token
     }
   }
 }

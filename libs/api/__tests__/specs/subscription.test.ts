@@ -15,8 +15,7 @@ let prisma: PrismaClient
 let challenge: AlgebraicCaptchaChallenge
 
 let paymentMethod: PaymentMethod | undefined
-let trialMemberPlan: MemberPlan | undefined
-let normalMemberPlan: MemberPlan | undefined
+let memberPlan: MemberPlan | undefined
 let user: User | undefined
 let testingChallengeResponse: TestingChallengeAnswer | undefined
 
@@ -42,20 +41,16 @@ beforeAll(async () => {
       }
     })
 
-    const baseMemberPlan = {
-      active: true,
-      name: 'Member Plan Name',
-      description: 'member plan description'
-    }
-
-    trialMemberPlan = await prisma.memberPlan.create({
+    memberPlan = await prisma.memberPlan.create({
       data: {
-        ...baseMemberPlan,
-        id: 'trial-memberplan-id',
-        slug: 'trial-memberplan-slug',
-        extendable: false,
-        maxCount: 1,
-        amountPerMonthMin: 0,
+        active: true,
+        name: 'Member Plan Name',
+        description: 'member plan description',
+        id: 'memberplan-id',
+        slug: 'memberplan-slug',
+        extendable: true,
+        maxCount: null,
+        amountPerMonthMin: 100,
         availablePaymentMethods: {
           create: {
             forceAutoRenewal: false,
@@ -66,22 +61,11 @@ beforeAll(async () => {
       }
     })
 
-    normalMemberPlan = await prisma.memberPlan.create({
-      data: {
-        ...baseMemberPlan,
-        id: 'normal-memberplan-id',
-        slug: 'normal-memberplan-slug',
-        extendable: true,
-        maxCount: null,
-        amountPerMonthMin: 1
-      }
-    })
-
     user = await prisma.user.create({
       data: {
         id: 'user-id',
         active: true,
-        email: 'trial-subscription-user@wepublish.dev',
+        email: 'subscription-user@wepublish.dev',
         name: 'Tester',
         password: '1234'
       }
@@ -97,14 +81,14 @@ beforeAll(async () => {
 
 describe('Subscriptions', () => {
   describe('PUBLIC', () => {
-    test('invoice of free subscription is marked as paid', async () => {
-      const publicTrialSubscription: RegisterMemberAndReceivePaymentMutationVariables = {
+    test('can be created', async () => {
+      const publicSubscription: RegisterMemberAndReceivePaymentMutationVariables = {
         autoRenew: false,
-        monthlyAmount: 0,
+        monthlyAmount: 100,
         paymentPeriodicity: PaymentPeriodicity.Monthly,
-        email: 'public-trial-subscription-user@wepublish.dev',
-        name: 'Public Trial Subscription User',
-        memberPlanId: trialMemberPlan.id,
+        email: 'public-subscription-user@wepublish.dev',
+        name: 'Public Subscription User',
+        memberPlanId: memberPlan.id,
         paymentMethodId: paymentMethod.id,
         challengeAnswer: {
           ...testingChallengeResponse
@@ -114,15 +98,15 @@ describe('Subscriptions', () => {
       const result = await testServerPublic.executeOperation({
         query: RegisterMemberAndReceivePayment,
         variables: {
-          ...publicTrialSubscription
+          ...publicSubscription
         }
       })
 
-      const createdTrialSubscription = result.data.registerMemberAndReceivePayment
+      const subscription = result.data.registerMemberAndReceivePayment
 
       const payment = await prisma.payment.findFirstOrThrow({
         where: {
-          id: createdTrialSubscription.payment.id
+          id: subscription.payment.id
         }
       })
 
@@ -132,67 +116,30 @@ describe('Subscriptions', () => {
         }
       })
 
-      // expect a trial subscription's invoice to be paid at not null
-      expect(invoice.paidAt).not.toBe(null)
+      // expects a session
+      expect(subscription.session.token).toBeTruthy()
+
+      // expects a payment
+      expect(subscription.payment.id).toBeTruthy()
+
+      // expects a user
+      expect(subscription.user.id).toBeTruthy()
+
+      // expects an invoice
+      expect(invoice.id).toBeTruthy()
     })
-
-    // todo
-    test('invoice of normal subscription remains unpaid', async () => {})
-
-    test('invoice of free subscription is marked as paid with logged-in user', async () => {})
-
-    // todo
-    test('invoice of normal subscription remains unpaid with logged-in user', async () => {})
   })
 
   describe('PRIVATE', () => {
-    test('invoice of free subscription is marked as paid.', async () => {
-      const trialSubscription: SubscriptionInput = {
-        autoRenew: false,
-        extendable: false,
-        monthlyAmount: 0,
-        userID: user.id,
-        paymentMethodID: paymentMethod.id,
-        paymentPeriodicity: PaymentPeriodicity.Monthly,
-        memberPlanID: trialMemberPlan.id,
-        properties: [],
-        startsAt: new Date().toISOString()
-      }
-
-      const result = await testServerPrivate.executeOperation({
-        query: CreateSubscription,
-        variables: {
-          input: {
-            ...trialSubscription
-          }
-        }
-      })
-
-      const createdTrialSubscription = result.data.createSubscription
-
-      const invoice = await prisma.invoice.findFirst({
-        where: {
-          subscription: {
-            id: {
-              equals: createdTrialSubscription.id
-            }
-          }
-        }
-      })
-
-      // expect a trial subscription's invoice to be paid at not null
-      expect(invoice.paidAt).not.toBe(null)
-    })
-
-    test('invoice of normal subscription remains unpaid', async () => {
-      const normalSubscription: SubscriptionInput = {
+    test('can be created', async () => {
+      const subscriptionInput: SubscriptionInput = {
         autoRenew: true,
         extendable: true,
-        monthlyAmount: 1,
+        monthlyAmount: 100,
         userID: user.id,
         paymentMethodID: paymentMethod.id,
         paymentPeriodicity: PaymentPeriodicity.Monthly,
-        memberPlanID: normalMemberPlan.id,
+        memberPlanID: memberPlan.id,
         properties: [],
         startsAt: new Date().toISOString()
       }
@@ -201,24 +148,34 @@ describe('Subscriptions', () => {
         query: CreateSubscription,
         variables: {
           input: {
-            ...normalSubscription
+            ...subscriptionInput
           }
         }
       })
-      const createdNormalSubscription = result.data.createSubscription
+
+      const subscription = result.data.createSubscription
 
       const invoice = await prisma.invoice.findFirst({
         where: {
           subscription: {
             id: {
-              equals: createdNormalSubscription.id
+              equals: subscription.id
             }
           }
         }
       })
 
-      // invoice should be not paid
-      expect(invoice.paidAt).toBe(null)
+      expect(subscription.id).toBeTruthy()
+      expect(subscription.autoRenew).toBe(subscriptionInput.autoRenew)
+      expect(subscription.paidUntil).toBeNull()
+      expect(subscription.user.id).toBe(user.id)
+      expect(subscription.monthlyAmount).toBe(subscriptionInput.monthlyAmount)
+      expect(subscription.memberPlan.id).toBe(memberPlan.id)
+      expect(subscription.extendable).toBe(subscriptionInput.extendable)
+      expect(subscription.paymentMethod.id).toBe(paymentMethod.id)
+
+      // expects an invoice
+      expect(invoice.id).toBeTruthy()
     })
   })
 })

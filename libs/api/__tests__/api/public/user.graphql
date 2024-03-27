@@ -36,5 +36,8 @@ mutation RegisterMemberAndReceivePayment($name: String!, $email: String!, $autoR
     user {
       id
     }
+    session {
+      token
+    }
   }
 }
