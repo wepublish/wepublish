@@ -54,6 +54,7 @@ export const GraphQLSubscription = new GraphQLObjectType<Subscription, Context>(
     paymentPeriodicity: {type: new GraphQLNonNull(GraphQLPaymentPeriodicity)},
     monthlyAmount: {type: new GraphQLNonNull(GraphQLInt)},
     autoRenew: {type: new GraphQLNonNull(GraphQLBoolean)},
+    extendable: {type: new GraphQLNonNull(GraphQLBoolean)},
     startsAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     paidUntil: {type: GraphQLDateTime},
     paymentMethod: {
@@ -88,7 +89,8 @@ export const GraphQLSubscriptionFilter = new GraphQLInputObjectType({
     memberPlanID: {type: GraphQLString},
     paymentPeriodicity: {type: GraphQLPaymentPeriodicity},
     userHasAddress: {type: GraphQLBoolean},
-    userID: {type: GraphQLID}
+    userID: {type: GraphQLID},
+    extendable: {type: GraphQLBoolean}
   }
 })
 
@@ -128,6 +130,7 @@ export const GraphQLSubscriptionInput = new GraphQLInputObjectType({
     startsAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     paidUntil: {type: GraphQLDateTime},
     paymentMethodID: {type: new GraphQLNonNull(GraphQLString)},
+    extendable: {type: new GraphQLNonNull(GraphQLBoolean)},
     properties: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLMetadataPropertyInput)))
     },

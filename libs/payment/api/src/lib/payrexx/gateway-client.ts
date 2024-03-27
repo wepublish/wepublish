@@ -1,7 +1,7 @@
 import {PayrexxClient} from './payrexx-client'
 import {Transaction} from './transaction-client'
 
-type CreateGatewayRequestData = {
+export type CreateGatewayRequestData = {
   psp: number[]
   pm: string[]
   referenceId: string

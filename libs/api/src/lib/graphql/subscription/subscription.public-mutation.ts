@@ -44,6 +44,10 @@ export const updatePublicSubscription = async (
     throw new Error('You are not allowed to change a deactivated subscription!')
   }
 
+  if (!subscription.extendable && autoRenew) {
+    throw new Error("You can't make a non extendable subscription autoRenew!")
+  }
+
   if (
     !memberPlan.availablePaymentMethods.some(apm => {
       if (apm.forceAutoRenewal && !autoRenew) {

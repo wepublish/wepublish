@@ -110,6 +110,8 @@ export const GraphQLMemberPlan = new GraphQLObjectType<MemberPlan, Context>({
     tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
     active: {type: new GraphQLNonNull(GraphQLBoolean)},
     amountPerMonthMin: {type: new GraphQLNonNull(GraphQLInt)},
+    maxCount: {type: GraphQLInt},
+    extendable: {type: new GraphQLNonNull(GraphQLBoolean)},
     availablePaymentMethods: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLAvailablePaymentMethod)))
     }
@@ -132,6 +134,8 @@ export const GraphQLPublicMemberPlan = new GraphQLObjectType<MemberPlan, Context
     description: {type: GraphQLRichText},
     tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
     amountPerMonthMin: {type: new GraphQLNonNull(GraphQLInt)},
+    maxCount: {type: GraphQLInt},
+    extendable: {type: new GraphQLNonNull(GraphQLBoolean)},
     availablePaymentMethods: {
       type: new GraphQLNonNull(
         new GraphQLList(new GraphQLNonNull(GraphQLPublicAvailablePaymentMethod))
@@ -198,6 +202,8 @@ export const GraphQLMemberPlanInput = new GraphQLInputObjectType({
     tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
     active: {type: new GraphQLNonNull(GraphQLBoolean)},
     amountPerMonthMin: {type: new GraphQLNonNull(GraphQLInt)},
+    extendable: {type: new GraphQLNonNull(GraphQLBoolean)},
+    maxCount: {type: GraphQLInt},
     availablePaymentMethods: {
       type: new GraphQLNonNull(
         new GraphQLList(new GraphQLNonNull(GraphQLAvailablePaymentMethodInput))

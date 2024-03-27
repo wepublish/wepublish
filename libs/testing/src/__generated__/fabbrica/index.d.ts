@@ -1080,6 +1080,8 @@ type MemberPlanFactoryDefineInput = {
     description?: Prisma.JsonNullValueInput | Prisma.InputJsonValue;
     active?: boolean;
     amountPerMonthMin?: number;
+    extendable?: boolean;
+    maxCount?: number | null;
     availablePaymentMethods?: Prisma.AvailablePaymentMethodCreateNestedManyWithoutMemberPlanInput;
     image?: MemberPlanimageFactory | Prisma.ImageCreateNestedOneWithoutMemberPlanInput;
     Subscription?: Prisma.SubscriptionCreateNestedManyWithoutMemberPlanInput;
@@ -1674,6 +1676,7 @@ type SubscriptionFactoryDefineInput = {
     autoRenew?: boolean;
     startsAt?: Date;
     paidUntil?: Date | null;
+    extendable?: boolean;
     periods?: Prisma.SubscriptionPeriodCreateNestedManyWithoutSubscriptionInput;
     properties?: Prisma.MetadataPropertyCreateNestedManyWithoutSubscriptionInput;
     deactivation?: SubscriptiondeactivationFactory | Prisma.SubscriptionDeactivationCreateNestedOneWithoutSubscriptionInput;

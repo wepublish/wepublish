@@ -12,6 +12,11 @@ type Store = {
   [key: string]: number
 }
 
+export interface TestingChallengeAnswer {
+  challengeID: string
+  challengeSolution: string
+}
+
 export class AlgebraicCaptchaChallenge implements ChallengeProvider {
   // Hash list to prevent replay attacks
   private validHashes: Store
@@ -22,6 +27,10 @@ export class AlgebraicCaptchaChallenge implements ChallengeProvider {
   // Defines how long a challenge is valid
   readonly challengeValidTime: number
   private captchaLib: AlgebraicCaptcha
+
+  // FOR TESTING PURPOSES ONLY
+  // saves one pair of full text challengeID and answer
+  private testingChallengeAnswer: TestingChallengeAnswer
 
   constructor(
     challengeSecret: string,
@@ -51,14 +60,23 @@ export class AlgebraicCaptchaChallenge implements ChallengeProvider {
     }
   }
 
-  async generateChallenge(): Promise<Challenge> {
+  async generateChallenge(testing = false): Promise<Challenge> {
     const time = new Date().getTime()
     const {image, answer} = await this.captchaLib.generateCaptcha()
     const challengeSecret = this.composeHashSecret(answer, time, this.counter)
     const hash = this.createHash(challengeSecret)
     this.validHashes[hash] = time
+    const challengeID = Buffer.from(`${time};${hash};${this.counter++}`, 'utf-8').toString('base64')
+
+    // for TESTING PURPOSES ONLY. Save one answer in clear text
+    if (testing) {
+      this.testingChallengeAnswer = {
+        challengeID,
+        challengeSolution: answer.toString()
+      }
+    }
     return {
-      challengeID: Buffer.from(`${time};${hash};${this.counter++}`, 'utf-8').toString('base64'),
+      challengeID,
       challenge: image,
       validUntil: new Date(time + this.challengeValidTime)
     }
@@ -104,5 +122,13 @@ export class AlgebraicCaptchaChallenge implements ChallengeProvider {
       message: 'Challenge is not solved correctly!',
       valid: false
     }
+  }
+
+  /**
+   * FOR TESTING PURPOSES ONLY
+   * Getting one pair of id and answer in clear text.
+   */
+  public getTestingChallengeAnswer(): TestingChallengeAnswer {
+    return this.testingChallengeAnswer
   }
 }

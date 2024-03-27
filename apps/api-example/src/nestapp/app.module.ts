@@ -28,7 +28,8 @@ import {
   StripePaymentProvider,
   BexioPaymentProvider,
   PayrexxFactory,
-  HealthModule
+  HealthModule,
+  NeverChargePaymentProvider
 } from '@wepublish/api'
 import {ApiModule, PrismaModule} from '@wepublish/nest-modules'
 import bodyParser from 'body-parser'
@@ -211,6 +212,14 @@ import {PrismaClient} from '@prisma/client'
             }
           }
         }
+        paymentProviders.push(
+          new NeverChargePaymentProvider({
+            id: 'no-charge',
+            name: 'No Charge Payment',
+            offSessionPayments: true
+          })
+        )
+
         return {paymentProviders}
       },
       inject: [ConfigService, PrismaClient],

@@ -23,6 +23,7 @@ fragment FullSubscription on Subscription {
   deactivation {
     ...Deactivation
   }
+  extendable
 }
 
 fragment Deactivation on SubscriptionDeactivation {

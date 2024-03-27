@@ -21,6 +21,8 @@ fragment FullMemberPlan on MemberPlan {
     forceAutoRenewal
   }
   ...MemberPlanRef
+  extendable
+  maxCount
 }
 
 query MemberPlanList($filter: String, $cursor: ID, $take: Int, $skip: Int) {
