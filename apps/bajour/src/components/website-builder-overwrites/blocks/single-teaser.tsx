@@ -74,7 +74,7 @@ export const SingleTeaser = styled(TeaserOverwrite)`
     }
   }
 
-  ${({theme}) => theme.breakpoints.up('xl')} {
+  /* ${({theme}) => theme.breakpoints.up('xl')} {
     ${TeaserContentStyled} {
       grid-column: 5/8;
     }
@@ -82,5 +82,5 @@ export const SingleTeaser = styled(TeaserOverwrite)`
     ${TeaserImgStyled} {
       grid-column: 3/12;
     }
-  }
+  } */
 `
