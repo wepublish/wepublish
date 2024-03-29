@@ -3,14 +3,14 @@
 exports[`Break Block should render Default 1`] = `
 <DocumentFragment>
   <div
-    class="css-1k98guj-BreakBlockWrapper e11xbw3q1"
+    class="css-1tc4w2u-BreakBlockWrapper e11xbw3q1"
   >
     <div
       class="css-ywr472-BreakBlockSegment e11xbw3q0"
     >
       <img
         alt="DSC07717"
-        class="css-gm6a6z-ImageWrapper-BreakBlock e1shv2yg0"
+        class="css-y325pq-ImageWrapper-BreakBlock e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -23,13 +23,13 @@ https://unsplash.it/200/100 200w"
       class="css-ywr472-BreakBlockSegment e11xbw3q0"
     >
       <div
-        class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h4 css-ilmum9-MuiTypography-root-BreakBlock"
         role="heading"
       >
         Break block test
       </div>
       <div
-        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+        class="css-16p911l-RichTextBlockWrapper-BreakBlock eu4zjs90"
       >
         <div
           data-gramm="false"
@@ -159,14 +159,14 @@ https://unsplash.it/200/100 200w"
 exports[`Break Block should render ImageRight 1`] = `
 <DocumentFragment>
   <div
-    class="css-1k98guj-BreakBlockWrapper e11xbw3q1"
+    class="css-1tc4w2u-BreakBlockWrapper e11xbw3q1"
   >
     <div
       class="css-17wr6dm-BreakBlockSegment e11xbw3q0"
     >
       <img
         alt="DSC07717"
-        class="css-gm6a6z-ImageWrapper-BreakBlock e1shv2yg0"
+        class="css-y325pq-ImageWrapper-BreakBlock e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -179,13 +179,13 @@ https://unsplash.it/200/100 200w"
       class="css-ywr472-BreakBlockSegment e11xbw3q0"
     >
       <div
-        class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h4 css-ilmum9-MuiTypography-root-BreakBlock"
         role="heading"
       >
         Break block test
       </div>
       <div
-        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+        class="css-16p911l-RichTextBlockWrapper-BreakBlock eu4zjs90"
       >
         <div
           data-gramm="false"
@@ -315,14 +315,14 @@ https://unsplash.it/200/100 200w"
 exports[`Break Block should render WithButton 1`] = `
 <DocumentFragment>
   <div
-    class="css-1k98guj-BreakBlockWrapper e11xbw3q1"
+    class="css-1tc4w2u-BreakBlockWrapper e11xbw3q1"
   >
     <div
       class="css-ywr472-BreakBlockSegment e11xbw3q0"
     >
       <img
         alt="DSC07717"
-        class="css-gm6a6z-ImageWrapper-BreakBlock e1shv2yg0"
+        class="css-y325pq-ImageWrapper-BreakBlock e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -335,13 +335,13 @@ https://unsplash.it/200/100 200w"
       class="css-ywr472-BreakBlockSegment e11xbw3q0"
     >
       <div
-        class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h4 css-ilmum9-MuiTypography-root-BreakBlock"
         role="heading"
       >
         Break block test
       </div>
       <div
-        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+        class="css-16p911l-RichTextBlockWrapper-BreakBlock eu4zjs90"
       >
         <div
           data-gramm="false"
@@ -464,7 +464,7 @@ https://unsplash.it/200/100 200w"
         </div>
       </div>
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium css-hrj0e2-MuiTypography-root-MuiLink-root-MuiButtonBase-root-MuiButton-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-lj5q6d-MuiTypography-root-MuiLink-root-MuiButtonBase-root-MuiButton-root-BreakBlock"
         href="Link URL"
         tabindex="0"
       >
@@ -481,14 +481,14 @@ https://unsplash.it/200/100 200w"
 exports[`Break Block should render WithClassName 1`] = `
 <DocumentFragment>
   <div
-    class="extra-classname css-1k98guj-BreakBlockWrapper e11xbw3q1"
+    class="extra-classname css-1tc4w2u-BreakBlockWrapper e11xbw3q1"
   >
     <div
       class="css-ywr472-BreakBlockSegment e11xbw3q0"
     >
       <img
         alt="DSC07717"
-        class="css-gm6a6z-ImageWrapper-BreakBlock e1shv2yg0"
+        class="css-y325pq-ImageWrapper-BreakBlock e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -501,13 +501,13 @@ https://unsplash.it/200/100 200w"
       class="css-ywr472-BreakBlockSegment e11xbw3q0"
     >
       <div
-        class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h4 css-ilmum9-MuiTypography-root-BreakBlock"
         role="heading"
       >
         Break block test
       </div>
       <div
-        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+        class="css-16p911l-RichTextBlockWrapper-BreakBlock eu4zjs90"
       >
         <div
           data-gramm="false"
@@ -637,14 +637,14 @@ https://unsplash.it/200/100 200w"
 exports[`Break Block should render WithEmotion 1`] = `
 <DocumentFragment>
   <div
-    class="css-1k98guj-BreakBlockWrapper e11xbw3q1"
+    class="css-1tc4w2u-BreakBlockWrapper e11xbw3q1"
   >
     <div
       class="css-ywr472-BreakBlockSegment e11xbw3q0"
     >
       <img
         alt="DSC07717"
-        class="css-gm6a6z-ImageWrapper-BreakBlock e1shv2yg0"
+        class="css-y325pq-ImageWrapper-BreakBlock e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -657,13 +657,13 @@ https://unsplash.it/200/100 200w"
       class="css-ywr472-BreakBlockSegment e11xbw3q0"
     >
       <div
-        class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h4 css-ilmum9-MuiTypography-root-BreakBlock"
         role="heading"
       >
         Break block test
       </div>
       <div
-        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+        class="css-16p911l-RichTextBlockWrapper-BreakBlock eu4zjs90"
       >
         <div
           data-gramm="false"
@@ -793,13 +793,13 @@ https://unsplash.it/200/100 200w"
 exports[`Break Block should render WithoutImage 1`] = `
 <DocumentFragment>
   <div
-    class="css-1k98guj-BreakBlockWrapper e11xbw3q1"
+    class="css-1tc4w2u-BreakBlockWrapper e11xbw3q1"
   >
     <div
       class="css-ywr472-BreakBlockSegment e11xbw3q0"
     >
       <div
-        class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h2 css-1w8svnf-MuiTypography-root-BreakBlock"
         role="heading"
       >
         Break block test
@@ -809,7 +809,7 @@ exports[`Break Block should render WithoutImage 1`] = `
       class="css-ywr472-BreakBlockSegment e11xbw3q0"
     >
       <div
-        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+        class="css-16p911l-RichTextBlockWrapper-BreakBlock eu4zjs90"
       >
         <div
           data-gramm="false"
@@ -939,13 +939,13 @@ exports[`Break Block should render WithoutImage 1`] = `
 exports[`Break Block should render WithoutImageRight 1`] = `
 <DocumentFragment>
   <div
-    class="css-1k98guj-BreakBlockWrapper e11xbw3q1"
+    class="css-1tc4w2u-BreakBlockWrapper e11xbw3q1"
   >
     <div
       class="css-17wr6dm-BreakBlockSegment e11xbw3q0"
     >
       <div
-        class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h2 css-1w8svnf-MuiTypography-root-BreakBlock"
         role="heading"
       >
         Break block test
@@ -955,7 +955,7 @@ exports[`Break Block should render WithoutImageRight 1`] = `
       class="css-ywr472-BreakBlockSegment e11xbw3q0"
     >
       <div
-        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+        class="css-16p911l-RichTextBlockWrapper-BreakBlock eu4zjs90"
       >
         <div
           data-gramm="false"
