@@ -22,7 +22,7 @@ export class NeverChargePaymentProvider extends BasePaymentProvider {
   async createIntent(props: CreatePaymentIntentProps): Promise<Intent> {
     return {
       intentID: `no_charge_${new Date().getTime()}`,
-      intentSecret: '',
+      intentSecret: 'no_charge',
       intentData: '',
       paidAt: new Date(),
       state: PaymentState.paid
