@@ -27,6 +27,7 @@ elif [[ $(cat .CHANGELOG-next.md | grep "#### :" | grep -v "Bux Fix") ]]; then
 else
   INCREMENT=patch
 fi
+rm .CHANGELOG-next.md
 
 NEXT_STABLE_VERSION=$(semver -i ${INCREMENT} ${LAST_STABLE_TAG})
 NEXT_STABLE_VERSION_BRANCH=r/release-${NEXT_STABLE_VERSION}
@@ -49,13 +50,16 @@ else
   NEXT_INCREMENT="prerelease"
 fi
 
-echo "Creating new ${NEXT_INCREMENT} version"
-lerna version $NEXT_INCREMENT --no-push
+NEXT_VERSION=$(semver -i ${NEXT_INCREMENT} ${LAST_TAG})
+echo "Creating new ${NEXT_INCREMENT} version ${NEXT_VERSION}"
+lerna version $NEXT_VERSION
 
-echo "Adjusting related PR"
+npx lerna-changelog --from=${LAST_STABLE_TAG} > .CHANGELOG-next.md
 if [[ $(gh pr view) ]]; then
-  gh pr create --title "Release ${NEXT_STABLE_VERSION}" --body-file .CHANGELOG-next.md
-else
+  echo 'Editing PR body'
   gh pr edit --body-file .CHANGELOG-next.md
+else
+  echo 'Creating PR'
+    gh pr create --title "Release ${NEXT_STABLE_VERSION}" --body-file .CHANGELOG-next.md
 fi
 rm .CHANGELOG-next.md
