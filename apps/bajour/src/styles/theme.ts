@@ -7,10 +7,7 @@ const {
 
 const theme = createTheme(WepTheme, {
   typography: {
-    fontFamily: 'Roboto, sans-serif',
-    body1: {
-      lineHeight: 1.25
-    }
+    fontFamily: 'Roboto, sans-serif'
   },
   breakpoints: {
     values: {

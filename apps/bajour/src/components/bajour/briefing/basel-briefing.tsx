@@ -119,6 +119,7 @@ export const BaselBriefingStyled = styled('div')`
 
 const TeaserBackground = styled(Image)`
   width: 100%;
+  max-height: initial;
   object-fit: cover;
   position: absolute;
   z-index: -1;

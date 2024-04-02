@@ -3,6 +3,7 @@ import {BuilderRenderElementProps} from '@wepublish/website/builder'
 import {Link} from '@mui/material'
 import {BlockFormat, InlineFormat} from '@wepublish/richtext'
 import {css} from '@emotion/react'
+import {Fragment} from 'react'
 
 const tableStyles = css`
   border-collapse: collapse;
@@ -11,6 +12,12 @@ const tableStyles = css`
 const tableCellStyles = (borderColor?: string) => css`
   border-collapse: collapse;
   border: 1px solid ${borderColor ?? 'transparent'};
+`
+
+const paragraphStyles = css`
+  &:last-child {
+    margin-bottom: 0;
+  }
 `
 
 export function RenderElement({
@@ -25,9 +32,13 @@ export function RenderElement({
   switch (element.type) {
     case BlockFormat.H1:
       return (
-        <H3 component="h2" {...attributes} gutterBottom>
-          {children}
-        </H3>
+        <div>
+          <H3 component="h2" {...attributes} gutterBottom>
+            {children}
+          </H3>
+
+          <hr />
+        </div>
       )
 
     case BlockFormat.H2:
@@ -82,7 +93,25 @@ export function RenderElement({
         </Link>
       )
 
+    case BlockFormat.Paragraph: {
+      if (!element.children[0].text) {
+        console.log(element)
+
+        return <Fragment />
+      }
+
+      return (
+        <Paragraph {...attributes} css={paragraphStyles}>
+          {children}
+        </Paragraph>
+      )
+    }
+
     default:
-      return <Paragraph {...attributes}>{children}</Paragraph>
+      return (
+        <Paragraph {...attributes} css={paragraphStyles}>
+          {children}
+        </Paragraph>
+      )
   }
 }

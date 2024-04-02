@@ -1,4 +1,5 @@
 import {styled} from '@mui/material'
+import {ContentWidthProvider} from '@wepublish/website'
 import {ApiV1, PageContainer} from '@wepublish/website'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
@@ -42,7 +43,11 @@ const Homepage = styled(PageContainer)`
 `
 
 export default function Index() {
-  return <Homepage slug={'home'} />
+  return (
+    <ContentWidthProvider fullWidth>
+      <Homepage slug={'home'} />
+    </ContentWidthProvider>
+  )
 }
 
 export const getStaticProps: GetStaticProps = async () => {

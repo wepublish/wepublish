@@ -382,6 +382,7 @@ const navPaperLinkStyling = (theme: Theme) => css`
 
 export const NavPaperCategoryLinks = styled('div')`
   display: grid;
+  grid-auto-rows: max-content;
   font-weight: ${({theme}) => theme.typography.fontWeightMedium};
   font-size: ${({theme}) => theme.typography.h6.fontSize};
 `
@@ -416,6 +417,7 @@ export const NavPaperActions = styled('div')`
   grid-auto-flow: column;
   grid-auto-columns: max-content;
   gap: ${({theme}) => theme.spacing(2)};
+  margin-top: ${({theme}) => theme.spacing(5)};
 `
 
 const NavPaper = ({

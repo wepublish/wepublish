@@ -1,4 +1,3 @@
-import {ArticleWrapper} from '@wepublish/article/website'
 import {usePeerArticleQuery, usePeerQuery} from '@wepublish/website/api'
 import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
@@ -31,7 +30,7 @@ export function PeerArticleContainer({
   })
 
   return (
-    <ArticleWrapper>
+    <>
       <PeerInformation
         data={peer.data}
         loading={peer.loading}
@@ -52,6 +51,6 @@ export function PeerArticleContainer({
         error={error}
         className={className}
       />
-    </ArticleWrapper>
+    </>
   )
 }

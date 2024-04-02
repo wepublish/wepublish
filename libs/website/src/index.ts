@@ -14,6 +14,7 @@ export * from '@wepublish/feed/website'
 export * from '@wepublish/peering/website'
 export * from '@wepublish/user/website'
 export * from '@wepublish/membership/website'
+export * from '@wepublish/content/website'
 
 export * from '@wepublish/website/builder'
 export * as ApiV1 from '@wepublish/website/api'

@@ -1,10 +1,14 @@
 import {getSessionTokenProps, ssrAuthLink} from '@wepublish/utils/website'
-import {ApiV1, SubscribeContainer} from '@wepublish/website'
+import {ApiV1, ContentWrapper, SubscribeContainer} from '@wepublish/website'
 import {NextPageContext} from 'next'
 import getConfig from 'next/config'
 
 export default function Mitmachen() {
-  return <SubscribeContainer failureURL="/" successURL="/" />
+  return (
+    <ContentWrapper>
+      <SubscribeContainer failureURL="/" successURL="/" />
+    </ContentWrapper>
+  )
 }
 
 Mitmachen.getInitialProps = async (ctx: NextPageContext) => {

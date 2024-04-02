@@ -11,7 +11,7 @@ export const AuthorLinksWrapper = styled('aside')`
 `
 
 export const AuthorLinkIcon = ({title}: {title: string}) => {
-  if (title.toLowerCase() === 'twitter') {
+  if (['twitter', 'x'].includes(title.toLowerCase())) {
     return <FaTwitter size={22} />
   }
 

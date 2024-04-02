@@ -1,9 +1,7 @@
-import {ApiV1, PageContainer} from '@wepublish/website'
+import {ApiV1, ContentWrapper, PageContainer} from '@wepublish/website'
 import {GetStaticPaths, GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
-
-import {Container} from '../src/components/layout/container'
 
 export default function PageBySlug() {
   const {
@@ -11,9 +9,9 @@ export default function PageBySlug() {
   } = useRouter()
 
   return (
-    <Container>
+    <ContentWrapper>
       <PageContainer slug={slug as string} />
-    </Container>
+    </ContentWrapper>
   )
 }
 
