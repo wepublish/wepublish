@@ -47,6 +47,9 @@ export {
       }),
       client.query({
         query: ApiV1.SubscriptionsDocument
+      }),
+      client.query({
+        query: ApiV1.NavigationListDocument
       })
     ])
   }

@@ -1,7 +1,7 @@
 import {styled} from '@mui/material'
 import {BuilderAuthorLinksProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {FaInstagram, FaLinkedin, FaTwitter} from 'react-icons/fa6'
-import {MdContactMail, MdFacebook, MdMail} from 'react-icons/md'
+import {MdContactMail, MdFacebook, MdMail, MdWeb} from 'react-icons/md'
 
 export const AuthorLinksWrapper = styled('aside')`
   display: grid;
@@ -29,6 +29,10 @@ export const AuthorLinkIcon = ({title}: {title: string}) => {
 
   if (['mail', 'e-mail', 'email'].includes(title.toLowerCase())) {
     return <MdMail size={22} />
+  }
+
+  if (['website', 'webseite'].includes(title.toLowerCase())) {
+    return <MdWeb size={22} />
   }
 
   if (title.toLowerCase() === 'presseausweis') {

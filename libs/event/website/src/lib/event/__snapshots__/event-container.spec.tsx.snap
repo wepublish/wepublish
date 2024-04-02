@@ -3,7 +3,7 @@
 exports[`Event Container should render Default 1`] = `
 <DocumentFragment>
   <article
-    class="css-uh6yvp-EventWrapper ec2zadl3"
+    class="ec2zadl3 css-1ds6vfm-ContentWrapperStyled-EventWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -50,18 +50,22 @@ exports[`Event Container should render Default 1`] = `
     >
       {"@context":"http://schema.org","@type":"Event","startDate":"2023-02-24T09:00:00Z","endDate":"2023-02-25T07:30:00Z","duration":"P0Y0M0DT22H30M0S","keywords":"Concert","eventStatus":"SCHEDULED","location":"Basel","image":"https://unsplash.it/500/300","name":"Cool concert","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
     </script>
-    <img
-      alt="DSC07717"
-      class="css-f7a9ma-ImageWrapper-Event e1shv2yg0"
-      loading="lazy"
-      srcset="https://unsplash.it/800/400 800w,
+    <figure
+      class="css-1l259nm-ImageBlockWrapper-Event eekavcu1"
+    >
+      <img
+        alt="DSC07717"
+        class="css-m3orio-ImageWrapper-ImageBlock e1shv2yg0"
+        loading="lazy"
+        srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
-      title=""
-    />
+        title=""
+      />
+    </figure>
     <div
-      class="css-1wax86k-EventMeta ec2zadl2"
+      class="css-1m698ok-EventMeta ec2zadl2"
     >
       <div
         class="css-10k8kcv-MetaWrapper ec2zadl1"
@@ -117,10 +121,10 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-6jfyyt-TitleBlockWrapper ek0hk6a0"
+      class="css-cs9jq0-TitleBlockWrapper ek0hk6a0"
     >
       <h1
-        class="MuiTypography-root MuiTypography-h3 css-1108gw4-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
       >
         Cool concert
       </h1>
@@ -135,7 +139,7 @@ https://unsplash.it/200/100 200w"
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
           data-slate-node="element"
         >
           <span
@@ -219,7 +223,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
           data-slate-node="element"
         >
           <span
@@ -303,7 +307,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
           data-slate-node="element"
         >
           <span
@@ -387,7 +391,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
           data-slate-node="element"
         >
           <span
@@ -479,7 +483,7 @@ https://unsplash.it/200/100 200w"
 exports[`Event Container should render WithClassName 1`] = `
 <DocumentFragment>
   <article
-    class="extra-classname css-uh6yvp-EventWrapper ec2zadl3"
+    class="extra-classname ec2zadl3 css-1ds6vfm-ContentWrapperStyled-EventWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -526,18 +530,22 @@ exports[`Event Container should render WithClassName 1`] = `
     >
       {"@context":"http://schema.org","@type":"Event","startDate":"2023-02-24T09:00:00Z","endDate":"2023-02-25T07:30:00Z","duration":"P0Y0M0DT22H30M0S","keywords":"Concert","eventStatus":"SCHEDULED","location":"Basel","image":"https://unsplash.it/500/300","name":"Cool concert","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
     </script>
-    <img
-      alt="DSC07717"
-      class="css-f7a9ma-ImageWrapper-Event e1shv2yg0"
-      loading="lazy"
-      srcset="https://unsplash.it/800/400 800w,
+    <figure
+      class="css-1l259nm-ImageBlockWrapper-Event eekavcu1"
+    >
+      <img
+        alt="DSC07717"
+        class="css-m3orio-ImageWrapper-ImageBlock e1shv2yg0"
+        loading="lazy"
+        srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
-      title=""
-    />
+        title=""
+      />
+    </figure>
     <div
-      class="css-1wax86k-EventMeta ec2zadl2"
+      class="css-1m698ok-EventMeta ec2zadl2"
     >
       <div
         class="css-10k8kcv-MetaWrapper ec2zadl1"
@@ -593,10 +601,10 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-6jfyyt-TitleBlockWrapper ek0hk6a0"
+      class="css-cs9jq0-TitleBlockWrapper ek0hk6a0"
     >
       <h1
-        class="MuiTypography-root MuiTypography-h3 css-1108gw4-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
       >
         Cool concert
       </h1>
@@ -611,7 +619,7 @@ https://unsplash.it/200/100 200w"
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
           data-slate-node="element"
         >
           <span
@@ -695,7 +703,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
           data-slate-node="element"
         >
           <span
@@ -779,7 +787,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
           data-slate-node="element"
         >
           <span
@@ -863,7 +871,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
           data-slate-node="element"
         >
           <span
@@ -955,7 +963,7 @@ https://unsplash.it/200/100 200w"
 exports[`Event Container should render WithEmotion 1`] = `
 <DocumentFragment>
   <article
-    class="css-uh6yvp-EventWrapper ec2zadl3"
+    class="ec2zadl3 css-1ds6vfm-ContentWrapperStyled-EventWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -1002,18 +1010,22 @@ exports[`Event Container should render WithEmotion 1`] = `
     >
       {"@context":"http://schema.org","@type":"Event","startDate":"2023-02-24T09:00:00Z","endDate":"2023-02-25T07:30:00Z","duration":"P0Y0M0DT22H30M0S","keywords":"Concert","eventStatus":"SCHEDULED","location":"Basel","image":"https://unsplash.it/500/300","name":"Cool concert","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
     </script>
-    <img
-      alt="DSC07717"
-      class="css-f7a9ma-ImageWrapper-Event e1shv2yg0"
-      loading="lazy"
-      srcset="https://unsplash.it/800/400 800w,
+    <figure
+      class="css-1l259nm-ImageBlockWrapper-Event eekavcu1"
+    >
+      <img
+        alt="DSC07717"
+        class="css-m3orio-ImageWrapper-ImageBlock e1shv2yg0"
+        loading="lazy"
+        srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
-      title=""
-    />
+        title=""
+      />
+    </figure>
     <div
-      class="css-1wax86k-EventMeta ec2zadl2"
+      class="css-1m698ok-EventMeta ec2zadl2"
     >
       <div
         class="css-10k8kcv-MetaWrapper ec2zadl1"
@@ -1069,10 +1081,10 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-6jfyyt-TitleBlockWrapper ek0hk6a0"
+      class="css-cs9jq0-TitleBlockWrapper ek0hk6a0"
     >
       <h1
-        class="MuiTypography-root MuiTypography-h3 css-1108gw4-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
       >
         Cool concert
       </h1>
@@ -1087,7 +1099,7 @@ https://unsplash.it/200/100 200w"
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
           data-slate-node="element"
         >
           <span
@@ -1171,7 +1183,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
           data-slate-node="element"
         >
           <span
@@ -1255,7 +1267,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
           data-slate-node="element"
         >
           <span
@@ -1339,7 +1351,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
           data-slate-node="element"
         >
           <span

@@ -10,7 +10,6 @@ import {NextPageContext} from 'next'
 import getConfig from 'next/config'
 
 const ProfileWrapper = styled(ContentWrapper)`
-  display: grid;
   gap: ${({theme}) => theme.spacing(2)};
 `
 

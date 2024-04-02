@@ -1,4 +1,4 @@
-import {ApiV1, ContentWrapper, PageContainer} from '@wepublish/website'
+import {ApiV1, PageContainer} from '@wepublish/website'
 import {GetStaticPaths, GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
@@ -8,11 +8,7 @@ export default function PageBySlug() {
     query: {slug}
   } = useRouter()
 
-  return (
-    <ContentWrapper>
-      <PageContainer slug={slug as string} />
-    </ContentWrapper>
-  )
+  return <PageContainer slug={slug as string} />
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {

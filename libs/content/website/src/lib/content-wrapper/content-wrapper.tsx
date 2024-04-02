@@ -40,15 +40,15 @@ export const ContentWrapperStyled = styled('article')<{fullWidth?: boolean}>`
           grid-column: 4/10;
         }
 
+        & > :is(${ImageBlockWrapper}, ${BreakBlockWrapper},) {
+          grid-column: 2/12;
+        }
+
         &
           > :is(
-            ${ImageBlockWrapper},
-              ${BreakBlockWrapper},
-              ${TeaserGridFlexBlockWrapper},
-              ${TeaserGridBlockWrapper},
-              ${TeaserListBlockWrapper}
+            ${TeaserGridFlexBlockWrapper}, ${TeaserGridBlockWrapper}, ${TeaserListBlockWrapper}
           ) {
-          grid-column: 2/12;
+          grid-column: -1/1;
         }
 
         & > ${QuoteBlockWrapper} {

@@ -1,4 +1,3 @@
-import {capitalize, Chip, styled} from '@mui/material'
 import {
   ApiV1,
   ArticleContainer,

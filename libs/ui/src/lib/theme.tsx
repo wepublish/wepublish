@@ -1,4 +1,4 @@
-import {CSSObject, createTheme} from '@mui/material'
+import {createTheme, CSSObject} from '@mui/material'
 
 const {
   palette: {augmentColor}

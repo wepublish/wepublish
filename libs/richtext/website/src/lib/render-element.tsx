@@ -3,7 +3,6 @@ import {BuilderRenderElementProps} from '@wepublish/website/builder'
 import {Link} from '@mui/material'
 import {BlockFormat, InlineFormat} from '@wepublish/richtext'
 import {css} from '@emotion/react'
-import {Fragment} from 'react'
 
 const tableStyles = css`
   border-collapse: collapse;

@@ -27,13 +27,15 @@ export function Article({className, data, children, loading, error}: BuilderArti
     <ArticleWrapper className={className}>
       {data?.article && <ArticleSEO article={data.article as ArticleType} />}
 
-      <Blocks blocks={(data?.article?.blocks as Block[]) ?? []} />
+      <Blocks blocks={(data?.article?.blocks as Block[]) ?? []} type="Article" />
 
-      <ArticleInfoWrapper>
-        {data?.article?.authors.map(author => (
-          <AuthorChip key={author.id} author={author} publishedAt={data.article!.publishedAt} />
-        ))}
-      </ArticleInfoWrapper>
+      {!!data?.article?.authors.length && (
+        <ArticleInfoWrapper>
+          {data?.article?.authors.map(author => (
+            <AuthorChip key={author.id} author={author} publishedAt={data.article!.publishedAt} />
+          ))}
+        </ArticleInfoWrapper>
+      )}
 
       {children}
     </ArticleWrapper>

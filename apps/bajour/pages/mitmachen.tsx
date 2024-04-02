@@ -1,13 +1,15 @@
 import {getSessionTokenProps, ssrAuthLink} from '@wepublish/utils/website'
-import {ApiV1, ContentWrapper, SubscribeContainer} from '@wepublish/website'
+import {ApiV1, SubscribeContainer} from '@wepublish/website'
 import {NextPageContext} from 'next'
 import getConfig from 'next/config'
 
+import {Container} from '../src/components/layout/container'
+
 export default function Mitmachen() {
   return (
-    <ContentWrapper>
-      <SubscribeContainer failureURL="/" successURL="/" />
-    </ContentWrapper>
+    <Container>
+      <SubscribeContainer failureURL="/" successURL="/" fields={[]} />
+    </Container>
   )
 }
 
@@ -30,7 +32,7 @@ Mitmachen.getInitialProps = async (ctx: NextPageContext) => {
       client.query({
         query: ApiV1.MemberPlanListDocument,
         variables: {
-          tage: 50
+          take: 50
         }
       })
     ])
