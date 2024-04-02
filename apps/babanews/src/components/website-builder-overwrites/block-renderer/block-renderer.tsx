@@ -1,5 +1,11 @@
 import {useTheme} from '@mui/material'
-import {BlockRenderer, BuilderBlockRendererProps, useWebsiteBuilder} from '@wepublish/website'
+import {
+  BlockRenderer,
+  BreakBlock,
+  BuilderBlockRendererProps,
+  isBreakBlock,
+  useWebsiteBuilder
+} from '@wepublish/website'
 import {cond} from 'ramda'
 import {useMemo} from 'react'
 
