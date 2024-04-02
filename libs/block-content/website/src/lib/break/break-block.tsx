@@ -10,9 +10,10 @@ export const BreakBlockWrapper = styled('div')<{reverse?: boolean}>`
   gap: ${({theme}) => theme.spacing(4)};
   justify-content: center;
   align-items: center;
-  padding: ${({theme}) => theme.spacing(10)} 0;
+  padding: ${({theme}) => `${theme.spacing(6)} ${theme.spacing(3)}`};
 
   ${({theme}) => theme.breakpoints.up('md')} {
+    padding: ${({theme}) => theme.spacing(10)} 0;
     grid-template-columns: 1fr 1fr;
     gap: ${({theme}) => theme.spacing(10)};
   }
@@ -35,32 +36,35 @@ export const BreakBlockSegment = styled('div')<{reverse?: boolean}>`
 const imageStyles = (theme: Theme) => css`
   aspect-ratio: 1;
   object-fit: cover;
-  width: 80%;
+  width: 100%;
   max-width: ${theme.spacing(60)};
   margin: 0 auto;
 
-  /* ${theme.breakpoints.down('md')} { */
-  /* } */
+  ${theme.breakpoints.up('md')} {
+    width: 80%;
+  }
 `
 
 const headingStylesNoImage = (theme: Theme) => css`
-  font-size: 84px;
+  font-size: 40px;
   font-weight: 600;
-  font-style: italic;
   text-transform: uppercase;
-  /* ${theme.breakpoints.down('md')} {
-    aspect-ratio: 1;
-  } */
+
+  ${theme.breakpoints.up('md')} {
+    font-style: italic;
+    font-size: 84px;
+  }
 `
 
 const headingStylesWithImage = (theme: Theme) => css`
-  font-size: 45px;
+  font-size: 40px;
   font-weight: 600;
-  font-style: italic;
   text-transform: uppercase;
-  /* ${theme.breakpoints.down('md')} {
-    aspect-ratio: 1;
-  } */
+
+  ${theme.breakpoints.up('md')} {
+    font-style: italic;
+    font-size: 45px;
+  }
 `
 
 const linkStyles = (theme: Theme) => css`
@@ -80,7 +84,13 @@ const richTextStyles = (theme: Theme) => css`
   max-width: ${theme.spacing(55)};
 
   p {
-    font-size: 22px;
+    font-size: 16px;
+  }
+
+  ${theme.breakpoints.up('md')} {
+    p {
+      font-size: 22px;
+    }
   }
 `
 
