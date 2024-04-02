@@ -5,7 +5,6 @@ import {useMemo} from 'react'
 import {IoLogoInstagram} from 'react-icons/io'
 
 const Banner = styled('a')`
-  aspect-ratio: 2.7/1;
   width: 100%;
   background-color: ${({theme}) => theme.palette.common.black};
   display: grid;
@@ -13,13 +12,14 @@ const Banner = styled('a')`
   padding: ${({theme}) => theme.spacing(4)};
   text-decoration: none;
 
-  ${({theme}) => theme.breakpoints.up('md')} {
-    padding: ${({theme}) => `${theme.spacing(8)} 0`};
+  ${({theme}) => theme.breakpoints.up('sm')} {
+    padding: ${({theme}) => `${theme.spacing(8)} ${theme.spacing(4)}`};
     grid-template-columns: 1fr 1fr;
     column-gap: ${({theme}) => theme.spacing(4)};
   }
 
   ${({theme}) => theme.breakpoints.up('lg')} {
+    aspect-ratio: 2.7/1;
     column-gap: ${({theme}) => theme.spacing(8)};
   }
 `

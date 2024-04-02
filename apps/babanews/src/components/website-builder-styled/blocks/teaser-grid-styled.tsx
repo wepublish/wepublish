@@ -11,13 +11,6 @@ export const BabanewsTeaserGrid = styled(TeaserGridBlock)`
       padding-right: calc(100% / 28);
       align-items: center;
 
-      ${theme.breakpoints.up('sm')} {
-        grid-template-columns: repeat(12, 1fr);
-        padding-left: calc(100% / 48);
-        padding-right: calc(100% / 48);
-        row-gap: ${theme.spacing(3)};
-      }
-
       ${theme.breakpoints.up('md')} {
         row-gap: ${theme.spacing(6)};
         padding-left: calc(100% / 20);
