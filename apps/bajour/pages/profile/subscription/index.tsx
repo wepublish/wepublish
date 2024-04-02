@@ -2,7 +2,6 @@ import {css, styled} from '@mui/material'
 import {getSessionTokenProps, ssrAuthLink, withAuthGuard} from '@wepublish/utils/website'
 import {
   ApiV1,
-  ContentWrapper,
   InvoiceListContainer,
   SubscriptionListContainer,
   useWebsiteBuilder
@@ -10,7 +9,9 @@ import {
 import {NextPageContext} from 'next'
 import getConfig from 'next/config'
 
-const SubscriptionsWrapper = styled(ContentWrapper)`
+import {Container} from '../../../src/components/layout/container'
+
+const SubscriptionsWrapper = styled(Container)`
   gap: ${({theme}) => theme.spacing(3)};
 
   ${({theme}) => css`

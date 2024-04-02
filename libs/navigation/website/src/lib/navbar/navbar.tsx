@@ -6,6 +6,13 @@ import {MdAccountCircle, MdClose, MdMenu, MdOutlinePayments} from 'react-icons/m
 import {navigationLinkToUrl} from '../link-to-url'
 import {useUser} from '@wepublish/authentication/website'
 
+declare module 'react' {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  interface HTMLAttributes<T> {
+    fetchPriority?: 'high' | 'low' | 'auto'
+  }
+}
+
 export const NavbarWrapper = styled('nav')`
   position: sticky;
   top: 0;

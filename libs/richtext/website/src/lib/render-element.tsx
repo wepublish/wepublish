@@ -93,20 +93,6 @@ export function RenderElement({
         </Link>
       )
 
-    case BlockFormat.Paragraph: {
-      if (!element.children[0].text) {
-        console.log(element)
-
-        return <Fragment />
-      }
-
-      return (
-        <Paragraph {...attributes} css={paragraphStyles}>
-          {children}
-        </Paragraph>
-      )
-    }
-
     default:
       return (
         <Paragraph {...attributes} css={paragraphStyles}>
