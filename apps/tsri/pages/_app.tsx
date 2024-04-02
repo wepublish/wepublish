@@ -107,7 +107,7 @@ type CustomAppProps = AppProps<{
 }>
 
 function CustomApp({Component, pageProps}: CustomAppProps) {
-  const siteTitle = 'We.Publish'
+  const siteTitle = 'Tsri'
 
   return (
     <SessionProvider sessionToken={pageProps.sessionToken ?? null}>
