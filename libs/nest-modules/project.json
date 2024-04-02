@@ -3,6 +3,7 @@
   "$schema": "../../node_modules/nx/schemas/project-schema.json",
   "sourceRoot": "libs/nest-modules/src",
   "projectType": "library",
+  "tags": ["publishable"],
   "targets": {
     "build": {
       "executor": "@nx/js:tsc",
@@ -37,6 +38,5 @@
         }
       }
     }
-  },
-  "tags": []
+  }
 }

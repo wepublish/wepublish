@@ -3,12 +3,10 @@ import {
   createTheme,
   css,
   CssBaseline,
-  GlobalStyles,
   styled,
   Theme,
   ThemeOptions,
-  ThemeProvider,
-  useTheme
+  ThemeProvider
 } from '@mui/material'
 import {theme} from '@wepublish/ui'
 import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
@@ -28,7 +26,6 @@ import getConfig from 'next/config'
 import {Hanken_Grotesk, Merriweather} from 'next/font/google'
 import Head from 'next/head'
 import Script from 'next/script'
-import {useMemo} from 'react'
 import {initReactI18next} from 'react-i18next'
 import {PartialDeep} from 'type-fest'
 import {z} from 'zod'
@@ -36,10 +33,6 @@ import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {ReactComponent as Logo} from '../src/logo.svg'
-import {tsriArticleStyles} from '../src/styles/tsri-article.styles'
-import {TsriBreakBlock} from '../src/tsri-break-block'
-import {TsriButton} from '../src/tsri-button'
-import {TsriParagraph} from '../src/tsri-paragraph'
 
 setDefaultOptions({
   locale: de
@@ -141,13 +134,6 @@ type CustomAppProps = AppProps<{
 
 function CustomApp({Component, pageProps}: CustomAppProps) {
   const siteTitle = 'We.Publish'
-  const theme = useTheme()
-  const globalStyles = useMemo(
-    () => css`
-      ${tsriArticleStyles(theme)}
-    `,
-    [theme]
-  )
 
   return (
     <SessionProvider sessionToken={pageProps.sessionToken ?? null}>
@@ -155,17 +141,13 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
         <WebsiteBuilderProvider
           Head={Head}
           Script={Script}
-          elements={{Link: NextWepublishLink, Button: TsriButton, Paragraph: TsriParagraph}}
-          date={{format: dateFormatter}}
-          blocks={{Break: TsriBreakBlock}}>
+          elements={{Link: NextWepublishLink}}
+          date={{format: dateFormatter}}>
           <ThemeProvider theme={websiteExampleTheme}>
-            <GlobalStyles styles={globalStyles} />
             <CssBaseline />
 
             <Head>
               <title key="title">{siteTitle}</title>
-
-              <title>We.Publish</title>
               <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
               {/* Feeds */}

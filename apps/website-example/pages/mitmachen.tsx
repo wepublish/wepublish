@@ -26,7 +26,7 @@ Mitmachen.getInitialProps = async (ctx: NextPageContext) => {
       client.query({
         query: ApiV1.MemberPlanListDocument,
         variables: {
-          tage: 50
+          take: 50
         }
       }),
       client.query({

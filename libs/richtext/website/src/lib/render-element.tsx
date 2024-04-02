@@ -13,6 +13,12 @@ const tableCellStyles = (borderColor?: string) => css`
   border: 1px solid ${borderColor ?? 'transparent'};
 `
 
+const paragraphStyles = css`
+  &:last-child {
+    margin-bottom: 0;
+  }
+`
+
 export function RenderElement({
   attributes,
   children,
@@ -25,9 +31,13 @@ export function RenderElement({
   switch (element.type) {
     case BlockFormat.H1:
       return (
-        <H3 component="h2" {...attributes} gutterBottom>
-          {children}
-        </H3>
+        <div>
+          <H3 component="h2" {...attributes} gutterBottom>
+            {children}
+          </H3>
+
+          <hr />
+        </div>
       )
 
     case BlockFormat.H2:
@@ -83,6 +93,10 @@ export function RenderElement({
       )
 
     default:
-      return <Paragraph {...attributes}>{children}</Paragraph>
+      return (
+        <Paragraph {...attributes} css={paragraphStyles}>
+          {children}
+        </Paragraph>
+      )
   }
 }

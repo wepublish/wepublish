@@ -1,6 +1,13 @@
 import {css, styled} from '@mui/material'
 import {BuilderAuthorProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
+declare module 'react' {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  interface HTMLAttributes<T> {
+    fetchPriority?: 'high' | 'low' | 'auto'
+  }
+}
+
 export const AuthorWrapper = styled('article')`
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};

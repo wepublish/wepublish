@@ -24,12 +24,12 @@ https://unsplash.it/200/200 200w"
       class="css-1f3530-AuthorListItemContent ersskp40"
     >
       <h6
-        class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
       >
         Foobar
       </h6>
       <p
-        class="MuiTypography-root MuiTypography-body1 css-1c967wc-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
       >
         Editor
       </p>
@@ -62,12 +62,12 @@ https://unsplash.it/200/200 200w"
       class="css-1f3530-AuthorListItemContent ersskp40"
     >
       <h6
-        class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
       >
         Foobar
       </h6>
       <p
-        class="MuiTypography-root MuiTypography-body1 css-1c967wc-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
       >
         Editor
       </p>
@@ -100,12 +100,12 @@ https://unsplash.it/200/200 200w"
       class="css-1f3530-AuthorListItemContent ersskp40"
     >
       <h6
-        class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
       >
         Foobar
       </h6>
       <p
-        class="MuiTypography-root MuiTypography-body1 css-1c967wc-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
       >
         Editor
       </p>
@@ -127,12 +127,12 @@ exports[`AuthorList Item should render WithoutImage 1`] = `
       class="css-1f3530-AuthorListItemContent ersskp40"
     >
       <h6
-        class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
       >
         Foobar
       </h6>
       <p
-        class="MuiTypography-root MuiTypography-body1 css-1c967wc-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
       >
         Editor
       </p>
@@ -165,7 +165,7 @@ https://unsplash.it/200/200 200w"
       class="css-1f3530-AuthorListItemContent ersskp40"
     >
       <h6
-        class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
       >
         Foobar
       </h6>

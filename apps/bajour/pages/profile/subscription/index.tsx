@@ -12,7 +12,6 @@ import getConfig from 'next/config'
 import {Container} from '../../../src/components/layout/container'
 
 const SubscriptionsWrapper = styled(Container)`
-  display: grid;
   gap: ${({theme}) => theme.spacing(3)};
 
   ${({theme}) => css`

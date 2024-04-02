@@ -83,9 +83,10 @@ export const BlockRenderer = memo(({block}: BuilderBlockRendererProps) => {
 
 export type BlocksProp = {
   blocks: BlockType[]
+  type: BuilderBlockRendererProps['type']
 }
 
-export const Blocks = ({blocks}: BlocksProp) => {
+export const Blocks = ({blocks, type}: BlocksProp) => {
   const {
     blocks: {Renderer}
   } = useWebsiteBuilder()
@@ -93,7 +94,7 @@ export const Blocks = ({blocks}: BlocksProp) => {
   return (
     <>
       {blocks.map((block, index) => (
-        <Renderer key={index} block={block} />
+        <Renderer key={index} block={block} index={index} count={blocks.length} type={type} />
       ))}
     </>
   )

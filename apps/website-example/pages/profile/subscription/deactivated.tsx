@@ -1,10 +1,10 @@
 import {styled} from '@mui/material'
 import {getSessionTokenProps, ssrAuthLink, withAuthGuard} from '@wepublish/utils/website'
-import {ApiV1, SubscriptionListContainer} from '@wepublish/website'
+import {ApiV1, ContentWrapper, SubscriptionListContainer} from '@wepublish/website'
 import {NextPageContext} from 'next'
 import getConfig from 'next/config'
 
-const SubscriptionsWrapper = styled('div')`
+const SubscriptionsWrapper = styled(ContentWrapper)`
   display: grid;
   gap: ${({theme}) => theme.spacing(2)};
   grid-template-columns: minmax(max-content, 500px);
@@ -25,14 +25,17 @@ function DeactivatedSubscriptions() {
 
 const GuardedDeactivatedSubscriptions = withAuthGuard(DeactivatedSubscriptions)
 
-export {GuardedDeactivatedSubscriptions as default}
+export {
+  GuardedDeactivatedSubscriptions as default
+  // eslint-disable-next-line
+}
 ;(GuardedDeactivatedSubscriptions as any).getInitialProps = async (ctx: NextPageContext) => {
   if (typeof window !== 'undefined') {
     return {}
   }
 
-  const {publicRuntimeConfig} = getConfig()
   const sessionProps = await getSessionTokenProps(ctx)
+  const {publicRuntimeConfig} = getConfig()
   const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [
     ssrAuthLink(sessionProps.sessionToken?.token)
   ])

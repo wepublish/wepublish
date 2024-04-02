@@ -122,10 +122,13 @@ type CustomAppProps = AppProps<{
 }>
 
 function CustomApp({Component, pageProps}: CustomAppProps) {
+  const siteTitle = 'Gruppetto - Das neue Schweizer Radsportmagazin'
+
   return (
     <SessionProvider sessionToken={pageProps.sessionToken ?? null}>
       <WebsiteProvider>
         <WebsiteBuilderProvider
+          meta={{siteTitle}}
           Head={Head}
           Script={Script}
           Footer={Footer}
@@ -136,13 +139,16 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
             <CssBaseline />
 
             <Head>
-              <title>Gruppetto &mdash; Das neue Schweizer Radsportmagazin</title>
+              <title key="title">{siteTitle}</title>
               <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
               {/* Feeds */}
               <link rel="alternate" type="application/rss+xml" href="/api/rss-feed" />
               <link rel="alternate" type="application/atom+xml" href="/api/atom-feed" />
               <link rel="alternate" type="application/feed+json" href="/api/json-feed" />
+
+              {/* Sitemap */}
+              <link rel="sitemap" type="application/xml" title="Sitemap" href="/api/sitemap" />
             </Head>
 
             <Spacer>

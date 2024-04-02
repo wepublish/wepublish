@@ -37,8 +37,6 @@ export const AuthorChipContentWrapper = styled('div')`
   display: grid;
 `
 
-export const AuthorChipJobTitle = styled('div')``
-
 export const AuthorChipName = styled('div')`
   font-weight: 500;
 `
@@ -67,8 +65,6 @@ export function AuthorChip({className, author, publishedAt}: BuilderAuthorChipPr
           <AuthorChipName>
             Von <Link href={author.url}>{author.name}</Link>
           </AuthorChipName>
-
-          {author.jobTitle && <AuthorChipJobTitle>{author.jobTitle}</AuthorChipJobTitle>}
         </AuthorChipContentWrapper>
       </AuthorChipAuthorWrapper>
 

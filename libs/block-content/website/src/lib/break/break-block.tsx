@@ -37,6 +37,10 @@ const imageStyles = (theme: Theme) => css`
   }
 `
 
+const buttonStyles = css`
+  justify-self: start;
+`
+
 export const BreakBlock = ({
   className,
   text,
@@ -79,8 +83,13 @@ export const BreakBlock = ({
 
         <RichText richText={richText} />
 
-        {!hideButton && (
-          <Button variant="contained" color="secondary" LinkComponent={Link} href={linkURL ?? ''}>
+        {!hideButton && linkURL && (
+          <Button
+            variant="contained"
+            color="primary"
+            LinkComponent={Link}
+            href={linkURL}
+            css={buttonStyles}>
             {linkText}
           </Button>
         )}

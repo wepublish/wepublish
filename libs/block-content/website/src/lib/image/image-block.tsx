@@ -2,6 +2,13 @@ import {css, styled} from '@mui/material'
 import {BuilderImageBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {Block, ImageBlock as ImageBlockType} from '@wepublish/website/api'
 
+declare module 'react' {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  interface HTMLAttributes<T> {
+    fetchPriority?: 'high' | 'low' | 'auto'
+  }
+}
+
 export const isImageBlock = (block: Block): block is ImageBlockType =>
   block.__typename === 'ImageBlock'
 

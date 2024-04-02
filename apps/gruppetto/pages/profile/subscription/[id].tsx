@@ -2,6 +2,7 @@ import {css, styled} from '@mui/material'
 import {getSessionTokenProps, ssrAuthLink, withAuthGuard} from '@wepublish/utils/website'
 import {
   ApiV1,
+  ContentWrapper,
   InvoiceListContainer,
   SubscriptionListContainer,
   useWebsiteBuilder
@@ -10,7 +11,7 @@ import {NextPageContext} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 
-const SubscriptionsWrapper = styled('div')`
+const SubscriptionsWrapper = styled(ContentWrapper)`
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};
 
@@ -65,14 +66,17 @@ function Subscription() {
 
 const GuardedSubscription = withAuthGuard(Subscription)
 
-export {GuardedSubscription as default}
+export {
+  GuardedSubscription as default
+  // eslint-disable-next-line
+}
 ;(GuardedSubscription as any).getInitialProps = async (ctx: NextPageContext) => {
   if (typeof window !== 'undefined') {
     return {}
   }
 
-  const {publicRuntimeConfig} = getConfig()
   const sessionProps = await getSessionTokenProps(ctx)
+  const {publicRuntimeConfig} = getConfig()
   const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [
     ssrAuthLink(sessionProps.sessionToken?.token)
   ])
@@ -87,9 +91,6 @@ export {GuardedSubscription as default}
       }),
       client.query({
         query: ApiV1.InvoicesDocument
-      }),
-      client.query({
-        query: ApiV1.NavigationListDocument
       })
     ])
   }

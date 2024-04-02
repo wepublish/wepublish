@@ -1,5 +1,6 @@
 import {css, styled} from '@mui/material'
 import {
+  ApiV2,
   BuilderTeaserGridBlockProps,
   selectTeaserAuthors,
   selectTeaserLead,
@@ -7,6 +8,8 @@ import {
   selectTeaserUrl,
   useWebsiteBuilder
 } from '@wepublish/website'
+import {differenceInYears} from 'date-fns'
+import getConfig from 'next/config'
 import {useState} from 'react'
 
 import {ReactComponent as Logo} from '../../../logo.svg'
@@ -189,7 +192,8 @@ const LinkWrapper = styled('div')`
   display: grid;
 `
 
-export const Archive = ({teasers}: BuilderTeaserGridBlockProps) => {
+const Archive = ({teasers}: BuilderTeaserGridBlockProps) => {
+  const {data} = ApiV2.useStatsQuery()
   const [currentTeaser, setCurrentTeaser] = useState(teasers[2])
 
   const title = currentTeaser && selectTeaserTitle(currentTeaser)
@@ -212,17 +216,21 @@ export const Archive = ({teasers}: BuilderTeaserGridBlockProps) => {
 
         <Timeline>
           <Articles>
-            <Number>2586</Number>
+            <Number>{data?.stats?.articlesCount}</Number>
             Artikel
           </Articles>
 
           <Authors>
-            <Number>34</Number>
+            <Number>{data?.stats?.authorsCount}</Number>
             AutorInnen
           </Authors>
 
           <Years>
-            <Number>12</Number>
+            {data?.stats?.firstArticleDate && (
+              <Number>
+                {differenceInYears(new Date(), new Date(data.stats.firstArticleDate)) + 1}
+              </Number>
+            )}
             Jahre
           </Years>
 
@@ -255,3 +263,8 @@ export const Archive = ({teasers}: BuilderTeaserGridBlockProps) => {
     </ArchiveWrapper>
   )
 }
+
+const {publicRuntimeConfig} = getConfig()
+const ConnectedArchive = ApiV2.createWithV2ApiClient(publicRuntimeConfig.env.API_URL!, [])(Archive)
+
+export {ConnectedArchive as Archive}

@@ -1,5 +1,8 @@
-import {CSSObject, createTheme} from '@mui/material'
-import {BorderRadius} from '../../editor/src/lib/atoms/helpers'
+import {createTheme, CSSObject} from '@mui/material'
+
+const {
+  palette: {augmentColor}
+} = createTheme()
 
 export const theme = createTheme({
   typography: {
@@ -36,13 +39,8 @@ export const theme = createTheme({
     fontFamily: ['Merriweather', 'Roboto', 'sans-serif'].join(',')
   },
   palette: {
-    primary: {
-      main: '#e91e63'
-    },
-    secondary: {
-      main: '#000',
-      contrastText: '#fff'
-    },
+    primary: augmentColor({color: {main: '#e91e63'}}),
+    secondary: augmentColor({color: {main: '#000'}}),
     grey: {
       800: '#1a1a1a'
     }
@@ -54,7 +52,10 @@ export const theme = createTheme({
           const baseStyles: CSSObject = {
             borderRadius: '30px',
             textTransform: 'initial',
-            boxShadow: 'none'
+            boxShadow: 'none',
+            ':hover': {
+              boxShadow: 'none'
+            }
           }
 
           if (ownerState.color === 'secondary') {
@@ -84,6 +85,15 @@ export const theme = createTheme({
               }
             }
           }
+
+          if (ownerState.variant === 'contained') {
+            return {
+              ...baseStyles,
+              fontWeight: 700
+            }
+          }
+
+          return baseStyles
         }
       }
     }

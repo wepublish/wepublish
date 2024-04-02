@@ -1,4 +1,4 @@
-import {createTheme, Theme, ThemeOptions} from '@mui/material'
+import {createTheme, ThemeOptions} from '@mui/material'
 import {theme as WepTheme} from '@wepublish/ui'
 
 const {
@@ -7,10 +7,7 @@ const {
 
 const theme = createTheme(WepTheme, {
   typography: {
-    fontFamily: 'Roboto, sans-serif',
-    body1: {
-      lineHeight: 1.25
-    }
+    fontFamily: 'Roboto, sans-serif'
   },
   breakpoints: {
     values: {
@@ -40,6 +37,12 @@ const theme = createTheme(WepTheme, {
         }
       }
     }
+  }
+} as ThemeOptions)
+
+export const navbarTheme = createTheme(theme, {
+  palette: {
+    primary: theme.palette.secondary
   }
 } as ThemeOptions)
 

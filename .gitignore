@@ -21,3 +21,4 @@ lerna-debug.log
 # translations cleanup files
 tools/modified_jsonfile.json
 tools/removed_keys.json
+.vercel

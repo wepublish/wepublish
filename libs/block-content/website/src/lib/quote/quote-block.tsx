@@ -1,4 +1,4 @@
-import {styled, css, Theme, useTheme} from '@mui/material'
+import {styled, css} from '@mui/material'
 import {BuilderQuoteBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {Block, QuoteBlock as QuoteBlockType} from '@wepublish/website/api'
 
