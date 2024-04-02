@@ -133,7 +133,11 @@ jobs:
           EOF
           helm upgrade --install review-${{ github.event.pull_request.number }}-database oci://registry-1.docker.io/bitnamicharts/postgresql -n reviews -f values.yaml --wait
 
+<<<<<<< HEAD
 
+=======
+
+>>>>>>> f/bajour-article-style
 
   helm_deployment:
     name: Helm deployment
@@ -320,7 +324,11 @@ jobs:
       - run: |
           vercel --token "${{ secrets.VERCEL_API_TOKEN }}" link --project ${{ matrix.project }} --scope wepublish --yes
           vercel --token "${{ secrets.VERCEL_API_TOKEN }}" build --yes
+<<<<<<< HEAD
           vercel --token "${{ secrets.VERCEL_API_TOKEN }}" deploy --prebuilt --yes > deployment_url
+=======
+          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" deploy --prebuilt --yes > deployment_url
+>>>>>>> f/bajour-article-style
           vercel --token "${{ secrets.VERCEL_API_TOKEN }}" alias set $(cat deployment_url) ${{ matrix.project }}${PROJECT_URL_SUFFIX} --scope wepublish --yes
 
   notify:
