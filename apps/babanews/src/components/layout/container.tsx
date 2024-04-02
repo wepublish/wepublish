@@ -4,6 +4,7 @@ export const Container = styled('main')`
   display: grid;
   grid-template-columns: 1fr minmax(auto, 100vw) 1fr;
   grid-template-areas: '. content .';
+
   & > * {
     grid-area: content;
   }

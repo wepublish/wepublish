@@ -11,6 +11,7 @@ import getConfig from 'next/config'
 
 const Frontpage = styled(PageContainer)`
   gap: ${({theme}) => theme.spacing(6)};
+  padding-bottom: ${({theme}) => theme.spacing(6)};
   ${TeaserGridFlexBlockWrapper}:first-of-type
   ${TeaserWrapper}:first-of-type {
     ${TeaserDate} {

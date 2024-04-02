@@ -125,7 +125,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
 
               <Component {...pageProps} />
 
-              <Footer slug="main" categorySlugs={[['basel-briefing', 'other'], ['about-us']]} />
+              <Footer slug="main" categorySlugs={[['sonstiges', 'other'], ['about-us']]} />
             </div>
           </ThemeProvider>
         </WebsiteBuilderProvider>

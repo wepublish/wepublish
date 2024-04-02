@@ -38,6 +38,16 @@ export const BabanewsBlockRenderer = (props: BuilderBlockRendererProps) => {
               </Container>
             </FullWidthContainer>
           )
+        ],
+        [
+          isBreakBlock,
+          block => (
+            <FullWidthContainer backgroundColor={theme.palette.secondary.main}>
+              <Container>
+                <BreakBlock {...block} />
+              </Container>
+            </FullWidthContainer>
+          )
         ]
       ]),
     [TeaserGrid]

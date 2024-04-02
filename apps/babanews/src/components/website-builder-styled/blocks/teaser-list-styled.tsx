@@ -12,7 +12,6 @@ export const BabanewsTeaserList = styled(TeaserListBlock)`
       align-items: center;
 
       ${theme.breakpoints.up('sm')} {
-        grid-template-columns: repeat(12, 1fr);
         padding-left: calc(100% / 48);
         padding-right: calc(100% / 48);
         row-gap: ${theme.spacing(3)};
