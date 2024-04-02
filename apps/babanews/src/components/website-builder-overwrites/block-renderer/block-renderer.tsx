@@ -1,6 +1,11 @@
 import {useTheme} from '@mui/material'
-import {BreakBlock, isBreakBlock} from '@wepublish/website'
-import {BlockRenderer, BuilderBlockRendererProps, useWebsiteBuilder} from '@wepublish/website'
+import {
+  BlockRenderer,
+  BreakBlock,
+  BuilderBlockRendererProps,
+  isBreakBlock,
+  useWebsiteBuilder
+} from '@wepublish/website'
 import {cond} from 'ramda'
 import {useMemo} from 'react'
 
@@ -20,16 +25,6 @@ export const BabanewsBlockRenderer = (props: BuilderBlockRendererProps) => {
   const extraBlockMap = useMemo(
     () =>
       cond([
-        [
-          isBreakBlock,
-          block => (
-            <FullWidthContainer backgroundColor={theme.palette.secondary.main}>
-              <Container>
-                <BreakBlock {...block} />
-              </Container>
-            </FullWidthContainer>
-          )
-        ],
         [
           isFullWidthBanner,
           block => (
