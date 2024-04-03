@@ -9,7 +9,7 @@ exports[`Quote Block should render Default 1`] = `
       class="css-1nu3lgo-QuoteContent e1ugt7gl0"
     >
       <p
-        class="MuiTypography-root MuiTypography-h4 css-1936a0c-MuiTypography-root-QuoteBlock"
+        class="MuiTypography-root MuiTypography-h4 css-hvxnyb-MuiTypography-root-QuoteBlock"
       >
         «This is a quote»
       </p>
@@ -32,7 +32,7 @@ exports[`Quote Block should render WithClassName 1`] = `
       class="css-1nu3lgo-QuoteContent e1ugt7gl0"
     >
       <p
-        class="MuiTypography-root MuiTypography-h4 css-1936a0c-MuiTypography-root-QuoteBlock"
+        class="MuiTypography-root MuiTypography-h4 css-hvxnyb-MuiTypography-root-QuoteBlock"
       >
         «This is a quote»
       </p>
@@ -55,7 +55,7 @@ exports[`Quote Block should render WithEmotion 1`] = `
       class="css-1nu3lgo-QuoteContent e1ugt7gl0"
     >
       <p
-        class="MuiTypography-root MuiTypography-h4 css-1936a0c-MuiTypography-root-QuoteBlock"
+        class="MuiTypography-root MuiTypography-h4 css-hvxnyb-MuiTypography-root-QuoteBlock"
       >
         «This is a quote»
       </p>
@@ -88,7 +88,7 @@ https://unsplash.it/200/100 200w"
       class="css-1nu3lgo-QuoteContent e1ugt7gl0"
     >
       <p
-        class="MuiTypography-root MuiTypography-h4 css-1936a0c-MuiTypography-root-QuoteBlock"
+        class="MuiTypography-root MuiTypography-h4 css-hvxnyb-MuiTypography-root-QuoteBlock"
       >
         «This is a quote»
       </p>

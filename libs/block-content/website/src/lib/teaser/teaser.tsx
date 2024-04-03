@@ -165,7 +165,7 @@ export const TeaserInnerWrapper = styled('div')`
   grid-auto-rows: max-content;
 `
 
-export const ImageWrapper = styled('div')`
+export const ImageWrapperStyled = styled('div')`
   grid-column: 1/13;
   width: 100%;
   height: 100%;
@@ -289,9 +289,9 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
     <TeaserWrapper {...alignment} {...(hoverProps as object)}>
       <Link color="inherit" href={href ?? ''} className={className} css={linkStyles}>
         {image ? (
-          <ImageWrapper>
+          <ImageWrapperStyled>
             <Image image={image} css={enhancedImageStyles} />
-          </ImageWrapper>
+          </ImageWrapperStyled>
         ) : (
           <ImagePlaceholder />
         )}
