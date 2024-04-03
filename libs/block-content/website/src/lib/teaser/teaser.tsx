@@ -4,7 +4,8 @@ import {FlexAlignment, Teaser as TeaserType} from '@wepublish/website/api'
 import {BuilderTeaserProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {isImageBlock} from '../image/image-block'
 import {isTitleBlock} from '../title/title-block'
-import {useMemo, useState} from 'react'
+import {useMemo} from 'react'
+import {useHover} from 'react-aria'
 
 export const selectTeaserTitle = (teaser: TeaserType) => {
   switch (teaser.__typename) {
@@ -164,22 +165,18 @@ export const TeaserInnerWrapper = styled('div')`
   grid-auto-rows: max-content;
 `
 
-export const ImageWrapperStyled = styled('div')`
+export const ImageWrapper = styled('div')`
   grid-column: 1/13;
   width: 100%;
   height: 100%;
   overflow: hidden;
 `
 
-const teaserImageStyles = css`
+const getEnhancedImageStyles = (theme: Theme, isHovered: boolean) => css`
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
   transition: transform 0.3s ease-in-out;
-`
-
-const getEnhancedImageStyles = (theme: Theme, isHovered: boolean) => css`
-  ${teaserImageStyles};
   aspect-ratio: 1.8;
   transform: ${isHovered ? 'scale(1.1)' : 'scale(1)'};
 
@@ -195,14 +192,11 @@ const teaserLinkStyles = (theme: Theme) => css`
   text-decoration: none;
 `
 
-export const TeaserTitles = styled('header')``
-export const TeaserTitle = styled('h1')`
-  font-size: 26px;
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    font-size: 32px;
-  }
+const teaserLeadStyles = css`
+  font-weight: 300;
+  font-size: 15px;
 `
+
 export const TeaserPreTitle = styled('span')``
 export const TeaserLead = styled('p')``
 export const Authors = styled('span')`
@@ -215,17 +209,15 @@ export const TeaserAuthors = styled('div')`
   margin-top: ${({theme}) => theme.spacing(2)};
 `
 
-export const TeaserContent = styled(TeaserInnerWrapper)``
+export const TeaserContent = styled(TeaserInnerWrapper)`
+  grid-column: 1/13;
+`
 
 export const ImagePlaceholder = styled('div')`
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
   aspect-ratio: 1/1;
-`
-
-export const TeaserContentStyled = styled(TeaserContent)`
-  grid-column: 1/13;
 `
 
 export const TeaserPreTitleNoContent = styled(TeaserPreTitle)<{isHovered: boolean}>`
@@ -237,7 +229,7 @@ export const TeaserPreTitleNoContent = styled(TeaserPreTitle)<{isHovered: boolea
   margin-bottom: ${({theme}) => theme.spacing(1.5)};
 `
 
-export const TeaserPreTitleStyled = styled(TeaserPreTitle)<{isHovered: boolean}>`
+export const TeaserPreTitleWrapper = styled(TeaserPreTitle)<{isHovered: boolean}>`
   transition: background-color 0.3s ease-in-out;
   background-color: ${({theme, isHovered}) =>
     isHovered ? theme.palette.primary.main : theme.palette.secondary.main};
@@ -246,38 +238,33 @@ export const TeaserPreTitleStyled = styled(TeaserPreTitle)<{isHovered: boolean}>
   margin-bottom: ${({theme}) => theme.spacing(1.5)};
 `
 
-export const PreTitleStyled = styled('span')<{isHovered: boolean}>`
+export const PreTitle = styled('div')<{isHovered: boolean}>`
   transition: background-color 0.3s ease-in-out;
   padding: ${({theme}) => `${theme.spacing(0.5)} ${theme.spacing(2)}`};
   background-color: ${({theme, isHovered}) =>
     isHovered ? theme.palette.primary.main : theme.palette.secondary.main};
-  display: inline-block;
+  width: fit-content;
   font-size: 14px;
   font-weight: 300;
-  transform: ${({theme}) => `translateY(-${theme.spacing(3)})`};
+  transform: ${({theme}) => `translateY(-${theme.spacing(3.5)})`};
 
   ${({theme}) => theme.breakpoints.up('md')} {
     font-size: 18px;
-    transform: ${({theme}) => `translateY(-${theme.spacing(3.5)})`};
+    transform: ${({theme}) => `translateY(-${theme.spacing(4)})`};
   }
 `
 
-export const TeaserTitlesStyled = styled(TeaserTitle)`
-  margin: 0;
-`
-
-export const AuthorsAndDate = styled('p')`
+export const AuthorsAndDate = styled('div')`
   margin: 0;
   font-size: 12px;
 `
 
-export const TeaserLeadStyled = styled('div')`
-  font-weight: 300;
-  font-size: 15px;
+export const Time = styled('time')`
+  font-weight: 400;
 `
 
 export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
-  const [isHovered, setIsHovered] = useState(false)
+  const {hoverProps, isHovered} = useHover({})
   const theme = useTheme()
   const title = teaser && selectTeaserTitle(teaser)
   const preTitle = teaser && selectTeaserPreTitle(teaser)
@@ -289,7 +276,7 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
 
   const {
     date,
-    elements: {Link, Image}
+    elements: {Link, Image, Paragraph, H4}
   } = useWebsiteBuilder()
 
   const linkStyles = useMemo(() => teaserLinkStyles(theme), [theme])
@@ -299,42 +286,39 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
   )
 
   return (
-    <TeaserWrapper
-      {...alignment}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}>
+    <TeaserWrapper {...alignment} {...(hoverProps as object)}>
       <Link color="inherit" href={href ?? ''} className={className} css={linkStyles}>
         {image ? (
-          <ImageWrapperStyled>
+          <ImageWrapper>
             <Image image={image} css={enhancedImageStyles} />
-          </ImageWrapperStyled>
+          </ImageWrapper>
         ) : (
           <ImagePlaceholder />
         )}
 
-        <TeaserContentStyled>
+        <TeaserContent>
           {preTitle ? (
-            <TeaserPreTitleStyled isHovered={isHovered}>
-              <PreTitleStyled isHovered={isHovered}>{preTitle}</PreTitleStyled>
-            </TeaserPreTitleStyled>
+            <TeaserPreTitleWrapper isHovered={isHovered}>
+              <PreTitle isHovered={isHovered}>{preTitle}</PreTitle>
+            </TeaserPreTitleWrapper>
           ) : (
             <TeaserPreTitleNoContent isHovered={isHovered} />
           )}
 
-          <TeaserTitlesStyled>{title}</TeaserTitlesStyled>
+          <H4>{title}</H4>
 
-          <TeaserLeadStyled>{lead}</TeaserLeadStyled>
+          <Paragraph css={teaserLeadStyles}>{lead}</Paragraph>
 
           <AuthorsAndDate>
             {authors && authors?.length ? <Authors>Von {authors?.join(', ')} </Authors> : null}
             {publishDate && (
-              <time dateTime={publishDate} css={{fontWeight: 400}}>
+              <Time dateTime={publishDate}>
                 {'| '}
                 {date.format(new Date(publishDate), false)}{' '}
-              </time>
+              </Time>
             )}
           </AuthorsAndDate>
-        </TeaserContentStyled>
+        </TeaserContent>
       </Link>
     </TeaserWrapper>
   )
