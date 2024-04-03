@@ -4,15 +4,8 @@ import {
   ImageWrapperStyled,
   PreTitleStyled,
   Teaser,
-  // TeaserAuthors,
-  TeaserContentStyled,
-  // TeaserDate,
-  // TeaserLead,
-  // TeaserPreTitle,
   TeaserPreTitleNoContent,
   TeaserPreTitleStyled
-  // TeaserTitle,
-  // TeaserWrapper
 } from '@wepublish/website'
 
 export const TeaserImgStyled = styled(Image)`
@@ -20,6 +13,10 @@ export const TeaserImgStyled = styled(Image)`
   object-fit: cover;
   grid-column: 1/7;
   aspect-ratio: 3/2;
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    aspect-ratio: 16/9;
+  }
 `
 
 export const fluidTypography = (minSize: number, maxSize: number): string => {
@@ -39,7 +36,8 @@ export const fluidTypography = (minSize: number, maxSize: number): string => {
 
 export const ListTeaser = styled(Teaser)`
   ${({theme}) => theme.breakpoints.up('md')} {
-    grid-template-columns: repeat(12, 1fr);
+    grid-template-areas: 'image content';
+    grid-template-columns: 1fr 1fr;
     column-gap: ${({theme}) => theme.spacing(4)};
 
     ${TeaserPreTitleNoContent} {
@@ -58,12 +56,8 @@ export const ListTeaser = styled(Teaser)`
     }
 
     ${ImageWrapperStyled} {
-      aspect-ratio: 3/2;
-      grid-column: 1/7;
-    }
-
-    ${TeaserContentStyled} {
-      grid-column: 7/13;
+      aspect-ratio: 16/9;
+      width: 90%;
     }
   }
 `

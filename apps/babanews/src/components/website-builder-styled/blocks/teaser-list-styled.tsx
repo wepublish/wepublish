@@ -1,5 +1,12 @@
 import {css, styled} from '@mui/material'
-import {TeaserListBlock} from '@wepublish/website'
+import {
+  ImageWrapperStyled,
+  TeaserContentStyled,
+  TeaserListBlock,
+  TeaserPreTitleNoContent,
+  TeaserPreTitleStyled,
+  TeaserWrapper
+} from '@wepublish/website'
 
 export const BabanewsTeaserList = styled(TeaserListBlock)`
   ${({theme}) =>
@@ -21,7 +28,40 @@ export const BabanewsTeaserList = styled(TeaserListBlock)`
         row-gap: ${theme.spacing(6)};
         padding-left: calc(100% / 20);
         padding-right: calc(100% / 20);
-        row-gap: ${theme.spacing(8)};
+        row-gap: ${theme.spacing(4)};
+
+        ${TeaserWrapper} {
+          ${ImageWrapperStyled} {
+            grid-area: image;
+            margin-right: 0;
+            margin-left: auto;
+          }
+
+          ${TeaserContentStyled} {
+            grid-area: content;
+          }
+
+          &:nth-of-type(2n + 1) {
+            ${ImageWrapperStyled} {
+              grid-area: content;
+              margin-left: 0;
+              margin-right: auto;
+            }
+
+            ${TeaserContentStyled} {
+              grid-area: image;
+              text-align: right;
+            }
+
+            ${TeaserPreTitleNoContent} {
+              margin-left: 80%;
+            }
+
+            ${TeaserPreTitleStyled} {
+              margin-left: auto;
+            }
+          }
+        }
       }
 
       ${theme.breakpoints.up('xl')} {
