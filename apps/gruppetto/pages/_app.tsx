@@ -148,6 +148,9 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               <link rel="alternate" type="application/rss+xml" href="/api/rss-feed" />
               <link rel="alternate" type="application/atom+xml" href="/api/atom-feed" />
               <link rel="alternate" type="application/feed+json" href="/api/json-feed" />
+
+              {/* Sitemap */}
+              <link rel="sitemap" type="application/xml" title="Sitemap" href="/api/sitemap" />
             </Head>
 
             <Spacer>
