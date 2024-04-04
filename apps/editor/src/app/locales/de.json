@@ -1299,7 +1299,6 @@
       "trialSubscription": "Erweiterte Einstellungen",
       "configureTrialBtn": "Für Probeabos konfigurieren",
       "extendableToggle": "Verlängerbar",
-      "nonExtendableToggle": "Nicht verlängerbar",
       "extendableHelpText": "Bestimme, ob ein Abo eines Benutzers - automatisch oder manuell - verlängert werden kann oder nicht. Probeabos können in der Regel nicht verlängert werden.",
       "maxCount": "Maximale Anzahl Abos pro Benutzer:in",
       "maxCountHelpText": "Limitiere die Anzahl Abos, welche ein:e Benutzer:in für diesen Abo-Plan lösen kann. Dazu zählen auch deaktivierte Abos.",

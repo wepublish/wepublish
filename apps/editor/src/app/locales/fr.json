@@ -1252,7 +1252,6 @@
       "trialSubscription": "Réglages avancés",
       "configureTrialBtn": "Configurer abonnements d'essai",
       "extendableToggle": "Extensible",
-      "nonExtendableToggle": "Non extensible",
       "extendableHelpText": "Détermine si l'abonnement d'un utilisateur peut être renouvelé - automatiquement ou manuellement - ou non. En règle générale, les abonnements d'essai ne peuvent pas être prolongés.",
       "maxCount": "Nombre maximum d'abonnements par utilisateur",
       "maxCountHelpText": "Limite le nombre d'abonnements qu'un:e utilisateur:trice peut souscrire pour ce plan d'abonnement. Cela inclut les abonnements désactivés.",

@@ -748,9 +748,7 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
                           }
                         />
                         <FormControlLabelMarginLeft>
-                          {extendable
-                            ? t('memberplanForm.extendableToggle')
-                            : t('memberplanForm.nonExtendableToggle')}
+                          {t('memberplanForm.extendableToggle')}
                         </FormControlLabelMarginLeft>
                         <HelpText>{t('memberplanForm.extendableHelpText')}</HelpText>
                       </Col>
