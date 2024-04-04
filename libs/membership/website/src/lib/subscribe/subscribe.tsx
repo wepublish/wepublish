@@ -1,5 +1,5 @@
 import {zodResolver} from '@hookform/resolvers/zod'
-import {Box, Checkbox, FormControlLabel, InputAdornment, Modal, Slider, styled} from '@mui/material'
+import {Checkbox, FormControlLabel, InputAdornment, Modal, Slider, styled} from '@mui/material'
 import {
   RegistrationChallenge,
   RegistrationChallengeWrapper,
