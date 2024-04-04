@@ -63,7 +63,7 @@ exports[`SubscriptionList Container should render Cancel 1`] = `
 -           class="css-1fn3y2c-SubscriptionListItemActions eere75z0"
 -         >
 -           <button
--             class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium css-104io2v-MuiButtonBase-root-MuiButton-root"
+-             class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium css-14u5m77-MuiButtonBase-root-MuiButton-root"
 -             tabindex="0"
 -             type="button"
 -           >
@@ -152,7 +152,7 @@ exports[`SubscriptionList Container should render CancelWithInvoiceList 1`] = `
 -           class="css-1fn3y2c-SubscriptionListItemActions eere75z0"
 -         >
 -           <button
--             class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium css-104io2v-MuiButtonBase-root-MuiButton-root"
+-             class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium css-14u5m77-MuiButtonBase-root-MuiButton-root"
 -             tabindex="0"
 -             type="button"
 -           >
@@ -387,7 +387,7 @@ https://unsplash.it/200/100 200w"
           class="css-1fn3y2c-SubscriptionListItemActions eere75z0"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium css-104io2v-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium css-14u5m77-MuiButtonBase-root-MuiButton-root"
             tabindex="0"
             type="button"
           >
@@ -580,7 +580,7 @@ https://unsplash.it/200/100 200w"
           class="css-1fn3y2c-SubscriptionListItemActions eere75z0"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium css-104io2v-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium css-14u5m77-MuiButtonBase-root-MuiButton-root"
             tabindex="0"
             type="button"
           >
@@ -770,7 +770,7 @@ https://unsplash.it/200/100 200w"
           class="css-1fn3y2c-SubscriptionListItemActions eere75z0"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium css-104io2v-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium css-14u5m77-MuiButtonBase-root-MuiButton-root"
             tabindex="0"
             type="button"
           >
@@ -960,7 +960,7 @@ https://unsplash.it/200/100 200w"
           class="css-1fn3y2c-SubscriptionListItemActions eere75z0"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium css-104io2v-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium css-14u5m77-MuiButtonBase-root-MuiButton-root"
             tabindex="0"
             type="button"
           >
