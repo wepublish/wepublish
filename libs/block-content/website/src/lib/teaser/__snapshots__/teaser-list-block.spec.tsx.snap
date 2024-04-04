@@ -15,11 +15,11 @@ exports[`Teaser List Block should render Article 1`] = `
         href="https://example.com"
       >
         <div
-          class="css-xjjwu2-ImageWrapperStyled e18of27r12"
+          class="css-uxpjtj-TeaserImageWrapper e18of27r12"
         >
           <img
             alt="An image description"
-            class="css-xgcpzl-ImageWrapper-Teaser e1shv2yg0"
+            class="css-16cj43p-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -73,11 +73,11 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-xjjwu2-ImageWrapperStyled e18of27r12"
+          class="css-uxpjtj-TeaserImageWrapper e18of27r12"
         >
           <img
             alt="An image description"
-            class="css-xgcpzl-ImageWrapper-Teaser e1shv2yg0"
+            class="css-16cj43p-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -131,11 +131,11 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-xjjwu2-ImageWrapperStyled e18of27r12"
+          class="css-uxpjtj-TeaserImageWrapper e18of27r12"
         >
           <img
             alt="An image description"
-            class="css-xgcpzl-ImageWrapper-Teaser e1shv2yg0"
+            class="css-16cj43p-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -198,11 +198,11 @@ exports[`Teaser List Block should render Event 1`] = `
         href="https://example.com"
       >
         <div
-          class="css-xjjwu2-ImageWrapperStyled e18of27r12"
+          class="css-uxpjtj-TeaserImageWrapper e18of27r12"
         >
           <img
             alt="An image description"
-            class="css-xgcpzl-ImageWrapper-Teaser e1shv2yg0"
+            class="css-16cj43p-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -256,11 +256,11 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-xjjwu2-ImageWrapperStyled e18of27r12"
+          class="css-uxpjtj-TeaserImageWrapper e18of27r12"
         >
           <img
             alt="An image description"
-            class="css-xgcpzl-ImageWrapper-Teaser e1shv2yg0"
+            class="css-16cj43p-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -314,11 +314,11 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-xjjwu2-ImageWrapperStyled e18of27r12"
+          class="css-uxpjtj-TeaserImageWrapper e18of27r12"
         >
           <img
             alt="An image description"
-            class="css-xgcpzl-ImageWrapper-Teaser e1shv2yg0"
+            class="css-16cj43p-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -381,11 +381,11 @@ exports[`Teaser List Block should render Page 1`] = `
         href="https://example.com"
       >
         <div
-          class="css-xjjwu2-ImageWrapperStyled e18of27r12"
+          class="css-uxpjtj-TeaserImageWrapper e18of27r12"
         >
           <img
             alt="An image description"
-            class="css-xgcpzl-ImageWrapper-Teaser e1shv2yg0"
+            class="css-16cj43p-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -432,11 +432,11 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-xjjwu2-ImageWrapperStyled e18of27r12"
+          class="css-uxpjtj-TeaserImageWrapper e18of27r12"
         >
           <img
             alt="An image description"
-            class="css-xgcpzl-ImageWrapper-Teaser e1shv2yg0"
+            class="css-16cj43p-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -483,11 +483,11 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-xjjwu2-ImageWrapperStyled e18of27r12"
+          class="css-uxpjtj-TeaserImageWrapper e18of27r12"
         >
           <img
             alt="An image description"
-            class="css-xgcpzl-ImageWrapper-Teaser e1shv2yg0"
+            class="css-16cj43p-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -543,11 +543,11 @@ exports[`Teaser List Block should render WithClassName 1`] = `
         href="https://example.com"
       >
         <div
-          class="css-xjjwu2-ImageWrapperStyled e18of27r12"
+          class="css-uxpjtj-TeaserImageWrapper e18of27r12"
         >
           <img
             alt="An image description"
-            class="css-xgcpzl-ImageWrapper-Teaser e1shv2yg0"
+            class="css-16cj43p-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -601,11 +601,11 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-xjjwu2-ImageWrapperStyled e18of27r12"
+          class="css-uxpjtj-TeaserImageWrapper e18of27r12"
         >
           <img
             alt="An image description"
-            class="css-xgcpzl-ImageWrapper-Teaser e1shv2yg0"
+            class="css-16cj43p-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -659,11 +659,11 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-xjjwu2-ImageWrapperStyled e18of27r12"
+          class="css-uxpjtj-TeaserImageWrapper e18of27r12"
         >
           <img
             alt="An image description"
-            class="css-xgcpzl-ImageWrapper-Teaser e1shv2yg0"
+            class="css-16cj43p-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -726,11 +726,11 @@ exports[`Teaser List Block should render WithEmotion 1`] = `
         href="https://example.com"
       >
         <div
-          class="css-xjjwu2-ImageWrapperStyled e18of27r12"
+          class="css-uxpjtj-TeaserImageWrapper e18of27r12"
         >
           <img
             alt="An image description"
-            class="css-xgcpzl-ImageWrapper-Teaser e1shv2yg0"
+            class="css-16cj43p-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -784,11 +784,11 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-xjjwu2-ImageWrapperStyled e18of27r12"
+          class="css-uxpjtj-TeaserImageWrapper e18of27r12"
         >
           <img
             alt="An image description"
-            class="css-xgcpzl-ImageWrapper-Teaser e1shv2yg0"
+            class="css-16cj43p-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -842,11 +842,11 @@ https://unsplash.it/200/200 200w"
         href="https://example.com"
       >
         <div
-          class="css-xjjwu2-ImageWrapperStyled e18of27r12"
+          class="css-uxpjtj-TeaserImageWrapper e18of27r12"
         >
           <img
             alt="An image description"
-            class="css-xgcpzl-ImageWrapper-Teaser e1shv2yg0"
+            class="css-16cj43p-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,

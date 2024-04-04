@@ -1,4 +1,4 @@
-import {Theme, css, styled, useTheme} from '@mui/material'
+import {css, styled, useTheme} from '@mui/material'
 import {firstParagraphToPlaintext} from '@wepublish/richtext'
 import {FlexAlignment, Teaser as TeaserType} from '@wepublish/website/api'
 import {BuilderTeaserProps, useWebsiteBuilder} from '@wepublish/website/builder'
@@ -165,27 +165,34 @@ export const TeaserInnerWrapper = styled('div')`
   grid-auto-rows: max-content;
 `
 
-export const ImageWrapperStyled = styled('div')`
+export const TeaserImageWrapper = styled('div')`
   grid-column: 1/13;
   width: 100%;
   height: 100%;
   overflow: hidden;
 `
 
-const getEnhancedImageStyles = (theme: Theme, isHovered: boolean) => css`
-  width: 100%;
-  object-fit: cover;
-  grid-column: 1/13;
-  transition: transform 0.3s ease-in-out;
-  aspect-ratio: 1.8;
-  transform: ${isHovered ? 'scale(1.1)' : 'scale(1)'};
+const useImageStyles = (isHovered: boolean) => {
+  const theme = useTheme()
 
-  ${theme.breakpoints.up('md')} {
-    aspect-ratio: 1/1;
-  }
-`
+  return useMemo(
+    () => css`
+      width: 100%;
+      object-fit: cover;
+      grid-column: 1/13;
+      transition: transform 0.3s ease-in-out;
+      aspect-ratio: 1.8;
+      transform: ${isHovered ? 'scale(1.1)' : 'scale(1)'};
 
-const teaserLinkStyles = (theme: Theme) => css`
+      ${theme.breakpoints.up('md')} {
+        aspect-ratio: 1/1;
+      }
+    `,
+    [theme, isHovered]
+  )
+}
+
+const teaserLinkStyles = () => css`
   display: grid;
   grid-template-rows: min-content;
   align-items: start;
@@ -265,7 +272,6 @@ export const Time = styled('time')`
 
 export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
   const {hoverProps, isHovered} = useHover({})
-  const theme = useTheme()
   const title = teaser && selectTeaserTitle(teaser)
   const preTitle = teaser && selectTeaserPreTitle(teaser)
   const lead = teaser && selectTeaserLead(teaser)
@@ -279,19 +285,16 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
     elements: {Link, Image, Paragraph, H4}
   } = useWebsiteBuilder()
 
-  const linkStyles = useMemo(() => teaserLinkStyles(theme), [theme])
-  const enhancedImageStyles = useMemo(
-    () => getEnhancedImageStyles(theme, isHovered),
-    [theme, isHovered]
-  )
+  const linkStyles = teaserLinkStyles()
+  const imageStyles = useImageStyles(isHovered)
 
   return (
     <TeaserWrapper {...alignment} {...(hoverProps as object)}>
       <Link color="inherit" href={href ?? ''} className={className} css={linkStyles}>
         {image ? (
-          <ImageWrapperStyled>
-            <Image image={image} css={enhancedImageStyles} />
-          </ImageWrapperStyled>
+          <TeaserImageWrapper>
+            <Image image={image} css={imageStyles} />
+          </TeaserImageWrapper>
         ) : (
           <ImagePlaceholder />
         )}
