@@ -18,6 +18,7 @@ import {Roboto} from 'next/font/google'
 import Head from 'next/head'
 import Script from 'next/script'
 import {initReactI18next} from 'react-i18next'
+import {FaTwitter} from 'react-icons/fa6'
 import {MdFacebook, MdMail} from 'react-icons/md'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
@@ -27,8 +28,7 @@ import {MainGrid} from '../src/components/layout/main-grid'
 import {BajourBlockRenderer} from '../src/components/website-builder-overwrites/block-renderer/block-renderer'
 import {BajourTeaser} from '../src/components/website-builder-overwrites/blocks/teaser'
 import {BajourTeaserGrid} from '../src/components/website-builder-styled/blocks/teaser-grid-styled'
-import theme from '../src/styles/theme'
-import {ReactComponent as TwitterLogo} from '../src/twitter-logo.svg'
+import theme, {navbarTheme} from '../src/styles/theme'
 
 setDefaultOptions({
   locale: de
@@ -78,7 +78,7 @@ const Footer = styled(FooterContainer)`
 `
 
 const ButtonLink = styled('a')`
-  color: initial;
+  color: ${({theme}) => theme.palette.primary.contrastText};
 `
 
 function CustomApp({Component, pageProps}: CustomAppProps) {
@@ -126,24 +126,26 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               <CssBaseline />
 
               <MainGrid className={roboto.className}>
-                <NavBar
-                  slug="main"
-                  categorySlugs={[['basel-briefing', 'other'], ['about-us']]}
-                  headerSlug="header">
-                  <>
-                    <ButtonLink href="https://www.facebook.com/bajourbasel">
-                      <MdFacebook size="32" />
-                    </ButtonLink>
+                <ThemeProvider theme={navbarTheme}>
+                  <NavBar
+                    slug="main"
+                    categorySlugs={[['basel-briefing', 'other'], ['about-us']]}
+                    headerSlug="header">
+                    <>
+                      <ButtonLink href="https://www.facebook.com/bajourbasel">
+                        <MdFacebook size="32" />
+                      </ButtonLink>
 
-                    <ButtonLink href="https://twitter.com/bajourbasel">
-                      <TwitterLogo width={32} height={32} />
-                    </ButtonLink>
+                      <ButtonLink href="https://twitter.com/bajourbasel">
+                        <FaTwitter size="32" />
+                      </ButtonLink>
 
-                    <ButtonLink href="mailto:info@bajour.ch">
-                      <MdMail size="32" />
-                    </ButtonLink>
-                  </>
-                </NavBar>
+                      <ButtonLink href="mailto:info@bajour.ch">
+                        <MdMail size="32" />
+                      </ButtonLink>
+                    </>
+                  </NavBar>
+                </ThemeProvider>
 
                 <Component {...pageProps} />
 

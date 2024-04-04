@@ -1,4 +1,10 @@
-import {ApiV1, ArticleListContainer, AuthorContainer, useWebsiteBuilder} from '@wepublish/website'
+import {
+  ApiV1,
+  ArticleListContainer,
+  ArticleWrapper,
+  AuthorContainer,
+  useWebsiteBuilder
+} from '@wepublish/website'
 import {GetStaticPaths, GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
@@ -19,7 +25,7 @@ export default function AuthorBySlug() {
   })
 
   return (
-    <>
+    <ArticleWrapper>
       <AuthorContainer slug={slug as string} />
 
       {data?.author && (
@@ -28,7 +34,7 @@ export default function AuthorBySlug() {
           <ArticleListContainer variables={{filter: {authors: [data.author.id]}}} />
         </>
       )}
-    </>
+    </ArticleWrapper>
   )
 }
 
@@ -45,7 +51,7 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
 
   const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
 
-  const data = await Promise.all([
+  await Promise.all([
     client.query({
       query: ApiV1.AuthorDocument,
       variables: {

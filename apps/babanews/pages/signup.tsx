@@ -1,11 +1,17 @@
 import {styled, Typography} from '@mui/material'
-import {ApiV1, RegistrationFormContainer, useUser, useWebsiteBuilder} from '@wepublish/website'
+import {
+  ApiV1,
+  ContentWrapper,
+  RegistrationFormContainer,
+  useUser,
+  useWebsiteBuilder
+} from '@wepublish/website'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {useEffect} from 'react'
 
-const SignupWrapper = styled('div')`
+const SignupWrapper = styled(ContentWrapper)`
   display: grid;
   justify-content: center;
 `

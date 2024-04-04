@@ -55,7 +55,9 @@ export function ArticleListItem({
       </ArticleListItemImageWrapper>
 
       <ArticleListItemContent>
-        <time dateTime={publishedAt}>{format(new Date(publishedAt), false)}</time>
+        <time suppressHydrationWarning dateTime={publishedAt}>
+          {format(new Date(publishedAt), false)}
+        </time>
 
         {title && (
           <H5 component="h1">

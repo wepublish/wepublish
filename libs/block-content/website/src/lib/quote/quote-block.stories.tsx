@@ -48,6 +48,14 @@ export const Default = {
   }
 }
 
+export const WithImage = {
+  args: {
+    quote: 'This is a quote',
+    author: 'John Doe',
+    image
+  }
+}
+
 export const WithClassName = {
   args: {
     quote: 'This is a quote',
@@ -63,13 +71,5 @@ export const WithEmotion = {
     css: css`
       background-color: #eee;
     `
-  }
-}
-
-export const WithImage = {
-  args: {
-    quote: 'This is a quote',
-    author: 'John Doe',
-    image
   }
 }

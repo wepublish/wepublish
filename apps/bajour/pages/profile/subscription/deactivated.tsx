@@ -1,12 +1,10 @@
 import {styled} from '@mui/material'
 import {getSessionTokenProps, ssrAuthLink, withAuthGuard} from '@wepublish/utils/website'
-import {ApiV1, SubscriptionListContainer} from '@wepublish/website'
+import {ApiV1, ContentWrapper, SubscriptionListContainer} from '@wepublish/website'
 import {NextPageContext} from 'next'
 import getConfig from 'next/config'
 
-import {Container} from '../../../src/components/layout/container'
-
-const SubscriptionsWrapper = styled(Container)`
+const SubscriptionsWrapper = styled(ContentWrapper)`
   display: grid;
   gap: ${({theme}) => theme.spacing(2)};
   grid-template-columns: minmax(max-content, 500px);
@@ -49,6 +47,9 @@ export {
       }),
       client.query({
         query: ApiV1.SubscriptionsDocument
+      }),
+      client.query({
+        query: ApiV1.NavigationListDocument
       })
     ])
   }

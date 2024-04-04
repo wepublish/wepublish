@@ -1,12 +1,17 @@
 import {styled, Typography} from '@mui/material'
-import {ApiV1, RegistrationFormContainer, useUser, useWebsiteBuilder} from '@wepublish/website'
+import {
+  ApiV1,
+  ContentWrapper,
+  RegistrationFormContainer,
+  useUser,
+  useWebsiteBuilder
+} from '@wepublish/website'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {useEffect} from 'react'
 
-const SignupWrapper = styled('div')`
-  display: grid;
+const SignupWrapper = styled(ContentWrapper)`
   justify-content: center;
 `
 
@@ -25,11 +30,13 @@ export default function SignUp() {
 
   return (
     <SignupWrapper>
-      <H3 component="h1">Registriere dich noch heute</H3>
+      <div>
+        <H3 component="h1">Registriere dich noch heute</H3>
 
-      <Typography variant="body1" paragraph>
-        (Falls du schon einen Account hast, <Link href={'/login'}>klicke hier.</Link>)
-      </Typography>
+        <Typography variant="body1" paragraph>
+          (Falls du schon einen Account hast, <Link href={'/login'}>klicke hier.</Link>)
+        </Typography>
+      </div>
 
       <RegistrationFormContainer />
     </SignupWrapper>

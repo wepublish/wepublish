@@ -1,48 +1,84 @@
 import {css, styled} from '@mui/material'
 import {BuilderAuthorChipProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
-export const AuthorChipWrapper = styled('aside')`
+export const AuthorChipWrapper = styled('div')`
   display: grid;
-  gap: ${({theme}) => theme.spacing(3)};
-  grid-template-columns: 65px 1fr;
+  gap: ${({theme}) => theme.spacing(1)};
+`
+
+export const AuthorChipDivider = styled('hr')`
+  width: 100%;
+  height: 1px;
+  background-color: ${({theme}) => theme.palette.divider};
+  margin: 0;
+`
+
+export const AuthorChipAuthorWrapper = styled('div')`
+  display: grid;
+  gap: ${({theme}) => theme.spacing(1)};
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  align-items: end;
+`
+
+export const AuthorChipMetaWrapper = styled('div')`
+  display: grid;
+  grid-template-columns: max-content max-content;
+  justify-content: space-between;
   align-items: center;
 `
 
 export const AuthorChipImageWrapper = styled('div')`
   display: grid;
+  width: 40px;
 `
 
 export const AuthorChipContentWrapper = styled('div')`
   display: grid;
 `
 
-export const AuthorChipJobTitle = styled('div')``
-export const AuthorChipName = styled('div')``
+export const AuthorChipName = styled('div')`
+  font-weight: 500;
+`
 
 const imageStyles = css`
   border-radius: 50%;
 `
 
-export function AuthorChip({className, author}: BuilderAuthorChipProps) {
+export function AuthorChip({className, author, publishedAt}: BuilderAuthorChipProps) {
   const {
-    elements: {Image, Link}
+    AuthorLinks,
+    elements: {Image, Link},
+    date
   } = useWebsiteBuilder()
 
   return (
     <AuthorChipWrapper className={className}>
-      <AuthorChipImageWrapper>
-        {author.image && <Image image={author.image} square css={imageStyles} />}
-      </AuthorChipImageWrapper>
+      <AuthorChipAuthorWrapper>
+        {author.image && (
+          <AuthorChipImageWrapper>
+            <Image image={author.image} square css={imageStyles} />
+          </AuthorChipImageWrapper>
+        )}
 
-      <AuthorChipContentWrapper>
-        <AuthorChipName>
-          <strong>
+        <AuthorChipContentWrapper>
+          <AuthorChipName>
             Von <Link href={author.url}>{author.name}</Link>
-          </strong>
-        </AuthorChipName>
+          </AuthorChipName>
+        </AuthorChipContentWrapper>
+      </AuthorChipAuthorWrapper>
 
-        {author.jobTitle && <AuthorChipJobTitle>{author.jobTitle}</AuthorChipJobTitle>}
-      </AuthorChipContentWrapper>
+      <AuthorChipDivider />
+
+      <AuthorChipMetaWrapper>
+        {publishedAt && (
+          <time suppressHydrationWarning dateTime={publishedAt}>
+            {date.format(new Date(publishedAt), false)}
+          </time>
+        )}
+
+        {!!author.links?.length && <AuthorLinks links={author.links} />}
+      </AuthorChipMetaWrapper>
     </AuthorChipWrapper>
   )
 }

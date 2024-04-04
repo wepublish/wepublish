@@ -37,7 +37,12 @@ const Cell = styled(RCell)`
 
 export function EventStartsAtView({startsAt}: {startsAt: string}) {
   const startsAtDate = new Date(startsAt)
-  return <time dateTime={startsAtDate.toISOString()}>{formatDate(startsAtDate, 'PPP p')}</time>
+
+  return (
+    <time suppressHydrationWarning dateTime={startsAtDate.toISOString()}>
+      {formatDate(startsAtDate, 'PPP p')}
+    </time>
+  )
 }
 
 export function EventEndsAtView({endsAt}: {endsAt: string | null | undefined}) {
@@ -45,7 +50,11 @@ export function EventEndsAtView({endsAt}: {endsAt: string | null | undefined}) {
   const {t} = useTranslation()
 
   if (endsAtDate) {
-    return <time dateTime={endsAtDate.toISOString()}>{formatDate(endsAtDate, 'PPP p')}</time>
+    return (
+      <time suppressHydrationWarning dateTime={endsAtDate.toISOString()}>
+        {formatDate(endsAtDate, 'PPP p')}
+      </time>
+    )
   }
   return <>{t('event.list.endsAtNone')}</>
 }

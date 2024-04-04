@@ -4,6 +4,7 @@ import {IntendedRouteStorageKey} from '@wepublish/utils/website'
 import {
   ApiV1,
   AuthTokenStorageKey,
+  ContentWrapper,
   LoginFormContainer,
   useUser,
   useWebsiteBuilder
@@ -14,8 +15,7 @@ import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {useEffect} from 'react'
 
-const LoginWrapper = styled('div')`
-  display: grid;
+const LoginWrapper = styled(ContentWrapper)`
   justify-content: center;
 `
 
@@ -44,11 +44,13 @@ export default function Login({sessionToken}: LoginProps) {
 
   return (
     <LoginWrapper>
-      <H3 component="h1">Login für Abonnent*innen</H3>
+      <div>
+        <H3 component="h1">Login für Abonnent*innen</H3>
 
-      <Typography variant="body1" paragraph>
-        (Falls du noch keinen Account hast, <Link href={'/signup'}>klicke hier.</Link>)
-      </Typography>
+        <Typography variant="body1" paragraph>
+          (Falls du noch keinen Account hast, <Link href={'/signup'}>klicke hier.</Link>)
+        </Typography>
+      </div>
 
       <LoginFormContainer />
     </LoginWrapper>
