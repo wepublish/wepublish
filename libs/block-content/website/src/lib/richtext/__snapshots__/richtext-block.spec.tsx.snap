@@ -12,7 +12,7 @@ exports[`Richtext Block should render Default 1`] = `
       style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
     >
       <h2
-        class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h4 css-1raxwre-MuiTypography-root"
         data-slate-node="element"
       >
         <span
@@ -385,7 +385,7 @@ exports[`Richtext Block should render WithClassName 1`] = `
       style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
     >
       <h2
-        class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h4 css-1raxwre-MuiTypography-root"
         data-slate-node="element"
       >
         <span
@@ -758,7 +758,7 @@ exports[`Richtext Block should render WithEmotion 1`] = `
       style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
     >
       <h2
-        class="MuiTypography-root MuiTypography-h4 css-2p1mlx-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h4 css-1raxwre-MuiTypography-root"
         data-slate-node="element"
       >
         <span

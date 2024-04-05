@@ -5,11 +5,15 @@ import {
   ChallengeDocument,
   Exact,
   FullImageFragment,
+  FullInvoiceFragment,
   FullMemberPlanFragment,
+  FullSubscriptionFragment,
+  InvoicesDocument,
   MemberPlanListDocument,
   PaymentPeriodicity,
   RegisterDocument,
-  SubscribeDocument
+  SubscribeDocument,
+  SubscriptionsDocument
 } from '@wepublish/website/api'
 import {SubscribeContainer} from './subscribe-container'
 import * as registrationFormStories from './subscribe.stories'
@@ -17,6 +21,7 @@ import {ApolloError} from '@apollo/client'
 import {waitFor, within} from '@storybook/testing-library'
 import {useUser} from '@wepublish/authentication/website'
 import {Node} from 'slate'
+import {WithUserDecorator} from '@wepublish/storybook'
 
 export default {
   title: 'Container/Subscribe',
@@ -160,6 +165,32 @@ const challenge = {
   __typename: 'Challenge'
 } as Challenge
 
+const subscription = {
+  __typename: 'Subscription',
+  id: '1234',
+  autoRenew: false,
+  memberPlan,
+  monthlyAmount: memberPlan.amountPerMonthMin,
+  paymentMethod: {} as any,
+  paymentPeriodicity: PaymentPeriodicity.Yearly,
+  properties: [],
+  startsAt: new Date('2024-01-01').toISOString(),
+  url: 'https://example.com'
+} as Exact<FullSubscriptionFragment>
+
+const invoice = {
+  __typename: 'Invoice',
+  id: '1234',
+  createdAt: new Date('2024-01-01').toISOString(),
+  dueAt: new Date('2024-01-01').toISOString(),
+  items: [],
+  mail: '',
+  modifiedAt: new Date('2024-01-01').toISOString(),
+  subscriptionID: subscription.id,
+  total: 5000,
+  subscription
+} as Exact<FullInvoiceFragment>
+
 const registerVariables = {
   name: 'Bar',
   email: 'foobar@email.com',
@@ -207,6 +238,22 @@ export const Default: StoryObj<typeof SubscribeContainer> = {
           },
           result: {
             data: {challenge}
+          }
+        },
+        {
+          request: {
+            query: SubscriptionsDocument
+          },
+          result: {
+            data: {subscriptions: [subscription]}
+          }
+        },
+        {
+          request: {
+            query: InvoicesDocument
+          },
+          result: {
+            data: {invoices: [invoice]}
           }
         },
         {
@@ -259,6 +306,11 @@ export const Default: StoryObj<typeof SubscribeContainer> = {
       ]
     }
   }
+}
+
+export const LoggedIn: StoryObj<typeof SubscribeContainer> = {
+  ...Default,
+  decorators: [WithUserDecorator(null)]
 }
 
 export const Filled: StoryObj<typeof SubscribeContainer> = {

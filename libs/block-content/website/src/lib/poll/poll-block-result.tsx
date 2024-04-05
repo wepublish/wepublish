@@ -40,7 +40,7 @@ export const PollBlockVoteBarFill = styled('div')<{highlight: boolean}>`
   ${({highlight, theme}) =>
     highlight &&
     css`
-      background-color: ${theme.palette.secondary.main};
+      background-color: ${theme.palette.common.black};
     `}
 `
 
@@ -51,7 +51,7 @@ export const PollBlockVoteBarText = styled('div')<{highlight: boolean}>`
   ${({highlight, theme}) =>
     highlight &&
     css`
-      color: ${theme.palette.getContrastText(theme.palette.secondary.main)};
+      color: ${theme.palette.getContrastText(theme.palette.common.black)};
     `}
 `
 
