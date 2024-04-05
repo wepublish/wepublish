@@ -46,4 +46,5 @@ const theme = createTheme(WePTheme, {
     }
   }
 })
+
 export default theme
