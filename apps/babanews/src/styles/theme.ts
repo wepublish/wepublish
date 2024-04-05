@@ -4,7 +4,9 @@ const {
   palette: {augmentColor}
 } = createTheme()
 
-const theme = createTheme({
+import {theme as WePTheme} from "@wepublish/ui"
+
+const theme = createTheme(WePTheme, {
   typography: {
     fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
     body1: {
