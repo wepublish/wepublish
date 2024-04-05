@@ -19,21 +19,6 @@ export const TeaserImgStyled = styled(Image)`
   }
 `
 
-export const fluidTypography = (minSize: number, maxSize: number): string => {
-  const minViewPort = 390
-  const maxViewPort = 3840
-
-  return `clamp(
-    ${minSize}px,
-    calc(
-      ${minSize}px + (${maxSize} - ${minSize}) * (
-        (100vw + ${minViewPort}px) / (${maxViewPort} - ${minViewPort})
-      )
-    ),
-    ${maxSize}px
-  )`
-}
-
 export const ListTeaser = styled(Teaser)`
   ${({theme}) => theme.breakpoints.up('md')} {
     grid-template-areas: 'image content';
