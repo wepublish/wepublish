@@ -9,7 +9,7 @@ export const BabanewsTeaserGrid = styled(TeaserGridBlock)`
       column-gap: ${theme.spacing(4)};
       padding-left: calc(100% / 28);
       padding-right: calc(100% / 28);
-      align-items: center;
+      align-items: start;
 
       ${theme.breakpoints.up('md')} {
         row-gap: ${theme.spacing(6)};

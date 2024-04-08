@@ -45,6 +45,10 @@ i18next
   })
 z.setErrorMap(zodI18nMap)
 
+const ContentSpacer = styled('div')`
+  min-height: 100vh;
+`
+
 const Footer = styled(FooterContainer)`
   grid-column: -1/1;
 
@@ -122,8 +126,9 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
                 slug="main"
                 headerSlug="header"
               />
-
-              <Component {...pageProps} />
+              <ContentSpacer>
+                <Component {...pageProps} />
+              </ContentSpacer>
 
               <Footer slug="main" categorySlugs={[['sonstiges', 'other'], ['about-us']]} />
             </div>

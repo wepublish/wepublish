@@ -1,11 +1,11 @@
 import {styled} from '@mui/material'
 import {
   Image,
-  ImageWrapperStyled,
-  PreTitleStyled,
+  PreTitle,
   Teaser,
+  TeaserImageWrapper,
   TeaserPreTitleNoContent,
-  TeaserPreTitleStyled
+  TeaserPreTitleWrapper
 } from '@wepublish/website'
 
 export const TeaserImgStyled = styled(Image)`
@@ -21,8 +21,14 @@ export const TeaserImgStyled = styled(Image)`
 
 export const ListTeaser = styled(Teaser)`
   ${({theme}) => theme.breakpoints.up('md')} {
-    grid-template-areas: 'image content';
+    grid-template-areas:
+      'image pretitle'
+      'image title'
+      'image lead'
+      'image authors'
+      'image .';
     grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(5, auto);
     column-gap: ${({theme}) => theme.spacing(4)};
 
     ${TeaserPreTitleNoContent} {
@@ -30,17 +36,17 @@ export const ListTeaser = styled(Teaser)`
       height: 5px;
     }
 
-    ${TeaserPreTitleStyled} {
+    ${TeaserPreTitleWrapper} {
       width: max-content;
       height: auto;
       margin-bottom: ${({theme}) => theme.spacing(0.5)};
     }
 
-    ${PreTitleStyled} {
+    ${PreTitle} {
       transform: none;
     }
 
-    ${ImageWrapperStyled} {
+    ${TeaserImageWrapper} {
       aspect-ratio: 16/9;
       width: 90%;
     }

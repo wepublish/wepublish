@@ -1,12 +1,13 @@
 import {css, styled} from '@mui/material'
 import {
-  ImageWrapperStyled,
-  TeaserContentStyled,
+  TeaserImageWrapper,
   TeaserListBlock,
   TeaserPreTitleNoContent,
-  TeaserPreTitleStyled,
+  TeaserPreTitleWrapper,
   TeaserWrapper
 } from '@wepublish/website'
+
+import {ListTeaser} from '../../website-builder-overwrites/blocks/list-teaser'
 
 export const BabanewsTeaserList = styled(TeaserListBlock)`
   ${({theme}) =>
@@ -31,33 +32,32 @@ export const BabanewsTeaserList = styled(TeaserListBlock)`
         row-gap: ${theme.spacing(4)};
 
         ${TeaserWrapper} {
-          ${ImageWrapperStyled} {
-            grid-area: image;
+          ${TeaserImageWrapper} {
             margin-right: 0;
             margin-left: auto;
           }
 
-          ${TeaserContentStyled} {
-            grid-area: content;
-          }
+          &:nth-of-type(2n) {
+            ${ListTeaser} {
+              grid-template-areas:
+                'pretitle image'
+                'title image'
+                'lead image'
+                'authors image'
+                '. image';
+            }
+            text-align: right;
 
-          &:nth-of-type(2n + 1) {
-            ${ImageWrapperStyled} {
-              grid-area: content;
+            ${TeaserImageWrapper} {
               margin-left: 0;
               margin-right: auto;
-            }
-
-            ${TeaserContentStyled} {
-              grid-area: image;
-              text-align: right;
             }
 
             ${TeaserPreTitleNoContent} {
               margin-left: 80%;
             }
 
-            ${TeaserPreTitleStyled} {
+            ${TeaserPreTitleWrapper} {
               margin-left: auto;
             }
           }
