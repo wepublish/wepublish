@@ -205,6 +205,14 @@ import {PrismaClient} from '@prisma/client'
                   prisma
                 })
               )
+            } else if (paymentProvider.type === 'no-charge') {
+              paymentProviders.push(
+                new NeverChargePaymentProvider({
+                  id: paymentProvider.id,
+                  name: paymentProvider.name,
+                  offSessionPayments: paymentProvider.offSessionPayments
+                })
+              )
             } else {
               throw new Error(
                 `Unknown payment provider type defined: ${(paymentProvider as any).type}`
@@ -212,14 +220,6 @@ import {PrismaClient} from '@prisma/client'
             }
           }
         }
-        paymentProviders.push(
-          new NeverChargePaymentProvider({
-            id: 'no-charge',
-            name: 'No Charge Payment',
-            offSessionPayments: true
-          })
-        )
-
         return {paymentProviders}
       },
       inject: [ConfigService, PrismaClient],
