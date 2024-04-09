@@ -16,7 +16,7 @@ exports[`Footer should render Default 1`] = `
           href="/"
         >
           <span
-            class="MuiTypography-root MuiTypography-h4 css-1vn71jb-MuiTypography-root-FooterPaper"
+            class="MuiTypography-root MuiTypography-h4 css-uxagb0-MuiTypography-root-FooterPaper"
           >
             Gesellschaft
           </span>
@@ -26,7 +26,7 @@ exports[`Footer should render Default 1`] = `
           href="/a/abcd"
         >
           <span
-            class="MuiTypography-root MuiTypography-h4 css-1vn71jb-MuiTypography-root-FooterPaper"
+            class="MuiTypography-root MuiTypography-h4 css-uxagb0-MuiTypography-root-FooterPaper"
           >
             Politik
           </span>
@@ -36,7 +36,7 @@ exports[`Footer should render Default 1`] = `
           href="/a/abcd"
         >
           <span
-            class="MuiTypography-root MuiTypography-h4 css-1vn71jb-MuiTypography-root-FooterPaper"
+            class="MuiTypography-root MuiTypography-h4 css-uxagb0-MuiTypography-root-FooterPaper"
           >
             Kultur
           </span>
@@ -46,7 +46,7 @@ exports[`Footer should render Default 1`] = `
           href="/a/abcd"
         >
           <span
-            class="MuiTypography-root MuiTypography-h4 css-1vn71jb-MuiTypography-root-FooterPaper"
+            class="MuiTypography-root MuiTypography-h4 css-uxagb0-MuiTypography-root-FooterPaper"
           >
             Tsüri-News
           </span>
@@ -56,7 +56,7 @@ exports[`Footer should render Default 1`] = `
           href="https://google.com"
         >
           <span
-            class="MuiTypography-root MuiTypography-h4 css-1vn71jb-MuiTypography-root-FooterPaper"
+            class="MuiTypography-root MuiTypography-h4 css-uxagb0-MuiTypography-root-FooterPaper"
           >
             Was lauft?
           </span>
@@ -241,7 +241,7 @@ exports[`Footer should render WithClassName 1`] = `
           href="/"
         >
           <span
-            class="MuiTypography-root MuiTypography-h4 css-1vn71jb-MuiTypography-root-FooterPaper"
+            class="MuiTypography-root MuiTypography-h4 css-uxagb0-MuiTypography-root-FooterPaper"
           >
             Gesellschaft
           </span>
@@ -251,7 +251,7 @@ exports[`Footer should render WithClassName 1`] = `
           href="/a/abcd"
         >
           <span
-            class="MuiTypography-root MuiTypography-h4 css-1vn71jb-MuiTypography-root-FooterPaper"
+            class="MuiTypography-root MuiTypography-h4 css-uxagb0-MuiTypography-root-FooterPaper"
           >
             Politik
           </span>
@@ -261,7 +261,7 @@ exports[`Footer should render WithClassName 1`] = `
           href="/a/abcd"
         >
           <span
-            class="MuiTypography-root MuiTypography-h4 css-1vn71jb-MuiTypography-root-FooterPaper"
+            class="MuiTypography-root MuiTypography-h4 css-uxagb0-MuiTypography-root-FooterPaper"
           >
             Kultur
           </span>
@@ -271,7 +271,7 @@ exports[`Footer should render WithClassName 1`] = `
           href="/a/abcd"
         >
           <span
-            class="MuiTypography-root MuiTypography-h4 css-1vn71jb-MuiTypography-root-FooterPaper"
+            class="MuiTypography-root MuiTypography-h4 css-uxagb0-MuiTypography-root-FooterPaper"
           >
             Tsüri-News
           </span>
@@ -281,7 +281,7 @@ exports[`Footer should render WithClassName 1`] = `
           href="https://google.com"
         >
           <span
-            class="MuiTypography-root MuiTypography-h4 css-1vn71jb-MuiTypography-root-FooterPaper"
+            class="MuiTypography-root MuiTypography-h4 css-uxagb0-MuiTypography-root-FooterPaper"
           >
             Was lauft?
           </span>
@@ -466,7 +466,7 @@ exports[`Footer should render WithEmotion 1`] = `
           href="/"
         >
           <span
-            class="MuiTypography-root MuiTypography-h4 css-1vn71jb-MuiTypography-root-FooterPaper"
+            class="MuiTypography-root MuiTypography-h4 css-uxagb0-MuiTypography-root-FooterPaper"
           >
             Gesellschaft
           </span>
@@ -476,7 +476,7 @@ exports[`Footer should render WithEmotion 1`] = `
           href="/a/abcd"
         >
           <span
-            class="MuiTypography-root MuiTypography-h4 css-1vn71jb-MuiTypography-root-FooterPaper"
+            class="MuiTypography-root MuiTypography-h4 css-uxagb0-MuiTypography-root-FooterPaper"
           >
             Politik
           </span>
@@ -486,7 +486,7 @@ exports[`Footer should render WithEmotion 1`] = `
           href="/a/abcd"
         >
           <span
-            class="MuiTypography-root MuiTypography-h4 css-1vn71jb-MuiTypography-root-FooterPaper"
+            class="MuiTypography-root MuiTypography-h4 css-uxagb0-MuiTypography-root-FooterPaper"
           >
             Kultur
           </span>
@@ -496,7 +496,7 @@ exports[`Footer should render WithEmotion 1`] = `
           href="/a/abcd"
         >
           <span
-            class="MuiTypography-root MuiTypography-h4 css-1vn71jb-MuiTypography-root-FooterPaper"
+            class="MuiTypography-root MuiTypography-h4 css-uxagb0-MuiTypography-root-FooterPaper"
           >
             Tsüri-News
           </span>
@@ -506,7 +506,7 @@ exports[`Footer should render WithEmotion 1`] = `
           href="https://google.com"
         >
           <span
-            class="MuiTypography-root MuiTypography-h4 css-1vn71jb-MuiTypography-root-FooterPaper"
+            class="MuiTypography-root MuiTypography-h4 css-uxagb0-MuiTypography-root-FooterPaper"
           >
             Was lauft?
           </span>

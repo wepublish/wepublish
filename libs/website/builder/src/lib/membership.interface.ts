@@ -77,6 +77,8 @@ export type BuilderSubscribeProps<
   T extends OptionalKeysOf<RegisterMutationVariables> = OptionalKeysOf<RegisterMutationVariables>
 > = {
   challenge: Pick<QueryResult<ChallengeQuery>, 'data' | 'loading' | 'error'>
+  userSubscriptions: Pick<QueryResult<SubscriptionsQuery>, 'data' | 'loading' | 'error'>
+  userInvoices: Pick<QueryResult<InvoicesQuery>, 'data' | 'loading' | 'error'>
   memberPlans: Pick<QueryResult<MemberPlanListQuery>, 'data' | 'loading' | 'error'>
   className?: string
   onSubscribeWithRegister?: (data: {

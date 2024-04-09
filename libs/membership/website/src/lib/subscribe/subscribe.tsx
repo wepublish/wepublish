@@ -1,5 +1,5 @@
 import {zodResolver} from '@hookform/resolvers/zod'
-import {Checkbox, FormControlLabel, InputAdornment, Slider, styled} from '@mui/material'
+import {Checkbox, FormControlLabel, InputAdornment, Modal, Slider, styled} from '@mui/material'
 import {
   RegistrationChallenge,
   RegistrationChallengeWrapper,
@@ -21,7 +21,7 @@ import {
   useAsyncAction,
   useWebsiteBuilder
 } from '@wepublish/website/builder'
-import {useEffect, useMemo, useState} from 'react'
+import {PropsWithChildren, useEffect, useMemo, useState} from 'react'
 import {Controller, useForm} from 'react-hook-form'
 import {z} from 'zod'
 import {formatChf} from '../formatters/format-currency'
@@ -93,6 +93,8 @@ export const SubscribeExtraMoney = styled('div')`
 export const Subscribe = <T extends BuilderUserFormFields>({
   memberPlans,
   challenge,
+  userSubscriptions,
+  userInvoices,
   fields = ['firstName', 'password', 'address'] as T[],
   schema = defaultRegisterSchema,
   className,
@@ -101,12 +103,13 @@ export const Subscribe = <T extends BuilderUserFormFields>({
 }: BuilderSubscribeProps<T>) => {
   const {
     meta: {locale},
-    elements: {Alert, Button, TextField, H5},
+    elements: {Alert, Button, TextField, H5, Link, Paragraph},
     MemberPlanPicker,
     PaymentMethodPicker,
     PeriodicityPicker
   } = useWebsiteBuilder()
   const {hasUser} = useUser()
+  const [openConfirm, setOpenConfirm] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error>()
   const callAction = useAsyncAction(setLoading, setError)
@@ -260,11 +263,39 @@ export const Subscribe = <T extends BuilderUserFormFields>({
     }
   }, [selectedAvailablePaymentMethod, resetField, selectedPaymentPeriodicity])
 
+  const alreadyHasSubscription = useMemo(() => {
+    return (
+      userSubscriptions.data?.subscriptions.some(
+        ({memberPlan}) => memberPlan.id === selectedMemberPlanId
+      ) ?? false
+    )
+  }, [userSubscriptions.data?.subscriptions, selectedMemberPlanId])
+
+  const hasOpenInvoices = useMemo(
+    () =>
+      userInvoices.data?.invoices.some(invoice => !invoice.canceledAt && !invoice.paidAt) ?? false,
+    [userInvoices.data?.invoices]
+  )
+
   return (
     <SubscribeWrapper className={className} onSubmit={onSubmit} noValidate>
       <SubscribeSection>
         {(memberPlans.data?.memberPlans.nodes.length ?? 0) > 1 && (
           <H5 component="h2">Abo wählen</H5>
+        )}
+
+        {hasOpenInvoices && (
+          <Alert severity="warning">
+            Du hast bereits schon ein Abo mit offenen Rechnungen. Du kannst deine offenen Rechnungen
+            in deinem <Link href="/profile/subscription">Abo-Dashboard</Link> anschauen.
+          </Alert>
+        )}
+
+        {alreadyHasSubscription && (
+          <Alert severity="warning">
+            Du hast dieses Abo schon, bist du dir sicher? Du kannst deine Abos in deinem{' '}
+            <Link href="/profile/subscription">Abo-Dashboard</Link> anschauen.
+          </Alert>
         )}
 
         <Controller
@@ -410,9 +441,110 @@ export const Subscribe = <T extends BuilderUserFormFields>({
 
       {error && <Alert severity="error">{error.message}</Alert>}
 
-      <Button disabled={challenge.loading || loading} type="submit" css={buttonStyles}>
+      <Button
+        disabled={challenge.loading || userInvoices.loading || userSubscriptions.loading || loading}
+        type="submit"
+        css={buttonStyles}
+        onClick={e => {
+          if (hasOpenInvoices || alreadyHasSubscription) {
+            e.preventDefault()
+            setOpenConfirm(true)
+          }
+        }}>
         {paymentText} Abonnieren
       </Button>
+
+      <SubscribeConfirmModal
+        open={openConfirm}
+        onSubmit={() => {
+          onSubmit()
+          setOpenConfirm(false)
+        }}
+        onCancel={() => setOpenConfirm(false)}
+        submitText={`${paymentText} Abonnieren`}>
+        <H5 id="modal-modal-title" component="h2">
+          Bist du dir sicher?
+        </H5>
+
+        {hasOpenInvoices && (
+          <Paragraph gutterBottom={false}>
+            Du hast bereits schon ein Abo mit offenen Rechnungen. Du kannst deine offenen Rechnungen
+            in deinem <Link href="/profile/subscription">Abo-Dashboard</Link> anschauen.
+          </Paragraph>
+        )}
+
+        {alreadyHasSubscription && (
+          <Paragraph gutterBottom={false}>
+            Du hast dieses Abo schon. Du kannst deine Abos in deinem{' '}
+            <Link href="/profile/subscription">Abo-Dashboard</Link> anschauen.
+          </Paragraph>
+        )}
+      </SubscribeConfirmModal>
     </SubscribeWrapper>
+  )
+}
+
+export type SubscribeConfirmModalProps = {
+  open: boolean
+  submitText: string
+  onCancel: () => void
+  onSubmit: () => void
+}
+
+export const SubscribeConfirmModalWrapper = styled('div')`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80lvw;
+  max-width: 800px;
+  background-color: ${({theme}) => theme.palette.background.paper};
+  box-shadow: ${({theme}) => theme.shadows[24]};
+  padding: ${({theme}) => theme.spacing(2)};
+  display: grid;
+  gap: ${({theme}) => theme.spacing(3)};
+`
+
+export const SubscribeConfirmModalContent = styled('div')`
+  display: grid;
+  gap: ${({theme}) => theme.spacing(2)};
+  padding: ${({theme}) => theme.spacing(2)};
+`
+
+export const SubscribeConfirmModalActions = styled('div')`
+  display: flex;
+  justify-content: end;
+  gap: ${({theme}) => theme.spacing(3)};
+`
+
+export const SubscribeConfirmModal = ({
+  open,
+  onCancel,
+  onSubmit,
+  submitText,
+  children
+}: PropsWithChildren<SubscribeConfirmModalProps>) => {
+  const {
+    elements: {Button}
+  } = useWebsiteBuilder()
+
+  return (
+    <Modal
+      open={open}
+      onClose={onCancel}
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description">
+      <SubscribeConfirmModalWrapper>
+        <SubscribeConfirmModalContent>{children}</SubscribeConfirmModalContent>
+
+        <SubscribeConfirmModalActions>
+          <Button onClick={onCancel} variant="text" color="secondary">
+            Abbrechen
+          </Button>
+
+          <Button onClick={onSubmit}>{submitText}</Button>
+        </SubscribeConfirmModalActions>
+      </SubscribeConfirmModalWrapper>
+    </Modal>
   )
 }
