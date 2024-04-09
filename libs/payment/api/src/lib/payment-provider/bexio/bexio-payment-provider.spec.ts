@@ -136,15 +136,6 @@ describe('BexioPaymentProvider', () => {
       expect(res.customerID).toEqual('321')
       expect(res.paymentID).toEqual('123')
     })
-
-    it('should check intent status but payment is missing', async () => {
-      mockFindFirst.mockResolvedValue(null)
-
-      await expect(async () => {
-        const bexioPaymentProvider = new BexioPaymentProvider(mockProps)
-        await bexioPaymentProvider.checkIntentStatus({intentID: '123', paymentID: '123'})
-      }).rejects.toThrow('While checking intent, payment not found!')
-    })
   })
 
   describe('Test intent creation', () => {

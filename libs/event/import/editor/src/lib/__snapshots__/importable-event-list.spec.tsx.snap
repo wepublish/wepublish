@@ -174,7 +174,6 @@ exports[`ImportableEventListView renders the event list view with events 1`] = `
       class="css-kkcxf3 rs-table rs-table-hover"
       role="grid"
       style="width: auto; height: 0px;"
-      tabindex="-1"
     >
       <div
         class="rs-table-header-row-wrapper"
