@@ -130,7 +130,7 @@ describe('BexioPaymentProvider', () => {
       })
 
       const bexioPaymentProvider = new BexioPaymentProvider(mockProps)
-      const res = await bexioPaymentProvider.checkIntentStatus({intentID: '123'})
+      const res = await bexioPaymentProvider.checkIntentStatus({intentID: '123', paymentID: '123'})
 
       expect(res.state).toEqual('paid')
       expect(res.customerID).toEqual('321')
@@ -142,7 +142,7 @@ describe('BexioPaymentProvider', () => {
 
       await expect(async () => {
         const bexioPaymentProvider = new BexioPaymentProvider(mockProps)
-        await bexioPaymentProvider.checkIntentStatus({intentID: '123'})
+        await bexioPaymentProvider.checkIntentStatus({intentID: '123', paymentID: '123'})
       }).rejects.toThrow('While checking intent, payment not found!')
     })
   })

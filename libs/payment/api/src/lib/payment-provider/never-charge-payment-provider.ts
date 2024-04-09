@@ -29,11 +29,11 @@ export class NeverChargePaymentProvider extends BasePaymentProvider {
     }
   }
 
-  async checkIntentStatus({intentID}: CheckIntentProps): Promise<IntentState> {
+  async checkIntentStatus({intentID, paymentID}: CheckIntentProps): Promise<IntentState> {
     return {
       state: PaymentState.paid,
       paidAt: new Date(),
-      paymentID: 'fakePaymentID',
+      paymentID,
       paymentData: ''
     }
   }
