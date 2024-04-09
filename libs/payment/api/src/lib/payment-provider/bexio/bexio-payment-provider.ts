@@ -27,8 +27,7 @@ import {
   ResponseNOK,
   SendingInvoiceError,
   UnknownIntentState,
-  WebhookNotImplementedError,
-  PaymentNotFound
+  WebhookNotImplementedError
 } from './bexio-errors'
 import {addToStringReplaceMap, mapBexioStatusToPaymentStatus, searchForContact} from './bexio-utils'
 import fetch from 'node-fetch'
@@ -137,7 +136,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
    * @throws {ResponseNOK} Throws an error if the response status from Bexio is not 200.
    * @throws {UnknownIntentState} Throws an error if the intent status is not recognized.
    */
-  async checkIntentStatus({intentID}: CheckIntentProps): Promise<IntentState> {
+  async checkIntentStatus({intentID, paymentID}: CheckIntentProps): Promise<IntentState> {
     // currently the bexio library we use doesn't return the status (kb_item_status_id)
     // when querying for invoice, so we need to do it "manually" using fetch api
     const bexioBaseUrl = 'https://api.bexio.com/2.0'
@@ -172,25 +171,9 @@ export class BexioPaymentProvider extends BasePaymentProvider {
       throw new UnknownIntentState()
     }
 
-    // Get payment to return it
-    const payment = await this.prisma.payment.findFirst({
-      where: {
-        invoiceID: bexioResponse.api_reference,
-        intentID
-      }
-    })
-    if (!payment) {
-      logger('bexioPaymentProvider').error(
-        'No payment with intentID <%s> and invoiceID <%s> found!',
-        intentID,
-        bexioResponse.api_reference
-      )
-      throw new PaymentNotFound()
-    }
-
     return {
       state: intentStatus,
-      paymentID: payment.id,
+      paymentID,
       paymentData: JSON.stringify(bexioResponse),
       customerID: bexioResponse.contact_id ? bexioResponse.contact_id.toString() : ''
     }

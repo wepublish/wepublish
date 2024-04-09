@@ -28,7 +28,8 @@ import {
   StripePaymentProvider,
   BexioPaymentProvider,
   PayrexxFactory,
-  HealthModule
+  HealthModule,
+  NeverChargePaymentProvider
 } from '@wepublish/api'
 import {ApiModule, PrismaModule} from '@wepublish/nest-modules'
 import bodyParser from 'body-parser'
@@ -202,6 +203,14 @@ import {PrismaClient} from '@prisma/client'
                     paymentProvider.invoiceMailBodyRenewalMembership,
                   markInvoiceAsOpen: paymentProvider.markInvoiceAsOpen,
                   prisma
+                })
+              )
+            } else if (paymentProvider.type === 'no-charge') {
+              paymentProviders.push(
+                new NeverChargePaymentProvider({
+                  id: paymentProvider.id,
+                  name: paymentProvider.name,
+                  offSessionPayments: paymentProvider.offSessionPayments
                 })
               )
             } else {
