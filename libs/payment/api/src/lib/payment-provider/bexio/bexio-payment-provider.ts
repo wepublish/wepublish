@@ -27,8 +27,7 @@ import {
   ResponseNOK,
   SendingInvoiceError,
   UnknownIntentState,
-  WebhookNotImplementedError,
-  PaymentNotFound
+  WebhookNotImplementedError
 } from './bexio-errors'
 import {addToStringReplaceMap, mapBexioStatusToPaymentStatus, searchForContact} from './bexio-utils'
 import fetch from 'node-fetch'
