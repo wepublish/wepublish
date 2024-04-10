@@ -23,6 +23,7 @@ import {
   NotAuthenticatedError,
   NotFound,
   PaymentAlreadyRunning,
+  SubscriptionNotExtendable,
   SubscriptionNotFound,
   UserInputError,
   UserSubscriptionAlreadyDeactivated
@@ -389,14 +390,15 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         const properties = await memberContext.processSubscriptionProperties(subscriptionProperties)
 
         const {subscription, invoice} = await memberContext.createSubscription(
-          prisma.subscription,
+          prisma,
           user.id,
           paymentMethod.id,
           paymentPeriodicity,
           monthlyAmount,
           memberPlan.id,
           properties,
-          autoRenew
+          autoRenew,
+          memberPlan.extendable
         )
 
         if (!invoice) {
@@ -487,14 +489,15 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         const properties = await memberContext.processSubscriptionProperties(subscriptionProperties)
 
         const {subscription, invoice} = await memberContext.createSubscription(
-          prisma.subscription,
+          prisma,
           user.id,
           paymentMethod.id,
           paymentPeriodicity,
           monthlyAmount,
           memberPlan.id,
           properties,
-          autoRenew
+          autoRenew,
+          memberPlan.extendable
         )
 
         if (!invoice) {
@@ -552,6 +555,11 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             user.id
           )
           throw new SubscriptionNotFound()
+        }
+
+        // Prevent user from extending not extendable subscription
+        if (!subscription.extendable) {
+          throw new SubscriptionNotExtendable(subscription.id)
         }
 
         // Throw for unsupported payment providers

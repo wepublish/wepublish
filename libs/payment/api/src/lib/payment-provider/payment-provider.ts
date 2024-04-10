@@ -42,6 +42,7 @@ export interface CreatePaymentIntentProps {
 
 export interface CheckIntentProps {
   intentID: string
+  paymentID: string
 }
 
 export interface UpdateRemoteSubscriptionAmountProps {
