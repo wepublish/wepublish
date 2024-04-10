@@ -234,10 +234,11 @@ export const TeaserContent = styled(TeaserInnerWrapper)`
 `
 
 export const ImagePlaceholder = styled('div')`
-  width: 100%;
-  object-fit: cover;
   grid-column: 1/13;
-  aspect-ratio: 1/1;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  grid-area: image;
 `
 
 export const TeaserPreTitleNoContent = styled(TeaserPreTitle)<{isHovered: boolean}>`
@@ -366,7 +367,7 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
           {authors && authors?.length ? <Authors>Von {authors?.join(', ')} </Authors> : null}
           {publishDate && (
             <Time dateTime={publishDate}>
-              {'| '}
+              {authors && authors?.length ? '| ' : null}
               {date.format(new Date(publishDate), false)}{' '}
             </Time>
           )}

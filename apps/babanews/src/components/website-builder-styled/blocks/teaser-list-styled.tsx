@@ -35,6 +35,10 @@ export const BabanewsTeaserList = styled(TeaserListBlock)`
           ${TeaserImageWrapper} {
             margin-right: 0;
             margin-left: auto;
+
+            img {
+              aspect-ratio: 16/9;
+            }
           }
 
           &:nth-of-type(2n) {
