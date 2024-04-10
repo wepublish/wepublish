@@ -92,7 +92,14 @@ type Bexio = {
   markInvoiceAsOpen: boolean
 }
 
-type PaymentProvider = Payrexx | PayrexxSubscription | Stripe | StripeCheckout | Bexio
+type noCharge = {
+  type: 'no-charge'
+  id: string
+  name: string
+  offSessionPayments: boolean
+}
+
+type PaymentProvider = Payrexx | PayrexxSubscription | Stripe | StripeCheckout | Bexio | noCharge
 
 type Challenge = {
   secret: string
