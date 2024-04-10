@@ -179,7 +179,7 @@ https://unsplash.it/200/200 200w"
           class="css-tfwjps-Time e18of27r4"
           datetime="2023-01-01T00:00:00.000Z"
         >
-          | 01.01.2023 
+          01.01.2023 
         </time>
       </div>
     </a>
@@ -385,7 +385,7 @@ exports[`Teaser Article should render WithoutImageWithoutBlock 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1oyxfs0-ImagePlaceholder e18of27r9"
+        class="css-1eznk08-ImagePlaceholder e18of27r9"
       />
       <span
         class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
@@ -734,7 +734,7 @@ exports[`Teaser Custom should render WithoutImage 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1oyxfs0-ImagePlaceholder e18of27r9"
+        class="css-1eznk08-ImagePlaceholder e18of27r9"
       />
       <span
         class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
@@ -910,7 +910,7 @@ https://unsplash.it/200/200 200w"
           class="css-tfwjps-Time e18of27r4"
           datetime="2023-01-01T00:00:00.000Z"
         >
-          | 01.01.2023 
+          01.01.2023 
         </time>
       </div>
     </a>
@@ -969,7 +969,7 @@ https://unsplash.it/200/200 200w"
           class="css-tfwjps-Time e18of27r4"
           datetime="2023-01-01T00:00:00.000Z"
         >
-          | 01.01.2023 
+          01.01.2023 
         </time>
       </div>
     </a>
@@ -1028,7 +1028,7 @@ https://unsplash.it/200/200 200w"
           class="css-tfwjps-Time e18of27r4"
           datetime="2023-01-01T00:00:00.000Z"
         >
-          | 01.01.2023 
+          01.01.2023 
         </time>
       </div>
     </a>
@@ -1085,7 +1085,7 @@ https://unsplash.it/200/200 200w"
           class="css-tfwjps-Time e18of27r4"
           datetime="2023-01-01T00:00:00.000Z"
         >
-          | 01.01.2023 
+          01.01.2023 
         </time>
       </div>
     </a>
@@ -1144,7 +1144,7 @@ https://unsplash.it/200/200 200w"
           class="css-tfwjps-Time e18of27r4"
           datetime="2023-01-01T00:00:00.000Z"
         >
-          | 01.01.2023 
+          01.01.2023 
         </time>
       </div>
     </a>
@@ -1164,7 +1164,7 @@ exports[`Teaser Event should render WithoutImageWithoutEventImage 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1oyxfs0-ImagePlaceholder e18of27r9"
+        class="css-1eznk08-ImagePlaceholder e18of27r9"
       />
       <span
         class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
@@ -1192,7 +1192,7 @@ exports[`Teaser Event should render WithoutImageWithoutEventImage 1`] = `
           class="css-tfwjps-Time e18of27r4"
           datetime="2023-01-01T00:00:00.000Z"
         >
-          | 01.01.2023 
+          01.01.2023 
         </time>
       </div>
     </a>
@@ -1245,7 +1245,7 @@ https://unsplash.it/200/200 200w"
           class="css-tfwjps-Time e18of27r4"
           datetime="2023-01-01T00:00:00.000Z"
         >
-          | 01.01.2023 
+          01.01.2023 
         </time>
       </div>
     </a>
@@ -1304,7 +1304,7 @@ https://unsplash.it/200/200 200w"
           class="css-tfwjps-Time e18of27r4"
           datetime="2023-01-01T00:00:00.000Z"
         >
-          | 01.01.2023 
+          01.01.2023 
         </time>
       </div>
     </a>
@@ -1901,7 +1901,7 @@ https://unsplash.it/200/200 200w"
           class="css-tfwjps-Time e18of27r4"
           datetime="2023-01-01T00:00:00.000Z"
         >
-          | 01.01.2023 
+          01.01.2023 
         </time>
       </div>
     </a>
@@ -2107,7 +2107,7 @@ exports[`Teaser PeerArticle should render WithoutImageWithoutBlock 1`] = `
       href="https://example.com/p/123/1231231231"
     >
       <div
-        class="css-1oyxfs0-ImagePlaceholder e18of27r9"
+        class="css-1eznk08-ImagePlaceholder e18of27r9"
       />
       <span
         class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
