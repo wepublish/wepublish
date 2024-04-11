@@ -83,10 +83,7 @@ function Subscriptions() {
 
 const GuardedSubscriptions = withAuthGuard(Subscriptions)
 
-export {
-  GuardedSubscriptions as default
-  // eslint-disable-next-line
-}
+export {GuardedSubscriptions as default}
 ;(GuardedSubscriptions as any).getInitialProps = async (ctx: NextPageContext) => {
   if (typeof window !== 'undefined') {
     return {}

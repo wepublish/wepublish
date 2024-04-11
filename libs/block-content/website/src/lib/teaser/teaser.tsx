@@ -1,35 +1,11 @@
-import {css, styled} from '@mui/material'
+import {Theme, css, styled, useTheme} from '@mui/material'
 import {firstParagraphToPlaintext} from '@wepublish/richtext'
-import {FlexAlignment, TeaserStyle, Teaser as TeaserType} from '@wepublish/website/api'
+import {FlexAlignment, Teaser as TeaserType} from '@wepublish/website/api'
 import {BuilderTeaserProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {isImageBlock} from '../image/image-block'
 import {isTitleBlock} from '../title/title-block'
-
-export const TeaserWrapper = styled('article')<FlexAlignment>`
-  display: grid;
-
-  ${({w}) =>
-    w > 6 &&
-    css`
-      grid-column: 1 / -1;
-    `}
-
-  ${({theme, h, w, x, y}) => css`
-    ${theme.breakpoints.up('md')} {
-      grid-column-start: ${x + 1};
-      grid-column-end: ${x + 1 + w};
-      grid-row-start: ${y + 1};
-      grid-row-end: ${y + 1 + h};
-    }
-  `}
-`
-
-export const TeaserInnerWrapper = styled('div')`
-  display: grid;
-  gap: ${({theme}) => theme.spacing(1)};
-  grid-template-rows: auto;
-  grid-auto-rows: max-content;
-`
+import {useMemo} from 'react'
+import {useHover} from 'react-aria'
 
 export const selectTeaserTitle = (teaser: TeaserType) => {
   switch (teaser.__typename) {
@@ -132,7 +108,8 @@ export const selectTeaserDate = (teaser: TeaserType) => {
       return teaser.page?.publishedAt
     }
 
-    case 'ArticleTeaser': {
+    case 'ArticleTeaser':
+    case 'PeerArticleTeaser': {
       return teaser.article?.publishedAt
     }
 
@@ -162,20 +139,89 @@ export const selectTeaserAuthors = (teaser: TeaserType) => {
   }
 }
 
-const teaserImageStyles = css`
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-`
-
-const teaserLinkStyles = css`
+export const TeaserWrapper = styled('article')<FlexAlignment>`
   display: grid;
+
+  ${({w}) =>
+    w > 6 &&
+    css`
+      grid-column: 1 / -1;
+    `}
+
+  ${({theme, h, w, x, y}) => css`
+    ${theme.breakpoints.up('md')} {
+      grid-column-start: ${x + 1};
+      grid-column-end: ${x + 1 + w};
+      grid-row-start: ${y + 1};
+      grid-row-end: ${y + 1 + h};
+    }
+  `}
 `
 
-export const TeaserTitles = styled('header')``
-export const TeaserTitle = styled('h1')``
-export const TeaserPreTitle = styled('div')``
+export const TeaserInnerWrapper = styled('div')`
+  display: grid;
+  gap: ${({theme}) => theme.spacing(1)};
+  grid-template-rows: auto;
+  grid-auto-rows: max-content;
+`
+
+export const TeaserImageWrapper = styled('div')`
+  grid-column: 1/13;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  grid-area: image;
+`
+
+const useImageStyles = (isHovered: boolean) => {
+  const theme = useTheme()
+
+  return useMemo(
+    () => css`
+      width: 100%;
+      object-fit: cover;
+      grid-column: 1/13;
+      transition: transform 0.3s ease-in-out;
+      aspect-ratio: 1.8;
+      transform: ${isHovered ? 'scale(1.1)' : 'scale(1)'};
+
+      ${theme.breakpoints.up('md')} {
+        aspect-ratio: 1/1;
+      }
+    `,
+    [theme, isHovered]
+  )
+}
+
+const teaserLinkStyles = () => css`
+  display: grid;
+  grid-template-rows: min-content;
+  align-items: start;
+  text-decoration: none;
+  grid-template-areas:
+    'image'
+    'pretitle'
+    'title'
+    'lead'
+    'authors';
+`
+
+const teaserHeaderStyles = (theme: Theme) => css`
+  grid-area: title;
+  margin-bottom: ${theme.spacing(1)};
+`
+
+const teaserLeadStyles = css`
+  font-weight: 300;
+  font-size: 15px;
+  grid-area: lead;
+`
+
+export const TeaserPreTitle = styled('span')``
 export const TeaserLead = styled('p')``
+export const Authors = styled('span')`
+  font-weight: 500;
+`
 
 export const TeaserDate = styled('time')``
 
@@ -183,9 +229,65 @@ export const TeaserAuthors = styled('div')`
   margin-top: ${({theme}) => theme.spacing(2)};
 `
 
-export const TeaserContent = styled(TeaserInnerWrapper)``
+export const TeaserContent = styled(TeaserInnerWrapper)`
+  grid-column: 1/13;
+`
+
+export const ImagePlaceholder = styled('div')`
+  width: 100%;
+  object-fit: cover;
+  grid-column: 1/13;
+  aspect-ratio: 1/1;
+`
+
+export const TeaserPreTitleNoContent = styled(TeaserPreTitle)<{isHovered: boolean}>`
+  transition: background-color 0.3s ease-in-out;
+  background-color: ${({theme, isHovered}) =>
+    isHovered ? theme.palette.primary.main : theme.palette.common.black};
+  height: 3px;
+  width: 100%;
+  margin-bottom: ${({theme}) => theme.spacing(1.5)};
+`
+
+export const TeaserPreTitleWrapper = styled(TeaserPreTitle)<{isHovered: boolean}>`
+  transition: background-color 0.3s ease-in-out;
+  background-color: ${({theme, isHovered}) =>
+    isHovered ? theme.palette.primary.main : theme.palette.secondary.main};
+  height: 3px;
+  width: 100%;
+  margin-bottom: ${({theme}) => theme.spacing(1.5)};
+  grid-area: pretitle;
+`
+
+export const PreTitle = styled('div')<{isHovered: boolean}>`
+  transition: background-color 0.3s ease-in-out;
+  padding: ${({theme}) => `${theme.spacing(0.5)} ${theme.spacing(2)}`};
+  background-color: ${({theme, isHovered}) =>
+    isHovered ? theme.palette.primary.main : theme.palette.secondary.main};
+  width: fit-content;
+  font-size: 14px;
+  font-weight: 300;
+  transform: ${({theme}) => `translateY(-${theme.spacing(3.5)})`};
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    font-size: 18px;
+    transform: ${({theme}) => `translateY(-${theme.spacing(4)})`};
+  }
+`
+
+export const AuthorsAndDate = styled('div')`
+  margin: 0;
+  font-size: 12px;
+  grid-area: authors;
+`
+
+export const Time = styled('time')`
+  font-weight: 400;
+`
 
 export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
+  const theme = useTheme()
+  const {hoverProps, isHovered} = useHover({})
   const title = teaser && selectTeaserTitle(teaser)
   const preTitle = teaser && selectTeaserPreTitle(teaser)
   const lead = teaser && selectTeaserLead(teaser)
@@ -196,32 +298,45 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
 
   const {
     date,
-    elements: {H5, H6, Link, Image}
+    elements: {Link, Image, Paragraph, H4}
   } = useWebsiteBuilder()
 
+  const linkStyles = teaserLinkStyles()
+  const headerStyles = teaserHeaderStyles(theme)
+  const imageStyles = useImageStyles(isHovered)
+
   return (
-    <TeaserWrapper {...alignment}>
-      <Link color="inherit" underline="none" href={href} css={teaserLinkStyles}>
-        <TeaserInnerWrapper className={className}>
-          {image && <Image image={image} css={teaserImageStyles} />}
+    <TeaserWrapper {...alignment} {...(hoverProps as object)}>
+      <Link color="inherit" href={href ?? ''} className={className} css={linkStyles}>
+        {image ? (
+          <TeaserImageWrapper>
+            <Image image={image} css={imageStyles} />
+          </TeaserImageWrapper>
+        ) : (
+          <ImagePlaceholder />
+        )}
 
-          <TeaserContent>
-            {publishDate && (
-              <TeaserDate dateTime={publishDate}>
-                {date.format(new Date(publishDate), false)}
-              </TeaserDate>
-            )}
+        {preTitle ? (
+          <TeaserPreTitleWrapper isHovered={isHovered}>
+            <PreTitle isHovered={isHovered}>{preTitle}</PreTitle>
+          </TeaserPreTitleWrapper>
+        ) : (
+          <TeaserPreTitleNoContent isHovered={isHovered} />
+        )}
 
-            <TeaserTitles>
-              {preTitle && <H6 component={TeaserPreTitle}>{preTitle}</H6>}
-              <H5 component={TeaserTitle}>{title}</H5>
-            </TeaserTitles>
+        <H4 css={headerStyles}>{title}</H4>
 
-            {teaser?.style !== TeaserStyle.Light && <H6 component={TeaserLead}>{lead}</H6>}
+        <Paragraph css={teaserLeadStyles}>{lead}</Paragraph>
 
-            {!!authors?.length && <TeaserAuthors>{authors?.join(', ')}</TeaserAuthors>}
-          </TeaserContent>
-        </TeaserInnerWrapper>
+        <AuthorsAndDate>
+          {authors && authors?.length ? <Authors>Von {authors?.join(', ')} </Authors> : null}
+          {publishDate && (
+            <Time suppressHydrationWarning dateTime={publishDate}>
+              {'| '}
+              {date.format(new Date(publishDate), false)}{' '}
+            </Time>
+          )}
+        </AuthorsAndDate>
       </Link>
     </TeaserWrapper>
   )

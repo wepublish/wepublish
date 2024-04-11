@@ -462,7 +462,7 @@ export const Subscribe = <T extends BuilderUserFormFields>({
         }}
         onCancel={() => setOpenConfirm(false)}
         submitText={`${paymentText} Abonnieren`}>
-        <H5 id="modal-modal-title" component="h2" gutterBottom>
+        <H5 id="modal-modal-title" component="h2">
           Bist du dir sicher?
         </H5>
 
@@ -506,6 +506,8 @@ export const SubscribeConfirmModalWrapper = styled('div')`
 `
 
 export const SubscribeConfirmModalContent = styled('div')`
+  display: grid;
+  gap: ${({theme}) => theme.spacing(2)};
   padding: ${({theme}) => theme.spacing(2)};
 `
 

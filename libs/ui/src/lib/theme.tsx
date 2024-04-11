@@ -23,7 +23,11 @@ export const theme = createTheme({
     },
     h4: {
       fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
-      fontWeight: 600
+      fontWeight: 600,
+      fontSize: '26px',
+      '@media (min-width: 900px)': {
+        fontSize: '32px'
+      }
     },
     h5: {
       fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
@@ -40,7 +44,7 @@ export const theme = createTheme({
   },
   palette: {
     primary: augmentColor({color: {main: '#e91e63'}}),
-    secondary: augmentColor({color: {main: '#000'}}),
+    secondary: augmentColor({color: {main: '#F5FF64'}}),
     grey: {
       800: '#1a1a1a'
     }

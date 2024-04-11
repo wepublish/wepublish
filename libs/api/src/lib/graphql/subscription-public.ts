@@ -38,6 +38,7 @@ export const GraphQLPublicSubscription = new GraphQLObjectType<SubscriptionWithR
         return loaders.paymentMethodsByID.load(paymentMethodID)
       }
     },
+    extendable: {type: new GraphQLNonNull(GraphQLBoolean)},
     properties: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLMetadataPropertyPublic))),
       resolve: ({properties}) => {

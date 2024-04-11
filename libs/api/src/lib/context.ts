@@ -1042,14 +1042,22 @@ export async function contextFromRequest(
 
       // Mark invoice as paid
       if (intent.state === PaymentState.paid) {
-        await prisma.invoice.update({
-          where: {id: invoice.id},
-          data: {
-            paidAt: new Date()
-          }
+        const intentState = await paymentProvider.checkIntentStatus({
+          intentID: updatedPayment.intentID,
+          paymentID: updatedPayment.id
+        })
+        await paymentProvider.updatePaymentWithIntentState({
+          intentState: intentState,
+          paymentClient: prisma.payment,
+          paymentsByID: loaders.paymentsByID,
+          invoicesByID: loaders.invoicesByID,
+          subscriptionClient: prisma.subscription,
+          userClient: prisma.user,
+          invoiceClient: prisma.invoice,
+          subscriptionPeriodClient: prisma.subscriptionPeriod,
+          invoiceItemClient: prisma.invoiceItem
         })
       }
-
       return updatedPayment as Payment
     },
     challenge

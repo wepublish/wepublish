@@ -29,10 +29,7 @@ function Profile() {
 
 const GuardedProfile = withAuthGuard(Profile)
 
-export {
-  GuardedProfile as default
-  // eslint-disable-next-line
-}
+export {GuardedProfile as default}
 ;(GuardedProfile as any).getInitialProps = async (ctx: NextPageContext) => {
   if (typeof window !== 'undefined') {
     return {}

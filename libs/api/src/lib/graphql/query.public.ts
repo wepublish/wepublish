@@ -467,7 +467,10 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
           )
           if (!paymentProvider) continue // TODO: what happens if we don't find a paymentProvider
 
-          const intentState = await paymentProvider.checkIntentStatus({intentID: payment.intentID})
+          const intentState = await paymentProvider.checkIntentStatus({
+            intentID: payment.intentID,
+            paymentID: payment.id
+          })
           await paymentProvider.updatePaymentWithIntentState({
             intentState,
             paymentClient: context.prisma.payment,

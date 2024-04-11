@@ -25,10 +25,7 @@ function DeactivatedSubscriptions() {
 
 const GuardedDeactivatedSubscriptions = withAuthGuard(DeactivatedSubscriptions)
 
-export {
-  GuardedDeactivatedSubscriptions as default
-  // eslint-disable-next-line
-}
+export {GuardedDeactivatedSubscriptions as default}
 ;(GuardedDeactivatedSubscriptions as any).getInitialProps = async (ctx: NextPageContext) => {
   if (typeof window !== 'undefined') {
     return {}
