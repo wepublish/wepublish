@@ -1,6 +1,7 @@
 import {Button, styled} from '@mui/material'
+import {H3} from '@wepublish/ui'
 import {NextWepublishLink} from '@wepublish/utils/website'
-import {Image, TeaserContent, TeaserLead, TeaserPreTitle, TeaserTitle} from '@wepublish/website'
+import {Image, TeaserContent, TeaserLead, TeaserPreTitle} from '@wepublish/website'
 
 export const fluidTypography = (minSize: number, maxSize: number): string => {
   const minViewPort = 390
@@ -40,7 +41,7 @@ export const TeaserContentStyled = styled(TeaserContent)``
 
 export const TeaserPreTitleStyled = styled(TeaserPreTitle)``
 
-export const TeaserTitlesStyled = styled(TeaserTitle)`
+export const TeaserTitlesStyled = styled(H3)`
   margin: 0;
 `
 
