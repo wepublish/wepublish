@@ -1,9 +1,11 @@
 import {useTheme} from '@mui/material'
 import {
+  alignmentForTeaserBlock,
   BlockRenderer,
   BreakBlock,
   BuilderBlockRendererProps,
   isBreakBlock,
+  isTeaserListBlock,
   useWebsiteBuilder
 } from '@wepublish/website'
 import {cond} from 'ramda'
@@ -15,6 +17,8 @@ import {InstagramBanner} from '../../babanews/instagram-banner/instagram-banner'
 import {isInstagramBanner} from '../../babanews/instagram-banner/is-instagram-banner'
 import {Container} from '../../layout/container'
 import {FullWidthContainer} from '../../layout/full-width-container'
+import {BabanewsTeaserList} from '../../website-builder-styled/blocks/teaser-list-styled'
+import {ListTeaser} from '../blocks/list-teaser'
 
 export const BabanewsBlockRenderer = (props: BuilderBlockRendererProps) => {
   const theme = useTheme()
@@ -53,6 +57,22 @@ export const BabanewsBlockRenderer = (props: BuilderBlockRendererProps) => {
                 <BreakBlock {...block} />
               </Container>
             </FullWidthContainer>
+          )
+        ],
+        [
+          isTeaserListBlock,
+          block => (
+            <Container>
+              <BabanewsTeaserList>
+                {block.teasers.map((teaser, index) => (
+                  <ListTeaser
+                    teaser={teaser}
+                    key={index}
+                    alignment={alignmentForTeaserBlock(index, 1)}
+                  />
+                ))}
+              </BabanewsTeaserList>
+            </Container>
           )
         ]
       ]),
