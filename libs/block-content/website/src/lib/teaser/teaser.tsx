@@ -366,7 +366,7 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
         <AuthorsAndDate>
           {authors && authors?.length ? <Authors>Von {authors?.join(', ')} </Authors> : null}
           {publishDate && (
-            <Time dateTime={publishDate}>
+            <Time suppressHydrationWarning dateTime={publishDate}>
               {authors && authors?.length ? '| ' : null}
               {date.format(new Date(publishDate), false)}{' '}
             </Time>

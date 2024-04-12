@@ -1,9 +1,7 @@
 import {Alert, CircularProgress, styled, Typography} from '@mui/material'
-import {ApiV1, useUser} from '@wepublish/website'
+import {ApiV1, useUser, useWebsiteBuilder} from '@wepublish/website'
 import {useRouter} from 'next/router'
 import {useEffect, useMemo, useState} from 'react'
-
-import {Button} from '../../src/button'
 
 const ProgressWrapper = styled('div')`
   display: flex;
@@ -60,6 +58,10 @@ export default function PaymentFail() {
       setCheckedInvoices(invoices)
     }
   })
+
+  const {
+    elements: {Button}
+  } = useWebsiteBuilder()
 
   const invoices = useMemo(() => {
     return checkedInvoices

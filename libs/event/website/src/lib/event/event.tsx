@@ -1,16 +1,19 @@
-import {Theme, css, styled, useTheme} from '@mui/material'
+import {css, styled} from '@mui/material'
 import {BuilderEventProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {MdDateRange, MdLocationCity} from 'react-icons/md'
 import {EventSEO} from './event-seo'
+import {ContentWrapper} from '@wepublish/content/website'
+import {ImageWrapper} from '@wepublish/image/website'
 
-export const EventWrapper = styled('article')`
-  display: grid;
-  gap: ${({theme}) => theme.spacing(1)};
+export const EventWrapper = styled(ContentWrapper)`
+  gap: ${({theme}) => theme.spacing(4)};
 `
 
-const eventImage = (theme: Theme) => css`
-  aspect-ratio: 16 / 9;
-  object-fit: cover;
+const eventImage = css`
+  ${ImageWrapper} {
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
 `
 
 export const EventMeta = styled('div')`
@@ -19,6 +22,7 @@ export const EventMeta = styled('div')`
   justify-content: space-between;
   align-items: center;
   gap: ${({theme}) => theme.spacing(2)};
+  margin-top: -${({theme}) => theme.spacing(4)};
 `
 
 const MetaWrapper = styled('div')`
@@ -37,18 +41,15 @@ const EventStart = styled('div')`
 `
 
 export const Event = ({data, loading, error, className}: BuilderEventProps) => {
-  const theme = useTheme()
-
   const {
-    elements: {Image},
-    blocks: {RichText, Title},
+    blocks: {RichText, Title, Image},
     date
   } = useWebsiteBuilder()
 
   return (
     <EventWrapper className={className}>
       {data?.event && <EventSEO event={data.event} />}
-      {data?.event.image && <Image css={eventImage(theme)} image={data.event.image} />}
+      {data?.event.image && <Image css={eventImage} image={data.event.image} />}
 
       {data?.event && (
         <EventMeta>

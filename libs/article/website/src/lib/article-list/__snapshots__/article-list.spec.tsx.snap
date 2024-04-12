@@ -32,7 +32,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -70,7 +70,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           Some longer article title: How will it look like?
         </h1>
@@ -108,7 +108,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -146,7 +146,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -184,7 +184,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -222,7 +222,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -260,7 +260,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -298,7 +298,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -336,7 +336,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -374,7 +374,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -412,7 +412,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -433,7 +433,7 @@ https://unsplash.it/200/200 200w"
         <li>
           <button
             aria-label="Go to previous page"
-            class="MuiButtonBase-root Mui-disabled MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-circular Mui-disabled MuiPaginationItem-previousNext css-vn9ej0-MuiButtonBase-root-MuiPaginationItem-root"
+            class="MuiButtonBase-root Mui-disabled MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-circular Mui-disabled MuiPaginationItem-previousNext css-1dnowur-MuiButtonBase-root-MuiPaginationItem-root"
             disabled=""
             tabindex="-1"
             type="button"
@@ -455,7 +455,7 @@ https://unsplash.it/200/200 200w"
           <button
             aria-current="true"
             aria-label="page 1"
-            class="MuiButtonBase-root MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-circular Mui-selected MuiPaginationItem-page css-vn9ej0-MuiButtonBase-root-MuiPaginationItem-root"
+            class="MuiButtonBase-root MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-circular Mui-selected MuiPaginationItem-page css-1dnowur-MuiButtonBase-root-MuiPaginationItem-root"
             tabindex="0"
             type="button"
           >
@@ -468,7 +468,7 @@ https://unsplash.it/200/200 200w"
         <li>
           <button
             aria-label="Go to page 2"
-            class="MuiButtonBase-root MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-circular MuiPaginationItem-page css-vn9ej0-MuiButtonBase-root-MuiPaginationItem-root"
+            class="MuiButtonBase-root MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-circular MuiPaginationItem-page css-1dnowur-MuiButtonBase-root-MuiPaginationItem-root"
             tabindex="0"
             type="button"
           >
@@ -481,7 +481,7 @@ https://unsplash.it/200/200 200w"
         <li>
           <button
             aria-label="Go to next page"
-            class="MuiButtonBase-root MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-circular MuiPaginationItem-previousNext css-vn9ej0-MuiButtonBase-root-MuiPaginationItem-root"
+            class="MuiButtonBase-root MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-circular MuiPaginationItem-previousNext css-1dnowur-MuiButtonBase-root-MuiPaginationItem-root"
             tabindex="0"
             type="button"
           >
@@ -539,7 +539,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -577,7 +577,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           Some longer article title: How will it look like?
         </h1>
@@ -615,7 +615,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -653,7 +653,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -691,7 +691,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -729,7 +729,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -767,7 +767,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -805,7 +805,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -843,7 +843,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -881,7 +881,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -919,7 +919,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -940,7 +940,7 @@ https://unsplash.it/200/200 200w"
         <li>
           <button
             aria-label="Go to previous page"
-            class="MuiButtonBase-root Mui-disabled MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-circular Mui-disabled MuiPaginationItem-previousNext css-vn9ej0-MuiButtonBase-root-MuiPaginationItem-root"
+            class="MuiButtonBase-root Mui-disabled MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-circular Mui-disabled MuiPaginationItem-previousNext css-1dnowur-MuiButtonBase-root-MuiPaginationItem-root"
             disabled=""
             tabindex="-1"
             type="button"
@@ -962,7 +962,7 @@ https://unsplash.it/200/200 200w"
           <button
             aria-current="true"
             aria-label="page 1"
-            class="MuiButtonBase-root MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-circular Mui-selected MuiPaginationItem-page css-vn9ej0-MuiButtonBase-root-MuiPaginationItem-root"
+            class="MuiButtonBase-root MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-circular Mui-selected MuiPaginationItem-page css-1dnowur-MuiButtonBase-root-MuiPaginationItem-root"
             tabindex="0"
             type="button"
           >
@@ -975,7 +975,7 @@ https://unsplash.it/200/200 200w"
         <li>
           <button
             aria-label="Go to page 2"
-            class="MuiButtonBase-root MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-circular MuiPaginationItem-page css-vn9ej0-MuiButtonBase-root-MuiPaginationItem-root"
+            class="MuiButtonBase-root MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-circular MuiPaginationItem-page css-1dnowur-MuiButtonBase-root-MuiPaginationItem-root"
             tabindex="0"
             type="button"
           >
@@ -988,7 +988,7 @@ https://unsplash.it/200/200 200w"
         <li>
           <button
             aria-label="Go to next page"
-            class="MuiButtonBase-root MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-circular MuiPaginationItem-previousNext css-vn9ej0-MuiButtonBase-root-MuiPaginationItem-root"
+            class="MuiButtonBase-root MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-circular MuiPaginationItem-previousNext css-1dnowur-MuiButtonBase-root-MuiPaginationItem-root"
             tabindex="0"
             type="button"
           >
@@ -1046,7 +1046,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -1084,7 +1084,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           Some longer article title: How will it look like?
         </h1>
@@ -1122,7 +1122,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -1160,7 +1160,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -1198,7 +1198,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -1236,7 +1236,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -1274,7 +1274,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -1312,7 +1312,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -1350,7 +1350,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -1388,7 +1388,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -1426,7 +1426,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -1447,7 +1447,7 @@ https://unsplash.it/200/200 200w"
         <li>
           <button
             aria-label="Go to previous page"
-            class="MuiButtonBase-root Mui-disabled MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-circular Mui-disabled MuiPaginationItem-previousNext css-vn9ej0-MuiButtonBase-root-MuiPaginationItem-root"
+            class="MuiButtonBase-root Mui-disabled MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-circular Mui-disabled MuiPaginationItem-previousNext css-1dnowur-MuiButtonBase-root-MuiPaginationItem-root"
             disabled=""
             tabindex="-1"
             type="button"
@@ -1469,7 +1469,7 @@ https://unsplash.it/200/200 200w"
           <button
             aria-current="true"
             aria-label="page 1"
-            class="MuiButtonBase-root MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-circular Mui-selected MuiPaginationItem-page css-vn9ej0-MuiButtonBase-root-MuiPaginationItem-root"
+            class="MuiButtonBase-root MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-circular Mui-selected MuiPaginationItem-page css-1dnowur-MuiButtonBase-root-MuiPaginationItem-root"
             tabindex="0"
             type="button"
           >
@@ -1482,7 +1482,7 @@ https://unsplash.it/200/200 200w"
         <li>
           <button
             aria-label="Go to page 2"
-            class="MuiButtonBase-root MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-circular MuiPaginationItem-page css-vn9ej0-MuiButtonBase-root-MuiPaginationItem-root"
+            class="MuiButtonBase-root MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-circular MuiPaginationItem-page css-1dnowur-MuiButtonBase-root-MuiPaginationItem-root"
             tabindex="0"
             type="button"
           >
@@ -1495,7 +1495,7 @@ https://unsplash.it/200/200 200w"
         <li>
           <button
             aria-label="Go to next page"
-            class="MuiButtonBase-root MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-circular MuiPaginationItem-previousNext css-vn9ej0-MuiButtonBase-root-MuiPaginationItem-root"
+            class="MuiButtonBase-root MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-circular MuiPaginationItem-previousNext css-1dnowur-MuiButtonBase-root-MuiPaginationItem-root"
             tabindex="0"
             type="button"
           >
@@ -1569,7 +1569,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -1607,7 +1607,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -1645,7 +1645,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -1683,7 +1683,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -1721,7 +1721,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -1759,7 +1759,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -1797,7 +1797,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -1835,7 +1835,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -1873,7 +1873,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -1911,7 +1911,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -1949,7 +1949,7 @@ https://unsplash.it/200/200 200w"
           01.01.2023
         </time>
         <h1
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
           title
         </h1>
@@ -1970,7 +1970,7 @@ https://unsplash.it/200/200 200w"
         <li>
           <button
             aria-label="Go to previous page"
-            class="MuiButtonBase-root Mui-disabled MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-circular Mui-disabled MuiPaginationItem-previousNext css-vn9ej0-MuiButtonBase-root-MuiPaginationItem-root"
+            class="MuiButtonBase-root Mui-disabled MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-circular Mui-disabled MuiPaginationItem-previousNext css-1dnowur-MuiButtonBase-root-MuiPaginationItem-root"
             disabled=""
             tabindex="-1"
             type="button"
@@ -1992,7 +1992,7 @@ https://unsplash.it/200/200 200w"
           <button
             aria-current="true"
             aria-label="page 1"
-            class="MuiButtonBase-root MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-circular Mui-selected MuiPaginationItem-page css-vn9ej0-MuiButtonBase-root-MuiPaginationItem-root"
+            class="MuiButtonBase-root MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-circular Mui-selected MuiPaginationItem-page css-1dnowur-MuiButtonBase-root-MuiPaginationItem-root"
             tabindex="0"
             type="button"
           >
@@ -2005,7 +2005,7 @@ https://unsplash.it/200/200 200w"
         <li>
           <button
             aria-label="Go to page 2"
-            class="MuiButtonBase-root MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-circular MuiPaginationItem-page css-vn9ej0-MuiButtonBase-root-MuiPaginationItem-root"
+            class="MuiButtonBase-root MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-circular MuiPaginationItem-page css-1dnowur-MuiButtonBase-root-MuiPaginationItem-root"
             tabindex="0"
             type="button"
           >
@@ -2018,7 +2018,7 @@ https://unsplash.it/200/200 200w"
         <li>
           <button
             aria-label="Go to next page"
-            class="MuiButtonBase-root MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-circular MuiPaginationItem-previousNext css-vn9ej0-MuiButtonBase-root-MuiPaginationItem-root"
+            class="MuiButtonBase-root MuiPaginationItem-root MuiPaginationItem-sizeMedium MuiPaginationItem-text MuiPaginationItem-circular MuiPaginationItem-previousNext css-1dnowur-MuiButtonBase-root-MuiPaginationItem-root"
             tabindex="0"
             type="button"
           >

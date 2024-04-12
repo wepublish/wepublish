@@ -35,6 +35,13 @@ export const absoluteUrlToRelative: InMemoryCacheConfig['typePolicies'] = {
       }
     }
   },
+  Author: {
+    fields: {
+      url: {
+        merge: (_, url: string) => absoluteToRelative(url)
+      }
+    }
+  },
   Event: {
     fields: {
       url: {

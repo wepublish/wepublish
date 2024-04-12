@@ -95,7 +95,10 @@ export function SubscriptionListItem({
           <SubscriptionListItemMetaItem>
             <MdCalendarMonth />
             <span>
-              Abgeschlossen am <time dateTime={startsAt}>{date.format(new Date(startsAt))}</time>
+              Abgeschlossen am{' '}
+              <time suppressHydrationWarning dateTime={startsAt}>
+                {date.format(new Date(startsAt))}
+              </time>
             </span>
           </SubscriptionListItemMetaItem>
 
@@ -103,7 +106,10 @@ export function SubscriptionListItem({
             <SubscriptionListItemMetaItem>
               <MdOutlinePayments />
               <span>
-                Bezahlt bis <time dateTime={paidUntil}>{date.format(new Date(paidUntil))}</time>
+                Bezahlt bis{' '}
+                <time suppressHydrationWarning dateTime={paidUntil}>
+                  {date.format(new Date(paidUntil))}
+                </time>
               </span>
             </SubscriptionListItemMetaItem>
           )}
@@ -114,7 +120,7 @@ export function SubscriptionListItem({
                 <MdCancel />
                 <span>
                   Gekündigt am{' '}
-                  <time dateTime={deactivation.date}>
+                  <time suppressHydrationWarning dateTime={deactivation.date}>
                     {date.format(new Date(deactivation.date))}
                   </time>
                 </span>

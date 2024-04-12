@@ -14,7 +14,7 @@ const BriefingNewsletterWrapper = styled('article')`
   }
 
   ${({theme}) => theme.breakpoints.up('md')} {
-    margin: ${({theme}) => theme.spacing(4)} auto;
+    margin: 0 auto;
   }
 
   ${({theme}) => theme.breakpoints.up('xl')} {
@@ -24,7 +24,7 @@ const BriefingNewsletterWrapper = styled('article')`
 
 const BecomeMember = styled('div')`
   padding: ${({theme}) => theme.spacing(2)};
-  background-color: ${({theme}) => theme.palette.primary.main};
+  background-color: ${({theme}) => theme.palette.secondary.main};
   display: grid;
   gap: ${({theme}) => theme.spacing(1)};
   align-items: center;
@@ -40,7 +40,7 @@ const BecomeMember = styled('div')`
 `
 
 const BaselBriefing = styled(BecomeMember)`
-  background-color: ${({theme}) => theme.palette.primary.main};
+  background-color: ${({theme}) => theme.palette.secondary.main};
   background-image: url(${BaselBriefingBg.src});
   background-size: cover;
   background-repeat: no-repeat;

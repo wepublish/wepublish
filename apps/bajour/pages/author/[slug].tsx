@@ -1,9 +1,13 @@
-import {ApiV1, ArticleListContainer, AuthorContainer, useWebsiteBuilder} from '@wepublish/website'
+import {
+  ApiV1,
+  ArticleListContainer,
+  ArticleWrapper,
+  AuthorContainer,
+  useWebsiteBuilder
+} from '@wepublish/website'
 import {GetStaticPaths, GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
-
-import {Container} from '../../src/components/layout/container'
 
 export default function AuthorBySlug() {
   const {
@@ -21,7 +25,7 @@ export default function AuthorBySlug() {
   })
 
   return (
-    <Container>
+    <ArticleWrapper>
       <AuthorContainer slug={slug as string} />
 
       {data?.author && (
@@ -30,7 +34,7 @@ export default function AuthorBySlug() {
           <ArticleListContainer variables={{filter: {authors: [data.author.id]}}} />
         </>
       )}
-    </Container>
+    </ArticleWrapper>
   )
 }
 

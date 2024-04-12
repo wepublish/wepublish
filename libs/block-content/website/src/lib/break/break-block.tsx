@@ -94,6 +94,10 @@ const richTextStyles = (theme: Theme) => css`
   }
 `
 
+const buttonStyles = css`
+  justify-self: start;
+`
+
 export const BreakBlock = ({
   className,
   text,
@@ -136,13 +140,13 @@ export const BreakBlock = ({
 
         <RichText richText={richText} css={richTextStyles(theme)} />
 
-        {!hideButton && (
+        {!hideButton && linkURL && linkText && (
           <Button
             variant="contained"
             LinkComponent={Link}
             href={linkURL ?? ''}
             css={linkStyles(theme)}>
-            {linkText || 'Hier Anmelden'}
+            {linkText}
           </Button>
         )}
       </BreakBlockSegment>
