@@ -63,7 +63,7 @@ https://unsplash.it/200/100 200w"
           </time>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 css-1amaxt6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 css-1fh3rua-MuiTypography-root"
         >
           Cool concert
         </h1>
@@ -483,7 +483,7 @@ https://unsplash.it/200/100 200w"
           </time>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 css-1amaxt6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 css-1fh3rua-MuiTypography-root"
         >
           Cool concert
         </h1>
@@ -903,7 +903,7 @@ https://unsplash.it/200/100 200w"
           </time>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 css-1amaxt6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 css-1fh3rua-MuiTypography-root"
         >
           Cool concert
         </h1>
@@ -1312,7 +1312,7 @@ exports[`EventListItem should render WithoutImage 1`] = `
           </time>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 css-1amaxt6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 css-1fh3rua-MuiTypography-root"
         >
           Cool concert
         </h1>

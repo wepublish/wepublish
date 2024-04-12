@@ -23,7 +23,8 @@
       "defaultConfiguration": "development",
       "options": {
         "buildTarget": "tsri:build",
-        "dev": true
+        "dev": true,
+        "port": 4204
       },
       "configurations": {
         "development": {

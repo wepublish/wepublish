@@ -133,11 +133,6 @@ jobs:
           EOF
           helm upgrade --install review-${{ github.event.pull_request.number }}-database oci://registry-1.docker.io/bitnamicharts/postgresql -n reviews -f values.yaml --wait
 
-<<<<<<< HEAD
-
-=======
-
->>>>>>> f/bajour-article-style
 
   helm_deployment:
     name: Helm deployment
@@ -315,8 +310,8 @@ jobs:
       matrix:
         project: ${{fromJSON(needs.find_vercel_apps.outputs.projects)}}
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '18'
           cache: npm
@@ -324,11 +319,7 @@ jobs:
       - run: |
           vercel --token "${{ secrets.VERCEL_API_TOKEN }}" link --project ${{ matrix.project }} --scope wepublish --yes
           vercel --token "${{ secrets.VERCEL_API_TOKEN }}" build --yes
-<<<<<<< HEAD
           vercel --token "${{ secrets.VERCEL_API_TOKEN }}" deploy --prebuilt --yes > deployment_url
-=======
-          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" deploy --prebuilt --yes > deployment_url
->>>>>>> f/bajour-article-style
           vercel --token "${{ secrets.VERCEL_API_TOKEN }}" alias set $(cat deployment_url) ${{ matrix.project }}${PROJECT_URL_SUFFIX} --scope wepublish --yes
 
   notify:
@@ -339,8 +330,8 @@ jobs:
     continue-on-error: true
 
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version: '18'
           cache: npm

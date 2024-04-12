@@ -499,8 +499,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         input: {type: new GraphQLNonNull(GraphQLSubscriptionInput)}
       },
-      resolve: (root, {input}, {authenticate, prisma: {subscription}, memberContext}) =>
-        createSubscription(input, authenticate, memberContext, subscription)
+      resolve: (root, {input}, {authenticate, prisma, memberContext}) =>
+        createSubscription(input, authenticate, memberContext, prisma)
     },
 
     updateSubscription: {

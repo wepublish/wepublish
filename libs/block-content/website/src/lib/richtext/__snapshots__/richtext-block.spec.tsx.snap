@@ -29,7 +29,7 @@ exports[`Richtext Block should render Default 1`] = `
         <hr />
       </div>
       <h3
-        class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-19if12o-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-box1tp-MuiTypography-root"
         data-slate-node="element"
       >
         <span
@@ -405,7 +405,7 @@ exports[`Richtext Block should render WithClassName 1`] = `
         <hr />
       </div>
       <h3
-        class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-19if12o-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-box1tp-MuiTypography-root"
         data-slate-node="element"
       >
         <span
@@ -781,7 +781,7 @@ exports[`Richtext Block should render WithEmotion 1`] = `
         <hr />
       </div>
       <h3
-        class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-19if12o-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-box1tp-MuiTypography-root"
         data-slate-node="element"
       >
         <span

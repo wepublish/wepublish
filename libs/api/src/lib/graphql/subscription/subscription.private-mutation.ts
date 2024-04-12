@@ -75,13 +75,13 @@ export const createSubscription = async (
   {properties, ...input}: CreateSubscriptionInput,
   authenticate: Context['authenticate'],
   memberContext: Context['memberContext'],
-  subscriptionClient: PrismaClient['subscription']
+  prismaClient: PrismaClient
 ) => {
   const {roles} = authenticate()
   authorise(CanCreateSubscription, roles)
 
   const {subscription} = await memberContext.createSubscription(
-    subscriptionClient,
+    prismaClient,
     input['userID'],
     input['paymentMethodID'],
     input['paymentPeriodicity'],
@@ -89,6 +89,7 @@ export const createSubscription = async (
     input['memberPlanID'],
     properties,
     input['autoRenew'],
+    input['extendable'],
     input['startsAt']
   )
 

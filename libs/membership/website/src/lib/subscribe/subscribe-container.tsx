@@ -3,9 +3,11 @@ import {
   MemberPlan,
   RegisterMutationVariables,
   useChallengeLazyQuery,
+  useInvoicesLazyQuery,
   useMemberPlanListQuery,
   useRegisterMutation,
-  useSubscribeMutation
+  useSubscribeMutation,
+  useSubscriptionsLazyQuery
 } from '@wepublish/website/api'
 import {
   BuilderContainerProps,
@@ -36,6 +38,10 @@ export const SubscribeContainer = <T extends OptionalKeysOf<RegisterMutationVari
   const {setToken, hasUser} = useUser()
   const {Subscribe} = useWebsiteBuilder()
   const [fetchChallenge, challenge] = useChallengeLazyQuery()
+
+  const [fetchUserSubscriptions, userSubscriptions] = useSubscriptionsLazyQuery()
+  const [fetchUserInvoices, userInvoices] = useInvoicesLazyQuery()
+
   const memberPlanList = useMemberPlanListQuery({
     variables: {
       take: 50
@@ -63,7 +69,12 @@ export const SubscribeContainer = <T extends OptionalKeysOf<RegisterMutationVari
     if (!hasUser) {
       fetchChallenge()
     }
-  }, [hasUser, fetchChallenge])
+
+    if (hasUser) {
+      fetchUserSubscriptions()
+      fetchUserInvoices()
+    }
+  }, [hasUser, fetchChallenge, fetchUserSubscriptions, fetchUserInvoices])
 
   const filteredMemberPlans = useMemo(() => {
     return produce(memberPlanList, draftList => {
@@ -79,6 +90,8 @@ export const SubscribeContainer = <T extends OptionalKeysOf<RegisterMutationVari
       fields={fields}
       schema={schema}
       challenge={challenge}
+      userSubscriptions={userSubscriptions}
+      userInvoices={userInvoices}
       memberPlans={filteredMemberPlans}
       onSubscribe={async formData => {
         await subscribe({

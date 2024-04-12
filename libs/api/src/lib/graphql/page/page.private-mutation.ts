@@ -459,6 +459,9 @@ export const publishPage = async (
             updatedAt: updatedAt ?? publishAt,
             publishAt: null,
             properties: {
+              deleteMany: {
+                pageRevisionId: publishedPage?.published?.id || page?.draft?.id || ''
+              },
               createMany: {
                 data: properties
               }

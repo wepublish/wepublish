@@ -1,17 +1,19 @@
-import {ApiV1, AuthorListContainer, ContentWrapper} from '@wepublish/website'
+import {ApiV1, AuthorListContainer} from '@wepublish/website'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 
+import {Container} from '../../src/components/layout/container'
+
 export default function AuthorList() {
   return (
-    <ContentWrapper>
+    <Container>
       <AuthorListContainer
         variables={{
           sort: ApiV1.AuthorSort.Name,
           order: ApiV1.SortOrder.Ascending
         }}
       />
-    </ContentWrapper>
+    </Container>
   )
 }
 
