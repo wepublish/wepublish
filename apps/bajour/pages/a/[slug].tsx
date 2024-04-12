@@ -1,10 +1,13 @@
 import {
   ApiV1,
   ArticleContainer,
+  ArticleList,
   ArticleListContainer,
   ArticleWrapper,
+  BuilderArticleListProps,
   CommentListContainer,
-  useWebsiteBuilder
+  useWebsiteBuilder,
+  WebsiteBuilderProvider
 } from '@wepublish/website'
 import {GetStaticPaths, GetStaticProps} from 'next'
 import getConfig from 'next/config'
@@ -12,6 +15,15 @@ import {useRouter} from 'next/router'
 
 import {BriefingNewsletter} from '../../src/components/bajour/briefing-newsletter/briefing-newsletter'
 import {Container} from '../../src/components/layout/container'
+import {TeaserSlider} from '../../src/components/website-builder-overwrites/blocks/teaser-slider/teaser-slider'
+
+export const RelatedArticleSlider = (props: BuilderArticleListProps) => {
+  return (
+    <WebsiteBuilderProvider blocks={{TeaserGrid: TeaserSlider}}>
+      <ArticleList {...props} />
+    </WebsiteBuilderProvider>
+  )
+}
 
 export default function ArticleBySlug() {
   const {
@@ -29,28 +41,30 @@ export default function ArticleBySlug() {
   })
 
   return (
-    <Container>
-      <ArticleContainer slug={slug as string} />
+    <WebsiteBuilderProvider ArticleList={RelatedArticleSlider}>
+      <Container>
+        <ArticleContainer slug={slug as string} />
 
-      <BriefingNewsletter />
+        <BriefingNewsletter />
 
-      {data?.article && (
-        <>
-          <ArticleWrapper>
-            <H3 component={'h2'}>Das könnte dich auch interessieren</H3>
-            <ArticleListContainer
-              variables={{filter: {tags: data.article.tags}, take: 4}}
-              filter={articles => articles.filter(article => article.id !== data.article?.id)}
-            />
-          </ArticleWrapper>
+        {data?.article && (
+          <>
+            <ArticleWrapper>
+              <H3 component={'h2'}>Das könnte dich auch interessieren</H3>
+              <ArticleListContainer
+                variables={{filter: {tags: data.article.tags}, take: 4}}
+                filter={articles => articles.filter(article => article.id !== data.article?.id)}
+              />
+            </ArticleWrapper>
 
-          <ArticleWrapper>
-            <H3 component={'h2'}>Kommentare</H3>
-            <CommentListContainer id={data.article.id} type={ApiV1.CommentItemType.Article} />
-          </ArticleWrapper>
-        </>
-      )}
-    </Container>
+            <ArticleWrapper>
+              <H3 component={'h2'}>Kommentare</H3>
+              <CommentListContainer id={data.article.id} type={ApiV1.CommentItemType.Article} />
+            </ArticleWrapper>
+          </>
+        )}
+      </Container>
+    </WebsiteBuilderProvider>
   )
 }
 

@@ -10,7 +10,6 @@ import {
 } from 'react'
 import {PartialDeep} from 'type-fest'
 import {
-  BuilderArticleListItemProps,
   BuilderArticleListProps,
   BuilderArticleProps,
   BuilderArticleSEOProps
@@ -114,7 +113,6 @@ export type WebsiteBuilderProps = {
   AuthorChip: ComponentType<BuilderAuthorChipProps>
   AuthorListItem: ComponentType<BuilderAuthorListItemProps>
   AuthorList: ComponentType<BuilderAuthorListProps>
-  ArticleListItem: ComponentType<BuilderArticleListItemProps>
   ArticleList: ComponentType<BuilderArticleListProps>
   Event: ComponentType<BuilderEventProps>
   EventSEO: ComponentType<BuilderEventSEOProps>
@@ -234,7 +232,6 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   EventList: NoComponent,
   EventListItem: NoComponent,
   ArticleList: NoComponent,
-  ArticleListItem: NoComponent,
   CommentList: NoComponent,
   CommentListItem: NoComponent,
   CommentListItemChild: NoComponent,
