@@ -234,10 +234,11 @@ export const TeaserContent = styled(TeaserInnerWrapper)`
 `
 
 export const ImagePlaceholder = styled('div')`
-  width: 100%;
-  object-fit: cover;
   grid-column: 1/13;
-  aspect-ratio: 1/1;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  grid-area: image;
 `
 
 export const TeaserPreTitleNoContent = styled(TeaserPreTitle)<{isHovered: boolean}>`
@@ -283,6 +284,40 @@ export const AuthorsAndDate = styled('div')`
 
 export const Time = styled('time')`
   font-weight: 400;
+`
+
+export const TeaserContentStyled = styled(TeaserContent)`
+  grid-column: 1/13;
+`
+
+export const TeaserPreTitleStyled = styled(TeaserPreTitle)<{isHovered: boolean}>`
+  transition: background-color 0.3s ease-in-out;
+  background-color: ${({theme, isHovered}) =>
+    isHovered ? theme.palette.primary.main : theme.palette.secondary.main};
+  height: 3px;
+  width: 100%;
+  margin-bottom: ${({theme}) => theme.spacing(1.5)};
+`
+
+export const PreTitleStyled = styled('span')<{isHovered: boolean}>`
+  transition: background-color 0.3s ease-in-out;
+  padding: ${({theme}) => `${theme.spacing(0.5)} ${theme.spacing(2)}`};
+  background-color: ${({theme, isHovered}) =>
+    isHovered ? theme.palette.primary.main : theme.palette.secondary.main};
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 300;
+  transform: ${({theme}) => `translateY(-${theme.spacing(3)})`};
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    font-size: 18px;
+    transform: ${({theme}) => `translateY(-${theme.spacing(3.5)})`};
+  }
+`
+
+export const TeaserLeadStyled = styled('div')`
+  font-weight: 300;
+  font-size: 15px;
 `
 
 export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
@@ -332,7 +367,7 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
           {authors && authors?.length ? <Authors>Von {authors?.join(', ')} </Authors> : null}
           {publishDate && (
             <Time suppressHydrationWarning dateTime={publishDate}>
-              {'| '}
+              {authors && authors?.length ? '| ' : null}
               {date.format(new Date(publishDate), false)}{' '}
             </Time>
           )}

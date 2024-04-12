@@ -7,13 +7,15 @@ export const isBreakBlock = (block: Block): block is LinkPageBreakBlockType =>
 
 export const BreakBlockWrapper = styled('div')<{reverse?: boolean}>`
   display: grid;
-  gap: ${({theme}) => theme.spacing(2)};
+  gap: ${({theme}) => theme.spacing(4)};
   justify-content: center;
   align-items: center;
+  padding: ${({theme}) => `${theme.spacing(6)} ${theme.spacing(3)}`};
 
   ${({theme}) => theme.breakpoints.up('md')} {
+    padding: ${({theme}) => theme.spacing(10)} 0;
     grid-template-columns: 1fr 1fr;
-    gap: ${({theme}) => theme.spacing(5)};
+    gap: ${({theme}) => theme.spacing(10)};
   }
 `
 
@@ -32,8 +34,63 @@ export const BreakBlockSegment = styled('div')<{reverse?: boolean}>`
 `
 
 const imageStyles = (theme: Theme) => css`
-  ${theme.breakpoints.down('md')} {
-    aspect-ratio: 1;
+  aspect-ratio: 1;
+  object-fit: cover;
+  width: 100%;
+  max-width: ${theme.spacing(60)};
+  margin: 0 auto;
+
+  ${theme.breakpoints.up('md')} {
+    width: 80%;
+  }
+`
+
+const headingStylesNoImage = (theme: Theme) => css`
+  font-size: 40px;
+  font-weight: 600;
+  text-transform: uppercase;
+
+  ${theme.breakpoints.up('md')} {
+    font-style: italic;
+    font-size: 84px;
+  }
+`
+
+const headingStylesWithImage = (theme: Theme) => css`
+  font-size: 40px;
+  font-weight: 600;
+  text-transform: uppercase;
+
+  ${theme.breakpoints.up('md')} {
+    font-style: italic;
+    font-size: 45px;
+  }
+`
+
+const linkStyles = (theme: Theme) => css`
+  text-transform: none;
+  background-color: ${theme.palette.common.black};
+  margin-top: ${theme.spacing(2)};
+  width: fit-content;
+  padding: ${theme.spacing(1)} ${theme.spacing(3)};
+  border-radius: ${theme.spacing(4)};
+
+  :hover {
+    background-color: ${theme.palette.common.black};
+  }
+`
+
+const richTextStyles = (theme: Theme) => css`
+  max-width: ${theme.spacing(55)};
+
+  p {
+    font-size: 16px;
+  }
+
+  ${theme.breakpoints.up('md')} {
+    p {
+      font-size: 22px;
+    }
   }
 `
 
@@ -55,7 +112,7 @@ export const BreakBlock = ({
   templateOption
 }: BuilderBreakBlockProps) => {
   const {
-    elements: {H4, Image, Button, Link},
+    elements: {H2, H4, Image, Button, Link},
     blocks: {RichText}
   } = useWebsiteBuilder()
 
@@ -66,9 +123,9 @@ export const BreakBlock = ({
     <BreakBlockWrapper className={className} reverse={reverse}>
       <BreakBlockSegment reverse={reverse}>
         {!image && (
-          <H4 component="div" role="heading">
+          <H2 component="div" role="heading" css={headingStylesNoImage(theme)}>
             {text}
-          </H4>
+          </H2>
         )}
 
         {image && <Image image={image} css={imageStyles(theme)} />}
@@ -76,20 +133,19 @@ export const BreakBlock = ({
 
       <BreakBlockSegment>
         {image && (
-          <H4 component="div" role="heading">
+          <H4 component="div" role="heading" css={headingStylesWithImage(theme)}>
             {text}
           </H4>
         )}
 
-        <RichText richText={richText} />
+        <RichText richText={richText} css={richTextStyles(theme)} />
 
-        {!hideButton && linkURL && (
+        {!hideButton && linkURL && linkText && (
           <Button
             variant="contained"
-            color="primary"
             LinkComponent={Link}
-            href={linkURL}
-            css={buttonStyles}>
+            href={linkURL ?? ''}
+            css={linkStyles(theme)}>
             {linkText}
           </Button>
         )}
