@@ -6,7 +6,7 @@ exports[`Teaser List Block should render Article 1`] = `
     class="css-k8ojpv-TeaserListBlockWrapper ebuvkaa0"
   >
     <article
-      class="css-8p11sj-TeaserWrapper e18of27r14"
+      class="css-13bgdik-TeaserWrapper e18of27r18"
       x="0"
       y="0"
     >
@@ -15,7 +15,7 @@ exports[`Teaser List Block should render Article 1`] = `
         href="https://example.com"
       >
         <div
-          class="css-106gdu6-TeaserImageWrapper e18of27r12"
+          class="css-106gdu6-TeaserImageWrapper e18of27r16"
         >
           <img
             alt="An image description"
@@ -29,10 +29,10 @@ https://unsplash.it/200/200 200w"
           />
         </div>
         <span
-          class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+          class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
         >
           <div
-            class="css-1bkvv5m-PreTitle e18of27r2"
+            class="css-1bkvv5m-PreTitle e18of27r6"
           >
             Pre Title
           </div>
@@ -48,28 +48,28 @@ https://unsplash.it/200/200 200w"
           Lead
         </p>
         <div
-          class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+          class="css-1r6dk2d-AuthorsAndDate e18of27r5"
         >
           <time
-            class="css-tfwjps-Time e18of27r0"
+            class="css-tfwjps-Time e18of27r4"
             datetime="2023-01-01T00:00:00.000Z"
           >
-            | 01.01.2023 
+            01.01.2023 
           </time>
         </div>
       </a>
     </article>
     <article
-      class="css-z4j0q-TeaserWrapper e18of27r14"
-      x="4"
-      y="0"
+      class="css-jx9mmb-TeaserWrapper e18of27r18"
+      x="0"
+      y="1"
     >
       <a
         class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-kpytxy-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
-          class="css-106gdu6-TeaserImageWrapper e18of27r12"
+          class="css-106gdu6-TeaserImageWrapper e18of27r16"
         >
           <img
             alt="An image description"
@@ -83,10 +83,10 @@ https://unsplash.it/200/200 200w"
           />
         </div>
         <span
-          class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+          class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
         >
           <div
-            class="css-1bkvv5m-PreTitle e18of27r2"
+            class="css-1bkvv5m-PreTitle e18of27r6"
           >
             Pre Title
           </div>
@@ -102,28 +102,28 @@ https://unsplash.it/200/200 200w"
           Lead
         </p>
         <div
-          class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+          class="css-1r6dk2d-AuthorsAndDate e18of27r5"
         >
           <time
-            class="css-tfwjps-Time e18of27r0"
+            class="css-tfwjps-Time e18of27r4"
             datetime="2023-01-01T00:00:00.000Z"
           >
-            | 01.01.2023 
+            01.01.2023 
           </time>
         </div>
       </a>
     </article>
     <article
-      class="css-wylm69-TeaserWrapper e18of27r14"
-      x="8"
-      y="0"
+      class="css-1ml5tfp-TeaserWrapper e18of27r18"
+      x="0"
+      y="2"
     >
       <a
         class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-kpytxy-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
-          class="css-106gdu6-TeaserImageWrapper e18of27r12"
+          class="css-106gdu6-TeaserImageWrapper e18of27r16"
         >
           <img
             alt="An image description"
@@ -137,10 +137,10 @@ https://unsplash.it/200/200 200w"
           />
         </div>
         <span
-          class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+          class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
         >
           <div
-            class="css-1bkvv5m-PreTitle e18of27r2"
+            class="css-1bkvv5m-PreTitle e18of27r6"
           >
             Pre Title
           </div>
@@ -156,13 +156,13 @@ https://unsplash.it/200/200 200w"
           Lead
         </p>
         <div
-          class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+          class="css-1r6dk2d-AuthorsAndDate e18of27r5"
         >
           <time
-            class="css-tfwjps-Time e18of27r0"
+            class="css-tfwjps-Time e18of27r4"
             datetime="2023-01-01T00:00:00.000Z"
           >
-            | 01.01.2023 
+            01.01.2023 
           </time>
         </div>
       </a>
@@ -177,7 +177,7 @@ exports[`Teaser List Block should render Event 1`] = `
     class="css-k8ojpv-TeaserListBlockWrapper ebuvkaa0"
   >
     <article
-      class="css-8p11sj-TeaserWrapper e18of27r14"
+      class="css-13bgdik-TeaserWrapper e18of27r18"
       x="0"
       y="0"
     >
@@ -186,7 +186,7 @@ exports[`Teaser List Block should render Event 1`] = `
         href="https://example.com"
       >
         <div
-          class="css-106gdu6-TeaserImageWrapper e18of27r12"
+          class="css-106gdu6-TeaserImageWrapper e18of27r16"
         >
           <img
             alt="An image description"
@@ -200,10 +200,10 @@ https://unsplash.it/200/200 200w"
           />
         </div>
         <span
-          class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+          class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
         >
           <div
-            class="css-1bkvv5m-PreTitle e18of27r2"
+            class="css-1bkvv5m-PreTitle e18of27r6"
           >
             Pre Title
           </div>
@@ -219,28 +219,28 @@ https://unsplash.it/200/200 200w"
           Lead
         </p>
         <div
-          class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+          class="css-1r6dk2d-AuthorsAndDate e18of27r5"
         >
           <time
-            class="css-tfwjps-Time e18of27r0"
+            class="css-tfwjps-Time e18of27r4"
             datetime="2023-01-01T00:00:00.000Z"
           >
-            | 01.01.2023 
+            01.01.2023 
           </time>
         </div>
       </a>
     </article>
     <article
-      class="css-z4j0q-TeaserWrapper e18of27r14"
-      x="4"
-      y="0"
+      class="css-jx9mmb-TeaserWrapper e18of27r18"
+      x="0"
+      y="1"
     >
       <a
         class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-kpytxy-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
-          class="css-106gdu6-TeaserImageWrapper e18of27r12"
+          class="css-106gdu6-TeaserImageWrapper e18of27r16"
         >
           <img
             alt="An image description"
@@ -254,10 +254,10 @@ https://unsplash.it/200/200 200w"
           />
         </div>
         <span
-          class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+          class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
         >
           <div
-            class="css-1bkvv5m-PreTitle e18of27r2"
+            class="css-1bkvv5m-PreTitle e18of27r6"
           >
             Pre Title
           </div>
@@ -273,28 +273,28 @@ https://unsplash.it/200/200 200w"
           Lead
         </p>
         <div
-          class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+          class="css-1r6dk2d-AuthorsAndDate e18of27r5"
         >
           <time
-            class="css-tfwjps-Time e18of27r0"
+            class="css-tfwjps-Time e18of27r4"
             datetime="2023-01-01T00:00:00.000Z"
           >
-            | 01.01.2023 
+            01.01.2023 
           </time>
         </div>
       </a>
     </article>
     <article
-      class="css-wylm69-TeaserWrapper e18of27r14"
-      x="8"
-      y="0"
+      class="css-1ml5tfp-TeaserWrapper e18of27r18"
+      x="0"
+      y="2"
     >
       <a
         class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-kpytxy-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
-          class="css-106gdu6-TeaserImageWrapper e18of27r12"
+          class="css-106gdu6-TeaserImageWrapper e18of27r16"
         >
           <img
             alt="An image description"
@@ -308,10 +308,10 @@ https://unsplash.it/200/200 200w"
           />
         </div>
         <span
-          class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+          class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
         >
           <div
-            class="css-1bkvv5m-PreTitle e18of27r2"
+            class="css-1bkvv5m-PreTitle e18of27r6"
           >
             Pre Title
           </div>
@@ -327,13 +327,13 @@ https://unsplash.it/200/200 200w"
           Lead
         </p>
         <div
-          class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+          class="css-1r6dk2d-AuthorsAndDate e18of27r5"
         >
           <time
-            class="css-tfwjps-Time e18of27r0"
+            class="css-tfwjps-Time e18of27r4"
             datetime="2023-01-01T00:00:00.000Z"
           >
-            | 01.01.2023 
+            01.01.2023 
           </time>
         </div>
       </a>
@@ -348,7 +348,7 @@ exports[`Teaser List Block should render Page 1`] = `
     class="css-k8ojpv-TeaserListBlockWrapper ebuvkaa0"
   >
     <article
-      class="css-8p11sj-TeaserWrapper e18of27r14"
+      class="css-13bgdik-TeaserWrapper e18of27r18"
       x="0"
       y="0"
     >
@@ -357,7 +357,7 @@ exports[`Teaser List Block should render Page 1`] = `
         href="https://example.com"
       >
         <div
-          class="css-106gdu6-TeaserImageWrapper e18of27r12"
+          class="css-106gdu6-TeaserImageWrapper e18of27r16"
         >
           <img
             alt="An image description"
@@ -371,10 +371,10 @@ https://unsplash.it/200/200 200w"
           />
         </div>
         <span
-          class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+          class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
         >
           <div
-            class="css-1bkvv5m-PreTitle e18of27r2"
+            class="css-1bkvv5m-PreTitle e18of27r6"
           >
             Pre Title
           </div>
@@ -390,21 +390,21 @@ https://unsplash.it/200/200 200w"
           Lead
         </p>
         <div
-          class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+          class="css-1r6dk2d-AuthorsAndDate e18of27r5"
         />
       </a>
     </article>
     <article
-      class="css-z4j0q-TeaserWrapper e18of27r14"
-      x="4"
-      y="0"
+      class="css-jx9mmb-TeaserWrapper e18of27r18"
+      x="0"
+      y="1"
     >
       <a
         class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-kpytxy-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
-          class="css-106gdu6-TeaserImageWrapper e18of27r12"
+          class="css-106gdu6-TeaserImageWrapper e18of27r16"
         >
           <img
             alt="An image description"
@@ -418,10 +418,10 @@ https://unsplash.it/200/200 200w"
           />
         </div>
         <span
-          class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+          class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
         >
           <div
-            class="css-1bkvv5m-PreTitle e18of27r2"
+            class="css-1bkvv5m-PreTitle e18of27r6"
           >
             Pre Title
           </div>
@@ -437,21 +437,21 @@ https://unsplash.it/200/200 200w"
           Lead
         </p>
         <div
-          class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+          class="css-1r6dk2d-AuthorsAndDate e18of27r5"
         />
       </a>
     </article>
     <article
-      class="css-wylm69-TeaserWrapper e18of27r14"
-      x="8"
-      y="0"
+      class="css-1ml5tfp-TeaserWrapper e18of27r18"
+      x="0"
+      y="2"
     >
       <a
         class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-kpytxy-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
-          class="css-106gdu6-TeaserImageWrapper e18of27r12"
+          class="css-106gdu6-TeaserImageWrapper e18of27r16"
         >
           <img
             alt="An image description"
@@ -465,10 +465,10 @@ https://unsplash.it/200/200 200w"
           />
         </div>
         <span
-          class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+          class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
         >
           <div
-            class="css-1bkvv5m-PreTitle e18of27r2"
+            class="css-1bkvv5m-PreTitle e18of27r6"
           >
             Pre Title
           </div>
@@ -484,7 +484,7 @@ https://unsplash.it/200/200 200w"
           Lead
         </p>
         <div
-          class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+          class="css-1r6dk2d-AuthorsAndDate e18of27r5"
         />
       </a>
     </article>
@@ -498,7 +498,7 @@ exports[`Teaser List Block should render WithClassName 1`] = `
     class="extra-classname css-k8ojpv-TeaserListBlockWrapper ebuvkaa0"
   >
     <article
-      class="css-8p11sj-TeaserWrapper e18of27r14"
+      class="css-13bgdik-TeaserWrapper e18of27r18"
       x="0"
       y="0"
     >
@@ -507,7 +507,7 @@ exports[`Teaser List Block should render WithClassName 1`] = `
         href="https://example.com"
       >
         <div
-          class="css-106gdu6-TeaserImageWrapper e18of27r12"
+          class="css-106gdu6-TeaserImageWrapper e18of27r16"
         >
           <img
             alt="An image description"
@@ -521,10 +521,10 @@ https://unsplash.it/200/200 200w"
           />
         </div>
         <span
-          class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+          class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
         >
           <div
-            class="css-1bkvv5m-PreTitle e18of27r2"
+            class="css-1bkvv5m-PreTitle e18of27r6"
           >
             Pre Title
           </div>
@@ -540,28 +540,28 @@ https://unsplash.it/200/200 200w"
           Lead
         </p>
         <div
-          class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+          class="css-1r6dk2d-AuthorsAndDate e18of27r5"
         >
           <time
-            class="css-tfwjps-Time e18of27r0"
+            class="css-tfwjps-Time e18of27r4"
             datetime="2023-01-01T00:00:00.000Z"
           >
-            | 01.01.2023 
+            01.01.2023 
           </time>
         </div>
       </a>
     </article>
     <article
-      class="css-z4j0q-TeaserWrapper e18of27r14"
-      x="4"
-      y="0"
+      class="css-jx9mmb-TeaserWrapper e18of27r18"
+      x="0"
+      y="1"
     >
       <a
         class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-kpytxy-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
-          class="css-106gdu6-TeaserImageWrapper e18of27r12"
+          class="css-106gdu6-TeaserImageWrapper e18of27r16"
         >
           <img
             alt="An image description"
@@ -575,10 +575,10 @@ https://unsplash.it/200/200 200w"
           />
         </div>
         <span
-          class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+          class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
         >
           <div
-            class="css-1bkvv5m-PreTitle e18of27r2"
+            class="css-1bkvv5m-PreTitle e18of27r6"
           >
             Pre Title
           </div>
@@ -594,28 +594,28 @@ https://unsplash.it/200/200 200w"
           Lead
         </p>
         <div
-          class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+          class="css-1r6dk2d-AuthorsAndDate e18of27r5"
         >
           <time
-            class="css-tfwjps-Time e18of27r0"
+            class="css-tfwjps-Time e18of27r4"
             datetime="2023-01-01T00:00:00.000Z"
           >
-            | 01.01.2023 
+            01.01.2023 
           </time>
         </div>
       </a>
     </article>
     <article
-      class="css-wylm69-TeaserWrapper e18of27r14"
-      x="8"
-      y="0"
+      class="css-1ml5tfp-TeaserWrapper e18of27r18"
+      x="0"
+      y="2"
     >
       <a
         class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-kpytxy-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
-          class="css-106gdu6-TeaserImageWrapper e18of27r12"
+          class="css-106gdu6-TeaserImageWrapper e18of27r16"
         >
           <img
             alt="An image description"
@@ -629,10 +629,10 @@ https://unsplash.it/200/200 200w"
           />
         </div>
         <span
-          class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+          class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
         >
           <div
-            class="css-1bkvv5m-PreTitle e18of27r2"
+            class="css-1bkvv5m-PreTitle e18of27r6"
           >
             Pre Title
           </div>
@@ -648,13 +648,13 @@ https://unsplash.it/200/200 200w"
           Lead
         </p>
         <div
-          class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+          class="css-1r6dk2d-AuthorsAndDate e18of27r5"
         >
           <time
-            class="css-tfwjps-Time e18of27r0"
+            class="css-tfwjps-Time e18of27r4"
             datetime="2023-01-01T00:00:00.000Z"
           >
-            | 01.01.2023 
+            01.01.2023 
           </time>
         </div>
       </a>
@@ -669,7 +669,7 @@ exports[`Teaser List Block should render WithEmotion 1`] = `
     class="css-k8ojpv-TeaserListBlockWrapper ebuvkaa0"
   >
     <article
-      class="css-8p11sj-TeaserWrapper e18of27r14"
+      class="css-13bgdik-TeaserWrapper e18of27r18"
       x="0"
       y="0"
     >
@@ -678,7 +678,7 @@ exports[`Teaser List Block should render WithEmotion 1`] = `
         href="https://example.com"
       >
         <div
-          class="css-106gdu6-TeaserImageWrapper e18of27r12"
+          class="css-106gdu6-TeaserImageWrapper e18of27r16"
         >
           <img
             alt="An image description"
@@ -692,10 +692,10 @@ https://unsplash.it/200/200 200w"
           />
         </div>
         <span
-          class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+          class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
         >
           <div
-            class="css-1bkvv5m-PreTitle e18of27r2"
+            class="css-1bkvv5m-PreTitle e18of27r6"
           >
             Pre Title
           </div>
@@ -711,28 +711,28 @@ https://unsplash.it/200/200 200w"
           Lead
         </p>
         <div
-          class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+          class="css-1r6dk2d-AuthorsAndDate e18of27r5"
         >
           <time
-            class="css-tfwjps-Time e18of27r0"
+            class="css-tfwjps-Time e18of27r4"
             datetime="2023-01-01T00:00:00.000Z"
           >
-            | 01.01.2023 
+            01.01.2023 
           </time>
         </div>
       </a>
     </article>
     <article
-      class="css-z4j0q-TeaserWrapper e18of27r14"
-      x="4"
-      y="0"
+      class="css-jx9mmb-TeaserWrapper e18of27r18"
+      x="0"
+      y="1"
     >
       <a
         class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-kpytxy-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
-          class="css-106gdu6-TeaserImageWrapper e18of27r12"
+          class="css-106gdu6-TeaserImageWrapper e18of27r16"
         >
           <img
             alt="An image description"
@@ -746,10 +746,10 @@ https://unsplash.it/200/200 200w"
           />
         </div>
         <span
-          class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+          class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
         >
           <div
-            class="css-1bkvv5m-PreTitle e18of27r2"
+            class="css-1bkvv5m-PreTitle e18of27r6"
           >
             Pre Title
           </div>
@@ -765,28 +765,28 @@ https://unsplash.it/200/200 200w"
           Lead
         </p>
         <div
-          class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+          class="css-1r6dk2d-AuthorsAndDate e18of27r5"
         >
           <time
-            class="css-tfwjps-Time e18of27r0"
+            class="css-tfwjps-Time e18of27r4"
             datetime="2023-01-01T00:00:00.000Z"
           >
-            | 01.01.2023 
+            01.01.2023 
           </time>
         </div>
       </a>
     </article>
     <article
-      class="css-wylm69-TeaserWrapper e18of27r14"
-      x="8"
-      y="0"
+      class="css-1ml5tfp-TeaserWrapper e18of27r18"
+      x="0"
+      y="2"
     >
       <a
         class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-kpytxy-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
-          class="css-106gdu6-TeaserImageWrapper e18of27r12"
+          class="css-106gdu6-TeaserImageWrapper e18of27r16"
         >
           <img
             alt="An image description"
@@ -800,10 +800,10 @@ https://unsplash.it/200/200 200w"
           />
         </div>
         <span
-          class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+          class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
         >
           <div
-            class="css-1bkvv5m-PreTitle e18of27r2"
+            class="css-1bkvv5m-PreTitle e18of27r6"
           >
             Pre Title
           </div>
@@ -819,13 +819,13 @@ https://unsplash.it/200/200 200w"
           Lead
         </p>
         <div
-          class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+          class="css-1r6dk2d-AuthorsAndDate e18of27r5"
         >
           <time
-            class="css-tfwjps-Time e18of27r0"
+            class="css-tfwjps-Time e18of27r4"
             datetime="2023-01-01T00:00:00.000Z"
           >
-            | 01.01.2023 
+            01.01.2023 
           </time>
         </div>
       </a>

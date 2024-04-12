@@ -73,14 +73,4 @@ export const SingleTeaser = styled(TeaserOverwrite)`
       aspect-ratio: 5/2;
     }
   }
-
-  ${({theme}) => theme.breakpoints.up('xl')} {
-    ${TeaserContentStyled} {
-      grid-column: 5/8;
-    }
-
-    ${TeaserImgStyled} {
-      grid-column: 3/12;
-    }
-  }
 `
