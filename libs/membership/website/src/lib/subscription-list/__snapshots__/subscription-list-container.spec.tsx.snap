@@ -11,7 +11,7 @@ exports[`SubscriptionList Container should render Cancel 1`] = `
       class="css-1lcio32-SubscriptionListWrapper e12e7g630"
     >
       <div
-+       class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-standardError MuiAlert-standard css-1fv2bvb-MuiPaper-root-MuiAlert-root"
++       class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-standardError MuiAlert-standard css-1f6gfio-MuiPaper-root-MuiAlert-root"
 +       role="alert"
 +     >
 +       <div
@@ -185,7 +185,7 @@ exports[`SubscriptionList Container should render CancelWithInvoiceList 1`] = `
       class="css-1lcio32-SubscriptionListWrapper e12e7g630"
     >
       <div
-+       class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-standardError MuiAlert-standard css-1fv2bvb-MuiPaper-root-MuiAlert-root"
++       class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-standardError MuiAlert-standard css-1f6gfio-MuiPaper-root-MuiAlert-root"
 +       role="alert"
 +     >
 +       <div
@@ -354,7 +354,7 @@ exports[`SubscriptionList Container should render CancelWithInvoiceList 1`] = `
           class="css-kkg48e-InvoiceListItemContent e7di52m3"
 -       >
 -         <h6
--           class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+-           class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
         >
 -           Offene Rechnung für Foobar Memberplan
 -         </h6>
@@ -464,7 +464,7 @@ exports[`SubscriptionList Container should render CancelWithInvoiceList 1`] = `
 -           class="css-lst8rm-InvoiceListItemActions e7di52m0"
 -         >
 -           <button
--             class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-14wjwic-MuiButtonBase-root-MuiButton-root"
+-             class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
 -             tabindex="0"
 -             type="button"
 -           >
@@ -505,7 +505,7 @@ https://unsplash.it/200/100 200w"
         class="css-6l2m0q-SubscriptionListItemContent eere75z3"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
         >
           Foobar Memberplan
         </h6>
@@ -647,7 +647,7 @@ https://unsplash.it/200/100 200w"
           class="css-1fn3y2c-SubscriptionListItemActions eere75z0"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium css-14u5m77-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium css-1qr3v8l-MuiButtonBase-root-MuiButton-root"
             tabindex="0"
             type="button"
           >
@@ -657,7 +657,7 @@ https://unsplash.it/200/100 200w"
             />
           </button>
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-14wjwic-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
             tabindex="0"
             type="button"
           >
@@ -705,7 +705,7 @@ https://unsplash.it/200/100 200w"
         class="css-6l2m0q-SubscriptionListItemContent eere75z3"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
         >
           Foobar Memberplan
         </h6>
@@ -840,7 +840,7 @@ https://unsplash.it/200/100 200w"
           class="css-1fn3y2c-SubscriptionListItemActions eere75z0"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium css-14u5m77-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium css-1qr3v8l-MuiButtonBase-root-MuiButton-root"
             tabindex="0"
             type="button"
           >
@@ -850,7 +850,7 @@ https://unsplash.it/200/100 200w"
             />
           </button>
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-14wjwic-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
             tabindex="0"
             type="button"
           >
@@ -888,7 +888,7 @@ https://unsplash.it/200/100 200w"
         class="css-6l2m0q-SubscriptionListItemContent eere75z3"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
         >
           Foobar Memberplan
         </h6>
@@ -1030,7 +1030,7 @@ https://unsplash.it/200/100 200w"
           class="css-1fn3y2c-SubscriptionListItemActions eere75z0"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium css-14u5m77-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium css-1qr3v8l-MuiButtonBase-root-MuiButton-root"
             tabindex="0"
             type="button"
           >
@@ -1040,7 +1040,7 @@ https://unsplash.it/200/100 200w"
             />
           </button>
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-14wjwic-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
             tabindex="0"
             type="button"
           >
@@ -1078,7 +1078,7 @@ https://unsplash.it/200/100 200w"
         class="css-6l2m0q-SubscriptionListItemContent eere75z3"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
         >
           Foobar Memberplan
         </h6>
@@ -1220,7 +1220,7 @@ https://unsplash.it/200/100 200w"
           class="css-1fn3y2c-SubscriptionListItemActions eere75z0"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium css-14u5m77-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium css-1qr3v8l-MuiButtonBase-root-MuiButton-root"
             tabindex="0"
             type="button"
           >
@@ -1230,7 +1230,7 @@ https://unsplash.it/200/100 200w"
             />
           </button>
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-14wjwic-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
             tabindex="0"
             type="button"
           >

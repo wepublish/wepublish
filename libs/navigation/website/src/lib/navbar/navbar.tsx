@@ -6,6 +6,13 @@ import {MdAccountCircle, MdClose, MdMenu, MdOutlinePayments} from 'react-icons/m
 import {navigationLinkToUrl} from '../link-to-url'
 import {useUser} from '@wepublish/authentication/website'
 
+declare module 'react' {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  interface HTMLAttributes<T> {
+    fetchPriority?: 'high' | 'low' | 'auto'
+  }
+}
+
 export const NavbarWrapper = styled('nav')`
   position: sticky;
   top: 0;
@@ -382,6 +389,7 @@ const navPaperLinkStyling = (theme: Theme) => css`
 
 export const NavPaperCategoryLinks = styled('div')`
   display: grid;
+  grid-auto-rows: max-content;
   font-weight: ${({theme}) => theme.typography.fontWeightMedium};
   font-size: ${({theme}) => theme.typography.h6.fontSize};
 `
@@ -416,6 +424,7 @@ export const NavPaperActions = styled('div')`
   grid-auto-flow: column;
   grid-auto-columns: max-content;
   gap: ${({theme}) => theme.spacing(2)};
+  margin-top: ${({theme}) => theme.spacing(5)};
 `
 
 const NavPaper = ({

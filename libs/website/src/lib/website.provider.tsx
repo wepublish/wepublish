@@ -1,7 +1,13 @@
 import {GlobalStyles, TextField, Theme, ThemeProvider, css} from '@mui/material'
-import {Article, ArticleList, ArticleListItem, ArticleSEO} from '@wepublish/article/website'
+import {Article, ArticleList, ArticleSEO} from '@wepublish/article/website'
 import {LoginForm, RegistrationForm} from '@wepublish/authentication/website'
-import {Author, AuthorChip, AuthorList, AuthorListItem} from '@wepublish/author/website'
+import {
+  Author,
+  AuthorChip,
+  AuthorLinks,
+  AuthorList,
+  AuthorListItem
+} from '@wepublish/author/website'
 import {
   BildwurfAdBlock,
   BlockRenderer,
@@ -115,11 +121,11 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
     <IconContext.Provider value={{}}>
       <WebsiteBuilderProvider
         Author={Author}
+        AuthorLinks={AuthorLinks}
         AuthorChip={AuthorChip}
         AuthorList={AuthorList}
         AuthorListItem={AuthorListItem}
         ArticleList={ArticleList}
-        ArticleListItem={ArticleListItem}
         Article={Article}
         ArticleSEO={ArticleSEO}
         PeerInformation={PeerInformation}

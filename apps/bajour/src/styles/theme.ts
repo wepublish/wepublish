@@ -1,15 +1,13 @@
-import {createTheme} from '@mui/material'
+import {createTheme, ThemeOptions} from '@mui/material'
+import {theme as WepTheme} from '@wepublish/ui'
 
 const {
   palette: {augmentColor}
 } = createTheme()
 
-const theme = createTheme({
+const theme = createTheme(WepTheme, {
   typography: {
-    fontFamily: 'Roboto, sans-serif',
-    body1: {
-      lineHeight: 1.25
-    }
+    fontFamily: 'Roboto, sans-serif'
   },
   breakpoints: {
     values: {
@@ -21,26 +19,31 @@ const theme = createTheme({
     }
   },
   palette: {
-    primary: augmentColor({color: {main: '#FDDDD2'}}),
-    secondary: augmentColor({color: {main: '#ffbaba'}}),
+    primary: augmentColor({color: {main: '#FF0D62'}}),
+    secondary: augmentColor({color: {main: '#FDDDD2', dark: '#ffbaba'}}),
     error: augmentColor({color: {main: '#FF0D62'}})
   },
   components: {
     MuiButton: {
       styleOverrides: {
-        root: {
-          borderRadius: '12px'
-        },
-        outlinedError: {
+        outlinedPrimary: {
           borderWidth: '3px',
           borderColor: '#FF0D62',
           fontWeight: 'bold',
           ':hover': {
+            backgroundColor: 'transparent',
             borderWidth: '3px'
           }
         }
       }
     }
   }
-})
+} as ThemeOptions)
+
+export const navbarTheme = createTheme(theme, {
+  palette: {
+    primary: theme.palette.secondary
+  }
+} as ThemeOptions)
+
 export default theme

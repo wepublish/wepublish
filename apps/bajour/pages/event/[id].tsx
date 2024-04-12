@@ -3,18 +3,12 @@ import {GetStaticPaths, GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 
-import {Container} from '../../src/components/layout/container'
-
 export default function EventById() {
   const {
     query: {id}
   } = useRouter()
 
-  return (
-    <Container>
-      <EventContainer id={id as string} />
-    </Container>
-  )
+  return <EventContainer id={id as string} />
 }
 
 export const getStaticPaths: GetStaticPaths = async () => {

@@ -60,9 +60,11 @@ export function TeaserOverwrite({className, teaser, numColumns}: BuilderTeaserPr
 
         {!hideAuthorAndDate && (
           <AuthorsAndDate>
-            {authors?.length && <>Von {authors?.join(', ')},</>}
+            {authors?.length && <>Von {authors?.join(', ')}, </>}
             {publishDate && (
-              <time dateTime={publishDate}> {date.format(new Date(publishDate), false)} </time>
+              <time suppressHydrationWarning dateTime={publishDate}>
+                {date.format(new Date(publishDate), false)}{' '}
+              </time>
             )}
           </AuthorsAndDate>
         )}

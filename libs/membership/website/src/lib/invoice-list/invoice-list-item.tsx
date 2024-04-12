@@ -91,14 +91,20 @@ export function InvoiceListItem({
           <InvoiceListItemMetaItem>
             <MdCalendarMonth />
             <span>
-              Abgeschlossen am <time dateTime={createdAt}>{date.format(new Date(createdAt))}</time>
+              Abgeschlossen am{' '}
+              <time suppressHydrationWarning dateTime={createdAt}>
+                {date.format(new Date(createdAt))}
+              </time>
             </span>
           </InvoiceListItemMetaItem>
 
           <InvoiceListItemMetaItem>
             <MdOutlineWarning />
             <span>
-              Fällig am <time dateTime={dueAt}>{date.format(new Date(dueAt))}</time>
+              Fällig am{' '}
+              <time suppressHydrationWarning dateTime={dueAt}>
+                {date.format(new Date(dueAt))}
+              </time>
             </span>
           </InvoiceListItemMetaItem>
 
@@ -109,13 +115,19 @@ export function InvoiceListItem({
 
         {paidAt && (
           <strong>
-            Bezahlt am <time dateTime={paidAt}>{date.format(new Date(paidAt))}</time>
+            Bezahlt am{' '}
+            <time suppressHydrationWarning dateTime={paidAt}>
+              {date.format(new Date(paidAt))}
+            </time>
           </strong>
         )}
 
         {canceledAt && (
           <strong>
-            Storniert am <time dateTime={canceledAt}>{date.format(new Date(canceledAt))}</time>
+            Storniert am{' '}
+            <time suppressHydrationWarning dateTime={canceledAt}>
+              {date.format(new Date(canceledAt))}
+            </time>
           </strong>
         )}
 

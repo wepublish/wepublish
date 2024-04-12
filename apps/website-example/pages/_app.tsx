@@ -3,12 +3,10 @@ import {
   createTheme,
   css,
   CssBaseline,
-  GlobalStyles,
   styled,
   Theme,
   ThemeOptions,
-  ThemeProvider,
-  useTheme
+  ThemeProvider
 } from '@mui/material'
 import {theme} from '@wepublish/ui'
 import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
@@ -25,9 +23,9 @@ import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import {AppProps} from 'next/app'
 import getConfig from 'next/config'
+import {Hanken_Grotesk, Merriweather} from 'next/font/google'
 import Head from 'next/head'
 import Script from 'next/script'
-import {useMemo} from 'react'
 import {initReactI18next} from 'react-i18next'
 import {PartialDeep} from 'type-fest'
 import {z} from 'zod'
@@ -35,10 +33,6 @@ import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {ReactComponent as Logo} from '../src/logo.svg'
-import {tsriArticleStyles} from '../src/styles/tsri-article.styles'
-import {TsriBreakBlock} from '../src/tsri-break-block'
-import {TsriButton} from '../src/tsri-button'
-import {TsriParagraph} from '../src/tsri-paragraph'
 
 setDefaultOptions({
   locale: de
@@ -118,19 +112,28 @@ const dateFormatter = (date: Date, includeTime = true) =>
     ? `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
     : format(date, 'dd. MMMM yyyy')
 
+const hankenGrotesk = Hanken_Grotesk({
+  weight: ['100', '300', '400', '500', '700', '900'],
+  style: ['italic', 'normal'],
+  subsets: ['latin'],
+  display: 'swap',
+  preload: true
+})
+
+const merriweather = Merriweather({
+  weight: ['300', '400', '700', '900'],
+  style: ['italic', 'normal'],
+  subsets: ['latin'],
+  display: 'swap',
+  preload: true
+})
+
 type CustomAppProps = AppProps<{
   sessionToken?: ApiV1.UserSession
 }>
 
 function CustomApp({Component, pageProps}: CustomAppProps) {
   const siteTitle = 'We.Publish'
-  const theme = useTheme()
-  const globalStyles = useMemo(
-    () => css`
-      ${tsriArticleStyles(theme)}
-    `,
-    [theme]
-  )
 
   return (
     <SessionProvider sessionToken={pageProps.sessionToken ?? null}>
@@ -138,17 +141,13 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
         <WebsiteBuilderProvider
           Head={Head}
           Script={Script}
-          elements={{Link: NextWepublishLink, Button: TsriButton, Paragraph: TsriParagraph}}
-          date={{format: dateFormatter}}
-          blocks={{Break: TsriBreakBlock}}>
+          elements={{Link: NextWepublishLink}}
+          date={{format: dateFormatter}}>
           <ThemeProvider theme={websiteExampleTheme}>
-            <GlobalStyles styles={globalStyles} />
             <CssBaseline />
 
             <Head>
               <title key="title">{siteTitle}</title>
-
-              <title>We.Publish</title>
               <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
               {/* Feeds */}
@@ -169,7 +168,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               <meta name="theme-color" content="#ffffff" />
             </Head>
 
-            <Spacer>
+            <Spacer className={[hankenGrotesk.className, merriweather.className].join(' ')}>
               <NavBar
                 categorySlugs={[['categories', 'about-us']]}
                 slug="main"

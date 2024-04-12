@@ -1,5 +1,6 @@
 import {css, styled} from '@mui/material'
 import {
+  ApiV2,
   BuilderTeaserGridBlockProps,
   selectTeaserAuthors,
   selectTeaserLead,
@@ -7,6 +8,8 @@ import {
   selectTeaserUrl,
   useWebsiteBuilder
 } from '@wepublish/website'
+import {differenceInYears} from 'date-fns'
+import getConfig from 'next/config'
 import {useState} from 'react'
 
 import {ReactComponent as Logo} from '../../../logo.svg'
@@ -57,7 +60,7 @@ const BajourLogo = styled(Logo)`
 
 const ArchiveText = styled('span')`
   font-weight: 600;
-  color: ${({theme}) => theme.palette.error.main};
+  color: ${({theme}) => theme.palette.primary.main};
 `
 
 const Timeline = styled('div')`
@@ -71,7 +74,7 @@ const Timeline = styled('div')`
     'years .';
   grid-template-columns: 1fr 1fr;
   column-gap: ${({theme}) => theme.spacing(6)};
-  color: ${({theme}) => theme.palette.error.main};
+  color: ${({theme}) => theme.palette.primary.main};
   font-weight: 600;
   font-size: 10px;
 
@@ -119,7 +122,7 @@ const Axis = styled('div')`
   transform: translateX(-50%);
   height: 135%;
   width: ${({theme}) => theme.spacing(2)};
-  background-color: ${({theme}) => theme.palette.error.main};
+  background-color: ${({theme}) => theme.palette.primary.main};
   border-radius: ${({theme}) => theme.spacing(2)};
   border: 4px solid ${({theme}) => theme.palette.common.white};
 
@@ -145,7 +148,7 @@ const Highlights = styled('span')`
   left: 5%;
   font-size: 13px;
   font-weight: bold;
-  color: ${({theme}) => theme.palette.error.main};
+  color: ${({theme}) => theme.palette.primary.main};
 
   ${({theme}) => theme.breakpoints.up('md')} {
     top: -${({theme}) => theme.spacing(7)};
@@ -189,7 +192,8 @@ const LinkWrapper = styled('div')`
   display: grid;
 `
 
-export const Archive = ({teasers}: BuilderTeaserGridBlockProps) => {
+const Archive = ({teasers}: BuilderTeaserGridBlockProps) => {
+  const {data} = ApiV2.useStatsQuery()
   const [currentTeaser, setCurrentTeaser] = useState(teasers[2])
 
   const title = currentTeaser && selectTeaserTitle(currentTeaser)
@@ -212,17 +216,21 @@ export const Archive = ({teasers}: BuilderTeaserGridBlockProps) => {
 
         <Timeline>
           <Articles>
-            <Number>2586</Number>
+            <Number>{data?.stats?.articlesCount}</Number>
             Artikel
           </Articles>
 
           <Authors>
-            <Number>34</Number>
+            <Number>{data?.stats?.authorsCount}</Number>
             AutorInnen
           </Authors>
 
           <Years>
-            <Number>12</Number>
+            {data?.stats?.firstArticleDate && (
+              <Number>
+                {differenceInYears(new Date(), new Date(data.stats.firstArticleDate)) + 1}
+              </Number>
+            )}
             Jahre
           </Years>
 
@@ -246,7 +254,7 @@ export const Archive = ({teasers}: BuilderTeaserGridBlockProps) => {
             LinkComponent={Link}
             href={href}
             variant="outlined"
-            color="error"
+            color="primary"
             css={buttonStyles}>
             Weiterlesen
           </Button>
@@ -255,3 +263,8 @@ export const Archive = ({teasers}: BuilderTeaserGridBlockProps) => {
     </ArchiveWrapper>
   )
 }
+
+const {publicRuntimeConfig} = getConfig()
+const ConnectedArchive = ApiV2.createWithV2ApiClient(publicRuntimeConfig.env.API_URL!, [])(Archive)
+
+export {ConnectedArchive as Archive}

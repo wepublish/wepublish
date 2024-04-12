@@ -1,17 +1,11 @@
 import {useAuthorQuery} from '@wepublish/website/api'
-import {
-  BuilderAuthorProps,
-  BuilderContainerProps,
-  useWebsiteBuilder
-} from '@wepublish/website/builder'
+import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
 type IdOrSlug = {id: string; slug?: never} | {id?: never; slug: string}
 
-export type AuthorContainerProps = IdOrSlug &
-  Pick<BuilderAuthorProps, 'authorLinks'> &
-  BuilderContainerProps
+export type AuthorContainerProps = IdOrSlug & BuilderContainerProps
 
-export function AuthorContainer({id, slug, authorLinks, className}: AuthorContainerProps) {
+export function AuthorContainer({id, slug, className}: AuthorContainerProps) {
   const {Author} = useWebsiteBuilder()
   const {data, loading, error} = useAuthorQuery({
     variables: {
@@ -20,13 +14,5 @@ export function AuthorContainer({id, slug, authorLinks, className}: AuthorContai
     }
   })
 
-  return (
-    <Author
-      data={data}
-      loading={loading}
-      error={error}
-      className={className}
-      authorLinks={authorLinks}
-    />
-  )
+  return <Author data={data} loading={loading} error={error} className={className} />
 }

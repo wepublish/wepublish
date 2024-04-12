@@ -10,7 +10,6 @@ import {
 } from 'react'
 import {PartialDeep} from 'type-fest'
 import {
-  BuilderArticleListItemProps,
   BuilderArticleListProps,
   BuilderArticleProps,
   BuilderArticleSEOProps
@@ -18,6 +17,7 @@ import {
 import {BuilderLoginFormProps, BuilderRegistrationFormProps} from './authentication.interface'
 import {
   BuilderAuthorChipProps,
+  BuilderAuthorLinksProps,
   BuilderAuthorListItemProps,
   BuilderAuthorListProps,
   BuilderAuthorProps
@@ -109,10 +109,10 @@ export type WebsiteBuilderProps = {
   ArticleSEO: ComponentType<BuilderArticleSEOProps>
   PeerInformation: ComponentType<BuilderPeerProps>
   Author: ComponentType<BuilderAuthorProps>
+  AuthorLinks: ComponentType<BuilderAuthorLinksProps>
   AuthorChip: ComponentType<BuilderAuthorChipProps>
   AuthorListItem: ComponentType<BuilderAuthorListItemProps>
   AuthorList: ComponentType<BuilderAuthorListProps>
-  ArticleListItem: ComponentType<BuilderArticleListItemProps>
   ArticleList: ComponentType<BuilderArticleListProps>
   Event: ComponentType<BuilderEventProps>
   EventSEO: ComponentType<BuilderEventSEOProps>
@@ -223,6 +223,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   ArticleSEO: NoComponent,
   PeerInformation: NoComponent,
   Author: NoComponent,
+  AuthorLinks: NoComponent,
   AuthorChip: NoComponent,
   AuthorList: NoComponent,
   AuthorListItem: NoComponent,
@@ -231,7 +232,6 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   EventList: NoComponent,
   EventListItem: NoComponent,
   ArticleList: NoComponent,
-  ArticleListItem: NoComponent,
   CommentList: NoComponent,
   CommentListItem: NoComponent,
   CommentListItemChild: NoComponent,

@@ -11,22 +11,25 @@ exports[`Richtext Block should render Default 1`] = `
       data-slate-node="value"
       style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
     >
-      <h2
-        class="MuiTypography-root MuiTypography-h4 css-1raxwre-MuiTypography-root"
-        data-slate-node="element"
-      >
-        <span
-          data-slate-node="text"
+      <div>
+        <h2
+          class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom css-qe9imk-MuiTypography-root"
+          data-slate-node="element"
         >
           <span
-            data-slate-string="true"
+            data-slate-node="text"
           >
-            Title
+            <span
+              data-slate-string="true"
+            >
+              Title
+            </span>
           </span>
-        </span>
-      </h2>
+        </h2>
+        <hr />
+      </div>
       <h3
-        class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-box1tp-MuiTypography-root"
         data-slate-node="element"
       >
         <span
@@ -40,7 +43,7 @@ exports[`Richtext Block should render Default 1`] = `
         </span>
       </h3>
       <h4
-        class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
         data-slate-node="element"
       >
         <span
@@ -88,7 +91,7 @@ exports[`Richtext Block should render Default 1`] = `
         </li>
       </ol>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
         data-slate-node="element"
       >
         <span
@@ -117,7 +120,7 @@ exports[`Richtext Block should render Default 1`] = `
               data-slate-node="element"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                 data-slate-node="element"
               >
                 <span
@@ -136,7 +139,7 @@ exports[`Richtext Block should render Default 1`] = `
               data-slate-node="element"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                 data-slate-node="element"
               >
                 <span
@@ -159,7 +162,7 @@ exports[`Richtext Block should render Default 1`] = `
               data-slate-node="element"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                 data-slate-node="element"
               >
                 <span
@@ -178,7 +181,7 @@ exports[`Richtext Block should render Default 1`] = `
               data-slate-node="element"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                 data-slate-node="element"
               >
                 <span
@@ -196,7 +199,7 @@ exports[`Richtext Block should render Default 1`] = `
         </tbody>
       </table>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
         data-slate-node="element"
       >
         <span
@@ -384,22 +387,25 @@ exports[`Richtext Block should render WithClassName 1`] = `
       data-slate-node="value"
       style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
     >
-      <h2
-        class="MuiTypography-root MuiTypography-h4 css-1raxwre-MuiTypography-root"
-        data-slate-node="element"
-      >
-        <span
-          data-slate-node="text"
+      <div>
+        <h2
+          class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom css-qe9imk-MuiTypography-root"
+          data-slate-node="element"
         >
           <span
-            data-slate-string="true"
+            data-slate-node="text"
           >
-            Title
+            <span
+              data-slate-string="true"
+            >
+              Title
+            </span>
           </span>
-        </span>
-      </h2>
+        </h2>
+        <hr />
+      </div>
       <h3
-        class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-box1tp-MuiTypography-root"
         data-slate-node="element"
       >
         <span
@@ -413,7 +419,7 @@ exports[`Richtext Block should render WithClassName 1`] = `
         </span>
       </h3>
       <h4
-        class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
         data-slate-node="element"
       >
         <span
@@ -461,7 +467,7 @@ exports[`Richtext Block should render WithClassName 1`] = `
         </li>
       </ol>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
         data-slate-node="element"
       >
         <span
@@ -490,7 +496,7 @@ exports[`Richtext Block should render WithClassName 1`] = `
               data-slate-node="element"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                 data-slate-node="element"
               >
                 <span
@@ -509,7 +515,7 @@ exports[`Richtext Block should render WithClassName 1`] = `
               data-slate-node="element"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                 data-slate-node="element"
               >
                 <span
@@ -532,7 +538,7 @@ exports[`Richtext Block should render WithClassName 1`] = `
               data-slate-node="element"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                 data-slate-node="element"
               >
                 <span
@@ -551,7 +557,7 @@ exports[`Richtext Block should render WithClassName 1`] = `
               data-slate-node="element"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                 data-slate-node="element"
               >
                 <span
@@ -569,7 +575,7 @@ exports[`Richtext Block should render WithClassName 1`] = `
         </tbody>
       </table>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
         data-slate-node="element"
       >
         <span
@@ -757,22 +763,25 @@ exports[`Richtext Block should render WithEmotion 1`] = `
       data-slate-node="value"
       style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
     >
-      <h2
-        class="MuiTypography-root MuiTypography-h4 css-1raxwre-MuiTypography-root"
-        data-slate-node="element"
-      >
-        <span
-          data-slate-node="text"
+      <div>
+        <h2
+          class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom css-qe9imk-MuiTypography-root"
+          data-slate-node="element"
         >
           <span
-            data-slate-string="true"
+            data-slate-node="text"
           >
-            Title
+            <span
+              data-slate-string="true"
+            >
+              Title
+            </span>
           </span>
-        </span>
-      </h2>
+        </h2>
+        <hr />
+      </div>
       <h3
-        class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-box1tp-MuiTypography-root"
         data-slate-node="element"
       >
         <span
@@ -786,7 +795,7 @@ exports[`Richtext Block should render WithEmotion 1`] = `
         </span>
       </h3>
       <h4
-        class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
         data-slate-node="element"
       >
         <span
@@ -834,7 +843,7 @@ exports[`Richtext Block should render WithEmotion 1`] = `
         </li>
       </ol>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
         data-slate-node="element"
       >
         <span
@@ -863,7 +872,7 @@ exports[`Richtext Block should render WithEmotion 1`] = `
               data-slate-node="element"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                 data-slate-node="element"
               >
                 <span
@@ -882,7 +891,7 @@ exports[`Richtext Block should render WithEmotion 1`] = `
               data-slate-node="element"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                 data-slate-node="element"
               >
                 <span
@@ -905,7 +914,7 @@ exports[`Richtext Block should render WithEmotion 1`] = `
               data-slate-node="element"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                 data-slate-node="element"
               >
                 <span
@@ -924,7 +933,7 @@ exports[`Richtext Block should render WithEmotion 1`] = `
               data-slate-node="element"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                 data-slate-node="element"
               >
                 <span
@@ -942,7 +951,7 @@ exports[`Richtext Block should render WithEmotion 1`] = `
         </tbody>
       </table>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
         data-slate-node="element"
       >
         <span

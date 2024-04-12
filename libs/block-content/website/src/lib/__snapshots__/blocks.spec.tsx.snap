@@ -3,15 +3,15 @@
 exports[`Blocks should render Default 1`] = `
 <DocumentFragment>
   <div
-    class="css-6jfyyt-TitleBlockWrapper ek0hk6a0"
+    class="css-cs9jq0-TitleBlockWrapper ek0hk6a0"
   >
     <h1
-      class="MuiTypography-root MuiTypography-h3 css-1108gw4-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
     >
       Title
     </h1>
     <p
-      class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
     >
       Lead
     </p>
@@ -25,22 +25,25 @@ exports[`Blocks should render Default 1`] = `
       data-slate-node="value"
       style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
     >
-      <h2
-        class="MuiTypography-root MuiTypography-h4 css-1raxwre-MuiTypography-root"
-        data-slate-node="element"
-      >
-        <span
-          data-slate-node="text"
+      <div>
+        <h2
+          class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom css-qe9imk-MuiTypography-root"
+          data-slate-node="element"
         >
           <span
-            data-slate-string="true"
+            data-slate-node="text"
           >
-            Title
+            <span
+              data-slate-string="true"
+            >
+              Title
+            </span>
           </span>
-        </span>
-      </h2>
+        </h2>
+        <hr />
+      </div>
       <h3
-        class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-box1tp-MuiTypography-root"
         data-slate-node="element"
       >
         <span
@@ -54,7 +57,7 @@ exports[`Blocks should render Default 1`] = `
         </span>
       </h3>
       <h4
-        class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
         data-slate-node="element"
       >
         <span
@@ -102,7 +105,7 @@ exports[`Blocks should render Default 1`] = `
         </li>
       </ol>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
         data-slate-node="element"
       >
         <span
@@ -131,7 +134,7 @@ exports[`Blocks should render Default 1`] = `
               data-slate-node="element"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                 data-slate-node="element"
               >
                 <span
@@ -150,7 +153,7 @@ exports[`Blocks should render Default 1`] = `
               data-slate-node="element"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                 data-slate-node="element"
               >
                 <span
@@ -173,7 +176,7 @@ exports[`Blocks should render Default 1`] = `
               data-slate-node="element"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                 data-slate-node="element"
               >
                 <span
@@ -192,7 +195,7 @@ exports[`Blocks should render Default 1`] = `
               data-slate-node="element"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                 data-slate-node="element"
               >
                 <span
@@ -210,7 +213,7 @@ exports[`Blocks should render Default 1`] = `
         </tbody>
       </table>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
         data-slate-node="element"
       >
         <span
@@ -385,14 +388,14 @@ exports[`Blocks should render Default 1`] = `
     </div>
   </div>
   <div
-    class="css-1k98guj-BreakBlockWrapper e11xbw3q1"
+    class="css-18i7wzi-BreakBlockWrapper e11xbw3q1"
   >
     <div
       class="css-ywr472-BreakBlockSegment e11xbw3q0"
     >
       <img
         alt="DSC07717"
-        class="css-gm6a6z-ImageWrapper-BreakBlock e1shv2yg0"
+        class="css-t8ow6n-ImageWrapper-BreakBlock e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -405,13 +408,13 @@ https://unsplash.it/200/100 200w"
       class="css-ywr472-BreakBlockSegment e11xbw3q0"
     >
       <div
-        class="MuiTypography-root MuiTypography-h4 css-1raxwre-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h4 css-4x3r3m-MuiTypography-root-BreakBlock"
         role="heading"
       >
         Break block test
       </div>
       <div
-        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+        class="css-t92hh8-RichTextBlockWrapper-BreakBlock eu4zjs90"
       >
         <div
           data-gramm="false"
@@ -420,7 +423,7 @@ https://unsplash.it/200/100 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
             data-slate-node="element"
           >
             <span
@@ -434,7 +437,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </p>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
             data-slate-node="element"
           >
             <span
@@ -450,7 +453,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </p>
           <h4
-            class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
             data-slate-node="element"
           >
             <span
@@ -464,7 +467,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </h4>
           <h4
-            class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
             data-slate-node="element"
           >
             <span
@@ -480,7 +483,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </h4>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
             data-slate-node="element"
           >
             <span
@@ -533,24 +536,14 @@ https://unsplash.it/200/100 200w"
           </p>
         </div>
       </div>
-      <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium css-12y08aj-MuiButtonBase-root-MuiButton-root"
-        href=""
-        tabindex="0"
-        type="button"
-      >
-        <span
-          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-        />
-      </button>
     </div>
   </div>
   <figure
-    class="css-1emeboo-ImageBlockWrapper eekavcu0"
+    class="css-1jkqlnk-ImageBlockWrapper eekavcu1"
   >
     <img
       alt="DSC07717"
-      class="css-cibo30-ImageWrapper e1shv2yg0"
+      class="css-m3orio-ImageWrapper-ImageBlock e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -584,7 +577,7 @@ https://unsplash.it/200/100 200w"
           title=""
         />
         <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-nqtxq4-MuiImageListItemBar-root"
+          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
         >
           <div
             class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
@@ -612,7 +605,7 @@ https://unsplash.it/200/100 200w"
           title=""
         />
         <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-nqtxq4-MuiImageListItemBar-root"
+          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
         >
           <div
             class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
@@ -640,7 +633,7 @@ https://unsplash.it/200/100 200w"
           title=""
         />
         <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-nqtxq4-MuiImageListItemBar-root"
+          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
         >
           <div
             class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
@@ -667,7 +660,7 @@ https://unsplash.it/200/100 200w"
         1
       </div>
       <h3
-        class="MuiTypography-root MuiTypography-h3 css-1108gw4-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
       >
         Foobar
       </h3>
@@ -691,7 +684,7 @@ https://unsplash.it/200/100 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
             data-slate-node="element"
           >
             <span
@@ -716,7 +709,7 @@ https://unsplash.it/200/100 200w"
         2
       </div>
       <h3
-        class="MuiTypography-root MuiTypography-h3 css-1108gw4-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
       >
         Foobar
       </h3>
@@ -740,7 +733,7 @@ https://unsplash.it/200/100 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
             data-slate-node="element"
           >
             <span
@@ -765,7 +758,7 @@ https://unsplash.it/200/100 200w"
         3
       </div>
       <h3
-        class="MuiTypography-root MuiTypography-h3 css-1108gw4-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
       >
         Foobar
       </h3>
@@ -789,7 +782,7 @@ https://unsplash.it/200/100 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
             data-slate-node="element"
           >
             <span
@@ -807,20 +800,20 @@ https://unsplash.it/200/100 200w"
     </div>
   </div>
   <blockquote
-    class="css-1hx22vu-QuoteBlockWrapper e1ugt7gl1"
+    class="css-jrn897-QuoteBlockWrapper e1ugt7gl1"
   >
     <div
-      class="css-1nu3lgo-QuoteContent e1ugt7gl0"
+      class="css-1v9bccv-QuoteContent e1ugt7gl0"
     >
       <p
-        class="MuiTypography-root MuiTypography-h4 css-hvxnyb-MuiTypography-root-QuoteBlock"
+        class="MuiTypography-root MuiTypography-h4 css-1fh3rua-MuiTypography-root"
       >
         «Quote»
       </p>
       <cite
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1iafnkq-MuiTypography-root-QuoteBlock"
+        class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
       >
-        By an Author
+        von By an Author
       </cite>
     </div>
   </blockquote>
@@ -829,9 +822,12 @@ https://unsplash.it/200/100 200w"
   >
     <iframe
       allowfullscreen=""
-      class="css-ya33cg-EmbedBlockIframe-styleCustomCss e1t445oh0"
-      sandbox=""
+      aspectratio="1.78343949044586"
+      class="css-1nuubcq-EmbedBlockIframe-EmbedBlockIframe-styleCustomCss e1t445oh0"
+      id="iFrameResizer0"
+      scrolling="no"
       src="https://www.example.com"
+      style="overflow: hidden;"
       title="Title"
     />
   </div>
@@ -936,10 +932,10 @@ https://unsplash.it/200/100 200w"
     </div>
   </div>
   <div
-    class="css-1ek02iu-TeaserGridBlockWrapper e1xnbuxv0"
+    class="css-xjxszh-TeaserGridBlockWrapper e1xnbuxv0"
   >
     <article
-      class="css-13bgdik-TeaserWrapper e18of27r14"
+      class="css-13bgdik-TeaserWrapper e18of27r10"
       x="0"
       y="0"
     >
@@ -948,11 +944,11 @@ https://unsplash.it/200/100 200w"
         href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
       >
         <div
-          class="css-106gdu6-TeaserImageWrapper e18of27r12"
+          class="css-1xekyz3-TeaserImageWrapper e18of27r8"
         >
           <img
             alt="DSC07717"
-            class="css-8oddxk-ImageWrapper-Teaser e1shv2yg0"
+            class="css-1l306eh-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -961,39 +957,39 @@ https://unsplash.it/200/100 200w"
             title=""
           />
         </div>
-        <span
-          class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        <div
+          class="css-1ttae7a-TeaserPreTitleWrapper e18of27r3"
         >
           <div
-            class="css-1bkvv5m-PreTitle e18of27r2"
+            class="css-1rar8l1-PreTitle e18of27r2"
           >
             Pre Title
           </div>
-        </span>
-        <h4
-          class="MuiTypography-root MuiTypography-h4 css-s0t1xd-MuiTypography-root-Teaser"
+        </div>
+        <h1
+          class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
         >
           Title
-        </h4>
+        </h1>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-mmgi39-MuiTypography-root-Teaser"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r6"
         >
           Lead
         </p>
         <div
-          class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+          class="css-sibxk9-TeaserMetadata e18of27r1"
         >
           <time
-            class="css-tfwjps-Time e18of27r0"
+            class="css-bsjge5-TeaserTime e18of27r0"
             datetime="2023-01-01T00:00:00.000Z"
           >
-            | 01.01.2023 
+            01.01.2023 
           </time>
         </div>
       </a>
     </article>
     <article
-      class="css-jx9mmb-TeaserWrapper e18of27r14"
+      class="css-jx9mmb-TeaserWrapper e18of27r10"
       x="0"
       y="1"
     >
@@ -1002,11 +998,11 @@ https://unsplash.it/200/100 200w"
         href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
       >
         <div
-          class="css-106gdu6-TeaserImageWrapper e18of27r12"
+          class="css-1xekyz3-TeaserImageWrapper e18of27r8"
         >
           <img
             alt="DSC07717"
-            class="css-8oddxk-ImageWrapper-Teaser e1shv2yg0"
+            class="css-1l306eh-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1015,33 +1011,33 @@ https://unsplash.it/200/100 200w"
             title=""
           />
         </div>
-        <span
-          class="css-1gk2foz-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+        <div
+          class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
         />
-        <h4
-          class="MuiTypography-root MuiTypography-h4 css-s0t1xd-MuiTypography-root-Teaser"
+        <h1
+          class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
         >
           Chur solidarisiert sich mit der Ukraine
-        </h4>
+        </h1>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-mmgi39-MuiTypography-root-Teaser"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r6"
         >
           Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
         </p>
         <div
-          class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+          class="css-sibxk9-TeaserMetadata e18of27r1"
         >
           <time
-            class="css-tfwjps-Time e18of27r0"
+            class="css-bsjge5-TeaserTime e18of27r0"
             datetime="2023-01-01T00:00:00.000Z"
           >
-            | 01.01.2023 
+            01.01.2023 
           </time>
         </div>
       </a>
     </article>
     <article
-      class="css-1ml5tfp-TeaserWrapper e18of27r14"
+      class="css-1ml5tfp-TeaserWrapper e18of27r10"
       x="0"
       y="2"
     >
@@ -1050,11 +1046,11 @@ https://unsplash.it/200/100 200w"
         href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
       >
         <div
-          class="css-106gdu6-TeaserImageWrapper e18of27r12"
+          class="css-1xekyz3-TeaserImageWrapper e18of27r8"
         >
           <img
             alt="DSC07717"
-            class="css-8oddxk-ImageWrapper-Teaser e1shv2yg0"
+            class="css-1l306eh-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1063,32 +1059,32 @@ https://unsplash.it/200/100 200w"
             title=""
           />
         </div>
-        <span
-          class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        <div
+          class="css-1ttae7a-TeaserPreTitleWrapper e18of27r3"
         >
           <div
-            class="css-1bkvv5m-PreTitle e18of27r2"
+            class="css-1rar8l1-PreTitle e18of27r2"
           >
             Pre Title
           </div>
-        </span>
-        <h4
-          class="MuiTypography-root MuiTypography-h4 css-s0t1xd-MuiTypography-root-Teaser"
+        </div>
+        <h1
+          class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
         >
           Title
-        </h4>
+        </h1>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-mmgi39-MuiTypography-root-Teaser"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r6"
         >
           Lead
         </p>
         <div
-          class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+          class="css-sibxk9-TeaserMetadata e18of27r1"
         />
       </a>
     </article>
     <article
-      class="css-12jl06a-TeaserWrapper e18of27r14"
+      class="css-12jl06a-TeaserWrapper e18of27r10"
       x="0"
       y="3"
     >
@@ -1097,11 +1093,11 @@ https://unsplash.it/200/100 200w"
         href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
       >
         <div
-          class="css-106gdu6-TeaserImageWrapper e18of27r12"
+          class="css-1xekyz3-TeaserImageWrapper e18of27r8"
         >
           <img
             alt="DSC07717"
-            class="css-8oddxk-ImageWrapper-Teaser e1shv2yg0"
+            class="css-1l306eh-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1110,24 +1106,24 @@ https://unsplash.it/200/100 200w"
             title=""
           />
         </div>
-        <span
-          class="css-1gk2foz-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+        <div
+          class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
         />
-        <h4
-          class="MuiTypography-root MuiTypography-h4 css-s0t1xd-MuiTypography-root-Teaser"
+        <h1
+          class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
         >
           Das ist ein Titel
-        </h4>
+        </h1>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-mmgi39-MuiTypography-root-Teaser"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r6"
         />
         <div
-          class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+          class="css-sibxk9-TeaserMetadata e18of27r1"
         />
       </a>
     </article>
     <article
-      class="css-1na6kjf-TeaserWrapper e18of27r14"
+      class="css-1na6kjf-TeaserWrapper e18of27r10"
       x="0"
       y="4"
     >
@@ -1136,11 +1132,11 @@ https://unsplash.it/200/100 200w"
         href="https://google.com"
       >
         <div
-          class="css-106gdu6-TeaserImageWrapper e18of27r12"
+          class="css-1xekyz3-TeaserImageWrapper e18of27r8"
         >
           <img
             alt="DSC07717"
-            class="css-8oddxk-ImageWrapper-Teaser e1shv2yg0"
+            class="css-1l306eh-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1149,36 +1145,36 @@ https://unsplash.it/200/100 200w"
             title=""
           />
         </div>
-        <span
-          class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        <div
+          class="css-1ttae7a-TeaserPreTitleWrapper e18of27r3"
         >
           <div
-            class="css-1bkvv5m-PreTitle e18of27r2"
+            class="css-1rar8l1-PreTitle e18of27r2"
           >
             Pre Title
           </div>
-        </span>
-        <h4
-          class="MuiTypography-root MuiTypography-h4 css-s0t1xd-MuiTypography-root-Teaser"
+        </div>
+        <h1
+          class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
         >
           Title
-        </h4>
+        </h1>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-mmgi39-MuiTypography-root-Teaser"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r6"
         >
           Lead
         </p>
         <div
-          class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+          class="css-sibxk9-TeaserMetadata e18of27r1"
         />
       </a>
     </article>
   </div>
   <div
-    class="css-hw4wfz-TeaserGridBlockWrapper e1xnbuxv0"
+    class="css-331icf-TeaserGridBlockWrapper e1xnbuxv0"
   >
     <article
-      class="css-8p11sj-TeaserWrapper e18of27r14"
+      class="css-8p11sj-TeaserWrapper e18of27r10"
       x="0"
       y="0"
     >
@@ -1187,11 +1183,11 @@ https://unsplash.it/200/100 200w"
         href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
       >
         <div
-          class="css-106gdu6-TeaserImageWrapper e18of27r12"
+          class="css-1xekyz3-TeaserImageWrapper e18of27r8"
         >
           <img
             alt="DSC07717"
-            class="css-8oddxk-ImageWrapper-Teaser e1shv2yg0"
+            class="css-1l306eh-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1200,39 +1196,39 @@ https://unsplash.it/200/100 200w"
             title=""
           />
         </div>
-        <span
-          class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        <div
+          class="css-1ttae7a-TeaserPreTitleWrapper e18of27r3"
         >
           <div
-            class="css-1bkvv5m-PreTitle e18of27r2"
+            class="css-1rar8l1-PreTitle e18of27r2"
           >
             Pre Title
           </div>
-        </span>
-        <h4
-          class="MuiTypography-root MuiTypography-h4 css-s0t1xd-MuiTypography-root-Teaser"
+        </div>
+        <h1
+          class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
         >
           Title
-        </h4>
+        </h1>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-mmgi39-MuiTypography-root-Teaser"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r6"
         >
           Lead
         </p>
         <div
-          class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+          class="css-sibxk9-TeaserMetadata e18of27r1"
         >
           <time
-            class="css-tfwjps-Time e18of27r0"
+            class="css-bsjge5-TeaserTime e18of27r0"
             datetime="2023-01-01T00:00:00.000Z"
           >
-            | 01.01.2023 
+            01.01.2023 
           </time>
         </div>
       </a>
     </article>
     <article
-      class="css-z4j0q-TeaserWrapper e18of27r14"
+      class="css-z4j0q-TeaserWrapper e18of27r10"
       x="4"
       y="0"
     >
@@ -1241,11 +1237,11 @@ https://unsplash.it/200/100 200w"
         href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
       >
         <div
-          class="css-106gdu6-TeaserImageWrapper e18of27r12"
+          class="css-1xekyz3-TeaserImageWrapper e18of27r8"
         >
           <img
             alt="DSC07717"
-            class="css-8oddxk-ImageWrapper-Teaser e1shv2yg0"
+            class="css-1l306eh-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1254,33 +1250,33 @@ https://unsplash.it/200/100 200w"
             title=""
           />
         </div>
-        <span
-          class="css-1gk2foz-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+        <div
+          class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
         />
-        <h4
-          class="MuiTypography-root MuiTypography-h4 css-s0t1xd-MuiTypography-root-Teaser"
+        <h1
+          class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
         >
           Chur solidarisiert sich mit der Ukraine
-        </h4>
+        </h1>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-mmgi39-MuiTypography-root-Teaser"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r6"
         >
           Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
         </p>
         <div
-          class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+          class="css-sibxk9-TeaserMetadata e18of27r1"
         >
           <time
-            class="css-tfwjps-Time e18of27r0"
+            class="css-bsjge5-TeaserTime e18of27r0"
             datetime="2023-01-01T00:00:00.000Z"
           >
-            | 01.01.2023 
+            01.01.2023 
           </time>
         </div>
       </a>
     </article>
     <article
-      class="css-wylm69-TeaserWrapper e18of27r14"
+      class="css-wylm69-TeaserWrapper e18of27r10"
       x="8"
       y="0"
     >
@@ -1289,11 +1285,11 @@ https://unsplash.it/200/100 200w"
         href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
       >
         <div
-          class="css-106gdu6-TeaserImageWrapper e18of27r12"
+          class="css-1xekyz3-TeaserImageWrapper e18of27r8"
         >
           <img
             alt="DSC07717"
-            class="css-8oddxk-ImageWrapper-Teaser e1shv2yg0"
+            class="css-1l306eh-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1302,32 +1298,32 @@ https://unsplash.it/200/100 200w"
             title=""
           />
         </div>
-        <span
-          class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        <div
+          class="css-1ttae7a-TeaserPreTitleWrapper e18of27r3"
         >
           <div
-            class="css-1bkvv5m-PreTitle e18of27r2"
+            class="css-1rar8l1-PreTitle e18of27r2"
           >
             Pre Title
           </div>
-        </span>
-        <h4
-          class="MuiTypography-root MuiTypography-h4 css-s0t1xd-MuiTypography-root-Teaser"
+        </div>
+        <h1
+          class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
         >
           Title
-        </h4>
+        </h1>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-mmgi39-MuiTypography-root-Teaser"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r6"
         >
           Lead
         </p>
         <div
-          class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+          class="css-sibxk9-TeaserMetadata e18of27r1"
         />
       </a>
     </article>
     <article
-      class="css-auedvd-TeaserWrapper e18of27r14"
+      class="css-auedvd-TeaserWrapper e18of27r10"
       x="0"
       y="1"
     >
@@ -1336,11 +1332,11 @@ https://unsplash.it/200/100 200w"
         href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
       >
         <div
-          class="css-106gdu6-TeaserImageWrapper e18of27r12"
+          class="css-1xekyz3-TeaserImageWrapper e18of27r8"
         >
           <img
             alt="DSC07717"
-            class="css-8oddxk-ImageWrapper-Teaser e1shv2yg0"
+            class="css-1l306eh-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1349,24 +1345,24 @@ https://unsplash.it/200/100 200w"
             title=""
           />
         </div>
-        <span
-          class="css-1gk2foz-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+        <div
+          class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
         />
-        <h4
-          class="MuiTypography-root MuiTypography-h4 css-s0t1xd-MuiTypography-root-Teaser"
+        <h1
+          class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
         >
           Das ist ein Titel
-        </h4>
+        </h1>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-mmgi39-MuiTypography-root-Teaser"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r6"
         />
         <div
-          class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+          class="css-sibxk9-TeaserMetadata e18of27r1"
         />
       </a>
     </article>
     <article
-      class="css-1h821lc-TeaserWrapper e18of27r14"
+      class="css-1h821lc-TeaserWrapper e18of27r10"
       x="4"
       y="1"
     >
@@ -1375,11 +1371,11 @@ https://unsplash.it/200/100 200w"
         href="https://google.com"
       >
         <div
-          class="css-106gdu6-TeaserImageWrapper e18of27r12"
+          class="css-1xekyz3-TeaserImageWrapper e18of27r8"
         >
           <img
             alt="DSC07717"
-            class="css-8oddxk-ImageWrapper-Teaser e1shv2yg0"
+            class="css-1l306eh-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1388,27 +1384,27 @@ https://unsplash.it/200/100 200w"
             title=""
           />
         </div>
-        <span
-          class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        <div
+          class="css-1ttae7a-TeaserPreTitleWrapper e18of27r3"
         >
           <div
-            class="css-1bkvv5m-PreTitle e18of27r2"
+            class="css-1rar8l1-PreTitle e18of27r2"
           >
             Pre Title
           </div>
-        </span>
-        <h4
-          class="MuiTypography-root MuiTypography-h4 css-s0t1xd-MuiTypography-root-Teaser"
+        </div>
+        <h1
+          class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
         >
           Title
-        </h4>
+        </h1>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-mmgi39-MuiTypography-root-Teaser"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r6"
         >
           Lead
         </p>
         <div
-          class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+          class="css-sibxk9-TeaserMetadata e18of27r1"
         />
       </a>
     </article>
@@ -1417,7 +1413,7 @@ https://unsplash.it/200/100 200w"
     class="css-1iy4fdm-TeaserGridFlexBlockWrapper e1je8zv30"
   >
     <article
-      class="css-d36tn6-TeaserWrapper e18of27r14"
+      class="css-d36tn6-TeaserWrapper e18of27r10"
       x="0"
       y="0"
     >
@@ -1426,11 +1422,11 @@ https://unsplash.it/200/100 200w"
         href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
       >
         <div
-          class="css-106gdu6-TeaserImageWrapper e18of27r12"
+          class="css-1xekyz3-TeaserImageWrapper e18of27r8"
         >
           <img
             alt="DSC07717"
-            class="css-8oddxk-ImageWrapper-Teaser e1shv2yg0"
+            class="css-1l306eh-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1439,39 +1435,39 @@ https://unsplash.it/200/100 200w"
             title=""
           />
         </div>
-        <span
-          class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        <div
+          class="css-1ttae7a-TeaserPreTitleWrapper e18of27r3"
         >
           <div
-            class="css-1bkvv5m-PreTitle e18of27r2"
+            class="css-1rar8l1-PreTitle e18of27r2"
           >
             Pre Title
           </div>
-        </span>
-        <h4
-          class="MuiTypography-root MuiTypography-h4 css-s0t1xd-MuiTypography-root-Teaser"
+        </div>
+        <h1
+          class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
         >
           Title
-        </h4>
+        </h1>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-mmgi39-MuiTypography-root-Teaser"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r6"
         >
           Lead
         </p>
         <div
-          class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+          class="css-sibxk9-TeaserMetadata e18of27r1"
         >
           <time
-            class="css-tfwjps-Time e18of27r0"
+            class="css-bsjge5-TeaserTime e18of27r0"
             datetime="2023-01-01T00:00:00.000Z"
           >
-            | 01.01.2023 
+            01.01.2023 
           </time>
         </div>
       </a>
     </article>
     <article
-      class="css-1wuy1db-TeaserWrapper e18of27r14"
+      class="css-1wuy1db-TeaserWrapper e18of27r10"
       x="3"
       y="0"
     >
@@ -1480,11 +1476,11 @@ https://unsplash.it/200/100 200w"
         href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
       >
         <div
-          class="css-106gdu6-TeaserImageWrapper e18of27r12"
+          class="css-1xekyz3-TeaserImageWrapper e18of27r8"
         >
           <img
             alt="DSC07717"
-            class="css-8oddxk-ImageWrapper-Teaser e1shv2yg0"
+            class="css-1l306eh-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1493,33 +1489,33 @@ https://unsplash.it/200/100 200w"
             title=""
           />
         </div>
-        <span
-          class="css-1gk2foz-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+        <div
+          class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
         />
-        <h4
-          class="MuiTypography-root MuiTypography-h4 css-s0t1xd-MuiTypography-root-Teaser"
+        <h1
+          class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
         >
           Chur solidarisiert sich mit der Ukraine
-        </h4>
+        </h1>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-mmgi39-MuiTypography-root-Teaser"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r6"
         >
           Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
         </p>
         <div
-          class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+          class="css-sibxk9-TeaserMetadata e18of27r1"
         >
           <time
-            class="css-tfwjps-Time e18of27r0"
+            class="css-bsjge5-TeaserTime e18of27r0"
             datetime="2023-01-01T00:00:00.000Z"
           >
-            | 01.01.2023 
+            01.01.2023 
           </time>
         </div>
       </a>
     </article>
     <article
-      class="css-1203ukr-TeaserWrapper e18of27r14"
+      class="css-1203ukr-TeaserWrapper e18of27r10"
       x="8"
       y="0"
     >
@@ -1528,11 +1524,11 @@ https://unsplash.it/200/100 200w"
         href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
       >
         <div
-          class="css-106gdu6-TeaserImageWrapper e18of27r12"
+          class="css-1xekyz3-TeaserImageWrapper e18of27r8"
         >
           <img
             alt="DSC07717"
-            class="css-8oddxk-ImageWrapper-Teaser e1shv2yg0"
+            class="css-1l306eh-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1541,24 +1537,24 @@ https://unsplash.it/200/100 200w"
             title=""
           />
         </div>
-        <span
-          class="css-1gk2foz-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+        <div
+          class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
         />
-        <h4
-          class="MuiTypography-root MuiTypography-h4 css-s0t1xd-MuiTypography-root-Teaser"
+        <h1
+          class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
         >
           Das ist ein Titel
-        </h4>
+        </h1>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-mmgi39-MuiTypography-root-Teaser"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r6"
         />
         <div
-          class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+          class="css-sibxk9-TeaserMetadata e18of27r1"
         />
       </a>
     </article>
     <article
-      class="css-mnh2l7-TeaserWrapper e18of27r14"
+      class="css-mnh2l7-TeaserWrapper e18of27r10"
       x="3"
       y="3"
     >
@@ -1567,11 +1563,11 @@ https://unsplash.it/200/100 200w"
         href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
       >
         <div
-          class="css-106gdu6-TeaserImageWrapper e18of27r12"
+          class="css-1xekyz3-TeaserImageWrapper e18of27r8"
         >
           <img
             alt="DSC07717"
-            class="css-8oddxk-ImageWrapper-Teaser e1shv2yg0"
+            class="css-1l306eh-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1580,32 +1576,32 @@ https://unsplash.it/200/100 200w"
             title=""
           />
         </div>
-        <span
-          class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        <div
+          class="css-1ttae7a-TeaserPreTitleWrapper e18of27r3"
         >
           <div
-            class="css-1bkvv5m-PreTitle e18of27r2"
+            class="css-1rar8l1-PreTitle e18of27r2"
           >
             Pre Title
           </div>
-        </span>
-        <h4
-          class="MuiTypography-root MuiTypography-h4 css-s0t1xd-MuiTypography-root-Teaser"
+        </div>
+        <h1
+          class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
         >
           Title
-        </h4>
+        </h1>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-mmgi39-MuiTypography-root-Teaser"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r6"
         >
           Lead
         </p>
         <div
-          class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+          class="css-sibxk9-TeaserMetadata e18of27r1"
         />
       </a>
     </article>
     <article
-      class="css-83em0x-TeaserWrapper e18of27r14"
+      class="css-83em0x-TeaserWrapper e18of27r10"
       x="0"
       y="6"
     >
@@ -1614,11 +1610,11 @@ https://unsplash.it/200/100 200w"
         href="https://google.com"
       >
         <div
-          class="css-106gdu6-TeaserImageWrapper e18of27r12"
+          class="css-1xekyz3-TeaserImageWrapper e18of27r8"
         >
           <img
             alt="DSC07717"
-            class="css-8oddxk-ImageWrapper-Teaser e1shv2yg0"
+            class="css-1l306eh-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1627,27 +1623,27 @@ https://unsplash.it/200/100 200w"
             title=""
           />
         </div>
-        <span
-          class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        <div
+          class="css-1ttae7a-TeaserPreTitleWrapper e18of27r3"
         >
           <div
-            class="css-1bkvv5m-PreTitle e18of27r2"
+            class="css-1rar8l1-PreTitle e18of27r2"
           >
             Pre Title
           </div>
-        </span>
-        <h4
-          class="MuiTypography-root MuiTypography-h4 css-s0t1xd-MuiTypography-root-Teaser"
+        </div>
+        <h1
+          class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
         >
           Title
-        </h4>
+        </h1>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-mmgi39-MuiTypography-root-Teaser"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r6"
         >
           Lead
         </p>
         <div
-          class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+          class="css-sibxk9-TeaserMetadata e18of27r1"
         />
       </a>
     </article>
@@ -1670,7 +1666,7 @@ https://unsplash.it/200/100 200w"
     class="css-nrshve-PollBlockWrapper ecm33wf3"
   >
     <h1
-      class="MuiTypography-root MuiTypography-h4 css-1raxwre-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h4 css-1fh3rua-MuiTypography-root"
     >
       Question
     </h1>
@@ -1684,7 +1680,7 @@ https://unsplash.it/200/100 200w"
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
           data-slate-node="element"
         >
           <span
@@ -1778,7 +1774,7 @@ https://unsplash.it/200/100 200w"
     class="css-1mm1s5y-CommentBlockWrapper es9rr591"
   />
   <aside
-    class="css-1lwhsgn-EventBlockWrapper ea1goei0"
+    class="css-11sh4th-EventBlockWrapper ea1goei0"
   >
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-9ztkv6-MuiTypography-root-MuiLink-root-EventListItem"
@@ -1841,7 +1837,7 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1raxwre-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 css-1fh3rua-MuiTypography-root"
           >
             Cool concert
           </h1>
@@ -1855,7 +1851,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                 data-slate-node="element"
               >
                 <span
@@ -1954,15 +1950,15 @@ exports[`Blocks should render WithLayout 1`] = `
     class="css-1r99lih-Layout e7iufto0"
   >
     <div
-      class="css-6jfyyt-TitleBlockWrapper ek0hk6a0"
+      class="css-cs9jq0-TitleBlockWrapper ek0hk6a0"
     >
       <h1
-        class="MuiTypography-root MuiTypography-h3 css-1108gw4-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
       >
         Title
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
       >
         Lead
       </p>
@@ -1976,22 +1972,25 @@ exports[`Blocks should render WithLayout 1`] = `
         data-slate-node="value"
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
-        <h2
-          class="MuiTypography-root MuiTypography-h4 css-1raxwre-MuiTypography-root"
-          data-slate-node="element"
-        >
-          <span
-            data-slate-node="text"
+        <div>
+          <h2
+            class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom css-qe9imk-MuiTypography-root"
+            data-slate-node="element"
           >
             <span
-              data-slate-string="true"
+              data-slate-node="text"
             >
-              Title
+              <span
+                data-slate-string="true"
+              >
+                Title
+              </span>
             </span>
-          </span>
-        </h2>
+          </h2>
+          <hr />
+        </div>
         <h3
-          class="MuiTypography-root MuiTypography-h5 css-1i4zcgj-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-box1tp-MuiTypography-root"
           data-slate-node="element"
         >
           <span
@@ -2005,7 +2004,7 @@ exports[`Blocks should render WithLayout 1`] = `
           </span>
         </h3>
         <h4
-          class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
           data-slate-node="element"
         >
           <span
@@ -2053,7 +2052,7 @@ exports[`Blocks should render WithLayout 1`] = `
           </li>
         </ol>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
           data-slate-node="element"
         >
           <span
@@ -2082,7 +2081,7 @@ exports[`Blocks should render WithLayout 1`] = `
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                   data-slate-node="element"
                 >
                   <span
@@ -2101,7 +2100,7 @@ exports[`Blocks should render WithLayout 1`] = `
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                   data-slate-node="element"
                 >
                   <span
@@ -2124,7 +2123,7 @@ exports[`Blocks should render WithLayout 1`] = `
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                   data-slate-node="element"
                 >
                   <span
@@ -2143,7 +2142,7 @@ exports[`Blocks should render WithLayout 1`] = `
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                   data-slate-node="element"
                 >
                   <span
@@ -2161,7 +2160,7 @@ exports[`Blocks should render WithLayout 1`] = `
           </tbody>
         </table>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
           data-slate-node="element"
         >
           <span
@@ -2336,14 +2335,14 @@ exports[`Blocks should render WithLayout 1`] = `
       </div>
     </div>
     <div
-      class="css-1k98guj-BreakBlockWrapper e11xbw3q1"
+      class="css-18i7wzi-BreakBlockWrapper e11xbw3q1"
     >
       <div
         class="css-ywr472-BreakBlockSegment e11xbw3q0"
       >
         <img
           alt="DSC07717"
-          class="css-gm6a6z-ImageWrapper-BreakBlock e1shv2yg0"
+          class="css-t8ow6n-ImageWrapper-BreakBlock e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -2356,13 +2355,13 @@ https://unsplash.it/200/100 200w"
         class="css-ywr472-BreakBlockSegment e11xbw3q0"
       >
         <div
-          class="MuiTypography-root MuiTypography-h4 css-1raxwre-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 css-4x3r3m-MuiTypography-root-BreakBlock"
           role="heading"
         >
           Break block test
         </div>
         <div
-          class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+          class="css-t92hh8-RichTextBlockWrapper-BreakBlock eu4zjs90"
         >
           <div
             data-gramm="false"
@@ -2371,7 +2370,7 @@ https://unsplash.it/200/100 200w"
             style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
               data-slate-node="element"
             >
               <span
@@ -2385,7 +2384,7 @@ https://unsplash.it/200/100 200w"
               </span>
             </p>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
               data-slate-node="element"
             >
               <span
@@ -2401,7 +2400,7 @@ https://unsplash.it/200/100 200w"
               </span>
             </p>
             <h4
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
               data-slate-node="element"
             >
               <span
@@ -2415,7 +2414,7 @@ https://unsplash.it/200/100 200w"
               </span>
             </h4>
             <h4
-              class="MuiTypography-root MuiTypography-h6 css-1gylohk-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
               data-slate-node="element"
             >
               <span
@@ -2431,7 +2430,7 @@ https://unsplash.it/200/100 200w"
               </span>
             </h4>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
               data-slate-node="element"
             >
               <span
@@ -2484,24 +2483,14 @@ https://unsplash.it/200/100 200w"
             </p>
           </div>
         </div>
-        <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedSecondary MuiButton-sizeMedium MuiButton-containedSizeMedium css-12y08aj-MuiButtonBase-root-MuiButton-root"
-          href=""
-          tabindex="0"
-          type="button"
-        >
-          <span
-            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-          />
-        </button>
       </div>
     </div>
     <figure
-      class="css-1emeboo-ImageBlockWrapper eekavcu0"
+      class="css-1jkqlnk-ImageBlockWrapper eekavcu1"
     >
       <img
         alt="DSC07717"
-        class="css-cibo30-ImageWrapper e1shv2yg0"
+        class="css-m3orio-ImageWrapper-ImageBlock e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -2535,7 +2524,7 @@ https://unsplash.it/200/100 200w"
             title=""
           />
           <div
-            class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-nqtxq4-MuiImageListItemBar-root"
+            class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
           >
             <div
               class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
@@ -2563,7 +2552,7 @@ https://unsplash.it/200/100 200w"
             title=""
           />
           <div
-            class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-nqtxq4-MuiImageListItemBar-root"
+            class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
           >
             <div
               class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
@@ -2591,7 +2580,7 @@ https://unsplash.it/200/100 200w"
             title=""
           />
           <div
-            class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-nqtxq4-MuiImageListItemBar-root"
+            class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
           >
             <div
               class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
@@ -2618,7 +2607,7 @@ https://unsplash.it/200/100 200w"
           1
         </div>
         <h3
-          class="MuiTypography-root MuiTypography-h3 css-1108gw4-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
         >
           Foobar
         </h3>
@@ -2642,7 +2631,7 @@ https://unsplash.it/200/100 200w"
             style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
               data-slate-node="element"
             >
               <span
@@ -2667,7 +2656,7 @@ https://unsplash.it/200/100 200w"
           2
         </div>
         <h3
-          class="MuiTypography-root MuiTypography-h3 css-1108gw4-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
         >
           Foobar
         </h3>
@@ -2691,7 +2680,7 @@ https://unsplash.it/200/100 200w"
             style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
               data-slate-node="element"
             >
               <span
@@ -2716,7 +2705,7 @@ https://unsplash.it/200/100 200w"
           3
         </div>
         <h3
-          class="MuiTypography-root MuiTypography-h3 css-1108gw4-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
         >
           Foobar
         </h3>
@@ -2740,7 +2729,7 @@ https://unsplash.it/200/100 200w"
             style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
               data-slate-node="element"
             >
               <span
@@ -2758,20 +2747,20 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <blockquote
-      class="css-1hx22vu-QuoteBlockWrapper e1ugt7gl1"
+      class="css-jrn897-QuoteBlockWrapper e1ugt7gl1"
     >
       <div
-        class="css-1nu3lgo-QuoteContent e1ugt7gl0"
+        class="css-1v9bccv-QuoteContent e1ugt7gl0"
       >
         <p
-          class="MuiTypography-root MuiTypography-h4 css-hvxnyb-MuiTypography-root-QuoteBlock"
+          class="MuiTypography-root MuiTypography-h4 css-1fh3rua-MuiTypography-root"
         >
           «Quote»
         </p>
         <cite
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1iafnkq-MuiTypography-root-QuoteBlock"
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          By an Author
+          von By an Author
         </cite>
       </div>
     </blockquote>
@@ -2780,9 +2769,12 @@ https://unsplash.it/200/100 200w"
     >
       <iframe
         allowfullscreen=""
-        class="css-ya33cg-EmbedBlockIframe-styleCustomCss e1t445oh0"
-        sandbox=""
+        aspectratio="1.78343949044586"
+        class="css-1nuubcq-EmbedBlockIframe-EmbedBlockIframe-styleCustomCss e1t445oh0"
+        id="iFrameResizer1"
+        scrolling="no"
         src="https://www.example.com"
+        style="overflow: hidden;"
         title="Title"
       />
     </div>
@@ -2887,10 +2879,10 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-1ek02iu-TeaserGridBlockWrapper e1xnbuxv0"
+      class="css-xjxszh-TeaserGridBlockWrapper e1xnbuxv0"
     >
       <article
-        class="css-13bgdik-TeaserWrapper e18of27r14"
+        class="css-13bgdik-TeaserWrapper e18of27r10"
         x="0"
         y="0"
       >
@@ -2899,11 +2891,11 @@ https://unsplash.it/200/100 200w"
           href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
         >
           <div
-            class="css-106gdu6-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r8"
           >
             <img
               alt="DSC07717"
-              class="css-8oddxk-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1l306eh-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -2912,39 +2904,39 @@ https://unsplash.it/200/100 200w"
               title=""
             />
           </div>
-          <span
-            class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+          <div
+            class="css-1ttae7a-TeaserPreTitleWrapper e18of27r3"
           >
             <div
-              class="css-1bkvv5m-PreTitle e18of27r2"
+              class="css-1rar8l1-PreTitle e18of27r2"
             >
               Pre Title
             </div>
-          </span>
-          <h4
-            class="MuiTypography-root MuiTypography-h4 css-s0t1xd-MuiTypography-root-Teaser"
+          </div>
+          <h1
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
-          </h4>
+          </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-mmgi39-MuiTypography-root-Teaser"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r6"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-sibxk9-TeaserMetadata e18of27r1"
           >
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-bsjge5-TeaserTime e18of27r0"
               datetime="2023-01-01T00:00:00.000Z"
             >
-              | 01.01.2023 
+              01.01.2023 
             </time>
           </div>
         </a>
       </article>
       <article
-        class="css-jx9mmb-TeaserWrapper e18of27r14"
+        class="css-jx9mmb-TeaserWrapper e18of27r10"
         x="0"
         y="1"
       >
@@ -2953,11 +2945,11 @@ https://unsplash.it/200/100 200w"
           href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
         >
           <div
-            class="css-106gdu6-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r8"
           >
             <img
               alt="DSC07717"
-              class="css-8oddxk-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1l306eh-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -2966,33 +2958,33 @@ https://unsplash.it/200/100 200w"
               title=""
             />
           </div>
-          <span
-            class="css-1gk2foz-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+          <div
+            class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
-          <h4
-            class="MuiTypography-root MuiTypography-h4 css-s0t1xd-MuiTypography-root-Teaser"
+          <h1
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Chur solidarisiert sich mit der Ukraine
-          </h4>
+          </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-mmgi39-MuiTypography-root-Teaser"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r6"
           >
             Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-sibxk9-TeaserMetadata e18of27r1"
           >
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-bsjge5-TeaserTime e18of27r0"
               datetime="2023-01-01T00:00:00.000Z"
             >
-              | 01.01.2023 
+              01.01.2023 
             </time>
           </div>
         </a>
       </article>
       <article
-        class="css-1ml5tfp-TeaserWrapper e18of27r14"
+        class="css-1ml5tfp-TeaserWrapper e18of27r10"
         x="0"
         y="2"
       >
@@ -3001,11 +2993,11 @@ https://unsplash.it/200/100 200w"
           href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
         >
           <div
-            class="css-106gdu6-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r8"
           >
             <img
               alt="DSC07717"
-              class="css-8oddxk-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1l306eh-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -3014,32 +3006,32 @@ https://unsplash.it/200/100 200w"
               title=""
             />
           </div>
-          <span
-            class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+          <div
+            class="css-1ttae7a-TeaserPreTitleWrapper e18of27r3"
           >
             <div
-              class="css-1bkvv5m-PreTitle e18of27r2"
+              class="css-1rar8l1-PreTitle e18of27r2"
             >
               Pre Title
             </div>
-          </span>
-          <h4
-            class="MuiTypography-root MuiTypography-h4 css-s0t1xd-MuiTypography-root-Teaser"
+          </div>
+          <h1
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
-          </h4>
+          </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-mmgi39-MuiTypography-root-Teaser"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r6"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-sibxk9-TeaserMetadata e18of27r1"
           />
         </a>
       </article>
       <article
-        class="css-12jl06a-TeaserWrapper e18of27r14"
+        class="css-12jl06a-TeaserWrapper e18of27r10"
         x="0"
         y="3"
       >
@@ -3048,11 +3040,11 @@ https://unsplash.it/200/100 200w"
           href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
         >
           <div
-            class="css-106gdu6-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r8"
           >
             <img
               alt="DSC07717"
-              class="css-8oddxk-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1l306eh-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -3061,24 +3053,24 @@ https://unsplash.it/200/100 200w"
               title=""
             />
           </div>
-          <span
-            class="css-1gk2foz-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+          <div
+            class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
-          <h4
-            class="MuiTypography-root MuiTypography-h4 css-s0t1xd-MuiTypography-root-Teaser"
+          <h1
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Das ist ein Titel
-          </h4>
+          </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-mmgi39-MuiTypography-root-Teaser"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r6"
           />
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-sibxk9-TeaserMetadata e18of27r1"
           />
         </a>
       </article>
       <article
-        class="css-1na6kjf-TeaserWrapper e18of27r14"
+        class="css-1na6kjf-TeaserWrapper e18of27r10"
         x="0"
         y="4"
       >
@@ -3087,11 +3079,11 @@ https://unsplash.it/200/100 200w"
           href="https://google.com"
         >
           <div
-            class="css-106gdu6-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r8"
           >
             <img
               alt="DSC07717"
-              class="css-8oddxk-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1l306eh-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -3100,36 +3092,36 @@ https://unsplash.it/200/100 200w"
               title=""
             />
           </div>
-          <span
-            class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+          <div
+            class="css-1ttae7a-TeaserPreTitleWrapper e18of27r3"
           >
             <div
-              class="css-1bkvv5m-PreTitle e18of27r2"
+              class="css-1rar8l1-PreTitle e18of27r2"
             >
               Pre Title
             </div>
-          </span>
-          <h4
-            class="MuiTypography-root MuiTypography-h4 css-s0t1xd-MuiTypography-root-Teaser"
+          </div>
+          <h1
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
-          </h4>
+          </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-mmgi39-MuiTypography-root-Teaser"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r6"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-sibxk9-TeaserMetadata e18of27r1"
           />
         </a>
       </article>
     </div>
     <div
-      class="css-hw4wfz-TeaserGridBlockWrapper e1xnbuxv0"
+      class="css-331icf-TeaserGridBlockWrapper e1xnbuxv0"
     >
       <article
-        class="css-8p11sj-TeaserWrapper e18of27r14"
+        class="css-8p11sj-TeaserWrapper e18of27r10"
         x="0"
         y="0"
       >
@@ -3138,11 +3130,11 @@ https://unsplash.it/200/100 200w"
           href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
         >
           <div
-            class="css-106gdu6-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r8"
           >
             <img
               alt="DSC07717"
-              class="css-8oddxk-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1l306eh-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -3151,39 +3143,39 @@ https://unsplash.it/200/100 200w"
               title=""
             />
           </div>
-          <span
-            class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+          <div
+            class="css-1ttae7a-TeaserPreTitleWrapper e18of27r3"
           >
             <div
-              class="css-1bkvv5m-PreTitle e18of27r2"
+              class="css-1rar8l1-PreTitle e18of27r2"
             >
               Pre Title
             </div>
-          </span>
-          <h4
-            class="MuiTypography-root MuiTypography-h4 css-s0t1xd-MuiTypography-root-Teaser"
+          </div>
+          <h1
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
-          </h4>
+          </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-mmgi39-MuiTypography-root-Teaser"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r6"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-sibxk9-TeaserMetadata e18of27r1"
           >
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-bsjge5-TeaserTime e18of27r0"
               datetime="2023-01-01T00:00:00.000Z"
             >
-              | 01.01.2023 
+              01.01.2023 
             </time>
           </div>
         </a>
       </article>
       <article
-        class="css-z4j0q-TeaserWrapper e18of27r14"
+        class="css-z4j0q-TeaserWrapper e18of27r10"
         x="4"
         y="0"
       >
@@ -3192,11 +3184,11 @@ https://unsplash.it/200/100 200w"
           href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
         >
           <div
-            class="css-106gdu6-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r8"
           >
             <img
               alt="DSC07717"
-              class="css-8oddxk-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1l306eh-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -3205,33 +3197,33 @@ https://unsplash.it/200/100 200w"
               title=""
             />
           </div>
-          <span
-            class="css-1gk2foz-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+          <div
+            class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
-          <h4
-            class="MuiTypography-root MuiTypography-h4 css-s0t1xd-MuiTypography-root-Teaser"
+          <h1
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Chur solidarisiert sich mit der Ukraine
-          </h4>
+          </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-mmgi39-MuiTypography-root-Teaser"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r6"
           >
             Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-sibxk9-TeaserMetadata e18of27r1"
           >
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-bsjge5-TeaserTime e18of27r0"
               datetime="2023-01-01T00:00:00.000Z"
             >
-              | 01.01.2023 
+              01.01.2023 
             </time>
           </div>
         </a>
       </article>
       <article
-        class="css-wylm69-TeaserWrapper e18of27r14"
+        class="css-wylm69-TeaserWrapper e18of27r10"
         x="8"
         y="0"
       >
@@ -3240,11 +3232,11 @@ https://unsplash.it/200/100 200w"
           href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
         >
           <div
-            class="css-106gdu6-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r8"
           >
             <img
               alt="DSC07717"
-              class="css-8oddxk-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1l306eh-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -3253,32 +3245,32 @@ https://unsplash.it/200/100 200w"
               title=""
             />
           </div>
-          <span
-            class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+          <div
+            class="css-1ttae7a-TeaserPreTitleWrapper e18of27r3"
           >
             <div
-              class="css-1bkvv5m-PreTitle e18of27r2"
+              class="css-1rar8l1-PreTitle e18of27r2"
             >
               Pre Title
             </div>
-          </span>
-          <h4
-            class="MuiTypography-root MuiTypography-h4 css-s0t1xd-MuiTypography-root-Teaser"
+          </div>
+          <h1
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
-          </h4>
+          </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-mmgi39-MuiTypography-root-Teaser"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r6"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-sibxk9-TeaserMetadata e18of27r1"
           />
         </a>
       </article>
       <article
-        class="css-auedvd-TeaserWrapper e18of27r14"
+        class="css-auedvd-TeaserWrapper e18of27r10"
         x="0"
         y="1"
       >
@@ -3287,11 +3279,11 @@ https://unsplash.it/200/100 200w"
           href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
         >
           <div
-            class="css-106gdu6-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r8"
           >
             <img
               alt="DSC07717"
-              class="css-8oddxk-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1l306eh-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -3300,24 +3292,24 @@ https://unsplash.it/200/100 200w"
               title=""
             />
           </div>
-          <span
-            class="css-1gk2foz-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+          <div
+            class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
-          <h4
-            class="MuiTypography-root MuiTypography-h4 css-s0t1xd-MuiTypography-root-Teaser"
+          <h1
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Das ist ein Titel
-          </h4>
+          </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-mmgi39-MuiTypography-root-Teaser"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r6"
           />
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-sibxk9-TeaserMetadata e18of27r1"
           />
         </a>
       </article>
       <article
-        class="css-1h821lc-TeaserWrapper e18of27r14"
+        class="css-1h821lc-TeaserWrapper e18of27r10"
         x="4"
         y="1"
       >
@@ -3326,11 +3318,11 @@ https://unsplash.it/200/100 200w"
           href="https://google.com"
         >
           <div
-            class="css-106gdu6-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r8"
           >
             <img
               alt="DSC07717"
-              class="css-8oddxk-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1l306eh-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -3339,27 +3331,27 @@ https://unsplash.it/200/100 200w"
               title=""
             />
           </div>
-          <span
-            class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+          <div
+            class="css-1ttae7a-TeaserPreTitleWrapper e18of27r3"
           >
             <div
-              class="css-1bkvv5m-PreTitle e18of27r2"
+              class="css-1rar8l1-PreTitle e18of27r2"
             >
               Pre Title
             </div>
-          </span>
-          <h4
-            class="MuiTypography-root MuiTypography-h4 css-s0t1xd-MuiTypography-root-Teaser"
+          </div>
+          <h1
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
-          </h4>
+          </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-mmgi39-MuiTypography-root-Teaser"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r6"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-sibxk9-TeaserMetadata e18of27r1"
           />
         </a>
       </article>
@@ -3368,7 +3360,7 @@ https://unsplash.it/200/100 200w"
       class="css-1iy4fdm-TeaserGridFlexBlockWrapper e1je8zv30"
     >
       <article
-        class="css-d36tn6-TeaserWrapper e18of27r14"
+        class="css-d36tn6-TeaserWrapper e18of27r10"
         x="0"
         y="0"
       >
@@ -3377,11 +3369,11 @@ https://unsplash.it/200/100 200w"
           href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
         >
           <div
-            class="css-106gdu6-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r8"
           >
             <img
               alt="DSC07717"
-              class="css-8oddxk-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1l306eh-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -3390,39 +3382,39 @@ https://unsplash.it/200/100 200w"
               title=""
             />
           </div>
-          <span
-            class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+          <div
+            class="css-1ttae7a-TeaserPreTitleWrapper e18of27r3"
           >
             <div
-              class="css-1bkvv5m-PreTitle e18of27r2"
+              class="css-1rar8l1-PreTitle e18of27r2"
             >
               Pre Title
             </div>
-          </span>
-          <h4
-            class="MuiTypography-root MuiTypography-h4 css-s0t1xd-MuiTypography-root-Teaser"
+          </div>
+          <h1
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
-          </h4>
+          </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-mmgi39-MuiTypography-root-Teaser"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r6"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-sibxk9-TeaserMetadata e18of27r1"
           >
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-bsjge5-TeaserTime e18of27r0"
               datetime="2023-01-01T00:00:00.000Z"
             >
-              | 01.01.2023 
+              01.01.2023 
             </time>
           </div>
         </a>
       </article>
       <article
-        class="css-1wuy1db-TeaserWrapper e18of27r14"
+        class="css-1wuy1db-TeaserWrapper e18of27r10"
         x="3"
         y="0"
       >
@@ -3431,11 +3423,11 @@ https://unsplash.it/200/100 200w"
           href="https://demo.wepublish.media/a/clg2cxnig57497901rej8i9ubj1/chur-solidarisiert-sich-mit-der-ukraine"
         >
           <div
-            class="css-106gdu6-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r8"
           >
             <img
               alt="DSC07717"
-              class="css-8oddxk-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1l306eh-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -3444,33 +3436,33 @@ https://unsplash.it/200/100 200w"
               title=""
             />
           </div>
-          <span
-            class="css-1gk2foz-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+          <div
+            class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
-          <h4
-            class="MuiTypography-root MuiTypography-h4 css-s0t1xd-MuiTypography-root-Teaser"
+          <h1
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Chur solidarisiert sich mit der Ukraine
-          </h4>
+          </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-mmgi39-MuiTypography-root-Teaser"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r6"
           >
             Auch ein Jahr nach Kriegsausbruch sind die Sympathien klar. 1000 Churer*innen standen am Samstag Mahnwache in Chur. 
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-sibxk9-TeaserMetadata e18of27r1"
           >
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-bsjge5-TeaserTime e18of27r0"
               datetime="2023-01-01T00:00:00.000Z"
             >
-              | 01.01.2023 
+              01.01.2023 
             </time>
           </div>
         </a>
       </article>
       <article
-        class="css-1203ukr-TeaserWrapper e18of27r14"
+        class="css-1203ukr-TeaserWrapper e18of27r10"
         x="8"
         y="0"
       >
@@ -3479,11 +3471,11 @@ https://unsplash.it/200/100 200w"
           href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
         >
           <div
-            class="css-106gdu6-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r8"
           >
             <img
               alt="DSC07717"
-              class="css-8oddxk-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1l306eh-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -3492,24 +3484,24 @@ https://unsplash.it/200/100 200w"
               title=""
             />
           </div>
-          <span
-            class="css-1gk2foz-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+          <div
+            class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
-          <h4
-            class="MuiTypography-root MuiTypography-h4 css-s0t1xd-MuiTypography-root-Teaser"
+          <h1
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Das ist ein Titel
-          </h4>
+          </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-mmgi39-MuiTypography-root-Teaser"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r6"
           />
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-sibxk9-TeaserMetadata e18of27r1"
           />
         </a>
       </article>
       <article
-        class="css-mnh2l7-TeaserWrapper e18of27r14"
+        class="css-mnh2l7-TeaserWrapper e18of27r10"
         x="3"
         y="3"
       >
@@ -3518,11 +3510,11 @@ https://unsplash.it/200/100 200w"
           href="https://demo.wepublish.media/page/cl95fumlq261901phgrctx4mz/"
         >
           <div
-            class="css-106gdu6-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r8"
           >
             <img
               alt="DSC07717"
-              class="css-8oddxk-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1l306eh-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -3531,32 +3523,32 @@ https://unsplash.it/200/100 200w"
               title=""
             />
           </div>
-          <span
-            class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+          <div
+            class="css-1ttae7a-TeaserPreTitleWrapper e18of27r3"
           >
             <div
-              class="css-1bkvv5m-PreTitle e18of27r2"
+              class="css-1rar8l1-PreTitle e18of27r2"
             >
               Pre Title
             </div>
-          </span>
-          <h4
-            class="MuiTypography-root MuiTypography-h4 css-s0t1xd-MuiTypography-root-Teaser"
+          </div>
+          <h1
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
-          </h4>
+          </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-mmgi39-MuiTypography-root-Teaser"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r6"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-sibxk9-TeaserMetadata e18of27r1"
           />
         </a>
       </article>
       <article
-        class="css-83em0x-TeaserWrapper e18of27r14"
+        class="css-83em0x-TeaserWrapper e18of27r10"
         x="0"
         y="6"
       >
@@ -3565,11 +3557,11 @@ https://unsplash.it/200/100 200w"
           href="https://google.com"
         >
           <div
-            class="css-106gdu6-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r8"
           >
             <img
               alt="DSC07717"
-              class="css-8oddxk-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1l306eh-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -3578,27 +3570,27 @@ https://unsplash.it/200/100 200w"
               title=""
             />
           </div>
-          <span
-            class="css-hbvck4-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+          <div
+            class="css-1ttae7a-TeaserPreTitleWrapper e18of27r3"
           >
             <div
-              class="css-1bkvv5m-PreTitle e18of27r2"
+              class="css-1rar8l1-PreTitle e18of27r2"
             >
               Pre Title
             </div>
-          </span>
-          <h4
-            class="MuiTypography-root MuiTypography-h4 css-s0t1xd-MuiTypography-root-Teaser"
+          </div>
+          <h1
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
-          </h4>
+          </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-mmgi39-MuiTypography-root-Teaser"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r6"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-sibxk9-TeaserMetadata e18of27r1"
           />
         </a>
       </article>
@@ -3621,7 +3613,7 @@ https://unsplash.it/200/100 200w"
       class="css-nrshve-PollBlockWrapper ecm33wf3"
     >
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1raxwre-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h4 css-1fh3rua-MuiTypography-root"
       >
         Question
       </h1>
@@ -3635,7 +3627,7 @@ https://unsplash.it/200/100 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
             data-slate-node="element"
           >
             <span
@@ -3729,7 +3721,7 @@ https://unsplash.it/200/100 200w"
       class="css-1mm1s5y-CommentBlockWrapper es9rr591"
     />
     <aside
-      class="css-1lwhsgn-EventBlockWrapper ea1goei0"
+      class="css-11sh4th-EventBlockWrapper ea1goei0"
     >
       <a
         class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-9ztkv6-MuiTypography-root-MuiLink-root-EventListItem"
@@ -3792,7 +3784,7 @@ https://unsplash.it/200/100 200w"
               </time>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 css-1raxwre-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-h4 css-1fh3rua-MuiTypography-root"
             >
               Cool concert
             </h1>
@@ -3806,7 +3798,7 @@ https://unsplash.it/200/100 200w"
                 style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                   data-slate-node="element"
                 >
                   <span
