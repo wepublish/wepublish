@@ -1,6 +1,7 @@
 import {css, styled} from '@mui/material'
 import {
   ApiV1,
+  ContentWidthProvider,
   PageContainer,
   TeaserDate,
   TeaserGridFlexBlockWrapper,
@@ -10,6 +11,9 @@ import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 
 const Frontpage = styled(PageContainer)`
+  gap: ${({theme}) => theme.spacing(6)};
+  padding-bottom: ${({theme}) => theme.spacing(6)};
+
   ${TeaserGridFlexBlockWrapper}:first-of-type ${TeaserWrapper}:first-of-type {
     ${TeaserDate} {
       font-size: ${({theme}) => theme.typography.h6.fontSize};
@@ -31,7 +35,11 @@ const Frontpage = styled(PageContainer)`
 `
 
 export default function Index() {
-  return <Frontpage slug={''} />
+  return (
+    <ContentWidthProvider fullWidth>
+      <Frontpage slug={''} />
+    </ContentWidthProvider>
+  )
 }
 
 export const getStaticProps: GetStaticProps = async () => {

@@ -3,20 +3,20 @@
 exports[`Quote Block should render Default 1`] = `
 <DocumentFragment>
   <blockquote
-    class="css-1hx22vu-QuoteBlockWrapper e1ugt7gl1"
+    class="css-jrn897-QuoteBlockWrapper e1ugt7gl1"
   >
     <div
-      class="css-1nu3lgo-QuoteContent e1ugt7gl0"
+      class="css-1v9bccv-QuoteContent e1ugt7gl0"
     >
       <p
-        class="MuiTypography-root MuiTypography-h4 css-hvxnyb-MuiTypography-root-QuoteBlock"
+        class="MuiTypography-root MuiTypography-h4 css-1fh3rua-MuiTypography-root"
       >
         «This is a quote»
       </p>
       <cite
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1iafnkq-MuiTypography-root-QuoteBlock"
+        class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
       >
-        John Doe
+        von John Doe
       </cite>
     </div>
   </blockquote>
@@ -26,20 +26,20 @@ exports[`Quote Block should render Default 1`] = `
 exports[`Quote Block should render WithClassName 1`] = `
 <DocumentFragment>
   <blockquote
-    class="extra-classname css-1hx22vu-QuoteBlockWrapper e1ugt7gl1"
+    class="extra-classname css-jrn897-QuoteBlockWrapper e1ugt7gl1"
   >
     <div
-      class="css-1nu3lgo-QuoteContent e1ugt7gl0"
+      class="css-1v9bccv-QuoteContent e1ugt7gl0"
     >
       <p
-        class="MuiTypography-root MuiTypography-h4 css-hvxnyb-MuiTypography-root-QuoteBlock"
+        class="MuiTypography-root MuiTypography-h4 css-1fh3rua-MuiTypography-root"
       >
         «This is a quote»
       </p>
       <cite
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1iafnkq-MuiTypography-root-QuoteBlock"
+        class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
       >
-        John Doe
+        von John Doe
       </cite>
     </div>
   </blockquote>
@@ -49,20 +49,20 @@ exports[`Quote Block should render WithClassName 1`] = `
 exports[`Quote Block should render WithEmotion 1`] = `
 <DocumentFragment>
   <blockquote
-    class="css-1hx22vu-QuoteBlockWrapper e1ugt7gl1"
+    class="css-jrn897-QuoteBlockWrapper e1ugt7gl1"
   >
     <div
-      class="css-1nu3lgo-QuoteContent e1ugt7gl0"
+      class="css-1v9bccv-QuoteContent e1ugt7gl0"
     >
       <p
-        class="MuiTypography-root MuiTypography-h4 css-hvxnyb-MuiTypography-root-QuoteBlock"
+        class="MuiTypography-root MuiTypography-h4 css-1fh3rua-MuiTypography-root"
       >
         «This is a quote»
       </p>
       <cite
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1iafnkq-MuiTypography-root-QuoteBlock"
+        class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
       >
-        John Doe
+        von John Doe
       </cite>
     </div>
   </blockquote>
@@ -72,30 +72,30 @@ exports[`Quote Block should render WithEmotion 1`] = `
 exports[`Quote Block should render WithImage 1`] = `
 <DocumentFragment>
   <blockquote
-    class="css-c3iuqa-QuoteBlockWrapper e1ugt7gl1"
+    class="css-bkv3mi-QuoteBlockWrapper e1ugt7gl1"
   >
     <img
       alt="DSC07717"
-      class="css-k8y6nq-ImageWrapper-QuoteBlock e1shv2yg0"
+      class="css-cibo30-ImageWrapper e1shv2yg0"
       loading="lazy"
-      srcset="https://unsplash.it/800/400 800w,
-https://unsplash.it/500/300 500w,
-https://unsplash.it/300/200 300w,
-https://unsplash.it/200/100 200w"
+      srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
       title=""
     />
     <div
-      class="css-1nu3lgo-QuoteContent e1ugt7gl0"
+      class="css-1v9bccv-QuoteContent e1ugt7gl0"
     >
       <p
-        class="MuiTypography-root MuiTypography-h4 css-hvxnyb-MuiTypography-root-QuoteBlock"
+        class="MuiTypography-root MuiTypography-h4 css-1fh3rua-MuiTypography-root"
       >
         «This is a quote»
       </p>
       <cite
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1iafnkq-MuiTypography-root-QuoteBlock"
+        class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
       >
-        John Doe
+        von John Doe
       </cite>
     </div>
   </blockquote>

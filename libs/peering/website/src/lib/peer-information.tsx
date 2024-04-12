@@ -67,8 +67,8 @@ export function PeerInformation({data, loading, error, originUrl, className}: Bu
 
       <PeerInformationCTA>
         <Button
-          variant="outlined"
-          color="secondary"
+          variant="contained"
+          color="primary"
           href={data.peer.profile?.callToActionURL ?? data.peer.profile?.websiteURL}
           LinkComponent={Link}>
           <RichText richText={data.peer.profile?.callToActionText ?? []} />

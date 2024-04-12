@@ -1,11 +1,13 @@
 import {
+  ApiV1,
   BlockRenderer,
   BuilderBlockRendererProps,
+  isTeaserGridBlock,
   useWebsiteBuilder,
   WebsiteBuilderProvider
 } from '@wepublish/website'
-import {cond} from 'ramda'
-import {useMemo} from 'react'
+import {allPass, cond} from 'ramda'
+import {Fragment, useCallback, useMemo} from 'react'
 
 import {Archive} from '../../bajour/archive/archive'
 import {isArchive} from '../../bajour/archive/is-archive'
@@ -24,9 +26,22 @@ export const BajourBlockRenderer = (props: BuilderBlockRendererProps) => {
     blocks: {TeaserGrid}
   } = useWebsiteBuilder()
 
+  // Bajour has some old related articles teasers and we do not want them to show up
+  // They are hidden for now instead of removed from the API as we will migrate these to article metadata at some point.
+  // This allows us to show predefined related articles & enhance it with automatic generated once.
+  const isOldRelatedArticles = useCallback(
+    (block: ApiV1.Block): block is ApiV1.TeaserGridBlock =>
+      allPass([
+        isTeaserGridBlock,
+        () => props.type === 'Article' && props.index === props.count - 1
+      ])(block),
+    [props.index, props.count, props.type]
+  )
+
   const extraBlockMap = useMemo(
     () =>
       cond([
+        [isOldRelatedArticles, block => <Fragment />],
         [isContextBox, block => <ContextBox {...block} />],
         [isTeaserSlider, block => <TeaserSlider {...block} />],
         [isBestOfWePublish, block => <BestOfWePublish {...block} />],

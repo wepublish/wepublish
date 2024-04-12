@@ -2,13 +2,6 @@ import {styled} from '@mui/material'
 import {FullImageFragment} from '@wepublish/website/api'
 import {BuilderImageProps} from '@wepublish/website/builder'
 
-declare module 'react' {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  interface HTMLAttributes<T> {
-    fetchPriority?: 'high' | 'low' | 'auto'
-  }
-}
-
 type ImageItem = {size: number; url: string | null | undefined}
 
 export const imageToImageItems = (image: FullImageFragment): ImageItem[] => [

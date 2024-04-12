@@ -6,7 +6,7 @@ exports[`IconButton should render IconButton 1`] = `
     class="MuiStack-root css-3l5917-MuiStack-root"
   >
     <button
-      class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-whz9ym-MuiButtonBase-root-MuiIconButton-root"
+      class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeMedium css-78trlr-MuiButtonBase-root-MuiIconButton-root"
       tabindex="0"
       type="button"
     >

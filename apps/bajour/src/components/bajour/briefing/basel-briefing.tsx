@@ -119,6 +119,7 @@ export const BaselBriefingStyled = styled('div')`
 
 const TeaserBackground = styled(Image)`
   width: 100%;
+  max-height: initial;
   object-fit: cover;
   position: absolute;
   z-index: -1;
@@ -271,7 +272,7 @@ const TeaserContentInterior = styled('div')`
   padding: ${({theme}) =>
     `${theme.spacing(1)} ${theme.spacing(1)} ${theme.spacing(1)} ${theme.spacing(3.5)}`};
   border-bottom-right-radius: ${({theme}) => theme.spacing(2)};
-  background-color: ${({theme}) => theme.palette.secondary.main};
+  background-color: ${({theme}) => theme.palette.secondary.dark};
   color: ${({theme}) => theme.palette.common.black};
 
   ${({theme}) => theme.breakpoints.up('sm')} {

@@ -6,10 +6,10 @@ exports[`ArticleList should render Default 1`] = `
     class="css-2otupp-ArticleListWrapper ei1ca8h0"
   >
     <div
-      class="css-hw4wfz-TeaserGridBlockWrapper e1xnbuxv0"
+      class="css-331icf-TeaserGridBlockWrapper e1xnbuxv0"
     >
       <article
-        class="css-8p11sj-TeaserWrapper e18of27r14"
+        class="css-8p11sj-TeaserWrapper e18of27r18"
         x="0"
         y="0"
       >
@@ -18,11 +18,11 @@ exports[`ArticleList should render Default 1`] = `
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -32,28 +32,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -62,7 +62,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-z4j0q-TeaserWrapper e18of27r14"
+        class="css-z4j0q-TeaserWrapper e18of27r18"
         x="4"
         y="0"
       >
@@ -71,11 +71,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -85,28 +85,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -115,7 +115,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-wylm69-TeaserWrapper e18of27r14"
+        class="css-wylm69-TeaserWrapper e18of27r18"
         x="8"
         y="0"
       >
@@ -124,11 +124,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -138,28 +138,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -168,7 +168,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-auedvd-TeaserWrapper e18of27r14"
+        class="css-auedvd-TeaserWrapper e18of27r18"
         x="0"
         y="1"
       >
@@ -177,11 +177,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -191,28 +191,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -221,7 +221,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-1h821lc-TeaserWrapper e18of27r14"
+        class="css-1h821lc-TeaserWrapper e18of27r18"
         x="4"
         y="1"
       >
@@ -230,11 +230,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -244,28 +244,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -274,7 +274,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-uvlwjs-TeaserWrapper e18of27r14"
+        class="css-uvlwjs-TeaserWrapper e18of27r18"
         x="8"
         y="1"
       >
@@ -283,11 +283,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -297,28 +297,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -327,7 +327,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-ft58qy-TeaserWrapper e18of27r14"
+        class="css-ft58qy-TeaserWrapper e18of27r18"
         x="0"
         y="2"
       >
@@ -336,11 +336,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -350,28 +350,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -380,7 +380,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-10hpjpv-TeaserWrapper e18of27r14"
+        class="css-10hpjpv-TeaserWrapper e18of27r18"
         x="4"
         y="2"
       >
@@ -389,11 +389,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -403,28 +403,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -433,7 +433,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-1m195a6-TeaserWrapper e18of27r14"
+        class="css-1m195a6-TeaserWrapper e18of27r18"
         x="8"
         y="2"
       >
@@ -442,11 +442,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -456,28 +456,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -486,7 +486,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-1i5izja-TeaserWrapper e18of27r14"
+        class="css-1i5izja-TeaserWrapper e18of27r18"
         x="0"
         y="3"
       >
@@ -495,11 +495,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -509,28 +509,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -539,7 +539,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-1eiywew-TeaserWrapper e18of27r14"
+        class="css-1eiywew-TeaserWrapper e18of27r18"
         x="4"
         y="3"
       >
@@ -548,11 +548,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -562,28 +562,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -602,10 +602,10 @@ exports[`ArticleList should render WithClassName 1`] = `
     class="extra-classname css-2otupp-ArticleListWrapper ei1ca8h0"
   >
     <div
-      class="css-hw4wfz-TeaserGridBlockWrapper e1xnbuxv0"
+      class="css-331icf-TeaserGridBlockWrapper e1xnbuxv0"
     >
       <article
-        class="css-8p11sj-TeaserWrapper e18of27r14"
+        class="css-8p11sj-TeaserWrapper e18of27r18"
         x="0"
         y="0"
       >
@@ -614,11 +614,11 @@ exports[`ArticleList should render WithClassName 1`] = `
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -628,28 +628,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -658,7 +658,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-z4j0q-TeaserWrapper e18of27r14"
+        class="css-z4j0q-TeaserWrapper e18of27r18"
         x="4"
         y="0"
       >
@@ -667,11 +667,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -681,28 +681,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -711,7 +711,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-wylm69-TeaserWrapper e18of27r14"
+        class="css-wylm69-TeaserWrapper e18of27r18"
         x="8"
         y="0"
       >
@@ -720,11 +720,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -734,28 +734,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -764,7 +764,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-auedvd-TeaserWrapper e18of27r14"
+        class="css-auedvd-TeaserWrapper e18of27r18"
         x="0"
         y="1"
       >
@@ -773,11 +773,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -787,28 +787,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -817,7 +817,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-1h821lc-TeaserWrapper e18of27r14"
+        class="css-1h821lc-TeaserWrapper e18of27r18"
         x="4"
         y="1"
       >
@@ -826,11 +826,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -840,28 +840,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -870,7 +870,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-uvlwjs-TeaserWrapper e18of27r14"
+        class="css-uvlwjs-TeaserWrapper e18of27r18"
         x="8"
         y="1"
       >
@@ -879,11 +879,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -893,28 +893,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -923,7 +923,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-ft58qy-TeaserWrapper e18of27r14"
+        class="css-ft58qy-TeaserWrapper e18of27r18"
         x="0"
         y="2"
       >
@@ -932,11 +932,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -946,28 +946,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -976,7 +976,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-10hpjpv-TeaserWrapper e18of27r14"
+        class="css-10hpjpv-TeaserWrapper e18of27r18"
         x="4"
         y="2"
       >
@@ -985,11 +985,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -999,28 +999,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -1029,7 +1029,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-1m195a6-TeaserWrapper e18of27r14"
+        class="css-1m195a6-TeaserWrapper e18of27r18"
         x="8"
         y="2"
       >
@@ -1038,11 +1038,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1052,28 +1052,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -1082,7 +1082,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-1i5izja-TeaserWrapper e18of27r14"
+        class="css-1i5izja-TeaserWrapper e18of27r18"
         x="0"
         y="3"
       >
@@ -1091,11 +1091,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1105,28 +1105,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -1135,7 +1135,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-1eiywew-TeaserWrapper e18of27r14"
+        class="css-1eiywew-TeaserWrapper e18of27r18"
         x="4"
         y="3"
       >
@@ -1144,11 +1144,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1158,28 +1158,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -1198,10 +1198,10 @@ exports[`ArticleList should render WithEmotion 1`] = `
     class="css-2otupp-ArticleListWrapper ei1ca8h0"
   >
     <div
-      class="css-hw4wfz-TeaserGridBlockWrapper e1xnbuxv0"
+      class="css-331icf-TeaserGridBlockWrapper e1xnbuxv0"
     >
       <article
-        class="css-8p11sj-TeaserWrapper e18of27r14"
+        class="css-8p11sj-TeaserWrapper e18of27r18"
         x="0"
         y="0"
       >
@@ -1210,11 +1210,11 @@ exports[`ArticleList should render WithEmotion 1`] = `
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1224,28 +1224,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -1254,7 +1254,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-z4j0q-TeaserWrapper e18of27r14"
+        class="css-z4j0q-TeaserWrapper e18of27r18"
         x="4"
         y="0"
       >
@@ -1263,11 +1263,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1277,28 +1277,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -1307,7 +1307,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-wylm69-TeaserWrapper e18of27r14"
+        class="css-wylm69-TeaserWrapper e18of27r18"
         x="8"
         y="0"
       >
@@ -1316,11 +1316,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1330,28 +1330,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -1360,7 +1360,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-auedvd-TeaserWrapper e18of27r14"
+        class="css-auedvd-TeaserWrapper e18of27r18"
         x="0"
         y="1"
       >
@@ -1369,11 +1369,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1383,28 +1383,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -1413,7 +1413,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-1h821lc-TeaserWrapper e18of27r14"
+        class="css-1h821lc-TeaserWrapper e18of27r18"
         x="4"
         y="1"
       >
@@ -1422,11 +1422,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1436,28 +1436,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -1466,7 +1466,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-uvlwjs-TeaserWrapper e18of27r14"
+        class="css-uvlwjs-TeaserWrapper e18of27r18"
         x="8"
         y="1"
       >
@@ -1475,11 +1475,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1489,28 +1489,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -1519,7 +1519,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-ft58qy-TeaserWrapper e18of27r14"
+        class="css-ft58qy-TeaserWrapper e18of27r18"
         x="0"
         y="2"
       >
@@ -1528,11 +1528,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1542,28 +1542,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -1572,7 +1572,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-10hpjpv-TeaserWrapper e18of27r14"
+        class="css-10hpjpv-TeaserWrapper e18of27r18"
         x="4"
         y="2"
       >
@@ -1581,11 +1581,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1595,28 +1595,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -1625,7 +1625,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-1m195a6-TeaserWrapper e18of27r14"
+        class="css-1m195a6-TeaserWrapper e18of27r18"
         x="8"
         y="2"
       >
@@ -1634,11 +1634,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1648,28 +1648,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -1678,7 +1678,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-1i5izja-TeaserWrapper e18of27r14"
+        class="css-1i5izja-TeaserWrapper e18of27r18"
         x="0"
         y="3"
       >
@@ -1687,11 +1687,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1701,28 +1701,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -1731,7 +1731,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-1eiywew-TeaserWrapper e18of27r14"
+        class="css-1eiywew-TeaserWrapper e18of27r18"
         x="4"
         y="3"
       >
@@ -1740,11 +1740,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1754,28 +1754,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -1794,7 +1794,7 @@ exports[`ArticleList should render WithError 1`] = `
     class="css-2otupp-ArticleListWrapper ei1ca8h0"
   >
     <div
-      class="css-hw4wfz-TeaserGridBlockWrapper e1xnbuxv0"
+      class="css-331icf-TeaserGridBlockWrapper e1xnbuxv0"
     />
   </article>
 </DocumentFragment>
@@ -1806,7 +1806,7 @@ exports[`ArticleList should render WithLoading 1`] = `
     class="css-2otupp-ArticleListWrapper ei1ca8h0"
   >
     <div
-      class="css-hw4wfz-TeaserGridBlockWrapper e1xnbuxv0"
+      class="css-331icf-TeaserGridBlockWrapper e1xnbuxv0"
     />
   </article>
 </DocumentFragment>
@@ -1818,10 +1818,10 @@ exports[`ArticleList should render WithoutImage 1`] = `
     class="css-2otupp-ArticleListWrapper ei1ca8h0"
   >
     <div
-      class="css-hw4wfz-TeaserGridBlockWrapper e1xnbuxv0"
+      class="css-331icf-TeaserGridBlockWrapper e1xnbuxv0"
     >
       <article
-        class="css-8p11sj-TeaserWrapper e18of27r14"
+        class="css-8p11sj-TeaserWrapper e18of27r18"
         x="0"
         y="0"
       >
@@ -1830,11 +1830,11 @@ exports[`ArticleList should render WithoutImage 1`] = `
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1844,28 +1844,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -1874,7 +1874,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-z4j0q-TeaserWrapper e18of27r14"
+        class="css-z4j0q-TeaserWrapper e18of27r18"
         x="4"
         y="0"
       >
@@ -1883,11 +1883,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1897,28 +1897,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -1927,7 +1927,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-wylm69-TeaserWrapper e18of27r14"
+        class="css-wylm69-TeaserWrapper e18of27r18"
         x="8"
         y="0"
       >
@@ -1936,11 +1936,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1950,28 +1950,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -1980,7 +1980,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-auedvd-TeaserWrapper e18of27r14"
+        class="css-auedvd-TeaserWrapper e18of27r18"
         x="0"
         y="1"
       >
@@ -1989,11 +1989,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -2003,28 +2003,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -2033,7 +2033,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-1h821lc-TeaserWrapper e18of27r14"
+        class="css-1h821lc-TeaserWrapper e18of27r18"
         x="4"
         y="1"
       >
@@ -2042,11 +2042,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -2056,28 +2056,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -2086,7 +2086,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-uvlwjs-TeaserWrapper e18of27r14"
+        class="css-uvlwjs-TeaserWrapper e18of27r18"
         x="8"
         y="1"
       >
@@ -2095,11 +2095,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -2109,28 +2109,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -2139,7 +2139,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-ft58qy-TeaserWrapper e18of27r14"
+        class="css-ft58qy-TeaserWrapper e18of27r18"
         x="0"
         y="2"
       >
@@ -2148,11 +2148,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -2162,28 +2162,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -2192,7 +2192,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-10hpjpv-TeaserWrapper e18of27r14"
+        class="css-10hpjpv-TeaserWrapper e18of27r18"
         x="4"
         y="2"
       >
@@ -2201,11 +2201,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -2215,28 +2215,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -2245,7 +2245,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-1m195a6-TeaserWrapper e18of27r14"
+        class="css-1m195a6-TeaserWrapper e18of27r18"
         x="8"
         y="2"
       >
@@ -2254,11 +2254,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -2268,28 +2268,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -2298,7 +2298,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-1i5izja-TeaserWrapper e18of27r14"
+        class="css-1i5izja-TeaserWrapper e18of27r18"
         x="0"
         y="3"
       >
@@ -2307,11 +2307,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -2321,28 +2321,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 
@@ -2351,7 +2351,7 @@ https://unsplash.it/200/100 200w"
         </a>
       </article>
       <article
-        class="css-1eiywew-TeaserWrapper e18of27r14"
+        class="css-1eiywew-TeaserWrapper e18of27r18"
         x="4"
         y="3"
       >
@@ -2360,11 +2360,11 @@ https://unsplash.it/200/100 200w"
           href="https://example.com"
         >
           <div
-            class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+            class="css-1xekyz3-TeaserImageWrapper e18of27r16"
           >
             <img
               alt="DSC07717"
-              class="css-ouwb52-ImageWrapper-Teaser e1shv2yg0"
+              class="css-1rxpide-ImageWrapper-Teaser e1shv2yg0"
               loading="lazy"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -2374,28 +2374,28 @@ https://unsplash.it/200/100 200w"
             />
           </div>
           <span
-            class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+            class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+            class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
           >
             Title
           </h1>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
           >
             Lead
           </p>
           <div
-            class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+            class="css-1r6dk2d-AuthorsAndDate e18of27r5"
           >
             <span
-              class="css-bndfqf-Authors e18of27r8"
+              class="css-bndfqf-Authors e18of27r12"
             >
               Von Foobar, Foobar 
             </span>
             <time
-              class="css-tfwjps-Time e18of27r0"
+              class="css-tfwjps-Time e18of27r4"
               datetime="2023-01-01T00:00:00.000Z"
             >
               | 01.01.2023 

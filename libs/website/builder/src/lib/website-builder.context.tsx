@@ -17,6 +17,7 @@ import {
 import {BuilderLoginFormProps, BuilderRegistrationFormProps} from './authentication.interface'
 import {
   BuilderAuthorChipProps,
+  BuilderAuthorLinksProps,
   BuilderAuthorListItemProps,
   BuilderAuthorListProps,
   BuilderAuthorProps
@@ -108,6 +109,7 @@ export type WebsiteBuilderProps = {
   ArticleSEO: ComponentType<BuilderArticleSEOProps>
   PeerInformation: ComponentType<BuilderPeerProps>
   Author: ComponentType<BuilderAuthorProps>
+  AuthorLinks: ComponentType<BuilderAuthorLinksProps>
   AuthorChip: ComponentType<BuilderAuthorChipProps>
   AuthorListItem: ComponentType<BuilderAuthorListItemProps>
   AuthorList: ComponentType<BuilderAuthorListProps>
@@ -221,6 +223,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   ArticleSEO: NoComponent,
   PeerInformation: NoComponent,
   Author: NoComponent,
+  AuthorLinks: NoComponent,
   AuthorChip: NoComponent,
   AuthorList: NoComponent,
   AuthorListItem: NoComponent,

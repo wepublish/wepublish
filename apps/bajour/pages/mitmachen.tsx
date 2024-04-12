@@ -3,8 +3,14 @@ import {ApiV1, SubscribeContainer} from '@wepublish/website'
 import {NextPageContext} from 'next'
 import getConfig from 'next/config'
 
+import {Container} from '../src/components/layout/container'
+
 export default function Mitmachen() {
-  return <SubscribeContainer failureURL="/" successURL="/" />
+  return (
+    <Container>
+      <SubscribeContainer failureURL="/" successURL="/" fields={[]} />
+    </Container>
+  )
 }
 
 Mitmachen.getInitialProps = async (ctx: NextPageContext) => {
@@ -26,7 +32,7 @@ Mitmachen.getInitialProps = async (ctx: NextPageContext) => {
       client.query({
         query: ApiV1.MemberPlanListDocument,
         variables: {
-          tage: 50
+          take: 50
         }
       })
     ])

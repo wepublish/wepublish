@@ -3,7 +3,7 @@
 exports[`Event Block should render Default 1`] = `
 <DocumentFragment>
   <aside
-    class="css-1lwhsgn-EventBlockWrapper ea1goei0"
+    class="css-11sh4th-EventBlockWrapper ea1goei0"
   >
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-9ztkv6-MuiTypography-root-MuiLink-root-EventListItem"
@@ -66,7 +66,7 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1raxwre-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 css-1fh3rua-MuiTypography-root"
           >
             Cool concert
           </h1>
@@ -80,7 +80,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                 data-slate-node="element"
               >
                 <span
@@ -230,7 +230,7 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1raxwre-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 css-1fh3rua-MuiTypography-root"
           >
             Cool concert
           </h1>
@@ -244,7 +244,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                 data-slate-node="element"
               >
                 <span
@@ -394,7 +394,7 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1raxwre-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 css-1fh3rua-MuiTypography-root"
           >
             Cool concert
           </h1>
@@ -408,7 +408,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                 data-slate-node="element"
               >
                 <span
@@ -558,7 +558,7 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1raxwre-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 css-1fh3rua-MuiTypography-root"
           >
             Cool concert
           </h1>
@@ -572,7 +572,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                 data-slate-node="element"
               >
                 <span
@@ -722,7 +722,7 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1raxwre-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 css-1fh3rua-MuiTypography-root"
           >
             Cool concert
           </h1>
@@ -736,7 +736,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                 data-slate-node="element"
               >
                 <span
@@ -886,7 +886,7 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1raxwre-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 css-1fh3rua-MuiTypography-root"
           >
             Cool concert
           </h1>
@@ -900,7 +900,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                 data-slate-node="element"
               >
                 <span
@@ -996,7 +996,7 @@ https://unsplash.it/200/100 200w"
 exports[`Event Block should render WithClassName 1`] = `
 <DocumentFragment>
   <aside
-    class="extra-classname css-1lwhsgn-EventBlockWrapper ea1goei0"
+    class="extra-classname css-11sh4th-EventBlockWrapper ea1goei0"
   >
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-9ztkv6-MuiTypography-root-MuiLink-root-EventListItem"
@@ -1059,7 +1059,7 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1raxwre-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 css-1fh3rua-MuiTypography-root"
           >
             Cool concert
           </h1>
@@ -1073,7 +1073,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                 data-slate-node="element"
               >
                 <span
@@ -1223,7 +1223,7 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1raxwre-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 css-1fh3rua-MuiTypography-root"
           >
             Cool concert
           </h1>
@@ -1237,7 +1237,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                 data-slate-node="element"
               >
                 <span
@@ -1387,7 +1387,7 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1raxwre-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 css-1fh3rua-MuiTypography-root"
           >
             Cool concert
           </h1>
@@ -1401,7 +1401,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                 data-slate-node="element"
               >
                 <span
@@ -1551,7 +1551,7 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1raxwre-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 css-1fh3rua-MuiTypography-root"
           >
             Cool concert
           </h1>
@@ -1565,7 +1565,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                 data-slate-node="element"
               >
                 <span
@@ -1715,7 +1715,7 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1raxwre-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 css-1fh3rua-MuiTypography-root"
           >
             Cool concert
           </h1>
@@ -1729,7 +1729,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                 data-slate-node="element"
               >
                 <span
@@ -1879,7 +1879,7 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1raxwre-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 css-1fh3rua-MuiTypography-root"
           >
             Cool concert
           </h1>
@@ -1893,7 +1893,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                 data-slate-node="element"
               >
                 <span
@@ -1989,7 +1989,7 @@ https://unsplash.it/200/100 200w"
 exports[`Event Block should render WithEmotion 1`] = `
 <DocumentFragment>
   <aside
-    class="css-1lwhsgn-EventBlockWrapper ea1goei0"
+    class="css-11sh4th-EventBlockWrapper ea1goei0"
   >
     <a
       class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-9ztkv6-MuiTypography-root-MuiLink-root-EventListItem"
@@ -2052,7 +2052,7 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1raxwre-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 css-1fh3rua-MuiTypography-root"
           >
             Cool concert
           </h1>
@@ -2066,7 +2066,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                 data-slate-node="element"
               >
                 <span
@@ -2216,7 +2216,7 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1raxwre-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 css-1fh3rua-MuiTypography-root"
           >
             Cool concert
           </h1>
@@ -2230,7 +2230,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                 data-slate-node="element"
               >
                 <span
@@ -2380,7 +2380,7 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1raxwre-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 css-1fh3rua-MuiTypography-root"
           >
             Cool concert
           </h1>
@@ -2394,7 +2394,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                 data-slate-node="element"
               >
                 <span
@@ -2544,7 +2544,7 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1raxwre-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 css-1fh3rua-MuiTypography-root"
           >
             Cool concert
           </h1>
@@ -2558,7 +2558,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                 data-slate-node="element"
               >
                 <span
@@ -2708,7 +2708,7 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1raxwre-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 css-1fh3rua-MuiTypography-root"
           >
             Cool concert
           </h1>
@@ -2722,7 +2722,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                 data-slate-node="element"
               >
                 <span
@@ -2872,7 +2872,7 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1raxwre-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 css-1fh3rua-MuiTypography-root"
           >
             Cool concert
           </h1>
@@ -2886,7 +2886,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-ij8wsu-MuiTypography-root"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
                 data-slate-node="element"
               >
                 <span

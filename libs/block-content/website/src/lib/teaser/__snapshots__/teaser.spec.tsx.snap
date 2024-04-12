@@ -3,7 +3,7 @@
 exports[`Teaser Article should render Default 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -12,11 +12,11 @@ exports[`Teaser Article should render Default 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       >
         <img
           alt="An image description"
-          class="css-33w95o-ImageWrapper-Teaser e1shv2yg0"
+          class="css-38ekhx-ImageWrapper-Teaser e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -26,34 +26,34 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <span
-        class="css-11wr5si-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        class="css-hvhaxt-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
       >
         <div
-          class="css-1ilkepl-PreTitle e18of27r2"
+          class="css-mjfy74-PreTitle e18of27r6"
         >
           Pre Title
         </div>
       </span>
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Title
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lead
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       >
         <span
-          class="css-bndfqf-Authors e18of27r8"
+          class="css-bndfqf-Authors e18of27r12"
         >
           Von Foobar, Foobar 
         </span>
         <time
-          class="css-tfwjps-Time e18of27r0"
+          class="css-tfwjps-Time e18of27r4"
           datetime="2023-01-01T00:00:00.000Z"
         >
           | 01.01.2023 
@@ -67,7 +67,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Article should render WithLightStyle 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -76,11 +76,11 @@ exports[`Teaser Article should render WithLightStyle 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       >
         <img
           alt="An image description"
-          class="css-33w95o-ImageWrapper-Teaser e1shv2yg0"
+          class="css-38ekhx-ImageWrapper-Teaser e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -90,34 +90,34 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <span
-        class="css-11wr5si-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        class="css-hvhaxt-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
       >
         <div
-          class="css-1ilkepl-PreTitle e18of27r2"
+          class="css-mjfy74-PreTitle e18of27r6"
         >
           Pre Title
         </div>
       </span>
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Title
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lead
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       >
         <span
-          class="css-bndfqf-Authors e18of27r8"
+          class="css-bndfqf-Authors e18of27r12"
         >
           Von Foobar, Foobar 
         </span>
         <time
-          class="css-tfwjps-Time e18of27r0"
+          class="css-tfwjps-Time e18of27r4"
           datetime="2023-01-01T00:00:00.000Z"
         >
           | 01.01.2023 
@@ -131,7 +131,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Article should render WithoutAuthors 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -140,11 +140,11 @@ exports[`Teaser Article should render WithoutAuthors 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       >
         <img
           alt="An image description"
-          class="css-33w95o-ImageWrapper-Teaser e1shv2yg0"
+          class="css-38ekhx-ImageWrapper-Teaser e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -154,32 +154,32 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <span
-        class="css-11wr5si-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        class="css-hvhaxt-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
       >
         <div
-          class="css-1ilkepl-PreTitle e18of27r2"
+          class="css-mjfy74-PreTitle e18of27r6"
         >
           Pre Title
         </div>
       </span>
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Title
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lead
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       >
         <time
-          class="css-tfwjps-Time e18of27r0"
+          class="css-tfwjps-Time e18of27r4"
           datetime="2023-01-01T00:00:00.000Z"
         >
-          | 01.01.2023 
+          01.01.2023 
         </time>
       </div>
     </a>
@@ -190,7 +190,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Article should render WithoutBlockWithLightStyle 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -199,11 +199,11 @@ exports[`Teaser Article should render WithoutBlockWithLightStyle 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       >
         <img
           alt="An image description"
-          class="css-33w95o-ImageWrapper-Teaser e1shv2yg0"
+          class="css-38ekhx-ImageWrapper-Teaser e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -213,34 +213,34 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <span
-        class="css-11wr5si-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        class="css-hvhaxt-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
       >
         <div
-          class="css-1ilkepl-PreTitle e18of27r2"
+          class="css-mjfy74-PreTitle e18of27r6"
         >
           Pre Title
         </div>
       </span>
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Title
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lead on the article
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       >
         <span
-          class="css-bndfqf-Authors e18of27r8"
+          class="css-bndfqf-Authors e18of27r12"
         >
           Von Foobar, Foobar 
         </span>
         <time
-          class="css-tfwjps-Time e18of27r0"
+          class="css-tfwjps-Time e18of27r4"
           datetime="2023-01-01T00:00:00.000Z"
         >
           | 01.01.2023 
@@ -254,7 +254,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Article should render WithoutDate 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -263,11 +263,11 @@ exports[`Teaser Article should render WithoutDate 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       >
         <img
           alt="An image description"
-          class="css-33w95o-ImageWrapper-Teaser e1shv2yg0"
+          class="css-38ekhx-ImageWrapper-Teaser e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -277,29 +277,29 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <span
-        class="css-11wr5si-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        class="css-hvhaxt-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
       >
         <div
-          class="css-1ilkepl-PreTitle e18of27r2"
+          class="css-mjfy74-PreTitle e18of27r6"
         >
           Pre Title
         </div>
       </span>
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Title
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lead
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       >
         <span
-          class="css-bndfqf-Authors e18of27r8"
+          class="css-bndfqf-Authors e18of27r12"
         >
           Von Foobar, Foobar 
         </span>
@@ -312,7 +312,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Article should render WithoutImage 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -321,11 +321,11 @@ exports[`Teaser Article should render WithoutImage 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       >
         <img
           alt="An image description"
-          class="css-33w95o-ImageWrapper-Teaser e1shv2yg0"
+          class="css-38ekhx-ImageWrapper-Teaser e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -335,34 +335,34 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <span
-        class="css-11wr5si-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        class="css-hvhaxt-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
       >
         <div
-          class="css-1ilkepl-PreTitle e18of27r2"
+          class="css-mjfy74-PreTitle e18of27r6"
         >
           Pre Title
         </div>
       </span>
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Title
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lead
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       >
         <span
-          class="css-bndfqf-Authors e18of27r8"
+          class="css-bndfqf-Authors e18of27r12"
         >
           Von Foobar, Foobar 
         </span>
         <time
-          class="css-tfwjps-Time e18of27r0"
+          class="css-tfwjps-Time e18of27r4"
           datetime="2023-01-01T00:00:00.000Z"
         >
           | 01.01.2023 
@@ -376,7 +376,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Article should render WithoutImageWithoutBlock 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -385,37 +385,37 @@ exports[`Teaser Article should render WithoutImageWithoutBlock 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       />
       <span
-        class="css-11wr5si-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        class="css-hvhaxt-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
       >
         <div
-          class="css-1ilkepl-PreTitle e18of27r2"
+          class="css-mjfy74-PreTitle e18of27r6"
         >
           Pre Title
         </div>
       </span>
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Title
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lead
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       >
         <span
-          class="css-bndfqf-Authors e18of27r8"
+          class="css-bndfqf-Authors e18of27r12"
         >
           Von Foobar, Foobar 
         </span>
         <time
-          class="css-tfwjps-Time e18of27r0"
+          class="css-tfwjps-Time e18of27r4"
           datetime="2023-01-01T00:00:00.000Z"
         >
           | 01.01.2023 
@@ -429,7 +429,7 @@ exports[`Teaser Article should render WithoutImageWithoutBlock 1`] = `
 exports[`Teaser Article should render WithoutLead 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -438,11 +438,11 @@ exports[`Teaser Article should render WithoutLead 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       >
         <img
           alt="An image description"
-          class="css-33w95o-ImageWrapper-Teaser e1shv2yg0"
+          class="css-38ekhx-ImageWrapper-Teaser e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -452,34 +452,34 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <span
-        class="css-11wr5si-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        class="css-hvhaxt-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
       >
         <div
-          class="css-1ilkepl-PreTitle e18of27r2"
+          class="css-mjfy74-PreTitle e18of27r6"
         >
           Pre Title
         </div>
       </span>
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Title
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lead from block
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       >
         <span
-          class="css-bndfqf-Authors e18of27r8"
+          class="css-bndfqf-Authors e18of27r12"
         >
           Von Foobar, Foobar 
         </span>
         <time
-          class="css-tfwjps-Time e18of27r0"
+          class="css-tfwjps-Time e18of27r4"
           datetime="2023-01-01T00:00:00.000Z"
         >
           | 01.01.2023 
@@ -493,7 +493,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Article should render WithoutPreTitle 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -502,11 +502,11 @@ exports[`Teaser Article should render WithoutPreTitle 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       >
         <img
           alt="An image description"
-          class="css-33w95o-ImageWrapper-Teaser e1shv2yg0"
+          class="css-38ekhx-ImageWrapper-Teaser e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -516,34 +516,34 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <span
-        class="css-11wr5si-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        class="css-hvhaxt-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
       >
         <div
-          class="css-1ilkepl-PreTitle e18of27r2"
+          class="css-mjfy74-PreTitle e18of27r6"
         >
           Pre Title on the article
         </div>
       </span>
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Title
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lead
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       >
         <span
-          class="css-bndfqf-Authors e18of27r8"
+          class="css-bndfqf-Authors e18of27r12"
         >
           Von Foobar, Foobar 
         </span>
         <time
-          class="css-tfwjps-Time e18of27r0"
+          class="css-tfwjps-Time e18of27r4"
           datetime="2023-01-01T00:00:00.000Z"
         >
           | 01.01.2023 
@@ -557,7 +557,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Article should render WithoutTitle 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -566,11 +566,11 @@ exports[`Teaser Article should render WithoutTitle 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       >
         <img
           alt="An image description"
-          class="css-33w95o-ImageWrapper-Teaser e1shv2yg0"
+          class="css-38ekhx-ImageWrapper-Teaser e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -580,34 +580,34 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <span
-        class="css-11wr5si-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        class="css-hvhaxt-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
       >
         <div
-          class="css-1ilkepl-PreTitle e18of27r2"
+          class="css-mjfy74-PreTitle e18of27r6"
         >
           Pre Title
         </div>
       </span>
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Title from block
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lead
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       >
         <span
-          class="css-bndfqf-Authors e18of27r8"
+          class="css-bndfqf-Authors e18of27r12"
         >
           Von Foobar, Foobar 
         </span>
         <time
-          class="css-tfwjps-Time e18of27r0"
+          class="css-tfwjps-Time e18of27r4"
           datetime="2023-01-01T00:00:00.000Z"
         >
           | 01.01.2023 
@@ -621,7 +621,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Custom should render Default 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -630,11 +630,11 @@ exports[`Teaser Custom should render Default 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       >
         <img
           alt="An image description"
-          class="css-33w95o-ImageWrapper-Teaser e1shv2yg0"
+          class="css-38ekhx-ImageWrapper-Teaser e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -644,26 +644,26 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <span
-        class="css-11wr5si-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        class="css-hvhaxt-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
       >
         <div
-          class="css-1ilkepl-PreTitle e18of27r2"
+          class="css-mjfy74-PreTitle e18of27r6"
         >
           preTitle
         </div>
       </span>
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Teambesprechung vom 23.05.
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lead
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       />
     </a>
   </article>
@@ -673,7 +673,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Custom should render WithLightStyle 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -682,11 +682,11 @@ exports[`Teaser Custom should render WithLightStyle 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       >
         <img
           alt="An image description"
-          class="css-33w95o-ImageWrapper-Teaser e1shv2yg0"
+          class="css-38ekhx-ImageWrapper-Teaser e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -696,26 +696,26 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <span
-        class="css-11wr5si-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        class="css-hvhaxt-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
       >
         <div
-          class="css-1ilkepl-PreTitle e18of27r2"
+          class="css-mjfy74-PreTitle e18of27r6"
         >
           preTitle
         </div>
       </span>
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Teambesprechung vom 23.05.
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lead
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       />
     </a>
   </article>
@@ -725,7 +725,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Custom should render WithoutImage 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -734,29 +734,29 @@ exports[`Teaser Custom should render WithoutImage 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       />
       <span
-        class="css-11wr5si-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        class="css-hvhaxt-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
       >
         <div
-          class="css-1ilkepl-PreTitle e18of27r2"
+          class="css-mjfy74-PreTitle e18of27r6"
         >
           preTitle
         </div>
       </span>
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Teambesprechung vom 23.05.
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lead
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       />
     </a>
   </article>
@@ -766,7 +766,7 @@ exports[`Teaser Custom should render WithoutImage 1`] = `
 exports[`Teaser Custom should render WithoutPreTitle 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -775,11 +775,11 @@ exports[`Teaser Custom should render WithoutPreTitle 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       >
         <img
           alt="An image description"
-          class="css-33w95o-ImageWrapper-Teaser e1shv2yg0"
+          class="css-38ekhx-ImageWrapper-Teaser e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -789,20 +789,20 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <span
-        class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+        class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
       />
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Teambesprechung vom 23.05.
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lead
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       />
     </a>
   </article>
@@ -812,7 +812,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Custom should render WithoutTitle 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -821,11 +821,11 @@ exports[`Teaser Custom should render WithoutTitle 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       >
         <img
           alt="An image description"
-          class="css-33w95o-ImageWrapper-Teaser e1shv2yg0"
+          class="css-38ekhx-ImageWrapper-Teaser e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -835,24 +835,24 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <span
-        class="css-11wr5si-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        class="css-hvhaxt-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
       >
         <div
-          class="css-1ilkepl-PreTitle e18of27r2"
+          class="css-mjfy74-PreTitle e18of27r6"
         >
           preTitle
         </div>
       </span>
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       />
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lead
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       />
     </a>
   </article>
@@ -862,7 +862,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Event should render Default 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -871,11 +871,11 @@ exports[`Teaser Event should render Default 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       >
         <img
           alt="An image description"
-          class="css-33w95o-ImageWrapper-Teaser e1shv2yg0"
+          class="css-38ekhx-ImageWrapper-Teaser e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -885,32 +885,32 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <span
-        class="css-11wr5si-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        class="css-hvhaxt-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
       >
         <div
-          class="css-1ilkepl-PreTitle e18of27r2"
+          class="css-mjfy74-PreTitle e18of27r6"
         >
           Pre Title
         </div>
       </span>
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Title
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lead
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       >
         <time
-          class="css-tfwjps-Time e18of27r0"
+          class="css-tfwjps-Time e18of27r4"
           datetime="2023-01-01T00:00:00.000Z"
         >
-          | 01.01.2023 
+          01.01.2023 
         </time>
       </div>
     </a>
@@ -921,7 +921,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Event should render WithLightStyle 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -930,11 +930,11 @@ exports[`Teaser Event should render WithLightStyle 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       >
         <img
           alt="An image description"
-          class="css-33w95o-ImageWrapper-Teaser e1shv2yg0"
+          class="css-38ekhx-ImageWrapper-Teaser e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -944,32 +944,32 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <span
-        class="css-11wr5si-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        class="css-hvhaxt-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
       >
         <div
-          class="css-1ilkepl-PreTitle e18of27r2"
+          class="css-mjfy74-PreTitle e18of27r6"
         >
           Pre Title
         </div>
       </span>
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Title
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lead
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       >
         <time
-          class="css-tfwjps-Time e18of27r0"
+          class="css-tfwjps-Time e18of27r4"
           datetime="2023-01-01T00:00:00.000Z"
         >
-          | 01.01.2023 
+          01.01.2023 
         </time>
       </div>
     </a>
@@ -980,7 +980,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Event should render WithoutDescription 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -989,11 +989,11 @@ exports[`Teaser Event should render WithoutDescription 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       >
         <img
           alt="An image description"
-          class="css-33w95o-ImageWrapper-Teaser e1shv2yg0"
+          class="css-38ekhx-ImageWrapper-Teaser e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1003,32 +1003,32 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <span
-        class="css-11wr5si-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        class="css-hvhaxt-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
       >
         <div
-          class="css-1ilkepl-PreTitle e18of27r2"
+          class="css-mjfy74-PreTitle e18of27r6"
         >
           Pre Title
         </div>
       </span>
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Title
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo cons
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       >
         <time
-          class="css-tfwjps-Time e18of27r0"
+          class="css-tfwjps-Time e18of27r4"
           datetime="2023-01-01T00:00:00.000Z"
         >
-          | 01.01.2023 
+          01.01.2023 
         </time>
       </div>
     </a>
@@ -1039,7 +1039,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Event should render WithoutDescriptionWithLightStyle 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -1048,11 +1048,11 @@ exports[`Teaser Event should render WithoutDescriptionWithLightStyle 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       >
         <img
           alt="An image description"
-          class="css-33w95o-ImageWrapper-Teaser e1shv2yg0"
+          class="css-38ekhx-ImageWrapper-Teaser e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1062,30 +1062,30 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <span
-        class="css-11wr5si-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        class="css-hvhaxt-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
       >
         <div
-          class="css-1ilkepl-PreTitle e18of27r2"
+          class="css-mjfy74-PreTitle e18of27r6"
         >
           Pre Title
         </div>
       </span>
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Title
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       />
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       >
         <time
-          class="css-tfwjps-Time e18of27r0"
+          class="css-tfwjps-Time e18of27r4"
           datetime="2023-01-01T00:00:00.000Z"
         >
-          | 01.01.2023 
+          01.01.2023 
         </time>
       </div>
     </a>
@@ -1096,7 +1096,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Event should render WithoutImage 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -1105,11 +1105,11 @@ exports[`Teaser Event should render WithoutImage 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       >
         <img
           alt="An image description"
-          class="css-33w95o-ImageWrapper-Teaser e1shv2yg0"
+          class="css-38ekhx-ImageWrapper-Teaser e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1119,32 +1119,32 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <span
-        class="css-11wr5si-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        class="css-hvhaxt-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
       >
         <div
-          class="css-1ilkepl-PreTitle e18of27r2"
+          class="css-mjfy74-PreTitle e18of27r6"
         >
           Pre Title
         </div>
       </span>
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Title
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lead
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       >
         <time
-          class="css-tfwjps-Time e18of27r0"
+          class="css-tfwjps-Time e18of27r4"
           datetime="2023-01-01T00:00:00.000Z"
         >
-          | 01.01.2023 
+          01.01.2023 
         </time>
       </div>
     </a>
@@ -1155,7 +1155,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Event should render WithoutImageWithoutEventImage 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -1164,35 +1164,35 @@ exports[`Teaser Event should render WithoutImageWithoutEventImage 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       />
       <span
-        class="css-11wr5si-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        class="css-hvhaxt-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
       >
         <div
-          class="css-1ilkepl-PreTitle e18of27r2"
+          class="css-mjfy74-PreTitle e18of27r6"
         >
           Pre Title
         </div>
       </span>
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Title
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lead
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       >
         <time
-          class="css-tfwjps-Time e18of27r0"
+          class="css-tfwjps-Time e18of27r4"
           datetime="2023-01-01T00:00:00.000Z"
         >
-          | 01.01.2023 
+          01.01.2023 
         </time>
       </div>
     </a>
@@ -1203,7 +1203,7 @@ exports[`Teaser Event should render WithoutImageWithoutEventImage 1`] = `
 exports[`Teaser Event should render WithoutPreTitle 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -1212,11 +1212,11 @@ exports[`Teaser Event should render WithoutPreTitle 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       >
         <img
           alt="An image description"
-          class="css-33w95o-ImageWrapper-Teaser e1shv2yg0"
+          class="css-38ekhx-ImageWrapper-Teaser e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1226,26 +1226,26 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <span
-        class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+        class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
       />
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Title
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lead
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       >
         <time
-          class="css-tfwjps-Time e18of27r0"
+          class="css-tfwjps-Time e18of27r4"
           datetime="2023-01-01T00:00:00.000Z"
         >
-          | 01.01.2023 
+          01.01.2023 
         </time>
       </div>
     </a>
@@ -1256,7 +1256,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Event should render WithoutTitle 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -1265,11 +1265,11 @@ exports[`Teaser Event should render WithoutTitle 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       >
         <img
           alt="An image description"
-          class="css-33w95o-ImageWrapper-Teaser e1shv2yg0"
+          class="css-38ekhx-ImageWrapper-Teaser e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1279,32 +1279,32 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <span
-        class="css-11wr5si-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        class="css-hvhaxt-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
       >
         <div
-          class="css-1ilkepl-PreTitle e18of27r2"
+          class="css-mjfy74-PreTitle e18of27r6"
         >
           Pre Title
         </div>
       </span>
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Name of Event
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lead
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       >
         <time
-          class="css-tfwjps-Time e18of27r0"
+          class="css-tfwjps-Time e18of27r4"
           datetime="2023-01-01T00:00:00.000Z"
         >
-          | 01.01.2023 
+          01.01.2023 
         </time>
       </div>
     </a>
@@ -1315,7 +1315,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Page should render Default 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -1324,11 +1324,11 @@ exports[`Teaser Page should render Default 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       >
         <img
           alt="An image description"
-          class="css-33w95o-ImageWrapper-Teaser e1shv2yg0"
+          class="css-38ekhx-ImageWrapper-Teaser e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1338,26 +1338,26 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <span
-        class="css-11wr5si-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        class="css-hvhaxt-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
       >
         <div
-          class="css-1ilkepl-PreTitle e18of27r2"
+          class="css-mjfy74-PreTitle e18of27r6"
         >
           Pre Title
         </div>
       </span>
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Title
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lead
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       />
     </a>
   </article>
@@ -1367,7 +1367,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Page should render WithLightStyle 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -1376,11 +1376,11 @@ exports[`Teaser Page should render WithLightStyle 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       >
         <img
           alt="An image description"
-          class="css-33w95o-ImageWrapper-Teaser e1shv2yg0"
+          class="css-38ekhx-ImageWrapper-Teaser e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1390,26 +1390,26 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <span
-        class="css-11wr5si-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        class="css-hvhaxt-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
       >
         <div
-          class="css-1ilkepl-PreTitle e18of27r2"
+          class="css-mjfy74-PreTitle e18of27r6"
         >
           Pre Title
         </div>
       </span>
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Title
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lead
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       />
     </a>
   </article>
@@ -1419,7 +1419,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Page should render WithoutBlockWithLightStyle 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -1428,11 +1428,11 @@ exports[`Teaser Page should render WithoutBlockWithLightStyle 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       >
         <img
           alt="An image description"
-          class="css-33w95o-ImageWrapper-Teaser e1shv2yg0"
+          class="css-38ekhx-ImageWrapper-Teaser e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1442,26 +1442,26 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <span
-        class="css-11wr5si-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        class="css-hvhaxt-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
       >
         <div
-          class="css-1ilkepl-PreTitle e18of27r2"
+          class="css-mjfy74-PreTitle e18of27r6"
         >
           Pre Title
         </div>
       </span>
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Title
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Description on the page
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       />
     </a>
   </article>
@@ -1471,7 +1471,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Page should render WithoutImage 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -1480,11 +1480,11 @@ exports[`Teaser Page should render WithoutImage 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       >
         <img
           alt="An image description"
-          class="css-33w95o-ImageWrapper-Teaser e1shv2yg0"
+          class="css-38ekhx-ImageWrapper-Teaser e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1494,26 +1494,26 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <span
-        class="css-11wr5si-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        class="css-hvhaxt-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
       >
         <div
-          class="css-1ilkepl-PreTitle e18of27r2"
+          class="css-mjfy74-PreTitle e18of27r6"
         >
           Pre Title
         </div>
       </span>
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Title
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lead
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       />
     </a>
   </article>
@@ -1523,7 +1523,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Page should render WithoutImageWithoutBlock 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -1532,11 +1532,11 @@ exports[`Teaser Page should render WithoutImageWithoutBlock 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       >
         <img
           alt="An image description"
-          class="css-33w95o-ImageWrapper-Teaser e1shv2yg0"
+          class="css-38ekhx-ImageWrapper-Teaser e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1546,26 +1546,26 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <span
-        class="css-11wr5si-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        class="css-hvhaxt-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
       >
         <div
-          class="css-1ilkepl-PreTitle e18of27r2"
+          class="css-mjfy74-PreTitle e18of27r6"
         >
           Pre Title
         </div>
       </span>
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Title
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lead
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       />
     </a>
   </article>
@@ -1575,7 +1575,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Page should render WithoutLead 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -1584,11 +1584,11 @@ exports[`Teaser Page should render WithoutLead 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       >
         <img
           alt="An image description"
-          class="css-33w95o-ImageWrapper-Teaser e1shv2yg0"
+          class="css-38ekhx-ImageWrapper-Teaser e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1598,26 +1598,26 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <span
-        class="css-11wr5si-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        class="css-hvhaxt-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
       >
         <div
-          class="css-1ilkepl-PreTitle e18of27r2"
+          class="css-mjfy74-PreTitle e18of27r6"
         >
           Pre Title
         </div>
       </span>
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Title
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lead from block
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       />
     </a>
   </article>
@@ -1627,7 +1627,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Page should render WithoutPreTitle 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -1636,11 +1636,11 @@ exports[`Teaser Page should render WithoutPreTitle 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       >
         <img
           alt="An image description"
-          class="css-33w95o-ImageWrapper-Teaser e1shv2yg0"
+          class="css-38ekhx-ImageWrapper-Teaser e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1650,20 +1650,20 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <span
-        class="css-mx9nqs-TeaserPreTitle-TeaserPreTitleNoContent e18of27r4"
+        class="css-1dg2zjo-TeaserPreTitle-TeaserPreTitleNoContent e18of27r8"
       />
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Title
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lead
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       />
     </a>
   </article>
@@ -1673,7 +1673,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Page should render WithoutTitle 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -1682,11 +1682,11 @@ exports[`Teaser Page should render WithoutTitle 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       >
         <img
           alt="An image description"
-          class="css-33w95o-ImageWrapper-Teaser e1shv2yg0"
+          class="css-38ekhx-ImageWrapper-Teaser e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1696,26 +1696,26 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <span
-        class="css-11wr5si-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        class="css-hvhaxt-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
       >
         <div
-          class="css-1ilkepl-PreTitle e18of27r2"
+          class="css-mjfy74-PreTitle e18of27r6"
         >
           Pre Title
         </div>
       </span>
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Title from block
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lead
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       />
     </a>
   </article>
@@ -1725,7 +1725,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser PeerArticle should render Default 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -1734,11 +1734,11 @@ exports[`Teaser PeerArticle should render Default 1`] = `
       href="https://example.com/p/123/1231231231"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       >
         <img
           alt="An image description"
-          class="css-33w95o-ImageWrapper-Teaser e1shv2yg0"
+          class="css-38ekhx-ImageWrapper-Teaser e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1748,34 +1748,34 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <span
-        class="css-11wr5si-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        class="css-hvhaxt-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
       >
         <div
-          class="css-1ilkepl-PreTitle e18of27r2"
+          class="css-mjfy74-PreTitle e18of27r6"
         >
           Pre Title
         </div>
       </span>
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Title
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lead
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       >
         <span
-          class="css-bndfqf-Authors e18of27r8"
+          class="css-bndfqf-Authors e18of27r12"
         >
           Von Foobar, Foobar 
         </span>
         <time
-          class="css-tfwjps-Time e18of27r0"
+          class="css-tfwjps-Time e18of27r4"
           datetime="2023-01-01T00:00:00.000Z"
         >
           | 01.01.2023 
@@ -1789,7 +1789,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser PeerArticle should render WithLightStyle 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -1798,11 +1798,11 @@ exports[`Teaser PeerArticle should render WithLightStyle 1`] = `
       href="https://example.com/p/123/1231231231"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       >
         <img
           alt="An image description"
-          class="css-33w95o-ImageWrapper-Teaser e1shv2yg0"
+          class="css-38ekhx-ImageWrapper-Teaser e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1812,34 +1812,34 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <span
-        class="css-11wr5si-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        class="css-hvhaxt-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
       >
         <div
-          class="css-1ilkepl-PreTitle e18of27r2"
+          class="css-mjfy74-PreTitle e18of27r6"
         >
           Pre Title
         </div>
       </span>
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Title
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lead
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       >
         <span
-          class="css-bndfqf-Authors e18of27r8"
+          class="css-bndfqf-Authors e18of27r12"
         >
           Von Foobar, Foobar 
         </span>
         <time
-          class="css-tfwjps-Time e18of27r0"
+          class="css-tfwjps-Time e18of27r4"
           datetime="2023-01-01T00:00:00.000Z"
         >
           | 01.01.2023 
@@ -1853,7 +1853,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser PeerArticle should render WithoutAuthors 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -1862,11 +1862,11 @@ exports[`Teaser PeerArticle should render WithoutAuthors 1`] = `
       href="https://example.com/p/123/1231231231"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       >
         <img
           alt="An image description"
-          class="css-33w95o-ImageWrapper-Teaser e1shv2yg0"
+          class="css-38ekhx-ImageWrapper-Teaser e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1876,32 +1876,32 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <span
-        class="css-11wr5si-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        class="css-hvhaxt-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
       >
         <div
-          class="css-1ilkepl-PreTitle e18of27r2"
+          class="css-mjfy74-PreTitle e18of27r6"
         >
           Pre Title
         </div>
       </span>
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Title
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lead
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       >
         <time
-          class="css-tfwjps-Time e18of27r0"
+          class="css-tfwjps-Time e18of27r4"
           datetime="2023-01-01T00:00:00.000Z"
         >
-          | 01.01.2023 
+          01.01.2023 
         </time>
       </div>
     </a>
@@ -1912,7 +1912,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser PeerArticle should render WithoutBlockWithLightStyle 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -1921,11 +1921,11 @@ exports[`Teaser PeerArticle should render WithoutBlockWithLightStyle 1`] = `
       href="https://example.com/p/123/1231231231"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       >
         <img
           alt="An image description"
-          class="css-33w95o-ImageWrapper-Teaser e1shv2yg0"
+          class="css-38ekhx-ImageWrapper-Teaser e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1935,34 +1935,34 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <span
-        class="css-11wr5si-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        class="css-hvhaxt-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
       >
         <div
-          class="css-1ilkepl-PreTitle e18of27r2"
+          class="css-mjfy74-PreTitle e18of27r6"
         >
           Pre Title
         </div>
       </span>
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Title
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lead on the article
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       >
         <span
-          class="css-bndfqf-Authors e18of27r8"
+          class="css-bndfqf-Authors e18of27r12"
         >
           Von Foobar, Foobar 
         </span>
         <time
-          class="css-tfwjps-Time e18of27r0"
+          class="css-tfwjps-Time e18of27r4"
           datetime="2023-01-01T00:00:00.000Z"
         >
           | 01.01.2023 
@@ -1976,7 +1976,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser PeerArticle should render WithoutDate 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -1985,11 +1985,11 @@ exports[`Teaser PeerArticle should render WithoutDate 1`] = `
       href="https://example.com/p/123/1231231231"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       >
         <img
           alt="An image description"
-          class="css-33w95o-ImageWrapper-Teaser e1shv2yg0"
+          class="css-38ekhx-ImageWrapper-Teaser e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1999,29 +1999,29 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <span
-        class="css-11wr5si-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        class="css-hvhaxt-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
       >
         <div
-          class="css-1ilkepl-PreTitle e18of27r2"
+          class="css-mjfy74-PreTitle e18of27r6"
         >
           Pre Title
         </div>
       </span>
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Title
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lead
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       >
         <span
-          class="css-bndfqf-Authors e18of27r8"
+          class="css-bndfqf-Authors e18of27r12"
         >
           Von Foobar, Foobar 
         </span>
@@ -2034,7 +2034,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser PeerArticle should render WithoutImage 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -2043,11 +2043,11 @@ exports[`Teaser PeerArticle should render WithoutImage 1`] = `
       href="https://example.com/p/123/1231231231"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       >
         <img
           alt="An image description"
-          class="css-33w95o-ImageWrapper-Teaser e1shv2yg0"
+          class="css-38ekhx-ImageWrapper-Teaser e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -2057,34 +2057,34 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <span
-        class="css-11wr5si-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        class="css-hvhaxt-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
       >
         <div
-          class="css-1ilkepl-PreTitle e18of27r2"
+          class="css-mjfy74-PreTitle e18of27r6"
         >
           Pre Title
         </div>
       </span>
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Title
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lead
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       >
         <span
-          class="css-bndfqf-Authors e18of27r8"
+          class="css-bndfqf-Authors e18of27r12"
         >
           Von Foobar, Foobar 
         </span>
         <time
-          class="css-tfwjps-Time e18of27r0"
+          class="css-tfwjps-Time e18of27r4"
           datetime="2023-01-01T00:00:00.000Z"
         >
           | 01.01.2023 
@@ -2098,7 +2098,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser PeerArticle should render WithoutImageWithoutBlock 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -2107,37 +2107,37 @@ exports[`Teaser PeerArticle should render WithoutImageWithoutBlock 1`] = `
       href="https://example.com/p/123/1231231231"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       />
       <span
-        class="css-11wr5si-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        class="css-hvhaxt-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
       >
         <div
-          class="css-1ilkepl-PreTitle e18of27r2"
+          class="css-mjfy74-PreTitle e18of27r6"
         >
           Pre Title
         </div>
       </span>
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Title
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lead
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       >
         <span
-          class="css-bndfqf-Authors e18of27r8"
+          class="css-bndfqf-Authors e18of27r12"
         >
           Von Foobar, Foobar 
         </span>
         <time
-          class="css-tfwjps-Time e18of27r0"
+          class="css-tfwjps-Time e18of27r4"
           datetime="2023-01-01T00:00:00.000Z"
         >
           | 01.01.2023 
@@ -2151,7 +2151,7 @@ exports[`Teaser PeerArticle should render WithoutImageWithoutBlock 1`] = `
 exports[`Teaser PeerArticle should render WithoutPreTitle 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -2160,11 +2160,11 @@ exports[`Teaser PeerArticle should render WithoutPreTitle 1`] = `
       href="https://example.com/p/123/1231231231"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       >
         <img
           alt="An image description"
-          class="css-33w95o-ImageWrapper-Teaser e1shv2yg0"
+          class="css-38ekhx-ImageWrapper-Teaser e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -2174,34 +2174,34 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <span
-        class="css-11wr5si-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        class="css-hvhaxt-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
       >
         <div
-          class="css-1ilkepl-PreTitle e18of27r2"
+          class="css-mjfy74-PreTitle e18of27r6"
         >
           Pre Title on the article
         </div>
       </span>
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Title
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lead
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       >
         <span
-          class="css-bndfqf-Authors e18of27r8"
+          class="css-bndfqf-Authors e18of27r12"
         >
           Von Foobar, Foobar 
         </span>
         <time
-          class="css-tfwjps-Time e18of27r0"
+          class="css-tfwjps-Time e18of27r4"
           datetime="2023-01-01T00:00:00.000Z"
         >
           | 01.01.2023 
@@ -2215,7 +2215,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser PeerArticle should render WithoutTitle 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -2224,11 +2224,11 @@ exports[`Teaser PeerArticle should render WithoutTitle 1`] = `
       href="https://example.com/p/123/1231231231"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       >
         <img
           alt="An image description"
-          class="css-33w95o-ImageWrapper-Teaser e1shv2yg0"
+          class="css-38ekhx-ImageWrapper-Teaser e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -2238,34 +2238,34 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <span
-        class="css-11wr5si-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        class="css-hvhaxt-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
       >
         <div
-          class="css-1ilkepl-PreTitle e18of27r2"
+          class="css-mjfy74-PreTitle e18of27r6"
         >
           Pre Title
         </div>
       </span>
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Title from block
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lead
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       >
         <span
-          class="css-bndfqf-Authors e18of27r8"
+          class="css-bndfqf-Authors e18of27r12"
         >
           Von Foobar, Foobar 
         </span>
         <time
-          class="css-tfwjps-Time e18of27r0"
+          class="css-tfwjps-Time e18of27r4"
           datetime="2023-01-01T00:00:00.000Z"
         >
           | 01.01.2023 
@@ -2279,7 +2279,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser should render WithClassName 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -2288,11 +2288,11 @@ exports[`Teaser should render WithClassName 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       >
         <img
           alt="An image description"
-          class="css-33w95o-ImageWrapper-Teaser e1shv2yg0"
+          class="css-38ekhx-ImageWrapper-Teaser e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -2302,26 +2302,26 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <span
-        class="css-11wr5si-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        class="css-hvhaxt-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
       >
         <div
-          class="css-1ilkepl-PreTitle e18of27r2"
+          class="css-mjfy74-PreTitle e18of27r6"
         >
           preTitle
         </div>
       </span>
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Teambesprechung vom 23.05.
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lead
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       />
     </a>
   </article>
@@ -2331,7 +2331,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser should render WithEmotion 1`] = `
 <DocumentFragment>
   <article
-    class="css-8ks3rt-TeaserWrapper e18of27r14"
+    class="css-8ks3rt-TeaserWrapper e18of27r18"
     x="0"
     y="0"
   >
@@ -2340,11 +2340,11 @@ exports[`Teaser should render WithEmotion 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1xekyz3-TeaserImageWrapper e18of27r12"
+        class="css-1xekyz3-TeaserImageWrapper e18of27r16"
       >
         <img
           alt="An image description"
-          class="css-33w95o-ImageWrapper-Teaser e1shv2yg0"
+          class="css-38ekhx-ImageWrapper-Teaser e1shv2yg0"
           loading="lazy"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -2354,26 +2354,26 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <span
-        class="css-11wr5si-TeaserPreTitle-TeaserPreTitleWrapper e18of27r3"
+        class="css-hvhaxt-TeaserPreTitle-TeaserPreTitleWrapper e18of27r7"
       >
         <div
-          class="css-1ilkepl-PreTitle e18of27r2"
+          class="css-mjfy74-PreTitle e18of27r6"
         >
           preTitle
         </div>
       </span>
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-1b2zn6c-TeaserTitle-MuiTypography-root e18of27r11"
+        class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r15"
       >
         Teambesprechung vom 23.05.
       </h1>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1ey76ok-TeaserLead-MuiTypography-root e18of27r9"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1bou0ug-TeaserLead-MuiTypography-root e18of27r13"
       >
         Lead
       </p>
       <div
-        class="css-1r6dk2d-AuthorsAndDate e18of27r1"
+        class="css-1r6dk2d-AuthorsAndDate e18of27r5"
       />
     </a>
   </article>

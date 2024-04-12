@@ -1,13 +1,15 @@
 import {styled} from '@mui/material'
 import {getSessionTokenProps, ssrAuthLink, withAuthGuard} from '@wepublish/utils/website'
-import {ApiV1, PersonalDataFormContainer, useWebsiteBuilder} from '@wepublish/website'
+import {
+  ApiV1,
+  ContentWrapper,
+  PersonalDataFormContainer,
+  useWebsiteBuilder
+} from '@wepublish/website'
 import {NextPageContext} from 'next'
 import getConfig from 'next/config'
 
-import {Container} from '../../src/components/layout/container'
-
-const ProfileWrapper = styled(Container)`
-  display: grid;
+const ProfileWrapper = styled(ContentWrapper)`
   gap: ${({theme}) => theme.spacing(2)};
 `
 
@@ -27,10 +29,7 @@ function Profile() {
 
 const GuardedProfile = withAuthGuard(Profile)
 
-export {
-  GuardedProfile as default
-  // eslint-disable-next-line
-}
+export {GuardedProfile as default}
 ;(GuardedProfile as any).getInitialProps = async (ctx: NextPageContext) => {
   if (typeof window !== 'undefined') {
     return {}

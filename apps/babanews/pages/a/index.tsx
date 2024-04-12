@@ -1,9 +1,23 @@
 import {ApiV1, ArticleListContainer} from '@wepublish/website'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
+import {Reducer, useReducer} from 'react'
 
 export default function ArticleList() {
-  return <ArticleListContainer />
+  const [variables, onVariablesChange] = useReducer<
+    Reducer<Partial<ApiV1.ArticleListQueryVariables>, Partial<ApiV1.ArticleListQueryVariables>>
+  >(
+    (state, newVariables) => ({
+      ...state,
+      ...newVariables
+    }),
+    {
+      sort: ApiV1.ArticleSort.PublishedAt,
+      order: ApiV1.SortOrder.Descending
+    } as Partial<ApiV1.ArticleListQueryVariables>
+  )
+
+  return <ArticleListContainer variables={variables} onVariablesChange={onVariablesChange} />
 }
 
 export const getStaticProps: GetStaticProps = async () => {

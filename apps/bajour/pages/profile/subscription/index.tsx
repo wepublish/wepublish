@@ -12,7 +12,6 @@ import getConfig from 'next/config'
 import {Container} from '../../../src/components/layout/container'
 
 const SubscriptionsWrapper = styled(Container)`
-  display: grid;
   gap: ${({theme}) => theme.spacing(3)};
 
   ${({theme}) => css`
@@ -84,10 +83,7 @@ function Subscriptions() {
 
 const GuardedSubscriptions = withAuthGuard(Subscriptions)
 
-export {
-  GuardedSubscriptions as default
-  // eslint-disable-next-line
-}
+export {GuardedSubscriptions as default}
 ;(GuardedSubscriptions as any).getInitialProps = async (ctx: NextPageContext) => {
   if (typeof window !== 'undefined') {
     return {}

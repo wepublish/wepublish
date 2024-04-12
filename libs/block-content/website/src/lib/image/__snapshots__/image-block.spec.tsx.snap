@@ -3,11 +3,11 @@
 exports[`Image Block should render Default 1`] = `
 <DocumentFragment>
   <figure
-    class="css-1emeboo-ImageBlockWrapper eekavcu0"
+    class="css-1jkqlnk-ImageBlockWrapper eekavcu1"
   >
     <img
       alt="An image description"
-      class="css-19cwsz4-ImageWrapper e1shv2yg0"
+      class="css-lsysey-ImageWrapper-ImageBlock e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -25,11 +25,11 @@ https://unsplash.it/200/200 200w"
 exports[`Image Block should render WithClassName 1`] = `
 <DocumentFragment>
   <figure
-    class="extra-classname css-1emeboo-ImageBlockWrapper eekavcu0"
+    class="extra-classname css-1jkqlnk-ImageBlockWrapper eekavcu1"
   >
     <img
       alt="An image description"
-      class="css-19cwsz4-ImageWrapper e1shv2yg0"
+      class="css-lsysey-ImageWrapper-ImageBlock e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -47,11 +47,11 @@ https://unsplash.it/200/200 200w"
 exports[`Image Block should render WithEmotion 1`] = `
 <DocumentFragment>
   <figure
-    class="css-1emeboo-ImageBlockWrapper eekavcu0"
+    class="css-1jkqlnk-ImageBlockWrapper eekavcu1"
   >
     <img
       alt="An image description"
-      class="css-19cwsz4-ImageWrapper e1shv2yg0"
+      class="css-lsysey-ImageWrapper-ImageBlock e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -69,11 +69,11 @@ https://unsplash.it/200/200 200w"
 exports[`Image Block should render WithoutCaption 1`] = `
 <DocumentFragment>
   <figure
-    class="css-1emeboo-ImageBlockWrapper eekavcu0"
+    class="css-1jkqlnk-ImageBlockWrapper eekavcu1"
   >
     <img
       alt="An image description"
-      class="css-19cwsz4-ImageWrapper e1shv2yg0"
+      class="css-lsysey-ImageWrapper-ImageBlock e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
