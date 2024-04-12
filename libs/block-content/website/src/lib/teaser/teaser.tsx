@@ -234,10 +234,6 @@ export const TeaserAuthors = styled('div')`
   margin-top: ${({theme}) => theme.spacing(2)};
 `
 
-export const TeaserContent = styled(TeaserInnerWrapper)`
-  grid-column: 1/13;
-`
-
 export const TeaserPreTitleNoContent = styled(TeaserPreTitle)`
   transition: background-color 0.3s ease-in-out;
   background-color: ${({theme}) => theme.palette.common.black};
