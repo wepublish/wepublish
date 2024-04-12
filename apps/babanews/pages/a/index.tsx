@@ -14,7 +14,7 @@ export const Pagination = styled(MuiPagination)`
 
 export default function ArticleList() {
   const [page, setPage] = useState(1)
-  const limit = 2
+  const limit = 10
 
   const [variables, onVariablesChange] = useReducer<
     Reducer<Partial<ApiV1.ArticleListQueryVariables>, Partial<ApiV1.ArticleListQueryVariables>>
