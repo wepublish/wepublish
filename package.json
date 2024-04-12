@@ -256,6 +256,7 @@
     "graphql-upload": "^13.0.0",
     "i18next": "23.0.2",
     "i18next-browser-languagedetector": "^7.0.2",
+    "iframe-resizer-react": "^1.1.0",
     "immer": "^10.0.2",
     "isbot": "^3.6.5",
     "js-cookie": "^3.0.1",
