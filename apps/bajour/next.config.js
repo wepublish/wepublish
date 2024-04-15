@@ -55,13 +55,13 @@ const nextConfig = {
         permanent: false
       },
       {
-        source: '/tag/:slug',
-        destination: '/a/tag/:slug',
+        source: '/a/:id/:slug',
+        destination: '/a/:slug',
         permanent: false
       },
       {
-        source: '/a/:id/:slug',
-        destination: '/a/:slug',
+        source: '/tag/:slug',
+        destination: '/a/tag/:slug',
         permanent: false
       },
       {
