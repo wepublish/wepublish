@@ -276,6 +276,8 @@ export const TeaserMetadata = styled('div')`
   grid-area: authors;
 `
 
+export const TeaserDate = styled('time')``
+
 export const TeaserTime = styled('time')`
   font-weight: 400;
 `
