@@ -7,7 +7,6 @@ exports[`Embed Block should render Default 1`] = `
   >
     <iframe
       allowfullscreen=""
-      aspectratio="1.78343949044586"
       class="css-qsfbe7-EmbedBlockIframe-EmbedBlockIframe-styleCustomCss e1t445oh0"
       id="iFrameResizer0"
       scrolling="no"
@@ -26,7 +25,6 @@ exports[`Embed Block should render WithClassName 1`] = `
   >
     <iframe
       allowfullscreen=""
-      aspectratio="1.78343949044586"
       class="css-qsfbe7-EmbedBlockIframe-EmbedBlockIframe-styleCustomCss e1t445oh0"
       id="iFrameResizer1"
       scrolling="no"

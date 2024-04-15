@@ -1,4 +1,5 @@
 import {createTheme, ThemeOptions} from '@mui/material'
+import {createBreakpoints} from '@mui/system'
 import {theme as WepTheme} from '@wepublish/ui'
 
 const {
@@ -9,7 +10,7 @@ const theme = createTheme(WepTheme, {
   typography: {
     fontFamily: 'Roboto, sans-serif'
   },
-  breakpoints: {
+  breakpoints: createBreakpoints({
     values: {
       xs: 0,
       sm: 700,
@@ -17,7 +18,7 @@ const theme = createTheme(WepTheme, {
       lg: 1280,
       xl: 3800
     }
-  },
+  }),
   palette: {
     primary: augmentColor({color: {main: '#FF0D62'}}),
     secondary: augmentColor({color: {main: '#FDDDD2', dark: '#ffbaba'}}),

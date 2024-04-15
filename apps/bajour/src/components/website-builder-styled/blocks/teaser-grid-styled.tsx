@@ -24,8 +24,6 @@ export const BajourTeaserGrid = styled(TeaserGridBlock)`
       }
 
       ${theme.breakpoints.up('xl')} {
-        padding-left: calc((100% / 12) * 5);
-        padding-right: calc((100% / 12) * 7);
         row-gap: ${theme.spacing(5)};
       }
     `}
