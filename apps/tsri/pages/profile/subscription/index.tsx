@@ -2,16 +2,14 @@ import {css, styled} from '@mui/material'
 import {getSessionTokenProps, ssrAuthLink, withAuthGuard} from '@wepublish/utils/website'
 import {
   ApiV1,
-  ContentWrapper,
   InvoiceListContainer,
   SubscriptionListContainer,
   useWebsiteBuilder
 } from '@wepublish/website'
 import {NextPageContext} from 'next'
 import getConfig from 'next/config'
-import {useRouter} from 'next/router'
 
-const SubscriptionsWrapper = styled(ContentWrapper)`
+const SubscriptionsWrapper = styled('div')`
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};
 
@@ -29,52 +27,69 @@ const SubscriptionListWrapper = styled('div')`
   gap: ${({theme}) => theme.spacing(2)};
 `
 
-function Subscription() {
+const DeactivatedSubscriptions = styled('div')`
+  display: grid;
+  justify-content: center;
+`
+
+function Subscriptions() {
   const {
-    query: {id}
-  } = useRouter()
-  const {
-    elements: {H4}
+    elements: {Link, H4}
   } = useWebsiteBuilder()
+
+  const {data} = ApiV1.useSubscriptionsQuery({
+    fetchPolicy: 'cache-only'
+  })
+
+  const hasDeactivatedSubscriptions = data?.subscriptions.some(
+    subscription => subscription.deactivation
+  )
 
   return (
     <SubscriptionsWrapper>
       <SubscriptionListWrapper>
-        <H4 component={'h1'}>Abo</H4>
+        <H4 component={'h1'}>Aktive Abos</H4>
 
         <SubscriptionListContainer
           failureURL="/"
           successURL="/"
-          filter={subscriptions => subscriptions.filter(subscription => subscription.id === id)}
+          filter={subscriptions => subscriptions.filter(subscription => !subscription.deactivation)}
         />
+
+        {hasDeactivatedSubscriptions && (
+          <DeactivatedSubscriptions>
+            <Link href="/profile/subscription/deactivated">Gekündete Abos anzeigen</Link>
+          </DeactivatedSubscriptions>
+        )}
       </SubscriptionListWrapper>
 
       <SubscriptionListWrapper>
-        <H4 component={'h1'}>Rechnungen</H4>
+        <H4 component={'h1'}>Offene Rechnungen</H4>
 
         <InvoiceListContainer
           failureURL="/"
           successURL="/"
-          filter={invoices => invoices.filter(invoice => invoice.subscriptionID === id)}
+          filter={invoices =>
+            invoices.filter(
+              invoice => invoice.subscription && !invoice.canceledAt && !invoice.paidAt
+            )
+          }
         />
       </SubscriptionListWrapper>
     </SubscriptionsWrapper>
   )
 }
 
-const GuardedSubscription = withAuthGuard(Subscription)
+const GuardedSubscriptions = withAuthGuard(Subscriptions)
 
-export {
-  GuardedSubscription as default
-  // eslint-disable-next-line
-}
-;(GuardedSubscription as any).getInitialProps = async (ctx: NextPageContext) => {
+export {GuardedSubscriptions as default}
+;(GuardedSubscriptions as any).getInitialProps = async (ctx: NextPageContext) => {
   if (typeof window !== 'undefined') {
     return {}
   }
 
-  const sessionProps = await getSessionTokenProps(ctx)
   const {publicRuntimeConfig} = getConfig()
+  const sessionProps = await getSessionTokenProps(ctx)
   const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [
     ssrAuthLink(sessionProps.sessionToken?.token)
   ])
@@ -89,6 +104,9 @@ export {
       }),
       client.query({
         query: ApiV1.InvoicesDocument
+      }),
+      client.query({
+        query: ApiV1.NavigationListDocument
       })
     ])
   }
