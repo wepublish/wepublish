@@ -10,7 +10,9 @@ export const isEmbedBlock = (block: Block): block is EmbedBlockType =>
 
 export const EmbedBlockWrapper = styled('div')``
 
-export const EmbedBlockIframe = styled(IframeResizer)<{aspectRatio: number | null}>`
+export const EmbedBlockIframe = styled(IframeResizer, {
+  shouldForwardProp: propName => propName !== 'aspectRatio'
+})<{aspectRatio: number | null}>`
   width: 100%;
   border: 0;
 

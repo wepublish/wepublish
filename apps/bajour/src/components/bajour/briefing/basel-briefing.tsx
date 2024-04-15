@@ -172,10 +172,6 @@ const TeaserContentStyled = styled('div')`
     grid-column: 3/12;
     padding: ${({theme}) => `${theme.spacing(2)} ${theme.spacing(1.5)} ${theme.spacing(1.5)}`};
   }
-
-  ${({theme}) => theme.breakpoints.up('xl')} {
-    grid-column: 5/8;
-  }
 `
 
 const Heading = styled('div')`
