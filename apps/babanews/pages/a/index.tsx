@@ -1,9 +1,21 @@
+import styled from '@emotion/styled'
+import {Pagination as MuiPagination} from '@mui/material'
 import {ApiV1, ArticleListContainer} from '@wepublish/website'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
+import {useEffect, useMemo, useState} from 'react'
 import {Reducer, useReducer} from 'react'
 
+export const Pagination = styled(MuiPagination)`
+  grid-column: 1 / 5;
+  display: grid;
+  justify-content: center;
+`
+
 export default function ArticleList() {
+  const [page, setPage] = useState(1)
+  const limit = 10
+
   const [variables, onVariablesChange] = useReducer<
     Reducer<Partial<ApiV1.ArticleListQueryVariables>, Partial<ApiV1.ArticleListQueryVariables>>
   >(
@@ -13,11 +25,38 @@ export default function ArticleList() {
     }),
     {
       sort: ApiV1.ArticleSort.PublishedAt,
-      order: ApiV1.SortOrder.Descending
+      order: ApiV1.SortOrder.Descending,
+      skip: 0,
+      take: limit
     } as Partial<ApiV1.ArticleListQueryVariables>
   )
 
-  return <ArticleListContainer variables={variables} onVariablesChange={onVariablesChange} />
+  const {data} = ApiV1.useArticleListQuery({
+    fetchPolicy: 'cache-only',
+    variables
+  })
+
+  const paginationCount = useMemo(() => {
+    if (data?.articles.totalCount && data?.articles.totalCount > limit) {
+      return Math.ceil(data.articles.totalCount / limit)
+    }
+    return 1
+  }, [data?.articles.totalCount, limit])
+
+  useEffect(() => {
+    onVariablesChange({
+      skip: (page - 1) * limit
+    })
+  }, [page])
+
+  return (
+    <>
+      <ArticleListContainer variables={variables} onVariablesChange={onVariablesChange} />
+      {paginationCount > 1 && (
+        <Pagination page={page} count={paginationCount} onChange={(_, value) => setPage(value)} />
+      )}
+    </>
+  )
 }
 
 export const getStaticProps: GetStaticProps = async () => {
