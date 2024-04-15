@@ -145,6 +145,7 @@ export const BreakBlock = ({
             variant="contained"
             LinkComponent={Link}
             href={linkURL ?? ''}
+            target={linkTarget ?? '_blank'}
             css={linkStyles(theme)}>
             {linkText}
           </Button>

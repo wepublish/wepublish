@@ -121,6 +121,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
                 categorySlugs={[['categories', 'about-us']]}
                 slug="main"
                 headerSlug="header"
+                showSubscriptionsUrl={false}
               />
               <ContentSpacer>
                 <Component {...pageProps} />
