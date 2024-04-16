@@ -7,7 +7,7 @@ exports[`Author should render Default 1`] = `
   >
     <header>
       <h1
-        class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
       >
         Foobar
       </h1>
@@ -106,7 +106,7 @@ https://unsplash.it/200/100 200w"
       >
         <div>
           <h2
-            class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom css-qe9imk-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom css-1b40pty-MuiTypography-root"
             data-slate-node="element"
           >
             <span
@@ -122,7 +122,7 @@ https://unsplash.it/200/100 200w"
           <hr />
         </div>
         <h3
-          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-box1tp-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-l4mivh-MuiTypography-root"
           data-slate-node="element"
         >
           <span
@@ -477,7 +477,7 @@ exports[`Author should render WithClassName 1`] = `
   >
     <header>
       <h1
-        class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
       >
         Foobar
       </h1>
@@ -576,7 +576,7 @@ https://unsplash.it/200/100 200w"
       >
         <div>
           <h2
-            class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom css-qe9imk-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom css-1b40pty-MuiTypography-root"
             data-slate-node="element"
           >
             <span
@@ -592,7 +592,7 @@ https://unsplash.it/200/100 200w"
           <hr />
         </div>
         <h3
-          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-box1tp-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-l4mivh-MuiTypography-root"
           data-slate-node="element"
         >
           <span
@@ -947,7 +947,7 @@ exports[`Author should render WithEmotion 1`] = `
   >
     <header>
       <h1
-        class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
       >
         Foobar
       </h1>
@@ -1046,7 +1046,7 @@ https://unsplash.it/200/100 200w"
       >
         <div>
           <h2
-            class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom css-qe9imk-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom css-1b40pty-MuiTypography-root"
             data-slate-node="element"
           >
             <span
@@ -1062,7 +1062,7 @@ https://unsplash.it/200/100 200w"
           <hr />
         </div>
         <h3
-          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-box1tp-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-l4mivh-MuiTypography-root"
           data-slate-node="element"
         >
           <span
@@ -1421,7 +1421,7 @@ exports[`Author should render WithoutBio 1`] = `
   >
     <header>
       <h1
-        class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
       >
         Foobar
       </h1>
@@ -1530,7 +1530,7 @@ exports[`Author should render WithoutImage 1`] = `
   >
     <header>
       <h1
-        class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
       >
         Foobar
       </h1>
@@ -1619,7 +1619,7 @@ exports[`Author should render WithoutImage 1`] = `
       >
         <div>
           <h2
-            class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom css-qe9imk-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom css-1b40pty-MuiTypography-root"
             data-slate-node="element"
           >
             <span
@@ -1635,7 +1635,7 @@ exports[`Author should render WithoutImage 1`] = `
           <hr />
         </div>
         <h3
-          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-box1tp-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-l4mivh-MuiTypography-root"
           data-slate-node="element"
         >
           <span
@@ -1990,7 +1990,7 @@ exports[`Author should render WithoutJobTitle 1`] = `
   >
     <header>
       <h1
-        class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
       >
         Foobar
       </h1>
@@ -2084,7 +2084,7 @@ https://unsplash.it/200/100 200w"
       >
         <div>
           <h2
-            class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom css-qe9imk-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom css-1b40pty-MuiTypography-root"
             data-slate-node="element"
           >
             <span
@@ -2100,7 +2100,7 @@ https://unsplash.it/200/100 200w"
           <hr />
         </div>
         <h3
-          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-box1tp-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-l4mivh-MuiTypography-root"
           data-slate-node="element"
         >
           <span
@@ -2455,7 +2455,7 @@ exports[`Author should render WithoutLinks 1`] = `
   >
     <header>
       <h1
-        class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
       >
         Foobar
       </h1>
@@ -2486,7 +2486,7 @@ https://unsplash.it/200/100 200w"
       >
         <div>
           <h2
-            class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom css-qe9imk-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom css-1b40pty-MuiTypography-root"
             data-slate-node="element"
           >
             <span
@@ -2502,7 +2502,7 @@ https://unsplash.it/200/100 200w"
           <hr />
         </div>
         <h3
-          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-box1tp-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-l4mivh-MuiTypography-root"
           data-slate-node="element"
         >
           <span

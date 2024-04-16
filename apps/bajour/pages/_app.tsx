@@ -52,14 +52,6 @@ const dateFormatter = (date: Date, includeTime = true) =>
     ? `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
     : format(date, 'dd. MMMM yyyy')
 
-const roboto = Roboto({
-  weight: ['100', '300', '400', '500', '700', '900'],
-  style: ['italic', 'normal'],
-  subsets: ['latin'],
-  display: 'swap',
-  preload: true
-})
-
 type CustomAppProps = AppProps<{
   sessionToken?: ApiV1.UserSession
 }>
@@ -125,7 +117,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
             <ThemeProvider theme={theme}>
               <CssBaseline />
 
-              <MainGrid className={roboto.className}>
+              <MainGrid>
                 <ThemeProvider theme={navbarTheme}>
                   <NavBar
                     slug="main"

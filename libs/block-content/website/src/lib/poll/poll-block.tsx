@@ -126,7 +126,7 @@ export const PollBlock = ({poll, className}: BuilderPollBlockProps) => {
           {poll.answers.map(answer => (
             <Button
               variant="outlined"
-              color="secondary"
+              color="primary"
               key={answer.id}
               disabled={voteResult.loading}
               onClick={async () => {
