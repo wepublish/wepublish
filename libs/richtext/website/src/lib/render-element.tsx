@@ -3,6 +3,7 @@ import {BuilderRenderElementProps} from '@wepublish/website/builder'
 import {Link} from '@mui/material'
 import {BlockFormat, InlineFormat} from '@wepublish/richtext'
 import {css} from '@emotion/react'
+import {Fragment} from 'react'
 
 const tableStyles = css`
   border-collapse: collapse;
@@ -92,11 +93,20 @@ export function RenderElement({
         </Link>
       )
 
-    default:
+    default: {
+      if (
+        element.children.length === 1 &&
+        'text' in element.children[0] &&
+        !element.children[0].text
+      ) {
+        return <Fragment />
+      }
+
       return (
         <Paragraph {...attributes} css={paragraphStyles}>
           {children}
         </Paragraph>
       )
+    }
   }
 }
