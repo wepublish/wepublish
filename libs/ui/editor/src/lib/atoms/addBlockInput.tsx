@@ -26,6 +26,7 @@ export interface AddBlockInputProps {
 
 const Wrapper = styled.div`
   position: relative;
+  left: 41.5%;
 `
 
 export function AddBlockInput({menuItems, disabled, onMenuItemClick}: AddBlockInputProps) {

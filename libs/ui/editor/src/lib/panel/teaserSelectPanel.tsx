@@ -40,7 +40,8 @@ import {
   Radio,
   RadioGroup,
   toaster,
-  Toggle as RToggle
+  Toggle as RToggle,
+  Loader as RLoader
 } from 'rsuite'
 
 import {ChooseEditImage} from '../atoms/chooseEditImage'
@@ -117,6 +118,22 @@ const ToggleLabel = styled.span`
   margin-bottom: 4px;
 `
 
+const LoadMoreButton = styled(Button)`
+  text-align: center;
+  margin-top: 16px;
+`
+
+const Loader = styled(RLoader)`
+  margin: 5rem 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+`
+
+const NoData = styled(RList.Item)`
+  text-align: center;
+`
+
 export interface TeaserSelectPanelProps {
   onClose(): void
   onSelect(teaserLink: TeaserLink): void
@@ -170,7 +187,8 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   const {
     data: peerArticleListData,
     fetchMore: fetchMorePeerArticles,
-    error: peerArticleListError
+    error: peerArticleListError,
+    loading: isPeerArticleListLoading
   } = usePeerArticleListQuery({
     variables: peerListVariables,
     fetchPolicy: 'network-only'
@@ -217,7 +235,8 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   const {
     data: eventListData,
     fetchMore: fetchMoreEvents,
-    error: eventListError
+    error: eventListError,
+    loading: isEventListLoading
   } = useEventListQuery({
     fetchPolicy: 'network-only',
     variables: eventVariables
@@ -234,7 +253,8 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   const {
     data: articleListData,
     fetchMore: fetchMoreArticles,
-    error: articleListError
+    error: articleListError,
+    loading: isArticleListLoading
   } = useArticleListQuery({
     variables: listVariables,
     fetchPolicy: 'network-only'
@@ -243,7 +263,8 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
   const {
     data: pageListData,
     fetchMore: fetchMorePages,
-    error: pageListError
+    error: pageListError,
+    loading: isPageListLoading
   } = usePageListQuery({
     variables: pageListVariables,
     fetchPolicy: 'no-cache'
@@ -337,6 +358,14 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
       case TeaserType.Article:
         return (
           <>
+            {isArticleListLoading ? (
+              <RList.Item>
+                <Loader />
+              </RList.Item>
+            ) : null}
+            {!isArticleListLoading && articles.length === 0 ? (
+              <NoData>{t('articleEditor.panels.noDataToDisplay')}</NoData>
+            ) : null}
             {articles.map(article => {
               const states = []
 
@@ -366,7 +395,9 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
               )
             })}
             {articleListData?.articles.pageInfo.hasNextPage && (
-              <Button onClick={loadMoreArticles}>{t('articleEditor.panels.loadMore')}</Button>
+              <LoadMoreButton onClick={loadMoreArticles} appearance="primary">
+                {t('articleEditor.panels.loadMore')}
+              </LoadMoreButton>
             )}
           </>
         )
@@ -374,6 +405,14 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
       case TeaserType.PeerArticle:
         return (
           <>
+            {isPeerArticleListLoading ? (
+              <RList.Item>
+                <Loader />
+              </RList.Item>
+            ) : null}
+            {!isPeerArticleListLoading && peerArticles.length === 0 ? (
+              <NoData>{t('articleEditor.panels.noDataToDisplay')}</NoData>
+            ) : null}
             {peerArticles.map(({peer, article, peeredArticleURL}) => {
               const states = []
 
@@ -412,7 +451,9 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
               )
             })}
             {peerArticleListData?.peerArticles.pageInfo.hasNextPage && (
-              <Button onClick={loadMorePeerArticles}>{t('articleEditor.panels.loadMore')}</Button>
+              <LoadMoreButton onClick={loadMorePeerArticles} appearance="primary">
+                {t('articleEditor.panels.loadMore')}
+              </LoadMoreButton>
             )}
           </>
         )
@@ -420,6 +461,14 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
       case TeaserType.Page:
         return (
           <>
+            {isPageListLoading ? (
+              <RList.Item>
+                <Loader />
+              </RList.Item>
+            ) : null}
+            {!isPageListLoading && pages.length === 0 ? (
+              <NoData>{t('articleEditor.panels.noDataToDisplay')}</NoData>
+            ) : null}
             {pages.map(page => {
               const states = []
 
@@ -453,6 +502,14 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
       case TeaserType.Event:
         return (
           <>
+            {isEventListLoading ? (
+              <RList.Item>
+                <Loader />
+              </RList.Item>
+            ) : null}
+            {!isEventListLoading && events.length === 0 ? (
+              <NoData>{t('articleEditor.panels.noDataToDisplay')}</NoData>
+            ) : null}
             {events.map(event => {
               return (
                 <RList.Item key={event.id}>
@@ -647,7 +704,7 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
           </RNav.Item>
         </Nav>
 
-        {type === TeaserType.Event && (
+        {type === TeaserType.Event && !isEventListLoading && events.length !== 0 && (
           <EventFilterContainer>
             <ToggleLabel>{t('event.list.upcomingOnly')}</ToggleLabel>
             <Toggle checked={eventFilter} onChange={value => setEventFilter(value)} />

@@ -78,7 +78,6 @@ const AddBlockInputWrapper = styled.div`
   padding-right: 30px;
   margin-top: 10px;
   margin-bottom: 10px;
-  text-align: center;
 `
 
 export interface BlockProps<V = any> {

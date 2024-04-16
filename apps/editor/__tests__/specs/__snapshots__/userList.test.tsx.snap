@@ -554,7 +554,7 @@ exports[`User list view should render successfully 1`] = `
                   style="display: flex; flex-wrap: wrap; justify-content: center; width: 100px; height: 46px;"
                 >
                   <button
-                    class="css-lp92kk rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-circle rs-btn rs-btn-default rs-btn-sm"
+                    class="css-1wf3g71 rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-circle rs-btn rs-btn-default rs-btn-sm"
                     type="button"
                   >
                     <svg
@@ -583,7 +583,7 @@ exports[`User list view should render successfully 1`] = `
                     </span>
                   </button>
                   <button
-                    class="css-lp92kk rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-circle rs-btn rs-btn-ghost rs-btn-red rs-btn-sm"
+                    class="css-1wf3g71 rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-circle rs-btn rs-btn-ghost rs-btn-red rs-btn-sm"
                     type="button"
                   >
                     <svg
@@ -730,7 +730,7 @@ exports[`User list view should render successfully 1`] = `
                   style="display: flex; flex-wrap: wrap; justify-content: center; width: 100px; height: 46px;"
                 >
                   <button
-                    class="css-lp92kk rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-circle rs-btn rs-btn-default rs-btn-sm"
+                    class="css-1wf3g71 rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-circle rs-btn rs-btn-default rs-btn-sm"
                     type="button"
                   >
                     <svg
@@ -759,7 +759,7 @@ exports[`User list view should render successfully 1`] = `
                     </span>
                   </button>
                   <button
-                    class="css-lp92kk rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-circle rs-btn rs-btn-ghost rs-btn-red rs-btn-sm"
+                    class="css-1wf3g71 rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-circle rs-btn rs-btn-ghost rs-btn-red rs-btn-sm"
                     type="button"
                   >
                     <svg
@@ -906,7 +906,7 @@ exports[`User list view should render successfully 1`] = `
                   style="display: flex; flex-wrap: wrap; justify-content: center; width: 100px; height: 46px;"
                 >
                   <button
-                    class="css-lp92kk rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-circle rs-btn rs-btn-default rs-btn-sm"
+                    class="css-1wf3g71 rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-circle rs-btn rs-btn-default rs-btn-sm"
                     type="button"
                   >
                     <svg
@@ -935,7 +935,7 @@ exports[`User list view should render successfully 1`] = `
                     </span>
                   </button>
                   <button
-                    class="css-lp92kk rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-circle rs-btn rs-btn-ghost rs-btn-red rs-btn-sm"
+                    class="css-1wf3g71 rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-circle rs-btn rs-btn-ghost rs-btn-red rs-btn-sm"
                     type="button"
                   >
                     <svg
