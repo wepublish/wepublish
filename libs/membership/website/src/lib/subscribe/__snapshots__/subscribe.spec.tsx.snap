@@ -703,11 +703,11 @@ exports[`Subscribe should render Invalid 1`] = `
 exports[`Subscribe should render LoggedIn 1`] = `
 <DocumentFragment>
   <form
-    class="css-dai3ta-SubscribeWrapper eu4qtxp6"
+    class="css-dai3ta-SubscribeWrapper eu4qtxp3"
     novalidate=""
   >
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -1014,7 +1014,7 @@ https://unsplash.it/200/100 200w"
       </fieldset>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -1022,7 +1022,7 @@ https://unsplash.it/200/100 200w"
         Bonus Unterstützung
       </h2>
       <div
-        class="css-4dz7fc-SubscribeExtraMoney eu4qtxp3"
+        class="css-4dz7fc-SubscribeExtraMoney eu4qtxp0"
       >
         <span
           class="MuiSlider-root MuiSlider-colorSecondary MuiSlider-sizeMedium css-9kv34-MuiSlider-root"
@@ -1105,7 +1105,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -1113,7 +1113,7 @@ https://unsplash.it/200/100 200w"
         Zahlungsmethode wählen
       </h2>
       <div
-        class="css-tcuzi5-SubscribePayment eu4qtxp4"
+        class="css-tcuzi5-SubscribePayment eu4qtxp1"
       >
         <div
           class="MuiFormControl-root e1xdovcl0 css-rjme10-MuiFormControl-root-PaymentMethodPickerWrapper"
@@ -1304,11 +1304,11 @@ Compared values have no visual difference."
 exports[`Subscribe should render LoggedOut 1`] = `
 <DocumentFragment>
   <form
-    class="css-dai3ta-SubscribeWrapper eu4qtxp6"
+    class="css-dai3ta-SubscribeWrapper eu4qtxp3"
     novalidate=""
   >
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -1551,7 +1551,7 @@ https://unsplash.it/200/100 200w"
       </fieldset>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -1559,7 +1559,7 @@ https://unsplash.it/200/100 200w"
         Bonus Unterstützung
       </h2>
       <div
-        class="css-4dz7fc-SubscribeExtraMoney eu4qtxp3"
+        class="css-4dz7fc-SubscribeExtraMoney eu4qtxp0"
       >
         <span
           class="MuiSlider-root MuiSlider-colorSecondary MuiSlider-sizeMedium css-9kv34-MuiSlider-root"
@@ -1642,7 +1642,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <div
         class="css-17j4c9a-UserFormWrapper e1mcs0cc1"
@@ -1980,7 +1980,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -1988,7 +1988,7 @@ https://unsplash.it/200/100 200w"
         Zahlungsmethode wählen
       </h2>
       <div
-        class="css-tcuzi5-SubscribePayment eu4qtxp4"
+        class="css-tcuzi5-SubscribePayment eu4qtxp1"
       >
         <div
           class="MuiFormControl-root e1xdovcl0 css-rjme10-MuiFormControl-root-PaymentMethodPickerWrapper"
@@ -2158,7 +2158,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -2282,11 +2282,11 @@ https://unsplash.it/200/100 200w"
 exports[`Subscribe should render OnlyAddress 1`] = `
 <DocumentFragment>
   <form
-    class="css-dai3ta-SubscribeWrapper eu4qtxp6"
+    class="css-dai3ta-SubscribeWrapper eu4qtxp3"
     novalidate=""
   >
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -2529,7 +2529,7 @@ https://unsplash.it/200/100 200w"
       </fieldset>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -2537,7 +2537,7 @@ https://unsplash.it/200/100 200w"
         Bonus Unterstützung
       </h2>
       <div
-        class="css-4dz7fc-SubscribeExtraMoney eu4qtxp3"
+        class="css-4dz7fc-SubscribeExtraMoney eu4qtxp0"
       >
         <span
           class="MuiSlider-root MuiSlider-colorSecondary MuiSlider-sizeMedium css-9kv34-MuiSlider-root"
@@ -2620,7 +2620,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <div
         class="css-17j4c9a-UserFormWrapper e1mcs0cc1"
@@ -2854,7 +2854,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -2862,7 +2862,7 @@ https://unsplash.it/200/100 200w"
         Zahlungsmethode wählen
       </h2>
       <div
-        class="css-tcuzi5-SubscribePayment eu4qtxp4"
+        class="css-tcuzi5-SubscribePayment eu4qtxp1"
       >
         <div
           class="MuiFormControl-root e1xdovcl0 css-rjme10-MuiFormControl-root-PaymentMethodPickerWrapper"
@@ -3032,7 +3032,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -3703,11 +3703,11 @@ exports[`Subscribe should render OnlyAddressInvalid 1`] = `
 exports[`Subscribe should render OnlyFirstName 1`] = `
 <DocumentFragment>
   <form
-    class="css-dai3ta-SubscribeWrapper eu4qtxp6"
+    class="css-dai3ta-SubscribeWrapper eu4qtxp3"
     novalidate=""
   >
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -3950,7 +3950,7 @@ https://unsplash.it/200/100 200w"
       </fieldset>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -3958,7 +3958,7 @@ https://unsplash.it/200/100 200w"
         Bonus Unterstützung
       </h2>
       <div
-        class="css-4dz7fc-SubscribeExtraMoney eu4qtxp3"
+        class="css-4dz7fc-SubscribeExtraMoney eu4qtxp0"
       >
         <span
           class="MuiSlider-root MuiSlider-colorSecondary MuiSlider-sizeMedium css-9kv34-MuiSlider-root"
@@ -4041,7 +4041,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <div
         class="css-17j4c9a-UserFormWrapper e1mcs0cc1"
@@ -4160,7 +4160,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -4168,7 +4168,7 @@ https://unsplash.it/200/100 200w"
         Zahlungsmethode wählen
       </h2>
       <div
-        class="css-tcuzi5-SubscribePayment eu4qtxp4"
+        class="css-tcuzi5-SubscribePayment eu4qtxp1"
       >
         <div
           class="MuiFormControl-root e1xdovcl0 css-rjme10-MuiFormControl-root-PaymentMethodPickerWrapper"
@@ -4338,7 +4338,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -4734,7 +4734,7 @@ exports[`Subscribe should render OnlyFirstNameInvalid 1`] = `
         </div>
       </div>
       <div
-        class="css-qtq6nf-SubscribeSection eu4qtxp5"
+        class="css-qtq6nf-SubscribeSection eu4qtxp2"
 @@ -706,22 +727,23 @@
           </div>
           <div
@@ -4784,11 +4784,11 @@ exports[`Subscribe should render OnlyFirstNameInvalid 1`] = `
 exports[`Subscribe should render OnlyPassword 1`] = `
 <DocumentFragment>
   <form
-    class="css-dai3ta-SubscribeWrapper eu4qtxp6"
+    class="css-dai3ta-SubscribeWrapper eu4qtxp3"
     novalidate=""
   >
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -5031,7 +5031,7 @@ https://unsplash.it/200/100 200w"
       </fieldset>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -5039,7 +5039,7 @@ https://unsplash.it/200/100 200w"
         Bonus Unterstützung
       </h2>
       <div
-        class="css-4dz7fc-SubscribeExtraMoney eu4qtxp3"
+        class="css-4dz7fc-SubscribeExtraMoney eu4qtxp0"
       >
         <span
           class="MuiSlider-root MuiSlider-colorSecondary MuiSlider-sizeMedium css-9kv34-MuiSlider-root"
@@ -5122,7 +5122,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <div
         class="css-17j4c9a-UserFormWrapper e1mcs0cc1"
@@ -5271,7 +5271,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -5279,7 +5279,7 @@ https://unsplash.it/200/100 200w"
         Zahlungsmethode wählen
       </h2>
       <div
-        class="css-tcuzi5-SubscribePayment eu4qtxp4"
+        class="css-tcuzi5-SubscribePayment eu4qtxp1"
       >
         <div
           class="MuiFormControl-root e1xdovcl0 css-rjme10-MuiFormControl-root-PaymentMethodPickerWrapper"
@@ -5449,7 +5449,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -5850,7 +5850,7 @@ exports[`Subscribe should render OnlyPasswordInvalid 1`] = `
         </div>
       </div>
       <div
-        class="css-qtq6nf-SubscribeSection eu4qtxp5"
+        class="css-qtq6nf-SubscribeSection eu4qtxp2"
 @@ -736,22 +757,23 @@
           </div>
           <div
@@ -5900,11 +5900,11 @@ exports[`Subscribe should render OnlyPasswordInvalid 1`] = `
 exports[`Subscribe should render OnlyPreferredName 1`] = `
 <DocumentFragment>
   <form
-    class="css-dai3ta-SubscribeWrapper eu4qtxp6"
+    class="css-dai3ta-SubscribeWrapper eu4qtxp3"
     novalidate=""
   >
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -6147,7 +6147,7 @@ https://unsplash.it/200/100 200w"
       </fieldset>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -6155,7 +6155,7 @@ https://unsplash.it/200/100 200w"
         Bonus Unterstützung
       </h2>
       <div
-        class="css-4dz7fc-SubscribeExtraMoney eu4qtxp3"
+        class="css-4dz7fc-SubscribeExtraMoney eu4qtxp0"
       >
         <span
           class="MuiSlider-root MuiSlider-colorSecondary MuiSlider-sizeMedium css-9kv34-MuiSlider-root"
@@ -6238,7 +6238,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <div
         class="css-17j4c9a-UserFormWrapper e1mcs0cc1"
@@ -6356,7 +6356,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -6364,7 +6364,7 @@ https://unsplash.it/200/100 200w"
         Zahlungsmethode wählen
       </h2>
       <div
-        class="css-tcuzi5-SubscribePayment eu4qtxp4"
+        class="css-tcuzi5-SubscribePayment eu4qtxp1"
       >
         <div
           class="MuiFormControl-root e1xdovcl0 css-rjme10-MuiFormControl-root-PaymentMethodPickerWrapper"
@@ -6534,7 +6534,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -6892,7 +6892,7 @@ exports[`Subscribe should render OnlyPreferredNameInvalid 1`] = `
         </div>
       </div>
       <div
-        class="css-qtq6nf-SubscribeSection eu4qtxp5"
+        class="css-qtq6nf-SubscribeSection eu4qtxp2"
 @@ -705,22 +719,23 @@
           </div>
           <div
@@ -6942,11 +6942,11 @@ exports[`Subscribe should render OnlyPreferredNameInvalid 1`] = `
 exports[`Subscribe should render OnlyRequired 1`] = `
 <DocumentFragment>
   <form
-    class="css-dai3ta-SubscribeWrapper eu4qtxp6"
+    class="css-dai3ta-SubscribeWrapper eu4qtxp3"
     novalidate=""
   >
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -7189,7 +7189,7 @@ https://unsplash.it/200/100 200w"
       </fieldset>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -7197,7 +7197,7 @@ https://unsplash.it/200/100 200w"
         Bonus Unterstützung
       </h2>
       <div
-        class="css-4dz7fc-SubscribeExtraMoney eu4qtxp3"
+        class="css-4dz7fc-SubscribeExtraMoney eu4qtxp0"
       >
         <span
           class="MuiSlider-root MuiSlider-colorSecondary MuiSlider-sizeMedium css-9kv34-MuiSlider-root"
@@ -7280,7 +7280,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <div
         class="css-17j4c9a-UserFormWrapper e1mcs0cc1"
@@ -7362,7 +7362,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -7370,7 +7370,7 @@ https://unsplash.it/200/100 200w"
         Zahlungsmethode wählen
       </h2>
       <div
-        class="css-tcuzi5-SubscribePayment eu4qtxp4"
+        class="css-tcuzi5-SubscribePayment eu4qtxp1"
       >
         <div
           class="MuiFormControl-root e1xdovcl0 css-rjme10-MuiFormControl-root-PaymentMethodPickerWrapper"
@@ -7540,7 +7540,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -7862,7 +7862,7 @@ exports[`Subscribe should render OnlyRequiredInvalid 1`] = `
         </div>
       </div>
       <div
-        class="css-qtq6nf-SubscribeSection eu4qtxp5"
+        class="css-qtq6nf-SubscribeSection eu4qtxp2"
 @@ -669,22 +683,23 @@
           </div>
           <div
@@ -8040,7 +8040,7 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
           Zahlungsmethode wählen
         </h2>
         <div
-          class="css-tcuzi5-SubscribePayment eu4qtxp4"
+          class="css-tcuzi5-SubscribePayment eu4qtxp1"
 -       >
 -         <div
 -           class="MuiFormControl-root e1xdovcl0 css-rjme10-MuiFormControl-root-PaymentMethodPickerWrapper"
@@ -8312,11 +8312,11 @@ exports[`Subscribe should render ResetPaymentOptionsOnPaymentMethodChange 1`] = 
 exports[`Subscribe should render WithChallengeError 1`] = `
 <DocumentFragment>
   <form
-    class="css-dai3ta-SubscribeWrapper eu4qtxp6"
+    class="css-dai3ta-SubscribeWrapper eu4qtxp3"
     novalidate=""
   >
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -8559,7 +8559,7 @@ https://unsplash.it/200/100 200w"
       </fieldset>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -8567,7 +8567,7 @@ https://unsplash.it/200/100 200w"
         Bonus Unterstützung
       </h2>
       <div
-        class="css-4dz7fc-SubscribeExtraMoney eu4qtxp3"
+        class="css-4dz7fc-SubscribeExtraMoney eu4qtxp0"
       >
         <span
           class="MuiSlider-root MuiSlider-colorSecondary MuiSlider-sizeMedium css-9kv34-MuiSlider-root"
@@ -8650,7 +8650,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <div
         class="css-17j4c9a-UserFormWrapper e1mcs0cc1"
@@ -8988,7 +8988,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -8996,7 +8996,7 @@ https://unsplash.it/200/100 200w"
         Zahlungsmethode wählen
       </h2>
       <div
-        class="css-tcuzi5-SubscribePayment eu4qtxp4"
+        class="css-tcuzi5-SubscribePayment eu4qtxp1"
       >
         <div
           class="MuiFormControl-root e1xdovcl0 css-rjme10-MuiFormControl-root-PaymentMethodPickerWrapper"
@@ -9166,7 +9166,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -9216,11 +9216,11 @@ https://unsplash.it/200/100 200w"
 exports[`Subscribe should render WithChallengeLoading 1`] = `
 <DocumentFragment>
   <form
-    class="css-dai3ta-SubscribeWrapper eu4qtxp6"
+    class="css-dai3ta-SubscribeWrapper eu4qtxp3"
     novalidate=""
   >
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -9463,7 +9463,7 @@ https://unsplash.it/200/100 200w"
       </fieldset>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -9471,7 +9471,7 @@ https://unsplash.it/200/100 200w"
         Bonus Unterstützung
       </h2>
       <div
-        class="css-4dz7fc-SubscribeExtraMoney eu4qtxp3"
+        class="css-4dz7fc-SubscribeExtraMoney eu4qtxp0"
       >
         <span
           class="MuiSlider-root MuiSlider-colorSecondary MuiSlider-sizeMedium css-9kv34-MuiSlider-root"
@@ -9554,7 +9554,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <div
         class="css-17j4c9a-UserFormWrapper e1mcs0cc1"
@@ -9892,7 +9892,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -9900,7 +9900,7 @@ https://unsplash.it/200/100 200w"
         Zahlungsmethode wählen
       </h2>
       <div
-        class="css-tcuzi5-SubscribePayment eu4qtxp4"
+        class="css-tcuzi5-SubscribePayment eu4qtxp1"
       >
         <div
           class="MuiFormControl-root e1xdovcl0 css-rjme10-MuiFormControl-root-PaymentMethodPickerWrapper"
@@ -10070,7 +10070,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -10093,11 +10093,11 @@ https://unsplash.it/200/100 200w"
 exports[`Subscribe should render WithClassName 1`] = `
 <DocumentFragment>
   <form
-    class="extra-classname css-dai3ta-SubscribeWrapper eu4qtxp6"
+    class="extra-classname css-dai3ta-SubscribeWrapper eu4qtxp3"
     novalidate=""
   >
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -10340,7 +10340,7 @@ https://unsplash.it/200/100 200w"
       </fieldset>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -10348,7 +10348,7 @@ https://unsplash.it/200/100 200w"
         Bonus Unterstützung
       </h2>
       <div
-        class="css-4dz7fc-SubscribeExtraMoney eu4qtxp3"
+        class="css-4dz7fc-SubscribeExtraMoney eu4qtxp0"
       >
         <span
           class="MuiSlider-root MuiSlider-colorSecondary MuiSlider-sizeMedium css-9kv34-MuiSlider-root"
@@ -10431,7 +10431,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <div
         class="css-17j4c9a-UserFormWrapper e1mcs0cc1"
@@ -10769,7 +10769,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -10777,7 +10777,7 @@ https://unsplash.it/200/100 200w"
         Zahlungsmethode wählen
       </h2>
       <div
-        class="css-tcuzi5-SubscribePayment eu4qtxp4"
+        class="css-tcuzi5-SubscribePayment eu4qtxp1"
       >
         <div
           class="MuiFormControl-root e1xdovcl0 css-rjme10-MuiFormControl-root-PaymentMethodPickerWrapper"
@@ -10947,7 +10947,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -11192,7 +11192,7 @@ exports[`Subscribe should render WithCustomValidation 1`] = `
         </div>
       </div>
       <div
-        class="css-qtq6nf-SubscribeSection eu4qtxp5"
+        class="css-qtq6nf-SubscribeSection eu4qtxp2"
 @@ -736,22 +757,23 @@
           </div>
           <div
@@ -11242,11 +11242,11 @@ exports[`Subscribe should render WithCustomValidation 1`] = `
 exports[`Subscribe should render WithEmotion 1`] = `
 <DocumentFragment>
   <form
-    class="css-dai3ta-SubscribeWrapper eu4qtxp6"
+    class="css-dai3ta-SubscribeWrapper eu4qtxp3"
     novalidate=""
   >
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -11489,7 +11489,7 @@ https://unsplash.it/200/100 200w"
       </fieldset>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -11497,7 +11497,7 @@ https://unsplash.it/200/100 200w"
         Bonus Unterstützung
       </h2>
       <div
-        class="css-4dz7fc-SubscribeExtraMoney eu4qtxp3"
+        class="css-4dz7fc-SubscribeExtraMoney eu4qtxp0"
       >
         <span
           class="MuiSlider-root MuiSlider-colorSecondary MuiSlider-sizeMedium css-9kv34-MuiSlider-root"
@@ -11580,7 +11580,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <div
         class="css-17j4c9a-UserFormWrapper e1mcs0cc1"
@@ -11918,7 +11918,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -11926,7 +11926,7 @@ https://unsplash.it/200/100 200w"
         Zahlungsmethode wählen
       </h2>
       <div
-        class="css-tcuzi5-SubscribePayment eu4qtxp4"
+        class="css-tcuzi5-SubscribePayment eu4qtxp1"
       >
         <div
           class="MuiFormControl-root e1xdovcl0 css-rjme10-MuiFormControl-root-PaymentMethodPickerWrapper"
@@ -12096,7 +12096,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -12594,11 +12594,11 @@ Compared values have no visual difference."
 exports[`Subscribe should render WithUserInvoicesLoading 1`] = `
 <DocumentFragment>
   <form
-    class="css-dai3ta-SubscribeWrapper eu4qtxp6"
+    class="css-dai3ta-SubscribeWrapper eu4qtxp3"
     novalidate=""
   >
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -12873,7 +12873,7 @@ https://unsplash.it/200/100 200w"
       </fieldset>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -12881,7 +12881,7 @@ https://unsplash.it/200/100 200w"
         Bonus Unterstützung
       </h2>
       <div
-        class="css-4dz7fc-SubscribeExtraMoney eu4qtxp3"
+        class="css-4dz7fc-SubscribeExtraMoney eu4qtxp0"
       >
         <span
           class="MuiSlider-root MuiSlider-colorSecondary MuiSlider-sizeMedium css-9kv34-MuiSlider-root"
@@ -12964,7 +12964,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -12972,7 +12972,7 @@ https://unsplash.it/200/100 200w"
         Zahlungsmethode wählen
       </h2>
       <div
-        class="css-tcuzi5-SubscribePayment eu4qtxp4"
+        class="css-tcuzi5-SubscribePayment eu4qtxp1"
       >
         <div
           class="MuiFormControl-root e1xdovcl0 css-rjme10-MuiFormControl-root-PaymentMethodPickerWrapper"
@@ -13156,11 +13156,11 @@ https://unsplash.it/200/100 200w"
 exports[`Subscribe should render WithUserSubscriptionsLoading 1`] = `
 <DocumentFragment>
   <form
-    class="css-dai3ta-SubscribeWrapper eu4qtxp6"
+    class="css-dai3ta-SubscribeWrapper eu4qtxp3"
     novalidate=""
   >
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -13435,7 +13435,7 @@ https://unsplash.it/200/100 200w"
       </fieldset>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -13443,7 +13443,7 @@ https://unsplash.it/200/100 200w"
         Bonus Unterstützung
       </h2>
       <div
-        class="css-4dz7fc-SubscribeExtraMoney eu4qtxp3"
+        class="css-4dz7fc-SubscribeExtraMoney eu4qtxp0"
       >
         <span
           class="MuiSlider-root MuiSlider-colorSecondary MuiSlider-sizeMedium css-9kv34-MuiSlider-root"
@@ -13526,7 +13526,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -13534,7 +13534,7 @@ https://unsplash.it/200/100 200w"
         Zahlungsmethode wählen
       </h2>
       <div
-        class="css-tcuzi5-SubscribePayment eu4qtxp4"
+        class="css-tcuzi5-SubscribePayment eu4qtxp1"
       >
         <div
           class="MuiFormControl-root e1xdovcl0 css-rjme10-MuiFormControl-root-PaymentMethodPickerWrapper"

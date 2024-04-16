@@ -1,5 +1,5 @@
 import {zodResolver} from '@hookform/resolvers/zod'
-import {Checkbox, FormControlLabel, InputAdornment, Modal, Slider, styled} from '@mui/material'
+import {Checkbox, FormControlLabel, InputAdornment, Slider, styled} from '@mui/material'
 import {
   RegistrationChallenge,
   RegistrationChallengeWrapper,
@@ -21,7 +21,7 @@ import {
   useAsyncAction,
   useWebsiteBuilder
 } from '@wepublish/website/builder'
-import {PropsWithChildren, useEffect, useMemo, useState} from 'react'
+import {useEffect, useMemo, useState} from 'react'
 import {Controller, useForm} from 'react-hook-form'
 import {z} from 'zod'
 import {formatChf} from '../formatters/format-currency'
@@ -29,6 +29,7 @@ import {formatPaymentPeriod, getPaymentPeriodicyMonths} from '../formatters/form
 import {formatRenewalPeriod} from '../formatters/format-renewal-period'
 import {css} from '@emotion/react'
 import {sortBy} from 'ramda'
+import {MembershipModal} from '../membership-modal/membership-modal'
 
 const subscribeSchema = z.object({
   memberPlanId: z.string().nonempty(),
@@ -454,7 +455,7 @@ export const Subscribe = <T extends BuilderUserFormFields>({
         {paymentText} Abonnieren
       </Button>
 
-      <SubscribeConfirmModal
+      <MembershipModal
         open={openConfirm}
         onSubmit={() => {
           onSubmit()
@@ -462,7 +463,7 @@ export const Subscribe = <T extends BuilderUserFormFields>({
         }}
         onCancel={() => setOpenConfirm(false)}
         submitText={`${paymentText} Abonnieren`}>
-        <H5 id="modal-modal-title" component="h2">
+        <H5 id="modal-modal-title" component="h1">
           Bist du dir sicher?
         </H5>
 
@@ -479,72 +480,7 @@ export const Subscribe = <T extends BuilderUserFormFields>({
             <Link href="/profile/subscription">Abo-Dashboard</Link> anschauen.
           </Paragraph>
         )}
-      </SubscribeConfirmModal>
+      </MembershipModal>
     </SubscribeWrapper>
-  )
-}
-
-export type SubscribeConfirmModalProps = {
-  open: boolean
-  submitText: string
-  onCancel: () => void
-  onSubmit: () => void
-}
-
-export const SubscribeConfirmModalWrapper = styled('div')`
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 80lvw;
-  max-width: 800px;
-  background-color: ${({theme}) => theme.palette.background.paper};
-  box-shadow: ${({theme}) => theme.shadows[24]};
-  padding: ${({theme}) => theme.spacing(2)};
-  display: grid;
-  gap: ${({theme}) => theme.spacing(3)};
-`
-
-export const SubscribeConfirmModalContent = styled('div')`
-  display: grid;
-  gap: ${({theme}) => theme.spacing(2)};
-  padding: ${({theme}) => theme.spacing(2)};
-`
-
-export const SubscribeConfirmModalActions = styled('div')`
-  display: flex;
-  justify-content: end;
-  gap: ${({theme}) => theme.spacing(3)};
-`
-
-export const SubscribeConfirmModal = ({
-  open,
-  onCancel,
-  onSubmit,
-  submitText,
-  children
-}: PropsWithChildren<SubscribeConfirmModalProps>) => {
-  const {
-    elements: {Button}
-  } = useWebsiteBuilder()
-
-  return (
-    <Modal
-      open={open}
-      onClose={onCancel}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description">
-      <SubscribeConfirmModalWrapper>
-        <SubscribeConfirmModalContent>{children}</SubscribeConfirmModalContent>
-
-        <SubscribeConfirmModalActions>
-          <Button onClick={onCancel} variant="text" color="secondary">
-            Abbrechen
-          </Button>
-
-          <Button onClick={onSubmit}>{submitText}</Button>
-        </SubscribeConfirmModalActions>
-      </SubscribeConfirmModalWrapper>
-    </Modal>
   )
 }

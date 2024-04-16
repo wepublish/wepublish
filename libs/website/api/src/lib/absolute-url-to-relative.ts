@@ -48,5 +48,12 @@ export const absoluteUrlToRelative: InMemoryCacheConfig['typePolicies'] = {
         merge: (_, url: string) => absoluteToRelative(url)
       }
     }
+  },
+  Subscription: {
+    fields: {
+      url: {
+        merge: (_, url: string) => absoluteToRelative(url)
+      }
+    }
   }
 }
