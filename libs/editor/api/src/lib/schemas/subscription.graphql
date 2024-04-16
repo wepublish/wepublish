@@ -96,6 +96,12 @@ mutation DeleteSubscription($id: ID!) {
   }
 }
 
+mutation RenewSubscription($id: ID!) {
+  renewSubscription(id: $id) {
+    ...Invoice
+  }
+}
+
 query NewSubscribersPerMonth($months: Int!) {
     newSubscribersPerMonth(monthsBack: $months) {
         month

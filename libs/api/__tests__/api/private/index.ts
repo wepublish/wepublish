@@ -1012,6 +1012,7 @@ export type Mutation = {
   publishArticle?: Maybe<Article>;
   publishPage?: Maybe<Page>;
   rejectComment: Comment;
+  renewSubscription?: Maybe<Invoice>;
   requestChangesOnComment: Comment;
   resetUserPassword?: Maybe<User>;
   revokeActiveSession: Scalars['Boolean'];
@@ -1327,6 +1328,11 @@ export type MutationPublishPageArgs = {
 export type MutationRejectCommentArgs = {
   id: Scalars['ID'];
   rejectionReason?: InputMaybe<CommentRejectionReason>;
+};
+
+
+export type MutationRenewSubscriptionArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -4611,6 +4617,15 @@ export const CreateSubscription = gql`
   }
 }
     `;
+
+export const RenewSubscription = gql`
+mutation RenewSubscription($input: ID!) {
+  renewSubscription(input: $input) {
+    ...Invoice
+  }
+}
+`;
+
 export const TagList = gql`
     query TagList($filter: TagFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: TagSort) {
   tags(
