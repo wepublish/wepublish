@@ -1,5 +1,5 @@
 export enum UserRoleSort {
-  CreatedAt = 'modifiedAt',
+  CreatedAt = 'createdAt',
   ModifiedAt = 'modifiedAt'
 }
 
