@@ -3,22 +3,22 @@
 exports[`Typography should render Default 1`] = `
 <DocumentFragment>
   <h1
-    class="MuiTypography-root MuiTypography-h1 css-qq5cxq-MuiTypography-root"
+    class="MuiTypography-root MuiTypography-h1 css-1f1pdin-MuiTypography-root"
   >
     H1
   </h1>
   <h2
-    class="MuiTypography-root MuiTypography-h2 css-1m1enz5-MuiTypography-root"
+    class="MuiTypography-root MuiTypography-h2 css-10rkqji-MuiTypography-root"
   >
     H2
   </h2>
   <h3
-    class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
+    class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
   >
     H3
   </h3>
   <h4
-    class="MuiTypography-root MuiTypography-h4 css-1fh3rua-MuiTypography-root"
+    class="MuiTypography-root MuiTypography-h4 css-ivca51-MuiTypography-root"
   >
     H4
   </h4>
@@ -43,22 +43,22 @@ exports[`Typography should render Default 1`] = `
 exports[`Typography should render Styling 1`] = `
 <DocumentFragment>
   <h6
-    class="MuiTypography-root MuiTypography-h1 css-qq5cxq-MuiTypography-root"
+    class="MuiTypography-root MuiTypography-h1 css-1f1pdin-MuiTypography-root"
   >
     H6 with styling of H1
   </h6>
   <h5
-    class="MuiTypography-root MuiTypography-h2 css-1m1enz5-MuiTypography-root"
+    class="MuiTypography-root MuiTypography-h2 css-10rkqji-MuiTypography-root"
   >
     H5 with styling of H2
   </h5>
   <h4
-    class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
+    class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
   >
     H4 with styling of H3
   </h4>
   <h3
-    class="MuiTypography-root MuiTypography-h4 css-1fh3rua-MuiTypography-root"
+    class="MuiTypography-root MuiTypography-h4 css-ivca51-MuiTypography-root"
   >
     H3 with styling of H4
   </h3>
