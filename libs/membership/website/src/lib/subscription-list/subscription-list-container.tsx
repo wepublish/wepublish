@@ -4,6 +4,7 @@ import {
   Subscription,
   useCancelSubscriptionMutation,
   useExtendSubscriptionMutation,
+  useInvoicesQuery,
   usePaySubscriptionMutation,
   useSubscriptionsQuery
 } from '@wepublish/website/api'
@@ -25,6 +26,7 @@ export function SubscriptionListContainer({
 }: SubscriptionListContainerProps) {
   const {SubscriptionList} = useWebsiteBuilder()
   const {data, loading, error} = useSubscriptionsQuery()
+  const invoices = useInvoicesQuery()
 
   const [pay] = usePaySubscriptionMutation({
     onCompleted(data) {
@@ -57,6 +59,7 @@ export function SubscriptionListContainer({
       data={filteredSubscriptions}
       loading={loading}
       error={error}
+      invoices={invoices}
       className={className}
       onCancel={async subscriptionId => {
         await cancel({

@@ -4,7 +4,7 @@ import {
   useAsyncAction,
   useWebsiteBuilder
 } from '@wepublish/website/builder'
-import {useState} from 'react'
+import {useMemo, useState} from 'react'
 import {MdAttachMoney, MdCalendarMonth, MdOutlineInfo, MdOutlineWarning} from 'react-icons/md'
 import {formatChf} from '../formatters/format-currency'
 
@@ -55,6 +55,7 @@ export function InvoiceListItem({
   canceledAt,
   dueAt,
   subscription,
+  canPay,
   pay,
   className
 }: BuilderInvoiceListItemProps) {
@@ -67,6 +68,15 @@ export function InvoiceListItem({
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error>()
   const callAction = useAsyncAction(setLoading, setError)
+
+  const showPayrexxSubscriptionWarning = useMemo(
+    () =>
+      subscription?.paymentMethod.slug === 'payrexx-subscription' &&
+      new Date() > new Date(dueAt) &&
+      !canceledAt &&
+      !paidAt,
+    [canceledAt, dueAt, paidAt, subscription?.paymentMethod.slug]
+  )
 
   return (
     <InvoiceListItemWrapper className={className}>
@@ -133,12 +143,20 @@ export function InvoiceListItem({
 
         {error && <Alert severity="error">{error.message}</Alert>}
 
-        {!paidAt && !canceledAt && (
+        {canPay && (
           <InvoiceListItemActions>
             <Button onClick={callAction(pay)} disabled={loading}>
               Jetzt Bezahlen
             </Button>
           </InvoiceListItemActions>
+        )}
+
+        {/* @TODO: Remove when all 'payrexx subscriptions' subscriptions have been migrated  */}
+        {showPayrexxSubscriptionWarning && (
+          <Alert severity="warning">
+            Wir haben vor einiger Zeit das Membersystem umgestellt. Du verfügst noch über eine alte
+            Membership, die automatisch abgebucht wird.
+          </Alert>
         )}
       </InvoiceListItemContent>
     </InvoiceListItemWrapper>

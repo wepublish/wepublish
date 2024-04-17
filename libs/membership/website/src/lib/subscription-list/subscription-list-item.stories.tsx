@@ -32,13 +32,27 @@ const clickPay: StoryObj['play'] = async ({canvasElement, step}) => {
 const clickCancel: StoryObj['play'] = async ({canvasElement, step}) => {
   const canvas = within(canvasElement)
 
-  const button = canvas.getByText('Abo Kündigen', {
+  const button = canvas.getByText('Abo Künden', {
     selector: 'button'
   })
 
   await step('Click Cancel', async () => {
     await userEvent.click(button)
   })
+
+  /* Works fine in the browser but does not work in the terminal
+  // Mui sets the portal outside of the story root, so we have to escape it
+  const body = canvasElement.ownerDocument.body
+  const modal = within(body)
+
+  const modalButton = modal.getByText('Abo Künden', {
+    selector: '[role="presentation"] button'
+  })
+
+  await step('Confirm Cancel', async () => {
+    await userEvent.click(modalButton)
+  })
+   */
 }
 
 const clickExtend: StoryObj['play'] = async ({canvasElement, step}) => {
@@ -106,6 +120,8 @@ export const Default: StoryObj = {
     ...subscription,
     pay: action('pay'),
     cancel: action('cancel'),
+    canExtend: true,
+    canPay: false,
     extend: action('extend')
   }
 }
@@ -114,7 +130,9 @@ export const Unpaid: StoryObj = {
   ...Default,
   args: {
     ...Default.args,
-    paidUntil: null
+    paidUntil: null,
+    canPay: true,
+    canExtend: false
   }
 }
 
