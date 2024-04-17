@@ -51,22 +51,6 @@ https://unsplash.it/200/100 200w"
               </span>
             </span>
           </p>
-          <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
-            data-slate-node="element"
-          >
-            <span
-              data-slate-node="text"
-            >
-              <span
-                data-slate-length="0"
-                data-slate-zero-width="n"
-              >
-                ﻿
-                <br />
-              </span>
-            </span>
-          </p>
           <h4
             class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
             data-slate-node="element"
@@ -207,22 +191,6 @@ https://unsplash.it/200/100 200w"
               </span>
             </span>
           </p>
-          <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
-            data-slate-node="element"
-          >
-            <span
-              data-slate-node="text"
-            >
-              <span
-                data-slate-length="0"
-                data-slate-zero-width="n"
-              >
-                ﻿
-                <br />
-              </span>
-            </span>
-          </p>
           <h4
             class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
             data-slate-node="element"
@@ -360,22 +328,6 @@ https://unsplash.it/200/100 200w"
                 data-slate-string="true"
               >
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit
-              </span>
-            </span>
-          </p>
-          <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
-            data-slate-node="element"
-          >
-            <span
-              data-slate-node="text"
-            >
-              <span
-                data-slate-length="0"
-                data-slate-zero-width="n"
-              >
-                ﻿
-                <br />
               </span>
             </span>
           </p>
@@ -529,22 +481,6 @@ https://unsplash.it/200/100 200w"
               </span>
             </span>
           </p>
-          <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
-            data-slate-node="element"
-          >
-            <span
-              data-slate-node="text"
-            >
-              <span
-                data-slate-length="0"
-                data-slate-zero-width="n"
-              >
-                ﻿
-                <br />
-              </span>
-            </span>
-          </p>
           <h4
             class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
             data-slate-node="element"
@@ -685,22 +621,6 @@ https://unsplash.it/200/100 200w"
               </span>
             </span>
           </p>
-          <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
-            data-slate-node="element"
-          >
-            <span
-              data-slate-node="text"
-            >
-              <span
-                data-slate-length="0"
-                data-slate-zero-width="n"
-              >
-                ﻿
-                <br />
-              </span>
-            </span>
-          </p>
           <h4
             class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
             data-slate-node="element"
@@ -831,22 +751,6 @@ exports[`Break Block should render WithoutImage 1`] = `
               </span>
             </span>
           </p>
-          <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
-            data-slate-node="element"
-          >
-            <span
-              data-slate-node="text"
-            >
-              <span
-                data-slate-length="0"
-                data-slate-zero-width="n"
-              >
-                ﻿
-                <br />
-              </span>
-            </span>
-          </p>
           <h4
             class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
             data-slate-node="element"
@@ -974,22 +878,6 @@ exports[`Break Block should render WithoutImageRight 1`] = `
                 data-slate-string="true"
               >
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit
-              </span>
-            </span>
-          </p>
-          <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
-            data-slate-node="element"
-          >
-            <span
-              data-slate-node="text"
-            >
-              <span
-                data-slate-length="0"
-                data-slate-zero-width="n"
-              >
-                ﻿
-                <br />
               </span>
             </span>
           </p>

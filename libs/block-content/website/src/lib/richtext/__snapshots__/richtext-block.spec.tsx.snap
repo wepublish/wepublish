@@ -90,22 +90,6 @@ exports[`Richtext Block should render Default 1`] = `
           </span>
         </li>
       </ol>
-      <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
-        data-slate-node="element"
-      >
-        <span
-          data-slate-node="text"
-        >
-          <span
-            data-slate-length="0"
-            data-slate-zero-width="n"
-          >
-            ﻿
-            <br />
-          </span>
-        </span>
-      </p>
       <table
         class="css-o38l6f-tableStyles"
       >
@@ -466,22 +450,6 @@ exports[`Richtext Block should render WithClassName 1`] = `
           </span>
         </li>
       </ol>
-      <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
-        data-slate-node="element"
-      >
-        <span
-          data-slate-node="text"
-        >
-          <span
-            data-slate-length="0"
-            data-slate-zero-width="n"
-          >
-            ﻿
-            <br />
-          </span>
-        </span>
-      </p>
       <table
         class="css-o38l6f-tableStyles"
       >
@@ -842,22 +810,6 @@ exports[`Richtext Block should render WithEmotion 1`] = `
           </span>
         </li>
       </ol>
-      <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
-        data-slate-node="element"
-      >
-        <span
-          data-slate-node="text"
-        >
-          <span
-            data-slate-length="0"
-            data-slate-zero-width="n"
-          >
-            ﻿
-            <br />
-          </span>
-        </span>
-      </p>
       <table
         class="css-o38l6f-tableStyles"
       >
