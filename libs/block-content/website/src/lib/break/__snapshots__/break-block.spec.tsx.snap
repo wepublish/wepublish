@@ -23,7 +23,7 @@ https://unsplash.it/200/100 200w"
       class="css-ywr472-BreakBlockSegment e11xbw3q0"
     >
       <div
-        class="MuiTypography-root MuiTypography-h4 css-4x3r3m-MuiTypography-root-BreakBlock"
+        class="MuiTypography-root MuiTypography-h4 css-18u18fv-MuiTypography-root-BreakBlock"
         role="heading"
       >
         Break block test
@@ -179,7 +179,7 @@ https://unsplash.it/200/100 200w"
       class="css-ywr472-BreakBlockSegment e11xbw3q0"
     >
       <div
-        class="MuiTypography-root MuiTypography-h4 css-4x3r3m-MuiTypography-root-BreakBlock"
+        class="MuiTypography-root MuiTypography-h4 css-18u18fv-MuiTypography-root-BreakBlock"
         role="heading"
       >
         Break block test
@@ -335,7 +335,7 @@ https://unsplash.it/200/100 200w"
       class="css-ywr472-BreakBlockSegment e11xbw3q0"
     >
       <div
-        class="MuiTypography-root MuiTypography-h4 css-4x3r3m-MuiTypography-root-BreakBlock"
+        class="MuiTypography-root MuiTypography-h4 css-18u18fv-MuiTypography-root-BreakBlock"
         role="heading"
       >
         Break block test
@@ -501,7 +501,7 @@ https://unsplash.it/200/100 200w"
       class="css-ywr472-BreakBlockSegment e11xbw3q0"
     >
       <div
-        class="MuiTypography-root MuiTypography-h4 css-4x3r3m-MuiTypography-root-BreakBlock"
+        class="MuiTypography-root MuiTypography-h4 css-18u18fv-MuiTypography-root-BreakBlock"
         role="heading"
       >
         Break block test
@@ -657,7 +657,7 @@ https://unsplash.it/200/100 200w"
       class="css-ywr472-BreakBlockSegment e11xbw3q0"
     >
       <div
-        class="MuiTypography-root MuiTypography-h4 css-4x3r3m-MuiTypography-root-BreakBlock"
+        class="MuiTypography-root MuiTypography-h4 css-18u18fv-MuiTypography-root-BreakBlock"
         role="heading"
       >
         Break block test
@@ -799,7 +799,7 @@ exports[`Break Block should render WithoutImage 1`] = `
       class="css-ywr472-BreakBlockSegment e11xbw3q0"
     >
       <div
-        class="MuiTypography-root MuiTypography-h2 css-ygk4vh-MuiTypography-root-BreakBlock"
+        class="MuiTypography-root MuiTypography-h2 css-dh9xz8-MuiTypography-root-BreakBlock"
         role="heading"
       >
         Break block test
@@ -945,7 +945,7 @@ exports[`Break Block should render WithoutImageRight 1`] = `
       class="css-17wr6dm-BreakBlockSegment e11xbw3q0"
     >
       <div
-        class="MuiTypography-root MuiTypography-h2 css-ygk4vh-MuiTypography-root-BreakBlock"
+        class="MuiTypography-root MuiTypography-h2 css-dh9xz8-MuiTypography-root-BreakBlock"
         role="heading"
       >
         Break block test

@@ -6,7 +6,7 @@ exports[`Title Block should render Default 1`] = `
     class="css-cs9jq0-TitleBlockWrapper ek0hk6a0"
   >
     <h1
-      class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
     >
       This is a title
     </h1>
@@ -25,7 +25,7 @@ exports[`Title Block should render WithClassName 1`] = `
     class="extra-classname css-cs9jq0-TitleBlockWrapper ek0hk6a0"
   >
     <h1
-      class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
     >
       This is a title
     </h1>
@@ -44,7 +44,7 @@ exports[`Title Block should render WithEmotion 1`] = `
     class="css-cs9jq0-TitleBlockWrapper ek0hk6a0"
   >
     <h1
-      class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
     >
       This is a title
     </h1>
@@ -63,7 +63,7 @@ exports[`Title Block should render WithoutLead 1`] = `
     class="css-cs9jq0-TitleBlockWrapper ek0hk6a0"
   >
     <h1
-      class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
     >
       This is a title
     </h1>

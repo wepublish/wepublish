@@ -1,8 +1,6 @@
-import {ApiV1, SessionTokenContext} from '@wepublish/website'
+import {ApiV1, AuthTokenStorageKey, SessionTokenContext} from '@wepublish/website'
 import {deleteCookie, getCookie, setCookie} from 'cookies-next'
 import {memo, PropsWithChildren, useCallback, useEffect, useState} from 'react'
-
-export const AuthTokenStorageKey = 'auth.token'
 
 export const SessionProvider = memo<PropsWithChildren<{sessionToken: ApiV1.UserSession | null}>>(
   function SessionProvider({sessionToken, children}) {

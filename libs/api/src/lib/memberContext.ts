@@ -46,7 +46,7 @@ export interface DeactivateSubscriptionForUserProps {
   deactivationReason?: SubscriptionDeactivationReason
 }
 
-export interface MemberContext {
+export interface MemberContextInterface {
   prisma: PrismaClient
   loaders: DataLoaderContext
   paymentProviders: PaymentProvider[]
@@ -103,9 +103,10 @@ export function calculateAmountForPeriodicity(
   }
 }
 
-export class MemberContext implements MemberContext {
+export class MemberContext implements MemberContextInterface {
   loaders: DataLoaderContext
   paymentProviders: PaymentProvider[]
+  prisma: PrismaClient
 
   mailContext: MailContext
   getLoginUrlForUser: (user: User) => string
@@ -703,6 +704,7 @@ export class MemberContext implements MemberContext {
       subscriptionEvent
     )
   }
+
   async getActionsForSubscriptions(query: LookupActionInput): Promise<Action[]> {
     return new SubscriptionEventDictionary(this.prisma).getActionsForSubscriptions(query)
   }
