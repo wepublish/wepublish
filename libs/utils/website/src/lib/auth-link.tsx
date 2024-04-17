@@ -1,7 +1,6 @@
 import {ApolloLink} from '@apollo/client'
+import {AuthTokenStorageKey} from '@wepublish/website'
 import {getCookie} from 'cookies-next'
-
-import {AuthTokenStorageKey} from './session.provider'
 
 export const authLink = new ApolloLink((operation, forward) => {
   const {token} = JSON.parse(getCookie(AuthTokenStorageKey)?.toString() ?? '{}')
@@ -19,13 +18,13 @@ export const authLink = new ApolloLink((operation, forward) => {
   return forward(operation)
 })
 
-export const ssrAuthLink = (token: string | undefined): ApolloLink =>
+export const ssrAuthLink = (token: string | undefined | (() => string | undefined)): ApolloLink =>
   new ApolloLink((operation, forward) => {
     const context = operation.getContext()
 
     operation.setContext({
       headers: {
-        authorization: token ? `Bearer ${token}` : '',
+        authorization: token ? `Bearer ${typeof token === 'function' ? token() : token}` : '',
         ...context.headers
       },
       credentials: 'include',
