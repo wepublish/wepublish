@@ -84,7 +84,8 @@ const subscription = {
     id: '123',
     slug: '',
     description: [],
-    tags: []
+    tags: [],
+    extendable: true
   },
   properties: [],
   deactivation: null
@@ -136,6 +137,16 @@ export const Default: StoryObj = {
         },
         {
           request: {
+            query: InvoicesDocument
+          },
+          result: {
+            data: {
+              invoices: [invoice]
+            }
+          }
+        },
+        {
+          request: {
             query: CancelSubscriptionDocument,
             variables: {
               subscriptionId: subscription.id
@@ -145,7 +156,7 @@ export const Default: StoryObj = {
             data: {
               cancelUserSubscription: {
                 ...subscription,
-                paidUntil: null,
+                canceledAt: new Date('2023-01-01'),
                 deactivation
               }
             }
@@ -232,6 +243,24 @@ export const Extend: StoryObj = {
     await waitFor(() => canvas.getByText('Jetzt Verlängern'))
 
     await WithExtendError.play?.(ctx)
+  },
+  parameters: {
+    apolloClient: {
+      mocks: [
+        Default.parameters!.apolloClient.mocks[0],
+        {
+          request: {
+            query: InvoicesDocument
+          },
+          result: {
+            data: {
+              invoices: [{...invoice, paidAt: new Date('2023-01-01')}]
+            }
+          }
+        },
+        ...Default.parameters!.apolloClient.mocks.slice(2)
+      ]
+    }
   }
 }
 
@@ -239,7 +268,7 @@ export const Cancel: StoryObj = {
   ...Default,
   play: async ctx => {
     const canvas = within(ctx.canvasElement)
-    await waitFor(() => canvas.getByText('Abo Kündigen'))
+    await waitFor(() => canvas.getByText('Abo Künden'))
 
     await WithCancelError.play?.(ctx)
   }

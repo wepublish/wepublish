@@ -1,6 +1,5 @@
 import {composeStories} from '@storybook/react'
-import {render} from '@testing-library/react'
-import {act} from 'react-dom/test-utils'
+import {act, render} from '@testing-library/react'
 import snapshotDiff from 'snapshot-diff'
 import * as stories from './poll-block.stories'
 
