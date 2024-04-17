@@ -258,7 +258,7 @@ export const PreTitle = styled('div')`
   width: fit-content;
   font-size: 14px;
   font-weight: 300;
-  transform: ${({theme}) => `translateY(-${theme.spacing(3.5)})`};
+  transform: translateY(-100%);
 
   ${TeaserWrapper}:hover & {
     background-color: ${({theme}) => theme.palette.primary.main};
@@ -266,7 +266,6 @@ export const PreTitle = styled('div')`
 
   ${({theme}) => theme.breakpoints.up('md')} {
     font-size: 18px;
-    transform: ${({theme}) => `translateY(-${theme.spacing(4)})`};
   }
 `
 

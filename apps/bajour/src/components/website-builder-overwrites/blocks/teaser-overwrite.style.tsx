@@ -1,4 +1,5 @@
 import {Button, styled} from '@mui/material'
+import {H1, Paragraph} from '@wepublish/ui'
 import {NextWepublishLink} from '@wepublish/utils/website'
 import {Image, TeaserInnerWrapper, TeaserLead} from '@wepublish/website'
 
@@ -42,7 +43,7 @@ export const TeaserContentStyled = styled(TeaserInnerWrapper)`
 
 export const TeaserPreTitleStyled = styled('span')``
 
-export const TeaserTitlesStyled = styled('h1')`
+export const TeaserTitlesStyled = styled(H1)`
   margin: 0;
 `
 
@@ -58,7 +59,7 @@ export const TitleLine = styled('hr')`
   }
 `
 
-export const AuthorsAndDate = styled('p')`
+export const AuthorsAndDate = styled(Paragraph)`
   margin: 0;
 `
 
