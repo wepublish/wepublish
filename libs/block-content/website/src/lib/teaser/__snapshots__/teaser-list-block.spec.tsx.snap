@@ -11,7 +11,7 @@ exports[`Teaser List Block should render Article 1`] = `
       y="0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-kpytxy-MuiTypography-root-MuiLink-root-Teaser"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1rdjjkq-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
@@ -38,7 +38,7 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
+          class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
         >
           Title
         </h1>
@@ -65,7 +65,7 @@ https://unsplash.it/200/200 200w"
       y="1"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-kpytxy-MuiTypography-root-MuiLink-root-Teaser"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1rdjjkq-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
@@ -92,7 +92,7 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
+          class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
         >
           Title
         </h1>
@@ -119,7 +119,7 @@ https://unsplash.it/200/200 200w"
       y="2"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-kpytxy-MuiTypography-root-MuiLink-root-Teaser"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1rdjjkq-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
@@ -146,7 +146,7 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
+          class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
         >
           Title
         </h1>
@@ -182,7 +182,7 @@ exports[`Teaser List Block should render Event 1`] = `
       y="0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-kpytxy-MuiTypography-root-MuiLink-root-Teaser"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1rdjjkq-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
@@ -209,7 +209,7 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
+          class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
         >
           Title
         </h1>
@@ -236,7 +236,7 @@ https://unsplash.it/200/200 200w"
       y="1"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-kpytxy-MuiTypography-root-MuiLink-root-Teaser"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1rdjjkq-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
@@ -263,7 +263,7 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
+          class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
         >
           Title
         </h1>
@@ -290,7 +290,7 @@ https://unsplash.it/200/200 200w"
       y="2"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-kpytxy-MuiTypography-root-MuiLink-root-Teaser"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1rdjjkq-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
@@ -317,7 +317,7 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
+          class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
         >
           Title
         </h1>
@@ -353,7 +353,7 @@ exports[`Teaser List Block should render Page 1`] = `
       y="0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-kpytxy-MuiTypography-root-MuiLink-root-Teaser"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1rdjjkq-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
@@ -380,7 +380,7 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
+          class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
         >
           Title
         </h1>
@@ -400,7 +400,7 @@ https://unsplash.it/200/200 200w"
       y="1"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-kpytxy-MuiTypography-root-MuiLink-root-Teaser"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1rdjjkq-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
@@ -427,7 +427,7 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
+          class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
         >
           Title
         </h1>
@@ -447,7 +447,7 @@ https://unsplash.it/200/200 200w"
       y="2"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-kpytxy-MuiTypography-root-MuiLink-root-Teaser"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1rdjjkq-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
@@ -474,7 +474,7 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
+          class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
         >
           Title
         </h1>
@@ -503,7 +503,7 @@ exports[`Teaser List Block should render WithClassName 1`] = `
       y="0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-kpytxy-MuiTypography-root-MuiLink-root-Teaser"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1rdjjkq-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
@@ -530,7 +530,7 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
+          class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
         >
           Title
         </h1>
@@ -557,7 +557,7 @@ https://unsplash.it/200/200 200w"
       y="1"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-kpytxy-MuiTypography-root-MuiLink-root-Teaser"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1rdjjkq-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
@@ -584,7 +584,7 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
+          class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
         >
           Title
         </h1>
@@ -611,7 +611,7 @@ https://unsplash.it/200/200 200w"
       y="2"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-kpytxy-MuiTypography-root-MuiLink-root-Teaser"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1rdjjkq-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
@@ -638,7 +638,7 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
+          class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
         >
           Title
         </h1>
@@ -674,7 +674,7 @@ exports[`Teaser List Block should render WithEmotion 1`] = `
       y="0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-kpytxy-MuiTypography-root-MuiLink-root-Teaser"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1rdjjkq-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
@@ -701,7 +701,7 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
+          class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
         >
           Title
         </h1>
@@ -728,7 +728,7 @@ https://unsplash.it/200/200 200w"
       y="1"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-kpytxy-MuiTypography-root-MuiLink-root-Teaser"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1rdjjkq-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
@@ -755,7 +755,7 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
+          class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
         >
           Title
         </h1>
@@ -782,7 +782,7 @@ https://unsplash.it/200/200 200w"
       y="2"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-kpytxy-MuiTypography-root-MuiLink-root-Teaser"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1rdjjkq-MuiTypography-root-MuiLink-root-Teaser"
         href="https://example.com"
       >
         <div
@@ -809,7 +809,7 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <h1
-          class="MuiTypography-root MuiTypography-h4 css-1xt7at6-TeaserTitle-MuiTypography-root e18of27r7"
+          class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
         >
           Title
         </h1>

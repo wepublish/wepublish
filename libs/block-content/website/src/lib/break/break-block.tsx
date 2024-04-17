@@ -67,7 +67,7 @@ const headingStylesWithImage = (theme: Theme) => css`
   }
 `
 
-const linkStyles = (theme: Theme) => css`
+const buttonStyles = (theme: Theme) => css`
   text-transform: none;
   background-color: ${theme.palette.common.black};
   margin-top: ${theme.spacing(2)};
@@ -92,10 +92,6 @@ const richTextStyles = (theme: Theme) => css`
       font-size: 22px;
     }
   }
-`
-
-const buttonStyles = css`
-  justify-self: start;
 `
 
 export const BreakBlock = ({
@@ -146,7 +142,7 @@ export const BreakBlock = ({
             LinkComponent={Link}
             href={linkURL ?? ''}
             target={linkTarget ?? '_blank'}
-            css={linkStyles(theme)}>
+            css={buttonStyles(theme)}>
             {linkText}
           </Button>
         )}

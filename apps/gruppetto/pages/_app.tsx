@@ -35,7 +35,6 @@ import background from '../src/background.svg'
 import {GruppettoBreakBlock} from '../src/break-block'
 import {Footer} from '../src/footer'
 import {ReactComponent as Logo} from '../src/logo.svg'
-import {SafariBugHotfixTeaser} from '../src/safari-bug-hotfix'
 import {YearlyMemberPlanItem} from '../src/yearly-memberplan-item'
 
 setDefaultOptions({
@@ -134,7 +133,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
           Footer={Footer}
           MemberPlanItem={YearlyMemberPlanItem}
           elements={{Link: NextWepublishLink}}
-          blocks={{Break: GruppettoBreakBlock, Teaser: SafariBugHotfixTeaser}}>
+          blocks={{Break: GruppettoBreakBlock}}>
           <ThemeProvider theme={gruppettoTheme}>
             <CssBaseline />
 

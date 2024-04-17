@@ -201,7 +201,7 @@ const useImageStyles = () => {
 
 const teaserLinkStyles = () => css`
   display: grid;
-  grid-template-rows: min-content;
+  grid-auto-rows: max-content;
   align-items: start;
   text-decoration: none;
   grid-template-areas:
@@ -240,7 +240,7 @@ export const TeaserPreTitleNoContent = styled('div')`
 
 export const TeaserPreTitleWrapper = styled('div')`
   transition: background-color 0.3s ease-in-out;
-  background-color: ${({theme}) => theme.palette.secondary.main};
+  background-color: ${({theme}) => theme.palette.accent.main};
   height: 3px;
   width: 100%;
   margin-bottom: ${({theme}) => theme.spacing(1.5)};
@@ -254,7 +254,7 @@ export const TeaserPreTitleWrapper = styled('div')`
 export const PreTitle = styled('div')`
   transition: background-color 0.3s ease-in-out;
   padding: ${({theme}) => `${theme.spacing(0.5)} ${theme.spacing(2)}`};
-  background-color: ${({theme}) => theme.palette.secondary.main};
+  background-color: ${({theme}) => theme.palette.accent.main};
   width: fit-content;
   font-size: 14px;
   font-weight: 300;

@@ -14,7 +14,7 @@ exports[`Listicle Block should render Default 1`] = `
         1
       </div>
       <h3
-        class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
       >
         Foobar
       </h3>
@@ -63,7 +63,7 @@ https://unsplash.it/200/100 200w"
         2
       </div>
       <h3
-        class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
       >
         Foobar
       </h3>
@@ -112,7 +112,7 @@ https://unsplash.it/200/100 200w"
         3
       </div>
       <h3
-        class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
       >
         Foobar
       </h3>
@@ -161,7 +161,7 @@ https://unsplash.it/200/100 200w"
         4
       </div>
       <h3
-        class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
       >
         Foobar
       </h3>
@@ -219,7 +219,7 @@ exports[`Listicle Block should render WithClassName 1`] = `
         1
       </div>
       <h3
-        class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
       >
         Foobar
       </h3>
@@ -268,7 +268,7 @@ https://unsplash.it/200/100 200w"
         2
       </div>
       <h3
-        class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
       >
         Foobar
       </h3>
@@ -317,7 +317,7 @@ https://unsplash.it/200/100 200w"
         3
       </div>
       <h3
-        class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
       >
         Foobar
       </h3>
@@ -366,7 +366,7 @@ https://unsplash.it/200/100 200w"
         4
       </div>
       <h3
-        class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
       >
         Foobar
       </h3>
@@ -424,7 +424,7 @@ exports[`Listicle Block should render WithEmotion 1`] = `
         1
       </div>
       <h3
-        class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
       >
         Foobar
       </h3>
@@ -473,7 +473,7 @@ https://unsplash.it/200/100 200w"
         2
       </div>
       <h3
-        class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
       >
         Foobar
       </h3>
@@ -522,7 +522,7 @@ https://unsplash.it/200/100 200w"
         3
       </div>
       <h3
-        class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
       >
         Foobar
       </h3>
@@ -571,7 +571,7 @@ https://unsplash.it/200/100 200w"
         4
       </div>
       <h3
-        class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
       >
         Foobar
       </h3>
@@ -629,7 +629,7 @@ exports[`Listicle Block should render WithoutImage 1`] = `
         1
       </div>
       <h3
-        class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
       >
         Foobar
       </h3>
@@ -678,7 +678,7 @@ https://unsplash.it/200/100 200w"
         2
       </div>
       <h3
-        class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
       >
         Foobar
       </h3>
@@ -717,7 +717,7 @@ https://unsplash.it/200/100 200w"
         3
       </div>
       <h3
-        class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
       >
         Foobar
       </h3>
@@ -766,7 +766,7 @@ https://unsplash.it/200/100 200w"
         4
       </div>
       <h3
-        class="MuiTypography-root MuiTypography-h3 css-vqv5u4-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
       >
         Foobar
       </h3>

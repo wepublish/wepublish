@@ -23,7 +23,7 @@ https://unsplash.it/200/100 200w"
       class="css-ywr472-BreakBlockSegment e11xbw3q0"
     >
       <div
-        class="MuiTypography-root MuiTypography-h4 css-4x3r3m-MuiTypography-root-BreakBlock"
+        class="MuiTypography-root MuiTypography-h4 css-18u18fv-MuiTypography-root-BreakBlock"
         role="heading"
       >
         Break block test
@@ -48,22 +48,6 @@ https://unsplash.it/200/100 200w"
                 data-slate-string="true"
               >
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit
-              </span>
-            </span>
-          </p>
-          <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
-            data-slate-node="element"
-          >
-            <span
-              data-slate-node="text"
-            >
-              <span
-                data-slate-length="0"
-                data-slate-zero-width="n"
-              >
-                ﻿
-                <br />
               </span>
             </span>
           </p>
@@ -179,7 +163,7 @@ https://unsplash.it/200/100 200w"
       class="css-ywr472-BreakBlockSegment e11xbw3q0"
     >
       <div
-        class="MuiTypography-root MuiTypography-h4 css-4x3r3m-MuiTypography-root-BreakBlock"
+        class="MuiTypography-root MuiTypography-h4 css-18u18fv-MuiTypography-root-BreakBlock"
         role="heading"
       >
         Break block test
@@ -204,22 +188,6 @@ https://unsplash.it/200/100 200w"
                 data-slate-string="true"
               >
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit
-              </span>
-            </span>
-          </p>
-          <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
-            data-slate-node="element"
-          >
-            <span
-              data-slate-node="text"
-            >
-              <span
-                data-slate-length="0"
-                data-slate-zero-width="n"
-              >
-                ﻿
-                <br />
               </span>
             </span>
           </p>
@@ -335,7 +303,7 @@ https://unsplash.it/200/100 200w"
       class="css-ywr472-BreakBlockSegment e11xbw3q0"
     >
       <div
-        class="MuiTypography-root MuiTypography-h4 css-4x3r3m-MuiTypography-root-BreakBlock"
+        class="MuiTypography-root MuiTypography-h4 css-18u18fv-MuiTypography-root-BreakBlock"
         role="heading"
       >
         Break block test
@@ -360,22 +328,6 @@ https://unsplash.it/200/100 200w"
                 data-slate-string="true"
               >
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit
-              </span>
-            </span>
-          </p>
-          <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
-            data-slate-node="element"
-          >
-            <span
-              data-slate-node="text"
-            >
-              <span
-                data-slate-length="0"
-                data-slate-zero-width="n"
-              >
-                ﻿
-                <br />
               </span>
             </span>
           </p>
@@ -502,7 +454,7 @@ https://unsplash.it/200/100 200w"
       class="css-ywr472-BreakBlockSegment e11xbw3q0"
     >
       <div
-        class="MuiTypography-root MuiTypography-h4 css-4x3r3m-MuiTypography-root-BreakBlock"
+        class="MuiTypography-root MuiTypography-h4 css-18u18fv-MuiTypography-root-BreakBlock"
         role="heading"
       >
         Break block test
@@ -527,22 +479,6 @@ https://unsplash.it/200/100 200w"
                 data-slate-string="true"
               >
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit
-              </span>
-            </span>
-          </p>
-          <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
-            data-slate-node="element"
-          >
-            <span
-              data-slate-node="text"
-            >
-              <span
-                data-slate-length="0"
-                data-slate-zero-width="n"
-              >
-                ﻿
-                <br />
               </span>
             </span>
           </p>
@@ -658,7 +594,7 @@ https://unsplash.it/200/100 200w"
       class="css-ywr472-BreakBlockSegment e11xbw3q0"
     >
       <div
-        class="MuiTypography-root MuiTypography-h4 css-4x3r3m-MuiTypography-root-BreakBlock"
+        class="MuiTypography-root MuiTypography-h4 css-18u18fv-MuiTypography-root-BreakBlock"
         role="heading"
       >
         Break block test
@@ -683,22 +619,6 @@ https://unsplash.it/200/100 200w"
                 data-slate-string="true"
               >
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit
-              </span>
-            </span>
-          </p>
-          <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
-            data-slate-node="element"
-          >
-            <span
-              data-slate-node="text"
-            >
-              <span
-                data-slate-length="0"
-                data-slate-zero-width="n"
-              >
-                ﻿
-                <br />
               </span>
             </span>
           </p>
@@ -800,7 +720,7 @@ exports[`Break Block should render WithoutImage 1`] = `
       class="css-ywr472-BreakBlockSegment e11xbw3q0"
     >
       <div
-        class="MuiTypography-root MuiTypography-h2 css-ygk4vh-MuiTypography-root-BreakBlock"
+        class="MuiTypography-root MuiTypography-h2 css-dh9xz8-MuiTypography-root-BreakBlock"
         role="heading"
       >
         Break block test
@@ -829,22 +749,6 @@ exports[`Break Block should render WithoutImage 1`] = `
                 data-slate-string="true"
               >
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit
-              </span>
-            </span>
-          </p>
-          <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
-            data-slate-node="element"
-          >
-            <span
-              data-slate-node="text"
-            >
-              <span
-                data-slate-length="0"
-                data-slate-zero-width="n"
-              >
-                ﻿
-                <br />
               </span>
             </span>
           </p>
@@ -946,7 +850,7 @@ exports[`Break Block should render WithoutImageRight 1`] = `
       class="css-17wr6dm-BreakBlockSegment e11xbw3q0"
     >
       <div
-        class="MuiTypography-root MuiTypography-h2 css-ygk4vh-MuiTypography-root-BreakBlock"
+        class="MuiTypography-root MuiTypography-h2 css-dh9xz8-MuiTypography-root-BreakBlock"
         role="heading"
       >
         Break block test
@@ -975,22 +879,6 @@ exports[`Break Block should render WithoutImageRight 1`] = `
                 data-slate-string="true"
               >
                 Lorem ipsum dolor sit amet, consectetur adipiscing elit
-              </span>
-            </span>
-          </p>
-          <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
-            data-slate-node="element"
-          >
-            <span
-              data-slate-node="text"
-            >
-              <span
-                data-slate-length="0"
-                data-slate-zero-width="n"
-              >
-                ﻿
-                <br />
               </span>
             </span>
           </p>

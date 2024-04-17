@@ -1,8 +1,24 @@
-import {createTheme, CSSObject} from '@mui/material'
+import {createTheme, CSSObject, SimplePaletteColorOptions} from '@mui/material'
 
 const {
   palette: {augmentColor}
 } = createTheme()
+
+declare module '@mui/material/styles' {
+  interface Palette {
+    accent: SimplePaletteColorOptions
+  }
+
+  interface PaletteOptions {
+    accent: SimplePaletteColorOptions
+  }
+}
+
+declare module '@mui/material/Button' {
+  interface ButtonPropsColorOverrides {
+    accent: true
+  }
+}
 
 export const theme = createTheme({
   typography: {
@@ -11,20 +27,24 @@ export const theme = createTheme({
     },
     h1: {
       fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
-      fontWeight: 600
+      fontWeight: 600,
+      lineHeight: 1.15
     },
     h2: {
       fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
-      fontWeight: 600
+      fontWeight: 600,
+      lineHeight: 1.15
     },
     h3: {
       fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
-      fontWeight: 600
+      fontWeight: 600,
+      lineHeight: 1.15
     },
     h4: {
       fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
       fontWeight: 600,
       fontSize: '26px',
+      lineHeight: 1.15,
       '@media (min-width: 900px)': {
         fontSize: '32px'
       }
@@ -44,7 +64,8 @@ export const theme = createTheme({
   },
   palette: {
     primary: augmentColor({color: {main: '#e91e63'}}),
-    secondary: augmentColor({color: {main: '#F5FF64'}}),
+    secondary: augmentColor({color: {main: '#000'}}),
+    accent: augmentColor({color: {main: '#F5FF64'}}),
     grey: {
       800: '#1a1a1a'
     }

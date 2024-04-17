@@ -52,7 +52,7 @@ export const BabanewsBlockRenderer = (props: BuilderBlockRendererProps) => {
         [
           isBreakBlock,
           block => (
-            <FullWidthContainer backgroundColor={theme.palette.secondary.main}>
+            <FullWidthContainer backgroundColor={theme.palette.accent.main}>
               <Container>
                 <BreakBlock {...block} />
               </Container>

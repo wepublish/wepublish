@@ -14,7 +14,6 @@ import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import {AppProps} from 'next/app'
 import getConfig from 'next/config'
-import {Hanken_Grotesk} from 'next/font/google'
 import Head from 'next/head'
 import Script from 'next/script'
 import {initReactI18next} from 'react-i18next'
@@ -65,14 +64,6 @@ const dateFormatter = (date: Date, includeTime = true) =>
     ? `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
     : format(date, 'dd. MMMM yyyy')
 
-const hankenGrotesk = Hanken_Grotesk({
-  weight: ['100', '300', '400', '500', '600', '700'],
-  style: ['italic', 'normal'],
-  subsets: ['latin'],
-  display: 'swap',
-  preload: true
-})
-
 type CustomAppProps = AppProps<{
   sessionToken?: ApiV1.UserSession
 }>
@@ -116,19 +107,19 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               <meta name="msapplication-TileColor" content="#ffffff" />
               <meta name="theme-color" content="#ffffff" />
             </Head>
-            <div className={hankenGrotesk.className}>
-              <NavBar
-                categorySlugs={[['categories', 'about-us']]}
-                slug="main"
-                headerSlug="header"
-                showSubscriptionsUrl={false}
-              />
-              <ContentSpacer>
-                <Component {...pageProps} />
-              </ContentSpacer>
 
-              <Footer slug="main" categorySlugs={[['sonstiges', 'other'], ['about-us']]} />
-            </div>
+            <NavBar
+              categorySlugs={[['categories', 'about-us']]}
+              slug="main"
+              headerSlug="header"
+              showSubscriptionsUrl={false}
+            />
+
+            <ContentSpacer>
+              <Component {...pageProps} />
+            </ContentSpacer>
+
+            <Footer slug="main" categorySlugs={[['sonstiges', 'other'], ['about-us']]} />
           </ThemeProvider>
         </WebsiteBuilderProvider>
       </WebsiteProvider>
