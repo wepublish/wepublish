@@ -201,7 +201,7 @@ const useImageStyles = () => {
 
 const teaserLinkStyles = () => css`
   display: grid;
-  grid-template-rows: min-content;
+  grid-auto-rows: max-content;
   align-items: start;
   text-decoration: none;
   grid-template-areas:
