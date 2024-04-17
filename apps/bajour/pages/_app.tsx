@@ -14,7 +14,6 @@ import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import {AppProps} from 'next/app'
 import getConfig from 'next/config'
-import {Roboto} from 'next/font/google'
 import Head from 'next/head'
 import Script from 'next/script'
 import {initReactI18next} from 'react-i18next'
@@ -51,14 +50,6 @@ const dateFormatter = (date: Date, includeTime = true) =>
   includeTime
     ? `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
     : format(date, 'dd. MMMM yyyy')
-
-const roboto = Roboto({
-  weight: ['100', '300', '400', '500', '700', '900'],
-  style: ['italic', 'normal'],
-  subsets: ['latin'],
-  display: 'swap',
-  preload: true
-})
 
 type CustomAppProps = AppProps<{
   sessionToken?: ApiV1.UserSession
@@ -125,7 +116,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
             <ThemeProvider theme={theme}>
               <CssBaseline />
 
-              <MainGrid className={roboto.className}>
+              <MainGrid>
                 <ThemeProvider theme={navbarTheme}>
                   <NavBar
                     slug="main"

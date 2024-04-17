@@ -1,14 +1,41 @@
 import {createTheme, ThemeOptions} from '@mui/material'
 import {createBreakpoints} from '@mui/system'
 import {theme as WepTheme} from '@wepublish/ui'
+import {Roboto} from 'next/font/google'
 
 const {
   palette: {augmentColor}
 } = createTheme()
 
+const roboto = Roboto({
+  weight: ['100', '300', '400', '500', '700', '900'],
+  style: ['italic', 'normal'],
+  subsets: ['latin'],
+  display: 'swap',
+  preload: true
+})
+
 const theme = createTheme(WepTheme, {
   typography: {
-    fontFamily: 'Roboto, sans-serif'
+    h1: {
+      fontFamily: [roboto.style.fontFamily, 'sans-serif'].join(',')
+    },
+    h2: {
+      fontFamily: [roboto.style.fontFamily, 'sans-serif'].join(',')
+    },
+    h3: {
+      fontFamily: [roboto.style.fontFamily, 'sans-serif'].join(',')
+    },
+    h4: {
+      fontFamily: [roboto.style.fontFamily, 'sans-serif'].join(',')
+    },
+    h5: {
+      fontFamily: [roboto.style.fontFamily, 'sans-serif'].join(',')
+    },
+    h6: {
+      fontFamily: [roboto.style.fontFamily, 'sans-serif'].join(',')
+    },
+    fontFamily: [roboto.style.fontFamily, 'sans-serif'].join(',')
   },
   breakpoints: createBreakpoints({
     values: {
