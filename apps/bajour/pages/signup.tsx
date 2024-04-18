@@ -38,7 +38,7 @@ export default function SignUp() {
         </Typography>
       </div>
 
-      <RegistrationFormContainer />
+      <RegistrationFormContainer fields={['firstName']} />
     </SignupWrapper>
   )
 }

@@ -7,11 +7,11 @@ import {
   SubscriptionListContainer,
   useWebsiteBuilder
 } from '@wepublish/website'
+import {setCookie} from 'cookies-next'
 import {NextPageContext} from 'next'
 import getConfig from 'next/config'
 
 import {Container} from '../../../src/components/layout/container'
-import {setCookie} from 'cookies-next'
 
 const SubscriptionsWrapper = styled(Container)`
   gap: ${({theme}) => theme.spacing(3)};
@@ -48,14 +48,16 @@ function Subscriptions() {
     subscription => subscription.deactivation
   )
 
+  const locationOrigin = typeof window !== 'undefined' ? location.origin : ''
+
   return (
     <SubscriptionsWrapper>
       <SubscriptionListWrapper>
         <H4 component={'h1'}>Aktive Abos</H4>
 
         <SubscriptionListContainer
-          failureURL="/"
-          successURL="/"
+          successURL={`${locationOrigin}/payment/success`}
+          failureURL={`${locationOrigin}/payment/fail`}
           filter={subscriptions => subscriptions.filter(subscription => !subscription.deactivation)}
         />
 
@@ -70,8 +72,8 @@ function Subscriptions() {
         <H4 component={'h1'}>Offene Rechnungen</H4>
 
         <InvoiceListContainer
-          failureURL="/"
-          successURL="/"
+          successURL={`${locationOrigin}/payment/success`}
+          failureURL={`${locationOrigin}/payment/fail`}
           filter={invoices =>
             invoices.filter(
               invoice => invoice.subscription && !invoice.canceledAt && !invoice.paidAt

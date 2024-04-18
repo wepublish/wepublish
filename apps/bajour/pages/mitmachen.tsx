@@ -7,9 +7,15 @@ import getConfig from 'next/config'
 import {Container} from '../src/components/layout/container'
 
 export default function Mitmachen() {
+  const locationOrigin = typeof window !== 'undefined' ? location.origin : ''
+
   return (
     <Container>
-      <SubscribeContainer failureURL="/" successURL="/" fields={[]} />
+      <SubscribeContainer
+        successURL={`${locationOrigin}/payment/success`}
+        failureURL={`${locationOrigin}/payment/fail`}
+        fields={['firstName']}
+      />
     </Container>
   )
 }

@@ -30,6 +30,10 @@ const BestOfWePublishHeader = styled('div')`
   }
 `
 
+const BestOfWePublishTeaserWrapper = styled(TeaserGridBlockWrapper)`
+  grid-template-columns: 1fr 1fr;
+`
+
 const HeaderText = styled('div')`
   background-color: ${({theme}) => theme.palette.common.white};
   padding: 0 ${({theme}) => theme.spacing(2)};
@@ -85,7 +89,7 @@ const MoreButton = styled('a')`
   }
 `
 
-export const BestOfWePublish = ({teasers, numColumns}: BuilderTeaserGridBlockProps) => {
+export const BestOfWePublish = ({teasers, numColumns, blockStyle}: BuilderTeaserGridBlockProps) => {
   const filteredTeasers = teasers.filter(
     (teaser): teaser is ApiV1.PeerArticleTeaser =>
       teaser?.__typename === 'PeerArticleTeaser' && Boolean(teaser.article)
@@ -97,7 +101,7 @@ export const BestOfWePublish = ({teasers, numColumns}: BuilderTeaserGridBlockPro
         <HeaderText>Best of We.Publish</HeaderText>
       </BestOfWePublishHeader>
 
-      <TeaserGridBlockWrapper numColumns={numColumns}>
+      <BestOfWePublishTeaserWrapper numColumns={numColumns}>
         {filteredTeasers.map(
           (teaser, index) =>
             teaser && (
@@ -106,10 +110,11 @@ export const BestOfWePublish = ({teasers, numColumns}: BuilderTeaserGridBlockPro
                 teaser={teaser}
                 numColumns={numColumns}
                 alignment={alignmentForTeaserBlock(index, numColumns)}
+                blockStyle={blockStyle}
               />
             )
         )}
-      </TeaserGridBlockWrapper>
+      </BestOfWePublishTeaserWrapper>
 
       <BestOfWePublishFooter>
         <FooterContent>

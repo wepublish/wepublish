@@ -59,9 +59,7 @@ export const TitleLine = styled('hr')`
   }
 `
 
-export const AuthorsAndDate = styled(Paragraph)`
-  margin: 0;
-`
+export const AuthorsAndDate = styled(Paragraph)``
 
 export const TeaserLeadStyled = styled('div')``
 

@@ -70,12 +70,14 @@ export type BuilderTeaserListBlockProps = TeaserListBlock & {
 
 type TeaserTypeProps =
   | {
-      teaser?: Teaser | null
+      blockStyle: string | null | undefined
+      teaser?: Teaser | null | undefined
       alignment: FlexAlignment
       numColumns?: never
     }
   | {
-      teaser?: Teaser | null
+      blockStyle: string | null | undefined
+      teaser: Teaser | null | undefined
       alignment: FlexAlignment
       numColumns: number
     }

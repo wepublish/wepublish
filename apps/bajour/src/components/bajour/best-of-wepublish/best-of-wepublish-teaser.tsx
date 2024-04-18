@@ -3,7 +3,6 @@ import {NextWepublishLink} from '@wepublish/utils/website'
 import {
   ApiV1,
   BuilderTeaserProps,
-  Image as BuilderImage,
   selectTeaserImage,
   selectTeaserTitle,
   selectTeaserUrl,
@@ -14,11 +13,6 @@ import {
 type BestOfWePublishTeaserProps = BuilderTeaserProps & {
   teaser: ApiV1.PeerArticleTeaser
 }
-
-const TeaserBackground = styled(BuilderImage)`
-  width: 100%;
-  object-fit: cover;
-`
 
 const PeerLogoWrapper = styled('div')`
   position: absolute;
@@ -37,7 +31,6 @@ const PeerLogoWrapper = styled('div')`
 
 const LinkWrapper = styled(NextWepublishLink)`
   display: grid;
-  grid-template-columns: repeat(24, 1fr);
   grid-template-rows: auto;
   align-items: center;
   grid-template-columns: 1fr;
@@ -58,6 +51,7 @@ const InnerContainer = styled('div')`
 `
 
 const Content = styled('div')`
+  line-height: 1.1;
   display: inline-block;
   margin: ${({theme}) => theme.spacing(0.5)};
   position: absolute;
@@ -103,8 +97,10 @@ const Peer = styled(ContentText)`
   }
 `
 
-const imageStyles = css`
+const teaserBackgroundStyles = css`
   aspect-ratio: 4/3;
+  width: 100%;
+  object-fit: cover;
 `
 
 export const BestOfWePublishTeaser = ({teaser, alignment}: BestOfWePublishTeaserProps) => {
@@ -124,7 +120,7 @@ export const BestOfWePublishTeaser = ({teaser, alignment}: BestOfWePublishTeaser
         <PeerLogoWrapper>{peerLogo && <Image image={peerLogo} square />}</PeerLogoWrapper>
 
         <InnerContainer>
-          {image && <TeaserBackground image={image} css={imageStyles} />}
+          {image && <Image image={image} css={teaserBackgroundStyles} />}
 
           <Content>
             <ContentElement>

@@ -66,6 +66,7 @@ export const BabanewsBlockRenderer = (props: BuilderBlockRendererProps) => {
               <BabanewsTeaserList>
                 {block.teasers.map((teaser, index) => (
                   <ListTeaser
+                    blockStyle={block.blockStyle}
                     teaser={teaser}
                     key={index}
                     alignment={alignmentForTeaserBlock(index, 1)}

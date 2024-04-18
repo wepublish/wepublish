@@ -3,7 +3,7 @@
 exports[`Teaser Grid Block should render OneColumn 1`] = `
 <DocumentFragment>
   <div
-    class="css-xjxszh-TeaserGridBlockWrapper e1xnbuxv0"
+    class="css-blrgxi-TeaserGridBlockWrapper e1xnbuxv0"
   >
     <article
       class="css-13bgdik-TeaserWrapper e18of27r10"
@@ -154,7 +154,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Grid Block should render ThreeColumns 1`] = `
 <DocumentFragment>
   <div
-    class="css-331icf-TeaserGridBlockWrapper e1xnbuxv0"
+    class="css-8ifxdd-TeaserGridBlockWrapper e1xnbuxv0"
   >
     <article
       class="css-8p11sj-TeaserWrapper e18of27r10"
@@ -305,7 +305,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Grid Block should render WithClassName 1`] = `
 <DocumentFragment>
   <div
-    class="extra-classname css-331icf-TeaserGridBlockWrapper e1xnbuxv0"
+    class="extra-classname css-8ifxdd-TeaserGridBlockWrapper e1xnbuxv0"
   >
     <article
       class="css-8p11sj-TeaserWrapper e18of27r10"
@@ -456,7 +456,7 @@ https://unsplash.it/200/200 200w"
 exports[`Teaser Grid Block should render WithEmotion 1`] = `
 <DocumentFragment>
   <div
-    class="css-331icf-TeaserGridBlockWrapper e1xnbuxv0"
+    class="css-8ifxdd-TeaserGridBlockWrapper e1xnbuxv0"
   >
     <article
       class="css-8p11sj-TeaserWrapper e18of27r10"
