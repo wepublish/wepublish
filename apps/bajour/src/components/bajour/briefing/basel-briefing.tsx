@@ -74,7 +74,7 @@ const getValuesBasedOnBriefing = (briefing: BriefingType) => {
         title: 'Basel Briefing',
         subtitle: 'Das wichtigste für den tag',
         backgroundImage: baselBg,
-        welcome: 'Guten morgen!'
+        welcome: 'Guten Morgen!'
       }
     }
 
@@ -83,7 +83,7 @@ const getValuesBasedOnBriefing = (briefing: BriefingType) => {
         title: 'FCB Briefing',
         subtitle: 'DAS WICHTIGSTE VOR JEDEM SPIEL',
         backgroundImage: fcbBg,
-        welcome: 'Guten morgen!'
+        welcome: 'Guten Morgen!'
       }
     }
 
@@ -92,7 +92,7 @@ const getValuesBasedOnBriefing = (briefing: BriefingType) => {
         title: 'FASNACHTS-BRIEFING',
         subtitle: 'DEINE FASNÄCHTLICHE GRUNDVERSORGUNG',
         backgroundImage: fasnachtBg,
-        welcome: 'Guten morgen!'
+        welcome: 'Guten Morgen!'
       }
     }
   }
