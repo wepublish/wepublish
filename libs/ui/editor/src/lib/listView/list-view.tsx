@@ -53,6 +53,7 @@ export const StatusBadge = styled.div<StatusBadgeProps>`
   font-size: 0.75em;
   text-align: center;
   border-radius: 15px;
+  padding: 2px 8px;
   background-color: ${props => {
     if (props.states.includes('pending')) {
       return StateColor.pending
@@ -70,14 +71,16 @@ export const IconButtonCell = styled(RTable.Cell)`
   padding: 6px 0;
   & > div {
     padding: 0;
-    button:nth-of-type(n + 1) {
-      margin-left: 5px;
-    }
   }
 `
 
 export const IconButton = styled(RIconButton)`
-  margin-left: 5px;
+  width: 36px;
+  height: 36px;
+
+  &:not(:first-of-type) {
+    margin-left: 5px;
+  }
 `
 
 export const Table = styled(RTable)`

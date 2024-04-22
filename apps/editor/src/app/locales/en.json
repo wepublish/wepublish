@@ -72,6 +72,7 @@
         "light": "Light",
         "loading": "Loading ...",
         "loadMore": "Load More",
+        "noDataToDisplay": "No data to display",
         "metadata": "Metadata",
         "modifiedAt": "{{modifiedAt, ccc PP pp}}",
         "no": "No",

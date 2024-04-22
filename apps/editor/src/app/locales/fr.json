@@ -74,6 +74,7 @@
         "light": "Light",
         "loading": "Chargement ...",
         "loadMore": "Charger plus",
+        "noDataToDisplay": "Pas de données à afficher",
         "metadata": "Métadonnés",
         "metadataInfo": "Les informations de ces champs sont utilisées pour les aperçus dans les publications de médias sociaux. S'ils sont laissés vides, les informations de l'onglet général seront utilisées à la place.",
         "modifiedAt": "{{modifiedAt, ccc PP pp}}",

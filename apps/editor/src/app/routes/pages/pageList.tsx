@@ -17,6 +17,7 @@ import {
   DEFAULT_TABLE_PAGE_SIZES,
   DescriptionList,
   DescriptionListItem,
+  IconButton,
   IconButtonCell,
   IconButtonTooltip,
   ListFilters,
@@ -34,7 +35,7 @@ import {useEffect, useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdComment, MdContentCopy, MdDelete, MdPreview, MdUnpublished} from 'react-icons/md'
 import {Link, useNavigate} from 'react-router-dom'
-import {Button, IconButton, Message, Modal, Pagination, Table as RTable} from 'rsuite'
+import {Button, Message, Modal, Pagination, Table as RTable} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
 interface State {
@@ -215,7 +216,7 @@ function PageList() {
             </Cell>
           </Column>
 
-          <Column width={200} align="center" fixed="right">
+          <Column width={220} align="center" fixed="right">
             <HeaderCell>{t('pages.overview.action')}</HeaderCell>
             <IconButtonCell>
               {(rowData: RowDataType<PageRefFragment>) => (

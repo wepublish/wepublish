@@ -202,6 +202,8 @@ function AuthorList() {
                       icon={<MdDelete />}
                       circle
                       size="sm"
+                      appearance="ghost"
+                      color="red"
                       onClick={() => {
                         setConfirmationDialogOpen(true)
                         setCurrentAuthor(rowData as FullAuthorFragment)
