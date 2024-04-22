@@ -1,0 +1,54 @@
+@media print {
+  // Display background images
+  * {
+    -webkit-print-color-adjust: exact !important;   /* Chrome, Safari 6 – 15.3, Edge */
+    color-adjust: exact !important;                 /* Firefox 48 – 96 */
+    print-color-adjust: exact !important;           /* Firefox 97+, Safari 15.4+ */
+  }
+
+  // Do not repeat header on every page
+  .fixed-header {
+    position: relative !important;
+
+    // Set fixed header, logo and claim sizes
+    .header-height {
+      height: $header-height-sm-and-up;
+    }
+
+    .logo-width {
+      width: 350px;
+      min-height: 40.58px;
+    }
+
+    .claim-width {
+      width: 350px;
+      min-height: 14.23px;
+    }
+  }
+
+  .nuxt-content {
+    margin-top: 0px !important;
+  }
+
+  .v-application .nuxt-content {
+    padding-left: 15% !important;
+    padding-right: 15% !important;
+
+    p {
+      hyphens: auto;
+      font-size: 13px !important; // default is 18
+    }
+
+    .lead-20 {
+      font-size: 18px; // default is 26
+    }
+  }
+
+  iframe {
+    max-height: 90vh;
+  }
+
+  .himage, .quoteblock {
+    page-break-inside: avoid;
+  }
+}
