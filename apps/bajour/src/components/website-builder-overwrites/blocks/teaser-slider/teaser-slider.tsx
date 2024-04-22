@@ -4,18 +4,22 @@ import {css, styled, useMediaQuery, useTheme} from '@mui/material'
 import {
   ApiV1,
   BuilderTeaserGridBlockProps,
+  BuilderTeaserListBlockProps,
   hasBlockStyle,
   isFilledTeaser,
-  isTeaserGridBlock
+  isTeaserGridBlock,
+  isTeaserListBlock
 } from '@wepublish/website'
 import {useKeenSlider} from 'keen-slider/react'
-import {allPass} from 'ramda'
+import {allPass, anyPass} from 'ramda'
 import {useState} from 'react'
 
 import {TeaserSlide} from './teaser-slide'
 
-export const isTeaserSlider = (block: ApiV1.Block): block is ApiV1.TeaserGridBlock =>
-  allPass([hasBlockStyle('Slider'), isTeaserGridBlock])(block)
+export const isTeaserSlider = (
+  block: ApiV1.Block
+): block is ApiV1.TeaserGridBlock | ApiV1.TeaserListBlock =>
+  allPass([hasBlockStyle('Slider'), anyPass([isTeaserGridBlock, isTeaserListBlock])])(block)
 
 export const SliderContainer = styled('div')`
   display: grid;
@@ -140,7 +144,10 @@ const useSlidesPadding = () => {
   return 16
 }
 
-export const TeaserSlider = ({teasers}: BuilderTeaserGridBlockProps) => {
+export const TeaserSlider = ({
+  teasers,
+  blockStyle
+}: BuilderTeaserGridBlockProps | BuilderTeaserListBlockProps) => {
   const [currentSlide, setCurrentSlide] = useState(0)
   const [loaded, setLoaded] = useState(false)
 
@@ -172,7 +179,7 @@ export const TeaserSlider = ({teasers}: BuilderTeaserGridBlockProps) => {
         <SliderInnerContainer ref={ref} className="keen-slider">
           {filledTeasers.map((teaser, index) => (
             <div key={index} className="keen-slider__slide">
-              {<TeaserSlide teaser={teaser} />}
+              {<TeaserSlide teaser={teaser} blockStyle={blockStyle} />}
             </div>
           ))}
         </SliderInnerContainer>

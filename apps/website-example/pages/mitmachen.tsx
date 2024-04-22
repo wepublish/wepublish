@@ -5,7 +5,14 @@ import {NextPageContext} from 'next'
 import getConfig from 'next/config'
 
 export default function Mitmachen() {
-  return <SubscribeContainer failureURL="/" successURL="/" />
+  const locationOrigin = typeof window !== 'undefined' ? location.origin : ''
+
+  return (
+    <SubscribeContainer
+      successURL={`${locationOrigin}/payment/success`}
+      failureURL={`${locationOrigin}/payment/fail`}
+    />
+  )
 }
 
 Mitmachen.getInitialProps = async (ctx: NextPageContext) => {

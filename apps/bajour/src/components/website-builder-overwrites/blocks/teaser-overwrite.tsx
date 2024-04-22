@@ -1,5 +1,6 @@
 import {
   BuilderTeaserProps,
+  hasBlockStyle,
   selectTeaserAuthors,
   selectTeaserDate,
   selectTeaserImage,
@@ -9,7 +10,6 @@ import {
   selectTeaserUrl,
   useWebsiteBuilder
 } from '@wepublish/website'
-import {ApiV1} from '@wepublish/website'
 
 import {
   AuthorsAndDate,
@@ -26,7 +26,7 @@ import {
   TitleLine
 } from './teaser-overwrite.style'
 
-export function TeaserOverwrite({className, teaser, numColumns}: BuilderTeaserProps) {
+export function TeaserOverwrite({className, teaser, numColumns, blockStyle}: BuilderTeaserProps) {
   const title = teaser && selectTeaserTitle(teaser)
   const preTitle = teaser && selectTeaserPreTitle(teaser)
   const lead = teaser && selectTeaserLead(teaser)
@@ -39,11 +39,11 @@ export function TeaserOverwrite({className, teaser, numColumns}: BuilderTeaserPr
 
   const isSingleBlock = numColumns === 1
 
-  const isTextTeaser = !isSingleBlock && teaser?.style === ApiV1.TeaserStyle.Text
-  const isDefaultTeaser = !isSingleBlock && teaser?.style === ApiV1.TeaserStyle.Default
+  const isTextTeaser = !isSingleBlock && hasBlockStyle('Kleine Teaser')({blockStyle})
+  const isDefaultTeaser = !isSingleBlock && !blockStyle
   const hideTeaser = isTextTeaser
   const hideAuthorAndDate = isTextTeaser
-  const applyLeadBelow = !isSingleBlock && teaser?.style === ApiV1.TeaserStyle.Light
+  const applyLeadBelow = !isSingleBlock && hasBlockStyle('Breite Teaser')({blockStyle})
 
   return (
     <LinkAndGridContainer color="inherit" underline="none" href={href ?? ''} className={className}>
@@ -59,7 +59,7 @@ export function TeaserOverwrite({className, teaser, numColumns}: BuilderTeaserPr
         {(isSingleBlock || isDefaultTeaser) && <TitleLine />}
 
         {!hideAuthorAndDate && (
-          <AuthorsAndDate>
+          <AuthorsAndDate gutterBottom={false}>
             {authors?.length && <>Von {authors?.join(', ')}, </>}
             {publishDate && (
               <time suppressHydrationWarning dateTime={publishDate}>

@@ -6,7 +6,7 @@ exports[`ArticleList should render Default 1`] = `
     class="css-2otupp-ArticleListWrapper ei1ca8h0"
   >
     <div
-      class="css-331icf-TeaserGridBlockWrapper e1xnbuxv0"
+      class="css-8ifxdd-TeaserGridBlockWrapper e1xnbuxv0"
     >
       <article
         class="css-8p11sj-TeaserWrapper e18of27r10"
@@ -602,7 +602,7 @@ exports[`ArticleList should render WithClassName 1`] = `
     class="extra-classname css-2otupp-ArticleListWrapper ei1ca8h0"
   >
     <div
-      class="css-331icf-TeaserGridBlockWrapper e1xnbuxv0"
+      class="css-8ifxdd-TeaserGridBlockWrapper e1xnbuxv0"
     >
       <article
         class="css-8p11sj-TeaserWrapper e18of27r10"
@@ -1198,7 +1198,7 @@ exports[`ArticleList should render WithEmotion 1`] = `
     class="css-2otupp-ArticleListWrapper ei1ca8h0"
   >
     <div
-      class="css-331icf-TeaserGridBlockWrapper e1xnbuxv0"
+      class="css-8ifxdd-TeaserGridBlockWrapper e1xnbuxv0"
     >
       <article
         class="css-8p11sj-TeaserWrapper e18of27r10"
@@ -1794,7 +1794,7 @@ exports[`ArticleList should render WithError 1`] = `
     class="css-2otupp-ArticleListWrapper ei1ca8h0"
   >
     <div
-      class="css-331icf-TeaserGridBlockWrapper e1xnbuxv0"
+      class="css-8ifxdd-TeaserGridBlockWrapper e1xnbuxv0"
     />
   </article>
 </DocumentFragment>
@@ -1806,7 +1806,7 @@ exports[`ArticleList should render WithLoading 1`] = `
     class="css-2otupp-ArticleListWrapper ei1ca8h0"
   >
     <div
-      class="css-331icf-TeaserGridBlockWrapper e1xnbuxv0"
+      class="css-8ifxdd-TeaserGridBlockWrapper e1xnbuxv0"
     />
   </article>
 </DocumentFragment>
@@ -1818,7 +1818,7 @@ exports[`ArticleList should render WithoutImage 1`] = `
     class="css-2otupp-ArticleListWrapper ei1ca8h0"
   >
     <div
-      class="css-331icf-TeaserGridBlockWrapper e1xnbuxv0"
+      class="css-8ifxdd-TeaserGridBlockWrapper e1xnbuxv0"
     >
       <article
         class="css-8p11sj-TeaserWrapper e18of27r10"

@@ -39,14 +39,16 @@ function Subscription() {
     elements: {H4}
   } = useWebsiteBuilder()
 
+  const locationOrigin = typeof window !== 'undefined' ? location.origin : ''
+
   return (
     <SubscriptionsWrapper>
       <SubscriptionListWrapper>
         <H4 component={'h1'}>Abo</H4>
 
         <SubscriptionListContainer
-          failureURL="/"
-          successURL="/"
+          successURL={`${locationOrigin}/payment/success`}
+          failureURL={`${locationOrigin}/payment/fail`}
           filter={subscriptions => subscriptions.filter(subscription => subscription.id === id)}
         />
       </SubscriptionListWrapper>
@@ -55,8 +57,8 @@ function Subscription() {
         <H4 component={'h1'}>Rechnungen</H4>
 
         <InvoiceListContainer
-          failureURL="/"
-          successURL="/"
+          successURL={`${locationOrigin}/payment/success`}
+          failureURL={`${locationOrigin}/payment/fail`}
           filter={invoices => invoices.filter(invoice => invoice.subscriptionID === id)}
         />
       </SubscriptionListWrapper>

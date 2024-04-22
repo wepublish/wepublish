@@ -3,6 +3,7 @@ import {
   BlockRenderer,
   BuilderBlockRendererProps,
   isTeaserGridBlock,
+  isTeaserListBlock,
   useWebsiteBuilder,
   WebsiteBuilderProvider
 } from '@wepublish/website'
@@ -23,7 +24,7 @@ import {isWideTeaser, WideTeaser} from '../blocks/wide-teaser'
 
 export const BajourBlockRenderer = (props: BuilderBlockRendererProps) => {
   const {
-    blocks: {TeaserGrid}
+    blocks: {TeaserGrid, TeaserList}
   } = useWebsiteBuilder()
 
   // Bajour has some old related articles teasers and we do not want them to show up
@@ -51,7 +52,8 @@ export const BajourBlockRenderer = (props: BuilderBlockRendererProps) => {
           isWideTeaser,
           block => (
             <WebsiteBuilderProvider blocks={{Teaser: WideTeaser}}>
-              <TeaserGrid {...block} />
+              {isTeaserGridBlock(block) && <TeaserGrid {...block} />}
+              {isTeaserListBlock(block) && <TeaserList {...block} />}
             </WebsiteBuilderProvider>
           )
         ],
@@ -59,12 +61,13 @@ export const BajourBlockRenderer = (props: BuilderBlockRendererProps) => {
           isSmallTeaser,
           block => (
             <WebsiteBuilderProvider blocks={{Teaser: SmallTeaser}}>
-              <TeaserGrid {...block} />
+              {isTeaserGridBlock(block) && <TeaserGrid {...block} />}
+              {isTeaserListBlock(block) && <TeaserList {...block} />}
             </WebsiteBuilderProvider>
           )
         ]
       ]),
-    [TeaserGrid]
+    [TeaserGrid, TeaserList, isOldRelatedArticles]
   )
 
   return extraBlockMap(props.block) ?? <BlockRenderer {...props} />

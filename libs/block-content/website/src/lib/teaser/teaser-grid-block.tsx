@@ -10,10 +10,11 @@ import {BuilderTeaserGridBlockProps, useWebsiteBuilder} from '@wepublish/website
 export const isTeaserGridBlock = (block: Block): block is TeaserGridBlockType =>
   block.__typename === 'TeaserGridBlock'
 
-export const TeaserGridBlockWrapper = styled('div')<Pick<TeaserGridBlockType, 'numColumns'>>`
+export const TeaserGridBlockWrapper = styled('div', {
+  shouldForwardProp: propName => propName !== 'numColumns'
+})<Pick<TeaserGridBlockType, 'numColumns'>>`
   display: grid;
-  column-gap: ${({theme}) => theme.spacing(4)};
-  row-gap: ${({theme}) => theme.spacing(5)};
+  gap: ${({theme}) => theme.spacing(4)};
   grid-template-columns: 1fr;
   align-items: stretch;
 
@@ -66,7 +67,12 @@ export const alignmentForTeaserBlock = (index: number, numColumns: number): Flex
   }
 }
 
-export const TeaserGridBlock = ({numColumns, teasers, className}: BuilderTeaserGridBlockProps) => {
+export const TeaserGridBlock = ({
+  numColumns,
+  teasers,
+  blockStyle,
+  className
+}: BuilderTeaserGridBlockProps) => {
   const {
     blocks: {Teaser}
   } = useWebsiteBuilder()
@@ -81,6 +87,7 @@ export const TeaserGridBlock = ({numColumns, teasers, className}: BuilderTeaserG
           teaser={teaser}
           numColumns={numColumns}
           alignment={alignmentForTeaserBlock(index, numColumns)}
+          blockStyle={blockStyle}
         />
       ))}
     </TeaserGridBlockWrapper>
