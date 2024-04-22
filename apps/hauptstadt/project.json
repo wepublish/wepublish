@@ -1,0 +1,40 @@
+{
+  "name": "hauptstadt",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "apps/hauptstadt",
+  "projectType": "application",
+  "tags": [],
+  "targets": {
+    "install": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/hauptstadt",
+        "commands": ["npm install"],
+        "parallel": false
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/hauptstadt",
+        "commands": ["nuxt build"],
+        "parallel": false
+      }
+    },
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "cwd": "apps/hauptstadt",
+        "commands": ["nuxt"],
+        "parallel": false
+      }
+    },
+    "lint": {
+      "executor": "@nx/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/hauptstadt/**/*.{ts,tsx,js,jsx}"]
+      }
+    }
+  }
+}

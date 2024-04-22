@@ -1,0 +1,198 @@
+@import '~vuetify/src/styles/settings/variables';
+@import 'variables';
+
+/*
+############
+  VUETIFY THEME OVERWRITE
+############
+ */
+.theme--light.v-application {
+  color: black;
+}
+
+a {
+  color: #587072 !important;
+}
+
+.reset-a-style {
+  color: black !important;
+  text-decoration: none;
+}
+
+/**
+############
+  SLATE OVERWRITES
+############
+ */
+.tiempos .slate-strong {
+  font-family: 'tiempos semibold', serif;
+}
+
+/**
+############
+  TABLE
+############
+ */
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  font-size: 15px;
+  vertical-align: top;
+}
+
+th, td {
+  padding: 6px 10px;
+}
+
+@media #{map-get($display-breakpoints, 'sm-and-up')} {
+  table, th, td {
+    font-size: 16px;
+  }
+}
+
+/**
+############
+  TRANSITIONS
+############
+ */
+.default-enter-active, .default-leave-active { transition: opacity 200ms; }
+.default-enter, .default-leave-active { opacity: 0; }
+
+/**
+############
+  LINES
+############
+ */
+@mixin color-line-base {
+  width: 100%;
+  background: linear-gradient(270deg, $primary 0%, $h-yellow 100%);
+}
+.color-line-1 {
+  @include color-line-base;
+  height: 1px;
+}
+.color-line-2 {
+  @include color-line-base;
+  height: 2px;
+}
+.color-line-3 {
+  @include color-line-base;
+  height: 3px;
+}
+.color-line-4 {
+  @include color-line-base;
+  height: 4px;
+}
+
+@mixin primary-line-base {
+  width: 100%;
+  background: var(--v-primary-base);
+}
+.primary-line-1 {
+  @include primary-line-base;
+  height: 1px;
+}
+.primary-line-2 {
+  @include primary-line-base;
+  height: 2px;
+}
+
+.primary-line-3 {
+  @include primary-line-base;
+  height: 3px;
+}
+
+@mixin black-line-base {
+  width: 100%;
+  background: black;
+}
+.black-line-1 {
+  @include black-line-base;
+  height: 1px;
+}
+.black-line-2 {
+  @include black-line-base;
+  height: 2px;
+}
+
+.black-line-3 {
+  @include black-line-base;
+  height: 3px;
+}
+
+/**
+############
+  BACKGROUNDS
+############
+ */
+.bg-gradient {
+  background: linear-gradient(270deg, $primary 0%, $h-yellow 100%);
+}
+
+/**
+############
+  POSITION
+############
+ */
+.position-relative {
+  position: relative;
+}
+.position-absolute {
+  position: absolute;
+}
+.position-bottom {
+  bottom: 0px;
+}
+.position-right {
+  right: 0px;
+}
+
+
+/**
+############
+  BORDERS
+############
+ */
+.border-top-1px-solid-black {
+  border-top: 1px solid black;
+}
+.border-top-1px-solid-lightgray {
+  border-top: 1px lightgray solid;
+}
+.border-left-1px-solid-black {
+  border-left: 1px solid black;
+}
+
+.border-radius-50 {
+  border-radius: 50%;
+}
+
+
+/**
+############
+  HELPERS
+############
+ */
+.cursor-pointer {
+  cursor: pointer;
+}
+
+.z-index-4{
+  z-index: 4;
+}
+
+.z-index-5 {
+  z-index: 5;
+}
+
+.text-decoration-underline {
+  text-decoration: underline;
+}
+
+.text-decoration-none {
+  text-decoration: none;
+}
+
+.white-space-nowrap {
+  white-space: nowrap;
+}
