@@ -35,6 +35,7 @@ const BestOfWePublishTeaserWrapper = styled(TeaserGridBlockWrapper)`
 `
 
 const HeaderText = styled('div')`
+  text-transform: uppercase;
   background-color: ${({theme}) => theme.palette.common.white};
   padding: 0 ${({theme}) => theme.spacing(2)};
 `

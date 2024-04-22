@@ -15,7 +15,7 @@ const roboto = Roboto({
   preload: true
 })
 
-const theme = createTheme(WepTheme, {
+const theme = createTheme({}, WepTheme, {
   typography: {
     h1: {
       fontFamily: [roboto.style.fontFamily, 'sans-serif'].join(',')
@@ -33,6 +33,28 @@ const theme = createTheme(WepTheme, {
       fontFamily: [roboto.style.fontFamily, 'sans-serif'].join(',')
     },
     h6: {
+      fontFamily: [roboto.style.fontFamily, 'sans-serif'].join(',')
+    },
+    body1: {
+      fontFamily: [roboto.style.fontFamily, 'sans-serif'].join(','),
+      lineHeight: 1.4
+    },
+    body2: {
+      fontFamily: [roboto.style.fontFamily, 'sans-serif'].join(',')
+    },
+    button: {
+      fontFamily: [roboto.style.fontFamily, 'sans-serif'].join(',')
+    },
+    caption: {
+      fontFamily: [roboto.style.fontFamily, 'sans-serif'].join(',')
+    },
+    overline: {
+      fontFamily: [roboto.style.fontFamily, 'sans-serif'].join(',')
+    },
+    subtitle1: {
+      fontFamily: [roboto.style.fontFamily, 'sans-serif'].join(',')
+    },
+    subtitle2: {
       fontFamily: [roboto.style.fontFamily, 'sans-serif'].join(',')
     },
     fontFamily: [roboto.style.fontFamily, 'sans-serif'].join(',')

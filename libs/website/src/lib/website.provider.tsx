@@ -94,6 +94,8 @@ const dateFormatter = (date: Date, includeTime = true) =>
 const styles = (theme: Theme) => css`
   html {
     font-family: ${theme.typography.fontFamily};
+    hyphens: auto;
+    word-break: break-word;
   }
 
   * {

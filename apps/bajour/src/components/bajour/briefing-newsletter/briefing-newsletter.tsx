@@ -1,4 +1,5 @@
 import {Button, styled} from '@mui/material'
+import {H1} from '@wepublish/ui'
 import {useWebsiteBuilder} from '@wepublish/website'
 
 import {ReactComponent as Logo} from '../../../logo.svg'
@@ -52,7 +53,7 @@ const Heading = styled('div')`
   text-align: center;
 `
 
-const BaselBriefingTitle = styled('div')`
+const BaselBriefingTitle = styled(H1)`
   font-weight: bold;
   font-size: ${({theme}) => theme.spacing(4)};
   text-transform: uppercase;
@@ -124,6 +125,7 @@ const SharedButton = styled(Button)`
   font-weight: 600;
   text-align: center;
   border: 2px solid currentColor;
+  text-transform: uppercase;
 
   ${({theme}) => theme.breakpoints.up('sm')} {
     font-size: 18px;
@@ -160,7 +162,7 @@ export const BriefingNewsletter = () => {
       <BecomeMember>
         <BajourLogo />
 
-        <BecomeMemberButton LinkComponent={Link} href="/signup">
+        <BecomeMemberButton LinkComponent={Link} href="/mitmachen">
           Jetzt Member Werden
         </BecomeMemberButton>
       </BecomeMember>
