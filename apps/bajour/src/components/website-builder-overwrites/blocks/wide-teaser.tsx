@@ -23,6 +23,7 @@ export const WideTeaser = styled(TeaserOverwrite)`
   gap: ${({theme}) => theme.spacing(1.5)};
 
   ${TeaserContentStyled} {
+    gap: 0;
     grid-column: 10/24;
   }
 
@@ -42,6 +43,7 @@ export const WideTeaser = styled(TeaserOverwrite)`
 
   ${AuthorsAndDate} {
     font-size: ${fluidTypography(12, 20)};
+    margin-top: ${({theme}) => theme.spacing(1)};
   }
 
   ${TeaserLeadBelow},

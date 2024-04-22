@@ -1,3 +1,4 @@
+import {css} from '@mui/material'
 import {
   ApiV1,
   ArticleContainer,
@@ -17,7 +18,11 @@ import {BriefingNewsletter} from '../../src/components/bajour/briefing-newslette
 import {Container} from '../../src/components/layout/container'
 import {TeaserSlider} from '../../src/components/website-builder-overwrites/blocks/teaser-slider/teaser-slider'
 
-export const RelatedArticleSlider = (props: BuilderArticleListProps) => {
+const uppercase = css`
+  text-transform: uppercase;
+`
+
+const RelatedArticleSlider = (props: BuilderArticleListProps) => {
   return (
     <WebsiteBuilderProvider blocks={{TeaserGrid: TeaserSlider}}>
       <ArticleList {...props} />
@@ -30,7 +35,7 @@ export default function ArticleBySlug() {
     query: {slug}
   } = useRouter()
   const {
-    elements: {H3}
+    elements: {H5}
   } = useWebsiteBuilder()
 
   const {data} = ApiV1.useArticleQuery({
@@ -50,7 +55,10 @@ export default function ArticleBySlug() {
         {data?.article && (
           <>
             <ArticleWrapper>
-              <H3 component={'h2'}>Das könnte dich auch interessieren</H3>
+              <H5 component={'h2'} css={uppercase}>
+                Das könnte dich auch interessieren
+              </H5>
+
               <ArticleListContainer
                 variables={{filter: {tags: data.article.tags}, take: 4}}
                 filter={articles => articles.filter(article => article.id !== data.article?.id)}
@@ -58,7 +66,10 @@ export default function ArticleBySlug() {
             </ArticleWrapper>
 
             <ArticleWrapper>
-              <H3 component={'h2'}>Kommentare</H3>
+              <H5 component={'h2'} css={uppercase}>
+                Kommentare
+              </H5>
+
               <CommentListContainer id={data.article.id} type={ApiV1.CommentItemType.Article} />
             </ArticleWrapper>
           </>

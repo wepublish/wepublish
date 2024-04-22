@@ -1,4 +1,5 @@
 import {CssBaseline, styled, ThemeProvider} from '@mui/material'
+import {GoogleAnalytics} from '@next/third-parties/google'
 import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 import {
   ApiV1,
@@ -116,25 +117,25 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
             <ThemeProvider theme={theme}>
               <CssBaseline />
 
+              <GoogleAnalytics gaId="391346139" />
+
               <MainGrid>
                 <ThemeProvider theme={navbarTheme}>
                   <NavBar
                     slug="main"
                     categorySlugs={[['basel-briefing', 'other'], ['about-us']]}
                     headerSlug="header">
-                    <>
-                      <ButtonLink href="https://www.facebook.com/bajourbasel">
-                        <MdFacebook size="32" />
-                      </ButtonLink>
+                    <ButtonLink href="https://www.facebook.com/bajourbasel">
+                      <MdFacebook size="32" />
+                    </ButtonLink>
 
-                      <ButtonLink href="https://twitter.com/bajourbasel">
-                        <FaTwitter size="32" />
-                      </ButtonLink>
+                    <ButtonLink href="https://twitter.com/bajourbasel">
+                      <FaTwitter size="32" />
+                    </ButtonLink>
 
-                      <ButtonLink href="mailto:info@bajour.ch">
-                        <MdMail size="32" />
-                      </ButtonLink>
-                    </>
+                    <ButtonLink href="mailto:info@bajour.ch">
+                      <MdMail size="32" />
+                    </ButtonLink>
                   </NavBar>
                 </ThemeProvider>
 

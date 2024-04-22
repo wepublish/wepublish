@@ -123,7 +123,7 @@ exports[`Article should render Default 1`] = `
           <hr />
         </div>
         <h3
-          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-l4mivh-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-upop11-MuiTypography-root"
           data-slate-node="element"
         >
           <span
@@ -719,9 +719,9 @@ https://unsplash.it/200/100 200w"
         class="css-1v9bccv-QuoteContent e1ugt7gl0"
       >
         <p
-          class="MuiTypography-root MuiTypography-h4 css-ivca51-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
         >
-          «Quote»
+          Quote
         </p>
         <cite
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -751,7 +751,7 @@ https://unsplash.it/200/100 200w"
         class="css-ywr472-BreakBlockSegment e11xbw3q0"
       >
         <div
-          class="MuiTypography-root MuiTypography-h4 css-18u18fv-MuiTypography-root-BreakBlock"
+          class="MuiTypography-root MuiTypography-h4 css-um5h8b-MuiTypography-root-BreakBlock"
           role="heading"
         >
           Break block test
@@ -1014,7 +1014,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -1067,7 +1067,7 @@ https://unsplash.it/200/200 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Chur solidarisiert sich mit der Ukraine
           </h1>
@@ -1126,7 +1126,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -1167,7 +1167,7 @@ https://unsplash.it/200/100 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Das ist ein Titel
           </h1>
@@ -1212,7 +1212,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -1263,7 +1263,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -1316,7 +1316,7 @@ https://unsplash.it/200/200 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Chur solidarisiert sich mit der Ukraine
           </h1>
@@ -1375,7 +1375,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -1416,7 +1416,7 @@ https://unsplash.it/200/100 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Das ist ein Titel
           </h1>
@@ -1461,7 +1461,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -1512,7 +1512,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -1565,7 +1565,7 @@ https://unsplash.it/200/100 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Chur solidarisiert sich mit der Ukraine
           </h1>
@@ -1618,7 +1618,7 @@ https://unsplash.it/200/100 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Das ist ein Titel
           </h1>
@@ -1663,7 +1663,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -1710,7 +1710,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -1743,7 +1743,7 @@ https://unsplash.it/200/100 200w"
       class="css-nrshve-PollBlockWrapper ecm33wf3"
     >
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-ivca51-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
       >
         Question
       </h1>
@@ -2007,7 +2007,7 @@ https://unsplash.it/200/100 200w"
               </time>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 css-ivca51-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
             >
               Cool concert
             </h1>
@@ -2476,7 +2476,7 @@ exports[`Article should render WithChildren 1`] = `
           <hr />
         </div>
         <h3
-          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-l4mivh-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-upop11-MuiTypography-root"
           data-slate-node="element"
         >
           <span
@@ -3072,9 +3072,9 @@ https://unsplash.it/200/100 200w"
         class="css-1v9bccv-QuoteContent e1ugt7gl0"
       >
         <p
-          class="MuiTypography-root MuiTypography-h4 css-ivca51-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
         >
-          «Quote»
+          Quote
         </p>
         <cite
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -3104,7 +3104,7 @@ https://unsplash.it/200/100 200w"
         class="css-ywr472-BreakBlockSegment e11xbw3q0"
       >
         <div
-          class="MuiTypography-root MuiTypography-h4 css-18u18fv-MuiTypography-root-BreakBlock"
+          class="MuiTypography-root MuiTypography-h4 css-um5h8b-MuiTypography-root-BreakBlock"
           role="heading"
         >
           Break block test
@@ -3367,7 +3367,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -3420,7 +3420,7 @@ https://unsplash.it/200/200 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Chur solidarisiert sich mit der Ukraine
           </h1>
@@ -3479,7 +3479,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -3520,7 +3520,7 @@ https://unsplash.it/200/100 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Das ist ein Titel
           </h1>
@@ -3565,7 +3565,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -3616,7 +3616,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -3669,7 +3669,7 @@ https://unsplash.it/200/200 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Chur solidarisiert sich mit der Ukraine
           </h1>
@@ -3728,7 +3728,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -3769,7 +3769,7 @@ https://unsplash.it/200/100 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Das ist ein Titel
           </h1>
@@ -3814,7 +3814,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -3865,7 +3865,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -3918,7 +3918,7 @@ https://unsplash.it/200/100 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Chur solidarisiert sich mit der Ukraine
           </h1>
@@ -3971,7 +3971,7 @@ https://unsplash.it/200/100 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Das ist ein Titel
           </h1>
@@ -4016,7 +4016,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -4063,7 +4063,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -4096,7 +4096,7 @@ https://unsplash.it/200/100 200w"
       class="css-nrshve-PollBlockWrapper ecm33wf3"
     >
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-ivca51-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
       >
         Question
       </h1>
@@ -4360,7 +4360,7 @@ https://unsplash.it/200/100 200w"
               </time>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 css-ivca51-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
             >
               Cool concert
             </h1>
@@ -4832,7 +4832,7 @@ exports[`Article should render WithClassName 1`] = `
           <hr />
         </div>
         <h3
-          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-l4mivh-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-upop11-MuiTypography-root"
           data-slate-node="element"
         >
           <span
@@ -5428,9 +5428,9 @@ https://unsplash.it/200/100 200w"
         class="css-1v9bccv-QuoteContent e1ugt7gl0"
       >
         <p
-          class="MuiTypography-root MuiTypography-h4 css-ivca51-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
         >
-          «Quote»
+          Quote
         </p>
         <cite
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -5460,7 +5460,7 @@ https://unsplash.it/200/100 200w"
         class="css-ywr472-BreakBlockSegment e11xbw3q0"
       >
         <div
-          class="MuiTypography-root MuiTypography-h4 css-18u18fv-MuiTypography-root-BreakBlock"
+          class="MuiTypography-root MuiTypography-h4 css-um5h8b-MuiTypography-root-BreakBlock"
           role="heading"
         >
           Break block test
@@ -5723,7 +5723,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -5776,7 +5776,7 @@ https://unsplash.it/200/200 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Chur solidarisiert sich mit der Ukraine
           </h1>
@@ -5835,7 +5835,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -5876,7 +5876,7 @@ https://unsplash.it/200/100 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Das ist ein Titel
           </h1>
@@ -5921,7 +5921,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -5972,7 +5972,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -6025,7 +6025,7 @@ https://unsplash.it/200/200 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Chur solidarisiert sich mit der Ukraine
           </h1>
@@ -6084,7 +6084,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -6125,7 +6125,7 @@ https://unsplash.it/200/100 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Das ist ein Titel
           </h1>
@@ -6170,7 +6170,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -6221,7 +6221,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -6274,7 +6274,7 @@ https://unsplash.it/200/100 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Chur solidarisiert sich mit der Ukraine
           </h1>
@@ -6327,7 +6327,7 @@ https://unsplash.it/200/100 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Das ist ein Titel
           </h1>
@@ -6372,7 +6372,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -6419,7 +6419,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -6452,7 +6452,7 @@ https://unsplash.it/200/100 200w"
       class="css-nrshve-PollBlockWrapper ecm33wf3"
     >
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-ivca51-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
       >
         Question
       </h1>
@@ -6716,7 +6716,7 @@ https://unsplash.it/200/100 200w"
               </time>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 css-ivca51-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
             >
               Cool concert
             </h1>
@@ -7185,7 +7185,7 @@ exports[`Article should render WithEmotion 1`] = `
           <hr />
         </div>
         <h3
-          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-l4mivh-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-upop11-MuiTypography-root"
           data-slate-node="element"
         >
           <span
@@ -7781,9 +7781,9 @@ https://unsplash.it/200/100 200w"
         class="css-1v9bccv-QuoteContent e1ugt7gl0"
       >
         <p
-          class="MuiTypography-root MuiTypography-h4 css-ivca51-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
         >
-          «Quote»
+          Quote
         </p>
         <cite
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -7813,7 +7813,7 @@ https://unsplash.it/200/100 200w"
         class="css-ywr472-BreakBlockSegment e11xbw3q0"
       >
         <div
-          class="MuiTypography-root MuiTypography-h4 css-18u18fv-MuiTypography-root-BreakBlock"
+          class="MuiTypography-root MuiTypography-h4 css-um5h8b-MuiTypography-root-BreakBlock"
           role="heading"
         >
           Break block test
@@ -8076,7 +8076,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -8129,7 +8129,7 @@ https://unsplash.it/200/200 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Chur solidarisiert sich mit der Ukraine
           </h1>
@@ -8188,7 +8188,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -8229,7 +8229,7 @@ https://unsplash.it/200/100 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Das ist ein Titel
           </h1>
@@ -8274,7 +8274,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -8325,7 +8325,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -8378,7 +8378,7 @@ https://unsplash.it/200/200 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Chur solidarisiert sich mit der Ukraine
           </h1>
@@ -8437,7 +8437,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -8478,7 +8478,7 @@ https://unsplash.it/200/100 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Das ist ein Titel
           </h1>
@@ -8523,7 +8523,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -8574,7 +8574,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -8627,7 +8627,7 @@ https://unsplash.it/200/100 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Chur solidarisiert sich mit der Ukraine
           </h1>
@@ -8680,7 +8680,7 @@ https://unsplash.it/200/100 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Das ist ein Titel
           </h1>
@@ -8725,7 +8725,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -8772,7 +8772,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -8805,7 +8805,7 @@ https://unsplash.it/200/100 200w"
       class="css-nrshve-PollBlockWrapper ecm33wf3"
     >
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-ivca51-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
       >
         Question
       </h1>
@@ -9069,7 +9069,7 @@ https://unsplash.it/200/100 200w"
               </time>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 css-ivca51-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
             >
               Cool concert
             </h1>
@@ -9538,7 +9538,7 @@ exports[`Article should render WithoutAuthors 1`] = `
           <hr />
         </div>
         <h3
-          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-l4mivh-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-upop11-MuiTypography-root"
           data-slate-node="element"
         >
           <span
@@ -10134,9 +10134,9 @@ https://unsplash.it/200/100 200w"
         class="css-1v9bccv-QuoteContent e1ugt7gl0"
       >
         <p
-          class="MuiTypography-root MuiTypography-h4 css-ivca51-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
         >
-          «Quote»
+          Quote
         </p>
         <cite
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -10166,7 +10166,7 @@ https://unsplash.it/200/100 200w"
         class="css-ywr472-BreakBlockSegment e11xbw3q0"
       >
         <div
-          class="MuiTypography-root MuiTypography-h4 css-18u18fv-MuiTypography-root-BreakBlock"
+          class="MuiTypography-root MuiTypography-h4 css-um5h8b-MuiTypography-root-BreakBlock"
           role="heading"
         >
           Break block test
@@ -10429,7 +10429,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -10482,7 +10482,7 @@ https://unsplash.it/200/200 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Chur solidarisiert sich mit der Ukraine
           </h1>
@@ -10541,7 +10541,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -10582,7 +10582,7 @@ https://unsplash.it/200/100 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Das ist ein Titel
           </h1>
@@ -10627,7 +10627,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -10678,7 +10678,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -10731,7 +10731,7 @@ https://unsplash.it/200/200 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Chur solidarisiert sich mit der Ukraine
           </h1>
@@ -10790,7 +10790,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -10831,7 +10831,7 @@ https://unsplash.it/200/100 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Das ist ein Titel
           </h1>
@@ -10876,7 +10876,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -10927,7 +10927,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -10980,7 +10980,7 @@ https://unsplash.it/200/100 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Chur solidarisiert sich mit der Ukraine
           </h1>
@@ -11033,7 +11033,7 @@ https://unsplash.it/200/100 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Das ist ein Titel
           </h1>
@@ -11078,7 +11078,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -11125,7 +11125,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -11158,7 +11158,7 @@ https://unsplash.it/200/100 200w"
       class="css-nrshve-PollBlockWrapper ecm33wf3"
     >
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-ivca51-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
       >
         Question
       </h1>
@@ -11422,7 +11422,7 @@ https://unsplash.it/200/100 200w"
               </time>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 css-ivca51-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
             >
               Cool concert
             </h1>
@@ -11653,7 +11653,7 @@ exports[`Article should render WithoutImageMetadata 1`] = `
           <hr />
         </div>
         <h3
-          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-l4mivh-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-upop11-MuiTypography-root"
           data-slate-node="element"
         >
           <span
@@ -12249,9 +12249,9 @@ https://unsplash.it/200/100 200w"
         class="css-1v9bccv-QuoteContent e1ugt7gl0"
       >
         <p
-          class="MuiTypography-root MuiTypography-h4 css-ivca51-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
         >
-          «Quote»
+          Quote
         </p>
         <cite
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -12281,7 +12281,7 @@ https://unsplash.it/200/100 200w"
         class="css-ywr472-BreakBlockSegment e11xbw3q0"
       >
         <div
-          class="MuiTypography-root MuiTypography-h4 css-18u18fv-MuiTypography-root-BreakBlock"
+          class="MuiTypography-root MuiTypography-h4 css-um5h8b-MuiTypography-root-BreakBlock"
           role="heading"
         >
           Break block test
@@ -12544,7 +12544,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -12597,7 +12597,7 @@ https://unsplash.it/200/200 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Chur solidarisiert sich mit der Ukraine
           </h1>
@@ -12656,7 +12656,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -12697,7 +12697,7 @@ https://unsplash.it/200/100 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Das ist ein Titel
           </h1>
@@ -12742,7 +12742,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -12793,7 +12793,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -12846,7 +12846,7 @@ https://unsplash.it/200/200 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Chur solidarisiert sich mit der Ukraine
           </h1>
@@ -12905,7 +12905,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -12946,7 +12946,7 @@ https://unsplash.it/200/100 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Das ist ein Titel
           </h1>
@@ -12991,7 +12991,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -13042,7 +13042,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -13095,7 +13095,7 @@ https://unsplash.it/200/100 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Chur solidarisiert sich mit der Ukraine
           </h1>
@@ -13148,7 +13148,7 @@ https://unsplash.it/200/100 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Das ist ein Titel
           </h1>
@@ -13193,7 +13193,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -13240,7 +13240,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -13273,7 +13273,7 @@ https://unsplash.it/200/100 200w"
       class="css-nrshve-PollBlockWrapper ecm33wf3"
     >
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-ivca51-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
       >
         Question
       </h1>
@@ -13537,7 +13537,7 @@ https://unsplash.it/200/100 200w"
               </time>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 css-ivca51-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
             >
               Cool concert
             </h1>
@@ -14002,7 +14002,7 @@ exports[`Article should render WithoutLead 1`] = `
           <hr />
         </div>
         <h3
-          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-l4mivh-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-upop11-MuiTypography-root"
           data-slate-node="element"
         >
           <span
@@ -14598,9 +14598,9 @@ https://unsplash.it/200/100 200w"
         class="css-1v9bccv-QuoteContent e1ugt7gl0"
       >
         <p
-          class="MuiTypography-root MuiTypography-h4 css-ivca51-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
         >
-          «Quote»
+          Quote
         </p>
         <cite
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -14630,7 +14630,7 @@ https://unsplash.it/200/100 200w"
         class="css-ywr472-BreakBlockSegment e11xbw3q0"
       >
         <div
-          class="MuiTypography-root MuiTypography-h4 css-18u18fv-MuiTypography-root-BreakBlock"
+          class="MuiTypography-root MuiTypography-h4 css-um5h8b-MuiTypography-root-BreakBlock"
           role="heading"
         >
           Break block test
@@ -14893,7 +14893,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -14946,7 +14946,7 @@ https://unsplash.it/200/200 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Chur solidarisiert sich mit der Ukraine
           </h1>
@@ -15005,7 +15005,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -15046,7 +15046,7 @@ https://unsplash.it/200/100 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Das ist ein Titel
           </h1>
@@ -15091,7 +15091,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -15142,7 +15142,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -15195,7 +15195,7 @@ https://unsplash.it/200/200 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Chur solidarisiert sich mit der Ukraine
           </h1>
@@ -15254,7 +15254,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -15295,7 +15295,7 @@ https://unsplash.it/200/100 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Das ist ein Titel
           </h1>
@@ -15340,7 +15340,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -15391,7 +15391,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -15444,7 +15444,7 @@ https://unsplash.it/200/100 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Chur solidarisiert sich mit der Ukraine
           </h1>
@@ -15497,7 +15497,7 @@ https://unsplash.it/200/100 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Das ist ein Titel
           </h1>
@@ -15542,7 +15542,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -15589,7 +15589,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -15622,7 +15622,7 @@ https://unsplash.it/200/100 200w"
       class="css-nrshve-PollBlockWrapper ecm33wf3"
     >
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-ivca51-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
       >
         Question
       </h1>
@@ -15886,7 +15886,7 @@ https://unsplash.it/200/100 200w"
               </time>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 css-ivca51-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
             >
               Cool concert
             </h1>
@@ -16355,7 +16355,7 @@ exports[`Article should render WithoutSocialMedia 1`] = `
           <hr />
         </div>
         <h3
-          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-l4mivh-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-upop11-MuiTypography-root"
           data-slate-node="element"
         >
           <span
@@ -16951,9 +16951,9 @@ https://unsplash.it/200/100 200w"
         class="css-1v9bccv-QuoteContent e1ugt7gl0"
       >
         <p
-          class="MuiTypography-root MuiTypography-h4 css-ivca51-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
         >
-          «Quote»
+          Quote
         </p>
         <cite
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -16983,7 +16983,7 @@ https://unsplash.it/200/100 200w"
         class="css-ywr472-BreakBlockSegment e11xbw3q0"
       >
         <div
-          class="MuiTypography-root MuiTypography-h4 css-18u18fv-MuiTypography-root-BreakBlock"
+          class="MuiTypography-root MuiTypography-h4 css-um5h8b-MuiTypography-root-BreakBlock"
           role="heading"
         >
           Break block test
@@ -17246,7 +17246,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -17299,7 +17299,7 @@ https://unsplash.it/200/200 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Chur solidarisiert sich mit der Ukraine
           </h1>
@@ -17358,7 +17358,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -17399,7 +17399,7 @@ https://unsplash.it/200/100 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Das ist ein Titel
           </h1>
@@ -17444,7 +17444,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -17495,7 +17495,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -17548,7 +17548,7 @@ https://unsplash.it/200/200 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Chur solidarisiert sich mit der Ukraine
           </h1>
@@ -17607,7 +17607,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -17648,7 +17648,7 @@ https://unsplash.it/200/100 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Das ist ein Titel
           </h1>
@@ -17693,7 +17693,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -17744,7 +17744,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -17797,7 +17797,7 @@ https://unsplash.it/200/100 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Chur solidarisiert sich mit der Ukraine
           </h1>
@@ -17850,7 +17850,7 @@ https://unsplash.it/200/100 200w"
             class="css-moqb59-TeaserPreTitleNoContent e18of27r4"
           />
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Das ist ein Titel
           </h1>
@@ -17895,7 +17895,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -17942,7 +17942,7 @@ https://unsplash.it/200/100 200w"
             </div>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-syu5nc-TeaserTitle-MuiTypography-root e18of27r7"
+            class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
           >
             Title
           </h1>
@@ -17975,7 +17975,7 @@ https://unsplash.it/200/100 200w"
       class="css-nrshve-PollBlockWrapper ecm33wf3"
     >
       <h1
-        class="MuiTypography-root MuiTypography-h4 css-ivca51-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
       >
         Question
       </h1>
@@ -18239,7 +18239,7 @@ https://unsplash.it/200/100 200w"
               </time>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 css-ivca51-MuiTypography-root"
+              class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
             >
               Cool concert
             </h1>

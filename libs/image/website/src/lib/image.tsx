@@ -45,6 +45,22 @@ export function Image({
     return array
   }, [] as string[])
 
+  // @TODO: Remove with new media server
+  // Hack for animated gifs to work
+  if (image.format === 'gif' && image.url) {
+    return (
+      <ImageWrapper
+        {...props}
+        alt={image.description ?? image.title ?? image.filename ?? ''}
+        title={image.title ?? ''}
+        aspectRatio={image.width / image.height}
+        src={image.url}
+        loading={loading}
+        fetchPriority={fetchPriority}
+      />
+    )
+  }
+
   return (
     <ImageWrapper
       {...props}
