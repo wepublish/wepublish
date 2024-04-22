@@ -142,7 +142,12 @@ const BlockListItem = memo(function BlockListItem({
       onChange(index, value => {
         return {
           ...value,
-          value: isFunctionalUpdate(fieldValue) ? fieldValue(value.value) : fieldValue
+          value: isFunctionalUpdate(fieldValue)
+            ? fieldValue(value.value)
+            : {
+                blockStyle: value.value.blockStyle,
+                ...fieldValue
+              }
         }
       })
     },
