@@ -170,7 +170,7 @@ const TeaserContentStyled = styled('div')`
 
   ${({theme}) => theme.breakpoints.up('sm')} {
     grid-column: 3/12;
-    padding: ${({theme}) => `${theme.spacing(2)} ${theme.spacing(1.5)} ${theme.spacing(1.5)}`};
+    padding: ${({theme}) => `${theme.spacing(2)} 0 ${theme.spacing(1.5)}`};
   }
 `
 
@@ -273,11 +273,8 @@ const TeaserContentInterior = styled('div')`
 
   ${({theme}) => theme.breakpoints.up('sm')} {
     grid-column: 3/12;
-  }
-
-  ${({theme}) => theme.breakpoints.up('md')} {
     padding: ${({theme}) =>
-      `${theme.spacing(1.5)} ${theme.spacing(1.5)} ${theme.spacing(1.5)} ${theme.spacing(5)}`};
+      `${theme.spacing(1.5)} ${theme.spacing(1.5)} ${theme.spacing(1.5)} ${theme.spacing(4)}`};
   }
 `
 
@@ -349,7 +346,11 @@ export const BaselBriefing = ({teasers, blockStyle}: BaselBriefingProps) => {
 
   return (
     <BaselBriefingStyled>
-      <LinkWrapper color="inherit" underline="none" href={briefingDynamicValues.contentUrl}>
+      <LinkWrapper
+        color="inherit"
+        underline="none"
+        href={briefingDynamicValues.contentUrl}
+        target={'_blank'}>
         <BriefingContainer>
           {values.backgroundImage && <TeaserBackground image={values.backgroundImage} />}
 
