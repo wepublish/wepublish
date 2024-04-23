@@ -3,12 +3,15 @@ import {NextWepublishLink} from '@wepublish/utils/website'
 import {
   ApiV1,
   BuilderTeaserProps,
-  selectTeaserImage,
-  selectTeaserTitle,
   selectTeaserUrl,
   TeaserWrapper,
   useWebsiteBuilder
 } from '@wepublish/website'
+
+import {
+  selectBajourTeaserImage,
+  selectBajourTeaserTitle
+} from '../../website-builder-overwrites/blocks/select-teaser'
 
 type BestOfWePublishTeaserProps = BuilderTeaserProps & {
   teaser: ApiV1.PeerArticleTeaser
@@ -108,9 +111,9 @@ export const BestOfWePublishTeaser = ({teaser, alignment}: BestOfWePublishTeaser
     elements: {Image}
   } = useWebsiteBuilder()
 
-  const title = teaser && selectTeaserTitle(teaser)
+  const title = teaser && selectBajourTeaserTitle(teaser)
   const href = (teaser && selectTeaserUrl(teaser)) ?? ''
-  const image = teaser && selectTeaserImage(teaser)
+  const image = teaser && selectBajourTeaserImage(teaser)
   const peerName = teaser.peer?.name
   const peerLogo = teaser.peer?.profile?.logo
 

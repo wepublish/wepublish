@@ -5,11 +5,12 @@ import {
   ApiV1,
   BuilderTeaserGridBlockProps,
   selectTeaserDate,
-  selectTeaserImage,
   useWebsiteBuilder
 } from '@wepublish/website'
 import {useKeenSlider} from 'keen-slider/react'
 import {DOMAttributes, useState} from 'react'
+
+import {selectBajourTeaserImage} from '../../website-builder-overwrites/blocks/select-teaser'
 
 type ArchiveSliderProps = {
   teasers: BuilderTeaserGridBlockProps['teasers']
@@ -142,7 +143,7 @@ const ArchiveSlide = ({teaser, onClick, isCurrent}: ArchiveSlideProps) => {
     date
   } = useWebsiteBuilder()
 
-  const img = teaser && selectTeaserImage(teaser)
+  const img = teaser && selectBajourTeaserImage(teaser)
   const publishDate = teaser && selectTeaserDate(teaser)
 
   return (

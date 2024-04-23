@@ -424,7 +424,7 @@ exports[`Page should render Default 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-m3orio-ImageWrapper-ImageBlock e1shv2yg0"
+        class="css-cibo30-ImageWrapper e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -2507,7 +2507,7 @@ exports[`Page should render WithChildren 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-m3orio-ImageWrapper-ImageBlock e1shv2yg0"
+        class="css-cibo30-ImageWrapper e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -4593,7 +4593,7 @@ exports[`Page should render WithClassName 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-m3orio-ImageWrapper-ImageBlock e1shv2yg0"
+        class="css-cibo30-ImageWrapper e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -6676,7 +6676,7 @@ exports[`Page should render WithEmotion 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-m3orio-ImageWrapper-ImageBlock e1shv2yg0"
+        class="css-cibo30-ImageWrapper e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -8775,7 +8775,7 @@ exports[`Page should render WithoutDescription 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-m3orio-ImageWrapper-ImageBlock e1shv2yg0"
+        class="css-cibo30-ImageWrapper e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -10858,7 +10858,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-m3orio-ImageWrapper-ImageBlock e1shv2yg0"
+        class="css-cibo30-ImageWrapper e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -12933,7 +12933,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-m3orio-ImageWrapper-ImageBlock e1shv2yg0"
+        class="css-cibo30-ImageWrapper e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,

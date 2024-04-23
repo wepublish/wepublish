@@ -1,4 +1,4 @@
-import {css, styled} from '@mui/material'
+import {styled} from '@mui/material'
 import {BuilderImageBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {Block, ImageBlock as ImageBlockType} from '@wepublish/website/api'
 
@@ -21,11 +21,6 @@ export const ImageBlockWrapper = styled('figure')`
 
 export const ImageBlockCaption = styled('figcaption')``
 
-const imageStyles = css`
-  object-fit: cover;
-  aspect-ratio: 1.85611511;
-`
-
 export const ImageBlock = ({caption, image, className}: BuilderImageBlockProps) => {
   const {
     elements: {Image}
@@ -33,7 +28,7 @@ export const ImageBlock = ({caption, image, className}: BuilderImageBlockProps) 
 
   return (
     <ImageBlockWrapper className={className}>
-      {image && <Image image={image} css={imageStyles} fetchPriority="high" />}
+      {image && <Image image={image} fetchPriority="high" />}
 
       {caption && <figcaption>{caption}</figcaption>}
     </ImageBlockWrapper>
