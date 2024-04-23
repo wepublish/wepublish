@@ -92,6 +92,7 @@ export const SubscribeExtraMoney = styled('div')`
 `
 
 export const Subscribe = <T extends BuilderUserFormFields>({
+  defaults,
   memberPlans,
   challenge,
   userSubscriptions,
@@ -136,9 +137,14 @@ export const Subscribe = <T extends BuilderUserFormFields>({
   >({
     resolver: zodResolver(hasUser ? subscribeSchema : loggedOutSchema),
     defaultValues: {
+      ...defaults,
       extraMoney: 0,
       autoRenew: true,
-      memberPlanId: memberPlans.data?.memberPlans.nodes[0]?.id,
+      memberPlanId: defaults?.memberPlanSlug
+        ? memberPlans.data?.memberPlans.nodes.find(
+            memberPlan => memberPlan.slug === defaults?.memberPlanSlug
+          )?.id
+        : memberPlans.data?.memberPlans.nodes[0]?.id,
       paymentMethodId:
         memberPlans.data?.memberPlans.nodes[0]?.availablePaymentMethods[0]?.paymentMethods[0]?.id,
       paymentPeriodicity:

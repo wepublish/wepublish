@@ -21,7 +21,7 @@ import {OptionalKeysOf} from 'type-fest'
 export type SubscribeContainerProps<
   T extends OptionalKeysOf<RegisterMutationVariables> = OptionalKeysOf<RegisterMutationVariables>
 > = BuilderContainerProps &
-  Pick<BuilderSubscribeProps<T>, 'fields' | 'schema'> & {
+  Pick<BuilderSubscribeProps<T>, 'fields' | 'schema' | 'defaults'> & {
     successURL: string
     failureURL: string
     filter?: (memberPlans: MemberPlan[]) => MemberPlan[]
@@ -31,6 +31,7 @@ export const SubscribeContainer = <T extends OptionalKeysOf<RegisterMutationVari
   className,
   failureURL,
   successURL,
+  defaults,
   fields,
   schema,
   filter
@@ -87,6 +88,7 @@ export const SubscribeContainer = <T extends OptionalKeysOf<RegisterMutationVari
   return (
     <Subscribe
       className={className}
+      defaults={defaults}
       fields={fields}
       schema={schema}
       challenge={challenge}

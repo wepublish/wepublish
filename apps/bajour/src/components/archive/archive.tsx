@@ -10,11 +10,11 @@ import {differenceInYears} from 'date-fns'
 import getConfig from 'next/config'
 import {useState} from 'react'
 
-import {ReactComponent as Logo} from '../../../logo.svg'
+import {ReactComponent as Logo} from '../../logo.svg'
 import {
   selectBajourTeaserLead,
   selectBajourTeaserTitle
-} from '../../website-builder-overwrites/blocks/select-teaser'
+} from '../website-builder-overwrites/blocks/select-teaser'
 import {ArchiveSlider} from './archive-slider'
 
 export const ArchiveWrapper = styled('div')``
