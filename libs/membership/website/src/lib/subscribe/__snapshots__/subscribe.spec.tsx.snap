@@ -8035,7 +8035,7 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
                       viewBox="0 0 24 24"
                     >
                       <path
-@@ -409,142 +377,12 @@
+@@ -409,151 +377,24 @@
         >
           Zahlungsmethode wählen
         </h2>
@@ -8044,8 +8044,8 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
 -       >
 -         <div
 -           class="MuiFormControl-root e1xdovcl0 css-rjme10-MuiFormControl-root-PaymentMethodPickerWrapper"
--         >
--           <label
+        >
+          <label
 -             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
 -             data-shrink="true"
 -             for=":r5f:"
@@ -8096,7 +8096,7 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
 -             <fieldset
 -               aria-hidden="true"
 -               class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
-        >
+-             >
 -               <legend
 -                 class="css-14lo706"
 -               >
@@ -8110,7 +8110,7 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
 -         <div
 -           class="MuiFormControl-root ehf4qh40 css-ad7dvm-MuiFormControl-root-PeriodicityPickerWrapper"
 -         >
-          <label
+-           <label
 -             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
 -             data-shrink="true"
 -             for=":r5g:"
@@ -8138,7 +8138,8 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
 -               </option>
 -               <option
 -                 value="BIANNUAL"
--               >
++           class="MuiFormControlLabel-root Mui-disabled MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
+          >
 -                 Halbjährlich
 -               </option>
 -               <option
@@ -8173,11 +8174,42 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
 -           </div>
 -         </div>
 -         <label
-            class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
-          >
+-           class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
+-         >
             <span
-              class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium Mui-checked MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium css-1x65cmo-MuiButtonBase-root-MuiCheckbox-root"
+-             class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium Mui-checked MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium css-1x65cmo-MuiButtonBase-root-MuiCheckbox-root"
++             aria-disabled="true"
++             class="MuiButtonBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium Mui-disabled PrivateSwitchBase-root MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium Mui-checked Mui-disabled MuiCheckbox-root MuiCheckbox-colorPrimary MuiCheckbox-sizeMedium css-1x65cmo-MuiButtonBase-root-MuiCheckbox-root"
++             tabindex="-1"
             >
+              <input
+                checked=""
+                class="PrivateSwitchBase-input css-1m9pwf3"
+                data-indeterminate="false"
++               disabled=""
+                name="autoRenew"
+                type="checkbox"
+                value="true"
+              />
+              <svg
+@@ -565,16 +406,13 @@
+              >
+                <path
+                  d="M19 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.11 0 2-.9 2-2V5c0-1.1-.89-2-2-2zm-9 14l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"
+                />
+              </svg>
+-             <span
+-               class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+-             />
+            </span>
+            <span
+-             class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-67xpxh-MuiTypography-root"
++             class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label Mui-disabled css-67xpxh-MuiTypography-root"
+            >
+              Automatisch erneuern
+            </span>
+          </label>
+        </div>
 @@ -582,11 +420,11 @@
       <button
         class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-11lcf1o-MuiButtonBase-root-MuiButton-root-buttonStyles"

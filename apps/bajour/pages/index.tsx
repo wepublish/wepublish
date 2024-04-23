@@ -4,7 +4,7 @@ import {ApiV1, PageContainer} from '@wepublish/website'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 
-import {BestOfWePublishWrapper} from '../src/components/bajour/best-of-wepublish/best-of-wepublish'
+import {BestOfWePublishWrapper} from '../src/components/best-of-wepublish/best-of-wepublish'
 import {SliderContainer} from '../src/components/website-builder-overwrites/blocks/teaser-slider/teaser-slider'
 
 const Homepage = styled(PageContainer)`

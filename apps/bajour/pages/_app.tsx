@@ -25,6 +25,7 @@ import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {MainGrid} from '../src/components/layout/main-grid'
+import {BajourPaymentMethodPicker} from '../src/components/payment-method-picker/payment-method-picker'
 import {BajourBlockRenderer} from '../src/components/website-builder-overwrites/block-renderer/block-renderer'
 import {BajourTeaser} from '../src/components/website-builder-overwrites/blocks/teaser'
 import {BajourTeaserGrid} from '../src/components/website-builder-styled/blocks/teaser-grid-styled'
@@ -113,7 +114,8 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               Renderer: BajourBlockRenderer,
               Teaser: BajourTeaser,
               TeaserGrid: BajourTeaserGrid
-            }}>
+            }}
+            PaymentMethodPicker={BajourPaymentMethodPicker}>
             <ThemeProvider theme={theme}>
               <CssBaseline />
 
