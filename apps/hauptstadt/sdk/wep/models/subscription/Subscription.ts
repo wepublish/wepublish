@@ -17,6 +17,7 @@ export default class Subscription {
   public paidUntil?: Moment
   public paymentMethod?: PaymentMethod
   public deactivation?: SubscriptionDeactivation
+  public extendable: boolean
 
   constructor({
     id,
@@ -27,7 +28,8 @@ export default class Subscription {
     startsAt,
     paidUntil,
     paymentMethod,
-    deactivation
+    deactivation,
+    extendable
   }: {
     id: string
     memberPlan?: MemberPlan
@@ -38,6 +40,7 @@ export default class Subscription {
     paidUntil?: Moment
     paymentMethod?: PaymentMethod
     deactivation?: SubscriptionDeactivation
+    extendable: boolean
   }) {
     this.id = id
     this.memberPlan = memberPlan ? new MemberPlan(memberPlan) : undefined
@@ -48,6 +51,7 @@ export default class Subscription {
     this.paidUntil = paidUntil ? moment(paidUntil) : undefined
     this.paymentMethod = paymentMethod ? new PaymentMethod(paymentMethod) : undefined
     this.deactivation = deactivation ? new SubscriptionDeactivation(deactivation) : undefined
+    this.extendable = extendable
   }
 
   /**

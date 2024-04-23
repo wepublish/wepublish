@@ -64,7 +64,7 @@
 
           <!-- payment method selection -->
           <v-col
-            v-if="availablePaymentMethods && availablePaymentMethods.length"
+            v-if="availablePaymentMethods && availablePaymentMethods.length && !hidePaymentMethods"
             class="col-12 pt-8"
           >
             <v-row class="justify-center justify-sm-start">
@@ -180,7 +180,10 @@
                   x-large
                   @click="checkout()"
                 >
-                  <b>CHF {{ yearlyAmount }}</b> <span v-if="user">&nbsp;Bestätigen &</span> &nbsp;Bezahlen
+                  <span v-if="memberPlan.amountPerMonthMin === 0"><b>Gratis</b> Probe-Abo lösen</span>
+                  <span v-else>
+                    <b>CHF {{ yearlyAmount }}</b> <span v-if="user">&nbsp;Bestätigen &</span> &nbsp;Bezahlen
+                  </span>
                 </v-btn>
               </v-col>
             </v-row>
@@ -282,6 +285,11 @@ export default Vue.extend({
       default: () => []
     },
     hidePaymentSlider: {
+      type: Boolean as PropType<boolean>,
+      required: false,
+      default: false
+    },
+    hidePaymentMethods: {
       type: Boolean as PropType<boolean>,
       required: false,
       default: false
@@ -473,6 +481,10 @@ export default Vue.extend({
           window.open(redirectLink, '_blank')
         }, 50)
         return true
+      } else if (redirectLink.startsWith('no_charge')) { // trial subscriptions: non-charge-payment-adapter
+        const successURL = this.$config.PAYMENT_SUCCESS_URL
+        window.location.assign(successURL)
+        return true
       } else {
         // it's an intent secret. Load inline stripe form by setting the intentSecret variable
         this.intentSecret = redirectLink
@@ -499,8 +511,7 @@ export default Vue.extend({
         }
         this.subscriptionsDialog = false
       }
-
-      if (!this.memberRegistration.monthlyAmount) {
+      if (this.memberRegistration.monthlyAmount === undefined) {
         this.$nuxt.$emit('alert', {
           title: `Wir haben es mit einem technischen Fehler zu tun. Der Mindestbetrag existiert nicht. Bitte wende dich an ${this.$config.TECHNICAL_ISSUER_MAIL}`,
           type: 'error'
@@ -568,6 +579,10 @@ export default Vue.extend({
       this.memberRegistration.failureURL = this.FAILURE_URL
       if (!this.user) {
         this.memberRegistration.challengeAnswer = this.challengeAnswer
+      }
+      // non-extendable member plans can't be auto-renewed
+      if (!this.memberPlan.extendable) {
+        this.memberRegistration.autoRenew = false
       }
       // force auto-renewal
       if (this.selectedPaymentMethod?.forceAutoRenewal) {

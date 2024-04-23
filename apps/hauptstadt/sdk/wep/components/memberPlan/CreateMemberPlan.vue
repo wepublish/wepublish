@@ -91,6 +91,7 @@
             :icons-of-payment-providers="iconsOfPaymentProviders"
             :registration-form-fields="registrationFormFields"
             :hide-payment-slider="hidePaymentSlider"
+            :hide-payment-methods="hidePaymentMethods"
           >
             <template #sliderLabel>
               <slot name="sliderLabel" />
@@ -135,6 +136,11 @@ export default Vue.extend({
       required: false,
       default: undefined
     },
+    memberPlanTags: {
+      type: Array as PropType<string[] | undefined>,
+      required: false,
+      default: undefined
+    },
     // display member plan by slug. this overrules the "currentMemberPlanType"
     memberPlanBySlug: {
       type: String as PropType<string | undefined>,
@@ -152,6 +158,11 @@ export default Vue.extend({
       default: () => []
     },
     hidePaymentSlider: {
+      type: Boolean as PropType<boolean>,
+      required: false,
+      default: false
+    },
+    hidePaymentMethods: {
       type: Boolean as PropType<boolean>,
       required: false,
       default: false
@@ -219,7 +230,12 @@ export default Vue.extend({
   methods: {
     async getMemberPlans (): Promise<void> {
       this.loadingMemberPlans = true
-      const variables = { take: 100 }
+      let variables = { take: 100 }
+      if (this.memberPlanTags?.length) {
+        variables['filter'] = {
+          tags: this.memberPlanTags
+        }
+      }
       const response = await new MemberPlanService({ vue: this }).getMemberPlans({
         variables
       })

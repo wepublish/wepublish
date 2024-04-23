@@ -5,6 +5,7 @@ export type PropertyKey =
   | 'rubric'
   | 'crowdfunding-block-position'
   | 'crowdfunding-directus-id'
+  | 'member-plan-tag'
 export type PropertyValue =
   | 'opinion'
   | 'login'
@@ -16,6 +17,8 @@ export type PropertyValue =
   | 'abo-details'
   | 'open-invoice'
   | 'crowdfunding'
+  | 'trial-subscription'
+  | 'normal-subscription'
 
 export default class Property {
   public key: PropertyKey

@@ -31,8 +31,13 @@
       <span v-else>
         <!-- extend subscription -->
         <span v-if="mode === 'extendSubscription'">
-          <span class="fal fa-plus mr-1" />
-          Abo verlängern
+          <span v-if="subscription.extendable">
+            <span class="fal fa-plus mr-1" />
+            Abo verlängern
+          </span>
+          <span v-else>
+            Reguläres Abo lösen
+          </span>
         </span>
 
         <!-- pay open invoice -->
@@ -218,8 +223,12 @@ export default Vue.extend({
         // directly go to payment
         this.pay()
       } else if (this.mode === 'extendSubscription') {
-        // open confirm dialog
-        this.extendDialog = true
+        if (!this.subscription.extendable) {
+          this.$router.push('/p/abo')
+        } else {
+          // open confirm dialog
+          this.extendDialog = true
+        }
       }
     },
 
@@ -345,6 +354,9 @@ export default Vue.extend({
       if (redirectUrl.startsWith('https://')) {
         this.preparingPayment = false
         window.location.assign(redirectUrl)
+      } else if (redirectUrl.startsWith('no_charge')) { // trial subscriptions: non-charge-payment-adapter
+        const successURL = this.$config.PAYMENT_SUCCESS_URL
+        window.location.assign(successURL)
       } else { // stripe
         // open payment dialog
         this.intentSecret = redirectUrl

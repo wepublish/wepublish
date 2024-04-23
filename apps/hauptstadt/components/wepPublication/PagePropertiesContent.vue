@@ -9,10 +9,11 @@
       class="col-12 max-width-840 px-sm-0 pt-0"
     >
       <create-member-plan
-        current-member-plan-type="abo"
         :icons-of-payment-providers="iconsOfPaymentProvider"
         :registration-form-fields="registrationFormFields"
         :hide-payment-slider="hidePaymentSlider"
+        :hide-payment-methods="selectedMemberPlan && selectedMemberPlan.amountPerMonthMin === 0"
+        :member-plan-tags="memberPlanTags"
         @changed:memberPlan="(newMemberPlan) => {selectedMemberPlan = newMemberPlan}"
       >
         <template #sliderLabel>
@@ -186,11 +187,18 @@ export default Vue.extend({
     propertyType (): undefined | PropertyValue {
       return this.publication?.properties?.findPropertyByKey('type')?.value
     },
+    memberPlanTags (): undefined | PropertyValue[] {
+      const memberPlanTag = this.publication?.properties?.findPropertyByKey('member-plan-tag')?.value
+      return memberPlanTag ? [memberPlanTag] : undefined
+    },
     hidePaymentSlider (): boolean {
       if (!this.selectedMemberPlan) {
         return true
       }
       if (this.selectedMemberPlan.tags?.find(tag => tag === this.HIDE_PAYMENT_SLIDER_PROP_NAME)) {
+        return true
+      }
+      if (this.selectedMemberPlan.amountPerMonthMin === 0) {
         return true
       }
       return false
@@ -236,6 +244,9 @@ export default Vue.extend({
       const loggedIn = this.$store.getters['auth/loggedIn']
       let subtract = 0
       if (this.hidePaymentSlider) {
+        subtract++
+      }
+      if (this.selectedMemberPlan?.amountPerMonthMin === 0 && number > 3) {
         subtract++
       }
       if (loggedIn) {

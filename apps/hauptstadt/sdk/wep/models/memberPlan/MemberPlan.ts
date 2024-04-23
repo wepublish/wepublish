@@ -13,6 +13,8 @@ export default class MemberPlan {
   public amountPerMonthMin: number
   public availablePaymentMethods: AvailablePaymentMethods
   public tags?: string[]
+  public maxCount?: number
+  public extendable: boolean
 
   constructor({
     id,
@@ -22,7 +24,9 @@ export default class MemberPlan {
     description,
     amountPerMonthMin,
     availablePaymentMethods,
-    tags
+    tags,
+    maxCount,
+    extendable
   }: {
     id: string
     slug: string
@@ -32,6 +36,8 @@ export default class MemberPlan {
     amountPerMonthMin: number
     availablePaymentMethods: AvailablePaymentMethods | AvailablePaymentMethod[]
     tags?: string[]
+    maxCount?: number
+    extendable: boolean
   }) {
     this.id = id
     this.slug = slug
@@ -44,6 +50,8 @@ export default class MemberPlan {
         ? availablePaymentMethods
         : new AvailablePaymentMethods().parseApiData(availablePaymentMethods)
     this.tags = tags
+    this.maxCount = maxCount
+    this.extendable = extendable
   }
 
   public getAvailablePaymentMethods(): AvailablePaymentMethods {
@@ -89,6 +97,8 @@ export default class MemberPlan {
         ...availablePaymentMethod
       }
       tags
+      maxCount
+      extendable
     }
     ${AvailablePaymentMethod.availablePaymentMethodFragment}
     ${WepImage.wepImageFragment}
