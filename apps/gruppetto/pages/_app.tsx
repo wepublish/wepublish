@@ -8,6 +8,7 @@ import {
   ThemeOptions,
   ThemeProvider
 } from '@mui/material'
+import {GoogleAnalytics} from '@next/third-parties/google'
 import {theme} from '@wepublish/ui'
 import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 import {
@@ -23,7 +24,6 @@ import i18next from 'i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
 import {AppProps} from 'next/app'
 import getConfig from 'next/config'
-import {GoogleAnalytics} from '@next/third-parties/google'
 import Head from 'next/head'
 import Script from 'next/script'
 import {initReactI18next} from 'react-i18next'

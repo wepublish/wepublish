@@ -3,14 +3,16 @@ import {
   hasBlockStyle,
   selectTeaserAuthors,
   selectTeaserDate,
-  selectTeaserImage,
-  selectTeaserLead,
   selectTeaserPreTitle,
-  selectTeaserTitle,
   selectTeaserUrl,
   useWebsiteBuilder
 } from '@wepublish/website'
 
+import {
+  selectBajourTeaserImage,
+  selectBajourTeaserLead,
+  selectBajourTeaserTitle
+} from './select-teaser'
 import {
   AuthorsAndDate,
   LinkAndGridContainer,
@@ -27,10 +29,10 @@ import {
 } from './teaser-overwrite.style'
 
 export function TeaserOverwrite({className, teaser, numColumns, blockStyle}: BuilderTeaserProps) {
-  const title = teaser && selectTeaserTitle(teaser)
+  const title = teaser && selectBajourTeaserTitle(teaser)
   const preTitle = teaser && selectTeaserPreTitle(teaser)
-  const lead = teaser && selectTeaserLead(teaser)
-  const image = teaser && selectTeaserImage(teaser)
+  const lead = teaser && selectBajourTeaserLead(teaser)
+  const image = teaser && selectBajourTeaserImage(teaser)
   const publishDate = teaser && selectTeaserDate(teaser)
   const authors = teaser && selectTeaserAuthors(teaser)
   const href = teaser && selectTeaserUrl(teaser)
