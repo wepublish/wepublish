@@ -30,6 +30,7 @@ import {BajourBlockRenderer} from '../src/components/website-builder-overwrites/
 import {BajourTeaser} from '../src/components/website-builder-overwrites/blocks/teaser'
 import {BajourTeaserGrid} from '../src/components/website-builder-styled/blocks/teaser-grid-styled'
 import theme, {navbarTheme} from '../src/styles/theme'
+import {BajourBreakBlock} from '../src/components/website-builder-styled/blocks/break-block-styled'
 
 setDefaultOptions({
   locale: de
@@ -113,7 +114,8 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
             blocks={{
               Renderer: BajourBlockRenderer,
               Teaser: BajourTeaser,
-              TeaserGrid: BajourTeaserGrid
+              TeaserGrid: BajourTeaserGrid,
+              Break: BajourBreakBlock
             }}
             PaymentMethodPicker={BajourPaymentMethodPicker}>
             <ThemeProvider theme={theme}>
