@@ -121,6 +121,8 @@ type CustomAppProps = AppProps<{
   sessionToken?: ApiV1.UserSession
 }>
 
+const {publicRuntimeConfig} = getConfig()
+
 function CustomApp({Component, pageProps}: CustomAppProps) {
   const siteTitle = 'Gruppetto - Das neue Schweizer Radsportmagazin'
 
@@ -215,7 +217,9 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               </FooterContainer>
             </Spacer>
 
-            <GoogleAnalytics gaId="G-FL5CRKBXV4" />
+            {publicRuntimeConfig.env.GA_ID && (
+              <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
+            )}
           </ThemeProvider>
         </WebsiteBuilderProvider>
       </WebsiteProvider>
@@ -223,7 +227,6 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
   )
 }
 
-const {publicRuntimeConfig} = getConfig()
 const ConnectedApp = ApiV1.createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink])(
   CustomApp
 )

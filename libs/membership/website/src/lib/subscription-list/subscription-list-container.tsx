@@ -1,3 +1,4 @@
+import {StripeElement, StripePayment} from '@wepublish/payment/website'
 import {
   InvoicesDocument,
   InvoicesQuery,
@@ -10,7 +11,7 @@ import {
 } from '@wepublish/website/api'
 import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {produce} from 'immer'
-import {useMemo} from 'react'
+import {useMemo, useState} from 'react'
 
 export type SubscriptionListContainerProps = {
   successURL: string
@@ -24,13 +25,22 @@ export function SubscriptionListContainer({
   failureURL,
   className
 }: SubscriptionListContainerProps) {
+  const [stripeClientSecret, setStripeClientSecret] = useState<string>()
   const {SubscriptionList} = useWebsiteBuilder()
   const {data, loading, error} = useSubscriptionsQuery()
   const invoices = useInvoicesQuery()
 
   const [pay] = usePaySubscriptionMutation({
     onCompleted(data) {
-      if (data.createPaymentFromSubscription?.intentSecret) {
+      if (!data.createPaymentFromSubscription?.intentSecret) {
+        return
+      }
+
+      if (data.createPaymentFromSubscription.paymentMethod.paymentProviderID === 'stripe') {
+        setStripeClientSecret(data.createPaymentFromSubscription.intentSecret)
+      }
+
+      if (data.createPaymentFromSubscription.intentSecret.startsWith('http')) {
         window.location.href = data.createPaymentFromSubscription.intentSecret
       }
     }
@@ -38,7 +48,15 @@ export function SubscriptionListContainer({
   const [cancel] = useCancelSubscriptionMutationWithCacheUpdate()
   const [extend] = useExtendSubscriptionMutation({
     onCompleted(data) {
-      if (data.extendSubscription?.intentSecret) {
+      if (!data.extendSubscription?.intentSecret) {
+        return
+      }
+
+      if (data.extendSubscription.paymentMethod.paymentProviderID === 'stripe') {
+        setStripeClientSecret(data.extendSubscription.intentSecret)
+      }
+
+      if (data.extendSubscription.intentSecret.startsWith('http')) {
         window.location.href = data.extendSubscription.intentSecret
       }
     }
@@ -55,38 +73,54 @@ export function SubscriptionListContainer({
   )
 
   return (
-    <SubscriptionList
-      data={filteredSubscriptions}
-      loading={loading}
-      error={error}
-      invoices={invoices}
-      className={className}
-      onCancel={async subscriptionId => {
-        await cancel({
-          variables: {
-            subscriptionId
-          }
-        })
-      }}
-      onExtend={async subscriptionId => {
-        await extend({
-          variables: {
-            subscriptionId,
-            failureURL,
-            successURL
-          }
-        })
-      }}
-      onPay={async subscriptionId => {
-        await pay({
-          variables: {
-            subscriptionId,
-            failureURL,
-            successURL
-          }
-        })
-      }}
-    />
+    <>
+      {stripeClientSecret && (
+        <StripeElement clientSecret={stripeClientSecret}>
+          <StripePayment
+            onClose={async () => {
+              setTimeout(() => {
+                // give stripe some time => todo: absolutely find a better solution
+                // will be removed when migrating to website builder of we.publish
+                window.location.reload()
+              }, 1500)
+            }}
+          />
+        </StripeElement>
+      )}
+
+      <SubscriptionList
+        data={filteredSubscriptions}
+        loading={loading}
+        error={error}
+        invoices={invoices}
+        className={className}
+        onCancel={async subscriptionId => {
+          await cancel({
+            variables: {
+              subscriptionId
+            }
+          })
+        }}
+        onExtend={async subscriptionId => {
+          await extend({
+            variables: {
+              subscriptionId,
+              failureURL,
+              successURL
+            }
+          })
+        }}
+        onPay={async subscriptionId => {
+          await pay({
+            variables: {
+              subscriptionId,
+              failureURL,
+              successURL
+            }
+          })
+        }}
+      />
+    </>
   )
 }
 

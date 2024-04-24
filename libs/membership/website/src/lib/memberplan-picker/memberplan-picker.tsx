@@ -19,6 +19,8 @@ export const MemberPlanPickerRadios = styled(RadioGroup)`
   // hide unwanted label
   label {
     margin: 0;
+    display: grid;
+    align-items: stretch;
 
     & > span {
       display: none;
