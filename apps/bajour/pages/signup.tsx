@@ -11,6 +11,8 @@ import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {useEffect} from 'react'
 
+import {Container} from '../src/components/layout/container'
+
 const SignupWrapper = styled(ContentWrapper)`
   justify-content: center;
 `
@@ -29,17 +31,19 @@ export default function SignUp() {
   }, [router, hasUser])
 
   return (
-    <SignupWrapper>
-      <div>
-        <H3 component="h1">Registriere dich noch heute</H3>
+    <Container>
+      <SignupWrapper>
+        <div>
+          <H3 component="h1">Registriere dich noch heute</H3>
 
-        <Typography variant="body1" paragraph>
-          (Falls du schon einen Account hast, <Link href={'/login'}>klicke hier.</Link>)
-        </Typography>
-      </div>
+          <Typography variant="body1" paragraph>
+            (Falls du schon einen Account hast, <Link href={'/login'}>klicke hier.</Link>)
+          </Typography>
+        </div>
 
-      <RegistrationFormContainer fields={['firstName']} />
-    </SignupWrapper>
+        <RegistrationFormContainer fields={['firstName']} />
+      </SignupWrapper>
+    </Container>
   )
 }
 
