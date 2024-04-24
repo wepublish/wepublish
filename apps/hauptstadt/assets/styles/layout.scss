@@ -1,0 +1,121 @@
+@import '~vuetify/src/styles/settings/variables';
+@import 'variables';
+
+/*
+############
+  SPACINGS
+  IMPORTANT: To make these spacing apply in the app, import it in the nuxt base template. Otherwise Vuetify's spacings
+  overwrite this file, because this file is compiled after Vuetify's styles.
+############
+ */
+$min-space-size: 17;
+$max-space-size: 26;
+$space-factor: 4;
+$spacing-types: ('p': 'padding', 'm': 'margin');
+$spacing-directions: ('l': 'left', 'r': 'right', 't': 'top', 'b': 'bottom', 'a': 'all');
+
+@mixin spacing-base ($space-size, $breakpoint-name: false) {
+  @each $direction-short, $direction-long in $spacing-directions {
+    @each $type-short, $type-long in $spacing-types {
+      $css-directive: '';
+      @if $direction-short == 'a' {
+        $css-directive: #{$type-long};
+      } @else {
+        $css-directive: #{$type-long}-#{$direction-long};
+      }
+
+      // has breakpoint directive
+      @if $breakpoint-name {
+        .v-application .#{$type-short}#{$direction-short}-#{$breakpoint-name}-#{$space-size} {
+          #{$css-directive}: #{$space-factor * $space-size}px !important;
+        }
+      } @else { // base spacings without breakpoint directives in the name
+        .v-application .#{$type-short}#{$direction-short}-#{$space-size} {
+          #{$css-directive}: #{$space-factor * $space-size}px !important;
+        }
+      }
+    }
+  }
+}
+
+@for $space-size from $min-space-size through $max-space-size {
+  // 1. create base spacings
+  @include spacing-base($space-size);
+
+  // 2. create breakpoint spacings
+  @each $breakpoint-name, $breakpoint-width in $grid-breakpoints {
+    @media (min-width: #{$breakpoint-width}) {
+      @include spacing-base($space-size, $breakpoint-name);
+    }
+  }
+}
+/*
+############
+  LAYOUT
+############
+ */
+
+.max-container-width {
+  max-width: $max-container-width;
+}
+.max-container-width-sm {
+  max-width: $max-container-width-sm;
+}
+.max-container-width-md {
+  max-width: $max-container-width-md;
+}
+.max-container-width-lg {
+  max-width: $max-container-width-lg;
+}
+.max-container-width-xl {
+  max-width: $max-container-width-xl;
+}
+
+
+.max-width-840 {
+  max-width: 840px;
+}
+.max-width-680 {
+  max-width: 680px;
+}
+.max-width-580 {
+  max-width: 580px;
+}
+.max-width-520 {
+  max-width: 520px;
+}
+
+.w-600 {
+  width: 600px;
+}
+
+.w-680 {
+  width: 680px;
+}
+
+
+.w-100 {
+  width: 100%;
+}
+
+.h-100 {
+  height: 100%;
+}
+
+.min-h-100-vh {
+  min-height: 100vh;
+}
+
+@media #{map-get($display-breakpoints, 'lg-and-up')} {
+  .container-spacing {
+    padding-left: 7vw;
+    padding-right: 7vw;
+  }
+}
+
+@media #{map-get($display-breakpoints, 'xl-only')} {
+  .container-spacing {
+    padding-left: 10vw;
+    padding-right: 10vw;
+  }
+}

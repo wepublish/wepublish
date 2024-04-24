@@ -1,4 +1,5 @@
 import {CssBaseline, styled, ThemeProvider} from '@mui/material'
+import {GoogleAnalytics} from '@next/third-parties/google'
 import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 import {
   ApiV1,
@@ -24,10 +25,12 @@ import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {MainGrid} from '../src/components/layout/main-grid'
+import {BajourPaymentMethodPicker} from '../src/components/payment-method-picker/payment-method-picker'
 import {BajourBlockRenderer} from '../src/components/website-builder-overwrites/block-renderer/block-renderer'
 import {BajourTeaser} from '../src/components/website-builder-overwrites/blocks/teaser'
 import {BajourTeaserGrid} from '../src/components/website-builder-styled/blocks/teaser-grid-styled'
 import theme, {navbarTheme} from '../src/styles/theme'
+import {BajourBreakBlock} from '../src/components/website-builder-styled/blocks/break-block-styled'
 
 setDefaultOptions({
   locale: de
@@ -111,10 +114,14 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
             blocks={{
               Renderer: BajourBlockRenderer,
               Teaser: BajourTeaser,
-              TeaserGrid: BajourTeaserGrid
-            }}>
+              TeaserGrid: BajourTeaserGrid,
+              Break: BajourBreakBlock
+            }}
+            PaymentMethodPicker={BajourPaymentMethodPicker}>
             <ThemeProvider theme={theme}>
               <CssBaseline />
+
+              <GoogleAnalytics gaId="391346139" />
 
               <MainGrid>
                 <ThemeProvider theme={navbarTheme}>
@@ -122,19 +129,17 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
                     slug="main"
                     categorySlugs={[['basel-briefing', 'other'], ['about-us']]}
                     headerSlug="header">
-                    <>
-                      <ButtonLink href="https://www.facebook.com/bajourbasel">
-                        <MdFacebook size="32" />
-                      </ButtonLink>
+                    <ButtonLink href="https://www.facebook.com/bajourbasel">
+                      <MdFacebook size="32" />
+                    </ButtonLink>
 
-                      <ButtonLink href="https://twitter.com/bajourbasel">
-                        <FaTwitter size="32" />
-                      </ButtonLink>
+                    <ButtonLink href="https://twitter.com/bajourbasel">
+                      <FaTwitter size="32" />
+                    </ButtonLink>
 
-                      <ButtonLink href="mailto:info@bajour.ch">
-                        <MdMail size="32" />
-                      </ButtonLink>
-                    </>
+                    <ButtonLink href="mailto:info@bajour.ch">
+                      <MdMail size="32" />
+                    </ButtonLink>
                   </NavBar>
                 </ThemeProvider>
 

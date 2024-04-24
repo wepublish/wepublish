@@ -7,7 +7,7 @@ exports[`Image Block should render Default 1`] = `
   >
     <img
       alt="An image description"
-      class="css-lsysey-ImageWrapper-ImageBlock e1shv2yg0"
+      class="css-19cwsz4-ImageWrapper e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -29,7 +29,7 @@ exports[`Image Block should render WithClassName 1`] = `
   >
     <img
       alt="An image description"
-      class="css-lsysey-ImageWrapper-ImageBlock e1shv2yg0"
+      class="css-19cwsz4-ImageWrapper e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -51,7 +51,7 @@ exports[`Image Block should render WithEmotion 1`] = `
   >
     <img
       alt="An image description"
-      class="css-lsysey-ImageWrapper-ImageBlock e1shv2yg0"
+      class="css-19cwsz4-ImageWrapper e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -73,7 +73,7 @@ exports[`Image Block should render WithoutCaption 1`] = `
   >
     <img
       alt="An image description"
-      class="css-lsysey-ImageWrapper-ImageBlock e1shv2yg0"
+      class="css-19cwsz4-ImageWrapper e1shv2yg0"
       loading="lazy"
       srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,

@@ -39,6 +39,27 @@ const theme = createTheme(WePTheme, {
     h6: {
       fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
     },
+    body1: {
+      fontFamily: [merriweather.style.fontFamily, 'sans-serif'].join(',')
+    },
+    body2: {
+      fontFamily: [merriweather.style.fontFamily, 'sans-serif'].join(',')
+    },
+    button: {
+      fontFamily: [merriweather.style.fontFamily, 'sans-serif'].join(',')
+    },
+    caption: {
+      fontFamily: [merriweather.style.fontFamily, 'sans-serif'].join(',')
+    },
+    overline: {
+      fontFamily: [merriweather.style.fontFamily, 'sans-serif'].join(',')
+    },
+    subtitle1: {
+      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+    },
+    subtitle2: {
+      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+    },
     fontFamily: [merriweather.style.fontFamily, 'sans-serif'].join(',')
   }
 } as PartialDeep<Theme> | ThemeOptions)

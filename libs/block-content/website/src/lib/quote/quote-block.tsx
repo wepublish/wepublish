@@ -48,7 +48,7 @@ export const QuoteBlock = ({quote, author, image, className}: BuilderQuoteBlockP
       {image && <Image image={image} square />}
 
       <QuoteContent>
-        <H4 component="p">«{quote}»</H4>
+        <H4 component="p">{quote}</H4>
 
         {author && (
           <Paragraph component="cite" gutterBottom={false}>

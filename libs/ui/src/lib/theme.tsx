@@ -43,8 +43,8 @@ export const theme = createTheme({
     h4: {
       fontFamily: ['Hanken Grotesk', 'Roboto', 'sans-serif'].join(','),
       fontWeight: 600,
-      fontSize: '26px',
       lineHeight: 1.15,
+      fontSize: '26px',
       '@media (min-width: 900px)': {
         fontSize: '32px'
       }

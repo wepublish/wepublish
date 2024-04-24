@@ -55,7 +55,7 @@ exports[`Event Container should render Default 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-m3orio-ImageWrapper-ImageBlock e1shv2yg0"
+        class="css-cibo30-ImageWrapper e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -535,7 +535,7 @@ exports[`Event Container should render WithClassName 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-m3orio-ImageWrapper-ImageBlock e1shv2yg0"
+        class="css-cibo30-ImageWrapper e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -1015,7 +1015,7 @@ exports[`Event Container should render WithEmotion 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-m3orio-ImageWrapper-ImageBlock e1shv2yg0"
+        class="css-cibo30-ImageWrapper e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,

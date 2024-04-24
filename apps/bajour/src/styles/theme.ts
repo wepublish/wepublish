@@ -15,7 +15,7 @@ const roboto = Roboto({
   preload: true
 })
 
-const theme = createTheme(WepTheme, {
+const theme = createTheme({}, WepTheme, {
   typography: {
     h1: {
       fontFamily: [roboto.style.fontFamily, 'sans-serif'].join(',')
@@ -35,6 +35,28 @@ const theme = createTheme(WepTheme, {
     h6: {
       fontFamily: [roboto.style.fontFamily, 'sans-serif'].join(',')
     },
+    body1: {
+      fontFamily: [roboto.style.fontFamily, 'sans-serif'].join(','),
+      lineHeight: 1.4
+    },
+    body2: {
+      fontFamily: [roboto.style.fontFamily, 'sans-serif'].join(',')
+    },
+    button: {
+      fontFamily: [roboto.style.fontFamily, 'sans-serif'].join(',')
+    },
+    caption: {
+      fontFamily: [roboto.style.fontFamily, 'sans-serif'].join(',')
+    },
+    overline: {
+      fontFamily: [roboto.style.fontFamily, 'sans-serif'].join(',')
+    },
+    subtitle1: {
+      fontFamily: [roboto.style.fontFamily, 'sans-serif'].join(',')
+    },
+    subtitle2: {
+      fontFamily: [roboto.style.fontFamily, 'sans-serif'].join(',')
+    },
     fontFamily: [roboto.style.fontFamily, 'sans-serif'].join(',')
   },
   breakpoints: createBreakpoints({
@@ -49,6 +71,7 @@ const theme = createTheme(WepTheme, {
   palette: {
     primary: augmentColor({color: {main: '#FF0D62'}}),
     secondary: augmentColor({color: {main: '#FDDDD2', dark: '#ffbaba'}}),
+    accent: augmentColor({color: {main: '#770A6A'}}),
     error: augmentColor({color: {main: '#FF0D62'}})
   },
   components: {

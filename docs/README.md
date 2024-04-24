@@ -36,6 +36,11 @@
 
 ## apps/editor
 
+### run app with nx
+`npx nx serve <app-name>`
+
+example: `npx nx serve bajour`
+
 ### How to call an api endpoint from the UI (.tsx file)?
 
 Prerequisite: In the API (packages/api) exists a corresponding GraphQL endpoint.

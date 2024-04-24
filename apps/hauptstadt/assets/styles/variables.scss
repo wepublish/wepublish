@@ -1,0 +1,53 @@
+// Ref: https://github.com/nuxt-community/vuetify-module#customvariables
+//
+// The variables you want to modify
+$body-font-family: 'ABCWhyte', sans-serif !default;
+
+$grid-breakpoints: (
+  'xs': 0,
+  'sm': 760px,
+  'md': 1000px,
+  'lg': 1480px - 16px,
+  'xl': 2116px - 16px
+);
+
+
+/**
+#######################################################################
+  CUSTOM VARIABLES
+#######################################################################
+ */
+
+/*
+  COLORS
+ */
+$primary: #abd8da;
+$h-yellow: #f4e7bd;
+
+/*
+  CARD
+ */
+$card-title-word-break: 'keep-all';
+
+/*
+  HEADER
+ */
+$header-height: 80px;
+$header-height-sm-and-up: 145px;
+$header-height-md-and-up: 180px;
+$header-height-lg-and-up: 220px;
+$header-height-xl-only: 260px;
+
+$header-height-dense: 55px;
+$header-height-dense-md-and-up: 80px;
+
+/*
+  LAYOUT
+ */
+$max-container-width: 500px;
+$max-container-width-sm: 900px;
+$max-container-width-md: 1080px;
+$max-container-width-lg: 1425px;
+$max-container-width-xl: 2100px;
+
+$menu-container-width: 1264px;

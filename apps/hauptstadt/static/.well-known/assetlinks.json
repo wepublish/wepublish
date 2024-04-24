@@ -1,0 +1,15 @@
+[
+  {
+    "relation": [
+      "delegate_permission/common.handle_all_urls"
+    ],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "be.hauptstadt.android",
+      "sha256_cert_fingerprints": [
+        "58:F4:CA:10:0B:E8:AD:E1:18:B4:A2:3C:14:44:CE:BE:1A:99:4E:4D:CA:42:86:3D:F9:54:A4:AB:12:3A:9C:F5",
+        "B6:BE:5E:83:CC:46:0F:49:1A:3A:E6:B1:58:F0:60:55:14:F7:72:9F:2E:A7:33:D0:E3:35:2F:8C:2D:F4:1F:01"
+      ]
+    }
+  }
+]

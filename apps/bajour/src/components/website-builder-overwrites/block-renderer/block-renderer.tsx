@@ -2,7 +2,6 @@ import {
   ApiV1,
   BlockRenderer,
   BuilderBlockRendererProps,
-  isPollBlock,
   isTeaserGridBlock,
   isTeaserListBlock,
   useWebsiteBuilder,
@@ -11,16 +10,16 @@ import {
 import {allPass, cond} from 'ramda'
 import {Fragment, useCallback, useMemo} from 'react'
 
-import {Archive} from '../../bajour/archive/archive'
-import {isArchive} from '../../bajour/archive/is-archive'
-import {BestOfWePublish} from '../../bajour/best-of-wepublish/best-of-wepublish'
-import {isBestOfWePublish} from '../../bajour/best-of-wepublish/is-best-of-wepublish'
-import {BaselBriefing, BaselBriefingProps} from '../../bajour/briefing/basel-briefing'
-import {isAnyBriefing} from '../../bajour/briefing/is-briefing'
-import {ContextBox} from '../../bajour/context-box/context-box'
-import {isContextBox} from '../../bajour/context-box/is-context-box'
+import {Archive} from '../../archive/archive'
+import {isArchive} from '../../archive/is-archive'
 import {FrageDesTages} from '../../bajour/frage-des-tages/frage-des-tages'
 import {isFrageDesTages} from '../../bajour/frage-des-tages/is-frage-des-tages'
+import {BestOfWePublish} from '../../best-of-wepublish/best-of-wepublish'
+import {isBestOfWePublish} from '../../best-of-wepublish/is-best-of-wepublish'
+import {BaselBriefing, BaselBriefingProps} from '../../briefing/basel-briefing'
+import {isAnyBriefing} from '../../briefing/is-briefing'
+import {ContextBox} from '../../context-box/context-box'
+import {isContextBox} from '../../context-box/is-context-box'
 import {isSmallTeaser, SmallTeaser} from '../blocks/small-teaser'
 import {isTeaserSlider, TeaserSlider} from '../blocks/teaser-slider/teaser-slider'
 import {isWideTeaser, WideTeaser} from '../blocks/wide-teaser'

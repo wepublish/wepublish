@@ -3,12 +3,22 @@ import {ApiV1, AuthTokenStorageKey, SubscribeContainer} from '@wepublish/website
 import {setCookie} from 'cookies-next'
 import {NextPageContext} from 'next'
 import getConfig from 'next/config'
+import {useRouter} from 'next/router'
 
 export default function Mitmachen() {
+  const {
+    query: {firstName, mail, lastName}
+  } = useRouter()
+
   const locationOrigin = typeof window !== 'undefined' ? location.origin : ''
 
   return (
     <SubscribeContainer
+      defaults={{
+        email: mail as string | undefined,
+        firstName: firstName as string | undefined,
+        name: lastName as string | undefined
+      }}
       successURL={`${locationOrigin}/payment/success`}
       failureURL={`${locationOrigin}/payment/fail`}
     />
@@ -16,10 +26,6 @@ export default function Mitmachen() {
 }
 
 Mitmachen.getInitialProps = async (ctx: NextPageContext) => {
-  if (typeof window !== 'undefined') {
-    return {}
-  }
-
   const {publicRuntimeConfig} = getConfig()
   const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [
     ssrAuthLink(() => getSessionTokenProps(ctx).sessionToken?.token)
@@ -47,23 +53,38 @@ Mitmachen.getInitialProps = async (ctx: NextPageContext) => {
 
   const sessionProps = getSessionTokenProps(ctx)
 
+  const dataPromises = [
+    client.query({
+      query: ApiV1.MemberPlanListDocument,
+      variables: {
+        take: 50
+      }
+    }),
+    client.query({
+      query: ApiV1.NavigationListDocument
+    }),
+    client.query({
+      query: ApiV1.PeerProfileDocument
+    })
+  ]
+
   if (sessionProps.sessionToken) {
-    await Promise.all([
-      client.query({
-        query: ApiV1.MeDocument
-      }),
-      client.query({
-        query: ApiV1.MemberPlanListDocument,
-        variables: {
-          take: 50
-        }
-      }),
-      client.query({
-        query: ApiV1.NavigationListDocument
-      })
-    ])
+    dataPromises.push(
+      ...[
+        client.query({
+          query: ApiV1.MeDocument
+        }),
+        client.query({
+          query: ApiV1.InvoicesDocument,
+          variables: {
+            take: 50
+          }
+        })
+      ]
+    )
   }
 
+  await Promise.all(dataPromises)
   const props = ApiV1.addClientCacheToV1Props(client, sessionProps)
 
   return props

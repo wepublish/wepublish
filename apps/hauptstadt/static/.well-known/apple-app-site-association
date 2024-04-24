@@ -1,0 +1,10 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appID": "68X2T4YTGN.be.hauptstadt.ios",
+        "paths": ["NOT /p/abo", "NOT /login/*invoiceId*", "/*"]
+      }
+    ]
+  }
+}

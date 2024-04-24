@@ -76,6 +76,7 @@ export const TextLine = styled('hr')`
 `
 
 export const TeaserLeadBelow = styled(TeaserLead)`
+  grid-area: initial;
   margin: 0;
   grid-column: -1/1;
 

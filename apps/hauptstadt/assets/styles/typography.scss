@@ -1,0 +1,329 @@
+@import '~vuetify/src/styles/settings/variables';
+
+/**
+############
+  TYPOGRAPHY
+############
+ */
+$min-font-size: 10;
+$max-font-size: 66;
+@mixin font-base() {
+  font-weight: 400;
+  font-style: normal;
+  font-variant-caps: normal;
+  font-variant-east-asian: normal;
+  font-variant-ligatures: normal;
+  font-variant-numeric: normal;
+  font-stretch: 100%;
+}
+
+@mixin title-base($font-size) {
+  line-height: 1.2;
+  font-size: #{$font-size}px;
+  @include font-base;
+}
+@mixin lead-base($font-size) {
+  line-height: 1.25;
+  font-size: #{$font-size}px;
+  @include font-base;
+}
+@mixin caption-base($font-size) {
+  line-height: 1.3;
+  font-size: #{$font-size}px;
+  @include font-base;
+}
+
+/*
+  TITLE
+ */
+@for $font-size from $min-font-size through $max-font-size {
+  .title-#{$font-size} {
+    @include title-base($font-size);
+  }
+  @each $breakpoint-name, $breakpoint-width in $grid-breakpoints {
+    @media only screen and (min-width: #{$breakpoint-width}) {
+      .title-#{$breakpoint-name}-#{$font-size} {
+        line-height: 1.2 !important;
+        font-size: #{$font-size}px !important;
+        @include font-base;
+      }
+    }
+  }
+}
+
+/*
+  LEAD
+ */
+@for $font-size from $min-font-size through $max-font-size {
+  .lead-#{$font-size} {
+    @include lead-base($font-size);
+  }
+  @each $breakpoint-name, $breakpoint-width in $grid-breakpoints {
+    @media only screen and (min-width: #{$breakpoint-width}) {
+      .lead-#{$breakpoint-name}-#{$font-size} {
+        line-height: 1.25 !important;
+        font-size: #{$font-size}px !important;
+        @include font-base;
+      }
+    }
+  }
+}
+
+/**
+  CAPTION
+ */
+@for $font-size from $min-font-size through $max-font-size {
+  .caption-#{$font-size} {
+    @include caption-base($font-size);
+  }
+  @each $breakpoint-name, $breakpoint-width in $grid-breakpoints {
+    @media only screen and (min-width: #{$breakpoint-width}) {
+      .caption-#{$breakpoint-name}-#{$font-size} {
+        line-height: 1.3 !important;
+        font-size: #{$font-size}px !important;
+        @include font-base;
+      }
+    }
+  }
+}
+
+/**
+  FONT SIZES
+ */
+@for $font-size from $min-font-size through $max-font-size {
+  .font-size-#{$font-size} {
+    font-size: #{$font-size}px;
+    line-height: 1.5;
+  }
+
+  @each $breakpoint-name, $breakpoint-width in $grid-breakpoints {
+    @media only screen and (min-width: #{$breakpoint-width}) {
+      .font-size-#{$breakpoint-name}-#{$font-size} {
+        font-size: #{$font-size}px !important;
+        line-height: 1.5;
+      }
+    }
+  }
+}
+
+
+/**
+  LINE HEIGHTS
+ */
+.line-height-1-6 {
+  line-height: 1.6 !important;
+}
+
+.line-height-1-35 {
+  line-height: 1.35 !important;
+}
+
+.line-height-1-25 {
+  line-height: 1.25 !important;
+}
+.line-height-16 {
+  line-height: 16px;
+}
+
+/**
+  FONT FAMILY TYPES
+ */
+
+$font-families: (
+  'tiempos': 'tiempos, serif',
+  'tiempos-semibold': 'tiempos semibold, serif',
+  'tiempos-medium': 'tiempos medium, serif',
+  'tiempos-bold': 'tiempos bold, serif',
+  'tiempos-bold-italic': 'tiempos bold italic, serif',
+  'abc': 'ABCWhyte, sans-serif',
+  'abc-light': 'ABCWhyte light, sans-serif',
+  'abc-thin': 'ABCWhyte thin, sans-serif',
+  'abc-bold': 'ABCWhyte bold, sans-serif',
+  'abc-bold-italic': 'ABCWhyte bold italic, sans-serif',
+  'abc-black': 'ABCWhyte black, sans-serif',
+  'abc-super': 'ABCWhyte super, sans-serif',
+  'abc-heavy': 'ABCWhyte heavy, sans-serif',
+  'abc-black-italic': 'ABCWhyte black italic, sans-serif',
+  'abc-super-italic': 'ABCWhyte super italic, sans-serif',
+  'abc-heavy-italic': 'ABCWhyte heavy italic, sans-serif'
+);
+
+@each $class-name, $font-family in $font-families {
+  .#{$class-name} {
+    font-family: #{$font-family} !important;
+  }
+
+  @each $breakpoint-name, $breakpoint-width in $grid-breakpoints {
+    @media (min-width: #{$breakpoint-width}) {
+      .#{$class-name}-#{$breakpoint-name} {
+        font-family: #{$font-family} !important;
+      }
+    }
+  }
+}
+
+/**
+  HELPERS
+ */
+.word-break-keep-all {
+  word-break: keep-all !important;
+}
+
+/**
+ABC WHITE
+ */
+/* regular */
+@font-face {
+  font-family: 'ABCWhyte';
+  font-weight: normal;
+  src: url('../fonts/abc-white/ABCWhyte-Regular.woff2') format('woff2');
+}
+
+/* regular italic */
+@font-face {
+  font-family: 'ABCWhyte';
+  font-weight: normal;
+  font-style: italic;
+  src: url('../fonts/abc-white/ABCWhyte-RegularItalic.woff2') format('woff2');
+}
+
+/* light */
+@font-face {
+  font-family: 'ABCWhyte light';
+  font-weight: normal;
+  src: url('../fonts/abc-white/ABCWhyte-Light.woff2') format('woff2');
+}
+
+/* light italic */
+@font-face {
+  font-family: 'ABCWhyte light';
+  font-weight: normal;
+  font-style: italic;
+  src: url('../fonts/abc-white/ABCWhyte-LightItalic.woff2') format('woff2');
+}
+
+/* thin */
+@font-face {
+  font-family: 'ABCWhyte thin';
+  font-weight: 400;
+  src: url('../fonts/abc-white/ABCWhyte-Thin.woff2') format('woff2');
+}
+
+/* thin italic */
+@font-face {
+  font-family: 'ABCWhyte thin';
+  font-weight: 400;
+  font-style: italic;
+  src: url('../fonts/abc-white/ABCWhyte-ThinItalic.woff2') format('woff2');
+}
+
+/* bold */
+@font-face {
+  font-family: 'ABCWhyte bold';
+  font-weight: bold;
+  src: url('../fonts/abc-white/ABCWhyte-Bold.woff2') format('woff2');
+}
+/* bold italic */
+@font-face {
+  font-family: 'ABCWhyte bold italic';
+  font-weight: bold;
+  font-style: italic;
+  src: url('../fonts/abc-white/ABCWhyte-BoldItalic.woff2') format('woff2');
+}
+
+/* bold */
+@font-face {
+  font-family: 'ABCWhyte black';
+  font-weight: bold;
+  src: url('../fonts/abc-white/ABCWhyte-Black.woff2') format('woff2');
+}
+/* bold italic */
+@font-face {
+  font-family: 'ABCWhyte black italic';
+  font-weight: bold;
+  font-style: italic;
+  src: url('../fonts/abc-white/ABCWhyte-BlackItalic.woff2') format('woff2');
+}
+
+/* bold */
+@font-face {
+  font-family: 'ABCWhyte heavy';
+  font-weight: bold;
+  src: url('../fonts/abc-white/ABCWhyte-Heavy.woff2') format('woff2');
+}
+/* bold italic */
+@font-face {
+  font-family: 'ABCWhyte heavy italic';
+  font-weight: bold;
+  font-style: italic;
+  src: url('../fonts/abc-white/ABCWhyte-HeavyItalic.woff2') format('woff2');
+}
+
+/* bold */
+@font-face {
+  font-family: 'ABCWhyte super';
+  font-weight: bold;
+  src: url('../fonts/abc-white/ABCWhyte-Super.woff2') format('woff2');
+}
+/* bold italic */
+@font-face {
+  font-family: 'ABCWhyte super italic';
+  font-weight: bold;
+  font-style: italic;
+  src: url('../fonts/abc-white/ABCWhyte-SuperItalic.woff2') format('woff2');
+}
+
+/**
+TIEMPOS
+ */
+/* regular */
+@font-face {
+  font-family: 'tiempos';
+  font-weight: normal;
+  src: url('assets/fonts/tiempos/tiempos-text-web-regular.woff2') format('woff2');
+}
+/* regular italic */
+@font-face {
+  font-family: 'tiempos';
+  font-weight: normal;
+  font-style: italic;
+  src: url('assets/fonts/tiempos/tiempos-text-web-regular-italic.woff2') format('woff2');
+}
+
+/* medium */
+@font-face {
+  font-family: 'tiempos medium';
+  font-weight: normal;
+  src: url('assets/fonts/tiempos/tiempos-text-web-medium.woff2') format('woff2');
+}
+/* regular italic */
+@font-face {
+  font-family: 'tiempos medium';
+  font-weight: normal;
+  font-style: italic;
+  src: url('assets/fonts/tiempos/tiempos-text-web-medium-italic.woff2') format('woff2');
+}
+
+/* semi-bold */
+@font-face {
+  font-family: 'tiempos semibold';
+  src: url('assets/fonts/tiempos/tiempos-text-web-semibold.woff2') format('woff2');
+}
+/* semi-bold italic */
+@font-face {
+  font-family: 'tiempos semibold';
+  font-style: italic;
+  src: url('assets/fonts/tiempos/tiempos-text-web-semibold-italic.woff2') format('woff2');
+}
+/* bold */
+@font-face {
+  font-family: 'tiempos bold';
+  font-weight: normal;
+  src: url('assets/fonts/tiempos/tiempos-text-web-bold.woff2') format('woff2');
+}
+/* bold italic */
+@font-face {
+  font-family: 'tiempos bold italic';
+  font-weight: normal;
+  src: url('assets/fonts/tiempos/tiempos-text-web-bold-italic.woff2') format('woff2');
+}
