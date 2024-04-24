@@ -26,8 +26,8 @@ function DeactivatedSubscriptions() {
     <Container>
       <SubscriptionsWrapper>
         <SubscriptionListContainer
-          successURL={`${locationOrigin}/payment/success`}
-          failureURL={`${locationOrigin}/payment/fail`}
+          successURL={`${locationOrigin}/profile/subscription`}
+          failureURL={`${locationOrigin}/fail`}
           filter={subscriptions => subscriptions.filter(subscription => subscription.deactivation)}
         />
       </SubscriptionsWrapper>

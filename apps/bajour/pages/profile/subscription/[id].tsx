@@ -49,8 +49,8 @@ function Subscription() {
           <H4 component={'h1'}>Abo</H4>
 
           <SubscriptionListContainer
-            successURL={`${locationOrigin}/payment/success`}
-            failureURL={`${locationOrigin}/payment/fail`}
+            successURL={`${locationOrigin}/profile/subscription`}
+            failureURL={`${locationOrigin}/fail`}
             filter={subscriptions => subscriptions.filter(subscription => subscription.id === id)}
           />
         </SubscriptionListWrapper>
@@ -59,8 +59,8 @@ function Subscription() {
           <H4 component={'h1'}>Rechnungen</H4>
 
           <InvoiceListContainer
-            successURL={`${locationOrigin}/payment/success`}
-            failureURL={`${locationOrigin}/payment/fail`}
+            successURL={`${locationOrigin}/profile/subscription`}
+            failureURL={`${locationOrigin}/fail`}
             filter={invoices => invoices.filter(invoice => invoice.subscriptionID === id)}
           />
         </SubscriptionListWrapper>

@@ -22,8 +22,8 @@ export default function Mitmachen() {
           name: lastName as string | undefined,
           memberPlanSlug: memberPlanBySlug as string | undefined
         }}
-        successURL={`${locationOrigin}/payment/success`}
-        failureURL={`${locationOrigin}/payment/fail`}
+        successURL={`${locationOrigin}/profile/subscription`}
+        failureURL={`${locationOrigin}/fail`}
         fields={['firstName']}
         filter={memberPlans => {
           const preselectedMemberPlan = memberPlans.find(({slug}) => slug === memberPlanBySlug)
