@@ -26,6 +26,7 @@ export const RelatedArticleSlider = (props: BuilderArticleListProps) => {
 }
 
 export default function ArticleBySlug() {
+  console.log('articleBySlug')
   const {
     query: {slug}
   } = useRouter()
@@ -39,6 +40,10 @@ export default function ArticleBySlug() {
       slug: slug as string
     }
   })
+
+  const isFDT = data?.article?.tags.includes('frage-des-tages')
+
+  console.log('isFDT', isFDT)
 
   return (
     <WebsiteBuilderProvider ArticleList={RelatedArticleSlider}>

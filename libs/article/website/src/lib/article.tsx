@@ -23,6 +23,8 @@ export const ArticleInfoWrapper = styled('aside')`
 export function Article({className, data, children, loading, error}: BuilderArticleProps) {
   const {AuthorChip, ArticleSEO} = useWebsiteBuilder()
 
+  console.log('here article')
+
   return (
     <ArticleWrapper className={className}>
       {data?.article && <ArticleSEO article={data.article as ArticleType} />}

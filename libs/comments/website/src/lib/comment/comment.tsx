@@ -4,6 +4,44 @@ import {CommentAuthorType} from '@wepublish/website/api'
 import {BuilderCommentProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {MdPerson, MdVerified} from 'react-icons/md'
 
+function formatCommentDate(isoDateString: string) {
+  const monthNames = [
+    'Januar',
+    'Februar',
+    'März',
+    'April',
+    'Mai',
+    'Juni',
+    'Juli',
+    'August',
+    'September',
+    'Oktober',
+    'November',
+    'Dezember'
+  ]
+
+  // Create a date object from the ISO string
+  const date = new Date(isoDateString)
+
+  // Extract the components of the date
+  const day = date.getDate()
+  const monthIndex = date.getMonth()
+  const year = date.getFullYear()
+
+  // Format the hours and minutes
+  let hours = date.getHours()
+  let minutes = date.getMinutes()
+
+  // Padding with '0' if necessary to always have two digits
+  hours = hours < 10 ? `0${hours}` : hours
+  minutes = minutes < 10 ? `0${minutes}` : minutes
+
+  // Construct the formatted date string
+  const formattedDate = `${day}. ${monthNames[monthIndex]} ${year} | ${hours}:${minutes}`
+
+  return formattedDate
+}
+
 const avatarStyles = css`
   width: 46px;
   height: 46px;
@@ -75,6 +113,7 @@ export const Comment = ({
   title,
   source,
   children,
+  createdAt,
   showContent = true
 }: BuilderCommentProps) => {
   const {
@@ -87,6 +126,16 @@ export const Comment = ({
   const isGuest = authorType === CommentAuthorType.GuestUser
   const flair = user?.flair ?? source
   const name = user ? `${user.preferredName || user.firstName} ${user.name}` : guestUsername
+
+  const displayFlairOrDate = () => {
+    if (flair) {
+      return <CommentFlair isGuest={isGuest}>{flair}</CommentFlair>
+    } else if (createdAt) {
+      return <CommentFlair isGuest={isGuest}>{formatCommentDate(createdAt)}</CommentFlair>
+    } else {
+      return null
+    }
+  }
 
   return (
     <CommentWrapper className={className}>
@@ -105,7 +154,7 @@ export const Comment = ({
             )}
           </CommentName>
 
-          {flair && <CommentFlair isGuest={isGuest}>{flair}</CommentFlair>}
+          {displayFlairOrDate()}
         </CommentHeaderContent>
       </CommentHeader>
 

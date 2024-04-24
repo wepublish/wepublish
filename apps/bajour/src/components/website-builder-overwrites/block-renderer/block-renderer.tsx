@@ -2,6 +2,7 @@ import {
   ApiV1,
   BlockRenderer,
   BuilderBlockRendererProps,
+  isPollBlock,
   isTeaserGridBlock,
   isTeaserListBlock,
   useWebsiteBuilder,
@@ -18,6 +19,8 @@ import {BaselBriefing, BaselBriefingProps} from '../../bajour/briefing/basel-bri
 import {isAnyBriefing} from '../../bajour/briefing/is-briefing'
 import {ContextBox} from '../../bajour/context-box/context-box'
 import {isContextBox} from '../../bajour/context-box/is-context-box'
+import {FrageDesTages} from '../../bajour/frage-des-tages/frage-des-tages'
+import {isFrageDesTages} from '../../bajour/frage-des-tages/is-frage-des-tages'
 import {isSmallTeaser, SmallTeaser} from '../blocks/small-teaser'
 import {isTeaserSlider, TeaserSlider} from '../blocks/teaser-slider/teaser-slider'
 import {isWideTeaser, WideTeaser} from '../blocks/wide-teaser'
@@ -43,6 +46,7 @@ export const BajourBlockRenderer = (props: BuilderBlockRendererProps) => {
     () =>
       cond([
         [isOldRelatedArticles, block => <Fragment />],
+        [isFrageDesTages, block => <FrageDesTages {...block} />],
         [isContextBox, block => <ContextBox {...block} />],
         [isTeaserSlider, block => <TeaserSlider {...block} />],
         [isBestOfWePublish, block => <BestOfWePublish {...block} />],

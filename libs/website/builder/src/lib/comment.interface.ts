@@ -88,7 +88,14 @@ export type BuilderCommentListItemProps = Comment & {
 export type BuilderCommentProps = PropsWithChildren<
   Pick<
     Comment,
-    'text' | 'authorType' | 'user' | 'guestUserImage' | 'guestUsername' | 'title' | 'source'
+    | 'text'
+    | 'authorType'
+    | 'user'
+    | 'guestUserImage'
+    | 'guestUsername'
+    | 'title'
+    | 'source'
+    | 'createdAt'
   > & {
     className?: string
     showContent?: boolean
