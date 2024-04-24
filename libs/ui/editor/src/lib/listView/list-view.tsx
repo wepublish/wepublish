@@ -75,7 +75,7 @@ export const IconButtonCell = styled(RTable.Cell)`
 `
 
 export const IconButton = styled(RIconButton)`
-  width: 36px;
+  min-width: 36px;
   height: 36px;
 
   &:not(:first-of-type) {
