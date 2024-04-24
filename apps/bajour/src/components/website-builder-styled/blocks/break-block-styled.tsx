@@ -6,12 +6,12 @@ export const BajourBreakBlock = styled(BreakBlock)`
   color: white;
 
   ${({theme}) => theme.breakpoints.up('sm')} {
-    padding-left: 0 !important;
-    padding-right: 0 !important;
+    padding-left: 0;
+    padding-right: 0;
   }
 
   ${({theme}) => theme.breakpoints.up('md')} {
-    padding-left: ${({theme}) => theme.spacing(10)} !important;
-    padding-right: ${({theme}) => theme.spacing(10)} !important;
+    padding-left: ${({theme}) => theme.spacing(10)};
+    padding-right: ${({theme}) => theme.spacing(10)};
   }
 `
