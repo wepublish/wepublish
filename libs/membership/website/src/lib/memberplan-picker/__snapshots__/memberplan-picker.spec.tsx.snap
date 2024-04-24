@@ -6,7 +6,7 @@ exports[`MemberPlanPicker should render Default 1`] = `
     class="css-ah3hxd-MemberPlanPickerWrapper es1nn8k1"
   >
     <div
-      class="MuiFormGroup-root es1nn8k0 css-1rn5vyy-MuiFormGroup-root-MemberPlanPickerRadios"
+      class="MuiFormGroup-root es1nn8k0 css-109gj5f-MuiFormGroup-root-MemberPlanPickerRadios"
       role="radiogroup"
     >
       <label
@@ -244,7 +244,7 @@ exports[`MemberPlanPicker should render Selected 1`] = `
     class="css-ah3hxd-MemberPlanPickerWrapper es1nn8k1"
   >
     <div
-      class="MuiFormGroup-root es1nn8k0 css-1rn5vyy-MuiFormGroup-root-MemberPlanPickerRadios"
+      class="MuiFormGroup-root es1nn8k0 css-109gj5f-MuiFormGroup-root-MemberPlanPickerRadios"
       role="radiogroup"
     >
       <label
@@ -485,7 +485,7 @@ exports[`MemberPlanPicker should render WithClassName 1`] = `
     class="extra-classname css-ah3hxd-MemberPlanPickerWrapper es1nn8k1"
   >
     <div
-      class="MuiFormGroup-root es1nn8k0 css-1rn5vyy-MuiFormGroup-root-MemberPlanPickerRadios"
+      class="MuiFormGroup-root es1nn8k0 css-109gj5f-MuiFormGroup-root-MemberPlanPickerRadios"
       role="radiogroup"
     >
       <label
@@ -723,7 +723,7 @@ exports[`MemberPlanPicker should render WithEmotion 1`] = `
     class="css-u32rdq-MemberPlanPickerWrapper-css es1nn8k1"
   >
     <div
-      class="MuiFormGroup-root es1nn8k0 css-1rn5vyy-MuiFormGroup-root-MemberPlanPickerRadios"
+      class="MuiFormGroup-root es1nn8k0 css-109gj5f-MuiFormGroup-root-MemberPlanPickerRadios"
       role="radiogroup"
     >
       <label
@@ -961,7 +961,7 @@ exports[`MemberPlanPicker should render WithError 1`] = `
     class="css-ah3hxd-MemberPlanPickerWrapper es1nn8k1"
   >
     <div
-      class="MuiFormGroup-root es1nn8k0 css-1rn5vyy-MuiFormGroup-root-MemberPlanPickerRadios"
+      class="MuiFormGroup-root es1nn8k0 css-109gj5f-MuiFormGroup-root-MemberPlanPickerRadios"
       role="radiogroup"
     >
       <label
@@ -1199,7 +1199,7 @@ exports[`MemberPlanPicker should render WithLoading 1`] = `
     class="css-ah3hxd-MemberPlanPickerWrapper es1nn8k1"
   >
     <div
-      class="MuiFormGroup-root es1nn8k0 css-1rn5vyy-MuiFormGroup-root-MemberPlanPickerRadios"
+      class="MuiFormGroup-root es1nn8k0 css-109gj5f-MuiFormGroup-root-MemberPlanPickerRadios"
       role="radiogroup"
     >
       <label

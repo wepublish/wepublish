@@ -1303,6 +1303,7 @@ export type Subscription = {
   __typename?: 'Subscription';
   autoRenew: Scalars['Boolean'];
   deactivation?: Maybe<SubscriptionDeactivation>;
+  extendable: Scalars['Boolean'];
   id: Scalars['ID'];
   memberPlan: MemberPlan;
   monthlyAmount: Scalars['Int'];

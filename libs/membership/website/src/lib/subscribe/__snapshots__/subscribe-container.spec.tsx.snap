@@ -18,7 +18,7 @@ exports[`Subscribe Container should render Default 1`] = `
         class="css-ah3hxd-MemberPlanPickerWrapper es1nn8k1"
       >
         <div
-          class="MuiFormGroup-root es1nn8k0 css-1rn5vyy-MuiFormGroup-root-MemberPlanPickerRadios"
+          class="MuiFormGroup-root es1nn8k0 css-109gj5f-MuiFormGroup-root-MemberPlanPickerRadios"
           role="radiogroup"
         >
           <label
@@ -1066,7 +1066,7 @@ exports[`Subscribe Container should render Filled 1`] = `
           class="css-ah3hxd-MemberPlanPickerWrapper es1nn8k1"
         >
           <div
-            class="MuiFormGroup-root es1nn8k0 css-1rn5vyy-MuiFormGroup-root-MemberPlanPickerRadios"
+            class="MuiFormGroup-root es1nn8k0 css-109gj5f-MuiFormGroup-root-MemberPlanPickerRadios"
 @@ -336,349 +403,11 @@
           </div>
         </div>
@@ -1620,7 +1620,7 @@ exports[`Subscribe Container should render LoggedIn 1`] = `
         class="css-ah3hxd-MemberPlanPickerWrapper es1nn8k1"
       >
         <div
-          class="MuiFormGroup-root es1nn8k0 css-1rn5vyy-MuiFormGroup-root-MemberPlanPickerRadios"
+          class="MuiFormGroup-root es1nn8k0 css-109gj5f-MuiFormGroup-root-MemberPlanPickerRadios"
           role="radiogroup"
         >
           <label
@@ -2151,7 +2151,7 @@ exports[`Subscribe Container should render WithChallengeError 1`] = `
         class="css-ah3hxd-MemberPlanPickerWrapper es1nn8k1"
       >
         <div
-          class="MuiFormGroup-root es1nn8k0 css-1rn5vyy-MuiFormGroup-root-MemberPlanPickerRadios"
+          class="MuiFormGroup-root es1nn8k0 css-109gj5f-MuiFormGroup-root-MemberPlanPickerRadios"
           role="radiogroup"
         >
           <label
@@ -3054,7 +3054,7 @@ exports[`Subscribe Container should render WithClassName 1`] = `
         class="css-ah3hxd-MemberPlanPickerWrapper es1nn8k1"
       >
         <div
-          class="MuiFormGroup-root es1nn8k0 css-1rn5vyy-MuiFormGroup-root-MemberPlanPickerRadios"
+          class="MuiFormGroup-root es1nn8k0 css-109gj5f-MuiFormGroup-root-MemberPlanPickerRadios"
           role="radiogroup"
         >
           <label
@@ -4031,7 +4031,7 @@ exports[`Subscribe Container should render WithEmotion 1`] = `
         class="css-ah3hxd-MemberPlanPickerWrapper es1nn8k1"
       >
         <div
-          class="MuiFormGroup-root es1nn8k0 css-1rn5vyy-MuiFormGroup-root-MemberPlanPickerRadios"
+          class="MuiFormGroup-root es1nn8k0 css-109gj5f-MuiFormGroup-root-MemberPlanPickerRadios"
           role="radiogroup"
         >
           <label

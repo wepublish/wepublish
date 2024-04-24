@@ -782,7 +782,7 @@ exports[`Subscribe should render LoggedIn 1`] = `
         class="css-ah3hxd-MemberPlanPickerWrapper es1nn8k1"
       >
         <div
-          class="MuiFormGroup-root es1nn8k0 css-1rn5vyy-MuiFormGroup-root-MemberPlanPickerRadios"
+          class="MuiFormGroup-root es1nn8k0 css-109gj5f-MuiFormGroup-root-MemberPlanPickerRadios"
           role="radiogroup"
         >
           <label
@@ -1319,7 +1319,7 @@ exports[`Subscribe should render LoggedOut 1`] = `
         class="css-ah3hxd-MemberPlanPickerWrapper es1nn8k1"
       >
         <div
-          class="MuiFormGroup-root es1nn8k0 css-1rn5vyy-MuiFormGroup-root-MemberPlanPickerRadios"
+          class="MuiFormGroup-root es1nn8k0 css-109gj5f-MuiFormGroup-root-MemberPlanPickerRadios"
           role="radiogroup"
         >
           <label
@@ -2297,7 +2297,7 @@ exports[`Subscribe should render OnlyAddress 1`] = `
         class="css-ah3hxd-MemberPlanPickerWrapper es1nn8k1"
       >
         <div
-          class="MuiFormGroup-root es1nn8k0 css-1rn5vyy-MuiFormGroup-root-MemberPlanPickerRadios"
+          class="MuiFormGroup-root es1nn8k0 css-109gj5f-MuiFormGroup-root-MemberPlanPickerRadios"
           role="radiogroup"
         >
           <label
@@ -3718,7 +3718,7 @@ exports[`Subscribe should render OnlyFirstName 1`] = `
         class="css-ah3hxd-MemberPlanPickerWrapper es1nn8k1"
       >
         <div
-          class="MuiFormGroup-root es1nn8k0 css-1rn5vyy-MuiFormGroup-root-MemberPlanPickerRadios"
+          class="MuiFormGroup-root es1nn8k0 css-109gj5f-MuiFormGroup-root-MemberPlanPickerRadios"
           role="radiogroup"
         >
           <label
@@ -4799,7 +4799,7 @@ exports[`Subscribe should render OnlyPassword 1`] = `
         class="css-ah3hxd-MemberPlanPickerWrapper es1nn8k1"
       >
         <div
-          class="MuiFormGroup-root es1nn8k0 css-1rn5vyy-MuiFormGroup-root-MemberPlanPickerRadios"
+          class="MuiFormGroup-root es1nn8k0 css-109gj5f-MuiFormGroup-root-MemberPlanPickerRadios"
           role="radiogroup"
         >
           <label
@@ -5915,7 +5915,7 @@ exports[`Subscribe should render OnlyPreferredName 1`] = `
         class="css-ah3hxd-MemberPlanPickerWrapper es1nn8k1"
       >
         <div
-          class="MuiFormGroup-root es1nn8k0 css-1rn5vyy-MuiFormGroup-root-MemberPlanPickerRadios"
+          class="MuiFormGroup-root es1nn8k0 css-109gj5f-MuiFormGroup-root-MemberPlanPickerRadios"
           role="radiogroup"
         >
           <label
@@ -6957,7 +6957,7 @@ exports[`Subscribe should render OnlyRequired 1`] = `
         class="css-ah3hxd-MemberPlanPickerWrapper es1nn8k1"
       >
         <div
-          class="MuiFormGroup-root es1nn8k0 css-1rn5vyy-MuiFormGroup-root-MemberPlanPickerRadios"
+          class="MuiFormGroup-root es1nn8k0 css-109gj5f-MuiFormGroup-root-MemberPlanPickerRadios"
           role="radiogroup"
         >
           <label
@@ -7956,7 +7956,7 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
           class="css-ah3hxd-MemberPlanPickerWrapper es1nn8k1"
         >
           <div
-            class="MuiFormGroup-root es1nn8k0 css-1rn5vyy-MuiFormGroup-root-MemberPlanPickerRadios"
+            class="MuiFormGroup-root es1nn8k0 css-109gj5f-MuiFormGroup-root-MemberPlanPickerRadios"
 @@ -147,11 +115,11 @@
             </label>
             <label
@@ -8359,7 +8359,7 @@ exports[`Subscribe should render WithChallengeError 1`] = `
         class="css-ah3hxd-MemberPlanPickerWrapper es1nn8k1"
       >
         <div
-          class="MuiFormGroup-root es1nn8k0 css-1rn5vyy-MuiFormGroup-root-MemberPlanPickerRadios"
+          class="MuiFormGroup-root es1nn8k0 css-109gj5f-MuiFormGroup-root-MemberPlanPickerRadios"
           role="radiogroup"
         >
           <label
@@ -9263,7 +9263,7 @@ exports[`Subscribe should render WithChallengeLoading 1`] = `
         class="css-ah3hxd-MemberPlanPickerWrapper es1nn8k1"
       >
         <div
-          class="MuiFormGroup-root es1nn8k0 css-1rn5vyy-MuiFormGroup-root-MemberPlanPickerRadios"
+          class="MuiFormGroup-root es1nn8k0 css-109gj5f-MuiFormGroup-root-MemberPlanPickerRadios"
           role="radiogroup"
         >
           <label
@@ -10140,7 +10140,7 @@ exports[`Subscribe should render WithClassName 1`] = `
         class="css-ah3hxd-MemberPlanPickerWrapper es1nn8k1"
       >
         <div
-          class="MuiFormGroup-root es1nn8k0 css-1rn5vyy-MuiFormGroup-root-MemberPlanPickerRadios"
+          class="MuiFormGroup-root es1nn8k0 css-109gj5f-MuiFormGroup-root-MemberPlanPickerRadios"
           role="radiogroup"
         >
           <label
@@ -11289,7 +11289,7 @@ exports[`Subscribe should render WithEmotion 1`] = `
         class="css-ah3hxd-MemberPlanPickerWrapper es1nn8k1"
       >
         <div
-          class="MuiFormGroup-root es1nn8k0 css-1rn5vyy-MuiFormGroup-root-MemberPlanPickerRadios"
+          class="MuiFormGroup-root es1nn8k0 css-109gj5f-MuiFormGroup-root-MemberPlanPickerRadios"
           role="radiogroup"
         >
           <label
@@ -12673,7 +12673,7 @@ exports[`Subscribe should render WithUserInvoicesLoading 1`] = `
         class="css-ah3hxd-MemberPlanPickerWrapper es1nn8k1"
       >
         <div
-          class="MuiFormGroup-root es1nn8k0 css-1rn5vyy-MuiFormGroup-root-MemberPlanPickerRadios"
+          class="MuiFormGroup-root es1nn8k0 css-109gj5f-MuiFormGroup-root-MemberPlanPickerRadios"
           role="radiogroup"
         >
           <label
@@ -13235,7 +13235,7 @@ exports[`Subscribe should render WithUserSubscriptionsLoading 1`] = `
         class="css-ah3hxd-MemberPlanPickerWrapper es1nn8k1"
       >
         <div
-          class="MuiFormGroup-root es1nn8k0 css-1rn5vyy-MuiFormGroup-root-MemberPlanPickerRadios"
+          class="MuiFormGroup-root es1nn8k0 css-109gj5f-MuiFormGroup-root-MemberPlanPickerRadios"
           role="radiogroup"
         >
           <label

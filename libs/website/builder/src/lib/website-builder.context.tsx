@@ -201,6 +201,10 @@ export type WebsiteBuilderProps = {
     siteTitle: string
     locale: string
   }
+
+  thirdParty: Partial<{
+    stripe: string
+  }>
 }
 
 const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
@@ -305,7 +309,9 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   meta: {
     siteTitle: 'Newsroom Name',
     locale: 'ch-DE'
-  }
+  },
+
+  thirdParty: {}
 })
 
 export const useWebsiteBuilder = () => {

@@ -78,7 +78,7 @@ export const BajourPaymentMethodPicker = forwardRef<
             label=""
             control={
               <PaymentRadio>
-                {method.slug === 'payrexx' && (
+                {method.paymentProviderID === 'payrexx' && (
                   <>
                     <Twint css={icon} />
                     <PayPal css={icon} />
@@ -87,7 +87,7 @@ export const BajourPaymentMethodPicker = forwardRef<
                   </>
                 )}
 
-                {method.slug === 'stripe' && (
+                {method.paymentProviderID === 'stripe' && (
                   <>
                     <Mastercard css={icon} />
                     <Visa css={icon} />
