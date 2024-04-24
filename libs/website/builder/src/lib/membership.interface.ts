@@ -92,4 +92,10 @@ export type BuilderSubscribeProps<
   onSubscribe?: (
     data: Omit<SubscribeMutationVariables, 'failureURL' | 'successURL'>
   ) => Promise<void>
+  defaults?: Partial<{
+    memberPlanSlug: string | null
+    email: string
+    name: string
+    firstName: string
+  }>
 } & Pick<BuilderRegistrationFormProps<T>, 'schema' | 'fields'>

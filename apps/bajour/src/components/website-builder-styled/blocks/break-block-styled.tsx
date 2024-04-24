@@ -2,7 +2,7 @@ import {styled} from '@mui/material'
 import {BreakBlock} from '@wepublish/website'
 
 export const BajourBreakBlock = styled(BreakBlock)`
-  background-color: ${({theme}) => theme.palette.secondary.cta};
+  background-color: ${({theme}) => theme.palette.accent.main};
   color: white;
 
   ${({theme}) => theme.breakpoints.up('sm')} {

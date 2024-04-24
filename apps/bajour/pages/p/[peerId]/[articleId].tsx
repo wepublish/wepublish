@@ -9,7 +9,7 @@ import {GetStaticPaths, GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 
-import {BriefingNewsletter} from '../../../src/components/bajour/briefing-newsletter/briefing-newsletter'
+import {BriefingNewsletter} from '../../../src/components/briefing-newsletter/briefing-newsletter'
 import {Container} from '../../../src/components/layout/container'
 
 export function PeerArticleById() {

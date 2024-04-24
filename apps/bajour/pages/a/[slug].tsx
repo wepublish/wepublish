@@ -14,7 +14,7 @@ import {GetStaticPaths, GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 
-import {BriefingNewsletter} from '../../src/components/bajour/briefing-newsletter/briefing-newsletter'
+import {BriefingNewsletter} from '../../src/components/briefing-newsletter/briefing-newsletter'
 import {Container} from '../../src/components/layout/container'
 import {TeaserSlider} from '../../src/components/website-builder-overwrites/blocks/teaser-slider/teaser-slider'
 
@@ -105,7 +105,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
         slug
       }
     })),
-    fallback: true
+    fallback: 'blocking'
   }
 }
 

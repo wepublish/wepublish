@@ -11,7 +11,7 @@ import {
 import {
   selectBajourTeaserImage,
   selectBajourTeaserTitle
-} from '../../website-builder-overwrites/blocks/select-teaser'
+} from '../website-builder-overwrites/blocks/select-teaser'
 
 type BestOfWePublishTeaserProps = BuilderTeaserProps & {
   teaser: ApiV1.PeerArticleTeaser
