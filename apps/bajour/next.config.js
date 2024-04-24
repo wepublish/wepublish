@@ -1,10 +1,6 @@
 //@ts-check
 
 const {composePlugins, withNx} = require('@nx/next')
-const withBundleAnalyzer = require('@next/bundle-analyzer')({
-  enabled: process.env.NODE_ENV === 'production',
-  openAnalyzer: false
-})
 
 /**
  * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
@@ -46,7 +42,12 @@ const nextConfig = {
     }
   },
   experimental: {
-    scrollRestoration: true
+    scrollRestoration: true,
+    outputFileTracingIgnores: [
+      'node_modules/@swc/core-linux-x64-musl',
+      'node_modules/@swc/core-linux-x64-gnu ',
+      'node_modules/@esbuild/linux-x64'
+    ]
   },
   transpilePackages: ['@wepublish/ui', '@wepublish/website', 'react-tweet'],
   async redirects() {
@@ -101,6 +102,6 @@ const nextConfig = {
   }
 }
 
-const plugins = [withNx, withBundleAnalyzer]
+const plugins = [withNx]
 
 module.exports = composePlugins(...plugins)(nextConfig)
