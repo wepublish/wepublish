@@ -166,7 +166,7 @@ fragment FullTeaser on Teaser {
       ...ArticleWithoutBlocks
 
       blocks {
-        ...BlockWithoutTeaser
+        __typename
       }
     }
   }
@@ -190,7 +190,7 @@ fragment FullTeaser on Teaser {
       ...ArticleWithoutBlocks
 
       blocks {
-        ...BlockWithoutTeaser
+        __typename
       }
     }
   }
@@ -210,7 +210,7 @@ fragment FullTeaser on Teaser {
       ...PageWithoutBlocks
 
       blocks {
-        ...BlockWithoutTeaser
+        __typename
       }
     }
   }

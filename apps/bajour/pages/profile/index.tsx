@@ -11,6 +11,8 @@ import {setCookie} from 'cookies-next'
 import {NextPageContext} from 'next'
 import getConfig from 'next/config'
 
+import {Container} from '../../src/components/layout/container'
+
 const ProfileWrapper = styled(ContentWrapper)`
   gap: ${({theme}) => theme.spacing(2)};
 `
@@ -21,11 +23,12 @@ function Profile() {
   } = useWebsiteBuilder()
 
   return (
-    <ProfileWrapper>
-      <H4 component={'h1'}>Profil</H4>
-
-      <PersonalDataFormContainer mediaEmail="info@wepublish.dev" />
-    </ProfileWrapper>
+    <Container>
+      <ProfileWrapper>
+        <H4 component={'h1'}>Profil</H4>
+        <PersonalDataFormContainer mediaEmail="info@wepublish.dev" />
+      </ProfileWrapper>
+    </Container>
   )
 }
 

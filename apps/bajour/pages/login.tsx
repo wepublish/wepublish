@@ -10,10 +10,11 @@ import {
   useWebsiteBuilder
 } from '@wepublish/website'
 import {deleteCookie, getCookie, setCookie} from 'cookies-next'
-import {GetServerSideProps} from 'next'
+import {NextPageContext} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {useEffect} from 'react'
+import {Container} from '../src/components/layout/container'
 
 const LoginWrapper = styled(ContentWrapper)`
   justify-content: center;
@@ -43,21 +44,27 @@ export default function Login({sessionToken}: LoginProps) {
   }
 
   return (
-    <LoginWrapper>
-      <div>
-        <H3 component="h1">Login für Abonnent*innen</H3>
+    <Container>
+      <LoginWrapper>
+        <div>
+          <H3 component="h1">Login für Abonnent*innen</H3>
 
-        <Typography variant="body1" paragraph>
-          (Falls du noch keinen Account hast, <Link href={'/signup'}>klicke hier.</Link>)
-        </Typography>
-      </div>
+          <Typography variant="body1" paragraph>
+            (Falls du noch keinen Account hast, <Link href={'/signup'}>klicke hier.</Link>)
+          </Typography>
+        </div>
 
-      <LoginFormContainer />
-    </LoginWrapper>
+        <LoginFormContainer />
+      </LoginWrapper>
+    </Container>
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async ctx => {
+Login.getInitialProps = async (ctx: NextPageContext) => {
+  if (typeof window !== 'undefined') {
+    return {}
+  }
+
   const {publicRuntimeConfig} = getConfig()
   const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
 
