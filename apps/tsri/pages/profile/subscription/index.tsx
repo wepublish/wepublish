@@ -55,8 +55,8 @@ function Subscriptions() {
         <H4 component={'h1'}>Aktive Abos</H4>
 
         <SubscriptionListContainer
-          successURL={`${locationOrigin}/payment/success`}
-          failureURL={`${locationOrigin}/payment/fail`}
+          successURL={`${locationOrigin}/profile/subscription`}
+          failureURL={`${locationOrigin}/mitmachen`}
           filter={subscriptions => subscriptions.filter(subscription => !subscription.deactivation)}
         />
 
@@ -71,8 +71,8 @@ function Subscriptions() {
         <H4 component={'h1'}>Offene Rechnungen</H4>
 
         <InvoiceListContainer
-          successURL={`${locationOrigin}/payment/success`}
-          failureURL={`${locationOrigin}/payment/fail`}
+          successURL={`${locationOrigin}/profile/subscription`}
+          failureURL={`${locationOrigin}/mitmachen`}
           filter={invoices =>
             invoices.filter(
               invoice => invoice.subscription && !invoice.canceledAt && !invoice.paidAt

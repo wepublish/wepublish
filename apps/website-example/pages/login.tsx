@@ -9,7 +9,7 @@ import {
   useWebsiteBuilder
 } from '@wepublish/website'
 import {deleteCookie, getCookie, setCookie} from 'cookies-next'
-import {GetServerSideProps} from 'next'
+import {NextPageContext} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {useEffect} from 'react'
@@ -55,7 +55,11 @@ export default function Login({sessionToken}: LoginProps) {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async ctx => {
+Login.getInitialProps = async (ctx: NextPageContext) => {
+  if (typeof window !== 'undefined') {
+    return {}
+  }
+
   const {publicRuntimeConfig} = getConfig()
   const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
 
