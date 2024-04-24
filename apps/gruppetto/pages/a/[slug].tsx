@@ -56,18 +56,22 @@ export const getStaticPaths: GetStaticPaths = async () => {
   await client.query({
     query: ApiV1.PageDocument,
     variables: {
-      slug: 'home'
+      slug: ''
     }
   })
 
   const cache = Object.values(client.cache.extract())
-  const articleSlugs = cache.reduce((slugs, storeObj) => {
-    if (storeObj?.__typename === 'Article') {
-      slugs.push((storeObj as ApiV1.Article).slug)
+  const articleSlugs = []
+
+  for (const storeObj of cache) {
+    if (storeObj?.__typename === 'Article' && !(storeObj as ApiV1.Article).peeredArticleURL) {
+      articleSlugs.push((storeObj as ApiV1.Article).slug)
     }
 
-    return slugs
-  }, [] as string[])
+    if (articleSlugs.length > 20) {
+      break
+    }
+  }
 
   return {
     paths: articleSlugs.map(slug => ({

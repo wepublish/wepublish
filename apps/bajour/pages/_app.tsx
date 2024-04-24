@@ -28,9 +28,9 @@ import {MainGrid} from '../src/components/layout/main-grid'
 import {BajourPaymentMethodPicker} from '../src/components/payment-method-picker/payment-method-picker'
 import {BajourBlockRenderer} from '../src/components/website-builder-overwrites/block-renderer/block-renderer'
 import {BajourTeaser} from '../src/components/website-builder-overwrites/blocks/teaser'
+import {BajourBreakBlock} from '../src/components/website-builder-styled/blocks/break-block-styled'
 import {BajourTeaserGrid} from '../src/components/website-builder-styled/blocks/teaser-grid-styled'
 import theme, {navbarTheme} from '../src/styles/theme'
-import {BajourBreakBlock} from '../src/components/website-builder-styled/blocks/break-block-styled'
 
 setDefaultOptions({
   locale: de
