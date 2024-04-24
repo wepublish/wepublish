@@ -18,18 +18,22 @@ export const getStaticPaths: GetStaticPaths = async () => {
   await client.query({
     query: ApiV1.PageDocument,
     variables: {
-      slug: 'home'
+      slug: ''
     }
   })
 
   const cache = Object.values(client.cache.extract())
-  const pageSlugs = cache.reduce((slugs, storeObj) => {
+  const pageSlugs = []
+
+  for (const storeObj of cache) {
     if (storeObj?.__typename === 'Page') {
-      slugs.push((storeObj as ApiV1.Page).slug)
+      pageSlugs.push((storeObj as ApiV1.Page).slug)
     }
 
-    return slugs
-  }, [] as string[])
+    if (pageSlugs.length > 20) {
+      break
+    }
+  }
 
   return {
     paths: pageSlugs.map(slug => ({
