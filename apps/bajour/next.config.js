@@ -1,7 +1,6 @@
 //@ts-check
 
 const {composePlugins, withNx} = require('@nx/next')
-const path = require('path')
 
 /**
  * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
@@ -43,20 +42,7 @@ const nextConfig = {
     }
   },
   experimental: {
-    scrollRestoration: true,
-    outputFileTracingRoot: path.join(__dirname, '../../'),
-    outputFileTracingExcludes: {
-      '*': [
-        'node_modules/@swc/core-linux-x64-musl',
-        'node_modules/@swc/core-linux-x64-gnu ',
-        'node_modules/@esbuild/linux-x64'
-      ]
-    },
-    outputFileTracingIgnores: [
-      'node_modules/@swc/core-linux-x64-musl',
-      'node_modules/@swc/core-linux-x64-gnu ',
-      'node_modules/@esbuild/linux-x64'
-    ]
+    scrollRestoration: true
   },
   transpilePackages: ['@wepublish/ui', '@wepublish/website', 'react-tweet'],
   async redirects() {
