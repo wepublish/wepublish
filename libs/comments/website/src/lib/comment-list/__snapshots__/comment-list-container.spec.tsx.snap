@@ -3,7 +3,7 @@
 exports[`CommentList Container should render Default 1`] = `
 <DocumentFragment>
   <section
-    class="css-fwhbhf-CommentListWrapper eeofsby1"
+    class="css-fwhbhf-CommentListWrapper eeofsby2"
   >
     <article
       class="css-4zvvnd-CommentWrapper ekbi54x8"
@@ -2160,7 +2160,7 @@ https://unsplash.it/200/200 200w"
 exports[`CommentList Container should render WithClassName 1`] = `
 <DocumentFragment>
   <section
-    class="extra-classname css-fwhbhf-CommentListWrapper eeofsby1"
+    class="extra-classname css-fwhbhf-CommentListWrapper eeofsby2"
   >
     <article
       class="css-4zvvnd-CommentWrapper ekbi54x8"
@@ -4317,7 +4317,7 @@ https://unsplash.it/200/200 200w"
 exports[`CommentList Container should render WithEmotion 1`] = `
 <DocumentFragment>
   <section
-    class="css-fwhbhf-CommentListWrapper eeofsby1"
+    class="css-fwhbhf-CommentListWrapper eeofsby2"
   >
     <article
       class="css-4zvvnd-CommentWrapper ekbi54x8"
