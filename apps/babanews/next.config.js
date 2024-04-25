@@ -1,6 +1,7 @@
 //@ts-check
 
 const {composePlugins, withNx} = require('@nx/next')
+const {join} = require('path')
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.NODE_ENV === 'production',
   openAnalyzer: false
@@ -50,7 +51,15 @@ const nextConfig = {
   // This will transpile the ES Modules to CommonJS
   transpilePackages: ['@wepublish/ui', '@wepublish/website', 'react-tweet'],
   experimental: {
-    scrollRestoration: true
+    scrollRestoration: true,
+    outputFileTracingRoot: join(__dirname, '../../'),
+    outputFileTracingExcludes: {
+      '*': [
+        '**/node_modules/@swc/core-linux-x64-musl',
+        '**/node_modules/@swc/core-linux-x64-gnu ',
+        '**/node_modules/@esbuild/linux-x64'
+      ]
+    }
   }
 }
 
