@@ -1,12 +1,16 @@
 import {css, styled} from '@mui/material'
 import {Button} from '@wepublish/ui'
 import {RichTextBlock} from '@wepublish/website'
-import {useState} from 'react'
+import {memo, useState} from 'react'
 import {MdInfoOutline} from 'react-icons/md'
 import {Node} from 'slate'
 
+interface InfoBoxProps {
+  richText: Node[]
+  className?: string
+}
+
 export const InfoBoxWrapper = styled('aside')<{expanded: boolean}>`
-  width: ${({theme}) => theme.spacing(38)};
   grid-column: -1/1;
   display: grid;
   grid-template-columns: ${({theme}) => theme.spacing(4)} 1fr;
@@ -78,10 +82,10 @@ const ReadMore = styled(Button)`
   }
 `
 
-export const InfoBox = ({richText}: {richText: Node[]}) => {
+export const InfoBox = memo(function InfoBox({richText, className}: InfoBoxProps) {
   const [expanded, setExpanded] = useState(false)
   return (
-    <InfoBoxWrapper expanded={expanded}>
+    <InfoBoxWrapper expanded={expanded} className={className}>
       <InfoBoxInfo>
         <IconWrapper>
           <MdInfoOutline size="24" />
@@ -99,4 +103,4 @@ export const InfoBox = ({richText}: {richText: Node[]}) => {
       </InfoBoxContent>
     </InfoBoxWrapper>
   )
-}
+})

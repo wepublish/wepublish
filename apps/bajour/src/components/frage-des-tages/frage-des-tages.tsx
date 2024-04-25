@@ -1,15 +1,11 @@
 import {css, styled} from '@mui/material'
-import {
-  ApiV1,
-  AuthorChip,
-  BuilderCommentProps,
-  BuilderTeaserListBlockProps,
-  Comment,
-  RichTextBlock
-} from '@wepublish/website'
+import {Button} from '@wepublish/ui'
+import {ApiV1, BuilderCommentProps, BuilderTeaserListBlockProps, Comment} from '@wepublish/website'
 import Image from 'next/image'
+import Link from 'next/link'
 
-import {PollBlock} from '../../website-builder-overwrites/blocks/poll-block/poll-block'
+import {PollBlock} from '../website-builder-overwrites/blocks/poll-block/poll-block'
+import {AuthorBox} from './author-box'
 import frageDesTagesLogo from './frage-des-tages.svg'
 import {InfoBox} from './info-box'
 
@@ -28,25 +24,15 @@ export const FrageDesTagesWrapper = styled('div')`
       ${theme.breakpoints.up('sm')} {
         grid-template-columns: repeat(12, 1fr);
       }
-
-      /* ${theme.breakpoints.up('md')} {
-        grid-template-columns: repeat(12, 1fr);
-      } */
     `}
 `
 
 export const PollWrapper = styled('div')`
-  /* width: min-content; */
   grid-column: 1/5;
 `
 
 export const CommentsWrapper = styled('div')`
-  /* width: min-content; */
   grid-column: 6/13;
-`
-
-export const FirstComment = styled(Comment)`
-  color: #ff0d63;
 `
 
 export const AuthorAndContext = styled('div')`
@@ -59,18 +45,6 @@ export const Comments = styled('div')`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: ${({theme}) => theme.spacing(6)};
-`
-
-export const StyledAuthorChip = styled(AuthorChip)`
-  background-color: ${({theme}) => theme.palette.common.white};
-  padding: ${({theme}) => theme.spacing(1.5)};
-  border-radius: ${({theme}) => theme.spacing(2.5)};
-`
-
-export const StyledRichTextBlock = styled(RichTextBlock)`
-  background-color: ${({theme}) => theme.palette.common.white};
-  padding: ${({theme}) => theme.spacing(1.5)};
-  border-radius: ${({theme}) => theme.spacing(2.5)};
 `
 
 export const TopComments = styled('div')`
@@ -90,37 +64,25 @@ export const FDTLogo = styled(Image)`
   grid-column: 12 / 13;
 `
 
-export const FrageDesTages = ({teasers, className, ...rest}: BuilderTeaserListBlockProps) => {
-  // const {
-  //   blocks: {Comment}
-  // } = useWebsiteBuilder()
+export const FrageDesTages = ({teasers, className}: BuilderTeaserListBlockProps) => {
+  const article = (teasers[0] as ApiV1.ArticleTeaser).article
 
-  console.log('teasers', teasers)
-
-  const {
-    data: commentsData,
-    loading: commentsLoading,
-    error: commentsError
-  } = ApiV1.useCommentListQuery({
+  const {data: commentsData} = ApiV1.useCommentListQuery({
     variables: {
-      itemId: teasers[0].article.id,
+      itemId: article?.id || '',
       sort: ApiV1.CommentSort.Rating,
       order: ApiV1.SortOrder.Descending
     }
   })
 
-  const pollToPass = teasers[0].article.blocks.find(b => b.__typename === 'PollBlock').poll
+  const pollToPass = (article?.blocks.find(b => b.__typename === 'PollBlock') as ApiV1.PollBlock)
+    .poll
 
-  const {
-    data: authorData,
-    loading: authorLoading,
-    error: authorError
-  } = ApiV1.useAuthorQuery({
+  const {data: authorData} = ApiV1.useAuthorQuery({
     variables: {
       id: 'cltwrck6v001fc9eizptqd2l3'
     }
   })
-  console.log('commentsData?.comments[0]', commentsData?.comments[0])
 
   return (
     <FrageDesTagesWrapper className={className}>
@@ -130,9 +92,11 @@ export const FrageDesTages = ({teasers, className, ...rest}: BuilderTeaserListBl
       </PollWrapper>
       <CommentsWrapper>
         <AuthorAndContext>
-          {authorData?.author ? <StyledAuthorChip author={authorData?.author} /> : null}
           <div>
-            <InfoBox richText={pollToPass.infoText} />
+            {authorData?.author ? <AuthorBox author={authorData?.author} className="" /> : null}
+          </div>
+          <div>
+            <InfoBox richText={pollToPass?.infoText || []} />
           </div>
         </AuthorAndContext>
         <TopComments>Top antworten</TopComments>
@@ -149,6 +113,9 @@ export const FrageDesTages = ({teasers, className, ...rest}: BuilderTeaserListBl
           })}
         </Comments>
       </CommentsWrapper>
+      <Link href={article?.url || ''}>
+        <Button>Go to article</Button>
+      </Link>
     </FrageDesTagesWrapper>
   )
 }

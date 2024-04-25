@@ -15,6 +15,7 @@ import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 
 import {BriefingNewsletter} from '../../src/components/briefing-newsletter/briefing-newsletter'
+import {FrageDesTagesArticle} from '../../src/components/frage-des-tages/frage-des-tages-article'
 import {Container} from '../../src/components/layout/container'
 import {TeaserSlider} from '../../src/components/website-builder-overwrites/blocks/teaser-slider/teaser-slider'
 
@@ -48,7 +49,15 @@ export default function ArticleBySlug() {
 
   const isFDT = data?.article?.tags.includes('frage-des-tages')
 
-  console.log('isFDT', isFDT)
+  if (isFDT) {
+    return (
+      <WebsiteBuilderProvider ArticleList={RelatedArticleSlider}>
+        <Container>
+          <FrageDesTagesArticle article={data?.article as ApiV1.Article} className="" />
+        </Container>
+      </WebsiteBuilderProvider>
+    )
+  }
 
   return (
     <WebsiteBuilderProvider ArticleList={RelatedArticleSlider}>
