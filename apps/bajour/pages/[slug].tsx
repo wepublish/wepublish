@@ -4,12 +4,18 @@ import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 
+import {Container} from '../src/components/layout/container'
+
 export default function PageBySlug() {
   const {
     query: {slug}
   } = useRouter()
 
-  return <PageContainer slug={slug as string} />
+  return (
+    <Container>
+      <PageContainer slug={slug as string} />
+    </Container>
+  )
 }
 
 export const getStaticPaths = getPagePathsBasedOnPage('home')
