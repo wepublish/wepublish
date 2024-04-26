@@ -18,6 +18,56 @@ const nextConfig = {
       STRIPE_PUBLIC_KEY: process.env.STRIPE_PUBLIC_KEY || '',
       GA_ID: process.env.GA_ID || ''
     }
+  },
+  async redirects() {
+    return [
+      {
+        source: '/home',
+        destination: '/',
+        permanent: false
+      },
+      {
+        source: '/a/:id((?!tag).*)/:slug',
+        destination: '/a/:slug',
+        permanent: false
+      },
+      {
+        source: '/tag/:slug',
+        destination: '/a/tag/:slug',
+        permanent: false
+      },
+      {
+        source: '/profile/dashboard',
+        destination: '/login',
+        permanent: false,
+        has: [
+          {
+            type: 'query',
+            key: 'jwt'
+          }
+        ]
+      },
+      {
+        source: '/profile/dashboard',
+        destination: '/profile',
+        permanent: false
+      },
+      {
+        source: '/member-uebersicht',
+        destination: '/mitmachen',
+        permanent: false
+      },
+      {
+        source: '/goenner-uebersicht',
+        destination: '/mitmachen',
+        permanent: false
+      },
+      {
+        source: '/spende',
+        destination: '/mitmachen',
+        permanent: false
+      }
+    ]
   }
 }
 
