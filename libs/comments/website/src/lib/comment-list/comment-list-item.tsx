@@ -1,10 +1,16 @@
-import {styled} from '@mui/material'
+import {css, lighten, styled, useTheme} from '@mui/material'
 import {useUser} from '@wepublish/authentication/website'
 import {CommentState} from '@wepublish/website/api'
 import {BuilderCommentListItemProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {cond} from 'ramda'
 import {MdEdit, MdReply} from 'react-icons/md'
 import {getStateForEditor} from './comment-list.state'
+import ShareButton from './comment-list-item-share'
+import {useMemo} from 'react'
+
+const generateSocialMediaLink = (id: string) => {
+  return `${window.location.host}${window.location.pathname}?goToComment=${id}`
+}
 
 export const CommentListItemChildren = styled('aside')`
   display: grid;
@@ -21,6 +27,22 @@ export const CommentListItemActions = styled('div')`
   align-items: start;
   justify-content: space-between;
 `
+
+const useButtonStyles = () => {
+  const theme = useTheme()
+
+  return useMemo(
+    () => css`
+      border-width: 1px;
+
+      &:hover {
+        border-width: 1px;
+        background-color: ${lighten(theme.palette.primary.main, 0.9)};
+      }
+    `,
+    [theme]
+  )
+}
 
 export const CommentListItem = ({
   anonymousCanComment,
@@ -56,9 +78,13 @@ export const CommentListItem = ({
     loggedInUser?.id === comment.user?.id &&
     (userCanEdit || comment.state === CommentState.PendingUserChanges)
   const canReply = anonymousCanComment || hasLoggedInUser
+  const canShare = anonymousCanComment || hasLoggedInUser
 
   const showReply = getStateForEditor(openEditorsState)('add', id)
   const showEdit = getStateForEditor(openEditorsState)('edit', id)
+
+  const socialMediaLink = generateSocialMediaLink(id)
+  const buttonStyles = useButtonStyles()
 
   return (
     <Comment {...comment} showContent={!showEdit} className={className}>
@@ -87,8 +113,9 @@ export const CommentListItem = ({
           {canReply && (
             <Button
               startIcon={<MdReply />}
-              variant="text"
+              variant="outlined"
               size="small"
+              css={buttonStyles}
               onClick={() =>
                 dispatch({
                   type: 'add',
@@ -99,6 +126,8 @@ export const CommentListItem = ({
               Antworten
             </Button>
           )}
+
+          {canShare && <ShareButton url={socialMediaLink} title="title dupa" />}
 
           {canEdit && (
             <Button

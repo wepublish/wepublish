@@ -11,7 +11,6 @@ interface InfoBoxProps {
 }
 
 export const InfoBoxWrapper = styled('aside')<{expanded: boolean}>`
-  grid-column: -1/1;
   display: grid;
   grid-template-columns: ${({theme}) => theme.spacing(4)} 1fr;
   gap: ${({theme}) => theme.spacing(1)};

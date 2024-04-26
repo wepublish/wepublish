@@ -89,11 +89,7 @@ export const FrageDesTagesArticle = ({
         </PollWrapper>
         <CommentsWrapper>
           <AuthorAndContext>
-            <div>
-              {authorData?.author ? (
-                <StyledAuthorBox author={authorData?.author} className="" />
-              ) : null}
-            </div>
+            <div>{authorData?.author ? <StyledAuthorBox author={authorData?.author} /> : null}</div>
             <div>
               <StyledInfoBox richText={pollToPass?.infoText || []} />
             </div>

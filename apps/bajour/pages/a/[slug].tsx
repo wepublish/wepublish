@@ -32,7 +32,6 @@ const RelatedArticleSlider = (props: BuilderArticleListProps) => {
 }
 
 export default function ArticleBySlug() {
-  console.log('articleBySlug')
   const {
     query: {slug}
   } = useRouter()

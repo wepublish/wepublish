@@ -3,11 +3,25 @@ import {Button} from '@wepublish/ui'
 import {ApiV1, BuilderCommentProps, BuilderTeaserListBlockProps, Comment} from '@wepublish/website'
 import Image from 'next/image'
 import Link from 'next/link'
+import {useMemo} from 'react'
+import {MdForum} from 'react-icons/md'
 
 import {PollBlock} from '../website-builder-overwrites/blocks/poll-block/poll-block'
 import {AuthorBox} from './author-box'
 import frageDesTagesLogo from './frage-des-tages.svg'
 import {InfoBox} from './info-box'
+
+const countComments = (comments: ApiV1.Comment[]): number => {
+  let total = comments.length
+
+  for (const comment of comments) {
+    if (comment.children) {
+      total += countComments(comment.children)
+    }
+  }
+
+  return total
+}
 
 export const FrageDesTagesWrapper = styled('div')`
   display: grid;
@@ -64,6 +78,16 @@ export const FDTLogo = styled(Image)`
   grid-column: 12 / 13;
 `
 
+export const ReadMoreLink = styled(Link)`
+  grid-column: 11/13;
+  justify-self: self-end;
+`
+
+const ReadMoreButton = styled(Button)`
+  text-transform: uppercase;
+  padding: ${({theme}) => `${theme.spacing(1)} ${theme.spacing(2.5)}`};
+`
+
 export const FrageDesTages = ({teasers, className}: BuilderTeaserListBlockProps) => {
   const article = (teasers[0] as ApiV1.ArticleTeaser).article
 
@@ -84,6 +108,10 @@ export const FrageDesTages = ({teasers, className}: BuilderTeaserListBlockProps)
     }
   })
 
+  const numberOfComments = useMemo(() => {
+    return countComments(commentsData?.comments || [])
+  }, [commentsData?.comments])
+
   return (
     <FrageDesTagesWrapper className={className}>
       <FDTLogo src={frageDesTagesLogo} width={110} height={70} alt="frage-des-tages-logo" />
@@ -92,30 +120,30 @@ export const FrageDesTages = ({teasers, className}: BuilderTeaserListBlockProps)
       </PollWrapper>
       <CommentsWrapper>
         <AuthorAndContext>
-          <div>
-            {authorData?.author ? <AuthorBox author={authorData?.author} className="" /> : null}
-          </div>
+          <div>{authorData?.author ? <AuthorBox author={authorData?.author} /> : null}</div>
           <div>
             <InfoBox richText={pollToPass?.infoText || []} />
           </div>
         </AuthorAndContext>
         <TopComments>Top antworten</TopComments>
         <Comments>
-          {commentsData?.comments.slice(0, 2).map(comment => {
-            const commentDataToPass = {
-              text: comment.text,
-              title: comment.title,
-              user: comment.user,
-              createdAt: comment.createdAt
+          {commentsData?.comments.slice(0, 2).map(({text, title, user, createdAt, id}) => {
+            const dataToPass = {
+              text,
+              title,
+              user,
+              createdAt
             } as BuilderCommentProps
 
-            return <StyledComment {...commentDataToPass} key={comment.id} />
+            return <StyledComment {...dataToPass} key={id} />
           })}
         </Comments>
       </CommentsWrapper>
-      <Link href={article?.url || ''}>
-        <Button>Go to article</Button>
-      </Link>
+      <ReadMoreLink href={article?.url || ''}>
+        <ReadMoreButton
+          endIcon={<MdForum />}
+          variant="contained">{`Mitreden ${numberOfComments}`}</ReadMoreButton>
+      </ReadMoreLink>
     </FrageDesTagesWrapper>
   )
 }
