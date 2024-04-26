@@ -89,7 +89,7 @@ export function StripePayment({onClose}: StripePaymentProps) {
           </StripePaymentModalContent>
 
           <StripePaymentModalActions>
-            <Button variant="text" color="secondary">
+            <Button variant="text" color="secondary" onClick={() => onClose(false)}>
               Abbrechen
             </Button>
 
