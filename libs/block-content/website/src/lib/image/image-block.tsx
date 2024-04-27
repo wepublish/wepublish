@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import {Link, styled} from '@mui/material'
 import {BuilderImageBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {Block, ImageBlock as ImageBlockType} from '@wepublish/website/api'
 
@@ -21,14 +21,21 @@ export const ImageBlockWrapper = styled('figure')`
 
 export const ImageBlockCaption = styled('figcaption')``
 
-export const ImageBlock = ({caption, image, className}: BuilderImageBlockProps) => {
+export const ImageBlock = ({caption, linkUrl, image, className}: BuilderImageBlockProps) => {
   const {
     elements: {Image}
   } = useWebsiteBuilder()
 
   return (
     <ImageBlockWrapper className={className}>
-      {image && <Image image={image} fetchPriority="high" />}
+      {image &&
+        (linkUrl ? (
+          <Link href={linkUrl} target="_blank">
+            <Image image={image} fetchPriority="high" />
+          </Link>
+        ) : (
+          <Image image={image} fetchPriority="high" />
+        ))}
 
       {caption && <figcaption>{caption}</figcaption>}
     </ImageBlockWrapper>

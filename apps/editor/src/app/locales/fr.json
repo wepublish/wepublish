@@ -602,6 +602,7 @@
         "information": "Information",
         "license": "Licence",
         "link": "Lien",
+        "linkUrl": "Lien de destination",
         "notFound": "Image non trouvée !",
         "resizedImage": "La taille de l'image est automatiquement réduite à environ {{sizeMB}} MB lors du téléchargement.",
         "source": "Source",

@@ -10,6 +10,7 @@ fragment BlockWithoutTeaser on Block {
   ... on ImageBlock {
     blockStyle
     caption
+    linkUrl
     image {
       ...FullImage
     }
