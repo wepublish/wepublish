@@ -36,10 +36,10 @@ exports[`Poll Block should render AlreadyVoted 1`] = `
       </div>
     </div>
     <div
-      class="css-bq6dsl-PollBlockVoting ecm33wf2"
+      class="css-1e4oizq-PollBlockVoting ecm33wf2"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-kctgaw-MuiButtonBase-root-MuiButton-root"
+        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-19cust9-MuiButtonBase-root-MuiButton-root-PollBlock"
         tabindex="0"
         type="button"
       >
@@ -49,7 +49,7 @@ exports[`Poll Block should render AlreadyVoted 1`] = `
         />
       </button>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-kctgaw-MuiButtonBase-root-MuiButton-root"
+        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-19cust9-MuiButtonBase-root-MuiButton-root-PollBlock"
         tabindex="0"
         type="button"
       >
@@ -222,10 +222,10 @@ exports[`Poll Block should render AnonymousVoting 1`] = `
       </div>
     </div>
     <div
-      class="css-bq6dsl-PollBlockVoting ecm33wf2"
+      class="css-1e4oizq-PollBlockVoting ecm33wf2"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-kctgaw-MuiButtonBase-root-MuiButton-root"
+        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-19cust9-MuiButtonBase-root-MuiButton-root-PollBlock"
         tabindex="0"
         type="button"
       >
@@ -235,7 +235,7 @@ exports[`Poll Block should render AnonymousVoting 1`] = `
         />
       </button>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-kctgaw-MuiButtonBase-root-MuiButton-root"
+        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-19cust9-MuiButtonBase-root-MuiButton-root-PollBlock"
         tabindex="0"
         type="button"
       >
@@ -270,11 +270,11 @@ exports[`Poll Block should render AnonymousVotingPlay 1`] = `
         </div>
       </div>
       <div
--       class="css-bq6dsl-PollBlockVoting ecm33wf2"
+-       class="css-1e4oizq-PollBlockVoting ecm33wf2"
 +       class="css-1pntsw6-PollBlockVoteResultList ecm33wf1"
       >
 -       <button
--         class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-kctgaw-MuiButtonBase-root-MuiButton-root"
+-         class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-19cust9-MuiButtonBase-root-MuiButton-root-PollBlock"
 -         tabindex="0"
 -         type="button"
 +       <div
@@ -304,7 +304,7 @@ exports[`Poll Block should render AnonymousVotingPlay 1`] = `
             />
 -       </button>
 -       <button
--         class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-kctgaw-MuiButtonBase-root-MuiButton-root"
+-         class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-19cust9-MuiButtonBase-root-MuiButton-root-PollBlock"
 -         tabindex="0"
 -         type="button"
 +           <div
@@ -509,10 +509,10 @@ exports[`Poll Block should render Voting 1`] = `
       </div>
     </div>
     <div
-      class="css-bq6dsl-PollBlockVoting ecm33wf2"
+      class="css-1e4oizq-PollBlockVoting ecm33wf2"
     >
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-kctgaw-MuiButtonBase-root-MuiButton-root"
+        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-19cust9-MuiButtonBase-root-MuiButton-root-PollBlock"
         tabindex="0"
         type="button"
       >
@@ -522,7 +522,7 @@ exports[`Poll Block should render Voting 1`] = `
         />
       </button>
       <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-kctgaw-MuiButtonBase-root-MuiButton-root"
+        class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-19cust9-MuiButtonBase-root-MuiButton-root-PollBlock"
         tabindex="0"
         type="button"
       >
@@ -665,11 +665,11 @@ exports[`Poll Block should render VotingPlay 1`] = `
         </div>
       </div>
       <div
--       class="css-bq6dsl-PollBlockVoting ecm33wf2"
+-       class="css-1e4oizq-PollBlockVoting ecm33wf2"
 +       class="css-1pntsw6-PollBlockVoteResultList ecm33wf1"
       >
 -       <button
--         class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-kctgaw-MuiButtonBase-root-MuiButton-root"
+-         class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-19cust9-MuiButtonBase-root-MuiButton-root-PollBlock"
 -         tabindex="0"
 -         type="button"
 +       <div
@@ -699,7 +699,7 @@ exports[`Poll Block should render VotingPlay 1`] = `
             />
 -       </button>
 -       <button
--         class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-kctgaw-MuiButtonBase-root-MuiButton-root"
+-         class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-19cust9-MuiButtonBase-root-MuiButton-root-PollBlock"
 -         tabindex="0"
 -         type="button"
 +           <div
@@ -1044,9 +1044,9 @@ exports[`Poll Block should render WithError 1`] = `
 +       </div>
 +     </div>
 +     <div
-        class="css-bq6dsl-PollBlockVoting ecm33wf2"
+        class="css-1e4oizq-PollBlockVoting ecm33wf2"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-kctgaw-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-19cust9-MuiButtonBase-root-MuiButton-root-PollBlock"
           tabindex="0""
 `;
