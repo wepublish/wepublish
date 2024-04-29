@@ -71,6 +71,23 @@ export const CommentName = styled('div')`
   font-weight: ${({theme}) => theme.typography.fontWeightBold};
 `
 
+export const CommentAuthor = styled('div')`
+  font-family: ${({theme}) => theme.typography.subtitle2.fontFamily};
+  font-size: 17px;
+
+  ${({theme}) => css`
+    ${theme.breakpoints.up('sm')} {
+      font-size: 21px;
+    }
+  `}
+
+  ${({theme}) => css`
+    ${theme.breakpoints.up('xl')} {
+      font-size: 24px;
+    }
+  `}
+`
+
 export const CommentVerifiedBadge = styled('div')`
   display: grid;
   align-items: center;
@@ -145,7 +162,7 @@ export const Comment = ({
 
         <CommentHeaderContent>
           <CommentName>
-            {name}
+            <CommentAuthor>{name}</CommentAuthor>
 
             {isVerified && (
               <CommentVerifiedBadge>

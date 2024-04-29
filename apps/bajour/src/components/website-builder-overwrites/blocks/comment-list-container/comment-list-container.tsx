@@ -12,6 +12,7 @@ export const CommentListContainer = styled(BaseCommentListContainer)`
   ${CommentListItemChildren} {
     background-color: ${({theme}) => theme.palette.common.white};
     border-left-color: ${({theme}) => theme.palette.secondary.main};
+    margin-top: ${({theme}) => theme.spacing(3)};
 
     ${CommentWrapper} {
       background-color: ${({theme}) => theme.palette.common.white};
@@ -36,6 +37,10 @@ export const CommentListContainer = styled(BaseCommentListContainer)`
       border-bottom-right-radius: ${({theme}) => theme.spacing(2.5)};
       border-bottom-left-radius: ${({theme}) => theme.spacing(2.5)};
     }
+  }
+
+  ${CommentWrapper} {
+    gap: 0;
   }
 
   ${CommentHeader} {

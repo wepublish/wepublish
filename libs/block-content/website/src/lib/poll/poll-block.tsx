@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import {css, styled, useTheme} from '@mui/material'
 import {useUser} from '@wepublish/authentication/website'
 import {
   Block,
@@ -21,7 +21,7 @@ export const PollBlockWrapper = styled('article')`
 
 export const PollBlockVoting = styled('div')`
   display: grid;
-  gap: ${({theme}) => theme.spacing(1)};
+  gap: ${({theme}) => theme.spacing(1.5)};
 `
 
 export const PollBlockVoteResultList = styled('div')`
@@ -33,6 +33,28 @@ export const PollBlockMeta = styled('div')`
   font-size: 0.875em;
   color: ${({theme}) => theme.palette.text.disabled};
 `
+
+const useButtonStyles = () => {
+  const theme = useTheme()
+
+  return useMemo(
+    () => css`
+      text-transform: uppercase;
+      border-width: 1px;
+      text-align: left;
+      font-size: 16px;
+      justify-content: flex-start;
+      padding: ${theme.spacing(1)} ${theme.spacing(1.5)};
+
+      &:hover {
+        border-width: 1px;
+        background-color: ${theme.palette.primary.main};
+        color: ${theme.palette.common.white};
+      }
+    `,
+    [theme]
+  )
+}
 
 export const PollBlock = ({poll, className}: BuilderPollBlockProps) => {
   const {vote, fetchUserVote, canVoteAnonymously, getAnonymousVote} = usePollBlock()
@@ -48,6 +70,8 @@ export const PollBlock = ({poll, className}: BuilderPollBlockProps) => {
     data: undefined,
     loading: true
   })
+
+  const buttonStyles = useButtonStyles()
 
   const {hasUser} = useUser()
   const {
@@ -129,6 +153,7 @@ export const PollBlock = ({poll, className}: BuilderPollBlockProps) => {
               color="primary"
               key={answer.id}
               disabled={voteResult.loading}
+              css={buttonStyles}
               onClick={async () => {
                 setVoteResult({
                   loading: true

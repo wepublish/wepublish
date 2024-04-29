@@ -10,9 +10,6 @@ import {
 } from '@wepublish/website'
 
 export const PollBlock = styled(BasePollBlock)`
-  /* grid-column: 1/5; */
-  /* width: 100%; */
-
   ${PollBlockMeta} {
     display: none;
   }

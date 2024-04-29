@@ -40,6 +40,20 @@ export const AuthorName = styled('div')`
   gap: ${({theme}) => theme.spacing(1)};
   align-items: center;
   font-weight: ${({theme}) => theme.typography.fontWeightBold};
+  font-family: ${({theme}) => theme.typography.subtitle2.fontFamily};
+  font-size: 17px;
+
+  ${({theme}) => css`
+    ${theme.breakpoints.up('sm')} {
+      font-size: 21px;
+    }
+  `}
+
+  ${({theme}) => css`
+    ${theme.breakpoints.up('xl')} {
+      font-size: 24px;
+    }
+  `}
 `
 
 export const AuthorContent = styled('div')``

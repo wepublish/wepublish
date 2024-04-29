@@ -7,8 +7,7 @@ import {
   TwitterShareButton,
   WhatsappShareButton,
   FacebookShareButton,
-  LinkedinShareButton,
-  EmailShareButton
+  LinkedinShareButton
 } from 'react-share'
 
 interface ShareProps {
@@ -23,6 +22,12 @@ const ShareIcon = styled(IconButton)`
 const CopyIcon = styled('div')`
   font-size: 24px;
   cursor: pointer;
+`
+
+const ShareOptions = styled('div')`
+  display: flex;
+  justify-content: center;
+  padding: 10px;
 `
 
 const iconStyle = {
@@ -45,6 +50,18 @@ const ShareButton: React.FC<ShareProps> = ({url, title}) => {
 
   const handleCopyToClipboard = () => {
     navigator.clipboard.writeText(url)
+    handleClose()
+  }
+
+  const handleShareByEmail = () => {
+    navigator.clipboard.writeText(url)
+
+    const emailShareUrl = `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(
+      url
+    )}`
+
+    window.location.href = emailShareUrl
+
     handleClose()
   }
 
@@ -77,10 +94,9 @@ const ShareButton: React.FC<ShareProps> = ({url, title}) => {
       props: {url, title, onShareWindowClose: handleClose}
     },
     {
-      component: EmailShareButton,
       icon: <MdEmail size="24" />,
       color: '#D44638',
-      props: {url, subject: title, onShareWindowClose: handleClose}
+      action: handleShareByEmail
     },
     {
       component: CopyIcon,
@@ -89,8 +105,6 @@ const ShareButton: React.FC<ShareProps> = ({url, title}) => {
       action: handleCopyToClipboard
     }
   ]
-
-  console.log('url', url)
 
   return (
     <div>
@@ -110,15 +124,26 @@ const ShareButton: React.FC<ShareProps> = ({url, title}) => {
           vertical: 'center',
           horizontal: 'left'
         }}>
-        <div
-          className="share-options"
-          style={{display: 'flex', justifyContent: 'center', padding: '10px'}}>
-          {shareOptions.map((option, index) => (
-            <option.component key={index} url={url} style={{color: option.color, ...iconStyle}}>
-              {option.icon}
-            </option.component>
-          ))}
-        </div>
+        <ShareOptions>
+          {shareOptions.map((option, index) =>
+            option.component ? (
+              <option.component
+                key={index}
+                url={url}
+                style={{color: option.color, ...iconStyle}}
+                onClick={option.action}>
+                {option.icon}
+              </option.component>
+            ) : (
+              <IconButton
+                key={index}
+                style={{color: option.color, ...iconStyle}}
+                onClick={option.action}>
+                {option.icon}
+              </IconButton>
+            )
+          )}
+        </ShareOptions>
       </Popover>
     </div>
   )

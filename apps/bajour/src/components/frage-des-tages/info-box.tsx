@@ -29,9 +29,22 @@ export const InfoBoxWrapper = styled('aside')<{expanded: boolean}>`
 
 const AllAbout = styled('div')`
   color: ${({theme}) => theme.palette.common.black};
-  font-size: 21px;
-  font-weight: 600;
+  font-family: ${({theme}) => theme.typography.subtitle2.fontFamily};
+  font-size: 17px;
+  font-weight: ${({theme}) => theme.typography.fontWeightBold};
   margin-bottom: ${({theme}) => theme.spacing(1)};
+
+  ${({theme}) => css`
+    ${theme.breakpoints.up('sm')} {
+      font-size: 21px;
+    }
+  `}
+
+  ${({theme}) => css`
+    ${theme.breakpoints.up('xl')} {
+      font-size: 24px;
+    }
+  `}
 `
 
 const RichTextBlockWrapper = styled('div')<{expanded: boolean}>`

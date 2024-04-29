@@ -2,6 +2,7 @@ import {createTheme, ThemeOptions} from '@mui/material'
 import {createBreakpoints} from '@mui/system'
 import {theme as WepTheme} from '@wepublish/ui'
 import {Roboto} from 'next/font/google'
+import {Lora} from 'next/font/google'
 
 const {
   palette: {augmentColor}
@@ -9,6 +10,14 @@ const {
 
 const roboto = Roboto({
   weight: ['100', '300', '400', '500', '700', '900'],
+  style: ['italic', 'normal'],
+  subsets: ['latin'],
+  display: 'swap',
+  preload: true
+})
+
+const lora = Lora({
+  weight: ['700'],
   style: ['italic', 'normal'],
   subsets: ['latin'],
   display: 'swap',
@@ -55,9 +64,9 @@ const theme = createTheme({}, WepTheme, {
       fontFamily: [roboto.style.fontFamily, 'sans-serif'].join(',')
     },
     subtitle2: {
-      fontFamily: [roboto.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [lora.style.fontFamily, 'sans-serif'].join(',')
     },
-    fontFamily: [roboto.style.fontFamily, 'sans-serif'].join(',')
+    fontFamily: [roboto.style.fontFamily, lora.style.fontFamily, 'sans-serif'].join(',')
   },
   breakpoints: createBreakpoints({
     values: {

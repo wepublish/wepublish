@@ -23,6 +23,17 @@ const countComments = (comments: ApiV1.Comment[]): number => {
   return total
 }
 
+export const FrageDesTagesContainer = styled('div')`
+  padding: ${({theme}) => `${theme.spacing(1.5)}`};
+
+  ${({theme}) =>
+    css`
+      ${theme.breakpoints.up('sm')} {
+        padding: 0;
+      }
+    `}
+`
+
 export const FrageDesTagesWrapper = styled('div')`
   display: grid;
   column-gap: ${({theme}) => theme.spacing(2)};
@@ -31,34 +42,64 @@ export const FrageDesTagesWrapper = styled('div')`
   align-items: stretch;
   border-radius: ${({theme}) => theme.spacing(4)};
   background-color: ${({theme}) => theme.palette.secondary.main};
-  padding: ${({theme}) => `${theme.spacing(4)} ${theme.spacing(5)}`};
+  padding: ${({theme}) => `${theme.spacing(2)}`};
 
   ${({theme}) =>
     css`
       ${theme.breakpoints.up('sm')} {
+        padding: ${theme.spacing(4)} ${theme.spacing(5)};
         grid-template-columns: repeat(12, 1fr);
       }
     `}
 `
 
 export const PollWrapper = styled('div')`
-  grid-column: 1/5;
+  grid-column: 1/13;
+
+  ${({theme}) =>
+    css`
+      ${theme.breakpoints.up('sm')} {
+        grid-column: 1/5;
+      }
+    `}
 `
 
 export const CommentsWrapper = styled('div')`
-  grid-column: 6/13;
+  grid-column: 1/13;
+
+  ${({theme}) =>
+    css`
+      ${theme.breakpoints.up('sm')} {
+        grid-column: 6/13;
+      }
+    `}
 `
 
 export const AuthorAndContext = styled('div')`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: ${({theme}) => theme.spacing(6)};
+  grid-template-columns: 1fr;
+  gap: ${({theme}) => theme.spacing(2)};
+
+  ${({theme}) =>
+    css`
+      ${theme.breakpoints.up('sm')} {
+        gap: ${theme.spacing(6)};
+        grid-template-columns: repeat(2, 1fr);
+      }
+    `}
 `
 
 export const Comments = styled('div')`
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr;
   gap: ${({theme}) => theme.spacing(6)};
+
+  ${({theme}) =>
+    css`
+      ${theme.breakpoints.up('sm')} {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    `}
 `
 
 export const TopComments = styled('div')`
@@ -113,37 +154,39 @@ export const FrageDesTages = ({teasers, className}: BuilderTeaserListBlockProps)
   }, [commentsData?.comments])
 
   return (
-    <FrageDesTagesWrapper className={className}>
-      <FDTLogo src={frageDesTagesLogo} width={110} height={70} alt="frage-des-tages-logo" />
-      <PollWrapper>
-        <PollBlock poll={pollToPass} />
-      </PollWrapper>
-      <CommentsWrapper>
-        <AuthorAndContext>
-          <div>{authorData?.author ? <AuthorBox author={authorData?.author} /> : null}</div>
-          <div>
-            <InfoBox richText={pollToPass?.infoText || []} />
-          </div>
-        </AuthorAndContext>
-        <TopComments>Top antworten</TopComments>
-        <Comments>
-          {commentsData?.comments.slice(0, 2).map(({text, title, user, createdAt, id}) => {
-            const dataToPass = {
-              text,
-              title,
-              user,
-              createdAt
-            } as BuilderCommentProps
+    <FrageDesTagesContainer>
+      <FrageDesTagesWrapper className={className}>
+        <FDTLogo src={frageDesTagesLogo} width={110} height={70} alt="frage-des-tages-logo" />
+        <PollWrapper>
+          <PollBlock poll={pollToPass} />
+        </PollWrapper>
+        <CommentsWrapper>
+          <AuthorAndContext>
+            <div>{authorData?.author ? <AuthorBox author={authorData?.author} /> : null}</div>
+            <div>
+              <InfoBox richText={pollToPass?.infoText || []} />
+            </div>
+          </AuthorAndContext>
+          <TopComments>Top antworten</TopComments>
+          <Comments>
+            {commentsData?.comments.slice(0, 2).map(({text, title, user, createdAt, id}) => {
+              const dataToPass = {
+                text,
+                title,
+                user,
+                createdAt
+              } as BuilderCommentProps
 
-            return <StyledComment {...dataToPass} key={id} />
-          })}
-        </Comments>
-      </CommentsWrapper>
-      <ReadMoreLink href={article?.url || ''}>
-        <ReadMoreButton
-          endIcon={<MdForum />}
-          variant="contained">{`Mitreden ${numberOfComments}`}</ReadMoreButton>
-      </ReadMoreLink>
-    </FrageDesTagesWrapper>
+              return <StyledComment {...dataToPass} key={id} />
+            })}
+          </Comments>
+        </CommentsWrapper>
+        <ReadMoreLink href={article?.url || ''}>
+          <ReadMoreButton
+            endIcon={<MdForum />}
+            variant="contained">{`Mitreden ${numberOfComments}`}</ReadMoreButton>
+        </ReadMoreLink>
+      </FrageDesTagesWrapper>
+    </FrageDesTagesContainer>
   )
 }
