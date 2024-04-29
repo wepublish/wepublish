@@ -53,7 +53,7 @@ export class SubscriptionService {
       memberPlan: MemberPlan
     })[]
   > {
-    return await this.prismaService.subscription.findMany({
+    const allSubscriptions = await this.prismaService.subscription.findMany({
       where: {
         paidUntil: {
           lte: endOfDay(closestRenewalDate)
@@ -75,9 +75,25 @@ export class SubscriptionService {
         deactivation: true,
         user: true,
         paymentMethod: true,
-        memberPlan: true
+        memberPlan: true,
+        invoices: {
+          where: {
+            paidAt: null,
+            canceledAt: null
+          }
+        }
       }
     })
+
+    // Ensure that no invoice gets created if there is a open invoice
+    let subscriptions = []
+    for (const subscription of allSubscriptions) {
+      if (subscription.invoices.length === 0) {
+        subscriptions.push(subscription)
+      }
+    }
+
+    return subscriptions
   }
 
   /**
