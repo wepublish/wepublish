@@ -434,13 +434,42 @@ describe('SubscriptionController', () => {
         }
       }
     })
+
+    let subscription = await SubscriptionFactory.create({
+      paidUntil: sub(new Date(), {days: 1}),
+      periods: {
+        create: {
+          startsAt: sub(new Date(), {days: 1}),
+          endsAt: add(new Date(), {years: 1}),
+          paymentPeriodicity: PaymentPeriodicity.yearly,
+          amount: 22,
+          invoice: {
+            create: {
+              scheduledDeactivationAt: add(new Date(), {days: 2}),
+              mail: 'test@wepublish.com',
+              dueAt: sub(new Date(), {days: 1})
+            }
+          }
+        }
+      }
+    })
+    await InvoiceFactory.create({
+      mail: 'test@wepublish.com',
+      subscription: {
+        connect: {
+          id: subscription.id
+        }
+      }
+    })
+
     subscriptionsToExtend = await subscriptionService.getSubscriptionsForInvoiceCreation(
       new Date(),
       add(new Date(), {days: 200})
     )
+
     expect(subscriptionsToExtend.length).toEqual(0)
 
-    let subscription = await SubscriptionFactory.create({
+    subscription = await SubscriptionFactory.create({
       paidUntil: add(new Date(), {days: 1}),
       invoices: {
         create: {

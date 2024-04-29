@@ -53,7 +53,7 @@ export class SubscriptionService {
       memberPlan: MemberPlan
     })[]
   > {
-    return await this.prismaService.subscription.findMany({
+    return this.prismaService.subscription.findMany({
       where: {
         paidUntil: {
           lte: endOfDay(closestRenewalDate)
