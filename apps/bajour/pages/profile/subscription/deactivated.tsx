@@ -10,6 +10,8 @@ import {setCookie} from 'cookies-next'
 import {NextPageContext} from 'next'
 import getConfig from 'next/config'
 
+import {Container} from '../../../src/components/layout/container'
+
 const SubscriptionsWrapper = styled(ContentWrapper)`
   display: grid;
   gap: ${({theme}) => theme.spacing(2)};
@@ -21,13 +23,15 @@ function DeactivatedSubscriptions() {
   const locationOrigin = typeof window !== 'undefined' ? location.origin : ''
 
   return (
-    <SubscriptionsWrapper>
-      <SubscriptionListContainer
-        successURL={`${locationOrigin}/payment/success`}
-        failureURL={`${locationOrigin}/payment/fail`}
-        filter={subscriptions => subscriptions.filter(subscription => subscription.deactivation)}
-      />
-    </SubscriptionsWrapper>
+    <Container>
+      <SubscriptionsWrapper>
+        <SubscriptionListContainer
+          successURL={`${locationOrigin}/profile/subscription`}
+          failureURL={`${locationOrigin}/fail`}
+          filter={subscriptions => subscriptions.filter(subscription => subscription.deactivation)}
+        />
+      </SubscriptionsWrapper>
+    </Container>
   )
 }
 

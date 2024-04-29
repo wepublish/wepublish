@@ -49,7 +49,7 @@ export function registerPaymentsModule(): DynamicModule {
             name: 'Stripe Checkout',
             offSessionPayments: false,
             secretKey: config.getOrThrow('STRIPE_SECRET_KEY'),
-            webhookEndpointSecret: config.getOrThrow('STRIPE_CHECKOUT_WEBHOOK_SECRET'),
+            webhookEndpointSecret: config.getOrThrow('STRIPE_SECRET_KEY'),
             incomingRequestHandler: bodyParser.raw({type: 'application/json'})
           }),
           new StripePaymentProvider({
@@ -57,7 +57,7 @@ export function registerPaymentsModule(): DynamicModule {
             name: 'Stripe',
             offSessionPayments: true,
             secretKey: config.getOrThrow('STRIPE_SECRET_KEY'),
-            webhookEndpointSecret: config.getOrThrow('STRIPE_WEBHOOK_SECRET'),
+            webhookEndpointSecret: config.getOrThrow('STRIPE_SECRET_KEY'),
             incomingRequestHandler: bodyParser.raw({type: 'application/json'})
           })
         )

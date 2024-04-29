@@ -121,6 +121,13 @@ export const theme = createTheme({
           return baseStyles
         }
       }
+    },
+    MuiInputAdornment: {
+      styleOverrides: {
+        positionStart: {
+          flexShrink: 0
+        }
+      }
     }
   }
 })

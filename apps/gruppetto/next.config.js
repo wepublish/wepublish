@@ -13,7 +13,8 @@ const nextConfig = {
   reactStrictMode: true,
   publicRuntimeConfig: {
     env: {
-      API_URL: process.env.API_URL || ''
+      API_URL: process.env.API_URL || '',
+      GA_ID: process.env.GA_ID || ''
     }
   },
   // Adds the language attribute to the HTML

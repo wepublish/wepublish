@@ -299,7 +299,7 @@ jobs:
     steps:
       - id: projects
         run: |
-          echo "value=[\"babanews\", \"bajour\", \"tsri\", \"gruppetto\", \"hauptstadt\"]" >> $GITHUB_OUTPUT
+          echo "value=[\"babanews\", \"bajour\", \"tsri\", \"gruppetto\"]" >> $GITHUB_OUTPUT
       - run: |
           echo "${{ steps.projects.outputs.value }}"
 

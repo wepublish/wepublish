@@ -75,6 +75,8 @@ const ButtonLink = styled('a')`
   color: ${({theme}) => theme.palette.primary.contrastText};
 `
 
+const {publicRuntimeConfig} = getConfig()
+
 function CustomApp({Component, pageProps}: CustomAppProps) {
   const siteTitle = 'Bajour'
 
@@ -117,11 +119,12 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               TeaserGrid: BajourTeaserGrid,
               Break: BajourBreakBlock
             }}
+            thirdParty={{
+              stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY
+            }}
             PaymentMethodPicker={BajourPaymentMethodPicker}>
             <ThemeProvider theme={theme}>
               <CssBaseline />
-
-              <GoogleAnalytics gaId="391346139" />
 
               <MainGrid>
                 <ThemeProvider theme={navbarTheme}>
@@ -147,6 +150,10 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
 
                 <Footer slug="main" categorySlugs={[['basel-briefing', 'other'], ['about-us']]} />
               </MainGrid>
+
+              {publicRuntimeConfig.env.GA_ID && (
+                <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
+              )}
             </ThemeProvider>
           </WebsiteBuilderProvider>
         </WebsiteProvider>
@@ -155,9 +162,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
   )
 }
 
-const {publicRuntimeConfig} = getConfig()
-const ConnectedApp = ApiV1.createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink])(
-  CustomApp
-)
+const withApollo = ApiV1.createWithV1ApiClient(publicRuntimeConfig.env.API_URL!, [authLink])
+const ConnectedApp = withApollo(CustomApp)
 
 export {ConnectedApp as default}

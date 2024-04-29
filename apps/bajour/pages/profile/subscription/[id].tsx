@@ -12,6 +12,7 @@ import {setCookie} from 'cookies-next'
 import {NextPageContext} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
+import {Container} from '../../../src/components/layout/container'
 
 const SubscriptionsWrapper = styled(ContentWrapper)`
   display: grid;
@@ -42,27 +43,29 @@ function Subscription() {
   const locationOrigin = typeof window !== 'undefined' ? location.origin : ''
 
   return (
-    <SubscriptionsWrapper>
-      <SubscriptionListWrapper>
-        <H4 component={'h1'}>Abo</H4>
+    <Container>
+      <SubscriptionsWrapper>
+        <SubscriptionListWrapper>
+          <H4 component={'h1'}>Abo</H4>
 
-        <SubscriptionListContainer
-          successURL={`${locationOrigin}/payment/success`}
-          failureURL={`${locationOrigin}/payment/fail`}
-          filter={subscriptions => subscriptions.filter(subscription => subscription.id === id)}
-        />
-      </SubscriptionListWrapper>
+          <SubscriptionListContainer
+            successURL={`${locationOrigin}/profile/subscription`}
+            failureURL={`${locationOrigin}/fail`}
+            filter={subscriptions => subscriptions.filter(subscription => subscription.id === id)}
+          />
+        </SubscriptionListWrapper>
 
-      <SubscriptionListWrapper>
-        <H4 component={'h1'}>Rechnungen</H4>
+        <SubscriptionListWrapper>
+          <H4 component={'h1'}>Rechnungen</H4>
 
-        <InvoiceListContainer
-          successURL={`${locationOrigin}/payment/success`}
-          failureURL={`${locationOrigin}/payment/fail`}
-          filter={invoices => invoices.filter(invoice => invoice.subscriptionID === id)}
-        />
-      </SubscriptionListWrapper>
-    </SubscriptionsWrapper>
+          <InvoiceListContainer
+            successURL={`${locationOrigin}/profile/subscription`}
+            failureURL={`${locationOrigin}/fail`}
+            filter={invoices => invoices.filter(invoice => invoice.subscriptionID === id)}
+          />
+        </SubscriptionListWrapper>
+      </SubscriptionsWrapper>
+    </Container>
   )
 }
 

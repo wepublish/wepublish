@@ -1,5 +1,6 @@
+import {getPagePathsBasedOnPage} from '@wepublish/utils/website'
 import {ApiV1, PageContainer} from '@wepublish/website'
-import {GetStaticPaths, GetStaticProps} from 'next'
+import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 
@@ -11,35 +12,7 @@ export default function PageBySlug() {
   return <PageContainer slug={slug as string} />
 }
 
-export const getStaticPaths: GetStaticPaths = async () => {
-  const {publicRuntimeConfig} = getConfig()
-  const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
-
-  await client.query({
-    query: ApiV1.PageDocument,
-    variables: {
-      slug: 'home'
-    }
-  })
-
-  const cache = Object.values(client.cache.extract())
-  const pageSlugs = cache.reduce((slugs, storeObj) => {
-    if (storeObj?.__typename === 'Page') {
-      slugs.push((storeObj as ApiV1.Page).slug)
-    }
-
-    return slugs
-  }, [] as string[])
-
-  return {
-    paths: pageSlugs.map(slug => ({
-      params: {
-        slug
-      }
-    })),
-    fallback: 'blocking'
-  }
-}
+export const getStaticPaths = getPagePathsBasedOnPage('home')
 
 export const getStaticProps: GetStaticProps = async ({params}) => {
   const {slug} = params || {}

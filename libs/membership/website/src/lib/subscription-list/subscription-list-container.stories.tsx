@@ -114,7 +114,10 @@ const invoice = {
 } as Exact<FullInvoiceFragment>
 
 const intent = {
-  intentSecret: 'https://example.com'
+  intentSecret: 'https://example.com',
+  paymentMethod: {
+    paymentProviderID: 'payrexx'
+  }
 }
 
 export const Default: StoryObj = {
@@ -212,7 +215,17 @@ export const Unpaid: StoryObj = {
             }
           }
         },
-        ...Default.parameters!.apolloClient.mocks.slice(1)
+        {
+          request: {
+            query: InvoicesDocument
+          },
+          result: {
+            data: {
+              invoices: [invoice]
+            }
+          }
+        },
+        ...Default.parameters!.apolloClient.mocks.slice(2)
       ]
     }
   }
