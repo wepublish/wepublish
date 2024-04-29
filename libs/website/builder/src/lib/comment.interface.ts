@@ -96,6 +96,7 @@ export type BuilderCommentProps = PropsWithChildren<
     | 'title'
     | 'source'
     | 'createdAt'
+    | 'id'
   > & {
     className?: string
     showContent?: boolean

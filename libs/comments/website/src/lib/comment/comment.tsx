@@ -2,6 +2,7 @@ import {css} from '@emotion/react'
 import {styled} from '@mui/material'
 import {CommentAuthorType} from '@wepublish/website/api'
 import {BuilderCommentProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {useLayoutEffect, useState} from 'react'
 import {MdPerson, MdVerified} from 'react-icons/md'
 
 function formatCommentDate(isoDateString: string) {
@@ -20,24 +21,19 @@ function formatCommentDate(isoDateString: string) {
     'Dezember'
   ]
 
-  // Create a date object from the ISO string
-  const date = new Date(isoDateString)
+  const date: Date = new Date(isoDateString)
 
-  // Extract the components of the date
-  const day = date.getDate()
-  const monthIndex = date.getMonth()
-  const year = date.getFullYear()
+  const day: number = date.getDate()
+  const monthIndex: number = date.getMonth()
+  const year: number = date.getFullYear()
 
-  // Format the hours and minutes
-  let hours = date.getHours()
-  let minutes = date.getMinutes()
+  const hours: number = date.getHours()
+  const minutes: number = date.getMinutes()
 
-  // Padding with '0' if necessary to always have two digits
-  hours = hours < 10 ? `0${hours}` : hours
-  minutes = minutes < 10 ? `0${minutes}` : minutes
+  const paddedHours: string = hours < 10 ? `0${hours}` : `${hours}`
+  const paddedMinutes: string = minutes < 10 ? `0${minutes}` : `${minutes}`
 
-  // Construct the formatted date string
-  const formattedDate = `${day}. ${monthNames[monthIndex]} ${year} | ${hours}:${minutes}`
+  const formattedDate = `${day}. ${monthNames[monthIndex]} ${year} | ${paddedHours}:${paddedMinutes}`
 
   return formattedDate
 }
@@ -48,9 +44,16 @@ const avatarStyles = css`
   border-radius: 50%;
 `
 
-export const CommentWrapper = styled('article')`
+export const CommentWrapper = styled('article')<{highlight?: boolean}>`
   display: grid;
   gap: ${({theme}) => theme.spacing(2)};
+
+  ${({highlight, theme}) =>
+    highlight &&
+    css`
+      border: 2px solid ${theme.palette.primary.main};
+      border-radius: ${theme.spacing(1)};
+    `}
 `
 
 export const CommentHeader = styled('header')`
@@ -121,6 +124,7 @@ export const CommentActions = styled('div')`
 `
 
 export const Comment = ({
+  id,
   className,
   text,
   authorType,
@@ -137,6 +141,30 @@ export const Comment = ({
     elements: {Paragraph, Image},
     blocks: {RichText}
   } = useWebsiteBuilder()
+
+  const [goToComment, setGoToComment] = useState<string | null>(null)
+
+  useLayoutEffect(() => {
+    if (typeof window !== 'undefined') {
+      const searchParams = new URLSearchParams(window.location.search)
+      const commentId = searchParams.get('goToComment')
+
+      if (commentId) {
+        setGoToComment(commentId)
+        const element = document.getElementById(commentId)
+        if (element) {
+          const elementRect = element.getBoundingClientRect()
+          const absoluteElementTop = elementRect.top + window.pageYOffset
+          const offsetPosition = absoluteElementTop - 200
+
+          window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+          })
+        }
+      }
+    }
+  }, [])
 
   const image = user?.image ?? guestUserImage
   const isVerified = authorType === CommentAuthorType.VerifiedUser
@@ -155,7 +183,7 @@ export const Comment = ({
   }
 
   return (
-    <CommentWrapper className={className}>
+    <CommentWrapper key={goToComment} className={className} id={id} highlight={goToComment === id}>
       <CommentHeader>
         {image && <Image image={image} square css={avatarStyles} />}
         {!image && <MdPerson css={avatarStyles} />}

@@ -1,5 +1,5 @@
 import React, {useState, useRef} from 'react'
-import {IconButton, Popover} from '@mui/material'
+import {IconButton, Popover, Snackbar} from '@mui/material'
 import {MdShare, MdWhatsapp, MdFacebook, MdEmail, MdContentCopy} from 'react-icons/md'
 import {BsTwitterX, BsLinkedin} from 'react-icons/bs'
 import {styled} from '@mui/material'
@@ -37,6 +37,7 @@ const iconStyle = {
 }
 
 const ShareButton: React.FC<ShareProps> = ({url, title}) => {
+  const [snackbarOpen, setSnackbarOpen] = useState(false)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
   const shareButtonRef = useRef<HTMLButtonElement>(null)
 
@@ -44,13 +45,18 @@ const ShareButton: React.FC<ShareProps> = ({url, title}) => {
     setAnchorEl(event.currentTarget)
   }
 
-  const handleClose = () => {
+  const handleClosePopover = () => {
     setAnchorEl(null)
+  }
+
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false)
   }
 
   const handleCopyToClipboard = () => {
     navigator.clipboard.writeText(url)
-    handleClose()
+    setSnackbarOpen(true)
+    handleClosePopover()
   }
 
   const handleShareByEmail = () => {
@@ -62,36 +68,36 @@ const ShareButton: React.FC<ShareProps> = ({url, title}) => {
 
     window.location.href = emailShareUrl
 
-    handleClose()
+    handleClosePopover()
   }
 
-  const open = Boolean(anchorEl)
-  const id = open ? 'simple-popover' : undefined
+  const popoverOpen = Boolean(anchorEl)
+  const id = popoverOpen ? 'simple-popover' : undefined
 
   const shareOptions = [
     {
       component: TwitterShareButton,
       icon: <BsTwitterX size="24" />,
       color: '#000',
-      props: {url, title, onShareWindowClose: handleClose}
+      props: {url, title, onShareWindowClose: handleClosePopover}
     },
     {
       component: WhatsappShareButton,
       icon: <MdWhatsapp size="24" />,
       color: '#25D366',
-      props: {url, title, onShareWindowClose: handleClose}
+      props: {url, title, onShareWindowClose: handleClosePopover}
     },
     {
       component: FacebookShareButton,
       icon: <MdFacebook size="24" />,
       color: '#3B5998',
-      props: {url, title, onShareWindowClose: handleClose}
+      props: {url, title, onShareWindowClose: handleClosePopover}
     },
     {
       component: LinkedinShareButton,
       icon: <BsLinkedin size="24" />,
       color: '#0077B5',
-      props: {url, title, onShareWindowClose: handleClose}
+      props: {url, title, onShareWindowClose: handleClosePopover}
     },
     {
       icon: <MdEmail size="24" />,
@@ -113,9 +119,9 @@ const ShareButton: React.FC<ShareProps> = ({url, title}) => {
       </ShareIcon>
       <Popover
         id={id}
-        open={open}
+        open={popoverOpen}
         anchorEl={anchorEl}
-        onClose={handleClose}
+        onClose={handleClosePopover}
         anchorOrigin={{
           vertical: 'center',
           horizontal: 'right'
@@ -145,6 +151,13 @@ const ShareButton: React.FC<ShareProps> = ({url, title}) => {
           )}
         </ShareOptions>
       </Popover>
+      <Snackbar
+        open={snackbarOpen}
+        anchorOrigin={{vertical: 'top', horizontal: 'right'}}
+        autoHideDuration={6000}
+        onClose={handleCloseSnackbar}
+        message="Link zum Kommentar erfolgreich kopiert"
+      />
     </div>
   )
 }
