@@ -446,7 +446,8 @@ describe('SubscriptionController', () => {
         create: {
           scheduledDeactivationAt: sub(new Date(), {days: 4}),
           mail: 'test@wepublish.com',
-          dueAt: sub(new Date(), {days: 100})
+          dueAt: sub(new Date(), {days: 100}),
+          paidAt: sub(new Date(), {days: 100})
         }
       }
     })
