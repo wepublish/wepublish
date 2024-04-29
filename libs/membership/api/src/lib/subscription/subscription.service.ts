@@ -86,7 +86,7 @@ export class SubscriptionService {
     })
 
     // Ensure that no invoice gets created if there is a open invoice
-    let subscriptions = []
+    const subscriptions = []
     for (const subscription of allSubscriptions) {
       if (subscription.invoices.length === 0) {
         subscriptions.push(subscription)
