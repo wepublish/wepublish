@@ -451,6 +451,17 @@ describe('SubscriptionController', () => {
         }
       }
     })
+
+    await InvoiceFactory.create({
+      mail: 'test@wepublish.com',
+      canceledAt: new Date(),
+      subscription: {
+        connect: {
+          id: subscription.id
+        }
+      }
+    })
+
     subscriptionsToExtend = await subscriptionService.getSubscriptionsForInvoiceCreation(
       new Date(),
       add(new Date(), {days: 200})
