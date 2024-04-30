@@ -18,7 +18,7 @@ export const queryPhrase = async (
   order: SortOrder
 ) => {
   // Default add & if no specific query is given to prevent search to fail!
-  query = query.replace(' ', '&')
+  query = query.replace(/\s+/g, '&')
 
   const [foundArticleIds, foundPageIds] = await Promise.all([
     prisma.$queryRaw<{id: string}[]>`
