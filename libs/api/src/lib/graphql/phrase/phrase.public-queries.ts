@@ -4,7 +4,7 @@ import {PageSort, pageWithRevisionsToPublicPage} from '../../db/page'
 import {Context} from '../../context'
 import {createPageOrder} from '../page/page.queries'
 import {createArticleOrder} from '../article/article.queries'
-import {SortOrder} from '@wepublish/utils/api'
+import {SortOrder, getMaxTake} from '@wepublish/utils/api'
 
 export const queryPhrase = async (
   query: string,
@@ -28,9 +28,7 @@ export const queryPhrase = async (
          'english',
          jsonb_path_query_array(ar.blocks, 'strict $.**.text'),
          '["string"]'
-         )@@ to_tsquery('english', ${query})
-      LIMIT ${take}
-      OFFSET ${skip};
+         )@@ to_tsquery('english', ${query});
     `,
     prisma.$queryRaw<{id: string}[]>`
       SELECT p.id FROM pages p
@@ -39,9 +37,7 @@ export const queryPhrase = async (
          'english',
          jsonb_path_query_array(blocks, 'strict $.**.text'),
          '["string"]'
-         )@@ to_tsquery('english', ${query})
-      LIMIT ${take}
-      OFFSET ${skip};
+         )@@ to_tsquery('english', ${query});
     `
   ])
 
@@ -64,7 +60,9 @@ export const queryPhrase = async (
           }
         }
       },
-      orderBy: createArticleOrder(articleSort, order)
+      orderBy: createArticleOrder(articleSort, order),
+      skip,
+      take: getMaxTake(take)
     }),
 
     prisma.page.findMany({
@@ -80,18 +78,46 @@ export const queryPhrase = async (
           }
         }
       },
-      orderBy: createPageOrder(pageSort, order)
+      orderBy: createPageOrder(pageSort, order),
+      skip,
+      take: getMaxTake(take)
     })
   ])
 
   const publicArticles = articles.map(articleWithRevisionsToPublicArticle)
   publicArticles.forEach(article => publicArticlesLoader.prime(article.id, article))
 
+  const firstArticle = publicArticles[0]
+  const lastArticle = publicArticles[publicArticles.length - 1]
+  const articlesHasNextPage = articleIds.length > skip + publicArticles.length
+
   const publicPages = pages.map(pageWithRevisionsToPublicPage)
   publicPages.forEach(page => publicPagesLoader.prime(page.id, page))
 
+  const firstPage = publicPages[0]
+  const lastPage = publicPages[publicPages.length - 1]
+  const pagesHasNextPage = pageIds.length > skip + publicPages.length
+
   return {
-    articles: publicArticles,
-    pages: publicPages
+    articles: {
+      nodes: publicArticles,
+      totalCount: articleIds.length,
+      pageInfo: {
+        hasPreviousPage: Boolean(skip),
+        hasNextPage: articlesHasNextPage,
+        startCursor: firstArticle?.id,
+        endCursor: lastArticle?.id
+      }
+    },
+    pages: {
+      nodes: publicPages,
+      totalCount: pageIds.length,
+      pageInfo: {
+        hasPreviousPage: Boolean(skip),
+        hasNextPage: pagesHasNextPage,
+        startCursor: firstPage?.id,
+        endCursor: lastPage?.id
+      }
+    }
   }
 }
