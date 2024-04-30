@@ -1,25 +1,47 @@
-query Phrase($query: String!) {
-  phrase(query: $query) {
+query Phrase($query: String!, $take: Int, $skip: Int) {
+  phrase(query: $query, take: $take, skip: $skip) {
     articles {
-      id
-      slug
-      title
-      blocks {
-        ... on RichTextBlock {
-          richText
+      nodes {
+        id
+        slug
+        title
+        blocks {
+          ... on RichTextBlock {
+            richText
+          }
         }
       }
+
+      pageInfo {
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
+
+      totalCount
     }
 
     pages {
-      id
-      slug
-      title
-      blocks {
-        ... on RichTextBlock {
-          richText
+      nodes {
+        id
+        slug
+        title
+        blocks {
+          ... on RichTextBlock {
+            richText
+          }
         }
       }
+
+      pageInfo {
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
+
+      totalCount
     }
   }
 }
