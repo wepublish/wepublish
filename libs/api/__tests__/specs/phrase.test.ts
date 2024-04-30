@@ -61,6 +61,11 @@ describe('Phrases', () => {
       match: false
     },
     {
+      titleQuery: 'quick fox lazy hedgehog',
+      bodyQuery: 'quick fox lazy hedgehog',
+      match: true
+    },
+    {
       name: "If ! is used the code word can't be present in either body or title",
       query: '!bunny',
       match: false
