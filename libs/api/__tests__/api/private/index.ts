@@ -713,12 +713,14 @@ export type ImageBlock = {
   blockStyle?: Maybe<Scalars['String']>;
   caption?: Maybe<Scalars['String']>;
   image?: Maybe<Image>;
+  linkUrl?: Maybe<Scalars['String']>;
 };
 
 export type ImageBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   caption?: InputMaybe<Scalars['String']>;
   imageID?: InputMaybe<Scalars['ID']>;
+  linkUrl?: InputMaybe<Scalars['String']>;
 };
 
 export type ImageConnection = {

@@ -31,6 +31,7 @@ import {
   useAuthorisation
 } from '../atoms/permissionControl'
 import {getImgMinSizeToCompress, getOperationNameFromDocument} from '../utility'
+import {ImageBlockValue} from '../blocks'
 
 const {ControlLabel, Control, Group} = RForm
 
@@ -43,15 +44,18 @@ const Form = styled(RForm)`
 `
 
 export interface ImageEditPanelProps {
+  readonly block?: ImageBlockValue
   readonly id?: string
   readonly file?: File
   readonly imageMetaData?: ImageMetaData
 
   onClose?(): void
-  onSave?(image: ImageRefFragment): void
+  onSave?(image: ImageRefFragment, block: ImageBlockValue | undefined): void
 }
 
-function ImageEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPanelProps) {
+function ImageEditPanel({id, file, block, onClose, onSave, imageMetaData}: ImageEditPanelProps) {
+  const [imageBlock, setImageBlock] = useState<ImageBlockValue | undefined>(block)
+
   const [filename, setFilename] = useState('')
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
@@ -210,7 +214,7 @@ function ImageEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPan
       })
 
       if (data?.uploadImage) {
-        onSave?.(data.uploadImage)
+        onSave?.(data.uploadImage, imageBlock)
       }
     } else {
       const {data} = await updateImage({
@@ -224,7 +228,7 @@ function ImageEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPan
       )
 
       if (data?.updateImage) {
-        onSave?.(data.updateImage)
+        onSave?.(data.updateImage, imageBlock)
       }
     }
   }
@@ -367,6 +371,17 @@ function ImageEditPanel({id, file, onClose, onSave, imageMetaData}: ImageEditPan
                   onChange={(value: string) => setDescription(value)}
                 />
               </Group>
+              {imageBlock && (
+                <Group controlId="imageLinkUrl">
+                  <ControlLabel>{t('images.panels.linkUrl')}</ControlLabel>
+                  <Control
+                    name="linkUrl"
+                    value={imageBlock.linkUrl}
+                    disabled={isDisabled}
+                    onChange={(value: string) => setImageBlock({...imageBlock, linkUrl: value})}
+                  />
+                </Group>
+              )}
               <Group controlId="imageTags">
                 <ControlLabel>{t('images.panels.tags')}</ControlLabel>
                 <TagPicker

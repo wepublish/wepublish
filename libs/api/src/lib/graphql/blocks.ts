@@ -837,7 +837,8 @@ export const GraphQLImageBlock = new GraphQLObjectType<ImageBlock, Context>({
       })
     },
 
-    caption: {type: GraphQLString}
+    caption: {type: GraphQLString},
+    linkUrl: {type: GraphQLString}
   },
   isTypeOf: createProxyingIsTypeOf(value => {
     return value.type === BlockType.Image
@@ -1319,6 +1320,7 @@ export const GraphQLImageBlockInput = new GraphQLInputObjectType({
   fields: {
     blockStyle: {type: GraphQLString},
     caption: {type: GraphQLString},
+    linkUrl: {type: GraphQLString},
     imageID: {type: GraphQLID}
   }
 })
