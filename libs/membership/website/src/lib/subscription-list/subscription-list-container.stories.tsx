@@ -88,7 +88,8 @@ const subscription = {
     extendable: true
   },
   properties: [],
-  deactivation: null
+  deactivation: null,
+  extendable: true
 } as Exact<FullSubscriptionFragment>
 
 const deactivation = {
@@ -225,7 +226,7 @@ export const Unpaid: StoryObj = {
             }
           }
         },
-        ...Default.parameters!.apolloClient.mocks.slice(2)
+        ...Default.parameters!.apolloClient.mocks.slice(1)
       ]
     }
   }

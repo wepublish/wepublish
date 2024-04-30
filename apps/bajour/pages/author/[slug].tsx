@@ -9,6 +9,8 @@ import {GetStaticPaths, GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 
+import {Container} from '../../src/components/layout/container'
+
 export default function AuthorBySlug() {
   const {
     query: {slug}
@@ -25,16 +27,18 @@ export default function AuthorBySlug() {
   })
 
   return (
-    <ArticleWrapper>
-      <AuthorContainer slug={slug as string} />
+    <Container>
+      <ArticleWrapper>
+        <AuthorContainer slug={slug as string} />
 
-      {data?.author && (
-        <>
-          <H3 component={'h2'}>Alle Artikel von {data.author.name}</H3>
-          <ArticleListContainer variables={{filter: {authors: [data.author.id]}}} />
-        </>
-      )}
-    </ArticleWrapper>
+        {data?.author && (
+          <>
+            <H3 component={'h2'}>Alle Artikel von {data.author.name}</H3>
+            <ArticleListContainer variables={{filter: {authors: [data.author.id]}}} />
+          </>
+        )}
+      </ArticleWrapper>
+    </Container>
   )
 }
 

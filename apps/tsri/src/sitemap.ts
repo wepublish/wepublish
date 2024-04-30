@@ -1,5 +1,4 @@
-import {generateSitemap} from '@wepublish/website'
-import {ApiV1} from '@wepublish/website'
+import {ApiV1, generateSitemap} from '@wepublish/website/server'
 import {NextApiRequest} from 'next'
 import getConfig from 'next/config'
 

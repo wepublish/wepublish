@@ -20,7 +20,8 @@
                 "group": [
                   "@wepublish/*/website",
                   "@wepublish/website/*",
-                  "!@wepublish/utils/website"
+                  "!@wepublish/utils/website",
+                  "!@wepublish/website/server"
                 ],
                 "message": "Please use @wepublish/website instead."
               }

@@ -53,7 +53,7 @@ export class SubscriptionService {
       memberPlan: MemberPlan
     })[]
   > {
-    return await this.prismaService.subscription.findMany({
+    return this.prismaService.subscription.findMany({
       where: {
         paidUntil: {
           lte: endOfDay(closestRenewalDate)
@@ -68,14 +68,21 @@ export class SubscriptionService {
             }
           }
         },
-        autoRenew: true
+        autoRenew: true,
+        invoices: {
+          none: {
+            paidAt: null,
+            canceledAt: null
+          }
+        }
       },
       include: {
         periods: true,
         deactivation: true,
         user: true,
         paymentMethod: true,
-        memberPlan: true
+        memberPlan: true,
+        invoices: true
       }
     })
   }
