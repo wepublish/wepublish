@@ -137,7 +137,8 @@ const memberPlan = {
   id: '123',
   slug: '',
   description: text,
-  tags: []
+  tags: [],
+  extendable: true
 } as Exact<FullMemberPlanFragment>
 
 const memberPlan2 = {
@@ -175,7 +176,8 @@ const subscription = {
   paymentPeriodicity: PaymentPeriodicity.Yearly,
   properties: [],
   startsAt: new Date('2024-01-01').toISOString(),
-  url: 'https://example.com'
+  url: 'https://example.com',
+  extendable: true
 } as Exact<FullSubscriptionFragment>
 
 const invoice = {

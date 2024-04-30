@@ -75,10 +75,12 @@ const subscription = {
     id: '123',
     slug: '',
     description: [],
-    tags: []
+    tags: [],
+    extendable: true
   },
   properties: [],
-  deactivation: null
+  deactivation: null,
+  extendable: true
 } as Exact<FullSubscriptionFragment>
 
 const invoice = {

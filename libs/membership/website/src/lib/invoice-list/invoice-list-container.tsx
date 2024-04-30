@@ -71,12 +71,8 @@ export function InvoiceListContainer({
       {stripeClientSecret && (
         <StripeElement clientSecret={stripeClientSecret}>
           <StripePayment
-            onClose={async () => {
-              setTimeout(() => {
-                // give stripe some time => todo: absolutely find a better solution
-                // will be removed when migrating to website builder of we.publish
-                window.location.reload()
-              }, 1500)
+            onClose={success => {
+              window.location.href = success ? successURL : failureURL
             }}
           />
         </StripeElement>

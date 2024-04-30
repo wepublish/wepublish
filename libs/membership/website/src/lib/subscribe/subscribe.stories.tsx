@@ -14,7 +14,8 @@ import {
   FullSubscriptionFragment,
   MemberPlan,
   PaymentMethod,
-  PaymentPeriodicity
+  PaymentPeriodicity,
+  SubscriptionDeactivationReason
 } from '@wepublish/website/api'
 import {Node} from 'slate'
 import {z} from 'zod'
@@ -134,7 +135,8 @@ const memberPlan = {
   id: '123',
   slug: '',
   description: text,
-  tags: []
+  tags: [],
+  extendable: true
 } as Exact<FullMemberPlanFragment>
 
 const memberPlan2 = {
@@ -172,7 +174,8 @@ const subscription = {
   paymentPeriodicity: PaymentPeriodicity.Yearly,
   properties: [],
   startsAt: new Date('2024-01-01').toISOString(),
-  url: 'https://example.com'
+  url: 'https://example.com',
+  extendable: true
 } as Exact<FullSubscriptionFragment>
 
 const invoice = {
@@ -695,6 +698,43 @@ export const ResetPaymentOptionsOnPaymentMethodChange: StoryObj<typeof Subscribe
     await changePaymentMethod(memberPlan.availablePaymentMethods[2].paymentMethods[0])(ctx)
     await clickSubscribe(ctx)
   })
+}
+
+export const NoWarningDeactivatedSubscription: StoryObj<typeof Subscribe> = {
+  ...LoggedIn,
+  args: {
+    ...LoggedIn.args,
+    userSubscriptions: {
+      data: {
+        subscriptions: [
+          {
+            ...subscription,
+            deactivation: {
+              date: new Date('2023-01-01').toISOString(),
+              reason: SubscriptionDeactivationReason.None
+            }
+          }
+        ]
+      },
+      loading: false
+    }
+  }
+}
+
+export const NoWarningPaindInvoice: StoryObj<typeof Subscribe> = {
+  ...LoggedIn,
+  args: {
+    ...LoggedIn.args,
+    userInvoices: {
+      data: {
+        invoices: [
+          {...invoice, paidAt: new Date('2023-01-01').toISOString()},
+          {...invoice, canceledAt: new Date('2023-01-01').toISOString()}
+        ]
+      },
+      loading: false
+    }
+  }
 }
 
 export const WithClassName: StoryObj<typeof Subscribe> = {

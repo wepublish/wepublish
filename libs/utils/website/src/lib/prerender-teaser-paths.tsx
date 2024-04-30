@@ -19,7 +19,7 @@ export const getPagePathsBasedOnPage =
     const pageSlugs = []
 
     for (const storeObj of cache) {
-      if (storeObj?.__typename === 'Page') {
+      if (storeObj?.__typename === 'Page' && (storeObj as ApiV1.Page).slug !== pageSlug) {
         pageSlugs.push((storeObj as ApiV1.Page).slug)
       }
 

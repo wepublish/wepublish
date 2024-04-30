@@ -273,7 +273,7 @@ export const Subscribe = <T extends BuilderUserFormFields>({
   const alreadyHasSubscription = useMemo(() => {
     return (
       userSubscriptions.data?.subscriptions.some(
-        ({memberPlan}) => memberPlan.id === selectedMemberPlanId
+        ({memberPlan, deactivation}) => memberPlan.id === selectedMemberPlanId && !deactivation
       ) ?? false
     )
   }, [userSubscriptions.data?.subscriptions, selectedMemberPlanId])

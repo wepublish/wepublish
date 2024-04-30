@@ -12,6 +12,7 @@ import {setCookie} from 'cookies-next'
 import {NextPageContext} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
+
 import {Container} from '../../../src/components/layout/container'
 
 const SubscriptionsWrapper = styled(ContentWrapper)`
