@@ -12,7 +12,7 @@ export const PollBlockResultOverwrite = styled(PollBlockResult)`
     ${({highlight, theme}) =>
       highlight &&
       `
-      background-color: ${theme.palette.common.black};
+      background-color: ${theme.palette.primary.main};
     `}
   }
 `

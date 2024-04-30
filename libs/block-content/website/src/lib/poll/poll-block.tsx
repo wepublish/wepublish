@@ -26,7 +26,7 @@ export const PollBlockVoting = styled('div')`
 
 export const PollBlockVoteResultList = styled('div')`
   display: grid;
-  gap: ${({theme}) => theme.spacing(1)};
+  gap: ${({theme}) => theme.spacing(2)};
 `
 
 export const PollBlockMeta = styled('div')`

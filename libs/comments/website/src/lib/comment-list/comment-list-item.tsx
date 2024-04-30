@@ -14,10 +14,21 @@ const generateSocialMediaLink = (id: string) => {
 
 export const CommentListItemChildren = styled('aside')`
   display: grid;
+  position: relative;
   gap: ${({theme}) => theme.spacing(3)};
-  border-left: 2px solid currentColor;
   padding: ${({theme}) => theme.spacing(3)};
   padding-right: 0;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: ${({theme}) => theme.spacing(2)};
+    bottom: ${({theme}) => theme.spacing(2)};
+    left: ${({theme}) => theme.spacing(1)};
+    height: 100%;
+    width: 2px;
+    background-color: currentColor;
+  }
 `
 
 export const CommentListItemActions = styled('div')`

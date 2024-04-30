@@ -99,6 +99,7 @@ export const CommentVerifiedBadge = styled('div')`
 
 export const CommentFlair = styled('div')<{isGuest: boolean}>`
   font-size: 0.75em;
+  font-weight: 300;
 
   ${({isGuest, theme}) =>
     isGuest &&

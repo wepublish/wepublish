@@ -41,7 +41,7 @@ export const FrageDesTagesWrapper = styled('div')`
   grid-template-columns: 1fr;
   align-items: stretch;
   border-radius: ${({theme}) => theme.spacing(4)};
-  background-color: ${({theme}) => theme.palette.secondary.main};
+  background-color: ${({theme}) => theme.palette.secondary.light};
   padding: ${({theme}) => `${theme.spacing(2)}`};
 
   ${({theme}) =>

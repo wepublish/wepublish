@@ -56,10 +56,15 @@ export const AuthorName = styled('div')`
   `}
 `
 
-export const AuthorContent = styled('div')``
+export const AuthorContent = styled('div')`
+  span {
+    font-weight: 300;
+  }
+`
 
 export const Moderation = styled('span')`
-  font-size: 12px;
+  font-size: 0.75em;
+  font-weight: 300;
 `
 
 export const AuthorBox = memo(function AuthorBox({author, className}: AuthorBoxProps) {

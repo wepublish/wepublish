@@ -12,7 +12,7 @@ interface InfoBoxProps {
 
 export const InfoBoxWrapper = styled('aside')<{expanded: boolean}>`
   display: grid;
-  grid-template-columns: ${({theme}) => theme.spacing(4)} 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: ${({theme}) => theme.spacing(1)};
   height: ${({theme}) => theme.spacing(28)};
   transition: height 0.3s ease;
@@ -32,7 +32,7 @@ const AllAbout = styled('div')`
   font-family: ${({theme}) => theme.typography.subtitle2.fontFamily};
   font-size: 17px;
   font-weight: ${({theme}) => theme.typography.fontWeightBold};
-  margin-bottom: ${({theme}) => theme.spacing(1)};
+  margin-left: ${({theme}) => theme.spacing(1)};
 
   ${({theme}) => css`
     ${theme.breakpoints.up('sm')} {
@@ -52,6 +52,9 @@ const RichTextBlockWrapper = styled('div')<{expanded: boolean}>`
   max-height: ${({theme}) => theme.spacing(14)};
   overflow: hidden;
   transition: max-height 0.3s ease-in-out;
+  span {
+    font-weight: 300;
+  }
 
   ${({theme, expanded}) =>
     expanded &&
@@ -63,8 +66,9 @@ const RichTextBlockWrapper = styled('div')<{expanded: boolean}>`
 
 const InfoBoxInfo = styled('div')`
   color: ${({theme}) => theme.palette.common.black};
+  grid-column: 1/3;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
   justify-content: flex-start;
   padding-top: ${({theme}) => theme.spacing(0.5)};
@@ -75,10 +79,13 @@ const IconWrapper = styled('div')`
   height: ${({theme}) => theme.spacing(3)};
 `
 
-const InfoBoxContent = styled('div')``
+const InfoBoxContent = styled('div')`
+  display: grid;
+  grid-column: 1/3;
+`
 
 const ReadMore = styled(Button)`
-  margin-top: ${({theme}) => theme.spacing(1)};
+  margin: ${({theme}) => theme.spacing(1.5)} auto 0;
   padding: ${({theme}) => theme.spacing(0.5)} ${({theme}) => theme.spacing(1.5)};
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -88,6 +95,7 @@ const ReadMore = styled(Button)`
   border: 1px solid ${({theme}) => theme.palette.common.black};
   background-color: transparent;
   transition: background-color 0.25s ease-in-out;
+  width: fit-content;
 
   :hover {
     background-color: rgba(0, 0, 0, 0.2);
@@ -102,16 +110,17 @@ export const InfoBox = memo(function InfoBox({richText, className}: InfoBoxProps
         <IconWrapper>
           <MdInfoOutline size="24" />
         </IconWrapper>
+        <AllAbout>Darum geht’s:</AllAbout>
       </InfoBoxInfo>
 
       <InfoBoxContent>
-        <AllAbout>Darum geht’s:</AllAbout>
-
         <RichTextBlockWrapper expanded={expanded}>
           <RichTextBlock richText={richText} />
         </RichTextBlockWrapper>
 
-        <ReadMore onClick={() => setExpanded(expanded => !expanded)}>alles lesen</ReadMore>
+        <ReadMore onClick={() => setExpanded(expanded => !expanded)}>
+          {expanded ? 'Weniger' : 'alles lesen'}
+        </ReadMore>
       </InfoBoxContent>
     </InfoBoxWrapper>
   )

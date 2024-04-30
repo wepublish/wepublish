@@ -4,6 +4,7 @@ import {
   PollBlockMeta,
   PollBlockResultInfo,
   PollBlockResultName,
+  PollBlockResultPercentage,
   PollBlockVoteBar,
   PollBlockVoteBarFill,
   RichTextBlockWrapper
@@ -28,15 +29,21 @@ export const PollBlock = styled(BasePollBlock)`
 
   ${PollBlockVoteBarFill} {
     border-radius: ${({theme}) => theme.spacing(1)};
-    /* ${({highlight, theme}) =>
-      highlight &&
-      `
-      background-color: ${theme.palette.common.black};
-    `} */
   }
 
   ${PollBlockResultInfo} {
-    grid-template-columns: auto;
+    grid-template-columns: repeat(12, 1fr);
+    align-items: center;
+  }
+
+  ${PollBlockResultName} {
+    grid-column: 1/11;
+  }
+
+  ${PollBlockResultPercentage} {
+    grid-column: 11/13;
+    display: grid;
+    justify-content: end;
   }
 
   ${RichTextBlockWrapper} {

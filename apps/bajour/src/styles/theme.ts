@@ -79,7 +79,9 @@ const theme = createTheme({}, WepTheme, {
   }),
   palette: {
     primary: augmentColor({color: {main: '#FF0D62'}}),
-    secondary: augmentColor({color: {main: '#FDDDD2', dark: '#ffbaba'}}),
+    secondary: augmentColor({
+      color: {main: '#FDDDD2', dark: '#ffbaba', light: 'rgb(255, 239, 233)'}
+    }),
     accent: augmentColor({color: {main: '#770A6A'}}),
     error: augmentColor({color: {main: '#FF0D62'}})
   },

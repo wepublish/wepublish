@@ -6,10 +6,10 @@ exports[`CommentRatings should render AnonymousUserRatings 1`] = `
     class="css-11ltnyi-CommentRatingsWrapper e1ggg5h80"
   >
     <div
-      class="css-1mhglx2-StarRatingWrapper e41600y1"
+      class="css-1kfqtuu-StarRatingWrapper e41600y1"
     >
       <div
-        class="css-k02ajl-StarRatingName e41600y0"
+        class="css-esy0pk-StarRatingName e41600y0"
       >
         Foobar
       </div>
@@ -234,10 +234,10 @@ exports[`CommentRatings should render AnonymousUserRatings 1`] = `
       </div>
     </div>
     <div
-      class="css-1mhglx2-StarRatingWrapper e41600y1"
+      class="css-1kfqtuu-StarRatingWrapper e41600y1"
     >
       <div
-        class="css-k02ajl-StarRatingName e41600y0"
+        class="css-esy0pk-StarRatingName e41600y0"
       >
         Barfoo
       </div>
@@ -466,10 +466,10 @@ exports[`CommentRatings should render AnonymousUserRatings 1`] = `
       </div>
     </div>
     <div
-      class="css-1mhglx2-StarRatingWrapper e41600y1"
+      class="css-1kfqtuu-StarRatingWrapper e41600y1"
     >
       <div
-        class="css-k02ajl-StarRatingName e41600y0"
+        class="css-esy0pk-StarRatingName e41600y0"
       >
         Foobaz
       </div>
@@ -711,10 +711,10 @@ exports[`CommentRatings should render Default 1`] = `
     class="css-11ltnyi-CommentRatingsWrapper e1ggg5h80"
   >
     <div
-      class="css-1mhglx2-StarRatingWrapper e41600y1"
+      class="css-1kfqtuu-StarRatingWrapper e41600y1"
     >
       <div
-        class="css-k02ajl-StarRatingName e41600y0"
+        class="css-esy0pk-StarRatingName e41600y0"
       >
         Foobar
       </div>
@@ -935,10 +935,10 @@ exports[`CommentRatings should render Default 1`] = `
       </div>
     </div>
     <div
-      class="css-1mhglx2-StarRatingWrapper e41600y1"
+      class="css-1kfqtuu-StarRatingWrapper e41600y1"
     >
       <div
-        class="css-k02ajl-StarRatingName e41600y0"
+        class="css-esy0pk-StarRatingName e41600y0"
       >
         Barfoo
       </div>
@@ -1159,10 +1159,10 @@ exports[`CommentRatings should render Default 1`] = `
       </div>
     </div>
     <div
-      class="css-1mhglx2-StarRatingWrapper e41600y1"
+      class="css-1kfqtuu-StarRatingWrapper e41600y1"
     >
       <div
-        class="css-k02ajl-StarRatingName e41600y0"
+        class="css-esy0pk-StarRatingName e41600y0"
       >
         Foobaz
       </div>
@@ -1400,10 +1400,10 @@ exports[`CommentRatings should render OverridenRatings 1`] = `
     class="css-11ltnyi-CommentRatingsWrapper e1ggg5h80"
   >
     <div
-      class="css-1mhglx2-StarRatingWrapper e41600y1"
+      class="css-1kfqtuu-StarRatingWrapper e41600y1"
     >
       <div
-        class="css-k02ajl-StarRatingName e41600y0"
+        class="css-esy0pk-StarRatingName e41600y0"
       >
         Foobar
       </div>
@@ -1624,10 +1624,10 @@ exports[`CommentRatings should render OverridenRatings 1`] = `
       </div>
     </div>
     <div
-      class="css-1mhglx2-StarRatingWrapper e41600y1"
+      class="css-1kfqtuu-StarRatingWrapper e41600y1"
     >
       <div
-        class="css-k02ajl-StarRatingName e41600y0"
+        class="css-esy0pk-StarRatingName e41600y0"
       >
         Barfoo
       </div>
@@ -1848,10 +1848,10 @@ exports[`CommentRatings should render OverridenRatings 1`] = `
       </div>
     </div>
     <div
-      class="css-1mhglx2-StarRatingWrapper e41600y1"
+      class="css-1kfqtuu-StarRatingWrapper e41600y1"
     >
       <div
-        class="css-k02ajl-StarRatingName e41600y0"
+        class="css-esy0pk-StarRatingName e41600y0"
       >
         Foobaz
       </div>
@@ -2225,10 +2225,10 @@ exports[`CommentRatings should render ReadOnly 1`] = `
     class="css-11ltnyi-CommentRatingsWrapper e1ggg5h80"
   >
     <div
-      class="css-1mhglx2-StarRatingWrapper e41600y1"
+      class="css-1kfqtuu-StarRatingWrapper e41600y1"
     >
       <div
-        class="css-k02ajl-StarRatingName e41600y0"
+        class="css-esy0pk-StarRatingName e41600y0"
       >
         Foobar
       </div>
@@ -2359,10 +2359,10 @@ exports[`CommentRatings should render ReadOnly 1`] = `
       </div>
     </div>
     <div
-      class="css-1mhglx2-StarRatingWrapper e41600y1"
+      class="css-1kfqtuu-StarRatingWrapper e41600y1"
     >
       <div
-        class="css-k02ajl-StarRatingName e41600y0"
+        class="css-esy0pk-StarRatingName e41600y0"
       >
         Barfoo
       </div>
@@ -2493,10 +2493,10 @@ exports[`CommentRatings should render ReadOnly 1`] = `
       </div>
     </div>
     <div
-      class="css-1mhglx2-StarRatingWrapper e41600y1"
+      class="css-1kfqtuu-StarRatingWrapper e41600y1"
     >
       <div
-        class="css-k02ajl-StarRatingName e41600y0"
+        class="css-esy0pk-StarRatingName e41600y0"
       >
         Foobaz
       </div>
@@ -2636,7 +2636,7 @@ exports[`CommentRatings should render Single 1`] = `
     class="css-11ltnyi-CommentRatingsWrapper e1ggg5h80"
   >
     <div
-      class="css-1mhglx2-StarRatingWrapper e41600y1"
+      class="css-1kfqtuu-StarRatingWrapper e41600y1"
     >
       <div
         class="css-1mr5b7g-RatingWrapper-RatingWrapper-RatingWrapper-RatingWrapper e15hksji0"
@@ -2864,10 +2864,10 @@ exports[`CommentRatings should render UserRatings 1`] = `
     class="css-11ltnyi-CommentRatingsWrapper e1ggg5h80"
   >
     <div
-      class="css-1mhglx2-StarRatingWrapper e41600y1"
+      class="css-1kfqtuu-StarRatingWrapper e41600y1"
     >
       <div
-        class="css-k02ajl-StarRatingName e41600y0"
+        class="css-esy0pk-StarRatingName e41600y0"
       >
         Foobar
       </div>
@@ -3096,10 +3096,10 @@ exports[`CommentRatings should render UserRatings 1`] = `
       </div>
     </div>
     <div
-      class="css-1mhglx2-StarRatingWrapper e41600y1"
+      class="css-1kfqtuu-StarRatingWrapper e41600y1"
     >
       <div
-        class="css-k02ajl-StarRatingName e41600y0"
+        class="css-esy0pk-StarRatingName e41600y0"
       >
         Barfoo
       </div>
@@ -3332,10 +3332,10 @@ exports[`CommentRatings should render UserRatings 1`] = `
       </div>
     </div>
     <div
-      class="css-1mhglx2-StarRatingWrapper e41600y1"
+      class="css-1kfqtuu-StarRatingWrapper e41600y1"
     >
       <div
-        class="css-k02ajl-StarRatingName e41600y0"
+        class="css-esy0pk-StarRatingName e41600y0"
       >
         Foobaz
       </div>

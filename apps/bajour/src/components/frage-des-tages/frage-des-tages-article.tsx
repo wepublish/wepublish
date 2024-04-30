@@ -87,11 +87,11 @@ export const FDTLogo = styled(Image)`
 `
 
 const StyledAuthorBox = styled(AuthorBox)`
-  background-color: ${({theme}) => theme.palette.secondary.main};
+  background-color: ${({theme}) => theme.palette.secondary.light};
 `
 
 const StyledInfoBox = styled(InfoBox)`
-  background-color: ${({theme}) => theme.palette.secondary.main};
+  background-color: ${({theme}) => theme.palette.secondary.light};
 `
 
 const PollBlockStyled = styled(PollBlock)`
