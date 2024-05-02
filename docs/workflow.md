@@ -21,7 +21,7 @@
 ## Conventional Commits
 
 We use conventional commits to ensure that commit messages are standardized and meaningful. Please adhere to this format
-for consistency.
+for consistency. https://www.conventionalcommits.org/en/v1.0.0/#summary
 
 ## GitHub Labels for PRs
 
