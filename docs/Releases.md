@@ -58,26 +58,48 @@ We use semantic versioning to indicate changes within our public API.
 Major, minor changes within internal private APIs and Editor will be considered as minor or patch.
 We assume all components are used with the same version.
 
-## Release process
+## Release Process
 
-At this moment we use `git-flow` command for release process. This makes it easy to have a proper state of dev `master`
-and stable `production` branches.
+### Overview
 
-### In steps
+The release process starts right after the sprint ends, or at a predetermined time chosen by the development team. This
+process includes creating alpha and stable versions, managing branches, and handling pull requests.
 
-1. Starts right after sprint ends (or whatever time we pick)
-2. Identify type of release (`major` | `minor` | `patch`) by reviewing changelog
-    - `npx lerna-changelog`
-3. Create release branch `r/<release-name>` based on dev `master`
-    - `git checkout master git pull origin HEAD`
-    - `git checkout -b r/release-<version>`
-4. Create alpha-prerelease, create tag in github and publish new `next` npm
-    - `npx lerna version --force-git-tag <version>-alpha.X --yes`
-    - Create pull-request with changelog as description
-5. Apply bugfixes if needed
-    - Again create new pre-release
-    - Again add changelog into PR description
-6. Once release tested and verified publish final-release
-    - `./bin/release-stable.sh`
-    - `git push`
-7. Merge pull-request back into `master`
+### Steps for Releasing
+
+1. **Create Alpha Pre-release**
+    - At the end of the sprint, identify the type of release (`major`, `minor`, `patch`) by reviewing changes and then
+      use the `release alpha` command to create an alpha pre-release. If needed, specify the increment type:
+      ```
+      ./bin/release alpha [major|minor|patch]
+      ```
+    - This command automatically handles:
+        - Updating the `master` branch and creating a new release branch named `r/release-<version>`
+        - Tagging the version with `-alpha.X` suffix
+        - Generating a changelog using `npx lerna-changelog`
+        - Creating a pull request with the changelog as the description, if one does not exist
+
+2. **Apply Bug Fixes and Iterative Pre-releases (Optional)**
+    - Apply bug fixes on the release branch as necessary. Subsequent alpha versions can be generated:
+      ```
+      ./bin/release alpha
+      ```
+    - Include updated changelog entries in the pull request description with each pre-release.
+
+3. **Publish Final Release**
+    - Once the release has been tested and verified, finalize the release using the `release stable` command, which
+      performs the following:
+      ```
+      ./bin/release stable
+      ```
+    - This command handles:
+        - Finalizing the changelog entries using lerna-changelog
+        - Committing these changes with a release tag
+        - Pushing all changes and tags automatically
+
+### Additional Information
+
+- All commands are to be run from the root of the repository.
+- Ensure that the environment variables such as `GITHUB_AUTH` are set correctly before starting the release process.
+- The `release alpha` command can optionally take an increment type as an argument, while `release stable` does not take
+  any arguments.
