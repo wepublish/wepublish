@@ -6,7 +6,6 @@ import {
 } from '@wepublish/website'
 import {ComponentProps, forwardRef, PropsWithChildren, useEffect, useId} from 'react'
 
-import {ReactComponent as Invoice} from './invoice.svg'
 import {ReactComponent as Mastercard} from './mastercard.svg'
 import {ReactComponent as PayPal} from './paypal.svg'
 import {ReactComponent as PostFinance} from './post-finance.svg'
@@ -81,9 +80,15 @@ export const BajourPaymentMethodPicker = forwardRef<
                 {method.paymentProviderID === 'payrexx' && (
                   <>
                     <Twint css={icon} />
-                    <PayPal css={icon} />
                     <PostFinance css={icon} />
-                    <Invoice css={icon} />
+                    <Mastercard css={icon} />
+                    <Visa css={icon} />
+                  </>
+                )}
+
+                {method.paymentProviderID === 'paypal' && (
+                  <>
+                    <PayPal css={icon} />
                   </>
                 )}
 
