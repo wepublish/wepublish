@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NavigationResolver Mutation: createNavigation 1`] = `
+{
+  "id": "2",
+  "key": "new",
+  "name": "New Navigation",
+}
+`;
+
+exports[`NavigationResolver Mutation: deleteNavigation 1`] = `
+{
+  "id": "1",
+}
+`;
+
+exports[`NavigationResolver Mutation: updateNavigation 1`] = `
+{
+  "id": "1",
+  "key": "updated",
+  "name": "Updated Navigation",
+}
+`;
+
+exports[`NavigationResolver Query: getNavigation by key 1`] = `
+{
+  "id": "1",
+  "key": "main",
+  "links": [],
+  "name": "Main Navigation",
+}
+`;
+
+exports[`NavigationResolver Query: getNavigations list 1`] = `
+[
+  {
+    "id": "1",
+    "key": "main",
+    "links": [],
+    "name": "Main Navigation",
+  },
+]
+`;

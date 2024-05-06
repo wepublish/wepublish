@@ -7,6 +7,31 @@ type AllowedSettingVals {
   stringChoice: [String!]
 }
 
+type ArticleNavigationLink implements BaseNavigationLink {
+  articleID: String!
+  createdAt: DateTime!
+  id: String!
+  label: String!
+  modifiedAt: DateTime!
+  type: String!
+}
+
+interface BaseNavigationLink {
+  createdAt: DateTime!
+  id: String!
+  label: String!
+  modifiedAt: DateTime!
+  type: String!
+}
+
+input BaseNavigationLinkInput {
+  articleID: String
+  label: String!
+  pageID: String
+  type: String!
+  url: String
+}
+
 type BlockStyle {
   blocks: [BlockType!]!
   createdAt: DateTime!
@@ -47,6 +72,12 @@ input ConsentFilter {
   defaultValue: Boolean
   name: String
   slug: String
+}
+
+input CreateNavigationInput {
+  key: String!
+  links: [BaseNavigationLinkInput!]!
+  name: String!
 }
 
 type DashboardInvoice {
@@ -124,6 +155,15 @@ enum EventStatus {
   Postponed
   Rescheduled
   Scheduled
+}
+
+type ExternalNavigationLink implements BaseNavigationLink {
+  createdAt: DateTime!
+  id: String!
+  label: String!
+  modifiedAt: DateTime!
+  type: String!
+  url: String
 }
 
 type FocalPoint {
@@ -208,6 +248,7 @@ type Mutation {
 
   """Creates a new event."""
   createEvent(description: RichText, endsAt: DateTime, imageId: String, location: String, name: String!, startsAt: DateTime!, tagIds: [String!]): Event!
+  createNavigation(input: CreateNavigationInput!): Navigation!
 
   """Create a new subscription flow"""
   createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
@@ -226,6 +267,7 @@ type Mutation {
 
   """Deletes an existing event."""
   deleteEvent(id: String!): Event!
+  deleteNavigation(id: String!): Navigation!
 
   """Delete an existing subscription flow"""
   deleteSubscriptionFlow(id: String!): [SubscriptionFlowModel!]!
@@ -251,6 +293,7 @@ type Mutation {
 
   """Updates an existing event."""
   updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, location: String, name: String, startsAt: DateTime, tagIds: [String!]): Event!
+  updateNavigation(input: UpdateNavigationArgs!): Navigation!
 
   """Updates an existing setting."""
   updateSetting(name: SettingName!, value: GraphQLSettingValueType!): Setting!
@@ -268,11 +311,29 @@ type Mutation {
   updateUserConsent(id: String!, value: Boolean!): UserConsent!
 }
 
+type Navigation {
+  createdAt: DateTime!
+  id: String!
+  key: String!
+  links: [BaseNavigationLink!]!
+  modifiedAt: DateTime!
+  name: String!
+}
+
 type PageInfo {
   endCursor: String
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
   startCursor: String
+}
+
+type PageNavigationLink implements BaseNavigationLink {
+  createdAt: DateTime!
+  id: String!
+  label: String!
+  modifiedAt: DateTime!
+  pageID: String!
+  type: String!
 }
 
 type PaginatedEvents {
@@ -329,6 +390,8 @@ type Query {
 
   "\n      Returns the expected revenue for the time period given.\n      Excludes cancelled or manually set as paid invoices.\n    "
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
+  getNavigation(id: String, key: String): Navigation
+  getNavigations: [Navigation!]!
 
   """Returns an image by id."""
   image(id: String!): Image!
@@ -476,6 +539,13 @@ type SubscriptionInterval {
 type SystemMailModel {
   event: UserEvent!
   mailTemplate: MailTemplateRef
+}
+
+input UpdateNavigationArgs {
+  id: String!
+  key: String!
+  links: [BaseNavigationLinkInput!]!
+  name: String!
 }
 
 type User {
