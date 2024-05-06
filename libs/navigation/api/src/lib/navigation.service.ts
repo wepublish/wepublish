@@ -29,6 +29,7 @@ export class NavigationService {
 
   async createNavigation(input: CreateNavigationInput) {
     const {links, ...data} = input
+    
     return this.prisma.navigation.create({
       data: {
         ...data,
