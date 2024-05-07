@@ -19,6 +19,10 @@ fragment PageWithoutBlocks on Page {
   properties {
     ...FullProperty
   }
+
+  blocks {
+    __typename
+  }
 }
 
 fragment FullPage on Page {

@@ -31,6 +31,10 @@ fragment ArticleWithoutBlocks on Article {
   properties {
     ...FullProperty
   }
+
+  blocks {
+    __typename
+  }
 }
 
 fragment FullArticle on Article {
@@ -63,7 +67,7 @@ query ArticleList(
 ) {
   articles(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
     nodes {
-      ...FullArticle
+      ...ArticleWithoutBlocks
     }
 
     pageInfo {

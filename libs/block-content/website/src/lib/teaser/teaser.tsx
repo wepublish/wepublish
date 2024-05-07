@@ -192,7 +192,7 @@ const useImageStyles = () => {
       }
 
       ${theme.breakpoints.up('md')} {
-        aspect-ratio: 1/1;
+        aspect-ratio: 1;
       }
     `,
     [theme]

@@ -36,7 +36,7 @@ export const SmallTeaser = styled(TeaserOverwrite)`
 
   ${TeaserImgStyled} {
     grid-column: span 6;
-    aspect-ratio: 1/1;
+    aspect-ratio: 1;
   }
 
   ${TeaserTitlesStyled},
@@ -62,7 +62,7 @@ export const SmallTeaser = styled(TeaserOverwrite)`
 
     ${TeaserImgStyled} {
       grid-column: span 4;
-      aspect-ratio: 1/1;
+      aspect-ratio: 1;
     }
 
     ${TextLine} {

@@ -285,7 +285,6 @@ const Author = styled('div')`
 export const Avatar = styled(Image)`
   position: absolute;
   border-radius: 50%;
-  aspect-ratio: 1/1;
   width: ${({theme}) => theme.spacing(9)};
   height: ${({theme}) => theme.spacing(9)};
   object-fit: cover;
@@ -371,7 +370,7 @@ export const BaselBriefing = ({teasers, blockStyle}: BaselBriefingProps) => {
           <TeaserContentStyled>
             <TeaserContentInterior>
               {briefingDynamicValues.authorAvatar && (
-                <Avatar image={briefingDynamicValues.authorAvatar} />
+                <Avatar image={briefingDynamicValues.authorAvatar} square />
               )}
 
               {briefingDynamicValues.authorName && (

@@ -165,10 +165,6 @@ fragment FullTeaser on Teaser {
 
     article {
       ...ArticleWithoutBlocks
-
-      blocks {
-        __typename
-      }
     }
   }
 
@@ -189,10 +185,6 @@ fragment FullTeaser on Teaser {
 
     article {
       ...ArticleWithoutBlocks
-
-      blocks {
-        __typename
-      }
     }
   }
 
@@ -209,10 +201,6 @@ fragment FullTeaser on Teaser {
 
     page {
       ...PageWithoutBlocks
-
-      blocks {
-        __typename
-      }
     }
   }
 

@@ -30,7 +30,9 @@ export default function Mitmachen() {
 
           if (additionalMemberPlans === 'upsell' && preselectedMemberPlan) {
             return memberPlans.filter(
-              memberPlan => memberPlan.amountPerMonthMin >= preselectedMemberPlan.amountPerMonthMin
+              memberPlan =>
+                memberPlan.amountPerMonthMin >= preselectedMemberPlan.amountPerMonthMin ||
+                memberPlan === preselectedMemberPlan
             )
           }
 

@@ -65,6 +65,7 @@ import {RenderElement, RenderLeaf} from '@wepublish/richtext/website'
 import {
   Alert,
   Button,
+  Pagination,
   H1,
   H2,
   H3,
@@ -163,6 +164,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           Alert,
           Button,
           IconButton,
+          Pagination,
           H1,
           H2,
           H3,
