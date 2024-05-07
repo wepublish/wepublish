@@ -19,9 +19,11 @@ export class NavigationResolver {
     if (id) {
       return this.navigationService.getNavigationById(id)
     }
-    if (key) {
+
+        if (key) {
       return this.navigationService.getNavigationByKey(key)
     }
+
     throw new BadRequestException('Need to provide id or key')
   }
 
