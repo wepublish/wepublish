@@ -1,10 +1,5 @@
 import {Args, Mutation, Query, Resolver} from '@nestjs/graphql'
-import {
-  CanCreateNavigation,
-  CanDeleteNavigation,
-  CanGetNavigations,
-  Permissions
-} from '@wepublish/permissions/api'
+import {CanCreateNavigation, CanDeleteNavigation, Permissions} from '@wepublish/permissions/api'
 import {
   CreateNavigationInput,
   Navigation,
@@ -31,14 +26,13 @@ export class NavigationResolver {
   }
 
   @Query(() => [Navigation])
-  @Permissions(CanGetNavigations)
   getNavigations() {
     return this.navigationService.getNavigations()
   }
 
   @Mutation(() => Navigation)
   @Permissions(CanCreateNavigation)
-  createNavigation(@Args('input') input: CreateNavigationInput) {
+  createNavigation(@Args() input: CreateNavigationInput) {
     return this.navigationService.createNavigation(input)
   }
 
@@ -50,7 +44,7 @@ export class NavigationResolver {
 
   @Mutation(() => Navigation)
   @Permissions(CanCreateNavigation)
-  updateNavigation(@Args('input') input: UpdateNavigationArgs) {
+  updateNavigation(@Args() input: UpdateNavigationArgs) {
     return this.navigationService.updateNavigation(input)
   }
 }

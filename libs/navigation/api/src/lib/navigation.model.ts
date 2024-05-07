@@ -124,15 +124,15 @@ export class NavigationIdArgs {
 @InputType()
 class BaseNavigationLinkInput extends OmitType(NavigationLinkInput, [], InputType) {}
 
-@InputType()
+@ArgsType()
 export class UpdateNavigationArgs extends OmitType(
   Navigation,
   ['createdAt', 'modifiedAt', 'links'],
-  InputType
+  ArgsType
 ) {
   @Field(() => [BaseNavigationLinkInput])
   links!: BaseNavigationLinkInput[]
 }
 
-@InputType()
-export class CreateNavigationInput extends OmitType(UpdateNavigationArgs, ['id'], InputType) {}
+@ArgsType()
+export class CreateNavigationInput extends OmitType(UpdateNavigationArgs, ['id'], ArgsType) {}

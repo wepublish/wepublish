@@ -2,9 +2,13 @@
 
 exports[`NavigationResolver Mutation: createNavigation 1`] = `
 {
-  "id": "2",
-  "key": "new",
-  "name": "New Navigation",
+  "data": {
+    "createNavigation": {
+      "id": "2",
+      "key": "new",
+      "name": "New Navigation",
+    },
+  },
 }
 `;
 
@@ -16,9 +20,13 @@ exports[`NavigationResolver Mutation: deleteNavigation 1`] = `
 
 exports[`NavigationResolver Mutation: updateNavigation 1`] = `
 {
-  "id": "1",
-  "key": "updated",
-  "name": "Updated Navigation",
+  "data": {
+    "updateNavigation": {
+      "id": "1",
+      "key": "updated",
+      "name": "Updated Navigation",
+    },
+  },
 }
 `;
 

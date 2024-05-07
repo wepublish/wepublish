@@ -50,8 +50,16 @@ const navigationListQuery = `
 `
 
 const createNavigationMutation = `
-  mutation CreateNavigation($input: CreateNavigationInput!) {
-    createNavigation(input: $input) {
+  mutation CreateNavigation(
+    $key: String!
+    $name: String!
+    $links: [BaseNavigationLinkInput!]!
+  ) {
+    createNavigation(
+      key: $key
+      name: $name
+      links: $links
+    ) {
       id
       key
       name
@@ -60,8 +68,18 @@ const createNavigationMutation = `
 `
 
 const updateNavigationMutation = `
-  mutation UpdateNavigation($input: UpdateNavigationArgs!) {
-    updateNavigation(input: $input) {
+  mutation UpdateNavigation(
+    $id: String!
+    $key: String!
+    $name: String!
+    $links: [BaseNavigationLinkInput!]!
+  ) {
+    updateNavigation(
+      id: $id
+      key: $key
+      name: $name
+      links: $links
+    ) {
       id
       key
       name
@@ -155,13 +173,13 @@ describe('NavigationResolver', () => {
       .post('/')
       .send({
         query: createNavigationMutation,
-        variables: {input: mockInput}
+        variables: mockInput
+      })
+      .expect(res => {
+        expect(res.body).toMatchSnapshot()
+        expect(navigationServiceMock.createNavigation).toHaveBeenCalledWith(mockInput)
       })
       .expect(200)
-      .expect(res => {
-        expect(navigationServiceMock.createNavigation).toHaveBeenCalledWith(mockInput)
-        expect(res.body.data.createNavigation).toMatchSnapshot()
-      })
   })
 
   test('Mutation: updateNavigation', async () => {
@@ -173,13 +191,13 @@ describe('NavigationResolver', () => {
       .post('/')
       .send({
         query: updateNavigationMutation,
-        variables: {input: mockInput}
+        variables: mockInput
+      })
+      .expect(res => {
+        expect(res.body).toMatchSnapshot()
+        expect(navigationServiceMock.updateNavigation).toHaveBeenCalledWith(mockInput)
       })
       .expect(200)
-      .expect(res => {
-        expect(navigationServiceMock.updateNavigation).toHaveBeenCalledWith(mockInput)
-        expect(res.body.data.updateNavigation).toMatchSnapshot()
-      })
   })
 
   test('Mutation: deleteNavigation', async () => {
