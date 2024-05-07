@@ -254,4 +254,3 @@ Website: [https://www.wepublish.ch/](https://www.wepublish.ch/)
 [faq-md-url]: FAQ.md
 [code-of-conduct-url]: CODE_OF_CONDUCT.md
 [documentation-url]: docs/README.md
-
