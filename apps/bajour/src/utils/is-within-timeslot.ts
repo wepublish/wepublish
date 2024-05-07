@@ -1,20 +1,13 @@
 export const isWithinTimeslot = (
   showFrom = '6:00',
   showUntil = '11:00',
-  scheduledDate: Date | undefined = undefined
+  scheduledDate?: Date
 ): boolean => {
   const now = new Date()
 
-  // check if the scheduled date is today.
-  if (scheduledDate) {
-    const isSameDay = scheduledDate.getDate() === now.getDate()
-    const isSameMonth = scheduledDate.getMonth() === now.getMonth()
-    const isSameYear = scheduledDate.getFullYear() === now.getFullYear()
-
-    // since we've got a date object, just return false, if the scheduled date isn't today.
-    if (!isSameDay || !isSameMonth || !isSameYear) {
-      return false
-    }
+  // if scheduled date is given, return false, if today is not the scheduled date.
+  if (scheduledDate && new Date().setHours(0, 0, 0, 0) !== scheduledDate.setHours(0, 0, 0, 0)) {
+    return false
   }
 
   const [showFromHour, showFromMinutes] = showFrom.split(':').map(Number)
