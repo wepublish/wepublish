@@ -455,7 +455,7 @@ exports[`Article Container should render ById 1`] = `
       class="css-1ma568x-ImageBlockWrapper eekavcu2"
     >
       <div
-        class="css-17t3tid-ImageBlockInnerWrapper eekavcu1"
+        class="css-190ggwe-ImageBlockInnerWrapper eekavcu1"
       >
         <img
           alt="DSC07717"
@@ -2695,7 +2695,7 @@ exports[`Article Container should render BySlug 1`] = `
       class="css-1ma568x-ImageBlockWrapper eekavcu2"
     >
       <div
-        class="css-17t3tid-ImageBlockInnerWrapper eekavcu1"
+        class="css-190ggwe-ImageBlockInnerWrapper eekavcu1"
       >
         <img
           alt="DSC07717"
@@ -4935,7 +4935,7 @@ exports[`Article Container should render WithChildren 1`] = `
       class="css-1ma568x-ImageBlockWrapper eekavcu2"
     >
       <div
-        class="css-17t3tid-ImageBlockInnerWrapper eekavcu1"
+        class="css-190ggwe-ImageBlockInnerWrapper eekavcu1"
       >
         <img
           alt="DSC07717"
@@ -7178,7 +7178,7 @@ exports[`Article Container should render WithClassName 1`] = `
       class="css-1ma568x-ImageBlockWrapper eekavcu2"
     >
       <div
-        class="css-17t3tid-ImageBlockInnerWrapper eekavcu1"
+        class="css-190ggwe-ImageBlockInnerWrapper eekavcu1"
       >
         <img
           alt="DSC07717"
@@ -9418,7 +9418,7 @@ exports[`Article Container should render WithEmotion 1`] = `
       class="css-1ma568x-ImageBlockWrapper eekavcu2"
     >
       <div
-        class="css-17t3tid-ImageBlockInnerWrapper eekavcu1"
+        class="css-190ggwe-ImageBlockInnerWrapper eekavcu1"
       >
         <img
           alt="DSC07717"

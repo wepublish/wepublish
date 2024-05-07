@@ -6,7 +6,7 @@ exports[`Image Block should render Default 1`] = `
     class="css-1ma568x-ImageBlockWrapper eekavcu2"
   >
     <div
-      class="css-17t3tid-ImageBlockInnerWrapper eekavcu1"
+      class="css-190ggwe-ImageBlockInnerWrapper eekavcu1"
     >
       <img
         alt="An image description"
@@ -32,7 +32,7 @@ exports[`Image Block should render WithClassName 1`] = `
     class="extra-classname css-1ma568x-ImageBlockWrapper eekavcu2"
   >
     <div
-      class="css-17t3tid-ImageBlockInnerWrapper eekavcu1"
+      class="css-190ggwe-ImageBlockInnerWrapper eekavcu1"
     >
       <img
         alt="An image description"
@@ -58,7 +58,7 @@ exports[`Image Block should render WithEmotion 1`] = `
     class="css-1ma568x-ImageBlockWrapper eekavcu2"
   >
     <div
-      class="css-17t3tid-ImageBlockInnerWrapper eekavcu1"
+      class="css-190ggwe-ImageBlockInnerWrapper eekavcu1"
     >
       <img
         alt="An image description"
@@ -84,7 +84,7 @@ exports[`Image Block should render WithLink 1`] = `
     class="css-1ma568x-ImageBlockWrapper eekavcu2"
   >
     <div
-      class="css-17t3tid-ImageBlockInnerWrapper eekavcu1"
+      class="css-190ggwe-ImageBlockInnerWrapper eekavcu1"
     >
       <a
         class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
@@ -116,7 +116,7 @@ exports[`Image Block should render WithoutCaption 1`] = `
     class="css-1ma568x-ImageBlockWrapper eekavcu2"
   >
     <div
-      class="css-17t3tid-ImageBlockInnerWrapper eekavcu1"
+      class="css-190ggwe-ImageBlockInnerWrapper eekavcu1"
     >
       <img
         alt="An image description"
@@ -142,7 +142,7 @@ exports[`Image Block should render WithoutSource 1`] = `
     class="css-1ma568x-ImageBlockWrapper eekavcu2"
   >
     <div
-      class="css-17t3tid-ImageBlockInnerWrapper eekavcu1"
+      class="css-190ggwe-ImageBlockInnerWrapper eekavcu1"
     >
       <img
         alt="An image description"

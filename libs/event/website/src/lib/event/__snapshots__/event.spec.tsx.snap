@@ -54,7 +54,7 @@ exports[`Event should render Default 1`] = `
       class="css-i2ow2o-ImageBlockWrapper-Event eekavcu2"
     >
       <div
-        class="css-17t3tid-ImageBlockInnerWrapper eekavcu1"
+        class="css-190ggwe-ImageBlockInnerWrapper eekavcu1"
       >
         <img
           alt="DSC07717"
@@ -538,7 +538,7 @@ exports[`Event should render WithClassName 1`] = `
       class="css-i2ow2o-ImageBlockWrapper-Event eekavcu2"
     >
       <div
-        class="css-17t3tid-ImageBlockInnerWrapper eekavcu1"
+        class="css-190ggwe-ImageBlockInnerWrapper eekavcu1"
       >
         <img
           alt="DSC07717"
@@ -1022,7 +1022,7 @@ exports[`Event should render WithEmotion 1`] = `
       class="css-i2ow2o-ImageBlockWrapper-Event eekavcu2"
     >
       <div
-        class="css-17t3tid-ImageBlockInnerWrapper eekavcu1"
+        class="css-190ggwe-ImageBlockInnerWrapper eekavcu1"
       >
         <img
           alt="DSC07717"

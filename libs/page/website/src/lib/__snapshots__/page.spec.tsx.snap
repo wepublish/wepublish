@@ -423,7 +423,7 @@ exports[`Page should render Default 1`] = `
       class="css-1ma568x-ImageBlockWrapper eekavcu2"
     >
       <div
-        class="css-17t3tid-ImageBlockInnerWrapper eekavcu1"
+        class="css-190ggwe-ImageBlockInnerWrapper eekavcu1"
       >
         <img
           alt="DSC07717"
@@ -2486,7 +2486,7 @@ exports[`Page should render WithChildren 1`] = `
       class="css-1ma568x-ImageBlockWrapper eekavcu2"
     >
       <div
-        class="css-17t3tid-ImageBlockInnerWrapper eekavcu1"
+        class="css-190ggwe-ImageBlockInnerWrapper eekavcu1"
       >
         <img
           alt="DSC07717"
@@ -4552,7 +4552,7 @@ exports[`Page should render WithClassName 1`] = `
       class="css-1ma568x-ImageBlockWrapper eekavcu2"
     >
       <div
-        class="css-17t3tid-ImageBlockInnerWrapper eekavcu1"
+        class="css-190ggwe-ImageBlockInnerWrapper eekavcu1"
       >
         <img
           alt="DSC07717"
@@ -6615,7 +6615,7 @@ exports[`Page should render WithEmotion 1`] = `
       class="css-1ma568x-ImageBlockWrapper eekavcu2"
     >
       <div
-        class="css-17t3tid-ImageBlockInnerWrapper eekavcu1"
+        class="css-190ggwe-ImageBlockInnerWrapper eekavcu1"
       >
         <img
           alt="DSC07717"
@@ -8694,7 +8694,7 @@ exports[`Page should render WithoutDescription 1`] = `
       class="css-1ma568x-ImageBlockWrapper eekavcu2"
     >
       <div
-        class="css-17t3tid-ImageBlockInnerWrapper eekavcu1"
+        class="css-190ggwe-ImageBlockInnerWrapper eekavcu1"
       >
         <img
           alt="DSC07717"
@@ -10757,7 +10757,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
       class="css-1ma568x-ImageBlockWrapper eekavcu2"
     >
       <div
-        class="css-17t3tid-ImageBlockInnerWrapper eekavcu1"
+        class="css-190ggwe-ImageBlockInnerWrapper eekavcu1"
       >
         <img
           alt="DSC07717"
@@ -12812,7 +12812,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
       class="css-1ma568x-ImageBlockWrapper eekavcu2"
     >
       <div
-        class="css-17t3tid-ImageBlockInnerWrapper eekavcu1"
+        class="css-190ggwe-ImageBlockInnerWrapper eekavcu1"
       >
         <img
           alt="DSC07717"
