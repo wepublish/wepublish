@@ -12,5 +12,6 @@ export type BuilderNavbarProps = PropsWithChildren<
     loginUrl?: string
     profileUrl?: string
     subscriptionsUrl?: string
+    showSubscriptionsUrl?: boolean
   }
 >
