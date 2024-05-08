@@ -14,37 +14,37 @@ import {BadRequestException} from '@nestjs/common'
 export class NavigationResolver {
   constructor(private readonly navigationService: NavigationService) {}
 
-  @Query(() => Navigation, {nullable: true})
+  @Query(() => Navigation, {nullable: true, description: `Returns a navigation by id or key.`})
   getNavigation(@Args() {id, key}: NavigationArgs) {
     if (id) {
       return this.navigationService.getNavigationById(id)
     }
 
-        if (key) {
+    if (key) {
       return this.navigationService.getNavigationByKey(key)
     }
 
     throw new BadRequestException('Need to provide id or key')
   }
 
-  @Query(() => [Navigation])
+  @Query(() => [Navigation], {description: `Returns a list of navigations.`})
   getNavigations() {
     return this.navigationService.getNavigations()
   }
 
-  @Mutation(() => Navigation)
+  @Mutation(() => Navigation, {description: `Creates a new navigation.`})
   @Permissions(CanCreateNavigation)
   createNavigation(@Args() input: CreateNavigationInput) {
     return this.navigationService.createNavigation(input)
   }
 
-  @Mutation(() => Navigation)
+  @Mutation(() => Navigation, {description: `Updates an existing navigation.`})
   @Permissions(CanDeleteNavigation)
   deleteNavigation(@Args() {id}: NavigationIdArgs) {
     return this.navigationService.deleteNavigationById(id)
   }
 
-  @Mutation(() => Navigation)
+  @Mutation(() => Navigation, {description: `Deletes an existing navigation.`})
   @Permissions(CanCreateNavigation)
   updateNavigation(@Args() input: UpdateNavigationArgs) {
     return this.navigationService.updateNavigation(input)
