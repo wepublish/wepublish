@@ -74,12 +74,6 @@ input ConsentFilter {
   slug: String
 }
 
-input CreateNavigationInput {
-  key: String!
-  links: [BaseNavigationLinkInput!]!
-  name: String!
-}
-
 type DashboardInvoice {
   amount: Int!
   dueAt: DateTime!
@@ -248,7 +242,9 @@ type Mutation {
 
   """Creates a new event."""
   createEvent(description: RichText, endsAt: DateTime, imageId: String, location: String, name: String!, startsAt: DateTime!, tagIds: [String!]): Event!
-  createNavigation(input: CreateNavigationInput!): Navigation!
+
+  """Creates a new navigation."""
+  createNavigation(key: String!, links: [BaseNavigationLinkInput!]!, name: String!): Navigation!
 
   """Create a new subscription flow"""
   createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
@@ -267,6 +263,8 @@ type Mutation {
 
   """Deletes an existing event."""
   deleteEvent(id: String!): Event!
+
+  """Updates an existing navigation."""
   deleteNavigation(id: String!): Navigation!
 
   """Delete an existing subscription flow"""
@@ -293,7 +291,9 @@ type Mutation {
 
   """Updates an existing event."""
   updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, location: String, name: String, startsAt: DateTime, tagIds: [String!]): Event!
-  updateNavigation(input: UpdateNavigationArgs!): Navigation!
+
+  """Deletes an existing navigation."""
+  updateNavigation(id: String!, key: String!, links: [BaseNavigationLinkInput!]!, name: String!): Navigation!
 
   """Updates an existing setting."""
   updateSetting(name: SettingName!, value: GraphQLSettingValueType!): Setting!
@@ -390,7 +390,11 @@ type Query {
 
   "\n      Returns the expected revenue for the time period given.\n      Excludes cancelled or manually set as paid invoices.\n    "
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
+
+  """Returns a navigation by id or key."""
   getNavigation(id: String, key: String): Navigation
+
+  """Returns a list of navigations."""
   getNavigations: [Navigation!]!
 
   """Returns an image by id."""
@@ -539,13 +543,6 @@ type SubscriptionInterval {
 type SystemMailModel {
   event: UserEvent!
   mailTemplate: MailTemplateRef
-}
-
-input UpdateNavigationArgs {
-  id: String!
-  key: String!
-  links: [BaseNavigationLinkInput!]!
-  name: String!
 }
 
 type User {

@@ -8,20 +8,28 @@ import {
   UpdateNavigationArgs
 } from './navigation.model'
 import {NavigationService} from './navigation.service'
-import {BadRequestException} from '@nestjs/common'
+import {BadRequestException, NotFoundException} from '@nestjs/common'
 
 @Resolver(() => Navigation)
 export class NavigationResolver {
   constructor(private readonly navigationService: NavigationService) {}
 
   @Query(() => Navigation, {nullable: true, description: `Returns a navigation by id or key.`})
-  getNavigation(@Args() {id, key}: NavigationArgs) {
+  async getNavigation(@Args() {id, key}: NavigationArgs) {
+    let navigation: Navigation | null = null
     if (id) {
-      return this.navigationService.getNavigationById(id)
+      navigation = await this.navigationService.getNavigationById(id)
+      if (navigation === null) {
+        throw new NotFoundException('Navigation not found')
+      }
+      return navigation
     }
-
     if (key) {
-      return this.navigationService.getNavigationByKey(key)
+      navigation = await this.navigationService.getNavigationByKey(key)
+      if (navigation === null) {
+        throw new NotFoundException('Navigation not found')
+      }
+      return navigation
     }
 
     throw new BadRequestException('Need to provide id or key')

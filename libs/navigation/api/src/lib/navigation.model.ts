@@ -66,6 +66,7 @@ abstract class BaseNavigationLink {
 
   @Field()
   label!: string
+
   @Field(() => String)
   type!: string
 }
@@ -122,7 +123,7 @@ export class NavigationIdArgs {
 }
 
 @InputType()
-class BaseNavigationLinkInput extends OmitType(NavigationLinkInput, [], InputType) {}
+class BaseNavigationLinkInput extends NavigationLinkInput {}
 
 @ArgsType()
 export class UpdateNavigationArgs extends OmitType(

@@ -29,7 +29,7 @@ export class NavigationService {
 
   async createNavigation(input: CreateNavigationInput) {
     const {links, ...data} = input
-    
+
     return this.prisma.navigation.create({
       data: {
         ...data,
@@ -58,7 +58,7 @@ export class NavigationService {
       data: {
         ...data,
         links: {
-          createMany: {data: links ?? []}
+          createMany: {data: links}
         }
       },
       include: {links: true}
