@@ -73,8 +73,10 @@ const subscription = {
   paymentMethod: {},
   memberPlan: {
     image,
-    name: 'Foobar Memberplan'
-  }
+    name: 'Foobar Memberplan',
+    extendable: true
+  },
+  extendable: true
 } as Exact<FullSubscriptionFragment>
 
 const invoice = {

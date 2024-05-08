@@ -60,3 +60,10 @@ export const WithoutCaption = {
     caption: ''
   }
 }
+
+export const WithLink = {
+  args: {
+    image,
+    linkUrl: 'https://example.com'
+  }
+}

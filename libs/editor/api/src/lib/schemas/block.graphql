@@ -165,6 +165,7 @@ fragment FullBlock on Block {
   ... on ImageBlock {
     blockStyle
     caption
+    linkUrl
     image {
       ...ImageRef
     }

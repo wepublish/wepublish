@@ -596,6 +596,7 @@
         "information": "Information",
         "license": "Lizenz",
         "link": "Link",
+        "linkUrl": "Zieladresse",
         "notFound": "Bild nicht gefunden!",
         "resizedImage": "Die Bildgrösse wird beim Hochladen automatisch auf ca. {{sizeMB}} MB reduziert.",
         "source": "Quelle",

@@ -51,11 +51,13 @@ exports[`Navbar Container should render Default 1`] = `
         >
           <a
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
+            href="/"
           >
             Home
           </a>
           <a
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
+            href="/a/abcd"
           >
             Artikel
           </a>
@@ -162,11 +164,13 @@ exports[`Navbar Container should render WithClassName 1`] = `
         >
           <a
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
+            href="/"
           >
             Home
           </a>
           <a
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
+            href="/a/abcd"
           >
             Artikel
           </a>
@@ -273,11 +277,13 @@ exports[`Navbar Container should render WithEmotion 1`] = `
         >
           <a
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
+            href="/"
           >
             Home
           </a>
           <a
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
+            href="/a/abcd"
           >
             Artikel
           </a>

@@ -773,7 +773,7 @@ exports[`User edit view should render 1`] = `
                     role="gridcell"
                   >
                     <div
-                      class="css-chr1eq rs-panel"
+                      class="css-10cacs rs-panel"
                     >
                       <div
                         aria-expanded="false"
@@ -1617,7 +1617,7 @@ exports[`User edit view should render with ID 1`] = `
                     role="gridcell"
                   >
                     <div
-                      class="css-chr1eq rs-panel"
+                      class="css-10cacs rs-panel"
                     >
                       <div
                         aria-expanded="false"

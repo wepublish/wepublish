@@ -48,6 +48,7 @@ export interface RichTextBlock extends BaseBlock {
 export interface ImageBlock extends BaseBlock {
   type: BlockType.Image
   caption?: string
+  linkUrl?: string
   imageID?: string
 }
 

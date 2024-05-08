@@ -456,6 +456,7 @@ export type ImageBlock = {
   blockStyle?: Maybe<Scalars['String']>;
   caption?: Maybe<Scalars['String']>;
   image?: Maybe<Image>;
+  linkUrl?: Maybe<Scalars['String']>;
 };
 
 export type ImageGalleryBlock = {

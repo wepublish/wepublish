@@ -3,6 +3,7 @@ import {getSessionTokenProps, ssrAuthLink, withAuthGuard} from '@wepublish/utils
 import {
   ApiV1,
   AuthTokenStorageKey,
+  ContentWrapper,
   PersonalDataFormContainer,
   useWebsiteBuilder
 } from '@wepublish/website'
@@ -10,8 +11,7 @@ import {setCookie} from 'cookies-next'
 import {NextPageContext} from 'next'
 import getConfig from 'next/config'
 
-const ProfileWrapper = styled('div')`
-  display: grid;
+const ProfileWrapper = styled(ContentWrapper)`
   gap: ${({theme}) => theme.spacing(2)};
 `
 

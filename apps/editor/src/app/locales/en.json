@@ -601,6 +601,7 @@
         "information": "Information",
         "license": "License",
         "link": "Link",
+        "linkUrl": "Target URL",
         "notFound": "Image not found!",
         "resizedImage": "The image size is automatically reduced to about {{sizeMB}} MB when uploading.",
         "source": "Source",

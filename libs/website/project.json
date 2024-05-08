@@ -21,7 +21,9 @@
         "external": "all",
         "rootDir": ".",
         "buildableProjectDepsInPackageJsonType": "dependencies",
-        "updateBuildableProjectDepsInPackageJson": true
+        "updateBuildableProjectDepsInPackageJson": true,
+        "additionalEntryPoints": ["libs/website/src/server.ts"],
+        "generateExportsField": true
       }
     },
     "test": {

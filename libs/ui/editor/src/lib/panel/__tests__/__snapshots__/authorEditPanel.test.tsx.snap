@@ -318,7 +318,7 @@ exports[`Author Edit Panel should render 1`] = `
             role="region"
           >
             <div
-              class="css-obwoy8-Panel e6eaqve0 rs-panel"
+              class="css-1lsq9fg-Panel e6eaqve0 rs-panel"
             >
               <div
                 class="rs-panel-body rs-panel-body-fill"
@@ -1230,7 +1230,7 @@ exports[`Author Edit Panel should render with ID 1`] = `
             role="region"
           >
             <div
-              class="css-obwoy8-Panel e6eaqve0 rs-panel"
+              class="css-1lsq9fg-Panel e6eaqve0 rs-panel"
             >
               <div
                 class="rs-panel-body rs-panel-body-fill"

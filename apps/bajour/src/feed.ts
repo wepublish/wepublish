@@ -1,5 +1,4 @@
-import {generateFeed} from '@wepublish/website'
-import {ApiV1} from '@wepublish/website'
+import {ApiV1, generateFeed} from '@wepublish/website/server'
 import {Feed} from 'feed'
 import {NextApiRequest} from 'next'
 import getConfig from 'next/config'

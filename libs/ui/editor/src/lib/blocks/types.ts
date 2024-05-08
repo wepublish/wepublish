@@ -30,6 +30,7 @@ export interface RichTextBlockValue extends BaseBlockValue {
 export interface ImageBlockValue extends BaseBlockValue {
   image: ImageRefFragment | null
   caption: string
+  linkUrl?: string
 }
 
 export interface GalleryImageEdge {
@@ -380,6 +381,7 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
         image: {
           imageID: block.value.image?.id,
           caption: block.value.caption || undefined,
+          linkUrl: block.value.linkUrl,
           blockStyle: block.value.blockStyle
         }
       }
@@ -806,6 +808,7 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
         value: {
           blockStyle: block.blockStyle,
           caption: block.caption ?? '',
+          linkUrl: block.linkUrl ?? '',
           image: block.image ? block.image : null
         }
       }
