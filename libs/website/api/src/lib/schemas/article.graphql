@@ -31,10 +31,6 @@ fragment ArticleWithoutBlocks on Article {
   properties {
     ...FullProperty
   }
-
-  blocks {
-    __typename
-  }
 }
 
 fragment FullArticle on Article {

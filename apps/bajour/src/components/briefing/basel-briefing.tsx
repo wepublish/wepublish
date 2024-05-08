@@ -309,6 +309,7 @@ export const Avatar = styled(Image)`
 export const BaselBriefing = ({teasers, blockStyle}: BaselBriefingProps) => {
   let showFrom = undefined
   let showUntil = undefined
+  let scheduledDate
 
   const teaser = teasers && teasers[0]
   teaser?.properties.forEach(prop => {
@@ -319,9 +320,13 @@ export const BaselBriefing = ({teasers, blockStyle}: BaselBriefingProps) => {
     if (prop.key === 'showUntil') {
       showUntil = prop.value
     }
+
+    if (prop.key === 'scheduledDate') {
+      scheduledDate = new Date(prop.value)
+    }
   })
 
-  if (!isWithinTimeslot(showFrom, showUntil)) {
+  if (!isWithinTimeslot(showFrom, showUntil, scheduledDate)) {
     return null
   }
 
