@@ -52,7 +52,7 @@ export const CommentWrapper = styled('article')<{highlight?: boolean}>`
     highlight &&
     css`
       border: 2px solid ${theme.palette.primary.main};
-      border-radius: ${theme.spacing(1)};
+      border-radius: ${theme.spacing(2.5)};
     `}
 `
 

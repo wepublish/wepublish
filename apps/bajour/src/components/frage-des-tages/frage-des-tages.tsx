@@ -113,6 +113,10 @@ export const StyledComment = styled(Comment)`
   background-color: ${({theme}) => theme.palette.common.white};
   padding: ${({theme}) => theme.spacing(1.5)};
   border-radius: ${({theme}) => theme.spacing(2.5)};
+
+  span {
+    font-weight: 300;
+  }
 `
 
 export const FDTLogo = styled(Image)`
