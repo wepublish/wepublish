@@ -264,7 +264,7 @@ type Mutation {
   """Deletes an existing event."""
   deleteEvent(id: String!): Event!
 
-  """Updates an existing navigation."""
+  """Deletes an existing navigation."""
   deleteNavigation(id: String!): Navigation!
 
   """Delete an existing subscription flow"""
@@ -292,7 +292,7 @@ type Mutation {
   """Updates an existing event."""
   updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, location: String, name: String, startsAt: DateTime, tagIds: [String!]): Event!
 
-  """Deletes an existing navigation."""
+  """Updates an existing navigation."""
   updateNavigation(id: String!, key: String!, links: [BaseNavigationLinkInput!]!, name: String!): Navigation!
 
   """Updates an existing setting."""

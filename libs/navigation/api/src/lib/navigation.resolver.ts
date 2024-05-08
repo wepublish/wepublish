@@ -47,14 +47,14 @@ export class NavigationResolver {
   }
 
   @Mutation(() => Navigation, {description: `Updates an existing navigation.`})
-  @Permissions(CanDeleteNavigation)
-  deleteNavigation(@Args() {id}: NavigationIdArgs) {
-    return this.navigationService.deleteNavigationById(id)
-  }
-
-  @Mutation(() => Navigation, {description: `Deletes an existing navigation.`})
   @Permissions(CanCreateNavigation)
   updateNavigation(@Args() input: UpdateNavigationArgs) {
     return this.navigationService.updateNavigation(input)
+  }
+
+  @Mutation(() => Navigation, {description: `Deletes an existing navigation.`})
+  @Permissions(CanDeleteNavigation)
+  deleteNavigation(@Args() {id}: NavigationIdArgs) {
+    return this.navigationService.deleteNavigationById(id)
   }
 }
