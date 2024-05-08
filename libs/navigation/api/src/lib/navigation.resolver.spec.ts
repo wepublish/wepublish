@@ -133,7 +133,6 @@ describe('NavigationResolver', () => {
   })
 
   test('Query: getNavigation by key', async () => {
-    const mockKey = 'main'
     const mockResponse = {id: '1', key: 'main', name: 'Main Navigation', links: []}
     navigationServiceMock.getNavigationByKey?.mockResolvedValue(mockResponse)
 
@@ -141,12 +140,57 @@ describe('NavigationResolver', () => {
       .post('/')
       .send({
         query: navigationQuery,
-        variables: {key: mockKey}
+        variables: {key: 'main'}
       })
       .expect(200)
       .expect(res => {
-        expect(navigationServiceMock.getNavigationByKey).toHaveBeenCalledWith(mockKey)
-        expect(res.body.data.getNavigation).toMatchSnapshot()
+        expect(res.body).toMatchSnapshot()
+      })
+  })
+
+  test('Query: getNavigation by key: Not found', async () => {
+    navigationServiceMock.getNavigationByKey?.mockResolvedValue(null)
+
+    await request(app.getHttpServer())
+      .post('/')
+      .send({
+        query: navigationQuery,
+        variables: {key: 'not-found'}
+      })
+      .expect(200)
+      .expect(res => {
+        expect(res.body).toMatchSnapshot()
+      })
+  })
+
+  test('Query: getNavigation by id', async () => {
+    const mockResponse = {id: '1', key: 'main', name: 'Main Navigation', links: []}
+    navigationServiceMock.getNavigationById?.mockResolvedValue(mockResponse)
+
+    await request(app.getHttpServer())
+      .post('/')
+      .send({
+        query: navigationQuery,
+        variables: {id: '1'}
+      })
+      .expect(200)
+      .expect(res => {
+        expect(res.body).toMatchSnapshot()
+      })
+  })
+
+  test('Query: getNavigation by id: Not found', async () => {
+    navigationServiceMock.getNavigationById?.mockResolvedValue(null)
+
+    await request(app.getHttpServer())
+      .post('/')
+      .send({
+        query: navigationQuery,
+        variables: {id: 'not-found'}
+      })
+      .expect(200)
+      .expect(res => {
+        expect(res.body).toMatchSnapshot()
       })
   })
 
@@ -160,7 +204,7 @@ describe('NavigationResolver', () => {
       .expect(200)
       .expect(res => {
         expect(navigationServiceMock.getNavigations).toHaveBeenCalled()
-        expect(res.body.data.getNavigations).toMatchSnapshot()
+        expect(res.body).toMatchSnapshot()
       })
   })
 
@@ -214,7 +258,7 @@ describe('NavigationResolver', () => {
       .expect(200)
       .expect(res => {
         expect(navigationServiceMock.deleteNavigationById).toHaveBeenCalledWith(mockId)
-        expect(res.body.data.deleteNavigation).toMatchSnapshot()
+        expect(res.body).toMatchSnapshot()
       })
   })
 })
