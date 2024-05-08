@@ -425,7 +425,8 @@ export class SubscriptionService {
         paymentID: payment.id,
         invoice,
         saveCustomer: false,
-        customerID: customer.customerID
+        customerID: customer.customerID,
+        backgroundTask: true
       })
 
       await this.prismaService.payment.update({
