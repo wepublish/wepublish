@@ -129,19 +129,31 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
     customerID,
     invoice,
     paymentID,
-    successURL
+    successURL,
+    backgroundTask
   }: CreatePaymentIntentProps): Promise<Intent> {
     const amount = invoice.items.reduce(
       (accumulator, {amount, quantity}) => accumulator + amount * quantity,
       0
     )
-    const transaction = await this.transactionClient.chargePreAuthorizedTransaction(
-      parseInt(customerID as string),
-      {
-        amount,
-        referenceId: paymentID
+    let transaction: Transaction
+    try {
+      transaction = await this.transactionClient.chargePreAuthorizedTransaction(
+        parseInt(customerID as string),
+        {
+          amount,
+          referenceId: paymentID
+        }
+      )
+    } catch (e) {
+      if (backgroundTask) {
+        throw e
+      } else {
+        transaction.status = 'declined'
+        transaction.id = -1
+        transaction.referenceId = e
       }
-    )
+    }
     const state = this.mapPayrexxEventToPaymentStatus(transaction.status)
     if (state === null) {
       throw new Error('Invalid payrexx transaction status')
