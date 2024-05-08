@@ -299,7 +299,7 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
       status: 'declined',
       lang: '',
       psp: '',
-      amount: -1,
+      amount: 0,
       subscription: null
     }
   }
