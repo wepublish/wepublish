@@ -148,11 +148,8 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
     } catch (e) {
       if (backgroundTask) {
         throw e
-      } else {
-        transaction.status = 'declined'
-        transaction.id = -1
-        transaction.referenceId = e
       }
+      transaction = this.createErroredPreAuthorizedTransaction()
     }
     const state = this.mapPayrexxEventToPaymentStatus(transaction.status)
     if (state === null) {
@@ -290,6 +287,20 @@ export class PayrexxPaymentProvider extends BasePaymentProvider {
         return PaymentState.declined
       default:
         return null
+    }
+  }
+
+  private createErroredPreAuthorizedTransaction(): Transaction {
+    return {
+      id: -1,
+      uuid: '',
+      referenceId: '',
+      time: '',
+      status: 'declined',
+      lang: '',
+      psp: '',
+      amount: -1,
+      subscription: null
     }
   }
 }
