@@ -23,18 +23,29 @@ export const CommentListReadMore = styled(Button)`
 `
 
 export const ButtonsWrapper = styled('div')`
-  width: ${({theme}) => theme.spacing(86)};
+  width: auto;
   margin-top: ${({theme}) => theme.spacing(5)};
   display: flex;
   justify-content: center;
+  flex-direction: column;
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    flex-direction: row;
+    width: ${({theme}) => theme.spacing(86)};
+  }
 `
 
 export const LoginButton = styled(Button)`
-  margin-left: ${({theme}) => theme.spacing(6)};
+  margin-top: ${({theme}) => theme.spacing(3)};
   border-width: 1px;
 
   &:hover {
     border-width: 1px;
+  }
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    margin-top: 0;
+    margin-left: ${({theme}) => theme.spacing(6)};
   }
 `
 
@@ -45,17 +56,25 @@ export const CommentEditorOuter = styled('div')`
 export const LoginWrapper = styled('div')`
   position: relative;
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr;
   padding-top: ${({theme}) => theme.spacing(4)};
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    grid-template-columns: repeat(2, 1fr);
+  }
 `
 
 export const Register = styled('div')`
   display: flex;
   justify-content: center;
   align-items: center;
-  grid-column: 2/3;
   font-size: 1.8rem;
-  margin: 0 ${({theme}) => theme.spacing(4)};
+  margin: ${({theme}) => theme.spacing(4)} 0;
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    grid-column: 2/3;
+    margin: 0 ${({theme}) => theme.spacing(4)};
+  }
 `
 
 export const CloseLogin = styled(IconButton)`
@@ -71,7 +90,11 @@ export const ModalContent = styled('div')`
   padding: ${({theme}) => `${theme.spacing(4)} ${theme.spacing(3)}`};
   bottom: 0;
   background-color: ${({theme}) => theme.palette.common.white};
-  width: auto;
+  width: 100%;
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    width: auto;
+  }
 
   animation: slideUpAndFadeIn 0.5s ease forwards;
 
