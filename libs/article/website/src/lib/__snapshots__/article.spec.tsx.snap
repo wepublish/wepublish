@@ -3,7 +3,7 @@
 exports[`Article should render Default 1`] = `
 <DocumentFragment>
   <article
-    class="es3d6yl1 css-86pz0q-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="es3d6yl1 css-1gaqry-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -1855,7 +1855,7 @@ https://unsplash.it/200/100 200w"
         id="verified"
       >
         <header
-          class="css-p4cys7-CommentHeader ekbi54x8"
+          class="css-gv292l-CommentHeader ekbi54x8"
         >
           <img
             alt="DSC07717"
@@ -1911,7 +1911,7 @@ https://unsplash.it/200/200 200w"
           </div>
         </header>
         <div
-          class="css-td83z9-CommentContent ekbi54x2"
+          class="css-d5z2gz-CommentContent ekbi54x2"
         >
           <h1
             class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -2361,7 +2361,7 @@ https://unsplash.it/200/200 200w"
 exports[`Article should render WithChildren 1`] = `
 <DocumentFragment>
   <article
-    class="es3d6yl1 css-86pz0q-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="es3d6yl1 css-1gaqry-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -4213,7 +4213,7 @@ https://unsplash.it/200/100 200w"
         id="verified"
       >
         <header
-          class="css-p4cys7-CommentHeader ekbi54x8"
+          class="css-gv292l-CommentHeader ekbi54x8"
         >
           <img
             alt="DSC07717"
@@ -4269,7 +4269,7 @@ https://unsplash.it/200/200 200w"
           </div>
         </header>
         <div
-          class="css-td83z9-CommentContent ekbi54x2"
+          class="css-d5z2gz-CommentContent ekbi54x2"
         >
           <h1
             class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -4722,7 +4722,7 @@ https://unsplash.it/200/200 200w"
 exports[`Article should render WithClassName 1`] = `
 <DocumentFragment>
   <article
-    class="extra-classname es3d6yl1 css-86pz0q-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="extra-classname es3d6yl1 css-1gaqry-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -6574,7 +6574,7 @@ https://unsplash.it/200/100 200w"
         id="verified"
       >
         <header
-          class="css-p4cys7-CommentHeader ekbi54x8"
+          class="css-gv292l-CommentHeader ekbi54x8"
         >
           <img
             alt="DSC07717"
@@ -6630,7 +6630,7 @@ https://unsplash.it/200/200 200w"
           </div>
         </header>
         <div
-          class="css-td83z9-CommentContent ekbi54x2"
+          class="css-d5z2gz-CommentContent ekbi54x2"
         >
           <h1
             class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -7080,7 +7080,7 @@ https://unsplash.it/200/200 200w"
 exports[`Article should render WithEmotion 1`] = `
 <DocumentFragment>
   <article
-    class="es3d6yl1 css-86pz0q-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="es3d6yl1 css-1gaqry-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -8932,7 +8932,7 @@ https://unsplash.it/200/100 200w"
         id="verified"
       >
         <header
-          class="css-p4cys7-CommentHeader ekbi54x8"
+          class="css-gv292l-CommentHeader ekbi54x8"
         >
           <img
             alt="DSC07717"
@@ -8988,7 +8988,7 @@ https://unsplash.it/200/200 200w"
           </div>
         </header>
         <div
-          class="css-td83z9-CommentContent ekbi54x2"
+          class="css-d5z2gz-CommentContent ekbi54x2"
         >
           <h1
             class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -9438,7 +9438,7 @@ https://unsplash.it/200/200 200w"
 exports[`Article should render WithError 1`] = `
 <DocumentFragment>
   <article
-    class="es3d6yl1 css-86pz0q-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="es3d6yl1 css-1gaqry-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   />
 </DocumentFragment>
 `;
@@ -9446,7 +9446,7 @@ exports[`Article should render WithError 1`] = `
 exports[`Article should render WithLoading 1`] = `
 <DocumentFragment>
   <article
-    class="es3d6yl1 css-86pz0q-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="es3d6yl1 css-1gaqry-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   />
 </DocumentFragment>
 `;
@@ -9454,7 +9454,7 @@ exports[`Article should render WithLoading 1`] = `
 exports[`Article should render WithoutAuthors 1`] = `
 <DocumentFragment>
   <article
-    class="es3d6yl1 css-86pz0q-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="es3d6yl1 css-1gaqry-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -11290,7 +11290,7 @@ https://unsplash.it/200/100 200w"
         id="verified"
       >
         <header
-          class="css-p4cys7-CommentHeader ekbi54x8"
+          class="css-gv292l-CommentHeader ekbi54x8"
         >
           <img
             alt="DSC07717"
@@ -11346,7 +11346,7 @@ https://unsplash.it/200/200 200w"
           </div>
         </header>
         <div
-          class="css-td83z9-CommentContent ekbi54x2"
+          class="css-d5z2gz-CommentContent ekbi54x2"
         >
           <h1
             class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -11558,7 +11558,7 @@ https://unsplash.it/200/100 200w"
 exports[`Article should render WithoutImageMetadata 1`] = `
 <DocumentFragment>
   <article
-    class="es3d6yl1 css-86pz0q-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="es3d6yl1 css-1gaqry-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -13410,7 +13410,7 @@ https://unsplash.it/200/100 200w"
         id="verified"
       >
         <header
-          class="css-p4cys7-CommentHeader ekbi54x8"
+          class="css-gv292l-CommentHeader ekbi54x8"
         >
           <img
             alt="DSC07717"
@@ -13466,7 +13466,7 @@ https://unsplash.it/200/200 200w"
           </div>
         </header>
         <div
-          class="css-td83z9-CommentContent ekbi54x2"
+          class="css-d5z2gz-CommentContent ekbi54x2"
         >
           <h1
             class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -13916,7 +13916,7 @@ https://unsplash.it/200/200 200w"
 exports[`Article should render WithoutLead 1`] = `
 <DocumentFragment>
   <article
-    class="es3d6yl1 css-86pz0q-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="es3d6yl1 css-1gaqry-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -15764,7 +15764,7 @@ https://unsplash.it/200/100 200w"
         id="verified"
       >
         <header
-          class="css-p4cys7-CommentHeader ekbi54x8"
+          class="css-gv292l-CommentHeader ekbi54x8"
         >
           <img
             alt="DSC07717"
@@ -15820,7 +15820,7 @@ https://unsplash.it/200/200 200w"
           </div>
         </header>
         <div
-          class="css-td83z9-CommentContent ekbi54x2"
+          class="css-d5z2gz-CommentContent ekbi54x2"
         >
           <h1
             class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -16270,7 +16270,7 @@ https://unsplash.it/200/200 200w"
 exports[`Article should render WithoutSocialMedia 1`] = `
 <DocumentFragment>
   <article
-    class="es3d6yl1 css-86pz0q-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="es3d6yl1 css-1gaqry-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -18122,7 +18122,7 @@ https://unsplash.it/200/100 200w"
         id="verified"
       >
         <header
-          class="css-p4cys7-CommentHeader ekbi54x8"
+          class="css-gv292l-CommentHeader ekbi54x8"
         >
           <img
             alt="DSC07717"
@@ -18178,7 +18178,7 @@ https://unsplash.it/200/200 200w"
           </div>
         </header>
         <div
-          class="css-td83z9-CommentContent ekbi54x2"
+          class="css-d5z2gz-CommentContent ekbi54x2"
         >
           <h1
             class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"

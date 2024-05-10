@@ -60,7 +60,7 @@ export default function ArticleBySlug() {
   }
 
   return (
-    <WebsiteBuilderProvider ArticleList={RelatedArticleSlider} Article={isFDT ? FrageDesTagesArticle : undefined}>
+    <WebsiteBuilderProvider ArticleList={RelatedArticleSlider}>
       <Container>
         <ArticleContainer slug={slug as string} />
 

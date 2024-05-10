@@ -10,7 +10,7 @@ exports[`Comment List should render Default 1`] = `
       id="verified"
     >
       <header
-        class="css-p4cys7-CommentHeader ekbi54x8"
+        class="css-gv292l-CommentHeader ekbi54x8"
       >
         <img
           alt="DSC07717"
@@ -66,7 +66,7 @@ https://unsplash.it/200/200 200w"
         </div>
       </header>
       <div
-        class="css-td83z9-CommentContent ekbi54x2"
+        class="css-d5z2gz-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -107,7 +107,7 @@ https://unsplash.it/200/200 200w"
       id="123"
     >
       <header
-        class="css-p4cys7-CommentHeader ekbi54x8"
+        class="css-gv292l-CommentHeader ekbi54x8"
       >
         <img
           alt="DSC07717"
@@ -163,7 +163,7 @@ https://unsplash.it/200/200 200w"
         </div>
       </header>
       <div
-        class="css-td83z9-CommentContent ekbi54x2"
+        class="css-d5z2gz-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -213,7 +213,7 @@ exports[`Comment List should render WithAnonymousComments 1`] = `
       id="anonymous"
     >
       <header
-        class="css-p4cys7-CommentHeader ekbi54x8"
+        class="css-gv292l-CommentHeader ekbi54x8"
       >
         <img
           alt="DSC07717"
@@ -245,7 +245,7 @@ https://unsplash.it/200/200 200w"
         </div>
       </header>
       <div
-        class="css-td83z9-CommentContent ekbi54x2"
+        class="css-d5z2gz-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -286,7 +286,7 @@ https://unsplash.it/200/200 200w"
       id="123"
     >
       <header
-        class="css-p4cys7-CommentHeader ekbi54x8"
+        class="css-gv292l-CommentHeader ekbi54x8"
       >
         <img
           alt="DSC07717"
@@ -318,7 +318,7 @@ https://unsplash.it/200/200 200w"
         </div>
       </header>
       <div
-        class="css-td83z9-CommentContent ekbi54x2"
+        class="css-d5z2gz-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -368,7 +368,7 @@ exports[`Comment List should render WithClassName 1`] = `
       id="verified"
     >
       <header
-        class="css-p4cys7-CommentHeader ekbi54x8"
+        class="css-gv292l-CommentHeader ekbi54x8"
       >
         <img
           alt="DSC07717"
@@ -424,7 +424,7 @@ https://unsplash.it/200/200 200w"
         </div>
       </header>
       <div
-        class="css-td83z9-CommentContent ekbi54x2"
+        class="css-d5z2gz-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -465,7 +465,7 @@ https://unsplash.it/200/200 200w"
       id="123"
     >
       <header
-        class="css-p4cys7-CommentHeader ekbi54x8"
+        class="css-gv292l-CommentHeader ekbi54x8"
       >
         <img
           alt="DSC07717"
@@ -521,7 +521,7 @@ https://unsplash.it/200/200 200w"
         </div>
       </header>
       <div
-        class="css-td83z9-CommentContent ekbi54x2"
+        class="css-d5z2gz-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -571,7 +571,7 @@ exports[`Comment List should render WithEmotion 1`] = `
       id="verified"
     >
       <header
-        class="css-p4cys7-CommentHeader ekbi54x8"
+        class="css-gv292l-CommentHeader ekbi54x8"
       >
         <img
           alt="DSC07717"
@@ -627,7 +627,7 @@ https://unsplash.it/200/200 200w"
         </div>
       </header>
       <div
-        class="css-td83z9-CommentContent ekbi54x2"
+        class="css-d5z2gz-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -668,7 +668,7 @@ https://unsplash.it/200/200 200w"
       id="123"
     >
       <header
-        class="css-p4cys7-CommentHeader ekbi54x8"
+        class="css-gv292l-CommentHeader ekbi54x8"
       >
         <img
           alt="DSC07717"
@@ -724,7 +724,7 @@ https://unsplash.it/200/200 200w"
         </div>
       </header>
       <div
-        class="css-td83z9-CommentContent ekbi54x2"
+        class="css-d5z2gz-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -774,7 +774,7 @@ exports[`Comment List should render WithError 1`] = `
       id="verified"
     >
       <header
-        class="css-p4cys7-CommentHeader ekbi54x8"
+        class="css-gv292l-CommentHeader ekbi54x8"
       >
         <img
           alt="DSC07717"
@@ -830,7 +830,7 @@ https://unsplash.it/200/200 200w"
         </div>
       </header>
       <div
-        class="css-td83z9-CommentContent ekbi54x2"
+        class="css-d5z2gz-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -871,7 +871,7 @@ https://unsplash.it/200/200 200w"
       id="123"
     >
       <header
-        class="css-p4cys7-CommentHeader ekbi54x8"
+        class="css-gv292l-CommentHeader ekbi54x8"
       >
         <img
           alt="DSC07717"
@@ -927,7 +927,7 @@ https://unsplash.it/200/200 200w"
         </div>
       </header>
       <div
-        class="css-td83z9-CommentContent ekbi54x2"
+        class="css-d5z2gz-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -977,7 +977,7 @@ exports[`Comment List should render WithLoading 1`] = `
       id="verified"
     >
       <header
-        class="css-p4cys7-CommentHeader ekbi54x8"
+        class="css-gv292l-CommentHeader ekbi54x8"
       >
         <img
           alt="DSC07717"
@@ -1033,7 +1033,7 @@ https://unsplash.it/200/200 200w"
         </div>
       </header>
       <div
-        class="css-td83z9-CommentContent ekbi54x2"
+        class="css-d5z2gz-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -1074,7 +1074,7 @@ https://unsplash.it/200/200 200w"
       id="123"
     >
       <header
-        class="css-p4cys7-CommentHeader ekbi54x8"
+        class="css-gv292l-CommentHeader ekbi54x8"
       >
         <img
           alt="DSC07717"
@@ -1130,7 +1130,7 @@ https://unsplash.it/200/200 200w"
         </div>
       </header>
       <div
-        class="css-td83z9-CommentContent ekbi54x2"
+        class="css-d5z2gz-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"

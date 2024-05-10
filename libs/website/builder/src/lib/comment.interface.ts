@@ -69,6 +69,7 @@ export type BuilderCommentListProps = Pick<
 
 export type BuilderCommentListItemProps = Comment & {
   className?: string
+  isTopComment?: boolean
   ratingSystem: FullCommentRatingSystem
 } & Pick<
     BuilderCommentListProps,
@@ -100,6 +101,7 @@ export type BuilderCommentProps = PropsWithChildren<
   > & {
     className?: string
     showContent?: boolean
+    isTopComment?: boolean
   }
 >
 

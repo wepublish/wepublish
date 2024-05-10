@@ -31,12 +31,21 @@ export const CommentListItemChildren = styled('aside')`
   }
 `
 
-export const CommentListItemActions = styled('div')`
+export const CommentListItemActions = styled('div')<{isTopComment?: boolean}>`
   display: flex;
   flex-flow: row wrap;
   gap: ${({theme}) => theme.spacing(1)};
   align-items: start;
   justify-content: space-between;
+
+  ${({isTopComment, theme}) =>
+    isTopComment &&
+    css`
+      background-color: ${theme.palette.secondary.light};
+      border-bottom-right-radius: ${theme.spacing(2.5)};
+      border-bottom-left-radius: ${theme.spacing(2.5)};
+      padding: ${theme.spacing(1.5)};
+    `}
 `
 
 const useButtonStyles = () => {
@@ -56,6 +65,7 @@ const useButtonStyles = () => {
 }
 
 export const CommentListItem = ({
+  isTopComment,
   anonymousCanComment,
   anonymousCanRate,
   userCanEdit,
@@ -98,7 +108,7 @@ export const CommentListItem = ({
   const buttonStyles = useButtonStyles()
 
   return (
-    <Comment {...comment} showContent={!showEdit} className={className}>
+    <Comment {...comment} showContent={!showEdit} className={className} isTopComment={isTopComment}>
       <CommentListItemStateWarnings state={state} />
 
       {showEdit && (
@@ -119,7 +129,7 @@ export const CommentListItem = ({
         />
       )}
 
-      <CommentListItemActions>
+      <CommentListItemActions isTopComment={isTopComment}>
         <CommentListItemActions>
           {canReply && (
             <Button
