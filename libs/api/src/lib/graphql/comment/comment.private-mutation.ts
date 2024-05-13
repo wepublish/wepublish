@@ -63,8 +63,6 @@ export const updateComment = async (
   const {roles} = authenticate()
   authorise(CanUpdateComments, roles)
 
-  const canSkipApproval = hasPermission(CanCreateApprovedComment, roles)
-
   if (ratingOverrides?.length) {
     const answerIds = ratingOverrides.map(override => override.answerId)
     const answers = await commentRatingAnswerClient.findMany({
@@ -91,7 +89,6 @@ export const updateComment = async (
     data: {
       userID,
       guestUsername,
-      state: canSkipApproval ? CommentState.approved : CommentState.pendingApproval,
       guestUserImageID,
       source,
       revisions: revision
