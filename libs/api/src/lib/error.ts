@@ -94,7 +94,7 @@ export class MonthlyAmountNotEnough extends ApolloError {
 export class SubscriptionToDeactivateDoesNotExist extends ApolloError {
   constructor(id: string) {
     super(
-      `Subscription with id ${id} to deactivate not found or already deactivated!`,
+      `Subscription to deactivate with id ${id} not found or the subscription is already deactivated!`,
       ErrorCode.NotFound
     )
   }
