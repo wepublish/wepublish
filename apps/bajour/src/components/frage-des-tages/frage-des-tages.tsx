@@ -1,9 +1,16 @@
-import {css, styled} from '@mui/material'
+import {Alert, css, Snackbar, styled} from '@mui/material'
 import {Button} from '@wepublish/ui'
-import {ApiV1, BuilderCommentProps, BuilderTeaserListBlockProps, Comment} from '@wepublish/website'
+import {
+  ApiV1,
+  BuilderCommentProps,
+  BuilderTeaserListBlockProps,
+  Comment,
+  useAsyncAction
+} from '@wepublish/website'
 import Image from 'next/image'
 import Link from 'next/link'
-import {useMemo} from 'react'
+import {useRouter} from 'next/router'
+import {useCallback, useEffect, useMemo, useState} from 'react'
 import {MdForum} from 'react-icons/md'
 
 import {PollBlock} from '../website-builder-overwrites/blocks/poll-block/poll-block'
@@ -134,7 +141,14 @@ const ReadMoreButton = styled(Button)`
 `
 
 export const FrageDesTages = ({teasers, className}: BuilderTeaserListBlockProps) => {
+  const [snackbarOpen, setSnackbarOpen] = useState(false)
+  const [vote] = ApiV1.usePollVoteMutation()
+  const router = useRouter()
   const article = (teasers[0] as ApiV1.ArticleTeaser).article
+
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<Error>()
+  const callAction = useAsyncAction(setLoading, setError)
 
   const {data: commentsData} = ApiV1.useCommentListQuery({
     variables: {
@@ -156,6 +170,33 @@ export const FrageDesTages = ({teasers, className}: BuilderTeaserListBlockProps)
   const numberOfComments = useMemo(() => {
     return countComments(commentsData?.comments || [])
   }, [commentsData?.comments])
+
+  const voteOnPoll = useCallback(
+    async ({answerId}: ApiV1.PollVoteMutationVariables) =>
+      callAction(async () => {
+        await vote({
+          variables: {
+            answerId
+          }
+        })
+      })(),
+    [callAction, vote]
+  )
+
+  const autoVote = useCallback(async () => {
+    const pollIdFromParams = router.query.pollId as string
+    const answerId = router.query.answerId as string
+    if (pollIdFromParams && answerId) {
+      setTimeout(async () => {
+        voteOnPoll({answerId})
+        setSnackbarOpen(true)
+      }, 500)
+    }
+  }, [router.query, voteOnPoll])
+
+  useEffect(() => {
+    autoVote()
+  }, [autoVote])
 
   return (
     <FrageDesTagesContainer>
@@ -191,6 +232,19 @@ export const FrageDesTages = ({teasers, className}: BuilderTeaserListBlockProps)
             variant="contained">{`Mitreden ${numberOfComments}`}</ReadMoreButton>
         </ReadMoreLink>
       </FrageDesTagesWrapper>
+      <Snackbar
+        open={snackbarOpen}
+        anchorOrigin={{vertical: 'top', horizontal: 'right'}}
+        autoHideDuration={6000}
+        onClose={() => setSnackbarOpen(false)}>
+        <Alert
+          onClose={() => setSnackbarOpen(false)}
+          severity="success"
+          variant="filled"
+          sx={{width: '100%'}}>
+          Erfolgreich abgestimmt
+        </Alert>
+      </Snackbar>
     </FrageDesTagesContainer>
   )
 }
