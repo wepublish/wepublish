@@ -1105,7 +1105,7 @@ export function IPFromRequest(req: IncomingMessage | null): string | undefined {
     return (
       (headers['cf-connecting-ip'] as string | undefined) ||
       (headers['x-forwarded-for'] as string | undefined) ||
-      req.connection.remoteAddress ||
+      req.socket?.remoteAddress ||
       undefined
     )
   }
