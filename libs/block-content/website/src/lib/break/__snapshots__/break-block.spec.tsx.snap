@@ -10,7 +10,7 @@ exports[`Break Block should render Default 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-t8ow6n-ImageWrapper-BreakBlock e1shv2yg0"
+        class="css-2l3q0o-ImageWrapper-BreakBlock e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -150,7 +150,7 @@ exports[`Break Block should render ImageRight 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-t8ow6n-ImageWrapper-BreakBlock e1shv2yg0"
+        class="css-2l3q0o-ImageWrapper-BreakBlock e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -290,7 +290,7 @@ exports[`Break Block should render WithButton 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-t8ow6n-ImageWrapper-BreakBlock e1shv2yg0"
+        class="css-2l3q0o-ImageWrapper-BreakBlock e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -441,7 +441,7 @@ exports[`Break Block should render WithClassName 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-t8ow6n-ImageWrapper-BreakBlock e1shv2yg0"
+        class="css-2l3q0o-ImageWrapper-BreakBlock e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
@@ -581,7 +581,7 @@ exports[`Break Block should render WithEmotion 1`] = `
     >
       <img
         alt="DSC07717"
-        class="css-t8ow6n-ImageWrapper-BreakBlock e1shv2yg0"
+        class="css-2l3q0o-ImageWrapper-BreakBlock e1shv2yg0"
         loading="lazy"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,

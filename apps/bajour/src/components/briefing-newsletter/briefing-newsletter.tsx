@@ -162,7 +162,9 @@ export const BriefingNewsletter = () => {
       <BecomeMember>
         <BajourLogo />
 
-        <BecomeMemberButton LinkComponent={Link} href="/mitmachen">
+        <BecomeMemberButton
+          LinkComponent={Link}
+          href="/mitmachen?memberPlanBySlug=bajour-member&additionalMemberPlans=upsell">
           Jetzt Member Werden
         </BecomeMemberButton>
       </BecomeMember>

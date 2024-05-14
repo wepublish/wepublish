@@ -1,4 +1,4 @@
-import {FullArticleFragment, useArticleListQuery} from '@wepublish/website/api'
+import {ArticleWithoutBlocksFragment, useArticleListQuery} from '@wepublish/website/api'
 import {
   BuilderArticleListProps,
   BuilderContainerProps,
@@ -9,7 +9,7 @@ import {useMemo} from 'react'
 
 export type ArticleListContainerProps = BuilderContainerProps &
   Pick<BuilderArticleListProps, 'variables' | 'onVariablesChange'> & {
-    filter?: (articles: FullArticleFragment[]) => FullArticleFragment[]
+    filter?: (articles: ArticleWithoutBlocksFragment[]) => ArticleWithoutBlocksFragment[]
   }
 
 export function ArticleListContainer({
