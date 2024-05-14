@@ -16,7 +16,6 @@ import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 
 import {BriefingNewsletter} from '../../src/components/briefing-newsletter/briefing-newsletter'
-import {FrageDesTagesArticle} from '../../src/components/frage-des-tages/frage-des-tages-article'
 import {Container} from '../../src/components/layout/container'
 import {TeaserSlider} from '../../src/components/website-builder-overwrites/blocks/teaser-slider/teaser-slider'
 
@@ -49,16 +48,6 @@ export default function ArticleBySlug() {
 
   const isFDT = data?.article?.tags.includes('frage-des-tages')
 
-  if (isFDT) {
-    return (
-      <WebsiteBuilderProvider ArticleList={RelatedArticleSlider}>
-        <Container>
-          <FrageDesTagesArticle article={data?.article as ApiV1.Article} className="" />
-        </Container>
-      </WebsiteBuilderProvider>
-    )
-  }
-
   return (
     <WebsiteBuilderProvider ArticleList={RelatedArticleSlider}>
       <Container>
@@ -79,13 +68,15 @@ export default function ArticleBySlug() {
               />
             </ArticleWrapper>
 
-            <ArticleWrapper>
-              <H5 component={'h2'} css={uppercase}>
-                Kommentare
-              </H5>
+            {!isFDT && (
+              <ArticleWrapper>
+                <H5 component={'h2'} css={uppercase}>
+                  Kommentare
+                </H5>
 
-              <CommentListContainer id={data.article.id} type={ApiV1.CommentItemType.Article} />
-            </ArticleWrapper>
+                <CommentListContainer id={data.article.id} type={ApiV1.CommentItemType.Article} />
+              </ArticleWrapper>
+            )}
           </>
         )}
       </Container>

@@ -58,7 +58,7 @@ export const PollWrapper = styled('div')`
 
   ${({theme}) =>
     css`
-      ${theme.breakpoints.up('sm')} {
+      ${theme.breakpoints.up('md')} {
         grid-column: 1/5;
       }
     `}
@@ -69,7 +69,7 @@ export const CommentsWrapper = styled('div')`
 
   ${({theme}) =>
     css`
-      ${theme.breakpoints.up('sm')} {
+      ${theme.breakpoints.up('md')} {
         grid-column: 6/13;
       }
     `}
@@ -149,7 +149,7 @@ export const FrageDesTages = ({teasers, className}: BuilderTeaserListBlockProps)
 
   const {data: authorData} = ApiV1.useAuthorQuery({
     variables: {
-      id: 'cltwrck6v001fc9eizptqd2l3'
+      id: article?.authors[0].id || ''
     }
   })
 

@@ -3,9 +3,10 @@ import {LoginFormContainer, useUser} from '@wepublish/authentication/website'
 import {Button, IconButton, Link} from '@wepublish/ui'
 import {Comment} from '@wepublish/website/api'
 import {BuilderCommentListProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {MdClose, MdForum} from 'react-icons/md'
-import {getStateForEditor} from './comment-list.state'
 import {useMemo, useState} from 'react'
+import {MdClose, MdForum} from 'react-icons/md'
+import {Node} from 'slate'
+import {getStateForEditor} from './comment-list.state'
 
 export const CommentListWrapper = styled('section')`
   display: grid;
@@ -51,6 +52,11 @@ export const LoginButton = styled(Button)`
 
 export const CommentEditorOuter = styled('div')`
   padding: ${({theme}) => theme.spacing(4)};
+  width: 100%;
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    width: ${({theme}) => theme.spacing(80)};
+  }
 `
 
 export const LoginWrapper = styled('div')`
@@ -145,10 +151,15 @@ export const CommentList = ({
   const canReply = anonymousCanComment || hasUser
 
   const [modalOpen, setModalOpen] = useState(false)
+  const [commentId, setCommentId] = useState('')
   const [showLogin, setShowLogin] = useState(false)
 
-  const handleModalOpen = () => {
+  const handleModalOpen = (id?: string) => {
     setModalOpen(true)
+
+    if (id) {
+      setCommentId(id)
+    }
 
     if (canReply) {
       dispatch({
@@ -173,8 +184,8 @@ export const CommentList = ({
   const h4Styles = useMemo(() => headingStyles(), [])
   const aStyles = useMemo(() => linkStyles(), [])
 
-  const handleAddComment = (props: any) => {
-    onAddComment(props)
+  const handleAddComment = ({title, text}: {title?: string; text?: Node[]}) => {
+    onAddComment({title, text})
     handleModalClose()
   }
 
@@ -214,11 +225,15 @@ export const CommentList = ({
           userCanEdit={userCanEdit}
           maxCommentLength={maxCommentLength}
           children={(comment.children as Comment[]) ?? []}
+          handleModalOpen={handleModalOpen}
         />
       ))}
 
       <CommentListActions>
-        <CommentListReadMore startIcon={<MdForum />} variant="contained" onClick={handleModalOpen}>
+        <CommentListReadMore
+          startIcon={<MdForum />}
+          variant="contained"
+          onClick={() => handleModalOpen()}>
           Jetzt Mitreden
         </CommentListReadMore>
       </CommentListActions>

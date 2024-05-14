@@ -1,12 +1,25 @@
 import {css, styled} from '@mui/material'
 import {ApiV1, PollBlockProvider} from '@wepublish/website'
 import Image from 'next/image'
+import {useRouter} from 'next/router'
 
 import {CommentListContainer} from '../website-builder-overwrites/blocks/comment-list-container/comment-list-container'
 import {PollBlock} from '../website-builder-overwrites/blocks/poll-block/poll-block'
 import {AuthorBox} from './author-box'
 import frageDesTagesLogo from './frage-des-tages.svg'
 import {InfoBox} from './info-box'
+
+export const FrageDesTagesContainer = styled('div')`
+  padding: ${({theme}) => `${theme.spacing(1.5)}`};
+
+  ${({theme}) =>
+    css`
+      ${theme.breakpoints.up('md')} {
+        padding: 0;
+        grid-column: 1 / 13;
+      }
+    `}
+`
 
 export const FrageDesTagesWrapper = styled('div')`
   display: grid;
@@ -31,7 +44,7 @@ export const PollWrapper = styled('div')`
 
   ${({theme}) =>
     css`
-      ${theme.breakpoints.up('sm')} {
+      ${theme.breakpoints.up('md')} {
         grid-column: 1/5;
       }
     `}
@@ -42,7 +55,7 @@ export const CommentsWrapper = styled('div')`
 
   ${({theme}) =>
     css`
-      ${theme.breakpoints.up('sm')} {
+      ${theme.breakpoints.up('md')} {
         grid-column: 6/13;
       }
     `}
@@ -99,47 +112,53 @@ const PollBlockStyled = styled(PollBlock)`
   top: ${({theme}) => theme.spacing(14)};
 `
 
-export const FrageDesTagesArticle = ({
-  article,
-  className
-}: {
-  article: ApiV1.Article
-  className: string
-}) => {
-  const pollToPass = (article?.blocks.find(b => b.__typename === 'PollBlock') as ApiV1.PollBlock)
-    .poll
+export const FrageDesTagesArticle = ({poll}: {poll?: ApiV1.PollBlock['poll']}) => {
+  const {
+    query: {slug}
+  } = useRouter()
+
+  const {data: articleData} = ApiV1.useArticleQuery({
+    fetchPolicy: 'cache-only',
+    variables: {
+      slug: slug as string
+    }
+  })
 
   const {data: authorData} = ApiV1.useAuthorQuery({
     variables: {
-      id: 'cltwrck6v001fc9eizptqd2l3'
+      id: articleData?.article?.authors[0].id || ''
     }
   })
 
   return (
     <PollBlockProvider>
-      <FrageDesTagesWrapper className={className}>
-        <FDTLogo src={frageDesTagesLogo} width={110} height={70} alt="frage-des-tages-logo" />
-        <PollWrapper>
-          <PollBlockStyled poll={pollToPass} />
-        </PollWrapper>
-        <CommentsWrapper>
-          <AuthorAndContext>
-            <div>{authorData?.author ? <StyledAuthorBox author={authorData?.author} /> : null}</div>
-            <div>
-              <StyledInfoBox richText={pollToPass?.infoText || []} />
-            </div>
-          </AuthorAndContext>
-          <TopComments>Top antworten</TopComments>
-          <CommentListContainer
-            id={article.id}
-            variables={{
-              sort: ApiV1.CommentSort.Rating,
-              order: ApiV1.SortOrder.Descending
-            }}
-            type={ApiV1.CommentItemType.Article}
-          />
-        </CommentsWrapper>
-      </FrageDesTagesWrapper>
+      <FrageDesTagesContainer>
+        <FrageDesTagesWrapper>
+          <FDTLogo src={frageDesTagesLogo} width={110} height={70} alt="frage-des-tages-logo" />
+          <PollWrapper>
+            <PollBlockStyled poll={poll} />
+          </PollWrapper>
+          <CommentsWrapper>
+            <AuthorAndContext>
+              <div>
+                {authorData?.author ? <StyledAuthorBox author={authorData?.author} /> : null}
+              </div>
+              <div>
+                <StyledInfoBox richText={poll?.infoText || []} />
+              </div>
+            </AuthorAndContext>
+            <TopComments>Top antworten</TopComments>
+            <CommentListContainer
+              id={articleData?.article?.id || ''}
+              variables={{
+                sort: ApiV1.CommentSort.Rating,
+                order: ApiV1.SortOrder.Descending
+              }}
+              type={ApiV1.CommentItemType.Article}
+            />
+          </CommentsWrapper>
+        </FrageDesTagesWrapper>
+      </FrageDesTagesContainer>
     </PollBlockProvider>
   )
 }
