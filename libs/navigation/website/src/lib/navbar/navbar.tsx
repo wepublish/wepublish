@@ -217,7 +217,8 @@ export function Navbar({
   logo,
   loginUrl = '/login',
   profileUrl = '/profile',
-  subscriptionsUrl = '/profile/subscription'
+  subscriptionsUrl = '/profile/subscription',
+  showSubscriptionsUrl = true
 }: BuilderNavbarProps) {
   const {hasUser} = useUser()
   const [isMenuOpen, setMenuOpen] = useState(false)
@@ -289,13 +290,13 @@ export function Navbar({
           <NavbarSpacer />
 
           <NavbarActions isMenuOpen={isMenuOpen}>
-            {hasUser && (
+            {hasUser && showSubscriptionsUrl ? (
               <Link href={subscriptionsUrl} aria-label={hasUser ? 'Profil' : 'Login'}>
                 <IconButton css={{fontSize: '2em', color: 'black'}}>
                   <MdOutlinePayments />
                 </IconButton>
               </Link>
-            )}
+            ) : null}
 
             <Link href={hasUser ? profileUrl : loginUrl} aria-label={hasUser ? 'Profil' : 'Login'}>
               <IconButton css={{fontSize: '2em', color: 'black'}}>
