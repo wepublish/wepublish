@@ -671,6 +671,7 @@ export type MutationCreateSessionWithOAuth2CodeArgs = {
 
 export type MutationCreateSubscriptionArgs = {
   autoRenew: Scalars['Boolean'];
+  deactivateSubscriptionId?: InputMaybe<Scalars['ID']>;
   failureURL?: InputMaybe<Scalars['String']>;
   memberPlanID?: InputMaybe<Scalars['ID']>;
   memberPlanSlug?: InputMaybe<Scalars['Slug']>;

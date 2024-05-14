@@ -1,44 +1,83 @@
-import {capitalize} from '@mui/material'
+import {capitalize, css} from '@mui/material'
 import {ApiV1, ArticleListContainer, useWebsiteBuilder} from '@wepublish/website'
 import {GetStaticPaths, GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
+import {useMemo} from 'react'
+import {z} from 'zod'
 
 import {Container} from '../../../src/components/layout/container'
 
+const take = 25
+
+const pageSchema = z.object({
+  page: z.coerce.number().gte(1).optional(),
+  tag: z.string()
+})
+
+const uppercase = css`
+  text-transform: uppercase;
+`
+
 export default function ArticleListByTag() {
   const {
-    elements: {H3, Alert}
+    elements: {H5, Alert, Pagination}
   } = useWebsiteBuilder()
 
-  const {
-    query: {tag}
-  } = useRouter()
+  const {query, replace} = useRouter()
+  const {page, tag} = pageSchema.parse(query)
 
-  const {data, loading} = ApiV1.useArticleListQuery({
-    fetchPolicy: 'cache-only',
-    variables: {
+  const variables = useMemo(
+    () => ({
+      take,
+      skip: ((page ?? 1) - 1) * take,
       filter: {
-        tags: [tag as string]
+        tags: [tag]
       }
-    }
+    }),
+    [page, tag]
+  )
+
+  const {data} = ApiV1.useArticleListQuery({
+    fetchPolicy: 'cache-only',
+    variables
   })
+
+  const pageCount = useMemo(() => {
+    if (data?.articles.totalCount && data?.articles.totalCount > take) {
+      return Math.ceil(data.articles.totalCount / take)
+    }
+
+    return 1
+  }, [data?.articles.totalCount])
 
   return (
     <Container>
-      <H3 component="h1">{capitalize(tag as string)}</H3>
+      <H5 component={'h1'} css={uppercase}>
+        {capitalize(tag)}
+      </H5>
 
-      {!loading && !data?.articles.nodes.length && (
+      {data && !data.articles.nodes.length && (
         <Alert severity="info">Keine Artikel vorhanden</Alert>
       )}
 
-      <ArticleListContainer
-        variables={{
-          filter: {
-            tags: [tag as string]
+      <ArticleListContainer variables={variables} />
+
+      {pageCount > 1 && (
+        <Pagination
+          page={page ?? 1}
+          count={pageCount}
+          onChange={(_, value) =>
+            replace(
+              {
+                query: {...query, page: value}
+              },
+              undefined,
+              {shallow: true, scroll: true}
+            )
           }
-        }}
-      />
+        />
+      )}
     </Container>
   )
 }
@@ -59,6 +98,8 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
     client.query({
       query: ApiV1.ArticleListDocument,
       variables: {
+        take,
+        skip: 0,
         filter: {
           tags: [tag]
         }
