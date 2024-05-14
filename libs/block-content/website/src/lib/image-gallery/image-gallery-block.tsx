@@ -1,4 +1,4 @@
-import {ImageList, ImageListItem, ImageListItemBar, styled} from '@mui/material'
+import {ImageList, ImageListItem, styled} from '@mui/material'
 import {Block, ImageGalleryBlock as ImageGalleryBlockType} from '@wepublish/website/api'
 import {BuilderImageGalleryBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
@@ -24,7 +24,7 @@ export const ImageGalleryBlockImageList = styled(ImageList)`
 
 export const ImageGalleryBlock = ({images, className}: BuilderImageGalleryBlockProps) => {
   const {
-    elements: {Image}
+    elements: {Image, Paragraph}
   } = useWebsiteBuilder()
   const nonEmptyImages = images.filter(image => image.image)
 
@@ -35,7 +35,7 @@ export const ImageGalleryBlock = ({images, className}: BuilderImageGalleryBlockP
           <ImageListItem key={index}>
             <Image image={image.image!} />
 
-            <ImageListItemBar title={image.caption ?? image.image?.title} position="below" />
+            <Paragraph gutterBottom={false}>{image.caption ?? image.image?.title}</Paragraph>
           </ImageListItem>
         ))}
       </ImageGalleryBlockImageList>

@@ -23,19 +23,11 @@ https://unsplash.it/300/300?0 300w,
 https://unsplash.it/200/200?0 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -51,19 +43,11 @@ https://unsplash.it/300/300?1 300w,
 https://unsplash.it/200/200?1 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -79,19 +63,11 @@ https://unsplash.it/300/300?2 300w,
 https://unsplash.it/200/200?2 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -107,19 +83,11 @@ https://unsplash.it/300/300?3 300w,
 https://unsplash.it/200/200?3 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -135,19 +103,11 @@ https://unsplash.it/300/300?4 300w,
 https://unsplash.it/200/200?4 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -163,19 +123,11 @@ https://unsplash.it/300/300?5 300w,
 https://unsplash.it/200/200?5 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -191,19 +143,11 @@ https://unsplash.it/300/300?6 300w,
 https://unsplash.it/200/200?6 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -219,19 +163,11 @@ https://unsplash.it/300/300?7 300w,
 https://unsplash.it/200/200?7 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -247,19 +183,11 @@ https://unsplash.it/300/300?8 300w,
 https://unsplash.it/200/200?8 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -275,19 +203,11 @@ https://unsplash.it/300/300?9 300w,
 https://unsplash.it/200/200?9 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -303,19 +223,11 @@ https://unsplash.it/300/300?10 300w,
 https://unsplash.it/200/200?10 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
     </ul>
   </figure>
@@ -345,19 +257,11 @@ https://unsplash.it/300/300?0 300w,
 https://unsplash.it/200/200?0 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -373,19 +277,11 @@ https://unsplash.it/300/300?1 300w,
 https://unsplash.it/200/200?1 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -401,19 +297,11 @@ https://unsplash.it/300/300?2 300w,
 https://unsplash.it/200/200?2 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -429,19 +317,11 @@ https://unsplash.it/300/300?3 300w,
 https://unsplash.it/200/200?3 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -457,19 +337,11 @@ https://unsplash.it/300/300?4 300w,
 https://unsplash.it/200/200?4 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -485,19 +357,11 @@ https://unsplash.it/300/300?5 300w,
 https://unsplash.it/200/200?5 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -513,19 +377,11 @@ https://unsplash.it/300/300?6 300w,
 https://unsplash.it/200/200?6 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -541,19 +397,11 @@ https://unsplash.it/300/300?7 300w,
 https://unsplash.it/200/200?7 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -569,19 +417,11 @@ https://unsplash.it/300/300?8 300w,
 https://unsplash.it/200/200?8 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -597,19 +437,11 @@ https://unsplash.it/300/300?9 300w,
 https://unsplash.it/200/200?9 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -625,19 +457,11 @@ https://unsplash.it/300/300?10 300w,
 https://unsplash.it/200/200?10 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
     </ul>
   </figure>
@@ -667,19 +491,11 @@ https://unsplash.it/300/300?0 300w,
 https://unsplash.it/200/200?0 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -695,19 +511,11 @@ https://unsplash.it/300/300?1 300w,
 https://unsplash.it/200/200?1 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -723,19 +531,11 @@ https://unsplash.it/300/300?2 300w,
 https://unsplash.it/200/200?2 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -751,19 +551,11 @@ https://unsplash.it/300/300?3 300w,
 https://unsplash.it/200/200?3 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -779,19 +571,11 @@ https://unsplash.it/300/300?4 300w,
 https://unsplash.it/200/200?4 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -807,19 +591,11 @@ https://unsplash.it/300/300?5 300w,
 https://unsplash.it/200/200?5 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -835,19 +611,11 @@ https://unsplash.it/300/300?6 300w,
 https://unsplash.it/200/200?6 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -863,19 +631,11 @@ https://unsplash.it/300/300?7 300w,
 https://unsplash.it/200/200?7 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -891,19 +651,11 @@ https://unsplash.it/300/300?8 300w,
 https://unsplash.it/200/200?8 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -919,19 +671,11 @@ https://unsplash.it/300/300?9 300w,
 https://unsplash.it/200/200?9 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -947,19 +691,11 @@ https://unsplash.it/300/300?10 300w,
 https://unsplash.it/200/200?10 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
     </ul>
   </figure>
@@ -989,17 +725,9 @@ https://unsplash.it/300/300?0 300w,
 https://unsplash.it/200/200?0 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
-        >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            />
-          </div>
-        </div>
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+        />
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -1015,19 +743,11 @@ https://unsplash.it/300/300?1 300w,
 https://unsplash.it/200/200?1 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -1043,19 +763,11 @@ https://unsplash.it/300/300?2 300w,
 https://unsplash.it/200/200?2 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -1071,19 +783,11 @@ https://unsplash.it/300/300?3 300w,
 https://unsplash.it/200/200?3 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -1099,19 +803,11 @@ https://unsplash.it/300/300?4 300w,
 https://unsplash.it/200/200?4 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -1127,19 +823,11 @@ https://unsplash.it/300/300?5 300w,
 https://unsplash.it/200/200?5 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -1155,17 +843,9 @@ https://unsplash.it/300/300?6 300w,
 https://unsplash.it/200/200?6 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
-        >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            />
-          </div>
-        </div>
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+        />
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -1181,19 +861,11 @@ https://unsplash.it/300/300?7 300w,
 https://unsplash.it/200/200?7 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -1209,19 +881,11 @@ https://unsplash.it/300/300?8 300w,
 https://unsplash.it/200/200?8 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -1237,19 +901,11 @@ https://unsplash.it/300/300?9 300w,
 https://unsplash.it/200/200?9 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
       <li
         class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
@@ -1265,19 +921,11 @@ https://unsplash.it/300/300?10 300w,
 https://unsplash.it/200/200?10 200w"
           title="An image title"
         />
-        <div
-          class="MuiImageListItemBar-root MuiImageListItemBar-positionBelow css-1tkfipn-MuiImageListItemBar-root"
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
-          <div
-            class="MuiImageListItemBar-titleWrap MuiImageListItemBar-titleWrapBelow css-186gwnw-MuiImageListItemBar-titleWrap"
-          >
-            <div
-              class="MuiImageListItemBar-title css-dasnyc-MuiImageListItemBar-title"
-            >
-              Image caption
-            </div>
-          </div>
-        </div>
+          Image caption that is extremely long so it is bigger than the countainer that would display it
+        </p>
       </li>
     </ul>
   </figure>

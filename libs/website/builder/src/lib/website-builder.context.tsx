@@ -91,6 +91,7 @@ import {
   BuilderAlertProps,
   BuilderButtonProps,
   BuilderIconButtonProps,
+  BuilderPaginationProps,
   BuilderRatingProps,
   BuilderTextFieldProps
 } from './ui.interface'
@@ -143,6 +144,7 @@ export type WebsiteBuilderProps = {
     TextField: ComponentType<BuilderTextFieldProps>
     Button: ComponentType<BuilderButtonProps>
     IconButton: ComponentType<BuilderIconButtonProps>
+    Pagination: ComponentType<BuilderPaginationProps>
     H1: ComponentType<BuilderHeadingProps>
     H2: ComponentType<BuilderHeadingProps>
     H3: ComponentType<BuilderHeadingProps>
@@ -252,6 +254,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     TextField: NoComponent,
     Button: NoComponent,
     IconButton: NoComponent,
+    Pagination: NoComponent,
     H1: NoComponent,
     H2: NoComponent,
     H3: NoComponent,
