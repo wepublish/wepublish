@@ -11,6 +11,7 @@ import {ReactComponent as PayPal} from './paypal.svg'
 import {ReactComponent as PostFinance} from './post-finance.svg'
 import {ReactComponent as Twint} from './twint.svg'
 import {ReactComponent as Visa} from './visa.svg'
+import {ReactComponent as InvoiceIcon} from './invoice.svg'
 
 const PaymentRadioWrapper = styled('div')<{active?: boolean}>`
   display: grid;
@@ -96,6 +97,12 @@ export const BajourPaymentMethodPicker = forwardRef<
                   <>
                     <Mastercard css={icon} />
                     <Visa css={icon} />
+                  </>
+                )}
+
+                {method.paymentProviderID === 'bexio' && (
+                  <>
+                    <InvoiceIcon css={icon} />
                   </>
                 )}
               </PaymentRadio>
