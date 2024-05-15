@@ -1026,8 +1026,9 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       resolve: (
         root,
         {answerId},
-        {optionalAuthenticateUser, prisma: {pollAnswer, pollVote, setting}}
-      ) => voteOnPoll(answerId, undefined, optionalAuthenticateUser, pollAnswer, pollVote, setting)
+        {optionalAuthenticateUser, prisma: {pollAnswer, pollVote, setting}, fingerprint}
+      ) =>
+        voteOnPoll(answerId, fingerprint, optionalAuthenticateUser, pollAnswer, pollVote, setting)
     }
   }
 })
