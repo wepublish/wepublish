@@ -98,7 +98,6 @@ export const GraphQLPollVote = new GraphQLObjectType<PollVote, Context>({
     answerId: {type: new GraphQLNonNull(GraphQLString)},
     pollId: {type: new GraphQLNonNull(GraphQLID)},
     createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
-    fingerprint: {type: GraphQLString},
     disabled: {type: new GraphQLNonNull(GraphQLBoolean)}
   }
 })
