@@ -9,13 +9,13 @@ import {useMemo} from 'react'
 export const selectTeaserTitle = (teaser: TeaserType) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
-      const titleBlock = teaser.page?.blocks.find(isTitleBlock)
+      const titleBlock = teaser.page?.blocks?.find(isTitleBlock)
       return teaser.title || titleBlock?.title || teaser.page?.title
     }
 
     case 'PeerArticleTeaser':
     case 'ArticleTeaser': {
-      const titleBlock = teaser.article?.blocks.find(isTitleBlock)
+      const titleBlock = teaser.article?.blocks?.find(isTitleBlock)
       return teaser.title || titleBlock?.title || teaser.article?.title
     }
 
@@ -42,13 +42,13 @@ export const selectTeaserPreTitle = (teaser: TeaserType) => {
 export const selectTeaserLead = (teaser: TeaserType) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
-      const titleBlock = teaser.page?.blocks.find(isTitleBlock)
+      const titleBlock = teaser.page?.blocks?.find(isTitleBlock)
       return teaser.lead || titleBlock?.lead || teaser.page?.description
     }
 
     case 'PeerArticleTeaser':
     case 'ArticleTeaser': {
-      const titleBlock = teaser.article?.blocks.find(isTitleBlock)
+      const titleBlock = teaser.article?.blocks?.find(isTitleBlock)
       return teaser.lead || titleBlock?.lead || teaser.article?.lead
     }
 
@@ -83,13 +83,13 @@ export const selectTeaserUrl = (teaser: TeaserType) => {
 export const selectTeaserImage = (teaser: TeaserType) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
-      const imageBlock = teaser.page?.blocks.find(isImageBlock)
+      const imageBlock = teaser.page?.blocks?.find(isImageBlock)
       return teaser.image ?? imageBlock?.image ?? teaser?.page?.image
     }
 
     case 'PeerArticleTeaser':
     case 'ArticleTeaser': {
-      const imageBlock = teaser.article?.blocks.find(isImageBlock)
+      const imageBlock = teaser.article?.blocks?.find(isImageBlock)
       return teaser.image ?? imageBlock?.image ?? teaser?.article?.image
     }
 
