@@ -95,6 +95,21 @@ const modelFieldDefinitions = [{
                 name: "navigations",
                 type: "NavigationLink",
                 relationName: "ArticleToNavigationLink"
+            }, {
+                name: "tags",
+                type: "TaggedArticles",
+                relationName: "ArticleToTaggedArticles"
+            }]
+    }, {
+        name: "TaggedArticles",
+        fields: [{
+                name: "article",
+                type: "Article",
+                relationName: "ArticleToTaggedArticles"
+            }, {
+                name: "tag",
+                type: "Tag",
+                relationName: "TagToTaggedArticles"
             }]
     }, {
         name: "AuthorsLinks",
@@ -414,6 +429,21 @@ const modelFieldDefinitions = [{
                 name: "navigations",
                 type: "NavigationLink",
                 relationName: "NavigationLinkToPage"
+            }, {
+                name: "tags",
+                type: "TaggedPages",
+                relationName: "PageToTaggedPages"
+            }]
+    }, {
+        name: "TaggedPages",
+        fields: [{
+                name: "page",
+                type: "Page",
+                relationName: "PageToTaggedPages"
+            }, {
+                name: "tag",
+                type: "Tag",
+                relationName: "TagToTaggedPages"
             }]
     }, {
         name: "PaymentMethod",
@@ -602,6 +632,14 @@ const modelFieldDefinitions = [{
                 name: "authors",
                 type: "TaggedAuthors",
                 relationName: "TagToTaggedAuthors"
+            }, {
+                name: "articles",
+                type: "TaggedArticles",
+                relationName: "TagToTaggedArticles"
+            }, {
+                name: "pages",
+                type: "TaggedPages",
+                relationName: "TagToTaggedPages"
             }]
     }, {
         name: "Poll",
@@ -1154,6 +1192,79 @@ function defineArticleFactoryInternal({ defaultData: defaultDataResolver, traits
  */
 export function defineArticleFactory(options) {
     return defineArticleFactoryInternal(options !== null && options !== void 0 ? options : {});
+}
+function isTaggedArticlesarticleFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Article";
+}
+function isTaggedArticlestagFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Tag";
+}
+function autoGenerateTaggedArticlesScalarsOrEnums({ seq }) {
+    return {};
+}
+function defineTaggedArticlesFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("TaggedArticles", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateTaggedArticlesScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                article: isTaggedArticlesarticleFactory(defaultData.article) ? {
+                    create: yield defaultData.article.build()
+                } : defaultData.article,
+                tag: isTaggedArticlestagFactory(defaultData.tag) ? {
+                    create: yield defaultData.tag.build()
+                } : defaultData.tag
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
+            articleId: inputData.articleId,
+            tagId: inputData.tagId
+        });
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().taggedArticles.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
+        return {
+            _factoryFor: "TaggedArticles",
+            build,
+            buildList,
+            buildCreateInput: build,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
+        };
+    };
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
+    };
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
+}
+/**
+ * Define factory for {@link TaggedArticles} model.
+ *
+ * @param options
+ * @returns factory {@link TaggedArticlesFactoryInterface}
+ */
+export function defineTaggedArticlesFactory(options) {
+    return defineTaggedArticlesFactoryInternal(options);
 }
 function isAuthorsLinksAuthorFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Author";
@@ -2660,6 +2771,79 @@ function definePageFactoryInternal({ defaultData: defaultDataResolver, traits: t
  */
 export function definePageFactory(options) {
     return definePageFactoryInternal(options !== null && options !== void 0 ? options : {});
+}
+function isTaggedPagespageFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Page";
+}
+function isTaggedPagestagFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Tag";
+}
+function autoGenerateTaggedPagesScalarsOrEnums({ seq }) {
+    return {};
+}
+function defineTaggedPagesFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("TaggedPages", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateTaggedPagesScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                page: isTaggedPagespageFactory(defaultData.page) ? {
+                    create: yield defaultData.page.build()
+                } : defaultData.page,
+                tag: isTaggedPagestagFactory(defaultData.tag) ? {
+                    create: yield defaultData.tag.build()
+                } : defaultData.tag
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
+            pageId: inputData.pageId,
+            tagId: inputData.tagId
+        });
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().taggedPages.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
+        return {
+            _factoryFor: "TaggedPages",
+            build,
+            buildList,
+            buildCreateInput: build,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
+        };
+    };
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
+    };
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
+}
+/**
+ * Define factory for {@link TaggedPages} model.
+ *
+ * @param options
+ * @returns factory {@link TaggedPagesFactoryInterface}
+ */
+export function defineTaggedPagesFactory(options) {
+    return defineTaggedPagesFactoryInternal(options);
 }
 function autoGeneratePaymentMethodScalarsOrEnums({ seq }) {
     return {

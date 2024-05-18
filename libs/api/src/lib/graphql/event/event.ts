@@ -47,7 +47,7 @@ export const GraphQLEvent = new GraphQLObjectType<Event, Context>({
     externalSourceName: {type: GraphQLString},
 
     tags: {
-      type: new GraphQLList(new GraphQLNonNull(GraphQLTag)),
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLTag))),
       resolve: createProxyingResolver(async ({id}, _, {prisma: {tag}}) => {
         const tags = await tag.findMany({
           where: {

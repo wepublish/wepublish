@@ -29,7 +29,7 @@ beforeAll(async () => {
   const pageInput: PageInput = {
     title: 'Testing Page',
     slug: 'testing-page',
-    tags: ['tags'],
+    tags: [],
     properties: [],
     blocks: []
   }

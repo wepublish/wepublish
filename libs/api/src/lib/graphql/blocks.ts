@@ -552,8 +552,6 @@ export const GraphQLTeaserListBlock = new GraphQLObjectType<TeaserListBlock, Con
               prisma.article
             )
 
-            articles.nodes.forEach(article => loaders.articles.prime(article.id, article))
-
             return articles.nodes.map(
               article =>
                 ({
@@ -579,8 +577,6 @@ export const GraphQLTeaserListBlock = new GraphQLObjectType<TeaserListBlock, Con
               take,
               prisma.page
             )
-
-            pages.nodes.forEach(page => loaders.pages.prime(page.id, page))
 
             return pages.nodes.map(
               page =>

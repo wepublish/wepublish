@@ -19,11 +19,13 @@ import {
   PermissionControl,
   TableWrapper
 } from '@wepublish/ui/editor'
+import {equals} from 'ramda'
 import {memo, useCallback, useEffect, useReducer, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete, MdSave} from 'react-icons/md'
 import {
   Button,
+  Checkbox,
   FlexboxGrid,
   Form,
   IconButton as RIconButton,
@@ -72,35 +74,45 @@ enum TagListActionType {
 }
 
 type TagListActions =
-  | {type: TagListActionType.Set; payload: Record<string, string>}
+  | {type: TagListActionType.Set; payload: Record<string, Pick<Tag, 'tag' | 'main'>>}
   | {type: TagListActionType.Create; payload: {id: string}}
-  | {type: TagListActionType.Update; payload: {id: string; value: string}}
+  | {type: TagListActionType.Update; payload: {id: string; tag?: string | null; main?: boolean}}
   | {type: TagListActionType.Delete; payload: {id: string}}
 
 const mapTagsToFormValue = (tags: Tag[] | null | undefined) =>
   tags?.reduce((obj, node) => {
-    obj[node.id] = node.tag ?? ''
+    obj[node.id] = {
+      main: node.main,
+      tag: node.tag ?? ''
+    }
 
     return obj
-  }, {} as Record<string, string>) ?? {}
+  }, {} as Record<string, Pick<Tag, 'tag' | 'main'>>) ?? {}
 
 const tagFormValueReducer = (
-  state: Record<string, string>,
+  state: Record<string, Pick<Tag, 'tag' | 'main'>>,
   action: TagListActions
-): Record<string, string> => {
+): Record<string, Pick<Tag, 'tag' | 'main'>> => {
   switch (action.type) {
     case TagListActionType.Set:
       return action.payload
 
     case TagListActionType.Create:
       return {
-        [action.payload.id]: '',
+        [action.payload.id]: {
+          main: false,
+          tag: ''
+        },
         ...state
       }
 
     case TagListActionType.Update: {
       const newState = {...state}
-      newState[action.payload.id] = action.payload.value
+
+      newState[action.payload.id] = {
+        tag: action.payload.tag ?? newState[action.payload.id].tag,
+        main: action.payload.main ?? newState[action.payload.id].main
+      }
 
       return newState
     }
@@ -188,10 +200,7 @@ const TagList = memo<TagListProps>(({type}) => {
 
       dispatchApiValue({
         type: TagListActionType.Update,
-        payload: {
-          id: updatedTag.updateTag.id,
-          value: updatedTag.updateTag.tag ?? ''
-        }
+        payload: updatedTag.updateTag
       })
     }
   })
@@ -223,7 +232,7 @@ const TagList = memo<TagListProps>(({type}) => {
       const apiTag = apiValue[id]
       const formTag = formValue[id]
 
-      return apiTag !== formTag
+      return !equals(apiTag, formTag)
     },
     [apiValue, formValue]
   )
@@ -243,7 +252,7 @@ const TagList = memo<TagListProps>(({type}) => {
         }
       }
     })
-  }, [type, limit, page])
+  }, [type, limit, page, fetch])
 
   return (
     <>
@@ -280,19 +289,37 @@ const TagList = memo<TagListProps>(({type}) => {
                 <FlexWrapper>
                   <Form.Control
                     name={tagId}
-                    value={inputValue}
+                    value={inputValue.tag}
                     placeholder={t('tags.overview.placeholder')}
-                    onChange={(value: string) => {
+                    onChange={(tag: string) => {
                       dispatchFormValue({
                         type: TagListActionType.Update,
                         payload: {
                           id: tagId,
-                          value
+                          tag
                         }
                       })
                     }}
                   />
                 </FlexWrapper>
+
+                <Flex>
+                  <Checkbox
+                    name={tagId}
+                    checked={inputValue.main}
+                    value={inputValue.main ? 0 : 1}
+                    onChange={main => {
+                      dispatchFormValue({
+                        type: TagListActionType.Update,
+                        payload: {
+                          id: tagId,
+                          main: !!main
+                        }
+                      })
+                    }}>
+                    Mark as main
+                  </Checkbox>
+                </Flex>
 
                 <Flex>
                   <PermissionControl qualifyingPermissions={['CAN_UPDATE_TAG']}>
@@ -303,12 +330,13 @@ const TagList = memo<TagListProps>(({type}) => {
                         size="sm"
                         icon={<MdSave />}
                         onClick={() => {
-                          updateTag({
-                            variables: {
-                              id: tagId,
-                              tag: formValue[tagId] ? formValue[tagId] : null
-                            }
-                          })
+                          formValue[tagId] &&
+                            updateTag({
+                              variables: {
+                                id: tagId,
+                                ...formValue[tagId]
+                              }
+                            })
                         }}
                         disabled={!shouldUpdateTag(tagId)}
                       />

@@ -1,4 +1,3 @@
-import {capitalize, Chip, styled} from '@mui/material'
 import {getArticlePathsBasedOnPage} from '@wepublish/utils/website'
 import {
   ApiV1,
@@ -12,15 +11,8 @@ import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 
-export const ArticleTagList = styled('div')`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(75px, max-content));
-  gap: ${({theme}) => theme.spacing(1)};
-`
-
 export default function ArticleBySlug() {
   const {
-    push,
     query: {slug}
   } = useRouter()
   const {
@@ -36,25 +28,15 @@ export default function ArticleBySlug() {
 
   return (
     <>
-      <ArticleContainer slug={slug as string}>
-        <ArticleTagList>
-          {data?.article?.tags.map((tag, index) => (
-            <Chip
-              key={index}
-              label={capitalize(tag)}
-              variant="outlined"
-              onClick={() => push(`/a/tag/${tag}`)}
-            />
-          ))}
-        </ArticleTagList>
-      </ArticleContainer>
+      <ArticleContainer slug={slug as string} />
 
       {data?.article && (
         <>
           <ArticleWrapper>
             <H3 component={'h2'}>Das könnte dich auch interessieren</H3>
+
             <ArticleListContainer
-              variables={{filter: {tags: data.article.tags}, take: 4}}
+              variables={{filter: {tags: data.article.tags.map(tag => tag.id)}, take: 4}}
               filter={articles => articles.filter(article => article.id !== data.article?.id)}
             />
           </ArticleWrapper>

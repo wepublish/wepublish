@@ -164,12 +164,11 @@ function PageEditor() {
 
   useEffect(() => {
     if (pageData?.page) {
-      const {latest, pending} = pageData.page
+      const {latest, pending, tags} = pageData.page
       const {
         slug,
         title,
         description,
-        tags,
         url,
         image,
         blocks,
@@ -191,7 +190,7 @@ function PageEditor() {
         slug: slug ?? '',
         title: title ?? '',
         description: description ?? '',
-        tags,
+        tags: tags.map(({id}) => id),
         url,
         properties: properties.map(property => ({
           key: property.key,
@@ -230,7 +229,7 @@ function PageEditor() {
       setStateColor(StateColor.draft)
       setTagTitle(t('pageEditor.overview.unpublished'))
     }
-  }, [pageData, hasChanged])
+  }, [pageData, hasChanged, t])
 
   useEffect(() => {
     const error = createError?.message ?? updateError?.message ?? publishError?.message

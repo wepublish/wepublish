@@ -61,7 +61,7 @@ export default function ArticleBySlug() {
               </H5>
 
               <ArticleListContainer
-                variables={{filter: {tags: data.article.tags}, take: 4}}
+                variables={{filter: {tags: data.article.tags.map(tag => tag.id)}, take: 4}}
                 filter={articles => articles.filter(article => article.id !== data.article?.id)}
               />
             </ArticleWrapper>

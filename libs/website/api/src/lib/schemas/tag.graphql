@@ -2,4 +2,5 @@ fragment FullTag on Tag {
   id
   tag
   type
+  main
 }

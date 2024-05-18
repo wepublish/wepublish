@@ -713,6 +713,8 @@
       "commentRating": "Rating System",
       "comments": "Commentaires",
       "commentTags": "Tags",
+      "articleTags": "Tags",
+      "pageTags": "Tags",
       "consents": "Consentement",
       "dashboard": "Dashboard",
       "events": "Events",

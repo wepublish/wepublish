@@ -1,7 +1,7 @@
 import {TagType, TeaserType} from '@wepublish/editor/api'
-import {useEffect, useRef, useState} from 'react'
+import {useEffect, useMemo, useRef, useState} from 'react'
 import {useTranslation} from 'react-i18next'
-import {Button, Drawer, Form, Schema, SelectPicker, TagPicker} from 'rsuite'
+import {Button, Drawer, Form, Schema, SelectPicker} from 'rsuite'
 
 import {SelectTags} from '../atoms/tag/selectTags'
 import {TeaserListBlockValue} from '../blocks/types'
@@ -33,7 +33,6 @@ export function TeaserListConfigPanel({value, onClose, onSelect}: TeaserListConf
   const [take, setTake] = useState(value.take)
   const [skip, setSkip] = useState(value.skip)
   const [teaserType, setTeaserType] = useState(value.teaserType)
-  const prevTeaserType = useRef(value.teaserType)
   const {t} = useTranslation()
   const teaserTypeText = useTeaserTypeText()
 
@@ -46,24 +45,21 @@ export function TeaserListConfigPanel({value, onClose, onSelect}: TeaserListConf
       .isRequired()
   })
 
+  const tagType = useMemo(() => {
+    switch (teaserType) {
+      case TeaserType.Article:
+        return TagType.Article
+      case TeaserType.Page:
+        return TagType.Page
+      case TeaserType.Event:
+        return TagType.Event
+    }
+
+    throw new Error('Somehow unsupported teaser was selected')
+  }, [teaserType])
+
   useEffect(() => {
-    // Some teasers use the new tag system already, while the rest doesn't.
-    // So we need to reset when switching inbetween.
-
-    // new to old
-    if (
-      [TeaserType.Event].includes(prevTeaserType.current) &&
-      prevTeaserType.current !== teaserType
-    ) {
-      setTagFilter([])
-    }
-
-    // old to new
-    if ([TeaserType.Event].includes(teaserType) && teaserType !== prevTeaserType.current) {
-      setTagFilter([])
-    }
-
-    prevTeaserType.current = teaserType
+    setTagFilter([])
   }, [teaserType])
 
   return (
@@ -81,7 +77,7 @@ export function TeaserListConfigPanel({value, onClose, onSelect}: TeaserListConf
         })
       }>
       <Drawer.Header>
-        <Drawer.Title>{t('blocks.event.title')}</Drawer.Title>
+        <Drawer.Title>{t('blocks.teaserList.edit')}</Drawer.Title>
 
         <Drawer.Actions>
           <Button appearance={'ghost'} onClick={() => onClose()} type="button">
@@ -114,6 +110,7 @@ export function TeaserListConfigPanel({value, onClose, onSelect}: TeaserListConf
 
         <Form.Group controlId="skip">
           <Form.ControlLabel>{t('blocks.teaserList.skipLabel')}</Form.ControlLabel>
+
           <Form.Control
             name="skip"
             type="number"
@@ -125,6 +122,7 @@ export function TeaserListConfigPanel({value, onClose, onSelect}: TeaserListConf
 
         <Form.Group controlId="take">
           <Form.ControlLabel>{t('blocks.teaserList.takeLabel')}</Form.ControlLabel>
+
           <Form.Control
             name="take"
             type="number"
@@ -137,26 +135,13 @@ export function TeaserListConfigPanel({value, onClose, onSelect}: TeaserListConf
         <Form.Group controlId="tags">
           <Form.ControlLabel>{t('blocks.teaserList.tagsLabel')}</Form.ControlLabel>
 
-          {teaserType !== TeaserType.Event && (
-            <TagPicker
-              name="tags"
-              value={tagFilter}
-              creatable
-              data={tagFilter.map(tag => ({label: tag, value: tag}))}
-              onChange={tagsValue => setTagFilter(tagsValue)}
-              css={inputStyles}
-            />
-          )}
-
-          {teaserType === TeaserType.Event && (
-            <SelectTags
-              name="tags"
-              tagType={TagType.Event}
-              setSelectedTags={setTagFilter}
-              selectedTags={tagFilter}
-              css={inputStyles}
-            />
-          )}
+          <SelectTags
+            name="tags"
+            tagType={tagType}
+            setSelectedTags={setTagFilter}
+            selectedTags={tagFilter}
+            css={inputStyles}
+          />
         </Form.Group>
       </DrawerBody>
     </Form>
