@@ -47,7 +47,6 @@
         "contentUrl": "Inhalt URL",
         "createdAt": "{{createdAt, ccc PP p}}",
         "dateExplanationPopOver": "Dies kann verwendet werden, um auf Artikel zu verweisen, die zu einem späteren Zeitpunkt veröffentlicht werden sollen. Dies ist z. B. hilfreich, wenn Beiträge in sozialen Medien für den nächsten Morgen im Voraus geplant werden.",
-        "default": "Default",
         "displayOptions": "Anzeigeoptionen",
         "dontChangeSlug": "Slug nach dem Publizieren nicht mehr ändern.",
         "draft": "Entwurf",
@@ -69,7 +68,6 @@
         "key": "Key",
         "lead": "Lead",
         "leadHelpBlock": "Verwende einen SEO-optimierten Lead",
-        "light": "Light",
         "loading": "Laden ...",
         "loadMore": "Mehr laden",
         "noDataToDisplay": "Keine Daten zum Anzeigen",
@@ -108,10 +106,8 @@
         "statePending": "Status: Geplant",
         "statePublished": "Status: Publiziert",
         "status": "{{stateJoin}}",
-        "style": "Style",
         "tags": "Tags",
         "teaserStyle": "Style: {{label}}",
-        "text": "Text",
         "title": "Titel",
         "titleHelpBlock": "Verwende einen SEO-optimierten Titel",
         "totalCharCount": "Anzahl Zeichen {{totalCharCount}}",
@@ -635,14 +631,6 @@
     },
     "linkPageBreakEditPanel": {
       "close": "Schliessen",
-      "layout": {
-        "center": "Zentriert",
-        "default": "Standardlayout",
-        "image-left": "Bild links",
-        "image-right": "Bild rechts",
-        "label": "Layouts",
-        "right": "Rechtsbündig"
-      },
       "link": {
         "buttonLabel": "CTA-Button-Label",
         "hideToggleLabel": "CTA-Button ausblenden",
@@ -651,19 +639,6 @@
         "targetLabelBlank": "Neuer Browser-Tab",
         "targetLabelSelf": "Dieser Browser-Tab",
         "urlLabel": "CTA-URL"
-      },
-      "style": {
-        "dark": "Dark Style",
-        "default": "Standardstyle",
-        "image": "Bildhintergrund",
-        "label": "Styles"
-      },
-      "template": {
-        "donation": "Spende",
-        "label": "Vorlagen",
-        "membership": "Mitgliedschaft",
-        "none": "Keine",
-        "subscription": "Abonnement"
       },
       "title": "Einstellungen"
     },
