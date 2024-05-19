@@ -13,6 +13,7 @@ import {
   ListViewContainer,
   ListViewHeader,
   PermissionControl,
+  Textarea,
   useAuthorisation,
   useUnsavedChangesDialog
 } from '@wepublish/ui/editor'
@@ -61,6 +62,12 @@ const WarningIcon = styled(MdWarning)`
 
 const DescriptionListItemWrapper = styled(DescriptionListItem)`
   min-width: 100px;
+`
+
+const WideInputGroup = styled(InputGroup)`
+  &&& {
+    width: 100%;
+  }
 `
 
 type SettingInfoProps = {
@@ -185,6 +192,16 @@ function SettingList() {
       value: false,
       name: SettingName.AllowCommentEditing,
       label: 'settingList.allowCommentEditing'
+    },
+    [SettingName.HeadScript]: {
+      value: '',
+      name: SettingName.HeadScript,
+      label: 'settingList.headScript'
+    },
+    [SettingName.BodyScript]: {
+      value: '',
+      name: SettingName.BodyScript,
+      label: 'settingList.bodyScript'
     }
   } as Record<SettingName, SettingWithLabel>)
 
@@ -736,6 +753,53 @@ function SettingList() {
                         />
                         <InputGroupAddon>{t('settingList.days')}</InputGroupAddon>
                       </InputGroup>
+                    </Form.Group>
+                  </Panel>
+                </Col>
+
+                {/* scripts */}
+                <Col xs={24}>
+                  <Panel bordered header={t('settingList.scripts')}>
+                    <Form.Group controlId={SettingName.HeadScript}>
+                      <Form.ControlLabel>
+                        {t(settings[SettingName.HeadScript].label)}{' '}
+                        <SettingInfo text={t('settingList.warnings.scripts')} />
+                      </Form.ControlLabel>
+                      <WideInputGroup>
+                        <Form.Control
+                          name={SettingName.HeadScript}
+                          accepter={Textarea}
+                          rows={3}
+                          value={settings[SettingName.HeadScript].value}
+                          onChange={(value: string) => {
+                            setSetting({
+                              ...settings[SettingName.HeadScript],
+                              value: value
+                            })
+                          }}
+                        />
+                      </WideInputGroup>
+                    </Form.Group>
+
+                    <Form.Group controlId={SettingName.BodyScript}>
+                      <Form.ControlLabel>
+                        {t(settings[SettingName.BodyScript].label)}{' '}
+                        <SettingInfo text={t('settingList.warnings.scripts')} />
+                      </Form.ControlLabel>
+                      <WideInputGroup>
+                        <Form.Control
+                          name={SettingName.BodyScript}
+                          accepter={Textarea}
+                          rows={3}
+                          value={settings[SettingName.BodyScript].value}
+                          onChange={(value: string) => {
+                            setSetting({
+                              ...settings[SettingName.BodyScript],
+                              value: value
+                            })
+                          }}
+                        />
+                      </WideInputGroup>
                     </Form.Group>
                   </Panel>
                 </Col>

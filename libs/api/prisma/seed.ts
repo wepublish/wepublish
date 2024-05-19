@@ -177,6 +177,28 @@ const seedSettings = (prisma: PrismaClient) => [
       value: false,
       settingRestriction: {allowedValues: {boolChoice: true}}
     }
+  }),
+  prisma.setting.upsert({
+    where: {
+      name: SettingName.HEAD_SCRIPT
+    },
+    update: {},
+    create: {
+      name: SettingName.HEAD_SCRIPT,
+      value: '',
+      settingRestriction: {inputLength: 10000}
+    }
+  }),
+  prisma.setting.upsert({
+    where: {
+      name: SettingName.BODY_SCRIPT
+    },
+    update: {},
+    create: {
+      name: SettingName.BODY_SCRIPT,
+      value: '',
+      settingRestriction: {inputLength: 10000}
+    }
   })
 ]
 
