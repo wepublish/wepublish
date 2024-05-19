@@ -1,6 +1,5 @@
-import {Snackbar, styled} from '@mui/material'
+import {styled} from '@mui/material'
 import {useWebsiteBuilder} from '@wepublish/website/builder'
-import {useState} from 'react'
 
 export const StarRatingWrapper = styled('div')`
   display: grid;
@@ -33,14 +32,9 @@ export const StarRating = ({
   name,
   onChange
 }: StarRatingProps) => {
-  const [snackbarOpen, setSnackbarOpen] = useState(false)
   const {
     elements: {Rating}
   } = useWebsiteBuilder()
-
-  const handleCloseSnackbar = () => {
-    setSnackbarOpen(false)
-  }
 
   return (
     <StarRatingWrapper className={className}>
@@ -49,17 +43,8 @@ export const StarRating = ({
       <Rating
         value={rating}
         readOnly={readOnly}
-        onChange={(_, newValue) =>
-          newValue && (hasRated ? setSnackbarOpen(true) : onChange?.(newValue))
-        }
+        onChange={(_, newValue) => newValue && onChange?.(newValue)}
         showFilledIcon={hasRated}
-      />
-      <Snackbar
-        open={snackbarOpen}
-        anchorOrigin={{vertical: 'bottom', horizontal: 'center'}}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
-        message="Du hast bereits abgestimmt."
       />
     </StarRatingWrapper>
   )

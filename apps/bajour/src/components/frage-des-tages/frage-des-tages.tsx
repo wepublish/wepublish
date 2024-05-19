@@ -1,4 +1,4 @@
-import {Alert, css, Snackbar, styled} from '@mui/material'
+import {css, styled} from '@mui/material'
 import {Button} from '@wepublish/ui'
 import {
   ApiV1,
@@ -141,7 +141,6 @@ const ReadMoreButton = styled(Button)`
 `
 
 export const FrageDesTages = ({teasers, className}: BuilderTeaserListBlockProps) => {
-  const [snackbarOpen, setSnackbarOpen] = useState(false)
   const [vote] = ApiV1.usePollVoteMutation()
   const router = useRouter()
   const article = (teasers[0] as ApiV1.ArticleTeaser).article
@@ -189,7 +188,6 @@ export const FrageDesTages = ({teasers, className}: BuilderTeaserListBlockProps)
     if (pollIdFromParams && answerId) {
       setTimeout(async () => {
         voteOnPoll({answerId})
-        setSnackbarOpen(true)
       }, 500)
     }
   }, [router.query, voteOnPoll])
@@ -232,19 +230,6 @@ export const FrageDesTages = ({teasers, className}: BuilderTeaserListBlockProps)
             variant="contained">{`Mitreden ${numberOfComments}`}</ReadMoreButton>
         </ReadMoreLink>
       </FrageDesTagesWrapper>
-      <Snackbar
-        open={snackbarOpen}
-        anchorOrigin={{vertical: 'top', horizontal: 'right'}}
-        autoHideDuration={6000}
-        onClose={() => setSnackbarOpen(false)}>
-        <Alert
-          onClose={() => setSnackbarOpen(false)}
-          severity="success"
-          variant="filled"
-          sx={{width: '100%'}}>
-          Erfolgreich abgestimmt
-        </Alert>
-      </Snackbar>
     </FrageDesTagesContainer>
   )
 }

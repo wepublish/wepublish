@@ -1,5 +1,5 @@
 import React, {useState, useRef} from 'react'
-import {IconButton, Popover, Snackbar} from '@mui/material'
+import {IconButton, Popover} from '@mui/material'
 import {MdShare, MdWhatsapp, MdFacebook, MdEmail, MdContentCopy} from 'react-icons/md'
 import {BsTwitterX, BsLinkedin} from 'react-icons/bs'
 import {styled} from '@mui/material'
@@ -37,7 +37,6 @@ const iconStyle = {
 }
 
 const ShareButton: React.FC<ShareProps> = ({url, title}) => {
-  const [snackbarOpen, setSnackbarOpen] = useState(false)
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
   const shareButtonRef = useRef<HTMLButtonElement>(null)
 
@@ -49,13 +48,8 @@ const ShareButton: React.FC<ShareProps> = ({url, title}) => {
     setAnchorEl(null)
   }
 
-  const handleCloseSnackbar = () => {
-    setSnackbarOpen(false)
-  }
-
   const handleCopyToClipboard = () => {
     navigator.clipboard.writeText(url)
-    setSnackbarOpen(true)
     handleClosePopover()
   }
 
@@ -151,13 +145,6 @@ const ShareButton: React.FC<ShareProps> = ({url, title}) => {
           )}
         </ShareOptions>
       </Popover>
-      <Snackbar
-        open={snackbarOpen}
-        anchorOrigin={{vertical: 'top', horizontal: 'right'}}
-        autoHideDuration={6000}
-        onClose={handleCloseSnackbar}
-        message="Link zum Kommentar erfolgreich kopiert"
-      />
     </div>
   )
 }
