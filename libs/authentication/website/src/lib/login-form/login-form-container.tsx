@@ -4,7 +4,7 @@ import {useUser} from '../session.context'
 
 export type LoginFormContainerProps = BuilderContainerProps
 
-export function LoginFormContainer({className, afterLoginCallback}: LoginFormContainerProps) {
+export function LoginFormContainer({className}: LoginFormContainerProps) {
   const {LoginForm} = useWebsiteBuilder()
   const {setToken} = useUser()
   const [loginWithEmail, withEmail] = useLoginWithEmailMutation()
@@ -25,20 +25,12 @@ export function LoginFormContainer({className, afterLoginCallback}: LoginFormCon
         loginWithCredentials({
           variables: {email, password}
         })
-
-        if (afterLoginCallback) {
-          afterLoginCallback()
-        }
       }}
       loginWithCredentials={withCredentials}
       onSubmitLoginWithEmail={email => {
         loginWithEmail({
           variables: {email}
         })
-
-        if (afterLoginCallback) {
-          afterLoginCallback()
-        }
       }}
       loginWithEmail={withEmail}
     />

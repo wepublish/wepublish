@@ -79,7 +79,6 @@ export const CommentListItem = ({
   openEditorsStateDispatch: dispatch,
   ratingSystem,
   className,
-  handleModalOpen,
   ...comment
 }: BuilderCommentListItemProps) => {
   const {id, text, title, state, children, userRatings, overriddenRatings, calculatedRatings} =
@@ -102,6 +101,7 @@ export const CommentListItem = ({
   const canReply = anonymousCanComment || hasLoggedInUser
   const canShare = anonymousCanComment || hasLoggedInUser
 
+  const showReply = getStateForEditor(openEditorsState)('add', id)
   const showEdit = getStateForEditor(openEditorsState)('edit', id)
 
   const socialMediaLink = generateSocialMediaLink(id)
@@ -138,10 +138,9 @@ export const CommentListItem = ({
               size="small"
               css={buttonStyles}
               onClick={() => {
-                handleModalOpen(id)
                 dispatch({
                   type: 'add',
-                  action: 'close',
+                  action: 'open',
                   commentId: id
                 })
               }}>
@@ -177,6 +176,23 @@ export const CommentListItem = ({
         />
       </CommentListItemActions>
 
+      {showReply && (
+        <CommentEditor
+          onCancel={() =>
+            dispatch({
+              type: 'add',
+              action: 'close',
+              commentId: id
+            })
+          }
+          onSubmit={data => onAddComment({...data, parentID: id})}
+          maxCommentLength={maxCommentLength}
+          challenge={challenge}
+          error={add.error}
+          loading={add.loading}
+        />
+      )}
+
       {!!children?.length && (
         <CommentListItemChildren>
           {children.map(child => (
@@ -196,7 +212,6 @@ export const CommentListItem = ({
               userCanEdit={userCanEdit}
               maxCommentLength={maxCommentLength}
               className={className}
-              handleModalOpen={handleModalOpen}
             />
           ))}
         </CommentListItemChildren>

@@ -1,11 +1,9 @@
-import {Modal, css, styled} from '@mui/material'
-import {LoginFormContainer, useUser} from '@wepublish/authentication/website'
-import {Button, IconButton, Link} from '@wepublish/ui'
+import {styled} from '@mui/material'
+import {useUser} from '@wepublish/authentication/website'
+import {Button} from '@wepublish/ui'
 import {Comment} from '@wepublish/website/api'
 import {BuilderCommentListProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {useMemo, useState} from 'react'
-import {MdClose, MdForum} from 'react-icons/md'
-import {Node} from 'slate'
+import {MdForum} from 'react-icons/md'
 import {getStateForEditor} from './comment-list.state'
 
 export const CommentListWrapper = styled('section')`
@@ -21,108 +19,6 @@ export const CommentListActions = styled('div')`
 export const CommentListReadMore = styled(Button)`
   padding: ${({theme}) => `${theme.spacing(1)} ${theme.spacing(2.5)}`};
   text-transform: uppercase;
-`
-
-export const ButtonsWrapper = styled('div')`
-  width: auto;
-  margin-top: ${({theme}) => theme.spacing(5)};
-  display: flex;
-  justify-content: center;
-  flex-direction: column;
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    flex-direction: row;
-    width: ${({theme}) => theme.spacing(86)};
-  }
-`
-
-export const LoginButton = styled(Button)`
-  margin-top: ${({theme}) => theme.spacing(3)};
-  border-width: 1px;
-
-  &:hover {
-    border-width: 1px;
-  }
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    margin-top: 0;
-    margin-left: ${({theme}) => theme.spacing(6)};
-  }
-`
-
-export const CommentEditorOuter = styled('div')`
-  padding: ${({theme}) => theme.spacing(4)};
-  width: 100%;
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    width: ${({theme}) => theme.spacing(80)};
-  }
-`
-
-export const LoginWrapper = styled('div')`
-  position: relative;
-  display: grid;
-  grid-template-columns: 1fr;
-  padding-top: ${({theme}) => theme.spacing(4)};
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    grid-template-columns: repeat(2, 1fr);
-  }
-`
-
-export const Register = styled('div')`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 1.8rem;
-  margin: ${({theme}) => theme.spacing(4)} 0;
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    grid-column: 2/3;
-    margin: 0 ${({theme}) => theme.spacing(4)};
-  }
-`
-
-export const CloseLogin = styled(IconButton)`
-  position: absolute;
-  top: ${({theme}) => `-${theme.spacing(2)}`};
-  right: ${({theme}) => `-${theme.spacing(2)}`};
-`
-
-export const ModalContent = styled('div')`
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: ${({theme}) => `${theme.spacing(4)} ${theme.spacing(3)}`};
-  bottom: 0;
-  background-color: ${({theme}) => theme.palette.common.white};
-  width: 100%;
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    width: auto;
-  }
-
-  animation: slideUpAndFadeIn 0.5s ease forwards;
-
-  @keyframes slideUpAndFadeIn {
-    from {
-      transform: translateX(-50%) translateY(100%);
-      opacity: 0;
-    }
-    to {
-      transform: translateX(-50%) translateY(0);
-      opacity: 1;
-    }
-  }
-`
-
-const headingStyles = () => css`
-  font-size: 1.5rem;
-  font-weight: 400;
-`
-
-const linkStyles = () => css`
-  white-space: nowrap;
 `
 
 export const CommentList = ({
@@ -150,54 +46,7 @@ export const CommentList = ({
   const {hasUser} = useUser()
   const canReply = anonymousCanComment || hasUser
 
-  const [modalOpen, setModalOpen] = useState(false)
-  const [commentId, setCommentId] = useState('')
-  const [showLogin, setShowLogin] = useState(false)
-
-  const handleModalOpen = (id?: string) => {
-    setModalOpen(true)
-
-    if (id) {
-      setCommentId(id)
-    }
-
-    if (canReply) {
-      dispatch({
-        type: 'add',
-        action: 'open',
-        commentId: null
-      })
-    }
-  }
-  const handleModalClose = () => {
-    dispatch({
-      type: 'add',
-      action: 'close',
-      commentId: null
-    })
-    setShowLogin(false)
-    setModalOpen(false)
-  }
-
   const showReply = getStateForEditor(openEditorsState)('add', null)
-
-  const h4Styles = useMemo(() => headingStyles(), [])
-  const aStyles = useMemo(() => linkStyles(), [])
-
-  const handleAddComment = ({title, text}: {title?: string; text?: Node[]}) => {
-    onAddComment({title, text})
-    handleModalClose()
-  }
-
-  const handleAfterLoginCallback = () => {
-    setShowLogin(false)
-
-    dispatch({
-      type: 'add',
-      action: 'open',
-      commentId: null
-    })
-  }
 
   return (
     <CommentListWrapper className={className}>
@@ -225,76 +74,42 @@ export const CommentList = ({
           userCanEdit={userCanEdit}
           maxCommentLength={maxCommentLength}
           children={(comment.children as Comment[]) ?? []}
-          handleModalOpen={handleModalOpen}
         />
       ))}
 
-      <CommentListActions>
-        <CommentListReadMore
-          startIcon={<MdForum />}
-          variant="contained"
-          onClick={() => handleModalOpen()}>
-          Jetzt Mitreden
-        </CommentListReadMore>
-      </CommentListActions>
+      {showReply && (
+        <CommentEditor
+          challenge={challenge}
+          maxCommentLength={maxCommentLength}
+          onCancel={() =>
+            dispatch({
+              type: 'add',
+              action: 'close',
+              commentId: null
+            })
+          }
+          onSubmit={onAddComment}
+          error={add.error}
+          loading={add.loading}
+        />
+      )}
 
-      <Modal open={modalOpen} onClose={handleModalClose} closeAfterTransition>
-        <ModalContent>
-          {showReply ? (
-            <CommentEditorOuter>
-              <CommentEditor
-                challenge={challenge}
-                maxCommentLength={maxCommentLength}
-                onCancel={() => {
-                  dispatch({
-                    type: 'add',
-                    action: 'close',
-                    commentId: null
-                  })
-                  handleModalClose()
-                }}
-                onSubmit={handleAddComment}
-                error={add.error}
-                loading={add.loading}
-              />
-            </CommentEditorOuter>
-          ) : showLogin ? (
-            <LoginWrapper>
-              <LoginFormContainer afterLoginCallback={handleAfterLoginCallback} />
-              <Register>
-                <Link href="/signup" css={aStyles}>
-                  Jetzt registrieren
-                </Link>
-                <CloseLogin size="large" aria-label="Menu" onClick={() => setShowLogin(false)}>
-                  <MdClose />
-                </CloseLogin>
-              </Register>
-            </LoginWrapper>
-          ) : (
-            <>
-              <H4 css={h4Styles}>Du bist nicht eingeloggt</H4>
-              <ButtonsWrapper>
-                <Button
-                  variant="text"
-                  size="large"
-                  color="inherit"
-                  onClick={() =>
-                    dispatch({
-                      type: 'add',
-                      action: 'open',
-                      commentId: null
-                    })
-                  }>
-                  Als Gast kommentieren
-                </Button>
-                <LoginButton variant="outlined" size="large" onClick={() => setShowLogin(true)}>
-                  Anmelden / Registrieren
-                </LoginButton>
-              </ButtonsWrapper>
-            </>
-          )}
-        </ModalContent>
-      </Modal>
+      {canReply && (
+        <CommentListActions>
+          <CommentListReadMore
+            startIcon={<MdForum />}
+            variant="contained"
+            onClick={() => {
+              dispatch({
+                type: 'add',
+                action: 'open',
+                commentId: null
+              })
+            }}>
+            Jetzt Mitreden
+          </CommentListReadMore>
+        </CommentListActions>
+      )}
     </CommentListWrapper>
   )
 }

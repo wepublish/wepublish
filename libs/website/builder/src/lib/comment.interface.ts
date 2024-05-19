@@ -76,7 +76,6 @@ export type BuilderCommentListItemProps = Comment & {
   className?: string
   isTopComment?: boolean
   ratingSystem: FullCommentRatingSystem
-  handleModalOpen: (id?: string) => void
 } & Pick<
     BuilderCommentListProps,
     | 'anonymousCanComment'
