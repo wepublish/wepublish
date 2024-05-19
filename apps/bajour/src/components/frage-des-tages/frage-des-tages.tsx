@@ -5,6 +5,7 @@ import {
   BuilderCommentProps,
   BuilderTeaserListBlockProps,
   Comment,
+  isPollBlock,
   useAsyncAction
 } from '@wepublish/website'
 import Image from 'next/image'
@@ -157,8 +158,7 @@ export const FrageDesTages = ({teasers, className}: BuilderTeaserListBlockProps)
     }
   })
 
-  const pollToPass = (article?.blocks.find(b => b.__typename === 'PollBlock') as ApiV1.PollBlock)
-    .poll
+  const pollToPass = article?.blocks.find(isPollBlock)?.poll
 
   const {data: authorData} = ApiV1.useAuthorQuery({
     variables: {
