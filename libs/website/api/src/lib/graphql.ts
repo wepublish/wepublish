@@ -932,8 +932,22 @@ export type PeerProfile = {
 
 export type Phrase = {
   __typename?: 'Phrase';
-  articles: Array<Article>;
-  pages: Array<Page>;
+  articles?: Maybe<PhraseResultArticleContent>;
+  pages?: Maybe<PhraseResultPageContent>;
+};
+
+export type PhraseResultArticleContent = {
+  __typename?: 'PhraseResultArticleContent';
+  nodes: Array<Article>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PhraseResultPageContent = {
+  __typename?: 'PhraseResultPageContent';
+  nodes: Array<Page>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
 };
 
 export type Point = {
