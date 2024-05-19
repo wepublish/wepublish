@@ -3,12 +3,6 @@ import {IconButton, Popover} from '@mui/material'
 import {MdShare, MdWhatsapp, MdFacebook, MdEmail, MdContentCopy} from 'react-icons/md'
 import {BsTwitterX, BsLinkedin} from 'react-icons/bs'
 import {styled} from '@mui/material'
-import {
-  TwitterShareButton,
-  WhatsappShareButton,
-  FacebookShareButton,
-  LinkedinShareButton
-} from 'react-share'
 
 interface ShareProps {
   url: string
@@ -54,14 +48,10 @@ const ShareButton: React.FC<ShareProps> = ({url, title}) => {
   }
 
   const handleShareByEmail = () => {
-    navigator.clipboard.writeText(url)
-
     const emailShareUrl = `mailto:?subject=${encodeURIComponent(title)}&body=${encodeURIComponent(
       url
     )}`
-
     window.location.href = emailShareUrl
-
     handleClosePopover()
   }
 
@@ -70,39 +60,39 @@ const ShareButton: React.FC<ShareProps> = ({url, title}) => {
 
   const shareOptions = [
     {
-      component: TwitterShareButton,
+      url: `https://twitter.com/intent/tweet?url=${encodeURIComponent(
+        url
+      )}&text=${encodeURIComponent(title)}`,
+
       icon: <BsTwitterX size="24" />,
-      color: '#000',
-      props: {url, title, onShareWindowClose: handleClosePopover}
+      color: '#000'
     },
     {
-      component: WhatsappShareButton,
+      url: `https://api.whatsapp.com/send?text=${encodeURIComponent(title)}%20${encodeURIComponent(
+        url
+      )}`,
       icon: <MdWhatsapp size="24" />,
-      color: '#25D366',
-      props: {url, title, onShareWindowClose: handleClosePopover}
+      color: '#25D366'
     },
     {
-      component: FacebookShareButton,
+      url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`,
       icon: <MdFacebook size="24" />,
-      color: '#3B5998',
-      props: {url, title, onShareWindowClose: handleClosePopover}
+      color: '#3B5998'
     },
     {
-      component: LinkedinShareButton,
+      url: `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(url)}`,
       icon: <BsLinkedin size="24" />,
-      color: '#0077B5',
-      props: {url, title, onShareWindowClose: handleClosePopover}
+      color: '#0077B5'
     },
     {
+      action: handleShareByEmail,
       icon: <MdEmail size="24" />,
-      color: '#D44638',
-      action: handleShareByEmail
+      color: '#D44638'
     },
     {
-      component: CopyIcon,
-      icon: <MdContentCopy />,
-      color: '#595959',
-      action: handleCopyToClipboard
+      action: handleCopyToClipboard,
+      icon: <MdContentCopy size="24" />,
+      color: '#595959'
     }
   ]
 
@@ -126,14 +116,17 @@ const ShareButton: React.FC<ShareProps> = ({url, title}) => {
         }}>
         <ShareOptions>
           {shareOptions.map((option, index) =>
-            option.component ? (
-              <option.component
+            option.url ? (
+              <IconButton
                 key={index}
-                url={url}
+                component="a"
+                href={option.url}
+                target="_blank"
+                rel="noopener noreferrer"
                 style={{color: option.color, ...iconStyle}}
-                onClick={option.action}>
+                onClick={handleClosePopover}>
                 {option.icon}
-              </option.component>
+              </IconButton>
             ) : (
               <IconButton
                 key={index}
