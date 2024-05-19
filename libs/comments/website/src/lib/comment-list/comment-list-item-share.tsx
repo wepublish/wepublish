@@ -1,21 +1,11 @@
-import React, {useState, useRef} from 'react'
-import {IconButton, Popover} from '@mui/material'
-import {MdShare, MdWhatsapp, MdFacebook, MdEmail, MdContentCopy} from 'react-icons/md'
-import {BsTwitterX, BsLinkedin} from 'react-icons/bs'
-import {styled} from '@mui/material'
-
-interface ShareProps {
-  url: string
-  title: string
-}
+import {IconButton, Popover, styled} from '@mui/material'
+import {BuilderCommentListItemShareProps} from '@wepublish/website/builder'
+import React, {useRef, useState} from 'react'
+import {BsLinkedin, BsTwitterX} from 'react-icons/bs'
+import {MdContentCopy, MdEmail, MdFacebook, MdShare, MdWhatsapp} from 'react-icons/md'
 
 const ShareIcon = styled(IconButton)`
   border-width: 0px;
-`
-
-const CopyIcon = styled('div')`
-  font-size: 24px;
-  cursor: pointer;
 `
 
 const ShareOptions = styled('div')`
@@ -30,7 +20,7 @@ const iconStyle = {
   alignItems: 'center'
 }
 
-const ShareButton: React.FC<ShareProps> = ({url, title}) => {
+const CommentListItemShare = ({url, title}: BuilderCommentListItemShareProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
   const shareButtonRef = useRef<HTMLButtonElement>(null)
 
@@ -142,4 +132,4 @@ const ShareButton: React.FC<ShareProps> = ({url, title}) => {
   )
 }
 
-export default ShareButton
+export default CommentListItemShare

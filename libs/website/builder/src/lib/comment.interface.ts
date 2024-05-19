@@ -67,6 +67,11 @@ export type BuilderCommentListProps = Pick<
   openEditorsStateDispatch: Dispatch<BuilderCommentListActions>
 }
 
+export type BuilderCommentListItemShareProps = {
+  url: string
+  title: string
+}
+
 export type BuilderCommentListItemProps = Comment & {
   className?: string
   isTopComment?: boolean
