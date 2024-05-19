@@ -5,35 +5,13 @@ import {BuilderCommentProps, useWebsiteBuilder} from '@wepublish/website/builder
 import {useLayoutEffect, useState} from 'react'
 import {MdPerson, MdVerified} from 'react-icons/md'
 
-function formatCommentDate(isoDateString: string) {
-  const monthNames = [
-    'Januar',
-    'Februar',
-    'März',
-    'April',
-    'Mai',
-    'Juni',
-    'Juli',
-    'August',
-    'September',
-    'Oktober',
-    'November',
-    'Dezember'
-  ]
+import {format} from 'date-fns'
+import {de} from 'date-fns/locale'
 
+function formatCommentDate(isoDateString: string): string {
   const date: Date = new Date(isoDateString)
 
-  const day: number = date.getDate()
-  const monthIndex: number = date.getMonth()
-  const year: number = date.getFullYear()
-
-  const hours: number = date.getHours()
-  const minutes: number = date.getMinutes()
-
-  const paddedHours: string = hours < 10 ? `0${hours}` : `${hours}`
-  const paddedMinutes: string = minutes < 10 ? `0${minutes}` : `${minutes}`
-
-  const formattedDate = `${day}. ${monthNames[monthIndex]} ${year} | ${paddedHours}:${paddedMinutes}`
+  const formattedDate: string = format(date, 'd. MMMM yyyy | HH:mm', {locale: de})
 
   return formattedDate
 }
