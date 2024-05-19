@@ -124,11 +124,7 @@ export const FrageDesTagesArticle = ({poll}: {poll?: ApiV1.PollBlock['poll']}) =
     }
   })
 
-  const {data: authorData} = ApiV1.useAuthorQuery({
-    variables: {
-      id: articleData?.article?.authors[0].id || ''
-    }
-  })
+  const author = articleData?.article?.authors[0]
 
   return (
     <PollBlockProvider>
@@ -140,9 +136,7 @@ export const FrageDesTagesArticle = ({poll}: {poll?: ApiV1.PollBlock['poll']}) =
           </PollWrapper>
           <CommentsWrapper>
             <AuthorAndContext>
-              <div>
-                {authorData?.author ? <StyledAuthorBox author={authorData?.author} /> : null}
-              </div>
+              <div>{author ? <StyledAuthorBox author={author} /> : null}</div>
               <div>
                 <StyledInfoBox richText={poll?.infoText || []} />
               </div>
