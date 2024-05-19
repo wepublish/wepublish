@@ -5,12 +5,6 @@ import {BuilderCommentProps, useWebsiteBuilder} from '@wepublish/website/builder
 import {useLayoutEffect, useState} from 'react'
 import {MdPerson, MdVerified} from 'react-icons/md'
 
-const urlRegex = /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/
-
-const isLink = (flair: string) => {
-  return urlRegex.test(flair)
-}
-
 function formatCommentDate(isoDateString: string) {
   const monthNames = [
     'Januar',
@@ -123,17 +117,6 @@ export const CommentFlair = styled('div')<{isGuest: boolean}>`
     `}
 `
 
-export const CommentFlairAsLink = styled('a')<{isGuest: boolean}>`
-  font-size: 0.75em;
-  font-weight: 300;
-
-  ${({isGuest, theme}) =>
-    isGuest &&
-    css`
-      color: ${theme.palette.primary.main};
-    `}
-`
-
 export const CommentContent = styled('div')<{isTopComment?: boolean}>`
   padding: ${({theme}) => theme.spacing(1.5)};
 
@@ -210,13 +193,6 @@ export const Comment = ({
 
   const displayFlairOrDate = () => {
     if (flair) {
-      if (isLink(flair)) {
-        return (
-          <CommentFlairAsLink isGuest={isGuest} href={flair} target="_blank">
-            {flair}
-          </CommentFlairAsLink>
-        )
-      }
       return <CommentFlair isGuest={isGuest}>{flair}</CommentFlair>
     } else if (createdAt) {
       return <CommentFlair isGuest={isGuest}>{formatCommentDate(createdAt)}</CommentFlair>
