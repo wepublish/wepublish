@@ -3,11 +3,11 @@
 exports[`Comment List Item should render AnonymousCommenting 1`] = `
 <DocumentFragment>
   <article
-    class="css-1w9a60u-CommentWrapper ekbi54x10"
+    class="css-1w9a60u-CommentWrapper ekbi54x9"
     id="verified"
   >
     <header
-      class="css-gv292l-CommentHeader ekbi54x9"
+      class="css-gv292l-CommentHeader ekbi54x8"
     >
       <img
         alt="DSC07717"
@@ -20,18 +20,18 @@ https://unsplash.it/200/200 200w"
         title=""
       />
       <div
-        class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
+        class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
       >
         <div
-          class="css-l1mcyg-CommentName ekbi54x7"
+          class="css-l1mcyg-CommentName ekbi54x6"
         >
           <div
-            class="css-ygroyb-CommentAuthor-CommentAuthor-CommentAuthor ekbi54x6"
+            class="css-ygroyb-CommentAuthor-CommentAuthor-CommentAuthor ekbi54x5"
           >
             Signed Up User
           </div>
           <div
-            class="css-6cfhau-CommentVerifiedBadge ekbi54x5"
+            class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
           >
             <svg
               fill="currentColor"
@@ -56,7 +56,7 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <div
-          class="css-srb6c6-CommentFlair ekbi54x4"
+          class="css-srb6c6-CommentFlair ekbi54x3"
         >
           Flair
         </div>
@@ -137,7 +137,7 @@ https://unsplash.it/200/200 200w"
         </button>
         <div>
           <button
-            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall e1jq4lzs2 css-1sgogi5-MuiButtonBase-root-MuiIconButton-root-ShareIcon"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall e1jq4lzs1 css-1sgogi5-MuiButtonBase-root-MuiIconButton-root-ShareIcon"
             tabindex="0"
             type="button"
           >
@@ -444,11 +444,11 @@ https://unsplash.it/200/200 200w"
 exports[`Comment List Item should render Commenting 1`] = `
 <DocumentFragment>
   <article
-    class="css-1w9a60u-CommentWrapper ekbi54x10"
+    class="css-1w9a60u-CommentWrapper ekbi54x9"
     id="verified"
   >
     <header
-      class="css-gv292l-CommentHeader ekbi54x9"
+      class="css-gv292l-CommentHeader ekbi54x8"
     >
       <img
         alt="DSC07717"
@@ -461,18 +461,18 @@ https://unsplash.it/200/200 200w"
         title=""
       />
       <div
-        class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
+        class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
       >
         <div
-          class="css-l1mcyg-CommentName ekbi54x7"
+          class="css-l1mcyg-CommentName ekbi54x6"
         >
           <div
-            class="css-ygroyb-CommentAuthor-CommentAuthor-CommentAuthor ekbi54x6"
+            class="css-ygroyb-CommentAuthor-CommentAuthor-CommentAuthor ekbi54x5"
           >
             Signed Up User
           </div>
           <div
-            class="css-6cfhau-CommentVerifiedBadge ekbi54x5"
+            class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
           >
             <svg
               fill="currentColor"
@@ -497,7 +497,7 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <div
-          class="css-srb6c6-CommentFlair ekbi54x4"
+          class="css-srb6c6-CommentFlair ekbi54x3"
         >
           Flair
         </div>
@@ -578,7 +578,7 @@ https://unsplash.it/200/200 200w"
         </button>
         <div>
           <button
-            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall e1jq4lzs2 css-1sgogi5-MuiButtonBase-root-MuiIconButton-root-ShareIcon"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall e1jq4lzs1 css-1sgogi5-MuiButtonBase-root-MuiIconButton-root-ShareIcon"
             tabindex="0"
             type="button"
           >
@@ -1063,11 +1063,11 @@ https://unsplash.it/200/200 200w"
 exports[`Comment List Item should render Default 1`] = `
 <DocumentFragment>
   <article
-    class="css-1w9a60u-CommentWrapper ekbi54x10"
+    class="css-1w9a60u-CommentWrapper ekbi54x9"
     id="verified"
   >
     <header
-      class="css-gv292l-CommentHeader ekbi54x9"
+      class="css-gv292l-CommentHeader ekbi54x8"
     >
       <img
         alt="DSC07717"
@@ -1080,18 +1080,18 @@ https://unsplash.it/200/200 200w"
         title=""
       />
       <div
-        class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
+        class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
       >
         <div
-          class="css-l1mcyg-CommentName ekbi54x7"
+          class="css-l1mcyg-CommentName ekbi54x6"
         >
           <div
-            class="css-ygroyb-CommentAuthor-CommentAuthor-CommentAuthor ekbi54x6"
+            class="css-ygroyb-CommentAuthor-CommentAuthor-CommentAuthor ekbi54x5"
           >
             Signed Up User
           </div>
           <div
-            class="css-6cfhau-CommentVerifiedBadge ekbi54x5"
+            class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
           >
             <svg
               fill="currentColor"
@@ -1116,7 +1116,7 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <div
-          class="css-srb6c6-CommentFlair ekbi54x4"
+          class="css-srb6c6-CommentFlair ekbi54x3"
         >
           Flair
         </div>
@@ -1444,11 +1444,11 @@ https://unsplash.it/200/200 200w"
 exports[`Comment List Item should render Editing 1`] = `
 <DocumentFragment>
   <article
-    class="css-1w9a60u-CommentWrapper ekbi54x10"
+    class="css-1w9a60u-CommentWrapper ekbi54x9"
     id="verified"
   >
     <header
-      class="css-gv292l-CommentHeader ekbi54x9"
+      class="css-gv292l-CommentHeader ekbi54x8"
     >
       <img
         alt="DSC07717"
@@ -1461,18 +1461,18 @@ https://unsplash.it/200/200 200w"
         title=""
       />
       <div
-        class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
+        class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
       >
         <div
-          class="css-l1mcyg-CommentName ekbi54x7"
+          class="css-l1mcyg-CommentName ekbi54x6"
         >
           <div
-            class="css-ygroyb-CommentAuthor-CommentAuthor-CommentAuthor ekbi54x6"
+            class="css-ygroyb-CommentAuthor-CommentAuthor-CommentAuthor ekbi54x5"
           >
             Signed Up User
           </div>
           <div
-            class="css-6cfhau-CommentVerifiedBadge ekbi54x5"
+            class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
           >
             <svg
               fill="currentColor"
@@ -1497,7 +1497,7 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <div
-          class="css-srb6c6-CommentFlair ekbi54x4"
+          class="css-srb6c6-CommentFlair ekbi54x3"
         >
           Flair
         </div>
@@ -1578,7 +1578,7 @@ https://unsplash.it/200/200 200w"
         </button>
         <div>
           <button
-            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall e1jq4lzs2 css-1sgogi5-MuiButtonBase-root-MuiIconButton-root-ShareIcon"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall e1jq4lzs1 css-1sgogi5-MuiButtonBase-root-MuiIconButton-root-ShareIcon"
             tabindex="0"
             type="button"
           >
@@ -2094,11 +2094,11 @@ https://unsplash.it/200/200 200w"
 exports[`Comment List Item should render Nested 1`] = `
 <DocumentFragment>
   <article
-    class="css-1w9a60u-CommentWrapper ekbi54x10"
+    class="css-1w9a60u-CommentWrapper ekbi54x9"
     id="verified"
   >
     <header
-      class="css-gv292l-CommentHeader ekbi54x9"
+      class="css-gv292l-CommentHeader ekbi54x8"
     >
       <img
         alt="DSC07717"
@@ -2111,18 +2111,18 @@ https://unsplash.it/200/200 200w"
         title=""
       />
       <div
-        class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
+        class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
       >
         <div
-          class="css-l1mcyg-CommentName ekbi54x7"
+          class="css-l1mcyg-CommentName ekbi54x6"
         >
           <div
-            class="css-ygroyb-CommentAuthor-CommentAuthor-CommentAuthor ekbi54x6"
+            class="css-ygroyb-CommentAuthor-CommentAuthor-CommentAuthor ekbi54x5"
           >
             Signed Up User
           </div>
           <div
-            class="css-6cfhau-CommentVerifiedBadge ekbi54x5"
+            class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
           >
             <svg
               fill="currentColor"
@@ -2147,7 +2147,7 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <div
-          class="css-srb6c6-CommentFlair ekbi54x4"
+          class="css-srb6c6-CommentFlair ekbi54x3"
         >
           Flair
         </div>
@@ -2228,7 +2228,7 @@ https://unsplash.it/200/200 200w"
         </button>
         <div>
           <button
-            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall e1jq4lzs2 css-1sgogi5-MuiButtonBase-root-MuiIconButton-root-ShareIcon"
+            class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall e1jq4lzs1 css-1sgogi5-MuiButtonBase-root-MuiIconButton-root-ShareIcon"
             tabindex="0"
             type="button"
           >
@@ -2741,11 +2741,11 @@ https://unsplash.it/200/200 200w"
       class="css-uvrneq-CommentListItemChildren ew53o3y1"
     >
       <article
-        class="css-1w9a60u-CommentWrapper ekbi54x10"
+        class="css-1w9a60u-CommentWrapper ekbi54x9"
         id="verified"
       >
         <header
-          class="css-gv292l-CommentHeader ekbi54x9"
+          class="css-gv292l-CommentHeader ekbi54x8"
         >
           <img
             alt="DSC07717"
@@ -2758,18 +2758,18 @@ https://unsplash.it/200/200 200w"
             title=""
           />
           <div
-            class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
+            class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
           >
             <div
-              class="css-l1mcyg-CommentName ekbi54x7"
+              class="css-l1mcyg-CommentName ekbi54x6"
             >
               <div
-                class="css-ygroyb-CommentAuthor-CommentAuthor-CommentAuthor ekbi54x6"
+                class="css-ygroyb-CommentAuthor-CommentAuthor-CommentAuthor ekbi54x5"
               >
                 Signed Up User
               </div>
               <div
-                class="css-6cfhau-CommentVerifiedBadge ekbi54x5"
+                class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
               >
                 <svg
                   fill="currentColor"
@@ -2794,7 +2794,7 @@ https://unsplash.it/200/200 200w"
               </div>
             </div>
             <div
-              class="css-srb6c6-CommentFlair ekbi54x4"
+              class="css-srb6c6-CommentFlair ekbi54x3"
             >
               Flair
             </div>
@@ -2875,7 +2875,7 @@ https://unsplash.it/200/200 200w"
             </button>
             <div>
               <button
-                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall e1jq4lzs2 css-1sgogi5-MuiButtonBase-root-MuiIconButton-root-ShareIcon"
+                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall e1jq4lzs1 css-1sgogi5-MuiButtonBase-root-MuiIconButton-root-ShareIcon"
                 tabindex="0"
                 type="button"
               >
@@ -2941,11 +2941,11 @@ https://unsplash.it/200/200 200w"
           class="css-uvrneq-CommentListItemChildren ew53o3y1"
         >
           <article
-            class="css-1w9a60u-CommentWrapper ekbi54x10"
+            class="css-1w9a60u-CommentWrapper ekbi54x9"
             id="anonymous"
           >
             <header
-              class="css-gv292l-CommentHeader ekbi54x9"
+              class="css-gv292l-CommentHeader ekbi54x8"
             >
               <img
                 alt="DSC07717"
@@ -2958,19 +2958,19 @@ https://unsplash.it/200/200 200w"
                 title=""
               />
               <div
-                class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
+                class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
               >
                 <div
-                  class="css-l1mcyg-CommentName ekbi54x7"
+                  class="css-l1mcyg-CommentName ekbi54x6"
                 >
                   <div
-                    class="css-ygroyb-CommentAuthor-CommentAuthor-CommentAuthor ekbi54x6"
+                    class="css-ygroyb-CommentAuthor-CommentAuthor-CommentAuthor ekbi54x5"
                   >
                     Dr. Anonymous
                   </div>
                 </div>
                 <div
-                  class="css-r2jplb-CommentFlair-CommentFlair ekbi54x4"
+                  class="css-r2jplb-CommentFlair-CommentFlair ekbi54x3"
                 >
                   Source
                 </div>
@@ -3051,7 +3051,7 @@ https://unsplash.it/200/200 200w"
                 </button>
                 <div>
                   <button
-                    class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall e1jq4lzs2 css-1sgogi5-MuiButtonBase-root-MuiIconButton-root-ShareIcon"
+                    class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall e1jq4lzs1 css-1sgogi5-MuiButtonBase-root-MuiIconButton-root-ShareIcon"
                     tabindex="0"
                     type="button"
                   >
@@ -3086,11 +3086,11 @@ https://unsplash.it/200/200 200w"
         </aside>
       </article>
       <article
-        class="css-1w9a60u-CommentWrapper ekbi54x10"
+        class="css-1w9a60u-CommentWrapper ekbi54x9"
         id="anonymous"
       >
         <header
-          class="css-gv292l-CommentHeader ekbi54x9"
+          class="css-gv292l-CommentHeader ekbi54x8"
         >
           <img
             alt="DSC07717"
@@ -3103,19 +3103,19 @@ https://unsplash.it/200/200 200w"
             title=""
           />
           <div
-            class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
+            class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
           >
             <div
-              class="css-l1mcyg-CommentName ekbi54x7"
+              class="css-l1mcyg-CommentName ekbi54x6"
             >
               <div
-                class="css-ygroyb-CommentAuthor-CommentAuthor-CommentAuthor ekbi54x6"
+                class="css-ygroyb-CommentAuthor-CommentAuthor-CommentAuthor ekbi54x5"
               >
                 Dr. Anonymous
               </div>
             </div>
             <div
-              class="css-r2jplb-CommentFlair-CommentFlair ekbi54x4"
+              class="css-r2jplb-CommentFlair-CommentFlair ekbi54x3"
             >
               Source
             </div>
@@ -3196,7 +3196,7 @@ https://unsplash.it/200/200 200w"
             </button>
             <div>
               <button
-                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall e1jq4lzs2 css-1sgogi5-MuiButtonBase-root-MuiIconButton-root-ShareIcon"
+                class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall e1jq4lzs1 css-1sgogi5-MuiButtonBase-root-MuiIconButton-root-ShareIcon"
                 tabindex="0"
                 type="button"
               >
@@ -3231,11 +3231,11 @@ https://unsplash.it/200/200 200w"
           class="css-uvrneq-CommentListItemChildren ew53o3y1"
         >
           <article
-            class="css-1w9a60u-CommentWrapper ekbi54x10"
+            class="css-1w9a60u-CommentWrapper ekbi54x9"
             id="verified"
           >
             <header
-              class="css-gv292l-CommentHeader ekbi54x9"
+              class="css-gv292l-CommentHeader ekbi54x8"
             >
               <img
                 alt="DSC07717"
@@ -3248,18 +3248,18 @@ https://unsplash.it/200/200 200w"
                 title=""
               />
               <div
-                class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
+                class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
               >
                 <div
-                  class="css-l1mcyg-CommentName ekbi54x7"
+                  class="css-l1mcyg-CommentName ekbi54x6"
                 >
                   <div
-                    class="css-ygroyb-CommentAuthor-CommentAuthor-CommentAuthor ekbi54x6"
+                    class="css-ygroyb-CommentAuthor-CommentAuthor-CommentAuthor ekbi54x5"
                   >
                     Signed Up User
                   </div>
                   <div
-                    class="css-6cfhau-CommentVerifiedBadge ekbi54x5"
+                    class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
                   >
                     <svg
                       fill="currentColor"
@@ -3284,7 +3284,7 @@ https://unsplash.it/200/200 200w"
                   </div>
                 </div>
                 <div
-                  class="css-srb6c6-CommentFlair ekbi54x4"
+                  class="css-srb6c6-CommentFlair ekbi54x3"
                 >
                   Flair
                 </div>
@@ -3365,7 +3365,7 @@ https://unsplash.it/200/200 200w"
                 </button>
                 <div>
                   <button
-                    class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall e1jq4lzs2 css-1sgogi5-MuiButtonBase-root-MuiIconButton-root-ShareIcon"
+                    class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall e1jq4lzs1 css-1sgogi5-MuiButtonBase-root-MuiIconButton-root-ShareIcon"
                     tabindex="0"
                     type="button"
                   >
@@ -3438,11 +3438,11 @@ https://unsplash.it/200/200 200w"
 exports[`Comment List Item should render WithClassName 1`] = `
 <DocumentFragment>
   <article
-    class="extra-classname css-1w9a60u-CommentWrapper ekbi54x10"
+    class="extra-classname css-1w9a60u-CommentWrapper ekbi54x9"
     id="verified"
   >
     <header
-      class="css-gv292l-CommentHeader ekbi54x9"
+      class="css-gv292l-CommentHeader ekbi54x8"
     >
       <img
         alt="DSC07717"
@@ -3455,18 +3455,18 @@ https://unsplash.it/200/200 200w"
         title=""
       />
       <div
-        class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
+        class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
       >
         <div
-          class="css-l1mcyg-CommentName ekbi54x7"
+          class="css-l1mcyg-CommentName ekbi54x6"
         >
           <div
-            class="css-ygroyb-CommentAuthor-CommentAuthor-CommentAuthor ekbi54x6"
+            class="css-ygroyb-CommentAuthor-CommentAuthor-CommentAuthor ekbi54x5"
           >
             Signed Up User
           </div>
           <div
-            class="css-6cfhau-CommentVerifiedBadge ekbi54x5"
+            class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
           >
             <svg
               fill="currentColor"
@@ -3491,7 +3491,7 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <div
-          class="css-srb6c6-CommentFlair ekbi54x4"
+          class="css-srb6c6-CommentFlair ekbi54x3"
         >
           Flair
         </div>
@@ -3819,11 +3819,11 @@ https://unsplash.it/200/200 200w"
 exports[`Comment List Item should render WithEmotion 1`] = `
 <DocumentFragment>
   <article
-    class="css-au7tc5-CommentWrapper-css ekbi54x10"
+    class="css-au7tc5-CommentWrapper-css ekbi54x9"
     id="verified"
   >
     <header
-      class="css-gv292l-CommentHeader ekbi54x9"
+      class="css-gv292l-CommentHeader ekbi54x8"
     >
       <img
         alt="DSC07717"
@@ -3836,18 +3836,18 @@ https://unsplash.it/200/200 200w"
         title=""
       />
       <div
-        class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
+        class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
       >
         <div
-          class="css-l1mcyg-CommentName ekbi54x7"
+          class="css-l1mcyg-CommentName ekbi54x6"
         >
           <div
-            class="css-ygroyb-CommentAuthor-CommentAuthor-CommentAuthor ekbi54x6"
+            class="css-ygroyb-CommentAuthor-CommentAuthor-CommentAuthor ekbi54x5"
           >
             Signed Up User
           </div>
           <div
-            class="css-6cfhau-CommentVerifiedBadge ekbi54x5"
+            class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
           >
             <svg
               fill="currentColor"
@@ -3872,7 +3872,7 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <div
-          class="css-srb6c6-CommentFlair ekbi54x4"
+          class="css-srb6c6-CommentFlair ekbi54x3"
         >
           Flair
         </div>

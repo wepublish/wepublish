@@ -3,7 +3,7 @@
 exports[`Article should render Default 1`] = `
 <DocumentFragment>
   <article
-    class="es3d6yl1 css-15ts0oz-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="es3d6yl1 css-9m3m86-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -1831,11 +1831,11 @@ https://unsplash.it/200/100 200w"
       class="css-1mm1s5y-CommentBlockWrapper es9rr591"
     >
       <article
-        class="css-1w9a60u-CommentWrapper ekbi54x10"
+        class="css-1w9a60u-CommentWrapper ekbi54x9"
         id="verified"
       >
         <header
-          class="css-gv292l-CommentHeader ekbi54x9"
+          class="css-gv292l-CommentHeader ekbi54x8"
         >
           <img
             alt="DSC07717"
@@ -1848,18 +1848,18 @@ https://unsplash.it/200/200 200w"
             title=""
           />
           <div
-            class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
+            class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
           >
             <div
-              class="css-l1mcyg-CommentName ekbi54x7"
+              class="css-l1mcyg-CommentName ekbi54x6"
             >
               <div
-                class="css-ygroyb-CommentAuthor-CommentAuthor-CommentAuthor ekbi54x6"
+                class="css-ygroyb-CommentAuthor-CommentAuthor-CommentAuthor ekbi54x5"
               >
                 Signed Up User
               </div>
               <div
-                class="css-6cfhau-CommentVerifiedBadge ekbi54x5"
+                class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
               >
                 <svg
                   fill="currentColor"
@@ -1884,7 +1884,7 @@ https://unsplash.it/200/200 200w"
               </div>
             </div>
             <div
-              class="css-srb6c6-CommentFlair ekbi54x4"
+              class="css-srb6c6-CommentFlair ekbi54x3"
             >
               Flair
             </div>
@@ -2341,7 +2341,7 @@ https://unsplash.it/200/200 200w"
 exports[`Article should render WithChildren 1`] = `
 <DocumentFragment>
   <article
-    class="es3d6yl1 css-15ts0oz-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="es3d6yl1 css-9m3m86-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -4169,11 +4169,11 @@ https://unsplash.it/200/100 200w"
       class="css-1mm1s5y-CommentBlockWrapper es9rr591"
     >
       <article
-        class="css-1w9a60u-CommentWrapper ekbi54x10"
+        class="css-1w9a60u-CommentWrapper ekbi54x9"
         id="verified"
       >
         <header
-          class="css-gv292l-CommentHeader ekbi54x9"
+          class="css-gv292l-CommentHeader ekbi54x8"
         >
           <img
             alt="DSC07717"
@@ -4186,18 +4186,18 @@ https://unsplash.it/200/200 200w"
             title=""
           />
           <div
-            class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
+            class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
           >
             <div
-              class="css-l1mcyg-CommentName ekbi54x7"
+              class="css-l1mcyg-CommentName ekbi54x6"
             >
               <div
-                class="css-ygroyb-CommentAuthor-CommentAuthor-CommentAuthor ekbi54x6"
+                class="css-ygroyb-CommentAuthor-CommentAuthor-CommentAuthor ekbi54x5"
               >
                 Signed Up User
               </div>
               <div
-                class="css-6cfhau-CommentVerifiedBadge ekbi54x5"
+                class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
               >
                 <svg
                   fill="currentColor"
@@ -4222,7 +4222,7 @@ https://unsplash.it/200/200 200w"
               </div>
             </div>
             <div
-              class="css-srb6c6-CommentFlair ekbi54x4"
+              class="css-srb6c6-CommentFlair ekbi54x3"
             >
               Flair
             </div>
@@ -4682,7 +4682,7 @@ https://unsplash.it/200/200 200w"
 exports[`Article should render WithClassName 1`] = `
 <DocumentFragment>
   <article
-    class="extra-classname es3d6yl1 css-15ts0oz-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="extra-classname es3d6yl1 css-9m3m86-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -6510,11 +6510,11 @@ https://unsplash.it/200/100 200w"
       class="css-1mm1s5y-CommentBlockWrapper es9rr591"
     >
       <article
-        class="css-1w9a60u-CommentWrapper ekbi54x10"
+        class="css-1w9a60u-CommentWrapper ekbi54x9"
         id="verified"
       >
         <header
-          class="css-gv292l-CommentHeader ekbi54x9"
+          class="css-gv292l-CommentHeader ekbi54x8"
         >
           <img
             alt="DSC07717"
@@ -6527,18 +6527,18 @@ https://unsplash.it/200/200 200w"
             title=""
           />
           <div
-            class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
+            class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
           >
             <div
-              class="css-l1mcyg-CommentName ekbi54x7"
+              class="css-l1mcyg-CommentName ekbi54x6"
             >
               <div
-                class="css-ygroyb-CommentAuthor-CommentAuthor-CommentAuthor ekbi54x6"
+                class="css-ygroyb-CommentAuthor-CommentAuthor-CommentAuthor ekbi54x5"
               >
                 Signed Up User
               </div>
               <div
-                class="css-6cfhau-CommentVerifiedBadge ekbi54x5"
+                class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
               >
                 <svg
                   fill="currentColor"
@@ -6563,7 +6563,7 @@ https://unsplash.it/200/200 200w"
               </div>
             </div>
             <div
-              class="css-srb6c6-CommentFlair ekbi54x4"
+              class="css-srb6c6-CommentFlair ekbi54x3"
             >
               Flair
             </div>
@@ -7020,7 +7020,7 @@ https://unsplash.it/200/200 200w"
 exports[`Article should render WithEmotion 1`] = `
 <DocumentFragment>
   <article
-    class="es3d6yl1 css-15ts0oz-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="es3d6yl1 css-9m3m86-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -8848,11 +8848,11 @@ https://unsplash.it/200/100 200w"
       class="css-1mm1s5y-CommentBlockWrapper es9rr591"
     >
       <article
-        class="css-1w9a60u-CommentWrapper ekbi54x10"
+        class="css-1w9a60u-CommentWrapper ekbi54x9"
         id="verified"
       >
         <header
-          class="css-gv292l-CommentHeader ekbi54x9"
+          class="css-gv292l-CommentHeader ekbi54x8"
         >
           <img
             alt="DSC07717"
@@ -8865,18 +8865,18 @@ https://unsplash.it/200/200 200w"
             title=""
           />
           <div
-            class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
+            class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
           >
             <div
-              class="css-l1mcyg-CommentName ekbi54x7"
+              class="css-l1mcyg-CommentName ekbi54x6"
             >
               <div
-                class="css-ygroyb-CommentAuthor-CommentAuthor-CommentAuthor ekbi54x6"
+                class="css-ygroyb-CommentAuthor-CommentAuthor-CommentAuthor ekbi54x5"
               >
                 Signed Up User
               </div>
               <div
-                class="css-6cfhau-CommentVerifiedBadge ekbi54x5"
+                class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
               >
                 <svg
                   fill="currentColor"
@@ -8901,7 +8901,7 @@ https://unsplash.it/200/200 200w"
               </div>
             </div>
             <div
-              class="css-srb6c6-CommentFlair ekbi54x4"
+              class="css-srb6c6-CommentFlair ekbi54x3"
             >
               Flair
             </div>
@@ -9358,7 +9358,7 @@ https://unsplash.it/200/200 200w"
 exports[`Article should render WithError 1`] = `
 <DocumentFragment>
   <article
-    class="es3d6yl1 css-15ts0oz-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="es3d6yl1 css-9m3m86-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   />
 </DocumentFragment>
 `;
@@ -9366,7 +9366,7 @@ exports[`Article should render WithError 1`] = `
 exports[`Article should render WithLoading 1`] = `
 <DocumentFragment>
   <article
-    class="es3d6yl1 css-15ts0oz-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="es3d6yl1 css-9m3m86-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   />
 </DocumentFragment>
 `;
@@ -9374,7 +9374,7 @@ exports[`Article should render WithLoading 1`] = `
 exports[`Article should render WithoutAuthors 1`] = `
 <DocumentFragment>
   <article
-    class="es3d6yl1 css-15ts0oz-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="es3d6yl1 css-9m3m86-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -11186,11 +11186,11 @@ https://unsplash.it/200/100 200w"
       class="css-1mm1s5y-CommentBlockWrapper es9rr591"
     >
       <article
-        class="css-1w9a60u-CommentWrapper ekbi54x10"
+        class="css-1w9a60u-CommentWrapper ekbi54x9"
         id="verified"
       >
         <header
-          class="css-gv292l-CommentHeader ekbi54x9"
+          class="css-gv292l-CommentHeader ekbi54x8"
         >
           <img
             alt="DSC07717"
@@ -11203,18 +11203,18 @@ https://unsplash.it/200/200 200w"
             title=""
           />
           <div
-            class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
+            class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
           >
             <div
-              class="css-l1mcyg-CommentName ekbi54x7"
+              class="css-l1mcyg-CommentName ekbi54x6"
             >
               <div
-                class="css-ygroyb-CommentAuthor-CommentAuthor-CommentAuthor ekbi54x6"
+                class="css-ygroyb-CommentAuthor-CommentAuthor-CommentAuthor ekbi54x5"
               >
                 Signed Up User
               </div>
               <div
-                class="css-6cfhau-CommentVerifiedBadge ekbi54x5"
+                class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
               >
                 <svg
                   fill="currentColor"
@@ -11239,7 +11239,7 @@ https://unsplash.it/200/200 200w"
               </div>
             </div>
             <div
-              class="css-srb6c6-CommentFlair ekbi54x4"
+              class="css-srb6c6-CommentFlair ekbi54x3"
             >
               Flair
             </div>
@@ -11458,7 +11458,7 @@ https://unsplash.it/200/100 200w"
 exports[`Article should render WithoutImageMetadata 1`] = `
 <DocumentFragment>
   <article
-    class="es3d6yl1 css-15ts0oz-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="es3d6yl1 css-9m3m86-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -13286,11 +13286,11 @@ https://unsplash.it/200/100 200w"
       class="css-1mm1s5y-CommentBlockWrapper es9rr591"
     >
       <article
-        class="css-1w9a60u-CommentWrapper ekbi54x10"
+        class="css-1w9a60u-CommentWrapper ekbi54x9"
         id="verified"
       >
         <header
-          class="css-gv292l-CommentHeader ekbi54x9"
+          class="css-gv292l-CommentHeader ekbi54x8"
         >
           <img
             alt="DSC07717"
@@ -13303,18 +13303,18 @@ https://unsplash.it/200/200 200w"
             title=""
           />
           <div
-            class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
+            class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
           >
             <div
-              class="css-l1mcyg-CommentName ekbi54x7"
+              class="css-l1mcyg-CommentName ekbi54x6"
             >
               <div
-                class="css-ygroyb-CommentAuthor-CommentAuthor-CommentAuthor ekbi54x6"
+                class="css-ygroyb-CommentAuthor-CommentAuthor-CommentAuthor ekbi54x5"
               >
                 Signed Up User
               </div>
               <div
-                class="css-6cfhau-CommentVerifiedBadge ekbi54x5"
+                class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
               >
                 <svg
                   fill="currentColor"
@@ -13339,7 +13339,7 @@ https://unsplash.it/200/200 200w"
               </div>
             </div>
             <div
-              class="css-srb6c6-CommentFlair ekbi54x4"
+              class="css-srb6c6-CommentFlair ekbi54x3"
             >
               Flair
             </div>
@@ -13796,7 +13796,7 @@ https://unsplash.it/200/200 200w"
 exports[`Article should render WithoutLead 1`] = `
 <DocumentFragment>
   <article
-    class="es3d6yl1 css-15ts0oz-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="es3d6yl1 css-9m3m86-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -15620,11 +15620,11 @@ https://unsplash.it/200/100 200w"
       class="css-1mm1s5y-CommentBlockWrapper es9rr591"
     >
       <article
-        class="css-1w9a60u-CommentWrapper ekbi54x10"
+        class="css-1w9a60u-CommentWrapper ekbi54x9"
         id="verified"
       >
         <header
-          class="css-gv292l-CommentHeader ekbi54x9"
+          class="css-gv292l-CommentHeader ekbi54x8"
         >
           <img
             alt="DSC07717"
@@ -15637,18 +15637,18 @@ https://unsplash.it/200/200 200w"
             title=""
           />
           <div
-            class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
+            class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
           >
             <div
-              class="css-l1mcyg-CommentName ekbi54x7"
+              class="css-l1mcyg-CommentName ekbi54x6"
             >
               <div
-                class="css-ygroyb-CommentAuthor-CommentAuthor-CommentAuthor ekbi54x6"
+                class="css-ygroyb-CommentAuthor-CommentAuthor-CommentAuthor ekbi54x5"
               >
                 Signed Up User
               </div>
               <div
-                class="css-6cfhau-CommentVerifiedBadge ekbi54x5"
+                class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
               >
                 <svg
                   fill="currentColor"
@@ -15673,7 +15673,7 @@ https://unsplash.it/200/200 200w"
               </div>
             </div>
             <div
-              class="css-srb6c6-CommentFlair ekbi54x4"
+              class="css-srb6c6-CommentFlair ekbi54x3"
             >
               Flair
             </div>
@@ -16130,7 +16130,7 @@ https://unsplash.it/200/200 200w"
 exports[`Article should render WithoutSocialMedia 1`] = `
 <DocumentFragment>
   <article
-    class="es3d6yl1 css-15ts0oz-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="es3d6yl1 css-9m3m86-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -17958,11 +17958,11 @@ https://unsplash.it/200/100 200w"
       class="css-1mm1s5y-CommentBlockWrapper es9rr591"
     >
       <article
-        class="css-1w9a60u-CommentWrapper ekbi54x10"
+        class="css-1w9a60u-CommentWrapper ekbi54x9"
         id="verified"
       >
         <header
-          class="css-gv292l-CommentHeader ekbi54x9"
+          class="css-gv292l-CommentHeader ekbi54x8"
         >
           <img
             alt="DSC07717"
@@ -17975,18 +17975,18 @@ https://unsplash.it/200/200 200w"
             title=""
           />
           <div
-            class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
+            class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
           >
             <div
-              class="css-l1mcyg-CommentName ekbi54x7"
+              class="css-l1mcyg-CommentName ekbi54x6"
             >
               <div
-                class="css-ygroyb-CommentAuthor-CommentAuthor-CommentAuthor ekbi54x6"
+                class="css-ygroyb-CommentAuthor-CommentAuthor-CommentAuthor ekbi54x5"
               >
                 Signed Up User
               </div>
               <div
-                class="css-6cfhau-CommentVerifiedBadge ekbi54x5"
+                class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
               >
                 <svg
                   fill="currentColor"
@@ -18011,7 +18011,7 @@ https://unsplash.it/200/200 200w"
               </div>
             </div>
             <div
-              class="css-srb6c6-CommentFlair ekbi54x4"
+              class="css-srb6c6-CommentFlair ekbi54x3"
             >
               Flair
             </div>
