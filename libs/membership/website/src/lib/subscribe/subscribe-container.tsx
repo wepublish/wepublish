@@ -18,8 +18,8 @@ import {produce} from 'immer'
 import {StripeElement, StripePayment} from '@wepublish/payment/website'
 import {useContext, useEffect, useMemo, useState} from 'react'
 import {OptionalKeysOf} from 'type-fest'
-import {Snackbar} from '@mui/material'
 import {SnackbarContext} from '@wepublish/ui'
+import {useRouter} from 'next/router'
 
 export type SubscribeContainerProps<
   T extends OptionalKeysOf<RegisterMutationVariables> = OptionalKeysOf<RegisterMutationVariables>
@@ -39,6 +39,7 @@ export const SubscribeContainer = <T extends OptionalKeysOf<RegisterMutationVari
   schema,
   filter
 }: SubscribeContainerProps<T>) => {
+  const router = useRouter()
   const {setToken, hasUser} = useUser()
   const {Subscribe} = useWebsiteBuilder()
   const [fetchChallenge, challenge] = useChallengeLazyQuery()
@@ -71,7 +72,19 @@ export const SubscribeContainer = <T extends OptionalKeysOf<RegisterMutationVari
   })
 
   const [register] = useRegisterMutation({
-    onError: () => challenge.refetch(),
+    onError: async error => {
+      const emailAlreadyInUseError = error.graphQLErrors.find(
+        error => error.extensions.code === 'EMAIL_ALREADY_IN_USE'
+      )
+      if (emailAlreadyInUseError) {
+        snackbarContext.setSnack({
+          message: 'Diese E-Mail ist bereits registriert. Bitte logge dich ein.',
+          severity: 'error'
+        })
+        await router.push('/login')
+      }
+      await challenge.refetch()
+    },
     onCompleted(data) {
       if (data.registerMember.session) {
         setToken(data.registerMember.session)

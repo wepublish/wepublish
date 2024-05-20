@@ -1,4 +1,4 @@
-import {Alert, Snackbar, SnackbarProps} from '@mui/material'
+import {Alert, AlertColor, Snackbar, SnackbarProps} from '@mui/material'
 import {createContext, useState} from 'react'
 
 export const SnackbarContext = createContext<{
@@ -11,6 +11,7 @@ export const SnackbarContext = createContext<{
 
 export interface Snack {
   message: string
+  severity?: AlertColor
 }
 
 export function SnackbarWithContextProvider({children, ...props}: SnackbarProps) {
@@ -23,8 +24,9 @@ export function SnackbarWithContextProvider({children, ...props}: SnackbarProps)
       <Snackbar
         {...props}
         open={!!snack}
-        autoHideDuration={props.autoHideDuration || DEFAULT_AUTO_HIDE_DURATION}>
-        <Alert>{snack?.message}</Alert>
+        autoHideDuration={props.autoHideDuration || DEFAULT_AUTO_HIDE_DURATION}
+        onClose={() => setSnack(undefined)}>
+        <Alert severity={snack?.severity}>{snack?.message}</Alert>
       </Snackbar>
     </SnackbarContext.Provider>
   )
