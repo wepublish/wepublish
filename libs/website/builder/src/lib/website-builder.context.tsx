@@ -93,6 +93,7 @@ import {
   BuilderIconButtonProps,
   BuilderPaginationProps,
   BuilderRatingProps,
+  BuilderSnackbarProps,
   BuilderTextFieldProps
 } from './ui.interface'
 import {BuilderPersonalDataFormProps, BuilderImageUploadProps} from './user.interface'
@@ -145,6 +146,7 @@ export type WebsiteBuilderProps = {
     Button: ComponentType<BuilderButtonProps>
     IconButton: ComponentType<BuilderIconButtonProps>
     Pagination: ComponentType<BuilderPaginationProps>
+    Snackbar: ComponentType<BuilderSnackbarProps>
     H1: ComponentType<BuilderHeadingProps>
     H2: ComponentType<BuilderHeadingProps>
     H3: ComponentType<BuilderHeadingProps>
@@ -255,6 +257,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     Button: NoComponent,
     IconButton: NoComponent,
     Pagination: NoComponent,
+    Snackbar: NoComponent,
     H1: NoComponent,
     H2: NoComponent,
     H3: NoComponent,

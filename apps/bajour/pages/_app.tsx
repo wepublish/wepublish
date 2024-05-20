@@ -34,6 +34,7 @@ import {
   BajourTeaserList
 } from '../src/components/website-builder-styled/blocks/teaser-grid-styled'
 import theme, {navbarTheme} from '../src/styles/theme'
+import {SnackbarWithContextProvider} from '@wepublish/ui'
 
 setDefaultOptions({
   locale: de
@@ -127,38 +128,40 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY
             }}
             PaymentMethodPicker={BajourPaymentMethodPicker}>
-            <ThemeProvider theme={theme}>
-              <CssBaseline />
+            <SnackbarWithContextProvider>
+              <ThemeProvider theme={theme}>
+                <CssBaseline />
 
-              <MainGrid>
-                <ThemeProvider theme={navbarTheme}>
-                  <NavBar
-                    slug="main"
-                    categorySlugs={[['basel-briefing', 'other'], ['about-us']]}
-                    headerSlug="header">
-                    <ButtonLink href="https://www.facebook.com/bajourbasel">
-                      <MdFacebook size="32" />
-                    </ButtonLink>
+                <MainGrid>
+                  <ThemeProvider theme={navbarTheme}>
+                    <NavBar
+                      slug="main"
+                      categorySlugs={[['basel-briefing', 'other'], ['about-us']]}
+                      headerSlug="header">
+                      <ButtonLink href="https://www.facebook.com/bajourbasel">
+                        <MdFacebook size="32" />
+                      </ButtonLink>
 
-                    <ButtonLink href="https://twitter.com/bajourbasel">
-                      <FaTwitter size="32" />
-                    </ButtonLink>
+                      <ButtonLink href="https://twitter.com/bajourbasel">
+                        <FaTwitter size="32" />
+                      </ButtonLink>
 
-                    <ButtonLink href="mailto:info@bajour.ch">
-                      <MdMail size="32" />
-                    </ButtonLink>
-                  </NavBar>
-                </ThemeProvider>
+                      <ButtonLink href="mailto:info@bajour.ch">
+                        <MdMail size="32" />
+                      </ButtonLink>
+                    </NavBar>
+                  </ThemeProvider>
 
-                <Component {...pageProps} />
+                  <Component {...pageProps} />
 
-                <Footer slug="main" categorySlugs={[['basel-briefing', 'other'], ['about-us']]} />
-              </MainGrid>
+                  <Footer slug="main" categorySlugs={[['basel-briefing', 'other'], ['about-us']]} />
+                </MainGrid>
 
-              {publicRuntimeConfig.env.GA_ID && (
-                <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
-              )}
-            </ThemeProvider>
+                {publicRuntimeConfig.env.GA_ID && (
+                  <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
+                )}
+              </ThemeProvider>
+            </SnackbarWithContextProvider>
           </WebsiteBuilderProvider>
         </WebsiteProvider>
       </SessionProvider>

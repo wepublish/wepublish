@@ -16,8 +16,10 @@ import {
 } from '@wepublish/website/builder'
 import {produce} from 'immer'
 import {StripeElement, StripePayment} from '@wepublish/payment/website'
-import {useEffect, useMemo, useState} from 'react'
+import {useContext, useEffect, useMemo, useState} from 'react'
 import {OptionalKeysOf} from 'type-fest'
+import {Snackbar} from '@mui/material'
+import {SnackbarContext} from '@wepublish/ui'
 
 export type SubscribeContainerProps<
   T extends OptionalKeysOf<RegisterMutationVariables> = OptionalKeysOf<RegisterMutationVariables>
@@ -76,6 +78,8 @@ export const SubscribeContainer = <T extends OptionalKeysOf<RegisterMutationVari
       }
     }
   })
+
+  const snackbarContext = useContext(SnackbarContext)
 
   useEffect(() => {
     if (!hasUser) {
