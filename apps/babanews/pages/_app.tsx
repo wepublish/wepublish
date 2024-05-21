@@ -108,7 +108,12 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               <meta name="theme-color" content="#ffffff" />
             </Head>
 
-            <NavBar categorySlugs={[['categories', 'about-us']]} slug="main" headerSlug="header" />
+            <NavBar
+              categorySlugs={[['categories', 'about-us']]}
+              slug="main"
+              headerSlug="header"
+              showSubscriptionsUrl={false}
+            />
 
             <ContentSpacer>
               <Component {...pageProps} />

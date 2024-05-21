@@ -285,7 +285,6 @@ const Author = styled('div')`
 export const Avatar = styled(Image)`
   position: absolute;
   border-radius: 50%;
-  aspect-ratio: 1/1;
   width: ${({theme}) => theme.spacing(9)};
   height: ${({theme}) => theme.spacing(9)};
   object-fit: cover;
@@ -310,6 +309,7 @@ export const Avatar = styled(Image)`
 export const BaselBriefing = ({teasers, blockStyle}: BaselBriefingProps) => {
   let showFrom = undefined
   let showUntil = undefined
+  let scheduledDate
 
   const teaser = teasers && teasers[0]
   teaser?.properties.forEach(prop => {
@@ -320,9 +320,13 @@ export const BaselBriefing = ({teasers, blockStyle}: BaselBriefingProps) => {
     if (prop.key === 'showUntil') {
       showUntil = prop.value
     }
+
+    if (prop.key === 'scheduledDate') {
+      scheduledDate = new Date(prop.value)
+    }
   })
 
-  if (!isWithinTimeslot(showFrom, showUntil)) {
+  if (!isWithinTimeslot(showFrom, showUntil, scheduledDate)) {
     return null
   }
 
@@ -371,7 +375,7 @@ export const BaselBriefing = ({teasers, blockStyle}: BaselBriefingProps) => {
           <TeaserContentStyled>
             <TeaserContentInterior>
               {briefingDynamicValues.authorAvatar && (
-                <Avatar image={briefingDynamicValues.authorAvatar} />
+                <Avatar image={briefingDynamicValues.authorAvatar} square />
               )}
 
               {briefingDynamicValues.authorName && (

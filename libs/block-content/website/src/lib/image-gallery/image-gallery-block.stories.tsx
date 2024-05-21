@@ -34,7 +34,8 @@ export const Default = {
   args: {
     images: Array.from({length: 11}, (_, i) => ({
       image: image(i),
-      caption: 'Image caption'
+      caption:
+        'Image caption that is extremely long so it is bigger than the countainer that would display it'
     }))
   }
 }

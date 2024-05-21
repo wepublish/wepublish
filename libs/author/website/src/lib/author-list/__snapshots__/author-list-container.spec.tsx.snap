@@ -10,7 +10,7 @@ exports[`AuthorList Container should render Default 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
@@ -43,7 +43,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
@@ -76,7 +76,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
@@ -118,7 +118,7 @@ exports[`AuthorList Container should render WithClassName 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
@@ -151,7 +151,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
@@ -184,7 +184,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
@@ -226,7 +226,7 @@ exports[`AuthorList Container should render WithEmotion 1`] = `
       href="https://example.com"
     >
       <div
-        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
@@ -259,7 +259,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
@@ -292,7 +292,7 @@ https://unsplash.it/200/200 200w"
       href="https://example.com"
     >
       <div
-        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"

@@ -43,31 +43,40 @@ export default {
 
 export const Default = {
   args: {
-    quote: 'This is a quote',
+    quote:
+      'This is a quote that is very long so that we can make sure that linebreaks correctly happen.',
     author: 'John Doe'
   }
 }
 
 export const WithImage = {
+  ...Default,
   args: {
-    quote: 'This is a quote',
-    author: 'John Doe',
+    ...Default.args,
     image
   }
 }
 
-export const WithClassName = {
+export const WithImageAndShortText = {
+  ...WithImage,
   args: {
-    quote: 'This is a quote',
-    author: 'John Doe',
+    ...WithImage.args,
+    quote: 'This is a quote.'
+  }
+}
+
+export const WithClassName = {
+  ...Default,
+  args: {
+    ...Default.args,
     className: 'extra-classname'
   }
 }
 
 export const WithEmotion = {
+  ...Default,
   args: {
-    quote: 'This is a quote',
-    author: 'John Doe',
+    ...Default.args,
     css: css`
       background-color: #eee;
     `

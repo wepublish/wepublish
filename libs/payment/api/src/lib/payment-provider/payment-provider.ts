@@ -38,6 +38,7 @@ export interface CreatePaymentIntentProps {
   customerID?: string
   successURL?: string
   failureURL?: string
+  backgroundTask?: boolean
 }
 
 export interface CheckIntentProps {
