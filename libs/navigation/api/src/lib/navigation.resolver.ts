@@ -9,10 +9,14 @@ import {
 } from './navigation.model'
 import {NavigationService} from './navigation.service'
 import {UserInputError} from '@nestjs/apollo'
+import {NavigationDataLoader} from './navigation.dataloader'
 
 @Resolver(() => Navigation)
 export class NavigationResolver {
-  constructor(private readonly navigationService: NavigationService) {}
+  constructor(
+    private readonly navigationService: NavigationService,
+    private readonly navigationDataLoader: NavigationDataLoader
+  ) {}
 
   @Query(() => Navigation, {description: `Returns a navigation by key.`})
   async getNavigationByKey(@Args() {key}: NavigationKeyArgs) {
@@ -25,7 +29,7 @@ export class NavigationResolver {
 
   @Query(() => Navigation, {description: `Returns a navigation by id.`})
   async getNavigationById(@Args() {id}: NavigationIdArgs) {
-    const navigation = await this.navigationService.getNavigationById(id)
+    const navigation = await this.navigationDataLoader.load(id)
     if (navigation === null) {
       throw new UserInputError('Navigation not found')
     }
