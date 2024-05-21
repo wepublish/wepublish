@@ -108,12 +108,9 @@ export class NavigationLinkInput {
 }
 
 @ArgsType()
-export class NavigationArgs {
-  @Field(() => String, {nullable: true})
-  id?: string
-
-  @Field(() => String, {nullable: true})
-  key?: string
+export class NavigationKeyArgs {
+  @Field(() => String)
+  key!: string
 }
 
 @ArgsType()

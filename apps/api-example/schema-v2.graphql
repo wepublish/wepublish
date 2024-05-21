@@ -391,8 +391,11 @@ type Query {
   "\n      Returns the expected revenue for the time period given.\n      Excludes cancelled or manually set as paid invoices.\n    "
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
 
-  """Returns a navigation by id or key."""
-  getNavigation(id: String, key: String): Navigation
+  """Returns a navigation by id."""
+  getNavigationById(id: String!): Navigation!
+
+  """Returns a navigation by key."""
+  getNavigationByKey(key: String!): Navigation!
 
   """Returns a list of navigations."""
   getNavigations: [Navigation!]!

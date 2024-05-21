@@ -37,7 +37,7 @@ exports[`NavigationResolver Mutation: updateNavigation 1`] = `
 exports[`NavigationResolver Query: getNavigation by id 1`] = `
 {
   "data": {
-    "getNavigation": {
+    "getNavigationById": {
       "id": "1",
       "key": "main",
       "links": [],
@@ -49,19 +49,11 @@ exports[`NavigationResolver Query: getNavigation by id 1`] = `
 
 exports[`NavigationResolver Query: getNavigation by id: Not found 1`] = `
 {
-  "data": {
-    "getNavigation": null,
-  },
+  "data": null,
   "errors": [
     {
       "extensions": {
-        "code": "INTERNAL_SERVER_ERROR",
-        "originalError": {
-          "error": "Not Found",
-          "message": "Navigation not found",
-          "statusCode": 404,
-        },
-        "status": 404,
+        "code": "BAD_USER_INPUT",
       },
       "locations": [
         {
@@ -71,7 +63,7 @@ exports[`NavigationResolver Query: getNavigation by id: Not found 1`] = `
       ],
       "message": "Navigation not found",
       "path": [
-        "getNavigation",
+        "getNavigationById",
       ],
     },
   ],
@@ -81,7 +73,7 @@ exports[`NavigationResolver Query: getNavigation by id: Not found 1`] = `
 exports[`NavigationResolver Query: getNavigation by key 1`] = `
 {
   "data": {
-    "getNavigation": {
+    "getNavigationByKey": {
       "id": "1",
       "key": "main",
       "links": [],
@@ -93,19 +85,11 @@ exports[`NavigationResolver Query: getNavigation by key 1`] = `
 
 exports[`NavigationResolver Query: getNavigation by key: Not found 1`] = `
 {
-  "data": {
-    "getNavigation": null,
-  },
+  "data": null,
   "errors": [
     {
       "extensions": {
-        "code": "INTERNAL_SERVER_ERROR",
-        "originalError": {
-          "error": "Not Found",
-          "message": "Navigation not found",
-          "statusCode": 404,
-        },
-        "status": 404,
+        "code": "BAD_USER_INPUT",
       },
       "locations": [
         {
@@ -115,7 +99,7 @@ exports[`NavigationResolver Query: getNavigation by key: Not found 1`] = `
       ],
       "message": "Navigation not found",
       "path": [
-        "getNavigation",
+        "getNavigationByKey",
       ],
     },
   ],

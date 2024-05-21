@@ -8,9 +8,35 @@ import {PrismaClient} from '@prisma/client'
 import request from 'supertest'
 import {expect} from '@storybook/jest'
 
-const navigationQuery = `
-  query GetNavigation($id: String, $key: String) {
-    getNavigation(id: $id, key: $key) {
+const navigationQueryById = `
+  query GetNavigationById($id: String!) {
+    getNavigationById(id: $id) {
+      id
+      key
+      name
+      links {
+        id
+        label
+        type
+        ... on ArticleNavigationLink{
+          articleID
+        }
+        
+        ... on PageNavigationLink{
+          pageID
+        }
+        
+        ... on ExternalNavigationLink{
+          url
+        }
+      }
+    }
+  }
+`
+
+const navigationQueryByKey = `
+  query GetNavigationByKey($key: String!) {
+    getNavigationByKey(key: $key) {
       id
       key
       name
@@ -139,13 +165,13 @@ describe('NavigationResolver', () => {
     await request(app.getHttpServer())
       .post('/')
       .send({
-        query: navigationQuery,
+        query: navigationQueryByKey,
         variables: {key: 'main'}
       })
-      .expect(200)
       .expect(res => {
         expect(res.body).toMatchSnapshot()
       })
+      .expect(200)
   })
 
   test('Query: getNavigation by key: Not found', async () => {
@@ -154,13 +180,13 @@ describe('NavigationResolver', () => {
     await request(app.getHttpServer())
       .post('/')
       .send({
-        query: navigationQuery,
+        query: navigationQueryByKey,
         variables: {key: 'not-found'}
       })
-      .expect(200)
       .expect(res => {
         expect(res.body).toMatchSnapshot()
       })
+      .expect(200)
   })
 
   test('Query: getNavigation by id', async () => {
@@ -170,13 +196,13 @@ describe('NavigationResolver', () => {
     await request(app.getHttpServer())
       .post('/')
       .send({
-        query: navigationQuery,
+        query: navigationQueryById,
         variables: {id: '1'}
       })
-      .expect(200)
       .expect(res => {
         expect(res.body).toMatchSnapshot()
       })
+      .expect(200)
   })
 
   test('Query: getNavigation by id: Not found', async () => {
@@ -185,13 +211,13 @@ describe('NavigationResolver', () => {
     await request(app.getHttpServer())
       .post('/')
       .send({
-        query: navigationQuery,
+        query: navigationQueryById,
         variables: {id: 'not-found'}
       })
-      .expect(200)
       .expect(res => {
         expect(res.body).toMatchSnapshot()
       })
+      .expect(200)
   })
 
   test('Query: getNavigations list', async () => {
@@ -201,11 +227,11 @@ describe('NavigationResolver', () => {
     await request(app.getHttpServer())
       .post('/')
       .send({query: navigationListQuery})
-      .expect(200)
       .expect(res => {
         expect(navigationServiceMock.getNavigations).toHaveBeenCalled()
         expect(res.body).toMatchSnapshot()
       })
+      .expect(200)
   })
 
   test('Mutation: createNavigation', async () => {
@@ -255,10 +281,10 @@ describe('NavigationResolver', () => {
         query: deleteNavigationMutation,
         variables: {id: mockId}
       })
-      .expect(200)
       .expect(res => {
         expect(navigationServiceMock.deleteNavigationById).toHaveBeenCalledWith(mockId)
         expect(res.body).toMatchSnapshot()
       })
+      .expect(200)
   })
 })

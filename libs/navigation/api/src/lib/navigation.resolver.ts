@@ -3,36 +3,33 @@ import {CanCreateNavigation, CanDeleteNavigation, Permissions} from '@wepublish/
 import {
   CreateNavigationInput,
   Navigation,
-  NavigationArgs,
   NavigationIdArgs,
+  NavigationKeyArgs,
   UpdateNavigationArgs
 } from './navigation.model'
 import {NavigationService} from './navigation.service'
-import {BadRequestException, NotFoundException} from '@nestjs/common'
+import {UserInputError} from '@nestjs/apollo'
 
 @Resolver(() => Navigation)
 export class NavigationResolver {
   constructor(private readonly navigationService: NavigationService) {}
 
-  @Query(() => Navigation, {nullable: true, description: `Returns a navigation by id or key.`})
-  async getNavigation(@Args() {id, key}: NavigationArgs) {
-    let navigation: Navigation | null = null
-    if (id) {
-      navigation = await this.navigationService.getNavigationById(id)
-      if (navigation === null) {
-        throw new NotFoundException('Navigation not found')
-      }
-      return navigation
+  @Query(() => Navigation, {description: `Returns a navigation by key.`})
+  async getNavigationByKey(@Args() {key}: NavigationKeyArgs) {
+    const navigation = await this.navigationService.getNavigationByKey(key)
+    if (navigation === null) {
+      throw new UserInputError('Navigation not found')
     }
-    if (key) {
-      navigation = await this.navigationService.getNavigationByKey(key)
-      if (navigation === null) {
-        throw new NotFoundException('Navigation not found')
-      }
-      return navigation
-    }
+    return navigation
+  }
 
-    throw new BadRequestException('Need to provide id or key')
+  @Query(() => Navigation, {description: `Returns a navigation by id.`})
+  async getNavigationById(@Args() {id}: NavigationIdArgs) {
+    const navigation = await this.navigationService.getNavigationById(id)
+    if (navigation === null) {
+      throw new UserInputError('Navigation not found')
+    }
+    return navigation
   }
 
   @Query(() => [Navigation], {description: `Returns a list of navigations.`})
