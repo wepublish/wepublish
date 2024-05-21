@@ -101,7 +101,8 @@ export const Subscribe = <T extends BuilderUserFormFields>({
   schema = defaultRegisterSchema,
   className,
   onSubscribe,
-  onSubscribeWithRegister
+  onSubscribeWithRegister,
+  cancelSubscriptionId
 }: BuilderSubscribeProps<T>) => {
   const {
     meta: {locale},
@@ -271,6 +272,9 @@ export const Subscribe = <T extends BuilderUserFormFields>({
   }, [selectedAvailablePaymentMethod, resetField, selectedPaymentPeriodicity])
 
   const alreadyHasSubscription = useMemo(() => {
+    if (cancelSubscriptionId) {
+      return
+    }
     return (
       userSubscriptions.data?.subscriptions.some(
         ({memberPlan, deactivation}) => memberPlan.id === selectedMemberPlanId && !deactivation
@@ -278,11 +282,14 @@ export const Subscribe = <T extends BuilderUserFormFields>({
     )
   }, [userSubscriptions.data?.subscriptions, selectedMemberPlanId])
 
-  const hasOpenInvoices = useMemo(
-    () =>
-      userInvoices.data?.invoices.some(invoice => !invoice.canceledAt && !invoice.paidAt) ?? false,
-    [userInvoices.data?.invoices]
-  )
+  const hasOpenInvoices = useMemo(() => {
+    if (cancelSubscriptionId) {
+      return
+    }
+    return (
+      userInvoices.data?.invoices.some(invoice => !invoice.canceledAt && !invoice.paidAt) ?? false
+    )
+  }, [userInvoices.data?.invoices])
 
   return (
     <SubscribeWrapper className={className} onSubmit={onSubmit} noValidate>

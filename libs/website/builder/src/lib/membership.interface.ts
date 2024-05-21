@@ -98,4 +98,5 @@ export type BuilderSubscribeProps<
     name: string
     firstName: string
   }>
+  cancelSubscriptionId?: string
 } & Pick<BuilderRegistrationFormProps<T>, 'schema' | 'fields'>

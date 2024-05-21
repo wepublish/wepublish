@@ -18,6 +18,7 @@ import {produce} from 'immer'
 import {StripeElement, StripePayment} from '@wepublish/payment/website'
 import {useEffect, useMemo, useState} from 'react'
 import {OptionalKeysOf} from 'type-fest'
+import {useRouter} from 'next/router'
 
 export type SubscribeContainerProps<
   T extends OptionalKeysOf<RegisterMutationVariables> = OptionalKeysOf<RegisterMutationVariables>
@@ -40,11 +41,14 @@ export const SubscribeContainer = <T extends OptionalKeysOf<RegisterMutationVari
   const {setToken, hasUser} = useUser()
   const {Subscribe} = useWebsiteBuilder()
   const [fetchChallenge, challenge] = useChallengeLazyQuery()
+  const router = useRouter()
 
   const [fetchUserSubscriptions, userSubscriptions] = useSubscriptionsLazyQuery()
   const [fetchUserInvoices, userInvoices] = useInvoicesLazyQuery()
 
   const [stripeClientSecret, setStripeClientSecret] = useState<string>()
+
+  const {cancelSubscriptionId} = router.query
 
   const memberPlanList = useMemberPlanListQuery({
     variables: {
@@ -122,7 +126,8 @@ export const SubscribeContainer = <T extends OptionalKeysOf<RegisterMutationVari
             variables: {
               ...formData,
               successURL,
-              failureURL
+              failureURL,
+              deactivateSubscriptionId: (cancelSubscriptionId as string | undefined) || undefined
             }
           })
         }}
@@ -143,6 +148,7 @@ export const SubscribeContainer = <T extends OptionalKeysOf<RegisterMutationVari
             }
           })
         }}
+        cancelSubscriptionId={cancelSubscriptionId as string | undefined}
       />
     </>
   )

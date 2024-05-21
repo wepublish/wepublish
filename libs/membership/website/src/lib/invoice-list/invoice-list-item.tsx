@@ -7,6 +7,7 @@ import {
 import {useMemo, useState} from 'react'
 import {MdAttachMoney, MdCalendarMonth, MdOutlineInfo, MdOutlineWarning} from 'react-icons/md'
 import {formatChf} from '../formatters/format-currency'
+import Link from 'next/link'
 
 export const InvoiceListItemWrapper = styled('div')`
   display: grid;
@@ -153,9 +154,15 @@ export function InvoiceListItem({
 
         {/* @TODO: Remove when all 'payrexx subscriptions' subscriptions have been migrated  */}
         {showPayrexxSubscriptionWarning && (
-          <Alert severity="warning">
-            Wir haben vor einiger Zeit das Membersystem umgestellt. Du verfügst noch über eine alte
-            Membership, die automatisch abgebucht wird.
+          <Alert
+            severity="warning"
+            action={
+              <Link
+                href={`/mitmachen?memberPlanBySlug=${subscription?.memberPlan.slug}&upsell=true&cancelSubscriptionId=${subscription?.id}`}>
+                <Button>Jetzt Abo ersetzen</Button>
+              </Link>
+            }>
+            Wir haben vor einiger Zeit das Membersystem angepasst und dein Abo ist veraltet.
           </Alert>
         )}
       </InvoiceListItemContent>
