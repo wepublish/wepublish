@@ -855,7 +855,25 @@ exports[`Invoice Item should render WithPayrexxSubscriptionsWarning 1`] = `
         <div
           class="MuiAlert-message css-1pxa9xg-MuiAlert-message"
         >
-          Wir haben vor einiger Zeit das Membersystem umgestellt. Du verfügst noch über eine alte Membership, die automatisch abgebucht wird.
+          Wir haben vor einiger Zeit das Membersystem angepasst und dein Abo ist veraltet.
+        </div>
+        <div
+          class="MuiAlert-action css-ki1hdl-MuiAlert-action"
+        >
+          <a
+            href="/mitmachen?memberPlanBySlug=undefined&upsell=true&cancelSubscriptionId=1234-1234"
+          >
+            <button
+              class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
+              tabindex="0"
+              type="button"
+            >
+              Jetzt Abo ersetzen
+              <span
+                class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+              />
+            </button>
+          </a>
         </div>
       </div>
     </div>
