@@ -1,3 +1,4 @@
+{{- if .Values.storybook.enabled -}}
 ---
 apiVersion: v1
 kind: Service
@@ -90,3 +91,5 @@ data:
   {{- range $name, $value := .Values.storybook.env }}
   {{ $name }}: "{{ $value | b64enc }}"
   {{- end }}
+
+{{- end }}
