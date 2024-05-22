@@ -1413,7 +1413,8 @@
       "trialSubscriptionConfigured": "This subscription is configured as a trial subscription.",
       "nonExtendableNotCompatibleWithAutoRenew": "An automatically renewing subscription must be renewable. Change one of these parameters.",
       "configureAsTrialSubscription": "Configure as a trial subscription",
-      "subscriptionTrialNotPossible": "The subscription cannot be configured as a trial subscription. To do so, change the settings of the subscription plan."
+      "subscriptionTrialNotPossible": "The subscription cannot be configured as a trial subscription. To do so, change the settings of the subscription plan.",
+      "extendableWasChanged": "The «Extendable» option has been adjusted according to the subscription plan."
     },
     "subscriptionListFilter": {
       "extendable": "Extendable"
