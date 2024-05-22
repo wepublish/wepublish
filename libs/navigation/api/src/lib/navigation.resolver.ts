@@ -9,13 +9,13 @@ import {
 } from './navigation.model'
 import {NavigationService} from './navigation.service'
 import {UserInputError} from '@nestjs/apollo'
-import {NavigationDataLoader} from './navigation.dataloader'
+import {NavigationDataloader} from './navigation.dataloader'
 
 @Resolver(() => Navigation)
 export class NavigationResolver {
   constructor(
     private readonly navigationService: NavigationService,
-    private readonly navigationDataLoader: NavigationDataLoader
+    private readonly navigationDataLoader: NavigationDataloader
   ) {}
 
   @Query(() => Navigation, {description: `Returns a navigation by key.`})

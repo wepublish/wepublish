@@ -1,12 +1,18 @@
 import {Test, TestingModule} from '@nestjs/testing'
 import {PrismaClient} from '@prisma/client'
 import {NavigationService} from './navigation.service'
+import {NavigationDataloader} from './navigation.dataloader'
 
 describe('NavigationService', () => {
   let service: NavigationService
+  let navigationDataloader: {[method in keyof NavigationDataloader]?: jest.Mock}
   let prismaMock: any
 
   beforeEach(async () => {
+    navigationDataloader = {
+      load: jest.fn()
+    }
+
     prismaMock = {
       navigation: {
         findUnique: jest.fn(),
@@ -21,7 +27,11 @@ describe('NavigationService', () => {
     }
 
     const module: TestingModule = await Test.createTestingModule({
-      providers: [NavigationService, {provide: PrismaClient, useValue: prismaMock}]
+      providers: [
+        NavigationService,
+        {provide: NavigationDataloader, useValue: navigationDataloader},
+        {provide: PrismaClient, useValue: prismaMock}
+      ]
     }).compile()
 
     service = module.get<NavigationService>(NavigationService)

@@ -7,6 +7,7 @@ import {NavigationResolver} from './navigation.resolver'
 import {PrismaClient} from '@prisma/client'
 import request from 'supertest'
 import {expect} from '@storybook/jest'
+import {NavigationDataloader} from './navigation.dataloader'
 
 const navigationQueryById = `
   query GetNavigationById($id: String!) {
@@ -124,15 +125,19 @@ const deleteNavigationMutation = `
 describe('NavigationResolver', () => {
   let app: INestApplication
   let navigationServiceMock: {[method in keyof NavigationService]?: jest.Mock}
+  let navigationDataloader: {[method in keyof NavigationDataloader]?: jest.Mock}
 
   beforeEach(async () => {
     navigationServiceMock = {
-      getNavigationById: jest.fn(),
       getNavigationByKey: jest.fn(),
       getNavigations: jest.fn(),
       createNavigation: jest.fn(),
       deleteNavigationById: jest.fn(),
       updateNavigation: jest.fn()
+    }
+
+    navigationDataloader = {
+      load: jest.fn()
     }
 
     const module: TestingModule = await Test.createTestingModule({
@@ -145,6 +150,7 @@ describe('NavigationResolver', () => {
       ],
       providers: [
         NavigationResolver,
+        {provide: NavigationDataloader, useValue: navigationDataloader},
         {provide: NavigationService, useValue: navigationServiceMock},
         {provide: PrismaClient, useValue: jest.fn()}
       ]
@@ -191,7 +197,7 @@ describe('NavigationResolver', () => {
 
   test('Query: getNavigation by id', async () => {
     const mockResponse = {id: '1', key: 'main', name: 'Main Navigation', links: []}
-    navigationServiceMock.getNavigationById?.mockResolvedValue(mockResponse)
+    navigationDataloader.load?.mockResolvedValue(mockResponse)
 
     await request(app.getHttpServer())
       .post('/')
@@ -206,7 +212,7 @@ describe('NavigationResolver', () => {
   })
 
   test('Query: getNavigation by id: Not found', async () => {
-    navigationServiceMock.getNavigationById?.mockResolvedValue(null)
+    navigationDataloader.load?.mockResolvedValue(null)
 
     await request(app.getHttpServer())
       .post('/')

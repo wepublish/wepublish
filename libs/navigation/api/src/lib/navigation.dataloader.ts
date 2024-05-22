@@ -1,12 +1,12 @@
 import {PrismaClient, Navigation} from '@prisma/client'
-import {createOptionalsArray, DataLoaderService} from '@wepublish/utils/api'
+import {createOptionalsArray, DataloaderService} from '@wepublish/utils/api'
 
-export class NavigationDataLoader extends DataLoaderService<Navigation> {
+export class NavigationDataloader extends DataloaderService<Navigation> {
   constructor(protected readonly prisma: PrismaClient) {
     super()
   }
 
-  protected async loadByKeys(ids: string[]) {
+  async loadByKeys(ids: string[]) {
     return createOptionalsArray(
       ids,
       await this.prisma.navigation.findMany({
