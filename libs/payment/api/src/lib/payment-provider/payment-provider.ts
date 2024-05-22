@@ -38,10 +38,12 @@ export interface CreatePaymentIntentProps {
   customerID?: string
   successURL?: string
   failureURL?: string
+  backgroundTask?: boolean
 }
 
 export interface CheckIntentProps {
   intentID: string
+  paymentID: string
 }
 
 export interface UpdateRemoteSubscriptionAmountProps {
@@ -91,6 +93,12 @@ export interface Intent {
   errorCode?: string
 }
 
+export type WebhookResponse = {
+  status: number
+  message?: string
+  paymentStates?: IntentState[]
+}
+
 export interface PaymentProvider {
   id: string
   name: string
@@ -99,7 +107,7 @@ export interface PaymentProvider {
 
   incomingRequestHandler: NextHandleFunction
 
-  webhookForPaymentIntent(props: WebhookForPaymentIntentProps): Promise<IntentState[]>
+  webhookForPaymentIntent(props: WebhookForPaymentIntentProps): Promise<WebhookResponse>
 
   createIntent(props: CreatePaymentIntentProps): Promise<Intent>
 
@@ -136,7 +144,7 @@ export abstract class BasePaymentProvider implements PaymentProvider {
     this.incomingRequestHandler = props.incomingRequestHandler ?? bodyParser.json()
   }
 
-  abstract webhookForPaymentIntent(props: WebhookForPaymentIntentProps): Promise<IntentState[]>
+  abstract webhookForPaymentIntent(props: WebhookForPaymentIntentProps): Promise<WebhookResponse>
 
   abstract createIntent(props: CreatePaymentIntentProps): Promise<Intent>
 

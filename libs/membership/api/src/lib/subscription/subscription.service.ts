@@ -7,6 +7,7 @@ import {
   PaymentPeriodicity,
   PaymentProviderCustomer,
   PaymentState,
+  PrismaClient,
   Subscription,
   SubscriptionDeactivation,
   SubscriptionDeactivationReason,
@@ -14,9 +15,8 @@ import {
   SubscriptionPeriod,
   User
 } from '@prisma/client'
-import {PrismaService} from '@wepublish/nest-modules'
 import {PaymentProvider, PaymentsService} from '@wepublish/payment/api'
-import {add, endOfDay, startOfDay, sub} from 'date-fns'
+import {add, endOfDay, startOfDay} from 'date-fns'
 import {Action} from '../subscription-event-dictionary/subscription-event-dictionary.type'
 import {mapPaymentPeriodToMonths} from '@wepublish/utils/api'
 
@@ -37,7 +37,7 @@ interface PeriodBounds {
 @Injectable()
 export class SubscriptionService {
   constructor(
-    private readonly prismaService: PrismaService,
+    private readonly prismaService: PrismaClient,
     private readonly payments: PaymentsService
   ) {}
 
@@ -53,7 +53,7 @@ export class SubscriptionService {
       memberPlan: MemberPlan
     })[]
   > {
-    return await this.prismaService.subscription.findMany({
+    return this.prismaService.subscription.findMany({
       where: {
         paidUntil: {
           lte: endOfDay(closestRenewalDate)
@@ -61,21 +61,28 @@ export class SubscriptionService {
         deactivation: {
           is: null
         },
-        invoices: {
+        periods: {
           none: {
-            scheduledDeactivationAt: {
-              gte: sub(endOfDay(runDate), {days: 3})
+            startsAt: {
+              gt: startOfDay(runDate)
             }
           }
         },
-        autoRenew: true
+        autoRenew: true,
+        invoices: {
+          none: {
+            paidAt: null,
+            canceledAt: null
+          }
+        }
       },
       include: {
         periods: true,
         deactivation: true,
         user: true,
         paymentMethod: true,
-        memberPlan: true
+        memberPlan: true,
+        invoices: true
       }
     })
   }
@@ -425,7 +432,8 @@ export class SubscriptionService {
         paymentID: payment.id,
         invoice,
         saveCustomer: false,
-        customerID: customer.customerID
+        customerID: customer.customerID,
+        backgroundTask: true
       })
 
       await this.prismaService.payment.update({

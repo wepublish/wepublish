@@ -1,4 +1,4 @@
-import {SubscriptionDeactivationReason, UserEvent} from '@prisma/client'
+import {PaymentState, SubscriptionDeactivationReason, UserEvent, Subscription} from '@prisma/client'
 import {SettingName} from '@wepublish/settings/api'
 import {unselectPassword} from '@wepublish/user/api'
 import * as crypto from 'crypto'
@@ -18,10 +18,14 @@ import {
   CommentAuthenticationError,
   EmailAlreadyInUseError,
   InternalError,
+  InvoiceAlreadyPaidOrCanceled,
   MonthlyAmountNotEnough,
   NotAuthenticatedError,
   NotFound,
+  PaymentAlreadyRunning,
+  SubscriptionNotExtendable,
   SubscriptionNotFound,
+  SubscriptionToDeactivateDoesNotExist,
   UserInputError,
   UserSubscriptionAlreadyDeactivated
 } from '../error'
@@ -71,6 +75,7 @@ import {
 } from './user/user.public-mutation'
 
 import {mailLogType} from '@wepublish/mail/api'
+import {sub} from 'date-fns'
 
 export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
   name: 'Mutation',
@@ -386,14 +391,15 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         const properties = await memberContext.processSubscriptionProperties(subscriptionProperties)
 
         const {subscription, invoice} = await memberContext.createSubscription(
-          prisma.subscription,
+          prisma,
           user.id,
           paymentMethod.id,
           paymentPeriodicity,
           monthlyAmount,
           memberPlan.id,
           properties,
-          autoRenew
+          autoRenew,
+          memberPlan.extendable
         )
 
         if (!invoice) {
@@ -432,7 +438,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           type: new GraphQLList(new GraphQLNonNull(GraphQLMetadataPropertyPublicInput))
         },
         successURL: {type: GraphQLString},
-        failureURL: {type: GraphQLString}
+        failureURL: {type: GraphQLString},
+        deactivateSubscriptionId: {type: GraphQLID}
       },
       description: 'Allows authenticated users to create additional subscriptions',
       async resolve(
@@ -447,7 +454,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           paymentMethodSlug,
           subscriptionProperties,
           successURL,
-          failureURL
+          failureURL,
+          deactivateSubscriptionId
         },
         {prisma, loaders, memberContext, createPaymentWithProvider, authenticateUser}
       ) {
@@ -481,17 +489,39 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           paymentMethod
         )
 
+        // Check if subscription which should be deactivated exists
+        let subscriptionToDeactivate: null | Subscription = null
+        if (deactivateSubscriptionId) {
+          subscriptionToDeactivate = await prisma.subscription.findUnique({
+            where: {
+              id: deactivateSubscriptionId,
+              userID: user.id,
+              deactivation: {
+                is: null
+              }
+            },
+            include: {
+              deactivation: true,
+              periods: true,
+              properties: true
+            }
+          })
+          if (!subscriptionToDeactivate)
+            throw new SubscriptionToDeactivateDoesNotExist(deactivateSubscriptionId)
+        }
+
         const properties = await memberContext.processSubscriptionProperties(subscriptionProperties)
 
         const {subscription, invoice} = await memberContext.createSubscription(
-          prisma.subscription,
+          prisma,
           user.id,
           paymentMethod.id,
           paymentPeriodicity,
           monthlyAmount,
           memberPlan.id,
           properties,
-          autoRenew
+          autoRenew,
+          memberPlan.extendable
         )
 
         if (!invoice) {
@@ -502,12 +532,20 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           throw new InternalError()
         }
 
+        if (subscriptionToDeactivate) {
+          await memberContext.deactivateSubscription({
+            subscription: subscriptionToDeactivate,
+            deactivationReason: SubscriptionDeactivationReason.userSelfDeactivated
+          })
+        }
+
         return await createPaymentWithProvider({
           invoice,
           saveCustomer: true,
           paymentMethodID: paymentMethod.id,
           successURL,
-          failureURL
+          failureURL,
+          user
         })
       }
     },
@@ -548,6 +586,11 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             user.id
           )
           throw new SubscriptionNotFound()
+        }
+
+        // Prevent user from extending not extendable subscription
+        if (!subscription.extendable) {
+          throw new SubscriptionNotExtendable(subscription.id)
         }
 
         // Throw for unsupported payment providers
@@ -618,26 +661,25 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
               'customer %s not found',
               paymentMethod.paymentProviderID
             )
-            throw new InternalError()
-          }
-
-          // Charge customer
-          try {
-            const payment = await memberContext.chargeInvoice({
-              user,
-              invoice,
-              paymentMethodID: subscription.paymentMethodID,
-              customer
-            })
-            if (payment) {
-              return payment
+          } else {
+            // Charge customer
+            try {
+              const payment = await memberContext.chargeInvoice({
+                user,
+                invoice,
+                paymentMethodID: subscription.paymentMethodID,
+                customer
+              })
+              if (payment) {
+                return payment
+              }
+            } catch (e) {
+              logger('extendSubscription').warn(
+                'Invoice off session charge for subscription %s failed: %s',
+                subscription.id,
+                e
+              )
             }
-          } catch (e) {
-            logger('extendSubscription').warn(
-              'Invoice off session charge for subscription %s failed: %s',
-              subscription.id,
-              e
-            )
           }
         }
 
@@ -878,13 +920,17 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           throw new NotFound('PaymentMethod', paymentMethodID || paymentMethodSlug)
 
         const invoice = await prisma.invoice.findUnique({
-          where: {id: invoiceID},
+          where: {
+            id: invoiceID
+          },
           include: {
             items: true
           }
         })
 
         if (!invoice || !invoice.subscriptionID) throw new NotFound('Invoice', invoiceID)
+
+        if (invoice.paidAt || invoice.canceledAt) throw new InvoiceAlreadyPaidOrCanceled(invoiceID)
 
         const subscription = await prisma.subscription.findUnique({
           where: {
@@ -900,12 +946,27 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
         if (!subscription || subscription.userID !== user.id)
           throw new NotFound('Invoice', invoiceID)
 
+        // Prevent multiple payment of same invoice!
+        const blockingPaymnet = await prisma.payment.findFirst({
+          where: {
+            invoiceID,
+            state: {
+              in: [PaymentState.created, PaymentState.submitted, PaymentState.processing]
+            },
+            createdAt: {
+              gte: sub(new Date(), {minutes: 1})
+            }
+          }
+        })
+        if (blockingPaymnet) throw new PaymentAlreadyRunning(blockingPaymnet.id)
+
         return await createPaymentWithProvider({
           paymentMethodID: paymentMethod.id,
           invoice,
           saveCustomer: false,
           successURL,
-          failureURL
+          failureURL,
+          user
         })
       }
     },
@@ -965,8 +1026,9 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       resolve: (
         root,
         {answerId},
-        {optionalAuthenticateUser, prisma: {pollAnswer, pollVote, setting}}
-      ) => voteOnPoll(answerId, undefined, optionalAuthenticateUser, pollAnswer, pollVote, setting)
+        {optionalAuthenticateUser, prisma: {pollAnswer, pollVote, setting}, fingerprint}
+      ) =>
+        voteOnPoll(answerId, fingerprint, optionalAuthenticateUser, pollAnswer, pollVote, setting)
     }
   }
 })

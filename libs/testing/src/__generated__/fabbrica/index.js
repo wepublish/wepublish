@@ -121,6 +121,21 @@ const modelFieldDefinitions = [{
                 name: "articlesAsSocialMediaAuthor",
                 type: "ArticleRevisionSocialMediaAuthor",
                 relationName: "ArticleRevisionSocialMediaAuthorToAuthor"
+            }, {
+                name: "tags",
+                type: "TaggedAuthors",
+                relationName: "AuthorToTaggedAuthors"
+            }]
+    }, {
+        name: "TaggedAuthors",
+        fields: [{
+                name: "author",
+                type: "Author",
+                relationName: "AuthorToTaggedAuthors"
+            }, {
+                name: "tag",
+                type: "Tag",
+                relationName: "TagToTaggedAuthors"
             }]
     }, {
         name: "FocalPoint",
@@ -583,6 +598,10 @@ const modelFieldDefinitions = [{
                 name: "events",
                 type: "TaggedEvents",
                 relationName: "TagToTaggedEvents"
+            }, {
+                name: "authors",
+                type: "TaggedAuthors",
+                relationName: "TagToTaggedAuthors"
             }]
     }, {
         name: "Poll",
@@ -742,6 +761,9 @@ const modelFieldDefinitions = [{
     }, {
         name: "PeriodicJob",
         fields: []
+    }, {
+        name: "BlockStyle",
+        fields: []
     }];
 function isMetadataPropertyArticleRevisionFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "ArticleRevision";
@@ -767,7 +789,7 @@ function defineMetadataPropertyFactoryInternal({ defaultData: defaultDataResolve
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("MetadataProperty", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateMetadataPropertyScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -799,7 +821,7 @@ function defineMetadataPropertyFactoryInternal({ defaultData: defaultDataResolve
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().metadataProperty.create({ data });
         });
@@ -849,7 +871,7 @@ function defineArticleRevisionFactoryInternal({ defaultData: defaultDataResolver
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("ArticleRevision", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateArticleRevisionScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -875,7 +897,7 @@ function defineArticleRevisionFactoryInternal({ defaultData: defaultDataResolver
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().articleRevision.create({ data });
         });
@@ -921,7 +943,7 @@ function defineArticleRevisionAuthorFactoryInternal({ defaultData: defaultDataRe
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("ArticleRevisionAuthor", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateArticleRevisionAuthorScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -948,7 +970,7 @@ function defineArticleRevisionAuthorFactoryInternal({ defaultData: defaultDataRe
             revisionId: inputData.revisionId,
             authorId: inputData.authorId
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().articleRevisionAuthor.create({ data });
         });
@@ -994,7 +1016,7 @@ function defineArticleRevisionSocialMediaAuthorFactoryInternal({ defaultData: de
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("ArticleRevisionSocialMediaAuthor", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateArticleRevisionSocialMediaAuthorScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -1021,7 +1043,7 @@ function defineArticleRevisionSocialMediaAuthorFactoryInternal({ defaultData: de
             revisionId: inputData.revisionId,
             authorId: inputData.authorId
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().articleRevisionSocialMediaAuthor.create({ data });
         });
@@ -1072,7 +1094,7 @@ function defineArticleFactoryInternal({ defaultData: defaultDataResolver, traits
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("Article", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateArticleScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -1101,7 +1123,7 @@ function defineArticleFactoryInternal({ defaultData: defaultDataResolver, traits
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().article.create({ data });
         });
@@ -1147,7 +1169,7 @@ function defineAuthorsLinksFactoryInternal({ defaultData: defaultDataResolver, t
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("AuthorsLinks", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateAuthorsLinksScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -1170,7 +1192,7 @@ function defineAuthorsLinksFactoryInternal({ defaultData: defaultDataResolver, t
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().authorsLinks.create({ data });
         });
@@ -1216,7 +1238,7 @@ function defineAuthorFactoryInternal({ defaultData: defaultDataResolver, traits:
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("Author", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateAuthorScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -1239,7 +1261,7 @@ function defineAuthorFactoryInternal({ defaultData: defaultDataResolver, traits:
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().author.create({ data });
         });
@@ -1271,6 +1293,79 @@ function defineAuthorFactoryInternal({ defaultData: defaultDataResolver, traits:
 export function defineAuthorFactory(options) {
     return defineAuthorFactoryInternal(options !== null && options !== void 0 ? options : {});
 }
+function isTaggedAuthorsauthorFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Author";
+}
+function isTaggedAuthorstagFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Tag";
+}
+function autoGenerateTaggedAuthorsScalarsOrEnums({ seq }) {
+    return {};
+}
+function defineTaggedAuthorsFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("TaggedAuthors", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateTaggedAuthorsScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {
+                author: isTaggedAuthorsauthorFactory(defaultData.author) ? {
+                    create: yield defaultData.author.build()
+                } : defaultData.author,
+                tag: isTaggedAuthorstagFactory(defaultData.tag) ? {
+                    create: yield defaultData.tag.build()
+                } : defaultData.tag
+            };
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
+            authorId: inputData.authorId,
+            tagId: inputData.tagId
+        });
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().taggedAuthors.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
+        return {
+            _factoryFor: "TaggedAuthors",
+            build,
+            buildList,
+            buildCreateInput: build,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
+        };
+    };
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
+    };
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
+}
+/**
+ * Define factory for {@link TaggedAuthors} model.
+ *
+ * @param options
+ * @returns factory {@link TaggedAuthorsFactoryInterface}
+ */
+export function defineTaggedAuthorsFactory(options) {
+    return defineTaggedAuthorsFactoryInternal(options);
+}
 function isFocalPointimageFactory(x) {
     return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Image";
 }
@@ -1282,7 +1377,7 @@ function defineFocalPointFactoryInternal({ defaultData: defaultDataResolver, tra
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("FocalPoint", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateFocalPointScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -1305,7 +1400,7 @@ function defineFocalPointFactoryInternal({ defaultData: defaultDataResolver, tra
         const pickForConnect = (inputData) => ({
             imageId: inputData.imageId
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().focalPoint.create({ data });
         });
@@ -1356,7 +1451,7 @@ function defineImageFactoryInternal({ defaultData: defaultDataResolver, traits: 
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("Image", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateImageScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -1379,7 +1474,7 @@ function defineImageFactoryInternal({ defaultData: defaultDataResolver, traits: 
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().image.create({ data });
         });
@@ -1422,7 +1517,7 @@ function defineCommentsRevisionsFactoryInternal({ defaultData: defaultDataResolv
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("CommentsRevisions", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateCommentsRevisionsScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -1445,7 +1540,7 @@ function defineCommentsRevisionsFactoryInternal({ defaultData: defaultDataResolv
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().commentsRevisions.create({ data });
         });
@@ -1499,7 +1594,7 @@ function defineCommentFactoryInternal({ defaultData: defaultDataResolver, traits
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("Comment", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateCommentScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -1528,7 +1623,7 @@ function defineCommentFactoryInternal({ defaultData: defaultDataResolver, traits
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().comment.create({ data });
         });
@@ -1574,7 +1669,7 @@ function defineTaggedCommentsFactoryInternal({ defaultData: defaultDataResolver,
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("TaggedComments", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateTaggedCommentsScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -1601,7 +1696,7 @@ function defineTaggedCommentsFactoryInternal({ defaultData: defaultDataResolver,
             commentId: inputData.commentId,
             tagId: inputData.tagId
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().taggedComments.create({ data });
         });
@@ -1641,7 +1736,7 @@ function defineCommentRatingSystemFactoryInternal({ defaultData: defaultDataReso
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("CommentRatingSystem", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateCommentRatingSystemScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -1660,7 +1755,7 @@ function defineCommentRatingSystemFactoryInternal({ defaultData: defaultDataReso
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().commentRatingSystem.create({ data });
         });
@@ -1705,7 +1800,7 @@ function defineCommentRatingSystemAnswerFactoryInternal({ defaultData: defaultDa
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("CommentRatingSystemAnswer", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateCommentRatingSystemAnswerScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -1728,7 +1823,7 @@ function defineCommentRatingSystemAnswerFactoryInternal({ defaultData: defaultDa
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().commentRatingSystemAnswer.create({ data });
         });
@@ -1779,7 +1874,7 @@ function defineCommentRatingFactoryInternal({ defaultData: defaultDataResolver, 
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("CommentRating", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateCommentRatingScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -1808,7 +1903,7 @@ function defineCommentRatingFactoryInternal({ defaultData: defaultDataResolver, 
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().commentRating.create({ data });
         });
@@ -1854,7 +1949,7 @@ function defineCommentRatingOverrideFactoryInternal({ defaultData: defaultDataRe
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("CommentRatingOverride", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateCommentRatingOverrideScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -1881,7 +1976,7 @@ function defineCommentRatingOverrideFactoryInternal({ defaultData: defaultDataRe
             answerId: inputData.answerId,
             commentId: inputData.commentId
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().commentRatingOverride.create({ data });
         });
@@ -1928,7 +2023,7 @@ function defineInvoiceItemFactoryInternal({ defaultData: defaultDataResolver, tr
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("InvoiceItem", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateInvoiceItemScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -1951,7 +2046,7 @@ function defineInvoiceItemFactoryInternal({ defaultData: defaultDataResolver, tr
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().invoiceItem.create({ data });
         });
@@ -1998,7 +2093,7 @@ function defineInvoiceFactoryInternal({ defaultData: defaultDataResolver, traits
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("Invoice", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateInvoiceScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -2021,7 +2116,7 @@ function defineInvoiceFactoryInternal({ defaultData: defaultDataResolver, traits
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().invoice.create({ data });
         });
@@ -2072,7 +2167,7 @@ function defineMailLogFactoryInternal({ defaultData: defaultDataResolver, traits
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("MailLog", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateMailLogScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -2098,7 +2193,7 @@ function defineMailLogFactoryInternal({ defaultData: defaultDataResolver, traits
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().mailLog.create({ data });
         });
@@ -2143,7 +2238,7 @@ function defineAvailablePaymentMethodFactoryInternal({ defaultData: defaultDataR
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("AvailablePaymentMethod", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateAvailablePaymentMethodScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -2166,7 +2261,7 @@ function defineAvailablePaymentMethodFactoryInternal({ defaultData: defaultDataR
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().availablePaymentMethod.create({ data });
         });
@@ -2215,7 +2310,7 @@ function defineMemberPlanFactoryInternal({ defaultData: defaultDataResolver, tra
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("MemberPlan", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateMemberPlanScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -2238,7 +2333,7 @@ function defineMemberPlanFactoryInternal({ defaultData: defaultDataResolver, tra
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().memberPlan.create({ data });
         });
@@ -2290,7 +2385,7 @@ function defineNavigationLinkFactoryInternal({ defaultData: defaultDataResolver,
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("NavigationLink", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateNavigationLinkScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -2319,7 +2414,7 @@ function defineNavigationLinkFactoryInternal({ defaultData: defaultDataResolver,
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().navigationLink.create({ data });
         });
@@ -2362,7 +2457,7 @@ function defineNavigationFactoryInternal({ defaultData: defaultDataResolver, tra
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("Navigation", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateNavigationScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -2381,7 +2476,7 @@ function defineNavigationFactoryInternal({ defaultData: defaultDataResolver, tra
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().navigation.create({ data });
         });
@@ -2430,7 +2525,7 @@ function definePageRevisionFactoryInternal({ defaultData: defaultDataResolver, t
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("PageRevision", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGeneratePageRevisionScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -2456,7 +2551,7 @@ function definePageRevisionFactoryInternal({ defaultData: defaultDataResolver, t
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().pageRevision.create({ data });
         });
@@ -2505,7 +2600,7 @@ function definePageFactoryInternal({ defaultData: defaultDataResolver, traits: t
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("Page", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGeneratePageScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -2534,7 +2629,7 @@ function definePageFactoryInternal({ defaultData: defaultDataResolver, traits: t
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().page.create({ data });
         });
@@ -2580,7 +2675,7 @@ function definePaymentMethodFactoryInternal({ defaultData: defaultDataResolver, 
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("PaymentMethod", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGeneratePaymentMethodScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -2599,7 +2694,7 @@ function definePaymentMethodFactoryInternal({ defaultData: defaultDataResolver, 
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().paymentMethod.create({ data });
         });
@@ -2645,7 +2740,7 @@ function definePaymentFactoryInternal({ defaultData: defaultDataResolver, traits
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("Payment", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGeneratePaymentScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -2668,7 +2763,7 @@ function definePaymentFactoryInternal({ defaultData: defaultDataResolver, traits
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().payment.create({ data });
         });
@@ -2717,7 +2812,7 @@ function definePeerProfileFactoryInternal({ defaultData: defaultDataResolver, tr
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("PeerProfile", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGeneratePeerProfileScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -2740,7 +2835,7 @@ function definePeerProfileFactoryInternal({ defaultData: defaultDataResolver, tr
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().peerProfile.create({ data });
         });
@@ -2785,7 +2880,7 @@ function definePeerFactoryInternal({ defaultData: defaultDataResolver, traits: t
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("Peer", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGeneratePeerScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -2804,7 +2899,7 @@ function definePeerFactoryInternal({ defaultData: defaultDataResolver, traits: t
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().peer.create({ data });
         });
@@ -2847,7 +2942,7 @@ function defineTokenFactoryInternal({ defaultData: defaultDataResolver, traits: 
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("Token", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateTokenScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -2866,7 +2961,7 @@ function defineTokenFactoryInternal({ defaultData: defaultDataResolver, traits: 
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().token.create({ data });
         });
@@ -2912,7 +3007,7 @@ function defineSessionFactoryInternal({ defaultData: defaultDataResolver, traits
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("Session", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateSessionScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -2935,7 +3030,7 @@ function defineSessionFactoryInternal({ defaultData: defaultDataResolver, traits
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().session.create({ data });
         });
@@ -2986,7 +3081,7 @@ function defineSubscriptionPeriodFactoryInternal({ defaultData: defaultDataResol
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("SubscriptionPeriod", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateSubscriptionPeriodScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -3012,7 +3107,7 @@ function defineSubscriptionPeriodFactoryInternal({ defaultData: defaultDataResol
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().subscriptionPeriod.create({ data });
         });
@@ -3058,7 +3153,7 @@ function defineSubscriptionDeactivationFactoryInternal({ defaultData: defaultDat
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("SubscriptionDeactivation", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateSubscriptionDeactivationScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -3081,7 +3176,7 @@ function defineSubscriptionDeactivationFactoryInternal({ defaultData: defaultDat
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().subscriptionDeactivation.create({ data });
         });
@@ -3138,7 +3233,7 @@ function defineSubscriptionFactoryInternal({ defaultData: defaultDataResolver, t
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("Subscription", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateSubscriptionScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -3170,7 +3265,7 @@ function defineSubscriptionFactoryInternal({ defaultData: defaultDataResolver, t
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().subscription.create({ data });
         });
@@ -3213,7 +3308,7 @@ function defineUserAddressFactoryInternal({ defaultData: defaultDataResolver, tr
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("UserAddress", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateUserAddressScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -3236,7 +3331,7 @@ function defineUserAddressFactoryInternal({ defaultData: defaultDataResolver, tr
         const pickForConnect = (inputData) => ({
             userId: inputData.userId
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().userAddress.create({ data });
         });
@@ -3288,7 +3383,7 @@ function defineUserOAuth2AccountFactoryInternal({ defaultData: defaultDataResolv
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("UserOAuth2Account", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateUserOAuth2AccountScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -3311,7 +3406,7 @@ function defineUserOAuth2AccountFactoryInternal({ defaultData: defaultDataResolv
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().userOAuth2Account.create({ data });
         });
@@ -3357,7 +3452,7 @@ function definePaymentProviderCustomerFactoryInternal({ defaultData: defaultData
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("PaymentProviderCustomer", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGeneratePaymentProviderCustomerScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -3380,7 +3475,7 @@ function definePaymentProviderCustomerFactoryInternal({ defaultData: defaultData
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().paymentProviderCustomer.create({ data });
         });
@@ -3431,7 +3526,7 @@ function defineUserFactoryInternal({ defaultData: defaultDataResolver, traits: t
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("User", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateUserScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -3457,7 +3552,7 @@ function defineUserFactoryInternal({ defaultData: defaultDataResolver, traits: t
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().user.create({ data });
         });
@@ -3500,7 +3595,7 @@ function defineUserRoleFactoryInternal({ defaultData: defaultDataResolver, trait
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("UserRole", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateUserRoleScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -3519,7 +3614,7 @@ function defineUserRoleFactoryInternal({ defaultData: defaultDataResolver, trait
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().userRole.create({ data });
         });
@@ -3563,7 +3658,7 @@ function defineSettingFactoryInternal({ defaultData: defaultDataResolver, traits
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("Setting", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateSettingScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -3582,7 +3677,7 @@ function defineSettingFactoryInternal({ defaultData: defaultDataResolver, traits
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().setting.create({ data });
         });
@@ -3624,7 +3719,7 @@ function defineTagFactoryInternal({ defaultData: defaultDataResolver, traits: tr
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("Tag", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateTagScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -3643,7 +3738,7 @@ function defineTagFactoryInternal({ defaultData: defaultDataResolver, traits: tr
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().tag.create({ data });
         });
@@ -3683,7 +3778,7 @@ function definePollFactoryInternal({ defaultData: defaultDataResolver, traits: t
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("Poll", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGeneratePollScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -3702,7 +3797,7 @@ function definePollFactoryInternal({ defaultData: defaultDataResolver, traits: t
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().poll.create({ data });
         });
@@ -3745,7 +3840,7 @@ function definePollAnswerFactoryInternal({ defaultData: defaultDataResolver, tra
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("PollAnswer", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGeneratePollAnswerScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -3768,7 +3863,7 @@ function definePollAnswerFactoryInternal({ defaultData: defaultDataResolver, tra
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().pollAnswer.create({ data });
         });
@@ -3817,7 +3912,7 @@ function definePollVoteFactoryInternal({ defaultData: defaultDataResolver, trait
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("PollVote", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGeneratePollVoteScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -3846,7 +3941,7 @@ function definePollVoteFactoryInternal({ defaultData: defaultDataResolver, trait
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().pollVote.create({ data });
         });
@@ -3889,7 +3984,7 @@ function definePollExternalVoteSourceFactoryInternal({ defaultData: defaultDataR
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("PollExternalVoteSource", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGeneratePollExternalVoteSourceScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -3912,7 +4007,7 @@ function definePollExternalVoteSourceFactoryInternal({ defaultData: defaultDataR
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().pollExternalVoteSource.create({ data });
         });
@@ -3958,7 +4053,7 @@ function definePollExternalVoteFactoryInternal({ defaultData: defaultDataResolve
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("PollExternalVote", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGeneratePollExternalVoteScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -3984,7 +4079,7 @@ function definePollExternalVoteFactoryInternal({ defaultData: defaultDataResolve
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().pollExternalVote.create({ data });
         });
@@ -4030,7 +4125,7 @@ function defineEventFactoryInternal({ defaultData: defaultDataResolver, traits: 
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("Event", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateEventScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -4053,7 +4148,7 @@ function defineEventFactoryInternal({ defaultData: defaultDataResolver, traits: 
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().event.create({ data });
         });
@@ -4099,7 +4194,7 @@ function defineTaggedEventsFactoryInternal({ defaultData: defaultDataResolver, t
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("TaggedEvents", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateTaggedEventsScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -4126,7 +4221,7 @@ function defineTaggedEventsFactoryInternal({ defaultData: defaultDataResolver, t
             eventId: inputData.eventId,
             tagId: inputData.tagId
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().taggedEvents.create({ data });
         });
@@ -4170,7 +4265,7 @@ function defineConsentFactoryInternal({ defaultData: defaultDataResolver, traits
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("Consent", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateConsentScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -4189,7 +4284,7 @@ function defineConsentFactoryInternal({ defaultData: defaultDataResolver, traits
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().consent.create({ data });
         });
@@ -4237,7 +4332,7 @@ function defineUserConsentFactoryInternal({ defaultData: defaultDataResolver, tr
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("UserConsent", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateUserConsentScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -4263,7 +4358,7 @@ function defineUserConsentFactoryInternal({ defaultData: defaultDataResolver, tr
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().userConsent.create({ data });
         });
@@ -4308,7 +4403,7 @@ function defineUserFlowMailFactoryInternal({ defaultData: defaultDataResolver, t
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("UserFlowMail", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateUserFlowMailScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -4331,7 +4426,7 @@ function defineUserFlowMailFactoryInternal({ defaultData: defaultDataResolver, t
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().userFlowMail.create({ data });
         });
@@ -4374,7 +4469,7 @@ function defineSubscriptionFlowFactoryInternal({ defaultData: defaultDataResolve
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("SubscriptionFlow", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateSubscriptionFlowScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -4397,7 +4492,7 @@ function defineSubscriptionFlowFactoryInternal({ defaultData: defaultDataResolve
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().subscriptionFlow.create({ data });
         });
@@ -4445,7 +4540,7 @@ function defineSubscriptionIntervalFactoryInternal({ defaultData: defaultDataRes
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("SubscriptionInterval", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateSubscriptionIntervalScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -4471,7 +4566,7 @@ function defineSubscriptionIntervalFactoryInternal({ defaultData: defaultDataRes
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().subscriptionInterval.create({ data });
         });
@@ -4514,7 +4609,7 @@ function defineMailTemplateFactoryInternal({ defaultData: defaultDataResolver, t
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("MailTemplate", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGenerateMailTemplateScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -4533,7 +4628,7 @@ function defineMailTemplateFactoryInternal({ defaultData: defaultDataResolver, t
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().mailTemplate.create({ data });
         });
@@ -4575,7 +4670,7 @@ function definePeriodicJobFactoryInternal({ defaultData: defaultDataResolver, tr
         const seqKey = {};
         const getSeq = () => getSequenceCounter(seqKey);
         const screen = createScreener("PeriodicJob", modelFieldDefinitions);
-        const build = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
             const seq = getSeq();
             const requiredScalarData = autoGeneratePeriodicJobScalarsOrEnums({ seq });
             const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
@@ -4594,7 +4689,7 @@ function definePeriodicJobFactoryInternal({ defaultData: defaultDataResolver, tr
         const pickForConnect = (inputData) => ({
             id: inputData.id
         });
-        const create = (inputData = {}) => __awaiter(this, void 0, void 0, function* () {
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
             const data = yield build(inputData).then(screen);
             return yield getClient().periodicJob.create({ data });
         });
@@ -4625,4 +4720,65 @@ function definePeriodicJobFactoryInternal({ defaultData: defaultDataResolver, tr
  */
 export function definePeriodicJobFactory(options) {
     return definePeriodicJobFactoryInternal(options !== null && options !== void 0 ? options : {});
+}
+function autoGenerateBlockStyleScalarsOrEnums({ seq }) {
+    return {
+        name: getScalarFieldValueGenerator().String({ modelName: "BlockStyle", fieldName: "name", isId: false, isUnique: true, seq })
+    };
+}
+function defineBlockStyleFactoryInternal({ defaultData: defaultDataResolver, traits: traitsDefs = {} }) {
+    const getFactoryWithTraits = (traitKeys = []) => {
+        const seqKey = {};
+        const getSeq = () => getSequenceCounter(seqKey);
+        const screen = createScreener("BlockStyle", modelFieldDefinitions);
+        const build = (...args_1) => __awaiter(this, [...args_1], void 0, function* (inputData = {}) {
+            const seq = getSeq();
+            const requiredScalarData = autoGenerateBlockStyleScalarsOrEnums({ seq });
+            const resolveValue = normalizeResolver(defaultDataResolver !== null && defaultDataResolver !== void 0 ? defaultDataResolver : {});
+            const defaultData = yield traitKeys.reduce((queue, traitKey) => __awaiter(this, void 0, void 0, function* () {
+                var _a, _b;
+                const acc = yield queue;
+                const resolveTraitValue = normalizeResolver((_b = (_a = traitsDefs[traitKey]) === null || _a === void 0 ? void 0 : _a.data) !== null && _b !== void 0 ? _b : {});
+                const traitData = yield resolveTraitValue({ seq });
+                return Object.assign(Object.assign({}, acc), traitData);
+            }), resolveValue({ seq }));
+            const defaultAssociations = {};
+            const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
+            return data;
+        });
+        const buildList = (inputData) => Promise.all(normalizeList(inputData).map(data => build(data)));
+        const pickForConnect = (inputData) => ({
+            id: inputData.id
+        });
+        const create = (...args_2) => __awaiter(this, [...args_2], void 0, function* (inputData = {}) {
+            const data = yield build(inputData).then(screen);
+            return yield getClient().blockStyle.create({ data });
+        });
+        const createList = (inputData) => Promise.all(normalizeList(inputData).map(data => create(data)));
+        const createForConnect = (inputData = {}) => create(inputData).then(pickForConnect);
+        return {
+            _factoryFor: "BlockStyle",
+            build,
+            buildList,
+            buildCreateInput: build,
+            pickForConnect,
+            create,
+            createList,
+            createForConnect,
+        };
+    };
+    const factory = getFactoryWithTraits();
+    const useTraits = (name, ...names) => {
+        return getFactoryWithTraits([name, ...names]);
+    };
+    return Object.assign(Object.assign({}, factory), { use: useTraits });
+}
+/**
+ * Define factory for {@link BlockStyle} model.
+ *
+ * @param options
+ * @returns factory {@link BlockStyleFactoryInterface}
+ */
+export function defineBlockStyleFactory(options) {
+    return defineBlockStyleFactoryInternal(options !== null && options !== void 0 ? options : {});
 }

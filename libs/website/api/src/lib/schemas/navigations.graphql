@@ -6,14 +6,14 @@ fragment FullNavigation on Navigation {
     ... on PageNavigationLink {
       label
       page {
-        ...FullPage
+        url
       }
     }
 
     ... on ArticleNavigationLink {
       label
       article {
-        ...FullArticle
+        url
       }
     }
 

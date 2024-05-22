@@ -5,6 +5,7 @@ node_modules
 npm-debug.log
 .media
 .changelog
+.CHANGELOG-next.md
 coverage/
 screenshots
 
@@ -16,3 +17,8 @@ lerna-debug.log
 
 # Next.js
 .next
+
+# translations cleanup files
+tools/modified_jsonfile.json
+tools/removed_keys.json
+.vercel

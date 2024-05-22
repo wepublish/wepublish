@@ -1,7 +1,7 @@
 import {forwardRef} from '@nestjs/common'
 import {Test, TestingModule} from '@nestjs/testing'
 import {PaymentPeriodicity, PrismaClient, SubscriptionEvent, User} from '@prisma/client'
-import {PrismaService} from '@wepublish/nest-modules'
+import {PrismaModule} from '@wepublish/nest-modules'
 import {
   clearDatabase,
   clearFullDatabase,
@@ -57,11 +57,12 @@ describe('PeriodicJobService', () => {
     await nock.disableNetConnect()
     const module: TestingModule = await Test.createTestingModule({
       imports: [
+        PrismaModule,
         forwardRef(() => registerPrismaModule(prismaClient)),
         registerMailsModule(),
         registerPaymentsModule()
       ],
-      providers: [PrismaService, SubscriptionFlowService, PeriodicJobService, SubscriptionService]
+      providers: [SubscriptionFlowService, PeriodicJobService, SubscriptionService]
     }).compile()
 
     service = module.get<PeriodicJobService>(PeriodicJobService)
@@ -538,7 +539,7 @@ describe('PeriodicJobService', () => {
           },
           periods: {
             create: {
-              startsAt: subscriptionValidUntil,
+              startsAt: add(subscriptionValidUntil, {days: 10}),
               endsAt: add(subscriptionValidUntil, {months: 12}),
               paymentPeriodicity: PaymentPeriodicity.yearly,
               amount: 2400,
@@ -1059,7 +1060,7 @@ describe('PeriodicJobService', () => {
   it('Deactivate subscription missing invoice deletion object', async () => {
     const mp = await MemberPlanFactory.create({})
     const pm = await PaymentMethodFactory.create({})
-    const sf = await SubscriptionFlowFactory.create({
+    await SubscriptionFlowFactory.create({
       default: false,
       memberPlan: {
         connect: {

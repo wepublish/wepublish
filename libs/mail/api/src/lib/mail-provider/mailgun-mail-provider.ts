@@ -129,12 +129,20 @@ export class MailgunMailProvider extends BaseMailProvider {
       form.append('template', props.template)
 
       for (const [key, value] of Object.entries(props.templateData || {})) {
-        form.append(`v:${key}`, JSON.stringify(value))
+        // Enforce max length of 16kb per key => https://documentation.mailgun.com/en/latest/api-sending.html
+        let serializedValue: string | number = ''
+        if (typeof value === 'number') {
+          serializedValue = value
+        } else if (typeof value === 'string') {
+          serializedValue = value.substring(0, 15000)
+        } else {
+          serializedValue = JSON.stringify(value).substring(0, 15000)
+        }
+        form.append(`v:${key}`, serializedValue)
       }
     }
 
     form.append('v:mail_log_id', props.mailLogID)
-
     return new Promise((resolve, reject) => {
       form.submit(
         {

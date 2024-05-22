@@ -17,7 +17,7 @@ export interface MemberPlan extends Omit<PrismaMemberPlan, 'description'> {
 }
 
 export enum MemberPlanSort {
-  CreatedAt = 'modifiedAt',
+  CreatedAt = 'createdAt',
   ModifiedAt = 'modifiedAt'
 }
 

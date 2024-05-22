@@ -7,8 +7,8 @@ export const isTitleBlock = (block: Block): block is TitleBlockType =>
 
 export const TitleBlockWrapper = styled('div')`
   display: grid;
-  gap: ${({theme}) => theme.spacing(5)};
-  grid-template-rows: min-content min-content;
+  gap: ${({theme}) => theme.spacing(3)};
+  grid-auto-rows: min-content;
 `
 
 export const TitleBlock = ({title, lead, className}: BuilderTitleBlockProps) => {

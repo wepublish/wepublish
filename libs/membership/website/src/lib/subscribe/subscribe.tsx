@@ -29,6 +29,7 @@ import {formatPaymentPeriod, getPaymentPeriodicyMonths} from '../formatters/form
 import {formatRenewalPeriod} from '../formatters/format-renewal-period'
 import {css} from '@emotion/react'
 import {sortBy} from 'ramda'
+import {MembershipModal} from '../membership-modal/membership-modal'
 
 const subscribeSchema = z.object({
   memberPlanId: z.string().nonempty(),
@@ -91,8 +92,11 @@ export const SubscribeExtraMoney = styled('div')`
 `
 
 export const Subscribe = <T extends BuilderUserFormFields>({
+  defaults,
   memberPlans,
   challenge,
+  userSubscriptions,
+  userInvoices,
   fields = ['firstName', 'password', 'address'] as T[],
   schema = defaultRegisterSchema,
   className,
@@ -100,13 +104,14 @@ export const Subscribe = <T extends BuilderUserFormFields>({
   onSubscribeWithRegister
 }: BuilderSubscribeProps<T>) => {
   const {
-    locale,
-    elements: {Alert, Button, TextField, H5},
+    meta: {locale},
+    elements: {Alert, Button, TextField, H5, Link, Paragraph},
     MemberPlanPicker,
     PaymentMethodPicker,
     PeriodicityPicker
   } = useWebsiteBuilder()
   const {hasUser} = useUser()
+  const [openConfirm, setOpenConfirm] = useState(false)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error>()
   const callAction = useAsyncAction(setLoading, setError)
@@ -132,9 +137,14 @@ export const Subscribe = <T extends BuilderUserFormFields>({
   >({
     resolver: zodResolver(hasUser ? subscribeSchema : loggedOutSchema),
     defaultValues: {
+      ...defaults,
       extraMoney: 0,
       autoRenew: true,
-      memberPlanId: memberPlans.data?.memberPlans.nodes[0]?.id,
+      memberPlanId: defaults?.memberPlanSlug
+        ? memberPlans.data?.memberPlans.nodes.find(
+            memberPlan => memberPlan.slug === defaults?.memberPlanSlug
+          )?.id
+        : memberPlans.data?.memberPlans.nodes[0]?.id,
       paymentMethodId:
         memberPlans.data?.memberPlans.nodes[0]?.availablePaymentMethods[0]?.paymentMethods[0]?.id,
       paymentPeriodicity:
@@ -260,11 +270,39 @@ export const Subscribe = <T extends BuilderUserFormFields>({
     }
   }, [selectedAvailablePaymentMethod, resetField, selectedPaymentPeriodicity])
 
+  const alreadyHasSubscription = useMemo(() => {
+    return (
+      userSubscriptions.data?.subscriptions.some(
+        ({memberPlan, deactivation}) => memberPlan.id === selectedMemberPlanId && !deactivation
+      ) ?? false
+    )
+  }, [userSubscriptions.data?.subscriptions, selectedMemberPlanId])
+
+  const hasOpenInvoices = useMemo(
+    () =>
+      userInvoices.data?.invoices.some(invoice => !invoice.canceledAt && !invoice.paidAt) ?? false,
+    [userInvoices.data?.invoices]
+  )
+
   return (
     <SubscribeWrapper className={className} onSubmit={onSubmit} noValidate>
       <SubscribeSection>
         {(memberPlans.data?.memberPlans.nodes.length ?? 0) > 1 && (
           <H5 component="h2">Abo wählen</H5>
+        )}
+
+        {hasOpenInvoices && (
+          <Alert severity="warning">
+            Du hast bereits schon ein Abo mit offenen Rechnungen. Du kannst deine offenen Rechnungen
+            in deinem <Link href="/profile/subscription">Abo-Dashboard</Link> anschauen.
+          </Alert>
+        )}
+
+        {alreadyHasSubscription && (
+          <Alert severity="warning">
+            Du hast dieses Abo schon, bist du dir sicher? Du kannst deine Abos in deinem{' '}
+            <Link href="/profile/subscription">Abo-Dashboard</Link> anschauen.
+          </Alert>
         )}
 
         <Controller
@@ -410,9 +448,45 @@ export const Subscribe = <T extends BuilderUserFormFields>({
 
       {error && <Alert severity="error">{error.message}</Alert>}
 
-      <Button disabled={challenge.loading || loading} type="submit" css={buttonStyles}>
+      <Button
+        disabled={challenge.loading || userInvoices.loading || userSubscriptions.loading || loading}
+        type="submit"
+        css={buttonStyles}
+        onClick={e => {
+          if (hasOpenInvoices || alreadyHasSubscription) {
+            e.preventDefault()
+            setOpenConfirm(true)
+          }
+        }}>
         {paymentText} Abonnieren
       </Button>
+
+      <MembershipModal
+        open={openConfirm}
+        onSubmit={() => {
+          onSubmit()
+          setOpenConfirm(false)
+        }}
+        onCancel={() => setOpenConfirm(false)}
+        submitText={`${paymentText} Abonnieren`}>
+        <H5 id="modal-modal-title" component="h1">
+          Bist du dir sicher?
+        </H5>
+
+        {hasOpenInvoices && (
+          <Paragraph gutterBottom={false}>
+            Du hast bereits schon ein Abo mit offenen Rechnungen. Du kannst deine offenen Rechnungen
+            in deinem <Link href="/profile/subscription">Abo-Dashboard</Link> anschauen.
+          </Paragraph>
+        )}
+
+        {alreadyHasSubscription && (
+          <Paragraph gutterBottom={false}>
+            Du hast dieses Abo schon. Du kannst deine Abos in deinem{' '}
+            <Link href="/profile/subscription">Abo-Dashboard</Link> anschauen.
+          </Paragraph>
+        )}
+      </MembershipModal>
     </SubscribeWrapper>
   )
 }

@@ -8,7 +8,8 @@ import {
   ImageRefFragment,
   PageRefFragment,
   PeerRefFragment,
-  TeaserStyle
+  TeaserStyle,
+  TeaserType
 } from '@wepublish/editor/api'
 import nanoid from 'nanoid'
 import {Node} from 'slate'
@@ -16,30 +17,20 @@ import {Node} from 'slate'
 import {BlockListValue} from '../atoms/blockList'
 import {ListValue} from '../atoms/listInput'
 import {TeaserMetadataProperty} from '../panel/teaserEditPanel'
+import {BlockType} from '@wepublish/editor/api-v2'
 
-export enum BlockType {
-  RichText = 'richText',
-  Title = 'title',
-  Image = 'image',
-  ImageGallery = 'imageGallery',
-  Listicle = 'listicle',
-  Quote = 'quote',
-  Embed = 'embed',
-  LinkPageBreak = 'linkPageBreak',
-  TeaserGrid1 = 'teaserGrid1',
-  TeaserGrid6 = 'teaserGrid6',
-  TeaserGridFlex = 'teaserGridFlex',
-  HTMLBlock = 'html',
-  PollBlock = 'poll',
-  CommentBlock = 'comment',
-  EventBlock = 'event'
+export interface BaseBlockValue {
+  blockStyle?: string | null
 }
 
-export type RichTextBlockValue = Node[]
+export interface RichTextBlockValue extends BaseBlockValue {
+  richText: Node[]
+}
 
-export interface ImageBlockValue {
+export interface ImageBlockValue extends BaseBlockValue {
   image: ImageRefFragment | null
   caption: string
+  linkUrl?: string
 }
 
 export interface GalleryImageEdge {
@@ -47,34 +38,34 @@ export interface GalleryImageEdge {
   caption: string
 }
 
-export interface ImageGalleryBlockValue {
+export interface ImageGalleryBlockValue extends BaseBlockValue {
   images: GalleryImageEdge[]
 }
 
 export interface ListicleItem {
   title: string
   image: ImageRefFragment | null
-  richText: RichTextBlockValue
+  richText: Node[]
 }
 
-export interface ListicleBlockValue {
+export interface ListicleBlockValue extends BaseBlockValue {
   items: ListValue<ListicleItem>[]
 }
 
-export interface TitleBlockValue {
+export interface TitleBlockValue extends BaseBlockValue {
   title: string
   lead: string
 }
 
-export interface HTMLBlockValue {
+export interface HTMLBlockValue extends BaseBlockValue {
   html: string
 }
 
-export interface PollBlockValue {
+export interface PollBlockValue extends BaseBlockValue {
   poll: Pick<FullPoll, 'id' | 'question'> | null | undefined
 }
 
-export interface EventBlockValue {
+export interface EventBlockValue extends BaseBlockValue {
   filter: Partial<{
     tags: string[] | null
     events: string[] | null
@@ -82,7 +73,7 @@ export interface EventBlockValue {
   events: EventRefFragment[]
 }
 
-export interface CommentBlockValue {
+export interface CommentBlockValue extends BaseBlockValue {
   filter: Partial<{
     item: string | null
     tags: string[] | null
@@ -91,14 +82,15 @@ export interface CommentBlockValue {
   comments: FullCommentFragment[]
 }
 
-export interface QuoteBlockValue {
+export interface QuoteBlockValue extends BaseBlockValue {
   quote: string
   author: string
+  image?: ImageRefFragment | null
 }
 
-export interface LinkPageBreakBlockValue {
+export interface LinkPageBreakBlockValue extends BaseBlockValue {
   text: string
-  richText: RichTextBlockValue
+  richText: RichTextBlockValue['richText']
   linkURL: string
   linkText: string
   linkTarget?: string
@@ -123,61 +115,61 @@ export enum EmbedType {
   Other = 'other'
 }
 
-interface FacebookPostEmbed {
+interface FacebookPostEmbed extends BaseBlockValue {
   type: EmbedType.FacebookPost
   userID: string
   postID: string
 }
 
-interface FacebookVideoEmbed {
+interface FacebookVideoEmbed extends BaseBlockValue {
   type: EmbedType.FacebookVideo
   userID: string
   videoID: string
 }
 
-interface InstagramPostEmbed {
+interface InstagramPostEmbed extends BaseBlockValue {
   type: EmbedType.InstagramPost
   postID: string
 }
 
-interface TwitterTweetEmbed {
+interface TwitterTweetEmbed extends BaseBlockValue {
   type: EmbedType.TwitterTweet
   userID: string
   tweetID: string
 }
 
-interface VimeoVideoEmbed {
+interface VimeoVideoEmbed extends BaseBlockValue {
   type: EmbedType.VimeoVideo
   videoID: string
 }
 
-interface YouTubeVideoEmbed {
+interface YouTubeVideoEmbed extends BaseBlockValue {
   type: EmbedType.YouTubeVideo
   videoID: string
 }
 
-interface SoundCloudTrackEmbed {
+interface SoundCloudTrackEmbed extends BaseBlockValue {
   type: EmbedType.SoundCloudTrack
   trackID: string
 }
 
-interface PolisConversationEmbed {
+interface PolisConversationEmbed extends BaseBlockValue {
   type: EmbedType.PolisConversation
   conversationID: string
 }
 
-interface TikTokVideoEmbed {
+interface TikTokVideoEmbed extends BaseBlockValue {
   type: EmbedType.TikTokVideo
   videoID: string
   userID: string
 }
 
-interface BildwurfAdEmbed {
+interface BildwurfAdEmbed extends BaseBlockValue {
   type: EmbedType.BildwurfAd
   zoneID: string
 }
 
-export interface OtherEmbed {
+export interface OtherEmbed extends BaseBlockValue {
   type: EmbedType.Other
   url?: string
   title?: string
@@ -199,14 +191,6 @@ export type EmbedBlockValue =
   | TikTokVideoEmbed
   | BildwurfAdEmbed
   | OtherEmbed
-
-export enum TeaserType {
-  Article = 'article',
-  PeerArticle = 'peerArticle',
-  Page = 'page',
-  Custom = 'custom',
-  Event = 'event'
-}
 
 export enum MetaDataType {
   General = 'general',
@@ -266,7 +250,17 @@ export interface EventTeaser extends EventTeaserLink, BaseTeaser {}
 
 export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser | CustomTeaser | EventTeaser
 
-export interface TeaserGridBlockValue {
+export interface TeaserListBlockValue extends BaseBlockValue {
+  filter: Partial<{
+    tags: string[] | null
+  }>
+  teaserType: TeaserType
+  skip: number
+  take: number
+  teasers: Array<[string, Teaser]>
+}
+
+export interface TeaserGridBlockValue extends BaseBlockValue {
   teasers: Array<[string, Teaser | null]>
   numColumns: number
 }
@@ -285,7 +279,7 @@ export interface FlexTeaser {
   teaser: Teaser | null
 }
 
-export interface TeaserGridFlexBlockValue {
+export interface TeaserGridFlexBlockValue extends BaseBlockValue {
   flexTeasers: FlexTeaser[]
 }
 
@@ -304,6 +298,8 @@ export type LinkPageBreakBlockListValue = BlockListValue<
   LinkPageBreakBlockValue
 >
 
+export type TeaserListBlockListValue = BlockListValue<BlockType.TeaserList, TeaserListBlockValue>
+
 export type TeaserGridBlock1ListValue = BlockListValue<BlockType.TeaserGrid1, TeaserGridBlockValue>
 
 export type TeaserGridBlock6ListValue = BlockListValue<BlockType.TeaserGrid6, TeaserGridBlockValue>
@@ -313,13 +309,13 @@ export type TeaserGridFlexBlockListValue = BlockListValue<
   TeaserGridFlexBlockValue
 >
 
-export type HTMLBlockListValue = BlockListValue<BlockType.HTMLBlock, HTMLBlockValue>
+export type HTMLBlockListValue = BlockListValue<BlockType.Html, HTMLBlockValue>
 
-export type PollBlockListValue = BlockListValue<BlockType.PollBlock, PollBlockValue>
+export type PollBlockListValue = BlockListValue<BlockType.Poll, PollBlockValue>
 
-export type CommentBlockListValue = BlockListValue<BlockType.CommentBlock, CommentBlockValue>
+export type CommentBlockListValue = BlockListValue<BlockType.Comment, CommentBlockValue>
 
-export type EventBlockListValue = BlockListValue<BlockType.EventBlock, EventBlockValue>
+export type EventBlockListValue = BlockListValue<BlockType.Event, EventBlockValue>
 
 export type BlockValue =
   | TitleBlockListValue
@@ -337,41 +333,46 @@ export type BlockValue =
   | PollBlockListValue
   | CommentBlockListValue
   | EventBlockListValue
+  | TeaserListBlockListValue
 
 export function unionMapForBlock(block: BlockValue): BlockInput {
   switch (block.type) {
-    case BlockType.CommentBlock:
+    case BlockType.Comment:
       return {
         comment: {
           filter: {
             item: block.value?.filter.item,
             tags: block.value?.filter.tags,
             comments: block.value?.filter.comments
-          }
+          },
+          blockStyle: block.value.blockStyle
         }
       }
 
-    case BlockType.PollBlock:
+    case BlockType.Poll:
       return {
         poll: {
-          pollId: block.value?.poll?.id
+          pollId: block.value?.poll?.id,
+          blockStyle: block.value.blockStyle
         }
       }
 
-    case BlockType.EventBlock:
+    case BlockType.Event:
       return {
         event: {
           filter: {
             events: block.value?.filter.events,
             tags: block.value?.filter.tags
-          }
+          },
+          blockStyle: block.value.blockStyle
         }
       }
 
-    case BlockType.HTMLBlock:
+    case BlockType.Html:
       return {
         html: {
-          html: block.value?.html
+          html: block.value?.html,
+          blockStyle: block.value.blockStyle
         }
       }
 
@@ -379,7 +380,9 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
       return {
         image: {
           imageID: block.value.image?.id,
-          caption: block.value.caption || undefined
+          caption: block.value.caption || undefined,
+          linkUrl: block.value.linkUrl,
+          blockStyle: block.value.blockStyle
         }
       }
 
@@ -389,7 +392,8 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
           images: block.value.images.map(item => ({
             caption: item.caption,
             imageID: item.image?.id
-          }))
+          })),
+          blockStyle: block.value.blockStyle
         }
       }
 
@@ -400,7 +404,8 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
             title,
             richText,
             imageID: image?.id
-          }))
+          })),
+          blockStyle: block.value.blockStyle
         }
       }
 
@@ -408,20 +413,23 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
       return {
         title: {
           title: block.value.title || undefined,
-          lead: block.value.lead || undefined
+          lead: block.value.lead || undefined,
+          blockStyle: block.value.blockStyle
         }
       }
 
     case BlockType.RichText:
       return {
-        richText: {richText: block.value}
+        richText: {richText: block.value.richText, blockStyle: block.value.blockStyle}
       }
 
     case BlockType.Quote:
       return {
         quote: {
           quote: block.value.quote || undefined,
-          author: block.value.author || undefined
+          author: block.value.author || undefined,
+          imageID: block.value.image?.id || undefined,
+          blockStyle: block.value.blockStyle
         }
       }
 
@@ -437,7 +445,8 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
           richText: block.value.richText,
           linkTarget: block.value.linkTarget || undefined,
           hideButton: block.value.hideButton,
-          imageID: block.value.image?.id || undefined
+          imageID: block.value.image?.id || undefined,
+          blockStyle: block.value.blockStyle
         }
       }
 
@@ -449,7 +458,8 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
           return {
             facebookPost: {
               userID: value.userID,
-              postID: value.postID
+              postID: value.postID,
+              blockStyle: block.value.blockStyle
             }
           }
 
@@ -457,14 +467,16 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
           return {
             facebookVideo: {
               userID: value.userID,
-              videoID: value.videoID
+              videoID: value.videoID,
+              blockStyle: block.value.blockStyle
             }
           }
 
         case EmbedType.InstagramPost:
           return {
             instagramPost: {
-              postID: value.postID
+              postID: value.postID,
+              blockStyle: block.value.blockStyle
             }
           }
 
@@ -472,35 +484,40 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
           return {
             twitterTweet: {
               userID: value.userID,
-              tweetID: value.tweetID
+              tweetID: value.tweetID,
+              blockStyle: block.value.blockStyle
             }
           }
 
         case EmbedType.VimeoVideo:
           return {
             vimeoVideo: {
-              videoID: value.videoID
+              videoID: value.videoID,
+              blockStyle: block.value.blockStyle
             }
           }
 
         case EmbedType.YouTubeVideo:
           return {
             youTubeVideo: {
-              videoID: value.videoID
+              videoID: value.videoID,
+              blockStyle: block.value.blockStyle
             }
           }
 
         case EmbedType.SoundCloudTrack:
           return {
             soundCloudTrack: {
-              trackID: value.trackID
+              trackID: value.trackID,
+              blockStyle: block.value.blockStyle
             }
           }
 
         case EmbedType.PolisConversation:
           return {
             polisConversation: {
-              conversationID: value.conversationID
+              conversationID: value.conversationID,
+              blockStyle: block.value.blockStyle
             }
           }
 
@@ -508,14 +525,16 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
           return {
             tikTokVideo: {
               videoID: value.videoID,
-              userID: value.userID
+              userID: value.userID,
+              blockStyle: block.value.blockStyle
             }
           }
 
         case EmbedType.BildwurfAd:
           return {
             bildwurfAd: {
-              zoneID: value.zoneID
+              zoneID: value.zoneID,
+              blockStyle: block.value.blockStyle
             }
           }
 
@@ -527,12 +546,26 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
               width: value.width,
               height: value.height,
               styleCustom: value.styleCustom,
-              sandbox: value.sandbox
+              sandbox: value.sandbox,
+              blockStyle: block.value.blockStyle
             }
           }
       }
       break
     }
+
+    case BlockType.TeaserList:
+      return {
+        teaserList: {
+          filter: {
+            tags: block.value.filter.tags
+          },
+          take: block.value.take,
+          skip: block.value.skip,
+          blockStyle: block.value.blockStyle,
+          teaserType: block.value.teaserType
+        }
+      }
 
     case BlockType.TeaserGridFlex:
       return {
@@ -558,7 +591,8 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
                     w: flexTeaser.alignment.w,
                     h: flexTeaser.alignment.h,
                     static: flexTeaser.alignment.static ?? false
-                  }
+                  },
+                  blockStyle: block.value.blockStyle
                 }
 
               case TeaserType.PeerArticle:
@@ -581,7 +615,8 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
                     w: flexTeaser.alignment.w,
                     h: flexTeaser.alignment.h,
                     static: flexTeaser.alignment.static ?? false
-                  }
+                  },
+                  blockStyle: block.value.blockStyle
                 }
 
               case TeaserType.Page:
@@ -603,7 +638,8 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
                     w: flexTeaser.alignment.w,
                     h: flexTeaser.alignment.h,
                     static: flexTeaser.alignment.static ?? false
-                  }
+                  },
+                  blockStyle: block.value.blockStyle
                 }
 
               case TeaserType.Event:
@@ -625,7 +661,8 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
                     w: flexTeaser.alignment.w,
                     h: flexTeaser.alignment.h,
                     static: flexTeaser.alignment.static ?? false
-                  }
+                  },
+                  blockStyle: block.value.blockStyle
                 }
 
               case TeaserType.Custom:
@@ -653,7 +690,8 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
                     w: flexTeaser.alignment.w,
                     h: flexTeaser.alignment.h,
                     static: flexTeaser.alignment.static ?? false
-                  }
+                  },
+                  blockStyle: block.value.blockStyle
                 }
 
               default:
@@ -666,10 +704,12 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
                     w: flexTeaser.alignment.w,
                     h: flexTeaser.alignment.h,
                     static: flexTeaser.alignment.static ?? false
-                  }
+                  },
+                  blockStyle: block.value.blockStyle
                 }
             }
-          })
+          }),
+          blockStyle: block.value.blockStyle
         }
       }
 
@@ -750,7 +790,8 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
                 return null
             }
           }),
-          numColumns: block.value.numColumns
+          numColumns: block.value.numColumns,
+          blockStyle: block.value.blockStyle
         }
       }
   }
@@ -765,7 +806,9 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
         key,
         type: BlockType.Image,
         value: {
+          blockStyle: block.blockStyle,
           caption: block.caption ?? '',
+          linkUrl: block.linkUrl ?? '',
           image: block.image ? block.image : null
         }
       }
@@ -775,6 +818,7 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
         key,
         type: BlockType.ImageGallery,
         value: {
+          blockStyle: block.blockStyle,
           images: block.images.map(({image, caption}) => ({
             image: image ?? null,
             caption: caption ?? ''
@@ -787,6 +831,7 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
         key,
         type: BlockType.Listicle,
         value: {
+          blockStyle: block.blockStyle,
           items: block.items.map(({title, richText, image}) => ({
             id: nanoid(),
             value: {
@@ -803,6 +848,7 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
         key,
         type: BlockType.Title,
         value: {
+          blockStyle: block.blockStyle,
           title: block.title ?? '',
           lead: block.lead ?? ''
         }
@@ -812,84 +858,120 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
       return {
         key,
         type: BlockType.RichText,
-        value: block.richText
+        value: {
+          blockStyle: block.blockStyle,
+          richText: block.richText
+        }
       }
 
     case 'QuoteBlock':
       return {
         key,
         type: BlockType.Quote,
-        value: {quote: block.quote ?? '', author: block.author ?? ''}
+        value: {
+          blockStyle: block.blockStyle,
+          quote: block.quote ?? '',
+          author: block.author ?? '',
+          image: block.image ?? null
+        }
       }
 
     case 'FacebookPostBlock':
       return {
         key,
         type: BlockType.Embed,
-        value: {type: EmbedType.FacebookPost, userID: block.userID, postID: block.postID}
+        value: {
+          blockStyle: block.blockStyle,
+          type: EmbedType.FacebookPost,
+          userID: block.userID,
+          postID: block.postID
+        }
       }
 
     case 'FacebookVideoBlock':
       return {
         key,
         type: BlockType.Embed,
-        value: {type: EmbedType.FacebookVideo, userID: block.userID, videoID: block.videoID}
+        value: {
+          blockStyle: block.blockStyle,
+          type: EmbedType.FacebookVideo,
+          userID: block.userID,
+          videoID: block.videoID
+        }
       }
 
     case 'InstagramPostBlock':
       return {
         key,
         type: BlockType.Embed,
-        value: {type: EmbedType.InstagramPost, postID: block.postID}
+        value: {blockStyle: block.blockStyle, type: EmbedType.InstagramPost, postID: block.postID}
       }
 
     case 'TwitterTweetBlock':
       return {
         key,
         type: BlockType.Embed,
-        value: {type: EmbedType.TwitterTweet, userID: block.userID, tweetID: block.tweetID}
+        value: {
+          blockStyle: block.blockStyle,
+          type: EmbedType.TwitterTweet,
+          userID: block.userID,
+          tweetID: block.tweetID
+        }
       }
 
     case 'VimeoVideoBlock':
       return {
         key,
         type: BlockType.Embed,
-        value: {type: EmbedType.VimeoVideo, videoID: block.videoID}
+        value: {blockStyle: block.blockStyle, type: EmbedType.VimeoVideo, videoID: block.videoID}
       }
 
     case 'YouTubeVideoBlock':
       return {
         key,
         type: BlockType.Embed,
-        value: {type: EmbedType.YouTubeVideo, videoID: block.videoID}
+        value: {blockStyle: block.blockStyle, type: EmbedType.YouTubeVideo, videoID: block.videoID}
       }
 
     case 'SoundCloudTrackBlock':
       return {
         key,
         type: BlockType.Embed,
-        value: {type: EmbedType.SoundCloudTrack, trackID: block.trackID}
+        value: {
+          blockStyle: block.blockStyle,
+          type: EmbedType.SoundCloudTrack,
+          trackID: block.trackID
+        }
       }
 
     case 'PolisConversationBlock':
       return {
         key,
         type: BlockType.Embed,
-        value: {type: EmbedType.PolisConversation, conversationID: block.conversationID}
+        value: {
+          blockStyle: block.blockStyle,
+          type: EmbedType.PolisConversation,
+          conversationID: block.conversationID
+        }
       }
 
     case 'TikTokVideoBlock':
       return {
         key,
         type: BlockType.Embed,
-        value: {type: EmbedType.TikTokVideo, videoID: block.videoID, userID: block.userID}
+        value: {
+          blockStyle: block.blockStyle,
+          type: EmbedType.TikTokVideo,
+          videoID: block.videoID,
+          userID: block.userID
+        }
       }
 
     case 'BildwurfAdBlock':
       return {
         key,
         type: BlockType.Embed,
-        value: {type: EmbedType.BildwurfAd, zoneID: block.zoneID}
+        value: {blockStyle: block.blockStyle, type: EmbedType.BildwurfAd, zoneID: block.zoneID}
       }
 
     case 'EmbedBlock':
@@ -897,6 +979,7 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
         key,
         type: BlockType.Embed,
         value: {
+          blockStyle: block.blockStyle,
           type: EmbedType.Other,
           url: block.url ?? undefined,
           title: block.title ?? undefined,
@@ -910,9 +993,39 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
     case 'HTMLBlock':
       return {
         key,
-        type: BlockType.HTMLBlock,
+        type: BlockType.Html,
         value: {
+          blockStyle: block.blockStyle,
           html: block.html ?? ''
+        }
+      }
+
+    case 'TeaserListBlock':
+      return {
+        key,
+        type: BlockType.TeaserList,
+        value: {
+          blockStyle: block.blockStyle,
+          filter: block.filter,
+          skip: block.skip ?? 0,
+          take: block.take ?? 6,
+          teaserType: block.teaserType ?? TeaserType.Article,
+          teasers: block.teasers.map((teaser, index) => [
+            `${index}`,
+            {
+              ...teaser,
+              type:
+                teaser?.__typename === 'ArticleTeaser'
+                  ? TeaserType.Article
+                  : teaser?.__typename === 'PeerArticleTeaser'
+                  ? TeaserType.PeerArticle
+                  : teaser?.__typename === 'PageTeaser'
+                  ? TeaserType.Page
+                  : teaser?.__typename === 'EventTeaser'
+                  ? TeaserType.Event
+                  : TeaserType.Custom
+            } as Teaser
+          ])
         }
       }
 
@@ -921,6 +1034,7 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
         key,
         type: BlockType.TeaserGridFlex,
         value: {
+          blockStyle: block.blockStyle,
           flexTeasers: block?.flexTeasers.map(flexTeaser => {
             switch (flexTeaser?.teaser?.__typename) {
               case 'ArticleTeaser':
@@ -1068,6 +1182,7 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
         key,
         type: block.numColumns === 1 ? BlockType.TeaserGrid1 : BlockType.TeaserGrid6,
         value: {
+          blockStyle: block.blockStyle,
           numColumns: block.numColumns,
           teasers: block.teasers.map(teaser => {
             switch (teaser?.__typename) {
@@ -1171,6 +1286,7 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
         key,
         type: BlockType.LinkPageBreak,
         value: {
+          blockStyle: block.blockStyle,
           text: block.text ?? '',
           linkText: block.linkText ?? '',
           linkURL: block.linkURL ?? '',
@@ -1187,8 +1303,9 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
     case 'PollBlock':
       return {
         key,
-        type: BlockType.PollBlock,
+        type: BlockType.Poll,
         value: {
+          blockStyle: block.blockStyle,
           poll: block.poll
         }
       }
@@ -1196,8 +1313,9 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
     case 'EventBlock':
       return {
         key,
-        type: BlockType.EventBlock,
+        type: BlockType.Event,
         value: {
+          blockStyle: block.blockStyle,
           filter: block.filter,
           events: block.events
         }
@@ -1206,8 +1324,9 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
     case 'CommentBlock':
       return {
         key,
-        type: BlockType.CommentBlock,
+        type: BlockType.Comment,
         value: {
+          blockStyle: block.blockStyle,
           filter: block.filter,
           comments: block.comments
         }

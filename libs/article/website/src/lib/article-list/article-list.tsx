@@ -1,34 +1,33 @@
-import {css, styled} from '@mui/material'
+import {styled} from '@mui/material'
+import {Article, ArticleTeaser, TeaserStyle} from '@wepublish/website/api'
 import {BuilderArticleListProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {useMemo} from 'react'
 
-export const ArticleListWrapper = styled('article')`
-  display: grid;
-  gap: ${({theme}) => theme.spacing(4)};
-  grid-template-columns: repeat(1, 1fr);
+export const ArticleListWrapper = styled('article')``
 
-  ${({theme}) => css`
-    ${theme.breakpoints.up('sm')} {
-      grid-template-columns: repeat(2, 1fr);
-    }
-
-    ${theme.breakpoints.up('md')} {
-      grid-template-columns: repeat(3, 1fr);
-    }
-
-    ${theme.breakpoints.up('lg')} {
-      grid-template-columns: repeat(4, 1fr);
-    }
-  `}
-`
+export const articleToTeaser = (article: Article): ArticleTeaser => ({
+  __typename: 'ArticleTeaser',
+  style: TeaserStyle.Default,
+  article,
+  image: null,
+  lead: null,
+  preTitle: null,
+  title: null
+})
 
 export const ArticleList = ({data, className}: BuilderArticleListProps) => {
-  const {ArticleListItem} = useWebsiteBuilder()
+  const {
+    blocks: {TeaserGrid}
+  } = useWebsiteBuilder()
+
+  const teasers = useMemo(
+    () => data?.articles?.nodes.map(article => articleToTeaser(article as Article)) ?? [],
+    [data?.articles?.nodes]
+  )
 
   return (
     <ArticleListWrapper className={className}>
-      {data?.articles?.nodes.map(article => (
-        <ArticleListItem key={article.id} {...(article as any)} />
-      ))}
+      <TeaserGrid numColumns={3} teasers={teasers} />
     </ArticleListWrapper>
   )
 }

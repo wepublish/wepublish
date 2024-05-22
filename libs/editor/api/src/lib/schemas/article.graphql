@@ -1,6 +1,9 @@
 fragment MutationArticle on Article {
   id
 
+  shared
+  hidden
+
   draft {
     publishedAt
     updatedAt
@@ -30,6 +33,8 @@ fragment MutationArticle on Article {
 fragment ArticleRef on Article {
   id
 
+  shared
+  hidden
   createdAt
   modifiedAt
 
@@ -73,14 +78,7 @@ query ArticleList(
   $order: SortOrder
   $sort: ArticleSort
 ) {
-  articles(
-    filter: $filter
-    cursor: $cursor
-    take: $take
-    skip: $skip
-    order: $order
-    sort: $sort
-  ) {
+  articles(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
     nodes {
       ...ArticleRef
     }
@@ -105,7 +103,15 @@ query PeerArticleList(
   $take: Int
   $skip: Int
 ) {
-  peerArticles(cursors: $cursors, peerFilter: $peerFilter, order: $order, sort: $sort, filter: $filter, take: $take, skip: $skip) {
+  peerArticles(
+    cursors: $cursors
+    peerFilter: $peerFilter
+    order: $order
+    sort: $sort
+    filter: $filter
+    take: $take
+    skip: $skip
+  ) {
     nodes {
       peer {
         ...PeerWithProfile
@@ -176,6 +182,7 @@ query Article($id: ID!) {
   article(id: $id) {
     id
     shared
+    hidden
 
     draft {
       publishAt

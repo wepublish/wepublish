@@ -43,6 +43,7 @@ const DropdownWrapper = styled.div<{top: number; left: number}>`
 
 const Panel = styled(RPanel)`
   display: grid;
+  overflow: visible;
 `
 
 export function ChooseEditImage({
@@ -72,7 +73,7 @@ export function ChooseEditImage({
             {(openChooseModalOpen || openEditModalOpen || removeImage) && (
               <DropdownWrapper top={top} left={left}>
                 <Dropdown
-                  renderToggle={(props: unknown, ref: React.Ref<HTMLButtonElement>) => (
+                  renderToggle={(props: object, ref: React.Ref<HTMLButtonElement>) => (
                     <IconButton
                       {...props}
                       ref={ref}

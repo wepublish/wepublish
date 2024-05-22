@@ -11,8 +11,6 @@ import {
   defineMemberPlanFactory,
   definePaymentMethodFactory,
   defineSubscriptionFactory,
-  defineSubscriptionFlowFactory,
-  defineSubscriptionIntervalFactory,
   defineSubscriptionPeriodFactory,
   defineUserFactory,
   initialize
@@ -21,7 +19,7 @@ import nock from 'nock'
 
 import {forwardRef} from '@nestjs/common'
 import {Test, TestingModule} from '@nestjs/testing'
-import {PrismaModule, PrismaService} from '@wepublish/nest-modules'
+import {PrismaModule} from '@wepublish/nest-modules'
 import {PaymentsService} from '@wepublish/payment/api'
 import {clearDatabase, clearFullDatabase} from '@wepublish/testing'
 import {add, sub} from 'date-fns'
@@ -37,12 +35,6 @@ describe('SubscriptionController', () => {
 
   const MemberPlanFactory = defineMemberPlanFactory()
   const PaymentMethodFactory = definePaymentMethodFactory()
-  const SubscriptionFlowFactory = defineSubscriptionFlowFactory({
-    defaultData: {
-      memberPlan: MemberPlanFactory,
-      intervals: {connect: []}
-    } as any
-  })
   const SubscriptionFactory = defineSubscriptionFactory({
     defaultData: {
       paymentMethod: {
@@ -93,11 +85,6 @@ describe('SubscriptionController', () => {
   const InvoiceFactory = defineInvoiceFactory({
     defaultData: {
       subscription: SubscriptionFactory
-    }
-  })
-  const SubscriptionIntervalFactory = defineSubscriptionIntervalFactory({
-    defaultData: {
-      subscriptionFlow: SubscriptionFlowFactory
     }
   })
   const SubscriptionPeriodFactory = defineSubscriptionPeriodFactory({
@@ -344,7 +331,7 @@ describe('SubscriptionController', () => {
       'users'
     ])
 
-    subscriptionService = new SubscriptionService(prismaClient as PrismaService, paymentsService)
+    subscriptionService = new SubscriptionService(prismaClient, paymentsService)
 
     // Create deactivated subscription
     await SubscriptionFactory.create({
@@ -431,30 +418,79 @@ describe('SubscriptionController', () => {
     // Ensure that filter for invoices works
     await SubscriptionFactory.create({
       paidUntil: add(new Date(), {days: 1}),
-      invoices: {
+      periods: {
         create: {
-          scheduledDeactivationAt: sub(new Date(), {days: 2}),
-          mail: 'test@wepublish.com',
-          dueAt: sub(new Date(), {days: 100})
+          startsAt: add(new Date(), {days: 1}),
+          endsAt: add(new Date(), {years: 1}),
+          paymentPeriodicity: PaymentPeriodicity.yearly,
+          amount: 22,
+          invoice: {
+            create: {
+              scheduledDeactivationAt: sub(new Date(), {days: 2}),
+              mail: 'test@wepublish.com',
+              dueAt: sub(new Date(), {days: 100})
+            }
+          }
         }
       }
     })
+
+    let subscription = await SubscriptionFactory.create({
+      paidUntil: sub(new Date(), {days: 1}),
+      periods: {
+        create: {
+          startsAt: sub(new Date(), {days: 1}),
+          endsAt: add(new Date(), {years: 1}),
+          paymentPeriodicity: PaymentPeriodicity.yearly,
+          amount: 22,
+          invoice: {
+            create: {
+              scheduledDeactivationAt: add(new Date(), {days: 2}),
+              mail: 'test@wepublish.com',
+              dueAt: sub(new Date(), {days: 1})
+            }
+          }
+        }
+      }
+    })
+    await InvoiceFactory.create({
+      mail: 'test@wepublish.com',
+      subscription: {
+        connect: {
+          id: subscription.id
+        }
+      }
+    })
+
     subscriptionsToExtend = await subscriptionService.getSubscriptionsForInvoiceCreation(
       new Date(),
       add(new Date(), {days: 200})
     )
+
     expect(subscriptionsToExtend.length).toEqual(0)
 
-    let subscription = await SubscriptionFactory.create({
+    subscription = await SubscriptionFactory.create({
       paidUntil: add(new Date(), {days: 1}),
       invoices: {
         create: {
           scheduledDeactivationAt: sub(new Date(), {days: 4}),
           mail: 'test@wepublish.com',
-          dueAt: sub(new Date(), {days: 100})
+          dueAt: sub(new Date(), {days: 100}),
+          paidAt: sub(new Date(), {days: 100})
         }
       }
     })
+
+    await InvoiceFactory.create({
+      mail: 'test@wepublish.com',
+      canceledAt: new Date(),
+      subscription: {
+        connect: {
+          id: subscription.id
+        }
+      }
+    })
+
     subscriptionsToExtend = await subscriptionService.getSubscriptionsForInvoiceCreation(
       new Date(),
       add(new Date(), {days: 200})
@@ -662,9 +698,9 @@ describe('SubscriptionController', () => {
   })
 
   it('mark Invoice as paid (renewal)', async () => {
-    const paidUntil = new Date()
+    const paidUntil = add(new Date(), {days: 5})
     const subscription = await SubscriptionFactory.create({
-      paidUntil: add(paidUntil, {days: 5}),
+      paidUntil,
       createdAt: sub(new Date(), {years: 1, days: 4}),
       paymentPeriodicity: PaymentPeriodicity.yearly
     })
@@ -693,13 +729,10 @@ describe('SubscriptionController', () => {
         subscription: true
       }
     })
-
     expect(invoiceMarkedAsPaid).toBeDefined()
     expect(invoiceMarkedAsPaid!.paidAt).not.toBeNull()
     expect(invoiceMarkedAsPaid!.subscription).toBeDefined()
-    expect(invoiceMarkedAsPaid!.subscription!.paidUntil).toEqual(
-      add(paidUntil, {years: 1, days: 5})
-    )
+    expect(invoiceMarkedAsPaid!.subscription!.paidUntil).toEqual(add(paidUntil, {years: 1}))
   })
 
   it('mark Invoice as paid (initial)', async () => {
@@ -796,7 +829,7 @@ describe('SubscriptionController', () => {
     }
   })
 
-  it('Charge invoice:No offsession payment provider', async () => {
+  it('Charge invoice: No offsession payment provider', async () => {
     const {testableInvoice, actions} = await createDataForChargeFunction('payrexx')
     const answer = await subscriptionService.chargeInvoice(testableInvoice!, actions)
     expect(answer.action).toBeUndefined()

@@ -1,5 +1,86 @@
 # Change Log
 
+## 10.2.0 (2024-03-27)
+
+#### :heart: New Feature
+* [#1237](https://github.com/wepublish/wepublish/pull/1237) feat(babanews): Add babanews website based on website-example ([@tomaszdurka](https://github.com/tomaszdurka))
+* [#1211](https://github.com/wepublish/wepublish/pull/1211) feat(seeding): Ensure admin user while seeding ([@tomaszdurka](https://github.com/tomaszdurka))
+* [#1170](https://github.com/wepublish/wepublish/pull/1170) WPC-1473 Add healthcheck ([@elias-summermatter](https://github.com/elias-summermatter))
+* [#1150](https://github.com/wepublish/wepublish/pull/1150) F/wpc 1145 improved docker build ([@elias-summermatter](https://github.com/elias-summermatter))
+* [#1142](https://github.com/wepublish/wepublish/pull/1142) Yaml configuration for hosting ([@elias-summermatter](https://github.com/elias-summermatter))
+* [#1153](https://github.com/wepublish/wepublish/pull/1153) WPC-1182: Optional image in quote block ([@antkiewiczk](https://github.com/antkiewiczk))
+* [#1146](https://github.com/wepublish/wepublish/pull/1146) WPC-1458: change footer and header for website builder according to designs ([@antkiewiczk](https://github.com/antkiewiczk))
+* [#1147](https://github.com/wepublish/wepublish/pull/1147) TSRI-9: Tagging authors ([@michael-scheurer](https://github.com/michael-scheurer))
+* [#1145](https://github.com/wepublish/wepublish/pull/1145) Add cancelation date filter for subscription ([@elias-summermatter](https://github.com/elias-summermatter))
+
+#### :bug: Bug Fix
+* [#1214](https://github.com/wepublish/wepublish/pull/1214) fix(seeding): Seeding import from db ([@tomaszdurka](https://github.com/tomaszdurka))
+* [#1209](https://github.com/wepublish/wepublish/pull/1209) fix(migrations): Fix migraton command, so it fails if one of subcommands fails ([@tomaszdurka](https://github.com/tomaszdurka))
+* [#1207](https://github.com/wepublish/wepublish/pull/1207) WPC-1499 create invoice by subscription period not by invoice ([@elias-summermatter](https://github.com/elias-summermatter))
+* [#1198](https://github.com/wepublish/wepublish/pull/1198) fix(dev): Make sure editor runs in npm run dev, do not run client websites by default ([@tomaszdurka](https://github.com/tomaszdurka))
+* [#1194](https://github.com/wepublish/wepublish/pull/1194) fix(helm): Fix the fact that jobs are immutable by creating new job on each release ([@tomaszdurka](https://github.com/tomaszdurka))
+* [#1162](https://github.com/wepublish/wepublish/pull/1162) Fixe mailgun overflow bug ([@elias-summermatter](https://github.com/elias-summermatter))
+* [#1154](https://github.com/wepublish/wepublish/pull/1154) Mailgun: Fix json parsing of vaules ([@elias-summermatter](https://github.com/elias-summermatter))
+
+#### :nail_care: Polish
+* [#1137](https://github.com/wepublish/wepublish/pull/1137) feat(events-api): moved events API to v2 ([@Itrulia](https://github.com/Itrulia))
+
+#### :house: Internal
+* [#1238](https://github.com/wepublish/wepublish/pull/1238) feat(ci/cd): Push ghcr.io/wepublish/*:master images ([@tomaszdurka](https://github.com/tomaszdurka))
+* [#1190](https://github.com/wepublish/wepublish/pull/1190) chore(config): Improve config yaml typings ([@tomaszdurka](https://github.com/tomaszdurka))
+* [#1189](https://github.com/wepublish/wepublish/pull/1189) chore(helm): chart v4.0.0: include config-map with yaml configuration ([@tomaszdurka](https://github.com/tomaszdurka))
+* [#1188](https://github.com/wepublish/wepublish/pull/1188) Bump version to 18 and fixe leap year test bug ([@elias-summermatter](https://github.com/elias-summermatter))
+* [#1187](https://github.com/wepublish/wepublish/pull/1187) chore(releases): improve release scripts with Github actions ([@tomaszdurka](https://github.com/tomaszdurka))
+* [#1185](https://github.com/wepublish/wepublish/pull/1185) chore(releases): Add bin/release-alpha script to determine next version ([@tomaszdurka](https://github.com/tomaszdurka))
+* [#1183](https://github.com/wepublish/wepublish/pull/1183) chore(ci/cd): Remove on-master push git tag ([@tomaszdurka](https://github.com/tomaszdurka))
+* [#1182](https://github.com/wepublish/wepublish/pull/1182) Do not execute tag-push on pull-request ([@tomaszdurka](https://github.com/tomaszdurka))
+* [#1181](https://github.com/wepublish/wepublish/pull/1181) Add tag-prefix for automatic tags via workflows ([@tomaszdurka](https://github.com/tomaszdurka))
+* [#1180](https://github.com/wepublish/wepublish/pull/1180) Improve release workflows ([@tomaszdurka](https://github.com/tomaszdurka))
+* [#1179](https://github.com/wepublish/wepublish/pull/1179) fix docker run on m1 chip ([@elias-summermatter](https://github.com/elias-summermatter))
+* [#1177](https://github.com/wepublish/wepublish/pull/1177) Bump node version to 18 ([@elias-summermatter](https://github.com/elias-summermatter))
+* [#1166](https://github.com/wepublish/wepublish/pull/1166) Include CONFIG_FILE_PATH in helm chart ([@tomaszdurka](https://github.com/tomaszdurka))
+* [#1163](https://github.com/wepublish/wepublish/pull/1163) Bump helm chart version to 3.0.0 ([@tomaszdurka](https://github.com/tomaszdurka))
+
+#### Committers: 8
+- Elias Summermatter ([@elias-summermatter](https://github.com/elias-summermatter))
+- Itrulia ([@Itrulia](https://github.com/Itrulia))
+- Kamil Antkiewicz ([@antkiewiczk](https://github.com/antkiewiczk))
+- Nicolas Roos ([@roosnic1](https://github.com/roosnic1))
+- Till Hagger ([@per2plex](https://github.com/per2plex))
+- Tomasz Durka ([@tomaszdurka](https://github.com/tomaszdurka))
+- [@TurtleTT](https://github.com/TurtleTT)
+- [@michael-scheurer](https://github.com/michael-scheurer)
+
+## 10.1.0 (2024-02-22)
+
+#### :heart: New Feature
+* [#1117](https://github.com/wepublish/wepublish/pull/1117) WPC:1414: Payrexx - Save transaction token; call Transaction API endpoint  ([@antkiewiczk](https://github.com/antkiewiczk))
+
+#### :bug: Bug Fix
+* [#1119](https://github.com/wepublish/wepublish/pull/1119) Bexio fixes ([@elias-summermatter](https://github.com/elias-summermatter))
+* [#1129](https://github.com/wepublish/wepublish/pull/1129) fix(editor): missing permission controls for comments & events ([@Itrulia](https://github.com/Itrulia))
+* [#1126](https://github.com/wepublish/wepublish/pull/1126) fix(website): possible full reload when using relative links ([@Itrulia](https://github.com/Itrulia))
+
+#### :nail_care: Polish
+* [#1127](https://github.com/wepublish/wepublish/pull/1127) WPC-1014: Linting refactor ([@antkiewiczk](https://github.com/antkiewiczk))
+* [#1133](https://github.com/wepublish/wepublish/pull/1133) WPC-1442: Translations cleanup ([@antkiewiczk](https://github.com/antkiewiczk))
+
+#### :memo: Documentation
+* [#1116](https://github.com/wepublish/wepublish/pull/1116) docs(website): usage website builder documentation ([@Itrulia](https://github.com/Itrulia))
+
+#### :house: Internal
+* [#1138](https://github.com/wepublish/wepublish/pull/1138) WPC-1199: move stuff from editor to libs/ui ([@antkiewiczk](https://github.com/antkiewiczk))
+* [#1140](https://github.com/wepublish/wepublish/pull/1140) chore: upgraded typescript and removed rsuite hack ([@Itrulia](https://github.com/Itrulia))
+* [#1141](https://github.com/wepublish/wepublish/pull/1141) ci: lower parallelization of website tests ([@Itrulia](https://github.com/Itrulia))
+* [#1139](https://github.com/wepublish/wepublish/pull/1139) split running test jobs ([@elias-summermatter](https://github.com/elias-summermatter))
+
+#### Committers: 5
+- Elias Summermatter ([@elias-summermatter](https://github.com/elias-summermatter))
+- Itrulia ([@Itrulia](https://github.com/Itrulia))
+- Kamil Antkiewicz ([@antkiewiczk](https://github.com/antkiewiczk))
+- Tomasz Durka ([@tomaszdurka](https://github.com/tomaszdurka))
+- [@michael-scheurer](https://github.com/michael-scheurer)
+
 ## v10.0.0 (2023-11-29)
 
 #### :boom: Breaking Change

@@ -1,7 +1,7 @@
 import {Prisma, PrismaClient} from '@prisma/client'
+import {SortOrder, graphQLSortOrderToPrisma, getMaxTake} from '@wepublish/utils/api'
 import {ArticleFilter, ArticleSort, ArticleWithRevisions} from '../../db/article'
-import {ConnectionResult, MaxResultsPerPage} from '../../db/common'
-import {getSortOrder, SortOrder} from '../queries/sort'
+import {ConnectionResult} from '../../db/common'
 import {mapDateFilterToPrisma} from '../utils'
 
 export const createArticleOrder = (
@@ -11,32 +11,32 @@ export const createArticleOrder = (
   switch (field) {
     case ArticleSort.CreatedAt:
       return {
-        createdAt: sortOrder
+        createdAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case ArticleSort.ModifiedAt:
       return {
-        modifiedAt: sortOrder
+        modifiedAt: graphQLSortOrderToPrisma(sortOrder)
       }
 
     case ArticleSort.PublishedAt:
       return {
         published: {
-          publishedAt: sortOrder
+          publishedAt: graphQLSortOrderToPrisma(sortOrder)
         }
       }
 
     case ArticleSort.UpdatedAt:
       return {
         published: {
-          updatedAt: sortOrder
+          updatedAt: graphQLSortOrderToPrisma(sortOrder)
         }
       }
 
     case ArticleSort.PublishAt:
       return {
         pending: {
-          publishAt: sortOrder
+          publishAt: graphQLSortOrderToPrisma(sortOrder)
         }
       }
   }
@@ -186,7 +186,7 @@ const createSharedFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhere
 }
 
 const createTagsFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
-  if (filter?.tags) {
+  if (filter?.tags?.length) {
     const hasTags = {
       is: {
         tags: {hasSome: filter.tags}
@@ -223,6 +223,16 @@ const createAuthorFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhere
   return {}
 }
 
+const createHiddenFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => {
+  if (filter?.includeHidden) {
+    return {}
+  }
+
+  return {
+    hidden: false
+  }
+}
+
 export const createArticleFilter = (filter: Partial<ArticleFilter>): Prisma.ArticleWhereInput => ({
   AND: [
     createTitleFilter(filter),
@@ -230,25 +240,26 @@ export const createArticleFilter = (filter: Partial<ArticleFilter>): Prisma.Arti
     createPublicationDateFromFilter(filter),
     createPublicationDateToFilter(filter),
     createLeadFilter(filter),
-    createPublishedFilter(filter),
-    createDraftFilter(filter),
-    createPendingFilter(filter),
     createSharedFilter(filter),
     createTagsFilter(filter),
-    createAuthorFilter(filter)
+    createAuthorFilter(filter),
+    createHiddenFilter(filter),
+    {
+      OR: [createPublishedFilter(filter), createDraftFilter(filter), createPendingFilter(filter)]
+    }
   ]
 })
 
 export const getArticles = async (
   filter: Partial<ArticleFilter>,
   sortedField: ArticleSort,
-  order: 1 | -1,
+  order: SortOrder,
   cursorId: string | null,
   skip: number,
   take: number,
   article: PrismaClient['article']
 ): Promise<ConnectionResult<ArticleWithRevisions>> => {
-  const orderBy = createArticleOrder(sortedField, getSortOrder(order))
+  const orderBy = createArticleOrder(sortedField, order)
   const where = createArticleFilter(filter)
 
   const [totalCount, articles] = await Promise.all([
@@ -259,7 +270,7 @@ export const getArticles = async (
     article.findMany({
       where,
       skip,
-      take: Math.min(take, MaxResultsPerPage) + 1,
+      take: getMaxTake(take) + 1,
       orderBy,
       cursor: cursorId ? {id: cursorId} : undefined,
       include: {

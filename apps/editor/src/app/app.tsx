@@ -31,33 +31,34 @@ import {Base} from './base'
 import de from './locales/rsuiteDe'
 import fr from './locales/rsuiteFr'
 import {Login} from './login'
-import {ArticleEditor} from './routes/articleEditor'
-import {ArticleList} from './routes/articleList'
-import {AuthorList} from './routes/authorList'
-import {CommentRatingEditView} from './routes/commentRatingEditView'
+import {ArticleEditor} from './routes/articles/articleEditor'
+import {ArticleList} from './routes/articles/articleList'
+import {AuthorList} from './routes/authors/authorList'
+import {BlockStyleList} from './routes/blockStyles/blockStyleList'
+import {CommentRatingEditView} from './routes/commentRatings/commentRatingEditView'
 import {CommentEditView} from './routes/comments/commentEditView'
 import {CommentList} from './routes/comments/commentList'
-import {Dashboard} from './routes/dashboard'
+import {Dashboard} from './routes/dashboard/dashboard'
 import {EventCreateView} from './routes/events/eventCreateView'
 import {EventEditView} from './routes/events/eventEditView'
 import {EventListView} from './routes/events/eventListView'
-import {ImageList} from './routes/imageList'
-import {MemberPlanList} from './routes/memberPlanList'
-import {NavigationList} from './routes/navigationList'
-import {PageEditor} from './routes/pageEditor'
-import {PageList} from './routes/pageList'
-import {PaymentMethodList} from './routes/paymentMethodList'
-import {PeerArticleList} from './routes/peerArticleList'
-import {PeerList} from './routes/peerList'
+import {ImageList} from './routes/images/imageList'
+import {MemberPlanList} from './routes/memberPlans/memberPlanList'
+import {NavigationList} from './routes/navigations/navigationList'
+import {PageEditor} from './routes/pages/pageEditor'
+import {PageList} from './routes/pages/pageList'
+import {PaymentMethodList} from './routes/paymentMethods/paymentMethodList'
+import {PeerArticleList} from './routes/peerArticles/peerArticleList'
+import {PeerList} from './routes/peers/peerList'
 import {PollEditView} from './routes/polls/pollEditView'
 import {PollList} from './routes/polls/pollList'
-import {SubscriptionEditView} from './routes/subscriptionEditView'
-import {SubscriptionList} from './routes/subscriptionList'
-import {TagList} from './routes/tagList'
-import {TokenList} from './routes/tokenList'
-import {UserEditView} from './routes/userEditView'
-import {UserList} from './routes/userList'
-import {UserRoleList} from './routes/userRoleList'
+import {SubscriptionEditView} from './routes/subscriptions/subscriptionEditView'
+import {SubscriptionList} from './routes/subscriptions/subscriptionList'
+import {TagList} from './routes/tags/tagList'
+import {TokenList} from './routes/tokens/tokenList'
+import {UserRoleList} from './routes/userRoles/userRoleList'
+import {UserEditView} from './routes/users/userEditView'
+import {UserList} from './routes/users/userList'
 import {LocalStorageKey} from './utility'
 
 const LogoutMutation = gql`
@@ -267,6 +268,16 @@ export function App() {
             />
             <Route path="pages/create" element={<PageEditor />} />
             <Route path="pages/edit/:id" element={<PageEditor />} />
+            {/* BlockStyle Routes */}
+            <Route
+              path="block-content/styles"
+              element={
+                <Base>
+                  <BlockStyleList />
+                </Base>
+              }
+            />
+
             {/* Poll Routes */}
             <Route
               path="polls"
@@ -443,6 +454,16 @@ export function App() {
                 </Base>
               }
             />
+
+            <Route
+              path="authors/tags"
+              element={
+                <Base>
+                  <TagList type={TagType.Author} />
+                </Base>
+              }
+            />
+
             {/* Users Routes */}
             <Route
               path="users"

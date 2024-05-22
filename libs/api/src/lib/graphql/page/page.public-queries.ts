@@ -1,11 +1,12 @@
 import {PageFilter, PageSort} from '../../db/page'
 import {getPages} from './page.queries'
 import {PrismaClient} from '@prisma/client'
+import {SortOrder} from '@wepublish/utils/api'
 
 export const getPublishedPages = async (
   filter: Partial<PageFilter>,
   sortedField: PageSort,
-  order: 1 | -1,
+  order: SortOrder,
   cursorId: string | null,
   skip: number,
   take: number,

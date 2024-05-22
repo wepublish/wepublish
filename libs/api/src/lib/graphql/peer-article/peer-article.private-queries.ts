@@ -2,7 +2,8 @@ import {GraphQLResolveInfo, Kind} from 'graphql'
 import {ExtractField, WrapQuery} from '@graphql-tools/wrap'
 import {Context} from '../../context'
 import {ArticleFilter, ArticleSort, PeerArticle} from '../../db/article'
-import {ConnectionResult, SortOrder} from '../../db/common'
+import {ConnectionResult} from '../../db/common'
+import {SortOrder} from '@wepublish/utils/api'
 import {delegateToPeerSchema, base64Encode} from '../../utility'
 import {authorise} from '../permissions'
 import {CanGetPeerArticles} from '@wepublish/permissions/api'
@@ -12,7 +13,7 @@ export const getAdminPeerArticles = async (
   sort: ArticleSort,
   order: SortOrder,
   peerNameFilter: string,
-  stringifiedCursors: string,
+  stringifiedCursors: string | undefined | null,
   context: Context,
   info: GraphQLResolveInfo,
   take: number,
@@ -63,7 +64,8 @@ export const getAdminPeerArticles = async (
             // Skip isn't backwards compatible since the in pre primsa it means skip pages and in prisma skip object.
             skip: articleToSkipFromEachPeer,
             filter: {
-              published: true
+              published: true,
+              shared: true
             },
             // needed for versions before prisma
             after: cursors ? base64Encode(cursors[peer.id]) : undefined,

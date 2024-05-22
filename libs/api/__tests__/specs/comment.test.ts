@@ -108,6 +108,7 @@ beforeAll(async () => {
       title: 'This is the best test article',
       slug: generateRandomString(),
       shared: false,
+      hidden: false,
       tags: ['testing', 'awesome'],
       breaking: true,
       lead: 'This article will rock your world. Never has there been a better article',

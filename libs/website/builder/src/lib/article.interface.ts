@@ -17,10 +17,6 @@ export type BuilderArticleSEOProps = {
   article: Article
 }
 
-export type BuilderArticleListItemProps = Article & {
-  className?: string
-}
-
 export type BuilderArticleListProps = Pick<
   QueryResult<ArticleListQuery>,
   'data' | 'loading' | 'error'

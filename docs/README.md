@@ -25,12 +25,21 @@
 
 ## Table of Contents
 
+- [Coding Style Guide](CodingStyleGuide.md)
+- [Code Organization](CodeOrganization.md)
+- [Prisma](prisma.md)
 - [Write Automated Tests](testing.md)
 - [Setup Commenting](commenting.md)
 - [Email Templates](emailtemplates.md)
+- [Deployments](deployments.md)
 - [Releases](Releases.md)
 
 ## apps/editor
+
+### run app with nx
+`npx nx serve <app-name>`
+
+example: `npx nx serve bajour`
 
 ### How to call an api endpoint from the UI (.tsx file)?
 

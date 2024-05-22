@@ -2,6 +2,7 @@ import {Context} from '../../context'
 import {authorise} from '../permissions'
 import {CanCreateMemberPlan, CanDeleteMemberPlan} from '@wepublish/permissions/api'
 import {PrismaClient, Prisma} from '@prisma/client'
+import {InvalidMemberPlanSettings} from '../../error'
 
 export const deleteMemberPlanById = async (
   id: string,
@@ -36,6 +37,8 @@ export const createMemberPlan = (
   const {roles} = authenticate()
   authorise(CanCreateMemberPlan, roles)
 
+  checkMemberPlanIntegrity(availablePaymentMethods, input.extendable)
+
   return memberPlan.create({
     data: {
       ...input,
@@ -67,6 +70,8 @@ export const updateMemberPlan = async (
   const {roles} = authenticate()
   authorise(CanCreateMemberPlan, roles)
 
+  checkMemberPlanIntegrity(availablePaymentMethods, input.extendable as boolean)
+
   return memberPlan.update({
     where: {id},
     data: {
@@ -86,4 +91,14 @@ export const updateMemberPlan = async (
       availablePaymentMethods: true
     }
   })
+}
+
+function checkMemberPlanIntegrity(
+  availablePaymentMethods: Prisma.AvailablePaymentMethodUncheckedCreateWithoutMemberPlanInput[],
+  extendable: boolean
+): void {
+  const hasForceAutoRenew = !!availablePaymentMethods.find(apm => apm.forceAutoRenewal)
+  if (!extendable && hasForceAutoRenew) {
+    throw new InvalidMemberPlanSettings()
+  }
 }

@@ -6,6 +6,7 @@ import {SubscriptionList} from './subscription-list'
 import {
   Exact,
   FullImageFragment,
+  FullInvoiceFragment,
   FullSubscriptionFragment,
   PaymentPeriodicity
 } from '@wepublish/website/api'
@@ -59,9 +60,23 @@ const subscription = {
   paymentMethod: {},
   memberPlan: {
     image,
-    name: 'Foobar Memberplan'
-  }
+    name: 'Foobar Memberplan',
+    extendable: true
+  },
+  extendable: true
 } as Exact<FullSubscriptionFragment>
+
+const invoice = {
+  id: '4321-4321',
+  createdAt: '2023-01-01',
+  modifiedAt: '2023-01-01',
+  dueAt: '2023-01-01',
+  mail: 'foobar@example.com',
+  total: 500,
+  items: [],
+  subscription,
+  subscriptionID: subscription.id
+} as Exact<FullInvoiceFragment>
 
 export const Default = {
   args: {
@@ -73,9 +88,54 @@ export const Default = {
         {...subscription, id: '4'}
       ]
     },
+    invoices: {
+      data: {
+        invoices: [
+          {...invoice, id: '1', subscriptionID: '1'},
+          {
+            ...invoice,
+            id: '2',
+            subscriptionID: '2',
+            paidAt: new Date('2023-04-04').toISOString()
+          },
+          {
+            ...invoice,
+            id: '3',
+            subscriptionID: '3',
+            canceledAt: new Date('2023-04-04').toISOString()
+          },
+          {...invoice, id: '4', subscriptionID: '4', paidAt: new Date('2023-04-04').toISOString()}
+        ]
+      }
+    },
     onPay: action('onPay'),
     onCancel: action('onCancel'),
     onExtend: action('onExtend')
+  }
+}
+
+export const WithPayrexxSubscriptionsWorkaround = {
+  ...Default,
+  args: {
+    ...Default.args,
+    data: {
+      subscriptions: [
+        {
+          ...subscription,
+          id: '1',
+          paymentMethod: {
+            slug: 'payrexx-subscription'
+          }
+        },
+        {
+          ...subscription,
+          id: '2',
+          paymentMethod: {
+            slug: 'payrexx-subscription'
+          }
+        }
+      ]
+    }
   }
 }
 

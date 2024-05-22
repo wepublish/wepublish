@@ -2,7 +2,7 @@ import {ApolloError} from '@apollo/client'
 import {Event} from '@wepublish/editor/api'
 import {
   ImportedEventFilter,
-  useCreateEventMutation,
+  useImportEventMutation,
   useImportedEventListQuery,
   useImportedEventsIdsQuery
 } from '@wepublish/editor/api-v2'
@@ -37,7 +37,12 @@ const Cell = styled(RCell)`
 
 export function EventStartsAtView({startsAt}: {startsAt: string}) {
   const startsAtDate = new Date(startsAt)
-  return <time dateTime={startsAtDate.toISOString()}>{formatDate(startsAtDate, 'PPP p')}</time>
+
+  return (
+    <time suppressHydrationWarning dateTime={startsAtDate.toISOString()}>
+      {formatDate(startsAtDate, 'PPP p')}
+    </time>
+  )
 }
 
 export function EventEndsAtView({endsAt}: {endsAt: string | null | undefined}) {
@@ -45,7 +50,11 @@ export function EventEndsAtView({endsAt}: {endsAt: string | null | undefined}) {
   const {t} = useTranslation()
 
   if (endsAtDate) {
-    return <time dateTime={endsAtDate.toISOString()}>{formatDate(endsAtDate, 'PPP p')}</time>
+    return (
+      <time suppressHydrationWarning dateTime={endsAtDate.toISOString()}>
+        {formatDate(endsAtDate, 'PPP p')}
+      </time>
+    )
   }
   return <>{t('event.list.endsAtNone')}</>
 }
@@ -86,7 +95,7 @@ function ImportableEventListView() {
     onError: onErrorToast
   })
 
-  const [createEvent, {loading: mutationLoading}] = useCreateEventMutation({
+  const [createEvent, {loading: mutationLoading}] = useImportEventMutation({
     client,
     onCompleted: data => {
       toaster.push(
@@ -94,7 +103,7 @@ function ImportableEventListView() {
           {t('toast.createdSuccess')}
         </Message>
       )
-      navigate(`/events/edit/${data.createEvent}`)
+      navigate(`/events/edit/${data.importEvent}`)
     },
     onError: onErrorToast
   })

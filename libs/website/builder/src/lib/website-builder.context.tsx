@@ -10,7 +10,6 @@ import {
 } from 'react'
 import {PartialDeep} from 'type-fest'
 import {
-  BuilderArticleListItemProps,
   BuilderArticleListProps,
   BuilderArticleProps,
   BuilderArticleSEOProps
@@ -18,6 +17,7 @@ import {
 import {BuilderLoginFormProps, BuilderRegistrationFormProps} from './authentication.interface'
 import {
   BuilderAuthorChipProps,
+  BuilderAuthorLinksProps,
   BuilderAuthorListItemProps,
   BuilderAuthorListProps,
   BuilderAuthorProps
@@ -43,6 +43,7 @@ import {
   BuilderSoundCloudTrackBlockProps,
   BuilderTeaserGridBlockProps,
   BuilderTeaserGridFlexBlockProps,
+  BuilderTeaserListBlockProps,
   BuilderTeaserProps,
   BuilderTikTokVideoBlockProps,
   BuilderTitleBlockProps,
@@ -90,6 +91,7 @@ import {
   BuilderAlertProps,
   BuilderButtonProps,
   BuilderIconButtonProps,
+  BuilderPaginationProps,
   BuilderRatingProps,
   BuilderTextFieldProps
 } from './ui.interface'
@@ -108,10 +110,10 @@ export type WebsiteBuilderProps = {
   ArticleSEO: ComponentType<BuilderArticleSEOProps>
   PeerInformation: ComponentType<BuilderPeerProps>
   Author: ComponentType<BuilderAuthorProps>
+  AuthorLinks: ComponentType<BuilderAuthorLinksProps>
   AuthorChip: ComponentType<BuilderAuthorChipProps>
   AuthorListItem: ComponentType<BuilderAuthorListItemProps>
   AuthorList: ComponentType<BuilderAuthorListProps>
-  ArticleListItem: ComponentType<BuilderArticleListItemProps>
   ArticleList: ComponentType<BuilderArticleListProps>
   Event: ComponentType<BuilderEventProps>
   EventSEO: ComponentType<BuilderEventSEOProps>
@@ -142,6 +144,7 @@ export type WebsiteBuilderProps = {
     TextField: ComponentType<BuilderTextFieldProps>
     Button: ComponentType<BuilderButtonProps>
     IconButton: ComponentType<BuilderIconButtonProps>
+    Pagination: ComponentType<BuilderPaginationProps>
     H1: ComponentType<BuilderHeadingProps>
     H2: ComponentType<BuilderHeadingProps>
     H3: ComponentType<BuilderHeadingProps>
@@ -187,6 +190,7 @@ export type WebsiteBuilderProps = {
     Listicle: ComponentType<BuilderListicleBlockProps>
     TeaserGridFlex: ComponentType<BuilderTeaserGridFlexBlockProps>
     TeaserGrid: ComponentType<BuilderTeaserGridBlockProps>
+    TeaserList: ComponentType<BuilderTeaserListBlockProps>
     Teaser: ComponentType<BuilderTeaserProps>
     Comment: ComponentType<BuilderCommentBlockProps>
   }
@@ -195,7 +199,14 @@ export type WebsiteBuilderProps = {
     format: (date: Date, includeTime?: boolean) => string
   }
 
-  locale: string
+  meta: {
+    siteTitle: string
+    locale: string
+  }
+
+  thirdParty: Partial<{
+    stripe: string
+  }>
 }
 
 const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
@@ -218,6 +229,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   ArticleSEO: NoComponent,
   PeerInformation: NoComponent,
   Author: NoComponent,
+  AuthorLinks: NoComponent,
   AuthorChip: NoComponent,
   AuthorList: NoComponent,
   AuthorListItem: NoComponent,
@@ -226,7 +238,6 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   EventList: NoComponent,
   EventListItem: NoComponent,
   ArticleList: NoComponent,
-  ArticleListItem: NoComponent,
   CommentList: NoComponent,
   CommentListItem: NoComponent,
   CommentListItemChild: NoComponent,
@@ -243,6 +254,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     TextField: NoComponent,
     Button: NoComponent,
     IconButton: NoComponent,
+    Pagination: NoComponent,
     H1: NoComponent,
     H2: NoComponent,
     H3: NoComponent,
@@ -288,6 +300,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     Listicle: NoComponent,
     TeaserGridFlex: NoComponent,
     TeaserGrid: NoComponent,
+    TeaserList: NoComponent,
     Teaser: NoComponent,
     Break: NoComponent
   },
@@ -296,7 +309,12 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     format: date => date.toString()
   },
 
-  locale: 'ch-DE'
+  meta: {
+    siteTitle: 'Newsroom Name',
+    locale: 'ch-DE'
+  },
+
+  thirdParty: {}
 })
 
 export const useWebsiteBuilder = () => {

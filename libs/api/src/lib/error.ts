@@ -21,7 +21,8 @@ export enum ErrorCode {
   DisabledPeerError = 'DISABLED_PEER_ERROR',
   UserSubscriptionAlreadyDeactivated = 'USER_SUBSCRIPTION_ALREADY_DEACTIVATED',
   ChallengeFailed = 'ChallengeFailed',
-  InvalidSettingData = 'INVALID_SETTING_DATA'
+  InvalidSettingData = 'INVALID_SETTING_DATA',
+  PaymentAlreadyRunning = 'PAYMENT_ALREADY_RUNNING'
 }
 
 export class TokenExpiredError extends ApolloError {
@@ -87,6 +88,15 @@ export class EmailAlreadyInUseError extends ApolloError {
 export class MonthlyAmountNotEnough extends ApolloError {
   constructor() {
     super(`Monthly amount is not enough`, ErrorCode.MonthlyAmountNotEnough)
+  }
+}
+
+export class SubscriptionToDeactivateDoesNotExist extends ApolloError {
+  constructor(id: string) {
+    super(
+      `Subscription to deactivate with id ${id} not found or the subscription is already deactivated!`,
+      ErrorCode.NotFound
+    )
   }
 }
 
@@ -246,5 +256,29 @@ export class AlreadyUnpaidInvoices extends ApolloError {
 export class PeerIdMissingCommentError extends ApolloError {
   constructor() {
     super(`Comment with itemType PeerArticle requires a peerId`)
+  }
+}
+
+export class PaymentAlreadyRunning extends ApolloError {
+  constructor(id: string) {
+    super(`Payment with id ${id} already running!`, ErrorCode.PaymentAlreadyRunning)
+  }
+}
+
+export class InvoiceAlreadyPaidOrCanceled extends ApolloError {
+  constructor(id: string) {
+    super(`Invoice with id ${id} is already paid or canceled!`, ErrorCode.UserInputError)
+  }
+}
+
+export class SubscriptionNotExtendable extends ApolloError {
+  constructor(id: string) {
+    super(`Subscription with id ${id} is not extendable!`, ErrorCode.UserInputError)
+  }
+}
+
+export class InvalidMemberPlanSettings extends ApolloError {
+  constructor() {
+    super(`Memberplan cannot be non-renewable and auto-renew at the same time.`)
   }
 }

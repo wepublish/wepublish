@@ -66,7 +66,7 @@ export function LinkPageBreakBlock({
   }, [])
 
   const handleRichTextChange = useCallback(
-    (richText: React.SetStateAction<RichTextBlockValue>) =>
+    (richText: React.SetStateAction<RichTextBlockValue['richText']>) =>
       onChange(value => ({
         ...value,
         richText: isFunctionalUpdate(richText) ? richText(value.richText) : richText

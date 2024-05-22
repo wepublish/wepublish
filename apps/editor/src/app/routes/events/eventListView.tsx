@@ -4,6 +4,7 @@ import {
   createCheckedPermissionComponent,
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
+  IconButton,
   ListFilters,
   ListViewActions,
   ListViewContainer,
@@ -17,7 +18,7 @@ import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdAdd, MdDelete} from 'react-icons/md'
 import {Link} from 'react-router-dom'
-import {IconButton, Message, Pagination, Table as RTable, toaster} from 'rsuite'
+import {Message, Pagination, Table as RTable, toaster} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
 import {DeleteEventModal} from './deleteEventModal'

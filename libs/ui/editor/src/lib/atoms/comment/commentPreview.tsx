@@ -214,7 +214,7 @@ export function CommentPreview({
                     if (setRevision) {
                       setRevision(oldRevision => ({
                         ...oldRevision,
-                        text: text as RichTextBlockValue
+                        text: text as RichTextBlockValue['richText']
                       }))
                     }
                   }}

@@ -56,7 +56,7 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
           {image && (
             <ImagePanel image={image}>
               <Dropdown
-                renderToggle={(props: unknown, ref: React.Ref<HTMLButtonElement>) => (
+                renderToggle={(props: object, ref: React.Ref<HTMLButtonElement>) => (
                   <IconButton {...props} ref={ref} icon={<MdBuild />} circle appearance="subtle" />
                 )}>
                 <Dropdown.Item onClick={() => setChooseModalOpen(true)}>
@@ -91,7 +91,15 @@ export function ImageBlock({value, onChange, autofocus}: BlockProps<ImageBlockVa
       </Drawer>
       {image && (
         <Drawer open={isEditModalOpen} size="sm" onClose={() => setEditModalOpen(false)}>
-          <ImageEditPanel id={image!.id} onClose={() => setEditModalOpen(false)} />
+          <ImageEditPanel
+            block={value}
+            id={image!.id}
+            onClose={() => setEditModalOpen(false)}
+            onSave={(_, block) => {
+              setEditModalOpen(false)
+              block && onChange({...value, linkUrl: block.linkUrl})
+            }}
+          />
         </Drawer>
       )}
     </>

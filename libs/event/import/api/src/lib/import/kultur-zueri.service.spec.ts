@@ -1,17 +1,14 @@
-import {Test, TestingModule} from '@nestjs/testing'
+import {HttpService} from '@nestjs/axios'
 import {CACHE_MANAGER} from '@nestjs/cache-manager'
+import {Test, TestingModule} from '@nestjs/testing'
 import {PrismaClient} from '@prisma/client'
+import {ImageFetcherService, MediaAdapterService} from '@wepublish/image/api'
 import {EVENT_IMPORT_PROVIDER} from './events-import.service'
 import {KulturZueriService} from './kultur-zueri.service'
-import {Cache} from 'cache-manager'
-import {HttpService} from '@nestjs/axios'
-import {ImageFetcherService, MediaAdapterService} from '@wepublish/image/api'
 
 describe('KulturZueriService', () => {
   let service: KulturZueriService
   let prismaClient: PrismaClient
-  let cacheManager: Cache
-  let httpClient: HttpService
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -68,9 +65,7 @@ describe('KulturZueriService', () => {
     }).compile()
 
     service = module.get<KulturZueriService>(KulturZueriService)
-    cacheManager = module.get<Cache>(CACHE_MANAGER)
     prismaClient = module.get<PrismaClient>(PrismaClient)
-    httpClient = module.get<HttpService>(HttpService)
   })
 
   afterEach(() => {

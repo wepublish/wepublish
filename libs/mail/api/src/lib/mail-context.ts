@@ -2,7 +2,6 @@ import {PrismaClient, UserEvent} from '@prisma/client'
 import {BaseMailProvider} from './mail-provider/base-mail-provider'
 import {MailProviderTemplate} from './mail-provider/mail-provider.interface'
 
-import {PrismaService} from '@wepublish/nest-modules'
 import {Injectable} from '@nestjs/common'
 import {MailController, MailControllerConfig} from './mail.controller'
 
@@ -47,7 +46,7 @@ export class MailContext implements MailContextInterface {
 
   async sendMail(opts: MailControllerConfig) {
     if (opts.externalMailTemplateId) {
-      await new MailController(this.prisma as PrismaService, this, opts).sendMail()
+      await new MailController(this.prisma as PrismaClient, this, opts).sendMail()
     }
   }
 

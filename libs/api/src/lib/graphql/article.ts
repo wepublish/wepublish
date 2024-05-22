@@ -32,6 +32,7 @@ import {GraphQLPeer} from './peer'
 import {GraphQLPublicComment} from './comment/comment'
 import {AuthSessionType} from '@wepublish/authentication/api'
 import {getPublicCommentsForItemById} from './comment/comment.public-queries'
+import {SortOrder} from '@wepublish/utils/api'
 
 export const GraphQLArticleFilter = new GraphQLInputObjectType({
   name: 'ArticleFilter',
@@ -45,7 +46,9 @@ export const GraphQLArticleFilter = new GraphQLInputObjectType({
     published: {type: GraphQLBoolean},
     pending: {type: GraphQLBoolean},
     authors: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
-    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))}
+    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
+    includeHidden: {type: GraphQLBoolean},
+    shared: {type: GraphQLBoolean}
   }
 })
 
@@ -53,7 +56,9 @@ export const GraphQLPublicArticleFilter = new GraphQLInputObjectType({
   name: 'ArticleFilter',
   fields: {
     authors: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
-    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))}
+    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLString))},
+    includeHidden: {type: GraphQLBoolean},
+    shared: {type: GraphQLBoolean}
   }
 })
 
@@ -97,6 +102,7 @@ export const GraphQLArticleInput = new GraphQLInputObjectType({
     authorIDs: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLID)))},
 
     shared: {type: new GraphQLNonNull(GraphQLBoolean)},
+    hidden: {type: GraphQLBoolean},
     breaking: {type: new GraphQLNonNull(GraphQLBoolean)},
 
     hideAuthor: {type: new GraphQLNonNull(GraphQLBoolean)},
@@ -200,6 +206,7 @@ export const GraphQLArticle = new GraphQLObjectType<Article, Context>({
   fields: {
     id: {type: new GraphQLNonNull(GraphQLID)},
     shared: {type: new GraphQLNonNull(GraphQLBoolean)},
+    hidden: {type: GraphQLBoolean},
 
     createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
@@ -270,6 +277,9 @@ export const GraphQLPublicArticle: GraphQLObjectType<PublicArticle, Context> =
         resolve: createProxyingResolver((article, _, {urlAdapter}) => {
           return urlAdapter.getPublicArticleURL(article)
         })
+      },
+      peeredArticleURL: {
+        type: GraphQLString
       },
 
       preTitle: {type: GraphQLString},
@@ -348,7 +358,7 @@ export const GraphQLPublicArticle: GraphQLObjectType<PublicArticle, Context> =
               id,
               userId,
               null,
-              -1,
+              SortOrder.Descending,
               commentRatingSystemAnswers,
               comment
             )

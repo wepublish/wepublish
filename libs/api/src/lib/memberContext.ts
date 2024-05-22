@@ -46,7 +46,7 @@ export interface DeactivateSubscriptionForUserProps {
   deactivationReason?: SubscriptionDeactivationReason
 }
 
-export interface MemberContext {
+export interface MemberContextInterface {
   prisma: PrismaClient
   loaders: DataLoaderContext
   paymentProviders: PaymentProvider[]
@@ -103,9 +103,10 @@ export function calculateAmountForPeriodicity(
   }
 }
 
-export class MemberContext implements MemberContext {
+export class MemberContext implements MemberContextInterface {
   loaders: DataLoaderContext
   paymentProviders: PaymentProvider[]
+  prisma: PrismaClient
 
   mailContext: MailContext
   getLoginUrlForUser: (user: User) => string
@@ -217,7 +218,7 @@ export class MemberContext implements MemberContext {
           }
         })
 
-        // only return the invoice if it hasn't been canceled. Otherwise
+        // only return the invoice if it hasn't been canceled. Otherwise,
         // create a new period and a new invoice
         if (!invoice?.canceledAt) {
           return invoice
@@ -622,7 +623,7 @@ export class MemberContext implements MemberContext {
   }
 
   async createSubscription(
-    subscriptionClient: PrismaClient['subscription'],
+    prisma: PrismaClient,
     userID: string,
     paymentMethodId: string,
     paymentPeriodicity: PaymentPeriodicity,
@@ -630,9 +631,30 @@ export class MemberContext implements MemberContext {
     memberPlanId: string,
     properties: Pick<MetadataProperty, 'key' | 'value' | 'public'>[],
     autoRenew: boolean,
+    extendable: boolean,
     startsAt?: Date | string
   ): Promise<{subscription: SubscriptionWithRelations; invoice: InvoiceWithItems}> {
-    const subscription = await subscriptionClient.create({
+    if (!extendable && autoRenew) {
+      throw new Error("You can't create a non extendable subscription that is autoRenew!")
+    }
+
+    const memberPlan = await prisma.memberPlan.findUnique({where: {id: memberPlanId}})
+    const memberPlanSubscriptionCount = await prisma.subscription.count({
+      where: {
+        userID,
+        memberPlanID: memberPlanId
+      }
+    })
+
+    if (memberPlan.maxCount && memberPlan.maxCount <= memberPlanSubscriptionCount) {
+      throw new Error(
+        `Subscription count exceeded limit (given: ${memberPlanSubscriptionCount + 1} | max: ${
+          memberPlan.maxCount
+        }) for ${memberPlanId} memberplan!`
+      )
+    }
+
+    const subscription = await prisma.subscription.create({
       data: {
         userID,
         startsAt: startsAt ? startsAt : new Date(),
@@ -647,7 +669,8 @@ export class MemberContext implements MemberContext {
             data: properties
           }
         },
-        autoRenew
+        autoRenew,
+        extendable
       },
       include: {
         deactivation: true,
@@ -681,6 +704,7 @@ export class MemberContext implements MemberContext {
       subscriptionEvent
     )
   }
+
   async getActionsForSubscriptions(query: LookupActionInput): Promise<Action[]> {
     return new SubscriptionEventDictionary(this.prisma).getActionsForSubscriptions(query)
   }

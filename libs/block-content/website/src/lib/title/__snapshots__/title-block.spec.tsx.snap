@@ -3,15 +3,15 @@
 exports[`Title Block should render Default 1`] = `
 <DocumentFragment>
   <div
-    class="css-6jfyyt-TitleBlockWrapper ek0hk6a0"
+    class="css-cs9jq0-TitleBlockWrapper ek0hk6a0"
   >
     <h1
-      class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
     >
       This is a title
     </h1>
     <p
-      class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
     >
       This is a lead
     </p>
@@ -22,15 +22,15 @@ exports[`Title Block should render Default 1`] = `
 exports[`Title Block should render WithClassName 1`] = `
 <DocumentFragment>
   <div
-    class="extra-classname css-6jfyyt-TitleBlockWrapper ek0hk6a0"
+    class="extra-classname css-cs9jq0-TitleBlockWrapper ek0hk6a0"
   >
     <h1
-      class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
     >
       This is a title
     </h1>
     <p
-      class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
     >
       This is a lead
     </p>
@@ -41,15 +41,15 @@ exports[`Title Block should render WithClassName 1`] = `
 exports[`Title Block should render WithEmotion 1`] = `
 <DocumentFragment>
   <div
-    class="css-6jfyyt-TitleBlockWrapper ek0hk6a0"
+    class="css-cs9jq0-TitleBlockWrapper ek0hk6a0"
   >
     <h1
-      class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
     >
       This is a title
     </h1>
     <p
-      class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
     >
       This is a lead
     </p>
@@ -60,10 +60,10 @@ exports[`Title Block should render WithEmotion 1`] = `
 exports[`Title Block should render WithoutLead 1`] = `
 <DocumentFragment>
   <div
-    class="css-6jfyyt-TitleBlockWrapper ek0hk6a0"
+    class="css-cs9jq0-TitleBlockWrapper ek0hk6a0"
   >
     <h1
-      class="MuiTypography-root MuiTypography-h3 css-gepadz-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
     >
       This is a title
     </h1>

@@ -10,15 +10,14 @@ import {
   subscriptionFlowNonUniqueEvents,
   subscriptionFlowRequiredEvents
 } from './subscription-flow.type'
-import {SubscriptionEvent} from '@prisma/client'
-import {PrismaService} from '@wepublish/nest-modules'
+import {PrismaClient, SubscriptionEvent} from '@prisma/client'
 
 const SUBSCRIPTION_EVENT_MAX_DAYS_BEFORE = -25
 const SUBSCRIPTION_EVENT_MAX_DAYS_AFTER = 90
 
 @Injectable()
 export class SubscriptionFlowService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(private readonly prismaService: PrismaClient) {}
 
   async getFlows(defaultFlowOnly: boolean, memberPlanId?: string) {
     let where = {}

@@ -1,6 +1,5 @@
 import {Test, TestingModule} from '@nestjs/testing'
-import {User, UserEvent, UserFlowMail} from '@prisma/client'
-import {PrismaService} from '@wepublish/nest-modules'
+import {PrismaClient, User, UserEvent, UserFlowMail} from '@prisma/client'
 import {SystemMailResolver} from './system-mail.resolver'
 import {MailContext} from '@wepublish/mail/api'
 
@@ -61,7 +60,7 @@ describe('SystemMailResolver', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         SystemMailResolver,
-        {provide: PrismaService, useValue: prismaServiceMock},
+        {provide: PrismaClient, useValue: prismaServiceMock},
         {provide: MailContext, useValue: mailContestMock}
       ]
     }).compile()

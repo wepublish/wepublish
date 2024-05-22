@@ -88,7 +88,9 @@ function MemberPlanEdit() {
       active: true,
       tags: [],
       slug: '',
-      name: ''
+      name: '',
+      extendable: true,
+      maxCount: undefined
     }
 
     setMemberPlan(initMemberPlan)
@@ -135,7 +137,7 @@ function MemberPlanEdit() {
       name: memberPlan.name,
       slug: memberPlan.slug,
       tags: memberPlan.tags,
-      imageID: memberPlan.image?.id,
+      imageID: memberPlan.image?.id || null,
       description: memberPlan.description,
       active: memberPlan.active,
       availablePaymentMethods: availablePaymentMethods.map(({value}) => ({
@@ -143,7 +145,9 @@ function MemberPlanEdit() {
         forceAutoRenewal: value.forceAutoRenewal,
         paymentMethodIDs: value.paymentMethods.map((pm: PaymentMethod) => pm.id)
       })),
-      amountPerMonthMin: memberPlan.amountPerMonthMin
+      amountPerMonthMin: memberPlan.amountPerMonthMin,
+      extendable: memberPlan.extendable,
+      maxCount: memberPlan.maxCount
     }
 
     // update member plan
@@ -152,6 +156,13 @@ function MemberPlanEdit() {
         variables: {
           id: memberPlanId,
           input: memberPlanInput
+        },
+        onCompleted: data => {
+          toaster.push(
+            <Message type="success" closable>
+              {t('memberPlanEdit.savedChanges')}
+            </Message>
+          )
         }
       })
     } else {
@@ -161,6 +172,11 @@ function MemberPlanEdit() {
           input: memberPlanInput
         },
         onCompleted: data => {
+          toaster.push(
+            <Message type="success" closable>
+              {t('memberPlanEdit.savedChanges')}
+            </Message>
+          )
           navigate(`/memberplans/edit/${data.createMemberPlan?.id}`)
         }
       })

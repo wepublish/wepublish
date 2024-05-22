@@ -1,9 +1,11 @@
 import styled from '@emotion/styled'
+import {BlockStyle, BlockType, getApiClientV2, useBlockStylesQuery} from '@wepublish/editor/api-v2'
 import nanoid from 'nanoid'
-import React, {Fragment, memo, ReactNode, useCallback, useMemo, useState} from 'react'
+import React, {Fragment, memo, ReactNode, useCallback, useEffect, useMemo, useState} from 'react'
 import {MdArrowDownward, MdArrowUpward, MdDelete} from 'react-icons/md'
-import {IconButton, Panel as RPanel} from 'rsuite'
+import {IconButton, Panel as RPanel, SelectPicker} from 'rsuite'
 
+import {useTranslation} from 'react-i18next'
 import {
   isFunctionalUpdate,
   isValueConstructor,
@@ -16,7 +18,18 @@ const IconWrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin-left: 10px;
+  gap: 8px;
+`
+
+const Icon = styled.div`
+  display: flex;
+  align-items: center;
   fill: gray;
+  gap: 8px;
+`
+
+const BlockStyleSelect = styled(SelectPicker)`
+  width: 150px;
 `
 
 const ChildrenWrapper = styled.div`
@@ -65,7 +78,6 @@ const AddBlockInputWrapper = styled.div`
   padding-right: 30px;
   margin-top: 10px;
   margin-bottom: 10px;
-  text-align: center;
 `
 
 export interface BlockProps<V = any> {
@@ -127,21 +139,37 @@ const BlockListItem = memo(function BlockListItem({
 }: BlockListItemProps) {
   const handleValueChange = useCallback(
     (fieldValue: React.SetStateAction<any>) => {
-      onChange(index, value => ({
-        ...value,
-        value: isFunctionalUpdate(fieldValue) ? fieldValue(value.value) : fieldValue
-      }))
+      onChange(index, value => {
+        return {
+          ...value,
+          value: isFunctionalUpdate(fieldValue)
+            ? fieldValue(value.value)
+            : {
+                blockStyle: value.value.blockStyle,
+                ...fieldValue
+              }
+        }
+      })
     },
     [onChange, index]
   )
+
   return (
     <ListItemWrapper
+      value={value}
       icon={icon}
       disabled={disabled}
       onDelete={() => onDelete(index)}
       onMoveUp={onMoveUp ? () => onMoveUp(index) : undefined}
-      onMoveDown={onMoveDown ? () => onMoveDown(index) : undefined}>
-      {children({value: value.value, onChange: handleValueChange, autofocus, disabled, itemId})}
+      onMoveDown={onMoveDown ? () => onMoveDown(index) : undefined}
+      onStyleChange={blockStyle => handleValueChange({...value.value, blockStyle})}>
+      {children({
+        value: value.value,
+        onChange: handleValueChange,
+        autofocus,
+        disabled,
+        itemId
+      })}
     </ListItemWrapper>
   )
 })
@@ -170,11 +198,11 @@ export function BlockList<V extends BlockListValue>({
 
   const handleItemChange = useCallback(
     (index: number, itemValue: React.SetStateAction<BlockListValue>) => {
-      onChange((value: any) =>
-        Object.assign([], value, {
+      onChange((value: any) => {
+        return Object.assign([], value, {
           [index]: isFunctionalUpdate(itemValue) ? itemValue(value[index]) : itemValue
         })
-      )
+      })
     },
     [onChange]
   )
@@ -284,6 +312,7 @@ export function BlockList<V extends BlockListValue>({
 }
 
 interface ListItemWrapperProps {
+  value: BlockListItemProps['value']
   children?: ReactNode
   icon?: React.ReactElement
   disabled?: boolean
@@ -291,16 +320,43 @@ interface ListItemWrapperProps {
   onDelete?: () => void
   onMoveUp?: () => void
   onMoveDown?: () => void
+  onStyleChange?: (blockStyle?: BlockStyle['id']) => void
 }
 
+const client = getApiClientV2()
+
 function ListItemWrapper({
+  value,
   children,
   icon,
   disabled,
   onDelete,
   onMoveUp,
-  onMoveDown
+  onMoveDown,
+  onStyleChange
 }: ListItemWrapperProps) {
+  const {t} = useTranslation()
+  const {data} = useBlockStylesQuery({client})
+
+  const stylesForBlock = useMemo(
+    () =>
+      data?.blockStyles.filter(blockStyle => blockStyle.blocks.includes(value.type as BlockType)) ??
+      [],
+    [data?.blockStyles, value.type]
+  )
+
+  const blockStyleValue = useMemo(
+    // input is id & output is name
+    () => data?.blockStyles.find(style => [style.id, style.name].includes(value.value.blockStyle)),
+    [data?.blockStyles, value.value.blockStyle]
+  )
+
+  useEffect(() => {
+    if (blockStyleValue && blockStyleValue.id !== value.value.blockStyle) {
+      onStyleChange?.(blockStyleValue?.id)
+    }
+  }, [blockStyleValue, onStyleChange, value.value.blockStyle])
+
   return (
     <ListItem>
       <Wrapper>
@@ -309,7 +365,9 @@ function ListItemWrapper({
           onClick={onDelete}
           disabled={onDelete == null || disabled}
         />
+
         <FlexGrow />
+
         <UpwardButtonWrapper>
           <IconButton
             icon={<MdArrowUpward />}
@@ -317,6 +375,7 @@ function ListItemWrapper({
             disabled={onMoveUp == null || disabled}
           />
         </UpwardButtonWrapper>
+
         <DownwardButtonWrapper>
           <IconButton
             title=""
@@ -327,12 +386,30 @@ function ListItemWrapper({
         </DownwardButtonWrapper>
         <FlexGrow />
       </Wrapper>
+
       <PanelWrapper>
         <Panel bordered>
           <ChildrenWrapper>{children}</ChildrenWrapper>
         </Panel>
       </PanelWrapper>
-      <IconWrapper>{icon}</IconWrapper>
+
+      <IconWrapper>
+        <Icon>
+          {icon} {t('blockStyles.style')}
+        </Icon>
+
+        <BlockStyleSelect
+          cleanable
+          value={blockStyleValue?.id}
+          data={stylesForBlock.map(style => ({
+            value: style.id,
+            label: style.name
+          }))}
+          onChange={blockStyle => {
+            onStyleChange?.(blockStyle as string | undefined)
+          }}
+        />
+      </IconWrapper>
     </ListItem>
   )
 }
