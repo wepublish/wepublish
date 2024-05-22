@@ -29,7 +29,8 @@ import {
   BexioPaymentProvider,
   PayrexxFactory,
   HealthModule,
-  NeverChargePaymentProvider
+  NeverChargePaymentProvider,
+  NavigationModule
 } from '@wepublish/api'
 import {ApiModule, PrismaModule} from '@wepublish/nest-modules'
 import bodyParser from 'body-parser'
@@ -234,6 +235,7 @@ import {PrismaClient} from '@prisma/client'
     StatsModule,
     SettingModule,
     EventModule,
+    NavigationModule,
     BlockStylesModule,
     EventsImportModule.registerAsync({
       useFactory: (agendaBasel: AgendaBaselService, kulturZueri: KulturZueriService) => [

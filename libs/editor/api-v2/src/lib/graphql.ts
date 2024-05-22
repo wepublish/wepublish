@@ -28,6 +28,32 @@ export type AllowedSettingVals = {
   stringChoice?: Maybe<Array<Scalars['String']>>;
 };
 
+export type ArticleNavigationLink = BaseNavigationLink & {
+  __typename?: 'ArticleNavigationLink';
+  articleID: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  label: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  type: Scalars['String'];
+};
+
+export type BaseNavigationLink = {
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  label: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  type: Scalars['String'];
+};
+
+export type BaseNavigationLinkInput = {
+  articleID?: InputMaybe<Scalars['String']>;
+  label: Scalars['String'];
+  pageID?: InputMaybe<Scalars['String']>;
+  type: Scalars['String'];
+  url?: InputMaybe<Scalars['String']>;
+};
+
 export type BlockStyle = {
   __typename?: 'BlockStyle';
   blocks: Array<BlockType>;
@@ -70,6 +96,12 @@ export type ConsentFilter = {
   defaultValue?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['String']>;
+};
+
+export type CreateNavigationInput = {
+  key: Scalars['String'];
+  links: Array<BaseNavigationLinkInput>;
+  name: Scalars['String'];
 };
 
 export type DashboardInvoice = {
@@ -147,6 +179,16 @@ export enum EventStatus {
   Rescheduled = 'Rescheduled',
   Scheduled = 'Scheduled'
 }
+
+export type ExternalNavigationLink = BaseNavigationLink & {
+  __typename?: 'ExternalNavigationLink';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  label: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  type: Scalars['String'];
+  url?: Maybe<Scalars['String']>;
+};
 
 export type FocalPoint = {
   __typename?: 'FocalPoint';
@@ -237,6 +279,8 @@ export type Mutation = {
   createConsent: Consent;
   /** Creates a new event. */
   createEvent: Event;
+  /** Creates a new navigation. */
+  createNavigation: Navigation;
   /** Create a new subscription flow */
   createSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Create a subscription interval */
@@ -258,6 +302,8 @@ export type Mutation = {
   deleteConsent: Consent;
   /** Deletes an existing event. */
   deleteEvent: Event;
+  /** Deletes an existing navigation. */
+  deleteNavigation: Navigation;
   /** Delete an existing subscription flow */
   deleteSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Delete an existing subscription interval */
@@ -289,6 +335,8 @@ export type Mutation = {
   updateConsent: Consent;
   /** Updates an existing event. */
   updateEvent: Event;
+  /** Updates an existing navigation. */
+  updateNavigation: Navigation;
   /** Updates an existing setting. */
   updateSetting: Setting;
   /** Update an existing subscription flow */
@@ -331,6 +379,11 @@ export type MutationCreateEventArgs = {
 };
 
 
+export type MutationCreateNavigationArgs = {
+  navigation: CreateNavigationInput;
+};
+
+
 export type MutationCreateSubscriptionFlowArgs = {
   autoRenewal: Array<Scalars['Boolean']>;
   memberPlanId: Scalars['String'];
@@ -366,6 +419,11 @@ export type MutationDeleteConsentArgs = {
 
 export type MutationDeleteEventArgs = {
   id: Scalars['String'];
+};
+
+
+export type MutationDeleteNavigationArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -422,6 +480,11 @@ export type MutationUpdateEventArgs = {
 };
 
 
+export type MutationUpdateNavigationArgs = {
+  navigation: UpdateNavigationInput;
+};
+
+
 export type MutationUpdateSettingArgs = {
   name: SettingName;
   value: Scalars['GraphQLSettingValueType'];
@@ -454,12 +517,32 @@ export type MutationUpdateUserConsentArgs = {
   value: Scalars['Boolean'];
 };
 
+export type Navigation = {
+  __typename?: 'Navigation';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  key: Scalars['String'];
+  links: Array<BaseNavigationLink>;
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+};
+
 export type PageInfo = {
   __typename?: 'PageInfo';
   endCursor?: Maybe<Scalars['String']>;
   hasNextPage: Scalars['Boolean'];
   hasPreviousPage: Scalars['Boolean'];
   startCursor?: Maybe<Scalars['String']>;
+};
+
+export type PageNavigationLink = BaseNavigationLink & {
+  __typename?: 'PageNavigationLink';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  label: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  pageID: Scalars['String'];
+  type: Scalars['String'];
 };
 
 export type PaginatedEvents = {
@@ -535,6 +618,12 @@ export type Query = {
    *
    */
   expectedRevenue: Array<DashboardInvoice>;
+  /** Returns a navigation by id. */
+  getNavigationById: Navigation;
+  /** Returns a navigation by key. */
+  getNavigationByKey: Navigation;
+  /** Returns a list of navigations. */
+  getNavigations: Array<Navigation>;
   /** Returns an image by id. */
   image: Image;
   /**
@@ -649,6 +738,16 @@ export type QueryEventsArgs = {
 export type QueryExpectedRevenueArgs = {
   end?: InputMaybe<Scalars['DateTime']>;
   start: Scalars['DateTime'];
+};
+
+
+export type QueryGetNavigationByIdArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryGetNavigationByKeyArgs = {
+  key: Scalars['String'];
 };
 
 
@@ -827,6 +926,13 @@ export type SystemMailModel = {
   __typename?: 'SystemMailModel';
   event: UserEvent;
   mailTemplate?: Maybe<MailTemplateRef>;
+};
+
+export type UpdateNavigationInput = {
+  id: Scalars['String'];
+  key: Scalars['String'];
+  links: Array<BaseNavigationLinkInput>;
+  name: Scalars['String'];
 };
 
 export type User = {
@@ -1029,6 +1135,41 @@ export type FullMailTemplateFragment = { __typename?: 'MailTemplateWithUrlAndSta
 
 export type FullMailProviderFragment = { __typename?: 'MailProviderModel', name: string };
 
+export type FullNavigationFragment = { __typename?: 'Navigation', id: string, key: string, name: string, links: Array<{ __typename: 'ArticleNavigationLink', label: string, articleID: string } | { __typename: 'ExternalNavigationLink', label: string, url?: string | null } | { __typename: 'PageNavigationLink', label: string, pageID: string }> };
+
+export type NavigationListQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type NavigationListQuery = { __typename?: 'Query', getNavigations: Array<{ __typename?: 'Navigation', id: string, key: string, name: string, links: Array<{ __typename: 'ArticleNavigationLink', label: string, articleID: string } | { __typename: 'ExternalNavigationLink', label: string, url?: string | null } | { __typename: 'PageNavigationLink', label: string, pageID: string }> }> };
+
+export type NavigationQueryVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type NavigationQuery = { __typename?: 'Query', getNavigationById: { __typename?: 'Navigation', id: string, key: string, name: string, links: Array<{ __typename: 'ArticleNavigationLink', label: string, articleID: string } | { __typename: 'ExternalNavigationLink', label: string, url?: string | null } | { __typename: 'PageNavigationLink', label: string, pageID: string }> } };
+
+export type CreateNavigationMutationVariables = Exact<{
+  navigation: CreateNavigationInput;
+}>;
+
+
+export type CreateNavigationMutation = { __typename?: 'Mutation', createNavigation: { __typename?: 'Navigation', id: string, key: string, name: string, links: Array<{ __typename: 'ArticleNavigationLink', label: string, articleID: string } | { __typename: 'ExternalNavigationLink', label: string, url?: string | null } | { __typename: 'PageNavigationLink', label: string, pageID: string }> } };
+
+export type UpdateNavigationMutationVariables = Exact<{
+  navigation: UpdateNavigationInput;
+}>;
+
+
+export type UpdateNavigationMutation = { __typename?: 'Mutation', updateNavigation: { __typename?: 'Navigation', id: string, key: string, name: string, links: Array<{ __typename: 'ArticleNavigationLink', label: string, articleID: string } | { __typename: 'ExternalNavigationLink', label: string, url?: string | null } | { __typename: 'PageNavigationLink', label: string, pageID: string }> } };
+
+export type DeleteNavigationMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type DeleteNavigationMutation = { __typename?: 'Mutation', deleteNavigation: { __typename?: 'Navigation', id: string, key: string, name: string, links: Array<{ __typename: 'ArticleNavigationLink', label: string, articleID: string } | { __typename: 'ExternalNavigationLink', label: string, url?: string | null } | { __typename: 'PageNavigationLink', label: string, pageID: string }> } };
+
 export type FullPeriodicJobFragment = { __typename?: 'PeriodicJob', id: string, date: string, error?: string | null, executionTime?: string | null, finishedWithError?: string | null, modifiedAt: string, successfullyFinished?: string | null, tries: number, createdAt: string };
 
 export type PeriodicJobLogsQueryVariables = Exact<{
@@ -1219,6 +1360,28 @@ export const FullMailTemplateFragmentDoc = gql`
 export const FullMailProviderFragmentDoc = gql`
     fragment FullMailProvider on MailProviderModel {
   name
+}
+    `;
+export const FullNavigationFragmentDoc = gql`
+    fragment FullNavigation on Navigation {
+  id
+  key
+  name
+  links {
+    __typename
+    ... on PageNavigationLink {
+      label
+      pageID
+    }
+    ... on ArticleNavigationLink {
+      label
+      articleID
+    }
+    ... on ExternalNavigationLink {
+      label
+      url
+    }
+  }
 }
     `;
 export const FullPeriodicJobFragmentDoc = gql`
@@ -2023,6 +2186,174 @@ export function useSynchronizeMailTemplatesMutation(baseOptions?: Apollo.Mutatio
 export type SynchronizeMailTemplatesMutationHookResult = ReturnType<typeof useSynchronizeMailTemplatesMutation>;
 export type SynchronizeMailTemplatesMutationResult = Apollo.MutationResult<SynchronizeMailTemplatesMutation>;
 export type SynchronizeMailTemplatesMutationOptions = Apollo.BaseMutationOptions<SynchronizeMailTemplatesMutation, SynchronizeMailTemplatesMutationVariables>;
+export const NavigationListDocument = gql`
+    query NavigationList {
+  getNavigations {
+    ...FullNavigation
+  }
+}
+    ${FullNavigationFragmentDoc}`;
+
+/**
+ * __useNavigationListQuery__
+ *
+ * To run a query within a React component, call `useNavigationListQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNavigationListQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNavigationListQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useNavigationListQuery(baseOptions?: Apollo.QueryHookOptions<NavigationListQuery, NavigationListQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<NavigationListQuery, NavigationListQueryVariables>(NavigationListDocument, options);
+      }
+export function useNavigationListLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NavigationListQuery, NavigationListQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<NavigationListQuery, NavigationListQueryVariables>(NavigationListDocument, options);
+        }
+export type NavigationListQueryHookResult = ReturnType<typeof useNavigationListQuery>;
+export type NavigationListLazyQueryHookResult = ReturnType<typeof useNavigationListLazyQuery>;
+export type NavigationListQueryResult = Apollo.QueryResult<NavigationListQuery, NavigationListQueryVariables>;
+export const NavigationDocument = gql`
+    query Navigation($id: ID!) {
+  getNavigationById(id: $id) {
+    ...FullNavigation
+  }
+}
+    ${FullNavigationFragmentDoc}`;
+
+/**
+ * __useNavigationQuery__
+ *
+ * To run a query within a React component, call `useNavigationQuery` and pass it any options that fit your needs.
+ * When your component renders, `useNavigationQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useNavigationQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useNavigationQuery(baseOptions: Apollo.QueryHookOptions<NavigationQuery, NavigationQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<NavigationQuery, NavigationQueryVariables>(NavigationDocument, options);
+      }
+export function useNavigationLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<NavigationQuery, NavigationQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<NavigationQuery, NavigationQueryVariables>(NavigationDocument, options);
+        }
+export type NavigationQueryHookResult = ReturnType<typeof useNavigationQuery>;
+export type NavigationLazyQueryHookResult = ReturnType<typeof useNavigationLazyQuery>;
+export type NavigationQueryResult = Apollo.QueryResult<NavigationQuery, NavigationQueryVariables>;
+export const CreateNavigationDocument = gql`
+    mutation CreateNavigation($navigation: CreateNavigationInput!) {
+  createNavigation(navigation: $navigation) {
+    ...FullNavigation
+  }
+}
+    ${FullNavigationFragmentDoc}`;
+export type CreateNavigationMutationFn = Apollo.MutationFunction<CreateNavigationMutation, CreateNavigationMutationVariables>;
+
+/**
+ * __useCreateNavigationMutation__
+ *
+ * To run a mutation, you first call `useCreateNavigationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateNavigationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createNavigationMutation, { data, loading, error }] = useCreateNavigationMutation({
+ *   variables: {
+ *      navigation: // value for 'navigation'
+ *   },
+ * });
+ */
+export function useCreateNavigationMutation(baseOptions?: Apollo.MutationHookOptions<CreateNavigationMutation, CreateNavigationMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateNavigationMutation, CreateNavigationMutationVariables>(CreateNavigationDocument, options);
+      }
+export type CreateNavigationMutationHookResult = ReturnType<typeof useCreateNavigationMutation>;
+export type CreateNavigationMutationResult = Apollo.MutationResult<CreateNavigationMutation>;
+export type CreateNavigationMutationOptions = Apollo.BaseMutationOptions<CreateNavigationMutation, CreateNavigationMutationVariables>;
+export const UpdateNavigationDocument = gql`
+    mutation UpdateNavigation($navigation: UpdateNavigationInput!) {
+  updateNavigation(navigation: $navigation) {
+    ...FullNavigation
+  }
+}
+    ${FullNavigationFragmentDoc}`;
+export type UpdateNavigationMutationFn = Apollo.MutationFunction<UpdateNavigationMutation, UpdateNavigationMutationVariables>;
+
+/**
+ * __useUpdateNavigationMutation__
+ *
+ * To run a mutation, you first call `useUpdateNavigationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateNavigationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateNavigationMutation, { data, loading, error }] = useUpdateNavigationMutation({
+ *   variables: {
+ *      navigation: // value for 'navigation'
+ *   },
+ * });
+ */
+export function useUpdateNavigationMutation(baseOptions?: Apollo.MutationHookOptions<UpdateNavigationMutation, UpdateNavigationMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateNavigationMutation, UpdateNavigationMutationVariables>(UpdateNavigationDocument, options);
+      }
+export type UpdateNavigationMutationHookResult = ReturnType<typeof useUpdateNavigationMutation>;
+export type UpdateNavigationMutationResult = Apollo.MutationResult<UpdateNavigationMutation>;
+export type UpdateNavigationMutationOptions = Apollo.BaseMutationOptions<UpdateNavigationMutation, UpdateNavigationMutationVariables>;
+export const DeleteNavigationDocument = gql`
+    mutation DeleteNavigation($id: ID!) {
+  deleteNavigation(id: $id) {
+    ...FullNavigation
+  }
+}
+    ${FullNavigationFragmentDoc}`;
+export type DeleteNavigationMutationFn = Apollo.MutationFunction<DeleteNavigationMutation, DeleteNavigationMutationVariables>;
+
+/**
+ * __useDeleteNavigationMutation__
+ *
+ * To run a mutation, you first call `useDeleteNavigationMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteNavigationMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteNavigationMutation, { data, loading, error }] = useDeleteNavigationMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useDeleteNavigationMutation(baseOptions?: Apollo.MutationHookOptions<DeleteNavigationMutation, DeleteNavigationMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteNavigationMutation, DeleteNavigationMutationVariables>(DeleteNavigationDocument, options);
+      }
+export type DeleteNavigationMutationHookResult = ReturnType<typeof useDeleteNavigationMutation>;
+export type DeleteNavigationMutationResult = Apollo.MutationResult<DeleteNavigationMutation>;
+export type DeleteNavigationMutationOptions = Apollo.BaseMutationOptions<DeleteNavigationMutation, DeleteNavigationMutationVariables>;
 export const PeriodicJobLogsDocument = gql`
     query PeriodicJobLogs($skip: Int, $take: Int) {
   periodicJobLog(skip: $skip, take: $take) {

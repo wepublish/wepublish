@@ -28,6 +28,32 @@ export type AllowedSettingVals = {
   stringChoice?: Maybe<Array<Scalars['String']>>;
 };
 
+export type ArticleNavigationLink = BaseNavigationLink & {
+  __typename?: 'ArticleNavigationLink';
+  articleID: Scalars['String'];
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  label: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  type: Scalars['String'];
+};
+
+export type BaseNavigationLink = {
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  label: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  type: Scalars['String'];
+};
+
+export type BaseNavigationLinkInput = {
+  articleID?: InputMaybe<Scalars['String']>;
+  label: Scalars['String'];
+  pageID?: InputMaybe<Scalars['String']>;
+  type: Scalars['String'];
+  url?: InputMaybe<Scalars['String']>;
+};
+
 export type BlockStyle = {
   __typename?: 'BlockStyle';
   blocks: Array<BlockType>;
@@ -70,6 +96,12 @@ export type ConsentFilter = {
   defaultValue?: InputMaybe<Scalars['Boolean']>;
   name?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['String']>;
+};
+
+export type CreateNavigationInput = {
+  key: Scalars['String'];
+  links: Array<BaseNavigationLinkInput>;
+  name: Scalars['String'];
 };
 
 export type DashboardInvoice = {
@@ -147,6 +179,16 @@ export enum EventStatus {
   Rescheduled = 'Rescheduled',
   Scheduled = 'Scheduled'
 }
+
+export type ExternalNavigationLink = BaseNavigationLink & {
+  __typename?: 'ExternalNavigationLink';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  label: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  type: Scalars['String'];
+  url?: Maybe<Scalars['String']>;
+};
 
 export type FocalPoint = {
   __typename?: 'FocalPoint';
@@ -237,6 +279,8 @@ export type Mutation = {
   createConsent: Consent;
   /** Creates a new event. */
   createEvent: Event;
+  /** Creates a new navigation. */
+  createNavigation: Navigation;
   /** Create a new subscription flow */
   createSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Create a subscription interval */
@@ -258,6 +302,8 @@ export type Mutation = {
   deleteConsent: Consent;
   /** Deletes an existing event. */
   deleteEvent: Event;
+  /** Deletes an existing navigation. */
+  deleteNavigation: Navigation;
   /** Delete an existing subscription flow */
   deleteSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Delete an existing subscription interval */
@@ -289,6 +335,8 @@ export type Mutation = {
   updateConsent: Consent;
   /** Updates an existing event. */
   updateEvent: Event;
+  /** Updates an existing navigation. */
+  updateNavigation: Navigation;
   /** Updates an existing setting. */
   updateSetting: Setting;
   /** Update an existing subscription flow */
@@ -331,6 +379,11 @@ export type MutationCreateEventArgs = {
 };
 
 
+export type MutationCreateNavigationArgs = {
+  navigation: CreateNavigationInput;
+};
+
+
 export type MutationCreateSubscriptionFlowArgs = {
   autoRenewal: Array<Scalars['Boolean']>;
   memberPlanId: Scalars['String'];
@@ -366,6 +419,11 @@ export type MutationDeleteConsentArgs = {
 
 export type MutationDeleteEventArgs = {
   id: Scalars['String'];
+};
+
+
+export type MutationDeleteNavigationArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -422,6 +480,11 @@ export type MutationUpdateEventArgs = {
 };
 
 
+export type MutationUpdateNavigationArgs = {
+  navigation: UpdateNavigationInput;
+};
+
+
 export type MutationUpdateSettingArgs = {
   name: SettingName;
   value: Scalars['GraphQLSettingValueType'];
@@ -454,12 +517,32 @@ export type MutationUpdateUserConsentArgs = {
   value: Scalars['Boolean'];
 };
 
+export type Navigation = {
+  __typename?: 'Navigation';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  key: Scalars['String'];
+  links: Array<BaseNavigationLink>;
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+};
+
 export type PageInfo = {
   __typename?: 'PageInfo';
   endCursor?: Maybe<Scalars['String']>;
   hasNextPage: Scalars['Boolean'];
   hasPreviousPage: Scalars['Boolean'];
   startCursor?: Maybe<Scalars['String']>;
+};
+
+export type PageNavigationLink = BaseNavigationLink & {
+  __typename?: 'PageNavigationLink';
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  label: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  pageID: Scalars['String'];
+  type: Scalars['String'];
 };
 
 export type PaginatedEvents = {
@@ -535,6 +618,12 @@ export type Query = {
    *
    */
   expectedRevenue: Array<DashboardInvoice>;
+  /** Returns a navigation by id. */
+  getNavigationById: Navigation;
+  /** Returns a navigation by key. */
+  getNavigationByKey: Navigation;
+  /** Returns a list of navigations. */
+  getNavigations: Array<Navigation>;
   /** Returns an image by id. */
   image: Image;
   /**
@@ -649,6 +738,16 @@ export type QueryEventsArgs = {
 export type QueryExpectedRevenueArgs = {
   end?: InputMaybe<Scalars['DateTime']>;
   start: Scalars['DateTime'];
+};
+
+
+export type QueryGetNavigationByIdArgs = {
+  id: Scalars['ID'];
+};
+
+
+export type QueryGetNavigationByKeyArgs = {
+  key: Scalars['String'];
 };
 
 
@@ -829,6 +928,13 @@ export type SystemMailModel = {
   mailTemplate?: Maybe<MailTemplateRef>;
 };
 
+export type UpdateNavigationInput = {
+  id: Scalars['String'];
+  key: Scalars['String'];
+  links: Array<BaseNavigationLinkInput>;
+  name: Scalars['String'];
+};
+
 export type User = {
   __typename?: 'User';
   active: Scalars['Boolean'];
@@ -1002,7 +1108,13 @@ export type VersionInformationQueryResult = Apollo.QueryResult<VersionInformatio
         }
       }
       const result: PossibleTypesResultData = {
-  "possibleTypes": {}
+  "possibleTypes": {
+    "BaseNavigationLink": [
+      "ArticleNavigationLink",
+      "ExternalNavigationLink",
+      "PageNavigationLink"
+    ]
+  }
 };
       export default result;
     
