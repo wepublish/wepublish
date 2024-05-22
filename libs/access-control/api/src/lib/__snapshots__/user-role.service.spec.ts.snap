@@ -1,0 +1,65 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UserRoleService should create a user role 1`] = `
+[
+  {
+    "data": {
+      "description": "testDescription",
+      "name": "testRole",
+      "permissionIDs": [],
+      "systemRole": false,
+    },
+  },
+]
+`;
+
+exports[`UserRoleService should delete a user role by id 1`] = `
+[
+  {
+    "where": {
+      "id": "123",
+    },
+  },
+]
+`;
+
+exports[`UserRoleService should get a user role by id 1`] = `
+[
+  {
+    "where": {
+      "id": "123",
+    },
+  },
+]
+`;
+
+exports[`UserRoleService should get user roles with pagination 1`] = `
+[
+  {
+    "cursor": undefined,
+    "orderBy": {
+      "name": "asc",
+    },
+    "skip": 0,
+    "take": 11,
+    "where": {
+      "name": "Create",
+    },
+  },
+]
+`;
+
+exports[`UserRoleService should update a user role 1`] = `
+[
+  {
+    "data": {
+      "description": "updatedDescription",
+      "name": "updatedRole",
+      "permissionIDs": [],
+    },
+    "where": {
+      "id": "123",
+    },
+  },
+]
+`;
