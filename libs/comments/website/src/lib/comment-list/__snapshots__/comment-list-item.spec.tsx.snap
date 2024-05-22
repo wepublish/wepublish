@@ -135,7 +135,9 @@ https://unsplash.it/200/200 200w"
             class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
           />
         </button>
-        <div>
+        <div
+          class="css-f6dhhb-CommentListItemShareWrapper e1jq4lzs2"
+        >
           <button
             class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall e1jq4lzs1 css-1sgogi5-MuiButtonBase-root-MuiIconButton-root-ShareIcon"
             tabindex="0"
@@ -576,7 +578,9 @@ https://unsplash.it/200/200 200w"
             class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
           />
         </button>
-        <div>
+        <div
+          class="css-f6dhhb-CommentListItemShareWrapper e1jq4lzs2"
+        >
           <button
             class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall e1jq4lzs1 css-1sgogi5-MuiButtonBase-root-MuiIconButton-root-ShareIcon"
             tabindex="0"
@@ -1576,7 +1580,9 @@ https://unsplash.it/200/200 200w"
             class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
           />
         </button>
-        <div>
+        <div
+          class="css-f6dhhb-CommentListItemShareWrapper e1jq4lzs2"
+        >
           <button
             class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall e1jq4lzs1 css-1sgogi5-MuiButtonBase-root-MuiIconButton-root-ShareIcon"
             tabindex="0"
@@ -2226,7 +2232,9 @@ https://unsplash.it/200/200 200w"
             class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
           />
         </button>
-        <div>
+        <div
+          class="css-f6dhhb-CommentListItemShareWrapper e1jq4lzs2"
+        >
           <button
             class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall e1jq4lzs1 css-1sgogi5-MuiButtonBase-root-MuiIconButton-root-ShareIcon"
             tabindex="0"
@@ -2873,7 +2881,9 @@ https://unsplash.it/200/200 200w"
                 class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
               />
             </button>
-            <div>
+            <div
+              class="css-f6dhhb-CommentListItemShareWrapper e1jq4lzs2"
+            >
               <button
                 class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall e1jq4lzs1 css-1sgogi5-MuiButtonBase-root-MuiIconButton-root-ShareIcon"
                 tabindex="0"
@@ -3049,7 +3059,9 @@ https://unsplash.it/200/200 200w"
                     class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
                   />
                 </button>
-                <div>
+                <div
+                  class="css-f6dhhb-CommentListItemShareWrapper e1jq4lzs2"
+                >
                   <button
                     class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall e1jq4lzs1 css-1sgogi5-MuiButtonBase-root-MuiIconButton-root-ShareIcon"
                     tabindex="0"
@@ -3194,7 +3206,9 @@ https://unsplash.it/200/200 200w"
                 class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
               />
             </button>
-            <div>
+            <div
+              class="css-f6dhhb-CommentListItemShareWrapper e1jq4lzs2"
+            >
               <button
                 class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall e1jq4lzs1 css-1sgogi5-MuiButtonBase-root-MuiIconButton-root-ShareIcon"
                 tabindex="0"
@@ -3363,7 +3377,9 @@ https://unsplash.it/200/200 200w"
                     class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
                   />
                 </button>
-                <div>
+                <div
+                  class="css-f6dhhb-CommentListItemShareWrapper e1jq4lzs2"
+                >
                   <button
                     class="MuiButtonBase-root MuiIconButton-root MuiIconButton-sizeSmall e1jq4lzs1 css-1sgogi5-MuiButtonBase-root-MuiIconButton-root-ShareIcon"
                     tabindex="0"
