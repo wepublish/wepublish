@@ -315,7 +315,7 @@
     "regenerator-runtime": "0.13.7",
     "rsuite": "^5.40.0",
     "rxjs": "^7.8.0",
-    "sharp": "^0.33.0",
+    "sharp": "^0.33.4",
     "slate": "^0.58.1",
     "slate-history": "^0.58.1",
     "slate-hyperscript": "^0.58.1",
@@ -327,6 +327,7 @@
     "zod-i18n-map": "^2.13.1"
   },
   "optionalDependencies": {
-    "@img/sharp-darwin-arm64": "^0.33.4"
+    "@img/sharp-darwin-arm64": "^0.33.4",
+    "@img/sharp-linux-x64": "^0.33.4"
   }
 }

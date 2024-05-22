@@ -96,6 +96,38 @@ CMD ["bash", "./start.sh"]
 
 
 #######
+## media Server
+#######
+
+FROM node:18.19.1-bookworm-slim as build-media
+WORKDIR /wepublish
+COPY . .
+RUN npm ci && \
+    npm install --include=optional sharp && \
+    npm install -g @yao-pkg/pkg && \
+    npx nx build media && \
+    cp docker/media_build_package.json package.json && \
+    pkg -C Brotli package.json
+
+FROM debian:bookworm-slim as media
+MAINTAINER WePublish Foundation
+ENV NODE_ENV=production
+ENV ADDRESS=0.0.0.0
+ENV PORT=4100
+WORKDIR /wepublish
+RUN groupadd -r wepublish && \
+    useradd -r -g wepublish -d /wepublish wepublish && \
+    chown -R wepublish:wepublish /wepublish
+COPY --chown=wepublish:wepublish --from=build-media /wepublish/media /wepublish/media
+COPY --chown=wepublish:wepublish --from=build-media /wepublish/node_modules/sharp /wepublish/node_modules/sharp
+COPY --chown=wepublish:wepublish --from=build-media /wepublish/node_modules/@img /wepublish/node_modules/@img
+EXPOSE 4100
+USER wepublish
+CMD /wepublish/media
+
+
+
+#######
 ## Website
 #######
 FROM node:18.19.1-bookworm-slim as website
