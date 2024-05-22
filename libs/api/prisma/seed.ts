@@ -180,12 +180,12 @@ const seedSettings = (prisma: PrismaClient) => [
   }),
 
   // remove non-used settings
-  prisma.setting.delete({
+  prisma.setting.deleteMany({
     where: {
       name: 'invoiceReminderMaxTries'
     }
   }),
-  prisma.setting.delete({
+  prisma.setting.deleteMany({
     where: {
       name: 'invoiceFreqReminder'
     }
