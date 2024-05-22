@@ -39,7 +39,9 @@ export const GraphQLSettingName = new GraphQLEnumType({
     MAKE_EXPECTED_REVENUE_API_PUBLIC: {value: SettingName.MAKE_EXPECTED_REVENUE_API_PUBLIC},
     MAKE_REVENUE_API_PUBLIC: {value: SettingName.MAKE_REVENUE_API_PUBLIC},
     COMMENT_CHAR_LIMIT: {value: SettingName.COMMENT_CHAR_LIMIT},
-    ALLOW_COMMENT_EDITING: {value: SettingName.ALLOW_COMMENT_EDITING}
+    ALLOW_COMMENT_EDITING: {value: SettingName.ALLOW_COMMENT_EDITING},
+    HEAD_SCRIPT: {value: SettingName.HEAD_SCRIPT},
+    BODY_SCRIPT: {value: SettingName.BODY_SCRIPT}
   }
 })
 
