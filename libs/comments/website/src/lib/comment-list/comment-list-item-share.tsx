@@ -4,6 +4,8 @@ import React, {useRef, useState} from 'react'
 import {BsLinkedin, BsTwitterX} from 'react-icons/bs'
 import {MdContentCopy, MdEmail, MdFacebook, MdShare, MdWhatsapp} from 'react-icons/md'
 
+const CommentListItemShareWrapper = styled('div')``
+
 const ShareIcon = styled(IconButton)`
   border-width: 0px;
 `
@@ -20,7 +22,7 @@ const iconStyle = {
   alignItems: 'center'
 }
 
-const CommentListItemShare = ({url, title}: BuilderCommentListItemShareProps) => {
+const CommentListItemShare = ({url, title, className}: BuilderCommentListItemShareProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
   const shareButtonRef = useRef<HTMLButtonElement>(null)
 
@@ -87,7 +89,7 @@ const CommentListItemShare = ({url, title}: BuilderCommentListItemShareProps) =>
   ]
 
   return (
-    <div>
+    <CommentListItemShareWrapper className={className}>
       <ShareIcon ref={shareButtonRef} size="small" onClick={handleClick} aria-describedby={id}>
         <MdShare />
       </ShareIcon>
@@ -128,7 +130,7 @@ const CommentListItemShare = ({url, title}: BuilderCommentListItemShareProps) =>
           )}
         </ShareOptions>
       </Popover>
-    </div>
+    </CommentListItemShareWrapper>
   )
 }
 

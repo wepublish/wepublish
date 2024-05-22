@@ -68,6 +68,7 @@ export type BuilderCommentListProps = Pick<
 }
 
 export type BuilderCommentListItemShareProps = {
+  className?: string
   url: string
   title: string
 }
