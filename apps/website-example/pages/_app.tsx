@@ -144,6 +144,15 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
                 </LogoLink>
               </FooterContainer>
             </Spacer>
+
+            <Script
+              src={publicRuntimeConfig.env.API_URL! + '/static/head.js'}
+              strategy="beforeInteractive"
+            />
+            <Script
+              src={publicRuntimeConfig.env.API_URL! + '/static/body.js'}
+              strategy="afterInteractive"
+            />
           </ThemeProvider>
         </WebsiteBuilderProvider>
       </WebsiteProvider>

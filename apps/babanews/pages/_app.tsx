@@ -120,6 +120,15 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
             </ContentSpacer>
 
             <Footer slug="main" categorySlugs={[['sonstiges', 'other'], ['about-us']]} />
+
+            <Script
+              src={publicRuntimeConfig.env.API_URL! + '/static/head.js'}
+              strategy="beforeInteractive"
+            />
+            <Script
+              src={publicRuntimeConfig.env.API_URL! + '/static/body.js'}
+              strategy="afterInteractive"
+            />
           </ThemeProvider>
         </WebsiteBuilderProvider>
       </WebsiteProvider>

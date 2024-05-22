@@ -671,6 +671,7 @@ export type MutationCreateSessionWithOAuth2CodeArgs = {
 
 export type MutationCreateSubscriptionArgs = {
   autoRenew: Scalars['Boolean'];
+  deactivateSubscriptionId?: InputMaybe<Scalars['ID']>;
   failureURL?: InputMaybe<Scalars['String']>;
   memberPlanID?: InputMaybe<Scalars['ID']>;
   memberPlanSlug?: InputMaybe<Scalars['Slug']>;
@@ -992,7 +993,6 @@ export type PollVote = {
   answerId: Scalars['String'];
   createdAt: Scalars['DateTime'];
   disabled: Scalars['Boolean'];
-  fingerprint?: Maybe<Scalars['String']>;
   pollId: Scalars['ID'];
 };
 
@@ -1281,7 +1281,9 @@ export enum SettingName {
   AllowGuestCommenting = 'ALLOW_GUEST_COMMENTING',
   AllowGuestCommentRating = 'ALLOW_GUEST_COMMENT_RATING',
   AllowGuestPollVoting = 'ALLOW_GUEST_POLL_VOTING',
+  BodyScript = 'BODY_SCRIPT',
   CommentCharLimit = 'COMMENT_CHAR_LIMIT',
+  HeadScript = 'HEAD_SCRIPT',
   InvoiceReminderFreq = 'INVOICE_REMINDER_FREQ',
   InvoiceReminderMaxTries = 'INVOICE_REMINDER_MAX_TRIES',
   MakeActiveSubscribersApiPublic = 'MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC',

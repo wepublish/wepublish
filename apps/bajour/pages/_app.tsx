@@ -158,6 +158,15 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               {publicRuntimeConfig.env.GA_ID && (
                 <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
               )}
+
+              <Script
+                src={publicRuntimeConfig.env.API_URL! + '/static/head.js'}
+                strategy="beforeInteractive"
+              />
+              <Script
+                src={publicRuntimeConfig.env.API_URL! + '/static/body.js'}
+                strategy="afterInteractive"
+              />
             </ThemeProvider>
           </WebsiteBuilderProvider>
         </WebsiteProvider>
