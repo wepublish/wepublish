@@ -70,28 +70,6 @@ const seedSettings = (prisma: PrismaClient) => [
   }),
   prisma.setting.upsert({
     where: {
-      name: SettingName.INVOICE_REMINDER_FREQ
-    },
-    update: {},
-    create: {
-      name: SettingName.INVOICE_REMINDER_FREQ,
-      value: 3,
-      settingRestriction: {minValue: 0, maxValue: 30}
-    }
-  }),
-  prisma.setting.upsert({
-    where: {
-      name: SettingName.INVOICE_REMINDER_MAX_TRIES
-    },
-    update: {},
-    create: {
-      name: SettingName.INVOICE_REMINDER_MAX_TRIES,
-      value: 5,
-      settingRestriction: {minValue: 0, maxValue: 10}
-    }
-  }),
-  prisma.setting.upsert({
-    where: {
       name: SettingName.MAKE_NEW_SUBSCRIBERS_API_PUBLIC
     },
     update: {},
@@ -198,6 +176,18 @@ const seedSettings = (prisma: PrismaClient) => [
       name: SettingName.BODY_SCRIPT,
       value: '',
       settingRestriction: {inputLength: 10000}
+    }
+  }),
+
+  // remove non-used settings
+  prisma.setting.delete({
+    where: {
+      name: 'invoiceReminderMaxTries'
+    }
+  }),
+  prisma.setting.delete({
+    where: {
+      name: 'invoiceFreqReminder'
     }
   })
 ]
