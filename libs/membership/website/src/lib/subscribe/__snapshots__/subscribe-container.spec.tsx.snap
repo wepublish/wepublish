@@ -992,7 +992,82 @@ exports[`Subscribe Container should render Filled 1`] = `
       novalidate=""
     >
       <div
-@@ -336,349 +339,11 @@
+@@ -9,10 +12,74 @@
+        <h2
+          class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
+        >
+          Abo wählen
+        </h2>
++       <div
++         class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-standardWarning MuiAlert-standard css-19089cd-MuiPaper-root-MuiAlert-root"
++         role="alert"
++       >
++         <div
++           class="MuiAlert-icon css-1ytlwq5-MuiAlert-icon"
++         >
++           <svg
++             aria-hidden="true"
++             class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit css-1vooibu-MuiSvgIcon-root"
++             data-testid="ReportProblemOutlinedIcon"
++             focusable="false"
++             viewBox="0 0 24 24"
++           >
++             <path
++               d="M12 5.99L19.53 19H4.47L12 5.99M12 2L1 21h22L12 2zm1 14h-2v2h2v-2zm0-6h-2v4h2v-4z"
++             />
++           </svg>
++         </div>
++         <div
++           class="MuiAlert-message css-1pxa9xg-MuiAlert-message"
++         >
++           Du hast bereits schon ein Abo mit offenen Rechnungen. Du kannst deine offenen Rechnungen in deinem 
++           <a
++             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
++             href="/profile/subscription"
++           >
++             Abo-Dashboard
++           </a>
++            anschauen.
++         </div>
++       </div>
++       <div
++         class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-standardWarning MuiAlert-standard css-19089cd-MuiPaper-root-MuiAlert-root"
++         role="alert"
++       >
++         <div
++           class="MuiAlert-icon css-1ytlwq5-MuiAlert-icon"
++         >
++           <svg
++             aria-hidden="true"
++             class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit css-1vooibu-MuiSvgIcon-root"
++             data-testid="ReportProblemOutlinedIcon"
++             focusable="false"
++             viewBox="0 0 24 24"
++           >
++             <path
++               d="M12 5.99L19.53 19H4.47L12 5.99M12 2L1 21h22L12 2zm1 14h-2v2h2v-2zm0-6h-2v4h2v-4z"
++             />
++           </svg>
++         </div>
++         <div
++           class="MuiAlert-message css-1pxa9xg-MuiAlert-message"
++         >
++           Du hast dieses Abo schon, bist du dir sicher? Du kannst deine Abos in deinem 
++           <a
++             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
++             href="/profile/subscription"
++           >
++             Abo-Dashboard
++           </a>
++            anschauen.
++         </div>
++       </div>
+        <fieldset
+          class="css-ah3hxd-MemberPlanPickerWrapper es1nn8k1"
+        >
+          <div
+            class="MuiFormGroup-root es1nn8k0 css-109gj5f-MuiFormGroup-root-MemberPlanPickerRadios"
+@@ -336,349 +403,11 @@
           </div>
         </div>
       </div>
@@ -1065,7 +1140,7 @@ exports[`Subscribe Container should render Filled 1`] = `
 -             <fieldset
 -               aria-hidden="true"
 -               class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
--             >
+      >
 -               <legend
 -                 class="css-yjsfm1"
 -               >
@@ -1152,7 +1227,7 @@ exports[`Subscribe Container should render Filled 1`] = `
 -                   viewBox="0 0 24 24"
 -                   width="1em"
 -                   xmlns="http://www.w3.org/2000/svg"
-      >
+-                 >
 -                   <path
 -                     d="M0 0h24v24H0z"
 -                     fill="none"
@@ -1342,13 +1417,12 @@ exports[`Subscribe Container should render Filled 1`] = `
         >
           Zahlungsmethode wählen
         </h2>
-@@ -847,128 +512,18 @@
-            <span
+@@ -848,118 +577,10 @@
               class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-67xpxh-MuiTypography-root"
             >
               Automatisch erneuern
             </span>
--         </label>
+          </label>
 -       </div>
 -     </div>
 -     <div
@@ -1431,7 +1505,7 @@ exports[`Subscribe Container should render Filled 1`] = `
 -             id=":rp:-label"
 -           >
 -             Captcha
-          </label>
+-           </label>
 -           <div
 -             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl css-1ljpo10-MuiInputBase-root-MuiOutlinedInput-root"
 -           >
@@ -1456,24 +1530,12 @@ exports[`Subscribe Container should render Filled 1`] = `
 -               </legend>
 -             </fieldset>
 -           </div>
+-         </div>
         </div>
       </div>
--     </div>
       <button
--       class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-11lcf1o-MuiButtonBase-root-MuiButton-root-buttonStyles"
--       tabindex="0"
-+       class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-11lcf1o-MuiButtonBase-root-MuiButton-root-buttonStyles"
-+       disabled=""
-+       tabindex="-1"
-        type="submit"
-      >
-        Monatlich für CHF 5.- Abonnieren
--       <span
--         class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
--       />
-      </button>
-    </form>
-  </DocumentFragment>"
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-11lcf1o-MuiButtonBase-root-MuiButton-root-buttonStyles"
+        tabindex="0""
 `;
 
 exports[`Subscribe Container should render LoggedIn 1`] = `
