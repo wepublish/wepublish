@@ -74,6 +74,12 @@ input ConsentFilter {
   slug: String
 }
 
+input CreateNavigationInput {
+  key: String!
+  links: [BaseNavigationLinkInput!]!
+  name: String!
+}
+
 type DashboardInvoice {
   amount: Int!
   dueAt: DateTime!
@@ -244,7 +250,7 @@ type Mutation {
   createEvent(description: RichText, endsAt: DateTime, imageId: String, location: String, name: String!, startsAt: DateTime!, tagIds: [String!]): Event!
 
   """Creates a new navigation."""
-  createNavigation(key: String!, links: [BaseNavigationLinkInput!]!, name: String!): Navigation!
+  createNavigation(navigation: CreateNavigationInput!): Navigation!
 
   """Create a new subscription flow"""
   createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
@@ -265,7 +271,7 @@ type Mutation {
   deleteEvent(id: String!): Event!
 
   """Deletes an existing navigation."""
-  deleteNavigation(id: String!): Navigation!
+  deleteNavigation(id: ID!): Navigation!
 
   """Delete an existing subscription flow"""
   deleteSubscriptionFlow(id: String!): [SubscriptionFlowModel!]!
@@ -293,7 +299,7 @@ type Mutation {
   updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, location: String, name: String, startsAt: DateTime, tagIds: [String!]): Event!
 
   """Updates an existing navigation."""
-  updateNavigation(id: String!, key: String!, links: [BaseNavigationLinkInput!]!, name: String!): Navigation!
+  updateNavigation(navigation: UpdateNavigationInput!): Navigation!
 
   """Updates an existing setting."""
   updateSetting(name: SettingName!, value: GraphQLSettingValueType!): Setting!
@@ -392,7 +398,7 @@ type Query {
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
 
   """Returns a navigation by id."""
-  getNavigationById(id: String!): Navigation!
+  getNavigationById(id: ID!): Navigation!
 
   """Returns a navigation by key."""
   getNavigationByKey(key: String!): Navigation!
@@ -546,6 +552,13 @@ type SubscriptionInterval {
 type SystemMailModel {
   event: UserEvent!
   mailTemplate: MailTemplateRef
+}
+
+input UpdateNavigationInput {
+  id: String!
+  key: String!
+  links: [BaseNavigationLinkInput!]!
+  name: String!
 }
 
 type User {

@@ -10,7 +10,7 @@ import {expect} from '@storybook/jest'
 import {NavigationDataloader} from './navigation.dataloader'
 
 const navigationQueryById = `
-  query GetNavigationById($id: String!) {
+  query GetNavigationById($id: ID!) {
     getNavigationById(id: $id) {
       id
       key
@@ -77,16 +77,8 @@ const navigationListQuery = `
 `
 
 const createNavigationMutation = `
-  mutation CreateNavigation(
-    $key: String!
-    $name: String!
-    $links: [BaseNavigationLinkInput!]!
-  ) {
-    createNavigation(
-      key: $key
-      name: $name
-      links: $links
-    ) {
+  mutation CreateNavigation($navigation: CreateNavigationInput!) {
+    createNavigation(navigation: $navigation) {
       id
       key
       name
@@ -95,27 +87,17 @@ const createNavigationMutation = `
 `
 
 const updateNavigationMutation = `
-  mutation UpdateNavigation(
-    $id: String!
-    $key: String!
-    $name: String!
-    $links: [BaseNavigationLinkInput!]!
-  ) {
-    updateNavigation(
-      id: $id
-      key: $key
-      name: $name
-      links: $links
-    ) {
-      id
-      key
-      name
+  mutation UpdateNavigation($navigation: UpdateNavigationInput!) {
+    updateNavigation(navigation: $navigation) {
+        id
+        key
+        name
     }
   }
 `
 
 const deleteNavigationMutation = `
-  mutation DeleteNavigation($id: String!) {
+  mutation DeleteNavigation($id: ID!) {
     deleteNavigation(id: $id) {
       id
     }
@@ -241,7 +223,7 @@ describe('NavigationResolver', () => {
   })
 
   test('Mutation: createNavigation', async () => {
-    const mockInput = {key: 'new', name: 'New Navigation', links: []}
+    const navigation = {key: 'new', name: 'New Navigation', links: []}
     const mockResponse = {id: '2', key: 'new', name: 'New Navigation'}
     navigationServiceMock.createNavigation?.mockResolvedValue(mockResponse)
 
@@ -249,17 +231,17 @@ describe('NavigationResolver', () => {
       .post('/')
       .send({
         query: createNavigationMutation,
-        variables: mockInput
+        variables: {navigation}
       })
       .expect(res => {
         expect(res.body).toMatchSnapshot()
-        expect(navigationServiceMock.createNavigation).toHaveBeenCalledWith(mockInput)
+        expect(navigationServiceMock.createNavigation).toHaveBeenCalledWith(navigation)
       })
       .expect(200)
   })
 
   test('Mutation: updateNavigation', async () => {
-    const mockInput = {id: 'hello', key: 'updated', name: 'Updated Navigation', links: []}
+    const navigation = {id: 'hello', key: 'updated', name: 'Updated Navigation', links: []}
     const mockResponse = {id: '1', key: 'updated', name: 'Updated Navigation'}
     navigationServiceMock.updateNavigation?.mockResolvedValue(mockResponse)
 
@@ -267,11 +249,11 @@ describe('NavigationResolver', () => {
       .post('/')
       .send({
         query: updateNavigationMutation,
-        variables: mockInput
+        variables: {navigation}
       })
       .expect(res => {
         expect(res.body).toMatchSnapshot()
-        expect(navigationServiceMock.updateNavigation).toHaveBeenCalledWith(mockInput)
+        expect(navigationServiceMock.updateNavigation).toHaveBeenCalledWith(navigation)
       })
       .expect(200)
   })
@@ -288,8 +270,8 @@ describe('NavigationResolver', () => {
         variables: {id: mockId}
       })
       .expect(res => {
-        expect(navigationServiceMock.deleteNavigationById).toHaveBeenCalledWith(mockId)
         expect(res.body).toMatchSnapshot()
+        expect(navigationServiceMock.deleteNavigationById).toHaveBeenCalledWith(mockId)
       })
       .expect(200)
   })

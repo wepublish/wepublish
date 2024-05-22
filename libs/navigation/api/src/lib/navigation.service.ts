@@ -1,5 +1,5 @@
 import {Injectable} from '@nestjs/common'
-import {CreateNavigationInput, UpdateNavigationArgs} from './navigation.model'
+import {CreateNavigationInput, UpdateNavigationInput} from './navigation.model'
 import {PrismaClient} from '@prisma/client'
 import {NavigationDataloader} from './navigation.dataloader'
 import {PrimeDataLoader} from '@wepublish/utils/api'
@@ -55,7 +55,7 @@ export class NavigationService {
   }
 
   @PrimeDataLoader(NavigationDataloader)
-  async updateNavigation(input: UpdateNavigationArgs) {
+  async updateNavigation(input: UpdateNavigationInput) {
     const {id, links, ...data} = input
     await this.prisma.navigationLink.deleteMany({
       where: {navigationId: id}

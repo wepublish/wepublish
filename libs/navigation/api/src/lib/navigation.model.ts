@@ -5,7 +5,8 @@ import {
   InterfaceType,
   ArgsType,
   OmitType,
-  registerEnumType
+  registerEnumType,
+  ID
 } from '@nestjs/graphql'
 
 export enum NavigationLinkType {
@@ -115,22 +116,34 @@ export class NavigationKeyArgs {
 
 @ArgsType()
 export class NavigationIdArgs {
-  @Field(() => String)
+  @Field(() => ID)
   id!: string
 }
 
 @InputType()
 class BaseNavigationLinkInput extends NavigationLinkInput {}
 
-@ArgsType()
-export class UpdateNavigationArgs extends OmitType(
+@InputType()
+export class UpdateNavigationInput extends OmitType(
   Navigation,
   ['createdAt', 'modifiedAt', 'links'],
-  ArgsType
+  InputType
 ) {
   @Field(() => [BaseNavigationLinkInput])
   links!: BaseNavigationLinkInput[]
 }
 
+@InputType()
+export class CreateNavigationInput extends OmitType(UpdateNavigationInput, ['id'], InputType) {}
+
 @ArgsType()
-export class CreateNavigationInput extends OmitType(UpdateNavigationArgs, ['id'], ArgsType) {}
+export class UpdateNavigationArgs {
+  @Field(() => UpdateNavigationInput)
+  navigation!: UpdateNavigationInput
+}
+
+@ArgsType()
+export class CreateNavigationArgs {
+  @Field(() => CreateNavigationInput)
+  navigation!: CreateNavigationInput
+}
