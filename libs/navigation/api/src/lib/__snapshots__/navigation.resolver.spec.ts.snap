@@ -1,0 +1,122 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NavigationResolver Mutation: createNavigation 1`] = `
+{
+  "data": {
+    "createNavigation": {
+      "id": "2",
+      "key": "new",
+      "name": "New Navigation",
+    },
+  },
+}
+`;
+
+exports[`NavigationResolver Mutation: deleteNavigation 1`] = `
+{
+  "data": {
+    "deleteNavigation": {
+      "id": "1",
+    },
+  },
+}
+`;
+
+exports[`NavigationResolver Mutation: updateNavigation 1`] = `
+{
+  "data": {
+    "updateNavigation": {
+      "id": "1",
+      "key": "updated",
+      "name": "Updated Navigation",
+    },
+  },
+}
+`;
+
+exports[`NavigationResolver Query: getNavigation by id 1`] = `
+{
+  "data": {
+    "getNavigationById": {
+      "id": "1",
+      "key": "main",
+      "links": [],
+      "name": "Main Navigation",
+    },
+  },
+}
+`;
+
+exports[`NavigationResolver Query: getNavigation by id: Not found 1`] = `
+{
+  "data": null,
+  "errors": [
+    {
+      "extensions": {
+        "code": "BAD_USER_INPUT",
+      },
+      "locations": [
+        {
+          "column": 5,
+          "line": 3,
+        },
+      ],
+      "message": "Navigation not found",
+      "path": [
+        "getNavigationById",
+      ],
+    },
+  ],
+}
+`;
+
+exports[`NavigationResolver Query: getNavigation by key 1`] = `
+{
+  "data": {
+    "getNavigationByKey": {
+      "id": "1",
+      "key": "main",
+      "links": [],
+      "name": "Main Navigation",
+    },
+  },
+}
+`;
+
+exports[`NavigationResolver Query: getNavigation by key: Not found 1`] = `
+{
+  "data": null,
+  "errors": [
+    {
+      "extensions": {
+        "code": "BAD_USER_INPUT",
+      },
+      "locations": [
+        {
+          "column": 5,
+          "line": 3,
+        },
+      ],
+      "message": "Navigation not found",
+      "path": [
+        "getNavigationByKey",
+      ],
+    },
+  ],
+}
+`;
+
+exports[`NavigationResolver Query: getNavigations list 1`] = `
+{
+  "data": {
+    "getNavigations": [
+      {
+        "id": "1",
+        "key": "main",
+        "links": [],
+        "name": "Main Navigation",
+      },
+    ],
+  },
+}
+`;

@@ -56,6 +56,7 @@ import {CommentModule} from '@wepublish/comments/api'
 import {ArticleModule} from '@wepublish/article/api'
 import {PhraseModule} from '@wepublish/phrase/api'
 import {ActionModule} from '@wepublish/action/api'
+import {NavigationModule} from '@wepublish/navigation/api'
 
 @Global()
 @Module({
@@ -283,6 +284,7 @@ import {ActionModule} from '@wepublish/action/api'
     PollModule,
     PhraseModule,
     ActionModule,
+    NavigationModule,
     EventsImportModule.registerAsync({
       useFactory: (agendaBasel: AgendaBaselService, kulturZueri: KulturZueriService) => [
         agendaBasel,

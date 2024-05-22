@@ -1530,8 +1530,11 @@ export type PollVote = {
   answerId: Scalars['ID'];
   createdAt: Scalars['DateTime'];
   disabled: Scalars['Boolean'];
+<<<<<<< HEAD
   fingerprint?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
+=======
+>>>>>>> fe4a767e2 (chore(v2-migration): Migrate navigation to v2 (#1317))
   pollId: Scalars['ID'];
   userId?: Maybe<Scalars['ID']>;
 };
