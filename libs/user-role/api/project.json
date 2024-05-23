@@ -1,7 +1,7 @@
 {
-  "name": "access-control-api",
+  "name": "user-role-api",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/access-control/api/src",
+  "sourceRoot": "../api/src",
   "projectType": "library",
   "tags": [],
   "targets": {
@@ -12,7 +12,7 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "libs/access-control/api/jest.config.ts"
+        "jestConfig": "libs/user-role/api/jest.config.ts"
       }
     }
   }

@@ -17,7 +17,6 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@wepublish/access-control/api": ["libs/access-control/api/src/index.ts"],
       "@wepublish/analytics": ["libs/analytics/src/index.ts"],
       "@wepublish/api": ["libs/api/src/index.ts"],
       "@wepublish/api/seed": ["libs/api/prisma/seed.ts"],
@@ -64,6 +63,7 @@
       "@wepublish/testing": ["libs/testing/src/index.ts"],
       "@wepublish/ui": ["libs/ui/src/index.ts"],
       "@wepublish/ui/editor": ["libs/ui/editor/src/index.ts"],
+      "@wepublish/user-role/api": ["libs/user-role/api/src/index.ts"],
       "@wepublish/user/api": ["libs/user/api/src/index.ts"],
       "@wepublish/user/website": ["libs/user/website/src/index.ts"],
       "@wepublish/user/website/server": ["libs/user/website/src/server.ts"],

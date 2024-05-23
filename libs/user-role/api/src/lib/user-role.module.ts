@@ -5,4 +5,4 @@ import {UserRoleService} from './user-role.service'
 @Module({
   providers: [UserRoleResolver, UserRoleService]
 })
-export class AccessControlApiModule {}
+export class UserRoleModule {}
