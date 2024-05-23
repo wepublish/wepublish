@@ -57,6 +57,27 @@ jest.mock('react-router-dom', () => ({
   useParams: jest.fn()
 }))
 
+let OriginalDate: DateConstructor
+
+const mockCurrentDate = (mockDate: string) => {
+  const currentDate = new Date(mockDate)
+  OriginalDate = Date
+
+  global.Date = class extends Date {
+    constructor() {
+      super(currentDate as any)
+    }
+
+    static now() {
+      return currentDate.getTime()
+    }
+  } as any
+}
+
+const restoreOriginalDate = () => {
+  global.Date = OriginalDate
+}
+
 describe('Subscription edit view', () => {
   const mocks = [userListQuery, invoicesQuery, memberPlanListQuery, paymentMethodListQuery]
 
@@ -65,6 +86,8 @@ describe('Subscription edit view', () => {
   )
 
   test('should render', async () => {
+    mockCurrentDate('2024-05-21T12:00:00Z')
+
     const {asFragment} = render(
       <AuthContext.Provider value={sessionWithPermissions}>
         <MockedProvider mocks={mocks} addTypename={false}>
@@ -75,6 +98,8 @@ describe('Subscription edit view', () => {
       </AuthContext.Provider>
     )
     await actWait()
+
+    restoreOriginalDate()
 
     expect(asFragment()).toMatchSnapshot()
   })
