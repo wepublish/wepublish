@@ -16,7 +16,9 @@ import LanguageDetector from 'i18next-browser-languagedetector'
 import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
+import {useRouter} from 'next/router'
 import Script from 'next/script'
+import {useEffect} from 'react'
 import {initReactI18next} from 'react-i18next'
 import {FaTwitter} from 'react-icons/fa6'
 import {MdFacebook, MdMail} from 'react-icons/md'
@@ -80,8 +82,24 @@ const ButtonLink = styled('a')`
 
 const {publicRuntimeConfig} = getConfig()
 
+function injectPopupScript(url: string) {
+  if (url) {
+    const mailchimpScript = document.createElement('script')
+    mailchimpScript.src = url
+    document.head.appendChild(mailchimpScript)
+  }
+}
+
 function CustomApp({Component, pageProps}: CustomAppProps) {
   const siteTitle = 'Bajour'
+  const router = useRouter()
+
+  useEffect(() => {
+    const {popup} = router.query
+    if (popup === 'true') {
+      injectPopupScript(publicRuntimeConfig.env.MAILCHIMP_POPUP_SCRIPT_URL)
+    }
+  }, [router.query])
 
   return (
     <>
