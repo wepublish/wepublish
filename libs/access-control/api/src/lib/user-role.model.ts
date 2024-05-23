@@ -1,16 +1,6 @@
 import {ObjectType, Field, InputType, ArgsType, ID, registerEnumType, Int} from '@nestjs/graphql'
-
-@ObjectType()
-export class Permission {
-  @Field(() => String)
-  id!: string
-
-  @Field(() => String)
-  description!: string
-
-  @Field(() => Boolean)
-  deprecated!: boolean
-}
+import {PermissionObject} from '@wepublish/permissions/api'
+import {PaginatedType} from '@wepublish/utils/api'
 
 @ObjectType()
 export class UserRole {
@@ -26,36 +16,15 @@ export class UserRole {
   @Field(() => Boolean)
   systemRole!: boolean
 
-  @Field(() => [Permission])
-  permissions!: Permission[]
+  @Field(() => [String])
+  permissionIDs!: string[]
+
+  @Field(() => [PermissionObject], {nullable: true})
+  permissions!: PermissionObject[]
 }
 
 @ObjectType()
-export class PageInfo {
-  @Field(() => Boolean)
-  hasPreviousPage!: boolean
-
-  @Field(() => Boolean)
-  hasNextPage!: boolean
-
-  @Field(() => String, {nullable: true})
-  startCursor?: string
-
-  @Field(() => String, {nullable: true})
-  endCursor?: string
-}
-
-@ObjectType()
-export class GetUserRolesResult {
-  @Field(() => [UserRole])
-  nodes!: UserRole[]
-
-  @Field(() => PageInfo)
-  pageInfo!: PageInfo
-
-  @Field(() => Int)
-  totalCount!: number
-}
+export class PaginatedUserRoles extends PaginatedType(UserRole) {}
 
 @InputType()
 export class UserRoleFilter {

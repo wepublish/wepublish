@@ -38,6 +38,16 @@ exports[`UserRoleResolver Query: getUserRole by id 1`] = `
     "getUserRoleById": {
       "id": "1",
       "name": "Admin",
+      "permissions": [
+        {
+          "description": "Allows to create articles",
+          "id": "CAN_CREATE_ARTICLE",
+        },
+        {
+          "description": "Allows to delete a block style",
+          "id": "CAN_DELETE_BLOCK_STYLE",
+        },
+      ],
     },
   },
 }
@@ -74,6 +84,12 @@ exports[`UserRoleResolver Query: getUserRoles list 1`] = `
         {
           "id": "1",
           "name": "Admin",
+          "permissions": [
+            {
+              "description": "Allows to delete an event",
+              "id": "CAN_DELETE_EVENT",
+            },
+          ],
         },
       ],
       "pageInfo": {

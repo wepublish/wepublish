@@ -6,12 +6,23 @@ import {UserRoleService} from './user-role.service'
 import {UserRoleResolver} from './user-role.resolver'
 import request from 'supertest'
 import {expect} from '@storybook/jest'
+import {
+  CanCreateArticle,
+  CanDeleteBlockStyle,
+  CanDeleteEvent,
+  PermissionDataloader
+} from '@wepublish/permissions/api'
+import {PaginatedUserRoles, UserRole} from './user-role.model'
 
 const userRoleQueryById = `
   query GetUserRoleById($id: ID!) {
     getUserRoleById(id: $id) {
       id
       name
+      permissions {
+        id
+        description
+      }
     }
   }
 `
@@ -22,6 +33,10 @@ const userRoleListQuery = `
       nodes {
         id
         name
+        permissions {
+          id
+          description
+        }
       }
       totalCount
       pageInfo {
@@ -81,7 +96,11 @@ describe('UserRoleResolver', () => {
           path: '/'
         })
       ],
-      providers: [UserRoleResolver, {provide: UserRoleService, useValue: userRoleServiceMock}]
+      providers: [
+        UserRoleResolver,
+        {provide: UserRoleService, useValue: userRoleServiceMock},
+        {provide: PermissionDataloader, useValue: new PermissionDataloader()}
+      ]
     }).compile()
 
     app = module.createNestApplication()
@@ -93,7 +112,11 @@ describe('UserRoleResolver', () => {
   })
 
   test('Query: getUserRole by id', async () => {
-    const mockResponse = {id: '1', name: 'Admin'}
+    const mockResponse = {
+      id: '1',
+      name: 'Admin',
+      permissionIDs: [CanCreateArticle.id, CanDeleteBlockStyle.id]
+    } as UserRole
     userRoleServiceMock.getUserRoleById?.mockResolvedValue(mockResponse)
 
     await request(app.getHttpServer())
@@ -125,7 +148,7 @@ describe('UserRoleResolver', () => {
 
   test('Query: getUserRoles list', async () => {
     const mockResponse = {
-      nodes: [{id: '1', name: 'Admin'}],
+      nodes: [{id: '1', name: 'Admin', permissionIDs: [CanDeleteEvent.id]}],
       totalCount: 1,
       pageInfo: {
         hasPreviousPage: false,
@@ -133,7 +156,7 @@ describe('UserRoleResolver', () => {
         startCursor: '1',
         endCursor: '1'
       }
-    }
+    } as PaginatedUserRoles
     userRoleServiceMock.getUserRoles?.mockResolvedValue(mockResponse)
 
     await request(app.getHttpServer())

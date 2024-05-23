@@ -1,24 +1,29 @@
-import {Resolver, Query, Mutation, Args} from '@nestjs/graphql'
+import {Args, Mutation, Parent, Query, ResolveField, Resolver} from '@nestjs/graphql'
 import {UserRoleService} from './user-role.service'
 import {
-  GetUserRolesArgs,
   CreateUserRoleArgs,
+  GetUserRolesArgs,
+  PaginatedUserRoles,
   UpdateUserRoleArgs,
   UserRole,
-  UserRoleIdArgs,
-  GetUserRolesResult
+  UserRoleIdArgs
 } from './user-role.model'
 import {
   CanCreateUserRole,
   CanDeleteUserRole,
   CanGetUserRole,
-  CanGetUserRoles
+  CanGetUserRoles,
+  PermissionDataloader,
+  PermissionObject,
+  Permissions
 } from '@wepublish/permissions/api'
-import {Permissions} from '@wepublish/permissions/api'
 
 @Resolver(() => UserRole)
 export class UserRoleResolver {
-  constructor(private readonly userRoleService: UserRoleService) {}
+  constructor(
+    private readonly userRoleService: UserRoleService,
+    private readonly permissionDataloader: PermissionDataloader
+  ) {}
 
   @Query(() => UserRole, {description: 'Returns a user role'})
   @Permissions(CanGetUserRole)
@@ -26,7 +31,7 @@ export class UserRoleResolver {
     return this.userRoleService.getUserRoleById(args.id)
   }
 
-  @Query(() => GetUserRolesResult, {description: 'Returns a list of user roles'})
+  @Query(() => PaginatedUserRoles, {description: 'Returns a list of user roles'})
   @Permissions(CanGetUserRoles)
   getUserRoles(@Args() args: GetUserRolesArgs) {
     return this.userRoleService.getUserRoles(args)
@@ -48,5 +53,14 @@ export class UserRoleResolver {
   @Permissions(CanDeleteUserRole)
   deleteUserRole(@Args() {id}: UserRoleIdArgs) {
     return this.userRoleService.deleteUserRoleById(id)
+  }
+
+  @ResolveField(returns => [PermissionObject])
+  public permissions(@Parent() userRole: UserRole) {
+    const {permissionIDs} = userRole
+    if (!permissionIDs) {
+      return []
+    }
+    return this.permissionDataloader.loadMany(permissionIDs)
   }
 }
