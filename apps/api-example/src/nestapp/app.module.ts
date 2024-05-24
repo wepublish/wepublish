@@ -42,6 +42,7 @@ import {readConfig} from '../readConfig'
 import {EventModule} from '@wepublish/event/api'
 import {BlockStylesModule} from '@wepublish/block-content/api'
 import {PrismaClient} from '@prisma/client'
+import {UserRoleModule} from '@wepublish/user-role/api'
 
 @Global()
 @Module({
@@ -236,6 +237,7 @@ import {PrismaClient} from '@prisma/client'
     SettingModule,
     EventModule,
     NavigationModule,
+    UserRoleModule,
     BlockStylesModule,
     EventsImportModule.registerAsync({
       useFactory: (agendaBasel: AgendaBaselService, kulturZueri: KulturZueriService) => [

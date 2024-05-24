@@ -12,7 +12,6 @@ import {
   CanCreateUserRole,
   CanDeleteUserRole,
   CanGetUserRole,
-  CanGetUserRoles,
   PermissionDataloader,
   PermissionObject,
   Permissions
@@ -32,7 +31,7 @@ export class UserRoleResolver {
   }
 
   @Query(() => PaginatedUserRoles, {description: 'Returns a list of user roles'})
-  @Permissions(CanGetUserRoles)
+  // @Permissions(CanGetUserRoles)
   getUserRoles(@Args() args: GetUserRolesArgs) {
     return this.userRoleService.getUserRoles(args)
   }

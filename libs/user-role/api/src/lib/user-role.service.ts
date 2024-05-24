@@ -1,11 +1,11 @@
 import {Injectable} from '@nestjs/common'
-import {PrismaService} from '@wepublish/nest-modules'
 import {CreateUserRoleInput, GetUserRolesArgs, UpdateUserRoleInput} from './user-role.model'
 import {getMaxTake} from '@wepublish/utils/api'
+import {PrismaClient} from '@prisma/client'
 
 @Injectable()
 export class UserRoleService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaClient) {}
 
   getUserRoleById(id: string) {
     return this.prisma.userRole.findUnique({

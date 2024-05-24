@@ -7,7 +7,7 @@ import {AllPermissions, CanGetPermissions} from './permissions'
 export class PermissionsResolver {
   @Query(() => [PermissionObject], {description: 'Returns permissions list'})
   @Permissions(CanGetPermissions)
-  getUserRoleById() {
+  getPermissions() {
     return AllPermissions
   }
 }
