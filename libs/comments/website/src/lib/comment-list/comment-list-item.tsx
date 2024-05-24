@@ -5,7 +5,7 @@ import {BuilderCommentListItemProps, useWebsiteBuilder} from '@wepublish/website
 import {cond} from 'ramda'
 import {MdEdit, MdReply} from 'react-icons/md'
 import {getStateForEditor} from './comment-list.state'
-import CommentListItemShare from './comment-list-item-share'
+import {CommentListItemShare} from './comment-list-item-share'
 import {useMemo} from 'react'
 
 const generateSocialMediaLink = (id: string) => {

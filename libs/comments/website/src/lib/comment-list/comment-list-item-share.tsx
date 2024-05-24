@@ -1,16 +1,17 @@
 import {IconButton, Popover, styled} from '@mui/material'
 import {BuilderCommentListItemShareProps} from '@wepublish/website/builder'
 import React, {useRef, useState} from 'react'
-import {BsLinkedin, BsTwitterX} from 'react-icons/bs'
+import {BsLinkedin} from 'react-icons/bs'
 import {MdContentCopy, MdEmail, MdFacebook, MdShare, MdWhatsapp} from 'react-icons/md'
+import {FaXTwitter} from 'react-icons/fa6'
 
-const CommentListItemShareWrapper = styled('div')``
+export const CommentListItemShareWrapper = styled('div')``
 
-const ShareIcon = styled(IconButton)`
+export const CommentListItemShareIcon = styled(IconButton)`
   border-width: 0px;
 `
 
-const ShareOptions = styled('div')`
+export const CommentListItemShareOptions = styled('div')`
   display: flex;
   justify-content: center;
   padding: 10px;
@@ -22,7 +23,7 @@ const iconStyle = {
   alignItems: 'center'
 }
 
-const CommentListItemShare = ({url, title, className}: BuilderCommentListItemShareProps) => {
+export const CommentListItemShare = ({url, title, className}: BuilderCommentListItemShareProps) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
   const shareButtonRef = useRef<HTMLButtonElement>(null)
 
@@ -56,7 +57,7 @@ const CommentListItemShare = ({url, title, className}: BuilderCommentListItemSha
         url
       )}&text=${encodeURIComponent(title)}`,
 
-      icon: <BsTwitterX size="24" />,
+      icon: <FaXTwitter size="24" />,
       color: '#000'
     },
     {
@@ -90,9 +91,13 @@ const CommentListItemShare = ({url, title, className}: BuilderCommentListItemSha
 
   return (
     <CommentListItemShareWrapper className={className}>
-      <ShareIcon ref={shareButtonRef} size="small" onClick={handleClick} aria-describedby={id}>
+      <CommentListItemShareIcon
+        ref={shareButtonRef}
+        size="small"
+        onClick={handleClick}
+        aria-describedby={id}>
         <MdShare />
-      </ShareIcon>
+      </CommentListItemShareIcon>
       <Popover
         id={id}
         open={popoverOpen}
@@ -106,7 +111,7 @@ const CommentListItemShare = ({url, title, className}: BuilderCommentListItemSha
           vertical: 'center',
           horizontal: 'left'
         }}>
-        <ShareOptions>
+        <CommentListItemShareOptions>
           {shareOptions.map((option, index) =>
             option.url ? (
               <IconButton
@@ -128,10 +133,8 @@ const CommentListItemShare = ({url, title, className}: BuilderCommentListItemSha
               </IconButton>
             )
           )}
-        </ShareOptions>
+        </CommentListItemShareOptions>
       </Popover>
     </CommentListItemShareWrapper>
   )
 }
-
-export default CommentListItemShare
