@@ -1010,11 +1010,13 @@
     "saveAndClose": "Sauvegarder & fermer",
     "settingList": {
       "allowGuestCommentRating": "Autoriser les évaluations anonymes des commentaires",
+      "bodyScript": "Scripts à exécuter après le chargement du contenu",
       "comments": "Commentaires",
       "days": "jours",
       "errorTitle": "Erreur",
       "guestCommenting": "Autoriser les commentaires de personnes non connectées",
       "guestPollVote": "Autoriser les votes anonymes dans les sondages",
+      "headScript": "Scripts à exécuter avant le chargement du contenu",
       "login": "Login",
       "loginMinutes": "Durée de validité du token de l'email d'authentification",
       "minutes": "minutes",
@@ -1024,6 +1026,7 @@
       "peering": "Peering",
       "peerToken": "Peering timeout",
       "polls": "Sondages",
+      "scripts": "Propre code JavaScript",
       "settings": "Paramètres",
       "successMessage": "Paramètres mis à jour avec succès !",
       "successTitle": "Enregistré",
@@ -1035,7 +1038,8 @@
         "invoiceReminders": "Nombre de rappels de paiement par facture Délai entre les rappels de paiement — jours",
         "loginMinutes": "Durée de validité du token de connexion par email — minutes.",
         "passwordToken": "Durée de validité du token pour la réinitialisation du mot de passe par email — minutes.",
-        "peerToken": "Expiration du peering (en cas d’erreur lors du peering d’un article, la tentative de peering s’arrête après la durée définie ci-après) — millisecondes"
+        "peerToken": "Expiration du peering (en cas d’erreur lors du peering d’un article, la tentative de peering s’arrête après la durée définie ci-après) — millisecondes",
+        "scripts": "Les scripts provenant de sources peu fiables peuvent causer de graves problèmes de sécurité et affecter considérablement la mise en page et la conception du site."
       }
     },
     "subscriptionList": {
@@ -1215,6 +1219,7 @@
       "monthlyAmount": "Montant mensuel",
       "paidUntil": "Payé jusqu'à",
       "paymentMethod": "Mode de paiement",
+      "renewNow": "Prolonger maintenant",
       "selectMemberPlan": "Plan de membre",
       "selectUser": "Sélectionner l'utilisateur·trice",
       "startsAt": "Début de l'abonnement",

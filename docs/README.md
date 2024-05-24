@@ -172,10 +172,6 @@ example: https://fonts.google.com/icons?icon.query=trash
 
 ## libs/api
 
-### Environment Variables
-
-- MAX_AUTO_RENEW_SUBSCRIPTION_BATCH: Maximal amount of subscriptions which are going to be auto-renewed. If any other value than number is set, no batch maxima are considered. Possible types: `number`, any other type is being ignored.
-
 ### Subscriptions
 
 #### Receiving webhooks from payment providers such as Stripe or Payrexx
