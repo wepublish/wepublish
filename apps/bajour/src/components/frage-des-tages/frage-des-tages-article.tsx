@@ -1,7 +1,8 @@
 import {css, styled} from '@mui/material'
-import {ApiV1, PollBlockProvider} from '@wepublish/website'
+import {ApiV1, PollBlockProvider, useAsyncAction} from '@wepublish/website'
 import Image from 'next/image'
 import {useRouter} from 'next/router'
+import {useCallback, useEffect, useState} from 'react'
 
 import {CommentListContainer} from '../website-builder-overwrites/blocks/comment-list-container/comment-list-container'
 import {PollBlock} from '../website-builder-overwrites/blocks/poll-block/poll-block'
@@ -110,12 +111,33 @@ const StyledInfoBox = styled(InfoBox)`
 const PollBlockStyled = styled(PollBlock)`
   position: sticky;
   top: ${({theme}) => theme.spacing(14)};
+
+  button {
+    text-transform: uppercase;
+    border-width: 1px;
+    text-align: left;
+    font-size: 16px;
+    justify-content: flex-start;
+    padding: ${({theme}) => `${theme.spacing(1)} ${theme.spacing(1.5)}`};
+
+    &:hover {
+      border-width: 1px;
+      background-color: ${({theme}) => theme.palette.primary.main};
+      color: ${({theme}) => theme.palette.common.white};
+    }
+  }
 `
 
 export const FrageDesTagesArticle = ({poll}: {poll?: ApiV1.PollBlock['poll']}) => {
+  const [vote] = ApiV1.usePollVoteMutation()
+  const router = useRouter()
   const {
     query: {slug}
   } = useRouter()
+
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<Error>()
+  const callAction = useAsyncAction(setLoading, setError)
 
   const {data: articleData} = ApiV1.useArticleQuery({
     fetchPolicy: 'cache-only',
@@ -125,6 +147,23 @@ export const FrageDesTagesArticle = ({poll}: {poll?: ApiV1.PollBlock['poll']}) =
   })
 
   const author = articleData?.article?.authors[0]
+
+  const autoVote = useCallback(async () => {
+    const answerId = router.query.answerId as string
+    if (answerId) {
+      callAction(async () => {
+        await vote({
+          variables: {
+            answerId
+          }
+        })
+      })()
+    }
+  }, [router.query])
+
+  useEffect(() => {
+    autoVote()
+  }, [autoVote])
 
   return (
     <PollBlockProvider>

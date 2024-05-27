@@ -62,20 +62,7 @@ export const CommentName = styled('div')`
 `
 
 export const CommentAuthor = styled('div')`
-  font-family: ${({theme}) => theme.typography.subtitle2.fontFamily};
-  font-size: 17px;
-
-  ${({theme}) => css`
-    ${theme.breakpoints.up('sm')} {
-      font-size: 21px;
-    }
-  `}
-
-  ${({theme}) => css`
-    ${theme.breakpoints.up('xl')} {
-      font-size: 24px;
-    }
-  `}
+  font-size: ${({theme}) => theme.typography.body1};
 `
 
 export const CommentVerifiedBadge = styled('div')`
@@ -148,23 +135,11 @@ export const Comment = ({
     }
   }, [])
 
-  console.log('commentId', commentId)
-
   const image = user?.image ?? guestUserImage
   const isVerified = authorType === CommentAuthorType.VerifiedUser
   const isGuest = authorType === CommentAuthorType.GuestUser
   const flair = user?.flair ?? source
   const name = user ? `${user.preferredName || user.firstName} ${user.name}` : guestUsername
-
-  const displayFlairOrDate = () => {
-    if (flair) {
-      return <CommentFlair isGuest={isGuest}>{flair}</CommentFlair>
-    } else if (createdAt) {
-      return <CommentFlair isGuest={isGuest}>{formatCommentDate(createdAt)}</CommentFlair>
-    } else {
-      return null
-    }
-  }
 
   return (
     <CommentWrapper className={className} id={id} highlight={commentId === id}>
@@ -183,7 +158,10 @@ export const Comment = ({
             )}
           </CommentName>
 
-          {displayFlairOrDate()}
+          {flair && <CommentFlair isGuest={isGuest}>{flair}</CommentFlair>}
+          {!flair && createdAt && (
+            <CommentFlair isGuest={isGuest}>{formatCommentDate(createdAt)}</CommentFlair>
+          )}
         </CommentHeaderContent>
       </CommentHeader>
 

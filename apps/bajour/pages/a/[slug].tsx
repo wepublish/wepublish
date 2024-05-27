@@ -108,6 +108,9 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
     }),
     client.query({
       query: ApiV1.PeerProfileDocument
+    }),
+    client.query({
+      query: ApiV1.SettingListDocument
     })
   ])
 

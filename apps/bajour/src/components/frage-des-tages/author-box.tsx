@@ -40,7 +40,6 @@ export const AuthorName = styled('div')`
   gap: ${({theme}) => theme.spacing(1)};
   align-items: center;
   font-weight: ${({theme}) => theme.typography.fontWeightBold};
-  font-family: ${({theme}) => theme.typography.subtitle2.fontFamily};
   font-size: 17px;
 
   ${({theme}) => css`

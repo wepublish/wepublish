@@ -29,7 +29,6 @@ export const InfoBoxWrapper = styled('aside')<{expanded: boolean}>`
 
 const AllAbout = styled('div')`
   color: ${({theme}) => theme.palette.common.black};
-  font-family: ${({theme}) => theme.typography.subtitle2.fontFamily};
   font-size: 17px;
   font-weight: ${({theme}) => theme.typography.fontWeightBold};
   margin-left: ${({theme}) => theme.spacing(1)};

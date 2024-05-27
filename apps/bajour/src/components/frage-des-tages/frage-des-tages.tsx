@@ -5,13 +5,11 @@ import {
   BuilderCommentProps,
   BuilderTeaserListBlockProps,
   Comment,
-  isPollBlock,
-  useAsyncAction
+  isPollBlock
 } from '@wepublish/website'
 import Image from 'next/image'
 import Link from 'next/link'
-import {useRouter} from 'next/router'
-import {useCallback, useEffect, useMemo, useState} from 'react'
+import {useMemo} from 'react'
 import {MdForum} from 'react-icons/md'
 
 import {PollBlock} from '../website-builder-overwrites/blocks/poll-block/poll-block'
@@ -142,13 +140,7 @@ const ReadMoreButton = styled(Button)`
 `
 
 export const FrageDesTages = ({teasers, className}: BuilderTeaserListBlockProps) => {
-  const [vote] = ApiV1.usePollVoteMutation()
-  const router = useRouter()
   const article = (teasers[0] as ApiV1.ArticleTeaser).article
-
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<Error>()
-  const callAction = useAsyncAction(setLoading, setError)
 
   const {data: commentsData} = ApiV1.useCommentListQuery({
     variables: {
@@ -160,41 +152,9 @@ export const FrageDesTages = ({teasers, className}: BuilderTeaserListBlockProps)
 
   const pollToPass = article?.blocks.find(isPollBlock)?.poll
 
-  const {data: authorData} = ApiV1.useAuthorQuery({
-    variables: {
-      id: article?.authors[0].id || ''
-    }
-  })
-
   const numberOfComments = useMemo(() => {
     return countComments(commentsData?.comments || [])
   }, [commentsData?.comments])
-
-  const voteOnPoll = useCallback(
-    async ({answerId}: ApiV1.PollVoteMutationVariables) =>
-      callAction(async () => {
-        await vote({
-          variables: {
-            answerId
-          }
-        })
-      })(),
-    [callAction, vote]
-  )
-
-  const autoVote = useCallback(async () => {
-    const pollIdFromParams = router.query.pollId as string
-    const answerId = router.query.answerId as string
-    if (pollIdFromParams && answerId) {
-      setTimeout(async () => {
-        voteOnPoll({answerId})
-      }, 500)
-    }
-  }, [router.query, voteOnPoll])
-
-  useEffect(() => {
-    autoVote()
-  }, [autoVote])
 
   return (
     <FrageDesTagesContainer>
@@ -205,7 +165,7 @@ export const FrageDesTages = ({teasers, className}: BuilderTeaserListBlockProps)
         </PollWrapper>
         <CommentsWrapper>
           <AuthorAndContext>
-            <div>{authorData?.author ? <AuthorBox author={authorData?.author} /> : null}</div>
+            <div>{article?.authors[0] ? <AuthorBox author={article?.authors[0]} /> : null}</div>
             <div>
               <InfoBox richText={pollToPass?.infoText || []} />
             </div>
