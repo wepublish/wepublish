@@ -1,0 +1,105 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UserRoleResolver Mutation: createUserRole 1`] = `
+{
+  "data": {
+    "createUserRole": {
+      "id": "2",
+      "name": "Editor",
+    },
+  },
+}
+`;
+
+exports[`UserRoleResolver Mutation: deleteUserRole 1`] = `
+{
+  "data": {
+    "deleteUserRole": {
+      "id": "1",
+    },
+  },
+}
+`;
+
+exports[`UserRoleResolver Mutation: updateUserRole 1`] = `
+{
+  "data": {
+    "updateUserRole": {
+      "id": "1",
+      "name": "Super Admin",
+    },
+  },
+}
+`;
+
+exports[`UserRoleResolver Query: getUserRole by id 1`] = `
+{
+  "data": {
+    "getUserRoleById": {
+      "id": "1",
+      "name": "Admin",
+      "permissions": [
+        {
+          "description": "Allows to create articles",
+          "id": "CAN_CREATE_ARTICLE",
+        },
+        {
+          "description": "Allows to delete a block style",
+          "id": "CAN_DELETE_BLOCK_STYLE",
+        },
+      ],
+    },
+  },
+}
+`;
+
+exports[`UserRoleResolver Query: getUserRole by id: Not found 1`] = `
+{
+  "data": null,
+  "errors": [
+    {
+      "extensions": {
+        "code": "INTERNAL_SERVER_ERROR",
+      },
+      "locations": [
+        {
+          "column": 5,
+          "line": 3,
+        },
+      ],
+      "message": "Cannot return null for non-nullable field Query.getUserRoleById.",
+      "path": [
+        "getUserRoleById",
+      ],
+    },
+  ],
+}
+`;
+
+exports[`UserRoleResolver Query: getUserRoles list 1`] = `
+{
+  "data": {
+    "getUserRoles": {
+      "nodes": [
+        {
+          "id": "1",
+          "name": "Admin",
+          "permissions": [
+            {
+              "description": "Allows to delete an event",
+              "id": "CAN_DELETE_EVENT",
+            },
+          ],
+        },
+      ],
+      "pageInfo": {
+        "endCursor": "1",
+        "hasNextPage": false,
+        "hasPreviousPage": false,
+        "startCursor": "1",
+      },
+      "totalCount": 1,
+    },
+  },
+}
+`;

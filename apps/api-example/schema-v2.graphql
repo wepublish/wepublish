@@ -80,6 +80,11 @@ input CreateNavigationInput {
   name: String!
 }
 
+input CreateUserRoleInput {
+  name: String!
+  permissionIDs: [String!]!
+}
+
 type DashboardInvoice {
   amount: Int!
   dueAt: DateTime!
@@ -261,6 +266,9 @@ type Mutation {
   "\n      Creates a new userConsent based on input.\n      Returns created userConsent.\n    "
   createUserConsent(consentId: String!, userId: String!, value: Boolean!): UserConsent!
 
+  """Create a user role"""
+  createUserRole(userRole: CreateUserRoleInput!): UserRole!
+
   """Deletes an existing block style."""
   deleteBlockStyle(id: String!): BlockStyle!
 
@@ -281,6 +289,9 @@ type Mutation {
 
   "\n      Delete an existing userConsent by id.\n      Returns deleted userConsent.\n    "
   deleteUserConsent(id: String!): UserConsent!
+
+  """Deletes a user role"""
+  deleteUserRole(id: ID!): UserRole!
 
   "\n      Creates and event based on data from importable events list and an id and provider.\n      Also, uploads an image to WePublish Image library.\n    "
   importEvent(id: String!, source: String!): String!
@@ -315,6 +326,9 @@ type Mutation {
 
   "\n      Updates an existing userConsent based on input.\n      Returns updated userConsent.\n    "
   updateUserConsent(id: String!, value: Boolean!): UserConsent!
+
+  """Updates a user role"""
+  updateUserRole(userRole: UpdateUserRoleInput!): UserRole!
 }
 
 type Navigation {
@@ -348,6 +362,12 @@ type PaginatedEvents {
   totalCount: Float!
 }
 
+type PaginatedUserRoles {
+  nodes: [UserRole!]!
+  pageInfo: PageInfo!
+  totalCount: Float!
+}
+
 type PaymentMethodRef {
   id: String!
   name: String!
@@ -370,6 +390,12 @@ type PeriodicJob {
   modifiedAt: DateTime!
   successfullyFinished: DateTime
   tries: Float!
+}
+
+type PermissionObject {
+  deprecated: Boolean!
+  description: String!
+  id: String!
 }
 
 type Query {
@@ -405,6 +431,15 @@ type Query {
 
   """Returns a list of navigations."""
   getNavigations: [Navigation!]!
+
+  """Returns permissions list"""
+  getPermissions: [PermissionObject!]!
+
+  """Returns a user role"""
+  getUserRoleById(id: ID!): UserRole!
+
+  """Returns a list of user roles"""
+  getUserRoles(cursorId: ID, filter: UserRoleFilter, skip: Int, take: Int): PaginatedUserRoles!
 
   """Returns an image by id."""
   image(id: String!): Image!
@@ -563,6 +598,12 @@ input UpdateNavigationInput {
   name: String!
 }
 
+input UpdateUserRoleInput {
+  id: String!
+  name: String
+  permissionIDs: [String!]
+}
+
 type User {
   active: Boolean!
   createdAt: DateTime!
@@ -593,6 +634,19 @@ enum UserEvent {
   LOGIN_LINK
   PASSWORD_RESET
   TEST_MAIL
+}
+
+type UserRole {
+  description: String
+  id: String!
+  name: String!
+  permissionIDs: [String!]!
+  permissions: [PermissionObject!]
+  systemRole: Boolean!
+}
+
+input UserRoleFilter {
+  name: String
 }
 
 type VersionInformation {
