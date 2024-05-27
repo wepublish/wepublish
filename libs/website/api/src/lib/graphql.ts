@@ -859,6 +859,8 @@ export type PaymentMethod = {
   __typename?: 'PaymentMethod';
   description: Scalars['String'];
   id: Scalars['ID'];
+  image?: Maybe<Image>;
+  imageId?: Maybe<Scalars['String']>;
   name: Scalars['String'];
   paymentProviderID: Scalars['String'];
   slug: Scalars['Slug'];
