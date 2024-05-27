@@ -66,6 +66,11 @@ const nextConfig = {
         source: '/spende',
         destination: '/mitmachen',
         permanent: false
+      },
+      {
+        source: '/unterstuetzen',
+        destination: '/mitmachen',
+        permanent: false
       }
     ]
   }
