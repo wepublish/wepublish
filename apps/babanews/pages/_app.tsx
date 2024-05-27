@@ -108,13 +108,27 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               <meta name="theme-color" content="#ffffff" />
             </Head>
 
-            <NavBar categorySlugs={[['categories', 'about-us']]} slug="main" headerSlug="header" />
+            <NavBar
+              categorySlugs={[['categories', 'about-us']]}
+              slug="main"
+              headerSlug="header"
+              showSubscriptionsUrl={false}
+            />
 
             <ContentSpacer>
               <Component {...pageProps} />
             </ContentSpacer>
 
             <Footer slug="main" categorySlugs={[['sonstiges', 'other'], ['about-us']]} />
+
+            <Script
+              src={publicRuntimeConfig.env.API_URL! + '/static/head.js'}
+              strategy="beforeInteractive"
+            />
+            <Script
+              src={publicRuntimeConfig.env.API_URL! + '/static/body.js'}
+              strategy="afterInteractive"
+            />
           </ThemeProvider>
         </WebsiteBuilderProvider>
       </WebsiteProvider>

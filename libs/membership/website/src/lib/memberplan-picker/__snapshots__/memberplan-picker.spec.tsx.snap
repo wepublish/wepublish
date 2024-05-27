@@ -477,7 +477,49 @@ https://unsplash.it/200/100 200w"
 </DocumentFragment>
 `;
 
-exports[`MemberPlanPicker should render Single 1`] = `<DocumentFragment />`;
+exports[`MemberPlanPicker should render Single 1`] = `
+<DocumentFragment>
+  <fieldset
+    class="css-ah3hxd-MemberPlanPickerWrapper es1nn8k1"
+  >
+    <img
+      alt="DSC07717"
+      class="css-cibo30-ImageWrapper e1shv2yg0"
+      loading="lazy"
+      srcset="https://unsplash.it/800/400 800w,
+https://unsplash.it/500/300 500w,
+https://unsplash.it/300/200 300w,
+https://unsplash.it/200/100 200w"
+      title=""
+    />
+    <div
+      class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+    >
+      <div
+        data-gramm="false"
+        data-slate-editor="true"
+        data-slate-node="value"
+        style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
+      >
+        <p
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          data-slate-node="element"
+        >
+          <span
+            data-slate-node="text"
+          >
+            <span
+              data-slate-string="true"
+            >
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+            </span>
+          </span>
+        </p>
+      </div>
+    </div>
+  </fieldset>
+</DocumentFragment>
+`;
 
 exports[`MemberPlanPicker should render WithClassName 1`] = `
 <DocumentFragment>

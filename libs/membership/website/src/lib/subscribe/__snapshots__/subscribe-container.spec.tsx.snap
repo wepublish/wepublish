@@ -4998,7 +4998,11 @@ exports[`Subscribe Container should render WithFilter 1`] = `
   >
     <div
       class="css-qtq6nf-SubscribeSection eu4qtxp2"
-    />
+    >
+      <fieldset
+        class="css-ah3hxd-MemberPlanPickerWrapper es1nn8k1"
+      />
+    </div>
     <div
       class="css-qtq6nf-SubscribeSection eu4qtxp2"
     >

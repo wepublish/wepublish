@@ -1014,6 +1014,7 @@ export type Mutation = {
   publishArticle?: Maybe<Article>;
   publishPage?: Maybe<Page>;
   rejectComment: Comment;
+  renewSubscription?: Maybe<Invoice>;
   requestChangesOnComment: Comment;
   resetUserPassword?: Maybe<User>;
   revokeActiveSession: Scalars['Boolean'];
@@ -1330,6 +1331,11 @@ export type MutationPublishPageArgs = {
 export type MutationRejectCommentArgs = {
   id: Scalars['ID'];
   rejectionReason?: InputMaybe<CommentRejectionReason>;
+};
+
+
+export type MutationRenewSubscriptionArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -2336,9 +2342,9 @@ export enum SettingName {
   AllowGuestCommenting = 'ALLOW_GUEST_COMMENTING',
   AllowGuestCommentRating = 'ALLOW_GUEST_COMMENT_RATING',
   AllowGuestPollVoting = 'ALLOW_GUEST_POLL_VOTING',
+  BodyScript = 'BODY_SCRIPT',
   CommentCharLimit = 'COMMENT_CHAR_LIMIT',
-  InvoiceReminderFreq = 'INVOICE_REMINDER_FREQ',
-  InvoiceReminderMaxTries = 'INVOICE_REMINDER_MAX_TRIES',
+  HeadScript = 'HEAD_SCRIPT',
   MakeActiveSubscribersApiPublic = 'MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC',
   MakeExpectedRevenueApiPublic = 'MAKE_EXPECTED_REVENUE_API_PUBLIC',
   MakeNewDeactivationsApiPublic = 'MAKE_NEW_DEACTIVATIONS_API_PUBLIC',
@@ -2555,7 +2561,6 @@ export type TeaserListBlock = {
   take?: Maybe<Scalars['Int']>;
   teaserType?: Maybe<TeaserType>;
   teasers: Array<Maybe<Teaser>>;
-  title?: Maybe<Scalars['String']>;
 };
 
 export type TeaserListBlockFilter = {
@@ -2573,7 +2578,6 @@ export type TeaserListBlockInput = {
   skip?: InputMaybe<Scalars['Int']>;
   take?: InputMaybe<Scalars['Int']>;
   teaserType?: InputMaybe<TeaserType>;
-  title?: InputMaybe<Scalars['String']>;
 };
 
 export enum TeaserStyle {

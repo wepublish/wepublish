@@ -1,34 +1,30 @@
-import styled from '@emotion/styled'
-import {Pagination as MuiPagination} from '@mui/material'
-import {ApiV1, ArticleListContainer} from '@wepublish/website'
+import {ApiV1, ArticleListContainer, useWebsiteBuilder} from '@wepublish/website'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
-import {useEffect, useMemo, useState} from 'react'
-import {Reducer, useReducer} from 'react'
+import {useRouter} from 'next/router'
+import {useMemo} from 'react'
+import {z} from 'zod'
 
-export const Pagination = styled(MuiPagination)`
-  grid-column: 1 / 5;
-  display: grid;
-  justify-content: center;
-`
+const take = 25
+
+const pageSchema = z.object({
+  page: z.coerce.number().gte(1).optional()
+})
 
 export default function ArticleList() {
-  const [page, setPage] = useState(1)
-  const limit = 10
+  const {
+    elements: {Pagination}
+  } = useWebsiteBuilder()
 
-  const [variables, onVariablesChange] = useReducer<
-    Reducer<Partial<ApiV1.ArticleListQueryVariables>, Partial<ApiV1.ArticleListQueryVariables>>
-  >(
-    (state, newVariables) => ({
-      ...state,
-      ...newVariables
+  const {query, replace} = useRouter()
+  const {page} = pageSchema.parse(query)
+
+  const variables = useMemo(
+    () => ({
+      take,
+      skip: ((page ?? 1) - 1) * take
     }),
-    {
-      sort: ApiV1.ArticleSort.PublishedAt,
-      order: ApiV1.SortOrder.Descending,
-      skip: 0,
-      take: limit
-    } as Partial<ApiV1.ArticleListQueryVariables>
+    [page]
   )
 
   const {data} = ApiV1.useArticleListQuery({
@@ -36,24 +32,32 @@ export default function ArticleList() {
     variables
   })
 
-  const paginationCount = useMemo(() => {
-    if (data?.articles.totalCount && data?.articles.totalCount > limit) {
-      return Math.ceil(data.articles.totalCount / limit)
+  const pageCount = useMemo(() => {
+    if (data?.articles.totalCount && data?.articles.totalCount > take) {
+      return Math.ceil(data.articles.totalCount / take)
     }
-    return 1
-  }, [data?.articles.totalCount, limit])
 
-  useEffect(() => {
-    onVariablesChange({
-      skip: (page - 1) * limit
-    })
-  }, [page])
+    return 1
+  }, [data?.articles.totalCount])
 
   return (
     <>
-      <ArticleListContainer variables={variables} onVariablesChange={onVariablesChange} />
-      {paginationCount > 1 && (
-        <Pagination page={page} count={paginationCount} onChange={(_, value) => setPage(value)} />
+      <ArticleListContainer variables={variables} />
+
+      {pageCount > 1 && (
+        <Pagination
+          page={page ?? 1}
+          count={pageCount}
+          onChange={(_, value) =>
+            replace(
+              {
+                query: {...query, page: value}
+              },
+              undefined,
+              {shallow: true, scroll: true}
+            )
+          }
+        />
       )}
     </>
   )
@@ -69,16 +73,17 @@ export const getStaticProps: GetStaticProps = async () => {
   const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL, [])
   await Promise.all([
     client.query({
-      query: ApiV1.ArticleListDocument
-    }),
-    client.query({
       query: ApiV1.NavigationListDocument
     }),
     client.query({
       query: ApiV1.PeerProfileDocument
     }),
     client.query({
-      query: ApiV1.PeerProfileDocument
+      query: ApiV1.ArticleListDocument,
+      variables: {
+        take,
+        skip: 0
+      }
     })
   ])
 

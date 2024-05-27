@@ -1,6 +1,14 @@
 import {styled} from '@mui/material'
 import {FullImageFragment} from '@wepublish/website/api'
 import {BuilderImageProps} from '@wepublish/website/builder'
+import {useImageProps} from './image.context'
+
+declare module 'react' {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  interface HTMLAttributes<T> {
+    fetchPriority?: 'high' | 'low' | 'auto'
+  }
+}
 
 type ImageItem = {size: number; url: string | null | undefined}
 
@@ -28,13 +36,8 @@ export const ImageWrapper = styled('img')<{aspectRatio: number}>`
   object-fit: contain;
 `
 
-export function Image({
-  image,
-  square,
-  loading = 'lazy',
-  fetchPriority = 'low',
-  ...props
-}: BuilderImageProps) {
+export function Image({image, ...props}: BuilderImageProps) {
+  const {square, fetchPriority, loading} = useImageProps(props)
   const images = square ? imageToSquareImageItems(image) : imageToImageItems(image)
 
   const imageArray = images.reduce((array, img) => {

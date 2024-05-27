@@ -43,6 +43,7 @@ const DropdownWrapper = styled.div<{top: number; left: number}>`
 
 const Panel = styled(RPanel)`
   display: grid;
+  overflow: visible;
 `
 
 export function ChooseEditImage({

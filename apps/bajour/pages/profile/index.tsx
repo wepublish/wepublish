@@ -26,7 +26,7 @@ function Profile() {
     <Container>
       <ProfileWrapper>
         <H4 component={'h1'}>Profil</H4>
-        <PersonalDataFormContainer mediaEmail="info@wepublish.dev" />
+        <PersonalDataFormContainer mediaEmail="info@bajour.ch" />
       </ProfileWrapper>
     </Container>
   )

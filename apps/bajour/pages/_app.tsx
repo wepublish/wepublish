@@ -29,7 +29,10 @@ import {BajourPaymentMethodPicker} from '../src/components/payment-method-picker
 import {BajourBlockRenderer} from '../src/components/website-builder-overwrites/block-renderer/block-renderer'
 import {BajourTeaser} from '../src/components/website-builder-overwrites/blocks/teaser'
 import {BajourBreakBlock} from '../src/components/website-builder-styled/blocks/break-block-styled'
-import {BajourTeaserGrid} from '../src/components/website-builder-styled/blocks/teaser-grid-styled'
+import {
+  BajourTeaserGrid,
+  BajourTeaserList
+} from '../src/components/website-builder-styled/blocks/teaser-grid-styled'
 import theme, {navbarTheme} from '../src/styles/theme'
 
 setDefaultOptions({
@@ -117,6 +120,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               Renderer: BajourBlockRenderer,
               Teaser: BajourTeaser,
               TeaserGrid: BajourTeaserGrid,
+              TeaserList: BajourTeaserList,
               Break: BajourBreakBlock
             }}
             thirdParty={{
@@ -154,6 +158,15 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               {publicRuntimeConfig.env.GA_ID && (
                 <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
               )}
+
+              <Script
+                src={publicRuntimeConfig.env.API_URL! + '/static/head.js'}
+                strategy="beforeInteractive"
+              />
+              <Script
+                src={publicRuntimeConfig.env.API_URL! + '/static/body.js'}
+                strategy="afterInteractive"
+              />
             </ThemeProvider>
           </WebsiteBuilderProvider>
         </WebsiteProvider>

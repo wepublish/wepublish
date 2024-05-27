@@ -1,4 +1,4 @@
-import {PaymentState, SubscriptionDeactivationReason, UserEvent} from '@prisma/client'
+import {PaymentState, SubscriptionDeactivationReason, UserEvent, Subscription} from '@prisma/client'
 import {SettingName} from '@wepublish/settings/api'
 import {unselectPassword} from '@wepublish/user/api'
 import * as crypto from 'crypto'
@@ -25,6 +25,7 @@ import {
   PaymentAlreadyRunning,
   SubscriptionNotExtendable,
   SubscriptionNotFound,
+  SubscriptionToDeactivateDoesNotExist,
   UserInputError,
   UserSubscriptionAlreadyDeactivated
 } from '../error'
@@ -437,7 +438,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           type: new GraphQLList(new GraphQLNonNull(GraphQLMetadataPropertyPublicInput))
         },
         successURL: {type: GraphQLString},
-        failureURL: {type: GraphQLString}
+        failureURL: {type: GraphQLString},
+        deactivateSubscriptionId: {type: GraphQLID}
       },
       description: 'Allows authenticated users to create additional subscriptions',
       async resolve(
@@ -452,7 +454,8 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           paymentMethodSlug,
           subscriptionProperties,
           successURL,
-          failureURL
+          failureURL,
+          deactivateSubscriptionId
         },
         {prisma, loaders, memberContext, createPaymentWithProvider, authenticateUser}
       ) {
@@ -486,6 +489,27 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
           paymentMethod
         )
 
+        // Check if subscription which should be deactivated exists
+        let subscriptionToDeactivate: null | Subscription = null
+        if (deactivateSubscriptionId) {
+          subscriptionToDeactivate = await prisma.subscription.findUnique({
+            where: {
+              id: deactivateSubscriptionId,
+              userID: user.id,
+              deactivation: {
+                is: null
+              }
+            },
+            include: {
+              deactivation: true,
+              periods: true,
+              properties: true
+            }
+          })
+          if (!subscriptionToDeactivate)
+            throw new SubscriptionToDeactivateDoesNotExist(deactivateSubscriptionId)
+        }
+
         const properties = await memberContext.processSubscriptionProperties(subscriptionProperties)
 
         const {subscription, invoice} = await memberContext.createSubscription(
@@ -506,6 +530,13 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
             subscription.id
           )
           throw new InternalError()
+        }
+
+        if (subscriptionToDeactivate) {
+          await memberContext.deactivateSubscription({
+            subscription: subscriptionToDeactivate,
+            deactivationReason: SubscriptionDeactivationReason.userSelfDeactivated
+          })
         }
 
         return await createPaymentWithProvider({
@@ -995,8 +1026,9 @@ export const GraphQLPublicMutation = new GraphQLObjectType<undefined, Context>({
       resolve: (
         root,
         {answerId},
-        {optionalAuthenticateUser, prisma: {pollAnswer, pollVote, setting}}
-      ) => voteOnPoll(answerId, undefined, optionalAuthenticateUser, pollAnswer, pollVote, setting)
+        {optionalAuthenticateUser, prisma: {pollAnswer, pollVote, setting}, fingerprint}
+      ) =>
+        voteOnPoll(answerId, fingerprint, optionalAuthenticateUser, pollAnswer, pollVote, setting)
     }
   }
 })

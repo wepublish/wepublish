@@ -671,6 +671,7 @@ export type MutationCreateSessionWithOAuth2CodeArgs = {
 
 export type MutationCreateSubscriptionArgs = {
   autoRenew: Scalars['Boolean'];
+  deactivateSubscriptionId?: InputMaybe<Scalars['ID']>;
   failureURL?: InputMaybe<Scalars['String']>;
   memberPlanID?: InputMaybe<Scalars['ID']>;
   memberPlanSlug?: InputMaybe<Scalars['Slug']>;
@@ -929,8 +930,22 @@ export type PeerProfile = {
 
 export type Phrase = {
   __typename?: 'Phrase';
-  articles: Array<Article>;
-  pages: Array<Page>;
+  articles?: Maybe<PhraseResultArticleContent>;
+  pages?: Maybe<PhraseResultPageContent>;
+};
+
+export type PhraseResultArticleContent = {
+  __typename?: 'PhraseResultArticleContent';
+  nodes: Array<Article>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
+};
+
+export type PhraseResultPageContent = {
+  __typename?: 'PhraseResultPageContent';
+  nodes: Array<Page>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Int'];
 };
 
 export type Point = {
@@ -978,7 +993,6 @@ export type PollVote = {
   answerId: Scalars['String'];
   createdAt: Scalars['DateTime'];
   disabled: Scalars['Boolean'];
-  fingerprint?: Maybe<Scalars['String']>;
   pollId: Scalars['ID'];
 };
 
@@ -1267,9 +1281,9 @@ export enum SettingName {
   AllowGuestCommenting = 'ALLOW_GUEST_COMMENTING',
   AllowGuestCommentRating = 'ALLOW_GUEST_COMMENT_RATING',
   AllowGuestPollVoting = 'ALLOW_GUEST_POLL_VOTING',
+  BodyScript = 'BODY_SCRIPT',
   CommentCharLimit = 'COMMENT_CHAR_LIMIT',
-  InvoiceReminderFreq = 'INVOICE_REMINDER_FREQ',
-  InvoiceReminderMaxTries = 'INVOICE_REMINDER_MAX_TRIES',
+  HeadScript = 'HEAD_SCRIPT',
   MakeActiveSubscribersApiPublic = 'MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC',
   MakeExpectedRevenueApiPublic = 'MAKE_EXPECTED_REVENUE_API_PUBLIC',
   MakeNewDeactivationsApiPublic = 'MAKE_NEW_DEACTIVATIONS_API_PUBLIC',
@@ -1394,7 +1408,6 @@ export type TeaserListBlock = {
   take?: Maybe<Scalars['Int']>;
   teaserType?: Maybe<TeaserType>;
   teasers: Array<Maybe<Teaser>>;
-  title?: Maybe<Scalars['String']>;
 };
 
 export type TeaserListBlockFilter = {
@@ -1722,10 +1735,12 @@ export type PeerQuery = { __typename?: 'Query', peer?: { __typename?: 'Peer', id
 
 export type PhraseQueryVariables = Exact<{
   query: Scalars['String'];
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
 }>;
 
 
-export type PhraseQuery = { __typename?: 'Query', phrase?: { __typename?: 'Phrase', articles: Array<{ __typename?: 'Article', id: string, slug: string, title: string, blocks: Array<{ __typename?: 'BildwurfAdBlock' } | { __typename?: 'CommentBlock' } | { __typename?: 'EmbedBlock' } | { __typename?: 'EventBlock' } | { __typename?: 'FacebookPostBlock' } | { __typename?: 'FacebookVideoBlock' } | { __typename?: 'HTMLBlock' } | { __typename?: 'ImageBlock' } | { __typename?: 'ImageGalleryBlock' } | { __typename?: 'InstagramPostBlock' } | { __typename?: 'LinkPageBreakBlock' } | { __typename?: 'ListicleBlock' } | { __typename?: 'PolisConversationBlock' } | { __typename?: 'PollBlock' } | { __typename?: 'QuoteBlock' } | { __typename?: 'RichTextBlock', richText: Node[] } | { __typename?: 'SoundCloudTrackBlock' } | { __typename?: 'TeaserGridBlock' } | { __typename?: 'TeaserGridFlexBlock' } | { __typename?: 'TeaserListBlock' } | { __typename?: 'TikTokVideoBlock' } | { __typename?: 'TitleBlock' } | { __typename?: 'TwitterTweetBlock' } | { __typename?: 'VimeoVideoBlock' } | { __typename?: 'YouTubeVideoBlock' }> }>, pages: Array<{ __typename?: 'Page', id: string, slug: string, title: string, blocks: Array<{ __typename?: 'BildwurfAdBlock' } | { __typename?: 'CommentBlock' } | { __typename?: 'EmbedBlock' } | { __typename?: 'EventBlock' } | { __typename?: 'FacebookPostBlock' } | { __typename?: 'FacebookVideoBlock' } | { __typename?: 'HTMLBlock' } | { __typename?: 'ImageBlock' } | { __typename?: 'ImageGalleryBlock' } | { __typename?: 'InstagramPostBlock' } | { __typename?: 'LinkPageBreakBlock' } | { __typename?: 'ListicleBlock' } | { __typename?: 'PolisConversationBlock' } | { __typename?: 'PollBlock' } | { __typename?: 'QuoteBlock' } | { __typename?: 'RichTextBlock', richText: Node[] } | { __typename?: 'SoundCloudTrackBlock' } | { __typename?: 'TeaserGridBlock' } | { __typename?: 'TeaserGridFlexBlock' } | { __typename?: 'TeaserListBlock' } | { __typename?: 'TikTokVideoBlock' } | { __typename?: 'TitleBlock' } | { __typename?: 'TwitterTweetBlock' } | { __typename?: 'VimeoVideoBlock' } | { __typename?: 'YouTubeVideoBlock' }> }> } | null };
+export type PhraseQuery = { __typename?: 'Query', phrase?: { __typename?: 'Phrase', articles?: { __typename?: 'PhraseResultArticleContent', totalCount: number, nodes: Array<{ __typename?: 'Article', id: string, slug: string, title: string, blocks: Array<{ __typename?: 'BildwurfAdBlock' } | { __typename?: 'CommentBlock' } | { __typename?: 'EmbedBlock' } | { __typename?: 'EventBlock' } | { __typename?: 'FacebookPostBlock' } | { __typename?: 'FacebookVideoBlock' } | { __typename?: 'HTMLBlock' } | { __typename?: 'ImageBlock' } | { __typename?: 'ImageGalleryBlock' } | { __typename?: 'InstagramPostBlock' } | { __typename?: 'LinkPageBreakBlock' } | { __typename?: 'ListicleBlock' } | { __typename?: 'PolisConversationBlock' } | { __typename?: 'PollBlock' } | { __typename?: 'QuoteBlock' } | { __typename?: 'RichTextBlock', richText: Node[] } | { __typename?: 'SoundCloudTrackBlock' } | { __typename?: 'TeaserGridBlock' } | { __typename?: 'TeaserGridFlexBlock' } | { __typename?: 'TeaserListBlock' } | { __typename?: 'TikTokVideoBlock' } | { __typename?: 'TitleBlock' } | { __typename?: 'TwitterTweetBlock' } | { __typename?: 'VimeoVideoBlock' } | { __typename?: 'YouTubeVideoBlock' }> }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null, pages?: { __typename?: 'PhraseResultPageContent', totalCount: number, nodes: Array<{ __typename?: 'Page', id: string, slug: string, title: string, blocks: Array<{ __typename?: 'BildwurfAdBlock' } | { __typename?: 'CommentBlock' } | { __typename?: 'EmbedBlock' } | { __typename?: 'EventBlock' } | { __typename?: 'FacebookPostBlock' } | { __typename?: 'FacebookVideoBlock' } | { __typename?: 'HTMLBlock' } | { __typename?: 'ImageBlock' } | { __typename?: 'ImageGalleryBlock' } | { __typename?: 'InstagramPostBlock' } | { __typename?: 'LinkPageBreakBlock' } | { __typename?: 'ListicleBlock' } | { __typename?: 'PolisConversationBlock' } | { __typename?: 'PollBlock' } | { __typename?: 'QuoteBlock' } | { __typename?: 'RichTextBlock', richText: Node[] } | { __typename?: 'SoundCloudTrackBlock' } | { __typename?: 'TeaserGridBlock' } | { __typename?: 'TeaserGridFlexBlock' } | { __typename?: 'TeaserListBlock' } | { __typename?: 'TikTokVideoBlock' } | { __typename?: 'TitleBlock' } | { __typename?: 'TwitterTweetBlock' } | { __typename?: 'VimeoVideoBlock' } | { __typename?: 'YouTubeVideoBlock' }> }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null } | null };
 
 export type FullUserFragment = { __typename?: 'User', name: string, email: string };
 
@@ -2304,27 +2319,45 @@ export const Peer = gql`
 }
     ${PeerRef}`;
 export const Phrase = gql`
-    query Phrase($query: String!) {
-  phrase(query: $query) {
+    query Phrase($query: String!, $take: Int, $skip: Int) {
+  phrase(query: $query, take: $take, skip: $skip) {
     articles {
-      id
-      slug
-      title
-      blocks {
-        ... on RichTextBlock {
-          richText
+      nodes {
+        id
+        slug
+        title
+        blocks {
+          ... on RichTextBlock {
+            richText
+          }
         }
       }
+      pageInfo {
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
+      totalCount
     }
     pages {
-      id
-      slug
-      title
-      blocks {
-        ... on RichTextBlock {
-          richText
+      nodes {
+        id
+        slug
+        title
+        blocks {
+          ... on RichTextBlock {
+            richText
+          }
         }
       }
+      pageInfo {
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
+      totalCount
     }
   }
 }
