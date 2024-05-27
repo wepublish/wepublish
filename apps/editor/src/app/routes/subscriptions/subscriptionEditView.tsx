@@ -182,6 +182,22 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
     setSubscriptionProperties(data?.subscription)
   }, [data?.subscription])
 
+  useEffect(() => {
+    if (!memberPlan) {
+      return
+    }
+    if (memberPlan.extendable === extendable) {
+      return
+    }
+    setExtendable(memberPlan.extendable)
+    toaster.push(
+      <Message type="info" showIcon closable>
+        {t('subscriptionEditView.extendableWasChanged')}
+      </Message>,
+      {duration: 6000}
+    )
+  }, [memberPlan?.id])
+
   function setSubscriptionProperties(subscription?: FullSubscriptionFragment | null) {
     if (!subscription) {
       return
