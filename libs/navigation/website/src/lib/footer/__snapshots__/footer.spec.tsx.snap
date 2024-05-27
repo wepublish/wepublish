@@ -77,7 +77,7 @@ exports[`Footer should render Default 1`] = `
             class="css-1njm4hy-FooterPaperCategoryLinks enubu9x1"
           >
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/"
             >
               <span
@@ -87,7 +87,7 @@ exports[`Footer should render Default 1`] = `
               </span>
             </a>
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="https://google.com"
             >
               <span
@@ -97,7 +97,7 @@ exports[`Footer should render Default 1`] = `
               </span>
             </a>
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/a/abcd"
             >
               <span
@@ -120,7 +120,7 @@ exports[`Footer should render Default 1`] = `
             class="css-1njm4hy-FooterPaperCategoryLinks enubu9x1"
           >
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/"
             >
               <span
@@ -130,7 +130,7 @@ exports[`Footer should render Default 1`] = `
               </span>
             </a>
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/a/abcd"
             >
               <span
@@ -140,7 +140,7 @@ exports[`Footer should render Default 1`] = `
               </span>
             </a>
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/a/abcd"
             >
               <span
@@ -150,7 +150,7 @@ exports[`Footer should render Default 1`] = `
               </span>
             </a>
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/a/abcd"
             >
               <span
@@ -180,7 +180,7 @@ exports[`Footer should render Default 1`] = `
             class="css-1njm4hy-FooterPaperCategoryLinks enubu9x1"
           >
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/team/"
             >
               <span
@@ -190,7 +190,7 @@ exports[`Footer should render Default 1`] = `
               </span>
             </a>
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/about-us/"
             >
               <span
@@ -200,7 +200,7 @@ exports[`Footer should render Default 1`] = `
               </span>
             </a>
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
             >
               <span
                 class="MuiTypography-root MuiTypography-h6 css-3tukg2-MuiTypography-root-FooterPaper"
@@ -209,7 +209,7 @@ exports[`Footer should render Default 1`] = `
               </span>
             </a>
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
             >
               <span
                 class="MuiTypography-root MuiTypography-h6 css-3tukg2-MuiTypography-root-FooterPaper"
@@ -302,7 +302,7 @@ exports[`Footer should render WithClassName 1`] = `
             class="css-1njm4hy-FooterPaperCategoryLinks enubu9x1"
           >
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/"
             >
               <span
@@ -312,7 +312,7 @@ exports[`Footer should render WithClassName 1`] = `
               </span>
             </a>
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="https://google.com"
             >
               <span
@@ -322,7 +322,7 @@ exports[`Footer should render WithClassName 1`] = `
               </span>
             </a>
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/a/abcd"
             >
               <span
@@ -345,7 +345,7 @@ exports[`Footer should render WithClassName 1`] = `
             class="css-1njm4hy-FooterPaperCategoryLinks enubu9x1"
           >
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/"
             >
               <span
@@ -355,7 +355,7 @@ exports[`Footer should render WithClassName 1`] = `
               </span>
             </a>
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/a/abcd"
             >
               <span
@@ -365,7 +365,7 @@ exports[`Footer should render WithClassName 1`] = `
               </span>
             </a>
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/a/abcd"
             >
               <span
@@ -375,7 +375,7 @@ exports[`Footer should render WithClassName 1`] = `
               </span>
             </a>
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/a/abcd"
             >
               <span
@@ -405,7 +405,7 @@ exports[`Footer should render WithClassName 1`] = `
             class="css-1njm4hy-FooterPaperCategoryLinks enubu9x1"
           >
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/team/"
             >
               <span
@@ -415,7 +415,7 @@ exports[`Footer should render WithClassName 1`] = `
               </span>
             </a>
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/about-us/"
             >
               <span
@@ -425,7 +425,7 @@ exports[`Footer should render WithClassName 1`] = `
               </span>
             </a>
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
             >
               <span
                 class="MuiTypography-root MuiTypography-h6 css-3tukg2-MuiTypography-root-FooterPaper"
@@ -434,7 +434,7 @@ exports[`Footer should render WithClassName 1`] = `
               </span>
             </a>
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
             >
               <span
                 class="MuiTypography-root MuiTypography-h6 css-3tukg2-MuiTypography-root-FooterPaper"
@@ -527,7 +527,7 @@ exports[`Footer should render WithEmotion 1`] = `
             class="css-1njm4hy-FooterPaperCategoryLinks enubu9x1"
           >
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/"
             >
               <span
@@ -537,7 +537,7 @@ exports[`Footer should render WithEmotion 1`] = `
               </span>
             </a>
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="https://google.com"
             >
               <span
@@ -547,7 +547,7 @@ exports[`Footer should render WithEmotion 1`] = `
               </span>
             </a>
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/a/abcd"
             >
               <span
@@ -570,7 +570,7 @@ exports[`Footer should render WithEmotion 1`] = `
             class="css-1njm4hy-FooterPaperCategoryLinks enubu9x1"
           >
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/"
             >
               <span
@@ -580,7 +580,7 @@ exports[`Footer should render WithEmotion 1`] = `
               </span>
             </a>
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/a/abcd"
             >
               <span
@@ -590,7 +590,7 @@ exports[`Footer should render WithEmotion 1`] = `
               </span>
             </a>
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/a/abcd"
             >
               <span
@@ -600,7 +600,7 @@ exports[`Footer should render WithEmotion 1`] = `
               </span>
             </a>
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/a/abcd"
             >
               <span
@@ -630,7 +630,7 @@ exports[`Footer should render WithEmotion 1`] = `
             class="css-1njm4hy-FooterPaperCategoryLinks enubu9x1"
           >
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/team/"
             >
               <span
@@ -640,7 +640,7 @@ exports[`Footer should render WithEmotion 1`] = `
               </span>
             </a>
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
               href="/about-us/"
             >
               <span
@@ -650,7 +650,7 @@ exports[`Footer should render WithEmotion 1`] = `
               </span>
             </a>
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
             >
               <span
                 class="MuiTypography-root MuiTypography-h6 css-3tukg2-MuiTypography-root-FooterPaper"
@@ -659,7 +659,7 @@ exports[`Footer should render WithEmotion 1`] = `
               </span>
             </a>
             <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-zmbkvx-MuiTypography-root-MuiLink-root"
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
             >
               <span
                 class="MuiTypography-root MuiTypography-h6 css-3tukg2-MuiTypography-root-FooterPaper"
