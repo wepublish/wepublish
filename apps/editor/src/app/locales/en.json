@@ -1353,6 +1353,7 @@
       "monthlyAmount": "Monthly amount",
       "paidUntil": "Paid Until",
       "paymentMethod": "Payment Method",
+      "renewNow": "Renew now",
       "selectMemberPlan": "Member Plan",
       "selectUser": "Select User",
       "startsAt": "Subscription Start",

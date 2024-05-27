@@ -1014,6 +1014,7 @@ export type Mutation = {
   publishArticle?: Maybe<Article>;
   publishPage?: Maybe<Page>;
   rejectComment: Comment;
+  renewSubscription?: Maybe<Invoice>;
   requestChangesOnComment: Comment;
   resetUserPassword?: Maybe<User>;
   revokeActiveSession: Scalars['Boolean'];
@@ -1329,6 +1330,11 @@ export type MutationPublishPageArgs = {
 export type MutationRejectCommentArgs = {
   id: Scalars['ID'];
   rejectionReason?: InputMaybe<CommentRejectionReason>;
+};
+
+
+export type MutationRenewSubscriptionArgs = {
+  id: Scalars['ID'];
 };
 
 
@@ -3771,6 +3777,13 @@ export type DeleteSubscriptionMutationVariables = Exact<{
 
 
 export type DeleteSubscriptionMutation = { __typename?: 'Mutation', deleteSubscription?: { __typename?: 'Subscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, extendable: boolean, user?: { __typename?: 'User', id: string, createdAt: string, modifiedAt: string, name: string, firstName?: string | null, preferredName?: string | null, flair?: string | null, active: boolean, lastLogin?: string | null, email: string, emailVerifiedAt?: string | null, address?: { __typename?: 'UserAddress', company?: string | null, streetAddress?: string | null, streetAddress2?: string | null, zipCode?: string | null, city?: string | null, country?: string | null } | null, userImage?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, roles: Array<{ __typename?: 'UserRole', id: string, name: string, description?: string | null, systemRole: boolean, permissions: Array<{ __typename?: 'Permission', id: string, description: string, deprecated: boolean }> }>, subscriptions: Array<{ __typename?: 'UserSubscription', id: string, createdAt: string, modifiedAt: string, paymentPeriodicity: PaymentPeriodicity, monthlyAmount: number, autoRenew: boolean, startsAt: string, paidUntil?: string | null, periods: Array<{ __typename?: 'SubscriptionPeriod', id: string, amount: number, createdAt: string, endsAt: string, invoiceID: string, paymentPeriodicity: PaymentPeriodicity, startsAt: string }>, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null, memberPlan: { __typename?: 'MemberPlan', id: string, name: string, description?: Node[] | null, slug: string, active: boolean, tags?: Array<string> | null, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, invoices: Array<{ __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> }> }> } | null, memberPlan: { __typename?: 'MemberPlan', tags?: Array<string> | null, amountPerMonthMin: number, extendable: boolean, maxCount?: number | null, id: string, name: string, description?: Node[] | null, slug: string, active: boolean, availablePaymentMethods: Array<{ __typename?: 'AvailablePaymentMethod', paymentPeriodicities: Array<PaymentPeriodicity>, forceAutoRenewal: boolean, paymentMethods: Array<{ __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null }> }>, image?: { __typename?: 'Image', id: string, filename?: string | null, extension: string, title?: string | null, description?: string | null, width: number, height: number, url?: string | null, largeURL?: string | null, mediumURL?: string | null, thumbURL?: string | null, squareURL?: string | null, previewURL?: string | null, column1URL?: string | null, column6URL?: string | null } | null }, properties: Array<{ __typename?: 'Properties', key: string, value: string, public: boolean }>, paymentMethod: { __typename?: 'PaymentMethod', id: string, name: string, slug: string, createdAt: string, modifiedAt: string, description: string, active: boolean, paymentProvider?: { __typename?: 'PaymentProvider', id: string, name: string } | null }, deactivation?: { __typename?: 'SubscriptionDeactivation', date: string, reason: SubscriptionDeactivationReason } | null } | null };
+
+export type RenewSubscriptionMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type RenewSubscriptionMutation = { __typename?: 'Mutation', renewSubscription?: { __typename?: 'Invoice', id: string, total: number, paidAt?: string | null, description?: string | null, mail: string, manuallySetAsPaidByUserId?: string | null, canceledAt?: string | null, modifiedAt: string, createdAt: string, items: Array<{ __typename?: 'InvoiceItem', createdAt: string, modifiedAt: string, name: string, description?: string | null, quantity: number, amount: number, total: number }> } | null };
 
 export type NewSubscribersPerMonthQueryVariables = Exact<{
   months: Scalars['Int'];
@@ -8671,6 +8684,39 @@ export function useDeleteSubscriptionMutation(baseOptions?: Apollo.MutationHookO
 export type DeleteSubscriptionMutationHookResult = ReturnType<typeof useDeleteSubscriptionMutation>;
 export type DeleteSubscriptionMutationResult = Apollo.MutationResult<DeleteSubscriptionMutation>;
 export type DeleteSubscriptionMutationOptions = Apollo.BaseMutationOptions<DeleteSubscriptionMutation, DeleteSubscriptionMutationVariables>;
+export const RenewSubscriptionDocument = gql`
+    mutation RenewSubscription($id: ID!) {
+  renewSubscription(id: $id) {
+    ...Invoice
+  }
+}
+    ${InvoiceFragmentDoc}`;
+export type RenewSubscriptionMutationFn = Apollo.MutationFunction<RenewSubscriptionMutation, RenewSubscriptionMutationVariables>;
+
+/**
+ * __useRenewSubscriptionMutation__
+ *
+ * To run a mutation, you first call `useRenewSubscriptionMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRenewSubscriptionMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [renewSubscriptionMutation, { data, loading, error }] = useRenewSubscriptionMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useRenewSubscriptionMutation(baseOptions?: Apollo.MutationHookOptions<RenewSubscriptionMutation, RenewSubscriptionMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RenewSubscriptionMutation, RenewSubscriptionMutationVariables>(RenewSubscriptionDocument, options);
+      }
+export type RenewSubscriptionMutationHookResult = ReturnType<typeof useRenewSubscriptionMutation>;
+export type RenewSubscriptionMutationResult = Apollo.MutationResult<RenewSubscriptionMutation>;
+export type RenewSubscriptionMutationOptions = Apollo.BaseMutationOptions<RenewSubscriptionMutation, RenewSubscriptionMutationVariables>;
 export const NewSubscribersPerMonthDocument = gql`
     query NewSubscribersPerMonth($months: Int!) {
   newSubscribersPerMonth(monthsBack: $months) {
