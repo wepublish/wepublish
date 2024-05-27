@@ -74,7 +74,11 @@ export default function ArticleBySlug() {
                   Kommentare
                 </H5>
 
-                <CommentListContainer id={data.article.id} type={ApiV1.CommentItemType.Article} />
+                <CommentListContainer
+                  id={data.article.id}
+                  type={ApiV1.CommentItemType.Article}
+                  variables={{sort: ApiV1.CommentSort.Rating, order: ApiV1.SortOrder.Descending}}
+                />
               </ArticleWrapper>
             )}
           </>
@@ -121,9 +125,9 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
       client.query({
         query: ApiV1.CommentListDocument,
         variables: {
-          filter: {
-            itemId: article.data.article.id
-          }
+          sort: ApiV1.CommentSort.Rating,
+          order: ApiV1.SortOrder.Descending,
+          itemId: article.data.article.id
         }
       }),
       client.query({

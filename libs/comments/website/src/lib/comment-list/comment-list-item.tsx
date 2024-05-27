@@ -8,10 +8,6 @@ import {getStateForEditor} from './comment-list.state'
 import {CommentListItemShare} from './comment-list-item-share'
 import {useMemo} from 'react'
 
-const generateSocialMediaLink = (id: string) => {
-  return `${window.location.host}${window.location.pathname}?goToComment=${id}`
-}
-
 export const CommentListItemChildren = styled('aside')`
   display: grid;
   position: relative;
@@ -104,7 +100,6 @@ export const CommentListItem = ({
   const showReply = getStateForEditor(openEditorsState)('add', id)
   const showEdit = getStateForEditor(openEditorsState)('edit', id)
 
-  const socialMediaLink = generateSocialMediaLink(id)
   const buttonStyles = useButtonStyles()
 
   return (
@@ -148,7 +143,7 @@ export const CommentListItem = ({
             </Button>
           )}
 
-          {canShare && <CommentListItemShare url={socialMediaLink} title="share" />}
+          {canShare && <CommentListItemShare url={comment.url} title="share" />}
 
           {canEdit && (
             <Button

@@ -45,6 +45,7 @@ export const StarRating = ({
         readOnly={readOnly}
         onChange={(_, newValue) => newValue && onChange?.(newValue)}
         showFilledIcon={hasRated}
+        suppressHydrationWarning
       />
     </StarRatingWrapper>
   )

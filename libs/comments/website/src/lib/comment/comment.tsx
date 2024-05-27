@@ -2,11 +2,11 @@ import {css} from '@emotion/react'
 import {styled} from '@mui/material'
 import {CommentAuthorType} from '@wepublish/website/api'
 import {BuilderCommentProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {useLayoutEffect, useState} from 'react'
 import {MdPerson, MdVerified} from 'react-icons/md'
 
 import {format} from 'date-fns'
 import {de} from 'date-fns/locale'
+import {useEffect, useState} from 'react'
 
 function formatCommentDate(isoDateString: string): string {
   const date: Date = new Date(isoDateString)
@@ -139,29 +139,16 @@ export const Comment = ({
     blocks: {RichText}
   } = useWebsiteBuilder()
 
-  const [goToComment, setGoToComment] = useState<string | null>(null)
+  const [commentId, setCommentId] = useState<string | null>(null)
 
-  useLayoutEffect(() => {
-    if (typeof window !== 'undefined') {
-      const searchParams = new URLSearchParams(window.location.search)
-      const commentId = searchParams.get('goToComment')
-
-      if (commentId) {
-        setGoToComment(commentId)
-        const element = document.getElementById(commentId)
-        if (element) {
-          const elementRect = element.getBoundingClientRect()
-          const absoluteElementTop = elementRect.top + window.pageYOffset
-          const offsetPosition = absoluteElementTop - 200
-
-          window.scrollTo({
-            top: offsetPosition,
-            behavior: 'smooth'
-          })
-        }
-      }
+  useEffect(() => {
+    const commentId = window.location.hash.replace('#', '')
+    if (commentId) {
+      setCommentId(commentId)
     }
   }, [])
+
+  console.log('commentId', commentId)
 
   const image = user?.image ?? guestUserImage
   const isVerified = authorType === CommentAuthorType.VerifiedUser
@@ -180,7 +167,7 @@ export const Comment = ({
   }
 
   return (
-    <CommentWrapper key={goToComment} className={className} id={id} highlight={goToComment === id}>
+    <CommentWrapper className={className} id={id} highlight={commentId === id}>
       <CommentHeader isTopComment={isTopComment}>
         {image && <Image image={image} square css={avatarStyles} />}
         {!image && <MdPerson css={avatarStyles} />}

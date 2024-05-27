@@ -4617,15 +4617,6 @@ export const CreateSubscription = gql`
   }
 }
     `;
-
-export const RenewSubscription = gql`
-mutation RenewSubscription($input: ID!) {
-  renewSubscription(input: $input) {
-    ...Invoice
-  }
-}
-`;
-
 export const TagList = gql`
     query TagList($filter: TagFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: TagSort) {
   tags(
