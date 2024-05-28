@@ -31,16 +31,16 @@ export class Author {
   slug!: string
 
   @Field({nullable: true})
-  jobTitle!: string | null
+  jobTitle?: string
 
   @Field(type => GraphQLRichText, {nullable: true})
   bio!: Node[]
 
   @Field({nullable: true})
-  imageID!: string | null
+  imageID?: string
 
   @Field(() => [AuthorsLinks])
-  links!: AuthorsLinks[]
+  links?: AuthorsLinks[]
 }
 
 @ObjectType()

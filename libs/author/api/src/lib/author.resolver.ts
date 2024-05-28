@@ -15,16 +15,20 @@ import {
   CanGetAuthor,
   Permissions
 } from '@wepublish/permissions/api'
-import {UserInputError} from '@wepublish/api'
+import {AuthorDataloader} from './author.dataloader'
+import {UserInputError} from '@nestjs/apollo'
 
 @Resolver(() => Author)
 export class AuthorResolver {
-  constructor(private readonly authorService: AuthorService) {}
+  constructor(
+    private readonly authorService: AuthorService,
+    private readonly authorDataloader: AuthorDataloader
+  ) {}
 
   @Query(returns => Author)
   @Permissions(CanGetAuthor)
   async getAuthorsById(@Args() {id}: AuthorByIdArgs) {
-    const author = await this.authorService.getAuthorById(id)
+    const author = await this.authorDataloader.load(id)
     if (null === author) {
       throw new UserInputError('Author not found')
     }

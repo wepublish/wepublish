@@ -1,5 +1,10 @@
 import {Injectable} from '@nestjs/common'
-import {getMaxTake, graphQLSortOrderToPrisma, SortOrder} from '@wepublish/utils/api'
+import {
+  getMaxTake,
+  graphQLSortOrderToPrisma,
+  PrimeDataLoader,
+  SortOrder
+} from '@wepublish/utils/api'
 import {Prisma, PrismaClient} from '@prisma/client'
 import {
   CreateAuthorInput,
@@ -8,6 +13,7 @@ import {
   AuthorFilter,
   AuthorSort
 } from './author.model'
+import {AuthorDataloader} from './author.dataloader'
 
 const createAuthorOrder = (
   field: AuthorSort,
@@ -68,6 +74,7 @@ export const createAuthorFilter = (filter: Partial<AuthorFilter>): Prisma.Author
 export class AuthorService {
   constructor(private readonly prisma: PrismaClient) {}
 
+  @PrimeDataLoader(AuthorDataloader)
   async getAuthorById(id: string) {
     return this.prisma.author.findUnique({
       where: {
@@ -79,6 +86,7 @@ export class AuthorService {
     })
   }
 
+  @PrimeDataLoader(AuthorDataloader)
   async getAuthorBySlug(slug: string) {
     return this.prisma.author.findUnique({
       where: {
@@ -90,6 +98,7 @@ export class AuthorService {
     })
   }
 
+  @PrimeDataLoader(AuthorDataloader)
   async getAuthors({filter, sortedField, order, cursorId, skip, take}: GetAuthorsArgs) {
     {
       const orderBy = sortedField ? createAuthorOrder(sortedField, order) : {}
@@ -133,6 +142,7 @@ export class AuthorService {
     }
   }
 
+  @PrimeDataLoader(AuthorDataloader)
   async createAuthor(data: CreateAuthorInput) {
     const {links, tagIds, ...input} = data
 
@@ -150,6 +160,7 @@ export class AuthorService {
     })
   }
 
+  @PrimeDataLoader(AuthorDataloader)
   async updateAuthor(data: UpdateAuthorInput) {
     const {id, links, tagIds, ...input} = data
 
