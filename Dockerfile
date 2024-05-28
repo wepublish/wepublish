@@ -114,8 +114,8 @@ WORKDIR /app
 ENV NODE_ENV production
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nodejs
-COPY --from=builder-media /app/dist/apps/media/ .
-COPY --from=builder-media --chown=nodejs:nodejs /app/node_modules ./node_modules
+COPY --from=build-media /app/dist/apps/media/ .
+COPY --from=build-media --chown=nodejs:nodejs /app/node_modules ./node_modules
 USER nextjs
 EXPOSE 3000
 ENV PORT 3000
