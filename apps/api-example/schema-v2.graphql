@@ -126,6 +126,14 @@ input CreateNavigationInput {
   name: String!
 }
 
+input CreatePaymentMethodInput {
+  active: Boolean!
+  description: String!
+  name: String!
+  paymentProviderID: String!
+  slug: String!
+}
+
 input CreateUserRoleInput {
   name: String!
   permissionIDs: [String!]!
@@ -304,6 +312,7 @@ type Mutation {
 
   """Creates a new navigation."""
   createNavigation(navigation: CreateNavigationInput!): Navigation!
+  createPaymentMethod(paymentMethod: CreatePaymentMethodInput!): PaymentMethod!
 
   """Create a new subscription flow"""
   createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
@@ -329,6 +338,7 @@ type Mutation {
 
   """Deletes an existing navigation."""
   deleteNavigation(id: ID!): Navigation!
+  deletePaymentMethodById(id: ID!): PaymentMethod!
 
   """Delete an existing subscription flow"""
   deleteSubscriptionFlow(id: String!): [SubscriptionFlowModel!]!
@@ -361,6 +371,7 @@ type Mutation {
 
   """Updates an existing navigation."""
   updateNavigation(navigation: UpdateNavigationInput!): Navigation!
+  updatePaymentMethod(paymentMethod: UpdatePaymentMethodInput!): PaymentMethod!
 
   """Updates an existing setting."""
   updateSetting(name: SettingName!, value: GraphQLSettingValueType!): Setting!
@@ -422,6 +433,17 @@ type PaginatedUserRoles {
   nodes: [UserRole!]!
   pageInfo: PageInfo!
   totalCount: Float!
+}
+
+type PaymentMethod {
+  active: Boolean!
+  createdAt: DateTime!
+  description: String!
+  id: ID!
+  modifiedAt: DateTime!
+  name: String!
+  paymentProviderID: String!
+  slug: String!
 }
 
 type PaymentMethodRef {
@@ -490,6 +512,8 @@ type Query {
 
   """Returns a list of navigations."""
   getNavigations: [Navigation!]!
+  getPaymentMethodById(id: ID!): PaymentMethod!
+  getPaymentMethods: [PaymentMethod!]!
 
   """Returns permissions list"""
   getPermissions: [PermissionObject!]!
@@ -666,6 +690,15 @@ input UpdateNavigationInput {
   key: String!
   links: [BaseNavigationLinkInput!]!
   name: String!
+}
+
+input UpdatePaymentMethodInput {
+  active: Boolean
+  description: String
+  id: ID!
+  name: String
+  paymentProviderID: String
+  slug: String
 }
 
 input UpdateUserRoleInput {
