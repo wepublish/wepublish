@@ -41,7 +41,7 @@ exports[`UserRoleService should get user roles with pagination 1`] = `
       "name": "asc",
     },
     "skip": 0,
-    "take": 11,
+    "take": 3,
     "where": {
       "name": "Create",
     },

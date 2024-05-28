@@ -13,6 +13,7 @@ import {
   PermissionDataloader
 } from '@wepublish/permissions/api'
 import {PaginatedUserRoles, UserRole} from './user-role.model'
+import {UserRoleDataloader} from './user-role.dataloader'
 
 const userRoleQueryById = `
   query GetUserRoleById($id: ID!) {
@@ -78,6 +79,7 @@ const deleteUserRoleMutation = `
 describe('UserRoleResolver', () => {
   let app: INestApplication
   let userRoleServiceMock: {[method in keyof UserRoleService]?: jest.Mock}
+  let userRoleDataloader: {[method in keyof UserRoleDataloader]?: jest.Mock}
 
   beforeEach(async () => {
     userRoleServiceMock = {
@@ -86,6 +88,10 @@ describe('UserRoleResolver', () => {
       createUserRole: jest.fn(),
       updateUserRole: jest.fn(),
       deleteUserRoleById: jest.fn()
+    }
+
+    userRoleDataloader = {
+      load: jest.fn()
     }
 
     const module: TestingModule = await Test.createTestingModule({
@@ -98,6 +104,7 @@ describe('UserRoleResolver', () => {
       ],
       providers: [
         UserRoleResolver,
+        {provide: UserRoleDataloader, useValue: userRoleDataloader},
         {provide: UserRoleService, useValue: userRoleServiceMock},
         {provide: PermissionDataloader, useValue: new PermissionDataloader()}
       ]
