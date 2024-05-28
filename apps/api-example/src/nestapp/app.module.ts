@@ -76,6 +76,7 @@ import {ChallengeModule} from '@wepublish/challenge/api'
 import {MemberPlanModule} from '@wepublish/member-plan/api'
 import {SessionModule} from '@wepublish/session/api'
 import {UserSubscriptionModule} from '@wepublish/user-subscription/api'
+import {PaymentMethodModule} from '@wepublish/payment-method/api'
 
 @Global()
 @Module({
@@ -208,6 +209,7 @@ import {UserSubscriptionModule} from '@wepublish/user-subscription/api'
       },
       inject: [ConfigService, HttpService]
     }),
+    PaymentMethodModule,
     PaymentsModule.registerAsync({
       imports: [ConfigModule, PrismaModule],
       useFactory: async (config: ConfigService, prisma: PrismaClient) => {
