@@ -246,6 +246,9 @@ jobs:
                 operandTypes: [ '+', '-' ]
                 mode: 'formula'
                 targetSymbol: '?'
+          
+              mediaServer:
+                type: 'nova'
           editor:
             image: ghcr.io/wepublish/editor:${{ github.sha }}
             env:
