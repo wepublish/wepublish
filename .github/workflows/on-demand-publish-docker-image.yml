@@ -18,6 +18,9 @@ on:
       website_tags:
         required: true
         type: string
+      media_tags:
+        required: true
+        type: string
 
 jobs:
   build-and-push-docker-api:
@@ -111,7 +114,7 @@ jobs:
           target: media
           push: true
           tags: |
-            ${{ inputs.api_tags }}
+            ${{ inputs.media_tags }}
   build-and-push-website:
     name: Build and push website
     runs-on: ubuntu-latest

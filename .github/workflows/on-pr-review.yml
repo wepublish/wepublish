@@ -32,6 +32,8 @@ jobs:
         ghcr.io/wepublish/storybook:${{ github.sha }}
       website_tags: |
         ghcr.io/wepublish/website:${{ github.sha }}
+      media_tags: |
+        ghcr.io/wepublish/media:${{ github.sha }}
     secrets: inherit
 
   helm_deployment_deps:
