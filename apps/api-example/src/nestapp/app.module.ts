@@ -32,7 +32,8 @@ import {
   SettingModule,
   StatsModule,
   StripeCheckoutPaymentProvider,
-  StripePaymentProvider
+  StripePaymentProvider,
+  MemberPlanModule
 } from '@wepublish/api'
 import {ApiModule, PrismaModule} from '@wepublish/nest-modules'
 import bodyParser from 'body-parser'
@@ -242,6 +243,7 @@ import {UserRoleModule} from '@wepublish/user-role/api'
     AuthorModule,
     PaymentMethodModule,
     UserRoleModule,
+    MemberPlanModule,
     BlockStylesModule,
     EventsImportModule.registerAsync({
       useFactory: (agendaBasel: AgendaBaselService, kulturZueri: KulturZueriService) => [

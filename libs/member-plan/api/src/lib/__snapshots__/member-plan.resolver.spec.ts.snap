@@ -1,0 +1,177 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`MemberPlanResolver Mutation: createMemberPlan 1`] = `
+{
+  "data": {
+    "createMemberPlan": {
+      "id": "2",
+    },
+  },
+}
+`;
+
+exports[`MemberPlanResolver Mutation: deleteMemberPlan 1`] = `
+{
+  "data": {
+    "deleteMemberPlanById": {
+      "id": "1",
+    },
+  },
+}
+`;
+
+exports[`MemberPlanResolver Mutation: updateMemberPlan 1`] = `
+{
+  "data": {
+    "updateMemberPlan": {
+      "id": "1",
+    },
+  },
+}
+`;
+
+exports[`MemberPlanResolver Query: getActiveMemberPlans 1`] = `
+{
+  "data": {
+    "getActiveMemberPlans": [
+      {
+        "active": true,
+        "amountPerMonthMin": 10,
+        "createdAt": "2022-01-01T00:00:00.000Z",
+        "description": "description",
+        "extendable": true,
+        "id": "1",
+        "imageID": null,
+        "maxCount": 100,
+        "modifiedAt": "2022-01-02T00:00:00.000Z",
+        "name": "Member Plan 1",
+        "slug": "member-plan-1",
+        "tags": [
+          "tag1",
+          "tag2",
+        ],
+      },
+    ],
+  },
+}
+`;
+
+exports[`MemberPlanResolver Query: getMemberPlan by id 1`] = `
+{
+  "data": {
+    "getMemberPlanById": {
+      "active": true,
+      "amountPerMonthMin": 10,
+      "createdAt": "2022-01-01T00:00:00.000Z",
+      "description": "description",
+      "extendable": true,
+      "id": "1",
+      "imageID": null,
+      "maxCount": 100,
+      "modifiedAt": "2022-01-02T00:00:00.000Z",
+      "name": "Member Plan 1",
+      "slug": "member-plan-1",
+      "tags": [
+        "tag1",
+        "tag2",
+      ],
+    },
+  },
+}
+`;
+
+exports[`MemberPlanResolver Query: getMemberPlan by id: Not found 1`] = `
+{
+  "data": null,
+  "errors": [
+    {
+      "extensions": {
+        "code": "BAD_USER_INPUT",
+      },
+      "locations": [
+        {
+          "column": 7,
+          "line": 3,
+        },
+      ],
+      "message": "Member plan not found",
+      "path": [
+        "getMemberPlanById",
+      ],
+    },
+  ],
+}
+`;
+
+exports[`MemberPlanResolver Query: getMemberPlan by slug 1`] = `
+{
+  "data": {
+    "getMemberPlanBySlug": {
+      "active": true,
+      "amountPerMonthMin": 10,
+      "createdAt": "2022-01-01T00:00:00.000Z",
+      "description": "description",
+      "extendable": true,
+      "id": "1",
+      "imageID": null,
+      "maxCount": 100,
+      "modifiedAt": "2022-01-02T00:00:00.000Z",
+      "name": "Member Plan 1",
+      "slug": "member-plan-1",
+      "tags": [
+        "tag1",
+        "tag2",
+      ],
+    },
+  },
+}
+`;
+
+exports[`MemberPlanResolver Query: getMemberPlan by slug: Not found 1`] = `
+{
+  "data": null,
+  "errors": [
+    {
+      "extensions": {
+        "code": "BAD_USER_INPUT",
+      },
+      "locations": [
+        {
+          "column": 7,
+          "line": 3,
+        },
+      ],
+      "message": "Member plan not found",
+      "path": [
+        "getMemberPlanBySlug",
+      ],
+    },
+  ],
+}
+`;
+
+exports[`MemberPlanResolver Query: getMemberPlans list 1`] = `
+{
+  "data": {
+    "getMemberPlans": [
+      {
+        "active": true,
+        "amountPerMonthMin": 10,
+        "createdAt": "2022-01-01T00:00:00.000Z",
+        "description": "description",
+        "extendable": true,
+        "id": "1",
+        "imageID": null,
+        "maxCount": 100,
+        "modifiedAt": "2022-01-02T00:00:00.000Z",
+        "name": "Member Plan 1",
+        "slug": "member-plan-1",
+        "tags": [
+          "tag1",
+          "tag2",
+        ],
+      },
+    ],
+  },
+}
+`;
