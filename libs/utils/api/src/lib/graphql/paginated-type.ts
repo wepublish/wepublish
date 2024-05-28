@@ -1,5 +1,5 @@
 import {Type} from '@nestjs/common'
-import {Field, Int, ObjectType} from '@nestjs/graphql'
+import {ArgsType, Field, Int, ObjectType} from '@nestjs/graphql'
 
 @ObjectType()
 export class PageInfo {
@@ -36,4 +36,16 @@ export function PaginatedType<T>(classRef: Type<T>): Type<PaginatedObjectType<T>
   }
 
   return PaginatedObjectTypeImpl
+}
+
+@ArgsType()
+export class PaginatedArgsType {
+  @Field(type => Int, {nullable: true, defaultValue: 10})
+  take?: number
+
+  @Field(type => Int, {nullable: true, defaultValue: 0})
+  skip?: number
+
+  @Field({nullable: true})
+  cursorId?: string
 }
