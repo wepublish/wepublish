@@ -1,4 +1,4 @@
-import {css, styled, useTheme} from '@mui/material'
+import {styled} from '@mui/material'
 import {useUser} from '@wepublish/authentication/website'
 import {
   Block,

@@ -17,7 +17,7 @@ import {AuthorBox} from './author-box'
 import frageDesTagesLogo from './frage-des-tages.svg'
 import {InfoBox} from './info-box'
 
-const countComments = (comments: ApiV1.Comment[]): number => {
+const countComments = (comments: ApiV1.Comment[] | []): number => {
   let total = comments.length
 
   for (const comment of comments) {
