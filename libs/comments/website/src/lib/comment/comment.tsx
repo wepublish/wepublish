@@ -34,20 +34,12 @@ export const CommentWrapper = styled('article')<{highlight?: boolean}>`
     `}
 `
 
-export const CommentHeader = styled('header')<{isTopComment?: boolean}>`
+export const CommentHeader = styled('header')`
   display: grid;
   grid-template-columns: max-content 1fr;
   gap: ${({theme}) => theme.spacing(2)};
   align-items: center;
   padding: ${({theme}) => theme.spacing(1.5)};
-
-  ${({isTopComment, theme}) =>
-    isTopComment &&
-    css`
-      background-color: ${theme.palette.secondary.light};
-      border-top-right-radius: ${theme.spacing(2.5)};
-      border-top-left-radius: ${theme.spacing(2.5)};
-    `}
 `
 
 export const CommentHeaderContent = styled('div')``
@@ -82,14 +74,8 @@ export const CommentFlair = styled('div')<{isGuest: boolean}>`
     `}
 `
 
-export const CommentContent = styled('div')<{isTopComment?: boolean}>`
+export const CommentContent = styled('div')`
   padding: ${({theme}) => theme.spacing(1.5)};
-
-  ${({isTopComment, theme}) =>
-    isTopComment &&
-    css`
-      background-color: ${theme.palette.secondary.light};
-    `}
 `
 
 export const CommentChildren = styled('aside')`
@@ -108,7 +94,6 @@ export const CommentActions = styled('div')`
 
 export const Comment = ({
   id,
-  isTopComment,
   className,
   text,
   authorType,
@@ -143,7 +128,7 @@ export const Comment = ({
 
   return (
     <CommentWrapper className={className} id={id} highlight={commentId === id}>
-      <CommentHeader isTopComment={isTopComment}>
+      <CommentHeader>
         {image && <Image image={image} square css={avatarStyles} />}
         {!image && <MdPerson css={avatarStyles} />}
 
@@ -166,7 +151,7 @@ export const Comment = ({
       </CommentHeader>
 
       {showContent && (
-        <CommentContent isTopComment={isTopComment}>
+        <CommentContent>
           {title && (
             <Paragraph component="h1" gutterBottom={false}>
               <strong>{title}</strong>

@@ -60,7 +60,6 @@ export const CommentList = ({
         <CommentListItem
           key={comment.id}
           {...comment}
-          isTopComment={index <= 1}
           ratingSystem={data.ratingSystem}
           openEditorsState={openEditorsState}
           openEditorsStateDispatch={dispatch}
