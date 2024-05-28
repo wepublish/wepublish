@@ -30,7 +30,8 @@ import {
   PayrexxFactory,
   HealthModule,
   NeverChargePaymentProvider,
-  NavigationModule
+  NavigationModule,
+  AuthorModule
 } from '@wepublish/api'
 import {ApiModule, PrismaModule} from '@wepublish/nest-modules'
 import bodyParser from 'body-parser'
@@ -237,6 +238,7 @@ import {UserRoleModule} from '@wepublish/user-role/api'
     SettingModule,
     EventModule,
     NavigationModule,
+    AuthorModule,
     UserRoleModule,
     BlockStylesModule,
     EventsImportModule.registerAsync({
