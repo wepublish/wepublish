@@ -2,6 +2,11 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+input ActiveMemberPlansFilter {
+  name: String
+  tags: [String!]
+}
+
 type AllowedSettingVals {
   boolChoice: Boolean
   stringChoice: [String!]
@@ -118,6 +123,18 @@ input CreateAuthorInput {
   name: String!
   slug: String!
   tagIds: [String!]!
+}
+
+input CreateMemberPlanInput {
+  active: Boolean!
+  amountPerMonthMin: Float!
+  description: String!
+  extendable: Boolean!
+  imageID: String
+  maxCount: Float
+  name: String!
+  slug: String!
+  tags: [String!]!
 }
 
 input CreateNavigationInput {
@@ -293,9 +310,35 @@ type MailTemplateWithUrlAndStatusModel {
   url: String!
 }
 
+type MemberPlan {
+  active: Boolean!
+  amountPerMonthMin: Float!
+  createdAt: DateTime!
+  description: String!
+  extendable: Boolean!
+  id: ID!
+  imageID: String
+  maxCount: Float
+  modifiedAt: DateTime!
+  name: String!
+  slug: String!
+  tags: [String!]!
+}
+
 type MemberPlanRef {
   id: String!
   name: String!
+}
+
+enum MemberPlanSort {
+  CreatedAt
+  ModifiedAt
+}
+
+input MemberPlansFilter {
+  active: Boolean
+  name: String
+  tags: [String!]
 }
 
 type Mutation {
@@ -309,6 +352,7 @@ type Mutation {
 
   """Creates a new event."""
   createEvent(description: RichText, endsAt: DateTime, imageId: String, location: String, name: String!, startsAt: DateTime!, tagIds: [String!]): Event!
+  createMemberPlan(memberPlan: CreateMemberPlanInput!): MemberPlan!
 
   """Creates a new navigation."""
   createNavigation(navigation: CreateNavigationInput!): Navigation!
@@ -335,6 +379,7 @@ type Mutation {
 
   """Deletes an existing event."""
   deleteEvent(id: String!): Event!
+  deleteMemberPlanById(id: ID!): MemberPlan!
 
   """Deletes an existing navigation."""
   deleteNavigation(id: ID!): Navigation!
@@ -368,6 +413,7 @@ type Mutation {
 
   """Updates an existing event."""
   updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, location: String, name: String, startsAt: DateTime, tagIds: [String!]): Event!
+  updateMemberPlan(memberPlan: UpdateMemberPlanInput!): MemberPlan!
 
   """Updates an existing navigation."""
   updateNavigation(navigation: UpdateNavigationInput!): Navigation!
@@ -500,9 +546,13 @@ type Query {
 
   "\n      Returns the expected revenue for the time period given.\n      Excludes cancelled or manually set as paid invoices.\n    "
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
+  getActiveMemberPlans(cursorId: String, filter: ActiveMemberPlansFilter, order: SortOrder, skip: Int = 0, sort: MemberPlanSort, take: Int = 10): [MemberPlan!]!
   getAuthorBySlug(slug: String!): Author!
   getAuthors(cursorId: String, filter: AuthorFilter, order: SortOrder = Ascending, skip: Int = 0, sortedField: AuthorSort, take: Int = 10): PaginatedAuthors!
   getAuthorsById(id: ID!): Author!
+  getMemberPlanById(id: ID!): MemberPlan!
+  getMemberPlanBySlug(slug: String!): MemberPlan!
+  getMemberPlans(cursorId: String, filter: MemberPlansFilter, order: SortOrder, skip: Int = 0, sort: MemberPlanSort, take: Int = 10): [MemberPlan!]!
 
   """Returns a navigation by id."""
   getNavigationById(id: ID!): Navigation!
@@ -683,6 +733,19 @@ input UpdateAuthorInput {
   name: String
   slug: String
   tagIds: [String!]
+}
+
+input UpdateMemberPlanInput {
+  active: Boolean!
+  amountPerMonthMin: Float!
+  description: String!
+  extendable: Boolean!
+  id: ID!
+  imageID: String
+  maxCount: Float
+  name: String!
+  slug: String!
+  tags: [String!]!
 }
 
 input UpdateNavigationInput {
