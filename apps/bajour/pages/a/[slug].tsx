@@ -8,6 +8,7 @@ import {
   ArticleWrapper,
   BuilderArticleListProps,
   CommentListContainer,
+  PollBlock,
   useWebsiteBuilder,
   WebsiteBuilderProvider
 } from '@wepublish/website'
@@ -16,6 +17,7 @@ import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 
 import {BriefingNewsletter} from '../../src/components/briefing-newsletter/briefing-newsletter'
+import {FrageDesTagesArticle} from '../../src/components/frage-des-tages/frage-des-tages-article'
 import {Container} from '../../src/components/layout/container'
 import {TeaserSlider} from '../../src/components/website-builder-overwrites/blocks/teaser-slider/teaser-slider'
 
@@ -49,7 +51,9 @@ export default function ArticleBySlug() {
   const isFDT = data?.article?.tags.includes('frage-des-tages')
 
   return (
-    <WebsiteBuilderProvider ArticleList={RelatedArticleSlider}>
+    <WebsiteBuilderProvider
+      ArticleList={RelatedArticleSlider}
+      blocks={{Poll: isFDT ? FrageDesTagesArticle : PollBlock}}>
       <Container>
         <ArticleContainer slug={slug as string} />
 

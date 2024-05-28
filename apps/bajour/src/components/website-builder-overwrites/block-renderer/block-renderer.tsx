@@ -19,9 +19,7 @@ import {isAnyBriefing} from '../../briefing/is-briefing'
 import {ContextBox} from '../../context-box/context-box'
 import {isContextBox} from '../../context-box/is-context-box'
 import {FrageDesTages} from '../../frage-des-tages/frage-des-tages'
-import {FrageDesTagesArticle} from '../../frage-des-tages/frage-des-tages-article'
 import {isFrageDesTages} from '../../frage-des-tages/is-frage-des-tages'
-import {isFrageDesTagesArticle} from '../../frage-des-tages/is-frage-des-tages-article'
 import {isSmallTeaser, SmallTeaser} from '../blocks/small-teaser'
 import {isTeaserSlider, TeaserSlider} from '../blocks/teaser-slider/teaser-slider'
 import {isWideTeaser, WideTeaser} from '../blocks/wide-teaser'
@@ -48,7 +46,6 @@ export const BajourBlockRenderer = (props: BuilderBlockRendererProps) => {
       cond([
         [isOldRelatedArticles, block => <Fragment />],
         [isFrageDesTages, block => <FrageDesTages {...block} />],
-        [isFrageDesTagesArticle, block => <FrageDesTagesArticle {...block} />],
         [isContextBox, block => <ContextBox {...block} />],
         [isTeaserSlider, block => <TeaserSlider {...block} />],
         [isBestOfWePublish, block => <BestOfWePublish {...block} />],
