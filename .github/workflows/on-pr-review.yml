@@ -81,7 +81,7 @@ jobs:
             rootUser: ${S3_ACCESS_KEY_ID}
             rootPassword: ${S3_SECRET_ACCESS_KEY}
           disableWebUI: true
-          defaultBuckets: ${S3_BUCKET}
+          defaultBuckets: wepublish-staff,wepublish-transformed
           persistence:
             enabled: false
           service:
@@ -95,18 +95,13 @@ jobs:
         run: |
           cat > values.yaml <<EOF
           deployment:
-            image: seccomch/wep-media-light:latest
+            image: ghcr.io/wepublish/media:${{ github.sha }}
             env:
               TOKEN: media-token
-              DEBUG: 'false'
-              NUM_CLUSTERS: '1'
-              AWS_S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID}
-              AWS_S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY}
-              AWS_S3_BUCKET: ${S3_BUCKET}
-              AWS_S3_REGION: 'us-east-1'
-              AWS_S3_ENDPOINT: 'http://review-${{ github.event.pull_request.number }}-minio.reviews.svc.cluster.local:9000'
-              AWS_STORAGE_CLASS: 'REDUCED_REDUNDANCY'
-              AWS_S3_FORCE_PATH_STYLE: 'true'
+              S3_ACCESS_KEY: ${S3_ACCESS_KEY_ID}
+              S3_SECRET_KEY: ${S3_SECRET_ACCESS_KEY}
+              S3_ENDPOINT: 'http://review-${{ github.event.pull_request.number }}-minio.reviews.svc.cluster.local'
+              S3_PORT: 9000
             replicaCount: 1
           service:
             type: ClusterIP
