@@ -83,7 +83,11 @@ exports[`CommentRatings should render AnonymousUserRatings 1`] = `
                   fill="none"
                 />
                 <path
-                  d="m22 9.24-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
                 />
               </svg>
             </span>
@@ -121,7 +125,11 @@ exports[`CommentRatings should render AnonymousUserRatings 1`] = `
                   fill="none"
                 />
                 <path
-                  d="m22 9.24-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
                 />
               </svg>
             </span>
@@ -159,7 +167,11 @@ exports[`CommentRatings should render AnonymousUserRatings 1`] = `
                   fill="none"
                 />
                 <path
-                  d="m22 9.24-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
                 />
               </svg>
             </span>
@@ -197,7 +209,11 @@ exports[`CommentRatings should render AnonymousUserRatings 1`] = `
                   fill="none"
                 />
                 <path
-                  d="m22 9.24-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
                 />
               </svg>
             </span>
@@ -353,7 +369,11 @@ exports[`CommentRatings should render AnonymousUserRatings 1`] = `
                   fill="none"
                 />
                 <path
-                  d="m22 9.24-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
                 />
               </svg>
             </span>
@@ -391,7 +411,11 @@ exports[`CommentRatings should render AnonymousUserRatings 1`] = `
                   fill="none"
                 />
                 <path
-                  d="m22 9.24-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
                 />
               </svg>
             </span>
@@ -429,7 +453,11 @@ exports[`CommentRatings should render AnonymousUserRatings 1`] = `
                   fill="none"
                 />
                 <path
-                  d="m22 9.24-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
                 />
               </svg>
             </span>
@@ -627,7 +655,11 @@ exports[`CommentRatings should render AnonymousUserRatings 1`] = `
                   fill="none"
                 />
                 <path
-                  d="m22 9.24-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
                 />
               </svg>
             </span>
@@ -665,7 +697,11 @@ exports[`CommentRatings should render AnonymousUserRatings 1`] = `
                   fill="none"
                 />
                 <path
-                  d="m22 9.24-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
                 />
               </svg>
             </span>
@@ -2110,7 +2146,7 @@ exports[`CommentRatings should render Rate 1`] = `
               </span>
               <span
                 class="MuiRating-visuallyHidden"
-@@ -52,11 +56,11 @@
+@@ -52,27 +56,31 @@
             <label
               class="css-dqr9h-MuiRating-label"
               for=":r1o:"
@@ -2123,17 +2159,21 @@ exports[`CommentRatings should render Rate 1`] = `
                   fill="currentColor"
                   height="1em"
                   stroke="currentColor"
-@@ -68,11 +72,15 @@
+                  stroke-width="0"
+                  viewBox="0 0 24 24"
+                  width="1em"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
++                 <path
++                   d="M0 0h24v24H0z"
++                   fill="none"
++                 />
                   <path
                     d="M0 0h24v24H0z"
                     fill="none"
                   />
                   <path
 -                   d="m22 9.24-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"
-+                   d="M0 0h24v24H0z"
-+                   fill="none"
-+                 />
-+                 <path
 +                   d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
                   />
                 </svg>
@@ -2153,7 +2193,7 @@ exports[`CommentRatings should render Rate 1`] = `
                   fill="currentColor"
                   height="1em"
                   stroke="currentColor"
-@@ -106,11 +114,15 @@
+@@ -106,12 +114,16 @@
                   <path
                     d="M0 0h24v24H0z"
                     fill="none"
@@ -2162,14 +2202,15 @@ exports[`CommentRatings should render Rate 1`] = `
 -                   d="m22 9.24-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"
 +                   d="M0 0h24v24H0z"
 +                   fill="none"
-+                 />
+                  />
 +                 <path
 +                   d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
-                  />
++                 />
                 </svg>
               </span>
               <span
                 class="MuiRating-visuallyHidden"
+              >
 @@ -128,27 +140,31 @@
             <label
               class="css-dqr9h-MuiRating-label"
@@ -2216,7 +2257,24 @@ exports[`CommentRatings should render Rate 1`] = `
                 <svg
                   fill="currentColor"
                   height="1em"
-                  stroke="currentColor""
+                  stroke="currentColor"
+@@ -182,11 +198,15 @@
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+-                   d="m22 9.24-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"
++                   d="M0 0h24v24H0z"
++                   fill="none"
++                 />
++                 <path
++                   d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
+                  />
+                </svg>
+              </span>
+              <span
+                class="MuiRating-visuallyHidden""
 `;
 
 exports[`CommentRatings should render ReadOnly 1`] = `
@@ -2983,7 +3041,11 @@ exports[`CommentRatings should render UserRatings 1`] = `
                   fill="none"
                 />
                 <path
-                  d="m22 9.24-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
                 />
               </svg>
             </span>
@@ -3021,7 +3083,11 @@ exports[`CommentRatings should render UserRatings 1`] = `
                   fill="none"
                 />
                 <path
-                  d="m22 9.24-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
                 />
               </svg>
             </span>
@@ -3059,7 +3125,11 @@ exports[`CommentRatings should render UserRatings 1`] = `
                   fill="none"
                 />
                 <path
-                  d="m22 9.24-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
                 />
               </svg>
             </span>
@@ -3257,7 +3327,11 @@ exports[`CommentRatings should render UserRatings 1`] = `
                   fill="none"
                 />
                 <path
-                  d="m22 9.24-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
                 />
               </svg>
             </span>
@@ -3295,7 +3369,11 @@ exports[`CommentRatings should render UserRatings 1`] = `
                   fill="none"
                 />
                 <path
-                  d="m22 9.24-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"
+                  d="M0 0h24v24H0z"
+                  fill="none"
+                />
+                <path
+                  d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
                 />
               </svg>
             </span>
@@ -3614,7 +3692,7 @@ exports[`CommentRatings should render WithRateError 1`] = `
               </span>
               <span
                 class="MuiRating-visuallyHidden"
-@@ -52,27 +56,31 @@
+@@ -52,11 +56,11 @@
             <label
               class="css-dqr9h-MuiRating-label"
               for=":r38:"
@@ -3627,21 +3705,17 @@ exports[`CommentRatings should render WithRateError 1`] = `
                   fill="currentColor"
                   height="1em"
                   stroke="currentColor"
-                  stroke-width="0"
-                  viewBox="0 0 24 24"
-                  width="1em"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-+                 <path
-+                   d="M0 0h24v24H0z"
-+                   fill="none"
-+                 />
+@@ -68,11 +72,15 @@
                   <path
                     d="M0 0h24v24H0z"
                     fill="none"
                   />
                   <path
 -                   d="m22 9.24-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"
++                   d="M0 0h24v24H0z"
++                   fill="none"
++                 />
++                 <path
 +                   d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
                   />
                 </svg>
@@ -3721,7 +3795,24 @@ exports[`CommentRatings should render WithRateError 1`] = `
                   fill="currentColor"
                   height="1em"
                   stroke="currentColor"
-@@ -217,9 +233,34 @@
+@@ -182,11 +198,15 @@
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+-                   d="m22 9.24-7.19-.62L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.63-7.03L22 9.24zM12 15.4l-3.76 2.27 1-4.28-3.32-2.88 4.38-.38L12 6.1l1.71 4.04 4.38.38-3.32 2.88 1 4.28L12 15.4z"
++                   d="M0 0h24v24H0z"
++                   fill="none"
++                 />
++                 <path
++                   d="M12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"
+                  />
+                </svg>
+              </span>
+              <span
+                class="MuiRating-visuallyHidden"
+@@ -217,9 +237,34 @@
               >
                 Empty
               </span>
