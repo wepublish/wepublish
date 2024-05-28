@@ -1,6 +1,5 @@
-import {css, styled, Theme, useTheme} from '@mui/material'
+import {css, styled} from '@mui/material'
 import {BuilderQuoteBlockProps, useWebsiteBuilder} from '@wepublish/website'
-import {useMemo} from 'react'
 
 export const BajourQuoteBlockWrapper = styled('blockquote')<{withImage: boolean}>`
   font-style: italic;
@@ -68,33 +67,29 @@ const QuoteImage = styled('div')`
   }
 `
 
-const getQuoteStyles = (theme: Theme) => css`
+const BajourQuoteQuote = styled('p')`
   font-size: 20px;
   font-weight: 300;
   line-height: 1.25;
 
-  ${theme.breakpoints.up('md')} {
+  ${({theme}) => theme.breakpoints.up('md')} {
     font-size: 32px;
   }
 `
 
-const getAuthorStyles = (theme: Theme) => css`
+const BajourQuoteAuthor = styled('cite')`
   display: inline-block;
   font-size: 0.8rem;
-  margin-top: ${theme.spacing(1)};
+  margin-top: ${({theme}) => theme.spacing(1)};
   font-weight: 300;
 
-  ${theme.breakpoints.up('md')} {
-    margin-top: ${theme.spacing(2)};
+  ${({theme}) => theme.breakpoints.up('md')} {
+    margin-top: ${({theme}) => theme.spacing(2)};
     font-size: 1rem;
   }
 `
 
 export const BajourQuoteBlock = ({quote, author, image, className}: BuilderQuoteBlockProps) => {
-  const theme = useTheme()
-  const quoteStyles = useMemo(() => getQuoteStyles(theme), [theme])
-  const authorStyles = useMemo(() => getAuthorStyles(theme), [theme])
-
   const {
     elements: {H4, Image, Paragraph}
   } = useWebsiteBuilder()
@@ -107,11 +102,9 @@ export const BajourQuoteBlock = ({quote, author, image, className}: BuilderQuote
         </QuoteImage>
       )}
       <BajourQuoteContent>
-        <H4 component="p" css={quoteStyles}>
-          « {quote} »
-        </H4>
+        <H4 component={BajourQuoteQuote}>{quote}</H4>
         {author && (
-          <Paragraph component="cite" css={authorStyles} gutterBottom={false}>
+          <Paragraph component={BajourQuoteAuthor} gutterBottom={false}>
             {author}
           </Paragraph>
         )}
