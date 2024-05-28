@@ -146,4 +146,11 @@ storybook:
   url: https://storybook
   env: {}
 
+media:
+  image: ghcr.io/wepublish/media
+  env: {}
+  envFromSecretRefName:
+  properties: {}
+  replicaCount: 1
+
 labels: {}
