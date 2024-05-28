@@ -1,0 +1,114 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PaymentMethodResolver Mutation: createPaymentMethod 1`] = `
+{
+  "data": {
+    "createPaymentMethod": {
+      "active": true,
+      "createdAt": "2023-01-01T00:00:00.000Z",
+      "description": "Description of new payment method",
+      "id": "3",
+      "modifiedAt": "2023-01-01T00:00:00.000Z",
+      "name": "New Payment Method",
+      "paymentProviderID": "provider-3",
+      "slug": "new-payment-method",
+    },
+  },
+}
+`;
+
+exports[`PaymentMethodResolver Mutation: deletePaymentMethod 1`] = `
+{
+  "data": {
+    "deletePaymentMethodById": {
+      "id": "1",
+    },
+  },
+}
+`;
+
+exports[`PaymentMethodResolver Mutation: updatePaymentMethod 1`] = `
+{
+  "data": {
+    "updatePaymentMethod": {
+      "active": true,
+      "createdAt": "2023-01-01T00:00:00.000Z",
+      "description": "Updated description",
+      "id": "1",
+      "modifiedAt": "2023-01-01T00:00:00.000Z",
+      "name": "Updated Payment Method",
+      "paymentProviderID": "provider-1",
+      "slug": "updated-payment-method",
+    },
+  },
+}
+`;
+
+exports[`PaymentMethodResolver Query: getPaymentMethod by id 1`] = `
+{
+  "data": {
+    "getPaymentMethodById": {
+      "active": true,
+      "createdAt": "2023-01-01T00:00:00.000Z",
+      "description": "A standard credit card payment method",
+      "id": "1",
+      "modifiedAt": "2023-01-01T00:00:00.000Z",
+      "name": "Credit Card",
+      "paymentProviderID": "provider-1",
+      "slug": "credit-card",
+    },
+  },
+}
+`;
+
+exports[`PaymentMethodResolver Query: getPaymentMethod by id: Not found 1`] = `
+{
+  "data": null,
+  "errors": [
+    {
+      "extensions": {
+        "code": "BAD_USER_INPUT",
+      },
+      "locations": [
+        {
+          "column": 5,
+          "line": 3,
+        },
+      ],
+      "message": "Payment method not found",
+      "path": [
+        "getPaymentMethodById",
+      ],
+    },
+  ],
+}
+`;
+
+exports[`PaymentMethodResolver Query: getPaymentMethods list 1`] = `
+{
+  "data": {
+    "getPaymentMethods": [
+      {
+        "active": true,
+        "createdAt": "2023-01-01T00:00:00.000Z",
+        "description": "A standard credit card payment method",
+        "id": "1",
+        "modifiedAt": "2023-01-01T00:00:00.000Z",
+        "name": "Credit Card",
+        "paymentProviderID": "provider-1",
+        "slug": "credit-card",
+      },
+      {
+        "active": true,
+        "createdAt": "2023-01-01T00:00:00.000Z",
+        "description": "A PayPal payment method",
+        "id": "2",
+        "modifiedAt": "2023-01-01T00:00:00.000Z",
+        "name": "PayPal",
+        "paymentProviderID": "provider-2",
+        "slug": "paypal",
+      },
+    ],
+  },
+}
+`;

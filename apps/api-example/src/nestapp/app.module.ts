@@ -6,11 +6,13 @@ import {ScheduleModule} from '@nestjs/schedule'
 import {
   AgendaBaselService,
   AuthenticationModule,
+  AuthorModule,
+  BexioPaymentProvider,
   ConsentModule,
-  StatsModule,
   DashboardModule,
   EventsImportModule,
   GraphQLRichText,
+  HealthModule,
   KarmaMediaAdapter,
   KulturZueriService,
   MailchimpMailProvider,
@@ -18,20 +20,19 @@ import {
   MailsModule,
   MediaAdapterService,
   MembershipModule,
+  NavigationModule,
+  NeverChargePaymentProvider,
   PaymentProvider,
   PaymentsModule,
+  PaymentMethodModule,
+  PayrexxFactory,
   PayrexxPaymentProvider,
   PayrexxSubscriptionPaymentProvider,
   PermissionModule,
   SettingModule,
+  StatsModule,
   StripeCheckoutPaymentProvider,
-  StripePaymentProvider,
-  BexioPaymentProvider,
-  PayrexxFactory,
-  HealthModule,
-  NeverChargePaymentProvider,
-  NavigationModule,
-  AuthorModule
+  StripePaymentProvider
 } from '@wepublish/api'
 import {ApiModule, PrismaModule} from '@wepublish/nest-modules'
 import bodyParser from 'body-parser'
@@ -239,6 +240,7 @@ import {UserRoleModule} from '@wepublish/user-role/api'
     EventModule,
     NavigationModule,
     AuthorModule,
+    PaymentMethodModule,
     UserRoleModule,
     BlockStylesModule,
     EventsImportModule.registerAsync({
