@@ -101,7 +101,7 @@ CMD ["bash", "./start.sh"]
 
 FROM node:18.20.3-alpine AS base-media
 FROM base-media AS build-media
-RUN apk add --no-cache --update libc6-compat alpine-sdk
+# RUN apk add --no-cache --update libc6-compat alpine-sdk
 WORKDIR /app
 COPY . .
 COPY ./apps/media/package.json ./package.json
@@ -110,15 +110,15 @@ RUN npm ci
 RUN npx nx build media
 
 FROM base-media AS media
-WORKDIR /app
-ENV NODE_ENV production
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nodejs
+ENV NODE_ENV=production
+MAINTAINER WePublish Foundation
+WORKDIR /wepublish
+RUN addgroup --system --gid 1001 wepublish
+RUN adduser --system --uid 1001 wepublish
 COPY --from=build-media /app/dist/apps/media/ .
-COPY --from=build-media --chown=nodejs:nodejs /app/node_modules ./node_modules
-USER nextjs
-EXPOSE 3000
-ENV PORT 3000
+COPY --from=build-media --chown=wepublish:wepublish /app/node_modules ./node_modules
+USER wepublish
+EXPOSE 4100
 CMD ["node", "main.js"]
 
 
