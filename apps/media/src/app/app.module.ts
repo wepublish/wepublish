@@ -1,13 +1,7 @@
 import {Module} from '@nestjs/common'
 
 import {AppController} from './app.controller'
-import {
-  MediaService,
-  MediaServiceModule,
-  StorageClient,
-  StorageClientModule,
-  TokenModule
-} from '@wepublish/media/api'
+import {MediaServiceModule, StorageClientModule, TokenModule} from '@wepublish/media/api'
 import {ConfigModule, ConfigService} from '@nestjs/config'
 import {MulterModule} from '@nestjs/platform-express'
 import {PassportModule} from '@nestjs/passport'
