@@ -11,7 +11,7 @@ export class UserRole {
   name!: string
 
   @Field(() => String, {nullable: true})
-  description?: string
+  description!: string | null
 
   @Field(() => Boolean)
   systemRole!: boolean
@@ -20,7 +20,7 @@ export class UserRole {
   permissionIDs!: string[]
 
   @Field(() => [PermissionObject], {nullable: true})
-  permissions!: PermissionObject[]
+  permissions?: PermissionObject[]
 }
 
 @ObjectType()

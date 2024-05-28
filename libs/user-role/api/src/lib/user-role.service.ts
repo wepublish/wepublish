@@ -1,12 +1,14 @@
 import {Injectable} from '@nestjs/common'
 import {CreateUserRoleInput, GetUserRolesArgs, UpdateUserRoleInput} from './user-role.model'
-import {getMaxTake} from '@wepublish/utils/api'
+import {getMaxTake, PrimeDataLoader} from '@wepublish/utils/api'
 import {PrismaClient} from '@prisma/client'
+import {UserRoleDataloader} from './user-role.dataloader'
 
 @Injectable()
 export class UserRoleService {
   constructor(private prisma: PrismaClient) {}
 
+  @PrimeDataLoader(UserRoleDataloader)
   getUserRoleById(id: string) {
     return this.prisma.userRole.findUnique({
       where: {
@@ -15,6 +17,7 @@ export class UserRoleService {
     })
   }
 
+  @PrimeDataLoader(UserRoleDataloader)
   async getUserRoles({filter: where, ...pagination}: GetUserRolesArgs) {
     const {skip, take, cursorId} = pagination
     const [totalCount, userroles] = await Promise.all([
@@ -51,12 +54,14 @@ export class UserRoleService {
     }
   }
 
+  @PrimeDataLoader(UserRoleDataloader)
   createUserRole(data: CreateUserRoleInput) {
     return this.prisma.userRole.create({
       data: {...data, systemRole: false}
     })
   }
 
+  @PrimeDataLoader(UserRoleDataloader)
   async updateUserRole({id, ...data}: UpdateUserRoleInput) {
     const role = await this.prisma.userRole.findUnique({where: {id}})
     if (role?.systemRole) {

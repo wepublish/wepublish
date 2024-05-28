@@ -31,10 +31,12 @@ export function PrimeDataLoader<T extends Primeable<unknown>>(dataloader: Type<T
         ? resultItem.nodes
         : [resultItem]
 
+      console.log({results})
       for (const result of results) {
         if ('id' in result) {
           const that = this as any
           const loader = that[`__DATALOADER__${dataloader.name}`] as T
+          console.log({loader})
           loader.prime(result.id, result)
         }
       }
