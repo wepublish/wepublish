@@ -1,5 +1,5 @@
 import {ObjectType, Field, InputType, ArgsType, registerEnumType, ID} from '@nestjs/graphql'
-import {PaginatedType, SortOrder} from '@wepublish/utils/api'
+import {PaginatedArgsType, PaginatedType, SortOrder} from '@wepublish/utils/api'
 import {GraphQLRichText} from '@wepublish/richtext/api'
 import {Node} from 'slate'
 
@@ -101,24 +101,15 @@ export class AuthorFilter {
 }
 
 @ArgsType()
-export class GetAuthorsArgs {
+export class GetAuthorsArgs extends PaginatedArgsType {
   @Field(() => AuthorFilter, {nullable: true})
   filter?: Partial<AuthorFilter>
 
   @Field(() => AuthorSort, {nullable: true})
   sortedField?: AuthorSort
 
-  @Field(() => SortOrder, {nullable: true})
+  @Field(() => SortOrder, {nullable: true, defaultValue: SortOrder.Ascending})
   order?: SortOrder
-
-  @Field({nullable: true})
-  cursorId?: string
-
-  @Field({nullable: true})
-  skip?: number
-
-  @Field({nullable: true})
-  take?: number
 }
 
 @InputType()
@@ -180,6 +171,7 @@ export class UpdateAuthorInput {
 
 @ArgsType()
 export class UpdateAuthorArgs {
+  @Field(() => UpdateAuthorInput)
   author!: UpdateAuthorInput
 }
 

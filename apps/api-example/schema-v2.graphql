@@ -16,6 +16,42 @@ type ArticleNavigationLink implements BaseNavigationLink {
   type: String!
 }
 
+type Author {
+  bio: RichText
+  createdAt: DateTime!
+  id: String!
+  imageID: String
+  jobTitle: String
+  links: [AuthorsLinks!]!
+  modifiedAt: DateTime!
+  name: String!
+  slug: String!
+}
+
+input AuthorFilter {
+  name: String
+  tagIds: [String!]
+}
+
+enum AuthorSort {
+  CreatedAt
+  ModifiedAt
+  Name
+}
+
+type AuthorsLinks {
+  createdAt: DateTime!
+  id: String!
+  modifiedAt: DateTime!
+  title: String!
+  url: String!
+}
+
+input AuthorsLinksInput {
+  title: String!
+  url: String!
+}
+
 interface BaseNavigationLink {
   createdAt: DateTime!
   id: String!
@@ -72,6 +108,16 @@ input ConsentFilter {
   defaultValue: Boolean
   name: String
   slug: String
+}
+
+input CreateAuthorInput {
+  bio: RichText
+  imageID: String
+  jobTitle: String
+  links: [AuthorsLinksInput!]!
+  name: String!
+  slug: String!
+  tagIds: [String!]!
 }
 
 input CreateNavigationInput {
@@ -245,6 +291,8 @@ type MemberPlanRef {
 }
 
 type Mutation {
+  createAuthor(author: CreateAuthorInput!): Author!
+
   """Creates a new block style."""
   createBlockStyle(blocks: [BlockType!]!, name: String!): BlockStyle!
 
@@ -268,6 +316,7 @@ type Mutation {
 
   """Create a user role"""
   createUserRole(userRole: CreateUserRoleInput!): UserRole!
+  deleteAuthor(id: ID!): Author!
 
   """Deletes an existing block style."""
   deleteBlockStyle(id: String!): BlockStyle!
@@ -299,6 +348,7 @@ type Mutation {
 
   """Sends a test email for the given event"""
   testSystemMail(event: UserEvent!): Boolean!
+  updateAuthor(author: UpdateAuthorInput!): Author!
 
   """Updates an existing block style."""
   updateBlockStyle(blocks: [BlockType!], id: String!, name: String): BlockStyle!
@@ -354,6 +404,12 @@ type PageNavigationLink implements BaseNavigationLink {
   modifiedAt: DateTime!
   pageID: String!
   type: String!
+}
+
+type PaginatedAuthors {
+  nodes: [Author!]!
+  pageInfo: PageInfo!
+  totalCount: Float!
 }
 
 type PaginatedEvents {
@@ -422,6 +478,9 @@ type Query {
 
   "\n      Returns the expected revenue for the time period given.\n      Excludes cancelled or manually set as paid invoices.\n    "
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
+  getAuthorBySlug(slug: String!): Author!
+  getAuthors(cursorId: String, filter: AuthorFilter, order: SortOrder = Ascending, skip: Int = 0, sortedField: AuthorSort, take: Int = 10): PaginatedAuthors!
+  getAuthorsById(id: ID!): Author!
 
   """Returns a navigation by id."""
   getNavigationById(id: ID!): Navigation!
@@ -439,7 +498,7 @@ type Query {
   getUserRoleById(id: ID!): UserRole!
 
   """Returns a list of user roles"""
-  getUserRoles(cursorId: ID, filter: UserRoleFilter, skip: Int, take: Int): PaginatedUserRoles!
+  getUserRoles(cursorId: String, filter: UserRoleFilter, skip: Int = 0, take: Int = 10): PaginatedUserRoles!
 
   """Returns an image by id."""
   image(id: String!): Image!
@@ -589,6 +648,17 @@ type SubscriptionInterval {
 type SystemMailModel {
   event: UserEvent!
   mailTemplate: MailTemplateRef
+}
+
+input UpdateAuthorInput {
+  bio: RichText
+  id: String!
+  imageID: String
+  jobTitle: String
+  links: [AuthorsLinksInput!]
+  name: String
+  slug: String
+  tagIds: [String!]
 }
 
 input UpdateNavigationInput {

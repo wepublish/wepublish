@@ -1,6 +1,6 @@
-import {ObjectType, Field, InputType, ArgsType, ID, registerEnumType, Int} from '@nestjs/graphql'
+import {ObjectType, Field, InputType, ArgsType, ID, registerEnumType} from '@nestjs/graphql'
 import {PermissionObject} from '@wepublish/permissions/api'
-import {PaginatedType} from '@wepublish/utils/api'
+import {PaginatedArgsType, PaginatedType} from '@wepublish/utils/api'
 
 @ObjectType()
 export class UserRole {
@@ -60,18 +60,9 @@ export class UserRoleIdArgs {
 }
 
 @ArgsType()
-export class GetUserRolesArgs {
+export class GetUserRolesArgs extends PaginatedArgsType {
   @Field({nullable: true})
   filter?: UserRoleFilter
-
-  @Field(() => ID, {nullable: true})
-  cursorId?: string
-
-  @Field(() => Int, {nullable: true})
-  skip?: number
-
-  @Field(() => Int, {nullable: true})
-  take?: number
 }
 
 @InputType()
