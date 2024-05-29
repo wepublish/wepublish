@@ -2,7 +2,6 @@ import {
   ApiV1,
   BlockRenderer,
   BuilderBlockRendererProps,
-  isQuoteBlock,
   isTeaserGridBlock,
   isTeaserListBlock,
   useWebsiteBuilder,
@@ -19,7 +18,6 @@ import {BaselBriefing, BaselBriefingProps} from '../../briefing/basel-briefing'
 import {isAnyBriefing} from '../../briefing/is-briefing'
 import {ContextBox} from '../../context-box/context-box'
 import {isContextBox} from '../../context-box/is-context-box'
-import {BajourQuoteBlock} from '../../quote/bajour-quote'
 import {isSmallTeaser, SmallTeaser} from '../blocks/small-teaser'
 import {isTeaserSlider, TeaserSlider} from '../blocks/teaser-slider/teaser-slider'
 import {isWideTeaser, WideTeaser} from '../blocks/wide-teaser'
@@ -45,7 +43,6 @@ export const BajourBlockRenderer = (props: BuilderBlockRendererProps) => {
     () =>
       cond([
         [isOldRelatedArticles, block => <Fragment />],
-        [isQuoteBlock, block => <BajourQuoteBlock {...block} />],
         [isContextBox, block => <ContextBox {...block} />],
         [isTeaserSlider, block => <TeaserSlider {...block} />],
         [isBestOfWePublish, block => <BestOfWePublish {...block} />],

@@ -27,6 +27,7 @@ import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {MainGrid} from '../src/components/layout/main-grid'
 import {BajourPaymentMethodPicker} from '../src/components/payment-method-picker/payment-method-picker'
+import {BajourQuoteBlock} from '../src/components/quote/bajour-quote'
 import {BajourBlockRenderer} from '../src/components/website-builder-overwrites/block-renderer/block-renderer'
 import {BajourTeaser} from '../src/components/website-builder-overwrites/blocks/teaser'
 import {BajourBreakBlock} from '../src/components/website-builder-styled/blocks/break-block-styled'
@@ -124,7 +125,8 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               Teaser: BajourTeaser,
               TeaserGrid: BajourTeaserGrid,
               TeaserList: BajourTeaserList,
-              Break: BajourBreakBlock
+              Break: BajourBreakBlock,
+              Quote: BajourQuoteBlock
             }}
             thirdParty={{
               stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY
