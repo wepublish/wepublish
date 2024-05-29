@@ -843,7 +843,8 @@
       "editTitle": "Modifier la méthode de paiement",
       "name": "Nom",
       "slug": "Slug",
-      "title": "Méthodes de paiement"
+      "title": "Méthodes de paiement",
+      "selectImage": "Select preview image"
     },
     "peerArticles": {
       "articleImage": "Image de l'article",

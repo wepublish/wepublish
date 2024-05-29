@@ -881,7 +881,8 @@
       "editTitle": "Edit Payment Method",
       "name": "Name",
       "slug": "Slug",
-      "title": "Payment Methods"
+      "title": "Payment Methods",
+      "selectImage": "Select preview image"
     },
     "peerArticles": {
       "articleImage": "Article image",
