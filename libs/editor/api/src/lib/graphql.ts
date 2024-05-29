@@ -160,6 +160,7 @@ export type ArticleTeaserInput = {
   imageID?: InputMaybe<Scalars['ID']>;
   lead?: InputMaybe<Scalars['String']>;
   preTitle?: InputMaybe<Scalars['String']>;
+  style?: InputMaybe<TeaserStyle>;
   title?: InputMaybe<Scalars['String']>;
 };
 
@@ -445,6 +446,7 @@ export type CustomTeaserInput = {
   lead?: InputMaybe<Scalars['String']>;
   preTitle?: InputMaybe<Scalars['String']>;
   properties: Array<PropertiesInput>;
+  style?: InputMaybe<TeaserStyle>;
   title?: InputMaybe<Scalars['String']>;
 };
 
@@ -573,6 +575,7 @@ export type EventTeaserInput = {
   imageID?: InputMaybe<Scalars['ID']>;
   lead?: InputMaybe<Scalars['String']>;
   preTitle?: InputMaybe<Scalars['String']>;
+  style?: InputMaybe<TeaserStyle>;
   title?: InputMaybe<Scalars['String']>;
 };
 
@@ -884,10 +887,13 @@ export type LinkPageBreakBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   hideButton: Scalars['Boolean'];
   imageID?: InputMaybe<Scalars['ID']>;
+  layoutOption?: InputMaybe<Scalars['String']>;
   linkTarget?: InputMaybe<Scalars['String']>;
   linkText?: InputMaybe<Scalars['String']>;
   linkURL?: InputMaybe<Scalars['String']>;
   richText: Scalars['RichText'];
+  styleOption?: InputMaybe<Scalars['String']>;
+  templateOption?: InputMaybe<Scalars['String']>;
   text?: InputMaybe<Scalars['String']>;
 };
 
@@ -1661,6 +1667,7 @@ export type PageTeaserInput = {
   lead?: InputMaybe<Scalars['String']>;
   pageID: Scalars['ID'];
   preTitle?: InputMaybe<Scalars['String']>;
+  style?: InputMaybe<TeaserStyle>;
   title?: InputMaybe<Scalars['String']>;
 };
 
@@ -1799,6 +1806,7 @@ export type PeerArticleTeaserInput = {
   lead?: InputMaybe<Scalars['String']>;
   peerID: Scalars['ID'];
   preTitle?: InputMaybe<Scalars['String']>;
+  style?: InputMaybe<TeaserStyle>;
   title?: InputMaybe<Scalars['String']>;
 };
 
