@@ -1,6 +1,5 @@
 import {DynamicModule, Module, ModuleMetadata, Provider, Type} from '@nestjs/common'
 import {MediaService, MediaServiceConfig, MEDIA_SERVICE_MODULE_OPTIONS} from './media.service'
-import {StorageClientModule} from '../storage-client/storage-client.module'
 
 export type MediaOptionsFactory = {
   createMediaOptions(): Promise<MediaServiceConfig> | MediaServiceConfig
