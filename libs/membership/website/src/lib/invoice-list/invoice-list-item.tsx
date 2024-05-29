@@ -4,7 +4,7 @@ import {
   useAsyncAction,
   useWebsiteBuilder
 } from '@wepublish/website/builder'
-import {useState} from 'react'
+import {useMemo, useState} from 'react'
 import {MdAttachMoney, MdCalendarMonth, MdOutlineInfo, MdOutlineWarning} from 'react-icons/md'
 import {formatChf} from '../formatters/format-currency'
 
@@ -55,11 +55,12 @@ export function InvoiceListItem({
   canceledAt,
   dueAt,
   subscription,
+  canPay,
   pay,
   className
 }: BuilderInvoiceListItemProps) {
   const {
-    locale,
+    meta: {locale},
     elements: {H6, Button, Alert},
     date
   } = useWebsiteBuilder()
@@ -67,6 +68,15 @@ export function InvoiceListItem({
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<Error>()
   const callAction = useAsyncAction(setLoading, setError)
+
+  const showPayrexxSubscriptionWarning = useMemo(
+    () =>
+      subscription?.paymentMethod.slug === 'payrexx-subscription' &&
+      new Date() > new Date(dueAt) &&
+      !canceledAt &&
+      !paidAt,
+    [canceledAt, dueAt, paidAt, subscription?.paymentMethod.slug]
+  )
 
   return (
     <InvoiceListItemWrapper className={className}>
@@ -91,14 +101,20 @@ export function InvoiceListItem({
           <InvoiceListItemMetaItem>
             <MdCalendarMonth />
             <span>
-              Abgeschlossen am <time dateTime={createdAt}>{date.format(new Date(createdAt))}</time>
+              Abgeschlossen am{' '}
+              <time suppressHydrationWarning dateTime={createdAt}>
+                {date.format(new Date(createdAt))}
+              </time>
             </span>
           </InvoiceListItemMetaItem>
 
           <InvoiceListItemMetaItem>
             <MdOutlineWarning />
             <span>
-              Fällig am <time dateTime={dueAt}>{date.format(new Date(dueAt))}</time>
+              Fällig am{' '}
+              <time suppressHydrationWarning dateTime={dueAt}>
+                {date.format(new Date(dueAt))}
+              </time>
             </span>
           </InvoiceListItemMetaItem>
 
@@ -109,24 +125,38 @@ export function InvoiceListItem({
 
         {paidAt && (
           <strong>
-            Bezahlt am <time dateTime={paidAt}>{date.format(new Date(paidAt))}</time>
+            Bezahlt am{' '}
+            <time suppressHydrationWarning dateTime={paidAt}>
+              {date.format(new Date(paidAt))}
+            </time>
           </strong>
         )}
 
         {canceledAt && (
           <strong>
-            Storniert am <time dateTime={canceledAt}>{date.format(new Date(canceledAt))}</time>
+            Storniert am{' '}
+            <time suppressHydrationWarning dateTime={canceledAt}>
+              {date.format(new Date(canceledAt))}
+            </time>
           </strong>
         )}
 
         {error && <Alert severity="error">{error.message}</Alert>}
 
-        {!paidAt && !canceledAt && (
+        {canPay && (
           <InvoiceListItemActions>
             <Button onClick={callAction(pay)} disabled={loading}>
               Jetzt Bezahlen
             </Button>
           </InvoiceListItemActions>
+        )}
+
+        {/* @TODO: Remove when all 'payrexx subscriptions' subscriptions have been migrated  */}
+        {showPayrexxSubscriptionWarning && (
+          <Alert severity="warning">
+            Wir haben vor einiger Zeit das Membersystem umgestellt. Du verfügst noch über eine alte
+            Membership, die automatisch abgebucht wird.
+          </Alert>
         )}
       </InvoiceListItemContent>
     </InvoiceListItemWrapper>

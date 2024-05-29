@@ -25,8 +25,15 @@ import {isListicleBlock} from './listicle/listicle-block'
 import {isEventBlock} from './event/event-block'
 import {isPolisConversationBlock} from './polis-conversation/polis-conversation-block'
 import {isBreakBlock} from './break/break-block'
+import {memo} from 'react'
+import {isTeaserListBlock} from './teaser/teaser-list-block'
 
-export const BlockRenderer = ({block}: BuilderBlockRendererProps) => {
+export const hasBlockStyle =
+  (blockStyle: string) =>
+  <T extends {blockStyle?: string | null}>(block: T) =>
+    block.blockStyle === blockStyle
+
+export const BlockRenderer = memo(({block}: BuilderBlockRendererProps) => {
   const {blocks} = useWebsiteBuilder()
 
   const facebookEmbedCond = cond([
@@ -48,7 +55,8 @@ export const BlockRenderer = ({block}: BuilderBlockRendererProps) => {
 
   const teaserCond = cond([
     [isTeaserGridFlexBlock, block => <blocks.TeaserGridFlex {...block} />],
-    [isTeaserGridBlock, block => <blocks.TeaserGrid {...block} />]
+    [isTeaserGridBlock, block => <blocks.TeaserGrid {...block} />],
+    [isTeaserListBlock, block => <blocks.TeaserList {...block} />]
   ])
 
   const imageCond = cond([
@@ -73,13 +81,14 @@ export const BlockRenderer = ({block}: BuilderBlockRendererProps) => {
       [isCommentBlock, block => <blocks.Comment {...block} />]
     ])(block)
   )
-}
+})
 
 export type BlocksProp = {
   blocks: BlockType[]
+  type: BuilderBlockRendererProps['type']
 }
 
-export const Blocks = ({blocks}: BlocksProp) => {
+export const Blocks = ({blocks, type}: BlocksProp) => {
   const {
     blocks: {Renderer}
   } = useWebsiteBuilder()
@@ -87,7 +96,7 @@ export const Blocks = ({blocks}: BlocksProp) => {
   return (
     <>
       {blocks.map((block, index) => (
-        <Renderer key={index} block={block} />
+        <Renderer key={index} block={block} index={index} count={blocks.length} type={type} />
       ))}
     </>
   )

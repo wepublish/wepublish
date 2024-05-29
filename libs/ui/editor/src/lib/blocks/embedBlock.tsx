@@ -19,7 +19,9 @@ import {VimeoVideoEmbed} from './embeds/vimeo'
 import {YouTubeVideoEmbed} from './embeds/youTube'
 import {EmbedBlockValue, EmbedType} from './types'
 
-const Panel = styled(RPanel)<{isEmpty: boolean}>`
+const Panel = styled(RPanel, {
+  shouldForwardProp: prop => prop !== 'isEmpty'
+})<{isEmpty: boolean}>`
   display: grid;
   height: ${({isEmpty}) => (isEmpty ? '300px' : undefined)};
   padding: 0;
@@ -44,8 +46,6 @@ export function EmbedBlock({value, onChange, autofocus}: BlockProps<EmbedBlockVa
   const [isEmbedDialogOpen, setEmbedDialogOpen] = useState(false)
   const isEmpty = value.type === EmbedType.Other && value.url === undefined
   const {t} = useTranslation()
-
-  console.log('value', value)
 
   useEffect(() => {
     if (autofocus && isEmpty) {

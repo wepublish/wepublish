@@ -26,7 +26,7 @@ import {MediaAdapter} from '@wepublish/image/api'
 import {BaseMailProvider, MailContext, MailContextOptions} from '@wepublish/mail/api'
 import {InvoiceWithItems, PaymentProvider} from '@wepublish/payment/api'
 import {SettingName} from '@wepublish/settings/api'
-import {GenerateJWTProps, generateJWT, logger} from '@wepublish/utils/api'
+import {GenerateJWTProps, createOptionalsArray, generateJWT, logger} from '@wepublish/utils/api'
 import AbortController from 'abort-controller'
 import {AuthenticationError} from 'apollo-server-express'
 import crypto from 'crypto'
@@ -55,6 +55,7 @@ import {FullPoll, getPoll} from './graphql/poll/poll.public-queries'
 import {Hooks} from './hooks'
 import {MemberContext} from './memberContext'
 import {URLAdapter} from './urlAdapter'
+import {BlockStylesDataloaderService} from '@wepublish/block-content/api'
 
 /**
  * Peered article cache configuration and setup
@@ -113,6 +114,8 @@ export interface DataLoaderContext {
   readonly commentRatingSystemAnswers: DataLoader<1, CommentRatingSystemAnswer[]>
   readonly subscriptionsById: DataLoader<string, SubscriptionWithRelations | null>
   readonly usersById: DataLoader<string, User | null>
+
+  readonly blockStyleById: BlockStylesDataloaderService
 }
 
 export interface OAuth2Clients {
@@ -140,6 +143,8 @@ export interface Context {
   readonly paymentProviders: PaymentProvider[]
   readonly hooks?: Hooks
   readonly challenge: ChallengeProvider
+  readonly requestIP: string
+  readonly fingerprint: string
 
   getOauth2Clients(): Promise<OAuth2Clients[]>
 
@@ -214,16 +219,7 @@ export interface CreatePaymentWithProvider {
   saveCustomer: boolean
   successURL?: string
   failureURL?: string
-}
-
-const createOptionalsArray = <Data, Attribute extends keyof Data, Key extends Data[Attribute]>(
-  keys: Key[],
-  data: Data[],
-  attribute: Attribute
-): Array<Data | null> => {
-  const dataMap = Object.fromEntries(data.map(entry => [entry[attribute], entry]))
-
-  return keys.map(id => dataMap[id] ?? null)
+  user?: User
 }
 
 export async function contextFromRequest(
@@ -247,6 +243,8 @@ export async function contextFromRequest(
   const authService = new AuthenticationService(prisma)
 
   const token = tokenFromRequest(req)
+  const requestIP = IPFromRequest(req)
+  const fingerprint = fingerprintRequest(req, requestIP)
   const session = token ? await authService.getSessionByToken(token) : null
   const isSessionValid = authService.isSessionValid(session)
 
@@ -866,7 +864,9 @@ export async function contextFromRequest(
         }),
         'id'
       )
-    )
+    ),
+
+    blockStyleById: new BlockStylesDataloaderService(prisma)
   }
 
   const mailContext = new MailContext({
@@ -922,6 +922,8 @@ export async function contextFromRequest(
     oauth2Providers,
     paymentProviders,
     hooks,
+    requestIP,
+    fingerprint,
     sessionTTL: sessionTTL ?? DefaultSessionTTL,
     hashCostFactor: hashCostFactor ?? DefaultBcryptHashCostFactor,
 
@@ -991,7 +993,8 @@ export async function contextFromRequest(
       invoice,
       saveCustomer,
       failureURL,
-      successURL
+      successURL,
+      user
     }: CreatePaymentWithProvider): Promise<Payment> {
       const paymentMethod = await loaders.activePaymentMethodsByID.load(paymentMethodID)
       const paymentProvider = paymentProviders.find(
@@ -1010,12 +1013,22 @@ export async function contextFromRequest(
         }
       })
 
+      const customer = user
+        ? await prisma.paymentProviderCustomer.findFirst({
+            where: {
+              userId: user.id,
+              paymentProviderID: paymentMethod.paymentProviderID
+            }
+          })
+        : null
+
       const intent = await paymentProvider.createIntent({
         paymentID: payment.id,
         invoice,
         saveCustomer,
         successURL,
-        failureURL
+        failureURL,
+        customerID: customer?.customerID
       })
 
       const updatedPayment = await prisma.payment.update({
@@ -1035,14 +1048,22 @@ export async function contextFromRequest(
 
       // Mark invoice as paid
       if (intent.state === PaymentState.paid) {
-        await prisma.invoice.update({
-          where: {id: invoice.id},
-          data: {
-            paidAt: new Date()
-          }
+        const intentState = await paymentProvider.checkIntentStatus({
+          intentID: updatedPayment.intentID,
+          paymentID: updatedPayment.id
+        })
+        await paymentProvider.updatePaymentWithIntentState({
+          intentState,
+          paymentClient: prisma.payment,
+          paymentsByID: loaders.paymentsByID,
+          invoicesByID: loaders.invoicesByID,
+          subscriptionClient: prisma.subscription,
+          userClient: prisma.user,
+          invoiceClient: prisma.invoice,
+          subscriptionPeriodClient: prisma.subscriptionPeriod,
+          invoiceItemClient: prisma.invoiceItem
         })
       }
-
       return updatedPayment as Payment
     },
     challenge
@@ -1056,6 +1077,39 @@ export function tokenFromRequest(req: IncomingMessage | null): string | null {
   }
 
   return null
+}
+
+export function fingerprintRequest(
+  req: IncomingMessage | null,
+  ip: string | undefined
+): string | null {
+  let ipHash = null
+  if (ip) {
+    ipHash = crypto.createHash('sha224').update(ip).digest('hex').substring(0, 7)
+  }
+  let userAgentHash = null
+  if (req?.headers['user-agent']) {
+    userAgentHash = crypto
+      .createHash('sha224')
+      .update(req?.headers['user-agent'])
+      .digest('hex')
+      .substring(0, 7)
+  }
+  if (ipHash || userAgentHash) return `${ipHash}:${userAgentHash}`
+  return null
+}
+
+export function IPFromRequest(req: IncomingMessage | null): string | undefined {
+  const headers = req?.headers
+  if (headers) {
+    return (
+      (headers['cf-connecting-ip'] as string | undefined) ||
+      (headers['x-forwarded-for'] as string | undefined) ||
+      req.socket?.remoteAddress ||
+      undefined
+    )
+  }
+  return undefined
 }
 
 /**

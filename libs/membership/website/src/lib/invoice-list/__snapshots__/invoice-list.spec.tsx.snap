@@ -12,7 +12,7 @@ exports[`InvoiceList should render Default 1`] = `
         class="css-kkg48e-InvoiceListItemContent e7di52m3"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
         >
           Offene Rechnung für Foobar Memberplan
         </h6>
@@ -122,7 +122,7 @@ exports[`InvoiceList should render Default 1`] = `
           class="css-lst8rm-InvoiceListItemActions e7di52m0"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
             tabindex="0"
             type="button"
           >
@@ -141,7 +141,7 @@ exports[`InvoiceList should render Default 1`] = `
         class="css-kkg48e-InvoiceListItemContent e7di52m3"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
         >
           Offene Rechnung für Foobar Memberplan
         </h6>
@@ -251,7 +251,7 @@ exports[`InvoiceList should render Default 1`] = `
           class="css-lst8rm-InvoiceListItemActions e7di52m0"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
             tabindex="0"
             type="button"
           >
@@ -270,7 +270,7 @@ exports[`InvoiceList should render Default 1`] = `
         class="css-kkg48e-InvoiceListItemContent e7di52m3"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
         >
           Offene Rechnung für Foobar Memberplan
         </h6>
@@ -380,7 +380,7 @@ exports[`InvoiceList should render Default 1`] = `
           class="css-lst8rm-InvoiceListItemActions e7di52m0"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
             tabindex="0"
             type="button"
           >
@@ -399,7 +399,7 @@ exports[`InvoiceList should render Default 1`] = `
         class="css-kkg48e-InvoiceListItemContent e7di52m3"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
         >
           Offene Rechnung für Foobar Memberplan
         </h6>
@@ -509,7 +509,7 @@ exports[`InvoiceList should render Default 1`] = `
           class="css-lst8rm-InvoiceListItemActions e7di52m0"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
             tabindex="0"
             type="button"
           >
@@ -557,7 +557,7 @@ exports[`InvoiceList should render WithClassName 1`] = `
         class="css-kkg48e-InvoiceListItemContent e7di52m3"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
         >
           Offene Rechnung für Foobar Memberplan
         </h6>
@@ -667,7 +667,7 @@ exports[`InvoiceList should render WithClassName 1`] = `
           class="css-lst8rm-InvoiceListItemActions e7di52m0"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
             tabindex="0"
             type="button"
           >
@@ -686,7 +686,7 @@ exports[`InvoiceList should render WithClassName 1`] = `
         class="css-kkg48e-InvoiceListItemContent e7di52m3"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
         >
           Offene Rechnung für Foobar Memberplan
         </h6>
@@ -796,7 +796,7 @@ exports[`InvoiceList should render WithClassName 1`] = `
           class="css-lst8rm-InvoiceListItemActions e7di52m0"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
             tabindex="0"
             type="button"
           >
@@ -815,7 +815,7 @@ exports[`InvoiceList should render WithClassName 1`] = `
         class="css-kkg48e-InvoiceListItemContent e7di52m3"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
         >
           Offene Rechnung für Foobar Memberplan
         </h6>
@@ -925,7 +925,7 @@ exports[`InvoiceList should render WithClassName 1`] = `
           class="css-lst8rm-InvoiceListItemActions e7di52m0"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
             tabindex="0"
             type="button"
           >
@@ -944,7 +944,7 @@ exports[`InvoiceList should render WithClassName 1`] = `
         class="css-kkg48e-InvoiceListItemContent e7di52m3"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
         >
           Offene Rechnung für Foobar Memberplan
         </h6>
@@ -1054,7 +1054,7 @@ exports[`InvoiceList should render WithClassName 1`] = `
           class="css-lst8rm-InvoiceListItemActions e7di52m0"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
             tabindex="0"
             type="button"
           >
@@ -1082,7 +1082,7 @@ exports[`InvoiceList should render WithEmotion 1`] = `
         class="css-kkg48e-InvoiceListItemContent e7di52m3"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
         >
           Offene Rechnung für Foobar Memberplan
         </h6>
@@ -1192,7 +1192,7 @@ exports[`InvoiceList should render WithEmotion 1`] = `
           class="css-lst8rm-InvoiceListItemActions e7di52m0"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
             tabindex="0"
             type="button"
           >
@@ -1211,7 +1211,7 @@ exports[`InvoiceList should render WithEmotion 1`] = `
         class="css-kkg48e-InvoiceListItemContent e7di52m3"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
         >
           Offene Rechnung für Foobar Memberplan
         </h6>
@@ -1321,7 +1321,7 @@ exports[`InvoiceList should render WithEmotion 1`] = `
           class="css-lst8rm-InvoiceListItemActions e7di52m0"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
             tabindex="0"
             type="button"
           >
@@ -1340,7 +1340,7 @@ exports[`InvoiceList should render WithEmotion 1`] = `
         class="css-kkg48e-InvoiceListItemContent e7di52m3"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
         >
           Offene Rechnung für Foobar Memberplan
         </h6>
@@ -1450,7 +1450,7 @@ exports[`InvoiceList should render WithEmotion 1`] = `
           class="css-lst8rm-InvoiceListItemActions e7di52m0"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
             tabindex="0"
             type="button"
           >
@@ -1469,7 +1469,7 @@ exports[`InvoiceList should render WithEmotion 1`] = `
         class="css-kkg48e-InvoiceListItemContent e7di52m3"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
         >
           Offene Rechnung für Foobar Memberplan
         </h6>
@@ -1579,7 +1579,7 @@ exports[`InvoiceList should render WithEmotion 1`] = `
           class="css-lst8rm-InvoiceListItemActions e7di52m0"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
             tabindex="0"
             type="button"
           >
@@ -1601,7 +1601,7 @@ exports[`InvoiceList should render WithError 1`] = `
     class="css-1cqlm8-InvoiceListWrapper eae5n870"
   >
     <div
-      class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-standardError MuiAlert-standard css-1hdyuqk-MuiPaper-root-MuiAlert-root"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-standardError MuiAlert-standard css-1f6gfio-MuiPaper-root-MuiAlert-root"
       role="alert"
     >
       <div

@@ -1,3 +1,4 @@
+import {StripeElement, StripePayment} from '@wepublish/payment/website'
 import {
   Invoice,
   useCheckInvoiceStatusLazyQuery,
@@ -6,7 +7,7 @@ import {
 } from '@wepublish/website/api'
 import {BuilderContainerProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {produce} from 'immer'
-import {useMemo} from 'react'
+import {useMemo, useState} from 'react'
 
 export type InvoiceListContainerProps = {
   successURL: string
@@ -20,6 +21,7 @@ export function InvoiceListContainer({
   failureURL,
   className
 }: InvoiceListContainerProps) {
+  const [stripeClientSecret, setStripeClientSecret] = useState<string>()
   const {InvoiceList} = useWebsiteBuilder()
   const [checkInvoice] = useCheckInvoiceStatusLazyQuery()
   const {data, loading, error} = useInvoicesQuery({
@@ -40,7 +42,15 @@ export function InvoiceListContainer({
 
   const [pay] = usePayInvoiceMutation({
     onCompleted(data) {
-      if (data.createPaymentFromInvoice?.intentSecret) {
+      if (!data.createPaymentFromInvoice?.intentSecret) {
+        return
+      }
+
+      if (data.createPaymentFromInvoice.paymentMethod.paymentProviderID === 'stripe') {
+        setStripeClientSecret(data.createPaymentFromInvoice.intentSecret)
+      }
+
+      if (data.createPaymentFromInvoice.intentSecret.startsWith('http')) {
         window.location.href = data.createPaymentFromInvoice.intentSecret
       }
     }
@@ -57,21 +67,33 @@ export function InvoiceListContainer({
   )
 
   return (
-    <InvoiceList
-      data={filteredInvoices}
-      loading={loading}
-      error={error}
-      className={className}
-      onPay={async (invoiceId, paymentMethodId) => {
-        await pay({
-          variables: {
-            invoiceId,
-            paymentMethodId,
-            failureURL,
-            successURL
-          }
-        })
-      }}
-    />
+    <>
+      {stripeClientSecret && (
+        <StripeElement clientSecret={stripeClientSecret}>
+          <StripePayment
+            onClose={success => {
+              window.location.href = success ? successURL : failureURL
+            }}
+          />
+        </StripeElement>
+      )}
+
+      <InvoiceList
+        data={filteredInvoices}
+        loading={loading}
+        error={error}
+        className={className}
+        onPay={async (invoiceId, paymentMethodId) => {
+          await pay({
+            variables: {
+              invoiceId,
+              paymentMethodId,
+              failureURL,
+              successURL
+            }
+          })
+        }}
+      />
+    </>
   )
 }

@@ -5,7 +5,7 @@ export interface ImageWithTransformURL extends Image {
 }
 
 export enum ImageSort {
-  CreatedAt = 'modifiedAt',
+  CreatedAt = 'createdAt',
   ModifiedAt = 'modifiedAt'
 }
 

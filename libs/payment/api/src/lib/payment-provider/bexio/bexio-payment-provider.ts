@@ -18,7 +18,8 @@ import {
   Intent,
   IntentState,
   PaymentProviderProps,
-  WebhookForPaymentIntentProps
+  WebhookForPaymentIntentProps,
+  WebhookResponse
 } from '../payment-provider'
 import {
   InvoiceNotFoundError,
@@ -29,6 +30,7 @@ import {
   WebhookNotImplementedError
 } from './bexio-errors'
 import {addToStringReplaceMap, mapBexioStatusToPaymentStatus, searchForContact} from './bexio-utils'
+import fetch from 'node-fetch'
 
 export interface BexioPaymentProviderProps extends PaymentProviderProps {
   apiKey: string
@@ -89,7 +91,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     this.bexio = new Bexio(this.apiKey)
   }
 
-  async webhookForPaymentIntent(props: WebhookForPaymentIntentProps): Promise<IntentState[]> {
+  async webhookForPaymentIntent(props: WebhookForPaymentIntentProps): Promise<WebhookResponse> {
     throw new WebhookNotImplementedError()
   }
 
@@ -103,11 +105,10 @@ export class BexioPaymentProvider extends BasePaymentProvider {
    * @throws {NoSubscriptionIdInInvoice} Throws an error if the invoice contains a subscription ID.
    */
   async createIntent(props: CreatePaymentIntentProps): Promise<Intent> {
-    if (props.invoice.subscriptionID) {
+    if (!props.invoice.subscriptionID) {
       throw new NoSubscriptionIdInInvoice()
     }
-    const created = await this.bexioCreate(props.invoice.id, false)
-    return created
+    return await this.bexioCreate(props.invoice.id, false, props.successURL)
   }
 
   /**
@@ -135,7 +136,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
    * @throws {ResponseNOK} Throws an error if the response status from Bexio is not 200.
    * @throws {UnknownIntentState} Throws an error if the intent status is not recognized.
    */
-  async checkIntentStatus({intentID}: CheckIntentProps): Promise<IntentState> {
+  async checkIntentStatus({intentID, paymentID}: CheckIntentProps): Promise<IntentState> {
     // currently the bexio library we use doesn't return the status (kb_item_status_id)
     // when querying for invoice, so we need to do it "manually" using fetch api
     const bexioBaseUrl = 'https://api.bexio.com/2.0'
@@ -158,7 +159,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
 
     const bexioResponse = await response.json()
 
-    const intentStatus = mapBexioStatusToPaymentStatus(bexioResponse.data.kb_item_status_id)
+    const intentStatus = mapBexioStatusToPaymentStatus(bexioResponse.kb_item_status_id)
 
     if (!intentStatus) {
       logger('bexioPaymentProvider').error(
@@ -172,11 +173,9 @@ export class BexioPaymentProvider extends BasePaymentProvider {
 
     return {
       state: intentStatus,
-      paymentID: bexioResponse.data.payment_type_id
-        ? bexioResponse.data.payment_type_id.toString()
-        : '',
-      paymentData: JSON.stringify(bexioResponse.data),
-      customerID: bexioResponse.data.contact_id ? bexioResponse.data.contact_id.toString() : ''
+      paymentID,
+      paymentData: JSON.stringify(bexioResponse),
+      customerID: bexioResponse.contact_id ? bexioResponse.contact_id.toString() : ''
     }
   }
 
@@ -192,6 +191,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
    * @function
    * @param {string} invoiceId - The ID of the invoice in the local database.
    * @param {boolean} isRenewal - Indicates whether the invoice is a renewal or a new invoice.
+   * @param {string} successURL - The url the client gets redirected after successful invoice creation
    *
    * @throws {InvoiceNotFoundError} If the invoice or related data cannot be found in the local database.
    * @throws {Error} For any other generic error.
@@ -202,7 +202,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
    *   - intentData: A JSON string representation of the new invoice from Bexio.
    *   - state: The state of the payment, set as 'submitted'.
    */
-  async bexioCreate(invoiceId: string, isRenewal: boolean): Promise<Intent> {
+  async bexioCreate(invoiceId: string, isRenewal: boolean, successURL = ''): Promise<Intent> {
     try {
       const invoice = await this.prisma.invoice.findUnique({
         where: {
@@ -232,7 +232,7 @@ export class BexioPaymentProvider extends BasePaymentProvider {
 
       return {
         intentID: newInvoice.id.toString(),
-        intentSecret: '',
+        intentSecret: successURL,
         intentData: JSON.stringify(newInvoice),
         state: PaymentState.submitted
       }
@@ -317,12 +317,14 @@ export class BexioPaymentProvider extends BasePaymentProvider {
     addToStringReplaceMap(stringReplaceMap, 'subscription', invoice.subscription)
     addToStringReplaceMap(stringReplaceMap, 'user', invoice.subscription.user)
     addToStringReplaceMap(stringReplaceMap, 'memberPlan', invoice.subscription.memberPlan)
+
     const bexioInvoice: InvoicesStatic.InvoiceCreate = {
       title: isRenewal ? this.invoiceTitleRenewalMembership : this.invoiceTitleNewMembership,
       contact_id: contact.id,
       user_id: this.userId,
       mwst_type: 0,
       mwst_is_net: false,
+      api_reference: invoice.id,
       template_slug: isRenewal
         ? this.invoiceTemplateRenewalMembership
         : this.invoiceTemplateNewMembership,

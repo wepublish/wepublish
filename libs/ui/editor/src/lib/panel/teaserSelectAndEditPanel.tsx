@@ -1,9 +1,9 @@
-import {TeaserStyle} from '@wepublish/editor/api'
+import {TeaserStyle, TeaserType} from '@wepublish/editor/api'
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Drawer} from 'rsuite'
 
-import {Teaser, TeaserLink, TeaserType} from '../blocks/types'
+import {Teaser, TeaserLink} from '../blocks/types'
 import {TeaserEditPanel} from './teaserEditPanel'
 import {TeaserSelectPanel} from './teaserSelectPanel'
 

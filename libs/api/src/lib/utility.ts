@@ -47,6 +47,7 @@ export function mapSubscriptionsAsCsv(
       'paymentPeriodicity',
       'monthlyAmount',
       'autoRenew',
+      'extendable',
       'startsAt',
       'paidUntil',
       'paymentMethod',
@@ -81,6 +82,7 @@ export function mapSubscriptionsAsCsv(
         subscription?.paymentPeriodicity ?? '',
         subscription?.monthlyAmount ?? '',
         subscription?.autoRenew ?? '',
+        subscription?.extendable ?? '',
         subscription?.startsAt ? formatISO(subscription.startsAt, {representation: 'date'}) : '',
         subscription?.paidUntil
           ? formatISO(subscription.paidUntil, {representation: 'date'})

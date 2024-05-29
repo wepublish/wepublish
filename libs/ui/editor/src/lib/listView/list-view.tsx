@@ -6,7 +6,7 @@ import {StateColor} from '../utility'
 
 const {Cell} = RTable
 
-const ListViewContainer = styled.div`
+export const ListViewContainer = styled.div`
   display: grid;
   grid-gap: 10px;
   grid-template-columns: 2fr 1fr;
@@ -14,32 +14,32 @@ const ListViewContainer = styled.div`
   align-items: center;
 `
 
-const ListViewHeader = styled.div`
+export const ListViewHeader = styled.div`
   grid-column: 1 2;
 `
 
-const ListViewActions = styled.div`
+export const ListViewActions = styled.div`
   grid-column: 2;
   text-align: right;
 `
 
-const ListFilters = styled(ListViewFilters)`
+export const ListFilters = styled(ListViewFilters)`
   grid-column: 1/3;
 `
 
-const ListViewFilterArea = styled.div`
+export const ListViewFilterArea = styled.div`
   gap: 8px;
   display: flex;
   margin-top: 1rem;
   grid-column: 1/4;
 `
 
-const TableWrapper = styled.div`
+export const TableWrapper = styled.div`
   height: 100%;
   margin-top: 20px;
 `
 
-const PaddedCell = styled(Cell)`
+export const PaddedCell = styled(Cell)`
   .rs-table-cell-content {
     padding: 6px 0;
   }
@@ -49,9 +49,11 @@ interface StatusBadgeProps {
   states: string[]
 }
 
-const StatusBadge = styled.div<StatusBadgeProps>`
+export const StatusBadge = styled.div<StatusBadgeProps>`
+  font-size: 0.75em;
   text-align: center;
   border-radius: 15px;
+  padding: 2px 8px;
   background-color: ${props => {
     if (props.states.includes('pending')) {
       return StateColor.pending
@@ -65,35 +67,22 @@ const StatusBadge = styled.div<StatusBadgeProps>`
   }};
 `
 
-const IconButtonCell = styled(RTable.Cell)`
+export const IconButtonCell = styled(RTable.Cell)`
   padding: 6px 0;
   & > div {
     padding: 0;
-    button:nth-of-type(n + 1) {
-      margin-left: 5px;
-    }
   }
 `
 
-const IconButton = styled(RIconButton)`
-  margin-left: 5px;
+export const IconButton = styled(RIconButton)`
+  min-width: 36px;
+  height: 36px;
+
+  &:not(:first-of-type) {
+    margin-left: 5px;
+  }
 `
 
-const Table = styled(RTable)`
+export const Table = styled(RTable)`
   height: 100% !important;
 `
-
-export {
-  IconButton,
-  IconButtonCell,
-  ListFilters,
-  ListViewActions,
-  ListViewContainer,
-  ListViewFilterArea,
-  ListViewHeader,
-  PaddedCell,
-  StatusBadge,
-  StatusBadgeProps,
-  Table,
-  TableWrapper
-}

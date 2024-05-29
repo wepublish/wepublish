@@ -12,6 +12,7 @@ import {
   CreateCommentBtn,
   DEFAULT_MAX_TABLE_PAGES,
   DEFAULT_TABLE_PAGE_SIZES,
+  IconButton,
   IconButtonTooltip,
   ListViewContainer,
   ListViewFilterArea,
@@ -26,7 +27,7 @@ import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdEdit} from 'react-icons/md'
 import {Link} from 'react-router-dom'
-import {IconButton, Pagination, Table as RTable, Toggle} from 'rsuite'
+import {Pagination, Table as RTable, Toggle} from 'rsuite'
 import {RowDataType} from 'rsuite-table'
 
 const {Column, HeaderCell, Cell} = RTable
@@ -215,21 +216,19 @@ function CommentList() {
           <Column width={350} align="left" verticalAlign="middle" resizable>
             <HeaderCell>{t('comments.overview.text')}</HeaderCell>
             <Cell dataKey="revisions">
-              {(rowData: RowDataType<FullCommentFragment>) => (
-                <>
-                  {rowData.revisions?.length ? (
-                    <RichTextBlock
-                      displayOnly
-                      displayOneLine
-                      disabled
-                      onChange={() => {
-                        return undefined
-                      }}
-                      value={rowData.revisions[rowData.revisions?.length - 1]?.text || []}
-                    />
-                  ) : null}
-                </>
-              )}
+              {(rowData: RowDataType<FullCommentFragment>) =>
+                rowData.revisions?.length ? (
+                  <RichTextBlock
+                    displayOnly
+                    displayOneLine
+                    disabled
+                    onChange={() => {
+                      return undefined
+                    }}
+                    value={rowData.revisions[rowData.revisions?.length - 1]?.text || []}
+                  />
+                ) : null
+              }
             </Cell>
           </Column>
           {/* eslint-disable-next-line i18next/no-literal-string */}

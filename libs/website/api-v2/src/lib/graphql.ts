@@ -28,6 +28,34 @@ export type AllowedSettingVals = {
   stringChoice?: Maybe<Array<Scalars['String']>>;
 };
 
+export type BlockStyle = {
+  __typename?: 'BlockStyle';
+  blocks: Array<BlockType>;
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+};
+
+export enum BlockType {
+  Comment = 'Comment',
+  Embed = 'Embed',
+  Event = 'Event',
+  Html = 'HTML',
+  Image = 'Image',
+  ImageGallery = 'ImageGallery',
+  LinkPageBreak = 'LinkPageBreak',
+  Listicle = 'Listicle',
+  Poll = 'Poll',
+  Quote = 'Quote',
+  RichText = 'RichText',
+  TeaserGrid1 = 'TeaserGrid1',
+  TeaserGrid6 = 'TeaserGrid6',
+  TeaserGridFlex = 'TeaserGridFlex',
+  TeaserList = 'TeaserList',
+  Title = 'Title'
+}
+
 export type Consent = {
   __typename?: 'Consent';
   createdAt: Scalars['DateTime'];
@@ -67,18 +95,51 @@ export type DashboardSubscription = {
 export type Event = {
   __typename?: 'Event';
   createdAt: Scalars['DateTime'];
-  description: Scalars['RichText'];
+  description?: Maybe<Scalars['RichText']>;
   endsAt?: Maybe<Scalars['DateTime']>;
-  externalSourceId: Scalars['String'];
-  externalSourceName: Scalars['String'];
+  externalSourceId?: Maybe<Scalars['String']>;
+  externalSourceName?: Maybe<Scalars['String']>;
   id: Scalars['String'];
-  imageUrl?: Maybe<Scalars['String']>;
-  location: Scalars['String'];
+  image?: Maybe<Image>;
+  imageId?: Maybe<Scalars['String']>;
+  location?: Maybe<Scalars['String']>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   startsAt: Scalars['DateTime'];
   status: EventStatus;
 };
+
+export type EventFilter = {
+  from?: InputMaybe<Scalars['DateTime']>;
+  location?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  tags?: InputMaybe<Array<Scalars['String']>>;
+  to?: InputMaybe<Scalars['DateTime']>;
+  upcomingOnly?: InputMaybe<Scalars['Boolean']>;
+};
+
+export type EventFromSource = {
+  __typename?: 'EventFromSource';
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['RichText']>;
+  endsAt?: Maybe<Scalars['DateTime']>;
+  externalSourceId?: Maybe<Scalars['String']>;
+  externalSourceName?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  imageUrl?: Maybe<Scalars['String']>;
+  location?: Maybe<Scalars['String']>;
+  modifiedAt: Scalars['DateTime'];
+  name: Scalars['String'];
+  startsAt: Scalars['DateTime'];
+  status: EventStatus;
+};
+
+export enum EventSort {
+  CreatedAt = 'CreatedAt',
+  EndsAt = 'EndsAt',
+  ModifiedAt = 'ModifiedAt',
+  StartsAt = 'StartsAt'
+}
 
 export enum EventStatus {
   Cancelled = 'Cancelled',
@@ -86,6 +147,33 @@ export enum EventStatus {
   Rescheduled = 'Rescheduled',
   Scheduled = 'Scheduled'
 }
+
+export type FocalPoint = {
+  __typename?: 'FocalPoint';
+  x: Scalars['Float'];
+  y: Scalars['Float'];
+};
+
+export type Image = {
+  __typename?: 'Image';
+  createdAt: Scalars['DateTime'];
+  description?: Maybe<Scalars['RichText']>;
+  extension: Scalars['String'];
+  fileSize: Scalars['Int'];
+  filename?: Maybe<Scalars['String']>;
+  focalPoint?: Maybe<FocalPoint>;
+  format: Scalars['String'];
+  height: Scalars['Int'];
+  id: Scalars['String'];
+  license?: Maybe<Scalars['String']>;
+  link?: Maybe<Scalars['String']>;
+  mimeType: Scalars['String'];
+  modifiedAt: Scalars['DateTime'];
+  source?: Maybe<Scalars['String']>;
+  tags: Array<Scalars['String']>;
+  title?: Maybe<Scalars['String']>;
+  width: Scalars['Int'];
+};
 
 export type ImportedEventFilter = {
   from?: InputMaybe<Scalars['String']>;
@@ -104,9 +192,9 @@ export enum ImportedEventSort {
 
 export type ImportedEventsDocument = {
   __typename?: 'ImportedEventsDocument';
-  nodes: Array<Event>;
+  nodes: Array<EventFromSource>;
   pageInfo: PageInfo;
-  totalCount: Scalars['Int'];
+  totalCount: Scalars['Float'];
 };
 
 export type MailProviderModel = {
@@ -139,19 +227,16 @@ export type MemberPlanRef = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  /** Creates a new block style. */
+  createBlockStyle: BlockStyle;
   /**
    *
    *       Create a new consent.
    *
    */
   createConsent: Consent;
-  /**
-   *
-   *       Creates and event based on data from importable events list and an id and provider.
-   *       Also, uploads an image to WePublish Image library.
-   *
-   */
-  createEvent: Scalars['String'];
+  /** Creates a new event. */
+  createEvent: Event;
   /** Create a new subscription flow */
   createSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Create a subscription interval */
@@ -163,12 +248,16 @@ export type Mutation = {
    *
    */
   createUserConsent: UserConsent;
+  /** Deletes an existing block style. */
+  deleteBlockStyle: BlockStyle;
   /**
    *
    *       Deletes an existing consent.
    *
    */
   deleteConsent: Consent;
+  /** Deletes an existing event. */
+  deleteEvent: Event;
   /** Delete an existing subscription flow */
   deleteSubscriptionFlow: Array<SubscriptionFlowModel>;
   /** Delete an existing subscription interval */
@@ -180,15 +269,26 @@ export type Mutation = {
    *
    */
   deleteUserConsent: UserConsent;
+  /**
+   *
+   *       Creates and event based on data from importable events list and an id and provider.
+   *       Also, uploads an image to WePublish Image library.
+   *
+   */
+  importEvent: Scalars['String'];
   syncTemplates?: Maybe<Scalars['Boolean']>;
   /** Sends a test email for the given event */
   testSystemMail: Scalars['Boolean'];
+  /** Updates an existing block style. */
+  updateBlockStyle: BlockStyle;
   /**
    *
    *       Updates an existing consent.
    *
    */
   updateConsent: Consent;
+  /** Updates an existing event. */
+  updateEvent: Event;
   /** Updates an existing setting. */
   updateSetting: Setting;
   /** Update an existing subscription flow */
@@ -207,6 +307,12 @@ export type Mutation = {
 };
 
 
+export type MutationCreateBlockStyleArgs = {
+  blocks: Array<BlockType>;
+  name: Scalars['String'];
+};
+
+
 export type MutationCreateConsentArgs = {
   defaultValue: Scalars['Boolean'];
   name: Scalars['String'];
@@ -215,8 +321,13 @@ export type MutationCreateConsentArgs = {
 
 
 export type MutationCreateEventArgs = {
-  id: Scalars['String'];
-  source: Scalars['String'];
+  description?: InputMaybe<Scalars['RichText']>;
+  endsAt?: InputMaybe<Scalars['DateTime']>;
+  imageId?: InputMaybe<Scalars['String']>;
+  location?: InputMaybe<Scalars['String']>;
+  name: Scalars['String'];
+  startsAt: Scalars['DateTime'];
+  tagIds?: InputMaybe<Array<Scalars['String']>>;
 };
 
 
@@ -243,7 +354,17 @@ export type MutationCreateUserConsentArgs = {
 };
 
 
+export type MutationDeleteBlockStyleArgs = {
+  id: Scalars['String'];
+};
+
+
 export type MutationDeleteConsentArgs = {
+  id: Scalars['String'];
+};
+
+
+export type MutationDeleteEventArgs = {
   id: Scalars['String'];
 };
 
@@ -263,8 +384,21 @@ export type MutationDeleteUserConsentArgs = {
 };
 
 
+export type MutationImportEventArgs = {
+  id: Scalars['String'];
+  source: Scalars['String'];
+};
+
+
 export type MutationTestSystemMailArgs = {
   event: UserEvent;
+};
+
+
+export type MutationUpdateBlockStyleArgs = {
+  blocks?: InputMaybe<Array<BlockType>>;
+  id: Scalars['String'];
+  name?: InputMaybe<Scalars['String']>;
 };
 
 
@@ -273,6 +407,18 @@ export type MutationUpdateConsentArgs = {
   id: Scalars['String'];
   name?: InputMaybe<Scalars['String']>;
   slug?: InputMaybe<Scalars['String']>;
+};
+
+
+export type MutationUpdateEventArgs = {
+  description?: InputMaybe<Scalars['RichText']>;
+  endsAt?: InputMaybe<Scalars['DateTime']>;
+  id: Scalars['String'];
+  imageId?: InputMaybe<Scalars['String']>;
+  location?: InputMaybe<Scalars['String']>;
+  name?: InputMaybe<Scalars['String']>;
+  startsAt?: InputMaybe<Scalars['DateTime']>;
+  tagIds?: InputMaybe<Array<Scalars['String']>>;
 };
 
 
@@ -316,6 +462,13 @@ export type PageInfo = {
   startCursor?: Maybe<Scalars['String']>;
 };
 
+export type PaginatedEvents = {
+  __typename?: 'PaginatedEvents';
+  nodes: Array<Event>;
+  pageInfo: PageInfo;
+  totalCount: Scalars['Float'];
+};
+
 export type PaymentMethodRef = {
   __typename?: 'PaymentMethodRef';
   id: Scalars['String'];
@@ -351,6 +504,8 @@ export type Query = {
    *
    */
   activeSubscribers: Array<DashboardSubscription>;
+  /** Returns a list of block styles. */
+  blockStyles: Array<BlockStyle>;
   /**
    *
    *       Returns a consent by id.
@@ -363,12 +518,16 @@ export type Query = {
    *
    */
   consents: Array<Consent>;
+  /** Returns a event by id. */
+  event: Event;
   /**
    *
    *       Returns a list of Importable Event Providers
    *
    */
   eventProviders: Array<Scalars['String']>;
+  /** Returns a paginated list of events based on the filters given. */
+  events: PaginatedEvents;
   /**
    *
    *       Returns the expected revenue for the time period given.
@@ -376,12 +535,14 @@ export type Query = {
    *
    */
   expectedRevenue: Array<DashboardInvoice>;
+  /** Returns an image by id. */
+  image: Image;
   /**
    *
    *       Returns a more detailed version of a single importable event, by id and source.
    *
    */
-  importedEvent: Event;
+  importedEvent: EventFromSource;
   /**
    *
    *       Returns a list of imported events from external sources, transformed to match our model.
@@ -439,6 +600,7 @@ export type Query = {
    *
    */
   settingsList: Array<Setting>;
+  stats?: Maybe<Stats>;
   /** Returns all subscription flows */
   subscriptionFlows: Array<SubscriptionFlowModel>;
   /** Returns all mail flows */
@@ -469,9 +631,29 @@ export type QueryConsentsArgs = {
 };
 
 
+export type QueryEventArgs = {
+  id: Scalars['String'];
+};
+
+
+export type QueryEventsArgs = {
+  cursorId?: InputMaybe<Scalars['String']>;
+  filter?: InputMaybe<EventFilter>;
+  order?: InputMaybe<SortOrder>;
+  skip?: InputMaybe<Scalars['Int']>;
+  sort?: InputMaybe<EventSort>;
+  take?: InputMaybe<Scalars['Int']>;
+};
+
+
 export type QueryExpectedRevenueArgs = {
   end?: InputMaybe<Scalars['DateTime']>;
   start: Scalars['DateTime'];
+};
+
+
+export type QueryImageArgs = {
+  id: Scalars['String'];
 };
 
 
@@ -591,6 +773,18 @@ export type SingleEventFilter = {
   source: Scalars['String'];
 };
 
+export enum SortOrder {
+  Ascending = 'Ascending',
+  Descending = 'Descending'
+}
+
+export type Stats = {
+  __typename?: 'Stats';
+  articlesCount: Scalars['Int'];
+  authorsCount: Scalars['Int'];
+  firstArticleDate?: Maybe<Scalars['DateTime']>;
+};
+
 export enum SubscriptionDeactivationReason {
   InvoiceNotPaid = 'invoiceNotPaid',
   None = 'none',
@@ -680,6 +874,11 @@ export type RevenueQueryVariables = Exact<{
 
 export type RevenueQuery = { __typename?: 'Query', revenue: Array<{ __typename?: 'DashboardInvoice', amount: number, paidAt?: string | null, memberPlan?: string | null }> };
 
+export type StatsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type StatsQuery = { __typename?: 'Query', stats?: { __typename?: 'Stats', articlesCount: number, authorsCount: number, firstArticleDate?: string | null } | null };
+
 export type VersionInformationQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -724,6 +923,42 @@ export function useRevenueLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<Re
 export type RevenueQueryHookResult = ReturnType<typeof useRevenueQuery>;
 export type RevenueLazyQueryHookResult = ReturnType<typeof useRevenueLazyQuery>;
 export type RevenueQueryResult = Apollo.QueryResult<RevenueQuery, RevenueQueryVariables>;
+export const StatsDocument = gql`
+    query Stats {
+  stats {
+    articlesCount
+    authorsCount
+    firstArticleDate
+  }
+}
+    `;
+
+/**
+ * __useStatsQuery__
+ *
+ * To run a query within a React component, call `useStatsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useStatsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useStatsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useStatsQuery(baseOptions?: Apollo.QueryHookOptions<StatsQuery, StatsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<StatsQuery, StatsQueryVariables>(StatsDocument, options);
+      }
+export function useStatsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<StatsQuery, StatsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<StatsQuery, StatsQueryVariables>(StatsDocument, options);
+        }
+export type StatsQueryHookResult = ReturnType<typeof useStatsQuery>;
+export type StatsLazyQueryHookResult = ReturnType<typeof useStatsLazyQuery>;
+export type StatsQueryResult = Apollo.QueryResult<StatsQuery, StatsQueryVariables>;
 export const VersionInformationDocument = gql`
     query VersionInformation {
   versionInformation {

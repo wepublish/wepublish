@@ -18,7 +18,8 @@ import {
   PaymentProviderProps,
   UpdatePaymentWithIntentStateProps,
   UpdateRemoteSubscriptionAmountProps,
-  WebhookForPaymentIntentProps
+  WebhookForPaymentIntentProps,
+  WebhookResponse
 } from './payment-provider'
 
 export interface PayrexxSubscripionsPaymentProviderProps extends PaymentProviderProps {
@@ -153,8 +154,6 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
   async updatePaymentWithIntentState({
     intentState,
     paymentClient,
-    paymentsByID,
-    invoicesByID,
     subscriptionClient,
     userClient,
     invoiceClient,
@@ -369,15 +368,32 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
     }
   }
 
-  async webhookForPaymentIntent(props: WebhookForPaymentIntentProps): Promise<IntentState[]> {
+  async webhookForPaymentIntent(props: WebhookForPaymentIntentProps): Promise<WebhookResponse> {
     const intentStates: IntentState[] = []
 
     // Protect endpoint
     const apiKey = props.req.query.apiKey as string
-    if (!timeConstantCompare(apiKey, this.webhookSecret)) throw new Error('Invalid api key!')
+    if (!timeConstantCompare(apiKey, this.webhookSecret)) {
+      return {
+        status: 403,
+        message: 'Invalid Api Key'
+      }
+    }
+
+    if (!props.req.body.transaction) {
+      return {
+        status: 200,
+        message: 'Skipping non-transaction webhook'
+      }
+    }
 
     const transaction = props.req.body.transaction
-    if (!transaction) throw new Error('Can not handle webhook')
+    if (transaction.subscription === null) {
+      return {
+        status: 200,
+        message: 'Skipping transaction not related to subscription'
+      }
+    }
 
     const state = mapPayrexxEventToPaymentStatus(transaction.status)
     if (state !== null && transaction.subscription) {
@@ -387,13 +403,18 @@ export class PayrexxSubscriptionPaymentProvider extends BasePaymentProvider {
         state
       })
     }
-    return intentStates
+    return {
+      status: 200,
+      paymentStates: intentStates
+    }
   }
 
+  // eslint-disable-next-line
   async createIntent(props: CreatePaymentIntentProps): Promise<Intent> {
     throw new Error('NOT IMPLEMENTED')
   }
 
+  // eslint-disable-next-line
   async checkIntentStatus({intentID}: CheckIntentProps): Promise<IntentState> {
     throw new Error('NOT IMPLEMENTED')
   }

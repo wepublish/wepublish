@@ -10,3 +10,5 @@ libs/website/api-v2/src/lib/graphql.ts
 libs/testing/src/__generated__/fabbrica/index.ts
 libs/testing/src/__generated__/fabbrica/index.d.ts
 libs/testing/src/__generated__/fabbrica/index.js
+
+/.nx/cache

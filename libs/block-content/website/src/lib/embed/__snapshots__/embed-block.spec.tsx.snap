@@ -7,9 +7,11 @@ exports[`Embed Block should render Default 1`] = `
   >
     <iframe
       allowfullscreen=""
-      class="css-1wlgbuj-EmbedBlockIframe-styleCustomCss e1t445oh0"
-      sandbox=""
+      class="css-qsfbe7-EmbedBlockIframe-EmbedBlockIframe-styleCustomCss e1t445oh0"
+      id="iFrameResizer0"
+      scrolling="no"
       src="https://www.example.com"
+      style="overflow: hidden;"
       title="Title"
     />
   </div>
@@ -23,9 +25,11 @@ exports[`Embed Block should render WithClassName 1`] = `
   >
     <iframe
       allowfullscreen=""
-      class="css-1wlgbuj-EmbedBlockIframe-styleCustomCss e1t445oh0"
-      sandbox=""
+      class="css-qsfbe7-EmbedBlockIframe-EmbedBlockIframe-styleCustomCss e1t445oh0"
+      id="iFrameResizer1"
+      scrolling="no"
       src="https://www.example.com"
+      style="overflow: hidden;"
       title="Title"
     />
   </div>

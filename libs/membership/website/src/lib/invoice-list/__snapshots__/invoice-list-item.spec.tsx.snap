@@ -9,7 +9,7 @@ exports[`Invoice Item should render Canceled 1`] = `
       class="css-kkg48e-InvoiceListItemContent e7di52m3"
     >
       <h6
-        class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
       >
         Stornierte Rechnung für Foobar Memberplan
       </h6>
@@ -137,7 +137,7 @@ exports[`Invoice Item should render Default 1`] = `
       class="css-kkg48e-InvoiceListItemContent e7di52m3"
     >
       <h6
-        class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
       >
         Bezahlte Rechnung für Foobar Memberplan
       </h6>
@@ -265,7 +265,7 @@ exports[`Invoice Item should render Unpaid 1`] = `
       class="css-kkg48e-InvoiceListItemContent e7di52m3"
     >
       <h6
-        class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
       >
         Offene Rechnung für Foobar Memberplan
       </h6>
@@ -375,7 +375,7 @@ exports[`Invoice Item should render Unpaid 1`] = `
         class="css-lst8rm-InvoiceListItemActions e7di52m0"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
           tabindex="0"
           type="button"
         >
@@ -399,7 +399,7 @@ exports[`Invoice Item should render WithClassName 1`] = `
       class="css-kkg48e-InvoiceListItemContent e7di52m3"
     >
       <h6
-        class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
       >
         Bezahlte Rechnung für Foobar Memberplan
       </h6>
@@ -527,7 +527,7 @@ exports[`Invoice Item should render WithEmotion 1`] = `
       class="css-kkg48e-InvoiceListItemContent e7di52m3"
     >
       <h6
-        class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
       >
         Bezahlte Rechnung für Foobar Memberplan
       </h6>
@@ -657,7 +657,7 @@ exports[`Invoice Item should render WithPayError 1`] = `
           </li>
         </ul>
         <div
-+         class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-standardError MuiAlert-standard css-1hdyuqk-MuiPaper-root-MuiAlert-root"
++         class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-standardError MuiAlert-standard css-1f6gfio-MuiPaper-root-MuiAlert-root"
 +         role="alert"
 +       >
 +         <div
@@ -685,7 +685,7 @@ exports[`Invoice Item should render WithPayError 1`] = `
           class="css-lst8rm-InvoiceListItemActions e7di52m0"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
             tabindex="0""
 `;
 
@@ -700,9 +700,9 @@ exports[`Invoice Item should render WithPayLoading 1`] = `
           class="css-lst8rm-InvoiceListItemActions e7di52m0"
         >
           <button
--           class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
+-           class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
 -           tabindex="0"
-+           class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-sghohy-MuiButtonBase-root-MuiButton-root"
++           class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium Mui-disabled MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
 +           disabled=""
 +           tabindex="-1"
             type="button"
@@ -716,4 +716,149 @@ exports[`Invoice Item should render WithPayLoading 1`] = `
       </div>
     </div>
   </DocumentFragment>"
+`;
+
+exports[`Invoice Item should render WithPayrexxSubscriptionsWarning 1`] = `
+<DocumentFragment>
+  <div
+    class="css-7e096c-InvoiceListItemWrapper e7di52m4"
+  >
+    <div
+      class="css-kkg48e-InvoiceListItemContent e7di52m3"
+    >
+      <h6
+        class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+      >
+        Offene Rechnung für Foobar Memberplan
+      </h6>
+      <ul
+        class="css-579onz-InvoiceListItemMeta e7di52m2"
+      >
+        <li
+          class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0V0z"
+              fill="none"
+            />
+            <path
+              d="M11 7h2v2h-2zm0 4h2v6h-2zm1-9C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"
+            />
+          </svg>
+           Rechnungs-Nr: 4321-4321
+        </li>
+        <li
+          class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM9 14H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2zm-8 4H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2z"
+            />
+          </svg>
+          <span>
+            Abgeschlossen am 
+            <time
+              datetime="2023-01-01"
+            >
+              01.01.2023 00:00
+            </time>
+          </span>
+        </li>
+        <li
+          class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M1 21h22L12 2 1 21zm12-3h-2v-2h2v2zm0-4h-2v-4h2v4z"
+            />
+          </svg>
+          <span>
+            Fällig am 
+            <time
+              datetime="2023-01-01"
+            >
+              01.01.2023 00:00
+            </time>
+          </span>
+        </li>
+        <li
+          class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+        >
+          <svg
+            fill="currentColor"
+            height="1em"
+            stroke="currentColor"
+            stroke-width="0"
+            viewBox="0 0 24 24"
+            width="1em"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M0 0h24v24H0z"
+              fill="none"
+            />
+            <path
+              d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"
+            />
+          </svg>
+           Betrag von CHF 5.-
+        </li>
+      </ul>
+      <div
+        class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-standardWarning MuiAlert-standard css-19089cd-MuiPaper-root-MuiAlert-root"
+        role="alert"
+      >
+        <div
+          class="MuiAlert-icon css-1ytlwq5-MuiAlert-icon"
+        >
+          <svg
+            aria-hidden="true"
+            class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit css-1vooibu-MuiSvgIcon-root"
+            data-testid="ReportProblemOutlinedIcon"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M12 5.99L19.53 19H4.47L12 5.99M12 2L1 21h22L12 2zm1 14h-2v2h2v-2zm0-6h-2v4h2v-4z"
+            />
+          </svg>
+        </div>
+        <div
+          class="MuiAlert-message css-1pxa9xg-MuiAlert-message"
+        >
+          Wir haben vor einiger Zeit das Membersystem umgestellt. Du verfügst noch über eine alte Membership, die automatisch abgebucht wird.
+        </div>
+      </div>
+    </div>
+  </div>
+</DocumentFragment>
 `;

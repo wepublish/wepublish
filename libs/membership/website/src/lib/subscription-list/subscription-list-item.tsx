@@ -17,6 +17,7 @@ import {
 } from 'react-icons/md'
 import {formatChf} from '../formatters/format-currency'
 import {formatPaymentPeriod, formatPaymentTimeline} from '../formatters/format-payment-period'
+import {MembershipModal} from '../membership-modal/membership-modal'
 
 export const SubscriptionListItemWrapper = styled('div')`
   display: grid;
@@ -66,14 +67,16 @@ export function SubscriptionListItem({
   deactivation,
   memberPlan: {image, name},
   url,
+  canPay,
   pay,
   cancel,
+  canExtend,
   extend,
   className
 }: BuilderSubscriptionListItemProps) {
   const {
-    locale,
-    elements: {Image, H6, Button, Link, Alert},
+    meta: {locale},
+    elements: {Image, H6, Button, Link, Alert, H5, Paragraph},
     date
   } = useWebsiteBuilder()
 
@@ -83,6 +86,8 @@ export function SubscriptionListItem({
 
   const periodicityTimeline = formatPaymentTimeline(paymentPeriodicity)
   const subscriptionDuration = formatPaymentPeriod(paymentPeriodicity)
+
+  const [confirmCancel, setConfirmCancel] = useState(false)
 
   return (
     <SubscriptionListItemWrapper className={className}>
@@ -95,7 +100,10 @@ export function SubscriptionListItem({
           <SubscriptionListItemMetaItem>
             <MdCalendarMonth />
             <span>
-              Abgeschlossen am <time dateTime={startsAt}>{date.format(new Date(startsAt))}</time>
+              Abgeschlossen am{' '}
+              <time suppressHydrationWarning dateTime={startsAt}>
+                {date.format(new Date(startsAt))}
+              </time>
             </span>
           </SubscriptionListItemMetaItem>
 
@@ -103,7 +111,10 @@ export function SubscriptionListItem({
             <SubscriptionListItemMetaItem>
               <MdOutlinePayments />
               <span>
-                Bezahlt bis <time dateTime={paidUntil}>{date.format(new Date(paidUntil))}</time>
+                Bezahlt bis{' '}
+                <time suppressHydrationWarning dateTime={paidUntil}>
+                  {date.format(new Date(paidUntil))}
+                </time>
               </span>
             </SubscriptionListItemMetaItem>
           )}
@@ -114,7 +125,7 @@ export function SubscriptionListItem({
                 <MdCancel />
                 <span>
                   Gekündigt am{' '}
-                  <time dateTime={deactivation.date}>
+                  <time suppressHydrationWarning dateTime={deactivation.date}>
                     {date.format(new Date(deactivation.date))}
                   </time>
                 </span>
@@ -166,20 +177,20 @@ export function SubscriptionListItem({
         {!deactivation && (
           <SubscriptionListItemActions>
             <Button
-              onClick={callAction(cancel)}
+              onClick={() => setConfirmCancel(true)}
               disabled={loading}
               variant="text"
               color="secondary">
-              Abo Kündigen
+              Abo Künden
             </Button>
 
-            {!paidUntil && (
+            {canPay && (
               <Button onClick={callAction(pay)} disabled={loading}>
                 Jetzt Bezahlen
               </Button>
             )}
 
-            {paidUntil && (
+            {canExtend && (
               <Button onClick={callAction(extend)} disabled={loading}>
                 Jetzt Verlängern
               </Button>
@@ -187,6 +198,24 @@ export function SubscriptionListItem({
           </SubscriptionListItemActions>
         )}
       </SubscriptionListItemContent>
+
+      <MembershipModal
+        open={!!confirmCancel}
+        onSubmit={async () => {
+          setConfirmCancel(false)
+          await callAction(cancel)()
+        }}
+        onCancel={() => setConfirmCancel(false)}
+        submitText={`Abo Künden`}>
+        <H5 id="modal-modal-title" component="h1">
+          {name} wirklich künden?
+        </H5>
+
+        <Paragraph gutterBottom={false}>
+          Das Abo wird nicht mehr verlängert, bleibt aber gültig bis zum Ablaufsdatum. Alle offene
+          Rechnungen des Abos werden storniert.
+        </Paragraph>
+      </MembershipModal>
     </SubscriptionListItemWrapper>
   )
 }

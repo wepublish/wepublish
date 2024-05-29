@@ -9,7 +9,7 @@ import {
 } from '@wepublish/testing'
 import {Test, TestingModule} from '@nestjs/testing'
 import {forwardRef} from '@nestjs/common'
-import {PrismaModule, PrismaService} from '@wepublish/nest-modules'
+import {PrismaModule} from '@wepublish/nest-modules'
 import {matches} from 'lodash'
 import bodyParser from 'body-parser'
 import Mailgun from 'mailgun.js'
@@ -45,10 +45,10 @@ describe('MailController', () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [forwardRef(() => PrismaModule.forTest(prismaClient))],
       providers: [
-        PrismaService,
+        PrismaClient,
         {
           provide: MailContext,
-          useFactory: (prisma: PrismaService) => {
+          useFactory: (prisma: PrismaClient) => {
             return new MailContext({
               prisma,
               mailProvider: new MailchimpMailProvider({
@@ -64,7 +64,7 @@ describe('MailController', () => {
               defaultReplyToAddress: 'defaultReplyToAddress@example.com'
             })
           },
-          inject: [PrismaService]
+          inject: [PrismaClient]
         }
       ]
     }).compile()
@@ -164,7 +164,7 @@ describe('MailController', () => {
       root3: 'ok'
     }
 
-    await new MailController(prismaClient as PrismaService, mailContext, {
+    await new MailController(prismaClient, mailContext, {
       daysAwayFromEnding: 1,
       externalMailTemplateId: mailTemplate1.externalMailTemplateId,
       recipient: user,
@@ -205,7 +205,7 @@ describe('MailController', () => {
     })
 
     const periodicJobRunDate = new Date()
-    await new MailController(prismaClient as PrismaService, mailContext, {
+    await new MailController(prismaClient, mailContext, {
       daysAwayFromEnding: 1,
       externalMailTemplateId: mailTemplate2.externalMailTemplateId,
       recipient: user,
@@ -230,7 +230,7 @@ describe('MailController', () => {
         'Content-Type': 'application/json'
       })
 
-    await new MailController(prismaClient as PrismaService, mailContext, {
+    await new MailController(prismaClient, mailContext, {
       daysAwayFromEnding: 1,
       externalMailTemplateId: mailTemplate2.externalMailTemplateId,
       recipient: user,

@@ -1,11 +1,12 @@
 import {AuthorFilter, AuthorSort} from '../../db/author'
 import {PrismaClient} from '@prisma/client'
 import {getAuthors} from './author.queries'
+import {SortOrder} from '@wepublish/utils/api'
 
 export const getPublicAuthors = async (
   filter: Partial<AuthorFilter>,
   sortedField: AuthorSort,
-  order: 1 | -1,
+  order: SortOrder,
   cursorId: string | null,
   skip: number,
   take: number,

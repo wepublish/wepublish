@@ -12,6 +12,7 @@ fragment ArticleWithoutBlocks on Article {
   tags
   title
   url
+  peeredArticleURL
 
   authors {
     ...FullAuthor
@@ -62,7 +63,7 @@ query ArticleList(
 ) {
   articles(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
     nodes {
-      ...FullArticle
+      ...ArticleWithoutBlocks
     }
 
     pageInfo {

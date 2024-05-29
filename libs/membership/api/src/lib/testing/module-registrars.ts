@@ -1,10 +1,11 @@
 import {PrismaClient} from '@prisma/client'
 import {DynamicModule} from '@nestjs/common'
-import {PrismaModule, PrismaService} from '@wepublish/nest-modules'
+import {PrismaModule} from '@wepublish/nest-modules'
 import {FakeMailProvider, MailsModule} from '@wepublish/mail/api'
 import {
   PaymentProvider,
   PaymentsModule,
+  PayrexxFactory,
   PayrexxPaymentProvider,
   PayrexxSubscriptionPaymentProvider,
   StripeCheckoutPaymentProvider,
@@ -14,16 +15,7 @@ import bodyParser from 'body-parser'
 import {ConfigModule, ConfigService} from '@nestjs/config'
 
 export function registerPrismaModule(prismaClient: PrismaClient): DynamicModule {
-  return {
-    module: PrismaModule,
-    providers: [
-      {
-        provide: PrismaClient,
-        useFactory: () => prismaClient as PrismaService
-      }
-    ],
-    exports: [PrismaService]
-  }
+  return PrismaModule.forTest(prismaClient)
 }
 
 export function registerMailsModule(): DynamicModule {
@@ -43,7 +35,7 @@ export function registerMailsModule(): DynamicModule {
 export function registerPaymentsModule(): DynamicModule {
   return PaymentsModule.registerAsync({
     imports: [ConfigModule, PrismaModule],
-    useFactory: (config: ConfigService, prisma: PrismaService) => {
+    useFactory: (config: ConfigService, prisma: PrismaClient) => {
       const paymentProviders: PaymentProvider[] = []
 
       if (
@@ -57,7 +49,7 @@ export function registerPaymentsModule(): DynamicModule {
             name: 'Stripe Checkout',
             offSessionPayments: false,
             secretKey: config.getOrThrow('STRIPE_SECRET_KEY'),
-            webhookEndpointSecret: config.getOrThrow('STRIPE_CHECKOUT_WEBHOOK_SECRET'),
+            webhookEndpointSecret: config.getOrThrow('STRIPE_SECRET_KEY'),
             incomingRequestHandler: bodyParser.raw({type: 'application/json'})
           }),
           new StripePaymentProvider({
@@ -65,7 +57,7 @@ export function registerPaymentsModule(): DynamicModule {
             name: 'Stripe',
             offSessionPayments: true,
             secretKey: config.getOrThrow('STRIPE_SECRET_KEY'),
-            webhookEndpointSecret: config.getOrThrow('STRIPE_WEBHOOK_SECRET'),
+            webhookEndpointSecret: config.getOrThrow('STRIPE_SECRET_KEY'),
             incomingRequestHandler: bodyParser.raw({type: 'application/json'})
           })
         )
@@ -76,23 +68,21 @@ export function registerPaymentsModule(): DynamicModule {
         config.get('PAYREXX_API_SECRET') &&
         config.get('PAYREXX_WEBHOOK_SECRET')
       ) {
+        const payrexxFactory = new PayrexxFactory({
+          baseUrl: 'https://api.payrexx.com/v1.0/',
+          instance: config.getOrThrow('PAYREXX_INSTANCE_NAME'),
+          secret: config.getOrThrow('PAYREXX_API_SECRET')
+        })
         paymentProviders.push(
           new PayrexxPaymentProvider({
             id: 'payrexx',
             name: 'Payrexx',
             offSessionPayments: false,
-            instanceName: config.getOrThrow('PAYREXX_INSTANCE_NAME'),
-            instanceAPISecret: config.getOrThrow('PAYREXX_API_SECRET'),
+            gatewayClient: payrexxFactory.gatewayClient,
+            transactionClient: payrexxFactory.transactionClient,
+            webhookApiKey: config.getOrThrow('PAYREXX_WEBHOOK_SECRET'),
             psp: [0, 15, 17, 2, 3, 36],
-            pm: [
-              'postfinance_card',
-              'postfinance_efinance',
-              // "mastercard",
-              // "visa",
-              'twint',
-              // "invoice",
-              'paypal'
-            ],
+            pm: ['postfinance_card', 'postfinance_efinance', 'twint', 'paypal'],
             vatRate: 7.7,
             incomingRequestHandler: bodyParser.json()
           })
@@ -113,6 +103,6 @@ export function registerPaymentsModule(): DynamicModule {
 
       return {paymentProviders}
     },
-    inject: [ConfigService, PrismaService]
+    inject: [ConfigService, PrismaClient]
   })
 }

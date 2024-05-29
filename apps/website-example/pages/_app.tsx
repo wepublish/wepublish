@@ -1,21 +1,9 @@
-import {
-  Container,
-  createTheme,
-  css,
-  CssBaseline,
-  GlobalStyles,
-  styled,
-  Theme,
-  ThemeOptions,
-  ThemeProvider,
-  useTheme
-} from '@mui/material'
-import {theme} from '@wepublish/ui'
+import {Container, css, CssBaseline, styled, ThemeProvider} from '@mui/material'
+import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 import {
   ApiV1,
   FooterContainer,
   NavbarContainer,
-  NavbarInnerWrapper,
   WebsiteBuilderProvider,
   WebsiteProvider
 } from '@wepublish/website'
@@ -27,21 +15,13 @@ import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
 import Script from 'next/script'
-import {useMemo} from 'react'
 import {initReactI18next} from 'react-i18next'
-import {PartialDeep} from 'type-fest'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
-import {authLink} from '../src/auth-link'
+
 import {ReactComponent as Logo} from '../src/logo.svg'
-import {NavBarProfile} from '../src/navbar-profile'
-import {NextWepublishLink} from '../src/next-wepublish-link'
-import {SessionProvider} from '../src/session.provider'
-import {tsriArticleStyles} from '../src/styles/tsri-article.styles'
-import {TsriBreakBlock} from '../src/tsri-break-block'
-import {TsriButton} from '../src/tsri-button'
-import {TsriParagraph} from '../src/tsri-paragraph'
+import theme from '../src/theme'
 
 setDefaultOptions({
   locale: de
@@ -59,22 +39,6 @@ i18next
     }
   })
 z.setErrorMap(zodI18nMap)
-
-const websiteExampleTheme = createTheme(theme, {
-  typography: {
-    h1: {
-      fontWeight: theme.typography.fontWeightMedium
-    },
-    h2: {
-      fontWeight: theme.typography.fontWeightMedium
-    }
-  },
-  breakpoints: {
-    values: {
-      lg: 1310
-    }
-  }
-} as PartialDeep<Theme> | ThemeOptions)
 
 const Spacer = styled('div')`
   display: grid;
@@ -112,14 +76,8 @@ const LogoWrapper = styled(Logo)`
 `
 
 const NavBar = styled(NavbarContainer)`
-  background-color: ${({theme}) => theme.palette.common.white};
-  margin-bottom: ${({theme}) => theme.spacing(3)};
-
-  ${NavbarInnerWrapper} {
-    width: 100%;
-    max-width: ${({theme}) => `${theme.breakpoints.values['lg']}${theme.breakpoints.unit}`};
-    align-self: center;
-  }
+  grid-column: -1/1;
+  z-index: 11;
 `
 
 const dateFormatter = (date: Date, includeTime = true) =>
@@ -132,13 +90,7 @@ type CustomAppProps = AppProps<{
 }>
 
 function CustomApp({Component, pageProps}: CustomAppProps) {
-  const theme = useTheme()
-  const globalStyles = useMemo(
-    () => css`
-      ${tsriArticleStyles(theme)}
-    `,
-    [theme]
-  )
+  const siteTitle = 'We.Publish'
 
   return (
     <SessionProvider sessionToken={pageProps.sessionToken ?? null}>
@@ -146,21 +98,22 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
         <WebsiteBuilderProvider
           Head={Head}
           Script={Script}
-          elements={{Link: NextWepublishLink, Button: TsriButton, Paragraph: TsriParagraph}}
-          date={{format: dateFormatter}}
-          blocks={{Break: TsriBreakBlock}}>
-          <ThemeProvider theme={websiteExampleTheme}>
-            <GlobalStyles styles={globalStyles} />
+          elements={{Link: NextWepublishLink}}
+          date={{format: dateFormatter}}>
+          <ThemeProvider theme={theme}>
             <CssBaseline />
 
             <Head>
-              <title>We.Publish</title>
+              <title key="title">{siteTitle}</title>
               <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
               {/* Feeds */}
               <link rel="alternate" type="application/rss+xml" href="/api/rss-feed" />
               <link rel="alternate" type="application/atom+xml" href="/api/atom-feed" />
               <link rel="alternate" type="application/feed+json" href="/api/json-feed" />
+
+              {/* Sitemap */}
+              <link rel="sitemap" type="application/xml" title="Sitemap" href="/api/sitemap" />
 
               {/* Favicon definitions, generated with https://realfavicongenerator.net/ */}
               <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
@@ -173,13 +126,11 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
             </Head>
 
             <Spacer>
-              <NavBar categorySlugs={['categories', 'about-us']} slug="main">
-                <LogoLink href="/" aria-label="Startseite">
-                  <LogoWrapper />
-                </LogoLink>
-
-                <NavBarProfile />
-              </NavBar>
+              <NavBar
+                categorySlugs={[['categories', 'about-us']]}
+                slug="main"
+                headerSlug="header"
+              />
 
               <main>
                 <MainSpacer maxWidth="lg">
@@ -187,7 +138,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
                 </MainSpacer>
               </main>
 
-              <FooterContainer slug="footer">
+              <FooterContainer slug="footer" categorySlugs={[['categories', 'about-us']]}>
                 <LogoLink href="/" aria-label="Startseite">
                   <LogoWrapper />
                 </LogoLink>

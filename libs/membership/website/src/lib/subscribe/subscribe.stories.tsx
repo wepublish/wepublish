@@ -9,10 +9,13 @@ import {
   Challenge,
   Exact,
   FullImageFragment,
+  FullInvoiceFragment,
   FullMemberPlanFragment,
+  FullSubscriptionFragment,
   MemberPlan,
   PaymentMethod,
-  PaymentPeriodicity
+  PaymentPeriodicity,
+  SubscriptionDeactivationReason
 } from '@wepublish/website/api'
 import {Node} from 'slate'
 import {z} from 'zod'
@@ -132,7 +135,8 @@ const memberPlan = {
   id: '123',
   slug: '',
   description: text,
-  tags: []
+  tags: [],
+  extendable: true
 } as Exact<FullMemberPlanFragment>
 
 const memberPlan2 = {
@@ -159,6 +163,33 @@ const challenge = {
   validUntil: '2023-06-13',
   __typename: 'Challenge'
 } as Exact<Challenge>
+
+const subscription = {
+  __typename: 'Subscription',
+  id: '1234',
+  autoRenew: false,
+  memberPlan,
+  monthlyAmount: memberPlan.amountPerMonthMin,
+  paymentMethod: {} as any,
+  paymentPeriodicity: PaymentPeriodicity.Yearly,
+  properties: [],
+  startsAt: new Date('2024-01-01').toISOString(),
+  url: 'https://example.com',
+  extendable: true
+} as Exact<FullSubscriptionFragment>
+
+const invoice = {
+  __typename: 'Invoice',
+  id: '1234',
+  createdAt: new Date('2024-01-01').toISOString(),
+  dueAt: new Date('2024-01-01').toISOString(),
+  items: [],
+  mail: '',
+  modifiedAt: new Date('2024-01-01').toISOString(),
+  subscriptionID: subscription.id,
+  total: 5000,
+  subscription
+} as Exact<FullInvoiceFragment>
 
 const fillFirstName: StoryObj['play'] = async ({canvasElement, step}) => {
   const canvas = within(canvasElement)
@@ -383,17 +414,37 @@ export const LoggedOut: StoryObj<typeof Subscribe> = {
       },
       loading: false
     },
+    userSubscriptions: {
+      data: undefined,
+      loading: false
+    },
+    userInvoices: {
+      data: undefined,
+      loading: false
+    },
     onSubscribeWithRegister: async (...data) => action('onSubscribeWithRegister')(...data),
     onSubscribe: async (...data) => action('onSubscribe')(...data)
   }
 }
 
-export const LoggedIn = {
+export const LoggedIn: StoryObj<typeof Subscribe> = {
   ...LoggedOut,
   args: {
     ...LoggedOut.args,
     challenge: {
       data: undefined,
+      loading: false
+    },
+    userSubscriptions: {
+      data: {
+        subscriptions: [subscription]
+      },
+      loading: false
+    },
+    userInvoices: {
+      data: {
+        invoices: [invoice]
+      },
       loading: false
     }
   },
@@ -530,6 +581,13 @@ export const OnlyRequiredFilled: StoryObj<typeof Subscribe> = {
   })
 }
 
+export const LoggedInFilled: StoryObj<typeof Subscribe> = {
+  ...LoggedIn,
+  play: waitForInitialDataIsSet(async ctx => {
+    await clickSubscribe(ctx)
+  })
+}
+
 export const OnlyRequiredInvalid: StoryObj<typeof Subscribe> = {
   ...OnlyRequired,
   play: waitForInitialDataIsSet(async ctx => {
@@ -566,6 +624,28 @@ export const WithChallengeLoading: StoryObj<typeof Subscribe> = {
   args: {
     ...LoggedOut.args,
     challenge: {
+      loading: true,
+      data: undefined
+    }
+  }
+}
+
+export const WithUserSubscriptionsLoading: StoryObj<typeof Subscribe> = {
+  ...LoggedIn,
+  args: {
+    ...LoggedIn.args,
+    userSubscriptions: {
+      loading: true,
+      data: undefined
+    }
+  }
+}
+
+export const WithUserInvoicesLoading: StoryObj<typeof Subscribe> = {
+  ...LoggedIn,
+  args: {
+    ...LoggedIn.args,
+    userInvoices: {
       loading: true,
       data: undefined
     }
@@ -620,7 +700,44 @@ export const ResetPaymentOptionsOnPaymentMethodChange: StoryObj<typeof Subscribe
   })
 }
 
-export const WithClassName = {
+export const NoWarningDeactivatedSubscription: StoryObj<typeof Subscribe> = {
+  ...LoggedIn,
+  args: {
+    ...LoggedIn.args,
+    userSubscriptions: {
+      data: {
+        subscriptions: [
+          {
+            ...subscription,
+            deactivation: {
+              date: new Date('2023-01-01').toISOString(),
+              reason: SubscriptionDeactivationReason.None
+            }
+          }
+        ]
+      },
+      loading: false
+    }
+  }
+}
+
+export const NoWarningPaindInvoice: StoryObj<typeof Subscribe> = {
+  ...LoggedIn,
+  args: {
+    ...LoggedIn.args,
+    userInvoices: {
+      data: {
+        invoices: [
+          {...invoice, paidAt: new Date('2023-01-01').toISOString()},
+          {...invoice, canceledAt: new Date('2023-01-01').toISOString()}
+        ]
+      },
+      loading: false
+    }
+  }
+}
+
+export const WithClassName: StoryObj<typeof Subscribe> = {
   ...LoggedOut,
   args: {
     ...LoggedOut.args,

@@ -1,7 +1,13 @@
 import {GlobalStyles, TextField, Theme, ThemeProvider, css} from '@mui/material'
-import {Article, ArticleList, ArticleListItem, ArticleSEO} from '@wepublish/article/website'
+import {Article, ArticleList, ArticleSEO} from '@wepublish/article/website'
 import {LoginForm, RegistrationForm} from '@wepublish/authentication/website'
-import {Author, AuthorChip, AuthorList, AuthorListItem} from '@wepublish/author/website'
+import {
+  Author,
+  AuthorChip,
+  AuthorLinks,
+  AuthorList,
+  AuthorListItem
+} from '@wepublish/author/website'
 import {
   BildwurfAdBlock,
   BlockRenderer,
@@ -23,6 +29,7 @@ import {
   SoundCloudTrackBlock,
   Teaser,
   TeaserGridBlock,
+  TeaserListBlock,
   TeaserGridFlexBlock,
   TikTokVideoBlock,
   TitleBlock,
@@ -58,6 +65,7 @@ import {RenderElement, RenderLeaf} from '@wepublish/richtext/website'
 import {
   Alert,
   Button,
+  Pagination,
   H1,
   H2,
   H3,
@@ -87,6 +95,8 @@ const dateFormatter = (date: Date, includeTime = true) =>
 const styles = (theme: Theme) => css`
   html {
     font-family: ${theme.typography.fontFamily};
+    hyphens: auto;
+    word-break: break-word;
   }
 
   * {
@@ -114,11 +124,11 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
     <IconContext.Provider value={{}}>
       <WebsiteBuilderProvider
         Author={Author}
+        AuthorLinks={AuthorLinks}
         AuthorChip={AuthorChip}
         AuthorList={AuthorList}
         AuthorListItem={AuthorListItem}
         ArticleList={ArticleList}
-        ArticleListItem={ArticleListItem}
         Article={Article}
         ArticleSEO={ArticleSEO}
         PeerInformation={PeerInformation}
@@ -154,6 +164,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           Alert,
           Button,
           IconButton,
+          Pagination,
           H1,
           H2,
           H3,
@@ -183,6 +194,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           Listicle: ListicleBlock,
           TeaserGridFlex: TeaserGridFlexBlock,
           TeaserGrid: TeaserGridBlock,
+          TeaserList: TeaserListBlock,
           Teaser,
           BildwurfAd: BildwurfAdBlock,
           Embed: EmbedBlock,

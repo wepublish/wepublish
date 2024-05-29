@@ -41,7 +41,7 @@
     <!-- <a href="https://github.com/github_username/repo_name"><strong>Explore the docs »</strong></a>-->
     <br />
     <br />
-    <a href="#demo">View Demo</a>
+    <a href="#demo-stable">View Demo</a>
     ·
     <a href="https://github.com/wepublish/wepublish/issues">Report Bug</a>
     ·
@@ -55,7 +55,7 @@
 
 - [About the Project](#about-the-project)
   - [Built With](#built-with)
-- [Demo](#demo)
+- [Demo](#demo-stable)
 - [Packages](#packages)
 - [Getting Started](#getting-started)
   - [Prerequisites](#prerequisites)
@@ -63,6 +63,7 @@
 - [Usage](#usage)
 - [Troubleshooting](#troubleshooting)
 - [Contributing](#contributing)
+- [Docs](#docs)
 - [Code of Conduct](#code-of-conduct)
 - [License](#license)
 - [Contact](#contact)
@@ -91,7 +92,6 @@ TBD
 - [Website](https://demo.wepublish.media)
 - [API](https://api.demo.wepublish.media)
 
-
 ## Preview (Next)
 
 - [Editor](https://editor.next.wepublish.media)
@@ -99,7 +99,6 @@ TBD
   - password: `123`
 - [Website](https://next.wepublish.media)
 - [API](https://api.next.wepublish.media)
-
 
 ## Development (Master)
 
@@ -146,7 +145,13 @@ npm i
 npm run build
 ```
 
-4. Run the project (starts a postgresql with Docker)
+4a. Test wepublish (the initial admin login is red printed in the log at first startup)
+
+```sh
+npm run try
+```
+
+4b. Run the project (starts a postgresql with Docker)
 
 ```sh
 npm run dev
@@ -249,4 +254,3 @@ Website: [https://www.wepublish.ch/](https://www.wepublish.ch/)
 [faq-md-url]: FAQ.md
 [code-of-conduct-url]: CODE_OF_CONDUCT.md
 [documentation-url]: docs/README.md
-

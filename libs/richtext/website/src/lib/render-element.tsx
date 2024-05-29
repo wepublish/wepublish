@@ -3,6 +3,7 @@ import {BuilderRenderElementProps} from '@wepublish/website/builder'
 import {Link} from '@mui/material'
 import {BlockFormat, InlineFormat} from '@wepublish/richtext'
 import {css} from '@emotion/react'
+import {Fragment} from 'react'
 
 const tableStyles = css`
   border-collapse: collapse;
@@ -13,35 +14,45 @@ const tableCellStyles = (borderColor?: string) => css`
   border: 1px solid ${borderColor ?? 'transparent'};
 `
 
+const paragraphStyles = css`
+  &:last-child {
+    margin-bottom: 0;
+  }
+`
+
 export function RenderElement({
   attributes,
   children,
   element
 }: BuilderRenderElementProps): JSX.Element {
   const {
-    elements: {H4, H5, H6, Paragraph, UnorderedList, OrderedList, ListItem}
+    elements: {H3, H4, H5, Paragraph, UnorderedList, OrderedList, ListItem}
   } = useWebsiteBuilder()
 
   switch (element.type) {
     case BlockFormat.H1:
       return (
-        <H4 component="h2" {...attributes}>
-          {children}
-        </H4>
+        <div>
+          <H3 component="h2" {...attributes} gutterBottom>
+            {children}
+          </H3>
+
+          <hr />
+        </div>
       )
 
     case BlockFormat.H2:
       return (
-        <H5 component="h3" {...attributes}>
+        <H4 component="h3" {...attributes} gutterBottom>
           {children}
-        </H5>
+        </H4>
       )
 
     case BlockFormat.H3:
       return (
-        <H6 component="h4" {...attributes}>
+        <H5 component="h4" {...attributes} gutterBottom>
           {children}
-        </H6>
+        </H5>
       )
 
     case BlockFormat.UnorderedList:
@@ -82,7 +93,20 @@ export function RenderElement({
         </Link>
       )
 
-    default:
-      return <Paragraph {...attributes}>{children}</Paragraph>
+    default: {
+      if (
+        element.children.length === 1 &&
+        'text' in element.children[0] &&
+        !element.children[0].text
+      ) {
+        return <Fragment />
+      }
+
+      return (
+        <Paragraph {...attributes} css={paragraphStyles}>
+          {children}
+        </Paragraph>
+      )
+    }
   }
 }

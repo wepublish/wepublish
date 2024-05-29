@@ -5,7 +5,8 @@ import {
   Intent,
   IntentState,
   PaymentProviderProps,
-  WebhookForPaymentIntentProps
+  WebhookForPaymentIntentProps,
+  WebhookResponse
 } from './payment-provider'
 import Stripe from 'stripe'
 import {logger} from '@wepublish/utils/api'
@@ -20,7 +21,7 @@ interface CreateStripeCustomerProps {
   intent: Stripe.PaymentIntent
 }
 
-function mapStripeEventToPaymentStatue(event: string): PaymentState | null {
+function mapStripeEventToPaymentStatus(event: string): PaymentState | null {
   switch (event) {
     case 'requires_payment_method':
     case 'requires_confirmation':
@@ -64,17 +65,20 @@ export class StripePaymentProvider extends BasePaymentProvider {
     return this.stripe.webhooks.constructEvent(body, signature, this.webhookEndpointSecret)
   }
 
-  async webhookForPaymentIntent(props: WebhookForPaymentIntentProps): Promise<IntentState[]> {
+  async webhookForPaymentIntent(props: WebhookForPaymentIntentProps): Promise<WebhookResponse> {
     const signature = props.req.headers['stripe-signature'] as string
     const event = this.getWebhookEvent(props.req.body, signature)
 
     if (!event.type.startsWith('payment_intent')) {
-      throw new Error(`Can not handle ${event.type}`)
+      return {
+        status: 200,
+        message: `Skipping handling ${event.type}`
+      }
     }
 
     const intent = event.data.object as Stripe.PaymentIntent
     const intentStates: IntentState[] = []
-    const state = mapStripeEventToPaymentStatue(intent.status)
+    const state = mapStripeEventToPaymentStatus(intent.status)
     if (state !== null && intent.metadata.paymentID !== undefined) {
       let customerID
 
@@ -95,7 +99,10 @@ export class StripePaymentProvider extends BasePaymentProvider {
         customerID
       })
     }
-    return intentStates
+    return {
+      status: 200,
+      paymentStates: intentStates
+    }
   }
 
   private isCustomerDeleted(
@@ -180,7 +187,7 @@ export class StripePaymentProvider extends BasePaymentProvider {
       }
     }
 
-    const state = mapStripeEventToPaymentStatue(intent.status)
+    const state = mapStripeEventToPaymentStatus(intent.status)
     logger('stripePaymentProvider').info(
       'Created Stripe intent with ID: %s for paymentProvider %s',
       intent.id,
@@ -198,7 +205,7 @@ export class StripePaymentProvider extends BasePaymentProvider {
 
   async checkIntentStatus({intentID}: CheckIntentProps): Promise<IntentState> {
     const intent = await this.stripe.paymentIntents.retrieve(intentID)
-    const state = mapStripeEventToPaymentStatue(intent.status)
+    const state = mapStripeEventToPaymentStatus(intent.status)
 
     if (!state) {
       logger('stripePaymentProvider').error(

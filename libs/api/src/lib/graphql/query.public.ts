@@ -1,4 +1,5 @@
 import {AuthSessionType} from '@wepublish/authentication/api'
+import {SortOrder, logger} from '@wepublish/utils/api'
 import {UserInputError} from 'apollo-server-express'
 import {
   GraphQLID,
@@ -11,11 +12,9 @@ import {
 import {Context} from '../context'
 import {ArticleSort} from '../db/article'
 import {AuthorSort} from '../db/author'
-import {SortOrder} from '../db/common'
 import {MemberPlanSort} from '../db/memberPlan'
 import {PageSort, PublicPage} from '../db/page'
 import {NotFound} from '../error'
-import {logger} from '@wepublish/utils/api'
 import {delegateToPeerSchema} from '../utility'
 import {
   GraphQLPublicArticle,
@@ -209,6 +208,7 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
         if ((peerID == null && peerSlug == null) || (peerID != null && peerSlug != null)) {
           throw new UserInputError('You must provide either `peerID` or `peerSlug`.')
         }
+
         if (peerSlug) {
           const peer = await loaders.peerBySlug.load(peerSlug)
 
@@ -467,7 +467,10 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
           )
           if (!paymentProvider) continue // TODO: what happens if we don't find a paymentProvider
 
-          const intentState = await paymentProvider.checkIntentStatus({intentID: payment.intentID})
+          const intentState = await paymentProvider.checkIntentStatus({
+            intentID: payment.intentID,
+            paymentID: payment.id
+          })
           await paymentProvider.updatePaymentWithIntentState({
             intentState,
             paymentClient: context.prisma.payment,
@@ -600,10 +603,25 @@ export const GraphQLPublicQuery = new GraphQLObjectType<undefined, Context>({
       description:
         'This query performs a fulltext search on titles and blocks of articles/pages and returns all matching ones.',
       args: {
-        query: {type: new GraphQLNonNull(GraphQLString)}
+        query: {type: new GraphQLNonNull(GraphQLString)},
+        take: {type: GraphQLInt, defaultValue: 10},
+        skip: {type: GraphQLInt, defaultValue: 0},
+        pageSort: {type: GraphQLPublishedPageSort, defaultValue: PageSort.PublishedAt},
+        articleSort: {type: GraphQLPublicArticleSort, defaultValue: ArticleSort.PublishedAt},
+        order: {type: GraphQLSortOrder, defaultValue: SortOrder.Descending}
       },
-      resolve: (root, {query}, {prisma, loaders}) =>
-        queryPhrase(query, prisma, loaders.publicArticles, loaders.publicPagesByID)
+      resolve: (root, {query, take, skip, pageSort, articleSort, order}, {prisma, loaders}) =>
+        queryPhrase(
+          query,
+          prisma,
+          loaders.publicArticles,
+          loaders.publicPagesByID,
+          take,
+          skip,
+          pageSort,
+          articleSort,
+          order
+        )
     },
 
     // Setting

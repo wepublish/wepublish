@@ -67,12 +67,17 @@ export const EventListItem = ({
           <EventListItemMeta>
             <EventListItemDate>
               <MdDateRange />
-              <time dateTime={startsAt}>{date.format(new Date(startsAt))}</time>
+              <time suppressHydrationWarning dateTime={startsAt}>
+                {date.format(new Date(startsAt))}
+              </time>
             </EventListItemDate>
 
             {endsAt && (
               <>
-                &ndash; <time dateTime={endsAt}>{date.format(new Date(endsAt))}</time>
+                &ndash;{' '}
+                <time suppressHydrationWarning dateTime={endsAt}>
+                  {date.format(new Date(endsAt))}
+                </time>
               </>
             )}
           </EventListItemMeta>

@@ -26,7 +26,8 @@ const image = {
   bigURL: 'https://unsplash.it/800/800',
   largeURL: 'https://unsplash.it/500/500',
   mediumURL: 'https://unsplash.it/300/300',
-  smallURL: 'https://unsplash.it/200/200'
+  smallURL: 'https://unsplash.it/200/200',
+  source: 'Reddit.com'
 } as FullImageFragment
 
 export const Default = {
@@ -37,17 +38,17 @@ export const Default = {
 }
 
 export const WithClassName = {
+  ...Default,
   args: {
-    image,
-    caption: 'Image caption',
+    ...Default.args,
     className: 'extra-classname'
   }
 }
 
 export const WithEmotion = {
+  ...Default,
   args: {
-    image,
-    caption: 'Image caption',
+    ...Default.args,
     css: css`
       background-color: #eee;
     `
@@ -55,8 +56,28 @@ export const WithEmotion = {
 }
 
 export const WithoutCaption = {
+  ...Default,
   args: {
-    image,
+    ...Default.args,
     caption: ''
+  }
+}
+
+export const WithoutSource = {
+  ...Default,
+  args: {
+    ...Default.args,
+    image: {
+      ...image,
+      source: ''
+    }
+  }
+}
+
+export const WithLink = {
+  ...Default,
+  args: {
+    ...Default.args,
+    linkUrl: 'https://example.com'
   }
 }

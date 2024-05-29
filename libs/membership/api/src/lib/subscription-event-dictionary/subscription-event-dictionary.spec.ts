@@ -146,7 +146,7 @@ describe('SubscriptionEventDictionary', () => {
       default: false,
       memberPlan: {
         connect: {
-          id: customMemberPlan1.id
+          id: customMemberPlan2.id
         }
       },
       autoRenewal: [true, false],
@@ -382,7 +382,7 @@ describe('SubscriptionEventDictionary', () => {
     expect(JSON.stringify(actions)).toEqual(res)
 
     actions = await sed.getActionsForSubscriptions({
-      memberplanId: customMemberPlan1.id,
+      memberplanId: customMemberPlan2.id,
       periodicity: PaymentPeriodicity.monthly,
       paymentMethodId: 'payrexx',
       autorenwal: false,

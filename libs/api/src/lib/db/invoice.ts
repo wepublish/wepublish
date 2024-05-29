@@ -1,7 +1,7 @@
 import {DateFilter} from './common'
 
 export enum InvoiceSort {
-  CreatedAt = 'modifiedAt',
+  CreatedAt = 'createdAt',
   ModifiedAt = 'modifiedAt',
   PaidAt = 'paidAt'
 }

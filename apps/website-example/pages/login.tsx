@@ -1,5 +1,6 @@
 import styled from '@emotion/styled'
 import {Typography} from '@mui/material'
+import {IntendedRouteStorageKey} from '@wepublish/utils/website'
 import {
   ApiV1,
   AuthTokenStorageKey,
@@ -8,11 +9,10 @@ import {
   useWebsiteBuilder
 } from '@wepublish/website'
 import {deleteCookie, getCookie, setCookie} from 'cookies-next'
-import {GetServerSideProps} from 'next'
+import {NextPageContext} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 import {useEffect} from 'react'
-import {IntendedRouteStorageKey} from '../src/auth-guard'
 
 const LoginWrapper = styled('div')`
   display: grid;
@@ -32,15 +32,15 @@ export default function Login({sessionToken}: LoginProps) {
     if (sessionToken) {
       setToken(sessionToken)
     }
+  }, [sessionToken, setToken])
 
-    if (hasUser) {
-      const intendedRoute = getCookie(IntendedRouteStorageKey)?.toString()
-      deleteCookie(IntendedRouteStorageKey)
-      const route = intendedRoute ?? '/'
+  if (hasUser && typeof window !== 'undefined') {
+    const intendedRoute = getCookie(IntendedRouteStorageKey)?.toString()
+    deleteCookie(IntendedRouteStorageKey)
+    const route = intendedRoute ?? '/profile'
 
-      router.push(route)
-    }
-  }, [router, hasUser, sessionToken, setToken])
+    router.replace(route)
+  }
 
   return (
     <LoginWrapper>
@@ -55,7 +55,11 @@ export default function Login({sessionToken}: LoginProps) {
   )
 }
 
-export const getServerSideProps: GetServerSideProps = async ctx => {
+Login.getInitialProps = async (ctx: NextPageContext) => {
+  if (typeof window !== 'undefined') {
+    return {}
+  }
+
   const {publicRuntimeConfig} = getConfig()
   const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
 

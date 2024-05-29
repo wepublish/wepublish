@@ -73,8 +73,10 @@ const subscription = {
   paymentMethod: {},
   memberPlan: {
     image,
-    name: 'Foobar Memberplan'
-  }
+    name: 'Foobar Memberplan',
+    extendable: true
+  },
+  extendable: true
 } as Exact<FullSubscriptionFragment>
 
 const invoice = {
@@ -93,18 +95,22 @@ const invoice = {
 export const Default: StoryObj = {
   args: {
     ...invoice,
+    canPay: false,
     pay: action('pay')
   }
 }
 
 export const Unpaid: StoryObj = {
+  ...Default,
   args: {
     ...Default.args,
-    paidAt: null
+    paidAt: null,
+    canPay: true
   }
 }
 
 export const Canceled: StoryObj = {
+  ...Default,
   args: {
     ...Default.args,
     paidAt: null,
@@ -113,6 +119,7 @@ export const Canceled: StoryObj = {
 }
 
 export const WithPayLoading: StoryObj = {
+  ...Unpaid,
   args: {
     ...Unpaid.args,
     pay: (...args: unknown[]) => {
@@ -127,6 +134,7 @@ export const WithPayLoading: StoryObj = {
 }
 
 export const WithPayError: StoryObj = {
+  ...Unpaid,
   args: {
     ...Unpaid.args,
     pay: (...args: unknown[]) => {
@@ -138,6 +146,21 @@ export const WithPayError: StoryObj = {
     }
   },
   play: clickPay
+}
+
+export const WithPayrexxSubscriptionsWarning: StoryObj = {
+  ...Default,
+  args: {
+    ...Default.args,
+    paidAt: null,
+    canceledAt: null,
+    subscription: {
+      ...subscription,
+      paymentMethod: {
+        slug: 'payrexx-subscription'
+      }
+    }
+  }
 }
 
 export const WithClassName: StoryObj = {

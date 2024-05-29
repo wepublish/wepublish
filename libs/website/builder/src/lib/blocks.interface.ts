@@ -25,10 +25,16 @@ import {
   TeaserGridFlexBlock,
   TitleBlock,
   LinkPageBreakBlock,
-  CommentBlock
+  CommentBlock,
+  TeaserListBlock
 } from '@wepublish/website/api'
 
-export type BuilderBlockRendererProps = {block: Block}
+export type BuilderBlockRendererProps = {
+  block: Block
+  index: number
+  count: number
+  type: 'Page' | 'Article'
+}
 export type BuilderTitleBlockProps = TitleBlock & {className?: string}
 export type BuilderBreakBlockProps = LinkPageBreakBlock & {className?: string}
 export type BuilderImageBlockProps = ImageBlock & {className?: string}
@@ -58,7 +64,22 @@ export type BuilderTeaserGridBlockProps = TeaserGridBlock & {
   className?: string
 }
 
-export type BuilderTeaserProps = {
-  teaser?: Teaser | null
-  alignment: FlexAlignment
-} & {className?: string}
+export type BuilderTeaserListBlockProps = TeaserListBlock & {
+  className?: string
+}
+
+type TeaserTypeProps =
+  | {
+      blockStyle: string | null | undefined
+      teaser?: Teaser | null | undefined
+      alignment: FlexAlignment
+      numColumns?: never
+    }
+  | {
+      blockStyle: string | null | undefined
+      teaser: Teaser | null | undefined
+      alignment: FlexAlignment
+      numColumns: number
+    }
+
+export type BuilderTeaserProps = TeaserTypeProps & {className?: string}

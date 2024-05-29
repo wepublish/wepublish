@@ -34,3 +34,51 @@ query Page($slug: Slug, $id: ID) {
     ...FullPage
   }
 }
+
+query PageList(
+  $filter: PublishedPageFilter
+  $cursor: ID
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: PublishedPageSort
+) {
+  pages(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+    nodes {
+      ...FullPage
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}
+
+query SitemapPageList(
+  $filter: PublishedPageFilter
+  $cursor: ID
+  $take: Int
+  $skip: Int
+  $order: SortOrder
+  $sort: PublishedPageSort
+) {
+  pages(filter: $filter, cursor: $cursor, take: $take, skip: $skip, order: $order, sort: $sort) {
+    nodes {
+      url
+    }
+
+    pageInfo {
+      startCursor
+      endCursor
+      hasNextPage
+      hasPreviousPage
+    }
+
+    totalCount
+  }
+}

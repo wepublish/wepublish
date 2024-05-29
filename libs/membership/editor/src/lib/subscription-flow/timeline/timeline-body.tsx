@@ -46,6 +46,8 @@ export function TimelineBody({days, subscriptionFlow, eventIcons, eventColors}: 
   }
 
   return (
+    // Not useless in this case
+    // eslint-disable-next-line react/jsx-no-useless-fragment
     <>
       {days &&
         mailTemplates &&

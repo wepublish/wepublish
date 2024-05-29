@@ -18,6 +18,8 @@ import {BuilderRegistrationFormProps} from './authentication.interface'
 
 export type BuilderSubscriptionListItemProps = Subscription & {
   className?: string
+  canPay: boolean
+  canExtend: boolean
   pay?: () => Promise<void>
   cancel?: () => Promise<void>
   extend?: () => Promise<void>
@@ -28,6 +30,7 @@ export type BuilderSubscriptionListProps = Pick<
   'data' | 'loading' | 'error'
 > & {
   className?: string
+  invoices: Pick<QueryResult<InvoicesQuery>, 'data' | 'loading' | 'error'>
   onPay?: (subscriptionId: string) => Promise<void>
   onCancel?: (subscriptionId: string) => Promise<void>
   onExtend?: (subscriptionId: string) => Promise<void>
@@ -35,6 +38,7 @@ export type BuilderSubscriptionListProps = Pick<
 
 export type BuilderInvoiceListItemProps = Invoice & {
   className?: string
+  canPay: boolean
   pay?: () => Promise<void>
 }
 
@@ -77,6 +81,8 @@ export type BuilderSubscribeProps<
   T extends OptionalKeysOf<RegisterMutationVariables> = OptionalKeysOf<RegisterMutationVariables>
 > = {
   challenge: Pick<QueryResult<ChallengeQuery>, 'data' | 'loading' | 'error'>
+  userSubscriptions: Pick<QueryResult<SubscriptionsQuery>, 'data' | 'loading' | 'error'>
+  userInvoices: Pick<QueryResult<InvoicesQuery>, 'data' | 'loading' | 'error'>
   memberPlans: Pick<QueryResult<MemberPlanListQuery>, 'data' | 'loading' | 'error'>
   className?: string
   onSubscribeWithRegister?: (data: {
@@ -86,4 +92,10 @@ export type BuilderSubscribeProps<
   onSubscribe?: (
     data: Omit<SubscribeMutationVariables, 'failureURL' | 'successURL'>
   ) => Promise<void>
+  defaults?: Partial<{
+    memberPlanSlug: string | null
+    email: string
+    name: string
+    firstName: string
+  }>
 } & Pick<BuilderRegistrationFormProps<T>, 'schema' | 'fields'>

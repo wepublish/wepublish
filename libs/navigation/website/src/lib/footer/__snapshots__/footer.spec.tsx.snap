@@ -3,47 +3,673 @@
 exports[`Footer should render Default 1`] = `
 <DocumentFragment>
   <footer
-    class="css-5rtvk-FooterWrapper enubu9x2"
+    class="css-dl99x8-FooterWrapper enubu9x10"
   >
     <div
-      class="MuiContainer-root MuiContainer-maxWidthLg enubu9x1 css-1iuxm26-MuiContainer-root-FooterInnerWrapper"
+      class="css-1fxijoh-FooterPaperWrapper enubu9x6"
     >
-      <svg
-        height="50"
-        style="justify-self: center;"
-        viewBox="0 0 100 100"
-        width="50"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <circle
-          cx="50"
-          cy="50"
-          fill="#fff"
-          r="50"
-        />
-      </svg>
-      <nav
-        class="css-1svnta4-FooterLinks enubu9x0"
+      <div
+        class="css-dwrkrw-FooterPaperCategoryLinks-FooterPaperMainLinks enubu9x0"
       >
         <a
           class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
           href="/"
         >
-          Home
+          <span
+            class="MuiTypography-root MuiTypography-h4 css-15qkrhf-MuiTypography-root-FooterPaper"
+          >
+            Gesellschaft
+          </span>
         </a>
         <a
           class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
-          href="/a/impressum"
+          href="/a/abcd"
         >
-          Impressum
+          <span
+            class="MuiTypography-root MuiTypography-h4 css-15qkrhf-MuiTypography-root-FooterPaper"
+          >
+            Politik
+          </span>
+        </a>
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
+          href="/a/abcd"
+        >
+          <span
+            class="MuiTypography-root MuiTypography-h4 css-15qkrhf-MuiTypography-root-FooterPaper"
+          >
+            Kultur
+          </span>
+        </a>
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
+          href="/a/abcd"
+        >
+          <span
+            class="MuiTypography-root MuiTypography-h4 css-15qkrhf-MuiTypography-root-FooterPaper"
+          >
+            Tsüri-News
+          </span>
         </a>
         <a
           class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
           href="https://google.com"
         >
-          FAQ
+          <span
+            class="MuiTypography-root MuiTypography-h4 css-15qkrhf-MuiTypography-root-FooterPaper"
+          >
+            Was lauft?
+          </span>
         </a>
-      </nav>
+      </div>
+      <div
+        class="css-41fvzk-LinksGroup enubu9x2"
+      >
+        <div
+          class="css-1fj6oko-FooterPaperCategory enubu9x5"
+        >
+          <span
+            class="css-11gynt8-FooterName enubu9x4"
+          >
+            Guides
+          </span>
+          <div
+            class="css-1njm4hy-FooterPaperCategoryLinks enubu9x1"
+          >
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
+              href="/"
+            >
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-3tukg2-MuiTypography-root-FooterPaper"
+              >
+                Agenda
+              </span>
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
+              href="https://google.com"
+            >
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-3tukg2-MuiTypography-root-FooterPaper"
+              >
+                Denkmal.org
+              </span>
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
+              href="/a/abcd"
+            >
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-3tukg2-MuiTypography-root-FooterPaper"
+              >
+                Tsüri Guide
+              </span>
+            </a>
+          </div>
+        </div>
+        <div
+          class="css-1fj6oko-FooterPaperCategory enubu9x5"
+        >
+          <span
+            class="css-11gynt8-FooterName enubu9x4"
+          >
+            Fokusthema
+          </span>
+          <div
+            class="css-1njm4hy-FooterPaperCategoryLinks enubu9x1"
+          >
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
+              href="/"
+            >
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-3tukg2-MuiTypography-root-FooterPaper"
+              >
+                Mobilität
+              </span>
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
+              href="/a/abcd"
+            >
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-3tukg2-MuiTypography-root-FooterPaper"
+              >
+                Bildung
+              </span>
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
+              href="/a/abcd"
+            >
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-3tukg2-MuiTypography-root-FooterPaper"
+              >
+                Konsum
+              </span>
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
+              href="/a/abcd"
+            >
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-3tukg2-MuiTypography-root-FooterPaper"
+              >
+                Archive
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div
+        class="css-41fvzk-LinksGroup enubu9x2"
+      >
+        <div
+          class="css-85dbd7-FooterSeparator enubu9x3"
+        />
+        <div
+          class="css-1fj6oko-FooterPaperCategory enubu9x5"
+        >
+          <span
+            class="css-11gynt8-FooterName enubu9x4"
+          >
+            Über Uns
+          </span>
+          <div
+            class="css-1njm4hy-FooterPaperCategoryLinks enubu9x1"
+          >
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
+              href="/team/"
+            >
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-3tukg2-MuiTypography-root-FooterPaper"
+              >
+                Team
+              </span>
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
+              href="/about-us/"
+            >
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-3tukg2-MuiTypography-root-FooterPaper"
+              >
+                Über Uns
+              </span>
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
+            >
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-3tukg2-MuiTypography-root-FooterPaper"
+              >
+                Kontakt
+              </span>
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
+            >
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-3tukg2-MuiTypography-root-FooterPaper"
+              >
+                Jobs
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</DocumentFragment>
+`;
+
+exports[`Footer should render WithClassName 1`] = `
+<DocumentFragment>
+  <footer
+    class="extra-classname css-dl99x8-FooterWrapper enubu9x10"
+  >
+    <div
+      class="css-1fxijoh-FooterPaperWrapper enubu9x6"
+    >
+      <div
+        class="css-dwrkrw-FooterPaperCategoryLinks-FooterPaperMainLinks enubu9x0"
+      >
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
+          href="/"
+        >
+          <span
+            class="MuiTypography-root MuiTypography-h4 css-15qkrhf-MuiTypography-root-FooterPaper"
+          >
+            Gesellschaft
+          </span>
+        </a>
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
+          href="/a/abcd"
+        >
+          <span
+            class="MuiTypography-root MuiTypography-h4 css-15qkrhf-MuiTypography-root-FooterPaper"
+          >
+            Politik
+          </span>
+        </a>
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
+          href="/a/abcd"
+        >
+          <span
+            class="MuiTypography-root MuiTypography-h4 css-15qkrhf-MuiTypography-root-FooterPaper"
+          >
+            Kultur
+          </span>
+        </a>
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
+          href="/a/abcd"
+        >
+          <span
+            class="MuiTypography-root MuiTypography-h4 css-15qkrhf-MuiTypography-root-FooterPaper"
+          >
+            Tsüri-News
+          </span>
+        </a>
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
+          href="https://google.com"
+        >
+          <span
+            class="MuiTypography-root MuiTypography-h4 css-15qkrhf-MuiTypography-root-FooterPaper"
+          >
+            Was lauft?
+          </span>
+        </a>
+      </div>
+      <div
+        class="css-41fvzk-LinksGroup enubu9x2"
+      >
+        <div
+          class="css-1fj6oko-FooterPaperCategory enubu9x5"
+        >
+          <span
+            class="css-11gynt8-FooterName enubu9x4"
+          >
+            Guides
+          </span>
+          <div
+            class="css-1njm4hy-FooterPaperCategoryLinks enubu9x1"
+          >
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
+              href="/"
+            >
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-3tukg2-MuiTypography-root-FooterPaper"
+              >
+                Agenda
+              </span>
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
+              href="https://google.com"
+            >
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-3tukg2-MuiTypography-root-FooterPaper"
+              >
+                Denkmal.org
+              </span>
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
+              href="/a/abcd"
+            >
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-3tukg2-MuiTypography-root-FooterPaper"
+              >
+                Tsüri Guide
+              </span>
+            </a>
+          </div>
+        </div>
+        <div
+          class="css-1fj6oko-FooterPaperCategory enubu9x5"
+        >
+          <span
+            class="css-11gynt8-FooterName enubu9x4"
+          >
+            Fokusthema
+          </span>
+          <div
+            class="css-1njm4hy-FooterPaperCategoryLinks enubu9x1"
+          >
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
+              href="/"
+            >
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-3tukg2-MuiTypography-root-FooterPaper"
+              >
+                Mobilität
+              </span>
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
+              href="/a/abcd"
+            >
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-3tukg2-MuiTypography-root-FooterPaper"
+              >
+                Bildung
+              </span>
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
+              href="/a/abcd"
+            >
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-3tukg2-MuiTypography-root-FooterPaper"
+              >
+                Konsum
+              </span>
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
+              href="/a/abcd"
+            >
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-3tukg2-MuiTypography-root-FooterPaper"
+              >
+                Archive
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div
+        class="css-41fvzk-LinksGroup enubu9x2"
+      >
+        <div
+          class="css-85dbd7-FooterSeparator enubu9x3"
+        />
+        <div
+          class="css-1fj6oko-FooterPaperCategory enubu9x5"
+        >
+          <span
+            class="css-11gynt8-FooterName enubu9x4"
+          >
+            Über Uns
+          </span>
+          <div
+            class="css-1njm4hy-FooterPaperCategoryLinks enubu9x1"
+          >
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
+              href="/team/"
+            >
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-3tukg2-MuiTypography-root-FooterPaper"
+              >
+                Team
+              </span>
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
+              href="/about-us/"
+            >
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-3tukg2-MuiTypography-root-FooterPaper"
+              >
+                Über Uns
+              </span>
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
+            >
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-3tukg2-MuiTypography-root-FooterPaper"
+              >
+                Kontakt
+              </span>
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
+            >
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-3tukg2-MuiTypography-root-FooterPaper"
+              >
+                Jobs
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</DocumentFragment>
+`;
+
+exports[`Footer should render WithEmotion 1`] = `
+<DocumentFragment>
+  <footer
+    class="css-dl99x8-FooterWrapper enubu9x10"
+  >
+    <div
+      class="css-1fxijoh-FooterPaperWrapper enubu9x6"
+    >
+      <div
+        class="css-dwrkrw-FooterPaperCategoryLinks-FooterPaperMainLinks enubu9x0"
+      >
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
+          href="/"
+        >
+          <span
+            class="MuiTypography-root MuiTypography-h4 css-15qkrhf-MuiTypography-root-FooterPaper"
+          >
+            Gesellschaft
+          </span>
+        </a>
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
+          href="/a/abcd"
+        >
+          <span
+            class="MuiTypography-root MuiTypography-h4 css-15qkrhf-MuiTypography-root-FooterPaper"
+          >
+            Politik
+          </span>
+        </a>
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
+          href="/a/abcd"
+        >
+          <span
+            class="MuiTypography-root MuiTypography-h4 css-15qkrhf-MuiTypography-root-FooterPaper"
+          >
+            Kultur
+          </span>
+        </a>
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
+          href="/a/abcd"
+        >
+          <span
+            class="MuiTypography-root MuiTypography-h4 css-15qkrhf-MuiTypography-root-FooterPaper"
+          >
+            Tsüri-News
+          </span>
+        </a>
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
+          href="https://google.com"
+        >
+          <span
+            class="MuiTypography-root MuiTypography-h4 css-15qkrhf-MuiTypography-root-FooterPaper"
+          >
+            Was lauft?
+          </span>
+        </a>
+      </div>
+      <div
+        class="css-41fvzk-LinksGroup enubu9x2"
+      >
+        <div
+          class="css-1fj6oko-FooterPaperCategory enubu9x5"
+        >
+          <span
+            class="css-11gynt8-FooterName enubu9x4"
+          >
+            Guides
+          </span>
+          <div
+            class="css-1njm4hy-FooterPaperCategoryLinks enubu9x1"
+          >
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
+              href="/"
+            >
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-3tukg2-MuiTypography-root-FooterPaper"
+              >
+                Agenda
+              </span>
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
+              href="https://google.com"
+            >
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-3tukg2-MuiTypography-root-FooterPaper"
+              >
+                Denkmal.org
+              </span>
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
+              href="/a/abcd"
+            >
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-3tukg2-MuiTypography-root-FooterPaper"
+              >
+                Tsüri Guide
+              </span>
+            </a>
+          </div>
+        </div>
+        <div
+          class="css-1fj6oko-FooterPaperCategory enubu9x5"
+        >
+          <span
+            class="css-11gynt8-FooterName enubu9x4"
+          >
+            Fokusthema
+          </span>
+          <div
+            class="css-1njm4hy-FooterPaperCategoryLinks enubu9x1"
+          >
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
+              href="/"
+            >
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-3tukg2-MuiTypography-root-FooterPaper"
+              >
+                Mobilität
+              </span>
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
+              href="/a/abcd"
+            >
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-3tukg2-MuiTypography-root-FooterPaper"
+              >
+                Bildung
+              </span>
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
+              href="/a/abcd"
+            >
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-3tukg2-MuiTypography-root-FooterPaper"
+              >
+                Konsum
+              </span>
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
+              href="/a/abcd"
+            >
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-3tukg2-MuiTypography-root-FooterPaper"
+              >
+                Archive
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div
+        class="css-41fvzk-LinksGroup enubu9x2"
+      >
+        <div
+          class="css-85dbd7-FooterSeparator enubu9x3"
+        />
+        <div
+          class="css-1fj6oko-FooterPaperCategory enubu9x5"
+        >
+          <span
+            class="css-11gynt8-FooterName enubu9x4"
+          >
+            Über Uns
+          </span>
+          <div
+            class="css-1njm4hy-FooterPaperCategoryLinks enubu9x1"
+          >
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
+              href="/team/"
+            >
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-3tukg2-MuiTypography-root-FooterPaper"
+              >
+                Team
+              </span>
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
+              href="/about-us/"
+            >
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-3tukg2-MuiTypography-root-FooterPaper"
+              >
+                Über Uns
+              </span>
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
+            >
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-3tukg2-MuiTypography-root-FooterPaper"
+              >
+                Kontakt
+              </span>
+            </a>
+            <a
+              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-111ve54-MuiTypography-root-MuiLink-root-FooterPaper"
+            >
+              <span
+                class="MuiTypography-root MuiTypography-h6 css-3tukg2-MuiTypography-root-FooterPaper"
+              >
+                Jobs
+              </span>
+            </a>
+          </div>
+        </div>
+      </div>
     </div>
   </footer>
 </DocumentFragment>
@@ -52,28 +678,21 @@ exports[`Footer should render Default 1`] = `
 exports[`Footer should render WithError 1`] = `
 <DocumentFragment>
   <footer
-    class="css-5rtvk-FooterWrapper enubu9x2"
+    class="css-dl99x8-FooterWrapper enubu9x10"
   >
     <div
-      class="MuiContainer-root MuiContainer-maxWidthLg enubu9x1 css-1iuxm26-MuiContainer-root-FooterInnerWrapper"
+      class="css-1fxijoh-FooterPaperWrapper enubu9x6"
     >
-      <svg
-        height="50"
-        style="justify-self: center;"
-        viewBox="0 0 100 100"
-        width="50"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <circle
-          cx="50"
-          cy="50"
-          fill="#fff"
-          r="50"
-        />
-      </svg>
-      <nav
-        class="css-1svnta4-FooterLinks enubu9x0"
+      <div
+        class="css-41fvzk-LinksGroup enubu9x2"
       />
+      <div
+        class="css-41fvzk-LinksGroup enubu9x2"
+      >
+        <div
+          class="css-85dbd7-FooterSeparator enubu9x3"
+        />
+      </div>
     </div>
   </footer>
 </DocumentFragment>
@@ -82,29 +701,34 @@ exports[`Footer should render WithError 1`] = `
 exports[`Footer should render WithLoading 1`] = `
 <DocumentFragment>
   <footer
-    class="css-5rtvk-FooterWrapper enubu9x2"
+    class="css-dl99x8-FooterWrapper enubu9x10"
   >
     <div
-      class="MuiContainer-root MuiContainer-maxWidthLg enubu9x1 css-1iuxm26-MuiContainer-root-FooterInnerWrapper"
+      class="css-1fxijoh-FooterPaperWrapper enubu9x6"
     >
-      <svg
-        height="50"
-        style="justify-self: center;"
-        viewBox="0 0 100 100"
-        width="50"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <circle
-          cx="50"
-          cy="50"
-          fill="#fff"
-          r="50"
-        />
-      </svg>
-      <nav
-        class="css-1svnta4-FooterLinks enubu9x0"
+      <div
+        class="css-41fvzk-LinksGroup enubu9x2"
       />
+      <div
+        class="css-41fvzk-LinksGroup enubu9x2"
+      >
+        <div
+          class="css-85dbd7-FooterSeparator enubu9x3"
+        />
+      </div>
     </div>
+  </footer>
+</DocumentFragment>
+`;
+
+exports[`Footer should render WithoutItems 1`] = `
+<DocumentFragment>
+  <footer
+    class="css-dl99x8-FooterWrapper enubu9x10"
+  >
+    <div
+      class="css-1fxijoh-FooterPaperWrapper enubu9x6"
+    />
   </footer>
 </DocumentFragment>
 `;

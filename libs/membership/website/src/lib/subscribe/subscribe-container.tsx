@@ -3,9 +3,11 @@ import {
   MemberPlan,
   RegisterMutationVariables,
   useChallengeLazyQuery,
+  useInvoicesLazyQuery,
   useMemberPlanListQuery,
   useRegisterMutation,
-  useSubscribeMutation
+  useSubscribeMutation,
+  useSubscriptionsLazyQuery
 } from '@wepublish/website/api'
 import {
   BuilderContainerProps,
@@ -13,13 +15,14 @@ import {
   useWebsiteBuilder
 } from '@wepublish/website/builder'
 import {produce} from 'immer'
-import {useEffect, useMemo} from 'react'
+import {StripeElement, StripePayment} from '@wepublish/payment/website'
+import {useEffect, useMemo, useState} from 'react'
 import {OptionalKeysOf} from 'type-fest'
 
 export type SubscribeContainerProps<
   T extends OptionalKeysOf<RegisterMutationVariables> = OptionalKeysOf<RegisterMutationVariables>
 > = BuilderContainerProps &
-  Pick<BuilderSubscribeProps<T>, 'fields' | 'schema'> & {
+  Pick<BuilderSubscribeProps<T>, 'fields' | 'schema' | 'defaults'> & {
     successURL: string
     failureURL: string
     filter?: (memberPlans: MemberPlan[]) => MemberPlan[]
@@ -29,6 +32,7 @@ export const SubscribeContainer = <T extends OptionalKeysOf<RegisterMutationVari
   className,
   failureURL,
   successURL,
+  defaults,
   fields,
   schema,
   filter
@@ -36,6 +40,12 @@ export const SubscribeContainer = <T extends OptionalKeysOf<RegisterMutationVari
   const {setToken, hasUser} = useUser()
   const {Subscribe} = useWebsiteBuilder()
   const [fetchChallenge, challenge] = useChallengeLazyQuery()
+
+  const [fetchUserSubscriptions, userSubscriptions] = useSubscriptionsLazyQuery()
+  const [fetchUserInvoices, userInvoices] = useInvoicesLazyQuery()
+
+  const [stripeClientSecret, setStripeClientSecret] = useState<string>()
+
   const memberPlanList = useMemberPlanListQuery({
     variables: {
       take: 50
@@ -44,7 +54,15 @@ export const SubscribeContainer = <T extends OptionalKeysOf<RegisterMutationVari
 
   const [subscribe] = useSubscribeMutation({
     onCompleted(data) {
-      if (data.createSubscription?.intentSecret) {
+      if (!data.createSubscription?.intentSecret) {
+        return
+      }
+
+      if (data.createSubscription.paymentMethod.paymentProviderID === 'stripe') {
+        setStripeClientSecret(data.createSubscription.intentSecret)
+      }
+
+      if (data.createSubscription.intentSecret.startsWith('http')) {
         window.location.href = data.createSubscription.intentSecret
       }
     }
@@ -63,7 +81,12 @@ export const SubscribeContainer = <T extends OptionalKeysOf<RegisterMutationVari
     if (!hasUser) {
       fetchChallenge()
     }
-  }, [hasUser, fetchChallenge])
+
+    if (hasUser) {
+      fetchUserSubscriptions()
+      fetchUserInvoices()
+    }
+  }, [hasUser, fetchChallenge, fetchUserSubscriptions, fetchUserInvoices])
 
   const filteredMemberPlans = useMemo(() => {
     return produce(memberPlanList, draftList => {
@@ -74,38 +97,53 @@ export const SubscribeContainer = <T extends OptionalKeysOf<RegisterMutationVari
   }, [memberPlanList, filter])
 
   return (
-    <Subscribe
-      className={className}
-      fields={fields}
-      schema={schema}
-      challenge={challenge}
-      memberPlans={filteredMemberPlans}
-      onSubscribe={async formData => {
-        await subscribe({
-          variables: {
-            ...formData,
-            successURL,
-            failureURL
-          }
-        })
-      }}
-      onSubscribeWithRegister={async formData => {
-        const {errors: registerErrors} = await register({
-          variables: formData.register
-        })
+    <>
+      {stripeClientSecret && (
+        <StripeElement clientSecret={stripeClientSecret}>
+          <StripePayment
+            onClose={success => {
+              window.location.href = success ? successURL : failureURL
+            }}
+          />
+        </StripeElement>
+      )}
 
-        if (registerErrors) {
-          throw registerErrors
-        }
+      <Subscribe
+        className={className}
+        defaults={defaults}
+        fields={fields}
+        schema={schema}
+        challenge={challenge}
+        userSubscriptions={userSubscriptions}
+        userInvoices={userInvoices}
+        memberPlans={filteredMemberPlans}
+        onSubscribe={async formData => {
+          await subscribe({
+            variables: {
+              ...formData,
+              successURL,
+              failureURL
+            }
+          })
+        }}
+        onSubscribeWithRegister={async formData => {
+          const {errors: registerErrors} = await register({
+            variables: formData.register
+          })
 
-        await subscribe({
-          variables: {
-            ...formData.subscribe,
-            successURL,
-            failureURL
+          if (registerErrors) {
+            throw registerErrors
           }
-        })
-      }}
-    />
+
+          await subscribe({
+            variables: {
+              ...formData.subscribe,
+              successURL,
+              failureURL
+            }
+          })
+        }}
+      />
+    </>
   )
 }

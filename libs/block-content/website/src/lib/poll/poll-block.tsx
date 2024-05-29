@@ -126,7 +126,7 @@ export const PollBlock = ({poll, className}: BuilderPollBlockProps) => {
           {poll.answers.map(answer => (
             <Button
               variant="outlined"
-              color="secondary"
+              color="primary"
               key={answer.id}
               disabled={voteResult.loading}
               onClick={async () => {
@@ -175,7 +175,9 @@ export const PollBlock = ({poll, className}: BuilderPollBlockProps) => {
           <>
             {' '}
             &ndash; Schliesst am{' '}
-            <time dateTime={poll.closedAt}>{date.format(new Date(poll.closedAt))}</time>
+            <time suppressHydrationWarning dateTime={poll.closedAt}>
+              {date.format(new Date(poll.closedAt))}
+            </time>
           </>
         )}
         {!isOpen && <> &ndash; Abstimmung beendet.</>}

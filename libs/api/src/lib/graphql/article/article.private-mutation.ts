@@ -66,7 +66,7 @@ export const deleteArticleById = async (
   return article
 }
 
-type CreateArticleInput = Pick<Prisma.ArticleCreateInput, 'shared'> &
+type CreateArticleInput = Pick<Prisma.ArticleCreateInput, 'shared' | 'hidden'> &
   Omit<Prisma.ArticleRevisionCreateInput, 'properties' | 'revision'> & {
     properties: Prisma.MetadataPropertyCreateManyArticleRevisionInput[]
     authorIDs: Prisma.ArticleRevisionAuthorCreateManyRevisionInput['authorId'][]
@@ -80,11 +80,12 @@ export const createArticle = async (
 ) => {
   const {roles} = authenticate()
   authorise(CanCreateArticle, roles)
-  const {shared, properties, authorIDs, socialMediaAuthorIDs, ...data} = input
+  const {shared, hidden, properties, authorIDs, socialMediaAuthorIDs, ...data} = input
 
   return article.create({
     data: {
       shared,
+      hidden,
       draft: {
         create: {
           ...data,
@@ -166,6 +167,7 @@ export const duplicateArticle = async (
   return articleClient.create({
     data: {
       shared: article.shared,
+      hidden: article.hidden,
       draft: {
         create: input
       }
@@ -435,7 +437,7 @@ export const publishArticle = async (
   return updatedArticle
 }
 
-type UpdateArticleInput = Pick<Prisma.ArticleCreateInput, 'shared'> &
+type UpdateArticleInput = Pick<Prisma.ArticleCreateInput, 'shared' | 'hidden'> &
   Omit<Prisma.ArticleRevisionCreateInput, 'revision' | 'properties'> & {
     properties: Prisma.MetadataPropertyUncheckedCreateWithoutArticleRevisionInput[]
     authorIDs: Prisma.ArticleRevisionAuthorCreateManyRevisionInput['authorId'][]
@@ -444,7 +446,7 @@ type UpdateArticleInput = Pick<Prisma.ArticleCreateInput, 'shared'> &
 
 export const updateArticle = async (
   id: string,
-  {properties, authorIDs, socialMediaAuthorIDs, shared, ...input}: UpdateArticleInput,
+  {properties, authorIDs, socialMediaAuthorIDs, shared, hidden, ...input}: UpdateArticleInput,
   authenticate: Context['authenticate'],
   articleClient: PrismaClient['article']
 ) => {
@@ -464,6 +466,7 @@ export const updateArticle = async (
     where: {id},
     data: {
       shared,
+      hidden,
       draft: {
         upsert: {
           update: {

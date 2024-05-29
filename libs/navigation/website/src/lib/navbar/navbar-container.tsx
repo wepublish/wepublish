@@ -1,4 +1,4 @@
-import {useNavigationListQuery} from '@wepublish/website/api'
+import {useNavigationListQuery, usePeerProfileQuery} from '@wepublish/website/api'
 import {
   BuilderContainerProps,
   BuilderNavbarProps,
@@ -7,21 +7,49 @@ import {
 import {PropsWithChildren} from 'react'
 
 export type NavbarContainerProps = PropsWithChildren<
-  Pick<BuilderNavbarProps, 'categorySlugs' | 'slug'> & BuilderContainerProps
+  Pick<
+    BuilderNavbarProps,
+    | 'categorySlugs'
+    | 'slug'
+    | 'headerSlug'
+    | 'loginUrl'
+    | 'profileUrl'
+    | 'subscriptionsUrl'
+    | 'showSubscriptionsUrl'
+  > &
+    BuilderContainerProps
 >
 
-export function NavbarContainer({className, categorySlugs, slug, children}: NavbarContainerProps) {
+export function NavbarContainer({
+  className,
+  categorySlugs,
+  headerSlug,
+  slug,
+  loginUrl,
+  profileUrl,
+  subscriptionsUrl,
+  showSubscriptionsUrl,
+  children
+}: NavbarContainerProps) {
   const {Navbar} = useWebsiteBuilder()
   const {data, loading, error} = useNavigationListQuery()
+  const {data: peerInfoData} = usePeerProfileQuery()
+  const logo = peerInfoData?.peerProfile.logo
 
   return (
     <Navbar
+      headerSlug={headerSlug}
       categorySlugs={categorySlugs}
       slug={slug}
+      loginUrl={loginUrl}
+      profileUrl={profileUrl}
+      subscriptionsUrl={subscriptionsUrl}
+      showSubscriptionsUrl={showSubscriptionsUrl}
       data={data}
       loading={loading}
       error={error}
-      className={className}>
+      className={className}
+      logo={logo}>
       {children}
     </Navbar>
   )

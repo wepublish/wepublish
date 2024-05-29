@@ -6,11 +6,11 @@ exports[`AuthorList Container should render Default 1`] = `
     class="css-1d3do4s-AuthorListWrapper e17rhc8g0"
   >
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="https://example.com"
     >
       <div
-        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
@@ -27,23 +27,23 @@ https://unsplash.it/200/200 200w"
         class="css-1f3530-AuthorListItemContent ersskp40"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="https://example.com"
     >
       <div
-        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
@@ -60,23 +60,23 @@ https://unsplash.it/200/200 200w"
         class="css-1f3530-AuthorListItemContent ersskp40"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="https://example.com"
     >
       <div
-        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
@@ -93,12 +93,12 @@ https://unsplash.it/200/200 200w"
         class="css-1f3530-AuthorListItemContent ersskp40"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
@@ -114,11 +114,11 @@ exports[`AuthorList Container should render WithClassName 1`] = `
     class="extra-classname css-1d3do4s-AuthorListWrapper e17rhc8g0"
   >
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="https://example.com"
     >
       <div
-        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
@@ -135,23 +135,23 @@ https://unsplash.it/200/200 200w"
         class="css-1f3530-AuthorListItemContent ersskp40"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="https://example.com"
     >
       <div
-        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
@@ -168,23 +168,23 @@ https://unsplash.it/200/200 200w"
         class="css-1f3530-AuthorListItemContent ersskp40"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="https://example.com"
     >
       <div
-        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
@@ -201,12 +201,12 @@ https://unsplash.it/200/200 200w"
         class="css-1f3530-AuthorListItemContent ersskp40"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
@@ -222,11 +222,11 @@ exports[`AuthorList Container should render WithEmotion 1`] = `
     class="css-1d3do4s-AuthorListWrapper e17rhc8g0"
   >
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="https://example.com"
     >
       <div
-        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
@@ -243,23 +243,23 @@ https://unsplash.it/200/200 200w"
         class="css-1f3530-AuthorListItemContent ersskp40"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="https://example.com"
     >
       <div
-        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
@@ -276,23 +276,23 @@ https://unsplash.it/200/200 200w"
         class="css-1f3530-AuthorListItemContent ersskp40"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>
       </div>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-irdxts-MuiTypography-root-MuiLink-root-AuthorListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
       href="https://example.com"
     >
       <div
-        class="css-1qrb959-AuthorListItemImageWrapper ersskp41"
+        class="css-17dowui-AuthorListItemImageWrapper ersskp41"
       >
         <img
           alt="DSC07717"
@@ -309,12 +309,12 @@ https://unsplash.it/200/200 200w"
         class="css-1f3530-AuthorListItemContent ersskp40"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-2ulfj5-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
         >
           Example Name
         </h6>
         <p
-          class="MuiTypography-root MuiTypography-body1 css-ahj2mt-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
         >
           Co-Geschäftsleitung & Chefredaktor
         </p>

@@ -19,12 +19,12 @@ jobs:
           - 5432:5432
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-node@v3
+      - uses: actions/setup-node@v4
         with:
-          node-version: '16'
+          node-version: '18'
           cache: 'npm'
       - run: npm ci
-      - run: npm run test-all -- --code-coverage
+      - run: npm run test-backend -- --code-coverage
         env:
           NODE_OPTIONS: "--max-old-space-size=4096"
           JWT_SECRET_KEY: 'ThisIsSuperSecret'

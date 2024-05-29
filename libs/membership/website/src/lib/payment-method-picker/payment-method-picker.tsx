@@ -13,7 +13,7 @@ export const PaymentMethodPicker = forwardRef<HTMLButtonElement, BuilderPaymentM
     const show = paymentMethods && paymentMethods.length > 1
 
     useEffect(() => {
-      if (paymentMethods?.length && !value) {
+      if (paymentMethods?.length && !paymentMethods.some(({id}) => id === value)) {
         onChange(paymentMethods[0].id)
       }
     }, [paymentMethods, onChange, value])

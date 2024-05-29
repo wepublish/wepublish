@@ -7,6 +7,33 @@ type AllowedSettingVals {
   stringChoice: [String!]
 }
 
+type BlockStyle {
+  blocks: [BlockType!]!
+  createdAt: DateTime!
+  id: String!
+  modifiedAt: DateTime!
+  name: String!
+}
+
+enum BlockType {
+  Comment
+  Embed
+  Event
+  HTML
+  Image
+  ImageGallery
+  LinkPageBreak
+  Listicle
+  Poll
+  Quote
+  RichText
+  TeaserGrid1
+  TeaserGrid6
+  TeaserGridFlex
+  TeaserList
+  Title
+}
+
 type Consent {
   createdAt: DateTime!
   defaultValue: Boolean!
@@ -47,17 +74,49 @@ scalar DateTime
 
 type Event {
   createdAt: DateTime!
-  description: RichText!
+  description: RichText
   endsAt: DateTime
-  externalSourceId: String!
-  externalSourceName: String!
+  externalSourceId: String
+  externalSourceName: String
   id: String!
-  imageUrl: String
-  location: String!
+  image: Image
+  imageId: String
+  location: String
   modifiedAt: DateTime!
   name: String!
   startsAt: DateTime!
   status: EventStatus!
+}
+
+input EventFilter {
+  from: DateTime
+  location: String
+  name: String
+  tags: [String!]
+  to: DateTime
+  upcomingOnly: Boolean
+}
+
+type EventFromSource {
+  createdAt: DateTime!
+  description: RichText
+  endsAt: DateTime
+  externalSourceId: String
+  externalSourceName: String
+  id: String!
+  imageUrl: String
+  location: String
+  modifiedAt: DateTime!
+  name: String!
+  startsAt: DateTime!
+  status: EventStatus!
+}
+
+enum EventSort {
+  CreatedAt
+  EndsAt
+  ModifiedAt
+  StartsAt
 }
 
 enum EventStatus {
@@ -67,8 +126,33 @@ enum EventStatus {
   Scheduled
 }
 
+type FocalPoint {
+  x: Float!
+  y: Float!
+}
+
 """Setting Value"""
 scalar GraphQLSettingValueType
+
+type Image {
+  createdAt: DateTime!
+  description: RichText
+  extension: String!
+  fileSize: Int!
+  filename: String
+  focalPoint: FocalPoint
+  format: String!
+  height: Int!
+  id: String!
+  license: String
+  link: String
+  mimeType: String!
+  modifiedAt: DateTime!
+  source: String
+  tags: [String!]!
+  title: String
+  width: Int!
+}
 
 input ImportedEventFilter {
   from: String
@@ -86,9 +170,9 @@ enum ImportedEventSort {
 }
 
 type ImportedEventsDocument {
-  nodes: [Event!]!
+  nodes: [EventFromSource!]!
   pageInfo: PageInfo!
-  totalCount: Int!
+  totalCount: Float!
 }
 
 type MailProviderModel {
@@ -116,11 +200,14 @@ type MemberPlanRef {
 }
 
 type Mutation {
+  """Creates a new block style."""
+  createBlockStyle(blocks: [BlockType!]!, name: String!): BlockStyle!
+
   "\n      Create a new consent.\n    "
   createConsent(defaultValue: Boolean!, name: String!, slug: String!): Consent!
 
-  "\n      Creates and event based on data from importable events list and an id and provider.\n      Also, uploads an image to WePublish Image library.\n    "
-  createEvent(id: String!, source: String!): String!
+  """Creates a new event."""
+  createEvent(description: RichText, endsAt: DateTime, imageId: String, location: String, name: String!, startsAt: DateTime!, tagIds: [String!]): Event!
 
   """Create a new subscription flow"""
   createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
@@ -131,8 +218,14 @@ type Mutation {
   "\n      Creates a new userConsent based on input.\n      Returns created userConsent.\n    "
   createUserConsent(consentId: String!, userId: String!, value: Boolean!): UserConsent!
 
+  """Deletes an existing block style."""
+  deleteBlockStyle(id: String!): BlockStyle!
+
   "\n      Deletes an existing consent.\n    "
   deleteConsent(id: String!): Consent!
+
+  """Deletes an existing event."""
+  deleteEvent(id: String!): Event!
 
   """Delete an existing subscription flow"""
   deleteSubscriptionFlow(id: String!): [SubscriptionFlowModel!]!
@@ -142,13 +235,22 @@ type Mutation {
 
   "\n      Delete an existing userConsent by id.\n      Returns deleted userConsent.\n    "
   deleteUserConsent(id: String!): UserConsent!
+
+  "\n      Creates and event based on data from importable events list and an id and provider.\n      Also, uploads an image to WePublish Image library.\n    "
+  importEvent(id: String!, source: String!): String!
   syncTemplates: Boolean
 
   """Sends a test email for the given event"""
   testSystemMail(event: UserEvent!): Boolean!
 
+  """Updates an existing block style."""
+  updateBlockStyle(blocks: [BlockType!], id: String!, name: String): BlockStyle!
+
   "\n      Updates an existing consent.\n    "
   updateConsent(defaultValue: Boolean, id: String!, name: String, slug: String): Consent!
+
+  """Updates an existing event."""
+  updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, location: String, name: String, startsAt: DateTime, tagIds: [String!]): Event!
 
   """Updates an existing setting."""
   updateSetting(name: SettingName!, value: GraphQLSettingValueType!): Setting!
@@ -171,6 +273,12 @@ type PageInfo {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
   startCursor: String
+}
+
+type PaginatedEvents {
+  nodes: [Event!]!
+  pageInfo: PageInfo!
+  totalCount: Float!
 }
 
 type PaymentMethodRef {
@@ -201,20 +309,32 @@ type Query {
   "\n      Returns all active subscribers.\n      Includes subscribers with a cancelled but not run out subscription.\n    "
   activeSubscribers: [DashboardSubscription!]!
 
+  """Returns a list of block styles."""
+  blockStyles: [BlockStyle!]!
+
   "\n      Returns a consent by id.\n    "
   consent(id: String!): Consent!
 
   "\n      Returns all consents.\n    "
   consents(filter: ConsentFilter): [Consent!]!
 
+  """Returns a event by id."""
+  event(id: String!): Event!
+
   "\n      Returns a list of Importable Event Providers\n    "
   eventProviders: [String!]!
+
+  """Returns a paginated list of events based on the filters given."""
+  events(cursorId: String, filter: EventFilter, order: SortOrder = Ascending, skip: Int = 0, sort: EventSort = StartsAt, take: Int = 10): PaginatedEvents!
 
   "\n      Returns the expected revenue for the time period given.\n      Excludes cancelled or manually set as paid invoices.\n    "
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
 
+  """Returns an image by id."""
+  image(id: String!): Image!
+
   "\n      Returns a more detailed version of a single importable event, by id and source.\n    "
-  importedEvent(filter: SingleEventFilter!): Event!
+  importedEvent(filter: SingleEventFilter!): EventFromSource!
 
   "\n      Returns a list of imported events from external sources, transformed to match our model.\n    "
   importedEvents(filter: ImportedEventFilter, order: Int, skip: Int, sort: ImportedEventSort, take: Int): ImportedEventsDocument!
@@ -247,6 +367,7 @@ type Query {
 
   "\n      Returns all settings.\n    "
   settingsList(filter: SettingFilter): [Setting!]!
+  stats: Stats
 
   """Returns all subscription flows"""
   subscriptionFlows(defaultFlowOnly: Boolean!, memberPlanId: String): [SubscriptionFlowModel!]!
@@ -305,6 +426,17 @@ type SettingRestriction {
 input SingleEventFilter {
   id: String!
   source: String!
+}
+
+enum SortOrder {
+  Ascending
+  Descending
+}
+
+type Stats {
+  articlesCount: Int!
+  authorsCount: Int!
+  firstArticleDate: DateTime
 }
 
 enum SubscriptionDeactivationReason {
