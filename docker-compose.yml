@@ -61,7 +61,21 @@ services:
       - POSTGRESQL_DATABASE=wepublish
     networks:
       - app-tier
-
+  media:
+    image: wepublishch/media:master
+    platform: linux/amd64
+    ports:
+      - '127.0.0.1:4100:4100'
+    environment:
+      TOKEN: secret
+      S3_ACCESS_KEY: ${S3_ACCESS_KEY}
+      S3_SECRET_KEY: ${S3_SECRET_KEY}
+      S3_ENDPOINT: 'storage'
+      S3_PORT: '9000'
+    depends_on:
+      - storage
+    networks:
+      - app-tier
   pgadmin:
     image: dpage/pgadmin4
     platform: linux/amd64
