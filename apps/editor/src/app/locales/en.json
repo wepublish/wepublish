@@ -47,7 +47,6 @@
         "contentUrl": "Content URL",
         "createdAt": "{{createdAt, ccc PP p}}",
         "dateExplanationPopOver": "This can be used to reference articles that will be published at a later time. For example, helpful when scheduling social media posts in advance for the next morning.",
-        "default": "Default",
         "displayOptions": "Display Options",
         "dontChangeSlug": "Please don't change the slug once the article is published.",
         "draft": "Draft",
@@ -69,7 +68,6 @@
         "key": "Key",
         "lead": "Lead",
         "leadHelpBlock": "Please use an SEO-optimised lead",
-        "light": "Light",
         "loading": "Loading ...",
         "loadMore": "Load More",
         "noDataToDisplay": "No data to display",
@@ -108,10 +106,8 @@
         "statePending": "Status: Pending",
         "statePublished": "Status: Published",
         "status": "{{stateJoin}}",
-        "style": "Style",
         "tags": "Tags",
         "teaserStyle": "Style: {{label}}",
-        "text": "Text",
         "title": "Title",
         "titleHelpBlock": "Please use an SEO-optimised title",
         "totalCharCount": "Total characters count is {{totalCharCount}}",
@@ -640,14 +636,6 @@
     },
     "linkPageBreakEditPanel": {
       "close": "Close",
-      "layout": {
-        "center": "Centered",
-        "default": "Default Layout",
-        "image-left": "Image Left",
-        "image-right": "Image Right",
-        "label": "Layouts",
-        "right": "Right Aligned"
-      },
       "link": {
         "buttonLabel": "CTA Button label",
         "hideToggleLabel": "Hide CTA Button",
@@ -656,19 +644,6 @@
         "targetLabelBlank": "new browser tab",
         "targetLabelSelf": "this browser tab",
         "urlLabel": "CTA URL"
-      },
-      "style": {
-        "dark": "Dark Style",
-        "default": "Default Style",
-        "image": "Image Background",
-        "label": "Styles"
-      },
-      "template": {
-        "donation": "Donation",
-        "label": "Templates",
-        "membership": "Membership",
-        "none": "None",
-        "subscription": "Subscription"
       },
       "title": "Settings"
     },
