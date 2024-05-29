@@ -109,7 +109,7 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
         query: ApiV1.ArticleListDocument,
         variables: {
           filter: {
-            tags: article.data.article.tags
+            tags: article.data.article.tags.map((tag: ApiV1.Tag) => tag.id)
           },
           take: 4
         }
