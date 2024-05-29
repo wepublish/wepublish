@@ -16,6 +16,7 @@ import LanguageDetector from 'i18next-browser-languagedetector'
 import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
+import {useRouter} from 'next/router'
 import Script from 'next/script'
 import {initReactI18next} from 'react-i18next'
 import {FaTwitter} from 'react-icons/fa6'
@@ -82,6 +83,8 @@ const {publicRuntimeConfig} = getConfig()
 
 function CustomApp({Component, pageProps}: CustomAppProps) {
   const siteTitle = 'Bajour'
+  const router = useRouter()
+  const {popup} = router.query
 
   return (
     <>
@@ -167,6 +170,13 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
                 src={publicRuntimeConfig.env.API_URL! + '/static/body.js'}
                 strategy="afterInteractive"
               />
+
+              {popup && (
+                <Script
+                  src={publicRuntimeConfig.env.MAILCHIMP_POPUP_SCRIPT_URL!}
+                  strategy="afterInteractive"
+                />
+              )}
             </ThemeProvider>
           </WebsiteBuilderProvider>
         </WebsiteProvider>

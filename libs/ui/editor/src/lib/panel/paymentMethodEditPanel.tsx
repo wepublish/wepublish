@@ -1,6 +1,7 @@
 import {
   FullPaymentMethodFragment,
   FullPaymentProviderFragment,
+  ImageRefFragment,
   useCreatePaymentMethodMutation,
   usePaymentMethodQuery,
   usePaymentProviderListQuery,
@@ -10,8 +11,14 @@ import {slugify} from '@wepublish/utils'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Drawer, Form, Message, Panel, Schema, SelectPicker, toaster, Toggle} from 'rsuite'
-import {PermissionControl, createCheckedPermissionComponent, useAuthorisation} from '../atoms'
+import {
+  ChooseEditImage,
+  PermissionControl,
+  createCheckedPermissionComponent,
+  useAuthorisation
+} from '../atoms'
 import {toggleRequiredLabel} from '../toggleRequiredLabel'
+import {ImageSelectPanel} from './imageSelectPanel'
 
 export interface PaymentMethodEditPanelProps {
   id?: string
@@ -31,6 +38,9 @@ function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditPanelPro
   const [active, setActive] = useState<boolean>(true)
   const [paymentProvider, setPaymentProvider] = useState<FullPaymentProviderFragment>()
   const [paymentProviders, setPaymentProviders] = useState<FullPaymentProviderFragment[]>([])
+
+  const [imageSelectionOpen, setImageSelectionOpen] = useState(false)
+  const [image, setImage] = useState<ImageRefFragment>()
 
   const {
     data,
@@ -72,6 +82,7 @@ function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditPanelPro
       setDescription(data.paymentMethod.description)
       setActive(data.paymentMethod.active)
       setPaymentProvider(data.paymentMethod.paymentProvider ?? undefined)
+      setImage(data.paymentMethod.image ?? undefined)
     }
   }, [data?.paymentMethod])
 
@@ -109,7 +120,8 @@ function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditPanelPro
             slug,
             description,
             active,
-            paymentProviderID: paymentProvider.id
+            paymentProviderID: paymentProvider.id,
+            imageId: image?.id
           }
         }
       })
@@ -140,89 +152,116 @@ function PaymentMethodEditPanel({id, onClose, onSave}: PaymentMethodEditPanelPro
   })
 
   return (
-    <Form
-      onSubmit={validationPassed => validationPassed && handleSave()}
-      fluid
-      model={validationModel}
-      formValue={{name, paymentProvider}}>
-      <Drawer.Header>
-        <Drawer.Title>
-          {id ? t('paymentMethodList.editTitle') : t('paymentMethodList.createTitle')}
-        </Drawer.Title>
+    <>
+      <Form
+        onSubmit={validationPassed => validationPassed && handleSave()}
+        fluid
+        model={validationModel}
+        formValue={{name, paymentProvider}}>
+        <Drawer.Header>
+          <Drawer.Title>
+            {id ? t('paymentMethodList.editTitle') : t('paymentMethodList.createTitle')}
+          </Drawer.Title>
 
-        <Drawer.Actions>
-          <PermissionControl qualifyingPermissions={['CAN_CREATE_PAYMENT_METHOD']}>
-            <Button
-              appearance="primary"
-              disabled={isDisabled}
-              type="submit"
-              onClick={() => handleSave()}>
-              {id ? t('save') : t('create')}
+          <Drawer.Actions>
+            <PermissionControl qualifyingPermissions={['CAN_CREATE_PAYMENT_METHOD']}>
+              <Button
+                appearance="primary"
+                disabled={isDisabled}
+                type="submit"
+                onClick={() => handleSave()}>
+                {id ? t('save') : t('create')}
+              </Button>
+            </PermissionControl>
+            <Button appearance={'subtle'} onClick={() => onClose?.()}>
+              {t('close')}
             </Button>
-          </PermissionControl>
-          <Button appearance={'subtle'} onClick={() => onClose?.()}>
-            {t('close')}
-          </Button>
-        </Drawer.Actions>
-      </Drawer.Header>
+          </Drawer.Actions>
+        </Drawer.Header>
 
-      <Drawer.Body>
-        <Panel>
-          <Form.Group controlId="paymentMethodName">
-            <Form.ControlLabel>
-              {toggleRequiredLabel(t('paymentMethodList.name'))}
-            </Form.ControlLabel>
-            <Form.Control
-              name="name"
-              value={name}
-              disabled={isDisabled}
-              onChange={(value: string) => {
-                setName(value)
-                setSlug(slugify(value))
-              }}
-            />
-          </Form.Group>
-          <Form.Group controlId="paymentMethodSlug">
-            <Form.ControlLabel>{t('paymentMethodList.slug')}</Form.ControlLabel>
-            <Form.Control name={t('paymentMethodList.slug')} value={slug} plaintext />
-          </Form.Group>
-          <Form.Group controlId="paymentMethodIsActive">
-            <Form.ControlLabel>{t('paymentMethodList.active')}</Form.ControlLabel>
-            <Toggle checked={active} disabled={isDisabled} onChange={value => setActive(value)} />
-            <Form.HelpText>{t('paymentMethodList.activeDescription')}</Form.HelpText>
-          </Form.Group>
-          <Form.Group controlId="paymentMethodAdapter">
-            <Form.ControlLabel>
-              {toggleRequiredLabel(t('paymentMethodList.adapter'))}
-            </Form.ControlLabel>
-            <Form.Control
-              name="paymentProvider"
-              virtualized
-              disabled={isDisabled}
-              value={paymentProvider?.id}
-              data={paymentProviders.map(pp => ({value: pp.id, label: pp.name}))}
-              searchable={false}
-              block
-              accepter={SelectPicker}
-              onChange={(value: any) =>
-                setPaymentProvider(paymentProviders.find(pp => pp.id === value))
-              }
-            />
-          </Form.Group>
-          <Form.Group controlId="paymentMethodDescription">
-            <Form.ControlLabel>{t('paymentMethodList.description')}</Form.ControlLabel>
-            <Form.Control
-              name="description"
-              value={description}
-              disabled={isDisabled}
-              onChange={(value: string) => {
-                setDescription(value)
-              }}
-            />
-          </Form.Group>
-        </Panel>
-      </Drawer.Body>
-    </Form>
+        <Drawer.Body>
+          <Panel>
+            <Form.Group controlId="imageId">
+              <ChooseEditImage
+                image={image}
+                disabled={false}
+                openChooseModalOpen={() => setImageSelectionOpen(true)}
+                removeImage={() => setImage(undefined)}
+                header={t('paymentMethodList.selectImage')}
+                maxHeight={200}
+              />
+            </Form.Group>
+
+            <Form.Group controlId="paymentMethodName">
+              <Form.ControlLabel>
+                {toggleRequiredLabel(t('paymentMethodList.name'))}
+              </Form.ControlLabel>
+              <Form.Control
+                name="name"
+                value={name}
+                disabled={isDisabled}
+                onChange={(value: string) => {
+                  setName(value)
+                  setSlug(slugify(value))
+                }}
+              />
+            </Form.Group>
+            <Form.Group controlId="paymentMethodSlug">
+              <Form.ControlLabel>{t('paymentMethodList.slug')}</Form.ControlLabel>
+              <Form.Control name={t('paymentMethodList.slug')} value={slug} plaintext />
+            </Form.Group>
+            <Form.Group controlId="paymentMethodIsActive">
+              <Form.ControlLabel>{t('paymentMethodList.active')}</Form.ControlLabel>
+              <Toggle checked={active} disabled={isDisabled} onChange={value => setActive(value)} />
+              <Form.HelpText>{t('paymentMethodList.activeDescription')}</Form.HelpText>
+            </Form.Group>
+            <Form.Group controlId="paymentMethodAdapter">
+              <Form.ControlLabel>
+                {toggleRequiredLabel(t('paymentMethodList.adapter'))}
+              </Form.ControlLabel>
+              <Form.Control
+                name="paymentProvider"
+                virtualized
+                disabled={isDisabled}
+                value={paymentProvider?.id}
+                data={paymentProviders.map(pp => ({value: pp.id, label: pp.name}))}
+                searchable={false}
+                block
+                accepter={SelectPicker}
+                onChange={(value: any) =>
+                  setPaymentProvider(paymentProviders.find(pp => pp.id === value))
+                }
+              />
+            </Form.Group>
+            <Form.Group controlId="paymentMethodDescription">
+              <Form.ControlLabel>{t('paymentMethodList.description')}</Form.ControlLabel>
+              <Form.Control
+                name="description"
+                value={description}
+                disabled={isDisabled}
+                onChange={(value: string) => {
+                  setDescription(value)
+                }}
+              />
+            </Form.Group>
+          </Panel>
+        </Drawer.Body>
+      </Form>
+
+      <Drawer
+        open={imageSelectionOpen}
+        onClose={() => {
+          setImageSelectionOpen(false)
+        }}>
+        <ImageSelectPanel
+          onClose={() => setImageSelectionOpen(false)}
+          onSelect={(image: ImageRefFragment) => {
+            setImage(image)
+            setImageSelectionOpen(false)
+          }}
+        />
+      </Drawer>
+    </>
   )
 }
 

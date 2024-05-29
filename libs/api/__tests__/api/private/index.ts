@@ -1695,6 +1695,8 @@ export type PaymentMethod = {
   createdAt: Scalars['DateTime'];
   description: Scalars['String'];
   id: Scalars['ID'];
+  image?: Maybe<Image>;
+  imageId?: Maybe<Scalars['String']>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   paymentProvider?: Maybe<PaymentProvider>;
@@ -1704,6 +1706,7 @@ export type PaymentMethod = {
 export type PaymentMethodInput = {
   active: Scalars['Boolean'];
   description: Scalars['String'];
+  imageId?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
   paymentProviderID: Scalars['String'];
   slug: Scalars['Slug'];
@@ -3369,6 +3372,13 @@ export type CreateSubscriptionMutationVariables = Exact<{
 
 export type CreateSubscriptionMutation = { __typename?: 'Mutation', createSubscription?: { __typename?: 'Subscription', autoRenew: boolean, id: string, paidUntil?: string | null, monthlyAmount: number, extendable: boolean, user?: { __typename?: 'User', id: string } | null, memberPlan: { __typename?: 'MemberPlan', id: string }, paymentMethod: { __typename?: 'PaymentMethod', id: string } } | null };
 
+export type RenewSubscriptionMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type RenewSubscriptionMutation = { __typename?: 'Mutation', renewSubscription?: { __typename?: 'Invoice', id: string } | null };
+
 export type TagListQueryVariables = Exact<{
   filter?: InputMaybe<TagFilter>;
   cursor?: InputMaybe<Scalars['ID']>;
@@ -4617,15 +4627,13 @@ export const CreateSubscription = gql`
   }
 }
     `;
-
 export const RenewSubscription = gql`
-mutation RenewSubscription($input: ID!) {
-  renewSubscription(input: $input) {
-    ...Invoice
+    mutation RenewSubscription($id: ID!) {
+  renewSubscription(id: $id) {
+    id
   }
 }
-`;
-
+    `;
 export const TagList = gql`
     query TagList($filter: TagFilter, $cursor: ID, $take: Int, $skip: Int, $order: SortOrder, $sort: TagSort) {
   tags(

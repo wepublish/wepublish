@@ -216,8 +216,9 @@ model Image {
   pageRevisionSocialMediaImages PageRevision[] @relation("pageRevisionSocialMediaImage")
   pageRevisionImages            PageRevision[] @relation("pageRevisionImage")
 
-  users  User[]
-  events Event[]
+  users          User[]
+  events         Event[]
+  paymentMethods PaymentMethod[]
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -482,10 +483,8 @@ model MemberPlan {
   active                  Boolean
   amountPerMonthMin       Float
   availablePaymentMethods AvailablePaymentMethod[]
-  extendable              Boolean @default(true)
+  extendable              Boolean                  @default(true)
   maxCount                Int?
-
-
 
   imageID String?
   image   Image?  @relation(fields: [imageID], references: [id])
@@ -595,6 +594,9 @@ model PaymentMethod {
   description       String
   paymentProviderID String
   active            Boolean
+
+  image   Image?  @relation(fields: [imageId], references: [id])
+  imageId String?
 
   Subscription      Subscription[]
   Payment           Payment[]
@@ -741,7 +743,7 @@ model Subscription {
   periods            SubscriptionPeriod[]
   properties         MetadataProperty[]
   deactivation       SubscriptionDeactivation?
-  extendable         Boolean @default(true)
+  extendable         Boolean                   @default(true)
 
   paymentMethodID String
   paymentMethod   PaymentMethod @relation(fields: [paymentMethodID], references: [id])
