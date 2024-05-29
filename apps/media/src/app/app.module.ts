@@ -12,20 +12,24 @@ import {PassportModule} from '@nestjs/passport'
       cache: true
     }),
     MulterModule.register({}),
-    StorageClientModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: (config: ConfigService) => ({
-        endPoint: config.getOrThrow('S3_ENDPOINT'),
-        port: +config.getOrThrow('S3_PORT'),
-        accessKey: config.getOrThrow('S3_ACCESS_KEY'),
-        secretKey: config.getOrThrow('S3_SECRET_KEY'),
-        useSSL: Boolean(config.get('S3_SSL'))
-      }),
-      inject: [ConfigService]
-    }),
-    MediaServiceModule.forRoot({
-      uploadBucket: 'wepublish-staff',
-      transformationBucket: 'wepublish-transformed'
+    MediaServiceModule.forRootAsync({
+      imports: [
+        StorageClientModule.forRootAsync({
+          imports: [ConfigModule],
+          useFactory: (config: ConfigService) => ({
+            endPoint: config.getOrThrow('S3_ENDPOINT'),
+            port: +config.getOrThrow('S3_PORT'),
+            accessKey: config.getOrThrow('S3_ACCESS_KEY'),
+            secretKey: config.getOrThrow('S3_SECRET_KEY'),
+            useSSL: Boolean(config.get('S3_SSL'))
+          }),
+          inject: [ConfigService]
+        })
+      ],
+      useFactory: () => ({
+        uploadBucket: 'wepublish-staff',
+        transformationBucket: 'wepublish-transformed'
+      })
     }),
     TokenModule.registerAsync({
       imports: [ConfigModule, PassportModule],

@@ -4,7 +4,6 @@ import {TransformationsDto} from './transformations.dto'
 import {StorageClient} from '../storage-client/storage-client.service'
 
 export const MEDIA_SERVICE_MODULE_OPTIONS = Symbol('MEDIA_SERVICE_MODULE_OPTIONS')
-export const MEDIA_SERVICE_TOKEN = Symbol('MEDIA_SERVICE_TOKEN')
 
 export type MediaServiceConfig = {
   uploadBucket: string
@@ -29,9 +28,7 @@ export class MediaService {
   constructor(
     @Inject(MEDIA_SERVICE_MODULE_OPTIONS) private config: MediaServiceConfig,
     private storage: StorageClient
-  ) {
-    console.log('media service', this.config)
-  }
+  ) {}
 
   public async getImage(imageId: string, transformations: TransformationsDto) {
     const transformationsKey = getTransformationKey(transformations)

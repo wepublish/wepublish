@@ -2,10 +2,8 @@ import {DynamicModule, Module, ModuleMetadata, Provider, Type} from '@nestjs/com
 import {
   StorageClient,
   StorageClientConfig,
-  STORAGE_CLIENT_MODULE_OPTIONS,
-  STORAGE_CLIENT_SERVICE_TOKEN
+  STORAGE_CLIENT_MODULE_OPTIONS
 } from './storage-client.service'
-import {StorageClientConfigModule} from './storage-client-config.module'
 
 export type StorageOptionsFactory = {
   createStorageOptions(): Promise<StorageClientConfig> | StorageClientConfig
@@ -19,14 +17,9 @@ export interface StorageClientAsyncOptions extends Pick<ModuleMetadata, 'imports
 }
 
 @Module({
-  imports: [StorageClientConfigModule],
-  providers: [
-    {
-      provide: StorageClient,
-      useExisting: STORAGE_CLIENT_SERVICE_TOKEN
-    }
-  ],
-  exports: [StorageClientConfigModule, StorageClient]
+  imports: [],
+  providers: [StorageClient],
+  exports: [StorageClient]
 })
 export class StorageClientModule {
   public static forRoot(config: StorageClientConfig): DynamicModule {
@@ -36,10 +29,6 @@ export class StorageClientModule {
         {
           provide: STORAGE_CLIENT_MODULE_OPTIONS,
           useValue: config
-        },
-        {
-          provide: STORAGE_CLIENT_SERVICE_TOKEN,
-          useClass: StorageClient
         }
       ],
       exports: [StorageClient]
@@ -56,13 +45,7 @@ export class StorageClientModule {
   }
 
   private static createAsyncProviders(options: StorageClientAsyncOptions): Provider[] {
-    return [
-      {
-        provide: STORAGE_CLIENT_SERVICE_TOKEN,
-        useClass: StorageClient
-      },
-      this.createAsyncOptionsProvider(options)
-    ]
+    return [this.createAsyncOptionsProvider(options)]
   }
 
   private static createAsyncOptionsProvider(options: StorageClientAsyncOptions): Provider {
