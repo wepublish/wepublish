@@ -3,11 +3,11 @@
 exports[`Comment List Item should render AnonymousCommenting 1`] = `
 <DocumentFragment>
   <article
-    class="css-1w9a60u-CommentWrapper ekbi54x9"
+    class="css-19ehku-CommentWrapper ekbi54x9"
     id="verified"
   >
     <header
-      class="css-gv292l-CommentHeader ekbi54x8"
+      class="css-dmcn8p-CommentHeader ekbi54x8"
     >
       <img
         alt="DSC07717"
@@ -63,7 +63,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </header>
     <div
-      class="css-d5z2gz-CommentContent ekbi54x2"
+      class="css-7pcshh-CommentContent ekbi54x2"
     >
       <h1
         class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -99,10 +99,10 @@ https://unsplash.it/200/200 200w"
       </div>
     </div>
     <div
-      class="css-18nu611-CommentListItemActions ew53o3y0"
+      class="css-rtudyd-CommentListItemActions ew53o3y0"
     >
       <div
-        class="css-18nu611-CommentListItemActions ew53o3y0"
+        class="css-rtudyd-CommentListItemActions ew53o3y0"
       >
         <button
           class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall css-ddyrv3-MuiButtonBase-root-MuiButton-root-CommentListItem"
@@ -446,11 +446,11 @@ https://unsplash.it/200/200 200w"
 exports[`Comment List Item should render Commenting 1`] = `
 <DocumentFragment>
   <article
-    class="css-1w9a60u-CommentWrapper ekbi54x9"
+    class="css-19ehku-CommentWrapper ekbi54x9"
     id="verified"
   >
     <header
-      class="css-gv292l-CommentHeader ekbi54x8"
+      class="css-dmcn8p-CommentHeader ekbi54x8"
     >
       <img
         alt="DSC07717"
@@ -506,7 +506,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </header>
     <div
-      class="css-d5z2gz-CommentContent ekbi54x2"
+      class="css-7pcshh-CommentContent ekbi54x2"
     >
       <h1
         class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -542,10 +542,10 @@ https://unsplash.it/200/200 200w"
       </div>
     </div>
     <div
-      class="css-18nu611-CommentListItemActions ew53o3y0"
+      class="css-rtudyd-CommentListItemActions ew53o3y0"
     >
       <div
-        class="css-18nu611-CommentListItemActions ew53o3y0"
+        class="css-rtudyd-CommentListItemActions ew53o3y0"
       >
         <button
           class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall css-ddyrv3-MuiButtonBase-root-MuiButton-root-CommentListItem"
@@ -1067,11 +1067,11 @@ https://unsplash.it/200/200 200w"
 exports[`Comment List Item should render Default 1`] = `
 <DocumentFragment>
   <article
-    class="css-1w9a60u-CommentWrapper ekbi54x9"
+    class="css-19ehku-CommentWrapper ekbi54x9"
     id="verified"
   >
     <header
-      class="css-gv292l-CommentHeader ekbi54x8"
+      class="css-dmcn8p-CommentHeader ekbi54x8"
     >
       <img
         alt="DSC07717"
@@ -1127,7 +1127,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </header>
     <div
-      class="css-d5z2gz-CommentContent ekbi54x2"
+      class="css-7pcshh-CommentContent ekbi54x2"
     >
       <h1
         class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -1163,10 +1163,10 @@ https://unsplash.it/200/200 200w"
       </div>
     </div>
     <div
-      class="css-18nu611-CommentListItemActions ew53o3y0"
+      class="css-rtudyd-CommentListItemActions ew53o3y0"
     >
       <div
-        class="css-18nu611-CommentListItemActions ew53o3y0"
+        class="css-rtudyd-CommentListItemActions ew53o3y0"
       />
       <div
         class="css-11ltnyi-CommentRatingsWrapper e1ggg5h80"
@@ -1448,11 +1448,11 @@ https://unsplash.it/200/200 200w"
 exports[`Comment List Item should render Editing 1`] = `
 <DocumentFragment>
   <article
-    class="css-1w9a60u-CommentWrapper ekbi54x9"
+    class="css-19ehku-CommentWrapper ekbi54x9"
     id="verified"
   >
     <header
-      class="css-gv292l-CommentHeader ekbi54x8"
+      class="css-dmcn8p-CommentHeader ekbi54x8"
     >
       <img
         alt="DSC07717"
@@ -1508,7 +1508,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </header>
     <div
-      class="css-d5z2gz-CommentContent ekbi54x2"
+      class="css-7pcshh-CommentContent ekbi54x2"
     >
       <h1
         class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -1544,10 +1544,10 @@ https://unsplash.it/200/200 200w"
       </div>
     </div>
     <div
-      class="css-18nu611-CommentListItemActions ew53o3y0"
+      class="css-rtudyd-CommentListItemActions ew53o3y0"
     >
       <div
-        class="css-18nu611-CommentListItemActions ew53o3y0"
+        class="css-rtudyd-CommentListItemActions ew53o3y0"
       >
         <button
           class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall css-ddyrv3-MuiButtonBase-root-MuiButton-root-CommentListItem"
@@ -2100,11 +2100,11 @@ https://unsplash.it/200/200 200w"
 exports[`Comment List Item should render Nested 1`] = `
 <DocumentFragment>
   <article
-    class="css-1w9a60u-CommentWrapper ekbi54x9"
+    class="css-19ehku-CommentWrapper ekbi54x9"
     id="verified"
   >
     <header
-      class="css-gv292l-CommentHeader ekbi54x8"
+      class="css-dmcn8p-CommentHeader ekbi54x8"
     >
       <img
         alt="DSC07717"
@@ -2160,7 +2160,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </header>
     <div
-      class="css-d5z2gz-CommentContent ekbi54x2"
+      class="css-7pcshh-CommentContent ekbi54x2"
     >
       <h1
         class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -2196,10 +2196,10 @@ https://unsplash.it/200/200 200w"
       </div>
     </div>
     <div
-      class="css-18nu611-CommentListItemActions ew53o3y0"
+      class="css-rtudyd-CommentListItemActions ew53o3y0"
     >
       <div
-        class="css-18nu611-CommentListItemActions ew53o3y0"
+        class="css-rtudyd-CommentListItemActions ew53o3y0"
       >
         <button
           class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall css-ddyrv3-MuiButtonBase-root-MuiButton-root-CommentListItem"
@@ -2749,11 +2749,11 @@ https://unsplash.it/200/200 200w"
       class="css-uvrneq-CommentListItemChildren ew53o3y1"
     >
       <article
-        class="css-1w9a60u-CommentWrapper ekbi54x9"
+        class="css-19ehku-CommentWrapper ekbi54x9"
         id="verified"
       >
         <header
-          class="css-gv292l-CommentHeader ekbi54x8"
+          class="css-dmcn8p-CommentHeader ekbi54x8"
         >
           <img
             alt="DSC07717"
@@ -2809,7 +2809,7 @@ https://unsplash.it/200/200 200w"
           </div>
         </header>
         <div
-          class="css-d5z2gz-CommentContent ekbi54x2"
+          class="css-7pcshh-CommentContent ekbi54x2"
         >
           <h1
             class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -2845,10 +2845,10 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <div
-          class="css-18nu611-CommentListItemActions ew53o3y0"
+          class="css-rtudyd-CommentListItemActions ew53o3y0"
         >
           <div
-            class="css-18nu611-CommentListItemActions ew53o3y0"
+            class="css-rtudyd-CommentListItemActions ew53o3y0"
           >
             <button
               class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall css-ddyrv3-MuiButtonBase-root-MuiButton-root-CommentListItem"
@@ -2951,11 +2951,11 @@ https://unsplash.it/200/200 200w"
           class="css-uvrneq-CommentListItemChildren ew53o3y1"
         >
           <article
-            class="css-1w9a60u-CommentWrapper ekbi54x9"
+            class="css-19ehku-CommentWrapper ekbi54x9"
             id="anonymous"
           >
             <header
-              class="css-gv292l-CommentHeader ekbi54x8"
+              class="css-dmcn8p-CommentHeader ekbi54x8"
             >
               <img
                 alt="DSC07717"
@@ -2987,7 +2987,7 @@ https://unsplash.it/200/200 200w"
               </div>
             </header>
             <div
-              class="css-d5z2gz-CommentContent ekbi54x2"
+              class="css-7pcshh-CommentContent ekbi54x2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -3023,10 +3023,10 @@ https://unsplash.it/200/200 200w"
               </div>
             </div>
             <div
-              class="css-18nu611-CommentListItemActions ew53o3y0"
+              class="css-rtudyd-CommentListItemActions ew53o3y0"
             >
               <div
-                class="css-18nu611-CommentListItemActions ew53o3y0"
+                class="css-rtudyd-CommentListItemActions ew53o3y0"
               >
                 <button
                   class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall css-ddyrv3-MuiButtonBase-root-MuiButton-root-CommentListItem"
@@ -3098,11 +3098,11 @@ https://unsplash.it/200/200 200w"
         </aside>
       </article>
       <article
-        class="css-1w9a60u-CommentWrapper ekbi54x9"
+        class="css-19ehku-CommentWrapper ekbi54x9"
         id="anonymous"
       >
         <header
-          class="css-gv292l-CommentHeader ekbi54x8"
+          class="css-dmcn8p-CommentHeader ekbi54x8"
         >
           <img
             alt="DSC07717"
@@ -3134,7 +3134,7 @@ https://unsplash.it/200/200 200w"
           </div>
         </header>
         <div
-          class="css-d5z2gz-CommentContent ekbi54x2"
+          class="css-7pcshh-CommentContent ekbi54x2"
         >
           <h1
             class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -3170,10 +3170,10 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <div
-          class="css-18nu611-CommentListItemActions ew53o3y0"
+          class="css-rtudyd-CommentListItemActions ew53o3y0"
         >
           <div
-            class="css-18nu611-CommentListItemActions ew53o3y0"
+            class="css-rtudyd-CommentListItemActions ew53o3y0"
           >
             <button
               class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall css-ddyrv3-MuiButtonBase-root-MuiButton-root-CommentListItem"
@@ -3245,11 +3245,11 @@ https://unsplash.it/200/200 200w"
           class="css-uvrneq-CommentListItemChildren ew53o3y1"
         >
           <article
-            class="css-1w9a60u-CommentWrapper ekbi54x9"
+            class="css-19ehku-CommentWrapper ekbi54x9"
             id="verified"
           >
             <header
-              class="css-gv292l-CommentHeader ekbi54x8"
+              class="css-dmcn8p-CommentHeader ekbi54x8"
             >
               <img
                 alt="DSC07717"
@@ -3305,7 +3305,7 @@ https://unsplash.it/200/200 200w"
               </div>
             </header>
             <div
-              class="css-d5z2gz-CommentContent ekbi54x2"
+              class="css-7pcshh-CommentContent ekbi54x2"
             >
               <h1
                 class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -3341,10 +3341,10 @@ https://unsplash.it/200/200 200w"
               </div>
             </div>
             <div
-              class="css-18nu611-CommentListItemActions ew53o3y0"
+              class="css-rtudyd-CommentListItemActions ew53o3y0"
             >
               <div
-                class="css-18nu611-CommentListItemActions ew53o3y0"
+                class="css-rtudyd-CommentListItemActions ew53o3y0"
               >
                 <button
                   class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall css-ddyrv3-MuiButtonBase-root-MuiButton-root-CommentListItem"
@@ -3454,11 +3454,11 @@ https://unsplash.it/200/200 200w"
 exports[`Comment List Item should render WithClassName 1`] = `
 <DocumentFragment>
   <article
-    class="extra-classname css-1w9a60u-CommentWrapper ekbi54x9"
+    class="extra-classname css-19ehku-CommentWrapper ekbi54x9"
     id="verified"
   >
     <header
-      class="css-gv292l-CommentHeader ekbi54x8"
+      class="css-dmcn8p-CommentHeader ekbi54x8"
     >
       <img
         alt="DSC07717"
@@ -3514,7 +3514,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </header>
     <div
-      class="css-d5z2gz-CommentContent ekbi54x2"
+      class="css-7pcshh-CommentContent ekbi54x2"
     >
       <h1
         class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -3550,10 +3550,10 @@ https://unsplash.it/200/200 200w"
       </div>
     </div>
     <div
-      class="css-18nu611-CommentListItemActions ew53o3y0"
+      class="css-rtudyd-CommentListItemActions ew53o3y0"
     >
       <div
-        class="css-18nu611-CommentListItemActions ew53o3y0"
+        class="css-rtudyd-CommentListItemActions ew53o3y0"
       />
       <div
         class="css-11ltnyi-CommentRatingsWrapper e1ggg5h80"
@@ -3835,11 +3835,11 @@ https://unsplash.it/200/200 200w"
 exports[`Comment List Item should render WithEmotion 1`] = `
 <DocumentFragment>
   <article
-    class="css-au7tc5-CommentWrapper-css ekbi54x9"
+    class="css-67w04i-CommentWrapper-css ekbi54x9"
     id="verified"
   >
     <header
-      class="css-gv292l-CommentHeader ekbi54x8"
+      class="css-dmcn8p-CommentHeader ekbi54x8"
     >
       <img
         alt="DSC07717"
@@ -3895,7 +3895,7 @@ https://unsplash.it/200/200 200w"
       </div>
     </header>
     <div
-      class="css-d5z2gz-CommentContent ekbi54x2"
+      class="css-7pcshh-CommentContent ekbi54x2"
     >
       <h1
         class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -3931,10 +3931,10 @@ https://unsplash.it/200/200 200w"
       </div>
     </div>
     <div
-      class="css-18nu611-CommentListItemActions ew53o3y0"
+      class="css-rtudyd-CommentListItemActions ew53o3y0"
     >
       <div
-        class="css-18nu611-CommentListItemActions ew53o3y0"
+        class="css-rtudyd-CommentListItemActions ew53o3y0"
       />
       <div
         class="css-11ltnyi-CommentRatingsWrapper e1ggg5h80"

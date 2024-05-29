@@ -25,6 +25,9 @@ const avatarStyles = css`
 export const CommentWrapper = styled('article')<{highlight?: boolean}>`
   display: grid;
   gap: ${({theme}) => theme.spacing(2)};
+  &:target {
+    scroll-margin-top: ${({theme}) => theme.spacing(10)};
+  }
 
   ${({highlight, theme}) =>
     highlight &&
