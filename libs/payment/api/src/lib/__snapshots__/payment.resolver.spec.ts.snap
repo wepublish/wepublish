@@ -1,0 +1,86 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`PaymentResolver Mutation: createPaymentFromInvoice 1`] = `
+{
+  "data": {
+    "createPaymentFromInvoice": {
+      "createdAt": "2023-01-01T00:00:00.000Z",
+      "id": "1",
+      "intentData": "data-1",
+      "intentID": "intent-1",
+      "intentSecret": "secret-1",
+      "invoiceID": "invoice-1",
+      "modifiedAt": "2023-01-01T00:00:00.000Z",
+      "paymentData": "payment-data-1",
+      "paymentMethodID": "method-1",
+      "state": "created",
+    },
+  },
+}
+`;
+
+exports[`PaymentResolver Query: getPayment by id 1`] = `
+{
+  "data": {
+    "getPaymentById": {
+      "createdAt": "2023-01-01T00:00:00.000Z",
+      "id": "1",
+      "intentData": "data-1",
+      "intentID": "intent-1",
+      "intentSecret": "secret-1",
+      "invoiceID": "invoice-1",
+      "modifiedAt": "2023-01-01T00:00:00.000Z",
+      "paymentData": "payment-data-1",
+      "paymentMethodID": "method-1",
+      "state": "created",
+    },
+  },
+}
+`;
+
+exports[`PaymentResolver Query: getPayment by id: Not found 1`] = `
+{
+  "data": null,
+  "errors": [
+    {
+      "extensions": {
+        "code": "BAD_USER_INPUT",
+      },
+      "locations": [
+        {
+          "column": 9,
+          "line": 3,
+        },
+      ],
+      "message": "Payment not found",
+      "path": [
+        "getPaymentById",
+      ],
+    },
+  ],
+}
+`;
+
+exports[`PaymentResolver Query: getPayments list 1`] = `
+{
+  "data": {
+    "getPayments": {
+      "nodes": [
+        {
+          "createdAt": "2023-01-01T00:00:00.000Z",
+          "id": "1",
+          "intentData": "data-1",
+          "intentID": "intent-1",
+          "intentSecret": "secret-1",
+          "invoiceID": "invoice-1",
+          "modifiedAt": "2023-01-01T00:00:00.000Z",
+          "paymentData": "payment-data-1",
+          "paymentMethodID": "method-1",
+          "state": "created",
+        },
+      ],
+      "totalCount": 1,
+    },
+  },
+}
+`;

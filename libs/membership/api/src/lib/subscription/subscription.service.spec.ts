@@ -20,7 +20,7 @@ import nock from 'nock'
 import {forwardRef} from '@nestjs/common'
 import {Test, TestingModule} from '@nestjs/testing'
 import {PrismaModule} from '@wepublish/nest-modules'
-import {PaymentsService} from '@wepublish/payment/api'
+import {PaymentService} from '@wepublish/payment/api'
 import {clearDatabase, clearFullDatabase} from '@wepublish/testing'
 import {add, sub} from 'date-fns'
 import {PeriodicJobService} from '../periodic-job/periodic-job.service'
@@ -315,7 +315,7 @@ describe('SubscriptionController', () => {
 
       providers: [SubscriptionFlowService, PeriodicJobService, SubscriptionService]
     }).compile()
-    const paymentsService = module.get<PaymentsService>(PaymentsService)
+    const paymentsService = module.get<PaymentService>(PaymentService)
 
     await clearDatabase(prismaClient, [
       'payments',

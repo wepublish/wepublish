@@ -15,7 +15,7 @@ import {
   SubscriptionPeriod,
   User
 } from '@prisma/client'
-import {PaymentProvider, PaymentsService} from '@wepublish/payment/api'
+import {PaymentProvider, PaymentService, PaymentProviderService} from '@wepublish/payment/api'
 import {add, endOfDay, startOfDay} from 'date-fns'
 import {Action} from '../subscription-event-dictionary/subscription-event-dictionary.type'
 import {mapPaymentPeriodToMonths} from '@wepublish/utils/api'
@@ -38,7 +38,8 @@ interface PeriodBounds {
 export class SubscriptionService {
   constructor(
     private readonly prismaService: PrismaClient,
-    private readonly payments: PaymentsService
+    private readonly payments: PaymentService,
+    private readonly paymentProviders: PaymentProviderService
   ) {}
 
   public async getSubscriptionsForInvoiceCreation(
@@ -344,7 +345,7 @@ export class SubscriptionService {
     },
     mailActions: Action[]
   ): Promise<ChargeStatus> {
-    const paymentProvider = this.payments.findById(
+    const paymentProvider = this.paymentProviders.findById(
       invoice.subscription!.paymentMethod.paymentProviderID
     )
 
