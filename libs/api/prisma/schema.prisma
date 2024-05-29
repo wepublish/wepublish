@@ -229,8 +229,9 @@ model Image {
   pageRevisionSocialMediaImages PageRevision[] @relation("pageRevisionSocialMediaImage")
   pageRevisionImages            PageRevision[] @relation("pageRevisionImage")
 
-  users  User[]
-  events Event[]
+  users          User[]
+  events         Event[]
+  paymentMethods PaymentMethod[]
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -619,6 +620,9 @@ model PaymentMethod {
   description       String
   paymentProviderID String
   active            Boolean
+
+  image   Image?  @relation(fields: [imageId], references: [id])
+  imageId String?
 
   Subscription      Subscription[]
   Payment           Payment[]

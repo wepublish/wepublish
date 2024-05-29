@@ -148,6 +148,7 @@ export type ArticleTeaser = {
   image?: Maybe<Image>;
   lead?: Maybe<Scalars['String']>;
   preTitle?: Maybe<Scalars['String']>;
+  /** @deprecated Use block styles instead of this */
   style: TeaserStyle;
   title?: Maybe<Scalars['String']>;
 };
@@ -157,7 +158,6 @@ export type ArticleTeaserInput = {
   imageID?: InputMaybe<Scalars['ID']>;
   lead?: InputMaybe<Scalars['String']>;
   preTitle?: InputMaybe<Scalars['String']>;
-  style: TeaserStyle;
   title?: InputMaybe<Scalars['String']>;
 };
 
@@ -432,6 +432,7 @@ export type CustomTeaser = {
   lead?: Maybe<Scalars['String']>;
   preTitle?: Maybe<Scalars['String']>;
   properties?: Maybe<Array<Properties>>;
+  /** @deprecated Use block styles instead of this */
   style: TeaserStyle;
   title?: Maybe<Scalars['String']>;
 };
@@ -442,7 +443,6 @@ export type CustomTeaserInput = {
   lead?: InputMaybe<Scalars['String']>;
   preTitle?: InputMaybe<Scalars['String']>;
   properties: Array<PropertiesInput>;
-  style: TeaserStyle;
   title?: InputMaybe<Scalars['String']>;
 };
 
@@ -561,6 +561,7 @@ export type EventTeaser = {
   image?: Maybe<Image>;
   lead?: Maybe<Scalars['String']>;
   preTitle?: Maybe<Scalars['String']>;
+  /** @deprecated Use block styles instead of this */
   style: TeaserStyle;
   title?: Maybe<Scalars['String']>;
 };
@@ -570,7 +571,6 @@ export type EventTeaserInput = {
   imageID?: InputMaybe<Scalars['ID']>;
   lead?: InputMaybe<Scalars['String']>;
   preTitle?: InputMaybe<Scalars['String']>;
-  style: TeaserStyle;
   title?: InputMaybe<Scalars['String']>;
 };
 
@@ -865,12 +865,15 @@ export type LinkPageBreakBlock = {
   blockStyle?: Maybe<Scalars['String']>;
   hideButton: Scalars['Boolean'];
   image?: Maybe<Image>;
+  /** @deprecated Use block styles instead of this */
   layoutOption?: Maybe<Scalars['String']>;
   linkTarget?: Maybe<Scalars['String']>;
   linkText?: Maybe<Scalars['String']>;
   linkURL?: Maybe<Scalars['String']>;
   richText: Scalars['RichText'];
+  /** @deprecated Use block styles instead of this */
   styleOption?: Maybe<Scalars['String']>;
+  /** @deprecated Use block styles instead of this */
   templateOption?: Maybe<Scalars['String']>;
   text?: Maybe<Scalars['String']>;
 };
@@ -879,13 +882,10 @@ export type LinkPageBreakBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   hideButton: Scalars['Boolean'];
   imageID?: InputMaybe<Scalars['ID']>;
-  layoutOption?: InputMaybe<Scalars['String']>;
   linkTarget?: InputMaybe<Scalars['String']>;
   linkText?: InputMaybe<Scalars['String']>;
   linkURL?: InputMaybe<Scalars['String']>;
   richText: Scalars['RichText'];
-  styleOption?: InputMaybe<Scalars['String']>;
-  templateOption?: InputMaybe<Scalars['String']>;
   text?: InputMaybe<Scalars['String']>;
 };
 
@@ -1649,6 +1649,7 @@ export type PageTeaser = {
   lead?: Maybe<Scalars['String']>;
   page?: Maybe<Page>;
   preTitle?: Maybe<Scalars['String']>;
+  /** @deprecated Use block styles instead of this */
   style: TeaserStyle;
   title?: Maybe<Scalars['String']>;
 };
@@ -1658,7 +1659,6 @@ export type PageTeaserInput = {
   lead?: InputMaybe<Scalars['String']>;
   pageID: Scalars['ID'];
   preTitle?: InputMaybe<Scalars['String']>;
-  style: TeaserStyle;
   title?: InputMaybe<Scalars['String']>;
 };
 
@@ -1701,6 +1701,8 @@ export type PaymentMethod = {
   createdAt: Scalars['DateTime'];
   description: Scalars['String'];
   id: Scalars['ID'];
+  image?: Maybe<Image>;
+  imageId?: Maybe<Scalars['String']>;
   modifiedAt: Scalars['DateTime'];
   name: Scalars['String'];
   paymentProvider?: Maybe<PaymentProvider>;
@@ -1710,6 +1712,7 @@ export type PaymentMethod = {
 export type PaymentMethodInput = {
   active: Scalars['Boolean'];
   description: Scalars['String'];
+  imageId?: InputMaybe<Scalars['String']>;
   name: Scalars['String'];
   paymentProviderID: Scalars['String'];
   slug: Scalars['Slug'];
@@ -1783,6 +1786,7 @@ export type PeerArticleTeaser = {
   lead?: Maybe<Scalars['String']>;
   peer?: Maybe<Peer>;
   preTitle?: Maybe<Scalars['String']>;
+  /** @deprecated Use block styles instead of this */
   style: TeaserStyle;
   title?: Maybe<Scalars['String']>;
 };
@@ -1793,7 +1797,6 @@ export type PeerArticleTeaserInput = {
   lead?: InputMaybe<Scalars['String']>;
   peerID: Scalars['ID'];
   preTitle?: InputMaybe<Scalars['String']>;
-  style: TeaserStyle;
   title?: InputMaybe<Scalars['String']>;
 };
 
@@ -3378,6 +3381,13 @@ export type CreateSubscriptionMutationVariables = Exact<{
 
 export type CreateSubscriptionMutation = { __typename?: 'Mutation', createSubscription?: { __typename?: 'Subscription', autoRenew: boolean, id: string, paidUntil?: string | null, monthlyAmount: number, extendable: boolean, user?: { __typename?: 'User', id: string } | null, memberPlan: { __typename?: 'MemberPlan', id: string }, paymentMethod: { __typename?: 'PaymentMethod', id: string } } | null };
 
+export type RenewSubscriptionMutationVariables = Exact<{
+  id: Scalars['ID'];
+}>;
+
+
+export type RenewSubscriptionMutation = { __typename?: 'Mutation', renewSubscription?: { __typename?: 'Invoice', id: string } | null };
+
 export type TagListQueryVariables = Exact<{
   filter?: InputMaybe<TagFilter>;
   cursor?: InputMaybe<Scalars['ID']>;
@@ -4641,6 +4651,13 @@ export const CreateSubscription = gql`
     paymentMethod {
       id
     }
+  }
+}
+    `;
+export const RenewSubscription = gql`
+    mutation RenewSubscription($id: ID!) {
+  renewSubscription(id: $id) {
+    id
   }
 }
     `;

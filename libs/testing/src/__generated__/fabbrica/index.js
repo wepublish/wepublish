@@ -205,6 +205,10 @@ const modelFieldDefinitions = [{
                 name: "events",
                 type: "Event",
                 relationName: "EventToImage"
+            }, {
+                name: "paymentMethods",
+                type: "PaymentMethod",
+                relationName: "ImageToPaymentMethod"
             }]
     }, {
         name: "CommentsRevisions",
@@ -448,6 +452,10 @@ const modelFieldDefinitions = [{
     }, {
         name: "PaymentMethod",
         fields: [{
+                name: "image",
+                type: "Image",
+                relationName: "ImageToPaymentMethod"
+            }, {
                 name: "Subscription",
                 type: "Subscription",
                 relationName: "PaymentMethodToSubscription"
@@ -2845,6 +2853,9 @@ function defineTaggedPagesFactoryInternal({ defaultData: defaultDataResolver, tr
 export function defineTaggedPagesFactory(options) {
     return defineTaggedPagesFactoryInternal(options);
 }
+function isPaymentMethodimageFactory(x) {
+    return (x === null || x === void 0 ? void 0 : x._factoryFor) === "Image";
+}
 function autoGeneratePaymentMethodScalarsOrEnums({ seq }) {
     return {
         name: getScalarFieldValueGenerator().String({ modelName: "PaymentMethod", fieldName: "name", isId: false, isUnique: false, seq }),
@@ -2870,7 +2881,11 @@ function definePaymentMethodFactoryInternal({ defaultData: defaultDataResolver, 
                 const traitData = yield resolveTraitValue({ seq });
                 return Object.assign(Object.assign({}, acc), traitData);
             }), resolveValue({ seq }));
-            const defaultAssociations = {};
+            const defaultAssociations = {
+                image: isPaymentMethodimageFactory(defaultData.image) ? {
+                    create: yield defaultData.image.build()
+                } : defaultData.image
+            };
             const data = Object.assign(Object.assign(Object.assign(Object.assign({}, requiredScalarData), defaultData), defaultAssociations), inputData);
             return data;
         });

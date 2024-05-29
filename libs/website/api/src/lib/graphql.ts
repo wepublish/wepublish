@@ -88,6 +88,7 @@ export type ArticleTeaser = {
   image?: Maybe<Image>;
   lead?: Maybe<Scalars['String']>;
   preTitle?: Maybe<Scalars['String']>;
+  /** @deprecated Use block styles instead of this */
   style: TeaserStyle;
   title?: Maybe<Scalars['String']>;
 };
@@ -277,6 +278,7 @@ export type CustomTeaser = {
   lead?: Maybe<Scalars['String']>;
   preTitle?: Maybe<Scalars['String']>;
   properties: Array<PublicProperties>;
+  /** @deprecated Use block styles instead of this */
   style: TeaserStyle;
   title?: Maybe<Scalars['String']>;
 };
@@ -357,6 +359,7 @@ export type EventTeaser = {
   image?: Maybe<Image>;
   lead?: Maybe<Scalars['String']>;
   preTitle?: Maybe<Scalars['String']>;
+  /** @deprecated Use block styles instead of this */
   style: TeaserStyle;
   title?: Maybe<Scalars['String']>;
 };
@@ -532,12 +535,15 @@ export type LinkPageBreakBlock = {
   blockStyle?: Maybe<Scalars['String']>;
   hideButton: Scalars['Boolean'];
   image?: Maybe<Image>;
+  /** @deprecated Use block styles instead of this */
   layoutOption?: Maybe<Scalars['String']>;
   linkTarget?: Maybe<Scalars['String']>;
   linkText?: Maybe<Scalars['String']>;
   linkURL?: Maybe<Scalars['String']>;
   richText: Scalars['RichText'];
+  /** @deprecated Use block styles instead of this */
   styleOption?: Maybe<Scalars['String']>;
+  /** @deprecated Use block styles instead of this */
   templateOption?: Maybe<Scalars['String']>;
   text?: Maybe<Scalars['String']>;
 };
@@ -835,6 +841,7 @@ export type PageTeaser = {
   lead?: Maybe<Scalars['String']>;
   page?: Maybe<Page>;
   preTitle?: Maybe<Scalars['String']>;
+  /** @deprecated Use block styles instead of this */
   style: TeaserStyle;
   title?: Maybe<Scalars['String']>;
 };
@@ -859,6 +866,8 @@ export type PaymentMethod = {
   __typename?: 'PaymentMethod';
   description: Scalars['String'];
   id: Scalars['ID'];
+  image?: Maybe<Image>;
+  imageId?: Maybe<Scalars['String']>;
   name: Scalars['String'];
   paymentProviderID: Scalars['String'];
   slug: Scalars['Slug'];
@@ -912,6 +921,7 @@ export type PeerArticleTeaser = {
   lead?: Maybe<Scalars['String']>;
   peer?: Maybe<Peer>;
   preTitle?: Maybe<Scalars['String']>;
+  /** @deprecated Use block styles instead of this */
   style: TeaserStyle;
   title?: Maybe<Scalars['String']>;
 };
