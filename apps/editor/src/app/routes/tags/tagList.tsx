@@ -317,7 +317,7 @@ const TagList = memo<TagListProps>(({type}) => {
                         }
                       })
                     }}>
-                    Mark as main
+                    {t('tags.overview.markAsMain')}
                   </Checkbox>
                 </Flex>
 
