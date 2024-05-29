@@ -27,8 +27,7 @@ export const BajourQuoteBlockWrapper = styled('blockquote')<{withImage: boolean}
     max-width: calc((100% / 12) * 4 + ${({theme}) => theme.spacing(60)});
   }
 
-  @media (min-width: 1440px) {
-    // breakpoint needs to be custom
+  ${({theme}) => theme.breakpoints.up('lg')} {
     padding-left: 0;
     padding-right: 0;
     max-width: ${({theme}) => theme.spacing(85)};
