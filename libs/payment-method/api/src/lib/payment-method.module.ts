@@ -6,6 +6,7 @@ import {PaymentMethodDataloader} from './payment-method.dataloader'
 
 @Module({
   imports: [PrismaModule],
-  providers: [PaymentMethodService, PaymentMethodResolver, PaymentMethodDataloader]
+  providers: [PaymentMethodService, PaymentMethodResolver, PaymentMethodDataloader],
+  exports: [PaymentMethodDataloader]
 })
 export class PaymentMethodModule {}

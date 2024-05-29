@@ -1,17 +1,20 @@
 import {DynamicModule, Module, Provider} from '@nestjs/common'
 import {PrismaModule} from '@wepublish/nest-modules'
-import {PaymentsService} from './payments.service'
+import {PaymentService} from './payment.service'
 import {createAsyncOptionsProvider} from '@wepublish/utils/api'
 import {
   PAYMENTS_MODULE_OPTIONS,
   PaymentsModuleAsyncOptions,
   PaymentsModuleOptions
 } from './payments-module-options'
-import {PrismaClient} from '@prisma/client'
+import {PaymentDataloader} from './payment.dataloader'
+import {PaymentResolver} from './payment.resolver'
+import {PaymentProviderService} from './payment-provider.service'
+import {PaymentMethodModule} from '@wepublish/payment-method/api'
 
 @Module({
-  imports: [PrismaModule],
-  exports: [PaymentsService]
+  imports: [PrismaModule, PaymentMethodModule],
+  exports: [PaymentService, PaymentProviderService]
 })
 export class PaymentsModule {
   static registerAsync(options: PaymentsModuleAsyncOptions): DynamicModule {
@@ -27,11 +30,14 @@ export class PaymentsModule {
     return [
       createAsyncOptionsProvider<PaymentsModuleOptions>(PAYMENTS_MODULE_OPTIONS, options),
       {
-        provide: PaymentsService,
-        useFactory: (prisma: PrismaClient, {paymentProviders}: PaymentsModuleOptions) =>
-          new PaymentsService(prisma, paymentProviders),
-        inject: [PrismaClient, PAYMENTS_MODULE_OPTIONS]
-      }
+        provide: PaymentProviderService,
+        useFactory: ({paymentProviders}: PaymentsModuleOptions) =>
+          new PaymentProviderService(paymentProviders),
+        inject: [PAYMENTS_MODULE_OPTIONS]
+      },
+      PaymentService,
+      PaymentResolver,
+      PaymentDataloader
     ]
   }
 }

@@ -356,6 +356,7 @@ type Mutation {
 
   """Creates a new navigation."""
   createNavigation(navigation: CreateNavigationInput!): Navigation!
+  createPaymentFromInvoice(input: PaymentFromInvoiceInput!): Payment!
   createPaymentMethod(paymentMethod: CreatePaymentMethodInput!): PaymentMethod!
 
   """Create a new subscription flow"""
@@ -481,6 +482,30 @@ type PaginatedUserRoles {
   totalCount: Float!
 }
 
+type Payment {
+  createdAt: DateTime!
+  id: ID!
+  intentData: String
+  intentID: String
+  intentSecret: String
+  invoiceID: ID!
+  modifiedAt: DateTime!
+  paymentData: String
+  paymentMethodID: ID!
+  state: PaymentState!
+}
+
+input PaymentFilter {
+  intentID: String
+}
+
+input PaymentFromInvoiceInput {
+  failureURL: String!
+  invoiceID: ID!
+  paymentMethodID: ID!
+  successURL: String!
+}
+
 type PaymentMethod {
   active: Boolean!
   createdAt: DateTime!
@@ -502,6 +527,27 @@ enum PaymentPeriodicity {
   monthly
   quarterly
   yearly
+}
+
+enum PaymentSort {
+  CreatedAt
+  ModifiedAt
+}
+
+enum PaymentState {
+  canceled
+  created
+  declined
+  paid
+  processing
+  requiresUserAction
+  submitted
+}
+
+type PaymentsResult {
+  nodes: [Payment!]!
+  pageInfo: PageInfo!
+  totalCount: Float!
 }
 
 type PeriodicJob {
@@ -547,6 +593,7 @@ type Query {
   "\n      Returns the expected revenue for the time period given.\n      Excludes cancelled or manually set as paid invoices.\n    "
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
   getActiveMemberPlans(cursorId: String, filter: ActiveMemberPlansFilter, order: SortOrder, skip: Int = 0, sort: MemberPlanSort, take: Int = 10): [MemberPlan!]!
+  getAdminPayments(cursorId: String, filter: PaymentFilter, order: SortOrder, skip: Int = 0, sort: PaymentSort, take: Int = 10): PaymentsResult!
   getAuthorBySlug(slug: String!): Author!
   getAuthors(cursorId: String, filter: AuthorFilter, order: SortOrder = Ascending, skip: Int = 0, sortedField: AuthorSort, take: Int = 10): PaginatedAuthors!
   getAuthorsById(id: ID!): Author!
@@ -562,6 +609,7 @@ type Query {
 
   """Returns a list of navigations."""
   getNavigations: [Navigation!]!
+  getPaymentById(id: ID!): Payment!
   getPaymentMethodById(id: ID!): PaymentMethod!
   getPaymentMethods: [PaymentMethod!]!
 
