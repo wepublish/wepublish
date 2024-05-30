@@ -443,7 +443,7 @@ type Navigation {
   createdAt: DateTime!
   id: String!
   key: String!
-  links: [BaseNavigationLink!]!
+  links: [BaseNavigationLink!]
   modifiedAt: DateTime!
   name: String!
 }

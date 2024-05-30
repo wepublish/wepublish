@@ -33,8 +33,7 @@ import {
   StatsModule,
   StripeCheckoutPaymentProvider,
   StripePaymentProvider,
-  MemberPlanModule,
-  FieldMiddlewarePermissions
+  MemberPlanModule
 } from '@wepublish/api'
 import {ApiModule, PrismaModule} from '@wepublish/nest-modules'
 import bodyParser from 'body-parser'
@@ -59,10 +58,7 @@ import {UserRoleModule} from '@wepublish/user-role/api'
       path: 'v2',
       cache: 'bounded',
       playground: process.env.NODE_ENV === 'development',
-      allowBatchedHttpRequests: true,
-      buildSchemaOptions: {
-        fieldMiddleware: [FieldMiddlewarePermissions]
-      }
+      allowBatchedHttpRequests: true
     }),
     PrismaModule,
     MailsModule.registerAsync({
