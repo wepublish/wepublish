@@ -15,6 +15,7 @@ import {ImportableEventListView} from '@wepublish/event/import/editor'
 import {
   MailTemplateList,
   MemberPlanEdit,
+  MigrationList,
   PlaceholderList,
   SubscriptionFlowList,
   SystemMailList
@@ -727,6 +728,14 @@ export function App() {
               element={
                 <Base>
                   <SettingList />
+                </Base>
+              }
+            />
+            <Route
+              path="migration"
+              element={
+                <Base>
+                  <MigrationList />
                 </Base>
               }
             />
