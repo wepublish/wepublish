@@ -79,11 +79,12 @@ export default function ArticleBySlug() {
               />
             </ArticleWrapper>
 
-            {author && (
-              <AuthorWrapper>
-                <BajourAuthorChip key={author.id} author={author} />
-              </AuthorWrapper>
-            )}
+            {data?.article?.authors.length &&
+              data?.article?.authors.map(a => (
+                <AuthorWrapper key={a.id}>
+                  <BajourAuthorChip key={a.id} author={a} />
+                </AuthorWrapper>
+              ))}
 
             <ArticleWrapper>
               <H5 component={'h2'} css={uppercase}>
