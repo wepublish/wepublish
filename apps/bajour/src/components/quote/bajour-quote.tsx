@@ -66,31 +66,30 @@ const QuoteImage = styled('div')`
   }
 `
 
-const BajourQuoteQuote = styled('p')`
-  font-size: 20px;
-  font-weight: 300;
-  line-height: 1.25;
+const BajourQuoteQuote = styled('div')`
+  font-size: 20px !important;
+  font-weight: 300 !important;
+  line-height: 1.25 !important;
 
   ${({theme}) => theme.breakpoints.up('md')} {
-    font-size: 32px;
+    font-size: 32px !important;
   }
 `
 
-const BajourQuoteAuthor = styled('cite')`
-  display: inline-block;
-  font-size: 0.8rem;
-  margin-top: ${({theme}) => theme.spacing(1)};
-  font-weight: 300;
+const BajourQuoteAuthor = styled('div')`
+  font-size: 0.8rem !important;
+  margin-top: ${({theme}) => theme.spacing(1)} !important;
+  font-weight: 300 !important;
 
   ${({theme}) => theme.breakpoints.up('md')} {
-    margin-top: ${({theme}) => theme.spacing(2)};
-    font-size: 1rem;
+    margin-top: ${({theme}) => theme.spacing(2)} !important;
+    font-size: 1rem !important;
   }
 `
 
 export const BajourQuoteBlock = ({quote, author, image, className}: BuilderQuoteBlockProps) => {
   const {
-    elements: {H4, Image, Paragraph}
+    elements: {Image, Paragraph}
   } = useWebsiteBuilder()
 
   return (
@@ -101,7 +100,9 @@ export const BajourQuoteBlock = ({quote, author, image, className}: BuilderQuote
         </QuoteImage>
       )}
       <BajourQuoteContent>
-        <H4 component={BajourQuoteQuote}>{quote}</H4>
+        <Paragraph component={BajourQuoteQuote} gutterBottom={false}>
+          {quote}
+        </Paragraph>
         {author && (
           <Paragraph component={BajourQuoteAuthor} gutterBottom={false}>
             {author}
