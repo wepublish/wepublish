@@ -12,6 +12,7 @@ import {PaymentProvider} from '@wepublish/payment/api'
 import {createProxyingResolver} from '../utility'
 import {GraphQLSlug} from './slug'
 import {PaymentMethod} from '@prisma/client'
+import {GraphQLImage} from './image'
 
 export const GraphQLPaymentProvider = new GraphQLObjectType<PaymentProvider, Context>({
   name: 'PaymentProvider',
@@ -38,7 +39,16 @@ export const GraphQLPaymentMethod = new GraphQLObjectType<PaymentMethod, Context
         return paymentProviders.find(paymentProvider => paymentProvider.id === paymentProviderID)
       })
     },
-    active: {type: new GraphQLNonNull(GraphQLBoolean)}
+    active: {type: new GraphQLNonNull(GraphQLBoolean)},
+    imageId: {
+      type: GraphQLString
+    },
+    image: {
+      type: GraphQLImage,
+      resolve: createProxyingResolver(({imageId}, args, {loaders}) => {
+        return imageId ? loaders.images.load(imageId) : null
+      })
+    }
   }
 })
 
@@ -49,7 +59,16 @@ export const GraphQLPublicPaymentMethod = new GraphQLObjectType<PaymentMethod, C
     paymentProviderID: {type: new GraphQLNonNull(GraphQLString)},
     name: {type: new GraphQLNonNull(GraphQLString)},
     slug: {type: new GraphQLNonNull(GraphQLSlug)},
-    description: {type: new GraphQLNonNull(GraphQLString)}
+    description: {type: new GraphQLNonNull(GraphQLString)},
+    imageId: {
+      type: GraphQLString
+    },
+    image: {
+      type: GraphQLImage,
+      resolve: createProxyingResolver(({imageId}, args, {loaders}) => {
+        return imageId ? loaders.images.load(imageId) : null
+      })
+    }
   }
 })
 
@@ -60,6 +79,9 @@ export const GraphQLPaymentMethodInput = new GraphQLInputObjectType({
     slug: {type: new GraphQLNonNull(GraphQLSlug)},
     description: {type: new GraphQLNonNull(GraphQLString)},
     paymentProviderID: {type: new GraphQLNonNull(GraphQLString)},
-    active: {type: new GraphQLNonNull(GraphQLBoolean)}
+    active: {type: new GraphQLNonNull(GraphQLBoolean)},
+    imageId: {
+      type: GraphQLString
+    }
   }
 })
