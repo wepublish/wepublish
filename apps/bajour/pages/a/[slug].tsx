@@ -1,4 +1,4 @@
-import {css} from '@mui/material'
+import {css, styled} from '@mui/material'
 import {getArticlePathsBasedOnPage} from '@wepublish/utils/website'
 import {
   ApiV1,
@@ -8,6 +8,7 @@ import {
   ArticleWrapper,
   BuilderArticleListProps,
   CommentListContainer,
+  ContentWrapper,
   PollBlock,
   useWebsiteBuilder,
   WebsiteBuilderProvider
@@ -19,6 +20,8 @@ import {useRouter} from 'next/router'
 import {BriefingNewsletter} from '../../src/components/briefing-newsletter/briefing-newsletter'
 import {FrageDesTagesArticle} from '../../src/components/frage-des-tages/frage-des-tages-article'
 import {Container} from '../../src/components/layout/container'
+import {BajourArticle} from '../../src/components/website-builder-overwrites/article/bajour-article'
+import {BajourAuthorChip} from '../../src/components/website-builder-overwrites/author/author-chip'
 import {TeaserSlider} from '../../src/components/website-builder-overwrites/blocks/teaser-slider/teaser-slider'
 
 const uppercase = css`
@@ -32,6 +35,14 @@ const RelatedArticleSlider = (props: BuilderArticleListProps) => {
     </WebsiteBuilderProvider>
   )
 }
+
+export const AuthorWrapper = styled(ContentWrapper)`
+  margin: 0 ${({theme}) => theme.spacing(6)};
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    margin: 0;
+  }
+`
 
 export default function ArticleBySlug() {
   const {
@@ -53,7 +64,8 @@ export default function ArticleBySlug() {
   return (
     <WebsiteBuilderProvider
       ArticleList={RelatedArticleSlider}
-      blocks={{Poll: isFDT ? FrageDesTagesArticle : PollBlock}}>
+      blocks={{Poll: isFDT ? FrageDesTagesArticle : PollBlock}}
+      Article={BajourArticle}>
       <Container>
         <ArticleContainer slug={slug as string} />
 
@@ -71,6 +83,13 @@ export default function ArticleBySlug() {
                 filter={articles => articles.filter(article => article.id !== data.article?.id)}
               />
             </ArticleWrapper>
+
+            {data?.article?.authors.length &&
+              data?.article?.authors.map(a => (
+                <AuthorWrapper key={a.id}>
+                  <BajourAuthorChip key={a.id} author={a} />
+                </AuthorWrapper>
+              ))}
 
             {!isFDT && (
               <ArticleWrapper>
