@@ -35,6 +35,14 @@ export const CommentListItemActions = styled('div')`
   justify-content: space-between;
 `
 
+export const CommentListItemActionsButtons = styled('div')`
+  display: flex;
+  flex-flow: row wrap;
+  gap: ${({theme}) => theme.spacing(1)};
+  align-items: start;
+  justify-content: space-between;
+`
+
 const useButtonStyles = () => {
   const theme = useTheme()
 
@@ -115,7 +123,7 @@ export const CommentListItem = ({
       )}
 
       <CommentListItemActions>
-        <CommentListItemActions>
+        <CommentListItemActionsButtons>
           {canReply && (
             <Button
               startIcon={<MdReply />}
@@ -150,7 +158,7 @@ export const CommentListItem = ({
               Editieren
             </Button>
           )}
-        </CommentListItemActions>
+        </CommentListItemActionsButtons>
 
         <CommentRatings
           commentId={id}

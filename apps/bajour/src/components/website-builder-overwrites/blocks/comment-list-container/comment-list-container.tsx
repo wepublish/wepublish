@@ -49,8 +49,9 @@ export const CommentListContainer = styled(BaseCommentListContainer)`
     }
 
     ${CommentContent} {
+      padding-top: 0;
+      padding-bottom: 0;
       background-color: ${({theme}) => theme.palette.common.white};
-      padding: ${({theme}) => theme.spacing(1.5)};
     }
 
     ${CommentListItemActions} {
@@ -66,7 +67,8 @@ export const CommentListContainer = styled(BaseCommentListContainer)`
   }
 
   ${CommentContent} {
-    padding: ${({theme}) => theme.spacing(1.5)};
+    padding-top: 0;
+    padding-bottom: 0;
     span {
       // what other way to style <RichText /> ?
       font-weight: 300;
