@@ -554,6 +554,7 @@ export const GraphQLTeaserListBlockFilterInput = new GraphQLInputObjectType({
 export const GraphQLTeaserListBlock = new GraphQLObjectType<TeaserListBlock, Context>({
   name: 'TeaserListBlock',
   fields: {
+    title: {type: GraphQLString},
     blockStyle: {
       type: GraphQLString,
       resolve: resolveBlockStyleIdToName
@@ -662,6 +663,7 @@ export const GraphQLTeaserListBlock = new GraphQLObjectType<TeaserListBlock, Con
 export const GraphQLPublicTeaserListBlock = new GraphQLObjectType<TeaserListBlock, Context>({
   name: 'TeaserListBlock',
   fields: {
+    title: {type: GraphQLString},
     blockStyle: {
       type: GraphQLString,
       resolve: resolveBlockStyleIdToName
@@ -775,6 +777,7 @@ export const GraphQLPublicTeaserListBlock = new GraphQLObjectType<TeaserListBloc
 export const GraphQLTeaserListBlockInput = new GraphQLInputObjectType({
   name: 'TeaserListBlockInput',
   fields: {
+    title: {type: GraphQLString},
     blockStyle: {type: GraphQLString},
     teaserType: {
       type: GraphQLTeaserType
