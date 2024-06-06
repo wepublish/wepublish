@@ -21,6 +21,7 @@ export default function Mitmachen() {
       }}
       successURL={`${locationOrigin}/payment/success`}
       failureURL={`${locationOrigin}/payment/fail`}
+      fields={['firstName']}
     />
   )
 }

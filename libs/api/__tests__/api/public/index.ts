@@ -1418,6 +1418,7 @@ export type TeaserListBlock = {
   take?: Maybe<Scalars['Int']>;
   teaserType?: Maybe<TeaserType>;
   teasers: Array<Maybe<Teaser>>;
+  title?: Maybe<Scalars['String']>;
 };
 
 export type TeaserListBlockFilter = {

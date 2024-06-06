@@ -21,9 +21,10 @@ import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
+import {TsriBlockRenderer} from '../src/components/block-renderer/block-renderer'
+import {TsriTeaser} from '../src/components/tsri-teaser'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
-import {TsriBlockRenderer} from '../src/components/block-renderer/block-renderer'
 
 setDefaultOptions({
   locale: de
@@ -117,7 +118,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
           Head={Head}
           Script={Script}
           elements={{Link: NextWepublishLink}}
-          blocks={{Renderer: TsriBlockRenderer}}
+          blocks={{Renderer: TsriBlockRenderer, Teaser: TsriTeaser}}
           date={{format: dateFormatter}}
           meta={{siteTitle}}>
           <ThemeProvider theme={theme}>
@@ -167,11 +168,12 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
 
             <Script
               src={publicRuntimeConfig.env.API_URL! + '/static/head.js'}
-              strategy="beforeInteractive"
+              strategy="afterInteractive"
             />
+
             <Script
               src={publicRuntimeConfig.env.API_URL! + '/static/body.js'}
-              strategy="afterInteractive"
+              strategy="lazyOnload"
             />
           </ThemeProvider>
         </WebsiteBuilderProvider>

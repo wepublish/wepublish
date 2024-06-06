@@ -69,7 +69,7 @@ export const BajourPaymentMethodPicker = forwardRef<
         ref={ref}
         name={name}
         value={value ? value : ''}
-        onChange={event => onChange(event.target.value as ApiV1.PaymentPeriodicity)}
+        onChange={event => onChange(event.target.value)}
         row>
         {paymentMethods?.map(method => (
           <FormControlLabel
