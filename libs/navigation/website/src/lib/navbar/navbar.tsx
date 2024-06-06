@@ -452,57 +452,55 @@ const NavPaper = ({
     <NavPaperWrapper>
       {children && <NavPaperChildrenWrapper>{children}</NavPaperChildrenWrapper>}
 
-      {!!main?.links.length && (
-        <NavPaperMainLinks>
-          {main.links.map((link, index) => {
-            const url = navigationLinkToUrl(link)
+      <NavPaperMainLinks>
+        {main?.links.map((link, index) => {
+          const url = navigationLinkToUrl(link)
 
-            return (
-              <Link href={url} key={index} color="inherit" underline="none" onClick={closeMenu}>
-                <H4 component="span" css={{fontWeight: '700'}}>
-                  {link.label}
-                </H4>
-              </Link>
-            )
-          })}
+          return (
+            <Link href={url} key={index} color="inherit" underline="none" onClick={closeMenu}>
+              <H4 component="span" css={{fontWeight: '700'}}>
+                {link.label}
+              </H4>
+            </Link>
+          )
+        })}
 
-          <NavPaperActions>
-            {!hasUser && (
+        <NavPaperActions>
+          {!hasUser && (
+            <Button
+              LinkComponent={Link}
+              href={loginUrl}
+              variant="contained"
+              color="secondary"
+              onClick={closeMenu}>
+              Login
+            </Button>
+          )}
+
+          {hasUser && (
+            <>
               <Button
                 LinkComponent={Link}
-                href={loginUrl}
+                href={profileUrl}
                 variant="contained"
                 color="secondary"
                 onClick={closeMenu}>
-                Login
+                Mein Konto
               </Button>
-            )}
 
-            {hasUser && (
-              <>
-                <Button
-                  LinkComponent={Link}
-                  href={profileUrl}
-                  variant="contained"
-                  color="secondary"
-                  onClick={closeMenu}>
-                  Mein Konto
-                </Button>
-
-                <Button
-                  onClick={() => {
-                    logout()
-                    closeMenu()
-                  }}
-                  variant="outlined"
-                  color="secondary">
-                  Logout
-                </Button>
-              </>
-            )}
-          </NavPaperActions>
-        </NavPaperMainLinks>
-      )}
+              <Button
+                onClick={() => {
+                  logout()
+                  closeMenu()
+                }}
+                variant="outlined"
+                color="secondary">
+                Logout
+              </Button>
+            </>
+          )}
+        </NavPaperActions>
+      </NavPaperMainLinks>
 
       {!!categories.length &&
         categories.map((categoryArray, arrayIndex) => (
