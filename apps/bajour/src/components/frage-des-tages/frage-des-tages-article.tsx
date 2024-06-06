@@ -4,7 +4,7 @@ import Image from 'next/image'
 import {useRouter} from 'next/router'
 import {useCallback, useEffect, useState} from 'react'
 
-import {CommentListContainer} from '../website-builder-overwrites/blocks/comment-list-container/comment-list-container'
+import {CommentListContainer} from '../website-builder-overwrites/blocks/comment-list-container/comment-list-container-fdt'
 import {PollBlock} from '../website-builder-overwrites/blocks/poll-block/poll-block'
 import {AuthorBox} from './author-box'
 import frageDesTagesLogo from './frage-des-tages.svg'

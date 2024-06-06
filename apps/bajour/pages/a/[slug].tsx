@@ -7,7 +7,6 @@ import {
   ArticleListContainer,
   ArticleWrapper,
   BuilderArticleListProps,
-  CommentListContainer,
   ContentWrapper,
   PollBlock,
   useWebsiteBuilder,
@@ -22,6 +21,7 @@ import {FrageDesTagesArticle} from '../../src/components/frage-des-tages/frage-d
 import {Container} from '../../src/components/layout/container'
 import {BajourArticle} from '../../src/components/website-builder-overwrites/article/bajour-article'
 import {BajourAuthorChip} from '../../src/components/website-builder-overwrites/author/author-chip'
+import {CommentListContainer} from '../../src/components/website-builder-overwrites/blocks/comment-list-container/comment-list-container'
 import {TeaserSlider} from '../../src/components/website-builder-overwrites/blocks/teaser-slider/teaser-slider'
 
 const uppercase = css`

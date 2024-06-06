@@ -1,5 +1,4 @@
 import {styled} from '@mui/material'
-import {theme} from '@wepublish/ui'
 import {
   CommentContent,
   CommentHeader,
@@ -10,6 +9,25 @@ import {
 } from '@wepublish/website'
 
 export const CommentListContainer = styled(BaseCommentListContainer)`
+  > *:nth-of-type(-n + 2) {
+    ${CommentListItemActions} {
+      background-color: ${({theme}) => theme.palette.secondary.light};
+      border-bottom-right-radius: ${({theme}) => theme.spacing(2.5)};
+      border-bottom-left-radius: ${({theme}) => theme.spacing(2.5)};
+      padding: ${({theme}) => theme.spacing(1.5)};
+    }
+
+    ${CommentContent} {
+      background-color: ${({theme}) => theme.palette.secondary.light};
+    }
+
+    ${CommentHeader} {
+      background-color: ${({theme}) => theme.palette.secondary.light};
+      border-top-right-radius: ${({theme}) => theme.spacing(2.5)};
+      border-top-left-radius: ${({theme}) => theme.spacing(2.5)};
+    }
+  }
+
   ${CommentListItemChildren} {
     background-color: ${({theme}) => theme.palette.common.white};
     margin-top: ${({theme}) => theme.spacing(3)};
@@ -60,11 +78,5 @@ export const CommentListContainer = styled(BaseCommentListContainer)`
 
   ${CommentListItemActions} {
     padding: ${({theme}) => theme.spacing(1.5)};
-  }
-
-  ${theme.breakpoints.up('md')} {
-    max-width: ${({theme}) => theme.spacing(95)};
-    width: ${({theme}) => theme.spacing(95)};
-    margin: 0 auto;
   }
 `
