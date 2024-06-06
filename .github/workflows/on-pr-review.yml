@@ -10,7 +10,7 @@ concurrency:
 
 
 env:
-  API_URL: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+  API_URL: https://api-tsri.wepublish.dev
   EDITOR_URL: https://editor-${{ github.event.pull_request.number }}.reviews.wepublish.dev
   WEBSITE_URL: https://website-${{ github.event.pull_request.number }}.reviews.wepublish.dev
   MEDIA_SERVER_URL: https://media-${{ github.event.pull_request.number }}.reviews.wepublish.dev
