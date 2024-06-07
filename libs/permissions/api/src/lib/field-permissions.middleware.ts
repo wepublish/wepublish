@@ -11,6 +11,7 @@ export const FieldMiddlewarePermissions: FieldMiddleware = async (ctx, next) => 
   if (!permissions) {
     return next()
   }
+  
   if (!session) {
     return null
   }
