@@ -57,6 +57,7 @@
       "@wepublish/richtext/website": ["libs/richtext/website/src/index.ts"],
       "@wepublish/settings/api": ["libs/settings/api/src/index.ts"],
       "@wepublish/settings/editor": ["libs/settings/editor/src/index.ts"],
+      "@wepublish/scripts/api": ["libs/scripts/api/src/index.ts"],
       "@wepublish/stats/api": ["libs/stats/api/src/index.ts"],
       "@wepublish/storybook": ["libs/storybook/src/index.ts"],
       "@wepublish/testing": ["libs/testing/src/index.ts"],
@@ -69,10 +70,10 @@
       "@wepublish/utils/api": ["libs/utils/api/src/index.ts"],
       "@wepublish/utils/website": ["libs/utils/website/src/index.ts"],
       "@wepublish/website": ["libs/website/src/index.ts"],
-      "@wepublish/website/server": ["libs/website/src/server.ts"],
       "@wepublish/website/api": ["libs/website/api/src/index.ts"],
       "@wepublish/website/api-v2": ["libs/website/api-v2/src/index.ts"],
-      "@wepublish/website/builder": ["libs/website/builder/src/index.ts"]
+      "@wepublish/website/builder": ["libs/website/builder/src/index.ts"],
+      "@wepublish/website/server": ["libs/website/src/server.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
