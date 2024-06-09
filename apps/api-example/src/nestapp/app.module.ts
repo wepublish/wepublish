@@ -29,7 +29,8 @@ import {
   BexioPaymentProvider,
   PayrexxFactory,
   HealthModule,
-  NeverChargePaymentProvider
+  NeverChargePaymentProvider,
+  ScriptsModule
 } from '@wepublish/api'
 import {ApiModule, PrismaModule} from '@wepublish/nest-modules'
 import bodyParser from 'body-parser'
@@ -233,6 +234,7 @@ import {PrismaClient} from '@prisma/client'
     ConsentModule,
     StatsModule,
     SettingModule,
+    ScriptsModule,
     EventModule,
     BlockStylesModule,
     EventsImportModule.registerAsync({
