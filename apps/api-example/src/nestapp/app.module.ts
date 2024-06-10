@@ -6,11 +6,13 @@ import {ScheduleModule} from '@nestjs/schedule'
 import {
   AgendaBaselService,
   AuthenticationModule,
+  AuthorModule,
+  BexioPaymentProvider,
   ConsentModule,
-  StatsModule,
   DashboardModule,
   EventsImportModule,
   GraphQLRichText,
+  HealthModule,
   KarmaMediaAdapter,
   KulturZueriService,
   MailchimpMailProvider,
@@ -18,18 +20,20 @@ import {
   MailsModule,
   MediaAdapterService,
   MembershipModule,
+  NavigationModule,
+  NeverChargePaymentProvider,
   PaymentProvider,
   PaymentsModule,
+  PaymentMethodModule,
+  PayrexxFactory,
   PayrexxPaymentProvider,
   PayrexxSubscriptionPaymentProvider,
   PermissionModule,
   SettingModule,
+  StatsModule,
   StripeCheckoutPaymentProvider,
   StripePaymentProvider,
-  BexioPaymentProvider,
-  PayrexxFactory,
-  HealthModule,
-  NeverChargePaymentProvider
+  MemberPlanModule
 } from '@wepublish/api'
 import {ApiModule, PrismaModule} from '@wepublish/nest-modules'
 import bodyParser from 'body-parser'
@@ -41,6 +45,7 @@ import {readConfig} from '../readConfig'
 import {EventModule} from '@wepublish/event/api'
 import {BlockStylesModule} from '@wepublish/block-content/api'
 import {PrismaClient} from '@prisma/client'
+import {UserRoleModule} from '@wepublish/user-role/api'
 
 @Global()
 @Module({
@@ -234,6 +239,11 @@ import {PrismaClient} from '@prisma/client'
     StatsModule,
     SettingModule,
     EventModule,
+    NavigationModule,
+    AuthorModule,
+    PaymentMethodModule,
+    UserRoleModule,
+    MemberPlanModule,
     BlockStylesModule,
     EventsImportModule.registerAsync({
       useFactory: (agendaBasel: AgendaBaselService, kulturZueri: KulturZueriService) => [
