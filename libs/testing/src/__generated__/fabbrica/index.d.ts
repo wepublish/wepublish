@@ -533,6 +533,7 @@ type ImageFactoryDefineInput = {
     pageRevisionImages?: Prisma.PageRevisionCreateNestedManyWithoutImageInput;
     users?: Prisma.UserCreateNestedManyWithoutUserImageInput;
     events?: Prisma.EventCreateNestedManyWithoutImageInput;
+    paymentMethods?: Prisma.PaymentMethodCreateNestedManyWithoutImageInput;
 };
 type ImageFactoryDefineOptions = {
     defaultData?: Resolver<ImageFactoryDefineInput, BuildDataOptions>;
@@ -1314,6 +1315,10 @@ export interface PageFactoryInterface<TOptions extends PageFactoryDefineOptions 
  * @returns factory {@link PageFactoryInterface}
  */
 export declare function definePageFactory<TOptions extends PageFactoryDefineOptions>(options?: TOptions): PageFactoryInterface<TOptions>;
+type PaymentMethodimageFactory = {
+    _factoryFor: "Image";
+    build: () => PromiseLike<Prisma.ImageCreateNestedOneWithoutPaymentMethodsInput["create"]>;
+};
 type PaymentMethodFactoryDefineInput = {
     id?: string;
     createdAt?: Date;
@@ -1323,6 +1328,7 @@ type PaymentMethodFactoryDefineInput = {
     description?: string;
     paymentProviderID?: string;
     active?: boolean;
+    image?: PaymentMethodimageFactory | Prisma.ImageCreateNestedOneWithoutPaymentMethodsInput;
     Subscription?: Prisma.SubscriptionCreateNestedManyWithoutPaymentMethodInput;
     Payment?: Prisma.PaymentCreateNestedManyWithoutPaymentMethodInput;
     subscriptionFlows?: Prisma.SubscriptionFlowCreateNestedManyWithoutPaymentMethodsInput;

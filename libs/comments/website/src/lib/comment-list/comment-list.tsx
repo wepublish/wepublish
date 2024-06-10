@@ -11,7 +11,15 @@ export const CommentListWrapper = styled('section')`
   gap: ${({theme}) => theme.spacing(4)};
 `
 
-export const CommentListActions = styled('div')``
+export const CommentListActions = styled('div')`
+  display: flex;
+  justify-content: end;
+`
+
+export const CommentListReadMore = styled(Button)`
+  padding: ${({theme}) => `${theme.spacing(1)} ${theme.spacing(2.5)}`};
+  text-transform: uppercase;
+`
 
 export const CommentList = ({
   data,
@@ -33,12 +41,12 @@ export const CommentList = ({
   const {
     CommentEditor,
     CommentListItem,
-    elements: {Alert}
+    elements: {Alert, H4}
   } = useWebsiteBuilder()
   const {hasUser} = useUser()
+  const canReply = anonymousCanComment || hasUser
 
   const showReply = getStateForEditor(openEditorsState)('add', null)
-  const canReply = anonymousCanComment || hasUser
 
   return (
     <CommentListWrapper className={className}>
@@ -48,41 +56,7 @@ export const CommentList = ({
 
       {error && <Alert severity="error">{error.message}</Alert>}
 
-      {canReply && (
-        <CommentListActions>
-          <Button
-            startIcon={<MdForum />}
-            variant="text"
-            onClick={() => {
-              dispatch({
-                type: 'add',
-                action: 'open',
-                commentId: null
-              })
-            }}>
-            Jetzt Mitreden
-          </Button>
-        </CommentListActions>
-      )}
-
-      {showReply && (
-        <CommentEditor
-          challenge={challenge}
-          maxCommentLength={maxCommentLength}
-          onCancel={() =>
-            dispatch({
-              type: 'add',
-              action: 'close',
-              commentId: null
-            })
-          }
-          onSubmit={onAddComment}
-          error={add.error}
-          loading={add.loading}
-        />
-      )}
-
-      {data?.comments?.map(comment => (
+      {data?.comments?.map((comment, index) => (
         <CommentListItem
           key={comment.id}
           {...comment}
@@ -101,6 +75,40 @@ export const CommentList = ({
           children={(comment.children as Comment[]) ?? []}
         />
       ))}
+
+      {showReply && (
+        <CommentEditor
+          challenge={challenge}
+          maxCommentLength={maxCommentLength}
+          onCancel={() =>
+            dispatch({
+              type: 'add',
+              action: 'close',
+              commentId: null
+            })
+          }
+          onSubmit={onAddComment}
+          error={add.error}
+          loading={add.loading}
+        />
+      )}
+
+      {canReply && (
+        <CommentListActions>
+          <CommentListReadMore
+            startIcon={<MdForum />}
+            variant="contained"
+            onClick={() => {
+              dispatch({
+                type: 'add',
+                action: 'open',
+                commentId: null
+              })
+            }}>
+            Jetzt Mitreden
+          </CommentListReadMore>
+        </CommentListActions>
+      )}
     </CommentListWrapper>
   )
 }

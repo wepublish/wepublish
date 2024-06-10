@@ -16,6 +16,7 @@ import {
   useInvoicesQuery,
   useMemberPlanListQuery,
   usePaymentMethodListQuery,
+  useRenewSubscriptionMutation,
   useSubscriptionQuery,
   useUpdateSubscriptionMutation,
   useUserQuery
@@ -181,6 +182,22 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
     setSubscriptionProperties(data?.subscription)
   }, [data?.subscription])
 
+  useEffect(() => {
+    if (!memberPlan) {
+      return
+    }
+    if (memberPlan.extendable === extendable) {
+      return
+    }
+    setExtendable(memberPlan.extendable)
+    toaster.push(
+      <Message type="info" showIcon closable>
+        {t('subscriptionEditView.extendableWasChanged')}
+      </Message>,
+      {duration: 6000}
+    )
+  }, [memberPlan?.id])
+
   function setSubscriptionProperties(subscription?: FullSubscriptionFragment | null) {
     if (!subscription) {
       return
@@ -228,6 +245,8 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
     useCancelSubscriptionMutation()
 
   const [createSubscription, {loading: isCreating}] = useCreateSubscriptionMutation()
+  const [renewSubscription, {loading: isRenewing, error: renewalError}] =
+    useRenewSubscriptionMutation()
 
   /**
    * fetch edited user from api
@@ -265,14 +284,22 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
       loadMemberPlanError?.message ??
       paymentMethodLoadError?.message ??
       loadErrorInvoices?.message ??
-      cancelError?.message
+      cancelError?.message ??
+      renewalError?.message
     if (error)
       toaster.push(
         <Message type="error" showIcon closable>
           {error}
         </Message>
       )
-  }, [loadError, loadMemberPlanError, paymentMethodLoadError, loadErrorInvoices, cancelError])
+  }, [
+    loadError,
+    loadMemberPlanError,
+    paymentMethodLoadError,
+    loadErrorInvoices,
+    cancelError,
+    renewalError
+  ])
 
   /**
    * MEMOS
@@ -436,6 +463,21 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
       }
     })
     if (data?.cancelSubscription) onSave?.(data.cancelSubscription)
+    await reloadInvoices()
+  }
+
+  async function handleRenewal() {
+    if (!id) return
+
+    try {
+      await renewSubscription({
+        variables: {
+          id
+        }
+      })
+    } catch (e) {
+      /* error is handled in the mutation definition */
+    }
     await reloadInvoices()
   }
 
@@ -675,6 +717,18 @@ function SubscriptionEditView({onClose, onSave}: SubscriptionEditViewProps) {
                             }
                           />
                           <HelpText>{t('userSubscriptionEdit.autoRenewDescription')}</HelpText>
+                        </Col>
+                      </RowPaddingTop>
+                      <RowPaddingTop>
+                        <Col xs={12}></Col>
+                        <Col xs={12}>
+                          <Button
+                            appearance="ghost"
+                            color="red"
+                            loading={isDisabled}
+                            onClick={() => handleRenewal()}>
+                            {t('userSubscriptionEdit.renewNow')}
+                          </Button>
                         </Col>
                       </RowPaddingTop>
                       <RowPaddingTop>

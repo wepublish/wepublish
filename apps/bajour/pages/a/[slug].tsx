@@ -1,4 +1,4 @@
-import {css} from '@mui/material'
+import {css, styled} from '@mui/material'
 import {getArticlePathsBasedOnPage} from '@wepublish/utils/website'
 import {
   ApiV1,
@@ -7,7 +7,8 @@ import {
   ArticleListContainer,
   ArticleWrapper,
   BuilderArticleListProps,
-  CommentListContainer,
+  ContentWrapper,
+  PollBlock,
   useWebsiteBuilder,
   WebsiteBuilderProvider
 } from '@wepublish/website'
@@ -16,7 +17,11 @@ import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 
 import {BriefingNewsletter} from '../../src/components/briefing-newsletter/briefing-newsletter'
+import {FrageDesTagesArticle} from '../../src/components/frage-des-tages/frage-des-tages-article'
 import {Container} from '../../src/components/layout/container'
+import {BajourArticle} from '../../src/components/website-builder-overwrites/article/bajour-article'
+import {BajourAuthorChip} from '../../src/components/website-builder-overwrites/author/author-chip'
+import {CommentListContainer} from '../../src/components/website-builder-overwrites/blocks/comment-list-container/comment-list-container'
 import {TeaserSlider} from '../../src/components/website-builder-overwrites/blocks/teaser-slider/teaser-slider'
 
 const uppercase = css`
@@ -30,6 +35,14 @@ const RelatedArticleSlider = (props: BuilderArticleListProps) => {
     </WebsiteBuilderProvider>
   )
 }
+
+export const AuthorWrapper = styled(ContentWrapper)`
+  margin: 0 ${({theme}) => theme.spacing(6)};
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    margin: 0;
+  }
+`
 
 export default function ArticleBySlug() {
   const {
@@ -46,8 +59,13 @@ export default function ArticleBySlug() {
     }
   })
 
+  const isFDT = data?.article?.tags.includes('frage-des-tages')
+
   return (
-    <WebsiteBuilderProvider ArticleList={RelatedArticleSlider}>
+    <WebsiteBuilderProvider
+      ArticleList={RelatedArticleSlider}
+      blocks={{Poll: isFDT ? FrageDesTagesArticle : PollBlock}}
+      Article={BajourArticle}>
       <Container>
         <ArticleContainer slug={slug as string} />
 
@@ -66,13 +84,26 @@ export default function ArticleBySlug() {
               />
             </ArticleWrapper>
 
-            <ArticleWrapper>
-              <H5 component={'h2'} css={uppercase}>
-                Kommentare
-              </H5>
+            {data?.article?.authors.length &&
+              data?.article?.authors.map(a => (
+                <AuthorWrapper key={a.id}>
+                  <BajourAuthorChip key={a.id} author={a} />
+                </AuthorWrapper>
+              ))}
 
-              <CommentListContainer id={data.article.id} type={ApiV1.CommentItemType.Article} />
-            </ArticleWrapper>
+            {!isFDT && (
+              <ArticleWrapper>
+                <H5 component={'h2'} css={uppercase}>
+                  Kommentare
+                </H5>
+
+                <CommentListContainer
+                  id={data.article.id}
+                  type={ApiV1.CommentItemType.Article}
+                  variables={{sort: ApiV1.CommentSort.Rating, order: ApiV1.SortOrder.Descending}}
+                />
+              </ArticleWrapper>
+            )}
           </>
         )}
       </Container>
@@ -100,6 +131,9 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
     }),
     client.query({
       query: ApiV1.PeerProfileDocument
+    }),
+    client.query({
+      query: ApiV1.SettingListDocument
     })
   ])
 
@@ -117,9 +151,9 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
       client.query({
         query: ApiV1.CommentListDocument,
         variables: {
-          filter: {
-            itemId: article.data.article.id
-          }
+          sort: ApiV1.CommentSort.Rating,
+          order: ApiV1.SortOrder.Descending,
+          itemId: article.data.article.id
         }
       }),
       client.query({

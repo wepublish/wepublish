@@ -346,6 +346,23 @@ export const GraphQLPublicComment: GraphQLObjectType<PublicComment, Context> =
 
       rejectionReason: {type: GraphQLString},
       createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
+      url: {
+        type: new GraphQLNonNull(GraphQLString),
+        resolve: createProxyingResolver(async (comment, args, {urlAdapter, loaders}, info) => {
+          const item =
+            comment.itemType === 'article'
+              ? await loaders.publicArticles.load(comment.itemID)
+              : comment.itemType === 'page'
+              ? await loaders.publicPagesByID.load(comment.itemID)
+              : null
+
+          if (!item) {
+            return ''
+          }
+
+          return urlAdapter.getCommentURL(item, comment)
+        })
+      },
       modifiedAt: {
         type: GraphQLDateTime,
         resolve: createProxyingResolver(({revisions}) => {

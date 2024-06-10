@@ -196,6 +196,7 @@ export type Comment = {
   tags?: Maybe<Array<Tag>>;
   text?: Maybe<Scalars['RichText']>;
   title?: Maybe<Scalars['String']>;
+  url: Scalars['String'];
   user?: Maybe<User>;
   userRatings: Array<CommentRating>;
 };
@@ -857,6 +858,8 @@ export type PaymentMethod = {
   __typename?: 'PaymentMethod';
   description: Scalars['String'];
   id: Scalars['ID'];
+  image?: Maybe<Image>;
+  imageId?: Maybe<Scalars['String']>;
   name: Scalars['String'];
   paymentProviderID: Scalars['String'];
   slug: Scalars['Slug'];
@@ -1284,8 +1287,6 @@ export enum SettingName {
   BodyScript = 'BODY_SCRIPT',
   CommentCharLimit = 'COMMENT_CHAR_LIMIT',
   HeadScript = 'HEAD_SCRIPT',
-  InvoiceReminderFreq = 'INVOICE_REMINDER_FREQ',
-  InvoiceReminderMaxTries = 'INVOICE_REMINDER_MAX_TRIES',
   MakeActiveSubscribersApiPublic = 'MAKE_ACTIVE_SUBSCRIBERS_API_PUBLIC',
   MakeExpectedRevenueApiPublic = 'MAKE_EXPECTED_REVENUE_API_PUBLIC',
   MakeNewDeactivationsApiPublic = 'MAKE_NEW_DEACTIVATIONS_API_PUBLIC',
