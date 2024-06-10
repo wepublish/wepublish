@@ -29,7 +29,7 @@ const userRoleQueryById = `
 `
 
 const userRoleListQuery = `
-  query GetUserRoles($filter: UserRoleFilter, $skip: Int, $take: Int, $cursorId: ID) {
+  query GetUserRoles($filter: UserRoleFilter, $skip: Int, $take: Int, $cursorId: String) {
     getUserRoles(filter: $filter, skip: $skip, take: $take, cursorId: $cursorId) {
       nodes {
         id

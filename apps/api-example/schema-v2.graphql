@@ -311,7 +311,7 @@ type MailTemplateWithUrlAndStatusModel {
 }
 
 type MemberPlan {
-  active: Boolean
+  active: Boolean!
   amountPerMonthMin: Float!
   createdAt: DateTime!
   description: String!
@@ -443,7 +443,7 @@ type Navigation {
   createdAt: DateTime!
   id: String!
   key: String!
-  links: [BaseNavigationLink!]
+  links: [BaseNavigationLink!]!
   modifiedAt: DateTime!
   name: String!
 }

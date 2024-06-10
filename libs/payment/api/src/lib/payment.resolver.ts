@@ -31,7 +31,7 @@ export class PaymentResolver {
 
   @Query(() => PaymentsResult)
   @Permissions(CanGetPayments)
-  async getPayments(@Args() args: GetPaymentsArgs): Promise<PaymentsResult> {
+  async getPayments(@Args() args: GetPaymentsArgs) {
     return this.paymentsService.getPayments(args)
   }
 
