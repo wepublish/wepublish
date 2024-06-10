@@ -21,12 +21,12 @@ export const PollBlockWrapper = styled('article')`
 
 export const PollBlockVoting = styled('div')`
   display: grid;
-  gap: ${({theme}) => theme.spacing(1.5)};
+  gap: ${({theme}) => theme.spacing(1)};
 `
 
 export const PollBlockVoteResultList = styled('div')`
   display: grid;
-  gap: ${({theme}) => theme.spacing(2)};
+  gap: ${({theme}) => theme.spacing(1)};
 `
 
 export const PollBlockMeta = styled('div')`

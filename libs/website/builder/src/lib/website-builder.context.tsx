@@ -54,7 +54,6 @@ import {
 import {
   BuilderCommentEditorProps,
   BuilderCommentListItemProps,
-  BuilderCommentListItemShareProps,
   BuilderCommentListProps,
   BuilderCommentProps,
   BuilderCommentRatingsProps
@@ -96,7 +95,7 @@ import {
   BuilderRatingProps,
   BuilderTextFieldProps
 } from './ui.interface'
-import {BuilderImageUploadProps, BuilderPersonalDataFormProps} from './user.interface'
+import {BuilderPersonalDataFormProps, BuilderImageUploadProps} from './user.interface'
 
 const NoComponent = () => null
 
@@ -123,7 +122,6 @@ export type WebsiteBuilderProps = {
   Comment: ComponentType<BuilderCommentProps>
   CommentList: ComponentType<BuilderCommentListProps>
   CommentListItem: ComponentType<BuilderCommentListItemProps>
-  CommentListItemShare: ComponentType<BuilderCommentListItemShareProps>
   CommentListItemChild: ComponentType<BuilderCommentListItemProps>
   CommentEditor: ComponentType<BuilderCommentEditorProps>
   CommentRatings: ComponentType<BuilderCommentRatingsProps>
@@ -242,7 +240,6 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   ArticleList: NoComponent,
   CommentList: NoComponent,
   CommentListItem: NoComponent,
-  CommentListItemShare: NoComponent,
   CommentListItemChild: NoComponent,
   Comment: NoComponent,
   CommentEditor: NoComponent,

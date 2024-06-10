@@ -6,11 +6,10 @@ exports[`Comment List should render Default 1`] = `
     class="css-1mm1s5y-CommentBlockWrapper es9rr591"
   >
     <article
-      class="css-19ehku-CommentWrapper ekbi54x9"
-      id="verified"
+      class="css-4zvvnd-CommentWrapper ekbi54x8"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x8"
+        class="css-p4cys7-CommentHeader ekbi54x7"
       >
         <img
           alt="DSC07717"
@@ -23,16 +22,12 @@ https://unsplash.it/200/200 200w"
           title=""
         />
         <div
-          class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
+          class="css-1x1fqyu-CommentHeaderContent ekbi54x6"
         >
           <div
-            class="css-l1mcyg-CommentName ekbi54x6"
+            class="css-l1mcyg-CommentName ekbi54x5"
           >
-            <div
-              class="css-1pg77me-CommentAuthor ekbi54x5"
-            >
-              Signed Up User
-            </div>
+            Signed Up User
             <div
               class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
             >
@@ -53,20 +48,20 @@ https://unsplash.it/200/200 200w"
                   fill="none"
                 />
                 <path
-                  d="m23 12-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
+                  d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
                 />
               </svg>
             </div>
           </div>
           <div
-            class="css-srb6c6-CommentFlair ekbi54x3"
+            class="css-rox5w-CommentFlair ekbi54x3"
           >
             Flair
           </div>
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -103,11 +98,10 @@ https://unsplash.it/200/200 200w"
       </div>
     </article>
     <article
-      class="css-19ehku-CommentWrapper ekbi54x9"
-      id="123"
+      class="css-4zvvnd-CommentWrapper ekbi54x8"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x8"
+        class="css-p4cys7-CommentHeader ekbi54x7"
       >
         <img
           alt="DSC07717"
@@ -120,16 +114,12 @@ https://unsplash.it/200/200 200w"
           title=""
         />
         <div
-          class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
+          class="css-1x1fqyu-CommentHeaderContent ekbi54x6"
         >
           <div
-            class="css-l1mcyg-CommentName ekbi54x6"
+            class="css-l1mcyg-CommentName ekbi54x5"
           >
-            <div
-              class="css-1pg77me-CommentAuthor ekbi54x5"
-            >
-              Signed Up User
-            </div>
+            Signed Up User
             <div
               class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
             >
@@ -150,20 +140,20 @@ https://unsplash.it/200/200 200w"
                   fill="none"
                 />
                 <path
-                  d="m23 12-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
+                  d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
                 />
               </svg>
             </div>
           </div>
           <div
-            class="css-srb6c6-CommentFlair ekbi54x3"
+            class="css-rox5w-CommentFlair ekbi54x3"
           >
             Flair
           </div>
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -209,11 +199,10 @@ exports[`Comment List should render WithAnonymousComments 1`] = `
     class="css-1mm1s5y-CommentBlockWrapper es9rr591"
   >
     <article
-      class="css-19ehku-CommentWrapper ekbi54x9"
-      id="anonymous"
+      class="css-4zvvnd-CommentWrapper ekbi54x8"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x8"
+        class="css-p4cys7-CommentHeader ekbi54x7"
       >
         <img
           alt="DSC07717"
@@ -226,26 +215,22 @@ https://unsplash.it/200/200 200w"
           title=""
         />
         <div
-          class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
+          class="css-1x1fqyu-CommentHeaderContent ekbi54x6"
         >
           <div
-            class="css-l1mcyg-CommentName ekbi54x6"
+            class="css-l1mcyg-CommentName ekbi54x5"
           >
-            <div
-              class="css-1pg77me-CommentAuthor ekbi54x5"
-            >
-              Dr. Anonymous
-            </div>
+            Dr. Anonymous
           </div>
           <div
-            class="css-r2jplb-CommentFlair-CommentFlair ekbi54x3"
+            class="css-1j8pfh4-CommentFlair-CommentFlair ekbi54x3"
           >
             Source
           </div>
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -282,11 +267,10 @@ https://unsplash.it/200/200 200w"
       </div>
     </article>
     <article
-      class="css-19ehku-CommentWrapper ekbi54x9"
-      id="123"
+      class="css-4zvvnd-CommentWrapper ekbi54x8"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x8"
+        class="css-p4cys7-CommentHeader ekbi54x7"
       >
         <img
           alt="DSC07717"
@@ -299,26 +283,22 @@ https://unsplash.it/200/200 200w"
           title=""
         />
         <div
-          class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
+          class="css-1x1fqyu-CommentHeaderContent ekbi54x6"
         >
           <div
-            class="css-l1mcyg-CommentName ekbi54x6"
+            class="css-l1mcyg-CommentName ekbi54x5"
           >
-            <div
-              class="css-1pg77me-CommentAuthor ekbi54x5"
-            >
-              Dr. Anonymous
-            </div>
+            Dr. Anonymous
           </div>
           <div
-            class="css-r2jplb-CommentFlair-CommentFlair ekbi54x3"
+            class="css-1j8pfh4-CommentFlair-CommentFlair ekbi54x3"
           >
             Source
           </div>
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -364,11 +344,10 @@ exports[`Comment List should render WithClassName 1`] = `
     class="extra-classname css-1mm1s5y-CommentBlockWrapper es9rr591"
   >
     <article
-      class="css-19ehku-CommentWrapper ekbi54x9"
-      id="verified"
+      class="css-4zvvnd-CommentWrapper ekbi54x8"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x8"
+        class="css-p4cys7-CommentHeader ekbi54x7"
       >
         <img
           alt="DSC07717"
@@ -381,16 +360,12 @@ https://unsplash.it/200/200 200w"
           title=""
         />
         <div
-          class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
+          class="css-1x1fqyu-CommentHeaderContent ekbi54x6"
         >
           <div
-            class="css-l1mcyg-CommentName ekbi54x6"
+            class="css-l1mcyg-CommentName ekbi54x5"
           >
-            <div
-              class="css-1pg77me-CommentAuthor ekbi54x5"
-            >
-              Signed Up User
-            </div>
+            Signed Up User
             <div
               class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
             >
@@ -411,20 +386,20 @@ https://unsplash.it/200/200 200w"
                   fill="none"
                 />
                 <path
-                  d="m23 12-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
+                  d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
                 />
               </svg>
             </div>
           </div>
           <div
-            class="css-srb6c6-CommentFlair ekbi54x3"
+            class="css-rox5w-CommentFlair ekbi54x3"
           >
             Flair
           </div>
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -461,11 +436,10 @@ https://unsplash.it/200/200 200w"
       </div>
     </article>
     <article
-      class="css-19ehku-CommentWrapper ekbi54x9"
-      id="123"
+      class="css-4zvvnd-CommentWrapper ekbi54x8"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x8"
+        class="css-p4cys7-CommentHeader ekbi54x7"
       >
         <img
           alt="DSC07717"
@@ -478,16 +452,12 @@ https://unsplash.it/200/200 200w"
           title=""
         />
         <div
-          class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
+          class="css-1x1fqyu-CommentHeaderContent ekbi54x6"
         >
           <div
-            class="css-l1mcyg-CommentName ekbi54x6"
+            class="css-l1mcyg-CommentName ekbi54x5"
           >
-            <div
-              class="css-1pg77me-CommentAuthor ekbi54x5"
-            >
-              Signed Up User
-            </div>
+            Signed Up User
             <div
               class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
             >
@@ -508,20 +478,20 @@ https://unsplash.it/200/200 200w"
                   fill="none"
                 />
                 <path
-                  d="m23 12-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
+                  d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
                 />
               </svg>
             </div>
           </div>
           <div
-            class="css-srb6c6-CommentFlair ekbi54x3"
+            class="css-rox5w-CommentFlair ekbi54x3"
           >
             Flair
           </div>
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -567,11 +537,10 @@ exports[`Comment List should render WithEmotion 1`] = `
     class="css-1mm1s5y-CommentBlockWrapper es9rr591"
   >
     <article
-      class="css-19ehku-CommentWrapper ekbi54x9"
-      id="verified"
+      class="css-4zvvnd-CommentWrapper ekbi54x8"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x8"
+        class="css-p4cys7-CommentHeader ekbi54x7"
       >
         <img
           alt="DSC07717"
@@ -584,16 +553,12 @@ https://unsplash.it/200/200 200w"
           title=""
         />
         <div
-          class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
+          class="css-1x1fqyu-CommentHeaderContent ekbi54x6"
         >
           <div
-            class="css-l1mcyg-CommentName ekbi54x6"
+            class="css-l1mcyg-CommentName ekbi54x5"
           >
-            <div
-              class="css-1pg77me-CommentAuthor ekbi54x5"
-            >
-              Signed Up User
-            </div>
+            Signed Up User
             <div
               class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
             >
@@ -614,20 +579,20 @@ https://unsplash.it/200/200 200w"
                   fill="none"
                 />
                 <path
-                  d="m23 12-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
+                  d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
                 />
               </svg>
             </div>
           </div>
           <div
-            class="css-srb6c6-CommentFlair ekbi54x3"
+            class="css-rox5w-CommentFlair ekbi54x3"
           >
             Flair
           </div>
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -664,11 +629,10 @@ https://unsplash.it/200/200 200w"
       </div>
     </article>
     <article
-      class="css-19ehku-CommentWrapper ekbi54x9"
-      id="123"
+      class="css-4zvvnd-CommentWrapper ekbi54x8"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x8"
+        class="css-p4cys7-CommentHeader ekbi54x7"
       >
         <img
           alt="DSC07717"
@@ -681,16 +645,12 @@ https://unsplash.it/200/200 200w"
           title=""
         />
         <div
-          class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
+          class="css-1x1fqyu-CommentHeaderContent ekbi54x6"
         >
           <div
-            class="css-l1mcyg-CommentName ekbi54x6"
+            class="css-l1mcyg-CommentName ekbi54x5"
           >
-            <div
-              class="css-1pg77me-CommentAuthor ekbi54x5"
-            >
-              Signed Up User
-            </div>
+            Signed Up User
             <div
               class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
             >
@@ -711,20 +671,20 @@ https://unsplash.it/200/200 200w"
                   fill="none"
                 />
                 <path
-                  d="m23 12-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
+                  d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
                 />
               </svg>
             </div>
           </div>
           <div
-            class="css-srb6c6-CommentFlair ekbi54x3"
+            class="css-rox5w-CommentFlair ekbi54x3"
           >
             Flair
           </div>
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -770,11 +730,10 @@ exports[`Comment List should render WithError 1`] = `
     class="css-1mm1s5y-CommentBlockWrapper es9rr591"
   >
     <article
-      class="css-19ehku-CommentWrapper ekbi54x9"
-      id="verified"
+      class="css-4zvvnd-CommentWrapper ekbi54x8"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x8"
+        class="css-p4cys7-CommentHeader ekbi54x7"
       >
         <img
           alt="DSC07717"
@@ -787,16 +746,12 @@ https://unsplash.it/200/200 200w"
           title=""
         />
         <div
-          class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
+          class="css-1x1fqyu-CommentHeaderContent ekbi54x6"
         >
           <div
-            class="css-l1mcyg-CommentName ekbi54x6"
+            class="css-l1mcyg-CommentName ekbi54x5"
           >
-            <div
-              class="css-1pg77me-CommentAuthor ekbi54x5"
-            >
-              Signed Up User
-            </div>
+            Signed Up User
             <div
               class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
             >
@@ -817,20 +772,20 @@ https://unsplash.it/200/200 200w"
                   fill="none"
                 />
                 <path
-                  d="m23 12-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
+                  d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
                 />
               </svg>
             </div>
           </div>
           <div
-            class="css-srb6c6-CommentFlair ekbi54x3"
+            class="css-rox5w-CommentFlair ekbi54x3"
           >
             Flair
           </div>
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -867,11 +822,10 @@ https://unsplash.it/200/200 200w"
       </div>
     </article>
     <article
-      class="css-19ehku-CommentWrapper ekbi54x9"
-      id="123"
+      class="css-4zvvnd-CommentWrapper ekbi54x8"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x8"
+        class="css-p4cys7-CommentHeader ekbi54x7"
       >
         <img
           alt="DSC07717"
@@ -884,16 +838,12 @@ https://unsplash.it/200/200 200w"
           title=""
         />
         <div
-          class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
+          class="css-1x1fqyu-CommentHeaderContent ekbi54x6"
         >
           <div
-            class="css-l1mcyg-CommentName ekbi54x6"
+            class="css-l1mcyg-CommentName ekbi54x5"
           >
-            <div
-              class="css-1pg77me-CommentAuthor ekbi54x5"
-            >
-              Signed Up User
-            </div>
+            Signed Up User
             <div
               class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
             >
@@ -914,20 +864,20 @@ https://unsplash.it/200/200 200w"
                   fill="none"
                 />
                 <path
-                  d="m23 12-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
+                  d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
                 />
               </svg>
             </div>
           </div>
           <div
-            class="css-srb6c6-CommentFlair ekbi54x3"
+            class="css-rox5w-CommentFlair ekbi54x3"
           >
             Flair
           </div>
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -973,11 +923,10 @@ exports[`Comment List should render WithLoading 1`] = `
     class="css-1mm1s5y-CommentBlockWrapper es9rr591"
   >
     <article
-      class="css-19ehku-CommentWrapper ekbi54x9"
-      id="verified"
+      class="css-4zvvnd-CommentWrapper ekbi54x8"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x8"
+        class="css-p4cys7-CommentHeader ekbi54x7"
       >
         <img
           alt="DSC07717"
@@ -990,16 +939,12 @@ https://unsplash.it/200/200 200w"
           title=""
         />
         <div
-          class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
+          class="css-1x1fqyu-CommentHeaderContent ekbi54x6"
         >
           <div
-            class="css-l1mcyg-CommentName ekbi54x6"
+            class="css-l1mcyg-CommentName ekbi54x5"
           >
-            <div
-              class="css-1pg77me-CommentAuthor ekbi54x5"
-            >
-              Signed Up User
-            </div>
+            Signed Up User
             <div
               class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
             >
@@ -1020,20 +965,20 @@ https://unsplash.it/200/200 200w"
                   fill="none"
                 />
                 <path
-                  d="m23 12-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
+                  d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
                 />
               </svg>
             </div>
           </div>
           <div
-            class="css-srb6c6-CommentFlair ekbi54x3"
+            class="css-rox5w-CommentFlair ekbi54x3"
           >
             Flair
           </div>
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -1070,11 +1015,10 @@ https://unsplash.it/200/200 200w"
       </div>
     </article>
     <article
-      class="css-19ehku-CommentWrapper ekbi54x9"
-      id="123"
+      class="css-4zvvnd-CommentWrapper ekbi54x8"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x8"
+        class="css-p4cys7-CommentHeader ekbi54x7"
       >
         <img
           alt="DSC07717"
@@ -1087,16 +1031,12 @@ https://unsplash.it/200/200 200w"
           title=""
         />
         <div
-          class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
+          class="css-1x1fqyu-CommentHeaderContent ekbi54x6"
         >
           <div
-            class="css-l1mcyg-CommentName ekbi54x6"
+            class="css-l1mcyg-CommentName ekbi54x5"
           >
-            <div
-              class="css-1pg77me-CommentAuthor ekbi54x5"
-            >
-              Signed Up User
-            </div>
+            Signed Up User
             <div
               class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
             >
@@ -1117,20 +1057,20 @@ https://unsplash.it/200/200 200w"
                   fill="none"
                 />
                 <path
-                  d="m23 12-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
+                  d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
                 />
               </svg>
             </div>
           </div>
           <div
-            class="css-srb6c6-CommentFlair ekbi54x3"
+            class="css-rox5w-CommentFlair ekbi54x3"
           >
             Flair
           </div>
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"

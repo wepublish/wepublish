@@ -43,7 +43,6 @@ import {
   CommentList,
   CommentListItem,
   CommentListItemChild,
-  CommentListItemShare,
   CommentRatings
 } from '@wepublish/comments/website'
 import {Event, EventList, EventListItem, EventSEO} from '@wepublish/event/website'
@@ -141,7 +140,6 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
         EventListItem={EventListItem}
         CommentList={CommentList}
         CommentListItem={CommentListItem}
-        CommentListItemShare={CommentListItemShare}
         CommentListItemChild={CommentListItemChild}
         Comment={Comment}
         CommentEditor={CommentEditor}

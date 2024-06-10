@@ -11,15 +11,7 @@ export const CommentListWrapper = styled('section')`
   gap: ${({theme}) => theme.spacing(4)};
 `
 
-export const CommentListActions = styled('div')`
-  display: flex;
-  justify-content: end;
-`
-
-export const CommentListReadMore = styled(Button)`
-  padding: ${({theme}) => `${theme.spacing(1)} ${theme.spacing(2.5)}`};
-  text-transform: uppercase;
-`
+export const CommentListActions = styled('div')``
 
 export const CommentList = ({
   data,
@@ -41,12 +33,12 @@ export const CommentList = ({
   const {
     CommentEditor,
     CommentListItem,
-    elements: {Alert, H4}
+    elements: {Alert}
   } = useWebsiteBuilder()
   const {hasUser} = useUser()
-  const canReply = anonymousCanComment || hasUser
 
   const showReply = getStateForEditor(openEditorsState)('add', null)
+  const canReply = anonymousCanComment || hasUser
 
   return (
     <CommentListWrapper className={className}>
@@ -56,25 +48,22 @@ export const CommentList = ({
 
       {error && <Alert severity="error">{error.message}</Alert>}
 
-      {data?.comments?.map((comment, index) => (
-        <CommentListItem
-          key={comment.id}
-          {...comment}
-          ratingSystem={data.ratingSystem}
-          openEditorsState={openEditorsState}
-          openEditorsStateDispatch={dispatch}
-          challenge={challenge}
-          add={add}
-          onAddComment={onAddComment}
-          edit={edit}
-          onEditComment={onEditComment}
-          anonymousCanComment={anonymousCanComment}
-          anonymousCanRate={anonymousCanRate}
-          userCanEdit={userCanEdit}
-          maxCommentLength={maxCommentLength}
-          children={(comment.children as Comment[]) ?? []}
-        />
-      ))}
+      {canReply && (
+        <CommentListActions>
+          <Button
+            startIcon={<MdForum />}
+            variant="text"
+            onClick={() => {
+              dispatch({
+                type: 'add',
+                action: 'open',
+                commentId: null
+              })
+            }}>
+            Jetzt Mitreden
+          </Button>
+        </CommentListActions>
+      )}
 
       {showReply && (
         <CommentEditor
@@ -93,22 +82,25 @@ export const CommentList = ({
         />
       )}
 
-      {canReply && (
-        <CommentListActions>
-          <CommentListReadMore
-            startIcon={<MdForum />}
-            variant="contained"
-            onClick={() => {
-              dispatch({
-                type: 'add',
-                action: 'open',
-                commentId: null
-              })
-            }}>
-            Jetzt Mitreden
-          </CommentListReadMore>
-        </CommentListActions>
-      )}
+      {data?.comments?.map(comment => (
+        <CommentListItem
+          key={comment.id}
+          {...comment}
+          ratingSystem={data.ratingSystem}
+          openEditorsState={openEditorsState}
+          openEditorsStateDispatch={dispatch}
+          challenge={challenge}
+          add={add}
+          onAddComment={onAddComment}
+          edit={edit}
+          onEditComment={onEditComment}
+          anonymousCanComment={anonymousCanComment}
+          anonymousCanRate={anonymousCanRate}
+          userCanEdit={userCanEdit}
+          maxCommentLength={maxCommentLength}
+          children={(comment.children as Comment[]) ?? []}
+        />
+      ))}
     </CommentListWrapper>
   )
 }

@@ -4,37 +4,15 @@ import {CommentAuthorType} from '@wepublish/website/api'
 import {BuilderCommentProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {MdPerson, MdVerified} from 'react-icons/md'
 
-import {format} from 'date-fns'
-import {de} from 'date-fns/locale'
-import {useEffect, useState} from 'react'
-
-function formatCommentDate(isoDateString: string): string {
-  const date: Date = new Date(isoDateString)
-
-  const formattedDate: string = format(date, 'd. MMMM yyyy | HH:mm', {locale: de})
-
-  return formattedDate
-}
-
 const avatarStyles = css`
   width: 46px;
   height: 46px;
   border-radius: 50%;
 `
 
-export const CommentWrapper = styled('article')<{highlight?: boolean}>`
+export const CommentWrapper = styled('article')`
   display: grid;
   gap: ${({theme}) => theme.spacing(2)};
-  &:target {
-    scroll-margin-top: ${({theme}) => theme.spacing(10)};
-  }
-
-  ${({highlight, theme}) =>
-    highlight &&
-    css`
-      border: 2px solid ${theme.palette.primary.main};
-      border-radius: ${theme.spacing(2.5)};
-    `}
 `
 
 export const CommentHeader = styled('header')`
@@ -42,7 +20,6 @@ export const CommentHeader = styled('header')`
   grid-template-columns: max-content 1fr;
   gap: ${({theme}) => theme.spacing(2)};
   align-items: center;
-  padding: ${({theme}) => theme.spacing(1.5)};
 `
 
 export const CommentHeaderContent = styled('div')``
@@ -56,10 +33,6 @@ export const CommentName = styled('div')`
   font-weight: ${({theme}) => theme.typography.fontWeightBold};
 `
 
-export const CommentAuthor = styled('div')`
-  font-size: ${({theme}) => theme.typography.body1};
-`
-
 export const CommentVerifiedBadge = styled('div')`
   display: grid;
   align-items: center;
@@ -68,7 +41,6 @@ export const CommentVerifiedBadge = styled('div')`
 
 export const CommentFlair = styled('div')<{isGuest: boolean}>`
   font-size: 0.75em;
-  font-weight: 300;
 
   ${({isGuest, theme}) =>
     isGuest &&
@@ -77,9 +49,7 @@ export const CommentFlair = styled('div')<{isGuest: boolean}>`
     `}
 `
 
-export const CommentContent = styled('div')`
-  padding: ${({theme}) => theme.spacing(1.5)};
-`
+export const CommentContent = styled('div')``
 
 export const CommentChildren = styled('aside')`
   display: grid;
@@ -96,7 +66,6 @@ export const CommentActions = styled('div')`
 `
 
 export const Comment = ({
-  id,
   className,
   text,
   authorType,
@@ -106,22 +75,12 @@ export const Comment = ({
   title,
   source,
   children,
-  createdAt,
   showContent = true
 }: BuilderCommentProps) => {
   const {
     elements: {Paragraph, Image},
     blocks: {RichText}
   } = useWebsiteBuilder()
-
-  const [commentId, setCommentId] = useState<string | null>(null)
-
-  useEffect(() => {
-    const commentId = window.location.hash.replace('#', '')
-    if (commentId) {
-      setCommentId(commentId)
-    }
-  }, [])
 
   const image = user?.image ?? guestUserImage
   const isVerified = authorType === CommentAuthorType.VerifiedUser
@@ -130,14 +89,14 @@ export const Comment = ({
   const name = user ? `${user.preferredName || user.firstName} ${user.name}` : guestUsername
 
   return (
-    <CommentWrapper className={className} id={id} highlight={commentId === id}>
+    <CommentWrapper className={className}>
       <CommentHeader>
         {image && <Image image={image} square css={avatarStyles} />}
         {!image && <MdPerson css={avatarStyles} />}
 
         <CommentHeaderContent>
           <CommentName>
-            <CommentAuthor>{name}</CommentAuthor>
+            {name}
 
             {isVerified && (
               <CommentVerifiedBadge>
@@ -147,9 +106,6 @@ export const Comment = ({
           </CommentName>
 
           {flair && <CommentFlair isGuest={isGuest}>{flair}</CommentFlair>}
-          {!flair && createdAt && (
-            <CommentFlair isGuest={isGuest}>{formatCommentDate(createdAt)}</CommentFlair>
-          )}
         </CommentHeaderContent>
       </CommentHeader>
 

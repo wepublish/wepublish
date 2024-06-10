@@ -1,23 +1,30 @@
 import {Author, PublicArticle, PublicComment, PublicPage, URLAdapter} from '@wepublish/api'
 import {CommentItemType, Peer, Event, Subscription} from '@prisma/client'
 
-interface StandardURLAdapterProps {
+interface BajourURLAdapterProps {
   websiteURL: string
+  blocksHost: string
 }
 
-export class DefaultURLAdapter implements URLAdapter {
+export class BajourURLAdapter implements URLAdapter {
   readonly websiteURL: string
+  readonly blocksHost: string
 
-  constructor(props: StandardURLAdapterProps) {
+  constructor(props: BajourURLAdapterProps) {
     this.websiteURL = props.websiteURL
+    this.blocksHost = props.blocksHost
   }
 
   getSubscriptionURL(subscription: Subscription): string {
     return `${this.websiteURL}/profile/subscription/${subscription.id}`
   }
 
+  getArticlePreviewURL(token: string) {
+    return `${this.websiteURL}/a/preview/${token}`
+  }
+
   getPublicArticleURL(article: PublicArticle): string {
-    return `${this.websiteURL}/a/${article.slug}`
+    return `${this.websiteURL}/a/${article.id}/${article.slug}`
   }
 
   getPeeredArticleURL(peer: Peer, article: PublicArticle): string {
@@ -29,34 +36,26 @@ export class DefaultURLAdapter implements URLAdapter {
   }
 
   getAuthorURL(author: Author): string {
-    return `${this.websiteURL}/author/${author.slug}`
+    return `${this.websiteURL}/author/${author.slug || author.id}`
   }
 
   getEventURL(event: Event): string {
-    return `${this.websiteURL}/event/${event.id}`
+    return `${this.websiteURL}/events/${event.id}`
   }
 
-  getCommentURL(item: PublicArticle | PublicPage, comment: PublicComment, peer?: Peer) {
+  getCommentURL(item: PublicArticle | PublicPage, comment: PublicComment) {
     if (comment.itemType === CommentItemType.article) {
       return `${this.websiteURL}/a/${item.id}/${item.slug}#${comment.id}`
-    }
-
-    if (comment.itemType === CommentItemType.peerArticle) {
-      return `${this.websiteURL}/p/${peer?.id}/${item.id}#${comment.id}`
     }
 
     return `${this.websiteURL}/${item.slug}#${comment.id}`
   }
 
-  getArticlePreviewURL(token: string) {
-    return `${this.websiteURL}/a/preview/${token}`
-  }
-
   getPagePreviewURL(token: string): string {
-    return `${this.websiteURL}/${token}`
+    return `${this.websiteURL}/page/preview/${token}`
   }
 
   getLoginURL(token: string): string {
-    return `${this.websiteURL}/login?jwt=${token}`
+    return `${this.blocksHost}/profile/dashboard/?jwt=${token}`
   }
 }

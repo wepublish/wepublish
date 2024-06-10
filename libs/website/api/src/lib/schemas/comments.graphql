@@ -49,7 +49,6 @@ fragment CommentWithoutNesting on Comment {
   authorType
   rejectionReason
   state
-  url
 
   tags {
     ...FullTag

@@ -9,10 +9,10 @@ import {PropsWithChildren, useMemo} from 'react'
 import {PollBlockContext} from './poll-block.context'
 
 const getAnonymousVote = (pollId: string): string | null =>
-  typeof localStorage !== 'undefined' ? localStorage.getItem(`poll-vote:${pollId}`) : null
+  localStorage.getItem(`poll-vote:${pollId}`)
 
 const setAnonymousVote = (pollId: string, answerId: string) =>
-  typeof localStorage !== 'undefined' ? localStorage.setItem(`poll-vote:${pollId}`, answerId) : null
+  localStorage.setItem(`poll-vote:${pollId}`, answerId)
 
 export function PollBlockProvider({children}: PropsWithChildren) {
   const {hasUser} = useUser()

@@ -1,30 +1,17 @@
-import {css, lighten, styled, useTheme} from '@mui/material'
+import {styled} from '@mui/material'
 import {useUser} from '@wepublish/authentication/website'
 import {CommentState} from '@wepublish/website/api'
 import {BuilderCommentListItemProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {cond} from 'ramda'
 import {MdEdit, MdReply} from 'react-icons/md'
 import {getStateForEditor} from './comment-list.state'
-import {CommentListItemShare} from './comment-list-item-share'
-import {useMemo} from 'react'
 
 export const CommentListItemChildren = styled('aside')`
   display: grid;
-  position: relative;
   gap: ${({theme}) => theme.spacing(3)};
+  border-left: 2px solid currentColor;
   padding: ${({theme}) => theme.spacing(3)};
   padding-right: 0;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: ${({theme}) => theme.spacing(2)};
-    bottom: ${({theme}) => theme.spacing(2)};
-    left: ${({theme}) => theme.spacing(1)};
-    height: 100%;
-    width: 2px;
-    background-color: currentColor;
-  }
 `
 
 export const CommentListItemActions = styled('div')`
@@ -34,30 +21,6 @@ export const CommentListItemActions = styled('div')`
   align-items: start;
   justify-content: space-between;
 `
-
-export const CommentListItemActionsButtons = styled('div')`
-  display: flex;
-  flex-flow: row wrap;
-  gap: ${({theme}) => theme.spacing(1)};
-  align-items: start;
-  justify-content: space-between;
-`
-
-const useButtonStyles = () => {
-  const theme = useTheme()
-
-  return useMemo(
-    () => css`
-      border-width: 1px;
-
-      &:hover {
-        border-width: 1px;
-        background-color: ${lighten(theme.palette.primary.main, 0.9)};
-      }
-    `,
-    [theme]
-  )
-}
 
 export const CommentListItem = ({
   anonymousCanComment,
@@ -93,12 +56,9 @@ export const CommentListItem = ({
     loggedInUser?.id === comment.user?.id &&
     (userCanEdit || comment.state === CommentState.PendingUserChanges)
   const canReply = anonymousCanComment || hasLoggedInUser
-  const canShare = anonymousCanComment || hasLoggedInUser
 
   const showReply = getStateForEditor(openEditorsState)('add', id)
   const showEdit = getStateForEditor(openEditorsState)('edit', id)
-
-  const buttonStyles = useButtonStyles()
 
   return (
     <Comment {...comment} showContent={!showEdit} className={className}>
@@ -123,25 +83,22 @@ export const CommentListItem = ({
       )}
 
       <CommentListItemActions>
-        <CommentListItemActionsButtons>
+        <CommentListItemActions>
           {canReply && (
             <Button
               startIcon={<MdReply />}
-              variant="outlined"
+              variant="text"
               size="small"
-              css={buttonStyles}
-              onClick={() => {
+              onClick={() =>
                 dispatch({
                   type: 'add',
                   action: 'open',
                   commentId: id
                 })
-              }}>
+              }>
               Antworten
             </Button>
           )}
-
-          {canShare && <CommentListItemShare url={comment.url} title="share" />}
 
           {canEdit && (
             <Button
@@ -158,7 +115,7 @@ export const CommentListItem = ({
               Editieren
             </Button>
           )}
-        </CommentListItemActionsButtons>
+        </CommentListItemActions>
 
         <CommentRatings
           commentId={id}
