@@ -17,6 +17,29 @@ const nextConfig = {
       API_URL: process.env.API_URL || '',
       GA_ID: process.env.GA_ID || ''
     }
+  },
+  async headers() {
+    return [
+      {
+        // Apply these headers to all routes except /profile/*
+        source: '/((?!profile).*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 's-maxage=59, stale-while-revalidate=59, maxage=59, public'
+          }
+        ]
+      },
+      {
+        source: '/',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 's-maxage=59, stale-while-revalidate=59, maxage=59, public'
+          }
+        ]
+      }
+    ]
   }
 }
 
