@@ -196,6 +196,7 @@ export type Comment = {
   tags?: Maybe<Array<Tag>>;
   text?: Maybe<Scalars['RichText']>;
   title?: Maybe<Scalars['String']>;
+  url: Scalars['String'];
   user?: Maybe<User>;
   userRatings: Array<CommentRating>;
 };

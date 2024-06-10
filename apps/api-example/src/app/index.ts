@@ -13,7 +13,7 @@ import {createWriteStream} from 'pino-sentry'
 import pinoStackdriver from 'pino-stackdriver'
 import * as process from 'process'
 import {Application} from 'express'
-import {DefaultURLAdapter, BajourURLAdapter, TsriURLAdapter} from '../urlAdapters'
+import {DefaultURLAdapter, TsriURLAdapter} from '../urlAdapters'
 import {readConfig} from '../readConfig'
 const MS_PER_DAY = 24 * 60 * 60 * 1000
 
@@ -112,13 +112,6 @@ export async function runServer({
 
   // Load default
   let urlAdapter: URLAdapter = new DefaultURLAdapter({websiteURL})
-
-  // Load Bajour
-  if (config.general.urlAdapter === 'bajour') {
-    const blocksHost = process.env.BLOCKS_HOST
-    if (!blocksHost) throw new Error('No BLOCKS_HOST defined in environment.')
-    urlAdapter = new BajourURLAdapter({websiteURL, blocksHost})
-  }
 
   if (config.general.urlAdapter === 'tsri') {
     urlAdapter = new TsriURLAdapter({websiteURL})
