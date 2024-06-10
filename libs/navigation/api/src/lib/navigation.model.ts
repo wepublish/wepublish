@@ -8,7 +8,6 @@ import {
   registerEnumType,
   ID
 } from '@nestjs/graphql'
-import {CanGetNavigations, FieldProtected} from '@wepublish/permissions/api'
 
 export enum NavigationLinkType {
   Page = 'page',
@@ -34,7 +33,7 @@ export class Navigation {
   @Field()
   key!: string
 
-  @FieldProtected(() => [BaseNavigationLink], {permissions: [CanGetNavigations]})
+  @Field(() => [BaseNavigationLink])
   links!: BaseNavigationLink[]
 
   @Field()

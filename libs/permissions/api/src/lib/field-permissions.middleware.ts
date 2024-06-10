@@ -5,13 +5,13 @@ import {Permission} from './permissions'
 export const FieldMiddlewarePermissions: FieldMiddleware = async (ctx, next) => {
   const {info} = ctx
   const {extensions} = info.parentType.getFields()[info.fieldName]
-  const permissions = extensions.permissions as Permission[] | undefined
+  const permissions = extensions['permissions'] as Permission[] | undefined
   const session = ctx.context.req.user
 
   if (!permissions) {
     return next()
   }
-  
+
   if (!session) {
     return null
   }

@@ -8,7 +8,6 @@ import {
   OmitType
 } from '@nestjs/graphql'
 import {ListingArgsType} from '@wepublish/utils/api'
-import {CanGetMemberPlan, FieldProtected} from '@wepublish/permissions/api'
 
 @ObjectType()
 export class MemberPlan {
@@ -33,7 +32,7 @@ export class MemberPlan {
   @Field()
   description!: string
 
-  @FieldProtected(() => Boolean, {permissions: [CanGetMemberPlan]})
+  @Field()
   active!: boolean
 
   @Field()
