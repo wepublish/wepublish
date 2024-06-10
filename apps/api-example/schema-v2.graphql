@@ -593,7 +593,6 @@ type Query {
   "\n      Returns the expected revenue for the time period given.\n      Excludes cancelled or manually set as paid invoices.\n    "
   expectedRevenue(end: DateTime, start: DateTime!): [DashboardInvoice!]!
   getActiveMemberPlans(cursorId: String, filter: ActiveMemberPlansFilter, order: SortOrder, skip: Int = 0, sort: MemberPlanSort, take: Int = 10): [MemberPlan!]!
-  getAdminPayments(cursorId: String, filter: PaymentFilter, order: SortOrder, skip: Int = 0, sort: PaymentSort, take: Int = 10): PaymentsResult!
   getAuthorBySlug(slug: String!): Author!
   getAuthors(cursorId: String, filter: AuthorFilter, order: SortOrder = Ascending, skip: Int = 0, sortedField: AuthorSort, take: Int = 10): PaginatedAuthors!
   getAuthorsById(id: ID!): Author!
@@ -612,6 +611,7 @@ type Query {
   getPaymentById(id: ID!): Payment!
   getPaymentMethodById(id: ID!): PaymentMethod!
   getPaymentMethods: [PaymentMethod!]!
+  getPayments(cursorId: String, filter: PaymentFilter, order: SortOrder, skip: Int = 0, sort: PaymentSort, take: Int = 10): PaymentsResult!
 
   """Returns permissions list"""
   getPermissions: [PermissionObject!]!

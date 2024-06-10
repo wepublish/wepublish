@@ -1,21 +1,20 @@
 import {Injectable} from '@nestjs/common'
 import {PaymentProvider} from './payment-provider/payment-provider'
-import {PaymentState, PrismaClient} from '@prisma/client'
-import {Prisma, Payment} from '@prisma/client'
+import {PaymentState, Prisma, PrismaClient} from '@prisma/client'
 import {
   getMaxTake,
   graphQLSortOrderToPrisma,
   PrimeDataLoader,
   SortOrder
 } from '@wepublish/utils/api'
-import {GetPaymentsArgs, PaymentFromInvoiceInput, PaymentFilter, PaymentSort} from './payment.model'
+import {GetPaymentsArgs, PaymentFilter, PaymentFromInvoiceInput, PaymentSort} from './payment.model'
 import {PaymentDataloader} from './payment.dataloader'
 import {PaymentProviderService} from './payment-provider.service'
 import {PaymentMethodDataloader} from '@wepublish/payment-method/api'
 
 export const createPaymentOrder = (
   field: PaymentSort,
-  sortOrder: SortOrder
+  sortOrder: SortOrder = SortOrder.Ascending
 ): Prisma.PaymentFindManyArgs['orderBy'] => {
   switch (field) {
     case PaymentSort.CreatedAt:
@@ -53,7 +52,7 @@ export class PaymentService {
   ) {}
 
   @PrimeDataLoader(PaymentDataloader)
-  async getPaymentById(id: string): Promise<Payment> {
+  async getPaymentById(id: string) {
     return this.prisma.payment.findUnique({
       where: {id}
     })
@@ -63,8 +62,8 @@ export class PaymentService {
   async getPayments(args: GetPaymentsArgs) {
     const {filter, order, sort, skip, take, cursorId} = args
 
-    const orderBy = createPaymentOrder(sort, order)
-    const where = createPaymentFilter(filter)
+    const orderBy = sort ? createPaymentOrder(sort, order) : {}
+    const where = filter ? createPaymentFilter(filter) : {}
 
     const [totalCount, payments] = await Promise.all([
       this.prisma.payment.count({
@@ -99,11 +98,14 @@ export class PaymentService {
     }
   }
 
-  async createPaymentFromInvoice(data: PaymentFromInvoiceInput): Promise<Payment> {
+  async createPaymentFromInvoice(data: PaymentFromInvoiceInput) {
     const {paymentMethodID, invoiceID, failureURL, successURL} = data
 
     const paymentMethod = await this.paymentMethods.load(paymentMethodID)
-    const paymentProvider = await this.paymentProviders.findById(paymentMethod?.paymentProviderID)
+    if (!paymentMethod) {
+      throw new Error('Invalid data')
+    }
+    const paymentProvider = await this.paymentProviders.findById(paymentMethod.paymentProviderID)
 
     // TODO: Replace with InvoiceDataloader
     const invoice = await this.prisma.invoice.findUnique({
