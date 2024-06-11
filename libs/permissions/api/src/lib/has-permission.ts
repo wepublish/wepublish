@@ -1,9 +1,13 @@
-import {UserRole} from '@prisma/client'
 import {Permission, AllPermissions, EditorPermissions, PeerPermissions} from './permissions'
+
+export type PermissionsUserRole = {
+  id: string
+  permissionIDs: string[]
+}
 
 export function hasPermission(
   neededPermissions: Permission | Permission[],
-  userRoles: UserRole[]
+  userRoles: PermissionsUserRole[]
 ): boolean {
   const perms = Array.isArray(neededPermissions) ? neededPermissions : [neededPermissions]
 

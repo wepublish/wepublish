@@ -2,6 +2,19 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+union Action = ArticleCreatedAction | AuthorCreatedAction | CommentCreatedAction | EventCreatedAction | PageCreatedAction | PollStartedAction | SubscriptionCreatedAction | UserCreatedAction
+
+enum ActionType {
+  ArticleCreated
+  AuthorCreated
+  CommentCreated
+  EventCreated
+  PageCreated
+  PollStarted
+  SubscriptionCreated
+  UserCreated
+}
+
 input ActiveMemberPlansFilter {
   name: String
   tags: [String!]
@@ -10,6 +23,12 @@ input ActiveMemberPlansFilter {
 type AllowedSettingVals {
   boolChoice: Boolean
   stringChoice: [String!]
+}
+
+type ArticleCreatedAction {
+  actionType: ActionType!
+  date: DateTime!
+  id: ID!
 }
 
 type ArticleNavigationLink implements BaseNavigationLink {
@@ -31,6 +50,13 @@ type Author {
   modifiedAt: DateTime!
   name: String!
   slug: String!
+}
+
+type AuthorCreatedAction {
+  actionType: ActionType!
+  author: Author!
+  date: DateTime!
+  id: ID!
 }
 
 input AuthorFilter {
@@ -98,6 +124,12 @@ enum BlockType {
   TeaserGridFlex
   TeaserList
   Title
+}
+
+type CommentCreatedAction {
+  actionType: ActionType!
+  date: DateTime!
+  id: ID!
 }
 
 type Consent {
@@ -193,6 +225,13 @@ type Event {
   name: String!
   startsAt: DateTime!
   status: EventStatus!
+}
+
+type EventCreatedAction {
+  actionType: ActionType!
+  date: DateTime!
+  event: Event!
+  id: ID!
 }
 
 input EventFilter {
@@ -448,6 +487,12 @@ type Navigation {
   name: String!
 }
 
+type PageCreatedAction {
+  actionType: ActionType!
+  date: DateTime!
+  id: ID!
+}
+
 type PageInfo {
   endCursor: String
   hasNextPage: Boolean!
@@ -568,7 +613,16 @@ type PermissionObject {
   id: String!
 }
 
+type PollStartedAction {
+  actionType: ActionType!
+  date: DateTime!
+  id: ID!
+}
+
 type Query {
+  """Returns latest user actions"""
+  actions: [Action!]!
+
   "\n      Returns all active subscribers.\n      Includes subscribers with a cancelled but not run out subscription.\n    "
   activeSubscribers: [DashboardSubscription!]!
 
@@ -731,6 +785,12 @@ type Stats {
   firstArticleDate: DateTime
 }
 
+type SubscriptionCreatedAction {
+  actionType: ActionType!
+  date: DateTime!
+  id: ID!
+}
+
 enum SubscriptionDeactivationReason {
   invoiceNotPaid
   none
@@ -839,6 +899,12 @@ type UserConsent {
   modifiedAt: DateTime!
   user: User!
   value: Boolean!
+}
+
+type UserCreatedAction {
+  actionType: ActionType!
+  date: DateTime!
+  id: ID!
 }
 
 enum UserEvent {
