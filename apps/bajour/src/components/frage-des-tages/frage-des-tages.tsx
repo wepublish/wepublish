@@ -17,7 +17,11 @@ import {AuthorBox} from './author-box'
 import frageDesTagesLogo from './frage-des-tages.svg'
 import {InfoBox} from './info-box'
 
-const countComments = (comments: ApiV1.Comment[] | []): number => {
+interface CommentWithChildren extends ApiV1.Comment {
+  children: CommentWithChildren[]
+}
+
+const countComments = (comments: CommentWithChildren[] | []): number => {
   let total = comments.length
 
   for (const comment of comments) {
@@ -172,16 +176,19 @@ export const FrageDesTages = ({teasers, className}: BuilderTeaserListBlockProps)
           </AuthorAndContext>
           <TopComments>Top antworten</TopComments>
           <Comments>
-            {commentsData?.comments.slice(0, 2).map(({text, title, user, createdAt, id}) => {
-              const dataToPass = {
-                text,
-                title,
-                user,
-                createdAt
-              } as BuilderCommentProps
+            {commentsData?.comments
+              .slice(0, 2)
+              .map(({text, title, user, createdAt, id, authorType}) => {
+                const dataToPass = {
+                  text,
+                  title,
+                  user,
+                  createdAt,
+                  authorType
+                } as BuilderCommentProps
 
-              return <StyledComment {...dataToPass} key={id} />
-            })}
+                return <StyledComment {...dataToPass} key={id} />
+              })}
           </Comments>
         </CommentsWrapper>
         <ReadMoreLink href={article?.url || ''}>
