@@ -1,5 +1,5 @@
 import {getSessionTokenProps, ssrAuthLink} from '@wepublish/utils/website'
-import {ApiV1, AuthTokenStorageKey, SubscribeContainer} from '@wepublish/website'
+import {ApiV1, AuthTokenStorageKey, PageContainer, SubscribeContainer} from '@wepublish/website'
 import {setCookie} from 'cookies-next'
 import {NextPageContext} from 'next'
 import getConfig from 'next/config'
@@ -13,16 +13,20 @@ export default function Mitmachen() {
   const locationOrigin = typeof window !== 'undefined' ? location.origin : ''
 
   return (
-    <SubscribeContainer
-      defaults={{
-        email: mail as string | undefined,
-        firstName: firstName as string | undefined,
-        name: lastName as string | undefined
-      }}
-      successURL={`${locationOrigin}/payment/success`}
-      failureURL={`${locationOrigin}/payment/fail`}
-      fields={['firstName']}
-    />
+    <>
+      <SubscribeContainer
+        defaults={{
+          email: mail as string | undefined,
+          firstName: firstName as string | undefined,
+          name: lastName as string | undefined
+        }}
+        successURL={`${locationOrigin}/payment/success`}
+        failureURL={`${locationOrigin}/payment/fail`}
+        fields={['firstName']}
+      />
+
+      <PageContainer slug={'mitmachen'} />
+    </>
   )
 }
 
