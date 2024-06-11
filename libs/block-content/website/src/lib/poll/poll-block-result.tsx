@@ -3,6 +3,7 @@ import {PollAnswerWithVoteCount} from '@wepublish/website/api'
 
 export const PollBlockResultWrapper = styled('div')`
   display: grid;
+  gap: ${({theme}) => theme.spacing(0.5)};
 `
 
 export const PollBlockResultInfo = styled('div')`
@@ -10,6 +11,7 @@ export const PollBlockResultInfo = styled('div')`
   gap: ${({theme}) => theme.spacing(1)};
   grid-template-columns: max-content max-content;
   justify-content: space-between;
+  padding: 0 ${({theme}) => theme.spacing(1)};
 `
 
 export const PollBlockResultName = styled('div')`
@@ -40,7 +42,7 @@ export const PollBlockVoteBarFill = styled('div')<{highlight: boolean}>`
   ${({highlight, theme}) =>
     highlight &&
     css`
-      background-color: ${theme.palette.common.black};
+      background-color: ${theme.palette.primary.main};
     `}
 `
 
