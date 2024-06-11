@@ -157,7 +157,7 @@ export const FrageDesTages = ({teasers, className}: BuilderTeaserListBlockProps)
   const pollToPass = article?.blocks.find(isPollBlock)?.poll
 
   const numberOfComments = useMemo(() => {
-    return countComments(commentsData?.comments || [])
+    return countComments((commentsData?.comments as CommentWithChildren[]) || [])
   }, [commentsData?.comments])
 
   return (
