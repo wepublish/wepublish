@@ -1,6 +1,6 @@
 import {createTheme, Theme, ThemeOptions} from '@mui/material'
 import {theme as WePTheme} from '@wepublish/ui'
-import {Hanken_Grotesk, Merriweather} from 'next/font/google'
+import {Hanken_Grotesk} from 'next/font/google'
 import {PartialDeep} from 'type-fest'
 
 const hankenGrotesk = Hanken_Grotesk({

@@ -698,7 +698,7 @@ function SettingList() {
                           onChange={(value: string) => {
                             setSetting({
                               ...settings[SettingName.HeadScript],
-                              value: value
+                              value
                             })
                           }}
                         />
@@ -719,7 +719,7 @@ function SettingList() {
                           onChange={(value: string) => {
                             setSetting({
                               ...settings[SettingName.BodyScript],
-                              value: value
+                              value
                             })
                           }}
                         />

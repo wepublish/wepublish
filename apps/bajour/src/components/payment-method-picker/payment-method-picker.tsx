@@ -1,9 +1,5 @@
 import {css, FormControlLabel, Radio, RadioGroup, styled, useRadioGroup} from '@mui/material'
-import {
-  ApiV1,
-  BuilderPaymentMethodPickerProps,
-  PaymentMethodPickerWrapper
-} from '@wepublish/website'
+import {BuilderPaymentMethodPickerProps, PaymentMethodPickerWrapper} from '@wepublish/website'
 import {ComponentProps, forwardRef, PropsWithChildren, useEffect, useId} from 'react'
 
 import {ReactComponent as Invoice} from './invoice.svg'

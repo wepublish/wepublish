@@ -20,7 +20,7 @@ export class ScriptsController {
   private async serveScript(res: Response, name: string) {
     const script = await this.prismaService.setting.findFirst({
       where: {
-        name: name
+        name
       }
     })
 
