@@ -32,7 +32,7 @@ import {
   NeverChargePaymentProvider,
   ScriptsModule
 } from '@wepublish/api'
-import {ApiModule, PrismaModule} from '@wepublish/nest-modules'
+import {ApiModule, PrismaClientExceptionFilter, PrismaModule} from '@wepublish/nest-modules'
 import bodyParser from 'body-parser'
 import FormData from 'form-data'
 import Mailgun from 'mailgun.js'
@@ -42,6 +42,7 @@ import {readConfig} from '../readConfig'
 import {EventModule} from '@wepublish/event/api'
 import {BlockStylesModule} from '@wepublish/block-content/api'
 import {PrismaClient} from '@prisma/client'
+import {APP_FILTER} from '@nestjs/core'
 
 @Global()
 @Module({
@@ -262,6 +263,10 @@ import {PrismaClient} from '@prisma/client'
         )
       },
       inject: [ConfigService]
+    },
+    {
+      provide: APP_FILTER,
+      useClass: PrismaClientExceptionFilter
     }
   ]
 })
