@@ -53,7 +53,7 @@ export class DefaultURLAdapter implements URLAdapter {
   }
 
   getPagePreviewURL(token: string): string {
-    return `${this.websiteURL}/${token}`
+    return `${this.websiteURL}/preview/${token}`
   }
 
   getLoginURL(token: string): string {
