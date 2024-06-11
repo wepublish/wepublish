@@ -91,6 +91,14 @@ interface PollAnswersProps {
   onPollChange(poll: FullPoll): void
 }
 
+function generateUrlParams(answer: PollAnswerWithVoteCount): undefined | string {
+  if (!answer) {
+    return undefined
+  }
+
+  return `?answerId=${answer.id}`
+}
+
 export function PollAnswers({poll, onPollChange}: PollAnswersProps) {
   const {t} = useTranslation()
   const [modalOpen, setModalOpen] = useState<boolean>(false)
@@ -191,22 +199,16 @@ export function PollAnswers({poll, onPollChange}: PollAnswersProps) {
     })
   }
 
-  function generateUrlParams(answer: PollAnswerWithVoteCount): undefined | string {
-    if (!poll) {
-      return undefined
-    }
-    if (!answer) {
-      return undefined
-    }
-    return `?pollId=${poll.id}&answerId=${answer.id}`
-  }
   async function copyUrlParamsIntoClipboard(answer: PollAnswerWithVoteCount): Promise<void> {
     const urlParams = generateUrlParams(answer)
+
     if (!urlParams) {
       return
     }
+
     try {
       await navigator.clipboard.writeText(urlParams)
+
       toaster.push(
         <Message type="success" showIcon closable duration={3000}>
           {t('pollAnswer.urlCopied')}
@@ -231,7 +233,7 @@ export function PollAnswers({poll, onPollChange}: PollAnswersProps) {
                 content={`${getTotalVotesByAnswerId(poll, answer.id)} ${t('pollAnswer.votes')}`}>
                 <Form.Control
                   name={`answer-${answer.id}`}
-                  value={answer.answer || t('pollEditView.defaultAnswer')}
+                  value={answer.answer}
                   onChange={(value: string) => {
                     updateAnswer({
                       ...answer,
@@ -241,6 +243,7 @@ export function PollAnswers({poll, onPollChange}: PollAnswersProps) {
                 />
               </Badge>
             </Col>
+
             {/* copy link btn */}
             <RCol xs={8}>
               <IconButton
@@ -267,6 +270,7 @@ export function PollAnswers({poll, onPollChange}: PollAnswersProps) {
           </div>
         ))}
       </Row>
+
       {/* adding new poll answer */}
       <RRow>
         <RCol xs={16}>
@@ -279,6 +283,7 @@ export function PollAnswers({poll, onPollChange}: PollAnswersProps) {
             }}
           />
         </RCol>
+
         <RCol xs={8}>
           <RIconButton
             icon={<MdAdd />}
