@@ -122,12 +122,12 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
             <Footer slug="main" categorySlugs={[['sonstiges', 'other'], ['about-us']]} />
 
             <Script
-              src={publicRuntimeConfig.env.API_URL! + '/static/head.js'}
-              strategy="beforeInteractive"
+              src={publicRuntimeConfig.env.API_URL! + '/scripts/head.js'}
+              strategy="afterInteractive"
             />
             <Script
-              src={publicRuntimeConfig.env.API_URL! + '/static/body.js'}
-              strategy="afterInteractive"
+              src={publicRuntimeConfig.env.API_URL! + '/scripts/body.js'}
+              strategy="lazyOnload"
             />
           </ThemeProvider>
         </WebsiteBuilderProvider>

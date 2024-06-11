@@ -189,6 +189,7 @@ jobs:
               JWT_SECRET_KEY: 'jwt-token'
               DEFAULT_FROM_ADDRESS: 'dev@wepublish.ch'
               DEFAULT_REPLY_TO_ADDRESS: 'dev@wepublish.ch'
+              SYSTEM_INFO_KEY: 'review'
             config:
               general:
                 apolloPlayground: true

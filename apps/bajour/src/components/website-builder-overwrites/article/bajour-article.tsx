@@ -1,5 +1,5 @@
 import {styled} from '@mui/material'
-import {CommentListWrapper} from '@wepublish/website'
+import {ArticleInfoWrapper, AuthorChip, CommentListWrapper} from '@wepublish/website'
 import {ArticleListWrapper, ContentWrapper} from '@wepublish/website'
 import {Blocks} from '@wepublish/website'
 import {BuilderArticleProps, useWebsiteBuilder} from '@wepublish/website'
@@ -20,6 +20,13 @@ export function BajourArticle({className, data, children}: BuilderArticleProps) 
     <ArticleWrapper className={className}>
       {data?.article && <ArticleSEO article={data.article as ApiV1.Article} />}
       <Blocks blocks={(data?.article?.blocks as ApiV1.Block[]) ?? []} type="Article" />
+      {!!data?.article?.authors.length && (
+        <ArticleInfoWrapper>
+          {data?.article?.authors.map(author => (
+            <AuthorChip key={author.id} author={author} publishedAt={data.article!.publishedAt} />
+          ))}
+        </ArticleInfoWrapper>
+      )}
       {children}
     </ArticleWrapper>
   )

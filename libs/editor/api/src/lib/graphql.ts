@@ -2574,6 +2574,7 @@ export type TeaserListBlock = {
   take?: Maybe<Scalars['Int']>;
   teaserType?: Maybe<TeaserType>;
   teasers: Array<Maybe<Teaser>>;
+  title?: Maybe<Scalars['String']>;
 };
 
 export type TeaserListBlockFilter = {
@@ -2591,6 +2592,7 @@ export type TeaserListBlockInput = {
   skip?: InputMaybe<Scalars['Int']>;
   take?: InputMaybe<Scalars['Int']>;
   teaserType?: InputMaybe<TeaserType>;
+  title?: InputMaybe<Scalars['String']>;
 };
 
 export enum TeaserStyle {

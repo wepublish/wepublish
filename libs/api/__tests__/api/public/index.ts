@@ -197,6 +197,7 @@ export type Comment = {
   tags: Array<Tag>;
   text?: Maybe<Scalars['RichText']>;
   title?: Maybe<Scalars['String']>;
+  url: Scalars['String'];
   user?: Maybe<User>;
   userRatings: Array<CommentRating>;
 };
@@ -1418,6 +1419,7 @@ export type TeaserListBlock = {
   take?: Maybe<Scalars['Int']>;
   teaserType?: Maybe<TeaserType>;
   teasers: Array<Maybe<Teaser>>;
+  title?: Maybe<Scalars['String']>;
 };
 
 export type TeaserListBlockFilter = {
