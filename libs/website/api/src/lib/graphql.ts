@@ -88,6 +88,7 @@ export type ArticleTeaser = {
   image?: Maybe<Image>;
   lead?: Maybe<Scalars['String']>;
   preTitle?: Maybe<Scalars['String']>;
+  /** @deprecated Use block styles instead of this */
   style: TeaserStyle;
   title?: Maybe<Scalars['String']>;
 };
@@ -277,6 +278,7 @@ export type CustomTeaser = {
   lead?: Maybe<Scalars['String']>;
   preTitle?: Maybe<Scalars['String']>;
   properties: Array<PublicProperties>;
+  /** @deprecated Use block styles instead of this */
   style: TeaserStyle;
   title?: Maybe<Scalars['String']>;
 };
@@ -357,6 +359,7 @@ export type EventTeaser = {
   image?: Maybe<Image>;
   lead?: Maybe<Scalars['String']>;
   preTitle?: Maybe<Scalars['String']>;
+  /** @deprecated Use block styles instead of this */
   style: TeaserStyle;
   title?: Maybe<Scalars['String']>;
 };
@@ -532,12 +535,15 @@ export type LinkPageBreakBlock = {
   blockStyle?: Maybe<Scalars['String']>;
   hideButton: Scalars['Boolean'];
   image?: Maybe<Image>;
+  /** @deprecated Use block styles instead of this */
   layoutOption?: Maybe<Scalars['String']>;
   linkTarget?: Maybe<Scalars['String']>;
   linkText?: Maybe<Scalars['String']>;
   linkURL?: Maybe<Scalars['String']>;
   richText: Scalars['RichText'];
+  /** @deprecated Use block styles instead of this */
   styleOption?: Maybe<Scalars['String']>;
+  /** @deprecated Use block styles instead of this */
   templateOption?: Maybe<Scalars['String']>;
   text?: Maybe<Scalars['String']>;
 };
@@ -835,6 +841,7 @@ export type PageTeaser = {
   lead?: Maybe<Scalars['String']>;
   page?: Maybe<Page>;
   preTitle?: Maybe<Scalars['String']>;
+  /** @deprecated Use block styles instead of this */
   style: TeaserStyle;
   title?: Maybe<Scalars['String']>;
 };
@@ -914,6 +921,7 @@ export type PeerArticleTeaser = {
   lead?: Maybe<Scalars['String']>;
   peer?: Maybe<Peer>;
   preTitle?: Maybe<Scalars['String']>;
+  /** @deprecated Use block styles instead of this */
   style: TeaserStyle;
   title?: Maybe<Scalars['String']>;
 };
@@ -1951,6 +1959,15 @@ export type PeerQueryVariables = Exact<{
 
 
 export type PeerQuery = { __typename?: 'Query', peer?: { __typename?: 'Peer', id: string, createdAt: string, modifiedAt: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, themeColor: string, themeFontColor: string, hostURL: string, websiteURL: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, bigURL?: string | null, largeURL?: string | null, mediumURL?: string | null, smallURL?: string | null, squareBigURL?: string | null, squareLargeURL?: string | null, squareMediumURL?: string | null, squareSmallURL?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, bigURL?: string | null, largeURL?: string | null, mediumURL?: string | null, smallURL?: string | null, squareBigURL?: string | null, squareLargeURL?: string | null, squareMediumURL?: string | null, squareSmallURL?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null } | null } | null } | null };
+
+export type PhraseQueryVariables = Exact<{
+  query: Scalars['String'];
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type PhraseQuery = { __typename?: 'Query', phrase?: { __typename?: 'Phrase', articles?: { __typename?: 'PhraseResultArticleContent', totalCount: number, nodes: Array<{ __typename?: 'Article', id: string, slug: string, title: string, blocks: Array<{ __typename?: 'BildwurfAdBlock' } | { __typename?: 'CommentBlock' } | { __typename?: 'EmbedBlock' } | { __typename?: 'EventBlock' } | { __typename?: 'FacebookPostBlock' } | { __typename?: 'FacebookVideoBlock' } | { __typename?: 'HTMLBlock' } | { __typename?: 'ImageBlock' } | { __typename?: 'ImageGalleryBlock' } | { __typename?: 'InstagramPostBlock' } | { __typename?: 'LinkPageBreakBlock' } | { __typename?: 'ListicleBlock' } | { __typename?: 'PolisConversationBlock' } | { __typename?: 'PollBlock' } | { __typename?: 'QuoteBlock' } | { __typename?: 'RichTextBlock', richText: Node[] } | { __typename?: 'SoundCloudTrackBlock' } | { __typename?: 'TeaserGridBlock' } | { __typename?: 'TeaserGridFlexBlock' } | { __typename?: 'TeaserListBlock' } | { __typename?: 'TikTokVideoBlock' } | { __typename?: 'TitleBlock' } | { __typename?: 'TwitterTweetBlock' } | { __typename?: 'VimeoVideoBlock' } | { __typename?: 'YouTubeVideoBlock' }> }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null, pages?: { __typename?: 'PhraseResultPageContent', totalCount: number, nodes: Array<{ __typename?: 'Page', id: string, slug: string, title: string, blocks: Array<{ __typename?: 'BildwurfAdBlock' } | { __typename?: 'CommentBlock' } | { __typename?: 'EmbedBlock' } | { __typename?: 'EventBlock' } | { __typename?: 'FacebookPostBlock' } | { __typename?: 'FacebookVideoBlock' } | { __typename?: 'HTMLBlock' } | { __typename?: 'ImageBlock' } | { __typename?: 'ImageGalleryBlock' } | { __typename?: 'InstagramPostBlock' } | { __typename?: 'LinkPageBreakBlock' } | { __typename?: 'ListicleBlock' } | { __typename?: 'PolisConversationBlock' } | { __typename?: 'PollBlock' } | { __typename?: 'QuoteBlock' } | { __typename?: 'RichTextBlock', richText: Node[] } | { __typename?: 'SoundCloudTrackBlock' } | { __typename?: 'TeaserGridBlock' } | { __typename?: 'TeaserGridFlexBlock' } | { __typename?: 'TeaserListBlock' } | { __typename?: 'TikTokVideoBlock' } | { __typename?: 'TitleBlock' } | { __typename?: 'TwitterTweetBlock' } | { __typename?: 'VimeoVideoBlock' } | { __typename?: 'YouTubeVideoBlock' }> }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null } | null };
 
 export type FullPollFragment = { __typename?: 'FullPoll', id: string, question?: string | null, opensAt: string, closedAt?: string | null, infoText?: Node[] | null, answers: Array<{ __typename?: 'PollAnswerWithVoteCount', id: string, pollId: string, answer?: string | null, votes: number }>, externalVoteSources: Array<{ __typename?: 'PollExternalVoteSource', id: string, voteAmounts: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount: number }> }> };
 
@@ -4024,6 +4041,80 @@ export function usePeerLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PeerQ
 export type PeerQueryHookResult = ReturnType<typeof usePeerQuery>;
 export type PeerLazyQueryHookResult = ReturnType<typeof usePeerLazyQuery>;
 export type PeerQueryResult = Apollo.QueryResult<PeerQuery, PeerQueryVariables>;
+export const PhraseDocument = gql`
+    query Phrase($query: String!, $take: Int, $skip: Int) {
+  phrase(query: $query, take: $take, skip: $skip) {
+    articles {
+      nodes {
+        id
+        slug
+        title
+        blocks {
+          ... on RichTextBlock {
+            richText
+          }
+        }
+      }
+      pageInfo {
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
+      totalCount
+    }
+    pages {
+      nodes {
+        id
+        slug
+        title
+        blocks {
+          ... on RichTextBlock {
+            richText
+          }
+        }
+      }
+      pageInfo {
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
+      totalCount
+    }
+  }
+}
+    `;
+
+/**
+ * __usePhraseQuery__
+ *
+ * To run a query within a React component, call `usePhraseQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePhraseQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePhraseQuery({
+ *   variables: {
+ *      query: // value for 'query'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *   },
+ * });
+ */
+export function usePhraseQuery(baseOptions: Apollo.QueryHookOptions<PhraseQuery, PhraseQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PhraseQuery, PhraseQueryVariables>(PhraseDocument, options);
+      }
+export function usePhraseLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PhraseQuery, PhraseQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PhraseQuery, PhraseQueryVariables>(PhraseDocument, options);
+        }
+export type PhraseQueryHookResult = ReturnType<typeof usePhraseQuery>;
+export type PhraseLazyQueryHookResult = ReturnType<typeof usePhraseLazyQuery>;
+export type PhraseQueryResult = Apollo.QueryResult<PhraseQuery, PhraseQueryVariables>;
 export const UserPollVoteDocument = gql`
     query UserPollVote($pollId: ID!) {
   userPollVote(pollId: $pollId)

@@ -2,9 +2,10 @@ import {AppBar, Theme, Toolbar, css, styled, useTheme} from '@mui/material'
 import {FullNavigationFragment} from '@wepublish/website/api'
 import {BuilderNavbarProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {PropsWithChildren, useCallback, useMemo, useState} from 'react'
-import {MdAccountCircle, MdClose, MdMenu, MdOutlinePayments} from 'react-icons/md'
+import {MdAccountCircle, MdClose, MdMenu, MdOutlinePayments, MdSearch} from 'react-icons/md'
 import {navigationLinkToUrl} from '../link-to-url'
 import {useUser} from '@wepublish/authentication/website'
+import {Button} from '@wepublish/ui'
 
 declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -222,6 +223,7 @@ export function Navbar({
 }: BuilderNavbarProps) {
   const {hasUser} = useUser()
   const [isMenuOpen, setMenuOpen] = useState(false)
+  const [isSearchOpen, setSearchOpen] = useState(false)
   const toggleMenu = useCallback(() => setMenuOpen(isOpen => !isOpen), [])
 
   const imageStyles = useImageStyles()
@@ -256,54 +258,77 @@ export function Navbar({
     <NavbarWrapper className={className}>
       <AppBar position="static" elevation={0} color={'transparent'} css={appBarStyles}>
         <NavbarInnerWrapper>
-          <NavbarMain>
-            <NavbarIconButtonWrapper>
+          {isSearchOpen ? (
+            <div>
+              <label>
+                Type to search
+                <input type="text" />
+              </label>
               <IconButton
-                size="large"
-                aria-label="Menu"
-                onClick={toggleMenu}
-                css={{color: 'white'}}>
-                {!isMenuOpen && <MdMenu />}
-                {isMenuOpen && <MdClose />}
+                css={{fontSize: '2em', color: 'black'}}
+                onClick={() => setSearchOpen(false)}>
+                <MdClose />
               </IconButton>
-            </NavbarIconButtonWrapper>
-          </NavbarMain>
-
-          {!!headerItems?.links.length && (
-            <NavbarLinks isMenuOpen={isMenuOpen}>
-              {headerItems.links.map((link, index) => (
-                <Link key={index} css={navbarLinkStyles} href={navigationLinkToUrl(link)}>
-                  {link.label}
+            </div>
+          ) : (
+            <>
+              <NavbarMain>
+                <NavbarIconButtonWrapper>
+                  <IconButton
+                    size="large"
+                    aria-label="Menu"
+                    onClick={toggleMenu}
+                    css={{color: 'white'}}>
+                    {!isMenuOpen && <MdMenu />}
+                    {isMenuOpen && <MdClose />}
+                  </IconButton>
+                </NavbarIconButtonWrapper>
+              </NavbarMain>
+              {!!headerItems?.links.length && (
+                <NavbarLinks isMenuOpen={isMenuOpen}>
+                  {headerItems.links.map((link, index) => (
+                    <Link key={index} css={navbarLinkStyles} href={navigationLinkToUrl(link)}>
+                      {link.label}
+                    </Link>
+                  ))}
+                </NavbarLinks>
+              )}
+              {!!logo && (
+                <Link href="/" aria-label="Startseite" css={logoLinkStyles}>
+                  <NavbarLogoWrapper>
+                    <Image image={logo} css={imageStyles} loading="eager" fetchPriority="high" />
+                  </NavbarLogoWrapper>
                 </Link>
-              ))}
-            </NavbarLinks>
+              )}
+              <NavbarSpacer />
+              <NavbarActions isMenuOpen={isMenuOpen}>
+                <Button
+                  // href={hasUser ? profileUrl : loginUrl}
+                  onClick={() => setSearchOpen(true)}
+                  aria-label={'Search'}>
+                  <IconButton css={{fontSize: '2em', color: 'black'}}>
+                    <MdSearch />
+                  </IconButton>
+                </Button>
+
+                {hasUser && showSubscriptionsUrl ? (
+                  <Link href={subscriptionsUrl} aria-label={hasUser ? 'Profil' : 'Login'}>
+                    <IconButton css={{fontSize: '2em', color: 'black'}}>
+                      <MdOutlinePayments />
+                    </IconButton>
+                  </Link>
+                ) : null}
+
+                <Link
+                  href={hasUser ? profileUrl : loginUrl}
+                  aria-label={hasUser ? 'Profil' : 'Login'}>
+                  <IconButton css={{fontSize: '2em', color: 'black'}}>
+                    <MdAccountCircle />
+                  </IconButton>
+                </Link>
+              </NavbarActions>
+            </>
           )}
-
-          {!!logo && (
-            <Link href="/" aria-label="Startseite" css={logoLinkStyles}>
-              <NavbarLogoWrapper>
-                <Image image={logo} css={imageStyles} loading="eager" fetchPriority="high" />
-              </NavbarLogoWrapper>
-            </Link>
-          )}
-
-          <NavbarSpacer />
-
-          <NavbarActions isMenuOpen={isMenuOpen}>
-            {hasUser && showSubscriptionsUrl ? (
-              <Link href={subscriptionsUrl} aria-label={hasUser ? 'Profil' : 'Login'}>
-                <IconButton css={{fontSize: '2em', color: 'black'}}>
-                  <MdOutlinePayments />
-                </IconButton>
-              </Link>
-            ) : null}
-
-            <Link href={hasUser ? profileUrl : loginUrl} aria-label={hasUser ? 'Profil' : 'Login'}>
-              <IconButton css={{fontSize: '2em', color: 'black'}}>
-                <MdAccountCircle />
-              </IconButton>
-            </Link>
-          </NavbarActions>
         </NavbarInnerWrapper>
       </AppBar>
 
