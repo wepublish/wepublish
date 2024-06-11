@@ -2,7 +2,6 @@ import {Controller, Get, Inject, Query, UnauthorizedException} from '@nestjs/com
 import * as os from 'os'
 import * as fs from 'fs'
 import {timingSafeEqual} from 'crypto'
-import {unknown} from 'zod'
 
 @Controller('systemInfo')
 export class SystemInfoController {
