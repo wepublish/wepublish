@@ -2,6 +2,11 @@ fragment MutationArticle on Article {
   id
   shared
 
+  tags {
+    id
+    tag
+  }
+
   draft {
     publishedAt
     updatedAt
@@ -28,7 +33,6 @@ fragment MutationArticle on Article {
     lead
     slug
     breaking
-    tags
     properties {
       key
       value
@@ -42,6 +46,10 @@ fragment ArticleRef on Article {
 
   createdAt
   modifiedAt
+  tags {
+    id
+    tag
+  }
 
   draft {
     revision
@@ -148,6 +156,12 @@ query Article($id: ID!) {
     id
     shared
 
+    tags {
+      id
+      tag
+      type
+    }
+
     pending {
       publishAt
     }
@@ -169,7 +183,6 @@ query Article($id: ID!) {
       image {
         ...ImageRef
       }
-      tags
       properties {
         key
         value

@@ -1,11 +1,13 @@
 import {ApolloServer} from 'apollo-server-express'
 import {
   CreatePage,
+  CreateTag,
   DeletePage,
   Page,
   PageInput,
   PageList,
   PublishPage,
+  TagType,
   UnpublishPage,
   UpdatePage
 } from '../api/private'
@@ -136,11 +138,41 @@ beforeAll(async () => {
 describe('Pages', () => {
   describe('can be created/edited/published/unpublished/deleted:', () => {
     const ids: string[] = []
+    const tagIds = [] as string[]
+
     beforeAll(async () => {
+      const [tag1, tag2, tag3] = await Promise.all([
+        testServerPrivate.executeOperation({
+          query: CreateTag,
+          variables: {
+            tag: 'Tag 1',
+            type: TagType.Page
+          }
+        }),
+        testServerPrivate.executeOperation({
+          query: CreateTag,
+          variables: {
+            tag: 'Tag 2',
+            type: TagType.Page
+          }
+        }),
+        testServerPrivate.executeOperation({
+          query: CreateTag,
+          variables: {
+            tag: 'Tag 3',
+            type: TagType.Page
+          }
+        })
+      ])
+
+      tagIds.push(tag1.data?.createTag.id)
+      tagIds.push(tag2.data?.createTag.id)
+      tagIds.push(tag3.data?.createTag.id)
+
       const input: PageInput = {
         title: 'Testing Page',
         slug: generateRandomString(),
-        tags: ['one', 'two', 'three'],
+        tags: [tagIds[0], tagIds[1], tagIds[2]],
         properties: [
           {key: 'private', value: 'private', public: false},
           {key: 'public', value: 'public', public: true}
@@ -162,7 +194,7 @@ describe('Pages', () => {
       const input: PageInput = {
         title: 'Testing Page',
         slug: generateRandomString(),
-        tags: ['one', 'two', 'three'],
+        tags: [tagIds[0], tagIds[1], tagIds[2]],
         properties: [
           {key: 'private', value: 'private', public: false},
           {key: 'public', value: 'public', public: true}
@@ -183,7 +215,21 @@ describe('Pages', () => {
             id: expect.any(String),
             latest: expect.objectContaining({
               slug: expect.any(String)
-            })
+            }),
+            tags: expect.arrayContaining([
+              expect.objectContaining({
+                id: expect.any(String),
+                tag: 'Tag 1'
+              }),
+              expect.objectContaining({
+                id: expect.any(String),
+                tag: 'Tag 2'
+              }),
+              expect.objectContaining({
+                id: expect.any(String),
+                tag: 'Tag 3'
+              })
+            ])
           }
         }
       })
@@ -216,7 +262,21 @@ describe('Pages', () => {
             id: expect.any(String),
             latest: expect.objectContaining({
               slug: expect.any(String)
-            })
+            }),
+            tags: expect.arrayContaining([
+              expect.objectContaining({
+                id: expect.any(String),
+                tag: 'Tag 1'
+              }),
+              expect.objectContaining({
+                id: expect.any(String),
+                tag: 'Tag 2'
+              }),
+              expect.objectContaining({
+                id: expect.any(String),
+                tag: 'Tag 3'
+              })
+            ])
           }
         }
       })
@@ -229,7 +289,7 @@ describe('Pages', () => {
           input: {
             title: 'Update Title',
             slug: 'update-slug',
-            tags: ['update', 'tags'],
+            tags: [tagIds[0], tagIds[1]],
             properties: [
               {key: 'private', value: 'private', public: false},
               {key: 'public', value: 'public', public: true}
@@ -252,7 +312,17 @@ describe('Pages', () => {
             id: expect.any(String),
             latest: expect.objectContaining({
               slug: expect.any(String)
-            })
+            }),
+            tags: expect.arrayContaining([
+              expect.objectContaining({
+                id: expect.any(String),
+                tag: 'Tag 1'
+              }),
+              expect.objectContaining({
+                id: expect.any(String),
+                tag: 'Tag 2'
+              })
+            ])
           }
         }
       })
@@ -275,7 +345,17 @@ describe('Pages', () => {
             id: expect.any(String),
             latest: expect.objectContaining({
               slug: expect.any(String)
-            })
+            }),
+            tags: expect.arrayContaining([
+              expect.objectContaining({
+                id: expect.any(String),
+                tag: 'Tag 1'
+              }),
+              expect.objectContaining({
+                id: expect.any(String),
+                tag: 'Tag 2'
+              })
+            ])
           }
         }
       })
@@ -343,7 +423,17 @@ describe('Pages', () => {
             id: expect.any(String),
             latest: expect.objectContaining({
               slug: expect.any(String)
-            })
+            }),
+            tags: expect.arrayContaining([
+              expect.objectContaining({
+                id: expect.any(String),
+                tag: 'Tag 1'
+              }),
+              expect.objectContaining({
+                id: expect.any(String),
+                tag: 'Tag 2'
+              })
+            ])
           }
         }
       })

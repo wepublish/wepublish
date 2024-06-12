@@ -714,6 +714,8 @@
       "commentRating": "Bewertungssystem",
       "comments": "Kommentare",
       "commentTags": "Tags",
+      "articleTags": "Tags",
+      "pageTags": "Tags",
       "consents": "Konsens",
       "dashboard": "Dashboard",
       "events": "Events",
@@ -1100,7 +1102,8 @@
         "areYouSureConfirmation": "Tag löschen",
         "createTag": "Neuen Tag",
         "placeholder": "Name des Tags",
-        "title": "Tags"
+        "title": "Tags",
+        "markAsMain": "Als Haupt-Tag verwenden"
       }
     },
     "tokenList": {

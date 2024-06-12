@@ -41,6 +41,10 @@ jobs:
         ghcr.io/wepublish/website:${{ needs.release_version.outputs.version }}
         ghcr.io/wepublish/website:next
         wepublishch/website:${{ needs.release_version.outputs.version }}
+      media_tags: |
+        ghcr.io/wepublish/media:${{ needs.release_version.outputs.version }}
+        ghcr.io/wepublish/media:next
+        wepublishch/media:${{ needs.release_version.outputs.version }}
     secrets: inherit
 
   release_docker:
@@ -74,4 +78,9 @@ jobs:
         ghcr.io/wepublish/website:latest
         wepublishch/website:${{ needs.release_version.outputs.version }}
         wepublishch/website:latest
+      media_tags: |
+        ghcr.io/wepublish/media:${{ needs.release_version.outputs.version }}
+        ghcr.io/wepublish/media:latest
+        wepublishch/media:${{ needs.release_version.outputs.version }}
+        wepublishch/media:latest
     secrets: inherit

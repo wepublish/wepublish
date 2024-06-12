@@ -38,6 +38,19 @@ spec:
                 port:
                   name: http
 
+
+    {{- $mediaUrl := urlParse .Values.deployment.env.MEDIA_SERVER_URL }}
+    - host: {{ $mediaUrl.host }}
+      http:
+        paths:
+          - path: {{ $mediaUrl.path | default "/" }}
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ $fullName }}-media
+                port:
+                  name: http
+
 {{- if .Values.website.enabled -}}
     {{- $websiteUrl := urlParse .Values.deployment.env.WEBSITE_URL }}
     - host: {{ $websiteUrl.host }}

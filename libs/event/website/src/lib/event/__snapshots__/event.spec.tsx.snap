@@ -3,7 +3,7 @@
 exports[`Event should render Default 1`] = `
 <DocumentFragment>
   <article
-    class="ec2zadl3 css-95dnd2-ContentWrapperStyled-EventWrapper e1wqte7t0"
+    class="ec2zadl3 css-14skg5c-ContentWrapperStyled-EventWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -91,7 +91,7 @@ https://unsplash.it/200/100 200w"
               fill="none"
             />
             <path
-              d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
+              d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
             />
           </svg>
           24.02.2023 09:00
@@ -487,7 +487,7 @@ https://unsplash.it/200/100 200w"
 exports[`Event should render WithClassName 1`] = `
 <DocumentFragment>
   <article
-    class="extra-classname ec2zadl3 css-95dnd2-ContentWrapperStyled-EventWrapper e1wqte7t0"
+    class="extra-classname ec2zadl3 css-14skg5c-ContentWrapperStyled-EventWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -575,7 +575,7 @@ https://unsplash.it/200/100 200w"
               fill="none"
             />
             <path
-              d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
+              d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
             />
           </svg>
           24.02.2023 09:00
@@ -971,7 +971,7 @@ https://unsplash.it/200/100 200w"
 exports[`Event should render WithEmotion 1`] = `
 <DocumentFragment>
   <article
-    class="ec2zadl3 css-95dnd2-ContentWrapperStyled-EventWrapper e1wqte7t0"
+    class="ec2zadl3 css-14skg5c-ContentWrapperStyled-EventWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -1059,7 +1059,7 @@ https://unsplash.it/200/100 200w"
               fill="none"
             />
             <path
-              d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
+              d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
             />
           </svg>
           24.02.2023 09:00
@@ -1455,7 +1455,7 @@ https://unsplash.it/200/100 200w"
 exports[`Event should render WithError 1`] = `
 <DocumentFragment>
   <article
-    class="ec2zadl3 css-95dnd2-ContentWrapperStyled-EventWrapper e1wqte7t0"
+    class="ec2zadl3 css-14skg5c-ContentWrapperStyled-EventWrapper e1wqte7t0"
   >
     <div
       class="css-cs9jq0-TitleBlockWrapper ek0hk6a0"
@@ -1481,7 +1481,7 @@ exports[`Event should render WithError 1`] = `
 exports[`Event should render WithLoading 1`] = `
 <DocumentFragment>
   <article
-    class="ec2zadl3 css-95dnd2-ContentWrapperStyled-EventWrapper e1wqte7t0"
+    class="ec2zadl3 css-14skg5c-ContentWrapperStyled-EventWrapper e1wqte7t0"
   >
     <div
       class="css-cs9jq0-TitleBlockWrapper ek0hk6a0"
@@ -1507,7 +1507,7 @@ exports[`Event should render WithLoading 1`] = `
 exports[`Event should render WithoutImage 1`] = `
 <DocumentFragment>
   <article
-    class="ec2zadl3 css-95dnd2-ContentWrapperStyled-EventWrapper e1wqte7t0"
+    class="ec2zadl3 css-14skg5c-ContentWrapperStyled-EventWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -1573,7 +1573,7 @@ exports[`Event should render WithoutImage 1`] = `
               fill="none"
             />
             <path
-              d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
+              d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
             />
           </svg>
           24.02.2023 09:00

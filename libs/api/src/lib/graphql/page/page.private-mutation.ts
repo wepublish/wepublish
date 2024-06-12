@@ -5,6 +5,24 @@ import {DuplicatePageSlugError, NotFound} from '../../error'
 import {authorise} from '../permissions'
 import {CanCreatePage, CanDeletePage, CanPublishPage} from '@wepublish/permissions/api'
 
+const fullPageInclude = {
+  draft: {
+    include: {
+      properties: true
+    }
+  },
+  pending: {
+    include: {
+      properties: true
+    }
+  },
+  published: {
+    include: {
+      properties: true
+    }
+  }
+} as const
+
 export const deletePageById = async (
   id: string,
   authenticate: Context['authenticate'],
@@ -17,23 +35,7 @@ export const deletePageById = async (
     where: {
       id
     },
-    include: {
-      draft: {
-        include: {
-          properties: true
-        }
-      },
-      pending: {
-        include: {
-          properties: true
-        }
-      },
-      published: {
-        include: {
-          properties: true
-        }
-      }
-    }
+    include: fullPageInclude
   })
 
   if (!page) {
@@ -69,7 +71,7 @@ export const createPage = async (
 ) => {
   const {roles} = authenticate()
   authorise(CanCreatePage, roles)
-  const {properties, ...data} = input
+  const {properties, tags, ...data} = input
 
   return page.create({
     data: {
@@ -83,25 +85,17 @@ export const createPage = async (
           },
           revision: 0
         }
+      },
+      tags: {
+        createMany: {
+          data: (tags as string[])?.map(tagId => ({
+            tagId
+          })),
+          skipDuplicates: true
+        }
       }
     },
-    include: {
-      draft: {
-        include: {
-          properties: true
-        }
-      },
-      pending: {
-        include: {
-          properties: true
-        }
-      },
-      published: {
-        include: {
-          properties: true
-        }
-      }
-    }
+    include: fullPageInclude
   })
 }
 
@@ -115,6 +109,7 @@ export const duplicatePage = async (
   authorise(CanCreatePage, roles)
 
   const page = await pages.load(id)
+
   if (!page) {
     throw new NotFound('page', id)
   }
@@ -149,25 +144,17 @@ export const duplicatePage = async (
     data: {
       draft: {
         create: input
+      },
+      tags: {
+        createMany: {
+          data: page.tags.map(({tagId}) => ({
+            tagId
+          })),
+          skipDuplicates: true
+        }
       }
     },
-    include: {
-      draft: {
-        include: {
-          properties: true
-        }
-      },
-      pending: {
-        include: {
-          properties: true
-        }
-      },
-      published: {
-        include: {
-          properties: true
-        }
-      }
-    }
+    include: fullPageInclude
   })
 }
 
@@ -265,23 +252,7 @@ export const unpublishPage = async (
         delete: Boolean(page.publishedId)
       }
     },
-    include: {
-      draft: {
-        include: {
-          properties: true
-        }
-      },
-      pending: {
-        include: {
-          properties: true
-        }
-      },
-      published: {
-        include: {
-          properties: true
-        }
-      }
-    }
+    include: fullPageInclude
   })
 }
 
@@ -476,59 +447,26 @@ export const publishPage = async (
         delete: true
       }
     },
-    include: {
-      draft: {
-        include: {
-          properties: true
-        }
-      },
-      pending: {
-        include: {
-          properties: true
-        }
-      },
-      published: {
-        include: {
-          properties: true
-        }
-      }
-    }
+    include: fullPageInclude
   })
 }
 
-type UpdatePageInput = Omit<Prisma.PageRevisionCreateInput, 'revision' | 'properties'> & {
+type UpdatePageInput = Omit<Prisma.PageRevisionCreateInput, 'revision' | 'properties' | 'tags'> & {
+  tags: string[]
   properties: Prisma.MetadataPropertyUncheckedCreateWithoutPageRevisionInput[]
 }
 
 export const updatePage = async (
   id: string,
-  {properties, ...input}: UpdatePageInput,
+  {properties, tags, ...input}: UpdatePageInput,
   authenticate: Context['authenticate'],
-  pageClient: PrismaClient['page']
+  pageClient: PrismaClient['page'],
+  pageLoader: Context['loaders']['pages']
 ) => {
   const {roles} = authenticate()
   authorise(CanCreatePage, roles)
 
-  const page = await pageClient.findUnique({
-    where: {id},
-    include: {
-      draft: {
-        include: {
-          properties: true
-        }
-      },
-      pending: {
-        include: {
-          properties: true
-        }
-      },
-      published: {
-        include: {
-          properties: true
-        }
-      }
-    }
-  })
+  const page = await pageLoader.load(id)
 
   if (!page) {
     throw new NotFound('page', id)
@@ -581,24 +519,22 @@ export const updatePage = async (
             }
           }
         }
+      },
+      tags: {
+        deleteMany: {
+          tagId: {
+            notIn: tags
+          }
+        },
+        createMany: {
+          data: tags
+            .filter(tagId => !page.tags.some(tag => tag.tagId === tagId))
+            .map(tagId => ({
+              tagId
+            }))
+        }
       }
     },
-    include: {
-      draft: {
-        include: {
-          properties: true
-        }
-      },
-      pending: {
-        include: {
-          properties: true
-        }
-      },
-      published: {
-        include: {
-          properties: true
-        }
-      }
-    }
+    include: fullPageInclude
   })
 }

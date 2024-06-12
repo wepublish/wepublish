@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import {ImageRefFragment} from '@wepublish/editor/api'
+import {ImageRefFragment, TagType} from '@wepublish/editor/api'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdListAlt, MdSettings, MdShare} from 'react-icons/md'
@@ -20,6 +20,7 @@ import {
   ListInput,
   ListValue,
   PermissionControl,
+  SelectTags,
   Textarea,
   createCheckedPermissionComponent,
   useAuthorisation
@@ -224,13 +225,11 @@ function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
             </Form.Group>
             <Form.Group controlId="pageTags">
               <Form.ControlLabel>{t('pageEditor.panels.tags')}</Form.ControlLabel>
-              <TagPicker
+              <SelectTags
                 disabled={!isAuthorized}
-                virtualized
-                creatable
-                value={tags}
-                data={tags.map(tag => ({label: tag, value: tag}))}
-                onChange={tagsValue => onChange?.({...value, tags: tagsValue ?? []})}
+                selectedTags={tags}
+                setSelectedTags={tagsValue => onChange?.({...value, tags: tagsValue ?? []})}
+                tagType={TagType.Page}
               />
             </Form.Group>
             <Form.Group>

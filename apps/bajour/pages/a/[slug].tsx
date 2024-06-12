@@ -7,8 +7,8 @@ import {
   ArticleListContainer,
   ArticleWrapper,
   BuilderArticleListProps,
-  CommentListContainer,
   ContentWrapper,
+  PollBlock,
   useWebsiteBuilder,
   WebsiteBuilderProvider
 } from '@wepublish/website'
@@ -17,9 +17,11 @@ import getConfig from 'next/config'
 import {useRouter} from 'next/router'
 
 import {BriefingNewsletter} from '../../src/components/briefing-newsletter/briefing-newsletter'
+import {FrageDesTagesArticle} from '../../src/components/frage-des-tages/frage-des-tages-article'
 import {Container} from '../../src/components/layout/container'
 import {BajourArticle} from '../../src/components/website-builder-overwrites/article/bajour-article'
 import {BajourAuthorChip} from '../../src/components/website-builder-overwrites/author/author-chip'
+import {CommentListContainer} from '../../src/components/website-builder-overwrites/blocks/comment-list-container/comment-list-container'
 import {TeaserSlider} from '../../src/components/website-builder-overwrites/blocks/teaser-slider/teaser-slider'
 
 const uppercase = css`
@@ -57,10 +59,13 @@ export default function ArticleBySlug() {
     }
   })
 
-  const author = data?.article?.authors[0]
+  const isFDT = data?.article?.tags.some(({tag}) => tag === 'frage-des-tages')
 
   return (
-    <WebsiteBuilderProvider ArticleList={RelatedArticleSlider} Article={BajourArticle}>
+    <WebsiteBuilderProvider
+      ArticleList={RelatedArticleSlider}
+      blocks={{Poll: isFDT ? FrageDesTagesArticle : PollBlock}}
+      Article={BajourArticle}>
       <Container>
         <ArticleContainer slug={slug as string} />
 
@@ -74,7 +79,7 @@ export default function ArticleBySlug() {
               </H5>
 
               <ArticleListContainer
-                variables={{filter: {tags: data.article.tags}, take: 4}}
+                variables={{filter: {tags: data.article.tags.map(tag => tag.id)}, take: 4}}
                 filter={articles => articles.filter(article => article.id !== data.article?.id)}
               />
             </ArticleWrapper>
@@ -86,13 +91,19 @@ export default function ArticleBySlug() {
                 </AuthorWrapper>
               ))}
 
-            <ArticleWrapper>
-              <H5 component={'h2'} css={uppercase}>
-                Kommentare
-              </H5>
+            {!isFDT && (
+              <ArticleWrapper>
+                <H5 component={'h2'} css={uppercase}>
+                  Kommentare
+                </H5>
 
-              <CommentListContainer id={data.article.id} type={ApiV1.CommentItemType.Article} />
-            </ArticleWrapper>
+                <CommentListContainer
+                  id={data.article.id}
+                  type={ApiV1.CommentItemType.Article}
+                  variables={{sort: ApiV1.CommentSort.Rating, order: ApiV1.SortOrder.Descending}}
+                />
+              </ArticleWrapper>
+            )}
           </>
         )}
       </Container>
@@ -120,6 +131,9 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
     }),
     client.query({
       query: ApiV1.PeerProfileDocument
+    }),
+    client.query({
+      query: ApiV1.SettingListDocument
     })
   ])
 
@@ -129,7 +143,7 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
         query: ApiV1.ArticleListDocument,
         variables: {
           filter: {
-            tags: article.data.article.tags
+            tags: article.data.article.tags.map((tag: ApiV1.Tag) => tag.id)
           },
           take: 4
         }
@@ -137,9 +151,9 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
       client.query({
         query: ApiV1.CommentListDocument,
         variables: {
-          filter: {
-            itemId: article.data.article.id
-          }
+          sort: ApiV1.CommentSort.Rating,
+          order: ApiV1.SortOrder.Descending,
+          itemId: article.data.article.id
         }
       }),
       client.query({

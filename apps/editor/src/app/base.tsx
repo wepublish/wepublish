@@ -175,26 +175,60 @@ export function Base({children}: BaseProps) {
                     'CAN_CREATE_ARTICLE',
                     'CAN_DELETE_ARTICLE',
                     'CAN_PUBLISH_ARTICLE',
-                    'CAN_GET_ARTICLE_PREVIEW_LINK'
+                    'CAN_GET_ARTICLE_PREVIEW_LINK',
+                    'CAN_GET_PEER_ARTICLES',
+                    'CAN_GET_PEER_ARTICLE',
+                    'CAN_GET_TAGS'
                   ]}>
-                  <Nav.Item
-                    as={NavLink}
-                    href="/articles"
-                    icon={<MdDescription />}
-                    active={path === 'articles'}>
-                    {t('navbar.articles')}
-                  </Nav.Item>
-                </PermissionControl>
+                  <Nav.Menu
+                    eventKey={'articles'}
+                    title={t('navbar.articles')}
+                    icon={<MdDescription />}>
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        'CAN_GET_ARTICLES',
+                        'CAN_GET_ARTICLE',
+                        'CAN_CREATE_ARTICLE',
+                        'CAN_DELETE_ARTICLE',
+                        'CAN_PUBLISH_ARTICLE',
+                        'CAN_GET_ARTICLE_PREVIEW_LINK'
+                      ]}>
+                      <Nav.Item
+                        as={NavLink}
+                        href="/articles"
+                        icon={<MdDescription />}
+                        active={path === 'articles'}>
+                        {t('navbar.articles')}
+                      </Nav.Item>
+                    </PermissionControl>
 
-                <PermissionControl
-                  qualifyingPermissions={['CAN_GET_PEER_ARTICLES', 'CAN_GET_PEER_ARTICLE']}>
-                  <Nav.Item
-                    as={NavLink}
-                    href="/peerarticles"
-                    icon={<MdFileCopy />}
-                    active={path === 'peerarticles'}>
-                    {t('navbar.peerArticles')}
-                  </Nav.Item>
+                    <PermissionControl
+                      qualifyingPermissions={['CAN_GET_PEER_ARTICLES', 'CAN_GET_PEER_ARTICLE']}>
+                      <Nav.Item
+                        as={NavLink}
+                        href="/articles/peer"
+                        icon={<MdFileCopy />}
+                        active={path === 'articles/peer'}>
+                        {t('navbar.peerArticles')}
+                      </Nav.Item>
+                    </PermissionControl>
+
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        'CAN_GET_TAGS',
+                        'CAN_CREATE_TAG',
+                        'CAN_UPDATE_TAG',
+                        'CAN_DELETE_TAG'
+                      ]}>
+                      <Nav.Item
+                        as={NavLink}
+                        href="/articles/tags"
+                        icon={<MdSell />}
+                        active={path === 'articles/tags'}>
+                        {t('navbar.articleTags')}
+                      </Nav.Item>
+                    </PermissionControl>
+                  </Nav.Menu>
                 </PermissionControl>
 
                 <PermissionControl
@@ -204,15 +238,44 @@ export function Base({children}: BaseProps) {
                     'CAN_CREATE_PAGE',
                     'CAN_DELETE_PAGE',
                     'CAN_PUBLISH_PAGE',
-                    'CAN_GET_PAGE_PREVIEW_LINK'
+                    'CAN_GET_PAGE_PREVIEW_LINK',
+                    'CAN_GET_TAGS'
                   ]}>
-                  <Nav.Item
-                    as={NavLink}
-                    href="/pages"
-                    icon={<MdDashboard />}
-                    active={path === 'pages'}>
-                    {t('navbar.pages')}
-                  </Nav.Item>
+                  <Nav.Menu eventKey={'pages'} title={t('navbar.pages')} icon={<MdDashboard />}>
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        'CAN_GET_PAGES',
+                        'CAN_GET_PAGE',
+                        'CAN_CREATE_PAGE',
+                        'CAN_DELETE_PAGE',
+                        'CAN_PUBLISH_PAGE',
+                        'CAN_GET_PAGE_PREVIEW_LINK'
+                      ]}>
+                      <Nav.Item
+                        as={NavLink}
+                        href="/pages"
+                        icon={<MdDashboard />}
+                        active={path === 'page'}>
+                        {t('navbar.pages')}
+                      </Nav.Item>
+                    </PermissionControl>
+
+                    <PermissionControl
+                      qualifyingPermissions={[
+                        'CAN_GET_TAGS',
+                        'CAN_CREATE_TAG',
+                        'CAN_UPDATE_TAG',
+                        'CAN_DELETE_TAG'
+                      ]}>
+                      <Nav.Item
+                        as={NavLink}
+                        href="/pages/tags"
+                        icon={<MdSell />}
+                        active={path === 'pages/tags'}>
+                        {t('navbar.pageTags')}
+                      </Nav.Item>
+                    </PermissionControl>
+                  </Nav.Menu>
                 </PermissionControl>
 
                 <PermissionControl
