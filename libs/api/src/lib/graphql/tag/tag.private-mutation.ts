@@ -6,6 +6,7 @@ import {Context} from '../../context'
 export const createTag = (
   tag: string,
   type: TagType,
+  main = false,
   authenticate: Context['authenticate'],
   tagClient: PrismaClient['tag']
 ) => {
@@ -15,7 +16,8 @@ export const createTag = (
   return tagClient.create({
     data: {
       tag,
-      type
+      type,
+      main
     }
   })
 }
@@ -38,6 +40,7 @@ export const deleteTag = (
 export const updateTag = (
   tagId: string,
   tag: string,
+  main: boolean | undefined,
   authenticate: Context['authenticate'],
   tagClient: PrismaClient['tag']
 ) => {
@@ -49,7 +52,8 @@ export const updateTag = (
       id: tagId
     },
     data: {
-      tag
+      tag,
+      main
     }
   })
 }

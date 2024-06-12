@@ -42,8 +42,8 @@ export const generateFeed =
         link: article.url,
         date: new Date(article.publishedAt),
         category: article.tags.map(tag => ({
-          name: tag,
-          term: tag
+          name: tag.tag,
+          term: tag.tag
         }))
       } as Item
     })

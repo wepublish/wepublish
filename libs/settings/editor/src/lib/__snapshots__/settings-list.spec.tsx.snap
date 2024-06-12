@@ -71,7 +71,7 @@ exports[`SettingList renders successfully 1`] = `
               fill="none"
             />
             <path
-              d="M17 3H5a2 2 0 00-2 2v14a2 2 0 002 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"
+              d="M17 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"
             />
           </svg>
           save
@@ -106,7 +106,7 @@ exports[`SettingList renders successfully 1`] = `
               role="gridcell"
             >
               <div
-                class="css-16djhn4-Panel e8m68rm3 rs-panel rs-panel-bordered"
+                class="css-16djhn4-Panel e8m68rm4 rs-panel rs-panel-bordered"
               >
                 <div
                   aria-expanded="false"
@@ -139,7 +139,7 @@ exports[`SettingList renders successfully 1`] = `
                     >
                       settingList.guestCommenting
                       <div
-                        class="css-1xcmto8-Info e8m68rm2"
+                        class="css-1xcmto8-Info e8m68rm3"
                       >
                         <svg
                           fill="currentColor"
@@ -192,7 +192,7 @@ exports[`SettingList renders successfully 1`] = `
                     >
                       settingList.allowGuestCommentRating
                       <div
-                        class="css-1xcmto8-Info e8m68rm2"
+                        class="css-1xcmto8-Info e8m68rm3"
                       >
                         <svg
                           fill="currentColor"
@@ -245,7 +245,7 @@ exports[`SettingList renders successfully 1`] = `
                     >
                       settingList.allowCommentEditing
                       <div
-                        class="css-1xcmto8-Info e8m68rm2"
+                        class="css-1xcmto8-Info e8m68rm3"
                       >
                         <svg
                           fill="currentColor"
@@ -298,7 +298,7 @@ exports[`SettingList renders successfully 1`] = `
                     >
                       settingList.commentCharLimit
                       <div
-                        class="css-1xcmto8-Info e8m68rm2"
+                        class="css-1xcmto8-Info e8m68rm3"
                       >
                         <svg
                           fill="currentColor"
@@ -419,7 +419,7 @@ exports[`SettingList renders successfully 1`] = `
               role="gridcell"
             >
               <div
-                class="css-16djhn4-Panel e8m68rm3 rs-panel rs-panel-bordered"
+                class="css-16djhn4-Panel e8m68rm4 rs-panel rs-panel-bordered"
               >
                 <div
                   aria-expanded="false"
@@ -428,7 +428,7 @@ exports[`SettingList renders successfully 1`] = `
                 >
                   settingList.polls
                   <div
-                    class="css-1xcmto8-Info e8m68rm2"
+                    class="css-1xcmto8-Info e8m68rm3"
                   >
                     <svg
                       fill="currentColor"
@@ -493,7 +493,7 @@ exports[`SettingList renders successfully 1`] = `
               role="gridcell"
             >
               <div
-                class="css-16djhn4-Panel e8m68rm3 rs-panel rs-panel-bordered"
+                class="css-16djhn4-Panel e8m68rm4 rs-panel rs-panel-bordered"
               >
                 <div
                   aria-expanded="false"
@@ -526,7 +526,7 @@ exports[`SettingList renders successfully 1`] = `
                     >
                       settingList.newSubscriptionsApiPublic
                       <div
-                        class="css-1xcmto8-Info e8m68rm2"
+                        class="css-1xcmto8-Info e8m68rm3"
                       >
                         <svg
                           fill="currentColor"
@@ -579,7 +579,7 @@ exports[`SettingList renders successfully 1`] = `
                     >
                       settingList.activeSubscriptionsApiPublic
                       <div
-                        class="css-1xcmto8-Info e8m68rm2"
+                        class="css-1xcmto8-Info e8m68rm3"
                       >
                         <svg
                           fill="currentColor"
@@ -632,7 +632,7 @@ exports[`SettingList renders successfully 1`] = `
                     >
                       settingList.renewingSubscriptionsApiPublic
                       <div
-                        class="css-1xcmto8-Info e8m68rm2"
+                        class="css-1xcmto8-Info e8m68rm3"
                       >
                         <svg
                           fill="currentColor"
@@ -685,7 +685,7 @@ exports[`SettingList renders successfully 1`] = `
                     >
                       settingList.newDeactivationsApiPublic
                       <div
-                        class="css-1xcmto8-Info e8m68rm2"
+                        class="css-1xcmto8-Info e8m68rm3"
                       >
                         <svg
                           fill="currentColor"
@@ -738,7 +738,7 @@ exports[`SettingList renders successfully 1`] = `
                     >
                       settingList.expectedRevenueApiPublic
                       <div
-                        class="css-1xcmto8-Info e8m68rm2"
+                        class="css-1xcmto8-Info e8m68rm3"
                       >
                         <svg
                           fill="currentColor"
@@ -791,7 +791,7 @@ exports[`SettingList renders successfully 1`] = `
                     >
                       settingList.revenueApiPublic
                       <div
-                        class="css-1xcmto8-Info e8m68rm2"
+                        class="css-1xcmto8-Info e8m68rm3"
                       >
                         <svg
                           fill="currentColor"
@@ -851,7 +851,7 @@ exports[`SettingList renders successfully 1`] = `
               role="gridcell"
             >
               <div
-                class="css-16djhn4-Panel e8m68rm3 rs-panel rs-panel-bordered"
+                class="css-16djhn4-Panel e8m68rm4 rs-panel rs-panel-bordered"
               >
                 <div
                   aria-expanded="false"
@@ -884,7 +884,7 @@ exports[`SettingList renders successfully 1`] = `
                     >
                       settingList.loginMinutes
                       <div
-                        class="css-1xcmto8-Info e8m68rm2"
+                        class="css-1xcmto8-Info e8m68rm3"
                       >
                         <svg
                           fill="currentColor"
@@ -1013,7 +1013,7 @@ exports[`SettingList renders successfully 1`] = `
                     >
                       settingList.passwordToken
                       <div
-                        class="css-1xcmto8-Info e8m68rm2"
+                        class="css-1xcmto8-Info e8m68rm3"
                       >
                         <svg
                           fill="currentColor"
@@ -1139,7 +1139,7 @@ exports[`SettingList renders successfully 1`] = `
               role="gridcell"
             >
               <div
-                class="css-16djhn4-Panel e8m68rm3 rs-panel rs-panel-bordered"
+                class="css-16djhn4-Panel e8m68rm4 rs-panel rs-panel-bordered"
               >
                 <div
                   aria-expanded="false"
@@ -1148,7 +1148,7 @@ exports[`SettingList renders successfully 1`] = `
                 >
                   settingList.peering
                   <div
-                    class="css-1xcmto8-Info e8m68rm2"
+                    class="css-1xcmto8-Info e8m68rm3"
                   >
                     <svg
                       fill="currentColor"
@@ -1289,7 +1289,7 @@ exports[`SettingList renders successfully 1`] = `
               role="gridcell"
             >
               <div
-                class="css-16djhn4-Panel e8m68rm3 rs-panel rs-panel-bordered"
+                class="css-16djhn4-Panel e8m68rm4 rs-panel rs-panel-bordered"
               >
                 <div
                   aria-expanded="false"
@@ -1303,7 +1303,7 @@ exports[`SettingList renders successfully 1`] = `
                     <span
                       class="collapsed"
                     >
-                      settingList.payment
+                      settingList.scripts
                     </span>
                   </span>
                 </div>
@@ -1317,12 +1317,12 @@ exports[`SettingList renders successfully 1`] = `
                   >
                     <label
                       class="rs-form-control-label"
-                      for="INVOICE_REMINDER_MAX_TRIES"
-                      id="INVOICE_REMINDER_MAX_TRIES-control-label"
+                      for="HEAD_SCRIPT"
+                      id="HEAD_SCRIPT-control-label"
                     >
-                      settingList.invoiceReminders 
+                      settingList.headScript 
                       <div
-                        class="css-1xcmto8-Info e8m68rm2"
+                        class="css-1xcmto8-Info e8m68rm3"
                       >
                         <svg
                           fill="currentColor"
@@ -1344,94 +1344,21 @@ exports[`SettingList renders successfully 1`] = `
                       </div>
                     </label>
                     <div
-                      class="rs-input-group"
+                      class="css-hwiggr-WideInputGroup e8m68rm0 rs-input-group"
                     >
                       <div
                         class="rs-form-control rs-form-control-wrapper"
                       >
-                        <div
-                          class="rs-input-number rs-input-group rs-input-group-disabled"
-                        >
-                          <input
-                            aria-describedby="INVOICE_REMINDER_MAX_TRIES-help-text"
-                            aria-labelledby="INVOICE_REMINDER_MAX_TRIES-control-label"
-                            autocomplete="off"
-                            class="rs-input"
-                            disabled=""
-                            id="INVOICE_REMINDER_MAX_TRIES"
-                            name="INVOICE_REMINDER_MAX_TRIES"
-                            step="1"
-                            type="number"
-                            value="0"
-                          />
-                          <span
-                            class="rs-input-number-btn-group-vertical"
-                            disabled=""
-                          >
-                            <button
-                              aria-disabled="true"
-                              aria-label="Increment"
-                              class="rs-input-number-touchspin-up rs-btn rs-btn-subtle rs-btn-disabled"
-                              disabled=""
-                              tabindex="-1"
-                              type="button"
-                            >
-                              <svg
-                                aria-hidden="true"
-                                aria-label="angle up"
-                                class="rs-icon"
-                                data-category="legacy"
-                                fill="currentColor"
-                                focusable="false"
-                                height="1em"
-                                viewBox="0 0 21 32"
-                                width="1em"
-                              >
-                                <path
-                                  d="M19.196 21.143a.612.612 0 01-.179.411l-.893.893a.582.582 0 01-.411.179.612.612 0 01-.411-.179l-7.018-7.018-7.018 7.018c-.107.107-.268.179-.411.179s-.304-.071-.411-.179l-.893-.893c-.107-.107-.179-.268-.179-.411s.071-.304.179-.411l8.321-8.321c.107-.107.268-.179.411-.179s.304.071.411.179l8.321 8.321a.617.617 0 01.179.411z"
-                                />
-                              </svg>
-                              <span
-                                class="rs-ripple-pond"
-                              >
-                                <span
-                                  class="rs-ripple"
-                                />
-                              </span>
-                            </button>
-                            <button
-                              aria-disabled="true"
-                              aria-label="Decrement"
-                              class="rs-input-number-touchspin-down rs-btn rs-btn-subtle rs-btn-disabled"
-                              disabled=""
-                              tabindex="-1"
-                              type="button"
-                            >
-                              <svg
-                                aria-hidden="true"
-                                aria-label="angle down"
-                                class="rs-icon"
-                                data-category="legacy"
-                                fill="currentColor"
-                                focusable="false"
-                                height="1em"
-                                viewBox="0 0 21 32"
-                                width="1em"
-                              >
-                                <path
-                                  d="M19.196 13.143a.612.612 0 01-.179.411l-8.321 8.321c-.107.107-.268.179-.411.179s-.304-.071-.411-.179l-8.321-8.321c-.107-.107-.179-.268-.179-.411s.071-.304.179-.411l.893-.893a.582.582 0 01.411-.179c.143 0 .304.071.411.179l7.018 7.018 7.018-7.018c.107-.107.268-.179.411-.179s.304.071.411.179l.893.893a.617.617 0 01.179.411z"
-                                />
-                              </svg>
-                              <span
-                                class="rs-ripple-pond"
-                              >
-                                <span
-                                  class="rs-ripple"
-                                />
-                              </span>
-                            </button>
-                          </span>
-                        </div>
+                        <textarea
+                          aria-describedby="HEAD_SCRIPT-help-text"
+                          aria-labelledby="HEAD_SCRIPT-control-label"
+                          class="rs-input"
+                          disabled=""
+                          id="HEAD_SCRIPT"
+                          name="HEAD_SCRIPT"
+                          rows="3"
+                          type="text"
+                        />
                       </div>
                     </div>
                   </div>
@@ -1441,12 +1368,12 @@ exports[`SettingList renders successfully 1`] = `
                   >
                     <label
                       class="rs-form-control-label"
-                      for="INVOICE_REMINDER_FREQ"
-                      id="INVOICE_REMINDER_FREQ-control-label"
+                      for="BODY_SCRIPT"
+                      id="BODY_SCRIPT-control-label"
                     >
-                      settingList.invoiceFrequency 
+                      settingList.bodyScript 
                       <div
-                        class="css-1xcmto8-Info e8m68rm2"
+                        class="css-1xcmto8-Info e8m68rm3"
                       >
                         <svg
                           fill="currentColor"
@@ -1468,100 +1395,22 @@ exports[`SettingList renders successfully 1`] = `
                       </div>
                     </label>
                     <div
-                      class="rs-input-group"
+                      class="css-hwiggr-WideInputGroup e8m68rm0 rs-input-group"
                     >
                       <div
                         class="rs-form-control rs-form-control-wrapper"
                       >
-                        <div
-                          class="rs-input-number rs-input-group rs-input-group-disabled"
-                        >
-                          <input
-                            aria-describedby="INVOICE_REMINDER_FREQ-help-text"
-                            aria-labelledby="INVOICE_REMINDER_FREQ-control-label"
-                            autocomplete="off"
-                            class="rs-input"
-                            disabled=""
-                            id="INVOICE_REMINDER_FREQ"
-                            name="INVOICE_REMINDER_FREQ"
-                            step="1"
-                            type="number"
-                            value="0"
-                          />
-                          <span
-                            class="rs-input-number-btn-group-vertical"
-                            disabled=""
-                          >
-                            <button
-                              aria-disabled="true"
-                              aria-label="Increment"
-                              class="rs-input-number-touchspin-up rs-btn rs-btn-subtle rs-btn-disabled"
-                              disabled=""
-                              tabindex="-1"
-                              type="button"
-                            >
-                              <svg
-                                aria-hidden="true"
-                                aria-label="angle up"
-                                class="rs-icon"
-                                data-category="legacy"
-                                fill="currentColor"
-                                focusable="false"
-                                height="1em"
-                                viewBox="0 0 21 32"
-                                width="1em"
-                              >
-                                <path
-                                  d="M19.196 21.143a.612.612 0 01-.179.411l-.893.893a.582.582 0 01-.411.179.612.612 0 01-.411-.179l-7.018-7.018-7.018 7.018c-.107.107-.268.179-.411.179s-.304-.071-.411-.179l-.893-.893c-.107-.107-.179-.268-.179-.411s.071-.304.179-.411l8.321-8.321c.107-.107.268-.179.411-.179s.304.071.411.179l8.321 8.321a.617.617 0 01.179.411z"
-                                />
-                              </svg>
-                              <span
-                                class="rs-ripple-pond"
-                              >
-                                <span
-                                  class="rs-ripple"
-                                />
-                              </span>
-                            </button>
-                            <button
-                              aria-disabled="true"
-                              aria-label="Decrement"
-                              class="rs-input-number-touchspin-down rs-btn rs-btn-subtle rs-btn-disabled"
-                              disabled=""
-                              tabindex="-1"
-                              type="button"
-                            >
-                              <svg
-                                aria-hidden="true"
-                                aria-label="angle down"
-                                class="rs-icon"
-                                data-category="legacy"
-                                fill="currentColor"
-                                focusable="false"
-                                height="1em"
-                                viewBox="0 0 21 32"
-                                width="1em"
-                              >
-                                <path
-                                  d="M19.196 13.143a.612.612 0 01-.179.411l-8.321 8.321c-.107.107-.268.179-.411.179s-.304-.071-.411-.179l-8.321-8.321c-.107-.107-.179-.268-.179-.411s.071-.304.179-.411l.893-.893a.582.582 0 01.411-.179c.143 0 .304.071.411.179l7.018 7.018 7.018-7.018c.107-.107.268-.179.411-.179s.304.071.411.179l.893.893a.617.617 0 01.179.411z"
-                                />
-                              </svg>
-                              <span
-                                class="rs-ripple-pond"
-                              >
-                                <span
-                                  class="rs-ripple"
-                                />
-                              </span>
-                            </button>
-                          </span>
-                        </div>
+                        <textarea
+                          aria-describedby="BODY_SCRIPT-help-text"
+                          aria-labelledby="BODY_SCRIPT-control-label"
+                          class="rs-input"
+                          disabled=""
+                          id="BODY_SCRIPT"
+                          name="BODY_SCRIPT"
+                          rows="3"
+                          type="text"
+                        />
                       </div>
-                      <span
-                        class="rs-input-group-addon"
-                      >
-                        settingList.days
-                      </span>
                     </div>
                   </div>
                 </div>

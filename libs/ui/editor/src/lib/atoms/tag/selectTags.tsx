@@ -17,6 +17,7 @@ const Pagination = styled(RPagination)`
 
 interface SelectTagsProps {
   className?: string
+  disabled?: boolean
   name?: string
   tagType: TagType
   selectedTags?: string[] | null
@@ -25,6 +26,7 @@ interface SelectTagsProps {
 
 export function SelectTags({
   className,
+  disabled,
   name,
   tagType,
   selectedTags,
@@ -79,6 +81,7 @@ export function SelectTags({
     <TagPicker
       block
       virtualized
+      disabled={disabled}
       className={className}
       name={name}
       value={selectedTags}

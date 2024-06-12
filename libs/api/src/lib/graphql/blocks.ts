@@ -118,7 +118,10 @@ export const GraphQLRichTextBlock = new GraphQLObjectType<RichTextBlock>({
 export const GraphQLArticleTeaser = new GraphQLObjectType<ArticleTeaser, Context>({
   name: 'ArticleTeaser',
   fields: () => ({
-    style: {type: new GraphQLNonNull(GraphQLTeaserStyle)},
+    style: {
+      type: new GraphQLNonNull(GraphQLTeaserStyle),
+      deprecationReason: 'Use block styles instead of this'
+    },
     image: {
       type: GraphQLImage,
       resolve: createProxyingResolver(({imageID}, _, {loaders}) =>
@@ -143,7 +146,10 @@ export const GraphQLArticleTeaser = new GraphQLObjectType<ArticleTeaser, Context
 export const GraphQLPeerArticleTeaser = new GraphQLObjectType<PeerArticleTeaser, Context>({
   name: 'PeerArticleTeaser',
   fields: () => ({
-    style: {type: new GraphQLNonNull(GraphQLTeaserStyle)},
+    style: {
+      type: new GraphQLNonNull(GraphQLTeaserStyle),
+      deprecationReason: 'Use block styles instead of this'
+    },
 
     image: {
       type: GraphQLImage,
@@ -181,7 +187,10 @@ export const GraphQLPeerArticleTeaser = new GraphQLObjectType<PeerArticleTeaser,
 export const GraphQLPageTeaser = new GraphQLObjectType<PageTeaser, Context>({
   name: 'PageTeaser',
   fields: () => ({
-    style: {type: new GraphQLNonNull(GraphQLTeaserStyle)},
+    style: {
+      type: new GraphQLNonNull(GraphQLTeaserStyle),
+      deprecationReason: 'Use block styles instead of this'
+    },
 
     image: {
       type: GraphQLImage,
@@ -208,7 +217,10 @@ export const GraphQLPageTeaser = new GraphQLObjectType<PageTeaser, Context>({
 export const GraphQLEventTeaser = new GraphQLObjectType<EventTeaser, Context>({
   name: 'EventTeaser',
   fields: () => ({
-    style: {type: new GraphQLNonNull(GraphQLTeaserStyle)},
+    style: {
+      type: new GraphQLNonNull(GraphQLTeaserStyle),
+      deprecationReason: 'Use block styles instead of this'
+    },
 
     image: {
       type: GraphQLImage,
@@ -235,7 +247,10 @@ export const GraphQLEventTeaser = new GraphQLObjectType<EventTeaser, Context>({
 export const GraphQLCustomTeaser = new GraphQLObjectType<CustomTeaser, Context>({
   name: 'CustomTeaser',
   fields: () => ({
-    style: {type: new GraphQLNonNull(GraphQLTeaserStyle)},
+    style: {
+      type: new GraphQLNonNull(GraphQLTeaserStyle),
+      deprecationReason: 'Use block styles instead of this'
+    },
 
     image: {
       type: GraphQLImage,
@@ -329,7 +344,10 @@ export const GraphQLTeaserGridFlexBlock = new GraphQLObjectType<TeaserGridFlexBl
 export const GraphQLPublicArticleTeaser = new GraphQLObjectType<ArticleTeaser, Context>({
   name: 'ArticleTeaser',
   fields: () => ({
-    style: {type: new GraphQLNonNull(GraphQLTeaserStyle)},
+    style: {
+      type: new GraphQLNonNull(GraphQLTeaserStyle),
+      deprecationReason: 'Use block styles instead of this'
+    },
 
     image: {
       type: GraphQLImage,
@@ -357,7 +375,10 @@ export const GraphQLPublicArticleTeaser = new GraphQLObjectType<ArticleTeaser, C
 export const GraphQLPublicPeerArticleTeaser = new GraphQLObjectType<PeerArticleTeaser, Context>({
   name: 'PeerArticleTeaser',
   fields: () => ({
-    style: {type: new GraphQLNonNull(GraphQLTeaserStyle)},
+    style: {
+      type: new GraphQLNonNull(GraphQLTeaserStyle),
+      deprecationReason: 'Use block styles instead of this'
+    },
 
     image: {
       type: GraphQLImage,
@@ -406,7 +427,10 @@ export const GraphQLPublicPeerArticleTeaser = new GraphQLObjectType<PeerArticleT
 export const GraphQLPublicPageTeaser = new GraphQLObjectType<PageTeaser, Context>({
   name: 'PageTeaser',
   fields: () => ({
-    style: {type: new GraphQLNonNull(GraphQLTeaserStyle)},
+    style: {
+      type: new GraphQLNonNull(GraphQLTeaserStyle),
+      deprecationReason: 'Use block styles instead of this'
+    },
 
     image: {
       type: GraphQLImage,
@@ -434,7 +458,10 @@ export const GraphQLPublicPageTeaser = new GraphQLObjectType<PageTeaser, Context
 export const GraphQLPublicEventTeaser = new GraphQLObjectType<EventTeaser, Context>({
   name: 'EventTeaser',
   fields: () => ({
-    style: {type: new GraphQLNonNull(GraphQLTeaserStyle)},
+    style: {
+      type: new GraphQLNonNull(GraphQLTeaserStyle),
+      deprecationReason: 'Use block styles instead of this'
+    },
 
     image: {
       type: GraphQLImage,
@@ -462,7 +489,10 @@ export const GraphQLPublicEventTeaser = new GraphQLObjectType<EventTeaser, Conte
 export const GraphQLPublicCustomTeaser = new GraphQLObjectType<CustomTeaser, Context>({
   name: 'CustomTeaser',
   fields: () => ({
-    style: {type: new GraphQLNonNull(GraphQLTeaserStyle)},
+    style: {
+      type: new GraphQLNonNull(GraphQLTeaserStyle),
+      deprecationReason: 'Use block styles instead of this'
+    },
 
     image: {
       type: GraphQLImage,
@@ -524,6 +554,7 @@ export const GraphQLTeaserListBlockFilterInput = new GraphQLInputObjectType({
 export const GraphQLTeaserListBlock = new GraphQLObjectType<TeaserListBlock, Context>({
   name: 'TeaserListBlock',
   fields: {
+    title: {type: GraphQLString},
     blockStyle: {
       type: GraphQLString,
       resolve: resolveBlockStyleIdToName
@@ -552,8 +583,6 @@ export const GraphQLTeaserListBlock = new GraphQLObjectType<TeaserListBlock, Con
               prisma.article
             )
 
-            articles.nodes.forEach(article => loaders.articles.prime(article.id, article))
-
             return articles.nodes.map(
               article =>
                 ({
@@ -579,8 +608,6 @@ export const GraphQLTeaserListBlock = new GraphQLObjectType<TeaserListBlock, Con
               take,
               prisma.page
             )
-
-            pages.nodes.forEach(page => loaders.pages.prime(page.id, page))
 
             return pages.nodes.map(
               page =>
@@ -636,6 +663,7 @@ export const GraphQLTeaserListBlock = new GraphQLObjectType<TeaserListBlock, Con
 export const GraphQLPublicTeaserListBlock = new GraphQLObjectType<TeaserListBlock, Context>({
   name: 'TeaserListBlock',
   fields: {
+    title: {type: GraphQLString},
     blockStyle: {
       type: GraphQLString,
       resolve: resolveBlockStyleIdToName
@@ -749,6 +777,7 @@ export const GraphQLPublicTeaserListBlock = new GraphQLObjectType<TeaserListBloc
 export const GraphQLTeaserListBlockInput = new GraphQLInputObjectType({
   name: 'TeaserListBlockInput',
   fields: {
+    title: {type: GraphQLString},
     blockStyle: {type: GraphQLString},
     teaserType: {
       type: GraphQLTeaserType
@@ -1243,9 +1272,9 @@ export const GraphQLLinkPageBreakBlock = new GraphQLObjectType<LinkPageBreakBloc
     linkText: {type: GraphQLString},
     linkTarget: {type: GraphQLString},
     hideButton: {type: new GraphQLNonNull(GraphQLBoolean)},
-    styleOption: {type: GraphQLString},
-    layoutOption: {type: GraphQLString},
-    templateOption: {type: GraphQLString},
+    styleOption: {type: GraphQLString, deprecationReason: 'Use block styles instead of this'},
+    layoutOption: {type: GraphQLString, deprecationReason: 'Use block styles instead of this'},
+    templateOption: {type: GraphQLString, deprecationReason: 'Use block styles instead of this'},
     image: {
       type: GraphQLImage,
       resolve: createProxyingResolver(({imageID}, _args, {loaders}) => {
@@ -1378,9 +1407,21 @@ export const GraphQLLinkPageBreakBlockInput = new GraphQLInputObjectType({
     linkText: {type: GraphQLString},
     linkTarget: {type: GraphQLString},
     hideButton: {type: new GraphQLNonNull(GraphQLBoolean)},
-    styleOption: {type: GraphQLString},
-    templateOption: {type: GraphQLString},
-    layoutOption: {type: GraphQLString},
+    styleOption: {
+      type: GraphQLString
+      // @see https://github.com/dotansimha/graphql-code-generator/issues/9659
+      // deprecationReason: 'Use block styles instead of this'
+    },
+    templateOption: {
+      type: GraphQLString
+      // @see https://github.com/dotansimha/graphql-code-generator/issues/9659
+      // deprecationReason: 'Use block styles instead of this'
+    },
+    layoutOption: {
+      type: GraphQLString
+      // @see https://github.com/dotansimha/graphql-code-generator/issues/9659
+      // deprecationReason: 'Use block styles instead of this'
+    },
     imageID: {type: GraphQLID}
   }
 })
@@ -1534,7 +1575,11 @@ export const GraphQLCommentBlockInput = new GraphQLInputObjectType({
 export const GraphQLArticleTeaserInput = new GraphQLInputObjectType({
   name: 'ArticleTeaserInput',
   fields: {
-    style: {type: new GraphQLNonNull(GraphQLTeaserStyle)},
+    style: {
+      type: GraphQLTeaserStyle
+      // @see https://github.com/dotansimha/graphql-code-generator/issues/9659
+      // deprecationReason: 'Use block styles instead of this'
+    },
     imageID: {type: GraphQLID},
     preTitle: {type: GraphQLString},
     title: {type: GraphQLString},
@@ -1546,7 +1591,11 @@ export const GraphQLArticleTeaserInput = new GraphQLInputObjectType({
 export const GraphQLPeerArticleTeaserInput = new GraphQLInputObjectType({
   name: 'PeerArticleTeaserInput',
   fields: {
-    style: {type: new GraphQLNonNull(GraphQLTeaserStyle)},
+    style: {
+      type: GraphQLTeaserStyle
+      // @see https://github.com/dotansimha/graphql-code-generator/issues/9659
+      // deprecationReason: 'Use block styles instead of this'
+    },
     imageID: {type: GraphQLID},
     preTitle: {type: GraphQLString},
     title: {type: GraphQLString},
@@ -1559,7 +1608,11 @@ export const GraphQLPeerArticleTeaserInput = new GraphQLInputObjectType({
 export const GraphQLPageTeaserInput = new GraphQLInputObjectType({
   name: 'PageTeaserInput',
   fields: {
-    style: {type: new GraphQLNonNull(GraphQLTeaserStyle)},
+    style: {
+      type: GraphQLTeaserStyle
+      // @see https://github.com/dotansimha/graphql-code-generator/issues/9659
+      // deprecationReason: 'Use block styles instead of this'
+    },
     imageID: {type: GraphQLID},
     preTitle: {type: GraphQLString},
     title: {type: GraphQLString},
@@ -1571,7 +1624,11 @@ export const GraphQLPageTeaserInput = new GraphQLInputObjectType({
 export const GraphQLEventTeaserInput = new GraphQLInputObjectType({
   name: 'EventTeaserInput',
   fields: {
-    style: {type: new GraphQLNonNull(GraphQLTeaserStyle)},
+    style: {
+      type: GraphQLTeaserStyle
+      // @see https://github.com/dotansimha/graphql-code-generator/issues/9659
+      // deprecationReason: 'Use block styles instead of this'
+    },
     imageID: {type: GraphQLID},
     preTitle: {type: GraphQLString},
     title: {type: GraphQLString},
@@ -1583,7 +1640,11 @@ export const GraphQLEventTeaserInput = new GraphQLInputObjectType({
 export const GraphQLCustomTeaserInput = new GraphQLInputObjectType({
   name: 'CustomTeaserInput',
   fields: {
-    style: {type: new GraphQLNonNull(GraphQLTeaserStyle)},
+    style: {
+      type: GraphQLTeaserStyle
+      // @see https://github.com/dotansimha/graphql-code-generator/issues/9659
+      // deprecationReason: 'Use block styles instead of this'
+    },
     imageID: {type: GraphQLID},
     preTitle: {type: GraphQLString},
     title: {type: GraphQLString},

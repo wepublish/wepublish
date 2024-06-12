@@ -3,7 +3,7 @@
 exports[`Page should render Default 1`] = `
 <DocumentFragment>
   <article
-    class="ei3npnw0 css-16rq5xm-ContentWrapperStyled-PageWrapper e1wqte7t0"
+    class="ei3npnw0 css-1m39jl9-ContentWrapperStyled-PageWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -1721,13 +1721,13 @@ https://unsplash.it/200/100 200w"
         </div>
       </div>
       <div
-        class="css-1pntsw6-PollBlockVoteResultList ecm33wf1"
+        class="css-h8emd-PollBlockVoteResultList ecm33wf1"
       >
         <div
-          class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
+          class="css-1gble97-PollBlockResultWrapper e1v5g0xr6"
         >
           <div
-            class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
+            class="css-63kw5t-PollBlockResultInfo e1v5g0xr5"
           >
             <div
               class="css-115xnt3-PollBlockResultName e1v5g0xr4"
@@ -1744,7 +1744,7 @@ https://unsplash.it/200/100 200w"
             class="css-56q0p9-PollBlockVoteBar e1v5g0xr2"
           >
             <div
-              class="css-1l1sayy-PollBlockVoteBarFill e1v5g0xr1"
+              class="css-1pyc8ex-PollBlockVoteBarFill e1v5g0xr1"
             />
             <div
               class="css-1kbfvnx-PollBlockVoteBarText e1v5g0xr0"
@@ -1754,10 +1754,10 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <div
-          class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
+          class="css-1gble97-PollBlockResultWrapper e1v5g0xr6"
         >
           <div
-            class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
+            class="css-63kw5t-PollBlockResultInfo e1v5g0xr5"
           >
             <div
               class="css-115xnt3-PollBlockResultName e1v5g0xr4"
@@ -1799,10 +1799,11 @@ https://unsplash.it/200/100 200w"
       class="css-1mm1s5y-CommentBlockWrapper es9rr591"
     >
       <article
-        class="css-4zvvnd-CommentWrapper ekbi54x8"
+        class="css-19ehku-CommentWrapper ekbi54x9"
+        id="verified"
       >
         <header
-          class="css-p4cys7-CommentHeader ekbi54x7"
+          class="css-dmcn8p-CommentHeader ekbi54x8"
         >
           <img
             alt="DSC07717"
@@ -1815,12 +1816,16 @@ https://unsplash.it/200/200 200w"
             title=""
           />
           <div
-            class="css-1x1fqyu-CommentHeaderContent ekbi54x6"
+            class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
           >
             <div
-              class="css-l1mcyg-CommentName ekbi54x5"
+              class="css-l1mcyg-CommentName ekbi54x6"
             >
-              Signed Up User
+              <div
+                class="css-1pg77me-CommentAuthor ekbi54x5"
+              >
+                Signed Up User
+              </div>
               <div
                 class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
               >
@@ -1841,20 +1846,20 @@ https://unsplash.it/200/200 200w"
                     fill="none"
                   />
                   <path
-                    d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
+                    d="m23 12-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
                   />
                 </svg>
               </div>
             </div>
             <div
-              class="css-rox5w-CommentFlair ekbi54x3"
+              class="css-srb6c6-CommentFlair ekbi54x3"
             >
               Flair
             </div>
           </div>
         </header>
         <div
-          class="css-td83z9-CommentContent ekbi54x2"
+          class="css-7pcshh-CommentContent ekbi54x2"
         >
           <h1
             class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -1938,7 +1943,7 @@ https://unsplash.it/200/100 200w"
                     fill="none"
                   />
                   <path
-                    d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
+                    d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
                   />
                 </svg>
                 <time
@@ -2066,7 +2071,7 @@ https://unsplash.it/200/100 200w"
 exports[`Page should render WithChildren 1`] = `
 <DocumentFragment>
   <article
-    class="ei3npnw0 css-16rq5xm-ContentWrapperStyled-PageWrapper e1wqte7t0"
+    class="ei3npnw0 css-1m39jl9-ContentWrapperStyled-PageWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -3784,13 +3789,13 @@ https://unsplash.it/200/100 200w"
         </div>
       </div>
       <div
-        class="css-1pntsw6-PollBlockVoteResultList ecm33wf1"
+        class="css-h8emd-PollBlockVoteResultList ecm33wf1"
       >
         <div
-          class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
+          class="css-1gble97-PollBlockResultWrapper e1v5g0xr6"
         >
           <div
-            class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
+            class="css-63kw5t-PollBlockResultInfo e1v5g0xr5"
           >
             <div
               class="css-115xnt3-PollBlockResultName e1v5g0xr4"
@@ -3807,7 +3812,7 @@ https://unsplash.it/200/100 200w"
             class="css-56q0p9-PollBlockVoteBar e1v5g0xr2"
           >
             <div
-              class="css-1l1sayy-PollBlockVoteBarFill e1v5g0xr1"
+              class="css-1pyc8ex-PollBlockVoteBarFill e1v5g0xr1"
             />
             <div
               class="css-1kbfvnx-PollBlockVoteBarText e1v5g0xr0"
@@ -3817,10 +3822,10 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <div
-          class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
+          class="css-1gble97-PollBlockResultWrapper e1v5g0xr6"
         >
           <div
-            class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
+            class="css-63kw5t-PollBlockResultInfo e1v5g0xr5"
           >
             <div
               class="css-115xnt3-PollBlockResultName e1v5g0xr4"
@@ -3862,10 +3867,11 @@ https://unsplash.it/200/100 200w"
       class="css-1mm1s5y-CommentBlockWrapper es9rr591"
     >
       <article
-        class="css-4zvvnd-CommentWrapper ekbi54x8"
+        class="css-19ehku-CommentWrapper ekbi54x9"
+        id="verified"
       >
         <header
-          class="css-p4cys7-CommentHeader ekbi54x7"
+          class="css-dmcn8p-CommentHeader ekbi54x8"
         >
           <img
             alt="DSC07717"
@@ -3878,12 +3884,16 @@ https://unsplash.it/200/200 200w"
             title=""
           />
           <div
-            class="css-1x1fqyu-CommentHeaderContent ekbi54x6"
+            class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
           >
             <div
-              class="css-l1mcyg-CommentName ekbi54x5"
+              class="css-l1mcyg-CommentName ekbi54x6"
             >
-              Signed Up User
+              <div
+                class="css-1pg77me-CommentAuthor ekbi54x5"
+              >
+                Signed Up User
+              </div>
               <div
                 class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
               >
@@ -3904,20 +3914,20 @@ https://unsplash.it/200/200 200w"
                     fill="none"
                   />
                   <path
-                    d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
+                    d="m23 12-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
                   />
                 </svg>
               </div>
             </div>
             <div
-              class="css-rox5w-CommentFlair ekbi54x3"
+              class="css-srb6c6-CommentFlair ekbi54x3"
             >
               Flair
             </div>
           </div>
         </header>
         <div
-          class="css-td83z9-CommentContent ekbi54x2"
+          class="css-7pcshh-CommentContent ekbi54x2"
         >
           <h1
             class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -4001,7 +4011,7 @@ https://unsplash.it/200/100 200w"
                     fill="none"
                   />
                   <path
-                    d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
+                    d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
                   />
                 </svg>
                 <time
@@ -4132,7 +4142,7 @@ https://unsplash.it/200/100 200w"
 exports[`Page should render WithClassName 1`] = `
 <DocumentFragment>
   <article
-    class="extra-classname ei3npnw0 css-16rq5xm-ContentWrapperStyled-PageWrapper e1wqte7t0"
+    class="extra-classname ei3npnw0 css-1m39jl9-ContentWrapperStyled-PageWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -5850,13 +5860,13 @@ https://unsplash.it/200/100 200w"
         </div>
       </div>
       <div
-        class="css-1pntsw6-PollBlockVoteResultList ecm33wf1"
+        class="css-h8emd-PollBlockVoteResultList ecm33wf1"
       >
         <div
-          class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
+          class="css-1gble97-PollBlockResultWrapper e1v5g0xr6"
         >
           <div
-            class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
+            class="css-63kw5t-PollBlockResultInfo e1v5g0xr5"
           >
             <div
               class="css-115xnt3-PollBlockResultName e1v5g0xr4"
@@ -5873,7 +5883,7 @@ https://unsplash.it/200/100 200w"
             class="css-56q0p9-PollBlockVoteBar e1v5g0xr2"
           >
             <div
-              class="css-1l1sayy-PollBlockVoteBarFill e1v5g0xr1"
+              class="css-1pyc8ex-PollBlockVoteBarFill e1v5g0xr1"
             />
             <div
               class="css-1kbfvnx-PollBlockVoteBarText e1v5g0xr0"
@@ -5883,10 +5893,10 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <div
-          class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
+          class="css-1gble97-PollBlockResultWrapper e1v5g0xr6"
         >
           <div
-            class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
+            class="css-63kw5t-PollBlockResultInfo e1v5g0xr5"
           >
             <div
               class="css-115xnt3-PollBlockResultName e1v5g0xr4"
@@ -5928,10 +5938,11 @@ https://unsplash.it/200/100 200w"
       class="css-1mm1s5y-CommentBlockWrapper es9rr591"
     >
       <article
-        class="css-4zvvnd-CommentWrapper ekbi54x8"
+        class="css-19ehku-CommentWrapper ekbi54x9"
+        id="verified"
       >
         <header
-          class="css-p4cys7-CommentHeader ekbi54x7"
+          class="css-dmcn8p-CommentHeader ekbi54x8"
         >
           <img
             alt="DSC07717"
@@ -5944,12 +5955,16 @@ https://unsplash.it/200/200 200w"
             title=""
           />
           <div
-            class="css-1x1fqyu-CommentHeaderContent ekbi54x6"
+            class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
           >
             <div
-              class="css-l1mcyg-CommentName ekbi54x5"
+              class="css-l1mcyg-CommentName ekbi54x6"
             >
-              Signed Up User
+              <div
+                class="css-1pg77me-CommentAuthor ekbi54x5"
+              >
+                Signed Up User
+              </div>
               <div
                 class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
               >
@@ -5970,20 +5985,20 @@ https://unsplash.it/200/200 200w"
                     fill="none"
                   />
                   <path
-                    d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
+                    d="m23 12-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
                   />
                 </svg>
               </div>
             </div>
             <div
-              class="css-rox5w-CommentFlair ekbi54x3"
+              class="css-srb6c6-CommentFlair ekbi54x3"
             >
               Flair
             </div>
           </div>
         </header>
         <div
-          class="css-td83z9-CommentContent ekbi54x2"
+          class="css-7pcshh-CommentContent ekbi54x2"
         >
           <h1
             class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -6067,7 +6082,7 @@ https://unsplash.it/200/100 200w"
                     fill="none"
                   />
                   <path
-                    d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
+                    d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
                   />
                 </svg>
                 <time
@@ -6195,7 +6210,7 @@ https://unsplash.it/200/100 200w"
 exports[`Page should render WithEmotion 1`] = `
 <DocumentFragment>
   <article
-    class="ei3npnw0 css-16rq5xm-ContentWrapperStyled-PageWrapper e1wqte7t0"
+    class="ei3npnw0 css-1m39jl9-ContentWrapperStyled-PageWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -7913,13 +7928,13 @@ https://unsplash.it/200/100 200w"
         </div>
       </div>
       <div
-        class="css-1pntsw6-PollBlockVoteResultList ecm33wf1"
+        class="css-h8emd-PollBlockVoteResultList ecm33wf1"
       >
         <div
-          class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
+          class="css-1gble97-PollBlockResultWrapper e1v5g0xr6"
         >
           <div
-            class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
+            class="css-63kw5t-PollBlockResultInfo e1v5g0xr5"
           >
             <div
               class="css-115xnt3-PollBlockResultName e1v5g0xr4"
@@ -7936,7 +7951,7 @@ https://unsplash.it/200/100 200w"
             class="css-56q0p9-PollBlockVoteBar e1v5g0xr2"
           >
             <div
-              class="css-1l1sayy-PollBlockVoteBarFill e1v5g0xr1"
+              class="css-1pyc8ex-PollBlockVoteBarFill e1v5g0xr1"
             />
             <div
               class="css-1kbfvnx-PollBlockVoteBarText e1v5g0xr0"
@@ -7946,10 +7961,10 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <div
-          class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
+          class="css-1gble97-PollBlockResultWrapper e1v5g0xr6"
         >
           <div
-            class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
+            class="css-63kw5t-PollBlockResultInfo e1v5g0xr5"
           >
             <div
               class="css-115xnt3-PollBlockResultName e1v5g0xr4"
@@ -7991,10 +8006,11 @@ https://unsplash.it/200/100 200w"
       class="css-1mm1s5y-CommentBlockWrapper es9rr591"
     >
       <article
-        class="css-4zvvnd-CommentWrapper ekbi54x8"
+        class="css-19ehku-CommentWrapper ekbi54x9"
+        id="verified"
       >
         <header
-          class="css-p4cys7-CommentHeader ekbi54x7"
+          class="css-dmcn8p-CommentHeader ekbi54x8"
         >
           <img
             alt="DSC07717"
@@ -8007,12 +8023,16 @@ https://unsplash.it/200/200 200w"
             title=""
           />
           <div
-            class="css-1x1fqyu-CommentHeaderContent ekbi54x6"
+            class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
           >
             <div
-              class="css-l1mcyg-CommentName ekbi54x5"
+              class="css-l1mcyg-CommentName ekbi54x6"
             >
-              Signed Up User
+              <div
+                class="css-1pg77me-CommentAuthor ekbi54x5"
+              >
+                Signed Up User
+              </div>
               <div
                 class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
               >
@@ -8033,20 +8053,20 @@ https://unsplash.it/200/200 200w"
                     fill="none"
                   />
                   <path
-                    d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
+                    d="m23 12-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
                   />
                 </svg>
               </div>
             </div>
             <div
-              class="css-rox5w-CommentFlair ekbi54x3"
+              class="css-srb6c6-CommentFlair ekbi54x3"
             >
               Flair
             </div>
           </div>
         </header>
         <div
-          class="css-td83z9-CommentContent ekbi54x2"
+          class="css-7pcshh-CommentContent ekbi54x2"
         >
           <h1
             class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -8130,7 +8150,7 @@ https://unsplash.it/200/100 200w"
                     fill="none"
                   />
                   <path
-                    d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
+                    d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
                   />
                 </svg>
                 <time
@@ -8258,7 +8278,7 @@ https://unsplash.it/200/100 200w"
 exports[`Page should render WithError 1`] = `
 <DocumentFragment>
   <article
-    class="ei3npnw0 css-16rq5xm-ContentWrapperStyled-PageWrapper e1wqte7t0"
+    class="ei3npnw0 css-1m39jl9-ContentWrapperStyled-PageWrapper e1wqte7t0"
   />
 </DocumentFragment>
 `;
@@ -8266,7 +8286,7 @@ exports[`Page should render WithError 1`] = `
 exports[`Page should render WithLoading 1`] = `
 <DocumentFragment>
   <article
-    class="ei3npnw0 css-16rq5xm-ContentWrapperStyled-PageWrapper e1wqte7t0"
+    class="ei3npnw0 css-1m39jl9-ContentWrapperStyled-PageWrapper e1wqte7t0"
   />
 </DocumentFragment>
 `;
@@ -8274,7 +8294,7 @@ exports[`Page should render WithLoading 1`] = `
 exports[`Page should render WithoutDescription 1`] = `
 <DocumentFragment>
   <article
-    class="ei3npnw0 css-16rq5xm-ContentWrapperStyled-PageWrapper e1wqte7t0"
+    class="ei3npnw0 css-1m39jl9-ContentWrapperStyled-PageWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -9992,13 +10012,13 @@ https://unsplash.it/200/100 200w"
         </div>
       </div>
       <div
-        class="css-1pntsw6-PollBlockVoteResultList ecm33wf1"
+        class="css-h8emd-PollBlockVoteResultList ecm33wf1"
       >
         <div
-          class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
+          class="css-1gble97-PollBlockResultWrapper e1v5g0xr6"
         >
           <div
-            class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
+            class="css-63kw5t-PollBlockResultInfo e1v5g0xr5"
           >
             <div
               class="css-115xnt3-PollBlockResultName e1v5g0xr4"
@@ -10015,7 +10035,7 @@ https://unsplash.it/200/100 200w"
             class="css-56q0p9-PollBlockVoteBar e1v5g0xr2"
           >
             <div
-              class="css-1l1sayy-PollBlockVoteBarFill e1v5g0xr1"
+              class="css-1pyc8ex-PollBlockVoteBarFill e1v5g0xr1"
             />
             <div
               class="css-1kbfvnx-PollBlockVoteBarText e1v5g0xr0"
@@ -10025,10 +10045,10 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <div
-          class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
+          class="css-1gble97-PollBlockResultWrapper e1v5g0xr6"
         >
           <div
-            class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
+            class="css-63kw5t-PollBlockResultInfo e1v5g0xr5"
           >
             <div
               class="css-115xnt3-PollBlockResultName e1v5g0xr4"
@@ -10070,10 +10090,11 @@ https://unsplash.it/200/100 200w"
       class="css-1mm1s5y-CommentBlockWrapper es9rr591"
     >
       <article
-        class="css-4zvvnd-CommentWrapper ekbi54x8"
+        class="css-19ehku-CommentWrapper ekbi54x9"
+        id="verified"
       >
         <header
-          class="css-p4cys7-CommentHeader ekbi54x7"
+          class="css-dmcn8p-CommentHeader ekbi54x8"
         >
           <img
             alt="DSC07717"
@@ -10086,12 +10107,16 @@ https://unsplash.it/200/200 200w"
             title=""
           />
           <div
-            class="css-1x1fqyu-CommentHeaderContent ekbi54x6"
+            class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
           >
             <div
-              class="css-l1mcyg-CommentName ekbi54x5"
+              class="css-l1mcyg-CommentName ekbi54x6"
             >
-              Signed Up User
+              <div
+                class="css-1pg77me-CommentAuthor ekbi54x5"
+              >
+                Signed Up User
+              </div>
               <div
                 class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
               >
@@ -10112,20 +10137,20 @@ https://unsplash.it/200/200 200w"
                     fill="none"
                   />
                   <path
-                    d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
+                    d="m23 12-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
                   />
                 </svg>
               </div>
             </div>
             <div
-              class="css-rox5w-CommentFlair ekbi54x3"
+              class="css-srb6c6-CommentFlair ekbi54x3"
             >
               Flair
             </div>
           </div>
         </header>
         <div
-          class="css-td83z9-CommentContent ekbi54x2"
+          class="css-7pcshh-CommentContent ekbi54x2"
         >
           <h1
             class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -10209,7 +10234,7 @@ https://unsplash.it/200/100 200w"
                     fill="none"
                   />
                   <path
-                    d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
+                    d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
                   />
                 </svg>
                 <time
@@ -10337,7 +10362,7 @@ https://unsplash.it/200/100 200w"
 exports[`Page should render WithoutImageMetadata 1`] = `
 <DocumentFragment>
   <article
-    class="ei3npnw0 css-16rq5xm-ContentWrapperStyled-PageWrapper e1wqte7t0"
+    class="ei3npnw0 css-1m39jl9-ContentWrapperStyled-PageWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -12055,13 +12080,13 @@ https://unsplash.it/200/100 200w"
         </div>
       </div>
       <div
-        class="css-1pntsw6-PollBlockVoteResultList ecm33wf1"
+        class="css-h8emd-PollBlockVoteResultList ecm33wf1"
       >
         <div
-          class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
+          class="css-1gble97-PollBlockResultWrapper e1v5g0xr6"
         >
           <div
-            class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
+            class="css-63kw5t-PollBlockResultInfo e1v5g0xr5"
           >
             <div
               class="css-115xnt3-PollBlockResultName e1v5g0xr4"
@@ -12078,7 +12103,7 @@ https://unsplash.it/200/100 200w"
             class="css-56q0p9-PollBlockVoteBar e1v5g0xr2"
           >
             <div
-              class="css-1l1sayy-PollBlockVoteBarFill e1v5g0xr1"
+              class="css-1pyc8ex-PollBlockVoteBarFill e1v5g0xr1"
             />
             <div
               class="css-1kbfvnx-PollBlockVoteBarText e1v5g0xr0"
@@ -12088,10 +12113,10 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <div
-          class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
+          class="css-1gble97-PollBlockResultWrapper e1v5g0xr6"
         >
           <div
-            class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
+            class="css-63kw5t-PollBlockResultInfo e1v5g0xr5"
           >
             <div
               class="css-115xnt3-PollBlockResultName e1v5g0xr4"
@@ -12133,10 +12158,11 @@ https://unsplash.it/200/100 200w"
       class="css-1mm1s5y-CommentBlockWrapper es9rr591"
     >
       <article
-        class="css-4zvvnd-CommentWrapper ekbi54x8"
+        class="css-19ehku-CommentWrapper ekbi54x9"
+        id="verified"
       >
         <header
-          class="css-p4cys7-CommentHeader ekbi54x7"
+          class="css-dmcn8p-CommentHeader ekbi54x8"
         >
           <img
             alt="DSC07717"
@@ -12149,12 +12175,16 @@ https://unsplash.it/200/200 200w"
             title=""
           />
           <div
-            class="css-1x1fqyu-CommentHeaderContent ekbi54x6"
+            class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
           >
             <div
-              class="css-l1mcyg-CommentName ekbi54x5"
+              class="css-l1mcyg-CommentName ekbi54x6"
             >
-              Signed Up User
+              <div
+                class="css-1pg77me-CommentAuthor ekbi54x5"
+              >
+                Signed Up User
+              </div>
               <div
                 class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
               >
@@ -12175,20 +12205,20 @@ https://unsplash.it/200/200 200w"
                     fill="none"
                   />
                   <path
-                    d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
+                    d="m23 12-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
                   />
                 </svg>
               </div>
             </div>
             <div
-              class="css-rox5w-CommentFlair ekbi54x3"
+              class="css-srb6c6-CommentFlair ekbi54x3"
             >
               Flair
             </div>
           </div>
         </header>
         <div
-          class="css-td83z9-CommentContent ekbi54x2"
+          class="css-7pcshh-CommentContent ekbi54x2"
         >
           <h1
             class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -12272,7 +12302,7 @@ https://unsplash.it/200/100 200w"
                     fill="none"
                   />
                   <path
-                    d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
+                    d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
                   />
                 </svg>
                 <time
@@ -12400,7 +12430,7 @@ https://unsplash.it/200/100 200w"
 exports[`Page should render WithoutSocialMedia 1`] = `
 <DocumentFragment>
   <article
-    class="ei3npnw0 css-16rq5xm-ContentWrapperStyled-PageWrapper e1wqte7t0"
+    class="ei3npnw0 css-1m39jl9-ContentWrapperStyled-PageWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -14110,13 +14140,13 @@ https://unsplash.it/200/100 200w"
         </div>
       </div>
       <div
-        class="css-1pntsw6-PollBlockVoteResultList ecm33wf1"
+        class="css-h8emd-PollBlockVoteResultList ecm33wf1"
       >
         <div
-          class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
+          class="css-1gble97-PollBlockResultWrapper e1v5g0xr6"
         >
           <div
-            class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
+            class="css-63kw5t-PollBlockResultInfo e1v5g0xr5"
           >
             <div
               class="css-115xnt3-PollBlockResultName e1v5g0xr4"
@@ -14133,7 +14163,7 @@ https://unsplash.it/200/100 200w"
             class="css-56q0p9-PollBlockVoteBar e1v5g0xr2"
           >
             <div
-              class="css-1l1sayy-PollBlockVoteBarFill e1v5g0xr1"
+              class="css-1pyc8ex-PollBlockVoteBarFill e1v5g0xr1"
             />
             <div
               class="css-1kbfvnx-PollBlockVoteBarText e1v5g0xr0"
@@ -14143,10 +14173,10 @@ https://unsplash.it/200/100 200w"
           </div>
         </div>
         <div
-          class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
+          class="css-1gble97-PollBlockResultWrapper e1v5g0xr6"
         >
           <div
-            class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
+            class="css-63kw5t-PollBlockResultInfo e1v5g0xr5"
           >
             <div
               class="css-115xnt3-PollBlockResultName e1v5g0xr4"
@@ -14188,10 +14218,11 @@ https://unsplash.it/200/100 200w"
       class="css-1mm1s5y-CommentBlockWrapper es9rr591"
     >
       <article
-        class="css-4zvvnd-CommentWrapper ekbi54x8"
+        class="css-19ehku-CommentWrapper ekbi54x9"
+        id="verified"
       >
         <header
-          class="css-p4cys7-CommentHeader ekbi54x7"
+          class="css-dmcn8p-CommentHeader ekbi54x8"
         >
           <img
             alt="DSC07717"
@@ -14204,12 +14235,16 @@ https://unsplash.it/200/200 200w"
             title=""
           />
           <div
-            class="css-1x1fqyu-CommentHeaderContent ekbi54x6"
+            class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
           >
             <div
-              class="css-l1mcyg-CommentName ekbi54x5"
+              class="css-l1mcyg-CommentName ekbi54x6"
             >
-              Signed Up User
+              <div
+                class="css-1pg77me-CommentAuthor ekbi54x5"
+              >
+                Signed Up User
+              </div>
               <div
                 class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
               >
@@ -14230,20 +14265,20 @@ https://unsplash.it/200/200 200w"
                     fill="none"
                   />
                   <path
-                    d="M23 12l-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72l-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
+                    d="m23 12-2.44-2.79.34-3.69-3.61-.82-1.89-3.2L12 2.96 8.6 1.5 6.71 4.69 3.1 5.5l.34 3.7L1 12l2.44 2.79-.34 3.7 3.61.82L8.6 22.5l3.4-1.47 3.4 1.46 1.89-3.19 3.61-.82-.34-3.69L23 12zm-12.91 4.72-3.8-3.81 1.48-1.48 2.32 2.33 5.85-5.87 1.48 1.48-7.33 7.35z"
                   />
                 </svg>
               </div>
             </div>
             <div
-              class="css-rox5w-CommentFlair ekbi54x3"
+              class="css-srb6c6-CommentFlair ekbi54x3"
             >
               Flair
             </div>
           </div>
         </header>
         <div
-          class="css-td83z9-CommentContent ekbi54x2"
+          class="css-7pcshh-CommentContent ekbi54x2"
         >
           <h1
             class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -14327,7 +14362,7 @@ https://unsplash.it/200/100 200w"
                     fill="none"
                   />
                   <path
-                    d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
+                    d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
                   />
                 </svg>
                 <time

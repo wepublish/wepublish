@@ -97,7 +97,10 @@ function MemberPlanEdit() {
     setAvailablePaymentMethods(
       (initMemberPlan?.availablePaymentMethods || []).map(availablePaymentMethod => ({
         id: generateID(),
-        value: availablePaymentMethod
+        value: {
+          ...availablePaymentMethod,
+          paymentMethods: availablePaymentMethod.paymentMethods as PaymentMethod[]
+        }
       }))
     )
   }, [memberPlanData])

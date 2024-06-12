@@ -1,7 +1,15 @@
 import {ApolloServer} from 'apollo-server-express'
 import {createGraphQLTestClientWithPrisma} from '../utility'
-import {CreateSubscription, SubscriptionInput} from '../api/private'
-import {MemberPlan, PaymentMethod, PrismaClient, User} from '@prisma/client'
+import {CreateSubscription, RenewSubscription, SubscriptionInput} from '../api/private'
+import {
+  Invoice,
+  MemberPlan,
+  PaymentMethod,
+  PrismaClient,
+  Subscription,
+  SubscriptionPeriod,
+  User
+} from '@prisma/client'
 import {
   PaymentPeriodicity,
   RegisterMemberAndReceivePayment,
@@ -20,6 +28,9 @@ let challenge: AlgebraicCaptchaChallenge
 let paymentMethod: PaymentMethod | undefined
 let memberPlan: MemberPlan | undefined
 let user: User | undefined
+let subscription: Subscription | undefined
+let invoice: Invoice | undefined
+let subsccriptionPeriod: SubscriptionPeriod | undefined
 let testingChallengeResponse: TestingChallengeAnswer | undefined
 
 beforeAll(async () => {
@@ -71,6 +82,36 @@ beforeAll(async () => {
         email: 'subscription-user@wepublish.dev',
         name: 'Tester',
         password: '1234'
+      }
+    })
+
+    subscription = await prisma.subscription.create({
+      data: {
+        paymentPeriodicity: 'yearly',
+        monthlyAmount: 2,
+        autoRenew: true,
+        startsAt: new Date(),
+        paymentMethod: {connect: paymentMethod},
+        memberPlan: {connect: {slug: memberPlan.slug}},
+        user: {connect: {id: user.id}}
+      }
+    })
+
+    invoice = await prisma.invoice.create({
+      data: {
+        mail: user.email,
+        dueAt: new Date(),
+        scheduledDeactivationAt: new Date()
+      }
+    })
+
+    subsccriptionPeriod = await prisma.subscriptionPeriod.create({
+      data: {
+        startsAt: new Date(),
+        endsAt: new Date(),
+        paymentPeriodicity: 'yearly',
+        amount: 24,
+        invoice: {connect: {id: invoice.id}}
       }
     })
 
@@ -179,6 +220,53 @@ describe('Subscriptions', () => {
 
       // expects an invoice
       expect(invoice.id).toBeTruthy()
+    })
+
+    test('does not renew unpaid subscriptions', async () => {
+      const invoiceCountBefore = await prisma.invoice.count({where: {subscription}})
+      const perdiodCountBefore = await prisma.subscriptionPeriod.count({where: {subscription}})
+
+      await testServerPrivate.executeOperation({
+        query: RenewSubscription,
+        variables: {
+          input: {
+            id: subscription.id
+          }
+        }
+      })
+
+      const invoiceCountAfter = await prisma.invoice.count({where: {subscription}})
+      const perdiodCountAfter = await prisma.subscriptionPeriod.count({where: {subscription}})
+
+      expect(invoiceCountAfter).toEqual(invoiceCountBefore)
+      expect(perdiodCountBefore).toEqual(perdiodCountAfter)
+    })
+
+    test('renews paid subscriptions', async () => {
+      await prisma.invoice.update({
+        where: {id: invoice.id},
+        data: {
+          paidAt: new Date()
+        }
+      })
+
+      const invoiceCountBefore = await prisma.invoice.count({where: {subscription}})
+      const perdiodCountBefore = await prisma.subscriptionPeriod.count({where: {subscription}})
+
+      await testServerPrivate.executeOperation({
+        query: RenewSubscription,
+        variables: {
+          input: {
+            id: subscription.id
+          }
+        }
+      })
+
+      const invoiceCountAfter = await prisma.invoice.count({where: {subscription}})
+      const perdiodCountAfter = await prisma.subscriptionPeriod.count({where: {subscription}})
+
+      expect(invoiceCountAfter).toEqual(invoiceCountBefore)
+      expect(perdiodCountBefore).toEqual(perdiodCountAfter)
     })
   })
 })

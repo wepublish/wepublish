@@ -254,7 +254,7 @@ exports[`CommentEditor should render Anonymous 1`] = `
               fill="none"
             />
             <path
-              d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"
+              d="M2.01 21 23 12 2.01 3 2 10l15 2-15 2z"
             />
           </svg>
         </span>
@@ -531,7 +531,7 @@ exports[`CommentEditor should render AnonymousFilled 1`] = `
               fill="none"
             />
             <path
-              d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"
+              d="M2.01 21 23 12 2.01 3 2 10l15 2-15 2z"
             />
           </svg>
         </span>
@@ -808,7 +808,7 @@ exports[`CommentEditor should render AnonymousInvalid 1`] = `
               fill="none"
             />
             <path
-              d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"
+              d="M2.01 21 23 12 2.01 3 2 10l15 2-15 2z"
             />
           </svg>
         </span>
@@ -1085,7 +1085,7 @@ exports[`CommentEditor should render Cancel 1`] = `
               fill="none"
             />
             <path
-              d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"
+              d="M2.01 21 23 12 2.01 3 2 10l15 2-15 2z"
             />
           </svg>
         </span>
@@ -1226,7 +1226,7 @@ exports[`CommentEditor should render LoggedIn 1`] = `
               fill="none"
             />
             <path
-              d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"
+              d="M2.01 21 23 12 2.01 3 2 10l15 2-15 2z"
             />
           </svg>
         </span>
@@ -1367,7 +1367,7 @@ exports[`CommentEditor should render LoggedInFilled 1`] = `
               fill="none"
             />
             <path
-              d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"
+              d="M2.01 21 23 12 2.01 3 2 10l15 2-15 2z"
             />
           </svg>
         </span>
@@ -1508,7 +1508,7 @@ exports[`CommentEditor should render LoggedInInvalid 1`] = `
               fill="none"
             />
             <path
-              d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"
+              d="M2.01 21 23 12 2.01 3 2 10l15 2-15 2z"
             />
           </svg>
         </span>
@@ -1711,7 +1711,7 @@ exports[`CommentEditor should render WithChallengeError 1`] = `
               fill="none"
             />
             <path
-              d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"
+              d="M2.01 21 23 12 2.01 3 2 10l15 2-15 2z"
             />
           </svg>
         </span>
@@ -2013,7 +2013,7 @@ exports[`CommentEditor should render WithError 1`] = `
               fill="none"
             />
             <path
-              d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"
+              d="M2.01 21 23 12 2.01 3 2 10l15 2-15 2z"
             />
           </svg>
         </span>

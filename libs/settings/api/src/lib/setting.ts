@@ -12,8 +12,6 @@ export enum SettingName {
   SEND_LOGIN_JWT_EXPIRES_MIN = 'sendLoginJwtExpiresMin',
   RESET_PASSWORD_JWT_EXPIRES_MIN = 'resetPasswordJwtExpiresMin',
   PEERING_TIMEOUT_MS = 'peeringTimeoutInMs',
-  INVOICE_REMINDER_FREQ = 'invoiceFreqReminder',
-  INVOICE_REMINDER_MAX_TRIES = 'invoiceReminderMaxTries',
   MAIL_PROVIDER_NAME = 'mailProviderName',
 
   MAKE_NEW_SUBSCRIBERS_API_PUBLIC = 'makeNewSubscribersApiPublic',
@@ -25,7 +23,10 @@ export enum SettingName {
   MAKE_REVENUE_API_PUBLIC = 'makeRevenueApiPublic',
   COMMENT_CHAR_LIMIT = 'commentCharLimit',
 
-  ALLOW_COMMENT_EDITING = 'allowCommentEditing'
+  ALLOW_COMMENT_EDITING = 'allowCommentEditing',
+
+  HEAD_SCRIPT = 'headScript',
+  BODY_SCRIPT = 'bodyScript'
 }
 
 export type CreateSettingArgs<T> = Omit<Setting<T>, 'id'>

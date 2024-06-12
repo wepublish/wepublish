@@ -217,7 +217,7 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
       )
     },
     tags: {
-      type: new GraphQLList(new GraphQLNonNull(GraphQLTag)),
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLTag))),
       resolve: createProxyingResolver(async ({id}, _, {prisma: {tag}}) => {
         const tags = await tag.findMany({
           where: {
@@ -306,7 +306,7 @@ export const GraphQLPublicComment: GraphQLObjectType<PublicComment, Context> =
         )
       },
       tags: {
-        type: new GraphQLList(new GraphQLNonNull(GraphQLTag)),
+        type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLTag))),
         resolve: createProxyingResolver(async ({id}, _, {prisma: {taggedComments}}) => {
           const tags = await taggedComments.findMany({
             where: {
@@ -346,6 +346,23 @@ export const GraphQLPublicComment: GraphQLObjectType<PublicComment, Context> =
 
       rejectionReason: {type: GraphQLString},
       createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
+      url: {
+        type: new GraphQLNonNull(GraphQLString),
+        resolve: createProxyingResolver(async (comment, args, {urlAdapter, loaders}, info) => {
+          const item =
+            comment.itemType === 'article'
+              ? await loaders.publicArticles.load(comment.itemID)
+              : comment.itemType === 'page'
+              ? await loaders.publicPagesByID.load(comment.itemID)
+              : null
+
+          if (!item) {
+            return ''
+          }
+
+          return urlAdapter.getCommentURL(item, comment)
+        })
+      },
       modifiedAt: {
         type: GraphQLDateTime,
         resolve: createProxyingResolver(({revisions}) => {

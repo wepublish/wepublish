@@ -30,7 +30,9 @@ import {
   PayrexxFactory,
   HealthModule,
   NeverChargePaymentProvider,
-  KarmaMediaAdapter
+  KarmaMediaAdapter,
+  ScriptsModule,
+  SystemInfoModule
 } from '@wepublish/api'
 import {ApiModule, PrismaModule} from '@wepublish/nest-modules'
 import bodyParser from 'body-parser'
@@ -234,6 +236,7 @@ import {PrismaClient} from '@prisma/client'
     ConsentModule,
     StatsModule,
     SettingModule,
+    ScriptsModule,
     EventModule,
     BlockStylesModule,
     EventsImportModule.registerAsync({
@@ -245,9 +248,10 @@ import {PrismaClient} from '@prisma/client'
     }),
     ScheduleModule.forRoot(),
     ConfigModule.forRoot(),
-    HealthModule
+    HealthModule,
+    SystemInfoModule
   ],
-  exports: [MediaAdapterService],
+  exports: [MediaAdapterService, 'SYSTEM_INFO_KEY'],
   providers: [
     {
       provide: MediaAdapterService,
@@ -270,6 +274,13 @@ import {PrismaClient} from '@prisma/client'
           token,
           internalUrl ? new URL(internalUrl) : undefined
         )
+      },
+      inject: [ConfigService]
+    },
+    {
+      provide: 'SYSTEM_INFO_KEY',
+      useFactory: (config: ConfigService) => {
+        return config.get('SYSTEM_INFO_KEY')
       },
       inject: [ConfigService]
     }

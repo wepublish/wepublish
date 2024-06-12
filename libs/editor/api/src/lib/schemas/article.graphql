@@ -3,6 +3,10 @@ fragment MutationArticle on Article {
 
   shared
   hidden
+  tags {
+    id
+    tag
+  }
 
   draft {
     publishedAt
@@ -35,6 +39,10 @@ fragment ArticleRef on Article {
 
   shared
   hidden
+  tags {
+    id
+    tag
+  }
   createdAt
   modifiedAt
 
@@ -184,6 +192,12 @@ query Article($id: ID!) {
     shared
     hidden
 
+    tags {
+      id
+      tag
+      type
+    }
+
     draft {
       publishAt
     }
@@ -211,7 +225,6 @@ query Article($id: ID!) {
       image {
         ...ImageRef
       }
-      tags
       url
       canonicalUrl
       properties {
