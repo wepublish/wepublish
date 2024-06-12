@@ -46,6 +46,7 @@ import {EventModule} from '@wepublish/event/api'
 import {BlockStylesModule} from '@wepublish/block-content/api'
 import {PrismaClient} from '@prisma/client'
 import {UserRoleModule} from '@wepublish/user-role/api'
+import {ActionModule} from '@wepublish/action/api'
 
 @Global()
 @Module({
@@ -242,6 +243,7 @@ import {UserRoleModule} from '@wepublish/user-role/api'
     NavigationModule,
     AuthorModule,
     PaymentMethodModule,
+    ActionModule,
     UserRoleModule,
     MemberPlanModule,
     BlockStylesModule,
