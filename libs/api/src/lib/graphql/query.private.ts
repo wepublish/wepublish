@@ -19,8 +19,6 @@ import {SubscriptionSort} from '../db/subscription'
 import {UserSort} from '../db/user'
 import {UserRoleSort} from '../db/userRole'
 import {GivenTokeExpiryToLongError, UserIdNotFound} from '../error'
-import {GraphQLAction} from './action'
-import {getActions} from './action/action.private-queries'
 
 import {GraphQLAuthProvider, GraphQLJWTToken} from './auth'
 import {
@@ -652,29 +650,6 @@ export const GraphQLQuery = new GraphQLObjectType<undefined, Context>({
       args: {monthsBack: {type: GraphQLInt}},
       resolve: (root, {monthsBack}, {authenticate, prisma: {subscription}}) => {
         return getNewSubscribersPerMonth(authenticate, subscription, monthsBack)
-      }
-    },
-
-    // Actions
-    // =======
-    actions: {
-      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLAction))),
-      resolve: (
-        root,
-        _,
-        {authenticate, prisma: {article, page, comment, subscription, author, poll, user, event}}
-      ) => {
-        return getActions(
-          authenticate,
-          article,
-          page,
-          comment,
-          subscription,
-          author,
-          poll,
-          user,
-          event
-        )
       }
     }
   }

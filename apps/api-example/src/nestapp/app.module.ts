@@ -55,6 +55,7 @@ import {ImportPeerArticleModule} from '@wepublish/peering/api/import'
 import {CommentModule} from '@wepublish/comments/api'
 import {ArticleModule} from '@wepublish/article/api'
 import {PhraseModule} from '@wepublish/phrase/api'
+import {ActionModule} from '@wepublish/action/api'
 
 @Global()
 @Module({
@@ -281,6 +282,7 @@ import {PhraseModule} from '@wepublish/phrase/api'
     BlockContentModule,
     PollModule,
     PhraseModule,
+    ActionModule,
     EventsImportModule.registerAsync({
       useFactory: (agendaBasel: AgendaBaselService, kulturZueri: KulturZueriService) => [
         agendaBasel,

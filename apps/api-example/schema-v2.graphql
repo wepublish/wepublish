@@ -2,6 +2,7 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+<<<<<<< HEAD
 directive @extends on INTERFACE | OBJECT
 
 directive @external on FIELD_DEFINITION | OBJECT
@@ -21,13 +22,43 @@ directive @requires(fields: String!) on FIELD_DEFINITION
 directive @shareable on FIELD_DEFINITION | OBJECT
 
 directive @tag(name: String!) repeatable on ARGUMENT_DEFINITION | ENUM | ENUM_VALUE | FIELD_DEFINITION | INPUT_FIELD_DEFINITION | INPUT_OBJECT | INTERFACE | OBJECT | SCALAR | UNION
+=======
+union Action = ArticleCreatedAction | AuthorCreatedAction | CommentCreatedAction | EventCreatedAction | PageCreatedAction | PollStartedAction | SubscriptionCreatedAction | UserCreatedAction
+
+enum ActionType {
+  ArticleCreated
+  AuthorCreated
+  CommentCreated
+  EventCreated
+  PageCreated
+  PollStarted
+  SubscriptionCreated
+  UserCreated
+}
+
+input ActiveMemberPlansFilter {
+  name: String
+  tags: [String!]
+}
+>>>>>>> 2416ad87d (chore(migrate-v2-action): Migrate actions to v2 (#1362))
 
 type AllowedSettingVals {
   boolChoice: Boolean
   stringChoice: [String!]
 }
 
+<<<<<<< HEAD
 type Article {
+=======
+type ArticleCreatedAction {
+  actionType: ActionType!
+  date: DateTime!
+  id: ID!
+}
+
+type ArticleNavigationLink implements BaseNavigationLink {
+  articleID: String!
+>>>>>>> 2416ad87d (chore(migrate-v2-action): Migrate actions to v2 (#1362))
   createdAt: DateTime!
   disableComments: Boolean!
   draft: ArticleRevision
@@ -114,6 +145,7 @@ type Author {
   id: ID!
 }
 
+<<<<<<< HEAD
 type Banner {
   actions: [BannerAction!]
   active: Boolean!
@@ -124,6 +156,30 @@ type Banner {
   showOnArticles: Boolean!
   showOnPages: [PageModel!]
   text: String!
+=======
+type AuthorCreatedAction {
+  actionType: ActionType!
+  author: Author!
+  date: DateTime!
+  id: ID!
+}
+
+input AuthorFilter {
+  name: String
+  tagIds: [String!]
+}
+
+enum AuthorSort {
+  CreatedAt
+  ModifiedAt
+  Name
+}
+
+type AuthorsLinks {
+  createdAt: DateTime!
+  id: String!
+  modifiedAt: DateTime!
+>>>>>>> 2416ad87d (chore(migrate-v2-action): Migrate actions to v2 (#1362))
   title: String!
 }
 
@@ -230,6 +286,7 @@ enum BlockType {
   Title
 }
 
+<<<<<<< HEAD
 type BreakBlock implements BaseBlock & HasImage {
   blockStyle: ID
   hideButton: Boolean
@@ -281,6 +338,14 @@ input CommentBlockInput {
   filter: CommentBlockFilterInput!
 }
 
+=======
+type CommentCreatedAction {
+  actionType: ActionType!
+  date: DateTime!
+  id: ID!
+}
+
+>>>>>>> 2416ad87d (chore(migrate-v2-action): Migrate actions to v2 (#1362))
 type Consent {
   createdAt: DateTime!
   defaultValue: Boolean!
@@ -414,6 +479,13 @@ input EventBlockFilterInput {
 
 input EventBlockInput {
   filter: EventBlockFilterInput!
+}
+
+type EventCreatedAction {
+  actionType: ActionType!
+  date: DateTime!
+  event: Event!
+  id: ID!
 }
 
 input EventFilter {
@@ -838,6 +910,12 @@ type Page {
   id: ID!
 }
 
+type PageCreatedAction {
+  actionType: ActionType!
+  date: DateTime!
+  id: ID!
+}
+
 type PageInfo {
   endCursor: String
   hasNextPage: Boolean!
@@ -1013,7 +1091,16 @@ input PropertyInput {
   value: String!
 }
 
+type PollStartedAction {
+  actionType: ActionType!
+  date: DateTime!
+  id: ID!
+}
+
 type Query {
+  """Returns latest user actions"""
+  actions: [Action!]!
+
   "\n      Returns all active subscribers.\n      Includes subscribers with a cancelled but not run out subscription.\n    "
   activeSubscribers: [DashboardSubscription!]!
 
@@ -1204,6 +1291,12 @@ type Stats {
   articlesCount: Int!
   authorsCount: Int!
   firstArticleDate: DateTime
+}
+
+type SubscriptionCreatedAction {
+  actionType: ActionType!
+  date: DateTime!
+  id: ID!
 }
 
 enum SubscriptionDeactivationReason {
@@ -1413,6 +1506,12 @@ type UserConsent {
   modifiedAt: DateTime!
   user: User!
   value: Boolean!
+}
+
+type UserCreatedAction {
+  actionType: ActionType!
+  date: DateTime!
+  id: ID!
 }
 
 enum UserEvent {
