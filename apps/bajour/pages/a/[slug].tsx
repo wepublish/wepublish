@@ -59,7 +59,7 @@ export default function ArticleBySlug() {
     }
   })
 
-  const isFDT = data?.article?.tags.includes('frage-des-tages')
+  const isFDT = data?.article?.tags.some(({tag}) => tag === 'frage-des-tages')
 
   return (
     <WebsiteBuilderProvider
