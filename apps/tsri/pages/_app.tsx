@@ -24,6 +24,7 @@ import {TsriBlockRenderer} from '../src/components/block-renderer/block-renderer
 import {TsriTeaser} from '../src/components/tsri-teaser'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
+import {TsriBlockRenderer} from '../src/components/block-renderer/block-renderer'
 
 setDefaultOptions({
   locale: de
