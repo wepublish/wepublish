@@ -48,7 +48,7 @@ export const isFilledTeaser = (teaser: Teaser | null | undefined): teaser is Tea
     }
 
     case 'CustomTeaser': {
-      return Boolean(teaser.contentUrl)
+      return Boolean(teaser.contentUrl) || Boolean(teaser.preTitle)
     }
   }
 

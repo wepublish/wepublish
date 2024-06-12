@@ -13,6 +13,7 @@ export const DailyBriefingContext = createContext<campaigns.Campaigns[]>([])
 
 const DailyBriefingTeaserWrapper = styled('div')`
   display: grid;
+  grid-auto-rows: min-content;
   gap: ${({theme}) => theme.spacing(4)};
   background-color: ${({theme}) => theme.palette.accent.main};
   padding: ${({theme}) => theme.spacing(2)};
@@ -25,6 +26,7 @@ const DailyBriefingLinkList = styled('ul')`
   margin: 0;
   padding: 0;
   display: grid;
+  grid-auto-rows: min-content;
   gap: ${({theme}) => theme.spacing(2)};
 `
 
