@@ -1,4 +1,4 @@
-import {useEffect, useState} from 'react'
+import {useEffect, useRef, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdEdit} from 'react-icons/md'
 import {Drawer, IconButton as RSIconButton, Panel} from 'rsuite'
@@ -9,12 +9,18 @@ import {TeaserListBlockValue} from './types'
 import styled from '@emotion/styled'
 import {ContentForTeaser} from './teaserGridBlock'
 import {TeaserListConfigPanel, useTeaserTypeText} from '../panel/teaserListConfigPanel'
+import {TypographicTextArea} from '../atoms'
+
+const TeaserListBlockWrapper = styled.div`
+  display: grid;
+  gap: 8px;
+`
 
 const TeaserGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
-  margin-top: 24px;
+  margin-top: 16px;
 `
 
 const TeaserWrapper = styled('article')`
@@ -45,22 +51,32 @@ const InfoList = styled.ul`
 `
 
 export const TeaserListBlock = ({value, onChange, autofocus}: BlockProps<TeaserListBlockValue>) => {
+  const focusRef = useRef<HTMLTextAreaElement>(null)
   const {filter, teasers, skip, take, teaserType} = value
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const {t} = useTranslation()
   const teaserTypeText = useTeaserTypeText()
 
-  const isEmpty = !teasers.length
+  const isEmpty = !teasers.length || !value.title
   const teasersToDisplay = teasers.slice(0, 6)
 
   useEffect(() => {
     if (autofocus && isEmpty) {
-      setIsDialogOpen(true)
+      focusRef.current?.focus()
     }
   }, [autofocus, isEmpty])
 
   return (
-    <>
+    <TeaserListBlockWrapper>
+      <TypographicTextArea
+        ref={focusRef}
+        variant="title"
+        align="center"
+        placeholder={t('blocks.title.title')}
+        value={value.title ?? ''}
+        onChange={e => onChange({...value, title: e.target.value})}
+      />
+
       <PreviewPanel bodyFill bordered>
         <PlaceholderInput onAddClick={() => setIsDialogOpen(true)}>
           <IconButton size={'lg'} icon={<MdEdit />} onClick={() => setIsDialogOpen(true)}>
@@ -102,6 +118,6 @@ export const TeaserListBlock = ({value, onChange, autofocus}: BlockProps<TeaserL
           }}
         />
       </Drawer>
-    </>
+    </TeaserListBlockWrapper>
   )
 }

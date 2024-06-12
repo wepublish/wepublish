@@ -58,7 +58,7 @@ export const getArticleSEO = (article: Article) => {
       '@context': 'http://schema.org',
       '@type': 'NewsArticle',
       articleBody,
-      keywords: article.tags.join(','),
+      keywords: article.tags.map(({tag}) => tag).join(','),
       image,
       description,
       author: {
@@ -139,7 +139,7 @@ export const ArticleSEO = ({article}: BuilderArticleSEOProps) => {
         ))}
 
         {seo.tags.map(tag => (
-          <meta key={`og:article:tag:${tag}`} property="og:article:tag" content={tag} />
+          <meta key={`og:article:tag:${tag}`} property="og:article:tag" content={tag.tag ?? ''} />
         ))}
       </Head>
 

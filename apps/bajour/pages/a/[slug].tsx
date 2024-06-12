@@ -59,7 +59,7 @@ export default function ArticleBySlug() {
     }
   })
 
-  const isFDT = data?.article?.tags.includes('frage-des-tages')
+  const isFDT = data?.article?.tags.some(({tag}) => tag === 'frage-des-tages')
 
   return (
     <WebsiteBuilderProvider
@@ -79,7 +79,7 @@ export default function ArticleBySlug() {
               </H5>
 
               <ArticleListContainer
-                variables={{filter: {tags: data.article.tags}, take: 4}}
+                variables={{filter: {tags: data.article.tags.map(tag => tag.id)}, take: 4}}
                 filter={articles => articles.filter(article => article.id !== data.article?.id)}
               />
             </ArticleWrapper>
@@ -143,7 +143,7 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
         query: ApiV1.ArticleListDocument,
         variables: {
           filter: {
-            tags: article.data.article.tags
+            tags: article.data.article.tags.map((tag: ApiV1.Tag) => tag.id)
           },
           take: 4
         }

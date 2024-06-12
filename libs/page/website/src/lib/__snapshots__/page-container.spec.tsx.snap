@@ -3,7 +3,7 @@
 exports[`Page Container should render ById 1`] = `
 <DocumentFragment>
   <article
-    class="ei3npnw0 css-16rq5xm-ContentWrapperStyled-PageWrapper e1wqte7t0"
+    class="ei3npnw0 css-1m39jl9-ContentWrapperStyled-PageWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -1865,7 +1865,7 @@ https://unsplash.it/200/100 200w"
 exports[`Page Container should render BySlug 1`] = `
 <DocumentFragment>
   <article
-    class="ei3npnw0 css-16rq5xm-ContentWrapperStyled-PageWrapper e1wqte7t0"
+    class="ei3npnw0 css-1m39jl9-ContentWrapperStyled-PageWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -3727,7 +3727,7 @@ https://unsplash.it/200/100 200w"
 exports[`Page Container should render WithChildren 1`] = `
 <DocumentFragment>
   <article
-    class="ei3npnw0 css-16rq5xm-ContentWrapperStyled-PageWrapper e1wqte7t0"
+    class="ei3npnw0 css-1m39jl9-ContentWrapperStyled-PageWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -5592,7 +5592,7 @@ https://unsplash.it/200/100 200w"
 exports[`Page Container should render WithClassName 1`] = `
 <DocumentFragment>
   <article
-    class="extra-classname ei3npnw0 css-16rq5xm-ContentWrapperStyled-PageWrapper e1wqte7t0"
+    class="extra-classname ei3npnw0 css-1m39jl9-ContentWrapperStyled-PageWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -7454,7 +7454,7 @@ https://unsplash.it/200/100 200w"
 exports[`Page Container should render WithEmotion 1`] = `
 <DocumentFragment>
   <article
-    class="ei3npnw0 css-16rq5xm-ContentWrapperStyled-PageWrapper e1wqte7t0"
+    class="ei3npnw0 css-1m39jl9-ContentWrapperStyled-PageWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"

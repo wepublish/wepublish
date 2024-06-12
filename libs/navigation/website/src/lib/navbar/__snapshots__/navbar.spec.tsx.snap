@@ -15,7 +15,7 @@ exports[`Navbar should render Default 1`] = `
           class="css-1trl8g0-NavbarMain ei6evl213"
         >
           <div
-            class="css-1g6nmgg-NavbarIconButtonWrapper ei6evl211"
+            class="css-6rgw7r-NavbarIconButtonWrapper ei6evl211"
           >
             <button
               aria-label="Menu"
@@ -72,7 +72,7 @@ exports[`Navbar should render Default 1`] = `
           >
             <img
               alt="banff2"
-              class="css-15go3ul-ImageWrapper-Navbar e1shv2yg0"
+              class="css-gp4aqo-ImageWrapper-Navbar e1shv2yg0"
               loading="eager"
               srcset="https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 800w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 500w,
@@ -142,7 +142,7 @@ exports[`Navbar should render WithChildren 1`] = `
           class="css-1trl8g0-NavbarMain ei6evl213"
         >
           <div
-            class="css-1g6nmgg-NavbarIconButtonWrapper ei6evl211"
+            class="css-6rgw7r-NavbarIconButtonWrapper ei6evl211"
           >
             <button
               aria-label="Menu"
@@ -199,7 +199,7 @@ exports[`Navbar should render WithChildren 1`] = `
           >
             <img
               alt="banff2"
-              class="css-15go3ul-ImageWrapper-Navbar e1shv2yg0"
+              class="css-gp4aqo-ImageWrapper-Navbar e1shv2yg0"
               loading="eager"
               srcset="https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 800w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 500w,
@@ -269,7 +269,7 @@ exports[`Navbar should render WithClassName 1`] = `
           class="css-1trl8g0-NavbarMain ei6evl213"
         >
           <div
-            class="css-1g6nmgg-NavbarIconButtonWrapper ei6evl211"
+            class="css-6rgw7r-NavbarIconButtonWrapper ei6evl211"
           >
             <button
               aria-label="Menu"
@@ -326,7 +326,7 @@ exports[`Navbar should render WithClassName 1`] = `
           >
             <img
               alt="banff2"
-              class="css-15go3ul-ImageWrapper-Navbar e1shv2yg0"
+              class="css-gp4aqo-ImageWrapper-Navbar e1shv2yg0"
               loading="eager"
               srcset="https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 800w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 500w,
@@ -396,7 +396,7 @@ exports[`Navbar should render WithEmotion 1`] = `
           class="css-1trl8g0-NavbarMain ei6evl213"
         >
           <div
-            class="css-1g6nmgg-NavbarIconButtonWrapper ei6evl211"
+            class="css-6rgw7r-NavbarIconButtonWrapper ei6evl211"
           >
             <button
               aria-label="Menu"
@@ -453,7 +453,7 @@ exports[`Navbar should render WithEmotion 1`] = `
           >
             <img
               alt="banff2"
-              class="css-15go3ul-ImageWrapper-Navbar e1shv2yg0"
+              class="css-gp4aqo-ImageWrapper-Navbar e1shv2yg0"
               loading="eager"
               srcset="https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 800w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 500w,
@@ -523,7 +523,7 @@ exports[`Navbar should render WithError 1`] = `
           class="css-1trl8g0-NavbarMain ei6evl213"
         >
           <div
-            class="css-1g6nmgg-NavbarIconButtonWrapper ei6evl211"
+            class="css-6rgw7r-NavbarIconButtonWrapper ei6evl211"
           >
             <button
               aria-label="Menu"
@@ -564,7 +564,7 @@ exports[`Navbar should render WithError 1`] = `
           >
             <img
               alt="banff2"
-              class="css-15go3ul-ImageWrapper-Navbar e1shv2yg0"
+              class="css-gp4aqo-ImageWrapper-Navbar e1shv2yg0"
               loading="eager"
               srcset="https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 800w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 500w,
@@ -634,7 +634,7 @@ exports[`Navbar should render WithLoading 1`] = `
           class="css-1trl8g0-NavbarMain ei6evl213"
         >
           <div
-            class="css-1g6nmgg-NavbarIconButtonWrapper ei6evl211"
+            class="css-6rgw7r-NavbarIconButtonWrapper ei6evl211"
           >
             <button
               aria-label="Menu"
@@ -675,7 +675,7 @@ exports[`Navbar should render WithLoading 1`] = `
           >
             <img
               alt="banff2"
-              class="css-15go3ul-ImageWrapper-Navbar e1shv2yg0"
+              class="css-gp4aqo-ImageWrapper-Navbar e1shv2yg0"
               loading="eager"
               srcset="https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 800w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 500w,
@@ -745,7 +745,7 @@ exports[`Navbar should render WithLoggedIn 1`] = `
           class="css-1trl8g0-NavbarMain ei6evl213"
         >
           <div
-            class="css-1g6nmgg-NavbarIconButtonWrapper ei6evl211"
+            class="css-6rgw7r-NavbarIconButtonWrapper ei6evl211"
           >
             <button
               aria-label="Menu"
@@ -802,7 +802,7 @@ exports[`Navbar should render WithLoggedIn 1`] = `
           >
             <img
               alt="banff2"
-              class="css-15go3ul-ImageWrapper-Navbar e1shv2yg0"
+              class="css-gp4aqo-ImageWrapper-Navbar e1shv2yg0"
               loading="eager"
               srcset="https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 800w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 500w,
@@ -904,7 +904,7 @@ exports[`Navbar should render WithoutItems 1`] = `
           class="css-1trl8g0-NavbarMain ei6evl213"
         >
           <div
-            class="css-1g6nmgg-NavbarIconButtonWrapper ei6evl211"
+            class="css-6rgw7r-NavbarIconButtonWrapper ei6evl211"
           >
             <button
               aria-label="Menu"
@@ -945,7 +945,7 @@ exports[`Navbar should render WithoutItems 1`] = `
           >
             <img
               alt="banff2"
-              class="css-15go3ul-ImageWrapper-Navbar e1shv2yg0"
+              class="css-gp4aqo-ImageWrapper-Navbar e1shv2yg0"
               loading="eager"
               srcset="https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 800w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 500w,
@@ -1015,7 +1015,7 @@ exports[`Navbar should render WithoutLogo 1`] = `
           class="css-1trl8g0-NavbarMain ei6evl213"
         >
           <div
-            class="css-1g6nmgg-NavbarIconButtonWrapper ei6evl211"
+            class="css-6rgw7r-NavbarIconButtonWrapper ei6evl211"
           >
             <button
               aria-label="Menu"

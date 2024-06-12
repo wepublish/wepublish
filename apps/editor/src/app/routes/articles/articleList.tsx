@@ -64,8 +64,15 @@ function mapColumFieldToGraphQLField(columnField: string): ArticleSort | null {
   }
 }
 
-function ArticleList() {
-  const [filter, setFilter] = useState({} as ArticleFilter)
+type ArticleListProps = {
+  initialFilter?: ArticleFilter
+}
+
+function ArticleList({initialFilter = {}}: ArticleListProps) {
+  const {t} = useTranslation()
+  const navigate = useNavigate()
+
+  const [filter, setFilter] = useState(initialFilter)
 
   const [isConfirmationDialogOpen, setConfirmationDialogOpen] = useState(false)
   const [isArticlePreviewLinkOpen, setArticlePreviewLinkOpen] = useState(false)
@@ -81,15 +88,16 @@ function ArticleList() {
   const [unpublishArticle, {loading: isUnpublishing}] = useUnpublishArticleMutation()
   const [duplicateArticle, {loading: isDuplicating}] = useDuplicateArticleMutation()
 
-  const navigate = useNavigate()
-
-  const articleListVariables = {
-    filter: filter || undefined,
-    take: limit,
-    skip: (page - 1) * limit,
-    sort: mapColumFieldToGraphQLField(sortField),
-    order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
-  }
+  const articleListVariables = useMemo(
+    () => ({
+      filter,
+      take: limit,
+      skip: (page - 1) * limit,
+      sort: mapColumFieldToGraphQLField(sortField),
+      order: mapTableSortTypeToGraphQLSortOrder(sortOrder)
+    }),
+    [filter, limit, page, sortField, sortOrder]
+  )
 
   const {
     data,
@@ -99,27 +107,18 @@ function ArticleList() {
     variables: articleListVariables,
     fetchPolicy: 'network-only'
   })
+  const [createComment] = useCreateCommentMutation()
 
   const articles = useMemo(() => data?.articles?.nodes ?? [], [data])
-
-  useEffect(() => {
-    refetch(articleListVariables)
-  }, [filter, page, limit, sortOrder, sortField])
-
   const [highlightedRowId, setHighlightedRowId] = useState<string | null>(null)
 
   useEffect(() => {
     const timerID = setTimeout(() => {
       setHighlightedRowId(null)
     }, 3000)
-    return () => {
-      clearTimeout(timerID)
-    }
+
+    return () => clearTimeout(timerID)
   }, [highlightedRowId])
-
-  const {t} = useTranslation()
-
-  const [createComment] = useCreateCommentMutation()
 
   return (
     <>

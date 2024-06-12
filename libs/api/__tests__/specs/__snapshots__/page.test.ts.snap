@@ -15,6 +15,20 @@ exports[`Pages can be created/edited/published/unpublished/deleted: can be creat
       },
       "pending": null,
       "published": null,
+      "tags": ArrayContaining [
+        ObjectContaining {
+          "id": Any<String>,
+          "tag": "Tag 1",
+        },
+        ObjectContaining {
+          "id": Any<String>,
+          "tag": "Tag 2",
+        },
+        ObjectContaining {
+          "id": Any<String>,
+          "tag": "Tag 3",
+        },
+      ],
     },
   },
   "errors": undefined,
@@ -57,6 +71,16 @@ exports[`Pages can be created/edited/published/unpublished/deleted: can be publi
         "revision": 0,
         "updatedAt": 2020-11-25T23:55:35.000Z,
       },
+      "tags": ArrayContaining [
+        ObjectContaining {
+          "id": Any<String>,
+          "tag": "Tag 1",
+        },
+        ObjectContaining {
+          "id": Any<String>,
+          "tag": "Tag 2",
+        },
+      ],
     },
   },
   "errors": undefined,
@@ -79,6 +103,20 @@ exports[`Pages can be created/edited/published/unpublished/deleted: can be read 
       },
       "pending": null,
       "published": null,
+      "tags": ArrayContaining [
+        ObjectContaining {
+          "id": Any<String>,
+          "tag": "Tag 1",
+        },
+        ObjectContaining {
+          "id": Any<String>,
+          "tag": "Tag 2",
+        },
+        ObjectContaining {
+          "id": Any<String>,
+          "tag": "Tag 3",
+        },
+      ],
     },
   },
   "errors": undefined,
@@ -106,6 +144,16 @@ exports[`Pages can be created/edited/published/unpublished/deleted: can be unpub
       },
       "pending": null,
       "published": null,
+      "tags": ArrayContaining [
+        ObjectContaining {
+          "id": Any<String>,
+          "tag": "Tag 1",
+        },
+        ObjectContaining {
+          "id": Any<String>,
+          "tag": "Tag 2",
+        },
+      ],
     },
   },
   "errors": undefined,
@@ -133,6 +181,16 @@ exports[`Pages can be created/edited/published/unpublished/deleted: can be updat
       },
       "pending": null,
       "published": null,
+      "tags": ArrayContaining [
+        ObjectContaining {
+          "id": Any<String>,
+          "tag": "Tag 1",
+        },
+        ObjectContaining {
+          "id": Any<String>,
+          "tag": "Tag 2",
+        },
+      ],
     },
   },
   "errors": undefined,

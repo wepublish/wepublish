@@ -3,7 +3,7 @@
 exports[`Page should render Default 1`] = `
 <DocumentFragment>
   <article
-    class="ei3npnw0 css-16rq5xm-ContentWrapperStyled-PageWrapper e1wqte7t0"
+    class="ei3npnw0 css-1m39jl9-ContentWrapperStyled-PageWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -2071,7 +2071,7 @@ https://unsplash.it/200/100 200w"
 exports[`Page should render WithChildren 1`] = `
 <DocumentFragment>
   <article
-    class="ei3npnw0 css-16rq5xm-ContentWrapperStyled-PageWrapper e1wqte7t0"
+    class="ei3npnw0 css-1m39jl9-ContentWrapperStyled-PageWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -4142,7 +4142,7 @@ https://unsplash.it/200/100 200w"
 exports[`Page should render WithClassName 1`] = `
 <DocumentFragment>
   <article
-    class="extra-classname ei3npnw0 css-16rq5xm-ContentWrapperStyled-PageWrapper e1wqte7t0"
+    class="extra-classname ei3npnw0 css-1m39jl9-ContentWrapperStyled-PageWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -6210,7 +6210,7 @@ https://unsplash.it/200/100 200w"
 exports[`Page should render WithEmotion 1`] = `
 <DocumentFragment>
   <article
-    class="ei3npnw0 css-16rq5xm-ContentWrapperStyled-PageWrapper e1wqte7t0"
+    class="ei3npnw0 css-1m39jl9-ContentWrapperStyled-PageWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -8278,7 +8278,7 @@ https://unsplash.it/200/100 200w"
 exports[`Page should render WithError 1`] = `
 <DocumentFragment>
   <article
-    class="ei3npnw0 css-16rq5xm-ContentWrapperStyled-PageWrapper e1wqte7t0"
+    class="ei3npnw0 css-1m39jl9-ContentWrapperStyled-PageWrapper e1wqte7t0"
   />
 </DocumentFragment>
 `;
@@ -8286,7 +8286,7 @@ exports[`Page should render WithError 1`] = `
 exports[`Page should render WithLoading 1`] = `
 <DocumentFragment>
   <article
-    class="ei3npnw0 css-16rq5xm-ContentWrapperStyled-PageWrapper e1wqte7t0"
+    class="ei3npnw0 css-1m39jl9-ContentWrapperStyled-PageWrapper e1wqte7t0"
   />
 </DocumentFragment>
 `;
@@ -8294,7 +8294,7 @@ exports[`Page should render WithLoading 1`] = `
 exports[`Page should render WithoutDescription 1`] = `
 <DocumentFragment>
   <article
-    class="ei3npnw0 css-16rq5xm-ContentWrapperStyled-PageWrapper e1wqte7t0"
+    class="ei3npnw0 css-1m39jl9-ContentWrapperStyled-PageWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -10362,7 +10362,7 @@ https://unsplash.it/200/100 200w"
 exports[`Page should render WithoutImageMetadata 1`] = `
 <DocumentFragment>
   <article
-    class="ei3npnw0 css-16rq5xm-ContentWrapperStyled-PageWrapper e1wqte7t0"
+    class="ei3npnw0 css-1m39jl9-ContentWrapperStyled-PageWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -12430,7 +12430,7 @@ https://unsplash.it/200/100 200w"
 exports[`Page should render WithoutSocialMedia 1`] = `
 <DocumentFragment>
   <article
-    class="ei3npnw0 css-16rq5xm-ContentWrapperStyled-PageWrapper e1wqte7t0"
+    class="ei3npnw0 css-1m39jl9-ContentWrapperStyled-PageWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"

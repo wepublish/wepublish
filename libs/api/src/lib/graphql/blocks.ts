@@ -554,6 +554,7 @@ export const GraphQLTeaserListBlockFilterInput = new GraphQLInputObjectType({
 export const GraphQLTeaserListBlock = new GraphQLObjectType<TeaserListBlock, Context>({
   name: 'TeaserListBlock',
   fields: {
+    title: {type: GraphQLString},
     blockStyle: {
       type: GraphQLString,
       resolve: resolveBlockStyleIdToName
@@ -582,8 +583,6 @@ export const GraphQLTeaserListBlock = new GraphQLObjectType<TeaserListBlock, Con
               prisma.article
             )
 
-            articles.nodes.forEach(article => loaders.articles.prime(article.id, article))
-
             return articles.nodes.map(
               article =>
                 ({
@@ -609,8 +608,6 @@ export const GraphQLTeaserListBlock = new GraphQLObjectType<TeaserListBlock, Con
               take,
               prisma.page
             )
-
-            pages.nodes.forEach(page => loaders.pages.prime(page.id, page))
 
             return pages.nodes.map(
               page =>
@@ -666,6 +663,7 @@ export const GraphQLTeaserListBlock = new GraphQLObjectType<TeaserListBlock, Con
 export const GraphQLPublicTeaserListBlock = new GraphQLObjectType<TeaserListBlock, Context>({
   name: 'TeaserListBlock',
   fields: {
+    title: {type: GraphQLString},
     blockStyle: {
       type: GraphQLString,
       resolve: resolveBlockStyleIdToName
@@ -779,6 +777,7 @@ export const GraphQLPublicTeaserListBlock = new GraphQLObjectType<TeaserListBloc
 export const GraphQLTeaserListBlockInput = new GraphQLInputObjectType({
   name: 'TeaserListBlockInput',
   fields: {
+    title: {type: GraphQLString},
     blockStyle: {type: GraphQLString},
     teaserType: {
       type: GraphQLTeaserType
@@ -1408,9 +1407,21 @@ export const GraphQLLinkPageBreakBlockInput = new GraphQLInputObjectType({
     linkText: {type: GraphQLString},
     linkTarget: {type: GraphQLString},
     hideButton: {type: new GraphQLNonNull(GraphQLBoolean)},
-    styleOption: {type: GraphQLString, deprecationReason: 'Use block styles instead of this'},
-    templateOption: {type: GraphQLString, deprecationReason: 'Use block styles instead of this'},
-    layoutOption: {type: GraphQLString, deprecationReason: 'Use block styles instead of this'},
+    styleOption: {
+      type: GraphQLString
+      // @see https://github.com/dotansimha/graphql-code-generator/issues/9659
+      // deprecationReason: 'Use block styles instead of this'
+    },
+    templateOption: {
+      type: GraphQLString
+      // @see https://github.com/dotansimha/graphql-code-generator/issues/9659
+      // deprecationReason: 'Use block styles instead of this'
+    },
+    layoutOption: {
+      type: GraphQLString
+      // @see https://github.com/dotansimha/graphql-code-generator/issues/9659
+      // deprecationReason: 'Use block styles instead of this'
+    },
     imageID: {type: GraphQLID}
   }
 })
@@ -1565,8 +1576,9 @@ export const GraphQLArticleTeaserInput = new GraphQLInputObjectType({
   name: 'ArticleTeaserInput',
   fields: {
     style: {
-      type: GraphQLTeaserStyle,
-      deprecationReason: 'Use block styles instead of this'
+      type: GraphQLTeaserStyle
+      // @see https://github.com/dotansimha/graphql-code-generator/issues/9659
+      // deprecationReason: 'Use block styles instead of this'
     },
     imageID: {type: GraphQLID},
     preTitle: {type: GraphQLString},
@@ -1580,8 +1592,9 @@ export const GraphQLPeerArticleTeaserInput = new GraphQLInputObjectType({
   name: 'PeerArticleTeaserInput',
   fields: {
     style: {
-      type: GraphQLTeaserStyle,
-      deprecationReason: 'Use block styles instead of this'
+      type: GraphQLTeaserStyle
+      // @see https://github.com/dotansimha/graphql-code-generator/issues/9659
+      // deprecationReason: 'Use block styles instead of this'
     },
     imageID: {type: GraphQLID},
     preTitle: {type: GraphQLString},
@@ -1596,8 +1609,9 @@ export const GraphQLPageTeaserInput = new GraphQLInputObjectType({
   name: 'PageTeaserInput',
   fields: {
     style: {
-      type: GraphQLTeaserStyle,
-      deprecationReason: 'Use block styles instead of this'
+      type: GraphQLTeaserStyle
+      // @see https://github.com/dotansimha/graphql-code-generator/issues/9659
+      // deprecationReason: 'Use block styles instead of this'
     },
     imageID: {type: GraphQLID},
     preTitle: {type: GraphQLString},
@@ -1611,8 +1625,9 @@ export const GraphQLEventTeaserInput = new GraphQLInputObjectType({
   name: 'EventTeaserInput',
   fields: {
     style: {
-      type: GraphQLTeaserStyle,
-      deprecationReason: 'Use block styles instead of this'
+      type: GraphQLTeaserStyle
+      // @see https://github.com/dotansimha/graphql-code-generator/issues/9659
+      // deprecationReason: 'Use block styles instead of this'
     },
     imageID: {type: GraphQLID},
     preTitle: {type: GraphQLString},
@@ -1626,8 +1641,9 @@ export const GraphQLCustomTeaserInput = new GraphQLInputObjectType({
   name: 'CustomTeaserInput',
   fields: {
     style: {
-      type: GraphQLTeaserStyle,
-      deprecationReason: 'Use block styles instead of this'
+      type: GraphQLTeaserStyle
+      // @see https://github.com/dotansimha/graphql-code-generator/issues/9659
+      // deprecationReason: 'Use block styles instead of this'
     },
     imageID: {type: GraphQLID},
     preTitle: {type: GraphQLString},

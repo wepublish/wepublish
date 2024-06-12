@@ -13,7 +13,11 @@ const pageSchema = z.object({
   tag: z.string()
 })
 
-export default function ArticleListByTag() {
+type ArticleListByTagProps = {
+  tagId: string
+}
+
+export default function ArticleListByTag({tagId}: ArticleListByTagProps) {
   const {
     elements: {H3, Alert, Pagination}
   } = useWebsiteBuilder()
@@ -26,10 +30,10 @@ export default function ArticleListByTag() {
       take,
       skip: ((page ?? 1) - 1) * take,
       filter: {
-        tags: [tag]
+        tags: [tagId]
       }
     }),
-    [page, tag]
+    [page, tagId]
   )
 
   const {data} = ApiV1.useArticleListQuery({
@@ -80,12 +84,28 @@ export const getStaticPaths: GetStaticPaths = async () => {
     fallback: 'blocking'
   }
 }
-
 export const getStaticProps: GetStaticProps = async ({params}) => {
   const {tag} = params || {}
 
   const {publicRuntimeConfig} = getConfig()
   const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL!, [])
+
+  const tagResult = await client.query({
+    query: ApiV1.TagDocument,
+    variables: {
+      tag,
+      type: ApiV1.TagType.Article
+    }
+  })
+
+  if (!tagResult.error && !tagResult.data.tags.nodes.length) {
+    return {
+      notFound: true
+    }
+  }
+
+  const tagId = tagResult.data.tags.nodes[0].id
+
   await Promise.all([
     client.query({
       query: ApiV1.ArticleListDocument,
@@ -93,7 +113,7 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
         take,
         skip: 0,
         filter: {
-          tags: [tag]
+          tags: [tagId]
         }
       }
     }),
@@ -105,7 +125,9 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
     })
   ])
 
-  const props = ApiV1.addClientCacheToV1Props(client, {})
+  const props = ApiV1.addClientCacheToV1Props(client, {
+    tagId
+  })
 
   return {
     props,

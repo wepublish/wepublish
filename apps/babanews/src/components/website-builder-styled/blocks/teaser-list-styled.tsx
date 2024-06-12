@@ -1,7 +1,7 @@
 import {css, styled} from '@mui/material'
 import {
   TeaserImageWrapper,
-  TeaserListBlockWrapper,
+  TeaserListBlockTeasers,
   TeaserPreTitleNoContent,
   TeaserPreTitleWrapper,
   TeaserWrapper
@@ -9,7 +9,7 @@ import {
 
 import {ListTeaser} from '../../website-builder-overwrites/blocks/list-teaser'
 
-export const BabanewsTeaserList = styled(TeaserListBlockWrapper)`
+export const BabanewsTeaserList = styled(TeaserListBlockTeasers)`
   ${({theme}) =>
     css`
       grid-template-columns: repeat(12, 1fr);

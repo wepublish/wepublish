@@ -99,7 +99,8 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
           Head={Head}
           Script={Script}
           elements={{Link: NextWepublishLink}}
-          date={{format: dateFormatter}}>
+          date={{format: dateFormatter}}
+          meta={{siteTitle}}>
           <ThemeProvider theme={theme}>
             <CssBaseline />
 
