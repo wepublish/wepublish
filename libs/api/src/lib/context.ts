@@ -12,6 +12,8 @@ import {
   PaymentState,
   Peer,
   PrismaClient,
+  TaggedArticles,
+  TaggedPages,
   User,
   UserRole
 } from '@prisma/client'
@@ -78,10 +80,10 @@ export interface DataLoaderContext {
 
   readonly images: DataLoader<string, Image | null>
 
-  readonly articles: DataLoader<string, ArticleWithRevisions | null>
+  readonly articles: DataLoader<string, (ArticleWithRevisions & {tags: TaggedArticles[]}) | null>
   readonly publicArticles: DataLoader<string, PublicArticle | null>
 
-  readonly pages: DataLoader<string, PageWithRevisions | null>
+  readonly pages: DataLoader<string, (PageWithRevisions & {tags: TaggedPages[]}) | null>
   readonly publicPagesByID: DataLoader<string, PublicPage | null>
   readonly publicPagesBySlug: DataLoader<string, PublicPage | null>
 
@@ -143,6 +145,8 @@ export interface Context {
   readonly paymentProviders: PaymentProvider[]
   readonly hooks?: Hooks
   readonly challenge: ChallengeProvider
+  readonly requestIP: string
+  readonly fingerprint: string
 
   getOauth2Clients(): Promise<OAuth2Clients[]>
 
@@ -241,6 +245,8 @@ export async function contextFromRequest(
   const authService = new AuthenticationService(prisma)
 
   const token = tokenFromRequest(req)
+  const requestIP = IPFromRequest(req)
+  const fingerprint = fingerprintRequest(req, requestIP)
   const session = token ? await authService.getSessionByToken(token) : null
   const isSessionValid = authService.isSessionValid(session)
 
@@ -352,6 +358,7 @@ export async function contextFromRequest(
             }
           },
           include: {
+            tags: true,
             draft: {
               include: {
                 properties: true,
@@ -432,6 +439,7 @@ export async function contextFromRequest(
             }
           },
           include: {
+            tags: true,
             draft: {
               include: {
                 properties: true
@@ -918,6 +926,8 @@ export async function contextFromRequest(
     oauth2Providers,
     paymentProviders,
     hooks,
+    requestIP,
+    fingerprint,
     sessionTTL: sessionTTL ?? DefaultSessionTTL,
     hashCostFactor: hashCostFactor ?? DefaultBcryptHashCostFactor,
 
@@ -1071,6 +1081,39 @@ export function tokenFromRequest(req: IncomingMessage | null): string | null {
   }
 
   return null
+}
+
+export function fingerprintRequest(
+  req: IncomingMessage | null,
+  ip: string | undefined
+): string | null {
+  let ipHash = null
+  if (ip) {
+    ipHash = crypto.createHash('sha224').update(ip).digest('hex').substring(0, 7)
+  }
+  let userAgentHash = null
+  if (req?.headers['user-agent']) {
+    userAgentHash = crypto
+      .createHash('sha224')
+      .update(req?.headers['user-agent'])
+      .digest('hex')
+      .substring(0, 7)
+  }
+  if (ipHash || userAgentHash) return `${ipHash}:${userAgentHash}`
+  return null
+}
+
+export function IPFromRequest(req: IncomingMessage | null): string | undefined {
+  const headers = req?.headers
+  if (headers) {
+    return (
+      (headers['cf-connecting-ip'] as string | undefined) ||
+      (headers['x-forwarded-for'] as string | undefined) ||
+      req.socket?.remoteAddress ||
+      undefined
+    )
+  }
+  return undefined
 }
 
 /**

@@ -43,6 +43,7 @@ import {
   CommentList,
   CommentListItem,
   CommentListItemChild,
+  CommentListItemShare,
   CommentRatings
 } from '@wepublish/comments/website'
 import {Event, EventList, EventListItem, EventSEO} from '@wepublish/event/website'
@@ -65,6 +66,7 @@ import {RenderElement, RenderLeaf} from '@wepublish/richtext/website'
 import {
   Alert,
   Button,
+  Pagination,
   H1,
   H2,
   H3,
@@ -139,6 +141,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
         EventListItem={EventListItem}
         CommentList={CommentList}
         CommentListItem={CommentListItem}
+        CommentListItemShare={CommentListItemShare}
         CommentListItemChild={CommentListItemChild}
         Comment={Comment}
         CommentEditor={CommentEditor}
@@ -163,6 +166,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           Alert,
           Button,
           IconButton,
+          Pagination,
           H1,
           H2,
           H3,

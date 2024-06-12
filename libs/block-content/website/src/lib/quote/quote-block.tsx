@@ -21,7 +21,7 @@ export const QuoteBlockWrapper = styled('blockquote')<{withImage: boolean}>`
     css`
       ${theme.breakpoints.up('sm')} {
         gap: ${theme.spacing(3)};
-        grid-template-columns: 80px max-content;
+        grid-template-columns: 80px auto;
       }
     `};
 
@@ -52,7 +52,7 @@ export const QuoteBlock = ({quote, author, image, className}: BuilderQuoteBlockP
 
         {author && (
           <Paragraph component="cite" gutterBottom={false}>
-            von {author}
+            {author}
           </Paragraph>
         )}
       </QuoteContent>

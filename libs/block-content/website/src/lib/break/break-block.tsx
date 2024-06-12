@@ -34,7 +34,6 @@ export const BreakBlockSegment = styled('div')<{reverse?: boolean}>`
 `
 
 const imageStyles = (theme: Theme) => css`
-  aspect-ratio: 1;
   object-fit: cover;
   width: 100%;
   max-width: ${theme.spacing(60)};
@@ -141,6 +140,7 @@ export const BreakBlock = ({
             variant="contained"
             LinkComponent={Link}
             href={linkURL ?? ''}
+            target={linkTarget ?? '_blank'}
             css={buttonStyles(theme)}>
             {linkText}
           </Button>

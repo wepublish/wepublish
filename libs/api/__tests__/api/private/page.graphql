@@ -1,6 +1,11 @@
 fragment MutationPage on Page {
   id
 
+  tags {
+    id
+    tag
+  }
+
   draft {
     publishedAt
     updatedAt
@@ -27,7 +32,6 @@ fragment MutationPage on Page {
     image {
       ...ImageRef
     }
-    tags
     properties {
       key
       value
@@ -122,6 +126,12 @@ query Page($id: ID!) {
   page(id: $id) {
     id
 
+    tags {
+      id
+      tag
+      type
+    }
+
     pending {
       publishAt
     }
@@ -140,7 +150,6 @@ query Page($id: ID!) {
       image {
         ...ImageRef
       }
-      tags
       properties {
         key
         value

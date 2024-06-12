@@ -9,7 +9,13 @@ import {PropsWithChildren} from 'react'
 export type NavbarContainerProps = PropsWithChildren<
   Pick<
     BuilderNavbarProps,
-    'categorySlugs' | 'slug' | 'headerSlug' | 'loginUrl' | 'profileUrl' | 'subscriptionsUrl'
+    | 'categorySlugs'
+    | 'slug'
+    | 'headerSlug'
+    | 'loginUrl'
+    | 'profileUrl'
+    | 'subscriptionsUrl'
+    | 'showSubscriptionsUrl'
   > &
     BuilderContainerProps
 >
@@ -22,6 +28,7 @@ export function NavbarContainer({
   loginUrl,
   profileUrl,
   subscriptionsUrl,
+  showSubscriptionsUrl,
   children
 }: NavbarContainerProps) {
   const {Navbar} = useWebsiteBuilder()
@@ -37,6 +44,7 @@ export function NavbarContainer({
       loginUrl={loginUrl}
       profileUrl={profileUrl}
       subscriptionsUrl={subscriptionsUrl}
+      showSubscriptionsUrl={showSubscriptionsUrl}
       data={data}
       loading={loading}
       error={error}

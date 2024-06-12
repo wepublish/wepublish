@@ -5,7 +5,6 @@ import {useWebsiteBuilder} from '@wepublish/website/builder'
 export const AuthorListItemImageWrapper = styled('div')`
   display: grid;
   width: 100%;
-  aspect-ratio: 1;
 `
 
 export const AuthorListItemContent = styled('div')``

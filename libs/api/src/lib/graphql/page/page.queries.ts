@@ -161,13 +161,21 @@ const createPendingFilter = (filter: Partial<PageFilter>): Prisma.PageWhereInput
 const createTagsFilter = (filter: Partial<PageFilter>): Prisma.PageWhereInput => {
   if (filter?.tags?.length) {
     const hasTags = {
-      is: {
-        tags: {hasSome: filter.tags}
+      some: {
+        tag: {
+          id: {
+            in: filter.tags
+          }
+        }
       }
-    }
+    } satisfies Prisma.TaggedPagesListRelationFilter
 
     return {
-      OR: [{draft: hasTags}, {pending: hasTags}, {published: hasTags}]
+      OR: [
+        {
+          tags: hasTags
+        }
+      ]
     }
   }
 

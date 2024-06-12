@@ -3,7 +3,7 @@
 exports[`Event should render Default 1`] = `
 <DocumentFragment>
   <article
-    class="ec2zadl3 css-1ds6vfm-ContentWrapperStyled-EventWrapper e1wqte7t0"
+    class="ec2zadl3 css-14skg5c-ContentWrapperStyled-EventWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -51,18 +51,22 @@ exports[`Event should render Default 1`] = `
       {"@context":"http://schema.org","@type":"Event","startDate":"2023-02-24T09:00:00Z","endDate":"2023-02-25T07:30:00Z","duration":"P0Y0M0DT22H30M0S","keywords":"Concert","eventStatus":"SCHEDULED","location":"Basel","image":"https://unsplash.it/500/300","name":"Cool concert","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
     </script>
     <figure
-      class="css-1l259nm-ImageBlockWrapper-Event eekavcu1"
+      class="css-i2ow2o-ImageBlockWrapper-Event eekavcu2"
     >
-      <img
-        alt="DSC07717"
-        class="css-cibo30-ImageWrapper e1shv2yg0"
-        loading="lazy"
-        srcset="https://unsplash.it/800/400 800w,
+      <div
+        class="css-190ggwe-ImageBlockInnerWrapper eekavcu1"
+      >
+        <img
+          alt="DSC07717"
+          class="css-1oyo3gl-ImageWrapper-ImageBlock e1shv2yg0"
+          loading="lazy"
+          srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
-        title=""
-      />
+          title=""
+        />
+      </div>
     </figure>
     <div
       class="css-1m698ok-EventMeta ec2zadl2"
@@ -87,7 +91,7 @@ https://unsplash.it/200/100 200w"
               fill="none"
             />
             <path
-              d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
+              d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
             />
           </svg>
           24.02.2023 09:00
@@ -483,7 +487,7 @@ https://unsplash.it/200/100 200w"
 exports[`Event should render WithClassName 1`] = `
 <DocumentFragment>
   <article
-    class="extra-classname ec2zadl3 css-1ds6vfm-ContentWrapperStyled-EventWrapper e1wqte7t0"
+    class="extra-classname ec2zadl3 css-14skg5c-ContentWrapperStyled-EventWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -531,18 +535,22 @@ exports[`Event should render WithClassName 1`] = `
       {"@context":"http://schema.org","@type":"Event","startDate":"2023-02-24T09:00:00Z","endDate":"2023-02-25T07:30:00Z","duration":"P0Y0M0DT22H30M0S","keywords":"Concert","eventStatus":"SCHEDULED","location":"Basel","image":"https://unsplash.it/500/300","name":"Cool concert","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
     </script>
     <figure
-      class="css-1l259nm-ImageBlockWrapper-Event eekavcu1"
+      class="css-i2ow2o-ImageBlockWrapper-Event eekavcu2"
     >
-      <img
-        alt="DSC07717"
-        class="css-cibo30-ImageWrapper e1shv2yg0"
-        loading="lazy"
-        srcset="https://unsplash.it/800/400 800w,
+      <div
+        class="css-190ggwe-ImageBlockInnerWrapper eekavcu1"
+      >
+        <img
+          alt="DSC07717"
+          class="css-1oyo3gl-ImageWrapper-ImageBlock e1shv2yg0"
+          loading="lazy"
+          srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
-        title=""
-      />
+          title=""
+        />
+      </div>
     </figure>
     <div
       class="css-1m698ok-EventMeta ec2zadl2"
@@ -567,7 +575,7 @@ https://unsplash.it/200/100 200w"
               fill="none"
             />
             <path
-              d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
+              d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
             />
           </svg>
           24.02.2023 09:00
@@ -963,7 +971,7 @@ https://unsplash.it/200/100 200w"
 exports[`Event should render WithEmotion 1`] = `
 <DocumentFragment>
   <article
-    class="ec2zadl3 css-1ds6vfm-ContentWrapperStyled-EventWrapper e1wqte7t0"
+    class="ec2zadl3 css-14skg5c-ContentWrapperStyled-EventWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -1011,18 +1019,22 @@ exports[`Event should render WithEmotion 1`] = `
       {"@context":"http://schema.org","@type":"Event","startDate":"2023-02-24T09:00:00Z","endDate":"2023-02-25T07:30:00Z","duration":"P0Y0M0DT22H30M0S","keywords":"Concert","eventStatus":"SCHEDULED","location":"Basel","image":"https://unsplash.it/500/300","name":"Cool concert","description":"Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."}
     </script>
     <figure
-      class="css-1l259nm-ImageBlockWrapper-Event eekavcu1"
+      class="css-i2ow2o-ImageBlockWrapper-Event eekavcu2"
     >
-      <img
-        alt="DSC07717"
-        class="css-cibo30-ImageWrapper e1shv2yg0"
-        loading="lazy"
-        srcset="https://unsplash.it/800/400 800w,
+      <div
+        class="css-190ggwe-ImageBlockInnerWrapper eekavcu1"
+      >
+        <img
+          alt="DSC07717"
+          class="css-1oyo3gl-ImageWrapper-ImageBlock e1shv2yg0"
+          loading="lazy"
+          srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
 https://unsplash.it/200/100 200w"
-        title=""
-      />
+          title=""
+        />
+      </div>
     </figure>
     <div
       class="css-1m698ok-EventMeta ec2zadl2"
@@ -1047,7 +1059,7 @@ https://unsplash.it/200/100 200w"
               fill="none"
             />
             <path
-              d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
+              d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
             />
           </svg>
           24.02.2023 09:00
@@ -1443,7 +1455,7 @@ https://unsplash.it/200/100 200w"
 exports[`Event should render WithError 1`] = `
 <DocumentFragment>
   <article
-    class="ec2zadl3 css-1ds6vfm-ContentWrapperStyled-EventWrapper e1wqte7t0"
+    class="ec2zadl3 css-14skg5c-ContentWrapperStyled-EventWrapper e1wqte7t0"
   >
     <div
       class="css-cs9jq0-TitleBlockWrapper ek0hk6a0"
@@ -1469,7 +1481,7 @@ exports[`Event should render WithError 1`] = `
 exports[`Event should render WithLoading 1`] = `
 <DocumentFragment>
   <article
-    class="ec2zadl3 css-1ds6vfm-ContentWrapperStyled-EventWrapper e1wqte7t0"
+    class="ec2zadl3 css-14skg5c-ContentWrapperStyled-EventWrapper e1wqte7t0"
   >
     <div
       class="css-cs9jq0-TitleBlockWrapper ek0hk6a0"
@@ -1495,7 +1507,7 @@ exports[`Event should render WithLoading 1`] = `
 exports[`Event should render WithoutImage 1`] = `
 <DocumentFragment>
   <article
-    class="ec2zadl3 css-1ds6vfm-ContentWrapperStyled-EventWrapper e1wqte7t0"
+    class="ec2zadl3 css-14skg5c-ContentWrapperStyled-EventWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -1561,7 +1573,7 @@ exports[`Event should render WithoutImage 1`] = `
               fill="none"
             />
             <path
-              d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
+              d="M9 11H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2zm2-7h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V9h14v11z"
             />
           </svg>
           24.02.2023 09:00

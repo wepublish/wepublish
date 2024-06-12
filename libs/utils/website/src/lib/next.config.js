@@ -36,6 +36,29 @@ const nextConfig = {
       }
     }
   },
+  async headers() {
+    return [
+      {
+        // Apply these headers to all routes except /profile/*
+        source: '/((?!profile).*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 's-maxage=59, stale-while-revalidate=59, maxage=59, public'
+          }
+        ]
+      },
+      {
+        source: '/',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 's-maxage=59, stale-while-revalidate=59, maxage=59, public'
+          }
+        ]
+      }
+    ]
+  },
   experimental: {
     scrollRestoration: true,
     outputFileTracingRoot: join(__dirname, '../../../../../'),

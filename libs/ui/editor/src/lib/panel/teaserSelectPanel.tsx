@@ -37,8 +37,6 @@ import {
   Nav as RNav,
   Notification,
   Panel,
-  Radio,
-  RadioGroup,
   toaster,
   Toggle as RToggle,
   Loader as RLoader
@@ -569,17 +567,6 @@ export function TeaserSelectPanel({onClose, onSelect}: TeaserSelectPanelProps) {
 
             <Panel header={t('articleEditor.panels.displayOptions')}>
               <Form fluid>
-                <Form.Group controlId="articleStyle">
-                  <Form.ControlLabel>{t('articleEditor.panels.style')}</Form.ControlLabel>
-                  <RadioGroup
-                    inline
-                    value={style}
-                    onChange={teaserStyle => setStyle(teaserStyle as TeaserStyle)}>
-                    <Radio value={TeaserStyle.Default}>{t('articleEditor.panels.default')}</Radio>
-                    <Radio value={TeaserStyle.Light}>{t('articleEditor.panels.light')}</Radio>
-                    <Radio value={TeaserStyle.Text}>{t('articleEditor.panels.text')}</Radio>
-                  </RadioGroup>
-                </Form.Group>
                 <Form.Group controlId="articlePreTitle">
                   <Form.ControlLabel>{t('articleEditor.panels.preTitle')}</Form.ControlLabel>
                   <Form.Control

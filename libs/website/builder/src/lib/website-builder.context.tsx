@@ -54,6 +54,7 @@ import {
 import {
   BuilderCommentEditorProps,
   BuilderCommentListItemProps,
+  BuilderCommentListItemShareProps,
   BuilderCommentListProps,
   BuilderCommentProps,
   BuilderCommentRatingsProps
@@ -91,10 +92,11 @@ import {
   BuilderAlertProps,
   BuilderButtonProps,
   BuilderIconButtonProps,
+  BuilderPaginationProps,
   BuilderRatingProps,
   BuilderTextFieldProps
 } from './ui.interface'
-import {BuilderPersonalDataFormProps, BuilderImageUploadProps} from './user.interface'
+import {BuilderImageUploadProps, BuilderPersonalDataFormProps} from './user.interface'
 
 const NoComponent = () => null
 
@@ -121,6 +123,7 @@ export type WebsiteBuilderProps = {
   Comment: ComponentType<BuilderCommentProps>
   CommentList: ComponentType<BuilderCommentListProps>
   CommentListItem: ComponentType<BuilderCommentListItemProps>
+  CommentListItemShare: ComponentType<BuilderCommentListItemShareProps>
   CommentListItemChild: ComponentType<BuilderCommentListItemProps>
   CommentEditor: ComponentType<BuilderCommentEditorProps>
   CommentRatings: ComponentType<BuilderCommentRatingsProps>
@@ -143,6 +146,7 @@ export type WebsiteBuilderProps = {
     TextField: ComponentType<BuilderTextFieldProps>
     Button: ComponentType<BuilderButtonProps>
     IconButton: ComponentType<BuilderIconButtonProps>
+    Pagination: ComponentType<BuilderPaginationProps>
     H1: ComponentType<BuilderHeadingProps>
     H2: ComponentType<BuilderHeadingProps>
     H3: ComponentType<BuilderHeadingProps>
@@ -238,6 +242,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   ArticleList: NoComponent,
   CommentList: NoComponent,
   CommentListItem: NoComponent,
+  CommentListItemShare: NoComponent,
   CommentListItemChild: NoComponent,
   Comment: NoComponent,
   CommentEditor: NoComponent,
@@ -252,6 +257,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     TextField: NoComponent,
     Button: NoComponent,
     IconButton: NoComponent,
+    Pagination: NoComponent,
     H1: NoComponent,
     H2: NoComponent,
     H3: NoComponent,

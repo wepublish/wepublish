@@ -14,8 +14,7 @@ fragment FullAuthor on Author {
   }
 
   tags {
-    id
-    tag
+    ...FullTag
   }
 
   image {

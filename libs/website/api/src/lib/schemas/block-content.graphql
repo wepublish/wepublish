@@ -167,7 +167,7 @@ fragment FullTeaser on Teaser {
       ...ArticleWithoutBlocks
 
       blocks {
-        __typename
+        ...BlockWithoutTeaser
       }
     }
   }
@@ -191,7 +191,7 @@ fragment FullTeaser on Teaser {
       ...ArticleWithoutBlocks
 
       blocks {
-        __typename
+        ...BlockWithoutTeaser
       }
     }
   }
@@ -211,7 +211,7 @@ fragment FullTeaser on Teaser {
       ...PageWithoutBlocks
 
       blocks {
-        __typename
+        ...BlockWithoutTeaser
       }
     }
   }
@@ -278,6 +278,7 @@ fragment FullBlock on Block {
   }
 
   ... on TeaserListBlock {
+    title
     blockStyle
     teasers {
       ...FullTeaser
