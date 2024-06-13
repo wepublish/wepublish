@@ -39,7 +39,8 @@ const theme = createTheme(WePTheme, {
       fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
     },
     body1: {
-      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+      fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(','),
+      fontSize: '16px'
     },
     body2: {
       fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')

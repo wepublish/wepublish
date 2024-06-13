@@ -85,16 +85,18 @@ export const FocusTeaser = ({
         </FocusedTeaser>
       </FocusedTeaserContent>
 
-      <TeaserListBlockTeasers>
-        {restTeasers.map((teaser, index) => (
-          <Teaser
-            key={index}
-            teaser={teaser}
-            alignment={alignmentForTeaserBlock(index, 4)}
-            blockStyle={blockStyle}
-          />
-        ))}
-      </TeaserListBlockTeasers>
+      {!!restTeasers.length && (
+        <TeaserListBlockTeasers>
+          {restTeasers.map((teaser, index) => (
+            <Teaser
+              key={index}
+              teaser={teaser}
+              alignment={alignmentForTeaserBlock(index, 4)}
+              blockStyle={blockStyle}
+            />
+          ))}
+        </TeaserListBlockTeasers>
+      )}
     </FocusTeaserWrapper>
   )
 }

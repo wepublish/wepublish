@@ -44,25 +44,25 @@ const imageStyles = (theme: Theme) => css`
   }
 `
 
-const headingStylesNoImage = (theme: Theme) => css`
+export const HeadingWithImage = styled('div')`
   font-size: 40px;
   font-weight: 600;
   text-transform: uppercase;
 
-  ${theme.breakpoints.up('md')} {
+  ${({theme}) => theme.breakpoints.up('md')} {
     font-style: italic;
-    font-size: 84px;
+    font-size: 45px;
   }
 `
 
-const headingStylesWithImage = (theme: Theme) => css`
+export const HeadingWithoutImage = styled('div')`
   font-size: 40px;
   font-weight: 600;
   text-transform: uppercase;
 
-  ${theme.breakpoints.up('md')} {
+  ${({theme}) => theme.breakpoints.up('md')} {
     font-style: italic;
-    font-size: 45px;
+    font-size: 84px;
   }
 `
 
@@ -117,22 +117,12 @@ export const BreakBlock = ({
   return (
     <BreakBlockWrapper className={className} reverse={reverse}>
       <BreakBlockSegment reverse={reverse}>
-        {!image && (
-          <H2 component="div" role="heading" css={headingStylesNoImage(theme)}>
-            {text}
-          </H2>
-        )}
-
+        {!image && <H2 component={HeadingWithoutImage}>{text}</H2>}
         {image && <Image image={image} css={imageStyles(theme)} />}
       </BreakBlockSegment>
 
       <BreakBlockSegment>
-        {image && (
-          <H4 component="div" role="heading" css={headingStylesWithImage(theme)}>
-            {text}
-          </H4>
-        )}
-
+        {image && <H4 component={HeadingWithImage}>{text}</H4>}
         <RichText richText={richText} css={richTextStyles(theme)} />
 
         {!hideButton && linkURL && linkText && (

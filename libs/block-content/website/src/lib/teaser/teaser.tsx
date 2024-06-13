@@ -218,7 +218,7 @@ export const TeaserTitle = styled('h1')`
 `
 export const TeaserLead = styled('p')`
   font-weight: 300;
-  font-size: 15px;
+  font-size: ${({theme}) => theme.typography.body1.fontSize};
   grid-area: lead;
 `
 

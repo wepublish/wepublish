@@ -24,6 +24,8 @@ import {TsriBlockRenderer} from '../src/components/block-renderer/block-renderer
 import {TsriTeaser} from '../src/components/tsri-teaser'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
+import {TsriBreakBlock} from '../src/components/tsri-break-block'
+import {TsriNavbar} from '../src/components/tsri-navbar'
 
 setDefaultOptions({
   locale: de
@@ -100,8 +102,9 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
         <WebsiteBuilderProvider
           Head={Head}
           Script={Script}
+          Navbar={TsriNavbar}
           elements={{Link: NextWepublishLink}}
-          blocks={{Renderer: TsriBlockRenderer, Teaser: TsriTeaser}}
+          blocks={{Renderer: TsriBlockRenderer, Teaser: TsriTeaser, Break: TsriBreakBlock}}
           date={{format: dateFormatter}}
           meta={{siteTitle}}>
           <ThemeProvider theme={theme}>

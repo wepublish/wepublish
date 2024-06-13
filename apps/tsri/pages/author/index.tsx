@@ -34,7 +34,7 @@ export default function AuthorList({tagId}: AuthorListProps) {
           tagIds: tagId ? [tagId] : []
         }
       } satisfies ApiV1.AuthorListQueryVariables),
-    [page]
+    [page, tagId]
   )
 
   const {data} = ApiV1.useAuthorListQuery({

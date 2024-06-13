@@ -17,6 +17,7 @@ const eventImage = css`
 `
 
 export const EventMeta = styled('div')`
+  grid-column: 2/12;
   display: grid;
   grid-template-columns: auto auto;
   justify-content: space-between;

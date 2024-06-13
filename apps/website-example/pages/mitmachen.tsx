@@ -19,8 +19,8 @@ export default function Mitmachen() {
         firstName: firstName as string | undefined,
         name: lastName as string | undefined
       }}
-      successURL={`${locationOrigin}/payment/success`}
-      failureURL={`${locationOrigin}/payment/fail`}
+      successURL={`${locationOrigin}/profile/subscription`}
+      failureURL={`${locationOrigin}/mitmachen`}
     />
   )
 }

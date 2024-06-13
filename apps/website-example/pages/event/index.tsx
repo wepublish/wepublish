@@ -57,7 +57,7 @@ export default function EventList() {
         />
 
         <DateTimePicker
-          label="Von"
+          label="Bis"
           value={variables?.filter?.to ?? null}
           onChange={value => {
             onVariablesChange({

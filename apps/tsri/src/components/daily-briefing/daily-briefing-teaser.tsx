@@ -33,6 +33,7 @@ const DailyBriefingLinkList = styled('ul')`
 const DailyBriefingLink = styled('li')`
   padding-bottom: ${({theme}) => theme.spacing(2)};
   border-bottom: currentColor 1px solid;
+  font-size: ${({theme}) => theme.typography.h6};
   font-weight: 600;
 
   &:last-child {
@@ -40,7 +41,7 @@ const DailyBriefingLink = styled('li')`
   }
 `
 
-export const DailyBriefingTeaser = ({alignment}: BuilderTeaserProps) => {
+export const DailyBriefingTeaser = ({alignment, teaser}: BuilderTeaserProps) => {
   const {
     elements: {H4, Link}
   } = useWebsiteBuilder()
@@ -49,7 +50,7 @@ export const DailyBriefingTeaser = ({alignment}: BuilderTeaserProps) => {
   return (
     <TeaserWrapper {...alignment}>
       <DailyBriefingTeaserWrapper>
-        <H4 component={DailyBriefingTitle}>Daily Briefing</H4>
+        <H4 component={DailyBriefingTitle}>{teaser?.title || 'Daily Briefing'}</H4>
 
         <DailyBriefingLinkList>
           {campaigns.map(campaign => (
