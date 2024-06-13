@@ -21,11 +21,11 @@ import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {TsriBlockRenderer} from '../src/components/block-renderer/block-renderer'
+import {TsriBreakBlock} from '../src/components/tsri-break-block'
+import {TsriNavbar} from '../src/components/tsri-navbar'
 import {TsriTeaser} from '../src/components/tsri-teaser'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
-import {TsriBreakBlock} from '../src/components/tsri-break-block'
-import {TsriNavbar} from '../src/components/tsri-navbar'
 
 setDefaultOptions({
   locale: de
