@@ -885,10 +885,13 @@ export type LinkPageBreakBlockInput = {
   blockStyle?: InputMaybe<Scalars['String']>;
   hideButton: Scalars['Boolean'];
   imageID?: InputMaybe<Scalars['ID']>;
+  layoutOption?: InputMaybe<Scalars['String']>;
   linkTarget?: InputMaybe<Scalars['String']>;
   linkText?: InputMaybe<Scalars['String']>;
   linkURL?: InputMaybe<Scalars['String']>;
   richText: Scalars['RichText'];
+  styleOption?: InputMaybe<Scalars['String']>;
+  templateOption?: InputMaybe<Scalars['String']>;
   text?: InputMaybe<Scalars['String']>;
 };
 

@@ -1,11 +1,18 @@
 import {AppBar, Theme, Toolbar, css, styled, useTheme} from '@mui/material'
-import {FullNavigationFragment} from '@wepublish/website/api'
+import {useUser} from '@wepublish/authentication/website'
+import {useRouter} from 'next/router'
+import {Teaser, TeaserListBlock, alignmentForTeaserBlock} from '@wepublish/block-content/website'
+import {Button} from '@wepublish/ui'
+import {
+  ArticleTeaser,
+  FullNavigationFragment,
+  PageTeaser,
+  usePhraseQuery
+} from '@wepublish/website/api'
 import {BuilderNavbarProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {PropsWithChildren, useCallback, useMemo, useState} from 'react'
+import {PropsWithChildren, useCallback, useEffect, useMemo, useState} from 'react'
 import {MdAccountCircle, MdClose, MdMenu, MdOutlinePayments, MdSearch} from 'react-icons/md'
 import {navigationLinkToUrl} from '../link-to-url'
-import {useUser} from '@wepublish/authentication/website'
-import {Button} from '@wepublish/ui'
 
 declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -224,7 +231,42 @@ export function Navbar({
   const {hasUser} = useUser()
   const [isMenuOpen, setMenuOpen] = useState(false)
   const [isSearchOpen, setSearchOpen] = useState(false)
+  const [phraseQuery, setPhraseQuery] = useState('')
+  const [rawQuery, setRawQuery] = useState('')
   const toggleMenu = useCallback(() => setMenuOpen(isOpen => !isOpen), [])
+
+  const router = useRouter()
+
+  const {
+    data: phraseData,
+    loading,
+    error
+  } = usePhraseQuery({
+    variables: {
+      query: phraseQuery
+    }
+  })
+
+  console.log('phraseQuery', phraseQuery)
+  console.log('phraseData', phraseData)
+  const articlesNodes =
+    (phraseData?.phrase && phraseData.phrase.articles && phraseData.phrase.articles.nodes) || []
+  const pagesNodes =
+    (phraseData?.phrase && phraseData.phrase.pages && phraseData.phrase.pages.nodes) || []
+
+  const modifiedArticlesNodes = articlesNodes.map(node => ({
+    __typename: 'ArticleTeaser',
+    article: node
+  }))
+
+  const modifiedPagesNodes = pagesNodes.map(node => ({
+    __typename: 'PageTeaser',
+    page: node
+  }))
+
+  const phraseResultTeasers = [...modifiedArticlesNodes, ...modifiedPagesNodes]
+
+  console.log('phraseResultTeasers', phraseResultTeasers)
 
   const imageStyles = useImageStyles()
   const appBarStyles = useAppBarStyles(isMenuOpen)
@@ -250,101 +292,189 @@ export function Navbar({
     [categorySlugs, data?.navigations]
   )
 
+  const onClosePhraseResults = useCallback(() => {
+    setSearchOpen(false)
+    setPhraseQuery('')
+    setRawQuery('')
+  }, [])
+
+  useEffect(() => {
+    const handleRouteChange = () => {
+      onClosePhraseResults()
+    }
+
+    router.events.on('routeChangeComplete', handleRouteChange)
+
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange)
+    }
+  }, [router.events, onClosePhraseResults])
+
   const {
     elements: {IconButton, Image, Link}
   } = useWebsiteBuilder()
 
   return (
     <NavbarWrapper className={className}>
-      <AppBar position="static" elevation={0} color={'transparent'} css={appBarStyles}>
-        <NavbarInnerWrapper>
-          {isSearchOpen ? (
-            <div>
-              <label>
-                Type to search
-                <input type="text" />
-              </label>
-              <IconButton
-                css={{fontSize: '2em', color: 'black'}}
-                onClick={() => setSearchOpen(false)}>
-                <MdClose />
-              </IconButton>
-            </div>
-          ) : (
-            <>
-              <NavbarMain>
-                <NavbarIconButtonWrapper>
+      {!phraseResultTeasers.length ? (
+        <>
+          <AppBar position="static" elevation={0} color={'transparent'} css={appBarStyles}>
+            <NavbarInnerWrapper>
+              {isSearchOpen ? (
+                <div>
+                  <form onSubmit={() => setPhraseQuery(rawQuery)}>
+                    <label>
+                      Type to search
+                      <input type="text" onChange={e => setRawQuery(e.target.value)} />
+                    </label>
+                    <Button onClick={() => setPhraseQuery(rawQuery)} aria-label={'Search'}>
+                      <IconButton css={{fontSize: '2em', color: 'black'}}>
+                        <MdSearch />
+                      </IconButton>
+                    </Button>
+                  </form>
                   <IconButton
-                    size="large"
-                    aria-label="Menu"
-                    onClick={toggleMenu}
-                    css={{color: 'white'}}>
-                    {!isMenuOpen && <MdMenu />}
-                    {isMenuOpen && <MdClose />}
+                    css={{fontSize: '2em', color: 'black'}}
+                    onClick={() => setSearchOpen(false)}>
+                    <MdClose />
                   </IconButton>
-                </NavbarIconButtonWrapper>
-              </NavbarMain>
-              {!!headerItems?.links.length && (
-                <NavbarLinks isMenuOpen={isMenuOpen}>
-                  {headerItems.links.map((link, index) => (
-                    <Link key={index} css={navbarLinkStyles} href={navigationLinkToUrl(link)}>
-                      {link.label}
+                </div>
+              ) : (
+                <>
+                  <NavbarMain>
+                    <NavbarIconButtonWrapper>
+                      <IconButton
+                        size="large"
+                        aria-label="Menu"
+                        onClick={toggleMenu}
+                        css={{color: 'white'}}>
+                        {!isMenuOpen && <MdMenu />}
+                        {isMenuOpen && <MdClose />}
+                      </IconButton>
+                    </NavbarIconButtonWrapper>
+                  </NavbarMain>
+                  {!!headerItems?.links.length && (
+                    <NavbarLinks isMenuOpen={isMenuOpen}>
+                      {headerItems.links.map((link, index) => (
+                        <Link key={index} css={navbarLinkStyles} href={navigationLinkToUrl(link)}>
+                          {link.label}
+                        </Link>
+                      ))}
+                    </NavbarLinks>
+                  )}
+                  {!!logo && (
+                    <Link href="/" aria-label="Startseite" css={logoLinkStyles}>
+                      <NavbarLogoWrapper>
+                        <Image
+                          image={logo}
+                          css={imageStyles}
+                          loading="eager"
+                          fetchPriority="high"
+                        />
+                      </NavbarLogoWrapper>
                     </Link>
-                  ))}
-                </NavbarLinks>
-              )}
-              {!!logo && (
-                <Link href="/" aria-label="Startseite" css={logoLinkStyles}>
-                  <NavbarLogoWrapper>
-                    <Image image={logo} css={imageStyles} loading="eager" fetchPriority="high" />
-                  </NavbarLogoWrapper>
-                </Link>
-              )}
-              <NavbarSpacer />
-              <NavbarActions isMenuOpen={isMenuOpen}>
-                <Button
-                  // href={hasUser ? profileUrl : loginUrl}
-                  onClick={() => setSearchOpen(true)}
-                  aria-label={'Search'}>
-                  <IconButton css={{fontSize: '2em', color: 'black'}}>
-                    <MdSearch />
-                  </IconButton>
-                </Button>
+                  )}
+                  <NavbarSpacer />
+                  <NavbarActions isMenuOpen={isMenuOpen}>
+                    <Button onClick={() => setSearchOpen(true)} aria-label={'Search'}>
+                      <IconButton css={{fontSize: '2em', color: 'black'}}>
+                        <MdSearch />
+                      </IconButton>
+                    </Button>
 
-                {hasUser && showSubscriptionsUrl ? (
-                  <Link href={subscriptionsUrl} aria-label={hasUser ? 'Profil' : 'Login'}>
-                    <IconButton css={{fontSize: '2em', color: 'black'}}>
-                      <MdOutlinePayments />
-                    </IconButton>
-                  </Link>
-                ) : null}
+                    {hasUser && showSubscriptionsUrl ? (
+                      <Link href={subscriptionsUrl} aria-label={hasUser ? 'Profil' : 'Login'}>
+                        <IconButton css={{fontSize: '2em', color: 'black'}}>
+                          <MdOutlinePayments />
+                        </IconButton>
+                      </Link>
+                    ) : null}
 
-                <Link
-                  href={hasUser ? profileUrl : loginUrl}
-                  aria-label={hasUser ? 'Profil' : 'Login'}>
-                  <IconButton css={{fontSize: '2em', color: 'black'}}>
-                    <MdAccountCircle />
-                  </IconButton>
-                </Link>
-              </NavbarActions>
-            </>
+                    <Link
+                      href={hasUser ? profileUrl : loginUrl}
+                      aria-label={hasUser ? 'Profil' : 'Login'}>
+                      <IconButton css={{fontSize: '2em', color: 'black'}}>
+                        <MdAccountCircle />
+                      </IconButton>
+                    </Link>
+                  </NavbarActions>
+                </>
+              )}
+            </NavbarInnerWrapper>
+          </AppBar>
+
+          {isMenuOpen && Boolean(mainItems || categories?.length) && (
+            <NavPaper
+              profileUrl={profileUrl}
+              loginUrl={loginUrl}
+              main={mainItems}
+              categories={categories}
+              closeMenu={toggleMenu}>
+              {children}
+            </NavPaper>
           )}
-        </NavbarInnerWrapper>
-      </AppBar>
-
-      {isMenuOpen && Boolean(mainItems || categories?.length) && (
-        <NavPaper
-          profileUrl={profileUrl}
-          loginUrl={loginUrl}
-          main={mainItems}
-          categories={categories}
-          closeMenu={toggleMenu}>
-          {children}
-        </NavPaper>
+        </>
+      ) : (
+        <NavbarPhraseResults teasers={phraseResultTeasers} onClose={onClosePhraseResults} />
       )}
     </NavbarWrapper>
   )
 }
+
+export const NavbarPhraseResults = ({
+  teasers,
+  onClose
+}: {
+  teasers: ArticleTeaser[] | PageTeaser[]
+  onClose: () => void
+}) => {
+  const {
+    elements: {IconButton}
+  } = useWebsiteBuilder()
+
+  return (
+    <NavbarPhraseResultsWrapper>
+      <IconButton css={{fontSize: '2em', color: 'black'}} onClick={onClose}>
+        <MdClose />
+      </IconButton>
+      {teasers.map((teaser, index) => {
+        return (
+          <Teaser
+            key={index}
+            teaser={teaser}
+            blockStyle=""
+            alignment={alignmentForTeaserBlock(index, 1)}
+          />
+        )
+      })}
+    </NavbarPhraseResultsWrapper>
+  )
+}
+
+export const NavbarPhraseResultsWrapper = styled('div')`
+  padding: ${({theme}) => theme.spacing(2.5)};
+  background-color: ${({theme}) => theme.palette.common.white};
+  color: ${({theme}) => theme.palette.primary.contrastText};
+  display: grid;
+  gap: ${({theme}) => theme.spacing(3)};
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  transform: translateY(100%);
+  overflow-y: scroll;
+  max-height: 100vh;
+  padding-bottom: ${({theme}) => theme.spacing(10)};
+
+  ${({theme}) => css`
+    ${theme.breakpoints.up('md')} {
+      gap: ${theme.spacing(6)};
+      row-gap: ${theme.spacing(12)};
+      grid-template-columns: 1fr 1fr;
+      padding: ${theme.spacing(2.5)} calc(100% / 6) calc(100% / 12);
+    }
+  `}
+`
 
 export const NavPaperWrapper = styled('div')`
   padding: ${({theme}) => theme.spacing(2.5)};

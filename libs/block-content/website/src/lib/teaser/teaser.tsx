@@ -296,6 +296,10 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
   const linkStyles = teaserLinkStyles()
   const imageStyles = useImageStyles()
 
+  console.log('teaser', teaser)
+  console.log('title', title)
+  console.log('authors', authors)
+
   return (
     <TeaserWrapper {...alignment}>
       <Link color="inherit" href={href ?? ''} className={className} css={linkStyles}>

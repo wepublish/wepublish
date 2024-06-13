@@ -2,14 +2,7 @@ query Phrase($query: String!, $take: Int, $skip: Int) {
   phrase(query: $query, take: $take, skip: $skip) {
     articles {
       nodes {
-        id
-        slug
-        title
-        blocks {
-          ... on RichTextBlock {
-            richText
-          }
-        }
+        ...ArticleWithoutBlocks
       }
 
       pageInfo {
@@ -24,14 +17,7 @@ query Phrase($query: String!, $take: Int, $skip: Int) {
 
     pages {
       nodes {
-        id
-        slug
-        title
-        blocks {
-          ... on RichTextBlock {
-            richText
-          }
-        }
+        ...FullPage
       }
 
       pageInfo {
