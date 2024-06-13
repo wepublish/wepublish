@@ -28,6 +28,7 @@
       "@wepublish/author/website": ["libs/author/website/src/index.ts"],
       "@wepublish/block-content/api": ["libs/block-content/api/src/index.ts"],
       "@wepublish/block-content/website": ["libs/block-content/website/src/index.ts"],
+      "@wepublish/block/api": ["libs/block/api/src/index.ts"],
       "@wepublish/comments/website": ["libs/comments/website/src/index.ts"],
       "@wepublish/consent/api": ["libs/consent/api/src/index.ts"],
       "@wepublish/consent/editor": ["libs/consent/editor/src/index.ts"],
