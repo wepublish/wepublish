@@ -449,6 +449,7 @@ export const Subscribe = <T extends BuilderUserFormFields>({
       {error && <Alert severity="error">{error.message}</Alert>}
 
       <Button
+        size={'large'}
         disabled={challenge.loading || userInvoices.loading || userSubscriptions.loading || loading}
         type="submit"
         css={buttonStyles}

@@ -13,10 +13,6 @@ export const EventBlockWrapper = styled('aside')`
   justify-items: center;
 `
 
-const columnLayout = css`
-  grid-template-columns: minmax(30%, 200px) auto;
-`
-
 const truncate = truncateFirstParagraph(255)
 
 export const EventBlock = ({events, className}: BuilderEventBlockProps) => {
@@ -25,12 +21,7 @@ export const EventBlock = ({events, className}: BuilderEventBlockProps) => {
   return (
     <EventBlockWrapper className={className}>
       {events.map(event => (
-        <EventListItem
-          key={event.id}
-          {...event}
-          description={truncate(event.description)}
-          css={columnLayout}
-        />
+        <EventListItem key={event.id} {...event} description={truncate(event.description)} />
       ))}
     </EventBlockWrapper>
   )

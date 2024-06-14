@@ -6,7 +6,7 @@ import {PrismaClient} from '@prisma/client'
 import {getImages} from './image.queries'
 import {SortOrder} from '@wepublish/utils/api'
 
-export const getImageById = (
+export const getImageById = async (
   id: string,
   authenticate: Context['authenticate'],
   imageLoader: Context['loaders']['images']

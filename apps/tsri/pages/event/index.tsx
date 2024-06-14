@@ -1,31 +1,19 @@
-import {Checkbox, css, FormControlLabel, FormGroup, Pagination, styled} from '@mui/material'
+import {Checkbox, css, FormControlLabel, FormGroup, styled} from '@mui/material'
 import {DateTimePicker, LocalizationProvider} from '@mui/x-date-pickers'
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns'
 import {ApiV1, EventListContainer, useWebsiteBuilder} from '@wepublish/website'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
-import {Reducer, useMemo, useReducer} from 'react'
+import {useMemo} from 'react'
 import {z} from 'zod'
 
 const Filter = styled('div')`
   display: grid;
-  grid-template-columns: minmax(150px, 250px);
+  grid-template-columns: repeat(auto-fit, 250px);
   align-items: center;
   gap: ${({theme}) => theme.spacing(2)};
   margin-bottom: ${({theme}) => theme.spacing(3)};
-
-  ${({theme}) => css`
-    ${theme.breakpoints.up('sm')} {
-      grid-template-columns: 1fr 1fr;
-    }
-  `}
-
-  ${({theme}) => css`
-    ${theme.breakpoints.up('md')} {
-      grid-template-columns: 250px 250px 250px;
-    }
-  `}
 `
 
 const pageSchema = z.object({

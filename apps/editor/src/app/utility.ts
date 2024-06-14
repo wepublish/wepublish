@@ -168,7 +168,7 @@ export function flattenDOMTokenList(list: DOMTokenList) {
 
 export function getSettings(): ClientSettings {
   const defaultSettings = {
-    apiURL: 'http://localhost:4000',
+    apiURL: 'https://api-tsri.wepublish.dev',
     peerByDefault: false,
     imgMinSizeToCompress: 10
   }

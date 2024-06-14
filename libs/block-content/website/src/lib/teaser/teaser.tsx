@@ -4,7 +4,7 @@ import {FlexAlignment, Teaser as TeaserType} from '@wepublish/website/api'
 import {BuilderTeaserProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {isImageBlock} from '../image/image-block'
 import {isTitleBlock} from '../title/title-block'
-import {useMemo} from 'react'
+import {PropsWithChildren, useMemo} from 'react'
 
 export const selectTeaserTitle = (teaser: TeaserType) => {
   switch (teaser.__typename) {
@@ -187,7 +187,7 @@ const useImageStyles = () => {
       transition: transform 0.3s ease-in-out;
       aspect-ratio: 1.8;
 
-      ${TeaserWrapper}:hover & {
+      :where(${TeaserWrapper}:hover &) {
         transform: scale(1.1);
       }
 
@@ -199,11 +199,10 @@ const useImageStyles = () => {
   )
 }
 
-const teaserLinkStyles = () => css`
+export const TeaserContentWrapper = styled('div')`
   display: grid;
   grid-auto-rows: max-content;
   align-items: start;
-  text-decoration: none;
   grid-template-areas:
     'image'
     'pretitle'
@@ -216,6 +215,7 @@ export const TeaserTitle = styled('h1')`
   grid-area: title;
   margin-bottom: ${({theme}) => theme.spacing(1)};
 `
+
 export const TeaserLead = styled('p')`
   font-weight: 300;
   font-size: ${({theme}) => theme.typography.body1.fontSize};
@@ -233,7 +233,7 @@ export const TeaserPreTitleNoContent = styled('div')`
   width: 100%;
   margin-bottom: ${({theme}) => theme.spacing(1.5)};
 
-  ${TeaserWrapper}:hover & {
+  :where(${TeaserWrapper}:hover &) {
     background-color: ${({theme}) => theme.palette.primary.main};
   }
 `
@@ -246,7 +246,7 @@ export const TeaserPreTitleWrapper = styled('div')`
   margin-bottom: ${({theme}) => theme.spacing(1.5)};
   grid-area: pretitle;
 
-  ${TeaserWrapper}:hover & {
+  :where(${TeaserWrapper}:hover &) {
     background-color: ${({theme}) => theme.palette.primary.main};
   }
 `
@@ -260,7 +260,7 @@ export const PreTitle = styled('div')`
   font-weight: 300;
   transform: translateY(-100%);
 
-  ${TeaserWrapper}:hover & {
+  :where(${TeaserWrapper}:hover &) {
     background-color: ${({theme}) => theme.palette.primary.main};
   }
 
@@ -279,6 +279,26 @@ export const TeaserTime = styled('time')`
   font-weight: 400;
 `
 
+const TeaserContent = ({
+  href,
+  className,
+  children
+}: PropsWithChildren<{href?: string; className?: string}>) => {
+  const {
+    elements: {Link}
+  } = useWebsiteBuilder()
+
+  if (href) {
+    return (
+      <Link color="inherit" underline="none" href={href}>
+        <TeaserContentWrapper className={className}>{children}</TeaserContentWrapper>
+      </Link>
+    )
+  }
+
+  return <TeaserContentWrapper className={className}>{children}</TeaserContentWrapper>
+}
+
 export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
   const title = teaser && selectTeaserTitle(teaser)
   const preTitle = teaser && selectTeaserPreTitle(teaser)
@@ -293,26 +313,23 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
     elements: {Link, Image, Paragraph, H4}
   } = useWebsiteBuilder()
 
-  const linkStyles = teaserLinkStyles()
   const imageStyles = useImageStyles()
 
   return (
     <TeaserWrapper {...alignment}>
-      <Link color="inherit" href={href ?? ''} className={className} css={linkStyles}>
+      <TeaserContent href={href} className={className}>
         <TeaserImageWrapper>
           {image && <Image image={image} css={imageStyles} />}
         </TeaserImageWrapper>
 
-        {preTitle ? (
+        {preTitle && (
           <TeaserPreTitleWrapper>
             <PreTitle>{preTitle}</PreTitle>
           </TeaserPreTitleWrapper>
-        ) : (
-          <TeaserPreTitleNoContent />
         )}
+        {!preTitle && <TeaserPreTitleNoContent />}
 
         <H4 component={TeaserTitle}>{title}</H4>
-
         <Paragraph component={TeaserLead}>{lead}</Paragraph>
 
         <TeaserMetadata>
@@ -325,7 +342,7 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
             </TeaserTime>
           )}
         </TeaserMetadata>
-      </Link>
+      </TeaserContent>
     </TeaserWrapper>
   )
 }

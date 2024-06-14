@@ -40,6 +40,7 @@ function Subscription() {
   } = useWebsiteBuilder()
 
   const locationOrigin = typeof window !== 'undefined' ? location.origin : ''
+  const thisLocation = typeof window !== 'undefined' ? location.href : ''
 
   return (
     <SubscriptionsWrapper>
@@ -48,7 +49,7 @@ function Subscription() {
 
         <SubscriptionListContainer
           successURL={`${locationOrigin}/profile/subscription`}
-          failureURL={`${locationOrigin}/mitmachen`}
+          failureURL={thisLocation}
           filter={subscriptions => subscriptions.filter(subscription => subscription.id === id)}
         />
       </SubscriptionListWrapper>
@@ -58,7 +59,7 @@ function Subscription() {
 
         <InvoiceListContainer
           successURL={`${locationOrigin}/profile/subscription`}
-          failureURL={`${locationOrigin}/mitmachen`}
+          failureURL={thisLocation}
           filter={invoices => invoices.filter(invoice => invoice.subscriptionID === id)}
         />
       </SubscriptionListWrapper>

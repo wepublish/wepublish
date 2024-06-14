@@ -30,6 +30,10 @@ jobs:
         ghcr.io/wepublish/editor:master-${{ needs.date_sha_tag.outputs.tag }}
         ghcr.io/wepublish/editor:master
         wepublishch/editor:master
+      media_tags: |
+        ghcr.io/wepublish/media:master-${{ needs.date_sha_tag.outputs.tag }}
+        ghcr.io/wepublish/media:master
+        wepublishch/media:master
       storybook_tags: |
         ghcr.io/wepublish/storybook:master-${{ needs.date_sha_tag.outputs.tag }}
         ghcr.io/wepublish/storybook:master

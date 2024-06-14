@@ -15,12 +15,9 @@ export const isFocusTeaser = (block: ApiV1.Block): block is ApiV1.TeaserListBloc
   allPass([hasBlockStyle('Focus'), isTeaserListBlock])(block)
 
 const FocusTeaserWrapper = styled('section')`
+  grid-column: -1/1;
   display: grid;
-  gap: ${({theme}) => theme.spacing(5)};
-
-  ${({theme}) => theme.breakpoints.up('lg')} {
-    gap: ${({theme}) => theme.spacing(13)};
-  }
+  gap: ${({theme}) => theme.spacing(4)};
 `
 
 const FocusedTeaserContent = styled('div')`
@@ -44,6 +41,10 @@ const FocusedTeaserTitle = styled('h1')`
 
 const FocusedTeaser = styled('div')`
   padding: ${({theme}) => theme.spacing(4)};
+
+  ${ImageWrapper} {
+    max-height: 50lvh;
+  }
 
   ${({theme}) => theme.breakpoints.up('md')} {
     padding: ${({theme}) => theme.spacing(8)};
