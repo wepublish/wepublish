@@ -17,13 +17,16 @@ const eventImage = css`
 `
 
 export const EventMeta = styled('div')`
-  grid-column: 2/12;
   display: grid;
   grid-template-columns: auto auto;
   justify-content: space-between;
   align-items: center;
   gap: ${({theme}) => theme.spacing(2)};
   margin-top: -${({theme}) => theme.spacing(4)};
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    grid-column: 2/12;
+  }
 `
 
 const MetaWrapper = styled('div')`
