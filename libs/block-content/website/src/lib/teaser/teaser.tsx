@@ -10,13 +10,13 @@ export const selectTeaserTitle = (teaser: TeaserType) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
       const titleBlock = teaser.page?.blocks?.find(isTitleBlock)
-      return teaser.title || titleBlock?.title || teaser.page?.title
+      return teaser.title || teaser.page?.title || titleBlock?.title
     }
 
     case 'PeerArticleTeaser':
     case 'ArticleTeaser': {
       const titleBlock = teaser.article?.blocks?.find(isTitleBlock)
-      return teaser.title || titleBlock?.title || teaser.article?.title
+      return teaser.title || teaser.article?.title || titleBlock?.title
     }
 
     case 'EventTeaser':
@@ -43,13 +43,13 @@ export const selectTeaserLead = (teaser: TeaserType) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
       const titleBlock = teaser.page?.blocks?.find(isTitleBlock)
-      return teaser.lead || titleBlock?.lead || teaser.page?.description
+      return teaser.lead || teaser.page?.description || titleBlock?.lead
     }
 
     case 'PeerArticleTeaser':
     case 'ArticleTeaser': {
       const titleBlock = teaser.article?.blocks?.find(isTitleBlock)
-      return teaser.lead || titleBlock?.lead || teaser.article?.lead
+      return teaser.lead || teaser.article?.lead || titleBlock?.lead
     }
 
     case 'EventTeaser':
@@ -84,13 +84,13 @@ export const selectTeaserImage = (teaser: TeaserType) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
       const imageBlock = teaser.page?.blocks?.find(isImageBlock)
-      return teaser.image ?? imageBlock?.image ?? teaser?.page?.image
+      return teaser.image ?? teaser?.page?.image ?? imageBlock?.image
     }
 
     case 'PeerArticleTeaser':
     case 'ArticleTeaser': {
       const imageBlock = teaser.article?.blocks?.find(isImageBlock)
-      return teaser.image ?? imageBlock?.image ?? teaser?.article?.image
+      return teaser.image ?? teaser?.article?.image ?? imageBlock?.image
     }
 
     case 'EventTeaser':
@@ -310,7 +310,7 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
 
   const {
     date,
-    elements: {Link, Image, Paragraph, H4}
+    elements: {Image, Paragraph, H4}
   } = useWebsiteBuilder()
 
   const imageStyles = useImageStyles()
@@ -330,7 +330,7 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
         {!preTitle && <TeaserPreTitleNoContent />}
 
         <H4 component={TeaserTitle}>{title}</H4>
-        <Paragraph component={TeaserLead}>{lead}</Paragraph>
+        {lead && <Paragraph component={TeaserLead}>{lead}</Paragraph>}
 
         <TeaserMetadata>
           {authors && authors?.length ? <Authors>Von {authors?.join(', ')} </Authors> : null}

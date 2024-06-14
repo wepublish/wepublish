@@ -2,6 +2,7 @@ import {styled} from '@mui/material'
 import {
   ImageWrapper,
   Teaser,
+  TeaserImageWrapper,
   TeaserPreTitleNoContent,
   TeaserPreTitleWrapper
 } from '@wepublish/website'
@@ -20,6 +21,10 @@ const OverridenTeaser = styled(Teaser)`
 
   &:hover ${ImageWrapper} {
     transform: unset;
+  }
+
+  ${TeaserImageWrapper}:empty {
+    min-height: unset;
   }
 `
 

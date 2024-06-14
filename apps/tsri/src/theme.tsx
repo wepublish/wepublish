@@ -61,6 +61,16 @@ const theme = createTheme(WePTheme, {
       fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
     },
     fontFamily: [hankenGrotesk.style.fontFamily, 'sans-serif'].join(',')
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        containedSizeLarge: () => ({
+          padding: `${WePTheme.spacing(1.5)} ${WePTheme.spacing(3)}`,
+          fontSize: '1.1em'
+        })
+      }
+    }
   }
 } as PartialDeep<Theme> | ThemeOptions)
 

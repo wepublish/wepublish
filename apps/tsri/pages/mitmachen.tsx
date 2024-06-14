@@ -1,9 +1,37 @@
+import {styled} from '@mui/material'
 import {getSessionTokenProps, ssrAuthLink} from '@wepublish/utils/website'
-import {ApiV1, AuthTokenStorageKey, PageContainer, SubscribeContainer} from '@wepublish/website'
+import {
+  ApiV1,
+  AuthTokenStorageKey,
+  PageContainer,
+  SubscribeContainer,
+  SubscribeWrapper,
+  UserFormWrapper
+} from '@wepublish/website'
 import {setCookie} from 'cookies-next'
 import {NextPageContext} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
+
+const MitmachenPage = styled(PageContainer)`
+  ${SubscribeWrapper} {
+    grid-row: 2;
+
+    ${({theme}) => theme.breakpoints.up('md')} {
+      grid-column: 2/12;
+    }
+  }
+
+  ${UserFormWrapper} {
+    ${({theme}) => theme.breakpoints.up('md')} {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+  }
+
+  .MuiFormControlLabel-root.Mui-disabled {
+    display: none;
+  }
+`
 
 export default function Mitmachen() {
   const {
@@ -14,8 +42,9 @@ export default function Mitmachen() {
   const thisLocation = typeof window !== 'undefined' ? location.href : ''
 
   return (
-    <>
+    <MitmachenPage slug={'mitmachen'}>
       <SubscribeContainer
+        extraMoneyOffset={700}
         defaults={{
           email: mail as string | undefined,
           firstName: firstName as string | undefined,
@@ -24,10 +53,9 @@ export default function Mitmachen() {
         successURL={`${locationOrigin}/profile/subscription`}
         failureURL={thisLocation}
         fields={['firstName']}
+        filter={plans => plans.filter(plan => plan.tags?.some(tag => tag === 'selling'))}
       />
-
-      <PageContainer slug={'mitmachen'} />
-    </>
+    </MitmachenPage>
   )
 }
 
@@ -60,6 +88,12 @@ Mitmachen.getInitialProps = async (ctx: NextPageContext) => {
   const sessionProps = getSessionTokenProps(ctx)
 
   const dataPromises = [
+    client.query({
+      query: ApiV1.PageDocument,
+      variables: {
+        slug: 'mitmachen'
+      }
+    }),
     client.query({
       query: ApiV1.MemberPlanListDocument,
       variables: {

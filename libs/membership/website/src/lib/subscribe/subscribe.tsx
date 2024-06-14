@@ -1,5 +1,5 @@
 import {zodResolver} from '@hookform/resolvers/zod'
-import {Checkbox, FormControlLabel, InputAdornment, Slider, styled} from '@mui/material'
+import {Checkbox, FormControlLabel, Slider, styled} from '@mui/material'
 import {
   RegistrationChallenge,
   RegistrationChallengeWrapper,
@@ -28,13 +28,13 @@ import {formatChf} from '../formatters/format-currency'
 import {formatPaymentPeriod, getPaymentPeriodicyMonths} from '../formatters/format-payment-period'
 import {formatRenewalPeriod} from '../formatters/format-renewal-period'
 import {css} from '@emotion/react'
-import {sortBy} from 'ramda'
+import {replace, sortBy, toLower} from 'ramda'
 import {MembershipModal} from '../membership-modal/membership-modal'
 
 const subscribeSchema = z.object({
   memberPlanId: z.string().nonempty(),
   paymentMethodId: z.string().nonempty(),
-  extraMoney: z.coerce.number().gte(0).optional(),
+  monthlyAmount: z.coerce.number().gte(0),
   autoRenew: z.boolean(),
   paymentPeriodicity: z.enum([
     PaymentPeriodicity.Monthly,
@@ -77,22 +77,23 @@ const buttonStyles = css`
   justify-self: center;
 `
 
-export const SubscribeExtraMoney = styled('div')`
+export const SubscribeAmount = styled('div')`
   display: grid;
-  gap: ${({theme}) => theme.spacing(3)};
+  gap: ${({theme}) => theme.spacing(1)};
   grid-template-columns: 1fr;
   align-items: center;
   padding: ${({theme}) => theme.spacing(3)};
   border: 1px solid ${({theme}) => theme.palette.divider};
   border-radius: ${({theme}) => theme.shape.borderRadius}px;
+`
 
-  ${({theme}) => theme.breakpoints.up('sm')} {
-    grid-template-columns: 3fr minmax(300px, 1fr);
-  }
+export const SubscribeAmountText = styled('p')`
+  text-align: center;
 `
 
 export const Subscribe = <T extends BuilderUserFormFields>({
   defaults,
+  extraMoneyOffset = 0,
   memberPlans,
   challenge,
   userSubscriptions,
@@ -104,7 +105,7 @@ export const Subscribe = <T extends BuilderUserFormFields>({
   onSubscribeWithRegister
 }: BuilderSubscribeProps<T>) => {
   const {
-    meta: {locale},
+    meta: {locale, siteTitle},
     elements: {Alert, Button, TextField, H5, Link, Paragraph},
     MemberPlanPicker,
     PaymentMethodPicker,
@@ -138,7 +139,7 @@ export const Subscribe = <T extends BuilderUserFormFields>({
     resolver: zodResolver(hasUser ? subscribeSchema : loggedOutSchema),
     defaultValues: {
       ...defaults,
-      extraMoney: 0,
+      monthlyAmount: 0,
       autoRenew: true,
       memberPlanId: defaults?.memberPlanSlug
         ? memberPlans.data?.memberPlans.nodes.find(
@@ -157,7 +158,7 @@ export const Subscribe = <T extends BuilderUserFormFields>({
   const selectedPaymentMethodId = watch<'paymentMethodId'>('paymentMethodId')
   const selectedPaymentPeriodicity = watch<'paymentPeriodicity'>('paymentPeriodicity')
   const selectedMemberPlanId = watch<'memberPlanId'>('memberPlanId')
-  const extraMoney = watch<'extraMoney'>('extraMoney')
+  const monthlyAmount = watch<'monthlyAmount'>('monthlyAmount')
   const autoRenew = watch<'autoRenew'>('autoRenew')
 
   const sortedMemberPlans = useMemo(
@@ -189,11 +190,6 @@ export const Subscribe = <T extends BuilderUserFormFields>({
     () =>
       selectedMemberPlan?.availablePaymentMethods?.flatMap(({paymentMethods}) => paymentMethods),
     [selectedMemberPlan?.availablePaymentMethods]
-  )
-
-  const monthlyAmount = useMemo(
-    () => (selectedMemberPlan?.amountPerMonthMin ?? 0) + Math.max(0, extraMoney ?? 0) * 100,
-    [selectedMemberPlan?.amountPerMonthMin, extraMoney]
   )
 
   const paymentText = autoRenew
@@ -237,6 +233,15 @@ export const Subscribe = <T extends BuilderUserFormFields>({
       subscribe: subscribeData
     })
   })
+
+  useEffect(() => {
+    if (selectedMemberPlan) {
+      setValue<'monthlyAmount'>(
+        'monthlyAmount',
+        selectedMemberPlan.amountPerMonthMin + extraMoneyOffset
+      )
+    }
+  }, [selectedMemberPlan, extraMoneyOffset, setValue])
 
   useEffect(() => {
     if (challenge.data?.challenge.challengeID) {
@@ -321,47 +326,29 @@ export const Subscribe = <T extends BuilderUserFormFields>({
       </SubscribeSection>
 
       <SubscribeSection>
-        <H5 component="h2">Bonus Unterstützung</H5>
-
         <Controller
-          name={'extraMoney'}
+          name={'monthlyAmount'}
           control={control}
           render={({field, fieldState: {error}}) => (
-            <SubscribeExtraMoney>
+            <SubscribeAmount>
+              <Paragraph component={SubscribeAmountText} gutterBottom={false}>
+                Ich unterstütze {siteTitle} {replace(/^./, toLower)(paymentText)}
+              </Paragraph>
+
               <Slider
                 {...field}
-                min={0}
-                max={100}
-                valueLabelFormat={val => formatChf(val, locale)}
-                step={0.5}
+                min={selectedMemberPlan?.amountPerMonthMin}
+                max={(selectedMemberPlan?.amountPerMonthMin ?? 500) * 5}
+                valueLabelFormat={val => formatChf(val / 100, locale)}
+                step={100}
                 color="secondary"
               />
-
-              <TextField
-                {...field}
-                type={'number'}
-                fullWidth
-                label={'Monatliche Bonus-Unterstützung (optional)'}
-                error={!!error}
-                helperText={error?.message}
-                inputProps={{
-                  step: 'any',
-                  min: 0
-                }}
-                InputProps={{
-                  startAdornment: <InputAdornment position="start">CHF</InputAdornment>
-                }}
-              />
-            </SubscribeExtraMoney>
+            </SubscribeAmount>
           )}
         />
-      </SubscribeSection>
 
-      {!hasUser && (
-        <SubscribeSection>
-          <UserForm control={control} fields={fields} />
-        </SubscribeSection>
-      )}
+        {!hasUser && <UserForm control={control} fields={fields} />}
+      </SubscribeSection>
 
       <SubscribeSection>
         <H5 component="h2">Zahlungsmethode wählen</H5>

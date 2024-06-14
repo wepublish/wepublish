@@ -165,7 +165,7 @@ function AuthorList() {
             setSortField(sortColumn)
           }}>
           <Column width={100} align="left" resizable>
-            <HeaderCell>{}</HeaderCell>
+            <HeaderCell>{''}</HeaderCell>
             <CellSmallPadding>
               {(rowData: RowDataType<FullAuthorFragment>) => (
                 <Avatar circle src={rowData.image?.squareURL || undefined} />
