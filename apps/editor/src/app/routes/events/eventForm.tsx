@@ -3,6 +3,7 @@ import {
   ImageRefFragment,
   MutationCreateEventArgs,
   MutationUpdateEventArgs,
+  Tag,
   TagType
 } from '@wepublish/editor/api'
 import {
@@ -20,6 +21,7 @@ import {Drawer, Form, Panel, SelectPicker} from 'rsuite'
 
 type EventFormData = (MutationCreateEventArgs | MutationUpdateEventArgs) & {
   image?: ImageRefFragment | null
+  tags?: Pick<Tag, 'id' | 'tag'>[]
 }
 
 type EventFormProps = {
@@ -135,6 +137,7 @@ export const EventForm = ({event, onChange, create}: EventFormProps) => {
             <Form.ControlLabel>{t('event.form.tags')}</Form.ControlLabel>
             <Form.Control
               name="tagIds"
+              defaultTags={event.tags ?? []}
               selectedTags={event.tagIds ?? []}
               setSelectedTags={(tagIds: string[]) => onChange({tagIds})}
               tagType={TagType.Event}
