@@ -1,4 +1,4 @@
-import {AppBar, Theme, Toolbar, css, styled, useTheme} from '@mui/material'
+import {AppBar, Theme, Toolbar, css, styled, useTheme, TextField} from '@mui/material'
 import {useUser} from '@wepublish/authentication/website'
 import {useRouter} from 'next/router'
 import {Teaser, TeaserListBlock, alignmentForTeaserBlock} from '@wepublish/block-content/website'
@@ -215,6 +215,32 @@ const useImageStyles = () => {
   )
 }
 
+export const SearchBar = styled('div')`
+  display: flex;
+  padding: ${({theme}) => theme.spacing(2)};
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-self: start;
+  gap: ${({theme}) => theme.spacing(2)};
+  grid-column: 1/5;
+  width: 100%;
+  border-bottom: 1px solid ${({theme}) => theme.palette.divider};
+`
+
+export const SearchInput = styled(TextField)`
+  width: 100%;
+`
+
+export const SearchForm = styled('form')`
+  width: 100%;
+  display: flex;
+  flex-wrap: nowrap;
+`
+
+export const SearchButton = styled(Button)`
+  margin-left: ${({theme}) => theme.spacing(2)};
+`
+
 export function Navbar({
   className,
   children,
@@ -321,24 +347,25 @@ export function Navbar({
           <AppBar position="static" elevation={0} color={'transparent'} css={appBarStyles}>
             <NavbarInnerWrapper>
               {isSearchOpen ? (
-                <div>
-                  <form onSubmit={() => setPhraseQuery(rawQuery)}>
-                    <label>
-                      Type to search
-                      <input type="text" onChange={e => setRawQuery(e.target.value)} />
-                    </label>
-                    <Button onClick={() => setPhraseQuery(rawQuery)} aria-label={'Search'}>
+                <SearchBar>
+                  <SearchForm onSubmit={() => setPhraseQuery(rawQuery)}>
+                    <SearchInput
+                      type="text"
+                      label="Type to search"
+                      onChange={e => setRawQuery(e.target.value)}
+                    />
+                    <SearchButton onClick={() => setPhraseQuery(rawQuery)} aria-label={'Search'}>
                       <IconButton css={{fontSize: '2em', color: 'black'}}>
                         <MdSearch />
                       </IconButton>
-                    </Button>
-                  </form>
+                    </SearchButton>
+                  </SearchForm>
                   <IconButton
                     css={{fontSize: '2em', color: 'black'}}
                     onClick={() => setSearchOpen(false)}>
                     <MdClose />
                   </IconButton>
-                </div>
+                </SearchBar>
               ) : (
                 <>
                   <NavbarMain>
