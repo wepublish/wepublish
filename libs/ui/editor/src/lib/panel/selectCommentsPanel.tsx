@@ -99,8 +99,6 @@ export function SelectCommentPanel({
     fetchPolicy: 'cache-and-network'
   })
 
-  console.log(itemId)
-
   const getUsername = useMemo(() => commentUsernameGenerator(t), [t])
 
   const saveSelection = () => {
@@ -153,6 +151,7 @@ export function SelectCommentPanel({
             <Form.ControlLabel>{t('blocks.comment.filterByTag')}</Form.ControlLabel>
 
             <SelectTags
+              defaultTags={[]}
               name="tags"
               tagType={TagType.Comment}
               setSelectedTags={setTagFilter}
@@ -180,7 +179,7 @@ export function SelectCommentPanel({
           rowClassName={rowData => (commentFilter?.includes(rowData?.id) ? 'highlighted-row' : '')}>
           {allowCherryPicking && (
             <Table.Column width={36}>
-              <Table.HeaderCell>{}</Table.HeaderCell>
+              <Table.HeaderCell>{''}</Table.HeaderCell>
               <TableCellNoPadding>
                 {(rowData: RowDataType<FullCommentFragment>) => (
                   <CheckboxWrapper>

@@ -289,6 +289,7 @@ function AuthorEditPanel({id, onClose, onSave}: AuthorEditPanelProps) {
             <Panel header={t('authors.panels.tags')}>
               <FormControl
                 name="tagIds"
+                defaultTags={data?.author?.tags ?? []}
                 selectedTags={tagIds}
                 setSelectedTags={(newTagIds: string[]) => setTagIds(newTagIds)}
                 tagType={TagType.Author}

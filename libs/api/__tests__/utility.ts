@@ -1,4 +1,4 @@
-import {CommentItemType, Event, Peer, PrismaClient, Subscription} from '@prisma/client'
+import {CommentItemType, Event, Peer, PrismaClient, Subscription, Tag} from '@prisma/client'
 import {ApolloServer} from 'apollo-server-express'
 import * as crypto from 'crypto'
 import {URL} from 'url'
@@ -79,6 +79,10 @@ class ExampleURLAdapter implements URLAdapter {
 
   getSubscriptionURL(subscription: Subscription): string {
     return `https://demo.wepublish.ch/profile/subscription/${subscription.id}`
+  }
+
+  getTagURL(tag: Tag): string {
+    return `https://demo.wepublish.ch/a/tag/${tag.tag}`
   }
 }
 

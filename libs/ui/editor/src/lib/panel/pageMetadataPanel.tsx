@@ -1,5 +1,5 @@
 import styled from '@emotion/styled'
-import {ImageRefFragment, TagType} from '@wepublish/editor/api'
+import {ImageRefFragment, Tag, TagType} from '@wepublish/editor/api'
 import {useEffect, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {MdListAlt, MdSettings, MdShare} from 'react-icons/md'
@@ -72,6 +72,7 @@ export interface PageMetadata {
   readonly title?: string
   readonly description: string
   readonly tags: string[]
+  readonly defaultTags: Pick<Tag, 'id' | 'tag'>[]
   readonly url: string
   readonly properties: PageMetadataProperty[]
   readonly image?: ImageRefFragment
@@ -93,6 +94,7 @@ function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
     title,
     description,
     slug,
+    defaultTags,
     tags,
     image,
     socialMediaTitle,
@@ -226,6 +228,7 @@ function PageMetadataPanel({value, onClose, onChange}: PageMetadataPanelProps) {
             <Form.Group controlId="pageTags">
               <Form.ControlLabel>{t('pageEditor.panels.tags')}</Form.ControlLabel>
               <SelectTags
+                defaultTags={defaultTags}
                 disabled={!isAuthorized}
                 selectedTags={tags}
                 setSelectedTags={tagsValue => onChange?.({...value, tags: tagsValue ?? []})}
