@@ -13,6 +13,7 @@ import {
 import {Context} from '../../context'
 import {GraphQLPageInfo} from '../common'
 import {TagSort} from './tag.query'
+import {createProxyingResolver} from '../../utility'
 
 export const GraphQLTagType = new GraphQLEnumType({
   name: 'TagType',
@@ -31,7 +32,13 @@ export const GraphQLTag = new GraphQLObjectType<Tag, Context>({
     id: {type: new GraphQLNonNull(GraphQLID)},
     tag: {type: GraphQLString},
     type: {type: GraphQLTagType},
-    main: {type: new GraphQLNonNull(GraphQLBoolean)}
+    main: {type: new GraphQLNonNull(GraphQLBoolean)},
+    url: {
+      type: new GraphQLNonNull(GraphQLString),
+      resolve: createProxyingResolver((tag, _, {urlAdapter}) => {
+        return urlAdapter.getTagURL(tag)
+      })
+    }
   }
 })
 
