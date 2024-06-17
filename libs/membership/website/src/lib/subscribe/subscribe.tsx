@@ -91,6 +91,31 @@ export const SubscribeAmountText = styled('p')`
   text-align: center;
 `
 
+export const SubscribeCancelable = styled('p')`
+  text-align: center;
+  color: ${({theme}) => theme.palette.grey[500]};
+`
+
+export const SubscribeNarrowSection = styled(SubscribeSection)`
+  gap: ${({theme}) => theme.spacing(1)};
+`
+
+export const getPaymentText = (
+  autoRenew: boolean,
+  paymentPeriodicity: PaymentPeriodicity,
+  monthlyAmount: number,
+  locale: string
+) =>
+  autoRenew
+    ? `${formatRenewalPeriod(paymentPeriodicity)} für ${formatChf(
+        (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
+        locale
+      )}`
+    : `${formatPaymentPeriod(paymentPeriodicity)} für ${formatChf(
+        (monthlyAmount / 100) * getPaymentPeriodicyMonths(paymentPeriodicity),
+        locale
+      )}`
+
 export const Subscribe = <T extends BuilderUserFormFields>({
   defaults,
   extraMoneyOffset = 0,
@@ -192,15 +217,8 @@ export const Subscribe = <T extends BuilderUserFormFields>({
     [selectedMemberPlan?.availablePaymentMethods]
   )
 
-  const paymentText = autoRenew
-    ? `${formatRenewalPeriod(selectedPaymentPeriodicity)} für ${formatChf(
-        (monthlyAmount / 100) * getPaymentPeriodicyMonths(selectedPaymentPeriodicity),
-        locale
-      )}`
-    : `${formatPaymentPeriod(selectedPaymentPeriodicity)} für ${formatChf(
-        (monthlyAmount / 100) * getPaymentPeriodicyMonths(selectedPaymentPeriodicity),
-        locale
-      )}`
+  const paymentText = getPaymentText(autoRenew, selectedPaymentPeriodicity, monthlyAmount, locale)
+  const monthlyPaymentText = getPaymentText(true, PaymentPeriodicity.Monthly, monthlyAmount, locale)
 
   const onSubmit = handleSubmit(data => {
     const subscribeData: SubscribeMutationVariables = {
@@ -332,7 +350,7 @@ export const Subscribe = <T extends BuilderUserFormFields>({
           render={({field, fieldState: {error}}) => (
             <SubscribeAmount>
               <Paragraph component={SubscribeAmountText} gutterBottom={false}>
-                Ich unterstütze {siteTitle} {replace(/^./, toLower)(paymentText)}
+                Ich unterstütze {siteTitle} {replace(/^./, toLower)(monthlyPaymentText)}
               </Paragraph>
 
               <Slider
@@ -437,19 +455,29 @@ export const Subscribe = <T extends BuilderUserFormFields>({
 
       {error && <Alert severity="error">{error.message}</Alert>}
 
-      <Button
-        size={'large'}
-        disabled={challenge.loading || userInvoices.loading || userSubscriptions.loading || loading}
-        type="submit"
-        css={buttonStyles}
-        onClick={e => {
-          if (hasOpenInvoices || alreadyHasSubscription) {
-            e.preventDefault()
-            setOpenConfirm(true)
+      <SubscribeNarrowSection>
+        <Button
+          size={'large'}
+          disabled={
+            challenge.loading || userInvoices.loading || userSubscriptions.loading || loading
           }
-        }}>
-        {paymentText} Abonnieren
-      </Button>
+          type="submit"
+          css={buttonStyles}
+          onClick={e => {
+            if (hasOpenInvoices || alreadyHasSubscription) {
+              e.preventDefault()
+              setOpenConfirm(true)
+            }
+          }}>
+          {paymentText} Abonnieren
+        </Button>
+
+        {autoRenew && (
+          <Paragraph component={SubscribeCancelable} gutterBottom={false}>
+            Jederzeit kündbar
+          </Paragraph>
+        )}
+      </SubscribeNarrowSection>
 
       <MembershipModal
         open={openConfirm}

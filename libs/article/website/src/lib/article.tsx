@@ -1,4 +1,4 @@
-import {styled} from '@mui/material'
+import {Chip, styled} from '@mui/material'
 import {BuilderArticleProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {Article as ArticleType, Block} from '@wepublish/website/api'
 import {Blocks} from '@wepublish/block-content/website'
@@ -16,12 +16,27 @@ export const ArticleWrapper = styled(ContentWrapper)`
 
 export const ArticleInfoWrapper = styled('aside')`
   display: grid;
-  gap: ${({theme}) => theme.spacing(2)};
+  gap: ${({theme}) => theme.spacing(4)};
   grid-row-start: 2;
 `
 
+export const ArticleTags = styled('div')`
+  display: flex;
+  flex-flow: row wrap;
+  gap: ${({theme}) => theme.spacing(1)};
+`
+
+export const ArticleAuthors = styled('div')`
+  display: grid;
+  gap: ${({theme}) => theme.spacing(2)};
+`
+
 export function Article({className, data, children, loading, error}: BuilderArticleProps) {
-  const {AuthorChip, ArticleSEO} = useWebsiteBuilder()
+  const {
+    AuthorChip,
+    ArticleSEO,
+    elements: {Link}
+  } = useWebsiteBuilder()
 
   return (
     <ArticleWrapper className={className}>
@@ -29,13 +44,31 @@ export function Article({className, data, children, loading, error}: BuilderArti
 
       <Blocks blocks={(data?.article?.blocks as Block[]) ?? []} type="Article" />
 
-      {!!data?.article?.authors.length && (
-        <ArticleInfoWrapper>
-          {data?.article?.authors.map(author => (
-            <AuthorChip key={author.id} author={author} publishedAt={data.article!.publishedAt} />
-          ))}
-        </ArticleInfoWrapper>
-      )}
+      <ArticleInfoWrapper>
+        {!!data?.article?.authors.length && (
+          <ArticleAuthors>
+            {data.article.authors.map(author => (
+              <AuthorChip key={author.id} author={author} publishedAt={data.article!.publishedAt} />
+            ))}
+          </ArticleAuthors>
+        )}
+
+        {!!data?.article?.tags.length && (
+          <ArticleTags>
+            {data.article.tags.map(tag => (
+              <Chip
+                key={tag.id}
+                label={tag.tag}
+                component={Link}
+                href={tag.url}
+                color="secondary"
+                variant="outlined"
+                clickable
+              />
+            ))}
+          </ArticleTags>
+        )}
+      </ArticleInfoWrapper>
 
       {children}
     </ArticleWrapper>

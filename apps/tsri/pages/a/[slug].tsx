@@ -74,7 +74,7 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
     })
   ])
 
-  if (article.data.article) {
+  if (article.data?.article) {
     await Promise.all([
       client.query({
         query: ApiV1.ArticleListDocument,

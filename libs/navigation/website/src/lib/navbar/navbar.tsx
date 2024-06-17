@@ -119,7 +119,7 @@ export const NavbarActions = styled('div')<{isMenuOpen?: boolean}>`
   flex-flow: row wrap;
   align-items: center;
   justify-self: end;
-  gap: ${({theme}) => theme.spacing(2)};
+  gap: ${({theme}) => theme.spacing(1)};
   grid-column: 5;
   justify-self: end;
 
@@ -128,6 +128,10 @@ export const NavbarActions = styled('div')<{isMenuOpen?: boolean}>`
     css`
       z-index: -1;
     `}
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    gap: ${({theme}) => theme.spacing(2)};
+  }
 `
 
 export const NavbarIconButtonWrapper = styled('div')`
@@ -218,7 +222,7 @@ export function Navbar({
   loginUrl = '/login',
   profileUrl = '/profile',
   subscriptionsUrl = '/profile/subscription',
-  showSubscriptionsUrl = true
+  actions
 }: BuilderNavbarProps) {
   const {hasUser} = useUser()
   const [isMenuOpen, setMenuOpen] = useState(false)
@@ -290,17 +294,19 @@ export function Navbar({
           <NavbarSpacer />
 
           <NavbarActions isMenuOpen={isMenuOpen}>
-            {hasUser && showSubscriptionsUrl ? (
-              <Link href={subscriptionsUrl} aria-label={hasUser ? 'Profil' : 'Login'}>
+            {actions}
+
+            {hasUser && subscriptionsUrl && (
+              <Link href={subscriptionsUrl}>
                 <IconButton css={{fontSize: '2em', color: 'black'}}>
-                  <MdOutlinePayments />
+                  <MdOutlinePayments aria-label={'Subscriptions'} />
                 </IconButton>
               </Link>
-            ) : null}
+            )}
 
-            <Link href={hasUser ? profileUrl : loginUrl} aria-label={hasUser ? 'Profil' : 'Login'}>
+            <Link href={hasUser ? profileUrl : loginUrl}>
               <IconButton css={{fontSize: '2em', color: 'black'}}>
-                <MdAccountCircle />
+                <MdAccountCircle aria-label={hasUser ? 'Profil' : 'Login'} />
               </IconButton>
             </Link>
           </NavbarActions>

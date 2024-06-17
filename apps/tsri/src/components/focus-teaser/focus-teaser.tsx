@@ -17,7 +17,8 @@ export const isFocusTeaser = (block: ApiV1.Block): block is ApiV1.TeaserListBloc
 const FocusTeaserWrapper = styled('section')`
   grid-column: -1/1;
   display: grid;
-  gap: ${({theme}) => theme.spacing(2)};
+  column-gap: ${({theme}) => theme.spacing(2)};
+  row-gap: ${({theme}) => theme.spacing(5)};
 `
 
 const FocusedTeaserContent = styled('div')`
@@ -29,7 +30,7 @@ const FocusedTeaserContent = styled('div')`
   }
 `
 
-const FocusedTeaserTitle = styled('h1')`
+const FocusedTeaserTitle = styled('div')`
   display: grid;
   color: ${({theme}) => theme.palette.secondary.contrastText};
   background-color: ${({theme}) => theme.palette.secondary.main};
@@ -59,23 +60,57 @@ const FocusedTeaser = styled('div')`
   }
 `
 
+export const selectTags = (teaser: ApiV1.Teaser): ApiV1.Tag[] => {
+  switch (teaser.__typename) {
+    case 'PageTeaser': {
+      return teaser.page?.tags ?? []
+    }
+
+    case 'ArticleTeaser': {
+      return teaser.article?.tags ?? []
+    }
+
+    case 'EventTeaser':
+      return teaser.event?.tags ?? []
+
+    case 'PeerArticleTeaser':
+    case 'CustomTeaser':
+      return []
+  }
+
+  return []
+}
+
 export const FocusTeaser = ({
   teasers,
+  filter,
   blockStyle,
   title,
   className
 }: BuilderTeaserListBlockProps) => {
   const {
     blocks: {Teaser},
-    elements: {H3}
+    elements: {Link, H3}
   } = useWebsiteBuilder()
 
   const [focusedTeaser, ...restTeasers] = teasers
 
+  const focusTeaserTitle = title && <H3 component={'h1'}>{title}</H3>
+  const tags =
+    focusedTeaser && selectTags(focusedTeaser).filter(({id}) => filter.tags?.includes(id))
+
   return (
     <FocusTeaserWrapper className={className}>
       <FocusedTeaserContent>
-        {title && <H3 component={FocusedTeaserTitle}>{title}</H3>}
+        <FocusedTeaserTitle>
+          {tags?.length === 1 && tags[0].url ? (
+            <Link href={tags[0].url} color="inherit" underline="none">
+              {focusTeaserTitle}
+            </Link>
+          ) : (
+            focusTeaserTitle
+          )}
+        </FocusedTeaserTitle>
 
         <FocusedTeaser>
           <Teaser

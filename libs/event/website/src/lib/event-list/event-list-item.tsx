@@ -17,7 +17,7 @@ export const EventListItemWrapper = styled('article')`
   grid-template-columns: 1fr;
   align-content: start;
 
-  @container (min-width: 350px) {
+  @container (min-width: 400px) {
     grid-template-columns: minmax(30%, 200px) auto;
   }
 `

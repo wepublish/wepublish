@@ -1,4 +1,5 @@
-import {Container, css, CssBaseline, styled, ThemeProvider} from '@mui/material'
+import {Container, css, CssBaseline, NoSsr, styled, ThemeProvider} from '@mui/material'
+import {IconButton} from '@wepublish/ui'
 import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 import {
   ApiV1,
@@ -16,6 +17,7 @@ import getConfig from 'next/config'
 import Head from 'next/head'
 import Script from 'next/script'
 import {initReactI18next} from 'react-i18next'
+import {MdOutlineShoppingBag} from 'react-icons/md'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
@@ -26,6 +28,7 @@ import {TsriNavbar} from '../src/components/tsri-navbar'
 import {TsriTeaser} from '../src/components/tsri-teaser'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
+import {Paywall} from '../src/components/paywall'
 
 setDefaultOptions({
   locale: de
@@ -53,6 +56,7 @@ const Spacer = styled('div')`
 `
 
 const MainSpacer = styled(Container)`
+  position: relative;
   display: grid;
   gap: ${({theme}) => theme.spacing(5)};
 
@@ -137,10 +141,21 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
                 categorySlugs={[['categories', 'about-us']]}
                 slug="main"
                 headerSlug="header"
+                actions={
+                  <NextWepublishLink href="https://shop.tsri.ch/" target="_blank">
+                    <IconButton css={{fontSize: '2em', color: 'black'}}>
+                      <MdOutlineShoppingBag aria-label="Shop" />
+                    </IconButton>
+                  </NextWepublishLink>
+                }
               />
 
               <main>
                 <MainSpacer maxWidth="lg">
+                  <NoSsr>
+                    <Paywall />
+                  </NoSsr>
+
                   <Component {...pageProps} />
                 </MainSpacer>
               </main>
