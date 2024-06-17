@@ -40,6 +40,10 @@ type ArticleNavigationLink implements BaseNavigationLink {
   type: String!
 }
 
+type ArticleTeaser {
+  articleID: ID!
+}
+
 type Author {
   bio: RichText
   createdAt: DateTime!
@@ -126,6 +130,12 @@ enum BlockType {
   Title
 }
 
+type CommentBlockFilter {
+  comments: [ID!]
+  item: ID
+  tags: [ID!]
+}
+
 type CommentCreatedAction {
   actionType: ActionType!
   date: DateTime!
@@ -188,6 +198,10 @@ input CreateUserRoleInput {
   permissionIDs: [String!]!
 }
 
+type CustomTeaser {
+  contentUrl: String
+}
+
 type DashboardInvoice {
   amount: Int!
   dueAt: DateTime!
@@ -225,6 +239,11 @@ type Event {
   name: String!
   startsAt: DateTime!
   status: EventStatus!
+}
+
+type EventBlockFilter {
+  events: [ID!]
+  tags: [ID!]
 }
 
 type EventCreatedAction {
@@ -272,6 +291,11 @@ enum EventStatus {
   Scheduled
 }
 
+type EventTeaser {
+  event: Event!
+  eventID: ID!
+}
+
 type ExternalNavigationLink implements BaseNavigationLink {
   createdAt: DateTime!
   id: String!
@@ -281,9 +305,29 @@ type ExternalNavigationLink implements BaseNavigationLink {
   url: String
 }
 
+type FlexAlignment {
+  h: Int!
+  i: String!
+  static: Boolean!
+  w: Int!
+  x: Int!
+  y: Int!
+}
+
+type FlexTeaser {
+  alignment: FlexAlignment!
+  teaser: Teaser!
+}
+
 type FocalPoint {
   x: Float!
   y: Float!
+}
+
+type GalleryImageEdge {
+  caption: String
+  image: Image!
+  imageID: ID!
 }
 
 """Setting Value"""
@@ -328,6 +372,13 @@ type ImportedEventsDocument {
   nodes: [EventFromSource!]!
   pageInfo: PageInfo!
   totalCount: Float!
+}
+
+type ListicleItem {
+  image: Image
+  imageID: ID
+  richText: RichText!
+  title: String!
 }
 
 type MailProviderModel {
@@ -509,6 +560,10 @@ type PageNavigationLink implements BaseNavigationLink {
   type: String!
 }
 
+type PageTeaser {
+  pageID: ID!
+}
+
 type PaginatedAuthors {
   nodes: [Author!]!
   pageInfo: PageInfo!
@@ -593,6 +648,11 @@ type PaymentsResult {
   nodes: [Payment!]!
   pageInfo: PageInfo!
   totalCount: Float!
+}
+
+type PeerArticleTeaser {
+  articleID: ID!
+  peerID: ID!
 }
 
 type PeriodicJob {
@@ -828,6 +888,12 @@ type SubscriptionInterval {
 type SystemMailModel {
   event: UserEvent!
   mailTemplate: MailTemplateRef
+}
+
+union Teaser = ArticleTeaser | CustomTeaser | EventTeaser | PageTeaser | PeerArticleTeaser
+
+type TeaserListBlockFilter {
+  tags: [ID!]
 }
 
 input UpdateAuthorInput {
