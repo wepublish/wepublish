@@ -13,13 +13,4 @@ export class TikTokVideoBlock {
 }
 
 @InputType()
-export class TikTokVideoBlockInput {
-  @Field(() => String, {nullable: true})
-  blockStyle?: string
-
-  @Field(() => String)
-  videoID!: string
-
-  @Field(() => String)
-  userID!: string
-}
+export class TikTokVideoBlockInput extends TikTokVideoBlock {}

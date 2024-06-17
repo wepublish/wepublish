@@ -10,10 +10,4 @@ export class HTMLBlock {
 }
 
 @InputType()
-export class HTMLBlockInput {
-  @Field(() => String, {nullable: true})
-  blockStyle?: string
-
-  @Field(() => String, {nullable: true})
-  html?: string
-}
+export class HTMLBlockInput extends HTMLBlock {}

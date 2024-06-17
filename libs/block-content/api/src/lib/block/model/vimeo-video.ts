@@ -10,10 +10,4 @@ export class VimeoVideoBlock {
 }
 
 @InputType()
-export class VimeoVideoBlockInput {
-  @Field(() => String, {nullable: true})
-  blockStyle?: string
-
-  @Field(() => String)
-  videoID!: string
-}
+export class VimeoVideoBlockInput extends VimeoVideoBlock {}

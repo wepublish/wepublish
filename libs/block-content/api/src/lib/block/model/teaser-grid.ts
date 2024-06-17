@@ -1,4 +1,4 @@
-import {Field, InputType, ObjectType} from '@nestjs/graphql'
+import {Field, InputType, ObjectType, OmitType} from '@nestjs/graphql'
 import {Teaser, TeaserInput} from './teaser'
 
 @ObjectType()
@@ -14,13 +14,7 @@ export class TeaserGridBlock {
 }
 
 @InputType()
-export class TeaserGridBlockInput {
-  @Field(() => String, {nullable: true})
-  blockStyle?: string
-
+export class TeaserGridBlockInput extends OmitType(TeaserGridBlock, ['teasers']) {
   @Field(() => [TeaserInput])
   teasers!: TeaserInput[]
-
-  @Field(() => Number)
-  numColumns!: number
 }

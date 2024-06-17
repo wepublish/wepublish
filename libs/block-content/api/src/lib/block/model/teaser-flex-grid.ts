@@ -1,5 +1,4 @@
-import {Field, InputType, ObjectType} from '@nestjs/graphql'
-import {GraphQLBoolean, GraphQLInt} from 'graphql/index'
+import {Field, InputType, ObjectType, OmitType, Int} from '@nestjs/graphql'
 import {Teaser, TeaserInput} from './teaser'
 
 // Objects
@@ -9,19 +8,19 @@ export class FlexAlignment {
   @Field(() => String)
   i!: string
 
-  @Field(() => GraphQLInt)
+  @Field(() => Int)
   x!: number
 
-  @Field(() => GraphQLInt)
+  @Field(() => Int)
   y!: number
 
-  @Field(() => GraphQLInt)
+  @Field(() => Int)
   w!: number
 
-  @Field(() => GraphQLInt)
+  @Field(() => Int)
   h!: number
 
-  @Field(() => GraphQLBoolean)
+  @Field()
   static!: boolean
 }
 
@@ -46,25 +45,7 @@ export class TeaserGridFlexBlock {
 // Inputs
 
 @InputType()
-export class FlexAlignmentInput {
-  @Field(() => String)
-  i!: string
-
-  @Field(() => GraphQLInt)
-  x!: number
-
-  @Field(() => GraphQLInt)
-  y!: number
-
-  @Field(() => GraphQLInt)
-  w!: number
-
-  @Field(() => GraphQLInt)
-  h!: number
-
-  @Field(() => GraphQLBoolean)
-  static!: boolean
-}
+export class FlexAlignmentInput extends FlexAlignment {}
 
 @InputType()
 export class FlexTeaserInput {
@@ -76,10 +57,7 @@ export class FlexTeaserInput {
 }
 
 @InputType()
-export class TeaserGridFlexBlockInput {
-  @Field(() => String, {nullable: true})
-  blockStyle?: string
-
+export class TeaserGridFlexBlockInput extends OmitType(TeaserGridFlexBlock, ['flexTeasers']) {
   @Field(() => [FlexTeaserInput])
   flexTeasers!: FlexTeaserInput[]
 }

@@ -10,10 +10,4 @@ export class SoundCloudTrackBlock {
 }
 
 @InputType()
-export class SoundCloudTrackBlockInput {
-  @Field(() => String, {nullable: true})
-  blockStyle?: string
-
-  @Field(() => String)
-  trackID!: string
-}
+export class SoundCloudTrackBlockInput extends SoundCloudTrackBlock {}

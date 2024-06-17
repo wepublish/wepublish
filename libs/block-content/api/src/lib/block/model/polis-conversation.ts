@@ -10,10 +10,4 @@ export class PolisConversationBlock {
 }
 
 @InputType()
-export class PolisConversationBlockInput {
-  @Field(() => String, {nullable: true})
-  blockStyle?: string
-
-  @Field(() => String)
-  conversationID!: string
-}
+export class PolisConversationBlockInput extends PolisConversationBlock {}

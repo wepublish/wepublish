@@ -1,4 +1,4 @@
-import {Field, ID, InputType, ObjectType} from '@nestjs/graphql'
+import {Field, ID, InputType, ObjectType, OmitType} from '@nestjs/graphql'
 import {GraphQLRichText} from '@wepublish/richtext/api'
 import Node from 'slate'
 import {Image} from '@wepublish/image/api'
@@ -9,6 +9,9 @@ import {Image} from '@wepublish/image/api'
 export class ListicleItem {
   @Field(() => String)
   title!: string
+
+  @Field(() => ID, {nullable: true})
+  imageID?: string
 
   @Field(() => Image, {nullable: true})
   image?: Image
@@ -29,22 +32,10 @@ export class ListicleBlock {
 // Inputs
 
 @InputType()
-export class ListicleItemInput {
-  @Field(() => String)
-  title!: string
-
-  @Field(() => ID, {nullable: true})
-  imageID?: string
-
-  @Field(() => GraphQLRichText)
-  richText!: Node[]
-}
+export class ListicleItemInput extends OmitType(ListicleItem, ['image']) {}
 
 @InputType()
-export class ListicleBlockInput {
-  @Field(() => String, {nullable: true})
-  blockStyle?: string
-
+export class ListicleBlockInput extends OmitType(ListicleBlock, ['items']) {
   @Field(() => [ListicleItemInput])
   items!: ListicleItemInput[]
 }

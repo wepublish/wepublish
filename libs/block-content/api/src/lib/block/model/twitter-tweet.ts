@@ -13,13 +13,4 @@ export class TwitterTweetBlock {
 }
 
 @InputType()
-export class TwitterTweetBlockInput {
-  @Field(() => String, {nullable: true})
-  blockStyle?: string
-
-  @Field(() => String)
-  userID!: string
-
-  @Field(() => String)
-  tweetID!: string
-}
+export class TwitterTweetBlockInput extends TwitterTweetBlock {}

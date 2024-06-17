@@ -10,10 +10,4 @@ export class YouTubeVideoBlock {
 }
 
 @InputType()
-export class YouTubeVideoBlockInput {
-  @Field(() => String, {nullable: true})
-  blockStyle?: string
-
-  @Field(() => String)
-  videoID!: string
-}
+export class YouTubeVideoBlockInput extends YouTubeVideoBlock {}

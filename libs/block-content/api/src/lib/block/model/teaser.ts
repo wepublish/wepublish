@@ -1,4 +1,12 @@
-import {createUnionType, Field, ID, InputType, ObjectType, registerEnumType} from '@nestjs/graphql'
+import {
+  createUnionType,
+  Field,
+  ID,
+  InputType,
+  ObjectType,
+  OmitType,
+  registerEnumType
+} from '@nestjs/graphql'
 import {Image} from '@wepublish/image/api'
 
 export enum TeaserType {
@@ -19,12 +27,12 @@ export enum TeaserStyle {
 
 registerEnumType(TeaserStyle, {name: 'TeaserStyle'})
 
-// Objects
-
-@ObjectType()
-export class ArticleTeaser {
+export abstract class AbstractTeaser {
   @Field(() => TeaserStyle)
   style!: TeaserStyle
+
+  @Field(() => ID, {nullable: true})
+  imageID?: string
 
   @Field(() => Image, {nullable: true})
   image?: Image
@@ -37,27 +45,23 @@ export class ArticleTeaser {
 
   @Field(() => String, {nullable: true})
   lead?: string
+}
+
+// Objects
+
+@ObjectType()
+export class ArticleTeaser extends AbstractTeaser {
+  @Field(() => ID)
+  articleID!: string
 
   // @Field(() => Article)
   // article!: Article;
 }
 
 @ObjectType()
-export class PeerArticleTeaser {
-  @Field(() => TeaserStyle)
-  style!: TeaserStyle
-
-  @Field(() => Image, {nullable: true})
-  image?: Image
-
-  @Field(() => String, {nullable: true})
-  preTitle?: string
-
-  @Field(() => String, {nullable: true})
-  title?: string
-
-  @Field(() => String, {nullable: true})
-  lead?: string
+export class PeerArticleTeaser extends AbstractTeaser {
+  @Field(() => ID)
+  peerID!: string
 
   // @Field(() => Peer)
   // peer!: Peer;
@@ -70,64 +74,25 @@ export class PeerArticleTeaser {
 }
 
 @ObjectType()
-export class PageTeaser {
-  @Field(() => TeaserStyle)
-  style!: TeaserStyle
-
-  @Field(() => Image, {nullable: true})
-  image?: Image
-
-  @Field(() => String, {nullable: true})
-  preTitle?: string
-
-  @Field(() => String, {nullable: true})
-  title?: string
-
-  @Field(() => String, {nullable: true})
-  lead?: string
+export class PageTeaser extends AbstractTeaser {
+  @Field(() => ID)
+  pageID!: string
 
   // @Field(() => Page)
   // page!: Page;
 }
 
 @ObjectType()
-export class EventTeaser {
-  @Field(() => TeaserStyle)
-  style!: TeaserStyle
-
-  @Field(() => Image, {nullable: true})
-  image?: Image
-
-  @Field(() => String, {nullable: true})
-  preTitle?: string
-
-  @Field(() => String, {nullable: true})
-  title?: string
-
-  @Field(() => String, {nullable: true})
-  lead?: string
+export class EventTeaser extends AbstractTeaser {
+  @Field(() => ID)
+  eventID!: string
 
   @Field(() => Event)
   event!: Event
 }
 
 @ObjectType()
-export class CustomTeaser {
-  @Field(() => TeaserStyle)
-  style!: TeaserStyle
-
-  @Field(() => Image, {nullable: true})
-  image?: Image
-
-  @Field(() => String, {nullable: true})
-  preTitle?: string
-
-  @Field(() => String, {nullable: true})
-  title?: string
-
-  @Field(() => String, {nullable: true})
-  lead?: string
-
+export class CustomTeaser extends AbstractTeaser {
   @Field(() => String, {nullable: true})
   contentUrl?: string
 
@@ -158,115 +123,19 @@ export const Teaser = createUnionType({
 // Inputs
 
 @InputType()
-export class ArticleTeaserInput {
-  @Field(() => TeaserStyle, {nullable: true})
-  style?: TeaserStyle
-
-  @Field(() => ID, {nullable: true})
-  imageID?: string
-
-  @Field(() => String, {nullable: true})
-  preTitle?: string
-
-  @Field(() => String, {nullable: true})
-  title?: string
-
-  @Field(() => String, {nullable: true})
-  lead?: string
-
-  @Field(() => ID)
-  articleID!: string
-}
+export class ArticleTeaserInput extends OmitType(ArticleTeaser, ['image']) {}
 
 @InputType()
-export class PeerArticleTeaserInput {
-  @Field(() => TeaserStyle, {nullable: true})
-  style?: TeaserStyle
-
-  @Field(() => ID, {nullable: true})
-  imageID?: string
-
-  @Field(() => String, {nullable: true})
-  preTitle?: string
-
-  @Field(() => String, {nullable: true})
-  title?: string
-
-  @Field(() => String, {nullable: true})
-  lead?: string
-
-  @Field(() => ID)
-  peerID!: string
-
-  @Field(() => ID)
-  articleID!: string
-}
+export class PeerArticleTeaserInput extends OmitType(PeerArticleTeaser, ['image']) {}
 
 @InputType()
-export class PageTeaserInput {
-  @Field(() => TeaserStyle, {nullable: true})
-  style?: TeaserStyle
-
-  @Field(() => ID, {nullable: true})
-  imageID?: string
-
-  @Field(() => String, {nullable: true})
-  preTitle?: string
-
-  @Field(() => String, {nullable: true})
-  title?: string
-
-  @Field(() => String, {nullable: true})
-  lead?: string
-
-  @Field(() => ID)
-  pageID!: string
-}
+export class PageTeaserInput extends OmitType(PageTeaser, ['image']) {}
 
 @InputType()
-export class EventTeaserInput {
-  @Field(() => TeaserStyle, {nullable: true})
-  style?: TeaserStyle
-
-  @Field(() => ID, {nullable: true})
-  imageID?: string
-
-  @Field(() => String, {nullable: true})
-  preTitle?: string
-
-  @Field(() => String, {nullable: true})
-  title?: string
-
-  @Field(() => String, {nullable: true})
-  lead?: string
-
-  @Field(() => ID)
-  eventID!: string
-}
+export class EventTeaserInput extends OmitType(EventTeaser, ['image', 'event']) {}
 
 @InputType()
-export class CustomTeaserInput {
-  @Field(() => TeaserStyle, {nullable: true})
-  style?: TeaserStyle
-
-  @Field(() => ID, {nullable: true})
-  imageID?: string
-
-  @Field(() => String, {nullable: true})
-  preTitle?: string
-
-  @Field(() => String, {nullable: true})
-  title?: string
-
-  @Field(() => String, {nullable: true})
-  lead?: string
-
-  @Field(() => String, {nullable: true})
-  contentUrl?: string
-
-  // @Field(() => [Property])
-  // properties!: Property[];
-}
+export class CustomTeaserInput extends OmitType(CustomTeaser, ['image']) {}
 
 @InputType()
 export class TeaserInput {

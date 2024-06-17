@@ -13,13 +13,4 @@ export class FacebookVideoBlock {
 }
 
 @InputType()
-export class FacebookVideoBlockInput {
-  @Field(() => String, {nullable: true})
-  blockStyle?: string
-
-  @Field(() => String)
-  userID!: string
-
-  @Field(() => String)
-  videoID!: string
-}
+export class FacebookVideoBlockInput extends FacebookVideoBlock {}

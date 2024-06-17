@@ -10,10 +10,4 @@ export class InstagramPostBlock {
 }
 
 @InputType()
-export class InstagramPostBlockInput {
-  @Field(() => String, {nullable: true})
-  blockStyle?: string
-
-  @Field(() => String)
-  postID!: string
-}
+export class InstagramPostBlockInput extends InstagramPostBlock {}

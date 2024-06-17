@@ -12,10 +12,4 @@ export class RichTextBlock {
 }
 
 @InputType()
-export class RichTextBlockInput {
-  @Field(() => String, {nullable: true})
-  blockStyle?: string
-
-  @Field(() => GraphQLRichText)
-  richText!: Node[]
-}
+export class RichTextBlockInput extends RichTextBlock {}

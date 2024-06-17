@@ -13,13 +13,4 @@ export class FacebookPostBlock {
 }
 
 @InputType()
-export class FacebookPostBlockInput {
-  @Field(() => String, {nullable: true})
-  blockStyle?: string
-
-  @Field(() => String)
-  userID!: string
-
-  @Field(() => String)
-  postID!: string
-}
+export class FacebookPostBlockInput extends FacebookPostBlock {}

@@ -13,13 +13,4 @@ export class TitleBlock {
 }
 
 @InputType()
-export class TitleBlockInput {
-  @Field(() => String, {nullable: true})
-  blockStyle?: string
-
-  @Field(() => String, {nullable: true})
-  title?: string
-
-  @Field(() => String, {nullable: true})
-  lead?: string
-}
+export class TitleBlockInput extends TitleBlock {}
