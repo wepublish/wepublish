@@ -2,7 +2,7 @@ import {PublicArticle} from './db/article'
 import {PublicPage} from './db/page'
 import {Author} from './db/author'
 import {PublicComment} from './db/comment'
-import {Event, Peer, Subscription} from '@prisma/client'
+import {Event, Peer, Subscription, Tag} from '@prisma/client'
 
 export interface URLAdapter {
   getPublicArticleURL(article: PublicArticle): string
@@ -15,4 +15,5 @@ export interface URLAdapter {
   getCommentURL(item: PublicArticle | PublicPage, comment: PublicComment, peer?: Peer): string
   getLoginURL(token: string): string
   getSubscriptionURL(subscription: Subscription): string
+  getTagURL(tag: Tag): string
 }

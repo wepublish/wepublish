@@ -13,7 +13,7 @@ import {createWriteStream} from 'pino-sentry'
 import pinoStackdriver from 'pino-stackdriver'
 import * as process from 'process'
 import {Application} from 'express'
-import {DefaultURLAdapter, TsriURLAdapter} from '../urlAdapters'
+import {DefaultURLAdapter} from '../urlAdapters'
 import {readConfig} from '../readConfig'
 const MS_PER_DAY = 24 * 60 * 60 * 1000
 
@@ -106,16 +106,7 @@ export async function runServer({
     level: 'debug'
   })
 
-  /*
-   * Load correct URL adapter
-   */
-
-  // Load default
-  let urlAdapter: URLAdapter = new DefaultURLAdapter({websiteURL})
-
-  if (config.general.urlAdapter === 'tsri') {
-    urlAdapter = new TsriURLAdapter({websiteURL})
-  }
+  const urlAdapter: URLAdapter = new DefaultURLAdapter({websiteURL})
 
   /**
    * Challenge

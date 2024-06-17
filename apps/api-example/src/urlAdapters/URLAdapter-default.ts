@@ -1,5 +1,5 @@
 import {Author, PublicArticle, PublicComment, PublicPage, URLAdapter} from '@wepublish/api'
-import {CommentItemType, Peer, Event, Subscription} from '@prisma/client'
+import {CommentItemType, Peer, Event, Subscription, Tag, TagType} from '@prisma/client'
 
 interface StandardURLAdapterProps {
   websiteURL: string
@@ -58,5 +58,13 @@ export class DefaultURLAdapter implements URLAdapter {
 
   getLoginURL(token: string): string {
     return `${this.websiteURL}/login?jwt=${token}`
+  }
+
+  getTagURL(tag: Tag): string {
+    if (tag.tag && tag.type === TagType.Article) {
+      return `${this.websiteURL}/a/tag/${tag.tag}`
+    }
+
+    return ``
   }
 }
