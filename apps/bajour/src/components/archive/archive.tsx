@@ -3,6 +3,8 @@ import {
   ApiV2,
   BuilderTeaserGridBlockProps,
   selectTeaserAuthors,
+  selectTeaserLead,
+  selectTeaserTitle,
   selectTeaserUrl,
   useWebsiteBuilder
 } from '@wepublish/website'
@@ -11,10 +13,6 @@ import getConfig from 'next/config'
 import {useState} from 'react'
 
 import {ReactComponent as Logo} from '../../logo.svg'
-import {
-  selectTeaserLead,
-  selectTeaserTitle
-} from '../website-builder-overwrites/blocks/select-teaser'
 import {ArchiveSlider} from './archive-slider'
 
 export const ArchiveWrapper = styled('div')``
