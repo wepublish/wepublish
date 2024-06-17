@@ -1,4 +1,4 @@
-import {css, styled} from '@mui/material'
+import {styled} from '@mui/material'
 import {truncateFirstParagraph} from '@wepublish/richtext'
 import {Block, EventBlock as EventBlockType} from '@wepublish/website/api'
 import {BuilderEventBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'

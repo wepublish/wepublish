@@ -27,10 +27,6 @@ const MitmachenPage = styled(PageContainer)`
       grid-template-columns: 1fr 1fr 1fr;
     }
   }
-
-  .MuiFormControlLabel-root.Mui-disabled {
-    display: none;
-  }
 `
 
 export default function Mitmachen() {

@@ -18,6 +18,40 @@ const nextConfig = {
       MAILCHIMP_API_KEY: process.env.MAILCHIMP_API_KEY || '',
       MAILCHIMP_SERVER_PREFIX: process.env.MAILCHIMP_SERVER_PREFIX || ''
     }
+  },
+  async redirects() {
+    return [
+      {
+        source: '/a/:id((?!tag).*)/:slug',
+        destination: '/a/:slug',
+        permanent: false
+      },
+      {
+        source: '/zh/rubrik/:slug',
+        destination: '/a/tag/:slug',
+        permanent: false
+      },
+      {
+        source: '/redaktion',
+        destination: '/author',
+        permanent: false
+      },
+      {
+        source: '/agenda',
+        destination: '/event',
+        permanent: false
+      },
+      {
+        source: '/account/profile',
+        destination: '/profile',
+        permanent: false
+      },
+      {
+        source: '/account/subscriptions',
+        destination: '/profile/subscription',
+        permanent: false
+      }
+    ]
   }
 }
 

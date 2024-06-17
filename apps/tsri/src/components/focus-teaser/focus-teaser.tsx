@@ -17,7 +17,7 @@ export const isFocusTeaser = (block: ApiV1.Block): block is ApiV1.TeaserListBloc
 const FocusTeaserWrapper = styled('section')`
   grid-column: -1/1;
   display: grid;
-  gap: ${({theme}) => theme.spacing(4)};
+  gap: ${({theme}) => theme.spacing(2)};
 `
 
 const FocusedTeaserContent = styled('div')`

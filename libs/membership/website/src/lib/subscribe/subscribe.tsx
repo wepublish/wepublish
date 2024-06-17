@@ -378,22 +378,24 @@ export const Subscribe = <T extends BuilderUserFormFields>({
             )}
           />
 
-          <Controller
-            name={'autoRenew'}
-            control={control}
-            render={({field}) => (
-              <FormControlLabel
-                {...field}
-                control={
-                  <Checkbox
-                    checked={field.value}
-                    disabled={selectedAvailablePaymentMethod?.forceAutoRenewal}
-                  />
-                }
-                label="Automatisch erneuern"
-              />
-            )}
-          />
+          {!selectedAvailablePaymentMethod?.forceAutoRenewal && (
+            <Controller
+              name={'autoRenew'}
+              control={control}
+              render={({field}) => (
+                <FormControlLabel
+                  {...field}
+                  control={
+                    <Checkbox
+                      checked={field.value}
+                      disabled={selectedAvailablePaymentMethod?.forceAutoRenewal}
+                    />
+                  }
+                  label="Automatisch erneuern"
+                />
+              )}
+            />
+          )}
         </SubscribePayment>
       </SubscribeSection>
 

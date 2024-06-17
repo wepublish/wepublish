@@ -1,4 +1,4 @@
-import {Checkbox, css, FormControlLabel, FormGroup, styled} from '@mui/material'
+import {Checkbox, FormControlLabel, FormGroup, styled} from '@mui/material'
 import {DateTimePicker, LocalizationProvider} from '@mui/x-date-pickers'
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns'
 import {ApiV1, EventListContainer, useWebsiteBuilder} from '@wepublish/website'
@@ -152,6 +152,8 @@ export const getStaticProps: GetStaticProps = async () => {
     client.query({
       query: ApiV1.EventListDocument,
       variables: {
+        take,
+        skip: 0,
         sort: ApiV1.EventSort.StartsAt,
         order: ApiV1.SortOrder.Ascending
       }

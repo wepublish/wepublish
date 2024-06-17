@@ -13,7 +13,8 @@ export const TeaserListBlockWrapper = styled('section')`
 
 export const TeaserListBlockTeasers = styled('div')`
   display: grid;
-  gap: ${({theme}) => theme.spacing(4)};
+  column-gap: ${({theme}) => theme.spacing(2)};
+  row-gap: ${({theme}) => theme.spacing(5)};
   grid-template-columns: 1fr;
   align-items: stretch;
 
