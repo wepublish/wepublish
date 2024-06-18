@@ -1,4 +1,4 @@
-import {createUnionType, Field, InputType} from '@nestjs/graphql'
+import {createUnionType, Field, InputType, registerEnumType} from '@nestjs/graphql'
 import {RichTextBlock, RichTextBlockInput} from './model/richtext'
 import {ImageBlock, ImageBlockInput} from './model/image'
 import {ImageGalleryBlock, ImageGalleryBlockInput} from './model/image-gallery'
@@ -26,7 +26,37 @@ import {TeaserListBlock, TeaserListBlockInput} from './model/teaser-list'
 
 import {EmbedBlock} from './model/embed'
 
-export const Block = createUnionType({
+export enum BlockType {
+  Title = 'title',
+  RichText = 'richText',
+  FacebookPost = 'facebookPost',
+  FacebookVideo = 'facebookVideo',
+  InstagramPost = 'instagramPost',
+  TwitterTweet = 'twitterTweet',
+  VimeoVideo = 'vimeoVideo',
+  YouTubeVideo = 'youTubeVideo',
+  SoundCloudTrack = 'soundCloudTrack',
+  PolisConversation = 'polisConversation',
+  TikTokVideo = 'tikTokVideo',
+  BildwurfAd = 'bildwurfAd',
+  Embed = 'embed',
+  Quote = 'quote',
+  Image = 'image',
+  ImageGallery = 'imageGallery',
+  Listicle = 'listicle',
+  LinkPageBreak = 'linkPageBreak',
+  TeaserGrid = 'teaserGrid',
+  TeaserGridFlex = 'teaserGridFlex',
+  TeaserList = 'teaserList',
+  HTML = 'html',
+  Poll = 'poll',
+  Comment = 'comment',
+  Event = 'event'
+}
+
+registerEnumType(BlockType, {name: 'BlockType'})
+
+export const BlockUnion = createUnionType({
   name: 'Block',
   types: () => [
     RichTextBlock,
@@ -56,78 +86,79 @@ export const Block = createUnionType({
     TeaserListBlock
   ]
 })
+export type Block = typeof BlockUnion
 
 @InputType()
 export class BlockInput {
   @Field(() => RichTextBlockInput, {nullable: true})
-  richText?: RichTextBlockInput
+  [BlockType.RichText]?: RichTextBlockInput;
 
   @Field(() => ImageBlockInput, {nullable: true})
-  image?: ImageBlockInput
+  [BlockType.Image]?: ImageBlockInput;
 
   @Field(() => ImageGalleryBlockInput, {nullable: true})
-  imageGallery?: ImageGalleryBlockInput
+  [BlockType.ImageGallery]?: ImageGalleryBlockInput;
 
   @Field(() => ListicleBlockInput, {nullable: true})
-  listicle?: ListicleBlockInput
+  [BlockType.Listicle]?: ListicleBlockInput;
 
   @Field(() => TitleBlockInput, {nullable: true})
-  title?: TitleBlockInput
+  [BlockType.Title]?: TitleBlockInput;
 
   @Field(() => QuoteBlockInput, {nullable: true})
-  quote?: QuoteBlockInput
+  [BlockType.Quote]?: QuoteBlockInput;
 
   @Field(() => FacebookPostBlockInput, {nullable: true})
-  facebookPost?: FacebookPostBlockInput
+  [BlockType.FacebookPost]?: FacebookPostBlockInput;
 
   @Field(() => FacebookVideoBlockInput, {nullable: true})
-  facebookVideo?: FacebookVideoBlockInput
+  [BlockType.FacebookVideo]?: FacebookVideoBlockInput;
 
   @Field(() => InstagramPostBlockInput, {nullable: true})
-  instagramPost?: InstagramPostBlockInput
+  [BlockType.InstagramPost]?: InstagramPostBlockInput;
 
   @Field(() => TwitterTweetBlockInput, {nullable: true})
-  twitterTweet?: TwitterTweetBlockInput
+  [BlockType.TwitterTweet]?: TwitterTweetBlockInput;
 
   @Field(() => VimeoVideoBlockInput, {nullable: true})
-  vimeoVideo?: VimeoVideoBlockInput
+  [BlockType.VimeoVideo]?: VimeoVideoBlockInput;
 
   @Field(() => YouTubeVideoBlockInput, {nullable: true})
-  youTubeVideo?: YouTubeVideoBlockInput
+  [BlockType.YouTubeVideo]?: YouTubeVideoBlockInput;
 
   @Field(() => SoundCloudTrackBlockInput, {nullable: true})
-  soundCloudTrack?: SoundCloudTrackBlockInput
+  [BlockType.SoundCloudTrack]?: SoundCloudTrackBlockInput;
 
   @Field(() => PolisConversationBlockInput, {nullable: true})
-  polisConversation?: PolisConversationBlockInput
+  [BlockType.PolisConversation]?: PolisConversationBlockInput;
 
   @Field(() => TikTokVideoBlockInput, {nullable: true})
-  tikTokVideo?: TikTokVideoBlockInput
+  [BlockType.TikTokVideo]?: TikTokVideoBlockInput;
 
   @Field(() => BildwurfAdBlockInput, {nullable: true})
-  bildwurfAd?: BildwurfAdBlockInput
+  [BlockType.BildwurfAd]?: BildwurfAdBlockInput;
 
   @Field(() => HTMLBlockInput, {nullable: true})
-  html?: HTMLBlockInput
+  [BlockType.HTML]?: HTMLBlockInput;
 
   @Field(() => PollBlockInput, {nullable: true})
-  poll?: PollBlockInput
+  [BlockType.Poll]?: PollBlockInput;
 
   @Field(() => EventBlockInput, {nullable: true})
-  event?: EventBlockInput
+  [BlockType.Event]?: EventBlockInput;
 
   @Field(() => CommentBlockInput, {nullable: true})
-  comment?: CommentBlockInput
+  [BlockType.Comment]?: CommentBlockInput;
 
   @Field(() => LinkPageBreakBlockInput, {nullable: true})
-  linkPageBreak?: LinkPageBreakBlockInput
+  [BlockType.LinkPageBreak]?: LinkPageBreakBlockInput;
 
   @Field(() => TeaserGridBlockInput, {nullable: true})
-  teaserGrid?: TeaserGridBlockInput
+  [BlockType.TeaserGrid]?: TeaserGridBlockInput;
 
   @Field(() => TeaserGridFlexBlockInput, {nullable: true})
-  teaserGridFlex?: TeaserGridFlexBlockInput
+  [BlockType.TeaserGridFlex]?: TeaserGridFlexBlockInput;
 
   @Field(() => TeaserListBlockInput, {nullable: true})
-  teaserList?: TeaserListBlockInput
+  [BlockType.TeaserList]?: TeaserListBlockInput
 }

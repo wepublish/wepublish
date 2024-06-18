@@ -13,7 +13,7 @@ export class TeaserListBlock {
   blockStyle?: string
 
   @Field()
-  teaserType!: typeof TeaserType
+  teaserType!: TeaserType
 
   @Field()
   filter!: TeaserListBlockFilter
