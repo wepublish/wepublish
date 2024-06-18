@@ -3,11 +3,11 @@
 exports[`Comment List Item should render AnonymousCommenting 1`] = `
 <DocumentFragment>
   <article
-    class="css-19ehku-CommentWrapper ekbi54x9"
+    class="css-19ehku-CommentWrapper ekbi54x10"
     id="verified"
   >
     <header
-      class="css-dmcn8p-CommentHeader ekbi54x8"
+      class="css-dmcn8p-CommentHeader ekbi54x9"
     >
       <img
         alt="DSC07717"
@@ -20,18 +20,18 @@ https://unsplash.it/200/200 200w"
         title=""
       />
       <div
-        class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
+        class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
       >
         <div
-          class="css-l1mcyg-CommentName ekbi54x6"
+          class="css-l1mcyg-CommentName ekbi54x7"
         >
           <div
-            class="css-1pg77me-CommentAuthor ekbi54x5"
+            class="css-1pg77me-CommentAuthor ekbi54x6"
           >
             Signed Up User
           </div>
           <div
-            class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
+            class="css-6cfhau-CommentVerifiedBadge ekbi54x5"
           >
             <svg
               fill="currentColor"
@@ -56,7 +56,19 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <div
-          class="css-srb6c6-CommentFlair ekbi54x3"
+          class="css-srb6c6-CommentFlair ekbi54x4"
+        >
+          <a
+            class="css-c0umgh-CommentFlairLink ekbi54x3"
+            href="Source"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Flair
+          </a>
+        </div>
+        <div
+          class="css-srb6c6-CommentFlair ekbi54x4"
         >
           Flair
         </div>
@@ -105,12 +117,12 @@ https://unsplash.it/200/200 200w"
         class="css-14q529f-CommentListItemActionsButtons ew53o3y0"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall css-ddyrv3-MuiButtonBase-root-MuiButton-root-CommentListItem"
+          class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary css-ddyrv3-MuiButtonBase-root-MuiButton-root-CommentListItem"
           tabindex="0"
           type="button"
         >
           <span
-            class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
+            class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
           >
             <svg
               fill="currentColor"
@@ -182,7 +194,7 @@ https://unsplash.it/200/200 200w"
           >
             <span
               aria-label="0 Stars"
-              class="MuiRating-root MuiRating-sizeMedium Mui-readOnly MuiRating-readOnly css-ryrseu-MuiRating-root"
+              class="MuiRating-root MuiRating-sizeMedium Mui-readOnly MuiRating-readOnly css-15befwp-MuiRating-root"
               role="img"
             >
               <span>
@@ -316,7 +328,7 @@ https://unsplash.it/200/200 200w"
           >
             <span
               aria-label="0 Stars"
-              class="MuiRating-root MuiRating-sizeMedium Mui-readOnly MuiRating-readOnly css-ryrseu-MuiRating-root"
+              class="MuiRating-root MuiRating-sizeMedium Mui-readOnly MuiRating-readOnly css-15befwp-MuiRating-root"
               role="img"
             >
               <span>
@@ -446,11 +458,11 @@ https://unsplash.it/200/200 200w"
 exports[`Comment List Item should render Commenting 1`] = `
 <DocumentFragment>
   <article
-    class="css-19ehku-CommentWrapper ekbi54x9"
+    class="css-19ehku-CommentWrapper ekbi54x10"
     id="verified"
   >
     <header
-      class="css-dmcn8p-CommentHeader ekbi54x8"
+      class="css-dmcn8p-CommentHeader ekbi54x9"
     >
       <img
         alt="DSC07717"
@@ -463,18 +475,18 @@ https://unsplash.it/200/200 200w"
         title=""
       />
       <div
-        class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
+        class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
       >
         <div
-          class="css-l1mcyg-CommentName ekbi54x6"
+          class="css-l1mcyg-CommentName ekbi54x7"
         >
           <div
-            class="css-1pg77me-CommentAuthor ekbi54x5"
+            class="css-1pg77me-CommentAuthor ekbi54x6"
           >
             Signed Up User
           </div>
           <div
-            class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
+            class="css-6cfhau-CommentVerifiedBadge ekbi54x5"
           >
             <svg
               fill="currentColor"
@@ -499,7 +511,19 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <div
-          class="css-srb6c6-CommentFlair ekbi54x3"
+          class="css-srb6c6-CommentFlair ekbi54x4"
+        >
+          <a
+            class="css-c0umgh-CommentFlairLink ekbi54x3"
+            href="Source"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Flair
+          </a>
+        </div>
+        <div
+          class="css-srb6c6-CommentFlair ekbi54x4"
         >
           Flair
         </div>
@@ -548,12 +572,12 @@ https://unsplash.it/200/200 200w"
         class="css-14q529f-CommentListItemActionsButtons ew53o3y0"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall css-ddyrv3-MuiButtonBase-root-MuiButton-root-CommentListItem"
+          class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary css-ddyrv3-MuiButtonBase-root-MuiButton-root-CommentListItem"
           tabindex="0"
           type="button"
         >
           <span
-            class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
+            class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
           >
             <svg
               fill="currentColor"
@@ -624,7 +648,7 @@ https://unsplash.it/200/200 200w"
             class="css-1mr5b7g-RatingWrapper-RatingWrapper-RatingWrapper-RatingWrapper e15hksji0"
           >
             <span
-              class="MuiRating-root MuiRating-sizeMedium css-iljtu2-MuiRating-root"
+              class="MuiRating-root MuiRating-sizeMedium css-1qqgbpl-MuiRating-root"
             >
               <label
                 class="css-dqr9h-MuiRating-label"
@@ -847,7 +871,7 @@ https://unsplash.it/200/200 200w"
             class="css-1mr5b7g-RatingWrapper-RatingWrapper-RatingWrapper-RatingWrapper e15hksji0"
           >
             <span
-              class="MuiRating-root MuiRating-sizeMedium css-iljtu2-MuiRating-root"
+              class="MuiRating-root MuiRating-sizeMedium css-1qqgbpl-MuiRating-root"
             >
               <label
                 class="css-dqr9h-MuiRating-label"
@@ -1067,11 +1091,11 @@ https://unsplash.it/200/200 200w"
 exports[`Comment List Item should render Default 1`] = `
 <DocumentFragment>
   <article
-    class="css-19ehku-CommentWrapper ekbi54x9"
+    class="css-19ehku-CommentWrapper ekbi54x10"
     id="verified"
   >
     <header
-      class="css-dmcn8p-CommentHeader ekbi54x8"
+      class="css-dmcn8p-CommentHeader ekbi54x9"
     >
       <img
         alt="DSC07717"
@@ -1084,18 +1108,18 @@ https://unsplash.it/200/200 200w"
         title=""
       />
       <div
-        class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
+        class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
       >
         <div
-          class="css-l1mcyg-CommentName ekbi54x6"
+          class="css-l1mcyg-CommentName ekbi54x7"
         >
           <div
-            class="css-1pg77me-CommentAuthor ekbi54x5"
+            class="css-1pg77me-CommentAuthor ekbi54x6"
           >
             Signed Up User
           </div>
           <div
-            class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
+            class="css-6cfhau-CommentVerifiedBadge ekbi54x5"
           >
             <svg
               fill="currentColor"
@@ -1120,7 +1144,19 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <div
-          class="css-srb6c6-CommentFlair ekbi54x3"
+          class="css-srb6c6-CommentFlair ekbi54x4"
+        >
+          <a
+            class="css-c0umgh-CommentFlairLink ekbi54x3"
+            href="Source"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Flair
+          </a>
+        </div>
+        <div
+          class="css-srb6c6-CommentFlair ekbi54x4"
         >
           Flair
         </div>
@@ -1184,7 +1220,7 @@ https://unsplash.it/200/200 200w"
           >
             <span
               aria-label="0 Stars"
-              class="MuiRating-root MuiRating-sizeMedium Mui-readOnly MuiRating-readOnly css-ryrseu-MuiRating-root"
+              class="MuiRating-root MuiRating-sizeMedium Mui-readOnly MuiRating-readOnly css-15befwp-MuiRating-root"
               role="img"
             >
               <span>
@@ -1318,7 +1354,7 @@ https://unsplash.it/200/200 200w"
           >
             <span
               aria-label="0 Stars"
-              class="MuiRating-root MuiRating-sizeMedium Mui-readOnly MuiRating-readOnly css-ryrseu-MuiRating-root"
+              class="MuiRating-root MuiRating-sizeMedium Mui-readOnly MuiRating-readOnly css-15befwp-MuiRating-root"
               role="img"
             >
               <span>
@@ -1448,11 +1484,11 @@ https://unsplash.it/200/200 200w"
 exports[`Comment List Item should render Editing 1`] = `
 <DocumentFragment>
   <article
-    class="css-19ehku-CommentWrapper ekbi54x9"
+    class="css-19ehku-CommentWrapper ekbi54x10"
     id="verified"
   >
     <header
-      class="css-dmcn8p-CommentHeader ekbi54x8"
+      class="css-dmcn8p-CommentHeader ekbi54x9"
     >
       <img
         alt="DSC07717"
@@ -1465,18 +1501,18 @@ https://unsplash.it/200/200 200w"
         title=""
       />
       <div
-        class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
+        class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
       >
         <div
-          class="css-l1mcyg-CommentName ekbi54x6"
+          class="css-l1mcyg-CommentName ekbi54x7"
         >
           <div
-            class="css-1pg77me-CommentAuthor ekbi54x5"
+            class="css-1pg77me-CommentAuthor ekbi54x6"
           >
             Signed Up User
           </div>
           <div
-            class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
+            class="css-6cfhau-CommentVerifiedBadge ekbi54x5"
           >
             <svg
               fill="currentColor"
@@ -1501,7 +1537,19 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <div
-          class="css-srb6c6-CommentFlair ekbi54x3"
+          class="css-srb6c6-CommentFlair ekbi54x4"
+        >
+          <a
+            class="css-c0umgh-CommentFlairLink ekbi54x3"
+            href="Source"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Flair
+          </a>
+        </div>
+        <div
+          class="css-srb6c6-CommentFlair ekbi54x4"
         >
           Flair
         </div>
@@ -1550,12 +1598,12 @@ https://unsplash.it/200/200 200w"
         class="css-14q529f-CommentListItemActionsButtons ew53o3y0"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall css-ddyrv3-MuiButtonBase-root-MuiButton-root-CommentListItem"
+          class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary css-ddyrv3-MuiButtonBase-root-MuiButton-root-CommentListItem"
           tabindex="0"
           type="button"
         >
           <span
-            class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
+            class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
           >
             <svg
               fill="currentColor"
@@ -1611,12 +1659,12 @@ https://unsplash.it/200/200 200w"
           </button>
         </div>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall css-1ktsojf-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary css-1ktsojf-MuiButtonBase-root-MuiButton-root"
           tabindex="0"
           type="button"
         >
           <span
-            class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
+            class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
           >
             <svg
               fill="currentColor"
@@ -1657,7 +1705,7 @@ https://unsplash.it/200/200 200w"
             class="css-1mr5b7g-RatingWrapper-RatingWrapper-RatingWrapper-RatingWrapper e15hksji0"
           >
             <span
-              class="MuiRating-root MuiRating-sizeMedium css-iljtu2-MuiRating-root"
+              class="MuiRating-root MuiRating-sizeMedium css-1qqgbpl-MuiRating-root"
             >
               <label
                 class="css-dqr9h-MuiRating-label"
@@ -1880,7 +1928,7 @@ https://unsplash.it/200/200 200w"
             class="css-1mr5b7g-RatingWrapper-RatingWrapper-RatingWrapper-RatingWrapper e15hksji0"
           >
             <span
-              class="MuiRating-root MuiRating-sizeMedium css-iljtu2-MuiRating-root"
+              class="MuiRating-root MuiRating-sizeMedium css-1qqgbpl-MuiRating-root"
             >
               <label
                 class="css-dqr9h-MuiRating-label"
@@ -2100,11 +2148,11 @@ https://unsplash.it/200/200 200w"
 exports[`Comment List Item should render Nested 1`] = `
 <DocumentFragment>
   <article
-    class="css-19ehku-CommentWrapper ekbi54x9"
+    class="css-19ehku-CommentWrapper ekbi54x10"
     id="verified"
   >
     <header
-      class="css-dmcn8p-CommentHeader ekbi54x8"
+      class="css-dmcn8p-CommentHeader ekbi54x9"
     >
       <img
         alt="DSC07717"
@@ -2117,18 +2165,18 @@ https://unsplash.it/200/200 200w"
         title=""
       />
       <div
-        class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
+        class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
       >
         <div
-          class="css-l1mcyg-CommentName ekbi54x6"
+          class="css-l1mcyg-CommentName ekbi54x7"
         >
           <div
-            class="css-1pg77me-CommentAuthor ekbi54x5"
+            class="css-1pg77me-CommentAuthor ekbi54x6"
           >
             Signed Up User
           </div>
           <div
-            class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
+            class="css-6cfhau-CommentVerifiedBadge ekbi54x5"
           >
             <svg
               fill="currentColor"
@@ -2153,7 +2201,19 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <div
-          class="css-srb6c6-CommentFlair ekbi54x3"
+          class="css-srb6c6-CommentFlair ekbi54x4"
+        >
+          <a
+            class="css-c0umgh-CommentFlairLink ekbi54x3"
+            href="Source"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Flair
+          </a>
+        </div>
+        <div
+          class="css-srb6c6-CommentFlair ekbi54x4"
         >
           Flair
         </div>
@@ -2202,12 +2262,12 @@ https://unsplash.it/200/200 200w"
         class="css-14q529f-CommentListItemActionsButtons ew53o3y0"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall css-ddyrv3-MuiButtonBase-root-MuiButton-root-CommentListItem"
+          class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary css-ddyrv3-MuiButtonBase-root-MuiButton-root-CommentListItem"
           tabindex="0"
           type="button"
         >
           <span
-            class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
+            class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
           >
             <svg
               fill="currentColor"
@@ -2263,12 +2323,12 @@ https://unsplash.it/200/200 200w"
           </button>
         </div>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall css-1ktsojf-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary css-1ktsojf-MuiButtonBase-root-MuiButton-root"
           tabindex="0"
           type="button"
         >
           <span
-            class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
+            class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
           >
             <svg
               fill="currentColor"
@@ -2309,7 +2369,7 @@ https://unsplash.it/200/200 200w"
             class="css-1mr5b7g-RatingWrapper-RatingWrapper-RatingWrapper-RatingWrapper e15hksji0"
           >
             <span
-              class="MuiRating-root MuiRating-sizeMedium css-iljtu2-MuiRating-root"
+              class="MuiRating-root MuiRating-sizeMedium css-1qqgbpl-MuiRating-root"
             >
               <label
                 class="css-dqr9h-MuiRating-label"
@@ -2532,7 +2592,7 @@ https://unsplash.it/200/200 200w"
             class="css-1mr5b7g-RatingWrapper-RatingWrapper-RatingWrapper-RatingWrapper e15hksji0"
           >
             <span
-              class="MuiRating-root MuiRating-sizeMedium css-iljtu2-MuiRating-root"
+              class="MuiRating-root MuiRating-sizeMedium css-1qqgbpl-MuiRating-root"
             >
               <label
                 class="css-dqr9h-MuiRating-label"
@@ -2749,11 +2809,11 @@ https://unsplash.it/200/200 200w"
       class="css-uvrneq-CommentListItemChildren ew53o3y2"
     >
       <article
-        class="css-19ehku-CommentWrapper ekbi54x9"
+        class="css-19ehku-CommentWrapper ekbi54x10"
         id="verified"
       >
         <header
-          class="css-dmcn8p-CommentHeader ekbi54x8"
+          class="css-dmcn8p-CommentHeader ekbi54x9"
         >
           <img
             alt="DSC07717"
@@ -2766,18 +2826,18 @@ https://unsplash.it/200/200 200w"
             title=""
           />
           <div
-            class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
+            class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
           >
             <div
-              class="css-l1mcyg-CommentName ekbi54x6"
+              class="css-l1mcyg-CommentName ekbi54x7"
             >
               <div
-                class="css-1pg77me-CommentAuthor ekbi54x5"
+                class="css-1pg77me-CommentAuthor ekbi54x6"
               >
                 Signed Up User
               </div>
               <div
-                class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
+                class="css-6cfhau-CommentVerifiedBadge ekbi54x5"
               >
                 <svg
                   fill="currentColor"
@@ -2802,7 +2862,19 @@ https://unsplash.it/200/200 200w"
               </div>
             </div>
             <div
-              class="css-srb6c6-CommentFlair ekbi54x3"
+              class="css-srb6c6-CommentFlair ekbi54x4"
+            >
+              <a
+                class="css-c0umgh-CommentFlairLink ekbi54x3"
+                href="Source"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Flair
+              </a>
+            </div>
+            <div
+              class="css-srb6c6-CommentFlair ekbi54x4"
             >
               Flair
             </div>
@@ -2851,12 +2923,12 @@ https://unsplash.it/200/200 200w"
             class="css-14q529f-CommentListItemActionsButtons ew53o3y0"
           >
             <button
-              class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall css-ddyrv3-MuiButtonBase-root-MuiButton-root-CommentListItem"
+              class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary css-ddyrv3-MuiButtonBase-root-MuiButton-root-CommentListItem"
               tabindex="0"
               type="button"
             >
               <span
-                class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
+                class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
               >
                 <svg
                   fill="currentColor"
@@ -2912,12 +2984,12 @@ https://unsplash.it/200/200 200w"
               </button>
             </div>
             <button
-              class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall css-1ktsojf-MuiButtonBase-root-MuiButton-root"
+              class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary css-1ktsojf-MuiButtonBase-root-MuiButton-root"
               tabindex="0"
               type="button"
             >
               <span
-                class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
+                class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
               >
                 <svg
                   fill="currentColor"
@@ -2951,11 +3023,11 @@ https://unsplash.it/200/200 200w"
           class="css-uvrneq-CommentListItemChildren ew53o3y2"
         >
           <article
-            class="css-19ehku-CommentWrapper ekbi54x9"
+            class="css-19ehku-CommentWrapper ekbi54x10"
             id="anonymous"
           >
             <header
-              class="css-dmcn8p-CommentHeader ekbi54x8"
+              class="css-dmcn8p-CommentHeader ekbi54x9"
             >
               <img
                 alt="DSC07717"
@@ -2968,21 +3040,28 @@ https://unsplash.it/200/200 200w"
                 title=""
               />
               <div
-                class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
+                class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
               >
                 <div
-                  class="css-l1mcyg-CommentName ekbi54x6"
+                  class="css-l1mcyg-CommentName ekbi54x7"
                 >
                   <div
-                    class="css-1pg77me-CommentAuthor ekbi54x5"
+                    class="css-1pg77me-CommentAuthor ekbi54x6"
                   >
                     Dr. Anonymous
                   </div>
                 </div>
                 <div
-                  class="css-r2jplb-CommentFlair-CommentFlair ekbi54x3"
+                  class="css-r2jplb-CommentFlair-CommentFlair ekbi54x4"
                 >
-                  Source
+                  <a
+                    class="css-c0umgh-CommentFlairLink ekbi54x3"
+                    href="Source"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    Source
+                  </a>
                 </div>
               </div>
             </header>
@@ -3029,12 +3108,12 @@ https://unsplash.it/200/200 200w"
                 class="css-14q529f-CommentListItemActionsButtons ew53o3y0"
               >
                 <button
-                  class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall css-ddyrv3-MuiButtonBase-root-MuiButton-root-CommentListItem"
+                  class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary css-ddyrv3-MuiButtonBase-root-MuiButton-root-CommentListItem"
                   tabindex="0"
                   type="button"
                 >
                   <span
-                    class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
+                    class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
                   >
                     <svg
                       fill="currentColor"
@@ -3098,11 +3177,11 @@ https://unsplash.it/200/200 200w"
         </aside>
       </article>
       <article
-        class="css-19ehku-CommentWrapper ekbi54x9"
+        class="css-19ehku-CommentWrapper ekbi54x10"
         id="anonymous"
       >
         <header
-          class="css-dmcn8p-CommentHeader ekbi54x8"
+          class="css-dmcn8p-CommentHeader ekbi54x9"
         >
           <img
             alt="DSC07717"
@@ -3115,21 +3194,28 @@ https://unsplash.it/200/200 200w"
             title=""
           />
           <div
-            class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
+            class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
           >
             <div
-              class="css-l1mcyg-CommentName ekbi54x6"
+              class="css-l1mcyg-CommentName ekbi54x7"
             >
               <div
-                class="css-1pg77me-CommentAuthor ekbi54x5"
+                class="css-1pg77me-CommentAuthor ekbi54x6"
               >
                 Dr. Anonymous
               </div>
             </div>
             <div
-              class="css-r2jplb-CommentFlair-CommentFlair ekbi54x3"
+              class="css-r2jplb-CommentFlair-CommentFlair ekbi54x4"
             >
-              Source
+              <a
+                class="css-c0umgh-CommentFlairLink ekbi54x3"
+                href="Source"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Source
+              </a>
             </div>
           </div>
         </header>
@@ -3176,12 +3262,12 @@ https://unsplash.it/200/200 200w"
             class="css-14q529f-CommentListItemActionsButtons ew53o3y0"
           >
             <button
-              class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall css-ddyrv3-MuiButtonBase-root-MuiButton-root-CommentListItem"
+              class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary css-ddyrv3-MuiButtonBase-root-MuiButton-root-CommentListItem"
               tabindex="0"
               type="button"
             >
               <span
-                class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
+                class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
               >
                 <svg
                   fill="currentColor"
@@ -3245,11 +3331,11 @@ https://unsplash.it/200/200 200w"
           class="css-uvrneq-CommentListItemChildren ew53o3y2"
         >
           <article
-            class="css-19ehku-CommentWrapper ekbi54x9"
+            class="css-19ehku-CommentWrapper ekbi54x10"
             id="verified"
           >
             <header
-              class="css-dmcn8p-CommentHeader ekbi54x8"
+              class="css-dmcn8p-CommentHeader ekbi54x9"
             >
               <img
                 alt="DSC07717"
@@ -3262,18 +3348,18 @@ https://unsplash.it/200/200 200w"
                 title=""
               />
               <div
-                class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
+                class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
               >
                 <div
-                  class="css-l1mcyg-CommentName ekbi54x6"
+                  class="css-l1mcyg-CommentName ekbi54x7"
                 >
                   <div
-                    class="css-1pg77me-CommentAuthor ekbi54x5"
+                    class="css-1pg77me-CommentAuthor ekbi54x6"
                   >
                     Signed Up User
                   </div>
                   <div
-                    class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
+                    class="css-6cfhau-CommentVerifiedBadge ekbi54x5"
                   >
                     <svg
                       fill="currentColor"
@@ -3298,7 +3384,19 @@ https://unsplash.it/200/200 200w"
                   </div>
                 </div>
                 <div
-                  class="css-srb6c6-CommentFlair ekbi54x3"
+                  class="css-srb6c6-CommentFlair ekbi54x4"
+                >
+                  <a
+                    class="css-c0umgh-CommentFlairLink ekbi54x3"
+                    href="Source"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    Flair
+                  </a>
+                </div>
+                <div
+                  class="css-srb6c6-CommentFlair ekbi54x4"
                 >
                   Flair
                 </div>
@@ -3347,12 +3445,12 @@ https://unsplash.it/200/200 200w"
                 class="css-14q529f-CommentListItemActionsButtons ew53o3y0"
               >
                 <button
-                  class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall css-ddyrv3-MuiButtonBase-root-MuiButton-root-CommentListItem"
+                  class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-colorPrimary css-ddyrv3-MuiButtonBase-root-MuiButton-root-CommentListItem"
                   tabindex="0"
                   type="button"
                 >
                   <span
-                    class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
+                    class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
                   >
                     <svg
                       fill="currentColor"
@@ -3408,12 +3506,12 @@ https://unsplash.it/200/200 200w"
                   </button>
                 </div>
                 <button
-                  class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall css-1ktsojf-MuiButtonBase-root-MuiButton-root"
+                  class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary MuiButton-root MuiButton-text MuiButton-textPrimary MuiButton-sizeSmall MuiButton-textSizeSmall MuiButton-colorPrimary css-1ktsojf-MuiButtonBase-root-MuiButton-root"
                   tabindex="0"
                   type="button"
                 >
                   <span
-                    class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
+                    class="MuiButton-icon MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
                   >
                     <svg
                       fill="currentColor"
@@ -3454,11 +3552,11 @@ https://unsplash.it/200/200 200w"
 exports[`Comment List Item should render WithClassName 1`] = `
 <DocumentFragment>
   <article
-    class="extra-classname css-19ehku-CommentWrapper ekbi54x9"
+    class="extra-classname css-19ehku-CommentWrapper ekbi54x10"
     id="verified"
   >
     <header
-      class="css-dmcn8p-CommentHeader ekbi54x8"
+      class="css-dmcn8p-CommentHeader ekbi54x9"
     >
       <img
         alt="DSC07717"
@@ -3471,18 +3569,18 @@ https://unsplash.it/200/200 200w"
         title=""
       />
       <div
-        class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
+        class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
       >
         <div
-          class="css-l1mcyg-CommentName ekbi54x6"
+          class="css-l1mcyg-CommentName ekbi54x7"
         >
           <div
-            class="css-1pg77me-CommentAuthor ekbi54x5"
+            class="css-1pg77me-CommentAuthor ekbi54x6"
           >
             Signed Up User
           </div>
           <div
-            class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
+            class="css-6cfhau-CommentVerifiedBadge ekbi54x5"
           >
             <svg
               fill="currentColor"
@@ -3507,7 +3605,19 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <div
-          class="css-srb6c6-CommentFlair ekbi54x3"
+          class="css-srb6c6-CommentFlair ekbi54x4"
+        >
+          <a
+            class="css-c0umgh-CommentFlairLink ekbi54x3"
+            href="Source"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Flair
+          </a>
+        </div>
+        <div
+          class="css-srb6c6-CommentFlair ekbi54x4"
         >
           Flair
         </div>
@@ -3571,7 +3681,7 @@ https://unsplash.it/200/200 200w"
           >
             <span
               aria-label="0 Stars"
-              class="MuiRating-root MuiRating-sizeMedium Mui-readOnly MuiRating-readOnly css-ryrseu-MuiRating-root"
+              class="MuiRating-root MuiRating-sizeMedium Mui-readOnly MuiRating-readOnly css-15befwp-MuiRating-root"
               role="img"
             >
               <span>
@@ -3705,7 +3815,7 @@ https://unsplash.it/200/200 200w"
           >
             <span
               aria-label="0 Stars"
-              class="MuiRating-root MuiRating-sizeMedium Mui-readOnly MuiRating-readOnly css-ryrseu-MuiRating-root"
+              class="MuiRating-root MuiRating-sizeMedium Mui-readOnly MuiRating-readOnly css-15befwp-MuiRating-root"
               role="img"
             >
               <span>
@@ -3835,11 +3945,11 @@ https://unsplash.it/200/200 200w"
 exports[`Comment List Item should render WithEmotion 1`] = `
 <DocumentFragment>
   <article
-    class="css-67w04i-CommentWrapper-css ekbi54x9"
+    class="css-67w04i-CommentWrapper-css ekbi54x10"
     id="verified"
   >
     <header
-      class="css-dmcn8p-CommentHeader ekbi54x8"
+      class="css-dmcn8p-CommentHeader ekbi54x9"
     >
       <img
         alt="DSC07717"
@@ -3852,18 +3962,18 @@ https://unsplash.it/200/200 200w"
         title=""
       />
       <div
-        class="css-1x1fqyu-CommentHeaderContent ekbi54x7"
+        class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
       >
         <div
-          class="css-l1mcyg-CommentName ekbi54x6"
+          class="css-l1mcyg-CommentName ekbi54x7"
         >
           <div
-            class="css-1pg77me-CommentAuthor ekbi54x5"
+            class="css-1pg77me-CommentAuthor ekbi54x6"
           >
             Signed Up User
           </div>
           <div
-            class="css-6cfhau-CommentVerifiedBadge ekbi54x4"
+            class="css-6cfhau-CommentVerifiedBadge ekbi54x5"
           >
             <svg
               fill="currentColor"
@@ -3888,7 +3998,19 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <div
-          class="css-srb6c6-CommentFlair ekbi54x3"
+          class="css-srb6c6-CommentFlair ekbi54x4"
+        >
+          <a
+            class="css-c0umgh-CommentFlairLink ekbi54x3"
+            href="Source"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Flair
+          </a>
+        </div>
+        <div
+          class="css-srb6c6-CommentFlair ekbi54x4"
         >
           Flair
         </div>
@@ -3952,7 +4074,7 @@ https://unsplash.it/200/200 200w"
           >
             <span
               aria-label="0 Stars"
-              class="MuiRating-root MuiRating-sizeMedium Mui-readOnly MuiRating-readOnly css-ryrseu-MuiRating-root"
+              class="MuiRating-root MuiRating-sizeMedium Mui-readOnly MuiRating-readOnly css-15befwp-MuiRating-root"
               role="img"
             >
               <span>
@@ -4086,7 +4208,7 @@ https://unsplash.it/200/200 200w"
           >
             <span
               aria-label="0 Stars"
-              class="MuiRating-root MuiRating-sizeMedium Mui-readOnly MuiRating-readOnly css-ryrseu-MuiRating-root"
+              class="MuiRating-root MuiRating-sizeMedium Mui-readOnly MuiRating-readOnly css-15befwp-MuiRating-root"
               role="img"
             >
               <span>
