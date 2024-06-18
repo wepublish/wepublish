@@ -1,4 +1,5 @@
 import {Field, ID, InputType, ObjectType, OmitType} from '@nestjs/graphql'
+import {Event} from '@wepublish/event/api'
 
 // Objects
 

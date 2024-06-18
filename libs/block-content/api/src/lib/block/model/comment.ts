@@ -22,8 +22,8 @@ export class CommentBlock {
   @Field(() => CommentBlockFilter)
   filter!: CommentBlockFilter
 
-  @Field(() => [Comment])
-  comments!: Comment[]
+  // @Field(() => [Comment])
+  // comments!: Comment[]
 }
 
 // Inputs
@@ -32,7 +32,7 @@ export class CommentBlock {
 export class CommentBlockInputFilter extends CommentBlockFilter {}
 
 @InputType()
-export class CommentBlockInput extends OmitType(CommentBlock, ['comments', 'filter']) {
+export class CommentBlockInput extends OmitType(CommentBlock, ['filter']) {
   @Field(() => CommentBlockInputFilter)
   filter!: CommentBlockInputFilter
 }
