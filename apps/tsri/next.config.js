@@ -16,7 +16,9 @@ const nextConfig = {
     env: {
       API_URL: process.env.API_URL || '',
       MAILCHIMP_API_KEY: process.env.MAILCHIMP_API_KEY || '',
-      MAILCHIMP_SERVER_PREFIX: process.env.MAILCHIMP_SERVER_PREFIX || ''
+      MAILCHIMP_SERVER_PREFIX: process.env.MAILCHIMP_SERVER_PREFIX || '',
+      GA_ID: process.env.GA_ID || '',
+      SPARKLOOP_ID: process.env.SPARKLOOP_ID || ''
     }
   },
   async redirects() {

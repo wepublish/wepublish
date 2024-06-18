@@ -29,6 +29,7 @@ import {TsriTeaser} from '../src/components/tsri-teaser'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
 import {Paywall} from '../src/components/paywall'
+import {GoogleAnalytics} from '@next/third-parties/google'
 
 setDefaultOptions({
   locale: de
@@ -176,6 +177,18 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               src={publicRuntimeConfig.env.API_URL! + '/scripts/body.js'}
               strategy="lazyOnload"
             />
+
+            {publicRuntimeConfig.env.GA_ID && (
+              <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
+            )}
+
+            {publicRuntimeConfig.env.SPARKLOOP_ID && (
+              <Script
+                src={`https://js.sparkloop.app/team_${publicRuntimeConfig.env.SPARKLOOP_ID}.js`}
+                strategy="lazyOnload"
+                data-sparkloop
+              />
+            )}
           </ThemeProvider>
         </WebsiteBuilderProvider>
       </WebsiteProvider>
