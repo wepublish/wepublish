@@ -1,6 +1,7 @@
 import {Container, css, styled, Theme, useTheme} from '@mui/material'
 import {useUser, useWebsiteBuilder} from '@wepublish/website'
 import {differenceInHours} from 'date-fns'
+import {useRouter} from 'next/router'
 import {useEffect, useMemo, useState} from 'react'
 import {MdClose} from 'react-icons/md'
 
@@ -36,11 +37,12 @@ export function Paywall() {
     elements: {Button, Link, Paragraph, H3, IconButton}
   } = useWebsiteBuilder()
   const theme = useTheme()
+  const router = useRouter()
 
   // Hide paywall for logged in users, on the registration and login
   // page, and if it was hidden within the last 24 hours
   useEffect(() => {
-    const path = window.location.pathname
+    const path = router.pathname
     const isLoggedIn = hasUser
     const lastClosedTime = Number(localStorage.getItem('paywallLastClosed')) ?? 0
     const currentTime = new Date().getTime()
@@ -48,14 +50,14 @@ export function Paywall() {
     if (
       !isLoggedIn &&
       path !== '/mitmachen' &&
-      path !== '/profile' &&
+      path !== '/login' &&
       differenceInHours(currentTime, lastClosedTime) > 24
     ) {
       setDisplay(true)
     } else {
       setDisplay(false)
     }
-  }, [hasUser])
+  }, [hasUser, router.pathname])
 
   const offset = useMemo(() => {
     const header = document.querySelector<HTMLElement>('.MuiAppBar-root')
@@ -90,15 +92,13 @@ export function Paywall() {
         </Paragraph>
 
         <PaywallActions>
-          <Link href={`/mitmachen`}>
-            <Button color="secondary">Jetzt Member werden</Button>
-          </Link>
+          <Button color="secondary" LinkComponent={Link} href="/mitmachen">
+            Jetzt Member werden
+          </Button>
 
-          <Link href={`/profile`}>
-            <Button color="secondary" variant="outlined">
-              Zum Login
-            </Button>
-          </Link>
+          <Button color="secondary" variant="outlined" LinkComponent={Link} href="/login">
+            Zum Login
+          </Button>
         </PaywallActions>
       </Container>
     </PaywallWrapper>
