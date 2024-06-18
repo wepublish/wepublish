@@ -24,7 +24,7 @@ import {BajourArticle} from '../../src/components/website-builder-overwrites/art
 import {BajourAuthorChip} from '../../src/components/website-builder-overwrites/author/author-chip'
 import {CommentListContainer} from '../../src/components/website-builder-overwrites/blocks/comment-list-container/comment-list-container'
 import {TeaserSlider} from '../../src/components/website-builder-overwrites/blocks/teaser-slider/teaser-slider'
-import {BajourComment} from 'apps/bajour/src/components/website-builder-overwrites/blocks/comment/comment'
+import {BajourComment} from '../../src/components/website-builder-overwrites/blocks/comment/comment'
 
 const uppercase = css`
   text-transform: uppercase;
