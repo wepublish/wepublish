@@ -50,17 +50,29 @@ export const CommentHeader = styled('header')`
 
 export const CommentHeaderContent = styled('div')``
 
-export const CommentName = styled('div')`
+export const CommentName = styled('div')<{highlight?: boolean}>`
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: max-content;
   gap: ${({theme}) => theme.spacing(1)};
   align-items: center;
   font-weight: ${({theme}) => theme.typography.fontWeightBold};
+
+  ${({highlight, theme}) =>
+    highlight &&
+    css`
+      color: ${theme.palette.primary.main};
+    `}
 `
 
-export const CommentAuthor = styled('div')`
+export const CommentAuthor = styled('div')<{highlight?: boolean}>`
   font-size: ${({theme}) => theme.typography.body1};
+
+  ${({highlight, theme}) =>
+    highlight &&
+    css`
+      color: ${theme.palette.primary.main};
+    `}
 `
 
 export const CommentVerifiedBadge = styled('div')`
@@ -69,7 +81,7 @@ export const CommentVerifiedBadge = styled('div')`
   color: ${({theme}) => theme.palette.info.main};
 `
 
-export const CommentFlair = styled('div')<{isGuest: boolean}>`
+export const CommentFlair = styled('div')<{isGuest: boolean; highlight?: boolean}>`
   font-size: 0.75em;
   font-weight: 300;
 
@@ -78,10 +90,22 @@ export const CommentFlair = styled('div')<{isGuest: boolean}>`
     css`
       color: ${theme.palette.primary.main};
     `}
+
+  ${({highlight, theme}) =>
+    highlight &&
+    css`
+      color: ${theme.palette.primary.main};
+    `}
 `
 
-export const CommentContent = styled('div')`
+export const CommentContent = styled('div')<{highlight?: boolean}>`
   padding: ${({theme}) => theme.spacing(1.5)};
+
+  ${({highlight, theme}) =>
+    highlight &&
+    css`
+      color: ${theme.palette.primary.main};
+    `}
 `
 
 export const CommentChildren = styled('aside')`
@@ -138,6 +162,11 @@ export const BajourComment = ({
   const flair = user?.flair ?? source
   const name = user ? `${user.preferredName || user.firstName} ${user.name}` : guestUsername
 
+  const sourceAsLinkTag = tags.some((tag: ApiV1.Tag) => tag.tag === bajourTags.QuelleAlsLink)
+  const highlightSourceTag = tags.some((tag: ApiV1.Tag) => tag.tag === bajourTags.QuelleHervorheben)
+  const topCommentTag = tags.some((tag: ApiV1.Tag) => tag.tag === bajourTags.TopKommentar)
+  const moderationTag = tags.some((tag: ApiV1.Tag) => tag.tag === bajourTags.Moderation)
+
   const renderFlair = (flair: string, isGuest: boolean) => {
     const isUrl = (str: string) => {
       try {
@@ -149,9 +178,9 @@ export const BajourComment = ({
     }
 
     if (isUrl(flair)) {
-      if (tags.some((tag: ApiV1.Tag) => tag.tag === bajourTags.QuelleAlsLink)) {
+      if (sourceAsLinkTag) {
         return (
-          <CommentFlair isGuest={isGuest}>
+          <CommentFlair isGuest={isGuest} highlight={moderationTag}>
             <CommentFlairLink href={flair} target="_blank" rel="noopener noreferrer">
               {flair}
             </CommentFlairLink>
@@ -160,23 +189,22 @@ export const BajourComment = ({
       }
     }
 
-    return <CommentFlair isGuest={isGuest}>{flair}</CommentFlair>
+    return (
+      <CommentFlair isGuest={isGuest} highlight={highlightSourceTag || moderationTag}>
+        {flair}
+      </CommentFlair>
+    )
   }
 
   return (
-    <CommentWrapper
-      className={className}
-      id={id}
-      highlight={
-        commentId === id || tags.some((tag: ApiV1.Tag) => tag.tag === bajourTags.TopKommentar)
-      }>
+    <CommentWrapper className={className} id={id} highlight={topCommentTag}>
       <CommentHeader>
         {image && <Image image={image} square css={avatarStyles} />}
         {!image && <MdPerson css={avatarStyles} />}
 
         <CommentHeaderContent>
-          <CommentName>
-            <CommentAuthor>{name}</CommentAuthor>
+          <CommentName highlight={moderationTag}>
+            <CommentAuthor highlight={moderationTag}>{name}</CommentAuthor>
 
             {isVerified && (
               <CommentVerifiedBadge>
@@ -187,13 +215,15 @@ export const BajourComment = ({
 
           {flair && renderFlair(flair, isGuest)}
           {!flair && createdAt && (
-            <CommentFlair isGuest={isGuest}>{formatCommentDate(createdAt)}</CommentFlair>
+            <CommentFlair isGuest={isGuest} highlight={highlightSourceTag || moderationTag}>
+              {formatCommentDate(createdAt)}
+            </CommentFlair>
           )}
         </CommentHeaderContent>
       </CommentHeader>
 
       {showContent && (
-        <CommentContent>
+        <CommentContent highlight={moderationTag}>
           {title && (
             <Paragraph component="h1" gutterBottom={false}>
               <strong>{title}</strong>
