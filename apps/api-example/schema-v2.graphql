@@ -200,6 +200,7 @@ input CreateUserRoleInput {
 
 type CustomTeaser {
   contentUrl: String
+  properties: [Property!]!
 }
 
 type DashboardInvoice {
@@ -677,6 +678,12 @@ type PollStartedAction {
   actionType: ActionType!
   date: DateTime!
   id: ID!
+}
+
+type Property {
+  key: String!
+  public: Boolean!
+  value: String!
 }
 
 type Query {

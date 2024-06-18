@@ -9,6 +9,7 @@ import {
 } from '@nestjs/graphql'
 import {Image} from '@wepublish/image/api'
 import {Event} from '@wepublish/event/api'
+import {Property} from '@wepublish/property/api'
 
 export enum TeaserType {
   Article = 'article',
@@ -97,8 +98,8 @@ export class CustomTeaser extends AbstractTeaser {
   @Field(() => String, {nullable: true})
   contentUrl?: string
 
-  // @Field(() => [Property])
-  // properties!: Property[];
+  @Field(() => [Property])
+  properties!: Property[]
 }
 
 export const Teaser = createUnionType({
