@@ -2,7 +2,9 @@ import {css, styled} from '@mui/material'
 import {createContext, useContext, PropsWithChildren, ComponentProps} from 'react'
 import {
   BreakBlockWrapper,
+  EventBlockWrapper,
   ImageBlockWrapper,
+  ImageGalleryBlockWrapper,
   QuoteBlockWrapper,
   TeaserGridBlockWrapper,
   TeaserGridFlexBlockWrapper,
@@ -40,13 +42,16 @@ export const ContentWrapperStyled = styled('article')<{fullWidth?: boolean}>`
           grid-column: 4/10;
         }
 
-        & > :is(${ImageBlockWrapper}, ${BreakBlockWrapper},) {
+        & > :is(${ImageBlockWrapper}, ${EventBlockWrapper}, ${BreakBlockWrapper}) {
           grid-column: 2/12;
         }
 
         &
           > :is(
-            ${TeaserGridFlexBlockWrapper}, ${TeaserGridBlockWrapper}, ${TeaserListBlockWrapper}
+            ${TeaserGridFlexBlockWrapper},
+              ${TeaserGridBlockWrapper},
+              ${TeaserListBlockWrapper},
+              ${ImageGalleryBlockWrapper}
           ) {
           grid-column: -1/1;
         }

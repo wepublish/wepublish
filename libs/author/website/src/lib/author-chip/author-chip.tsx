@@ -30,16 +30,16 @@ export const AuthorChipMetaWrapper = styled('div')`
 
 export const AuthorChipImageWrapper = styled('div')`
   display: grid;
-  width: 40px;
+  width: 60px;
 `
 
-export const AuthorChipContentWrapper = styled('div')`
-  display: grid;
-`
+export const AuthorChipContentWrapper = styled('div')``
 
 export const AuthorChipName = styled('div')`
   font-weight: 500;
 `
+
+export const AuthorChipJob = styled('div')``
 
 const imageStyles = css`
   border-radius: 50%;
@@ -65,6 +65,8 @@ export function AuthorChip({className, author, publishedAt}: BuilderAuthorChipPr
           <AuthorChipName>
             Von <Link href={author.url}>{author.name}</Link>
           </AuthorChipName>
+
+          {author.jobTitle && <AuthorChipJob>{author.jobTitle}</AuthorChipJob>}
         </AuthorChipContentWrapper>
       </AuthorChipAuthorWrapper>
 

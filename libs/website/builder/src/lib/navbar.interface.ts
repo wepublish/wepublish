@@ -1,6 +1,6 @@
 import {QueryResult} from '@apollo/client'
 import {FullImageFragment, NavigationListQuery} from '@wepublish/website/api'
-import {PropsWithChildren} from 'react'
+import {PropsWithChildren, ReactNode} from 'react'
 
 export type BuilderNavbarProps = PropsWithChildren<
   Pick<QueryResult<NavigationListQuery>, 'data' | 'loading' | 'error'> & {
@@ -11,7 +11,7 @@ export type BuilderNavbarProps = PropsWithChildren<
     logo?: FullImageFragment | null
     loginUrl?: string
     profileUrl?: string
-    subscriptionsUrl?: string
-    showSubscriptionsUrl?: boolean
+    subscriptionsUrl?: string | null
+    actions?: ReactNode
   }
 >

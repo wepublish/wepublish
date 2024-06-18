@@ -4,9 +4,11 @@ import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {MdDateRange} from 'react-icons/md'
 
 export const eventListItemStyles = css`
+  display: grid;
   width: 100%;
   color: inherit;
   text-decoration: inherit;
+  container-type: inline-size;
 `
 
 export const EventListItemWrapper = styled('article')`
@@ -15,7 +17,7 @@ export const EventListItemWrapper = styled('article')`
   grid-template-columns: 1fr;
   align-content: start;
 
-  ${({theme}) => theme.breakpoints.up('md')} {
+  @container (min-width: 400px) {
     grid-template-columns: minmax(30%, 200px) auto;
   }
 `

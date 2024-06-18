@@ -3,6 +3,7 @@ fragment FullTag on Tag {
   tag
   type
   main
+  url
 }
 
 query Tag($tag: String!, $type: TagType!) {
