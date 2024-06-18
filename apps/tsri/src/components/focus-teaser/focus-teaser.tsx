@@ -15,12 +15,10 @@ export const isFocusTeaser = (block: ApiV1.Block): block is ApiV1.TeaserListBloc
   allPass([hasBlockStyle('Focus'), isTeaserListBlock])(block)
 
 const FocusTeaserWrapper = styled('section')`
+  grid-column: -1/1;
   display: grid;
-  gap: ${({theme}) => theme.spacing(5)};
-
-  ${({theme}) => theme.breakpoints.up('lg')} {
-    gap: ${({theme}) => theme.spacing(13)};
-  }
+  column-gap: ${({theme}) => theme.spacing(2)};
+  row-gap: ${({theme}) => theme.spacing(5)};
 `
 
 const FocusedTeaserContent = styled('div')`
@@ -32,7 +30,7 @@ const FocusedTeaserContent = styled('div')`
   }
 `
 
-const FocusedTeaserTitle = styled('h1')`
+const FocusedTeaserTitle = styled('div')`
   display: grid;
   color: ${({theme}) => theme.palette.secondary.contrastText};
   background-color: ${({theme}) => theme.palette.secondary.main};
@@ -44,6 +42,10 @@ const FocusedTeaserTitle = styled('h1')`
 
 const FocusedTeaser = styled('div')`
   padding: ${({theme}) => theme.spacing(4)};
+
+  ${ImageWrapper} {
+    max-height: 50lvh;
+  }
 
   ${({theme}) => theme.breakpoints.up('md')} {
     padding: ${({theme}) => theme.spacing(8)};
@@ -58,23 +60,57 @@ const FocusedTeaser = styled('div')`
   }
 `
 
+export const selectTags = (teaser: ApiV1.Teaser): ApiV1.Tag[] => {
+  switch (teaser.__typename) {
+    case 'PageTeaser': {
+      return teaser.page?.tags ?? []
+    }
+
+    case 'ArticleTeaser': {
+      return teaser.article?.tags ?? []
+    }
+
+    case 'EventTeaser':
+      return teaser.event?.tags ?? []
+
+    case 'PeerArticleTeaser':
+    case 'CustomTeaser':
+      return []
+  }
+
+  return []
+}
+
 export const FocusTeaser = ({
   teasers,
+  filter,
   blockStyle,
   title,
   className
 }: BuilderTeaserListBlockProps) => {
   const {
     blocks: {Teaser},
-    elements: {H3}
+    elements: {Link, H3}
   } = useWebsiteBuilder()
 
   const [focusedTeaser, ...restTeasers] = teasers
 
+  const focusTeaserTitle = title && <H3 component={'h1'}>{title}</H3>
+  const tags =
+    focusedTeaser && selectTags(focusedTeaser).filter(({id}) => filter.tags?.includes(id))
+
   return (
     <FocusTeaserWrapper className={className}>
       <FocusedTeaserContent>
-        {title && <H3 component={FocusedTeaserTitle}>{title}</H3>}
+        <FocusedTeaserTitle>
+          {tags?.length === 1 && tags[0].url ? (
+            <Link href={tags[0].url} color="inherit" underline="none">
+              {focusTeaserTitle}
+            </Link>
+          ) : (
+            focusTeaserTitle
+          )}
+        </FocusedTeaserTitle>
 
         <FocusedTeaser>
           <Teaser
@@ -85,16 +121,18 @@ export const FocusTeaser = ({
         </FocusedTeaser>
       </FocusedTeaserContent>
 
-      <TeaserListBlockTeasers>
-        {restTeasers.map((teaser, index) => (
-          <Teaser
-            key={index}
-            teaser={teaser}
-            alignment={alignmentForTeaserBlock(index, 4)}
-            blockStyle={blockStyle}
-          />
-        ))}
-      </TeaserListBlockTeasers>
+      {!!restTeasers.length && (
+        <TeaserListBlockTeasers>
+          {restTeasers.map((teaser, index) => (
+            <Teaser
+              key={index}
+              teaser={teaser}
+              alignment={alignmentForTeaserBlock(index, 4)}
+              blockStyle={blockStyle}
+            />
+          ))}
+        </TeaserListBlockTeasers>
+      )}
     </FocusTeaserWrapper>
   )
 }
