@@ -91,6 +91,7 @@ const memberPlan = {
           name: 'Payrexx',
           slug: 'payrexx',
           paymentProviderID: '1',
+          image,
           __typename: 'PaymentMethod'
         },
         {
@@ -99,6 +100,7 @@ const memberPlan = {
           name: 'Payrexx',
           slug: 'payrexx',
           paymentProviderID: '1',
+          image,
           __typename: 'PaymentMethod'
         }
       ]
@@ -113,6 +115,7 @@ const memberPlan = {
           name: 'Stripe',
           slug: 'stripe',
           paymentProviderID: '2',
+          image,
           __typename: 'PaymentMethod'
         }
       ]
@@ -127,6 +130,7 @@ const memberPlan = {
           name: 'Stripe',
           slug: 'stripe',
           paymentProviderID: '2',
+          image,
           __typename: 'PaymentMethod'
         }
       ]
@@ -374,13 +378,10 @@ const changePaymentMethod =
   async ({canvasElement, step}) => {
     const canvas = within(canvasElement)
 
-    const input = canvas.getByLabelText('Zahlungsmethode', {
-      selector: 'select'
-    })
+    const input = canvas.getByLabelText(`${paymentMethod.description} ${paymentMethod.name}`)
 
     await step('Change Paymentmethod', async () => {
       await userEvent.click(input)
-      await userEvent.selectOptions(input, paymentMethod.description)
       await wait(10) // wait for reset to happen
     })
   }
