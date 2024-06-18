@@ -3,6 +3,8 @@ import {
   ApiV2,
   BuilderTeaserGridBlockProps,
   selectTeaserAuthors,
+  selectTeaserLead,
+  selectTeaserTitle,
   selectTeaserUrl,
   useWebsiteBuilder
 } from '@wepublish/website'
@@ -11,10 +13,6 @@ import getConfig from 'next/config'
 import {useState} from 'react'
 
 import {ReactComponent as Logo} from '../../logo.svg'
-import {
-  selectBajourTeaserLead,
-  selectBajourTeaserTitle
-} from '../website-builder-overwrites/blocks/select-teaser'
 import {ArchiveSlider} from './archive-slider'
 
 export const ArchiveWrapper = styled('div')``
@@ -198,8 +196,8 @@ const Archive = ({teasers}: BuilderTeaserGridBlockProps) => {
   const {data} = ApiV2.useStatsQuery()
   const [currentTeaser, setCurrentTeaser] = useState(teasers[2])
 
-  const title = currentTeaser && selectBajourTeaserTitle(currentTeaser)
-  const lead = currentTeaser && selectBajourTeaserLead(currentTeaser)
+  const title = currentTeaser && selectTeaserTitle(currentTeaser)
+  const lead = currentTeaser && selectTeaserLead(currentTeaser)
   const href = (currentTeaser && selectTeaserUrl(currentTeaser)) ?? ''
   const authors = currentTeaser && selectTeaserAuthors(currentTeaser)
 

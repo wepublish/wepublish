@@ -168,6 +168,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
                 src={publicRuntimeConfig.env.API_URL! + '/scripts/head.js'}
                 strategy="afterInteractive"
               />
+
               <Script
                 src={publicRuntimeConfig.env.API_URL! + '/scripts/body.js'}
                 strategy="lazyOnload"

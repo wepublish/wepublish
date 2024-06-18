@@ -45,6 +45,7 @@ export const BajourAuthorChipContentWrapper = styled('div')`
 export const BajourAuthorChipName = styled('div')`
   font-weight: 300;
   font-size: ${({theme}) => theme.typography.h4.fontSize};
+
   a {
     color: ${({theme}) => theme.palette.text.primary};
     text-decoration: none;
@@ -69,6 +70,7 @@ export function BajourAuthorChip({className, author}: BajourAuthorChipProps) {
           <Image image={author.image} square css={imageStyles} />
         </BajourAuthorChipImageWrapper>
       )}
+
       <BajourAuthorChipAuthorWrapper>
         <BajourAuthorChipContentWrapper>
           <BajourAuthorChipName>

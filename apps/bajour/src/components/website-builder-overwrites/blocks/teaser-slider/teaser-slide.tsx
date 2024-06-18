@@ -3,13 +3,14 @@ import {
   BuilderTeaserProps,
   selectTeaserAuthors,
   selectTeaserDate,
+  selectTeaserImage,
   selectTeaserLead,
+  selectTeaserTitle,
   selectTeaserUrl,
   useWebsiteBuilder
 } from '@wepublish/website'
 import {useMemo} from 'react'
 
-import {selectBajourTeaserImage, selectBajourTeaserTitle} from '../select-teaser'
 import {fluidTypography} from '../teaser-overwrite.style'
 
 export const TeaserSlideContainer = styled('div')`
@@ -68,10 +69,10 @@ const useButtonStyles = (theme: Theme) => {
 }
 
 export const TeaserSlide = ({teaser, className}: Omit<BuilderTeaserProps, 'alignment'>) => {
-  const title = teaser && selectBajourTeaserTitle(teaser)
+  const title = teaser && selectTeaserTitle(teaser)
   const lead = teaser && selectTeaserLead(teaser)
   const href = (teaser && selectTeaserUrl(teaser)) ?? ''
-  const image = teaser && selectBajourTeaserImage(teaser)
+  const image = teaser && selectTeaserImage(teaser)
   const publishDate = teaser && selectTeaserDate(teaser)
   const authors = teaser && selectTeaserAuthors(teaser)
 
