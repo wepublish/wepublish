@@ -3,11 +3,11 @@
 exports[`Subscribe Container should render Default 1`] = `
 <DocumentFragment>
   <form
-    class="css-dai3ta-SubscribeWrapper eu4qtxp3"
+    class="css-dai3ta-SubscribeWrapper eu4qtxp6"
     novalidate=""
   >
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp2"
+      class="css-qtq6nf-SubscribeSection eu4qtxp5"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -249,16 +249,16 @@ https://unsplash.it/200/100 200w"
       </fieldset>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp2"
+      class="css-qtq6nf-SubscribeSection eu4qtxp5"
     >
-      <h2
-        class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
-      >
-        Bonus Unterstützung
-      </h2>
       <div
-        class="css-4dz7fc-SubscribeExtraMoney eu4qtxp0"
+        class="css-1w13aws-SubscribeAmount eu4qtxp3"
       >
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-2be65z-SubscribeAmountText-MuiTypography-root eu4qtxp2"
+        >
+          Ich unterstütze Newsroom Name monatlich für CHF 5.-
+        </p>
         <span
           class="MuiSlider-root MuiSlider-colorSecondary MuiSlider-sizeMedium css-bhj4ar-MuiSlider-root"
         >
@@ -276,72 +276,21 @@ https://unsplash.it/200/100 200w"
           >
             <input
               aria-orientation="horizontal"
-              aria-valuemax="100"
-              aria-valuemin="0"
-              aria-valuenow="0"
+              aria-valuemax="2500"
+              aria-valuemin="500"
+              aria-valuenow="500"
               data-index="0"
-              max="100"
-              min="0"
-              name="extraMoney"
-              step="0.5"
+              max="2500"
+              min="500"
+              name="monthlyAmount"
+              step="100"
               style="border: 0px; height: 100%; margin: -1px; overflow: hidden; padding: 0px; position: absolute; white-space: nowrap; width: 100%; direction: ltr;"
               type="range"
-              value="0"
+              value="500"
             />
           </span>
         </span>
-        <div
-          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
-        >
-          <label
-            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
-            data-shrink="true"
-            for=":r0:"
-            id=":r0:-label"
-          >
-            Monatliche Bonus-Unterstützung (optional)
-          </label>
-          <div
-            class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedStart css-zos2p1-MuiInputBase-root-MuiOutlinedInput-root"
-          >
-            <div
-              class="MuiInputAdornment-root MuiInputAdornment-positionStart MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-16su6c8-MuiInputAdornment-root"
-            >
-              <p
-                class="MuiTypography-root MuiTypography-body1 css-1q4i2pm-MuiTypography-root"
-              >
-                CHF
-              </p>
-            </div>
-            <input
-              aria-invalid="false"
-              class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedStart css-1o9s3wi-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r0:"
-              min="0"
-              name="extraMoney"
-              step="any"
-              type="number"
-              value="0"
-            />
-            <fieldset
-              aria-hidden="true"
-              class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
-            >
-              <legend
-                class="css-14lo706"
-              >
-                <span>
-                  Monatliche Bonus-Unterstützung (optional)
-                </span>
-              </legend>
-            </fieldset>
-          </div>
-        </div>
       </div>
-    </div>
-    <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp2"
-    >
       <div
         class="css-17j4c9a-UserFormWrapper e1mcs0cc1"
       >
@@ -351,8 +300,8 @@ https://unsplash.it/200/100 200w"
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
             data-shrink="false"
-            for=":r1:"
-            id=":r1:-label"
+            for=":r0:"
+            id=":r0:-label"
           >
             Vorname
           </label>
@@ -363,7 +312,7 @@ https://unsplash.it/200/100 200w"
               aria-invalid="false"
               autocomplete="firstname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r1:"
+              id=":r0:"
               name="firstName"
               type="text"
               value=""
@@ -388,8 +337,8 @@ https://unsplash.it/200/100 200w"
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
             data-shrink="false"
-            for=":r2:"
-            id=":r2:-label"
+            for=":r1:"
+            id=":r1:-label"
           >
             Nachname
           </label>
@@ -400,7 +349,7 @@ https://unsplash.it/200/100 200w"
               aria-invalid="false"
               autocomplete="lastname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r2:"
+              id=":r1:"
               name="name"
               type="text"
               value=""
@@ -425,8 +374,8 @@ https://unsplash.it/200/100 200w"
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
             data-shrink="false"
-            for=":r3:"
-            id=":r3:-label"
+            for=":r2:"
+            id=":r2:-label"
           >
             Email
           </label>
@@ -437,7 +386,7 @@ https://unsplash.it/200/100 200w"
               aria-invalid="false"
               autocomplete="email"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r3:"
+              id=":r2:"
               name="email"
               type="email"
               value=""
@@ -462,8 +411,8 @@ https://unsplash.it/200/100 200w"
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
             data-shrink="false"
-            for=":r4:"
-            id=":r4:-label"
+            for=":r3:"
+            id=":r3:-label"
           >
             Passwort
           </label>
@@ -474,7 +423,7 @@ https://unsplash.it/200/100 200w"
               aria-invalid="false"
               autocomplete="new-password"
               class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r4:"
+              id=":r3:"
               name="password"
               type="password"
               value=""
@@ -532,8 +481,8 @@ https://unsplash.it/200/100 200w"
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
               data-shrink="false"
-              for=":r5:"
-              id=":r5:-label"
+              for=":r4:"
+              id=":r4:-label"
             >
               Adresse
             </label>
@@ -544,7 +493,7 @@ https://unsplash.it/200/100 200w"
                 aria-invalid="false"
                 autocomplete="address"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r5:"
+                id=":r4:"
                 name="address.streetAddress"
                 type="text"
                 value=""
@@ -569,8 +518,8 @@ https://unsplash.it/200/100 200w"
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
               data-shrink="false"
-              for=":r6:"
-              id=":r6:-label"
+              for=":r5:"
+              id=":r5:-label"
             >
               PLZ
             </label>
@@ -581,7 +530,7 @@ https://unsplash.it/200/100 200w"
                 aria-invalid="false"
                 autocomplete="zip"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r6:"
+                id=":r5:"
                 name="address.zipCode"
                 type="text"
                 value=""
@@ -606,8 +555,8 @@ https://unsplash.it/200/100 200w"
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
               data-shrink="false"
-              for=":r7:"
-              id=":r7:-label"
+              for=":r6:"
+              id=":r6:-label"
             >
               Ort / Stadt
             </label>
@@ -618,7 +567,7 @@ https://unsplash.it/200/100 200w"
                 aria-invalid="false"
                 autocomplete="city"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r7:"
+                id=":r6:"
                 name="address.city"
                 type="text"
                 value=""
@@ -643,8 +592,8 @@ https://unsplash.it/200/100 200w"
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
               data-shrink="false"
-              for=":r8:"
-              id=":r8:-label"
+              for=":r7:"
+              id=":r7:-label"
             >
               Land
             </label>
@@ -655,7 +604,7 @@ https://unsplash.it/200/100 200w"
                 aria-invalid="false"
                 autocomplete="country"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r8:"
+                id=":r7:"
                 name="address.country"
                 type="text"
                 value=""
@@ -678,7 +627,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp2"
+      class="css-qtq6nf-SubscribeSection eu4qtxp5"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -686,71 +635,216 @@ https://unsplash.it/200/100 200w"
         Zahlungsmethode wählen
       </h2>
       <div
-        class="css-tcuzi5-SubscribePayment eu4qtxp1"
+        class="css-tcuzi5-SubscribePayment eu4qtxp4"
       >
         <div
-          class="MuiFormControl-root e1xdovcl0 css-rjme10-MuiFormControl-root-PaymentMethodPickerWrapper"
+          class="MuiFormControl-root e1xdovcl1 css-rjme10-MuiFormControl-root-PaymentMethodPickerWrapper"
         >
-          <label
-            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
-            data-shrink="true"
-            for=":r9:"
-          >
-            Zahlungsmethode
-          </label>
           <div
-            class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl  css-9i9uko-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root"
+            class="MuiFormGroup-root MuiFormGroup-row css-qfz70r-MuiFormGroup-root"
+            id=":r8:"
+            role="radiogroup"
           >
-            <select
-              aria-invalid="false"
-              class="MuiNativeSelect-select MuiNativeSelect-outlined MuiInputBase-input MuiOutlinedInput-input css-ffg8md-MuiNativeSelect-select-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r9:"
-              name="paymentMethodId"
+            <label
+              class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
             >
-              <option
-                value="12345"
+              <span
+                aria-label="Mit Zahlungsintervall, optionales erneueren Payrexx"
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-1kh4s80-MuiButtonBase-root-MuiRadio-root-PaymentRadio"
               >
-                Mit Zahlungsintervall, optionales erneueren
-              </option>
-              <option
-                value="12345-12345"
-              >
-                Mit Zahlungsintervall, optionales erneueren 2
-              </option>
-              <option
-                value="1234"
-              >
-                Optionales erneueren
-              </option>
-              <option
-                value="1234-1234"
-              >
-                Jährlich erneuert
-              </option>
-            </select>
-            <svg
-              aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiNativeSelect-icon MuiNativeSelect-iconOutlined css-1g12qau-MuiSvgIcon-root-MuiNativeSelect-icon"
-              data-testid="ArrowDropDownIcon"
-              focusable="false"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M7 10l5 5 5-5z"
-              />
-            </svg>
-            <fieldset
-              aria-hidden="true"
-              class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
-            >
-              <legend
-                class="css-14lo706"
-              >
-                <span>
-                  Zahlungsmethode
+                <input
+                  class="PrivateSwitchBase-input css-1m9pwf3"
+                  name="paymentMethodId"
+                  type="radio"
+                  value="12345"
+                />
+                <span
+                  class="css-hyxlzm"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-11zohuh-MuiSvgIcon-root"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
                 </span>
-              </legend>
-            </fieldset>
+                <span
+                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                />
+              </span>
+              <div
+                class="css-1fd5imw-PaymentRadioWrapper e1xdovcl0"
+              />
+              <span
+                class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-67xpxh-MuiTypography-root"
+              />
+            </label>
+            <label
+              class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
+            >
+              <span
+                aria-label="Mit Zahlungsintervall, optionales erneueren 2 Payrexx"
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-1kh4s80-MuiButtonBase-root-MuiRadio-root-PaymentRadio"
+              >
+                <input
+                  class="PrivateSwitchBase-input css-1m9pwf3"
+                  name="paymentMethodId"
+                  type="radio"
+                  value="12345-12345"
+                />
+                <span
+                  class="css-hyxlzm"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hhw7if-MuiSvgIcon-root"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                />
+              </span>
+              <div
+                class="css-1bz2hxg-PaymentRadioWrapper e1xdovcl0"
+              />
+              <span
+                class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-67xpxh-MuiTypography-root"
+              />
+            </label>
+            <label
+              class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
+            >
+              <span
+                aria-label="Optionales erneueren Stripe"
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-1kh4s80-MuiButtonBase-root-MuiRadio-root-PaymentRadio"
+              >
+                <input
+                  class="PrivateSwitchBase-input css-1m9pwf3"
+                  name="paymentMethodId"
+                  type="radio"
+                  value="1234"
+                />
+                <span
+                  class="css-hyxlzm"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hhw7if-MuiSvgIcon-root"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                />
+              </span>
+              <div
+                class="css-1bz2hxg-PaymentRadioWrapper e1xdovcl0"
+              />
+              <span
+                class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-67xpxh-MuiTypography-root"
+              />
+            </label>
+            <label
+              class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
+            >
+              <span
+                aria-label="Jährlich erneuert Stripe"
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-1kh4s80-MuiButtonBase-root-MuiRadio-root-PaymentRadio"
+              >
+                <input
+                  class="PrivateSwitchBase-input css-1m9pwf3"
+                  name="paymentMethodId"
+                  type="radio"
+                  value="1234-1234"
+                />
+                <span
+                  class="css-hyxlzm"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hhw7if-MuiSvgIcon-root"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                />
+              </span>
+              <div
+                class="css-1bz2hxg-PaymentRadioWrapper e1xdovcl0"
+              />
+              <span
+                class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-67xpxh-MuiTypography-root"
+              />
+            </label>
           </div>
         </div>
         <div
@@ -856,7 +950,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp2"
+      class="css-qtq6nf-SubscribeSection eu4qtxp5"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -963,16 +1057,25 @@ https://unsplash.it/200/100 200w"
         </div>
       </div>
     </div>
-    <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-11lcf1o-MuiButtonBase-root-MuiButton-root-buttonStyles"
-      tabindex="0"
-      type="submit"
+    <div
+      class="css-13or86z-SubscribeSection-SubscribeNarrowSection eu4qtxp0"
     >
-      Monatlich für CHF 5.- Abonnieren
-      <span
-        class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-      />
-    </button>
+      <button
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-containedSizeLarge css-1yo1oar-MuiButtonBase-root-MuiButton-root-buttonStyles"
+        tabindex="0"
+        type="submit"
+      >
+        Monatlich für CHF 5.- Abonnieren
+        <span
+          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+        />
+      </button>
+      <p
+        class="MuiTypography-root MuiTypography-body1 css-1gju5y7-SubscribeCancelable-MuiTypography-root eu4qtxp1"
+      >
+        Jederzeit kündbar
+      </p>
+    </div>
   </form>
 </DocumentFragment>
 `;
@@ -988,7 +1091,7 @@ exports[`Subscribe Container should render Filled 1`] = `
 +     Logged in as Foo
 +   </div>
     <form
-      class="css-dai3ta-SubscribeWrapper eu4qtxp3"
+      class="css-dai3ta-SubscribeWrapper eu4qtxp6"
       novalidate=""
     >
       <div
@@ -1067,13 +1170,16 @@ exports[`Subscribe Container should render Filled 1`] = `
         >
           <div
             class="MuiFormGroup-root es1nn8k0 css-109gj5f-MuiFormGroup-root-MemberPlanPickerRadios"
-@@ -336,349 +403,11 @@
-          </div>
-        </div>
-      </div>
-      <div
-        class="css-qtq6nf-SubscribeSection eu4qtxp2"
--     >
+@@ -282,350 +349,16 @@
+                name="monthlyAmount"
+                step="100"
+                style="border: 0px; height: 100%; margin: -1px; overflow: hidden; padding: 0px; position: absolute; white-space: nowrap; width: 100%; direction: ltr;"
+                type="range"
+                value="500"
+-             />
+-           </span>
+-         </span>
+-       </div>
 -       <div
 -         class="css-17j4c9a-UserFormWrapper e1mcs0cc1"
 -       >
@@ -1083,8 +1189,8 @@ exports[`Subscribe Container should render Filled 1`] = `
 -           <label
 -             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
 -             data-shrink="false"
--             for=":re:"
--             id=":re:-label"
+-             for=":rd:"
+-             id=":rd:-label"
 -           >
 -             Vorname
 -           </label>
@@ -1095,7 +1201,7 @@ exports[`Subscribe Container should render Filled 1`] = `
 -               aria-invalid="false"
 -               autocomplete="firstname"
 -               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
--               id=":re:"
+-               id=":rd:"
 -               name="firstName"
 -               type="text"
 -               value=""
@@ -1120,8 +1226,8 @@ exports[`Subscribe Container should render Filled 1`] = `
 -           <label
 -             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
 -             data-shrink="false"
--             for=":rf:"
--             id=":rf:-label"
+-             for=":re:"
+-             id=":re:-label"
 -           >
 -             Nachname
 -           </label>
@@ -1132,21 +1238,21 @@ exports[`Subscribe Container should render Filled 1`] = `
 -               aria-invalid="false"
 -               autocomplete="lastname"
 -               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
--               id=":rf:"
+-               id=":re:"
 -               name="name"
 -               type="text"
 -               value=""
--             />
+              />
 -             <fieldset
 -               aria-hidden="true"
 -               class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
-      >
+-             >
 -               <legend
 -                 class="css-yjsfm1"
 -               >
 -                 <span>
 -                   Nachname
--                 </span>
+            </span>
 -               </legend>
 -             </fieldset>
 -           </div>
@@ -1157,8 +1263,8 @@ exports[`Subscribe Container should render Filled 1`] = `
 -           <label
 -             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
 -             data-shrink="false"
--             for=":rg:"
--             id=":rg:-label"
+-             for=":rf:"
+-             id=":rf:-label"
 -           >
 -             Email
 -           </label>
@@ -1169,7 +1275,7 @@ exports[`Subscribe Container should render Filled 1`] = `
 -               aria-invalid="false"
 -               autocomplete="email"
 -               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
--               id=":rg:"
+-               id=":rf:"
 -               name="email"
 -               type="email"
 -               value=""
@@ -1194,8 +1300,8 @@ exports[`Subscribe Container should render Filled 1`] = `
 -           <label
 -             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
 -             data-shrink="false"
--             for=":rh:"
--             id=":rh:-label"
+-             for=":rg:"
+-             id=":rg:-label"
 -           >
 -             Passwort
 -           </label>
@@ -1206,7 +1312,7 @@ exports[`Subscribe Container should render Filled 1`] = `
 -               aria-invalid="false"
 -               autocomplete="new-password"
 -               class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
--               id=":rh:"
+-               id=":rg:"
 -               name="password"
 -               type="password"
 -               value=""
@@ -1250,22 +1356,22 @@ exports[`Subscribe Container should render Filled 1`] = `
 -               >
 -                 <span>
 -                   Passwort
--                 </span>
+          </span>
 -               </legend>
 -             </fieldset>
--           </div>
--         </div>
+        </div>
+      </div>
 -         <div
 -           class="css-sweuoc-UserAddressWrapper e1mcs0cc0"
 -         >
--           <div
+      <div
 -             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-1706pe8-MuiFormControl-root-MuiTextField-root"
 -           >
 -             <label
 -               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
 -               data-shrink="false"
--               for=":ri:"
--               id=":ri:-label"
+-               for=":rh:"
+-               id=":rh:-label"
 -             >
 -               Adresse
 -             </label>
@@ -1276,7 +1382,7 @@ exports[`Subscribe Container should render Filled 1`] = `
 -                 aria-invalid="false"
 -                 autocomplete="address"
 -                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
--                 id=":ri:"
+-                 id=":rh:"
 -                 name="address.streetAddress"
 -                 type="text"
 -                 value=""
@@ -1301,8 +1407,8 @@ exports[`Subscribe Container should render Filled 1`] = `
 -             <label
 -               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
 -               data-shrink="false"
--               for=":rj:"
--               id=":rj:-label"
+-               for=":ri:"
+-               id=":ri:-label"
 -             >
 -               PLZ
 -             </label>
@@ -1313,7 +1419,7 @@ exports[`Subscribe Container should render Filled 1`] = `
 -                 aria-invalid="false"
 -                 autocomplete="zip"
 -                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
--                 id=":rj:"
+-                 id=":ri:"
 -                 name="address.zipCode"
 -                 type="text"
 -                 value=""
@@ -1338,8 +1444,8 @@ exports[`Subscribe Container should render Filled 1`] = `
 -             <label
 -               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
 -               data-shrink="false"
--               for=":rk:"
--               id=":rk:-label"
+-               for=":rj:"
+-               id=":rj:-label"
 -             >
 -               Ort / Stadt
 -             </label>
@@ -1350,7 +1456,7 @@ exports[`Subscribe Container should render Filled 1`] = `
 -                 aria-invalid="false"
 -                 autocomplete="city"
 -                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
--                 id=":rk:"
+-                 id=":rj:"
 -                 name="address.city"
 -                 type="text"
 -                 value=""
@@ -1375,8 +1481,8 @@ exports[`Subscribe Container should render Filled 1`] = `
 -             <label
 -               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
 -               data-shrink="false"
--               for=":rl:"
--               id=":rl:-label"
+-               for=":rk:"
+-               id=":rk:-label"
 -             >
 -               Land
 -             </label>
@@ -1387,7 +1493,7 @@ exports[`Subscribe Container should render Filled 1`] = `
 -                 aria-invalid="false"
 -                 autocomplete="country"
 -                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
--                 id=":rl:"
+-                 id=":rk:"
 -                 name="address.country"
 -                 type="text"
 -                 value=""
@@ -1410,23 +1516,22 @@ exports[`Subscribe Container should render Filled 1`] = `
 -       </div>
 -     </div>
 -     <div
--       class="css-qtq6nf-SubscribeSection eu4qtxp2"
--     >
+        class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      >
         <h2
           class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
-          Zahlungsmethode wählen
-        </h2>
-@@ -848,118 +577,10 @@
+@@ -941,119 +674,11 @@
+            <span
               class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-67xpxh-MuiTypography-root"
             >
               Automatisch erneuern
             </span>
-          </label>
+-         </label>
 -       </div>
 -     </div>
 -     <div
--       class="css-qtq6nf-SubscribeSection eu4qtxp2"
+-       class="css-qtq6nf-SubscribeSection eu4qtxp5"
 -     >
 -       <h2
 -         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -1505,7 +1610,7 @@ exports[`Subscribe Container should render Filled 1`] = `
 -             id=":rp:-label"
 -           >
 -             Captcha
--           </label>
+          </label>
 -           <div
 -             class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl css-1ljpo10-MuiInputBase-root-MuiOutlinedInput-root"
 -           >
@@ -1533,19 +1638,19 @@ exports[`Subscribe Container should render Filled 1`] = `
 -         </div>
         </div>
       </div>
-      <button
-        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-11lcf1o-MuiButtonBase-root-MuiButton-root-buttonStyles"
-        tabindex="0""
+      <div
+        class="css-13or86z-SubscribeSection-SubscribeNarrowSection eu4qtxp0"
+      >"
 `;
 
 exports[`Subscribe Container should render LoggedIn 1`] = `
 <DocumentFragment>
   <form
-    class="css-dai3ta-SubscribeWrapper eu4qtxp3"
+    class="css-dai3ta-SubscribeWrapper eu4qtxp6"
     novalidate=""
   >
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp2"
+      class="css-qtq6nf-SubscribeSection eu4qtxp5"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -1851,16 +1956,16 @@ https://unsplash.it/200/100 200w"
       </fieldset>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp2"
+      class="css-qtq6nf-SubscribeSection eu4qtxp5"
     >
-      <h2
-        class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
-      >
-        Bonus Unterstützung
-      </h2>
       <div
-        class="css-4dz7fc-SubscribeExtraMoney eu4qtxp0"
+        class="css-1w13aws-SubscribeAmount eu4qtxp3"
       >
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-2be65z-SubscribeAmountText-MuiTypography-root eu4qtxp2"
+        >
+          Ich unterstütze Newsroom Name monatlich für CHF 5.-
+        </p>
         <span
           class="MuiSlider-root MuiSlider-colorSecondary MuiSlider-sizeMedium css-bhj4ar-MuiSlider-root"
         >
@@ -1878,71 +1983,24 @@ https://unsplash.it/200/100 200w"
           >
             <input
               aria-orientation="horizontal"
-              aria-valuemax="100"
-              aria-valuemin="0"
-              aria-valuenow="0"
+              aria-valuemax="2500"
+              aria-valuemin="500"
+              aria-valuenow="500"
               data-index="0"
-              max="100"
-              min="0"
-              name="extraMoney"
-              step="0.5"
+              max="2500"
+              min="500"
+              name="monthlyAmount"
+              step="100"
               style="border: 0px; height: 100%; margin: -1px; overflow: hidden; padding: 0px; position: absolute; white-space: nowrap; width: 100%; direction: ltr;"
               type="range"
-              value="0"
+              value="500"
             />
           </span>
         </span>
-        <div
-          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
-        >
-          <label
-            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
-            data-shrink="true"
-            for=":rq:"
-            id=":rq:-label"
-          >
-            Monatliche Bonus-Unterstützung (optional)
-          </label>
-          <div
-            class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedStart css-zos2p1-MuiInputBase-root-MuiOutlinedInput-root"
-          >
-            <div
-              class="MuiInputAdornment-root MuiInputAdornment-positionStart MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-16su6c8-MuiInputAdornment-root"
-            >
-              <p
-                class="MuiTypography-root MuiTypography-body1 css-1q4i2pm-MuiTypography-root"
-              >
-                CHF
-              </p>
-            </div>
-            <input
-              aria-invalid="false"
-              class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedStart css-1o9s3wi-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":rq:"
-              min="0"
-              name="extraMoney"
-              step="any"
-              type="number"
-              value="0"
-            />
-            <fieldset
-              aria-hidden="true"
-              class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
-            >
-              <legend
-                class="css-14lo706"
-              >
-                <span>
-                  Monatliche Bonus-Unterstützung (optional)
-                </span>
-              </legend>
-            </fieldset>
-          </div>
-        </div>
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp2"
+      class="css-qtq6nf-SubscribeSection eu4qtxp5"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -1950,71 +2008,216 @@ https://unsplash.it/200/100 200w"
         Zahlungsmethode wählen
       </h2>
       <div
-        class="css-tcuzi5-SubscribePayment eu4qtxp1"
+        class="css-tcuzi5-SubscribePayment eu4qtxp4"
       >
         <div
-          class="MuiFormControl-root e1xdovcl0 css-rjme10-MuiFormControl-root-PaymentMethodPickerWrapper"
+          class="MuiFormControl-root e1xdovcl1 css-rjme10-MuiFormControl-root-PaymentMethodPickerWrapper"
         >
-          <label
-            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
-            data-shrink="true"
-            for=":rr:"
-          >
-            Zahlungsmethode
-          </label>
           <div
-            class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl  css-9i9uko-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root"
+            class="MuiFormGroup-root MuiFormGroup-row css-qfz70r-MuiFormGroup-root"
+            id=":rq:"
+            role="radiogroup"
           >
-            <select
-              aria-invalid="false"
-              class="MuiNativeSelect-select MuiNativeSelect-outlined MuiInputBase-input MuiOutlinedInput-input css-ffg8md-MuiNativeSelect-select-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":rr:"
-              name="paymentMethodId"
+            <label
+              class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
             >
-              <option
-                value="12345"
+              <span
+                aria-label="Mit Zahlungsintervall, optionales erneueren Payrexx"
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-1kh4s80-MuiButtonBase-root-MuiRadio-root-PaymentRadio"
               >
-                Mit Zahlungsintervall, optionales erneueren
-              </option>
-              <option
-                value="12345-12345"
-              >
-                Mit Zahlungsintervall, optionales erneueren 2
-              </option>
-              <option
-                value="1234"
-              >
-                Optionales erneueren
-              </option>
-              <option
-                value="1234-1234"
-              >
-                Jährlich erneuert
-              </option>
-            </select>
-            <svg
-              aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiNativeSelect-icon MuiNativeSelect-iconOutlined css-1g12qau-MuiSvgIcon-root-MuiNativeSelect-icon"
-              data-testid="ArrowDropDownIcon"
-              focusable="false"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M7 10l5 5 5-5z"
-              />
-            </svg>
-            <fieldset
-              aria-hidden="true"
-              class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
-            >
-              <legend
-                class="css-14lo706"
-              >
-                <span>
-                  Zahlungsmethode
+                <input
+                  class="PrivateSwitchBase-input css-1m9pwf3"
+                  name="paymentMethodId"
+                  type="radio"
+                  value="12345"
+                />
+                <span
+                  class="css-hyxlzm"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-11zohuh-MuiSvgIcon-root"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
                 </span>
-              </legend>
-            </fieldset>
+                <span
+                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                />
+              </span>
+              <div
+                class="css-1fd5imw-PaymentRadioWrapper e1xdovcl0"
+              />
+              <span
+                class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-67xpxh-MuiTypography-root"
+              />
+            </label>
+            <label
+              class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
+            >
+              <span
+                aria-label="Mit Zahlungsintervall, optionales erneueren 2 Payrexx"
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-1kh4s80-MuiButtonBase-root-MuiRadio-root-PaymentRadio"
+              >
+                <input
+                  class="PrivateSwitchBase-input css-1m9pwf3"
+                  name="paymentMethodId"
+                  type="radio"
+                  value="12345-12345"
+                />
+                <span
+                  class="css-hyxlzm"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hhw7if-MuiSvgIcon-root"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                />
+              </span>
+              <div
+                class="css-1bz2hxg-PaymentRadioWrapper e1xdovcl0"
+              />
+              <span
+                class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-67xpxh-MuiTypography-root"
+              />
+            </label>
+            <label
+              class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
+            >
+              <span
+                aria-label="Optionales erneueren Stripe"
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-1kh4s80-MuiButtonBase-root-MuiRadio-root-PaymentRadio"
+              >
+                <input
+                  class="PrivateSwitchBase-input css-1m9pwf3"
+                  name="paymentMethodId"
+                  type="radio"
+                  value="1234"
+                />
+                <span
+                  class="css-hyxlzm"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hhw7if-MuiSvgIcon-root"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                />
+              </span>
+              <div
+                class="css-1bz2hxg-PaymentRadioWrapper e1xdovcl0"
+              />
+              <span
+                class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-67xpxh-MuiTypography-root"
+              />
+            </label>
+            <label
+              class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
+            >
+              <span
+                aria-label="Jährlich erneuert Stripe"
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-1kh4s80-MuiButtonBase-root-MuiRadio-root-PaymentRadio"
+              >
+                <input
+                  class="PrivateSwitchBase-input css-1m9pwf3"
+                  name="paymentMethodId"
+                  type="radio"
+                  value="1234-1234"
+                />
+                <span
+                  class="css-hyxlzm"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hhw7if-MuiSvgIcon-root"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                />
+              </span>
+              <div
+                class="css-1bz2hxg-PaymentRadioWrapper e1xdovcl0"
+              />
+              <span
+                class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-67xpxh-MuiTypography-root"
+              />
+            </label>
           </div>
         </div>
         <div
@@ -2119,16 +2322,25 @@ https://unsplash.it/200/100 200w"
         </label>
       </div>
     </div>
-    <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-11lcf1o-MuiButtonBase-root-MuiButton-root-buttonStyles"
-      tabindex="0"
-      type="submit"
+    <div
+      class="css-13or86z-SubscribeSection-SubscribeNarrowSection eu4qtxp0"
     >
-      Monatlich für CHF 5.- Abonnieren
-      <span
-        class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-      />
-    </button>
+      <button
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-containedSizeLarge css-1yo1oar-MuiButtonBase-root-MuiButton-root-buttonStyles"
+        tabindex="0"
+        type="submit"
+      >
+        Monatlich für CHF 5.- Abonnieren
+        <span
+          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+        />
+      </button>
+      <p
+        class="MuiTypography-root MuiTypography-body1 css-1gju5y7-SubscribeCancelable-MuiTypography-root eu4qtxp1"
+      >
+        Jederzeit kündbar
+      </p>
+    </div>
   </form>
 </DocumentFragment>
 `;
@@ -2136,11 +2348,11 @@ https://unsplash.it/200/100 200w"
 exports[`Subscribe Container should render WithChallengeError 1`] = `
 <DocumentFragment>
   <form
-    class="css-dai3ta-SubscribeWrapper eu4qtxp3"
+    class="css-dai3ta-SubscribeWrapper eu4qtxp6"
     novalidate=""
   >
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp2"
+      class="css-qtq6nf-SubscribeSection eu4qtxp5"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -2382,16 +2594,16 @@ https://unsplash.it/200/100 200w"
       </fieldset>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp2"
+      class="css-qtq6nf-SubscribeSection eu4qtxp5"
     >
-      <h2
-        class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
-      >
-        Bonus Unterstützung
-      </h2>
       <div
-        class="css-4dz7fc-SubscribeExtraMoney eu4qtxp0"
+        class="css-1w13aws-SubscribeAmount eu4qtxp3"
       >
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-2be65z-SubscribeAmountText-MuiTypography-root eu4qtxp2"
+        >
+          Ich unterstütze Newsroom Name monatlich für CHF 5.-
+        </p>
         <span
           class="MuiSlider-root MuiSlider-colorSecondary MuiSlider-sizeMedium css-bhj4ar-MuiSlider-root"
         >
@@ -2409,72 +2621,21 @@ https://unsplash.it/200/100 200w"
           >
             <input
               aria-orientation="horizontal"
-              aria-valuemax="100"
-              aria-valuemin="0"
-              aria-valuenow="0"
+              aria-valuemax="2500"
+              aria-valuemin="500"
+              aria-valuenow="500"
               data-index="0"
-              max="100"
-              min="0"
-              name="extraMoney"
-              step="0.5"
+              max="2500"
+              min="500"
+              name="monthlyAmount"
+              step="100"
               style="border: 0px; height: 100%; margin: -1px; overflow: hidden; padding: 0px; position: absolute; white-space: nowrap; width: 100%; direction: ltr;"
               type="range"
-              value="0"
+              value="500"
             />
           </span>
         </span>
-        <div
-          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
-        >
-          <label
-            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
-            data-shrink="true"
-            for=":ru:"
-            id=":ru:-label"
-          >
-            Monatliche Bonus-Unterstützung (optional)
-          </label>
-          <div
-            class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedStart css-zos2p1-MuiInputBase-root-MuiOutlinedInput-root"
-          >
-            <div
-              class="MuiInputAdornment-root MuiInputAdornment-positionStart MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-16su6c8-MuiInputAdornment-root"
-            >
-              <p
-                class="MuiTypography-root MuiTypography-body1 css-1q4i2pm-MuiTypography-root"
-              >
-                CHF
-              </p>
-            </div>
-            <input
-              aria-invalid="false"
-              class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedStart css-1o9s3wi-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":ru:"
-              min="0"
-              name="extraMoney"
-              step="any"
-              type="number"
-              value="0"
-            />
-            <fieldset
-              aria-hidden="true"
-              class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
-            >
-              <legend
-                class="css-14lo706"
-              >
-                <span>
-                  Monatliche Bonus-Unterstützung (optional)
-                </span>
-              </legend>
-            </fieldset>
-          </div>
-        </div>
       </div>
-    </div>
-    <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp2"
-    >
       <div
         class="css-17j4c9a-UserFormWrapper e1mcs0cc1"
       >
@@ -2484,8 +2645,8 @@ https://unsplash.it/200/100 200w"
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
             data-shrink="false"
-            for=":rv:"
-            id=":rv:-label"
+            for=":ru:"
+            id=":ru:-label"
           >
             Vorname
           </label>
@@ -2496,7 +2657,7 @@ https://unsplash.it/200/100 200w"
               aria-invalid="false"
               autocomplete="firstname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":rv:"
+              id=":ru:"
               name="firstName"
               type="text"
               value=""
@@ -2521,8 +2682,8 @@ https://unsplash.it/200/100 200w"
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
             data-shrink="false"
-            for=":r10:"
-            id=":r10:-label"
+            for=":rv:"
+            id=":rv:-label"
           >
             Nachname
           </label>
@@ -2533,7 +2694,7 @@ https://unsplash.it/200/100 200w"
               aria-invalid="false"
               autocomplete="lastname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r10:"
+              id=":rv:"
               name="name"
               type="text"
               value=""
@@ -2558,8 +2719,8 @@ https://unsplash.it/200/100 200w"
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
             data-shrink="false"
-            for=":r11:"
-            id=":r11:-label"
+            for=":r10:"
+            id=":r10:-label"
           >
             Email
           </label>
@@ -2570,7 +2731,7 @@ https://unsplash.it/200/100 200w"
               aria-invalid="false"
               autocomplete="email"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r11:"
+              id=":r10:"
               name="email"
               type="email"
               value=""
@@ -2595,8 +2756,8 @@ https://unsplash.it/200/100 200w"
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
             data-shrink="false"
-            for=":r12:"
-            id=":r12:-label"
+            for=":r11:"
+            id=":r11:-label"
           >
             Passwort
           </label>
@@ -2607,7 +2768,7 @@ https://unsplash.it/200/100 200w"
               aria-invalid="false"
               autocomplete="new-password"
               class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r12:"
+              id=":r11:"
               name="password"
               type="password"
               value=""
@@ -2665,8 +2826,8 @@ https://unsplash.it/200/100 200w"
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
               data-shrink="false"
-              for=":r13:"
-              id=":r13:-label"
+              for=":r12:"
+              id=":r12:-label"
             >
               Adresse
             </label>
@@ -2677,7 +2838,7 @@ https://unsplash.it/200/100 200w"
                 aria-invalid="false"
                 autocomplete="address"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r13:"
+                id=":r12:"
                 name="address.streetAddress"
                 type="text"
                 value=""
@@ -2702,8 +2863,8 @@ https://unsplash.it/200/100 200w"
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
               data-shrink="false"
-              for=":r14:"
-              id=":r14:-label"
+              for=":r13:"
+              id=":r13:-label"
             >
               PLZ
             </label>
@@ -2714,7 +2875,7 @@ https://unsplash.it/200/100 200w"
                 aria-invalid="false"
                 autocomplete="zip"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r14:"
+                id=":r13:"
                 name="address.zipCode"
                 type="text"
                 value=""
@@ -2739,8 +2900,8 @@ https://unsplash.it/200/100 200w"
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
               data-shrink="false"
-              for=":r15:"
-              id=":r15:-label"
+              for=":r14:"
+              id=":r14:-label"
             >
               Ort / Stadt
             </label>
@@ -2751,7 +2912,7 @@ https://unsplash.it/200/100 200w"
                 aria-invalid="false"
                 autocomplete="city"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r15:"
+                id=":r14:"
                 name="address.city"
                 type="text"
                 value=""
@@ -2776,8 +2937,8 @@ https://unsplash.it/200/100 200w"
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
               data-shrink="false"
-              for=":r16:"
-              id=":r16:-label"
+              for=":r15:"
+              id=":r15:-label"
             >
               Land
             </label>
@@ -2788,7 +2949,7 @@ https://unsplash.it/200/100 200w"
                 aria-invalid="false"
                 autocomplete="country"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r16:"
+                id=":r15:"
                 name="address.country"
                 type="text"
                 value=""
@@ -2811,7 +2972,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp2"
+      class="css-qtq6nf-SubscribeSection eu4qtxp5"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -2819,71 +2980,216 @@ https://unsplash.it/200/100 200w"
         Zahlungsmethode wählen
       </h2>
       <div
-        class="css-tcuzi5-SubscribePayment eu4qtxp1"
+        class="css-tcuzi5-SubscribePayment eu4qtxp4"
       >
         <div
-          class="MuiFormControl-root e1xdovcl0 css-rjme10-MuiFormControl-root-PaymentMethodPickerWrapper"
+          class="MuiFormControl-root e1xdovcl1 css-rjme10-MuiFormControl-root-PaymentMethodPickerWrapper"
         >
-          <label
-            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
-            data-shrink="true"
-            for=":r17:"
-          >
-            Zahlungsmethode
-          </label>
           <div
-            class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl  css-9i9uko-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root"
+            class="MuiFormGroup-root MuiFormGroup-row css-qfz70r-MuiFormGroup-root"
+            id=":r16:"
+            role="radiogroup"
           >
-            <select
-              aria-invalid="false"
-              class="MuiNativeSelect-select MuiNativeSelect-outlined MuiInputBase-input MuiOutlinedInput-input css-ffg8md-MuiNativeSelect-select-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r17:"
-              name="paymentMethodId"
+            <label
+              class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
             >
-              <option
-                value="12345"
+              <span
+                aria-label="Mit Zahlungsintervall, optionales erneueren Payrexx"
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-1kh4s80-MuiButtonBase-root-MuiRadio-root-PaymentRadio"
               >
-                Mit Zahlungsintervall, optionales erneueren
-              </option>
-              <option
-                value="12345-12345"
-              >
-                Mit Zahlungsintervall, optionales erneueren 2
-              </option>
-              <option
-                value="1234"
-              >
-                Optionales erneueren
-              </option>
-              <option
-                value="1234-1234"
-              >
-                Jährlich erneuert
-              </option>
-            </select>
-            <svg
-              aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiNativeSelect-icon MuiNativeSelect-iconOutlined css-1g12qau-MuiSvgIcon-root-MuiNativeSelect-icon"
-              data-testid="ArrowDropDownIcon"
-              focusable="false"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M7 10l5 5 5-5z"
-              />
-            </svg>
-            <fieldset
-              aria-hidden="true"
-              class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
-            >
-              <legend
-                class="css-14lo706"
-              >
-                <span>
-                  Zahlungsmethode
+                <input
+                  class="PrivateSwitchBase-input css-1m9pwf3"
+                  name="paymentMethodId"
+                  type="radio"
+                  value="12345"
+                />
+                <span
+                  class="css-hyxlzm"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-11zohuh-MuiSvgIcon-root"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
                 </span>
-              </legend>
-            </fieldset>
+                <span
+                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                />
+              </span>
+              <div
+                class="css-1fd5imw-PaymentRadioWrapper e1xdovcl0"
+              />
+              <span
+                class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-67xpxh-MuiTypography-root"
+              />
+            </label>
+            <label
+              class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
+            >
+              <span
+                aria-label="Mit Zahlungsintervall, optionales erneueren 2 Payrexx"
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-1kh4s80-MuiButtonBase-root-MuiRadio-root-PaymentRadio"
+              >
+                <input
+                  class="PrivateSwitchBase-input css-1m9pwf3"
+                  name="paymentMethodId"
+                  type="radio"
+                  value="12345-12345"
+                />
+                <span
+                  class="css-hyxlzm"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hhw7if-MuiSvgIcon-root"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                />
+              </span>
+              <div
+                class="css-1bz2hxg-PaymentRadioWrapper e1xdovcl0"
+              />
+              <span
+                class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-67xpxh-MuiTypography-root"
+              />
+            </label>
+            <label
+              class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
+            >
+              <span
+                aria-label="Optionales erneueren Stripe"
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-1kh4s80-MuiButtonBase-root-MuiRadio-root-PaymentRadio"
+              >
+                <input
+                  class="PrivateSwitchBase-input css-1m9pwf3"
+                  name="paymentMethodId"
+                  type="radio"
+                  value="1234"
+                />
+                <span
+                  class="css-hyxlzm"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hhw7if-MuiSvgIcon-root"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                />
+              </span>
+              <div
+                class="css-1bz2hxg-PaymentRadioWrapper e1xdovcl0"
+              />
+              <span
+                class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-67xpxh-MuiTypography-root"
+              />
+            </label>
+            <label
+              class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
+            >
+              <span
+                aria-label="Jährlich erneuert Stripe"
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-1kh4s80-MuiButtonBase-root-MuiRadio-root-PaymentRadio"
+              >
+                <input
+                  class="PrivateSwitchBase-input css-1m9pwf3"
+                  name="paymentMethodId"
+                  type="radio"
+                  value="1234-1234"
+                />
+                <span
+                  class="css-hyxlzm"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hhw7if-MuiSvgIcon-root"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                />
+              </span>
+              <div
+                class="css-1bz2hxg-PaymentRadioWrapper e1xdovcl0"
+              />
+              <span
+                class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-67xpxh-MuiTypography-root"
+              />
+            </label>
           </div>
         </div>
         <div
@@ -2989,7 +3295,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp2"
+      class="css-qtq6nf-SubscribeSection eu4qtxp5"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -3022,16 +3328,25 @@ https://unsplash.it/200/100 200w"
         </div>
       </div>
     </div>
-    <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-11lcf1o-MuiButtonBase-root-MuiButton-root-buttonStyles"
-      tabindex="0"
-      type="submit"
+    <div
+      class="css-13or86z-SubscribeSection-SubscribeNarrowSection eu4qtxp0"
     >
-      Monatlich für CHF 5.- Abonnieren
-      <span
-        class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-      />
-    </button>
+      <button
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-containedSizeLarge css-1yo1oar-MuiButtonBase-root-MuiButton-root-buttonStyles"
+        tabindex="0"
+        type="submit"
+      >
+        Monatlich für CHF 5.- Abonnieren
+        <span
+          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+        />
+      </button>
+      <p
+        class="MuiTypography-root MuiTypography-body1 css-1gju5y7-SubscribeCancelable-MuiTypography-root eu4qtxp1"
+      >
+        Jederzeit kündbar
+      </p>
+    </div>
   </form>
 </DocumentFragment>
 `;
@@ -3039,11 +3354,11 @@ https://unsplash.it/200/100 200w"
 exports[`Subscribe Container should render WithClassName 1`] = `
 <DocumentFragment>
   <form
-    class="extra-classname css-dai3ta-SubscribeWrapper eu4qtxp3"
+    class="extra-classname css-dai3ta-SubscribeWrapper eu4qtxp6"
     novalidate=""
   >
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp2"
+      class="css-qtq6nf-SubscribeSection eu4qtxp5"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -3285,16 +3600,16 @@ https://unsplash.it/200/100 200w"
       </fieldset>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp2"
+      class="css-qtq6nf-SubscribeSection eu4qtxp5"
     >
-      <h2
-        class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
-      >
-        Bonus Unterstützung
-      </h2>
       <div
-        class="css-4dz7fc-SubscribeExtraMoney eu4qtxp0"
+        class="css-1w13aws-SubscribeAmount eu4qtxp3"
       >
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-2be65z-SubscribeAmountText-MuiTypography-root eu4qtxp2"
+        >
+          Ich unterstütze Newsroom Name monatlich für CHF 5.-
+        </p>
         <span
           class="MuiSlider-root MuiSlider-colorSecondary MuiSlider-sizeMedium css-bhj4ar-MuiSlider-root"
         >
@@ -3312,72 +3627,21 @@ https://unsplash.it/200/100 200w"
           >
             <input
               aria-orientation="horizontal"
-              aria-valuemax="100"
-              aria-valuemin="0"
-              aria-valuenow="0"
+              aria-valuemax="2500"
+              aria-valuemin="500"
+              aria-valuenow="500"
               data-index="0"
-              max="100"
-              min="0"
-              name="extraMoney"
-              step="0.5"
+              max="2500"
+              min="500"
+              name="monthlyAmount"
+              step="100"
               style="border: 0px; height: 100%; margin: -1px; overflow: hidden; padding: 0px; position: absolute; white-space: nowrap; width: 100%; direction: ltr;"
               type="range"
-              value="0"
+              value="500"
             />
           </span>
         </span>
-        <div
-          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
-        >
-          <label
-            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
-            data-shrink="true"
-            for=":r1a:"
-            id=":r1a:-label"
-          >
-            Monatliche Bonus-Unterstützung (optional)
-          </label>
-          <div
-            class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedStart css-zos2p1-MuiInputBase-root-MuiOutlinedInput-root"
-          >
-            <div
-              class="MuiInputAdornment-root MuiInputAdornment-positionStart MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-16su6c8-MuiInputAdornment-root"
-            >
-              <p
-                class="MuiTypography-root MuiTypography-body1 css-1q4i2pm-MuiTypography-root"
-              >
-                CHF
-              </p>
-            </div>
-            <input
-              aria-invalid="false"
-              class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedStart css-1o9s3wi-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r1a:"
-              min="0"
-              name="extraMoney"
-              step="any"
-              type="number"
-              value="0"
-            />
-            <fieldset
-              aria-hidden="true"
-              class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
-            >
-              <legend
-                class="css-14lo706"
-              >
-                <span>
-                  Monatliche Bonus-Unterstützung (optional)
-                </span>
-              </legend>
-            </fieldset>
-          </div>
-        </div>
       </div>
-    </div>
-    <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp2"
-    >
       <div
         class="css-17j4c9a-UserFormWrapper e1mcs0cc1"
       >
@@ -3387,8 +3651,8 @@ https://unsplash.it/200/100 200w"
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
             data-shrink="false"
-            for=":r1b:"
-            id=":r1b:-label"
+            for=":r1a:"
+            id=":r1a:-label"
           >
             Vorname
           </label>
@@ -3399,7 +3663,7 @@ https://unsplash.it/200/100 200w"
               aria-invalid="false"
               autocomplete="firstname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r1b:"
+              id=":r1a:"
               name="firstName"
               type="text"
               value=""
@@ -3424,8 +3688,8 @@ https://unsplash.it/200/100 200w"
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
             data-shrink="false"
-            for=":r1c:"
-            id=":r1c:-label"
+            for=":r1b:"
+            id=":r1b:-label"
           >
             Nachname
           </label>
@@ -3436,7 +3700,7 @@ https://unsplash.it/200/100 200w"
               aria-invalid="false"
               autocomplete="lastname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r1c:"
+              id=":r1b:"
               name="name"
               type="text"
               value=""
@@ -3461,8 +3725,8 @@ https://unsplash.it/200/100 200w"
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
             data-shrink="false"
-            for=":r1d:"
-            id=":r1d:-label"
+            for=":r1c:"
+            id=":r1c:-label"
           >
             Email
           </label>
@@ -3473,7 +3737,7 @@ https://unsplash.it/200/100 200w"
               aria-invalid="false"
               autocomplete="email"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r1d:"
+              id=":r1c:"
               name="email"
               type="email"
               value=""
@@ -3498,8 +3762,8 @@ https://unsplash.it/200/100 200w"
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
             data-shrink="false"
-            for=":r1e:"
-            id=":r1e:-label"
+            for=":r1d:"
+            id=":r1d:-label"
           >
             Passwort
           </label>
@@ -3510,7 +3774,7 @@ https://unsplash.it/200/100 200w"
               aria-invalid="false"
               autocomplete="new-password"
               class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r1e:"
+              id=":r1d:"
               name="password"
               type="password"
               value=""
@@ -3568,8 +3832,8 @@ https://unsplash.it/200/100 200w"
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
               data-shrink="false"
-              for=":r1f:"
-              id=":r1f:-label"
+              for=":r1e:"
+              id=":r1e:-label"
             >
               Adresse
             </label>
@@ -3580,7 +3844,7 @@ https://unsplash.it/200/100 200w"
                 aria-invalid="false"
                 autocomplete="address"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r1f:"
+                id=":r1e:"
                 name="address.streetAddress"
                 type="text"
                 value=""
@@ -3605,8 +3869,8 @@ https://unsplash.it/200/100 200w"
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
               data-shrink="false"
-              for=":r1g:"
-              id=":r1g:-label"
+              for=":r1f:"
+              id=":r1f:-label"
             >
               PLZ
             </label>
@@ -3617,7 +3881,7 @@ https://unsplash.it/200/100 200w"
                 aria-invalid="false"
                 autocomplete="zip"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r1g:"
+                id=":r1f:"
                 name="address.zipCode"
                 type="text"
                 value=""
@@ -3642,8 +3906,8 @@ https://unsplash.it/200/100 200w"
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
               data-shrink="false"
-              for=":r1h:"
-              id=":r1h:-label"
+              for=":r1g:"
+              id=":r1g:-label"
             >
               Ort / Stadt
             </label>
@@ -3654,7 +3918,7 @@ https://unsplash.it/200/100 200w"
                 aria-invalid="false"
                 autocomplete="city"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r1h:"
+                id=":r1g:"
                 name="address.city"
                 type="text"
                 value=""
@@ -3679,8 +3943,8 @@ https://unsplash.it/200/100 200w"
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
               data-shrink="false"
-              for=":r1i:"
-              id=":r1i:-label"
+              for=":r1h:"
+              id=":r1h:-label"
             >
               Land
             </label>
@@ -3691,7 +3955,7 @@ https://unsplash.it/200/100 200w"
                 aria-invalid="false"
                 autocomplete="country"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r1i:"
+                id=":r1h:"
                 name="address.country"
                 type="text"
                 value=""
@@ -3714,7 +3978,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp2"
+      class="css-qtq6nf-SubscribeSection eu4qtxp5"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -3722,71 +3986,216 @@ https://unsplash.it/200/100 200w"
         Zahlungsmethode wählen
       </h2>
       <div
-        class="css-tcuzi5-SubscribePayment eu4qtxp1"
+        class="css-tcuzi5-SubscribePayment eu4qtxp4"
       >
         <div
-          class="MuiFormControl-root e1xdovcl0 css-rjme10-MuiFormControl-root-PaymentMethodPickerWrapper"
+          class="MuiFormControl-root e1xdovcl1 css-rjme10-MuiFormControl-root-PaymentMethodPickerWrapper"
         >
-          <label
-            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
-            data-shrink="true"
-            for=":r1j:"
-          >
-            Zahlungsmethode
-          </label>
           <div
-            class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl  css-9i9uko-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root"
+            class="MuiFormGroup-root MuiFormGroup-row css-qfz70r-MuiFormGroup-root"
+            id=":r1i:"
+            role="radiogroup"
           >
-            <select
-              aria-invalid="false"
-              class="MuiNativeSelect-select MuiNativeSelect-outlined MuiInputBase-input MuiOutlinedInput-input css-ffg8md-MuiNativeSelect-select-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r1j:"
-              name="paymentMethodId"
+            <label
+              class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
             >
-              <option
-                value="12345"
+              <span
+                aria-label="Mit Zahlungsintervall, optionales erneueren Payrexx"
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-1kh4s80-MuiButtonBase-root-MuiRadio-root-PaymentRadio"
               >
-                Mit Zahlungsintervall, optionales erneueren
-              </option>
-              <option
-                value="12345-12345"
-              >
-                Mit Zahlungsintervall, optionales erneueren 2
-              </option>
-              <option
-                value="1234"
-              >
-                Optionales erneueren
-              </option>
-              <option
-                value="1234-1234"
-              >
-                Jährlich erneuert
-              </option>
-            </select>
-            <svg
-              aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiNativeSelect-icon MuiNativeSelect-iconOutlined css-1g12qau-MuiSvgIcon-root-MuiNativeSelect-icon"
-              data-testid="ArrowDropDownIcon"
-              focusable="false"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M7 10l5 5 5-5z"
-              />
-            </svg>
-            <fieldset
-              aria-hidden="true"
-              class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
-            >
-              <legend
-                class="css-14lo706"
-              >
-                <span>
-                  Zahlungsmethode
+                <input
+                  class="PrivateSwitchBase-input css-1m9pwf3"
+                  name="paymentMethodId"
+                  type="radio"
+                  value="12345"
+                />
+                <span
+                  class="css-hyxlzm"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-11zohuh-MuiSvgIcon-root"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
                 </span>
-              </legend>
-            </fieldset>
+                <span
+                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                />
+              </span>
+              <div
+                class="css-1fd5imw-PaymentRadioWrapper e1xdovcl0"
+              />
+              <span
+                class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-67xpxh-MuiTypography-root"
+              />
+            </label>
+            <label
+              class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
+            >
+              <span
+                aria-label="Mit Zahlungsintervall, optionales erneueren 2 Payrexx"
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-1kh4s80-MuiButtonBase-root-MuiRadio-root-PaymentRadio"
+              >
+                <input
+                  class="PrivateSwitchBase-input css-1m9pwf3"
+                  name="paymentMethodId"
+                  type="radio"
+                  value="12345-12345"
+                />
+                <span
+                  class="css-hyxlzm"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hhw7if-MuiSvgIcon-root"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                />
+              </span>
+              <div
+                class="css-1bz2hxg-PaymentRadioWrapper e1xdovcl0"
+              />
+              <span
+                class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-67xpxh-MuiTypography-root"
+              />
+            </label>
+            <label
+              class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
+            >
+              <span
+                aria-label="Optionales erneueren Stripe"
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-1kh4s80-MuiButtonBase-root-MuiRadio-root-PaymentRadio"
+              >
+                <input
+                  class="PrivateSwitchBase-input css-1m9pwf3"
+                  name="paymentMethodId"
+                  type="radio"
+                  value="1234"
+                />
+                <span
+                  class="css-hyxlzm"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hhw7if-MuiSvgIcon-root"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                />
+              </span>
+              <div
+                class="css-1bz2hxg-PaymentRadioWrapper e1xdovcl0"
+              />
+              <span
+                class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-67xpxh-MuiTypography-root"
+              />
+            </label>
+            <label
+              class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
+            >
+              <span
+                aria-label="Jährlich erneuert Stripe"
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-1kh4s80-MuiButtonBase-root-MuiRadio-root-PaymentRadio"
+              >
+                <input
+                  class="PrivateSwitchBase-input css-1m9pwf3"
+                  name="paymentMethodId"
+                  type="radio"
+                  value="1234-1234"
+                />
+                <span
+                  class="css-hyxlzm"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hhw7if-MuiSvgIcon-root"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                />
+              </span>
+              <div
+                class="css-1bz2hxg-PaymentRadioWrapper e1xdovcl0"
+              />
+              <span
+                class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-67xpxh-MuiTypography-root"
+              />
+            </label>
           </div>
         </div>
         <div
@@ -3892,7 +4301,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp2"
+      class="css-qtq6nf-SubscribeSection eu4qtxp5"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -3999,16 +4408,25 @@ https://unsplash.it/200/100 200w"
         </div>
       </div>
     </div>
-    <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-11lcf1o-MuiButtonBase-root-MuiButton-root-buttonStyles"
-      tabindex="0"
-      type="submit"
+    <div
+      class="css-13or86z-SubscribeSection-SubscribeNarrowSection eu4qtxp0"
     >
-      Monatlich für CHF 5.- Abonnieren
-      <span
-        class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-      />
-    </button>
+      <button
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-containedSizeLarge css-1yo1oar-MuiButtonBase-root-MuiButton-root-buttonStyles"
+        tabindex="0"
+        type="submit"
+      >
+        Monatlich für CHF 5.- Abonnieren
+        <span
+          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+        />
+      </button>
+      <p
+        class="MuiTypography-root MuiTypography-body1 css-1gju5y7-SubscribeCancelable-MuiTypography-root eu4qtxp1"
+      >
+        Jederzeit kündbar
+      </p>
+    </div>
   </form>
 </DocumentFragment>
 `;
@@ -4016,11 +4434,11 @@ https://unsplash.it/200/100 200w"
 exports[`Subscribe Container should render WithEmotion 1`] = `
 <DocumentFragment>
   <form
-    class="css-dai3ta-SubscribeWrapper eu4qtxp3"
+    class="css-dai3ta-SubscribeWrapper eu4qtxp6"
     novalidate=""
   >
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp2"
+      class="css-qtq6nf-SubscribeSection eu4qtxp5"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -4262,16 +4680,16 @@ https://unsplash.it/200/100 200w"
       </fieldset>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp2"
+      class="css-qtq6nf-SubscribeSection eu4qtxp5"
     >
-      <h2
-        class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
-      >
-        Bonus Unterstützung
-      </h2>
       <div
-        class="css-4dz7fc-SubscribeExtraMoney eu4qtxp0"
+        class="css-1w13aws-SubscribeAmount eu4qtxp3"
       >
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-2be65z-SubscribeAmountText-MuiTypography-root eu4qtxp2"
+        >
+          Ich unterstütze Newsroom Name monatlich für CHF 5.-
+        </p>
         <span
           class="MuiSlider-root MuiSlider-colorSecondary MuiSlider-sizeMedium css-bhj4ar-MuiSlider-root"
         >
@@ -4289,72 +4707,21 @@ https://unsplash.it/200/100 200w"
           >
             <input
               aria-orientation="horizontal"
-              aria-valuemax="100"
-              aria-valuemin="0"
-              aria-valuenow="0"
+              aria-valuemax="2500"
+              aria-valuemin="500"
+              aria-valuenow="500"
               data-index="0"
-              max="100"
-              min="0"
-              name="extraMoney"
-              step="0.5"
+              max="2500"
+              min="500"
+              name="monthlyAmount"
+              step="100"
               style="border: 0px; height: 100%; margin: -1px; overflow: hidden; padding: 0px; position: absolute; white-space: nowrap; width: 100%; direction: ltr;"
               type="range"
-              value="0"
+              value="500"
             />
           </span>
         </span>
-        <div
-          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
-        >
-          <label
-            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
-            data-shrink="true"
-            for=":r1n:"
-            id=":r1n:-label"
-          >
-            Monatliche Bonus-Unterstützung (optional)
-          </label>
-          <div
-            class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedStart css-zos2p1-MuiInputBase-root-MuiOutlinedInput-root"
-          >
-            <div
-              class="MuiInputAdornment-root MuiInputAdornment-positionStart MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-16su6c8-MuiInputAdornment-root"
-            >
-              <p
-                class="MuiTypography-root MuiTypography-body1 css-1q4i2pm-MuiTypography-root"
-              >
-                CHF
-              </p>
-            </div>
-            <input
-              aria-invalid="false"
-              class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedStart css-1o9s3wi-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r1n:"
-              min="0"
-              name="extraMoney"
-              step="any"
-              type="number"
-              value="0"
-            />
-            <fieldset
-              aria-hidden="true"
-              class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
-            >
-              <legend
-                class="css-14lo706"
-              >
-                <span>
-                  Monatliche Bonus-Unterstützung (optional)
-                </span>
-              </legend>
-            </fieldset>
-          </div>
-        </div>
       </div>
-    </div>
-    <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp2"
-    >
       <div
         class="css-17j4c9a-UserFormWrapper e1mcs0cc1"
       >
@@ -4364,8 +4731,8 @@ https://unsplash.it/200/100 200w"
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
             data-shrink="false"
-            for=":r1o:"
-            id=":r1o:-label"
+            for=":r1n:"
+            id=":r1n:-label"
           >
             Vorname
           </label>
@@ -4376,7 +4743,7 @@ https://unsplash.it/200/100 200w"
               aria-invalid="false"
               autocomplete="firstname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r1o:"
+              id=":r1n:"
               name="firstName"
               type="text"
               value=""
@@ -4401,8 +4768,8 @@ https://unsplash.it/200/100 200w"
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
             data-shrink="false"
-            for=":r1p:"
-            id=":r1p:-label"
+            for=":r1o:"
+            id=":r1o:-label"
           >
             Nachname
           </label>
@@ -4413,7 +4780,7 @@ https://unsplash.it/200/100 200w"
               aria-invalid="false"
               autocomplete="lastname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r1p:"
+              id=":r1o:"
               name="name"
               type="text"
               value=""
@@ -4438,8 +4805,8 @@ https://unsplash.it/200/100 200w"
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
             data-shrink="false"
-            for=":r1q:"
-            id=":r1q:-label"
+            for=":r1p:"
+            id=":r1p:-label"
           >
             Email
           </label>
@@ -4450,7 +4817,7 @@ https://unsplash.it/200/100 200w"
               aria-invalid="false"
               autocomplete="email"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r1q:"
+              id=":r1p:"
               name="email"
               type="email"
               value=""
@@ -4475,8 +4842,8 @@ https://unsplash.it/200/100 200w"
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
             data-shrink="false"
-            for=":r1r:"
-            id=":r1r:-label"
+            for=":r1q:"
+            id=":r1q:-label"
           >
             Passwort
           </label>
@@ -4487,7 +4854,7 @@ https://unsplash.it/200/100 200w"
               aria-invalid="false"
               autocomplete="new-password"
               class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r1r:"
+              id=":r1q:"
               name="password"
               type="password"
               value=""
@@ -4545,8 +4912,8 @@ https://unsplash.it/200/100 200w"
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
               data-shrink="false"
-              for=":r1s:"
-              id=":r1s:-label"
+              for=":r1r:"
+              id=":r1r:-label"
             >
               Adresse
             </label>
@@ -4557,7 +4924,7 @@ https://unsplash.it/200/100 200w"
                 aria-invalid="false"
                 autocomplete="address"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r1s:"
+                id=":r1r:"
                 name="address.streetAddress"
                 type="text"
                 value=""
@@ -4582,8 +4949,8 @@ https://unsplash.it/200/100 200w"
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
               data-shrink="false"
-              for=":r1t:"
-              id=":r1t:-label"
+              for=":r1s:"
+              id=":r1s:-label"
             >
               PLZ
             </label>
@@ -4594,7 +4961,7 @@ https://unsplash.it/200/100 200w"
                 aria-invalid="false"
                 autocomplete="zip"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r1t:"
+                id=":r1s:"
                 name="address.zipCode"
                 type="text"
                 value=""
@@ -4619,8 +4986,8 @@ https://unsplash.it/200/100 200w"
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
               data-shrink="false"
-              for=":r1u:"
-              id=":r1u:-label"
+              for=":r1t:"
+              id=":r1t:-label"
             >
               Ort / Stadt
             </label>
@@ -4631,7 +4998,7 @@ https://unsplash.it/200/100 200w"
                 aria-invalid="false"
                 autocomplete="city"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r1u:"
+                id=":r1t:"
                 name="address.city"
                 type="text"
                 value=""
@@ -4656,8 +5023,8 @@ https://unsplash.it/200/100 200w"
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
               data-shrink="false"
-              for=":r1v:"
-              id=":r1v:-label"
+              for=":r1u:"
+              id=":r1u:-label"
             >
               Land
             </label>
@@ -4668,7 +5035,7 @@ https://unsplash.it/200/100 200w"
                 aria-invalid="false"
                 autocomplete="country"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r1v:"
+                id=":r1u:"
                 name="address.country"
                 type="text"
                 value=""
@@ -4691,7 +5058,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp2"
+      class="css-qtq6nf-SubscribeSection eu4qtxp5"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -4699,71 +5066,216 @@ https://unsplash.it/200/100 200w"
         Zahlungsmethode wählen
       </h2>
       <div
-        class="css-tcuzi5-SubscribePayment eu4qtxp1"
+        class="css-tcuzi5-SubscribePayment eu4qtxp4"
       >
         <div
-          class="MuiFormControl-root e1xdovcl0 css-rjme10-MuiFormControl-root-PaymentMethodPickerWrapper"
+          class="MuiFormControl-root e1xdovcl1 css-rjme10-MuiFormControl-root-PaymentMethodPickerWrapper"
         >
-          <label
-            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
-            data-shrink="true"
-            for=":r20:"
-          >
-            Zahlungsmethode
-          </label>
           <div
-            class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-formControl  css-9i9uko-MuiInputBase-root-MuiOutlinedInput-root-MuiSelect-root"
+            class="MuiFormGroup-root MuiFormGroup-row css-qfz70r-MuiFormGroup-root"
+            id=":r1v:"
+            role="radiogroup"
           >
-            <select
-              aria-invalid="false"
-              class="MuiNativeSelect-select MuiNativeSelect-outlined MuiInputBase-input MuiOutlinedInput-input css-ffg8md-MuiNativeSelect-select-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r20:"
-              name="paymentMethodId"
+            <label
+              class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
             >
-              <option
-                value="12345"
+              <span
+                aria-label="Mit Zahlungsintervall, optionales erneueren Payrexx"
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary Mui-checked MuiRadio-root MuiRadio-colorPrimary css-1kh4s80-MuiButtonBase-root-MuiRadio-root-PaymentRadio"
               >
-                Mit Zahlungsintervall, optionales erneueren
-              </option>
-              <option
-                value="12345-12345"
-              >
-                Mit Zahlungsintervall, optionales erneueren 2
-              </option>
-              <option
-                value="1234"
-              >
-                Optionales erneueren
-              </option>
-              <option
-                value="1234-1234"
-              >
-                Jährlich erneuert
-              </option>
-            </select>
-            <svg
-              aria-hidden="true"
-              class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium MuiNativeSelect-icon MuiNativeSelect-iconOutlined css-1g12qau-MuiSvgIcon-root-MuiNativeSelect-icon"
-              data-testid="ArrowDropDownIcon"
-              focusable="false"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M7 10l5 5 5-5z"
-              />
-            </svg>
-            <fieldset
-              aria-hidden="true"
-              class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
-            >
-              <legend
-                class="css-14lo706"
-              >
-                <span>
-                  Zahlungsmethode
+                <input
+                  class="PrivateSwitchBase-input css-1m9pwf3"
+                  name="paymentMethodId"
+                  type="radio"
+                  value="12345"
+                />
+                <span
+                  class="css-hyxlzm"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-11zohuh-MuiSvgIcon-root"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
                 </span>
-              </legend>
-            </fieldset>
+                <span
+                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                />
+              </span>
+              <div
+                class="css-1fd5imw-PaymentRadioWrapper e1xdovcl0"
+              />
+              <span
+                class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-67xpxh-MuiTypography-root"
+              />
+            </label>
+            <label
+              class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
+            >
+              <span
+                aria-label="Mit Zahlungsintervall, optionales erneueren 2 Payrexx"
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-1kh4s80-MuiButtonBase-root-MuiRadio-root-PaymentRadio"
+              >
+                <input
+                  class="PrivateSwitchBase-input css-1m9pwf3"
+                  name="paymentMethodId"
+                  type="radio"
+                  value="12345-12345"
+                />
+                <span
+                  class="css-hyxlzm"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hhw7if-MuiSvgIcon-root"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                />
+              </span>
+              <div
+                class="css-1bz2hxg-PaymentRadioWrapper e1xdovcl0"
+              />
+              <span
+                class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-67xpxh-MuiTypography-root"
+              />
+            </label>
+            <label
+              class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
+            >
+              <span
+                aria-label="Optionales erneueren Stripe"
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-1kh4s80-MuiButtonBase-root-MuiRadio-root-PaymentRadio"
+              >
+                <input
+                  class="PrivateSwitchBase-input css-1m9pwf3"
+                  name="paymentMethodId"
+                  type="radio"
+                  value="1234"
+                />
+                <span
+                  class="css-hyxlzm"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hhw7if-MuiSvgIcon-root"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                />
+              </span>
+              <div
+                class="css-1bz2hxg-PaymentRadioWrapper e1xdovcl0"
+              />
+              <span
+                class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-67xpxh-MuiTypography-root"
+              />
+            </label>
+            <label
+              class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
+            >
+              <span
+                aria-label="Jährlich erneuert Stripe"
+                class="MuiButtonBase-root MuiRadio-root MuiRadio-colorPrimary PrivateSwitchBase-root MuiRadio-root MuiRadio-colorPrimary MuiRadio-root MuiRadio-colorPrimary css-1kh4s80-MuiButtonBase-root-MuiRadio-root-PaymentRadio"
+              >
+                <input
+                  class="PrivateSwitchBase-input css-1m9pwf3"
+                  name="paymentMethodId"
+                  type="radio"
+                  value="1234-1234"
+                />
+                <span
+                  class="css-hyxlzm"
+                >
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hbvpl3-MuiSvgIcon-root"
+                    data-testid="RadioButtonUncheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
+                    />
+                  </svg>
+                  <svg
+                    aria-hidden="true"
+                    class="MuiSvgIcon-root MuiSvgIcon-fontSizeMedium css-1hhw7if-MuiSvgIcon-root"
+                    data-testid="RadioButtonCheckedIcon"
+                    focusable="false"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
+                    />
+                  </svg>
+                </span>
+                <span
+                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+                />
+              </span>
+              <div
+                class="css-1bz2hxg-PaymentRadioWrapper e1xdovcl0"
+              />
+              <span
+                class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-67xpxh-MuiTypography-root"
+              />
+            </label>
           </div>
         </div>
         <div
@@ -4869,7 +5381,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp2"
+      class="css-qtq6nf-SubscribeSection eu4qtxp5"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -4976,16 +5488,25 @@ https://unsplash.it/200/100 200w"
         </div>
       </div>
     </div>
-    <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-11lcf1o-MuiButtonBase-root-MuiButton-root-buttonStyles"
-      tabindex="0"
-      type="submit"
+    <div
+      class="css-13or86z-SubscribeSection-SubscribeNarrowSection eu4qtxp0"
     >
-      Monatlich für CHF 5.- Abonnieren
-      <span
-        class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-      />
-    </button>
+      <button
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-containedSizeLarge css-1yo1oar-MuiButtonBase-root-MuiButton-root-buttonStyles"
+        tabindex="0"
+        type="submit"
+      >
+        Monatlich für CHF 5.- Abonnieren
+        <span
+          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+        />
+      </button>
+      <p
+        class="MuiTypography-root MuiTypography-body1 css-1gju5y7-SubscribeCancelable-MuiTypography-root eu4qtxp1"
+      >
+        Jederzeit kündbar
+      </p>
+    </div>
   </form>
 </DocumentFragment>
 `;
@@ -4993,27 +5514,23 @@ https://unsplash.it/200/100 200w"
 exports[`Subscribe Container should render WithFilter 1`] = `
 <DocumentFragment>
   <form
-    class="css-dai3ta-SubscribeWrapper eu4qtxp3"
+    class="css-dai3ta-SubscribeWrapper eu4qtxp6"
     novalidate=""
   >
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp2"
-    >
-      <fieldset
-        class="css-ah3hxd-MemberPlanPickerWrapper es1nn8k1"
-      />
-    </div>
+      class="css-qtq6nf-SubscribeSection eu4qtxp5"
+    />
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp2"
+      class="css-qtq6nf-SubscribeSection eu4qtxp5"
     >
-      <h2
-        class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
-      >
-        Bonus Unterstützung
-      </h2>
       <div
-        class="css-4dz7fc-SubscribeExtraMoney eu4qtxp0"
+        class="css-1w13aws-SubscribeAmount eu4qtxp3"
       >
+        <p
+          class="MuiTypography-root MuiTypography-body1 css-2be65z-SubscribeAmountText-MuiTypography-root eu4qtxp2"
+        >
+          Ich unterstütze Newsroom Name monatlich für CHF 0.-
+        </p>
         <span
           class="MuiSlider-root MuiSlider-colorSecondary MuiSlider-sizeMedium css-bhj4ar-MuiSlider-root"
         >
@@ -5031,72 +5548,21 @@ exports[`Subscribe Container should render WithFilter 1`] = `
           >
             <input
               aria-orientation="horizontal"
-              aria-valuemax="100"
+              aria-valuemax="2500"
               aria-valuemin="0"
               aria-valuenow="0"
               data-index="0"
-              max="100"
+              max="2500"
               min="0"
-              name="extraMoney"
-              step="0.5"
+              name="monthlyAmount"
+              step="100"
               style="border: 0px; height: 100%; margin: -1px; overflow: hidden; padding: 0px; position: absolute; white-space: nowrap; width: 100%; direction: ltr;"
               type="range"
               value="0"
             />
           </span>
         </span>
-        <div
-          class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
-        >
-          <label
-            class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiFormLabel-filled MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-shrink MuiInputLabel-sizeMedium MuiInputLabel-outlined css-1oxf4qp-MuiFormLabel-root-MuiInputLabel-root"
-            data-shrink="true"
-            for=":r24:"
-            id=":r24:-label"
-          >
-            Monatliche Bonus-Unterstützung (optional)
-          </label>
-          <div
-            class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-adornedStart css-zos2p1-MuiInputBase-root-MuiOutlinedInput-root"
-          >
-            <div
-              class="MuiInputAdornment-root MuiInputAdornment-positionStart MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-16su6c8-MuiInputAdornment-root"
-            >
-              <p
-                class="MuiTypography-root MuiTypography-body1 css-1q4i2pm-MuiTypography-root"
-              >
-                CHF
-              </p>
-            </div>
-            <input
-              aria-invalid="false"
-              class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedStart css-1o9s3wi-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r24:"
-              min="0"
-              name="extraMoney"
-              step="any"
-              type="number"
-              value="0"
-            />
-            <fieldset
-              aria-hidden="true"
-              class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
-            >
-              <legend
-                class="css-14lo706"
-              >
-                <span>
-                  Monatliche Bonus-Unterstützung (optional)
-                </span>
-              </legend>
-            </fieldset>
-          </div>
-        </div>
       </div>
-    </div>
-    <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp2"
-    >
       <div
         class="css-17j4c9a-UserFormWrapper e1mcs0cc1"
       >
@@ -5106,8 +5572,8 @@ exports[`Subscribe Container should render WithFilter 1`] = `
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
             data-shrink="false"
-            for=":r25:"
-            id=":r25:-label"
+            for=":r24:"
+            id=":r24:-label"
           >
             Vorname
           </label>
@@ -5118,7 +5584,7 @@ exports[`Subscribe Container should render WithFilter 1`] = `
               aria-invalid="false"
               autocomplete="firstname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r25:"
+              id=":r24:"
               name="firstName"
               type="text"
               value=""
@@ -5143,8 +5609,8 @@ exports[`Subscribe Container should render WithFilter 1`] = `
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
             data-shrink="false"
-            for=":r26:"
-            id=":r26:-label"
+            for=":r25:"
+            id=":r25:-label"
           >
             Nachname
           </label>
@@ -5155,7 +5621,7 @@ exports[`Subscribe Container should render WithFilter 1`] = `
               aria-invalid="false"
               autocomplete="lastname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r26:"
+              id=":r25:"
               name="name"
               type="text"
               value=""
@@ -5180,8 +5646,8 @@ exports[`Subscribe Container should render WithFilter 1`] = `
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
             data-shrink="false"
-            for=":r27:"
-            id=":r27:-label"
+            for=":r26:"
+            id=":r26:-label"
           >
             Email
           </label>
@@ -5192,7 +5658,7 @@ exports[`Subscribe Container should render WithFilter 1`] = `
               aria-invalid="false"
               autocomplete="email"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r27:"
+              id=":r26:"
               name="email"
               type="email"
               value=""
@@ -5217,8 +5683,8 @@ exports[`Subscribe Container should render WithFilter 1`] = `
           <label
             class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
             data-shrink="false"
-            for=":r28:"
-            id=":r28:-label"
+            for=":r27:"
+            id=":r27:-label"
           >
             Passwort
           </label>
@@ -5229,7 +5695,7 @@ exports[`Subscribe Container should render WithFilter 1`] = `
               aria-invalid="false"
               autocomplete="new-password"
               class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
-              id=":r28:"
+              id=":r27:"
               name="password"
               type="password"
               value=""
@@ -5287,8 +5753,8 @@ exports[`Subscribe Container should render WithFilter 1`] = `
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
               data-shrink="false"
-              for=":r29:"
-              id=":r29:-label"
+              for=":r28:"
+              id=":r28:-label"
             >
               Adresse
             </label>
@@ -5299,7 +5765,7 @@ exports[`Subscribe Container should render WithFilter 1`] = `
                 aria-invalid="false"
                 autocomplete="address"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r29:"
+                id=":r28:"
                 name="address.streetAddress"
                 type="text"
                 value=""
@@ -5324,8 +5790,8 @@ exports[`Subscribe Container should render WithFilter 1`] = `
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
               data-shrink="false"
-              for=":r2a:"
-              id=":r2a:-label"
+              for=":r29:"
+              id=":r29:-label"
             >
               PLZ
             </label>
@@ -5336,7 +5802,7 @@ exports[`Subscribe Container should render WithFilter 1`] = `
                 aria-invalid="false"
                 autocomplete="zip"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r2a:"
+                id=":r29:"
                 name="address.zipCode"
                 type="text"
                 value=""
@@ -5361,8 +5827,8 @@ exports[`Subscribe Container should render WithFilter 1`] = `
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
               data-shrink="false"
-              for=":r2b:"
-              id=":r2b:-label"
+              for=":r2a:"
+              id=":r2a:-label"
             >
               Ort / Stadt
             </label>
@@ -5373,7 +5839,7 @@ exports[`Subscribe Container should render WithFilter 1`] = `
                 aria-invalid="false"
                 autocomplete="city"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r2b:"
+                id=":r2a:"
                 name="address.city"
                 type="text"
                 value=""
@@ -5398,8 +5864,8 @@ exports[`Subscribe Container should render WithFilter 1`] = `
             <label
               class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined css-gv8x57-MuiFormLabel-root-MuiInputLabel-root"
               data-shrink="false"
-              for=":r2c:"
-              id=":r2c:-label"
+              for=":r2b:"
+              id=":r2b:-label"
             >
               Land
             </label>
@@ -5410,7 +5876,7 @@ exports[`Subscribe Container should render WithFilter 1`] = `
                 aria-invalid="false"
                 autocomplete="country"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
-                id=":r2c:"
+                id=":r2b:"
                 name="address.country"
                 type="text"
                 value=""
@@ -5433,7 +5899,7 @@ exports[`Subscribe Container should render WithFilter 1`] = `
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp2"
+      class="css-qtq6nf-SubscribeSection eu4qtxp5"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -5441,8 +5907,17 @@ exports[`Subscribe Container should render WithFilter 1`] = `
         Zahlungsmethode wählen
       </h2>
       <div
-        class="css-tcuzi5-SubscribePayment eu4qtxp1"
+        class="css-tcuzi5-SubscribePayment eu4qtxp4"
       >
+        <div
+          class="MuiFormControl-root e1xdovcl1 css-rjme10-MuiFormControl-root-PaymentMethodPickerWrapper"
+        >
+          <div
+            class="MuiFormGroup-root MuiFormGroup-row css-qfz70r-MuiFormGroup-root"
+            id=":r2c:"
+            role="radiogroup"
+          />
+        </div>
         <label
           class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
         >
@@ -5481,7 +5956,7 @@ exports[`Subscribe Container should render WithFilter 1`] = `
       </div>
     </div>
     <div
-      class="css-qtq6nf-SubscribeSection eu4qtxp2"
+      class="css-qtq6nf-SubscribeSection eu4qtxp5"
     >
       <h2
         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
@@ -5588,16 +6063,25 @@ exports[`Subscribe Container should render WithFilter 1`] = `
         </div>
       </div>
     </div>
-    <button
-      class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-11lcf1o-MuiButtonBase-root-MuiButton-root-buttonStyles"
-      tabindex="0"
-      type="submit"
+    <div
+      class="css-13or86z-SubscribeSection-SubscribeNarrowSection eu4qtxp0"
     >
-      Jährlich für CHF 0.- Abonnieren
-      <span
-        class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-      />
-    </button>
+      <button
+        class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-containedSizeLarge MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeLarge MuiButton-containedSizeLarge css-1yo1oar-MuiButtonBase-root-MuiButton-root-buttonStyles"
+        tabindex="0"
+        type="submit"
+      >
+        Jährlich für CHF 0.- Abonnieren
+        <span
+          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+        />
+      </button>
+      <p
+        class="MuiTypography-root MuiTypography-body1 css-1gju5y7-SubscribeCancelable-MuiTypography-root eu4qtxp1"
+      >
+        Jederzeit kündbar
+      </p>
+    </div>
   </form>
 </DocumentFragment>
 `;

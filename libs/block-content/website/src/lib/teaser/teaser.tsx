@@ -4,19 +4,19 @@ import {FlexAlignment, Teaser as TeaserType} from '@wepublish/website/api'
 import {BuilderTeaserProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {isImageBlock} from '../image/image-block'
 import {isTitleBlock} from '../title/title-block'
-import {useMemo} from 'react'
+import {PropsWithChildren, useMemo} from 'react'
 
 export const selectTeaserTitle = (teaser: TeaserType) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
       const titleBlock = teaser.page?.blocks?.find(isTitleBlock)
-      return teaser.title || titleBlock?.title || teaser.page?.title
+      return teaser.title || teaser.page?.title || titleBlock?.title
     }
 
     case 'PeerArticleTeaser':
     case 'ArticleTeaser': {
       const titleBlock = teaser.article?.blocks?.find(isTitleBlock)
-      return teaser.title || titleBlock?.title || teaser.article?.title
+      return teaser.title || teaser.article?.title || titleBlock?.title
     }
 
     case 'EventTeaser':
@@ -43,13 +43,13 @@ export const selectTeaserLead = (teaser: TeaserType) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
       const titleBlock = teaser.page?.blocks?.find(isTitleBlock)
-      return teaser.lead || titleBlock?.lead || teaser.page?.description
+      return teaser.lead || teaser.page?.description || titleBlock?.lead
     }
 
     case 'PeerArticleTeaser':
     case 'ArticleTeaser': {
       const titleBlock = teaser.article?.blocks?.find(isTitleBlock)
-      return teaser.lead || titleBlock?.lead || teaser.article?.lead
+      return teaser.lead || teaser.article?.lead || titleBlock?.lead
     }
 
     case 'EventTeaser':
@@ -84,13 +84,13 @@ export const selectTeaserImage = (teaser: TeaserType) => {
   switch (teaser.__typename) {
     case 'PageTeaser': {
       const imageBlock = teaser.page?.blocks?.find(isImageBlock)
-      return teaser.image ?? imageBlock?.image ?? teaser?.page?.image
+      return teaser.image ?? teaser?.page?.image ?? imageBlock?.image
     }
 
     case 'PeerArticleTeaser':
     case 'ArticleTeaser': {
       const imageBlock = teaser.article?.blocks?.find(isImageBlock)
-      return teaser.image ?? imageBlock?.image ?? teaser?.article?.image
+      return teaser.image ?? teaser?.article?.image ?? imageBlock?.image
     }
 
     case 'EventTeaser':
@@ -187,7 +187,7 @@ const useImageStyles = () => {
       transition: transform 0.3s ease-in-out;
       aspect-ratio: 1.8;
 
-      ${TeaserWrapper}:hover & {
+      :where(${TeaserWrapper}:hover &) {
         transform: scale(1.1);
       }
 
@@ -199,11 +199,10 @@ const useImageStyles = () => {
   )
 }
 
-const teaserLinkStyles = () => css`
+export const TeaserContentWrapper = styled('div')`
   display: grid;
   grid-auto-rows: max-content;
   align-items: start;
-  text-decoration: none;
   grid-template-areas:
     'image'
     'pretitle'
@@ -216,9 +215,10 @@ export const TeaserTitle = styled('h1')`
   grid-area: title;
   margin-bottom: ${({theme}) => theme.spacing(1)};
 `
+
 export const TeaserLead = styled('p')`
   font-weight: 300;
-  font-size: 15px;
+  font-size: ${({theme}) => theme.typography.body1.fontSize};
   grid-area: lead;
 `
 
@@ -233,7 +233,7 @@ export const TeaserPreTitleNoContent = styled('div')`
   width: 100%;
   margin-bottom: ${({theme}) => theme.spacing(1.5)};
 
-  ${TeaserWrapper}:hover & {
+  :where(${TeaserWrapper}:hover &) {
     background-color: ${({theme}) => theme.palette.primary.main};
   }
 `
@@ -246,7 +246,7 @@ export const TeaserPreTitleWrapper = styled('div')`
   margin-bottom: ${({theme}) => theme.spacing(1.5)};
   grid-area: pretitle;
 
-  ${TeaserWrapper}:hover & {
+  :where(${TeaserWrapper}:hover &) {
     background-color: ${({theme}) => theme.palette.primary.main};
   }
 `
@@ -260,7 +260,7 @@ export const PreTitle = styled('div')`
   font-weight: 300;
   transform: translateY(-100%);
 
-  ${TeaserWrapper}:hover & {
+  :where(${TeaserWrapper}:hover &) {
     background-color: ${({theme}) => theme.palette.primary.main};
   }
 
@@ -279,6 +279,26 @@ export const TeaserTime = styled('time')`
   font-weight: 400;
 `
 
+const TeaserContent = ({
+  href,
+  className,
+  children
+}: PropsWithChildren<{href?: string; className?: string}>) => {
+  const {
+    elements: {Link}
+  } = useWebsiteBuilder()
+
+  if (href) {
+    return (
+      <Link color="inherit" underline="none" href={href}>
+        <TeaserContentWrapper className={className}>{children}</TeaserContentWrapper>
+      </Link>
+    )
+  }
+
+  return <TeaserContentWrapper className={className}>{children}</TeaserContentWrapper>
+}
+
 export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
   const title = teaser && selectTeaserTitle(teaser)
   const preTitle = teaser && selectTeaserPreTitle(teaser)
@@ -290,10 +310,9 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
 
   const {
     date,
-    elements: {Link, Image, Paragraph, H4}
+    elements: {Image, Paragraph, H4}
   } = useWebsiteBuilder()
 
-  const linkStyles = teaserLinkStyles()
   const imageStyles = useImageStyles()
 
   console.log('teaser', teaser)
@@ -302,22 +321,20 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
 
   return (
     <TeaserWrapper {...alignment}>
-      <Link color="inherit" href={href ?? ''} className={className} css={linkStyles}>
+      <TeaserContent href={href} className={className}>
         <TeaserImageWrapper>
           {image && <Image image={image} css={imageStyles} />}
         </TeaserImageWrapper>
 
-        {preTitle ? (
+        {preTitle && (
           <TeaserPreTitleWrapper>
             <PreTitle>{preTitle}</PreTitle>
           </TeaserPreTitleWrapper>
-        ) : (
-          <TeaserPreTitleNoContent />
         )}
+        {!preTitle && <TeaserPreTitleNoContent />}
 
         <H4 component={TeaserTitle}>{title}</H4>
-
-        <Paragraph component={TeaserLead}>{lead}</Paragraph>
+        {lead && <Paragraph component={TeaserLead}>{lead}</Paragraph>}
 
         <TeaserMetadata>
           {authors && authors?.length ? <Authors>Von {authors?.join(', ')} </Authors> : null}
@@ -329,7 +346,7 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
             </TeaserTime>
           )}
         </TeaserMetadata>
-      </Link>
+      </TeaserContent>
     </TeaserWrapper>
   )
 }
