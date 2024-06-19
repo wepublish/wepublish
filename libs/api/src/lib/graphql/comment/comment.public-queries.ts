@@ -30,7 +30,6 @@ export const getPublicChildrenCommentsByParentId = async (
   userId: string | null,
   comment: PrismaClient['comment']
 ) => {
-  console.log('here, getPublicChildrenCommentsByParentId')
   const comments = (await comment.findMany({
     where: {
       AND: [
@@ -138,7 +137,6 @@ export const getPublicCommentsForItemById = async (
   const topComments = sortedComments.filter(comment =>
     comment.tags.some(({tag}) => tag.tag === 'Top Kommentar')
   )
-  console.log('topComments', topComments)
   const otherComments = sortedComments.filter(
     comment => !comment.tags.some(({tag}) => tag.tag === 'Top Kommentar')
   )

@@ -121,8 +121,6 @@ export const getComments = async (
     })
   ])
 
-  console.log('comments', comments)
-
   const nodes = comments.slice(0, take)
   const firstComment = nodes[0]
   const lastComment = nodes[nodes.length - 1]

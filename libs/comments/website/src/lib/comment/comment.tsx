@@ -151,14 +151,14 @@ export const Comment = ({
             )}
           </CommentName>
 
-          {source && (
+          {user?.flair && source && (
             <CommentFlair isGuest={isGuest}>
               <CommentFlairLink href={source} target="_blank" rel="noopener noreferrer">
                 {flair}
               </CommentFlairLink>
             </CommentFlair>
           )}
-          {user?.flair && <CommentFlair isGuest={isGuest}>{user?.flair}</CommentFlair>}
+          {user?.flair && !source && <CommentFlair isGuest={isGuest}>{user?.flair}</CommentFlair>}
           {!flair && createdAt && (
             <CommentFlair isGuest={isGuest}>{formatCommentDate(createdAt)}</CommentFlair>
           )}
