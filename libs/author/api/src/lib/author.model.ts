@@ -1,6 +1,6 @@
 import {ObjectType, Field, InputType, ArgsType, registerEnumType, ID} from '@nestjs/graphql'
 import {PaginatedArgsType, PaginatedType, SortOrder} from '@wepublish/utils/api'
-import {GraphQLRichText} from '@wepublish/richtext/api'
+import {GraphQLRichText, RichTextNode} from '@wepublish/richtext/api'
 import {Node} from 'slate'
 
 export enum AuthorSort {
@@ -34,26 +34,17 @@ export class Author {
   jobTitle?: string
 
   @Field(type => GraphQLRichText, {nullable: true})
-  bio!: Node[]
+  bio!: RichTextNode[]
 
   @Field({nullable: true})
   imageID?: string
 
-  @Field(() => [AuthorsLinks])
-  links?: AuthorsLinks[]
+  @Field(() => [AuthorsLink])
+  links?: AuthorsLink[]
 }
 
 @ObjectType()
-export class AuthorsLinks {
-  @Field()
-  id!: string
-
-  @Field()
-  createdAt!: Date
-
-  @Field()
-  modifiedAt!: Date
-
+export class AuthorsLink {
   @Field()
   title!: string
 

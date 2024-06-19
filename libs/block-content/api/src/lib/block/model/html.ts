@@ -1,7 +1,11 @@
-import {Field, InputType, ObjectType} from '@nestjs/graphql'
+import {Field, InputType, ObjectType, OmitType} from '@nestjs/graphql'
+import {BlockType} from '../block-type'
 
 @ObjectType()
 export class HTMLBlock {
+  @Field()
+  type: BlockType = BlockType.HTML
+
   @Field(() => String, {nullable: true})
   blockStyle?: string
 
@@ -10,4 +14,4 @@ export class HTMLBlock {
 }
 
 @InputType()
-export class HTMLBlockInput extends HTMLBlock {}
+export class HTMLBlockInput extends OmitType(HTMLBlock, [], InputType) {}

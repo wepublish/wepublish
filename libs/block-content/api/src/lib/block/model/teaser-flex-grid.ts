@@ -1,5 +1,6 @@
 import {Field, InputType, ObjectType, OmitType, Int} from '@nestjs/graphql'
-import {Teaser, TeaserInput} from './teaser'
+import {Teaser, TeaserInput, TeaserUnion} from './teaser'
+import {BlockType} from '../block-type'
 
 // Objects
 
@@ -29,12 +30,15 @@ export class FlexTeaser {
   @Field(() => FlexAlignment)
   alignment!: FlexAlignment
 
-  @Field(() => Teaser)
-  teaser!: typeof Teaser
+  @Field(() => TeaserUnion)
+  teaser!: Teaser
 }
 
 @ObjectType()
 export class TeaserGridFlexBlock {
+  @Field()
+  type: BlockType = BlockType.TeaserGridFlex
+
   @Field(() => String, {nullable: true})
   blockStyle?: string
 
@@ -45,7 +49,7 @@ export class TeaserGridFlexBlock {
 // Inputs
 
 @InputType()
-export class FlexAlignmentInput extends FlexAlignment {}
+export class FlexAlignmentInput extends OmitType(FlexAlignment, [], InputType) {}
 
 @InputType()
 export class FlexTeaserInput {

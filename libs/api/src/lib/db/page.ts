@@ -23,7 +23,6 @@ export interface PageData {
   readonly socialMediaTitle?: string | null
   readonly socialMediaDescription?: string | null
   readonly socialMediaImageID?: string | null
-
   readonly blocks: PageBlock[]
 }
 

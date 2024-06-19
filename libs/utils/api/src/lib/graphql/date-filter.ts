@@ -1,4 +1,4 @@
-import {Field, registerEnumType} from '@nestjs/graphql'
+import {Field, InputType, registerEnumType} from '@nestjs/graphql'
 import {Prisma} from '@prisma/client'
 
 export enum DateFilterComparison {
@@ -9,8 +9,9 @@ export enum DateFilterComparison {
   LowerThanOrEqual = 'lte'
 }
 
-registerEnumType(DateFilterComparison)
+registerEnumType(DateFilterComparison, {name: 'DateFilterComparison'})
 
+@InputType()
 export class DateFilter {
   @Field(() => Date, {nullable: true})
   date?: Date

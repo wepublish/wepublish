@@ -1,4 +1,4 @@
-import {createUnionType, Field, InputType, registerEnumType} from '@nestjs/graphql'
+import {createUnionType, Field, InputType} from '@nestjs/graphql'
 import {RichTextBlock, RichTextBlockInput} from './model/richtext'
 import {ImageBlock, ImageBlockInput} from './model/image'
 import {ImageGalleryBlock, ImageGalleryBlockInput} from './model/image-gallery'
@@ -25,36 +25,7 @@ import {TeaserGridFlexBlock, TeaserGridFlexBlockInput} from './model/teaser-flex
 import {TeaserListBlock, TeaserListBlockInput} from './model/teaser-list'
 
 import {EmbedBlock} from './model/embed'
-
-export enum BlockType {
-  Title = 'title',
-  RichText = 'richText',
-  FacebookPost = 'facebookPost',
-  FacebookVideo = 'facebookVideo',
-  InstagramPost = 'instagramPost',
-  TwitterTweet = 'twitterTweet',
-  VimeoVideo = 'vimeoVideo',
-  YouTubeVideo = 'youTubeVideo',
-  SoundCloudTrack = 'soundCloudTrack',
-  PolisConversation = 'polisConversation',
-  TikTokVideo = 'tikTokVideo',
-  BildwurfAd = 'bildwurfAd',
-  Embed = 'embed',
-  Quote = 'quote',
-  Image = 'image',
-  ImageGallery = 'imageGallery',
-  Listicle = 'listicle',
-  LinkPageBreak = 'linkPageBreak',
-  TeaserGrid = 'teaserGrid',
-  TeaserGridFlex = 'teaserGridFlex',
-  TeaserList = 'teaserList',
-  HTML = 'html',
-  Poll = 'poll',
-  Comment = 'comment',
-  Event = 'event'
-}
-
-registerEnumType(BlockType, {name: 'BlockType'})
+import {BlockType} from './block-type'
 
 export const BlockUnion = createUnionType({
   name: 'Block',
@@ -84,7 +55,63 @@ export const BlockUnion = createUnionType({
     TeaserGridBlock,
     TeaserGridFlexBlock,
     TeaserListBlock
-  ]
+  ],
+  resolveType: value => {
+    switch (value.type) {
+      case BlockType.RichText:
+        return RichTextBlock
+      case BlockType.Image:
+        return ImageBlock
+      case BlockType.ImageGallery:
+        return ImageGalleryBlock
+      case BlockType.Listicle:
+        return ListicleBlock
+      case BlockType.FacebookPost:
+        return FacebookPostBlock
+      case BlockType.FacebookVideo:
+        return FacebookVideoBlock
+      case BlockType.InstagramPost:
+        return InstagramPostBlock
+      case BlockType.TwitterTweet:
+        return TwitterTweetBlock
+      case BlockType.VimeoVideo:
+        return VimeoVideoBlock
+      case BlockType.YouTubeVideo:
+        return YouTubeVideoBlock
+      case BlockType.SoundCloudTrack:
+        return SoundCloudTrackBlock
+      case BlockType.PolisConversation:
+        return PolisConversationBlock
+      case BlockType.TikTokVideo:
+        return TikTokVideoBlock
+      case BlockType.BildwurfAd:
+        return BildwurfAdBlock
+      case BlockType.Embed:
+        return EmbedBlock
+      case BlockType.HTML:
+        return HTMLBlock
+      case BlockType.Poll:
+        return PollBlock
+      case BlockType.Event:
+        return EventBlock
+      case BlockType.Comment:
+        return CommentBlock
+      case BlockType.LinkPageBreak:
+        return LinkPageBreakBlock
+      case BlockType.Title:
+        return TitleBlock
+      case BlockType.Quote:
+        return QuoteBlock
+      case BlockType.TeaserGrid:
+        return TeaserGridBlock
+      case BlockType.TeaserGridFlex:
+        return TeaserGridFlexBlock
+      case BlockType.TeaserList:
+        return TeaserListBlock
+      default:
+        throw new Error(value.type + ' ' + BlockType.TeaserGridFlex)
+    }
+  }
 })
 export type Block = typeof BlockUnion
 

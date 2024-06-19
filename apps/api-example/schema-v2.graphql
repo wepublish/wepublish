@@ -44,13 +44,17 @@ type ArticleTeaser {
   articleID: ID!
 }
 
+input ArticleTeaserInput {
+  articleID: ID!
+}
+
 type Author {
   bio: RichText
   createdAt: DateTime!
   id: String!
   imageID: String
   jobTitle: String
-  links: [AuthorsLinks!]!
+  links: [AuthorsLink!]!
   modifiedAt: DateTime!
   name: String!
   slug: String!
@@ -74,10 +78,7 @@ enum AuthorSort {
   Name
 }
 
-type AuthorsLinks {
-  createdAt: DateTime!
-  id: String!
-  modifiedAt: DateTime!
+type AuthorsLink {
   title: String!
   url: String!
 }
@@ -103,34 +104,132 @@ input BaseNavigationLinkInput {
   url: String
 }
 
+type BildwurfAdBlock {
+  blockStyle: String
+  zoneID: String!
+}
+
+input BildwurfAdBlockInput {
+  blockStyle: String
+  zoneID: String!
+}
+
+union Block = BildwurfAdBlock | CommentBlock | EmbedBlock | EventBlock | FacebookPostBlock | FacebookVideoBlock | HTMLBlock | ImageBlock | ImageGalleryBlock | InstagramPostBlock | LinkPageBreakBlock | ListicleBlock | PolisConversationBlock | PollBlock | QuoteBlock | RichTextBlock | SoundCloudTrackBlock | TeaserGridBlock | TeaserGridFlexBlock | TeaserListBlock | TikTokVideoBlock | TitleBlock | TwitterTweetBlock | VimeoVideoBlock | YouTubeVideoBlock
+
+input BlockInput {
+  bildwurfAd: BildwurfAdBlockInput
+  comment: CommentBlockInput
+  event: EventBlockInput
+  facebookPost: FacebookPostBlockInput
+  facebookVideo: FacebookVideoBlockInput
+  html: HTMLBlockInput
+  image: ImageBlockInput
+  imageGallery: ImageGalleryBlockInput
+  instagramPost: InstagramPostBlockInput
+  linkPageBreak: LinkPageBreakBlockInput
+  listicle: ListicleBlockInput
+  polisConversation: PolisConversationBlockInput
+  poll: PollBlockInput
+  quote: QuoteBlockInput
+  richText: RichTextBlockInput
+  soundCloudTrack: SoundCloudTrackBlockInput
+  teaserGrid: TeaserGridBlockInput
+  teaserGridFlex: TeaserGridFlexBlockInput
+  teaserList: TeaserListBlockInput
+  tikTokVideo: TikTokVideoBlockInput
+  title: TitleBlockInput
+  twitterTweet: TwitterTweetBlockInput
+  vimeoVideo: VimeoVideoBlockInput
+  youTubeVideo: YouTubeVideoBlockInput
+}
+
 type BlockStyle {
-  blocks: [BlockType!]!
+  blocks: [BlockStyleType!]!
   createdAt: DateTime!
   id: String!
   modifiedAt: DateTime!
   name: String!
 }
 
-enum BlockType {
+enum BlockStyleType {
+  BildwurfAd
   Comment
   Embed
   Event
+  FacebookPost
+  FacebookVideo
   HTML
   Image
   ImageGallery
+  InstagramPost
   LinkPageBreak
   Listicle
+  PolisConversation
   Poll
   Quote
   RichText
+  SoundCloudTrack
+  TeaserGrid
   TeaserGrid1
   TeaserGrid6
   TeaserGridFlex
   TeaserList
+  TikTokVideo
   Title
+  TwitterTweet
+  VimeoVideo
+  YouTubeVideo
+}
+
+enum BlockType {
+  BildwurfAd
+  Comment
+  Embed
+  Event
+  FacebookPost
+  FacebookVideo
+  HTML
+  Image
+  ImageGallery
+  InstagramPost
+  LinkPageBreak
+  Listicle
+  PolisConversation
+  Poll
+  Quote
+  RichText
+  SoundCloudTrack
+  TeaserGrid
+  TeaserGrid1
+  TeaserGrid6
+  TeaserGridFlex
+  TeaserList
+  TikTokVideo
+  Title
+  TwitterTweet
+  VimeoVideo
+  YouTubeVideo
+}
+
+type CommentBlock {
+  blockStyle: String
+  filter: CommentBlockFilter!
+  type: BlockType!
 }
 
 type CommentBlockFilter {
+  comments: [ID!]
+  item: ID
+  tags: [ID!]
+}
+
+input CommentBlockInput {
+  blockStyle: String
+  filter: CommentBlockInputFilter!
+  type: BlockType! = Comment
+}
+
+input CommentBlockInputFilter {
   comments: [ID!]
   item: ID
   tags: [ID!]
@@ -203,6 +302,11 @@ type CustomTeaser {
   properties: [Property!]!
 }
 
+input CustomTeaserInput {
+  contentUrl: String
+  properties: [PropertyInput!]!
+}
+
 type DashboardInvoice {
   amount: Int!
   dueAt: DateTime!
@@ -221,10 +325,34 @@ type DashboardSubscription {
   startsAt: DateTime!
 }
 
+input DateFilter {
+  comparison: DateFilterComparison!
+  date: DateTime
+}
+
+enum DateFilterComparison {
+  Equal
+  GreaterThan
+  GreaterThanOrEqual
+  LowerThan
+  LowerThanOrEqual
+}
+
 """
 A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
 """
 scalar DateTime
+
+type EmbedBlock {
+  blockStyle: String
+  height: Int
+  sandbox: String
+  styleCustom: String
+  title: String
+  type: BlockType!
+  url: String
+  width: Int
+}
 
 type Event {
   createdAt: DateTime!
@@ -242,9 +370,27 @@ type Event {
   status: EventStatus!
 }
 
+type EventBlock {
+  blockStyle: String
+  events: [Event!]!
+  filter: EventBlockFilter!
+  type: BlockType!
+}
+
 type EventBlockFilter {
   events: [ID!]
   tags: [ID!]
+}
+
+input EventBlockFilterInput {
+  events: [ID!]
+  tags: [ID!]
+}
+
+input EventBlockInput {
+  blockStyle: String
+  filter: EventBlockFilterInput!
+  type: BlockType! = Event
 }
 
 type EventCreatedAction {
@@ -297,6 +443,10 @@ type EventTeaser {
   eventID: ID!
 }
 
+input EventTeaserInput {
+  eventID: ID!
+}
+
 type ExternalNavigationLink implements BaseNavigationLink {
   createdAt: DateTime!
   id: String!
@@ -306,7 +456,44 @@ type ExternalNavigationLink implements BaseNavigationLink {
   url: String
 }
 
+type FacebookPostBlock {
+  blockStyle: String
+  postID: String!
+  type: BlockType!
+  userID: String!
+}
+
+input FacebookPostBlockInput {
+  blockStyle: String
+  postID: String!
+  type: BlockType! = FacebookPost
+  userID: String!
+}
+
+type FacebookVideoBlock {
+  blockStyle: String
+  type: BlockType!
+  userID: String!
+  videoID: String!
+}
+
+input FacebookVideoBlockInput {
+  blockStyle: String
+  type: BlockType! = FacebookVideo
+  userID: String!
+  videoID: String!
+}
+
 type FlexAlignment {
+  h: Int!
+  i: String!
+  static: Boolean!
+  w: Int!
+  x: Int!
+  y: Int!
+}
+
+input FlexAlignmentInput {
   h: Int!
   i: String!
   static: Boolean!
@@ -320,6 +507,11 @@ type FlexTeaser {
   teaser: Teaser!
 }
 
+input FlexTeaserInput {
+  alignment: FlexAlignmentInput!
+  teaser: TeaserInput!
+}
+
 type FocalPoint {
   x: Float!
   y: Float!
@@ -331,8 +523,25 @@ type GalleryImageEdge {
   imageID: ID!
 }
 
+input GalleryImageEdgeInput {
+  caption: String
+  imageID: ID!
+}
+
 """Setting Value"""
 scalar GraphQLSettingValueType
+
+type HTMLBlock {
+  blockStyle: String
+  html: String
+  type: BlockType!
+}
+
+input HTMLBlockInput {
+  blockStyle: String
+  html: String
+  type: BlockType! = HTML
+}
 
 type Image {
   createdAt: DateTime!
@@ -352,6 +561,35 @@ type Image {
   tags: [String!]!
   title: String
   width: Int!
+}
+
+type ImageBlock {
+  blockStyle: String
+  caption: String
+  image: Image!
+  imageID: ID!
+  linkUrl: String
+  type: BlockType!
+}
+
+input ImageBlockInput {
+  blockStyle: String
+  caption: String
+  imageID: ID!
+  linkUrl: String
+  type: BlockType! = Image
+}
+
+type ImageGalleryBlock {
+  blockStyle: String
+  images: [GalleryImageEdge!]!
+  type: BlockType!
+}
+
+input ImageGalleryBlockInput {
+  blockStyle: String
+  images: [GalleryImageEdgeInput!]!
+  type: BlockType! = ImageGallery
 }
 
 input ImportedEventFilter {
@@ -375,8 +613,69 @@ type ImportedEventsDocument {
   totalCount: Float!
 }
 
+type InstagramPostBlock {
+  blockStyle: String
+  postID: String!
+  type: BlockType!
+}
+
+input InstagramPostBlockInput {
+  blockStyle: String
+  postID: String!
+  type: BlockType! = InstagramPost
+}
+
+type LinkPageBreakBlock {
+  blockStyle: String
+  hideButton: Boolean!
+  image: Image
+  imageID: ID
+  layoutOption: String
+  linkTarget: String
+  linkText: String
+  linkURL: String
+  richText: RichText!
+  styleOption: String
+  templateOption: String
+  text: String
+  type: BlockType!
+}
+
+input LinkPageBreakBlockInput {
+  blockStyle: String
+  hideButton: Boolean!
+  imageID: ID
+  layoutOption: String
+  linkTarget: String
+  linkText: String
+  linkURL: String
+  richText: RichText!
+  styleOption: String
+  templateOption: String
+  text: String
+  type: BlockType! = LinkPageBreak
+}
+
+type ListicleBlock {
+  blockStyle: String
+  items: [ListicleItem!]!
+  type: BlockType!
+}
+
+input ListicleBlockInput {
+  blockStyle: String
+  items: [ListicleItemInput!]!
+  type: BlockType! = Listicle
+}
+
 type ListicleItem {
   image: Image
+  imageID: ID
+  richText: RichText!
+  title: String!
+}
+
+input ListicleItemInput {
   imageID: ID
   richText: RichText!
   title: String!
@@ -436,7 +735,7 @@ type Mutation {
   createAuthor(author: CreateAuthorInput!): Author!
 
   """Creates a new block style."""
-  createBlockStyle(blocks: [BlockType!]!, name: String!): BlockStyle!
+  createBlockStyle(blocks: [BlockStyleType!]!, name: String!): BlockStyle!
 
   "\n      Create a new consent.\n    "
   createConsent(defaultValue: Boolean!, name: String!, slug: String!): Consent!
@@ -447,6 +746,7 @@ type Mutation {
 
   """Creates a new navigation."""
   createNavigation(navigation: CreateNavigationInput!): Navigation!
+  createPage(page: PageInput!): Page!
   createPaymentFromInvoice(input: PaymentFromInvoiceInput!): Payment!
   createPaymentMethod(paymentMethod: CreatePaymentMethodInput!): PaymentMethod!
 
@@ -475,6 +775,7 @@ type Mutation {
 
   """Deletes an existing navigation."""
   deleteNavigation(id: ID!): Navigation!
+  deletePage(id: ID!): Page!
   deletePaymentMethodById(id: ID!): PaymentMethod!
 
   """Delete an existing subscription flow"""
@@ -488,17 +789,20 @@ type Mutation {
 
   """Deletes a user role"""
   deleteUserRole(id: ID!): UserRole!
+  duplicatePage(id: ID!): Page!
 
   "\n      Creates and event based on data from importable events list and an id and provider.\n      Also, uploads an image to WePublish Image library.\n    "
   importEvent(id: String!, source: String!): String!
+  publishPage(id: ID!, input: PublishPageInput!): Page!
   syncTemplates: Boolean
 
   """Sends a test email for the given event"""
   testSystemMail(event: UserEvent!): Boolean!
+  unpublishPage(id: ID!): Page!
   updateAuthor(author: UpdateAuthorInput!): Author!
 
   """Updates an existing block style."""
-  updateBlockStyle(blocks: [BlockType!], id: String!, name: String): BlockStyle!
+  updateBlockStyle(blocks: [BlockStyleType!], id: String!, name: String): BlockStyle!
 
   "\n      Updates an existing consent.\n    "
   updateConsent(defaultValue: Boolean, id: String!, name: String, slug: String): Consent!
@@ -509,6 +813,7 @@ type Mutation {
 
   """Updates an existing navigation."""
   updateNavigation(navigation: UpdateNavigationInput!): Navigation!
+  updatePage(id: ID!, page: PageInput!): Page!
   updatePaymentMethod(paymentMethod: UpdatePaymentMethodInput!): PaymentMethod!
 
   """Updates an existing setting."""
@@ -539,10 +844,32 @@ type Navigation {
   name: String!
 }
 
+type Page {
+  createdAt: DateTime!
+  draft: PageRevision
+  id: ID!
+  latest: PageRevision!
+  modifiedAt: DateTime!
+  pending: PageRevision
+  published: PageRevision
+  shared: Boolean!
+}
+
 type PageCreatedAction {
   actionType: ActionType!
   date: DateTime!
   id: ID!
+}
+
+input PageFilter {
+  description: String
+  draft: Boolean
+  pending: Boolean
+  publicationDateFrom: DateFilter
+  publicationDateTo: DateFilter
+  published: Boolean
+  tags: [String!]
+  title: String
 }
 
 type PageInfo {
@@ -550,6 +877,18 @@ type PageInfo {
   hasNextPage: Boolean!
   hasPreviousPage: Boolean!
   startCursor: String
+}
+
+input PageInput {
+  blocks: [BlockInput!]!
+  description: String
+  properties: [PropertyInput!]!
+  slug: String
+  socialMediaDescription: String
+  socialMediaImageID: ID
+  socialMediaTitle: String
+  tags: [String!]!
+  title: String!
 }
 
 type PageNavigationLink implements BaseNavigationLink {
@@ -561,7 +900,39 @@ type PageNavigationLink implements BaseNavigationLink {
   type: String!
 }
 
+type PageRevision {
+  blocks: [Block!]!
+  createdAt: DateTime!
+  description: String
+  image: Image
+  imageID: ID
+  properties: [Property!]!
+  publishAt: DateTime
+  publishedAt: DateTime
+  revision: Int!
+  slug: String
+  socialMediaDescription: String
+  socialMediaImage: Image
+  socialMediaImageID: ID
+  socialMediaTitle: String
+  tags: [String!]!
+  title: String!
+  updatedAt: DateTime
+}
+
+enum PageSort {
+  CreatedAt
+  ModifiedAt
+  PublishAt
+  PublishedAt
+  UpdatedAt
+}
+
 type PageTeaser {
+  pageID: ID!
+}
+
+input PageTeaserInput {
   pageID: ID!
 }
 
@@ -573,6 +944,18 @@ type PaginatedAuthors {
 
 type PaginatedEvents {
   nodes: [Event!]!
+  pageInfo: PageInfo!
+  totalCount: Float!
+}
+
+type PaginatedPages {
+  nodes: [Page!]!
+  pageInfo: PageInfo!
+  totalCount: Float!
+}
+
+type PaginatedPublishedPages {
+  nodes: [PublishedPage!]!
   pageInfo: PageInfo!
   totalCount: Float!
 }
@@ -656,6 +1039,11 @@ type PeerArticleTeaser {
   peerID: ID!
 }
 
+input PeerArticleTeaserInput {
+  articleID: ID!
+  peerID: ID!
+}
+
 type PeriodicJob {
   createdAt: DateTime!
   date: DateTime!
@@ -674,6 +1062,30 @@ type PermissionObject {
   id: String!
 }
 
+type PolisConversationBlock {
+  blockStyle: String
+  conversationID: String!
+  type: BlockType!
+}
+
+input PolisConversationBlockInput {
+  blockStyle: String
+  conversationID: String!
+  type: BlockType! = PolisConversation
+}
+
+type PollBlock {
+  blockStyle: String
+  pollId: ID
+  type: BlockType!
+}
+
+input PollBlockInput {
+  blockStyle: String
+  pollId: ID
+  type: BlockType! = Poll
+}
+
 type PollStartedAction {
   actionType: ActionType!
   date: DateTime!
@@ -684,6 +1096,36 @@ type Property {
   key: String!
   public: Boolean!
   value: String!
+}
+
+input PropertyInput {
+  key: String!
+  public: Boolean!
+  value: String!
+}
+
+input PublishPageInput {
+  publishAt: DateTime
+  publishedAt: DateTime
+  updatedAt: DateTime
+}
+
+type PublishedPage {
+  blocks: [Block!]!
+  description: String
+  id: ID!
+  image: Image
+  imageID: ID
+  properties: [Property!]!
+  publishedAt: DateTime
+  slug: String
+  socialMediaDescription: String
+  socialMediaImage: Image
+  socialMediaImageID: ID
+  socialMediaTitle: String
+  tags: [String!]!
+  title: String!
+  updatedAt: DateTime
 }
 
 type Query {
@@ -729,6 +1171,8 @@ type Query {
 
   """Returns a list of navigations."""
   getNavigations: [Navigation!]!
+  getPage(id: ID!): Page!
+  getPages(cursorId: String, filter: PageFilter, order: SortOrder = Ascending, skip: Int = 0, sortedField: PageSort, take: Int = 10): PaginatedPages!
   getPaymentById(id: ID!): Payment!
   getPaymentMethodById(id: ID!): PaymentMethod!
   getPaymentMethods: [PaymentMethod!]!
@@ -736,6 +1180,7 @@ type Query {
 
   """Returns permissions list"""
   getPermissions: [PermissionObject!]!
+  getPublishedPages(cursorId: String, filter: PageFilter, order: SortOrder = Ascending, skip: Int = 0, sortedField: PageSort, take: Int = 10): PaginatedPublishedPages!
 
   """Returns a user role"""
   getUserRoleById(id: ID!): UserRole!
@@ -796,7 +1241,36 @@ type Query {
   versionInformation: VersionInformation!
 }
 
+type QuoteBlock {
+  author: String
+  blockStyle: String
+  image: Image
+  imageID: ID
+  quote: String
+  type: BlockType!
+}
+
+input QuoteBlockInput {
+  author: String
+  blockStyle: String
+  imageID: ID
+  quote: String
+  type: BlockType! = Quote
+}
+
 scalar RichText
+
+type RichTextBlock {
+  blockStyle: String
+  richText: RichText!
+  type: BlockType!
+}
+
+input RichTextBlockInput {
+  blockStyle: String
+  richText: RichText!
+  type: BlockType! = RichText
+}
 
 type Setting {
   id: ID!
@@ -844,6 +1318,18 @@ input SingleEventFilter {
 enum SortOrder {
   Ascending
   Descending
+}
+
+type SoundCloudTrackBlock {
+  blockStyle: String
+  trackID: String!
+  type: BlockType!
+}
+
+input SoundCloudTrackBlockInput {
+  blockStyle: String
+  trackID: String!
+  type: BlockType! = SoundCloudTrack
 }
 
 type Stats {
@@ -899,8 +1385,105 @@ type SystemMailModel {
 
 union Teaser = ArticleTeaser | CustomTeaser | EventTeaser | PageTeaser | PeerArticleTeaser
 
+type TeaserGridBlock {
+  blockStyle: String
+  numColumns: Float!
+  teasers: [Teaser!]!
+  type: BlockType!
+}
+
+input TeaserGridBlockInput {
+  teasers: [TeaserInput!]!
+}
+
+type TeaserGridFlexBlock {
+  blockStyle: String
+  flexTeasers: [FlexTeaser!]!
+  type: BlockType!
+}
+
+input TeaserGridFlexBlockInput {
+  flexTeasers: [FlexTeaserInput!]!
+}
+
+input TeaserInput {
+  article: ArticleTeaserInput
+  custom: CustomTeaserInput
+  event: EventTeaserInput
+  page: PageTeaserInput
+  peerArticle: PeerArticleTeaserInput
+}
+
+type TeaserListBlock {
+  blockStyle: String
+  filter: TeaserListBlockFilter!
+  skip: Float!
+  take: Float!
+  teaserType: TeaserType!
+  teasers: [Teaser!]!
+  type: BlockType!
+}
+
 type TeaserListBlockFilter {
   tags: [ID!]
+}
+
+input TeaserListBlockFilterInput {
+  tags: [ID!]
+}
+
+input TeaserListBlockInput {
+  filter: TeaserListBlockFilterInput!
+}
+
+enum TeaserType {
+  Article
+  Custom
+  Event
+  Page
+  PeerArticle
+}
+
+type TikTokVideoBlock {
+  blockStyle: String
+  type: BlockType!
+  userID: String!
+  videoID: String!
+}
+
+input TikTokVideoBlockInput {
+  blockStyle: String
+  type: BlockType! = TikTokVideo
+  userID: String!
+  videoID: String!
+}
+
+type TitleBlock {
+  blockStyle: String
+  lead: String
+  title: String
+  type: BlockType!
+}
+
+input TitleBlockInput {
+  blockStyle: String
+  lead: String
+  title: String
+  type: BlockType! = Title
+}
+
+type TwitterTweetBlock {
+  blockStyle: String
+  tweetID: String!
+  type: BlockType!
+  userID: String!
+}
+
+input TwitterTweetBlockInput {
+  blockStyle: String
+  tweetID: String!
+  type: BlockType! = TwitterTweet
+  userID: String!
 }
 
 input UpdateAuthorInput {
@@ -1002,4 +1585,28 @@ input UserRoleFilter {
 
 type VersionInformation {
   version: String!
+}
+
+type VimeoVideoBlock {
+  blockStyle: String
+  type: BlockType!
+  videoID: String!
+}
+
+input VimeoVideoBlockInput {
+  blockStyle: String
+  type: BlockType! = VimeoVideo
+  videoID: String!
+}
+
+type YouTubeVideoBlock {
+  blockStyle: String
+  type: BlockType!
+  videoID: String!
+}
+
+input YouTubeVideoBlockInput {
+  blockStyle: String
+  type: BlockType! = YouTubeVideo
+  videoID: String!
 }

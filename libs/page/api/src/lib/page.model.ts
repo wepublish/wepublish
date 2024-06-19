@@ -6,13 +6,12 @@ import {
   ArgsType,
   Int,
   registerEnumType,
-  OmitType,
   PickType
 } from '@nestjs/graphql'
-import {GraphQLDateTime} from 'graphql-scalars'
 import {Image} from '@wepublish/image/api'
 import {Block, BlockInput, BlockUnion} from '@wepublish/block-content/api'
 import {DateFilter, PaginatedArgsType, PaginatedType, SortOrder} from '@wepublish/utils/api'
+import {Property, PropertyInput} from '@wepublish/property/api'
 
 export enum PageSort {
   CreatedAt = 'createdAt',
@@ -24,18 +23,8 @@ export enum PageSort {
 
 registerEnumType(PageSort, {name: 'PageSort'})
 
-// Object Types
 @ObjectType()
-export class PageRevision {
-  @Field(() => Int)
-  revision!: number
-
-  @Field(() => Date)
-  createdAt!: Date
-
-  @Field(() => Date, {nullable: true})
-  publishAt?: Date
-
+class PageData {
   @Field(() => Date, {nullable: true})
   updatedAt?: Date
 
@@ -54,11 +43,8 @@ export class PageRevision {
   @Field(() => [String])
   tags!: string[]
 
-  // @Field(() => [MetadataProperty])
-  properties!: string[]
-
-  @Field(() => String)
-  url!: string
+  @Field(() => [Property])
+  properties!: Property[]
 
   @Field(() => ID, {nullable: true})
   imageID?: string
@@ -82,6 +68,19 @@ export class PageRevision {
   blocks!: Block[]
 }
 
+// Object Types
+@ObjectType()
+export class PageRevision extends PageData {
+  @Field(() => Int)
+  revision!: number
+
+  @Field(() => Date, {nullable: true})
+  publishAt?: Date
+
+  @Field(() => Date)
+  createdAt!: Date
+}
+
 @ObjectType()
 export class Page {
   @Field(() => ID)
@@ -90,10 +89,10 @@ export class Page {
   @Field(() => Boolean)
   shared!: boolean
 
-  @Field(() => GraphQLDateTime)
+  @Field(() => Date)
   createdAt!: Date
 
-  @Field(() => GraphQLDateTime)
+  @Field(() => Date)
   modifiedAt!: Date
 
   @Field(() => PageRevision, {nullable: true})
@@ -113,7 +112,10 @@ export class Page {
 export class PaginatedPages extends PaginatedType(Page) {}
 
 @ObjectType()
-export class PublishedPage extends OmitType(PageRevision, ['revision']) {}
+export class PublishedPage extends PageData {
+  @Field(() => ID)
+  id!: string
+}
 
 @ObjectType()
 export class PaginatedPublishedPages extends PaginatedType(PublishedPage) {}
@@ -150,18 +152,24 @@ export class PageFilter {
 export class PublishedPageFilter extends PickType(PageFilter, ['tags']) {}
 
 @InputType()
-export class PageInput extends PickType(PageRevision, [
-  'slug',
-  'title',
-  'description',
-  'tags',
-  'properties',
-  'socialMediaDescription',
-  'socialMediaTitle',
-  'socialMediaImageID'
-]) {
+export class PageInput extends PickType(
+  PageData,
+  [
+    'slug',
+    'title',
+    'description',
+    'tags',
+    'socialMediaDescription',
+    'socialMediaTitle',
+    'socialMediaImageID'
+  ],
+  InputType
+) {
   @Field(() => [BlockInput])
   blocks!: BlockInput[]
+
+  @Field(() => [PropertyInput])
+  properties!: PropertyInput[]
 }
 
 // Args Types
@@ -211,11 +219,11 @@ export class UpdatePageArgs {
 }
 
 @InputType()
-export class PublishPageInput extends PickType(PageRevision, [
-  'publishAt',
-  'publishedAt',
-  'updatedAt'
-]) {}
+export class PublishPageInput extends PickType(
+  PageRevision,
+  ['publishAt', 'publishedAt', 'updatedAt'],
+  InputType
+) {}
 
 @ArgsType()
 export class PublishPageArgs {

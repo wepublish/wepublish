@@ -1,7 +1,11 @@
-import {Field, InputType, ObjectType} from '@nestjs/graphql'
+import {Field, InputType, ObjectType, OmitType} from '@nestjs/graphql'
+import {BlockType} from '../block-type'
 
 @ObjectType()
 export class PolisConversationBlock {
+  @Field()
+  type: BlockType = BlockType.PolisConversation
+
   @Field(() => String, {nullable: true})
   blockStyle?: string
 
@@ -10,4 +14,4 @@ export class PolisConversationBlock {
 }
 
 @InputType()
-export class PolisConversationBlockInput extends PolisConversationBlock {}
+export class PolisConversationBlockInput extends OmitType(PolisConversationBlock, [], InputType) {}

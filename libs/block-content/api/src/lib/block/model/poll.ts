@@ -1,7 +1,11 @@
 import {Field, ID, InputType, ObjectType, OmitType} from '@nestjs/graphql'
+import {BlockType} from '../block-type'
 
 @ObjectType()
 export class PollBlock {
+  @Field()
+  type: BlockType = BlockType.Poll
+
   @Field(() => String, {nullable: true})
   blockStyle?: string
 
@@ -13,4 +17,4 @@ export class PollBlock {
 }
 
 @InputType()
-export class PollBlockInput extends OmitType(PollBlock, []) {}
+export class PollBlockInput extends OmitType(PollBlock, [], InputType) {}

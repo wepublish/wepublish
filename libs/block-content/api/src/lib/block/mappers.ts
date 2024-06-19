@@ -1,7 +1,8 @@
-import {Block, BlockInput, BlockType} from './block.model'
+import {Block, BlockInput} from './block.model'
+import {BlockType} from './block-type'
 import {TeaserGridFlexBlock, TeaserGridFlexBlockInput} from './model/teaser-flex-grid'
 import {TeaserGridBlock, TeaserGridBlockInput} from './model/teaser-grid'
-import {TeaserInput} from './model/teaser'
+import {Teaser, TeaserInput} from './model/teaser'
 import {Prisma} from '@prisma/client'
 
 function mapTeaserInputToTeaser(value: any) {
@@ -24,7 +25,7 @@ function mapTeaserInputToTeaser(value: any) {
   const type = Object.keys(value)[0] as keyof TeaserInput
   const teaserValue = value[type]
 
-  return {type, ...teaserValue} as Block
+  return {type, ...teaserValue} as Teaser
 }
 
 export function mapBlockInputToPrisma(value: BlockInput): Prisma.InputJsonValue {

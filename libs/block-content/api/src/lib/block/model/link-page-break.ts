@@ -2,9 +2,13 @@ import {Field, ID, InputType, ObjectType, OmitType} from '@nestjs/graphql'
 import {GraphQLRichText} from '@wepublish/richtext/api'
 import {GraphQLBoolean} from 'graphql/index'
 import {Image} from '@wepublish/image/api'
+import {BlockType} from '../block-type'
 
 @ObjectType()
 export class LinkPageBreakBlock {
+  @Field()
+  type: BlockType = BlockType.LinkPageBreak
+
   @Field(() => String, {nullable: true})
   blockStyle?: string
 
@@ -43,4 +47,4 @@ export class LinkPageBreakBlock {
 }
 
 @InputType()
-export class LinkPageBreakBlockInput extends OmitType(LinkPageBreakBlock, ['image']) {}
+export class LinkPageBreakBlockInput extends OmitType(LinkPageBreakBlock, ['image'], InputType) {}

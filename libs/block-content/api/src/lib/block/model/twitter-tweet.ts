@@ -1,7 +1,11 @@
-import {Field, InputType, ObjectType} from '@nestjs/graphql'
+import {Field, InputType, ObjectType, OmitType} from '@nestjs/graphql'
+import {BlockType} from '../block-type'
 
 @ObjectType()
 export class TwitterTweetBlock {
+  @Field()
+  type: BlockType = BlockType.TwitterTweet
+
   @Field(() => String, {nullable: true})
   blockStyle?: string
 
@@ -13,4 +17,4 @@ export class TwitterTweetBlock {
 }
 
 @InputType()
-export class TwitterTweetBlockInput extends TwitterTweetBlock {}
+export class TwitterTweetBlockInput extends OmitType(TwitterTweetBlock, [], InputType) {}

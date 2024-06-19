@@ -15,7 +15,7 @@ import {GraphQLDateTime} from 'graphql-scalars'
 import {Context} from '../context'
 
 import {GraphQLImage} from './image'
-import {PublicPage, PageRevision, Page, PageSort} from '../db/page'
+import {PageRevision, Page, PageSort, PublicPage} from '../db/page'
 import {GraphQLSlug} from './slug'
 import {
   GraphQLDateFilter,
@@ -124,7 +124,7 @@ export const GraphQLPageRevision = new GraphQLObjectType<PageRevision, Context>(
           ...pageRevision,
           id: info?.variableValues?.id || 'ID-DOES-NOT-EXIST',
           updatedAt: new Date(),
-          publishedAt: new Date()
+          publishAt: new Date()
         } as PublicPage)
       })
     },

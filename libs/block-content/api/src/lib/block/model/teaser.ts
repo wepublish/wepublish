@@ -9,7 +9,7 @@ import {
 } from '@nestjs/graphql'
 import {Image} from '@wepublish/image/api'
 import {Event} from '@wepublish/event/api'
-import {Property} from '@wepublish/property/api'
+import {Property, PropertyInput} from '@wepublish/property/api'
 
 export enum TeaserType {
   Article = 'article',
@@ -102,7 +102,7 @@ export class CustomTeaser extends AbstractTeaser {
   properties!: Property[]
 }
 
-export const Teaser = createUnionType({
+export const TeaserUnion = createUnionType({
   name: 'Teaser',
   types: () => [ArticleTeaser, PeerArticleTeaser, PageTeaser, CustomTeaser, EventTeaser],
   resolveType: value => {
@@ -121,23 +121,27 @@ export const Teaser = createUnionType({
     return CustomTeaser.name
   }
 })
+export type Teaser = typeof TeaserUnion
 
 // Inputs
 
 @InputType()
-export class ArticleTeaserInput extends OmitType(ArticleTeaser, ['image']) {}
+export class ArticleTeaserInput extends OmitType(ArticleTeaser, ['image'], InputType) {}
 
 @InputType()
-export class PeerArticleTeaserInput extends OmitType(PeerArticleTeaser, ['image']) {}
+export class PeerArticleTeaserInput extends OmitType(PeerArticleTeaser, ['image'], InputType) {}
 
 @InputType()
-export class PageTeaserInput extends OmitType(PageTeaser, ['image']) {}
+export class PageTeaserInput extends OmitType(PageTeaser, ['image'], InputType) {}
 
 @InputType()
-export class EventTeaserInput extends OmitType(EventTeaser, ['image', 'event']) {}
+export class EventTeaserInput extends OmitType(EventTeaser, ['image', 'event'], InputType) {}
 
 @InputType()
-export class CustomTeaserInput extends OmitType(CustomTeaser, ['image']) {}
+export class CustomTeaserInput extends OmitType(CustomTeaser, ['image', 'properties'], InputType) {
+  @Field(() => [PropertyInput])
+  properties!: PropertyInput[]
+}
 
 @InputType()
 export class TeaserInput {

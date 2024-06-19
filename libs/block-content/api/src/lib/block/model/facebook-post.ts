@@ -1,7 +1,11 @@
-import {Field, InputType, ObjectType} from '@nestjs/graphql'
+import {Field, InputType, ObjectType, OmitType} from '@nestjs/graphql'
+import {BlockType} from '../block-type'
 
 @ObjectType()
 export class FacebookPostBlock {
+  @Field()
+  type: BlockType = BlockType.FacebookPost
+
   @Field(() => String, {nullable: true})
   blockStyle?: string
 
@@ -13,4 +17,4 @@ export class FacebookPostBlock {
 }
 
 @InputType()
-export class FacebookPostBlockInput extends FacebookPostBlock {}
+export class FacebookPostBlockInput extends OmitType(FacebookPostBlock, [], InputType) {}

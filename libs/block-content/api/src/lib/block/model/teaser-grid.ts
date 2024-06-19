@@ -1,17 +1,17 @@
 import {Field, InputType, ObjectType, OmitType} from '@nestjs/graphql'
-import {Teaser, TeaserInput} from './teaser'
-import {BlockType} from '../block.model'
+import {Teaser, TeaserInput, TeaserUnion} from './teaser'
+import {BlockType} from '../block-type'
 
 @ObjectType()
 export class TeaserGridBlock {
   @Field()
-  type = BlockType.TeaserGrid
+  type: BlockType = BlockType.TeaserGrid
 
   @Field(() => String, {nullable: true})
   blockStyle?: string
 
-  @Field(() => [Teaser])
-  teasers!: (typeof Teaser)[]
+  @Field(() => [TeaserUnion])
+  teasers!: Teaser[]
 
   @Field(() => Number)
   numColumns!: number
