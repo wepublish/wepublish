@@ -1368,6 +1368,7 @@ export type Tag = {
   main: Scalars['Boolean'];
   tag?: Maybe<Scalars['String']>;
   type?: Maybe<TagType>;
+  url: Scalars['String'];
 };
 
 export type TagConnection = {

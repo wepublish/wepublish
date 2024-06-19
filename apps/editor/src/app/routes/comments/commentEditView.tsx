@@ -287,6 +287,7 @@ const CommentEditView = memo(() => {
                     <RCol xs={24}>
                       <Form.ControlLabel>{t('commentEditView.tags')}</Form.ControlLabel>
                       <SelectTags
+                        defaultTags={comment?.tags ?? []}
                         selectedTags={commentTags}
                         setSelectedTags={setSelectedTags}
                         tagType={TagType.Comment}

@@ -1,5 +1,11 @@
 import styled from '@emotion/styled'
-import {AuthorRefFragment, CommentItemType, ImageRefFragment, TagType} from '@wepublish/editor/api'
+import {
+  AuthorRefFragment,
+  CommentItemType,
+  ImageRefFragment,
+  Tag,
+  TagType
+} from '@wepublish/editor/api'
 import {slugify} from '@wepublish/utils'
 import {useEffect, useState} from 'react'
 import {Trans, useTranslation} from 'react-i18next'
@@ -102,6 +108,7 @@ export interface ArticleMetadata {
   readonly seoTitle: string
   readonly authors: AuthorRefFragment[]
   readonly tags: string[]
+  readonly defaultTags: Pick<Tag, 'id' | 'tag'>[]
   readonly url: string
   readonly properties: ArticleMetadataProperty[]
   readonly canonicalUrl: string
@@ -144,6 +151,7 @@ function ArticleMetadataPanel({
     seoTitle,
     slug,
     tags,
+    defaultTags,
     authors,
     shared,
     hidden,
@@ -449,6 +457,7 @@ function ArticleMetadataPanel({
             <Group controlId="articleTags">
               <ControlLabel>{t('articleEditor.panels.tags')}</ControlLabel>
               <SelectTags
+                defaultTags={defaultTags}
                 disabled={!isAuthorized}
                 selectedTags={tags}
                 setSelectedTags={tagsValue => onChange?.({...value, tags: tagsValue ?? []})}

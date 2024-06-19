@@ -70,14 +70,16 @@ export const PollBlockResult = ({
   totalVotes,
   highlight
 }: PollBlockResultProps) => {
-  const percentage = (voteCount / totalVotes) * 100
+  const percentage = totalVotes ? (voteCount / totalVotes) * 100 : null
 
   return (
     <PollBlockResultWrapper>
       <PollBlockResultInfo>
         <PollBlockResultName>{answer}</PollBlockResultName>
 
-        <PollBlockResultPercentage>{Math.round(percentage)}%</PollBlockResultPercentage>
+        {percentage && (
+          <PollBlockResultPercentage>{Math.round(percentage)}%</PollBlockResultPercentage>
+        )}
       </PollBlockResultInfo>
 
       <PollBlockVoteBar>

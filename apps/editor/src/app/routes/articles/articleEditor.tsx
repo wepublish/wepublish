@@ -153,6 +153,7 @@ function ArticleEditor() {
     seoTitle: '',
     authors: [],
     tags: [],
+    defaultTags: [],
     url: '',
     properties: [],
     canonicalUrl: '',
@@ -241,6 +242,7 @@ function ArticleEditor() {
         lead: lead ?? '',
         seoTitle: seoTitle ?? '',
         tags: tags.map(({id}) => id),
+        defaultTags: tags,
         url,
         properties: properties.map(property => ({
           key: property.key,
