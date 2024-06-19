@@ -19,7 +19,7 @@ exports[`Teaser Article should render Default 1`] = `
         >
           <img
             alt="An image description"
-            class="css-1yp4o46-ImageWrapper-Teaser e1shv2yg0"
+            class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -87,7 +87,7 @@ exports[`Teaser Article should render WithLightStyle 1`] = `
         >
           <img
             alt="An image description"
-            class="css-1yp4o46-ImageWrapper-Teaser e1shv2yg0"
+            class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -155,7 +155,7 @@ exports[`Teaser Article should render WithoutAuthors 1`] = `
         >
           <img
             alt="An image description"
-            class="css-1yp4o46-ImageWrapper-Teaser e1shv2yg0"
+            class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -218,7 +218,7 @@ exports[`Teaser Article should render WithoutBlockWithLightStyle 1`] = `
         >
           <img
             alt="An image description"
-            class="css-1yp4o46-ImageWrapper-Teaser e1shv2yg0"
+            class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -286,7 +286,7 @@ exports[`Teaser Article should render WithoutDate 1`] = `
         >
           <img
             alt="An image description"
-            class="css-1yp4o46-ImageWrapper-Teaser e1shv2yg0"
+            class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -348,7 +348,7 @@ exports[`Teaser Article should render WithoutImage 1`] = `
         >
           <img
             alt="An image description"
-            class="css-1yp4o46-ImageWrapper-Teaser e1shv2yg0"
+            class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -473,7 +473,7 @@ exports[`Teaser Article should render WithoutLead 1`] = `
         >
           <img
             alt="An image description"
-            class="css-1yp4o46-ImageWrapper-Teaser e1shv2yg0"
+            class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -541,7 +541,7 @@ exports[`Teaser Article should render WithoutPreTitle 1`] = `
         >
           <img
             alt="An image description"
-            class="css-1yp4o46-ImageWrapper-Teaser e1shv2yg0"
+            class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -609,7 +609,7 @@ exports[`Teaser Article should render WithoutTitle 1`] = `
         >
           <img
             alt="An image description"
-            class="css-1yp4o46-ImageWrapper-Teaser e1shv2yg0"
+            class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -677,7 +677,7 @@ exports[`Teaser Custom should render Default 1`] = `
         >
           <img
             alt="An image description"
-            class="css-1yp4o46-ImageWrapper-Teaser e1shv2yg0"
+            class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -733,7 +733,7 @@ exports[`Teaser Custom should render WithLightStyle 1`] = `
         >
           <img
             alt="An image description"
-            class="css-1yp4o46-ImageWrapper-Teaser e1shv2yg0"
+            class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -834,7 +834,7 @@ exports[`Teaser Custom should render WithoutPreTitle 1`] = `
         >
           <img
             alt="An image description"
-            class="css-1yp4o46-ImageWrapper-Teaser e1shv2yg0"
+            class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -884,7 +884,7 @@ exports[`Teaser Custom should render WithoutTitle 1`] = `
         >
           <img
             alt="An image description"
-            class="css-1yp4o46-ImageWrapper-Teaser e1shv2yg0"
+            class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -938,7 +938,7 @@ exports[`Teaser Event should render Default 1`] = `
         >
           <img
             alt="An image description"
-            class="css-1yp4o46-ImageWrapper-Teaser e1shv2yg0"
+            class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1001,7 +1001,7 @@ exports[`Teaser Event should render WithLightStyle 1`] = `
         >
           <img
             alt="An image description"
-            class="css-1yp4o46-ImageWrapper-Teaser e1shv2yg0"
+            class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1064,7 +1064,7 @@ exports[`Teaser Event should render WithoutDescription 1`] = `
         >
           <img
             alt="An image description"
-            class="css-1yp4o46-ImageWrapper-Teaser e1shv2yg0"
+            class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1127,7 +1127,7 @@ exports[`Teaser Event should render WithoutDescriptionWithLightStyle 1`] = `
         >
           <img
             alt="An image description"
-            class="css-1yp4o46-ImageWrapper-Teaser e1shv2yg0"
+            class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1185,7 +1185,7 @@ exports[`Teaser Event should render WithoutImage 1`] = `
         >
           <img
             alt="An image description"
-            class="css-1yp4o46-ImageWrapper-Teaser e1shv2yg0"
+            class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1300,7 +1300,7 @@ exports[`Teaser Event should render WithoutPreTitle 1`] = `
         >
           <img
             alt="An image description"
-            class="css-1yp4o46-ImageWrapper-Teaser e1shv2yg0"
+            class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1357,7 +1357,7 @@ exports[`Teaser Event should render WithoutTitle 1`] = `
         >
           <img
             alt="An image description"
-            class="css-1yp4o46-ImageWrapper-Teaser e1shv2yg0"
+            class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1420,7 +1420,7 @@ exports[`Teaser Page should render Default 1`] = `
         >
           <img
             alt="An image description"
-            class="css-1yp4o46-ImageWrapper-Teaser e1shv2yg0"
+            class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1476,7 +1476,7 @@ exports[`Teaser Page should render WithLightStyle 1`] = `
         >
           <img
             alt="An image description"
-            class="css-1yp4o46-ImageWrapper-Teaser e1shv2yg0"
+            class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1532,7 +1532,7 @@ exports[`Teaser Page should render WithoutBlockWithLightStyle 1`] = `
         >
           <img
             alt="An image description"
-            class="css-1yp4o46-ImageWrapper-Teaser e1shv2yg0"
+            class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1588,7 +1588,7 @@ exports[`Teaser Page should render WithoutImage 1`] = `
         >
           <img
             alt="An image description"
-            class="css-1yp4o46-ImageWrapper-Teaser e1shv2yg0"
+            class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1644,7 +1644,7 @@ exports[`Teaser Page should render WithoutImageWithoutBlock 1`] = `
         >
           <img
             alt="An image description"
-            class="css-1yp4o46-ImageWrapper-Teaser e1shv2yg0"
+            class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1700,7 +1700,7 @@ exports[`Teaser Page should render WithoutLead 1`] = `
         >
           <img
             alt="An image description"
-            class="css-1yp4o46-ImageWrapper-Teaser e1shv2yg0"
+            class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1756,7 +1756,7 @@ exports[`Teaser Page should render WithoutPreTitle 1`] = `
         >
           <img
             alt="An image description"
-            class="css-1yp4o46-ImageWrapper-Teaser e1shv2yg0"
+            class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1806,7 +1806,7 @@ exports[`Teaser Page should render WithoutTitle 1`] = `
         >
           <img
             alt="An image description"
-            class="css-1yp4o46-ImageWrapper-Teaser e1shv2yg0"
+            class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1862,7 +1862,7 @@ exports[`Teaser PeerArticle should render Default 1`] = `
         >
           <img
             alt="An image description"
-            class="css-1yp4o46-ImageWrapper-Teaser e1shv2yg0"
+            class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1930,7 +1930,7 @@ exports[`Teaser PeerArticle should render WithLightStyle 1`] = `
         >
           <img
             alt="An image description"
-            class="css-1yp4o46-ImageWrapper-Teaser e1shv2yg0"
+            class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -1998,7 +1998,7 @@ exports[`Teaser PeerArticle should render WithoutAuthors 1`] = `
         >
           <img
             alt="An image description"
-            class="css-1yp4o46-ImageWrapper-Teaser e1shv2yg0"
+            class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -2061,7 +2061,7 @@ exports[`Teaser PeerArticle should render WithoutBlockWithLightStyle 1`] = `
         >
           <img
             alt="An image description"
-            class="css-1yp4o46-ImageWrapper-Teaser e1shv2yg0"
+            class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -2129,7 +2129,7 @@ exports[`Teaser PeerArticle should render WithoutDate 1`] = `
         >
           <img
             alt="An image description"
-            class="css-1yp4o46-ImageWrapper-Teaser e1shv2yg0"
+            class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -2191,7 +2191,7 @@ exports[`Teaser PeerArticle should render WithoutImage 1`] = `
         >
           <img
             alt="An image description"
-            class="css-1yp4o46-ImageWrapper-Teaser e1shv2yg0"
+            class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -2316,7 +2316,7 @@ exports[`Teaser PeerArticle should render WithoutPreTitle 1`] = `
         >
           <img
             alt="An image description"
-            class="css-1yp4o46-ImageWrapper-Teaser e1shv2yg0"
+            class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -2384,7 +2384,7 @@ exports[`Teaser PeerArticle should render WithoutTitle 1`] = `
         >
           <img
             alt="An image description"
-            class="css-1yp4o46-ImageWrapper-Teaser e1shv2yg0"
+            class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -2452,7 +2452,7 @@ exports[`Teaser should render WithClassName 1`] = `
         >
           <img
             alt="An image description"
-            class="css-1yp4o46-ImageWrapper-Teaser e1shv2yg0"
+            class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
@@ -2508,7 +2508,7 @@ exports[`Teaser should render WithEmotion 1`] = `
         >
           <img
             alt="An image description"
-            class="css-1yp4o46-ImageWrapper-Teaser e1shv2yg0"
+            class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
             loading="lazy"
             srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,

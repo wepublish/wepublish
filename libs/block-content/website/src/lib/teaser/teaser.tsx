@@ -185,14 +185,14 @@ const useImageStyles = () => {
       object-fit: cover;
       grid-column: 1/13;
       transition: transform 0.3s ease-in-out;
-      /* aspect-ratio: 1.8; */
+      aspect-ratio: 1.8;
 
       :where(${TeaserWrapper}:hover &) {
         transform: scale(1.1);
       }
 
       ${theme.breakpoints.up('md')} {
-        /* aspect-ratio: 1; */
+        aspect-ratio: 1;
       }
     `,
     [theme]
