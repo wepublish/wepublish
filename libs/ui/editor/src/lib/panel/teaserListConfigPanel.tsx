@@ -136,6 +136,7 @@ export function TeaserListConfigPanel({value, onClose, onSelect}: TeaserListConf
           <Form.ControlLabel>{t('blocks.teaserList.tagsLabel')}</Form.ControlLabel>
 
           <SelectTags
+            defaultTags={[]}
             name="tags"
             tagType={tagType}
             setSelectedTags={setTagFilter}

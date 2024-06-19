@@ -1,6 +1,6 @@
 /* eslint-disable */
 export default {
-  displayName: 'systemInfo-api',
+  displayName: 'system-info-api',
   preset: '../../../jest.preset.js',
   globals: {},
   testEnvironment: 'node',
@@ -13,6 +13,6 @@ export default {
     ]
   },
   moduleFileExtensions: ['ts', 'js', 'html'],
-  coverageDirectory: '../../../coverage/libs/systemInfo/api',
+  coverageDirectory: '../../../coverage/libs/system-info/api',
   globalSetup: '<rootDir>/setup-database.js'
 }

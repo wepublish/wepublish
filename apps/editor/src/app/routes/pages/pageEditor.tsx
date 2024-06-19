@@ -118,6 +118,7 @@ function PageEditor() {
     title: '',
     description: '',
     tags: [],
+    defaultTags: [],
     url: '',
     properties: [],
     image: undefined,
@@ -191,6 +192,7 @@ function PageEditor() {
         title: title ?? '',
         description: description ?? '',
         tags: tags.map(({id}) => id),
+        defaultTags: tags,
         url,
         properties: properties.map(property => ({
           key: property.key,

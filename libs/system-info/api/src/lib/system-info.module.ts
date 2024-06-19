@@ -1,5 +1,5 @@
 import {Module} from '@nestjs/common'
-import {SystemInfoController} from './systemInfo.controller'
+import {SystemInfoController} from './system-info.controller'
 
 @Module({
   controllers: [SystemInfoController]
