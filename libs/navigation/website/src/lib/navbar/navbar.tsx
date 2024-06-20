@@ -1,9 +1,7 @@
-import {AppBar, TextField, Theme, Toolbar, css, styled, useTheme} from '@mui/material'
+import {AppBar, Theme, Toolbar, css, styled, useTheme} from '@mui/material'
 import {useUser} from '@wepublish/authentication/website'
-import {Button} from '@wepublish/ui'
 import {FullNavigationFragment} from '@wepublish/website/api'
 import {BuilderNavbarProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {useRouter} from 'next/router'
 import {PropsWithChildren, useCallback, useMemo, useState} from 'react'
 import {MdAccountCircle, MdClose, MdMenu, MdOutlinePayments} from 'react-icons/md'
 import {navigationLinkToUrl} from '../link-to-url'
@@ -209,32 +207,6 @@ const useImageStyles = () => {
   )
 }
 
-export const SearchBar = styled('div')`
-  display: flex;
-  padding: ${({theme}) => theme.spacing(2)};
-  flex-wrap: nowrap;
-  align-items: center;
-  justify-self: start;
-  gap: ${({theme}) => theme.spacing(2)};
-  grid-column: 1/5;
-  width: 100%;
-  border-bottom: 1px solid ${({theme}) => theme.palette.divider};
-`
-
-export const SearchInput = styled(TextField)`
-  width: 100%;
-`
-
-export const SearchForm = styled('form')`
-  width: 100%;
-  display: flex;
-  flex-wrap: nowrap;
-`
-
-export const SearchButton = styled(Button)`
-  margin-left: ${({theme}) => theme.spacing(2)};
-`
-
 export function Navbar({
   className,
   children,
@@ -250,10 +222,7 @@ export function Navbar({
 }: BuilderNavbarProps) {
   const {hasUser} = useUser()
   const [isMenuOpen, setMenuOpen] = useState(false)
-  const [rawQuery, setRawQuery] = useState('')
   const toggleMenu = useCallback(() => setMenuOpen(isOpen => !isOpen), [])
-
-  const router = useRouter()
 
   const imageStyles = useImageStyles()
   const appBarStyles = useAppBarStyles(isMenuOpen)
@@ -285,71 +254,69 @@ export function Navbar({
 
   return (
     <NavbarWrapper className={className}>
-      <>
-        <AppBar position="static" elevation={0} color={'transparent'} css={appBarStyles}>
-          <NavbarInnerWrapper>
-            <>
-              <NavbarMain>
-                <NavbarIconButtonWrapper>
-                  <IconButton
-                    size="large"
-                    aria-label="Menu"
-                    onClick={toggleMenu}
-                    css={{color: 'white'}}>
-                    {!isMenuOpen && <MdMenu />}
-                    {isMenuOpen && <MdClose />}
-                  </IconButton>
-                </NavbarIconButtonWrapper>
-              </NavbarMain>
-              {!!headerItems?.links.length && (
-                <NavbarLinks isMenuOpen={isMenuOpen}>
-                  {headerItems.links.map((link, index) => (
-                    <Link key={index} css={navbarLinkStyles} href={navigationLinkToUrl(link)}>
-                      {link.label}
-                    </Link>
-                  ))}
-                </NavbarLinks>
-              )}
-              {!!logo && (
-                <Link href="/" aria-label="Startseite" css={logoLinkStyles}>
-                  <NavbarLogoWrapper>
-                    <Image image={logo} css={imageStyles} loading="eager" fetchPriority="high" />
-                  </NavbarLogoWrapper>
-                </Link>
-              )}
-              <NavbarSpacer />
-              <NavbarActions isMenuOpen={isMenuOpen}>
-                {hasUser && showSubscriptionsUrl ? (
-                  <Link href={subscriptionsUrl} aria-label={hasUser ? 'Profil' : 'Login'}>
-                    <IconButton css={{fontSize: '2em', color: 'black'}}>
-                      <MdOutlinePayments />
-                    </IconButton>
+      <AppBar position="static" elevation={0} color={'transparent'} css={appBarStyles}>
+        <NavbarInnerWrapper>
+          <>
+            <NavbarMain>
+              <NavbarIconButtonWrapper>
+                <IconButton
+                  size="large"
+                  aria-label="Menu"
+                  onClick={toggleMenu}
+                  css={{color: 'white'}}>
+                  {!isMenuOpen && <MdMenu />}
+                  {isMenuOpen && <MdClose />}
+                </IconButton>
+              </NavbarIconButtonWrapper>
+            </NavbarMain>
+            {!!headerItems?.links.length && (
+              <NavbarLinks isMenuOpen={isMenuOpen}>
+                {headerItems.links.map((link, index) => (
+                  <Link key={index} css={navbarLinkStyles} href={navigationLinkToUrl(link)}>
+                    {link.label}
                   </Link>
-                ) : null}
-
-                <Link
-                  href={hasUser ? profileUrl : loginUrl}
-                  aria-label={hasUser ? 'Profil' : 'Login'}>
+                ))}
+              </NavbarLinks>
+            )}
+            {!!logo && (
+              <Link href="/" aria-label="Startseite" css={logoLinkStyles}>
+                <NavbarLogoWrapper>
+                  <Image image={logo} css={imageStyles} loading="eager" fetchPriority="high" />
+                </NavbarLogoWrapper>
+              </Link>
+            )}
+            <NavbarSpacer />
+            <NavbarActions isMenuOpen={isMenuOpen}>
+              {hasUser && showSubscriptionsUrl ? (
+                <Link href={subscriptionsUrl} aria-label={hasUser ? 'Profil' : 'Login'}>
                   <IconButton css={{fontSize: '2em', color: 'black'}}>
-                    <MdAccountCircle />
+                    <MdOutlinePayments />
                   </IconButton>
                 </Link>
-              </NavbarActions>
-            </>
-          </NavbarInnerWrapper>
-        </AppBar>
+              ) : null}
 
-        {isMenuOpen && Boolean(mainItems || categories?.length) && (
-          <NavPaper
-            profileUrl={profileUrl}
-            loginUrl={loginUrl}
-            main={mainItems}
-            categories={categories}
-            closeMenu={toggleMenu}>
-            {children}
-          </NavPaper>
-        )}
-      </>
+              <Link
+                href={hasUser ? profileUrl : loginUrl}
+                aria-label={hasUser ? 'Profil' : 'Login'}>
+                <IconButton css={{fontSize: '2em', color: 'black'}}>
+                  <MdAccountCircle />
+                </IconButton>
+              </Link>
+            </NavbarActions>
+          </>
+        </NavbarInnerWrapper>
+      </AppBar>
+
+      {isMenuOpen && Boolean(mainItems || categories?.length) && (
+        <NavPaper
+          profileUrl={profileUrl}
+          loginUrl={loginUrl}
+          main={mainItems}
+          categories={categories}
+          closeMenu={toggleMenu}>
+          {children}
+        </NavPaper>
+      )}
     </NavbarWrapper>
   )
 }

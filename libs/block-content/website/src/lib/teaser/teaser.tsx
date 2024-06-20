@@ -321,14 +321,17 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
         <TeaserImageWrapper>
           {image && <Image image={image} css={imageStyles} />}
         </TeaserImageWrapper>
+
         {preTitle && (
           <TeaserPreTitleWrapper>
             <PreTitle>{preTitle}</PreTitle>
           </TeaserPreTitleWrapper>
         )}
         {!preTitle && <TeaserPreTitleNoContent />}
+
         <H4 component={TeaserTitle}>{title}</H4>
         {lead && <Paragraph component={TeaserLead}>{lead}</Paragraph>}
+
         <TeaserMetadata>
           {authors && authors?.length ? <Authors>Von {authors?.join(', ')} </Authors> : null}
 
