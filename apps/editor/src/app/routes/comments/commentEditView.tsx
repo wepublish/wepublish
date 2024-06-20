@@ -23,6 +23,7 @@ import {useTranslation} from 'react-i18next'
 import {MdVisibility} from 'react-icons/md'
 import {useNavigate, useParams} from 'react-router-dom'
 import {
+  Checkbox,
   Col as RCol,
   FlexboxGrid,
   Form,
@@ -174,6 +175,8 @@ const CommentEditView = memo(() => {
     {label: '5', value: 5}
   ]
 
+  console.log('comment.user?.id', comment?.user?.id)
+
   async function updateComment() {
     if (!comment) {
       return
@@ -188,6 +191,7 @@ const CommentEditView = memo(() => {
         guestUserImageID: comment.guestUserImage?.id || null,
         source: comment.source,
         tagIds: commentTags,
+        featured: comment.featured,
         ratingOverrides: comment.overriddenRatings?.map(stripTypename)
       }
     })
@@ -240,7 +244,21 @@ const CommentEditView = memo(() => {
               <ColNoMargin xs={24}>
                 <RPanel bordered header={t('commentEditView.actions')}>
                   <FlexboxGrid>
-                    <FlexboxGrid.Item colspan={24} style={{textAlign: 'end'}}>
+                    <FlexboxGrid.Item colspan={24} style={{textAlign: 'start'}}>
+                      {comment && (
+                        <Checkbox
+                          checked={!!comment?.featured}
+                          onChange={(value, checked) => {
+                            setComment({
+                              ...comment,
+                              featured: checked
+                            })
+                          }}>
+                          Featured
+                        </Checkbox>
+                      )}
+                    </FlexboxGrid.Item>
+                    <FlexboxGrid.Item colspan={24} style={{textAlign: 'start'}}>
                       <IconButton
                         appearance="ghost"
                         color="violet"

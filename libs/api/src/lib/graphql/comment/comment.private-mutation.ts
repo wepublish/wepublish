@@ -53,6 +53,7 @@ export const updateComment = async (
   userID: string,
   guestUsername: string,
   guestUserImageID: string,
+  featured: boolean,
   source: string,
   tagIds: string[] | undefined,
   ratingOverrides: CommentRatingOverrideInput[] | undefined,
@@ -90,6 +91,7 @@ export const updateComment = async (
       userID,
       guestUsername,
       guestUserImageID,
+      featured,
       source,
       revisions: revision
         ? {

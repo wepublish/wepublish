@@ -134,9 +134,7 @@ export const getPublicCommentsForItemById = async (
     }
   }
 
-  const topComments = sortedComments.filter(comment =>
-    comment.tags.some(({tag}) => tag.tag === 'Top Kommentar')
-  )
+  const topComments = sortedComments.filter(comment => comment.featured === true)
   const otherComments = sortedComments.filter(
     comment => !comment.tags.some(({tag}) => tag.tag === 'Top Kommentar')
   )
