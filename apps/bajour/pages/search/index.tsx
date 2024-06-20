@@ -10,7 +10,8 @@ export const SearchInput = styled(TextField)`
 `
 
 export const SearchForm = styled('form')`
-  width: 100%;
+  width: 90%;
+  margin: 0 auto;
   display: flex;
   flex-wrap: nowrap;
 `
@@ -21,6 +22,7 @@ export const SearchButton = styled(Button)`
 
 export const NavbarPhraseResultsWrapper = styled('div')`
   padding: ${({theme}) => theme.spacing(2.5)};
+  margin-top: ${({theme}) => theme.spacing(6)};
   background-color: ${({theme}) => theme.palette.common.white};
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};
@@ -35,6 +37,16 @@ export const NavbarPhraseResultsWrapper = styled('div')`
       padding: ${theme.spacing(2.5)} calc(100% / 6) calc(100% / 12);
     }
   `}
+`
+
+export const SearchPageWrapper = styled('div')`
+  padding-top: ${({theme}) => theme.spacing(6)};
+`
+
+export const SearchStatus = styled('div')`
+  margin: 0 auto;
+  padding: ${({theme}) => theme.spacing(4)};
+  text-align: center;
 `
 
 const ITEMS_PER_PAGE = 5
@@ -64,7 +76,8 @@ const SearchPage: React.FC = () => {
     }
   }, [query.q])
 
-  const handleSearch = () => {
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault()
     router.push({
       pathname: '/search',
       query: {q: rawQuery}
@@ -77,8 +90,6 @@ const SearchPage: React.FC = () => {
     setPage(value)
   }
 
-  console.log('phraseQuery', phraseQuery)
-  console.log('phraseData', phraseData)
   const articlesNodes =
     (phraseData?.phrase && phraseData.phrase.articles && phraseData.phrase.articles.nodes) || []
   const pagesNodes =
@@ -100,23 +111,17 @@ const SearchPage: React.FC = () => {
 
   const phraseResultTeasers = [...modifiedArticlesNodes, ...modifiedPagesNodes]
 
-  console.log('phraseResultTeasers', phraseResultTeasers)
-
   return (
-    <div>
+    <SearchPageWrapper>
       <SearchForm onSubmit={handleSearch}>
-        <SearchInput
-          type="text"
-          label="Type to search"
-          onChange={e => setRawQuery(e.target.value)}
-        />
-        <SearchButton onClick={handleSearch} aria-label={'Search'}>
-          <MdSearch />
+        <SearchInput type="text" label="Artikelsuche" onChange={e => setRawQuery(e.target.value)} />
+        <SearchButton onClick={handleSearch} aria-label="Artikelsuche">
+          <MdSearch size={28} />
         </SearchButton>
       </SearchForm>
 
-      {loading && <p>Loading...</p>}
-      {error && <p>Error: {error.message}</p>}
+      {loading && <SearchStatus>Loading...</SearchStatus>}
+      {error && <SearchStatus>Error: {error.message}</SearchStatus>}
       {phraseResultTeasers.length > 0 && (
         <>
           <NavbarPhraseResults teasers={phraseResultTeasers} />
@@ -130,15 +135,11 @@ const SearchPage: React.FC = () => {
           )}
         </>
       )}
-    </div>
+    </SearchPageWrapper>
   )
 }
 
-export const NavbarPhraseResults = ({
-  teasers
-}: {
-  teasers: ApiV1.ArticleTeaser[] | ApiV1.PageTeaser[]
-}) => {
+export const NavbarPhraseResults = ({teasers}: {teasers: any[]}) => {
   return (
     <NavbarPhraseResultsWrapper>
       {teasers.map((teaser, index) => {

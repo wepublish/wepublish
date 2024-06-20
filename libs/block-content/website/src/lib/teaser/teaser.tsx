@@ -315,17 +315,12 @@ export const Teaser = ({teaser, alignment, className}: BuilderTeaserProps) => {
 
   const imageStyles = useImageStyles()
 
-  // console.log('teaser', teaser)
-  console.log('title', title)
-  console.log('authors', authors)
-
   return (
     <TeaserWrapper {...alignment}>
       <TeaserContent href={href} className={className}>
         <TeaserImageWrapper>
           {image && <Image image={image} css={imageStyles} />}
         </TeaserImageWrapper>
-        dujpa
         {preTitle && (
           <TeaserPreTitleWrapper>
             <PreTitle>{preTitle}</PreTitle>

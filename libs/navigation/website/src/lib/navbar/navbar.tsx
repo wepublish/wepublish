@@ -1,11 +1,11 @@
-import {AppBar, Theme, Toolbar, css, styled, useTheme, TextField} from '@mui/material'
+import {AppBar, TextField, Theme, Toolbar, css, styled, useTheme} from '@mui/material'
 import {useUser} from '@wepublish/authentication/website'
-import {useRouter} from 'next/router'
 import {Button} from '@wepublish/ui'
-import {FullNavigationFragment, usePhraseQuery} from '@wepublish/website/api'
+import {FullNavigationFragment} from '@wepublish/website/api'
 import {BuilderNavbarProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {PropsWithChildren, useCallback, useEffect, useMemo, useState} from 'react'
-import {MdAccountCircle, MdClose, MdMenu, MdOutlinePayments, MdSearch} from 'react-icons/md'
+import {useRouter} from 'next/router'
+import {PropsWithChildren, useCallback, useMemo, useState} from 'react'
+import {MdAccountCircle, MdClose, MdMenu, MdOutlinePayments} from 'react-icons/md'
 import {navigationLinkToUrl} from '../link-to-url'
 
 declare module 'react' {
@@ -319,18 +319,6 @@ export function Navbar({
               )}
               <NavbarSpacer />
               <NavbarActions isMenuOpen={isMenuOpen}>
-                <Button
-                  onClick={() => {
-                    router.push({
-                      pathname: '/search'
-                    })
-                  }}
-                  aria-label={'Search'}>
-                  <IconButton css={{fontSize: '2em', color: 'black'}}>
-                    <MdSearch />
-                  </IconButton>
-                </Button>
-
                 {hasUser && showSubscriptionsUrl ? (
                   <Link href={subscriptionsUrl} aria-label={hasUser ? 'Profil' : 'Login'}>
                     <IconButton css={{fontSize: '2em', color: 'black'}}>
