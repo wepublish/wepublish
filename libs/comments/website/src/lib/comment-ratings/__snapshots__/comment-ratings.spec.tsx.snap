@@ -17,7 +17,7 @@ exports[`CommentRatings should render AnonymousUserRatings 1`] = `
         class="css-1mr5b7g-RatingWrapper-RatingWrapper-RatingWrapper-RatingWrapper e15hksji0"
       >
         <span
-          class="MuiRating-root MuiRating-sizeMedium css-1qqgbpl-MuiRating-root"
+          class="MuiRating-root MuiRating-sizeMedium css-iljtu2-MuiRating-root"
         >
           <label
             class="css-dqr9h-MuiRating-label"
@@ -261,7 +261,7 @@ exports[`CommentRatings should render AnonymousUserRatings 1`] = `
         class="css-1mr5b7g-RatingWrapper-RatingWrapper-RatingWrapper-RatingWrapper e15hksji0"
       >
         <span
-          class="MuiRating-root MuiRating-sizeMedium css-1qqgbpl-MuiRating-root"
+          class="MuiRating-root MuiRating-sizeMedium css-iljtu2-MuiRating-root"
         >
           <label
             class="css-dqr9h-MuiRating-label"
@@ -505,7 +505,7 @@ exports[`CommentRatings should render AnonymousUserRatings 1`] = `
         class="css-1mr5b7g-RatingWrapper-RatingWrapper-RatingWrapper-RatingWrapper e15hksji0"
       >
         <span
-          class="MuiRating-root MuiRating-sizeMedium css-1qqgbpl-MuiRating-root"
+          class="MuiRating-root MuiRating-sizeMedium css-iljtu2-MuiRating-root"
         >
           <label
             class="css-dqr9h-MuiRating-label"
@@ -758,7 +758,7 @@ exports[`CommentRatings should render Default 1`] = `
         class="css-1mr5b7g-RatingWrapper-RatingWrapper-RatingWrapper-RatingWrapper e15hksji0"
       >
         <span
-          class="MuiRating-root MuiRating-sizeMedium css-1qqgbpl-MuiRating-root"
+          class="MuiRating-root MuiRating-sizeMedium css-iljtu2-MuiRating-root"
         >
           <label
             class="css-dqr9h-MuiRating-label"
@@ -982,7 +982,7 @@ exports[`CommentRatings should render Default 1`] = `
         class="css-1mr5b7g-RatingWrapper-RatingWrapper-RatingWrapper-RatingWrapper e15hksji0"
       >
         <span
-          class="MuiRating-root MuiRating-sizeMedium css-1qqgbpl-MuiRating-root"
+          class="MuiRating-root MuiRating-sizeMedium css-iljtu2-MuiRating-root"
         >
           <label
             class="css-dqr9h-MuiRating-label"
@@ -1206,7 +1206,7 @@ exports[`CommentRatings should render Default 1`] = `
         class="css-1mr5b7g-RatingWrapper-RatingWrapper-RatingWrapper-RatingWrapper e15hksji0"
       >
         <span
-          class="MuiRating-root MuiRating-sizeMedium css-1qqgbpl-MuiRating-root"
+          class="MuiRating-root MuiRating-sizeMedium css-iljtu2-MuiRating-root"
         >
           <label
             class="css-dqr9h-MuiRating-label"
@@ -1447,7 +1447,7 @@ exports[`CommentRatings should render OverridenRatings 1`] = `
         class="css-1mr5b7g-RatingWrapper-RatingWrapper-RatingWrapper-RatingWrapper e15hksji0"
       >
         <span
-          class="MuiRating-root MuiRating-sizeMedium css-1qqgbpl-MuiRating-root"
+          class="MuiRating-root MuiRating-sizeMedium css-iljtu2-MuiRating-root"
         >
           <label
             class="css-dqr9h-MuiRating-label"
@@ -1671,7 +1671,7 @@ exports[`CommentRatings should render OverridenRatings 1`] = `
         class="css-1mr5b7g-RatingWrapper-RatingWrapper-RatingWrapper-RatingWrapper e15hksji0"
       >
         <span
-          class="MuiRating-root MuiRating-sizeMedium css-1qqgbpl-MuiRating-root"
+          class="MuiRating-root MuiRating-sizeMedium css-iljtu2-MuiRating-root"
         >
           <label
             class="css-dqr9h-MuiRating-label"
@@ -1895,7 +1895,7 @@ exports[`CommentRatings should render OverridenRatings 1`] = `
         class="css-1mr5b7g-RatingWrapper-RatingWrapper-RatingWrapper-RatingWrapper e15hksji0"
       >
         <span
-          class="MuiRating-root MuiRating-sizeMedium css-1qqgbpl-MuiRating-root"
+          class="MuiRating-root MuiRating-sizeMedium css-iljtu2-MuiRating-root"
         >
           <label
             class="css-dqr9h-MuiRating-label"
@@ -2295,7 +2295,7 @@ exports[`CommentRatings should render ReadOnly 1`] = `
       >
         <span
           aria-label="5 Stars"
-          class="MuiRating-root MuiRating-sizeMedium Mui-readOnly MuiRating-readOnly css-15befwp-MuiRating-root"
+          class="MuiRating-root MuiRating-sizeMedium Mui-readOnly MuiRating-readOnly css-ryrseu-MuiRating-root"
           role="img"
         >
           <span>
@@ -2429,7 +2429,7 @@ exports[`CommentRatings should render ReadOnly 1`] = `
       >
         <span
           aria-label="3 Stars"
-          class="MuiRating-root MuiRating-sizeMedium Mui-readOnly MuiRating-readOnly css-15befwp-MuiRating-root"
+          class="MuiRating-root MuiRating-sizeMedium Mui-readOnly MuiRating-readOnly css-ryrseu-MuiRating-root"
           role="img"
         >
           <span>
@@ -2563,7 +2563,7 @@ exports[`CommentRatings should render ReadOnly 1`] = `
       >
         <span
           aria-label="2 Stars"
-          class="MuiRating-root MuiRating-sizeMedium Mui-readOnly MuiRating-readOnly css-15befwp-MuiRating-root"
+          class="MuiRating-root MuiRating-sizeMedium Mui-readOnly MuiRating-readOnly css-ryrseu-MuiRating-root"
           role="img"
         >
           <span>
@@ -2700,7 +2700,7 @@ exports[`CommentRatings should render Single 1`] = `
         class="css-1mr5b7g-RatingWrapper-RatingWrapper-RatingWrapper-RatingWrapper e15hksji0"
       >
         <span
-          class="MuiRating-root MuiRating-sizeMedium css-1qqgbpl-MuiRating-root"
+          class="MuiRating-root MuiRating-sizeMedium css-iljtu2-MuiRating-root"
         >
           <label
             class="css-dqr9h-MuiRating-label"
@@ -2933,7 +2933,7 @@ exports[`CommentRatings should render UserRatings 1`] = `
         class="css-1mr5b7g-RatingWrapper-RatingWrapper-RatingWrapper-RatingWrapper e15hksji0"
       >
         <span
-          class="MuiRating-root MuiRating-sizeMedium css-1qqgbpl-MuiRating-root"
+          class="MuiRating-root MuiRating-sizeMedium css-iljtu2-MuiRating-root"
         >
           <label
             class="css-dqr9h-MuiRating-label"
@@ -3177,7 +3177,7 @@ exports[`CommentRatings should render UserRatings 1`] = `
         class="css-1mr5b7g-RatingWrapper-RatingWrapper-RatingWrapper-RatingWrapper e15hksji0"
       >
         <span
-          class="MuiRating-root MuiRating-sizeMedium css-1qqgbpl-MuiRating-root"
+          class="MuiRating-root MuiRating-sizeMedium css-iljtu2-MuiRating-root"
         >
           <label
             class="css-dqr9h-MuiRating-label"
@@ -3421,7 +3421,7 @@ exports[`CommentRatings should render UserRatings 1`] = `
         class="css-1mr5b7g-RatingWrapper-RatingWrapper-RatingWrapper-RatingWrapper e15hksji0"
       >
         <span
-          class="MuiRating-root MuiRating-sizeMedium css-1qqgbpl-MuiRating-root"
+          class="MuiRating-root MuiRating-sizeMedium css-iljtu2-MuiRating-root"
         >
           <label
             class="css-dqr9h-MuiRating-label"
@@ -3821,7 +3821,7 @@ exports[`CommentRatings should render WithRateError 1`] = `
 +       </div>
 +     </div>
 +     <div
-+       class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-colorError MuiAlert-standardError MuiAlert-standard css-1iznk5b-MuiPaper-root-MuiAlert-root"
++       class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-standardError MuiAlert-standard css-1f6gfio-MuiPaper-root-MuiAlert-root"
 +       role="alert"
 +     >
 +       <div
