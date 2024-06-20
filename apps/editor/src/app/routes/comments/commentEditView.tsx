@@ -175,8 +175,6 @@ const CommentEditView = memo(() => {
     {label: '5', value: 5}
   ]
 
-  console.log('comment.user?.id', comment?.user?.id)
-
   async function updateComment() {
     if (!comment) {
       return
@@ -254,7 +252,7 @@ const CommentEditView = memo(() => {
                               featured: checked
                             })
                           }}>
-                          Featured
+                          {t('commentEditView.featured')}
                         </Checkbox>
                       )}
                     </FlexboxGrid.Item>

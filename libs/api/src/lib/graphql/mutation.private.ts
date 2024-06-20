@@ -917,8 +917,8 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         userID: {type: GraphQLID},
         guestUsername: {type: GraphQLString},
         guestUserImageID: {type: GraphQLID},
-        source: {type: GraphQLString},
         featured: {type: GraphQLBoolean},
+        source: {type: GraphQLString},
         tagIds: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
         ratingOverrides: {
           type: new GraphQLList(new GraphQLNonNull(GraphQLCommentRatingOverrideUpdateInput))
