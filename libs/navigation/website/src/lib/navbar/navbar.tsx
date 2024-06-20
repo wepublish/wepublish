@@ -256,54 +256,54 @@ export function Navbar({
     <NavbarWrapper className={className}>
       <AppBar position="static" elevation={0} color={'transparent'} css={appBarStyles}>
         <NavbarInnerWrapper>
-          <>
-            <NavbarMain>
-              <NavbarIconButtonWrapper>
-                <IconButton
-                  size="large"
-                  aria-label="Menu"
-                  onClick={toggleMenu}
-                  css={{color: 'white'}}>
-                  {!isMenuOpen && <MdMenu />}
-                  {isMenuOpen && <MdClose />}
-                </IconButton>
-              </NavbarIconButtonWrapper>
-            </NavbarMain>
-            {!!headerItems?.links.length && (
-              <NavbarLinks isMenuOpen={isMenuOpen}>
-                {headerItems.links.map((link, index) => (
-                  <Link key={index} css={navbarLinkStyles} href={navigationLinkToUrl(link)}>
-                    {link.label}
-                  </Link>
-                ))}
-              </NavbarLinks>
-            )}
-            {!!logo && (
-              <Link href="/" aria-label="Startseite" css={logoLinkStyles}>
-                <NavbarLogoWrapper>
-                  <Image image={logo} css={imageStyles} loading="eager" fetchPriority="high" />
-                </NavbarLogoWrapper>
-              </Link>
-            )}
-            <NavbarSpacer />
-            <NavbarActions isMenuOpen={isMenuOpen}>
-              {hasUser && showSubscriptionsUrl ? (
-                <Link href={subscriptionsUrl} aria-label={hasUser ? 'Profil' : 'Login'}>
-                  <IconButton css={{fontSize: '2em', color: 'black'}}>
-                    <MdOutlinePayments />
-                  </IconButton>
-                </Link>
-              ) : null}
+          <NavbarMain>
+            <NavbarIconButtonWrapper>
+              <IconButton
+                size="large"
+                aria-label="Menu"
+                onClick={toggleMenu}
+                css={{color: 'white'}}>
+                {!isMenuOpen && <MdMenu />}
+                {isMenuOpen && <MdClose />}
+              </IconButton>
+            </NavbarIconButtonWrapper>
+          </NavbarMain>
 
-              <Link
-                href={hasUser ? profileUrl : loginUrl}
-                aria-label={hasUser ? 'Profil' : 'Login'}>
+          {!!headerItems?.links.length && (
+            <NavbarLinks isMenuOpen={isMenuOpen}>
+              {headerItems.links.map((link, index) => (
+                <Link key={index} css={navbarLinkStyles} href={navigationLinkToUrl(link)}>
+                  {link.label}
+                </Link>
+              ))}
+            </NavbarLinks>
+          )}
+
+          {!!logo && (
+            <Link href="/" aria-label="Startseite" css={logoLinkStyles}>
+              <NavbarLogoWrapper>
+                <Image image={logo} css={imageStyles} loading="eager" fetchPriority="high" />
+              </NavbarLogoWrapper>
+            </Link>
+          )}
+
+          <NavbarSpacer />
+
+          <NavbarActions isMenuOpen={isMenuOpen}>
+            {hasUser && showSubscriptionsUrl ? (
+              <Link href={subscriptionsUrl} aria-label={hasUser ? 'Profil' : 'Login'}>
                 <IconButton css={{fontSize: '2em', color: 'black'}}>
-                  <MdAccountCircle />
+                  <MdOutlinePayments />
                 </IconButton>
               </Link>
-            </NavbarActions>
-          </>
+            ) : null}
+
+            <Link href={hasUser ? profileUrl : loginUrl} aria-label={hasUser ? 'Profil' : 'Login'}>
+              <IconButton css={{fontSize: '2em', color: 'black'}}>
+                <MdAccountCircle />
+              </IconButton>
+            </Link>
+          </NavbarActions>
         </NavbarInnerWrapper>
       </AppBar>
 
