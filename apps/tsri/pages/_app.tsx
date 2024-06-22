@@ -1,4 +1,5 @@
 import {Container, css, CssBaseline, NoSsr, styled, ThemeProvider} from '@mui/material'
+import {GoogleAnalytics} from '@next/third-parties/google'
 import {IconButton} from '@wepublish/ui'
 import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 import {
@@ -23,13 +24,12 @@ import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {TsriBlockRenderer} from '../src/components/block-renderer/block-renderer'
+import {Paywall} from '../src/components/paywall'
 import {TsriBreakBlock} from '../src/components/tsri-break-block'
 import {TsriNavbar} from '../src/components/tsri-navbar'
 import {TsriTeaser} from '../src/components/tsri-teaser'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
-import {Paywall} from '../src/components/paywall'
-import {GoogleAnalytics} from '@next/third-parties/google'
 
 setDefaultOptions({
   locale: de
@@ -184,7 +184,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
 
             {publicRuntimeConfig.env.SPARKLOOP_ID && (
               <Script
-                src={`https://js.sparkloop.app/team_${publicRuntimeConfig.env.SPARKLOOP_ID}.js`}
+                src={`https://script.sparkloop.app/team_${publicRuntimeConfig.env.SPARKLOOP_ID}.js`}
                 strategy="lazyOnload"
                 data-sparkloop
               />

@@ -74,6 +74,10 @@ exports[`Navbar should render Default 1`] = `
               alt="banff2"
               class="css-gp4aqo-ImageWrapper-Navbar e1shv2yg0"
               loading="eager"
+              sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
               srcset="https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 800w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 500w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 300w,
@@ -86,10 +90,9 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
           class="css-cl7riy-NavbarSpacer ei6evl29"
         />
         <div
-          class="css-1w9evey-NavbarActions ei6evl212"
+          class="css-100bt78-NavbarActions ei6evl212"
         >
           <a
-            aria-label="Login"
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
             href="/login"
           >
@@ -99,6 +102,7 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
               type="button"
             >
               <svg
+                aria-label="Login"
                 fill="currentColor"
                 height="1em"
                 stroke="currentColor"
@@ -201,6 +205,10 @@ exports[`Navbar should render WithChildren 1`] = `
               alt="banff2"
               class="css-gp4aqo-ImageWrapper-Navbar e1shv2yg0"
               loading="eager"
+              sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
               srcset="https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 800w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 500w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 300w,
@@ -213,10 +221,9 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
           class="css-cl7riy-NavbarSpacer ei6evl29"
         />
         <div
-          class="css-1w9evey-NavbarActions ei6evl212"
+          class="css-100bt78-NavbarActions ei6evl212"
         >
           <a
-            aria-label="Login"
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
             href="/login"
           >
@@ -226,6 +233,7 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
               type="button"
             >
               <svg
+                aria-label="Login"
                 fill="currentColor"
                 height="1em"
                 stroke="currentColor"
@@ -328,6 +336,10 @@ exports[`Navbar should render WithClassName 1`] = `
               alt="banff2"
               class="css-gp4aqo-ImageWrapper-Navbar e1shv2yg0"
               loading="eager"
+              sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
               srcset="https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 800w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 500w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 300w,
@@ -340,10 +352,9 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
           class="css-cl7riy-NavbarSpacer ei6evl29"
         />
         <div
-          class="css-1w9evey-NavbarActions ei6evl212"
+          class="css-100bt78-NavbarActions ei6evl212"
         >
           <a
-            aria-label="Login"
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
             href="/login"
           >
@@ -353,6 +364,7 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
               type="button"
             >
               <svg
+                aria-label="Login"
                 fill="currentColor"
                 height="1em"
                 stroke="currentColor"
@@ -455,6 +467,10 @@ exports[`Navbar should render WithEmotion 1`] = `
               alt="banff2"
               class="css-gp4aqo-ImageWrapper-Navbar e1shv2yg0"
               loading="eager"
+              sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
               srcset="https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 800w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 500w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 300w,
@@ -467,10 +483,9 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
           class="css-cl7riy-NavbarSpacer ei6evl29"
         />
         <div
-          class="css-1w9evey-NavbarActions ei6evl212"
+          class="css-100bt78-NavbarActions ei6evl212"
         >
           <a
-            aria-label="Login"
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
             href="/login"
           >
@@ -480,6 +495,7 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
               type="button"
             >
               <svg
+                aria-label="Login"
                 fill="currentColor"
                 height="1em"
                 stroke="currentColor"
@@ -566,6 +582,10 @@ exports[`Navbar should render WithError 1`] = `
               alt="banff2"
               class="css-gp4aqo-ImageWrapper-Navbar e1shv2yg0"
               loading="eager"
+              sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
               srcset="https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 800w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 500w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 300w,
@@ -578,10 +598,9 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
           class="css-cl7riy-NavbarSpacer ei6evl29"
         />
         <div
-          class="css-1w9evey-NavbarActions ei6evl212"
+          class="css-100bt78-NavbarActions ei6evl212"
         >
           <a
-            aria-label="Login"
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
             href="/login"
           >
@@ -591,6 +610,7 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
               type="button"
             >
               <svg
+                aria-label="Login"
                 fill="currentColor"
                 height="1em"
                 stroke="currentColor"
@@ -677,6 +697,10 @@ exports[`Navbar should render WithLoading 1`] = `
               alt="banff2"
               class="css-gp4aqo-ImageWrapper-Navbar e1shv2yg0"
               loading="eager"
+              sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
               srcset="https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 800w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 500w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 300w,
@@ -689,10 +713,9 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
           class="css-cl7riy-NavbarSpacer ei6evl29"
         />
         <div
-          class="css-1w9evey-NavbarActions ei6evl212"
+          class="css-100bt78-NavbarActions ei6evl212"
         >
           <a
-            aria-label="Login"
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
             href="/login"
           >
@@ -702,6 +725,7 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
               type="button"
             >
               <svg
+                aria-label="Login"
                 fill="currentColor"
                 height="1em"
                 stroke="currentColor"
@@ -804,6 +828,10 @@ exports[`Navbar should render WithLoggedIn 1`] = `
               alt="banff2"
               class="css-gp4aqo-ImageWrapper-Navbar e1shv2yg0"
               loading="eager"
+              sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
               srcset="https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 800w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 500w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 300w,
@@ -816,10 +844,9 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
           class="css-cl7riy-NavbarSpacer ei6evl29"
         />
         <div
-          class="css-1w9evey-NavbarActions ei6evl212"
+          class="css-100bt78-NavbarActions ei6evl212"
         >
           <a
-            aria-label="Profil"
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
             href="/profile/subscription"
           >
@@ -829,6 +856,7 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
               type="button"
             >
               <svg
+                aria-label="Subscriptions"
                 fill="currentColor"
                 height="1em"
                 stroke="currentColor"
@@ -851,7 +879,6 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
             </button>
           </a>
           <a
-            aria-label="Profil"
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
             href="/profile"
           >
@@ -861,6 +888,7 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
               type="button"
             >
               <svg
+                aria-label="Profil"
                 fill="currentColor"
                 height="1em"
                 stroke="currentColor"
@@ -947,6 +975,10 @@ exports[`Navbar should render WithoutItems 1`] = `
               alt="banff2"
               class="css-gp4aqo-ImageWrapper-Navbar e1shv2yg0"
               loading="eager"
+              sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
               srcset="https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 800w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 500w,
 https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 300w,
@@ -959,10 +991,9 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
           class="css-cl7riy-NavbarSpacer ei6evl29"
         />
         <div
-          class="css-1w9evey-NavbarActions ei6evl212"
+          class="css-100bt78-NavbarActions ei6evl212"
         >
           <a
-            aria-label="Login"
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
             href="/login"
           >
@@ -972,6 +1003,7 @@ https://wepublish.ch/wp-content/uploads/2020/11/cropped-wepublishlogo-1.png 200w
               type="button"
             >
               <svg
+                aria-label="Login"
                 fill="currentColor"
                 height="1em"
                 stroke="currentColor"
@@ -1066,10 +1098,9 @@ exports[`Navbar should render WithoutLogo 1`] = `
           class="css-cl7riy-NavbarSpacer ei6evl29"
         />
         <div
-          class="css-1w9evey-NavbarActions ei6evl212"
+          class="css-100bt78-NavbarActions ei6evl212"
         >
           <a
-            aria-label="Login"
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
             href="/login"
           >
@@ -1079,6 +1110,7 @@ exports[`Navbar should render WithoutLogo 1`] = `
               type="button"
             >
               <svg
+                aria-label="Login"
                 fill="currentColor"
                 height="1em"
                 stroke="currentColor"

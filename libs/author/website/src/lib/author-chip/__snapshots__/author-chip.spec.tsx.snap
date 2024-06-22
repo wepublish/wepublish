@@ -3,18 +3,22 @@
 exports[`Author Chip should render Default 1`] = `
 <DocumentFragment>
   <div
-    class="css-1fhfas1-AuthorChipWrapper e1jhd13z6"
+    class="css-1fhfas1-AuthorChipWrapper e1jhd13z7"
   >
     <div
-      class="css-1umyun2-AuthorChipAuthorWrapper e1jhd13z4"
+      class="css-1umyun2-AuthorChipAuthorWrapper e1jhd13z5"
     >
       <div
-        class="css-e2hiv1-AuthorChipImageWrapper e1jhd13z2"
+        class="css-1g2350v-AuthorChipImageWrapper e1jhd13z3"
       >
         <img
           alt="DSC07717"
           class="css-1ij2yax-ImageWrapper-AuthorChip e1shv2yg0"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -23,10 +27,10 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-dpf16q-AuthorChipContentWrapper e1jhd13z1"
+        class="css-1bvkrr9-AuthorChipContentWrapper e1jhd13z2"
       >
         <div
-          class="css-1pifcp5-AuthorChipName e1jhd13z0"
+          class="css-1pifcp5-AuthorChipName e1jhd13z1"
         >
           Von 
           <a
@@ -36,13 +40,18 @@ https://unsplash.it/200/200 200w"
             Foobar
           </a>
         </div>
+        <div
+          class="css-1aegevy-AuthorChipJob e1jhd13z0"
+        >
+          Editor
+        </div>
       </div>
     </div>
     <hr
-      class="css-6invwi-AuthorChipDivider e1jhd13z5"
+      class="css-6invwi-AuthorChipDivider e1jhd13z6"
     />
     <div
-      class="css-kzytht-AuthorChipMetaWrapper e1jhd13z3"
+      class="css-kzytht-AuthorChipMetaWrapper e1jhd13z4"
     >
       <aside
         class="css-xraw1t-AuthorLinksWrapper e1qb6xb50"
@@ -120,18 +129,22 @@ https://unsplash.it/200/200 200w"
 exports[`Author Chip should render WithClassName 1`] = `
 <DocumentFragment>
   <div
-    class="extra-classname css-1fhfas1-AuthorChipWrapper e1jhd13z6"
+    class="extra-classname css-1fhfas1-AuthorChipWrapper e1jhd13z7"
   >
     <div
-      class="css-1umyun2-AuthorChipAuthorWrapper e1jhd13z4"
+      class="css-1umyun2-AuthorChipAuthorWrapper e1jhd13z5"
     >
       <div
-        class="css-e2hiv1-AuthorChipImageWrapper e1jhd13z2"
+        class="css-1g2350v-AuthorChipImageWrapper e1jhd13z3"
       >
         <img
           alt="DSC07717"
           class="css-1ij2yax-ImageWrapper-AuthorChip e1shv2yg0"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -140,10 +153,10 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-dpf16q-AuthorChipContentWrapper e1jhd13z1"
+        class="css-1bvkrr9-AuthorChipContentWrapper e1jhd13z2"
       >
         <div
-          class="css-1pifcp5-AuthorChipName e1jhd13z0"
+          class="css-1pifcp5-AuthorChipName e1jhd13z1"
         >
           Von 
           <a
@@ -153,13 +166,18 @@ https://unsplash.it/200/200 200w"
             Foobar
           </a>
         </div>
+        <div
+          class="css-1aegevy-AuthorChipJob e1jhd13z0"
+        >
+          Editor
+        </div>
       </div>
     </div>
     <hr
-      class="css-6invwi-AuthorChipDivider e1jhd13z5"
+      class="css-6invwi-AuthorChipDivider e1jhd13z6"
     />
     <div
-      class="css-kzytht-AuthorChipMetaWrapper e1jhd13z3"
+      class="css-kzytht-AuthorChipMetaWrapper e1jhd13z4"
     >
       <aside
         class="css-xraw1t-AuthorLinksWrapper e1qb6xb50"
@@ -237,18 +255,22 @@ https://unsplash.it/200/200 200w"
 exports[`Author Chip should render WithEmotion 1`] = `
 <DocumentFragment>
   <div
-    class="css-1fhfas1-AuthorChipWrapper e1jhd13z6"
+    class="css-1fhfas1-AuthorChipWrapper e1jhd13z7"
   >
     <div
-      class="css-1umyun2-AuthorChipAuthorWrapper e1jhd13z4"
+      class="css-1umyun2-AuthorChipAuthorWrapper e1jhd13z5"
     >
       <div
-        class="css-e2hiv1-AuthorChipImageWrapper e1jhd13z2"
+        class="css-1g2350v-AuthorChipImageWrapper e1jhd13z3"
       >
         <img
           alt="DSC07717"
           class="css-1ij2yax-ImageWrapper-AuthorChip e1shv2yg0"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -257,10 +279,10 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-dpf16q-AuthorChipContentWrapper e1jhd13z1"
+        class="css-1bvkrr9-AuthorChipContentWrapper e1jhd13z2"
       >
         <div
-          class="css-1pifcp5-AuthorChipName e1jhd13z0"
+          class="css-1pifcp5-AuthorChipName e1jhd13z1"
         >
           Von 
           <a
@@ -270,13 +292,18 @@ https://unsplash.it/200/200 200w"
             Foobar
           </a>
         </div>
+        <div
+          class="css-1aegevy-AuthorChipJob e1jhd13z0"
+        >
+          Editor
+        </div>
       </div>
     </div>
     <hr
-      class="css-6invwi-AuthorChipDivider e1jhd13z5"
+      class="css-6invwi-AuthorChipDivider e1jhd13z6"
     />
     <div
-      class="css-kzytht-AuthorChipMetaWrapper e1jhd13z3"
+      class="css-kzytht-AuthorChipMetaWrapper e1jhd13z4"
     >
       <aside
         class="css-xraw1t-AuthorLinksWrapper e1qb6xb50"
@@ -354,16 +381,16 @@ https://unsplash.it/200/200 200w"
 exports[`Author Chip should render WithoutImage 1`] = `
 <DocumentFragment>
   <div
-    class="css-1fhfas1-AuthorChipWrapper e1jhd13z6"
+    class="css-1fhfas1-AuthorChipWrapper e1jhd13z7"
   >
     <div
-      class="css-1umyun2-AuthorChipAuthorWrapper e1jhd13z4"
+      class="css-1umyun2-AuthorChipAuthorWrapper e1jhd13z5"
     >
       <div
-        class="css-dpf16q-AuthorChipContentWrapper e1jhd13z1"
+        class="css-1bvkrr9-AuthorChipContentWrapper e1jhd13z2"
       >
         <div
-          class="css-1pifcp5-AuthorChipName e1jhd13z0"
+          class="css-1pifcp5-AuthorChipName e1jhd13z1"
         >
           Von 
           <a
@@ -373,13 +400,18 @@ exports[`Author Chip should render WithoutImage 1`] = `
             Foobar
           </a>
         </div>
+        <div
+          class="css-1aegevy-AuthorChipJob e1jhd13z0"
+        >
+          Editor
+        </div>
       </div>
     </div>
     <hr
-      class="css-6invwi-AuthorChipDivider e1jhd13z5"
+      class="css-6invwi-AuthorChipDivider e1jhd13z6"
     />
     <div
-      class="css-kzytht-AuthorChipMetaWrapper e1jhd13z3"
+      class="css-kzytht-AuthorChipMetaWrapper e1jhd13z4"
     >
       <aside
         class="css-xraw1t-AuthorLinksWrapper e1qb6xb50"
@@ -457,18 +489,22 @@ exports[`Author Chip should render WithoutImage 1`] = `
 exports[`Author Chip should render WithoutJobTitle 1`] = `
 <DocumentFragment>
   <div
-    class="css-1fhfas1-AuthorChipWrapper e1jhd13z6"
+    class="css-1fhfas1-AuthorChipWrapper e1jhd13z7"
   >
     <div
-      class="css-1umyun2-AuthorChipAuthorWrapper e1jhd13z4"
+      class="css-1umyun2-AuthorChipAuthorWrapper e1jhd13z5"
     >
       <div
-        class="css-e2hiv1-AuthorChipImageWrapper e1jhd13z2"
+        class="css-1g2350v-AuthorChipImageWrapper e1jhd13z3"
       >
         <img
           alt="DSC07717"
           class="css-1ij2yax-ImageWrapper-AuthorChip e1shv2yg0"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -477,10 +513,10 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-dpf16q-AuthorChipContentWrapper e1jhd13z1"
+        class="css-1bvkrr9-AuthorChipContentWrapper e1jhd13z2"
       >
         <div
-          class="css-1pifcp5-AuthorChipName e1jhd13z0"
+          class="css-1pifcp5-AuthorChipName e1jhd13z1"
         >
           Von 
           <a
@@ -493,10 +529,10 @@ https://unsplash.it/200/200 200w"
       </div>
     </div>
     <hr
-      class="css-6invwi-AuthorChipDivider e1jhd13z5"
+      class="css-6invwi-AuthorChipDivider e1jhd13z6"
     />
     <div
-      class="css-kzytht-AuthorChipMetaWrapper e1jhd13z3"
+      class="css-kzytht-AuthorChipMetaWrapper e1jhd13z4"
     >
       <aside
         class="css-xraw1t-AuthorLinksWrapper e1qb6xb50"
