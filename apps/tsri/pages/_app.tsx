@@ -184,7 +184,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
 
             {publicRuntimeConfig.env.SPARKLOOP_ID && (
               <Script
-                src={`https://js.sparkloop.app/team_${publicRuntimeConfig.env.SPARKLOOP_ID}.js`}
+                src={`https://script.sparkloop.app/team_${publicRuntimeConfig.env.SPARKLOOP_ID}.js`}
                 strategy="lazyOnload"
                 data-sparkloop
               />
