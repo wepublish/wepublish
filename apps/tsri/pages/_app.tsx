@@ -21,9 +21,9 @@ import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
+import {TsriBlockRenderer} from '../src/components/block-renderer/block-renderer'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
-import {TsriBlockRenderer} from '../src/components/block-renderer/block-renderer'
 
 setDefaultOptions({
   locale: de

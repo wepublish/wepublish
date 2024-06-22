@@ -20,7 +20,7 @@ export const generateFeed =
       const seo = getArticleSEO(article)
 
       const content = await toHtml(
-        article.blocks.reduce((acc, curr) => {
+        article.blocks?.reduce((acc, curr) => {
           if (isRichTextBlock(curr)) {
             acc.push(...curr.richText)
           }
@@ -33,7 +33,7 @@ export const generateFeed =
         title: seo.schema.headline,
         image: seo.schema.image,
         description: seo.schema.description,
-        content,
+        content: content ? content : undefined,
         author: article.authors.map(author => ({
           name: author.name,
           link: author.url
