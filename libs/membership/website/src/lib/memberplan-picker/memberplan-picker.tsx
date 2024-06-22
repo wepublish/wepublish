@@ -1,4 +1,5 @@
 import {FormControlLabel, RadioGroup, styled} from '@mui/material'
+import {toPlaintext} from '@wepublish/richtext'
 import {BuilderMemberPlanPickerProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {forwardRef, useEffect} from 'react'
 
@@ -38,6 +39,8 @@ export const MemberPlanPicker = forwardRef<HTMLButtonElement, BuilderMemberPlanP
 
     const showRadioButtons = memberPlans.length > 1
     const selectedMemberPlan = memberPlans.find(({id}) => id === value)
+    const showPicker =
+      showRadioButtons || toPlaintext(selectedMemberPlan?.description) || selectedMemberPlan?.image
 
     useEffect(() => {
       if (memberPlans.length && !selectedMemberPlan) {
@@ -46,34 +49,38 @@ export const MemberPlanPicker = forwardRef<HTMLButtonElement, BuilderMemberPlanP
     }, [memberPlans, onChange, selectedMemberPlan])
 
     return (
-      <MemberPlanPickerWrapper className={className}>
-        {showRadioButtons && (
-          <MemberPlanPickerRadios
-            name={name}
-            onChange={event => onChange(event.target.value)}
-            value={value ? value : ''}
-            ref={ref}>
-            {memberPlans.map(memberPlan => (
-              <FormControlLabel
-                key={memberPlan.id}
-                value={memberPlan.id}
-                control={
-                  <MemberPlanItem
-                    key={memberPlan.id}
-                    checked={memberPlan.id === value}
-                    name={memberPlan.name}
-                    amountPerMonthMin={memberPlan.amountPerMonthMin}
-                  />
-                }
-                label={memberPlan.name}
-              />
-            ))}
-          </MemberPlanPickerRadios>
-        )}
+      showPicker && (
+        <MemberPlanPickerWrapper className={className}>
+          {showRadioButtons && (
+            <MemberPlanPickerRadios
+              name={name}
+              onChange={event => onChange(event.target.value)}
+              value={value ? value : ''}
+              ref={ref}>
+              {memberPlans.map(memberPlan => (
+                <FormControlLabel
+                  key={memberPlan.id}
+                  value={memberPlan.id}
+                  control={
+                    <MemberPlanItem
+                      key={memberPlan.id}
+                      checked={memberPlan.id === value}
+                      name={memberPlan.name}
+                      amountPerMonthMin={memberPlan.amountPerMonthMin}
+                    />
+                  }
+                  label={memberPlan.name}
+                />
+              ))}
+            </MemberPlanPickerRadios>
+          )}
 
-        {selectedMemberPlan?.image && <Image image={selectedMemberPlan.image} />}
-        {selectedMemberPlan?.description && <RichText richText={selectedMemberPlan.description} />}
-      </MemberPlanPickerWrapper>
+          {selectedMemberPlan?.image && <Image image={selectedMemberPlan.image} />}
+          {selectedMemberPlan?.description && (
+            <RichText richText={selectedMemberPlan.description} />
+          )}
+        </MemberPlanPickerWrapper>
+      )
     )
   }
 )
