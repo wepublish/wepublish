@@ -27,6 +27,10 @@ exports[`Teaser List Block should render Article 1`] = `
                 alt="An image description"
                 class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -85,6 +89,10 @@ https://unsplash.it/200/200 200w"
                 alt="An image description"
                 class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -143,6 +151,10 @@ https://unsplash.it/200/200 200w"
                 alt="An image description"
                 class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -214,6 +226,10 @@ exports[`Teaser List Block should render Event 1`] = `
                 alt="An image description"
                 class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -272,6 +288,10 @@ https://unsplash.it/200/200 200w"
                 alt="An image description"
                 class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -330,6 +350,10 @@ https://unsplash.it/200/200 200w"
                 alt="An image description"
                 class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -401,6 +425,10 @@ exports[`Teaser List Block should render Page 1`] = `
                 alt="An image description"
                 class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -452,6 +480,10 @@ https://unsplash.it/200/200 200w"
                 alt="An image description"
                 class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -503,6 +535,10 @@ https://unsplash.it/200/200 200w"
                 alt="An image description"
                 class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -567,6 +603,10 @@ exports[`Teaser List Block should render WithClassName 1`] = `
                 alt="An image description"
                 class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -625,6 +665,10 @@ https://unsplash.it/200/200 200w"
                 alt="An image description"
                 class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -683,6 +727,10 @@ https://unsplash.it/200/200 200w"
                 alt="An image description"
                 class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -754,6 +802,10 @@ exports[`Teaser List Block should render WithEmotion 1`] = `
                 alt="An image description"
                 class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -812,6 +864,10 @@ https://unsplash.it/200/200 200w"
                 alt="An image description"
                 class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -870,6 +926,10 @@ https://unsplash.it/200/200 200w"
                 alt="An image description"
                 class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -946,6 +1006,10 @@ exports[`Teaser List Block should render WithTitle 1`] = `
                 alt="An image description"
                 class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -1004,6 +1068,10 @@ https://unsplash.it/200/200 200w"
                 alt="An image description"
                 class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -1062,6 +1130,10 @@ https://unsplash.it/200/200 200w"
                 alt="An image description"
                 class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
