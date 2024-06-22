@@ -112,7 +112,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               categorySlugs={[['categories', 'about-us']]}
               slug="main"
               headerSlug="header"
-              showSubscriptionsUrl={false}
+              subscriptionsUrl={null}
             />
 
             <ContentSpacer>
@@ -125,6 +125,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               src={publicRuntimeConfig.env.API_URL! + '/scripts/head.js'}
               strategy="afterInteractive"
             />
+
             <Script
               src={publicRuntimeConfig.env.API_URL! + '/scripts/body.js'}
               strategy="lazyOnload"
