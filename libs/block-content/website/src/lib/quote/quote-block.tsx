@@ -19,6 +19,7 @@ export const QuoteBlockWrapper = styled('blockquote')<{withImage: boolean}>`
   border-top: 2px solid ${({theme}) => theme.palette.common.black};
   border-bottom: 2px solid ${({theme}) => theme.palette.common.black};
   margin: 0;
+  margin-left: calc(100% / 6);
 
   ${({theme, withImage}) =>
     withImage &&

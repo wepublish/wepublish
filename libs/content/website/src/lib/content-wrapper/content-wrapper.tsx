@@ -57,7 +57,7 @@ export const ContentWrapperStyled = styled('article')<{fullWidth?: boolean}>`
         }
 
         & > ${QuoteBlockWrapper} {
-          grid-column-start: 5;
+          /* grid-column-start: 5; */
         }
       }
     `}

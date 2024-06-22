@@ -3,7 +3,7 @@
 exports[`Event Container should render Default 1`] = `
 <DocumentFragment>
   <article
-    class="ec2zadl3 css-q9dcsn-ContentWrapperStyled-EventWrapper e1wqte7t0"
+    class="ec2zadl3 css-vcdz7t-ContentWrapperStyled-EventWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -491,7 +491,7 @@ https://unsplash.it/200/100 200w"
 exports[`Event Container should render WithClassName 1`] = `
 <DocumentFragment>
   <article
-    class="extra-classname ec2zadl3 css-q9dcsn-ContentWrapperStyled-EventWrapper e1wqte7t0"
+    class="extra-classname ec2zadl3 css-vcdz7t-ContentWrapperStyled-EventWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -979,7 +979,7 @@ https://unsplash.it/200/100 200w"
 exports[`Event Container should render WithEmotion 1`] = `
 <DocumentFragment>
   <article
-    class="ec2zadl3 css-q9dcsn-ContentWrapperStyled-EventWrapper e1wqte7t0"
+    class="ec2zadl3 css-vcdz7t-ContentWrapperStyled-EventWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
