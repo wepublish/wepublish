@@ -1201,6 +1201,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       type: GraphQLEvent,
       args: {
         name: {type: new GraphQLNonNull(GraphQLString)},
+        lead: {type: GraphQLString},
         description: {type: GraphQLRichText},
         location: {type: GraphQLString},
         startsAt: {type: new GraphQLNonNull(GraphQLDateTime)},
@@ -1224,6 +1225,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         id: {type: new GraphQLNonNull(GraphQLID)},
         name: {type: GraphQLString},
+        lead: {type: GraphQLString},
         description: {type: GraphQLRichText},
         status: {type: GraphQLEventStatus},
         location: {type: GraphQLString},

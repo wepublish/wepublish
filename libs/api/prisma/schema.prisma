@@ -1025,6 +1025,7 @@ model Event {
   modifiedAt DateTime @updatedAt
 
   name        String
+  lead        String?
   description Json[]
   status      EventStatus @default(Scheduled)
 

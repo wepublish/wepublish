@@ -23,7 +23,8 @@ const pageSchema = z.object({
     .toLowerCase()
     .transform(string => JSON.parse(string))
     .pipe(z.boolean())
-    .optional(),
+    .optional()
+    .default('true'),
   from: z.coerce.date().optional(),
   to: z.coerce.date().optional()
 })
@@ -97,26 +98,6 @@ export default function EventList() {
             )
           }}
         />
-
-        <FormGroup>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={upcomingOnly ?? false}
-                onChange={(_, checked) => {
-                  replace(
-                    {
-                      query: {...query, upcomingOnly: checked}
-                    },
-                    undefined,
-                    {shallow: true, scroll: true}
-                  )
-                }}
-              />
-            }
-            label="Nur bevorstehende"
-          />
-        </FormGroup>
       </Filter>
 
       <EventListContainer variables={variables} />

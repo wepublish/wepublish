@@ -53,7 +53,11 @@ export const selectTeaserLead = (teaser: TeaserType) => {
     }
 
     case 'EventTeaser':
-      return teaser.lead ?? firstParagraphToPlaintext(teaser.event?.description)?.substring(0, 225)
+      return (
+        teaser.lead ||
+        teaser.event?.lead ||
+        firstParagraphToPlaintext(teaser.event?.description)?.substring(0, 225)
+      )
 
     case 'CustomTeaser':
       return teaser.lead

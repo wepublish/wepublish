@@ -36,6 +36,7 @@ export const GraphQLEvent = new GraphQLObjectType<Event, Context>({
     id: {type: new GraphQLNonNull(GraphQLID)},
 
     name: {type: new GraphQLNonNull(GraphQLString)},
+    lead: {type: GraphQLString},
     status: {type: new GraphQLNonNull(GraphQLEventStatus)},
     description: {type: GraphQLRichText},
 
