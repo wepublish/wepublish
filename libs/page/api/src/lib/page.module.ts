@@ -6,6 +6,7 @@ import {PrismaModule} from '@wepublish/nest-modules'
 
 @Module({
   imports: [PrismaModule],
-  providers: [PageResolver, PageService, PageDataloader]
+  providers: [PageResolver, PageService, PageDataloader],
+  exports: [PageDataloader]
 })
 export class PageModule {}

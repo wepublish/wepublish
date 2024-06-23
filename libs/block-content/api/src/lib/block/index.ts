@@ -26,3 +26,5 @@ export * from './model/vimeo-video'
 export * from './model/youtube-video'
 export * from './block.model'
 export * from './mappers'
+
+export * from './block.module'

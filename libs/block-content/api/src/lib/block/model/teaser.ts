@@ -19,6 +19,16 @@ export enum TeaserType {
   Custom = 'custom'
 }
 
+class Foo {
+  @Field(() => Bar)
+  bar!: Bar
+}
+
+class Bar {
+  @Field(() => Foo)
+  foo!: Foo
+}
+
 registerEnumType(TeaserType, {name: 'TeaserType'})
 
 export enum TeaserStyle {
@@ -106,19 +116,19 @@ export const TeaserUnion = createUnionType({
   name: 'Teaser',
   types: () => [ArticleTeaser, PeerArticleTeaser, PageTeaser, CustomTeaser, EventTeaser],
   resolveType: value => {
-    if (value.peer) {
-      return PeerArticleTeaser.name
+    switch (value.type) {
+      case TeaserType.PeerArticle:
+        return PeerArticleTeaser.name
+      case TeaserType.Article:
+        return ArticleTeaser.name
+      case TeaserType.Page:
+        return PageTeaser.name
+      case TeaserType.Event:
+        return EventTeaser.name
+      case TeaserType.Custom:
+        return CustomTeaser.name
     }
-    if (value.article) {
-      return ArticleTeaser.name
-    }
-    if (value.page) {
-      return PageTeaser.name
-    }
-    if (value.event) {
-      return EventTeaser.name
-    }
-    return CustomTeaser.name
+    throw new Error('Invalid type for teaser')
   }
 })
 export type Teaser = typeof TeaserUnion
