@@ -33,7 +33,7 @@ export const generateFeed =
         title: seo.schema.headline,
         image: seo.schema.image,
         description: seo.schema.description,
-        content: content ? content : undefined,
+        content: content ? content : article.lead,
         author: article.authors.map(author => ({
           name: author.name,
           link: author.url
