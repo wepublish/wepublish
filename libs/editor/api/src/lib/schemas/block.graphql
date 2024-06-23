@@ -267,6 +267,10 @@ fragment FullBlock on Block {
     skip
     filter {
       tags
+      tagObjects {
+        id
+        tag
+      }
     }
   }
 

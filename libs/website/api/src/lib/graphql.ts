@@ -1427,6 +1427,7 @@ export type TeaserListBlock = {
 
 export type TeaserListBlockFilter = {
   __typename?: 'TeaserListBlockFilter';
+  tagObjects: Array<Tag>;
   tags?: Maybe<Array<Scalars['ID']>>;
 };
 
