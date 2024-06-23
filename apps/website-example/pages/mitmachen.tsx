@@ -11,6 +11,7 @@ export default function Mitmachen() {
   } = useRouter()
 
   const locationOrigin = typeof window !== 'undefined' ? location.origin : ''
+  const thisLocation = typeof window !== 'undefined' ? location.href : ''
 
   return (
     <SubscribeContainer
@@ -19,8 +20,8 @@ export default function Mitmachen() {
         firstName: firstName as string | undefined,
         name: lastName as string | undefined
       }}
-      successURL={`${locationOrigin}/payment/success`}
-      failureURL={`${locationOrigin}/payment/fail`}
+      successURL={`${locationOrigin}/profile/subscription`}
+      failureURL={thisLocation}
     />
   )
 }

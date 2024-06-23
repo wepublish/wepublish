@@ -9,7 +9,7 @@ export const isEventBlock = (block: Block): block is EventBlockType =>
 export const EventBlockWrapper = styled('aside')`
   display: grid;
   gap: ${({theme}) => theme.spacing(4)};
-  grid-template-columns: repeat(auto-fit, minmax(325px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   justify-items: center;
 `
 

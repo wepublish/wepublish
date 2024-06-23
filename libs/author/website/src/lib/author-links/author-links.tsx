@@ -35,7 +35,7 @@ export const AuthorLinkIcon = ({title}: {title: string}) => {
     return <MdWeb size={22} />
   }
 
-  if (title.toLowerCase() === 'presseausweis') {
+  if (['presseausweis', 'trustj'].includes(title.toLowerCase())) {
     return <MdContactMail size={22} />
   }
 

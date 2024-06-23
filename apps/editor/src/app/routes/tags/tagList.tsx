@@ -79,7 +79,9 @@ type TagListActions =
   | {type: TagListActionType.Update; payload: {id: string; tag?: string | null; main?: boolean}}
   | {type: TagListActionType.Delete; payload: {id: string}}
 
-const mapTagsToFormValue = (tags: Tag[] | null | undefined) =>
+const mapTagsToFormValue = <T extends Pick<Tag, 'id' | 'main' | 'tag'>>(
+  tags: T[] | null | undefined
+) =>
   tags?.reduce((obj, node) => {
     obj[node.id] = {
       main: node.main,
