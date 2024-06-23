@@ -1,4 +1,4 @@
-import {Field, InputType, ObjectType} from '@nestjs/graphql'
+import {Field, InputType, ObjectType, OmitType} from '@nestjs/graphql'
 
 @ObjectType()
 export class BildwurfAdBlock {
@@ -10,4 +10,4 @@ export class BildwurfAdBlock {
 }
 
 @InputType()
-export class BildwurfAdBlockInput extends BildwurfAdBlock {}
+export class BildwurfAdBlockInput extends OmitType(BildwurfAdBlock, [], InputType) {}

@@ -1,9 +1,7 @@
 import {ArgsType, Field, ObjectType, PartialType, PickType, registerEnumType} from '@nestjs/graphql'
 import {BlockType} from '@prisma/client'
 
-registerEnumType(BlockType, {
-  name: 'BlockType'
-})
+registerEnumType(BlockType, {name: 'BlockStyleType'})
 
 @ObjectType()
 export class BlockStyle {

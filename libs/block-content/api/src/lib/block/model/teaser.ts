@@ -9,6 +9,7 @@ import {
 } from '@nestjs/graphql'
 import {Image} from '@wepublish/image/api'
 import {Event} from '@wepublish/event/api'
+import {Property, PropertyInput} from '@wepublish/property/api'
 
 export enum TeaserType {
   Article = 'article',
@@ -16,6 +17,16 @@ export enum TeaserType {
   Page = 'page',
   Event = 'event',
   Custom = 'custom'
+}
+
+class Foo {
+  @Field(() => Bar)
+  bar!: Bar
+}
+
+class Bar {
+  @Field(() => Foo)
+  foo!: Foo
 }
 
 registerEnumType(TeaserType, {name: 'TeaserType'})
@@ -97,46 +108,50 @@ export class CustomTeaser extends AbstractTeaser {
   @Field(() => String, {nullable: true})
   contentUrl?: string
 
-  // @Field(() => [Property])
-  // properties!: Property[];
+  @Field(() => [Property])
+  properties!: Property[]
 }
 
-export const Teaser = createUnionType({
+export const TeaserUnion = createUnionType({
   name: 'Teaser',
   types: () => [ArticleTeaser, PeerArticleTeaser, PageTeaser, CustomTeaser, EventTeaser],
   resolveType: value => {
-    if (value.peer) {
-      return PeerArticleTeaser.name
+    switch (value.type) {
+      case TeaserType.PeerArticle:
+        return PeerArticleTeaser.name
+      case TeaserType.Article:
+        return ArticleTeaser.name
+      case TeaserType.Page:
+        return PageTeaser.name
+      case TeaserType.Event:
+        return EventTeaser.name
+      case TeaserType.Custom:
+        return CustomTeaser.name
     }
-    if (value.article) {
-      return ArticleTeaser.name
-    }
-    if (value.page) {
-      return PageTeaser.name
-    }
-    if (value.event) {
-      return EventTeaser.name
-    }
-    return CustomTeaser.name
+    throw new Error('Invalid type for teaser')
   }
 })
+export type Teaser = typeof TeaserUnion
 
 // Inputs
 
 @InputType()
-export class ArticleTeaserInput extends OmitType(ArticleTeaser, ['image']) {}
+export class ArticleTeaserInput extends OmitType(ArticleTeaser, ['image'], InputType) {}
 
 @InputType()
-export class PeerArticleTeaserInput extends OmitType(PeerArticleTeaser, ['image']) {}
+export class PeerArticleTeaserInput extends OmitType(PeerArticleTeaser, ['image'], InputType) {}
 
 @InputType()
-export class PageTeaserInput extends OmitType(PageTeaser, ['image']) {}
+export class PageTeaserInput extends OmitType(PageTeaser, ['image'], InputType) {}
 
 @InputType()
-export class EventTeaserInput extends OmitType(EventTeaser, ['image', 'event']) {}
+export class EventTeaserInput extends OmitType(EventTeaser, ['image', 'event'], InputType) {}
 
 @InputType()
-export class CustomTeaserInput extends OmitType(CustomTeaser, ['image']) {}
+export class CustomTeaserInput extends OmitType(CustomTeaser, ['image', 'properties'], InputType) {
+  @Field(() => [PropertyInput])
+  properties!: PropertyInput[]
+}
 
 @InputType()
 export class TeaserInput {

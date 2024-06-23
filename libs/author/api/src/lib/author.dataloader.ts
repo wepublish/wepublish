@@ -12,7 +12,7 @@ export class AuthorDataloader extends DataloaderService<Author> {
       ids,
       (await this.prisma.author.findMany({
         where: {id: {in: ids}}
-      })) as Author[],
+      })) as unknown as Author[],
       'id'
     )
   }

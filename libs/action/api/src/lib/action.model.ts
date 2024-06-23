@@ -1,6 +1,6 @@
 import {Field, ObjectType, registerEnumType, createUnionType} from '@nestjs/graphql'
 import {ID} from '@nestjs/graphql'
-import {AuthorV2 as Author} from '@wepublish/author/api'
+import {Author} from '@wepublish/author/api'
 import {Event} from '@wepublish/event/api'
 
 export enum ActionType {

@@ -1,9 +1,13 @@
-import {Field, InputType, ObjectType} from '@nestjs/graphql'
+import {Field, InputType, ObjectType, OmitType} from '@nestjs/graphql'
 import {GraphQLRichText} from '@wepublish/richtext/api'
 import {Node} from 'slate'
+import {BlockType} from '../block-type'
 
 @ObjectType()
 export class RichTextBlock {
+  @Field()
+  type: BlockType = BlockType.RichText
+
   @Field(() => String, {nullable: true})
   blockStyle?: string
 
@@ -12,4 +16,4 @@ export class RichTextBlock {
 }
 
 @InputType()
-export class RichTextBlockInput extends RichTextBlock {}
+export class RichTextBlockInput extends OmitType(RichTextBlock, [], InputType) {}

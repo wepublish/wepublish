@@ -1,7 +1,11 @@
-import {Field, InputType, ObjectType} from '@nestjs/graphql'
+import {Field, InputType, ObjectType, OmitType} from '@nestjs/graphql'
+import {BlockType} from '../block-type'
 
 @ObjectType()
 export class TikTokVideoBlock {
+  @Field()
+  type: BlockType = BlockType.TikTokVideo
+
   @Field(() => String, {nullable: true})
   blockStyle?: string
 
@@ -13,4 +17,4 @@ export class TikTokVideoBlock {
 }
 
 @InputType()
-export class TikTokVideoBlockInput extends TikTokVideoBlock {}
+export class TikTokVideoBlockInput extends OmitType(TikTokVideoBlock, [], InputType) {}

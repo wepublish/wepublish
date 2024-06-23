@@ -1,5 +1,6 @@
 import {Field, ID, InputType, ObjectType, OmitType} from '@nestjs/graphql'
-import {Teaser, TeaserType} from './teaser'
+import {Teaser, TeaserType, TeaserUnion} from './teaser'
+import {BlockType} from '../block-type'
 
 @ObjectType()
 export class TeaserListBlockFilter {
@@ -9,6 +10,9 @@ export class TeaserListBlockFilter {
 
 @ObjectType()
 export class TeaserListBlock {
+  @Field()
+  type: BlockType = BlockType.TeaserList
+
   @Field(() => String, {nullable: true})
   blockStyle?: string
 
@@ -24,12 +28,12 @@ export class TeaserListBlock {
   @Field()
   skip!: number
 
-  @Field(() => [Teaser])
-  teasers!: (typeof Teaser)[]
+  @Field(() => [TeaserUnion])
+  teasers!: Teaser[]
 }
 
 @InputType()
-export class TeaserListBlockFilterInput extends TeaserListBlockFilter {}
+export class TeaserListBlockFilterInput extends OmitType(TeaserListBlockFilter, [], InputType) {}
 
 @InputType()
 export class TeaserListBlockInput extends OmitType(TeaserListBlock, ['teasers', 'filter']) {

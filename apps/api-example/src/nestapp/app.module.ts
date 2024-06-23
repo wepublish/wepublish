@@ -1,4 +1,4 @@
-import {ApolloDriver, ApolloDriverConfig} from '@nestjs/apollo'
+import {ApolloDriverConfig, ApolloGatewayDriver} from '@nestjs/apollo'
 import {Global, Module} from '@nestjs/common'
 import {ConfigModule, ConfigService} from '@nestjs/config'
 import {GraphQLModule} from '@nestjs/graphql'
@@ -33,7 +33,8 @@ import {
   StatsModule,
   StripeCheckoutPaymentProvider,
   StripePaymentProvider,
-  MemberPlanModule
+  MemberPlanModule,
+  BlockModule
 } from '@wepublish/api'
 import {ApiModule, PrismaModule} from '@wepublish/nest-modules'
 import bodyParser from 'body-parser'
@@ -47,12 +48,13 @@ import {BlockStylesModule} from '@wepublish/block-content/api'
 import {PrismaClient} from '@prisma/client'
 import {UserRoleModule} from '@wepublish/user-role/api'
 import {ActionModule} from '@wepublish/action/api'
+import {PageModule} from '@wepublish/page/api'
 
 @Global()
 @Module({
   imports: [
     GraphQLModule.forRoot<ApolloDriverConfig>({
-      driver: ApolloDriver,
+      driver: ApolloGatewayDriver,
       resolvers: {RichText: GraphQLRichText},
       autoSchemaFile: './apps/api-example/schema-v2.graphql',
       sortSchema: true,
@@ -247,6 +249,8 @@ import {ActionModule} from '@wepublish/action/api'
     UserRoleModule,
     MemberPlanModule,
     BlockStylesModule,
+    BlockModule,
+    PageModule,
     EventsImportModule.registerAsync({
       useFactory: (agendaBasel: AgendaBaselService, kulturZueri: KulturZueriService) => [
         agendaBasel,

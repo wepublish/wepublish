@@ -42,6 +42,8 @@ import {
   getPublicChildrenCommentsByParentId
 } from './comment.public-queries'
 import {userCommentRating} from '../comment-rating/comment-rating.public-queries'
+import {PublicArticle} from '../../db/article'
+import {PublicPage} from '../../db/page'
 
 export const GraphQLCommentState = new GraphQLEnumType({
   name: 'CommentState',
@@ -359,8 +361,7 @@ export const GraphQLPublicComment: GraphQLObjectType<PublicComment, Context> =
           if (!item) {
             return ''
           }
-
-          return urlAdapter.getCommentURL(item, comment)
+          return urlAdapter.getCommentURL(item as PublicArticle | PublicPage, comment)
         })
       },
       modifiedAt: {

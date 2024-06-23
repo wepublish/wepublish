@@ -1,5 +1,6 @@
 import {Field, ID, InputType, ObjectType, OmitType} from '@nestjs/graphql'
 import {Image} from '@wepublish/image/api'
+import {BlockType} from '../block-type'
 
 // Objects
 
@@ -17,6 +18,9 @@ export class GalleryImageEdge {
 
 @ObjectType()
 export class ImageGalleryBlock {
+  @Field()
+  type: BlockType = BlockType.ImageGallery
+
   @Field(() => String, {nullable: true})
   blockStyle?: string
 
@@ -27,10 +31,10 @@ export class ImageGalleryBlock {
 // Inputs
 
 @InputType()
-export class GalleryImageEdgeInput extends OmitType(GalleryImageEdge, ['image']) {}
+export class GalleryImageEdgeInput extends OmitType(GalleryImageEdge, ['image'], InputType) {}
 
 @InputType()
-export class ImageGalleryBlockInput extends OmitType(ImageGalleryBlock, ['images']) {
+export class ImageGalleryBlockInput extends OmitType(ImageGalleryBlock, ['images'], InputType) {
   @Field(() => [GalleryImageEdgeInput])
   images!: GalleryImageEdgeInput[]
 }

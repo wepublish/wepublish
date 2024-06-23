@@ -1,8 +1,12 @@
 import {Field, ID, InputType, ObjectType, OmitType} from '@nestjs/graphql'
 import {Image} from '@wepublish/image/api'
+import {BlockType} from '../block-type'
 
 @ObjectType()
 export class QuoteBlock {
+  @Field()
+  type: BlockType = BlockType.Quote
+
   @Field(() => String, {nullable: true})
   blockStyle?: string
 
@@ -20,4 +24,4 @@ export class QuoteBlock {
 }
 
 @InputType()
-export class QuoteBlockInput extends OmitType(QuoteBlock, ['image']) {}
+export class QuoteBlockInput extends OmitType(QuoteBlock, ['image'], InputType) {}

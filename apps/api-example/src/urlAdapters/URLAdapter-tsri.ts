@@ -4,6 +4,7 @@ import {CommentItemType, Peer, Event, Subscription} from '@prisma/client'
 interface TsriURLAdapterProps {
   websiteURL: string
 }
+
 export class TsriURLAdapter implements URLAdapter {
   readonly websiteURL: string
 
@@ -49,6 +50,7 @@ export class TsriURLAdapter implements URLAdapter {
     }
     return `${this.websiteURL}/${item.slug}#${comment.id}`
   }
+
   getPeeredArticleURL(peer: Peer, article: PublicArticle): string {
     return `${this.websiteURL}/peer/${peer.slug}/${article.id}`
   }

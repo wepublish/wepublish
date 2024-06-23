@@ -1,4 +1,5 @@
 import {Field, ID, InputType, ObjectType, OmitType} from '@nestjs/graphql'
+import {BlockType} from '../block-type'
 
 // Objects
 
@@ -16,6 +17,9 @@ export class CommentBlockFilter {
 
 @ObjectType()
 export class CommentBlock {
+  @Field()
+  type: BlockType = BlockType.Comment
+
   @Field(() => String, {nullable: true})
   blockStyle?: string
 
@@ -29,10 +33,10 @@ export class CommentBlock {
 // Inputs
 
 @InputType()
-export class CommentBlockInputFilter extends CommentBlockFilter {}
+export class CommentBlockInputFilter extends OmitType(CommentBlockFilter, [], InputType) {}
 
 @InputType()
-export class CommentBlockInput extends OmitType(CommentBlock, ['filter']) {
+export class CommentBlockInput extends OmitType(CommentBlock, ['filter'], InputType) {
   @Field(() => CommentBlockInputFilter)
   filter!: CommentBlockInputFilter
 }

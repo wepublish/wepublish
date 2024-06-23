@@ -1,8 +1,11 @@
-import {Field, InputType, ObjectType} from '@nestjs/graphql'
-import {GraphQLInt} from 'graphql/index'
+import {Field, InputType, ObjectType, Int, OmitType} from '@nestjs/graphql'
+import {BlockType} from '../block-type'
 
 @ObjectType()
 export class EmbedBlock {
+  @Field()
+  type: BlockType = BlockType.Embed
+
   @Field(() => String, {nullable: true})
   blockStyle?: string
 
@@ -12,10 +15,10 @@ export class EmbedBlock {
   @Field(() => String, {nullable: true})
   title?: string
 
-  @Field(() => GraphQLInt, {nullable: true})
+  @Field(() => Int, {nullable: true})
   width?: number
 
-  @Field(() => GraphQLInt, {nullable: true})
+  @Field(() => Int, {nullable: true})
   height?: number
 
   @Field(() => String, {nullable: true})
@@ -26,4 +29,4 @@ export class EmbedBlock {
 }
 
 @InputType()
-export class EmbedBlockInput extends EmbedBlock {}
+export class EmbedBlockInput extends OmitType(EmbedBlock, [], InputType) {}
