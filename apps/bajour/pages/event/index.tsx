@@ -1,100 +1,142 @@
-import {Checkbox, css, FormControlLabel, FormGroup, styled} from '@mui/material'
+import {Checkbox, FormControlLabel, FormGroup, styled} from '@mui/material'
 import {DateTimePicker, LocalizationProvider} from '@mui/x-date-pickers'
 import {AdapterDateFns} from '@mui/x-date-pickers/AdapterDateFns'
-import {ApiV1, EventListContainer} from '@wepublish/website'
+import {ApiV1, EventListContainer, useWebsiteBuilder} from '@wepublish/website'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
-import {Reducer, useReducer} from 'react'
-
-import {Container} from '../../src/components/layout/container'
+import {useRouter} from 'next/router'
+import {useMemo} from 'react'
+import {z} from 'zod'
 
 const Filter = styled('div')`
   display: grid;
-  grid-template-columns: minmax(150px, 250px);
+  grid-template-columns: repeat(auto-fit, 250px);
   align-items: center;
   gap: ${({theme}) => theme.spacing(2)};
   margin-bottom: ${({theme}) => theme.spacing(3)};
-
-  ${({theme}) => css`
-    ${theme.breakpoints.up('sm')} {
-      grid-template-columns: 1fr 1fr;
-    }
-  `}
-
-  ${({theme}) => css`
-    ${theme.breakpoints.up('md')} {
-      grid-template-columns: 250px 250px 250px;
-    }
-  `}
 `
 
+const pageSchema = z.object({
+  page: z.coerce.number().gte(1).optional(),
+  upcomingOnly: z
+    .string()
+    .toLowerCase()
+    .transform(string => JSON.parse(string))
+    .pipe(z.boolean())
+    .optional(),
+  from: z.coerce.date().optional(),
+  to: z.coerce.date().optional()
+})
+
+const take = 25
+
 export default function EventList() {
-  const [variables, onVariablesChange] = useReducer<
-    Reducer<Partial<ApiV1.EventListQueryVariables>, Partial<ApiV1.EventListQueryVariables>>
-  >(
-    (state, newVariables) => ({
-      ...state,
-      ...newVariables
-    }),
-    {
-      sort: ApiV1.EventSort.StartsAt,
-      order: ApiV1.SortOrder.Ascending
-    } as Partial<ApiV1.EventListQueryVariables>
+  const {query, replace} = useRouter()
+  const {page, upcomingOnly, from, to} = pageSchema.parse(query)
+
+  const {
+    elements: {Pagination}
+  } = useWebsiteBuilder()
+
+  const variables = useMemo(
+    () =>
+      ({
+        take,
+        skip: ((page ?? 1) - 1) * take,
+        filter: {
+          from: from?.toISOString(),
+          to: to?.toISOString(),
+          upcomingOnly
+        },
+        sort: ApiV1.EventSort.StartsAt,
+        order: ApiV1.SortOrder.Ascending
+      } satisfies Partial<ApiV1.EventListQueryVariables>),
+    [from, page, to, upcomingOnly]
   )
 
+  const {data} = ApiV1.useEventListQuery({
+    fetchPolicy: 'cache-only',
+    variables
+  })
+
+  const pageCount = useMemo(() => {
+    if (data?.events?.totalCount && data?.events?.totalCount > take) {
+      return Math.ceil(data.events.totalCount / take)
+    }
+
+    return 1
+  }, [data?.events?.totalCount])
+
   return (
-    <Container>
-      <LocalizationProvider dateAdapter={AdapterDateFns}>
-        <Filter>
-          <DateTimePicker
-            label="Von"
-            value={variables?.filter?.from ?? null}
-            onChange={value => {
-              onVariablesChange({
-                filter: {
-                  ...variables?.filter,
-                  from: value
-                }
-              })
-            }}
+    <LocalizationProvider dateAdapter={AdapterDateFns}>
+      <Filter>
+        <DateTimePicker
+          label="Von"
+          value={from ?? null}
+          onChange={value => {
+            replace(
+              {
+                query: {...query, from: value?.toISOString()}
+              },
+              undefined,
+              {shallow: true, scroll: true}
+            )
+          }}
+        />
+
+        <DateTimePicker
+          label="Bis"
+          value={to ?? null}
+          onChange={value => {
+            replace(
+              {
+                query: {...query, to: value?.toISOString()}
+              },
+              undefined,
+              {shallow: true, scroll: true}
+            )
+          }}
+        />
+
+        <FormGroup>
+          <FormControlLabel
+            control={
+              <Checkbox
+                checked={upcomingOnly ?? false}
+                onChange={(_, checked) => {
+                  replace(
+                    {
+                      query: {...query, upcomingOnly: checked}
+                    },
+                    undefined,
+                    {shallow: true, scroll: true}
+                  )
+                }}
+              />
+            }
+            label="Nur bevorstehende"
           />
+        </FormGroup>
+      </Filter>
 
-          <DateTimePicker
-            label="Von"
-            value={variables?.filter?.to ?? null}
-            onChange={value => {
-              onVariablesChange({
-                filter: {
-                  ...variables?.filter,
-                  to: value
-                }
-              })
-            }}
-          />
+      <EventListContainer variables={variables} />
 
-          <FormGroup>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  checked={variables?.filter?.upcomingOnly ?? false}
-                  onChange={(_, checked) => {
-                    onVariablesChange({
-                      filter: {
-                        ...variables?.filter,
-                        upcomingOnly: checked
-                      }
-                    })
-                  }}
-                />
-              }
-              label="Nur bevorstehende"
-            />
-          </FormGroup>
-        </Filter>
-
-        <EventListContainer variables={variables} onVariablesChange={onVariablesChange} />
-      </LocalizationProvider>
-    </Container>
+      {pageCount > 1 && (
+        <Pagination
+          page={page ?? 1}
+          count={pageCount}
+          onChange={(_, value) =>
+            replace(
+              {
+                query: {...query, page: value}
+              },
+              undefined,
+              {shallow: true, scroll: true}
+            )
+          }
+        />
+      )}
+    </LocalizationProvider>
   )
 }
 
@@ -110,6 +152,8 @@ export const getStaticProps: GetStaticProps = async () => {
     client.query({
       query: ApiV1.EventListDocument,
       variables: {
+        take,
+        skip: 0,
         sort: ApiV1.EventSort.StartsAt,
         order: ApiV1.SortOrder.Ascending
       }
