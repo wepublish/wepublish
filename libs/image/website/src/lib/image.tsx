@@ -10,16 +10,22 @@ declare module 'react' {
   }
 }
 
-type ImageItem = {size: number; url: string | null | undefined}
+type ImageItem<Size extends number> = {size: Size; url: string | null | undefined}
+type ImageItems = [
+  bigUrl: ImageItem<800>,
+  largeUrl: ImageItem<500>,
+  mediumUrl: ImageItem<300>,
+  smallUrl: ImageItem<200>
+]
 
-export const imageToImageItems = (image: FullImageFragment): ImageItem[] => [
+export const imageToImageItems = (image: FullImageFragment): ImageItems => [
   {url: image.bigURL, size: 800},
   {url: image.largeURL, size: 500},
   {url: image.mediumURL, size: 300},
   {url: image.smallURL, size: 200}
 ]
 
-export const imageToSquareImageItems = (image: FullImageFragment): ImageItem[] => [
+export const imageToSquareImageItems = (image: FullImageFragment): ImageItems => [
   {url: image.squareBigURL, size: 800},
   {url: image.squareLargeURL, size: 500},
   {url: image.squareMediumURL, size: 300},
@@ -48,6 +54,16 @@ export function Image({image, ...props}: BuilderImageProps) {
     return array
   }, [] as string[])
 
+  const imageSizes = [...images].reverse().reduce((array, img, index) => {
+    if (index === images.length - 1) {
+      array.push(`${img.size}w`)
+    } else {
+      array.push(`(max-width: ${img.size * 2}px) ${img.size}w`)
+    }
+
+    return array
+  }, [] as string[])
+
   // @TODO: Remove with new media server
   // Hack for animated gifs to work
   if (image.format === 'gif' && image.url) {
@@ -71,6 +87,7 @@ export function Image({image, ...props}: BuilderImageProps) {
       title={image.title ?? ''}
       aspectRatio={image.width / image.height}
       srcSet={imageArray.join(',\n')}
+      sizes={imageSizes.join(',\n')}
       loading={loading}
       fetchPriority={fetchPriority}
     />

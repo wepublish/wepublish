@@ -15,7 +15,7 @@ export type NavbarContainerProps = PropsWithChildren<
     | 'loginUrl'
     | 'profileUrl'
     | 'subscriptionsUrl'
-    | 'showSubscriptionsUrl'
+    | 'actions'
   > &
     BuilderContainerProps
 >
@@ -28,8 +28,8 @@ export function NavbarContainer({
   loginUrl,
   profileUrl,
   subscriptionsUrl,
-  showSubscriptionsUrl,
-  children
+  children,
+  actions
 }: NavbarContainerProps) {
   const {Navbar} = useWebsiteBuilder()
   const {data, loading, error} = useNavigationListQuery()
@@ -44,12 +44,12 @@ export function NavbarContainer({
       loginUrl={loginUrl}
       profileUrl={profileUrl}
       subscriptionsUrl={subscriptionsUrl}
-      showSubscriptionsUrl={showSubscriptionsUrl}
       data={data}
       loading={loading}
       error={error}
       className={className}
-      logo={logo}>
+      logo={logo}
+      actions={actions}>
       {children}
     </Navbar>
   )
