@@ -135,6 +135,7 @@ export type BuilderCommentEditorProps = {
   maxCommentLength: number
   loading: boolean
   error?: ApolloError
+  canReply?: boolean
 } & (CreateCommentProps | EditCommentProps)
 
 export type BuilderCommentRatingsProps = {

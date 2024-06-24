@@ -119,27 +119,26 @@ export const CommentListItem = ({
           maxCommentLength={maxCommentLength}
           error={edit.error}
           loading={edit.loading}
+          canReply={canReply}
         />
       )}
 
       <CommentListItemActions>
         <CommentListItemActionsButtons>
-          {canReply && (
-            <Button
-              startIcon={<MdReply />}
-              variant="outlined"
-              size="small"
-              css={buttonStyles}
-              onClick={() => {
-                dispatch({
-                  type: 'add',
-                  action: 'open',
-                  commentId: id
-                })
-              }}>
-              Antworten
-            </Button>
-          )}
+          <Button
+            startIcon={<MdReply />}
+            variant="outlined"
+            size="small"
+            css={buttonStyles}
+            onClick={() => {
+              dispatch({
+                type: 'add',
+                action: 'open',
+                commentId: id
+              })
+            }}>
+            Antworten
+          </Button>
 
           {canShare && <CommentListItemShare url={comment.url} title="share" />}
 
@@ -183,6 +182,7 @@ export const CommentListItem = ({
           challenge={challenge}
           error={add.error}
           loading={add.loading}
+          canReply={canReply}
         />
       )}
 
