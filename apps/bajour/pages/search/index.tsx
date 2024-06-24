@@ -49,6 +49,10 @@ export const SearchStatus = styled('div')`
   text-align: center;
 `
 
+export const SearchPagination = styled(Pagination)`
+  margin-top: 20px;
+`
+
 const ITEMS_PER_PAGE = 5
 
 const SearchPage: React.FC = () => {
@@ -126,11 +130,10 @@ const SearchPage: React.FC = () => {
         <>
           <NavbarPhraseResults teasers={phraseResultTeasers} />
           {totalCount > ITEMS_PER_PAGE && (
-            <Pagination
+            <SearchPagination
               count={Math.ceil(totalCount / ITEMS_PER_PAGE)}
               page={page}
               onChange={handlePageChange}
-              style={{marginTop: '20px'}}
             />
           )}
         </>
