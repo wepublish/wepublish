@@ -111,7 +111,10 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
           elements={{Link: NextWepublishLink}}
           blocks={{Renderer: TsriBlockRenderer, Teaser: TsriTeaser, Break: TsriBreakBlock}}
           date={{format: dateFormatter}}
-          meta={{siteTitle}}>
+          meta={{siteTitle}}
+          thirdParty={{
+            stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY
+          }}>
           <ThemeProvider theme={theme}>
             <CssBaseline />
 
