@@ -215,6 +215,10 @@ exports[`Subscribe Container should render Default 1`] = `
           alt="DSC07717"
           class="css-cibo30-ImageWrapper e1shv2yg0"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -1170,7 +1174,7 @@ exports[`Subscribe Container should render Filled 1`] = `
         >
           <div
             class="MuiFormGroup-root es1nn8k0 css-109gj5f-MuiFormGroup-root-MemberPlanPickerRadios"
-@@ -282,350 +349,16 @@
+@@ -286,350 +353,16 @@
                 name="monthlyAmount"
                 step="100"
                 style="border: 0px; height: 100%; margin: -1px; overflow: hidden; padding: 0px; position: absolute; white-space: nowrap; width: 100%; direction: ltr;"
@@ -1521,7 +1525,7 @@ exports[`Subscribe Container should render Filled 1`] = `
         <h2
           class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
         >
-@@ -941,119 +674,11 @@
+@@ -945,119 +678,11 @@
             <span
               class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-67xpxh-MuiTypography-root"
             >
@@ -1922,6 +1926,10 @@ exports[`Subscribe Container should render LoggedIn 1`] = `
           alt="DSC07717"
           class="css-cibo30-ImageWrapper e1shv2yg0"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -2560,6 +2568,10 @@ exports[`Subscribe Container should render WithChallengeError 1`] = `
           alt="DSC07717"
           class="css-cibo30-ImageWrapper e1shv2yg0"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -3566,6 +3578,10 @@ exports[`Subscribe Container should render WithClassName 1`] = `
           alt="DSC07717"
           class="css-cibo30-ImageWrapper e1shv2yg0"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -4646,6 +4662,10 @@ exports[`Subscribe Container should render WithEmotion 1`] = `
           alt="DSC07717"
           class="css-cibo30-ImageWrapper e1shv2yg0"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,

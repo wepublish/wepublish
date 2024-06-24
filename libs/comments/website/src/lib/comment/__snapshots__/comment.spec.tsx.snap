@@ -13,6 +13,10 @@ exports[`Comment should render AnonymousUser 1`] = `
         alt="DSC07717"
         class="css-fy51ct-ImageWrapper-avatarStyles e1shv2yg0"
         loading="lazy"
+        sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -86,6 +90,10 @@ exports[`Comment should render PendingApproval 1`] = `
         alt="DSC07717"
         class="css-fy51ct-ImageWrapper-avatarStyles e1shv2yg0"
         loading="lazy"
+        sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -195,6 +203,10 @@ exports[`Comment should render PendingUserChanges 1`] = `
         alt="DSC07717"
         class="css-fy51ct-ImageWrapper-avatarStyles e1shv2yg0"
         loading="lazy"
+        sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -304,6 +316,10 @@ exports[`Comment should render Rejected 1`] = `
         alt="DSC07717"
         class="css-fy51ct-ImageWrapper-avatarStyles e1shv2yg0"
         loading="lazy"
+        sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -413,6 +429,10 @@ exports[`Comment should render VerifiedUser 1`] = `
         alt="DSC07717"
         class="css-fy51ct-ImageWrapper-avatarStyles e1shv2yg0"
         loading="lazy"
+        sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -522,6 +542,10 @@ exports[`Comment should render WithClassName 1`] = `
         alt="DSC07717"
         class="css-fy51ct-ImageWrapper-avatarStyles e1shv2yg0"
         loading="lazy"
+        sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -631,6 +655,10 @@ exports[`Comment should render WithEmotion 1`] = `
         alt="DSC07717"
         class="css-fy51ct-ImageWrapper-avatarStyles e1shv2yg0"
         loading="lazy"
+        sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -740,6 +768,10 @@ exports[`Comment should render WithoutFlair 1`] = `
         alt="DSC07717"
         class="css-fy51ct-ImageWrapper-avatarStyles e1shv2yg0"
         loading="lazy"
+        sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -954,6 +986,10 @@ exports[`Comment should render WithoutPreferredName 1`] = `
         alt="DSC07717"
         class="css-fy51ct-ImageWrapper-avatarStyles e1shv2yg0"
         loading="lazy"
+        sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -1063,6 +1099,10 @@ exports[`Comment should render WithoutSource 1`] = `
         alt="DSC07717"
         class="css-fy51ct-ImageWrapper-avatarStyles e1shv2yg0"
         loading="lazy"
+        sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
         srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,

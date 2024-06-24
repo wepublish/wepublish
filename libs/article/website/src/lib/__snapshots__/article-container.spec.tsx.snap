@@ -3,7 +3,7 @@
 exports[`Article Container should render ById 1`] = `
 <DocumentFragment>
   <article
-    class="es3d6yl1 css-m06ict-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="es3d6yl3 css-dilw1d-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -461,6 +461,10 @@ exports[`Article Container should render ById 1`] = `
           alt="DSC07717"
           class="css-1oyo3gl-ImageWrapper-ImageBlock e1shv2yg0"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -487,6 +491,10 @@ https://unsplash.it/200/100 200w"
             alt="DSC07717"
             class="css-cibo30-ImageWrapper e1shv2yg0"
             loading="lazy"
+            sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -507,6 +515,10 @@ https://unsplash.it/200/100 200w"
             alt="DSC07717"
             class="css-cibo30-ImageWrapper e1shv2yg0"
             loading="lazy"
+            sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -527,6 +539,10 @@ https://unsplash.it/200/100 200w"
             alt="DSC07717"
             class="css-cibo30-ImageWrapper e1shv2yg0"
             loading="lazy"
+            sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -561,6 +577,10 @@ https://unsplash.it/200/100 200w"
           alt="DSC07717"
           class="css-cibo30-ImageWrapper e1shv2yg0"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -610,6 +630,10 @@ https://unsplash.it/200/100 200w"
           alt="DSC07717"
           class="css-cibo30-ImageWrapper e1shv2yg0"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -659,6 +683,10 @@ https://unsplash.it/200/100 200w"
           alt="DSC07717"
           class="css-cibo30-ImageWrapper e1shv2yg0"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -711,15 +739,19 @@ https://unsplash.it/200/100 200w"
       </div>
     </blockquote>
     <div
-      class="css-18i7wzi-BreakBlockWrapper e11xbw3q1"
+      class="css-18i7wzi-BreakBlockWrapper e11xbw3q3"
     >
       <div
-        class="css-ywr472-BreakBlockSegment e11xbw3q0"
+        class="css-ywr472-BreakBlockSegment e11xbw3q2"
       >
         <img
           alt="DSC07717"
           class="css-2l3q0o-ImageWrapper-BreakBlock e1shv2yg0"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -728,11 +760,10 @@ https://unsplash.it/200/100 200w"
         />
       </div>
       <div
-        class="css-ywr472-BreakBlockSegment e11xbw3q0"
+        class="css-ywr472-BreakBlockSegment e11xbw3q2"
       >
         <div
-          class="MuiTypography-root MuiTypography-h4 css-um5h8b-MuiTypography-root-BreakBlock"
-          role="heading"
+          class="MuiTypography-root MuiTypography-h4 css-1d7w93q-HeadingWithImage-MuiTypography-root e11xbw3q1"
         >
           Break block test
         </div>
@@ -980,6 +1011,10 @@ https://unsplash.it/200/100 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -1043,6 +1078,10 @@ https://unsplash.it/200/200 200w"
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="css-5gi25x-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -1100,6 +1139,10 @@ https://unsplash.it/200/200 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -1151,6 +1194,10 @@ https://unsplash.it/200/200 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -1191,6 +1238,10 @@ https://unsplash.it/200/100 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -1246,6 +1297,10 @@ https://unsplash.it/200/200 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -1309,6 +1364,10 @@ https://unsplash.it/200/200 200w"
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="css-5gi25x-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -1366,6 +1425,10 @@ https://unsplash.it/200/200 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -1417,6 +1480,10 @@ https://unsplash.it/200/200 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -1457,6 +1524,10 @@ https://unsplash.it/200/100 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -1512,6 +1583,10 @@ https://unsplash.it/200/200 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -1575,6 +1650,10 @@ https://unsplash.it/200/100 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -1632,6 +1711,10 @@ https://unsplash.it/200/100 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -1672,6 +1755,10 @@ https://unsplash.it/200/100 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -1723,6 +1810,10 @@ https://unsplash.it/200/100 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -1882,14 +1973,14 @@ https://unsplash.it/200/100 200w"
       class="css-1mm1s5y-CommentBlockWrapper es9rr591"
     />
     <aside
-      class="css-11sh4th-EventBlockWrapper ea1goei0"
+      class="css-17m2fqm-EventBlockWrapper ea1goei0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-9ztkv6-MuiTypography-root-MuiLink-root-EventListItem"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-19nyt9i-MuiTypography-root-MuiLink-root-EventListItem"
         href="https://example.com"
       >
         <article
-          class="css-ki8is6-EventListItemWrapper ehub4u74"
+          class="css-1tce2jk-EventListItemWrapper ehub4u74"
         >
           <div
             class="css-13xyioz-EventListItemImage ehub4u70"
@@ -1898,6 +1989,10 @@ https://unsplash.it/200/100 200w"
               alt="DSC07717"
               class="css-cibo30-ImageWrapper e1shv2yg0"
               loading="lazy"
+              sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -2050,241 +2145,295 @@ https://unsplash.it/200/100 200w"
       </a>
     </aside>
     <aside
-      class="css-qhufog-ArticleInfoWrapper es3d6yl0"
+      class="css-13ung7g-ArticleInfoWrapper es3d6yl2"
     >
       <div
-        class="css-1fhfas1-AuthorChipWrapper e1jhd13z6"
+        class="css-1sxy1p-ArticleAuthors es3d6yl0"
       >
         <div
-          class="css-1umyun2-AuthorChipAuthorWrapper e1jhd13z4"
+          class="css-1fhfas1-AuthorChipWrapper e1jhd13z7"
         >
           <div
-            class="css-e2hiv1-AuthorChipImageWrapper e1jhd13z2"
+            class="css-1umyun2-AuthorChipAuthorWrapper e1jhd13z5"
           >
-            <img
-              alt="DSC07717"
-              class="css-1ij2yax-ImageWrapper-AuthorChip e1shv2yg0"
-              loading="lazy"
-              srcset="https://unsplash.it/800/800 800w,
+            <div
+              class="css-1g2350v-AuthorChipImageWrapper e1jhd13z3"
+            >
+              <img
+                alt="DSC07717"
+                class="css-1ij2yax-ImageWrapper-AuthorChip e1shv2yg0"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
-              title=""
-            />
-          </div>
-          <div
-            class="css-dpf16q-AuthorChipContentWrapper e1jhd13z1"
-          >
+                title=""
+              />
+            </div>
             <div
-              class="css-1pifcp5-AuthorChipName e1jhd13z0"
+              class="css-1bvkrr9-AuthorChipContentWrapper e1jhd13z2"
             >
-              Von 
-              <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-                href="https://example.com"
+              <div
+                class="css-1pifcp5-AuthorChipName e1jhd13z1"
               >
-                Foobar
-              </a>
+                Von 
+                <a
+                  class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                  href="https://example.com"
+                >
+                  Foobar
+                </a>
+              </div>
+              <div
+                class="css-1aegevy-AuthorChipJob e1jhd13z0"
+              >
+                Editor
+              </div>
             </div>
           </div>
+          <hr
+            class="css-6invwi-AuthorChipDivider e1jhd13z6"
+          />
+          <div
+            class="css-kzytht-AuthorChipMetaWrapper e1jhd13z4"
+          >
+            <time
+              datetime="2023-01-01T00:00:00.000Z"
+            >
+              01.01.2023
+            </time>
+            <aside
+              class="css-xraw1t-AuthorLinksWrapper e1qb6xb50"
+            >
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                href="https://twitter.com"
+                target="__blank"
+                title="Twitter"
+              >
+                <svg
+                  fill="currentColor"
+                  height="22"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 512 512"
+                  width="22"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"
+                  />
+                </svg>
+              </a>
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                href="https://facebook.com"
+                target="__blank"
+                title="Facebook"
+              >
+                <svg
+                  fill="currentColor"
+                  height="22"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 24 24"
+                  width="22"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"
+                  />
+                </svg>
+              </a>
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                href="https://instagram.com"
+                target="__blank"
+                title="Instagram"
+              >
+                <svg
+                  fill="currentColor"
+                  height="22"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 448 512"
+                  width="22"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"
+                  />
+                </svg>
+              </a>
+            </aside>
+          </div>
         </div>
-        <hr
-          class="css-6invwi-AuthorChipDivider e1jhd13z5"
-        />
         <div
-          class="css-kzytht-AuthorChipMetaWrapper e1jhd13z3"
+          class="css-1fhfas1-AuthorChipWrapper e1jhd13z7"
         >
-          <time
-            datetime="2023-01-01T00:00:00.000Z"
+          <div
+            class="css-1umyun2-AuthorChipAuthorWrapper e1jhd13z5"
           >
-            01.01.2023
-          </time>
-          <aside
-            class="css-xraw1t-AuthorLinksWrapper e1qb6xb50"
+            <div
+              class="css-1g2350v-AuthorChipImageWrapper e1jhd13z3"
+            >
+              <img
+                alt="DSC07717"
+                class="css-1ij2yax-ImageWrapper-AuthorChip e1shv2yg0"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title=""
+              />
+            </div>
+            <div
+              class="css-1bvkrr9-AuthorChipContentWrapper e1jhd13z2"
+            >
+              <div
+                class="css-1pifcp5-AuthorChipName e1jhd13z1"
+              >
+                Von 
+                <a
+                  class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                  href="https://example.com"
+                >
+                  Foobar
+                </a>
+              </div>
+              <div
+                class="css-1aegevy-AuthorChipJob e1jhd13z0"
+              >
+                Editor
+              </div>
+            </div>
+          </div>
+          <hr
+            class="css-6invwi-AuthorChipDivider e1jhd13z6"
+          />
+          <div
+            class="css-kzytht-AuthorChipMetaWrapper e1jhd13z4"
           >
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-              href="https://twitter.com"
-              target="__blank"
-              title="Twitter"
+            <time
+              datetime="2023-01-01T00:00:00.000Z"
             >
-              <svg
-                fill="currentColor"
-                height="22"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 512 512"
-                width="22"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"
-                />
-              </svg>
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-              href="https://facebook.com"
-              target="__blank"
-              title="Facebook"
+              01.01.2023
+            </time>
+            <aside
+              class="css-xraw1t-AuthorLinksWrapper e1qb6xb50"
             >
-              <svg
-                fill="currentColor"
-                height="22"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="22"
-                xmlns="http://www.w3.org/2000/svg"
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                href="https://twitter.com"
+                target="__blank"
+                title="Twitter"
               >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"
-                />
-              </svg>
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-              href="https://instagram.com"
-              target="__blank"
-              title="Instagram"
-            >
-              <svg
-                fill="currentColor"
-                height="22"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 448 512"
-                width="22"
-                xmlns="http://www.w3.org/2000/svg"
+                <svg
+                  fill="currentColor"
+                  height="22"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 512 512"
+                  width="22"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"
+                  />
+                </svg>
+              </a>
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                href="https://facebook.com"
+                target="__blank"
+                title="Facebook"
               >
-                <path
-                  d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"
-                />
-              </svg>
-            </a>
-          </aside>
+                <svg
+                  fill="currentColor"
+                  height="22"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 24 24"
+                  width="22"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"
+                  />
+                </svg>
+              </a>
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                href="https://instagram.com"
+                target="__blank"
+                title="Instagram"
+              >
+                <svg
+                  fill="currentColor"
+                  height="22"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 448 512"
+                  width="22"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"
+                  />
+                </svg>
+              </a>
+            </aside>
+          </div>
         </div>
       </div>
       <div
-        class="css-1fhfas1-AuthorChipWrapper e1jhd13z6"
+        class="css-3st1r8-ArticleTags es3d6yl1"
       >
-        <div
-          class="css-1umyun2-AuthorChipAuthorWrapper e1jhd13z4"
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorSecondary MuiChip-clickable MuiChip-clickableColorSecondary MuiChip-outlinedSecondary css-8lcq9x-MuiTypography-root-MuiLink-root-MuiButtonBase-root-MuiChip-root"
+          role="button"
+          tabindex="0"
         >
-          <div
-            class="css-e2hiv1-AuthorChipImageWrapper e1jhd13z2"
+          <span
+            class="MuiChip-label MuiChip-labelMedium css-6od3lo-MuiChip-label"
           >
-            <img
-              alt="DSC07717"
-              class="css-1ij2yax-ImageWrapper-AuthorChip e1shv2yg0"
-              loading="lazy"
-              srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-              title=""
-            />
-          </div>
-          <div
-            class="css-dpf16q-AuthorChipContentWrapper e1jhd13z1"
-          >
-            <div
-              class="css-1pifcp5-AuthorChipName e1jhd13z0"
-            >
-              Von 
-              <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-                href="https://example.com"
-              >
-                Foobar
-              </a>
-            </div>
-          </div>
-        </div>
-        <hr
-          class="css-6invwi-AuthorChipDivider e1jhd13z5"
-        />
-        <div
-          class="css-kzytht-AuthorChipMetaWrapper e1jhd13z3"
+            foo
+          </span>
+          <span
+            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+          />
+        </a>
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorSecondary MuiChip-clickable MuiChip-clickableColorSecondary MuiChip-outlinedSecondary css-8lcq9x-MuiTypography-root-MuiLink-root-MuiButtonBase-root-MuiChip-root"
+          role="button"
+          tabindex="0"
         >
-          <time
-            datetime="2023-01-01T00:00:00.000Z"
+          <span
+            class="MuiChip-label MuiChip-labelMedium css-6od3lo-MuiChip-label"
           >
-            01.01.2023
-          </time>
-          <aside
-            class="css-xraw1t-AuthorLinksWrapper e1qb6xb50"
-          >
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-              href="https://twitter.com"
-              target="__blank"
-              title="Twitter"
-            >
-              <svg
-                fill="currentColor"
-                height="22"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 512 512"
-                width="22"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"
-                />
-              </svg>
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-              href="https://facebook.com"
-              target="__blank"
-              title="Facebook"
-            >
-              <svg
-                fill="currentColor"
-                height="22"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="22"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"
-                />
-              </svg>
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-              href="https://instagram.com"
-              target="__blank"
-              title="Instagram"
-            >
-              <svg
-                fill="currentColor"
-                height="22"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 448 512"
-                width="22"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"
-                />
-              </svg>
-            </a>
-          </aside>
-        </div>
+            bar
+          </span>
+          <span
+            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+          />
+        </a>
       </div>
     </aside>
   </article>
@@ -2294,7 +2443,7 @@ https://unsplash.it/200/200 200w"
 exports[`Article Container should render BySlug 1`] = `
 <DocumentFragment>
   <article
-    class="es3d6yl1 css-m06ict-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="es3d6yl3 css-dilw1d-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -2752,6 +2901,10 @@ exports[`Article Container should render BySlug 1`] = `
           alt="DSC07717"
           class="css-1oyo3gl-ImageWrapper-ImageBlock e1shv2yg0"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -2778,6 +2931,10 @@ https://unsplash.it/200/100 200w"
             alt="DSC07717"
             class="css-cibo30-ImageWrapper e1shv2yg0"
             loading="lazy"
+            sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -2798,6 +2955,10 @@ https://unsplash.it/200/100 200w"
             alt="DSC07717"
             class="css-cibo30-ImageWrapper e1shv2yg0"
             loading="lazy"
+            sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -2818,6 +2979,10 @@ https://unsplash.it/200/100 200w"
             alt="DSC07717"
             class="css-cibo30-ImageWrapper e1shv2yg0"
             loading="lazy"
+            sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -2852,6 +3017,10 @@ https://unsplash.it/200/100 200w"
           alt="DSC07717"
           class="css-cibo30-ImageWrapper e1shv2yg0"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -2901,6 +3070,10 @@ https://unsplash.it/200/100 200w"
           alt="DSC07717"
           class="css-cibo30-ImageWrapper e1shv2yg0"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -2950,6 +3123,10 @@ https://unsplash.it/200/100 200w"
           alt="DSC07717"
           class="css-cibo30-ImageWrapper e1shv2yg0"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -3002,15 +3179,19 @@ https://unsplash.it/200/100 200w"
       </div>
     </blockquote>
     <div
-      class="css-18i7wzi-BreakBlockWrapper e11xbw3q1"
+      class="css-18i7wzi-BreakBlockWrapper e11xbw3q3"
     >
       <div
-        class="css-ywr472-BreakBlockSegment e11xbw3q0"
+        class="css-ywr472-BreakBlockSegment e11xbw3q2"
       >
         <img
           alt="DSC07717"
           class="css-2l3q0o-ImageWrapper-BreakBlock e1shv2yg0"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -3019,11 +3200,10 @@ https://unsplash.it/200/100 200w"
         />
       </div>
       <div
-        class="css-ywr472-BreakBlockSegment e11xbw3q0"
+        class="css-ywr472-BreakBlockSegment e11xbw3q2"
       >
         <div
-          class="MuiTypography-root MuiTypography-h4 css-um5h8b-MuiTypography-root-BreakBlock"
-          role="heading"
+          class="MuiTypography-root MuiTypography-h4 css-1d7w93q-HeadingWithImage-MuiTypography-root e11xbw3q1"
         >
           Break block test
         </div>
@@ -3271,6 +3451,10 @@ https://unsplash.it/200/100 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -3334,6 +3518,10 @@ https://unsplash.it/200/200 200w"
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="css-5gi25x-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -3391,6 +3579,10 @@ https://unsplash.it/200/200 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -3442,6 +3634,10 @@ https://unsplash.it/200/200 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -3482,6 +3678,10 @@ https://unsplash.it/200/100 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -3537,6 +3737,10 @@ https://unsplash.it/200/200 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -3600,6 +3804,10 @@ https://unsplash.it/200/200 200w"
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="css-5gi25x-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -3657,6 +3865,10 @@ https://unsplash.it/200/200 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -3708,6 +3920,10 @@ https://unsplash.it/200/200 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -3748,6 +3964,10 @@ https://unsplash.it/200/100 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -3803,6 +4023,10 @@ https://unsplash.it/200/200 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -3866,6 +4090,10 @@ https://unsplash.it/200/100 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -3923,6 +4151,10 @@ https://unsplash.it/200/100 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -3963,6 +4195,10 @@ https://unsplash.it/200/100 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -4014,6 +4250,10 @@ https://unsplash.it/200/100 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -4173,14 +4413,14 @@ https://unsplash.it/200/100 200w"
       class="css-1mm1s5y-CommentBlockWrapper es9rr591"
     />
     <aside
-      class="css-11sh4th-EventBlockWrapper ea1goei0"
+      class="css-17m2fqm-EventBlockWrapper ea1goei0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-9ztkv6-MuiTypography-root-MuiLink-root-EventListItem"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-19nyt9i-MuiTypography-root-MuiLink-root-EventListItem"
         href="https://example.com"
       >
         <article
-          class="css-ki8is6-EventListItemWrapper ehub4u74"
+          class="css-1tce2jk-EventListItemWrapper ehub4u74"
         >
           <div
             class="css-13xyioz-EventListItemImage ehub4u70"
@@ -4189,6 +4429,10 @@ https://unsplash.it/200/100 200w"
               alt="DSC07717"
               class="css-cibo30-ImageWrapper e1shv2yg0"
               loading="lazy"
+              sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -4341,241 +4585,295 @@ https://unsplash.it/200/100 200w"
       </a>
     </aside>
     <aside
-      class="css-qhufog-ArticleInfoWrapper es3d6yl0"
+      class="css-13ung7g-ArticleInfoWrapper es3d6yl2"
     >
       <div
-        class="css-1fhfas1-AuthorChipWrapper e1jhd13z6"
+        class="css-1sxy1p-ArticleAuthors es3d6yl0"
       >
         <div
-          class="css-1umyun2-AuthorChipAuthorWrapper e1jhd13z4"
+          class="css-1fhfas1-AuthorChipWrapper e1jhd13z7"
         >
           <div
-            class="css-e2hiv1-AuthorChipImageWrapper e1jhd13z2"
+            class="css-1umyun2-AuthorChipAuthorWrapper e1jhd13z5"
           >
-            <img
-              alt="DSC07717"
-              class="css-1ij2yax-ImageWrapper-AuthorChip e1shv2yg0"
-              loading="lazy"
-              srcset="https://unsplash.it/800/800 800w,
+            <div
+              class="css-1g2350v-AuthorChipImageWrapper e1jhd13z3"
+            >
+              <img
+                alt="DSC07717"
+                class="css-1ij2yax-ImageWrapper-AuthorChip e1shv2yg0"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
-              title=""
-            />
-          </div>
-          <div
-            class="css-dpf16q-AuthorChipContentWrapper e1jhd13z1"
-          >
+                title=""
+              />
+            </div>
             <div
-              class="css-1pifcp5-AuthorChipName e1jhd13z0"
+              class="css-1bvkrr9-AuthorChipContentWrapper e1jhd13z2"
             >
-              Von 
-              <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-                href="https://example.com"
+              <div
+                class="css-1pifcp5-AuthorChipName e1jhd13z1"
               >
-                Foobar
-              </a>
+                Von 
+                <a
+                  class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                  href="https://example.com"
+                >
+                  Foobar
+                </a>
+              </div>
+              <div
+                class="css-1aegevy-AuthorChipJob e1jhd13z0"
+              >
+                Editor
+              </div>
             </div>
           </div>
+          <hr
+            class="css-6invwi-AuthorChipDivider e1jhd13z6"
+          />
+          <div
+            class="css-kzytht-AuthorChipMetaWrapper e1jhd13z4"
+          >
+            <time
+              datetime="2023-01-01T00:00:00.000Z"
+            >
+              01.01.2023
+            </time>
+            <aside
+              class="css-xraw1t-AuthorLinksWrapper e1qb6xb50"
+            >
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                href="https://twitter.com"
+                target="__blank"
+                title="Twitter"
+              >
+                <svg
+                  fill="currentColor"
+                  height="22"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 512 512"
+                  width="22"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"
+                  />
+                </svg>
+              </a>
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                href="https://facebook.com"
+                target="__blank"
+                title="Facebook"
+              >
+                <svg
+                  fill="currentColor"
+                  height="22"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 24 24"
+                  width="22"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"
+                  />
+                </svg>
+              </a>
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                href="https://instagram.com"
+                target="__blank"
+                title="Instagram"
+              >
+                <svg
+                  fill="currentColor"
+                  height="22"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 448 512"
+                  width="22"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"
+                  />
+                </svg>
+              </a>
+            </aside>
+          </div>
         </div>
-        <hr
-          class="css-6invwi-AuthorChipDivider e1jhd13z5"
-        />
         <div
-          class="css-kzytht-AuthorChipMetaWrapper e1jhd13z3"
+          class="css-1fhfas1-AuthorChipWrapper e1jhd13z7"
         >
-          <time
-            datetime="2023-01-01T00:00:00.000Z"
+          <div
+            class="css-1umyun2-AuthorChipAuthorWrapper e1jhd13z5"
           >
-            01.01.2023
-          </time>
-          <aside
-            class="css-xraw1t-AuthorLinksWrapper e1qb6xb50"
+            <div
+              class="css-1g2350v-AuthorChipImageWrapper e1jhd13z3"
+            >
+              <img
+                alt="DSC07717"
+                class="css-1ij2yax-ImageWrapper-AuthorChip e1shv2yg0"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title=""
+              />
+            </div>
+            <div
+              class="css-1bvkrr9-AuthorChipContentWrapper e1jhd13z2"
+            >
+              <div
+                class="css-1pifcp5-AuthorChipName e1jhd13z1"
+              >
+                Von 
+                <a
+                  class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                  href="https://example.com"
+                >
+                  Foobar
+                </a>
+              </div>
+              <div
+                class="css-1aegevy-AuthorChipJob e1jhd13z0"
+              >
+                Editor
+              </div>
+            </div>
+          </div>
+          <hr
+            class="css-6invwi-AuthorChipDivider e1jhd13z6"
+          />
+          <div
+            class="css-kzytht-AuthorChipMetaWrapper e1jhd13z4"
           >
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-              href="https://twitter.com"
-              target="__blank"
-              title="Twitter"
+            <time
+              datetime="2023-01-01T00:00:00.000Z"
             >
-              <svg
-                fill="currentColor"
-                height="22"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 512 512"
-                width="22"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"
-                />
-              </svg>
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-              href="https://facebook.com"
-              target="__blank"
-              title="Facebook"
+              01.01.2023
+            </time>
+            <aside
+              class="css-xraw1t-AuthorLinksWrapper e1qb6xb50"
             >
-              <svg
-                fill="currentColor"
-                height="22"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="22"
-                xmlns="http://www.w3.org/2000/svg"
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                href="https://twitter.com"
+                target="__blank"
+                title="Twitter"
               >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"
-                />
-              </svg>
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-              href="https://instagram.com"
-              target="__blank"
-              title="Instagram"
-            >
-              <svg
-                fill="currentColor"
-                height="22"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 448 512"
-                width="22"
-                xmlns="http://www.w3.org/2000/svg"
+                <svg
+                  fill="currentColor"
+                  height="22"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 512 512"
+                  width="22"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"
+                  />
+                </svg>
+              </a>
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                href="https://facebook.com"
+                target="__blank"
+                title="Facebook"
               >
-                <path
-                  d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"
-                />
-              </svg>
-            </a>
-          </aside>
+                <svg
+                  fill="currentColor"
+                  height="22"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 24 24"
+                  width="22"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"
+                  />
+                </svg>
+              </a>
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                href="https://instagram.com"
+                target="__blank"
+                title="Instagram"
+              >
+                <svg
+                  fill="currentColor"
+                  height="22"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 448 512"
+                  width="22"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"
+                  />
+                </svg>
+              </a>
+            </aside>
+          </div>
         </div>
       </div>
       <div
-        class="css-1fhfas1-AuthorChipWrapper e1jhd13z6"
+        class="css-3st1r8-ArticleTags es3d6yl1"
       >
-        <div
-          class="css-1umyun2-AuthorChipAuthorWrapper e1jhd13z4"
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorSecondary MuiChip-clickable MuiChip-clickableColorSecondary MuiChip-outlinedSecondary css-8lcq9x-MuiTypography-root-MuiLink-root-MuiButtonBase-root-MuiChip-root"
+          role="button"
+          tabindex="0"
         >
-          <div
-            class="css-e2hiv1-AuthorChipImageWrapper e1jhd13z2"
+          <span
+            class="MuiChip-label MuiChip-labelMedium css-6od3lo-MuiChip-label"
           >
-            <img
-              alt="DSC07717"
-              class="css-1ij2yax-ImageWrapper-AuthorChip e1shv2yg0"
-              loading="lazy"
-              srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-              title=""
-            />
-          </div>
-          <div
-            class="css-dpf16q-AuthorChipContentWrapper e1jhd13z1"
-          >
-            <div
-              class="css-1pifcp5-AuthorChipName e1jhd13z0"
-            >
-              Von 
-              <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-                href="https://example.com"
-              >
-                Foobar
-              </a>
-            </div>
-          </div>
-        </div>
-        <hr
-          class="css-6invwi-AuthorChipDivider e1jhd13z5"
-        />
-        <div
-          class="css-kzytht-AuthorChipMetaWrapper e1jhd13z3"
+            foo
+          </span>
+          <span
+            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+          />
+        </a>
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorSecondary MuiChip-clickable MuiChip-clickableColorSecondary MuiChip-outlinedSecondary css-8lcq9x-MuiTypography-root-MuiLink-root-MuiButtonBase-root-MuiChip-root"
+          role="button"
+          tabindex="0"
         >
-          <time
-            datetime="2023-01-01T00:00:00.000Z"
+          <span
+            class="MuiChip-label MuiChip-labelMedium css-6od3lo-MuiChip-label"
           >
-            01.01.2023
-          </time>
-          <aside
-            class="css-xraw1t-AuthorLinksWrapper e1qb6xb50"
-          >
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-              href="https://twitter.com"
-              target="__blank"
-              title="Twitter"
-            >
-              <svg
-                fill="currentColor"
-                height="22"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 512 512"
-                width="22"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"
-                />
-              </svg>
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-              href="https://facebook.com"
-              target="__blank"
-              title="Facebook"
-            >
-              <svg
-                fill="currentColor"
-                height="22"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="22"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"
-                />
-              </svg>
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-              href="https://instagram.com"
-              target="__blank"
-              title="Instagram"
-            >
-              <svg
-                fill="currentColor"
-                height="22"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 448 512"
-                width="22"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"
-                />
-              </svg>
-            </a>
-          </aside>
-        </div>
+            bar
+          </span>
+          <span
+            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+          />
+        </a>
       </div>
     </aside>
   </article>
@@ -4585,7 +4883,7 @@ https://unsplash.it/200/200 200w"
 exports[`Article Container should render WithChildren 1`] = `
 <DocumentFragment>
   <article
-    class="es3d6yl1 css-m06ict-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="es3d6yl3 css-dilw1d-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -5043,6 +5341,10 @@ exports[`Article Container should render WithChildren 1`] = `
           alt="DSC07717"
           class="css-1oyo3gl-ImageWrapper-ImageBlock e1shv2yg0"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -5069,6 +5371,10 @@ https://unsplash.it/200/100 200w"
             alt="DSC07717"
             class="css-cibo30-ImageWrapper e1shv2yg0"
             loading="lazy"
+            sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -5089,6 +5395,10 @@ https://unsplash.it/200/100 200w"
             alt="DSC07717"
             class="css-cibo30-ImageWrapper e1shv2yg0"
             loading="lazy"
+            sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -5109,6 +5419,10 @@ https://unsplash.it/200/100 200w"
             alt="DSC07717"
             class="css-cibo30-ImageWrapper e1shv2yg0"
             loading="lazy"
+            sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -5143,6 +5457,10 @@ https://unsplash.it/200/100 200w"
           alt="DSC07717"
           class="css-cibo30-ImageWrapper e1shv2yg0"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -5192,6 +5510,10 @@ https://unsplash.it/200/100 200w"
           alt="DSC07717"
           class="css-cibo30-ImageWrapper e1shv2yg0"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -5241,6 +5563,10 @@ https://unsplash.it/200/100 200w"
           alt="DSC07717"
           class="css-cibo30-ImageWrapper e1shv2yg0"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -5293,15 +5619,19 @@ https://unsplash.it/200/100 200w"
       </div>
     </blockquote>
     <div
-      class="css-18i7wzi-BreakBlockWrapper e11xbw3q1"
+      class="css-18i7wzi-BreakBlockWrapper e11xbw3q3"
     >
       <div
-        class="css-ywr472-BreakBlockSegment e11xbw3q0"
+        class="css-ywr472-BreakBlockSegment e11xbw3q2"
       >
         <img
           alt="DSC07717"
           class="css-2l3q0o-ImageWrapper-BreakBlock e1shv2yg0"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -5310,11 +5640,10 @@ https://unsplash.it/200/100 200w"
         />
       </div>
       <div
-        class="css-ywr472-BreakBlockSegment e11xbw3q0"
+        class="css-ywr472-BreakBlockSegment e11xbw3q2"
       >
         <div
-          class="MuiTypography-root MuiTypography-h4 css-um5h8b-MuiTypography-root-BreakBlock"
-          role="heading"
+          class="MuiTypography-root MuiTypography-h4 css-1d7w93q-HeadingWithImage-MuiTypography-root e11xbw3q1"
         >
           Break block test
         </div>
@@ -5562,6 +5891,10 @@ https://unsplash.it/200/100 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -5625,6 +5958,10 @@ https://unsplash.it/200/200 200w"
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="css-5gi25x-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -5682,6 +6019,10 @@ https://unsplash.it/200/200 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -5733,6 +6074,10 @@ https://unsplash.it/200/200 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -5773,6 +6118,10 @@ https://unsplash.it/200/100 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -5828,6 +6177,10 @@ https://unsplash.it/200/200 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -5891,6 +6244,10 @@ https://unsplash.it/200/200 200w"
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="css-5gi25x-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -5948,6 +6305,10 @@ https://unsplash.it/200/200 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -5999,6 +6360,10 @@ https://unsplash.it/200/200 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -6039,6 +6404,10 @@ https://unsplash.it/200/100 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -6094,6 +6463,10 @@ https://unsplash.it/200/200 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -6157,6 +6530,10 @@ https://unsplash.it/200/100 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -6214,6 +6591,10 @@ https://unsplash.it/200/100 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -6254,6 +6635,10 @@ https://unsplash.it/200/100 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -6305,6 +6690,10 @@ https://unsplash.it/200/100 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -6464,14 +6853,14 @@ https://unsplash.it/200/100 200w"
       class="css-1mm1s5y-CommentBlockWrapper es9rr591"
     />
     <aside
-      class="css-11sh4th-EventBlockWrapper ea1goei0"
+      class="css-17m2fqm-EventBlockWrapper ea1goei0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-9ztkv6-MuiTypography-root-MuiLink-root-EventListItem"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-19nyt9i-MuiTypography-root-MuiLink-root-EventListItem"
         href="https://example.com"
       >
         <article
-          class="css-ki8is6-EventListItemWrapper ehub4u74"
+          class="css-1tce2jk-EventListItemWrapper ehub4u74"
         >
           <div
             class="css-13xyioz-EventListItemImage ehub4u70"
@@ -6480,6 +6869,10 @@ https://unsplash.it/200/100 200w"
               alt="DSC07717"
               class="css-cibo30-ImageWrapper e1shv2yg0"
               loading="lazy"
+              sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -6632,241 +7025,295 @@ https://unsplash.it/200/100 200w"
       </a>
     </aside>
     <aside
-      class="css-qhufog-ArticleInfoWrapper es3d6yl0"
+      class="css-13ung7g-ArticleInfoWrapper es3d6yl2"
     >
       <div
-        class="css-1fhfas1-AuthorChipWrapper e1jhd13z6"
+        class="css-1sxy1p-ArticleAuthors es3d6yl0"
       >
         <div
-          class="css-1umyun2-AuthorChipAuthorWrapper e1jhd13z4"
+          class="css-1fhfas1-AuthorChipWrapper e1jhd13z7"
         >
           <div
-            class="css-e2hiv1-AuthorChipImageWrapper e1jhd13z2"
+            class="css-1umyun2-AuthorChipAuthorWrapper e1jhd13z5"
           >
-            <img
-              alt="DSC07717"
-              class="css-1ij2yax-ImageWrapper-AuthorChip e1shv2yg0"
-              loading="lazy"
-              srcset="https://unsplash.it/800/800 800w,
+            <div
+              class="css-1g2350v-AuthorChipImageWrapper e1jhd13z3"
+            >
+              <img
+                alt="DSC07717"
+                class="css-1ij2yax-ImageWrapper-AuthorChip e1shv2yg0"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
-              title=""
-            />
-          </div>
-          <div
-            class="css-dpf16q-AuthorChipContentWrapper e1jhd13z1"
-          >
+                title=""
+              />
+            </div>
             <div
-              class="css-1pifcp5-AuthorChipName e1jhd13z0"
+              class="css-1bvkrr9-AuthorChipContentWrapper e1jhd13z2"
             >
-              Von 
-              <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-                href="https://example.com"
+              <div
+                class="css-1pifcp5-AuthorChipName e1jhd13z1"
               >
-                Foobar
-              </a>
+                Von 
+                <a
+                  class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                  href="https://example.com"
+                >
+                  Foobar
+                </a>
+              </div>
+              <div
+                class="css-1aegevy-AuthorChipJob e1jhd13z0"
+              >
+                Editor
+              </div>
             </div>
           </div>
+          <hr
+            class="css-6invwi-AuthorChipDivider e1jhd13z6"
+          />
+          <div
+            class="css-kzytht-AuthorChipMetaWrapper e1jhd13z4"
+          >
+            <time
+              datetime="2023-01-01T00:00:00.000Z"
+            >
+              01.01.2023
+            </time>
+            <aside
+              class="css-xraw1t-AuthorLinksWrapper e1qb6xb50"
+            >
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                href="https://twitter.com"
+                target="__blank"
+                title="Twitter"
+              >
+                <svg
+                  fill="currentColor"
+                  height="22"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 512 512"
+                  width="22"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"
+                  />
+                </svg>
+              </a>
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                href="https://facebook.com"
+                target="__blank"
+                title="Facebook"
+              >
+                <svg
+                  fill="currentColor"
+                  height="22"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 24 24"
+                  width="22"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"
+                  />
+                </svg>
+              </a>
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                href="https://instagram.com"
+                target="__blank"
+                title="Instagram"
+              >
+                <svg
+                  fill="currentColor"
+                  height="22"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 448 512"
+                  width="22"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"
+                  />
+                </svg>
+              </a>
+            </aside>
+          </div>
         </div>
-        <hr
-          class="css-6invwi-AuthorChipDivider e1jhd13z5"
-        />
         <div
-          class="css-kzytht-AuthorChipMetaWrapper e1jhd13z3"
+          class="css-1fhfas1-AuthorChipWrapper e1jhd13z7"
         >
-          <time
-            datetime="2023-01-01T00:00:00.000Z"
+          <div
+            class="css-1umyun2-AuthorChipAuthorWrapper e1jhd13z5"
           >
-            01.01.2023
-          </time>
-          <aside
-            class="css-xraw1t-AuthorLinksWrapper e1qb6xb50"
+            <div
+              class="css-1g2350v-AuthorChipImageWrapper e1jhd13z3"
+            >
+              <img
+                alt="DSC07717"
+                class="css-1ij2yax-ImageWrapper-AuthorChip e1shv2yg0"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title=""
+              />
+            </div>
+            <div
+              class="css-1bvkrr9-AuthorChipContentWrapper e1jhd13z2"
+            >
+              <div
+                class="css-1pifcp5-AuthorChipName e1jhd13z1"
+              >
+                Von 
+                <a
+                  class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                  href="https://example.com"
+                >
+                  Foobar
+                </a>
+              </div>
+              <div
+                class="css-1aegevy-AuthorChipJob e1jhd13z0"
+              >
+                Editor
+              </div>
+            </div>
+          </div>
+          <hr
+            class="css-6invwi-AuthorChipDivider e1jhd13z6"
+          />
+          <div
+            class="css-kzytht-AuthorChipMetaWrapper e1jhd13z4"
           >
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-              href="https://twitter.com"
-              target="__blank"
-              title="Twitter"
+            <time
+              datetime="2023-01-01T00:00:00.000Z"
             >
-              <svg
-                fill="currentColor"
-                height="22"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 512 512"
-                width="22"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"
-                />
-              </svg>
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-              href="https://facebook.com"
-              target="__blank"
-              title="Facebook"
+              01.01.2023
+            </time>
+            <aside
+              class="css-xraw1t-AuthorLinksWrapper e1qb6xb50"
             >
-              <svg
-                fill="currentColor"
-                height="22"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="22"
-                xmlns="http://www.w3.org/2000/svg"
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                href="https://twitter.com"
+                target="__blank"
+                title="Twitter"
               >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"
-                />
-              </svg>
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-              href="https://instagram.com"
-              target="__blank"
-              title="Instagram"
-            >
-              <svg
-                fill="currentColor"
-                height="22"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 448 512"
-                width="22"
-                xmlns="http://www.w3.org/2000/svg"
+                <svg
+                  fill="currentColor"
+                  height="22"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 512 512"
+                  width="22"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"
+                  />
+                </svg>
+              </a>
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                href="https://facebook.com"
+                target="__blank"
+                title="Facebook"
               >
-                <path
-                  d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"
-                />
-              </svg>
-            </a>
-          </aside>
+                <svg
+                  fill="currentColor"
+                  height="22"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 24 24"
+                  width="22"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"
+                  />
+                </svg>
+              </a>
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                href="https://instagram.com"
+                target="__blank"
+                title="Instagram"
+              >
+                <svg
+                  fill="currentColor"
+                  height="22"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 448 512"
+                  width="22"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"
+                  />
+                </svg>
+              </a>
+            </aside>
+          </div>
         </div>
       </div>
       <div
-        class="css-1fhfas1-AuthorChipWrapper e1jhd13z6"
+        class="css-3st1r8-ArticleTags es3d6yl1"
       >
-        <div
-          class="css-1umyun2-AuthorChipAuthorWrapper e1jhd13z4"
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorSecondary MuiChip-clickable MuiChip-clickableColorSecondary MuiChip-outlinedSecondary css-8lcq9x-MuiTypography-root-MuiLink-root-MuiButtonBase-root-MuiChip-root"
+          role="button"
+          tabindex="0"
         >
-          <div
-            class="css-e2hiv1-AuthorChipImageWrapper e1jhd13z2"
+          <span
+            class="MuiChip-label MuiChip-labelMedium css-6od3lo-MuiChip-label"
           >
-            <img
-              alt="DSC07717"
-              class="css-1ij2yax-ImageWrapper-AuthorChip e1shv2yg0"
-              loading="lazy"
-              srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-              title=""
-            />
-          </div>
-          <div
-            class="css-dpf16q-AuthorChipContentWrapper e1jhd13z1"
-          >
-            <div
-              class="css-1pifcp5-AuthorChipName e1jhd13z0"
-            >
-              Von 
-              <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-                href="https://example.com"
-              >
-                Foobar
-              </a>
-            </div>
-          </div>
-        </div>
-        <hr
-          class="css-6invwi-AuthorChipDivider e1jhd13z5"
-        />
-        <div
-          class="css-kzytht-AuthorChipMetaWrapper e1jhd13z3"
+            foo
+          </span>
+          <span
+            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+          />
+        </a>
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorSecondary MuiChip-clickable MuiChip-clickableColorSecondary MuiChip-outlinedSecondary css-8lcq9x-MuiTypography-root-MuiLink-root-MuiButtonBase-root-MuiChip-root"
+          role="button"
+          tabindex="0"
         >
-          <time
-            datetime="2023-01-01T00:00:00.000Z"
+          <span
+            class="MuiChip-label MuiChip-labelMedium css-6od3lo-MuiChip-label"
           >
-            01.01.2023
-          </time>
-          <aside
-            class="css-xraw1t-AuthorLinksWrapper e1qb6xb50"
-          >
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-              href="https://twitter.com"
-              target="__blank"
-              title="Twitter"
-            >
-              <svg
-                fill="currentColor"
-                height="22"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 512 512"
-                width="22"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"
-                />
-              </svg>
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-              href="https://facebook.com"
-              target="__blank"
-              title="Facebook"
-            >
-              <svg
-                fill="currentColor"
-                height="22"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="22"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"
-                />
-              </svg>
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-              href="https://instagram.com"
-              target="__blank"
-              title="Instagram"
-            >
-              <svg
-                fill="currentColor"
-                height="22"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 448 512"
-                width="22"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"
-                />
-              </svg>
-            </a>
-          </aside>
-        </div>
+            bar
+          </span>
+          <span
+            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+          />
+        </a>
       </div>
     </aside>
     <div>
@@ -6879,7 +7326,7 @@ https://unsplash.it/200/200 200w"
 exports[`Article Container should render WithClassName 1`] = `
 <DocumentFragment>
   <article
-    class="extra-classname es3d6yl1 css-m06ict-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="extra-classname es3d6yl3 css-dilw1d-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -7337,6 +7784,10 @@ exports[`Article Container should render WithClassName 1`] = `
           alt="DSC07717"
           class="css-1oyo3gl-ImageWrapper-ImageBlock e1shv2yg0"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -7363,6 +7814,10 @@ https://unsplash.it/200/100 200w"
             alt="DSC07717"
             class="css-cibo30-ImageWrapper e1shv2yg0"
             loading="lazy"
+            sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -7383,6 +7838,10 @@ https://unsplash.it/200/100 200w"
             alt="DSC07717"
             class="css-cibo30-ImageWrapper e1shv2yg0"
             loading="lazy"
+            sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -7403,6 +7862,10 @@ https://unsplash.it/200/100 200w"
             alt="DSC07717"
             class="css-cibo30-ImageWrapper e1shv2yg0"
             loading="lazy"
+            sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -7437,6 +7900,10 @@ https://unsplash.it/200/100 200w"
           alt="DSC07717"
           class="css-cibo30-ImageWrapper e1shv2yg0"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -7486,6 +7953,10 @@ https://unsplash.it/200/100 200w"
           alt="DSC07717"
           class="css-cibo30-ImageWrapper e1shv2yg0"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -7535,6 +8006,10 @@ https://unsplash.it/200/100 200w"
           alt="DSC07717"
           class="css-cibo30-ImageWrapper e1shv2yg0"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -7587,15 +8062,19 @@ https://unsplash.it/200/100 200w"
       </div>
     </blockquote>
     <div
-      class="css-18i7wzi-BreakBlockWrapper e11xbw3q1"
+      class="css-18i7wzi-BreakBlockWrapper e11xbw3q3"
     >
       <div
-        class="css-ywr472-BreakBlockSegment e11xbw3q0"
+        class="css-ywr472-BreakBlockSegment e11xbw3q2"
       >
         <img
           alt="DSC07717"
           class="css-2l3q0o-ImageWrapper-BreakBlock e1shv2yg0"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -7604,11 +8083,10 @@ https://unsplash.it/200/100 200w"
         />
       </div>
       <div
-        class="css-ywr472-BreakBlockSegment e11xbw3q0"
+        class="css-ywr472-BreakBlockSegment e11xbw3q2"
       >
         <div
-          class="MuiTypography-root MuiTypography-h4 css-um5h8b-MuiTypography-root-BreakBlock"
-          role="heading"
+          class="MuiTypography-root MuiTypography-h4 css-1d7w93q-HeadingWithImage-MuiTypography-root e11xbw3q1"
         >
           Break block test
         </div>
@@ -7856,6 +8334,10 @@ https://unsplash.it/200/100 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -7919,6 +8401,10 @@ https://unsplash.it/200/200 200w"
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="css-5gi25x-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -7976,6 +8462,10 @@ https://unsplash.it/200/200 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -8027,6 +8517,10 @@ https://unsplash.it/200/200 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -8067,6 +8561,10 @@ https://unsplash.it/200/100 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -8122,6 +8620,10 @@ https://unsplash.it/200/200 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -8185,6 +8687,10 @@ https://unsplash.it/200/200 200w"
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="css-5gi25x-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -8242,6 +8748,10 @@ https://unsplash.it/200/200 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -8293,6 +8803,10 @@ https://unsplash.it/200/200 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -8333,6 +8847,10 @@ https://unsplash.it/200/100 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -8388,6 +8906,10 @@ https://unsplash.it/200/200 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -8451,6 +8973,10 @@ https://unsplash.it/200/100 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -8508,6 +9034,10 @@ https://unsplash.it/200/100 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -8548,6 +9078,10 @@ https://unsplash.it/200/100 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -8599,6 +9133,10 @@ https://unsplash.it/200/100 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -8758,14 +9296,14 @@ https://unsplash.it/200/100 200w"
       class="css-1mm1s5y-CommentBlockWrapper es9rr591"
     />
     <aside
-      class="css-11sh4th-EventBlockWrapper ea1goei0"
+      class="css-17m2fqm-EventBlockWrapper ea1goei0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-9ztkv6-MuiTypography-root-MuiLink-root-EventListItem"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-19nyt9i-MuiTypography-root-MuiLink-root-EventListItem"
         href="https://example.com"
       >
         <article
-          class="css-ki8is6-EventListItemWrapper ehub4u74"
+          class="css-1tce2jk-EventListItemWrapper ehub4u74"
         >
           <div
             class="css-13xyioz-EventListItemImage ehub4u70"
@@ -8774,6 +9312,10 @@ https://unsplash.it/200/100 200w"
               alt="DSC07717"
               class="css-cibo30-ImageWrapper e1shv2yg0"
               loading="lazy"
+              sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -8926,241 +9468,295 @@ https://unsplash.it/200/100 200w"
       </a>
     </aside>
     <aside
-      class="css-qhufog-ArticleInfoWrapper es3d6yl0"
+      class="css-13ung7g-ArticleInfoWrapper es3d6yl2"
     >
       <div
-        class="css-1fhfas1-AuthorChipWrapper e1jhd13z6"
+        class="css-1sxy1p-ArticleAuthors es3d6yl0"
       >
         <div
-          class="css-1umyun2-AuthorChipAuthorWrapper e1jhd13z4"
+          class="css-1fhfas1-AuthorChipWrapper e1jhd13z7"
         >
           <div
-            class="css-e2hiv1-AuthorChipImageWrapper e1jhd13z2"
+            class="css-1umyun2-AuthorChipAuthorWrapper e1jhd13z5"
           >
-            <img
-              alt="DSC07717"
-              class="css-1ij2yax-ImageWrapper-AuthorChip e1shv2yg0"
-              loading="lazy"
-              srcset="https://unsplash.it/800/800 800w,
+            <div
+              class="css-1g2350v-AuthorChipImageWrapper e1jhd13z3"
+            >
+              <img
+                alt="DSC07717"
+                class="css-1ij2yax-ImageWrapper-AuthorChip e1shv2yg0"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
-              title=""
-            />
-          </div>
-          <div
-            class="css-dpf16q-AuthorChipContentWrapper e1jhd13z1"
-          >
+                title=""
+              />
+            </div>
             <div
-              class="css-1pifcp5-AuthorChipName e1jhd13z0"
+              class="css-1bvkrr9-AuthorChipContentWrapper e1jhd13z2"
             >
-              Von 
-              <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-                href="https://example.com"
+              <div
+                class="css-1pifcp5-AuthorChipName e1jhd13z1"
               >
-                Foobar
-              </a>
+                Von 
+                <a
+                  class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                  href="https://example.com"
+                >
+                  Foobar
+                </a>
+              </div>
+              <div
+                class="css-1aegevy-AuthorChipJob e1jhd13z0"
+              >
+                Editor
+              </div>
             </div>
           </div>
+          <hr
+            class="css-6invwi-AuthorChipDivider e1jhd13z6"
+          />
+          <div
+            class="css-kzytht-AuthorChipMetaWrapper e1jhd13z4"
+          >
+            <time
+              datetime="2023-01-01T00:00:00.000Z"
+            >
+              01.01.2023
+            </time>
+            <aside
+              class="css-xraw1t-AuthorLinksWrapper e1qb6xb50"
+            >
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                href="https://twitter.com"
+                target="__blank"
+                title="Twitter"
+              >
+                <svg
+                  fill="currentColor"
+                  height="22"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 512 512"
+                  width="22"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"
+                  />
+                </svg>
+              </a>
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                href="https://facebook.com"
+                target="__blank"
+                title="Facebook"
+              >
+                <svg
+                  fill="currentColor"
+                  height="22"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 24 24"
+                  width="22"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"
+                  />
+                </svg>
+              </a>
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                href="https://instagram.com"
+                target="__blank"
+                title="Instagram"
+              >
+                <svg
+                  fill="currentColor"
+                  height="22"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 448 512"
+                  width="22"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"
+                  />
+                </svg>
+              </a>
+            </aside>
+          </div>
         </div>
-        <hr
-          class="css-6invwi-AuthorChipDivider e1jhd13z5"
-        />
         <div
-          class="css-kzytht-AuthorChipMetaWrapper e1jhd13z3"
+          class="css-1fhfas1-AuthorChipWrapper e1jhd13z7"
         >
-          <time
-            datetime="2023-01-01T00:00:00.000Z"
+          <div
+            class="css-1umyun2-AuthorChipAuthorWrapper e1jhd13z5"
           >
-            01.01.2023
-          </time>
-          <aside
-            class="css-xraw1t-AuthorLinksWrapper e1qb6xb50"
+            <div
+              class="css-1g2350v-AuthorChipImageWrapper e1jhd13z3"
+            >
+              <img
+                alt="DSC07717"
+                class="css-1ij2yax-ImageWrapper-AuthorChip e1shv2yg0"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title=""
+              />
+            </div>
+            <div
+              class="css-1bvkrr9-AuthorChipContentWrapper e1jhd13z2"
+            >
+              <div
+                class="css-1pifcp5-AuthorChipName e1jhd13z1"
+              >
+                Von 
+                <a
+                  class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                  href="https://example.com"
+                >
+                  Foobar
+                </a>
+              </div>
+              <div
+                class="css-1aegevy-AuthorChipJob e1jhd13z0"
+              >
+                Editor
+              </div>
+            </div>
+          </div>
+          <hr
+            class="css-6invwi-AuthorChipDivider e1jhd13z6"
+          />
+          <div
+            class="css-kzytht-AuthorChipMetaWrapper e1jhd13z4"
           >
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-              href="https://twitter.com"
-              target="__blank"
-              title="Twitter"
+            <time
+              datetime="2023-01-01T00:00:00.000Z"
             >
-              <svg
-                fill="currentColor"
-                height="22"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 512 512"
-                width="22"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"
-                />
-              </svg>
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-              href="https://facebook.com"
-              target="__blank"
-              title="Facebook"
+              01.01.2023
+            </time>
+            <aside
+              class="css-xraw1t-AuthorLinksWrapper e1qb6xb50"
             >
-              <svg
-                fill="currentColor"
-                height="22"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="22"
-                xmlns="http://www.w3.org/2000/svg"
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                href="https://twitter.com"
+                target="__blank"
+                title="Twitter"
               >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"
-                />
-              </svg>
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-              href="https://instagram.com"
-              target="__blank"
-              title="Instagram"
-            >
-              <svg
-                fill="currentColor"
-                height="22"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 448 512"
-                width="22"
-                xmlns="http://www.w3.org/2000/svg"
+                <svg
+                  fill="currentColor"
+                  height="22"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 512 512"
+                  width="22"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"
+                  />
+                </svg>
+              </a>
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                href="https://facebook.com"
+                target="__blank"
+                title="Facebook"
               >
-                <path
-                  d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"
-                />
-              </svg>
-            </a>
-          </aside>
+                <svg
+                  fill="currentColor"
+                  height="22"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 24 24"
+                  width="22"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"
+                  />
+                </svg>
+              </a>
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                href="https://instagram.com"
+                target="__blank"
+                title="Instagram"
+              >
+                <svg
+                  fill="currentColor"
+                  height="22"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 448 512"
+                  width="22"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"
+                  />
+                </svg>
+              </a>
+            </aside>
+          </div>
         </div>
       </div>
       <div
-        class="css-1fhfas1-AuthorChipWrapper e1jhd13z6"
+        class="css-3st1r8-ArticleTags es3d6yl1"
       >
-        <div
-          class="css-1umyun2-AuthorChipAuthorWrapper e1jhd13z4"
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorSecondary MuiChip-clickable MuiChip-clickableColorSecondary MuiChip-outlinedSecondary css-8lcq9x-MuiTypography-root-MuiLink-root-MuiButtonBase-root-MuiChip-root"
+          role="button"
+          tabindex="0"
         >
-          <div
-            class="css-e2hiv1-AuthorChipImageWrapper e1jhd13z2"
+          <span
+            class="MuiChip-label MuiChip-labelMedium css-6od3lo-MuiChip-label"
           >
-            <img
-              alt="DSC07717"
-              class="css-1ij2yax-ImageWrapper-AuthorChip e1shv2yg0"
-              loading="lazy"
-              srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-              title=""
-            />
-          </div>
-          <div
-            class="css-dpf16q-AuthorChipContentWrapper e1jhd13z1"
-          >
-            <div
-              class="css-1pifcp5-AuthorChipName e1jhd13z0"
-            >
-              Von 
-              <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-                href="https://example.com"
-              >
-                Foobar
-              </a>
-            </div>
-          </div>
-        </div>
-        <hr
-          class="css-6invwi-AuthorChipDivider e1jhd13z5"
-        />
-        <div
-          class="css-kzytht-AuthorChipMetaWrapper e1jhd13z3"
+            foo
+          </span>
+          <span
+            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+          />
+        </a>
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorSecondary MuiChip-clickable MuiChip-clickableColorSecondary MuiChip-outlinedSecondary css-8lcq9x-MuiTypography-root-MuiLink-root-MuiButtonBase-root-MuiChip-root"
+          role="button"
+          tabindex="0"
         >
-          <time
-            datetime="2023-01-01T00:00:00.000Z"
+          <span
+            class="MuiChip-label MuiChip-labelMedium css-6od3lo-MuiChip-label"
           >
-            01.01.2023
-          </time>
-          <aside
-            class="css-xraw1t-AuthorLinksWrapper e1qb6xb50"
-          >
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-              href="https://twitter.com"
-              target="__blank"
-              title="Twitter"
-            >
-              <svg
-                fill="currentColor"
-                height="22"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 512 512"
-                width="22"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"
-                />
-              </svg>
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-              href="https://facebook.com"
-              target="__blank"
-              title="Facebook"
-            >
-              <svg
-                fill="currentColor"
-                height="22"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="22"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"
-                />
-              </svg>
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-              href="https://instagram.com"
-              target="__blank"
-              title="Instagram"
-            >
-              <svg
-                fill="currentColor"
-                height="22"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 448 512"
-                width="22"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"
-                />
-              </svg>
-            </a>
-          </aside>
-        </div>
+            bar
+          </span>
+          <span
+            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+          />
+        </a>
       </div>
     </aside>
   </article>
@@ -9170,7 +9766,7 @@ https://unsplash.it/200/200 200w"
 exports[`Article Container should render WithEmotion 1`] = `
 <DocumentFragment>
   <article
-    class="es3d6yl1 css-m06ict-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="es3d6yl3 css-dilw1d-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -9628,6 +10224,10 @@ exports[`Article Container should render WithEmotion 1`] = `
           alt="DSC07717"
           class="css-1oyo3gl-ImageWrapper-ImageBlock e1shv2yg0"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -9654,6 +10254,10 @@ https://unsplash.it/200/100 200w"
             alt="DSC07717"
             class="css-cibo30-ImageWrapper e1shv2yg0"
             loading="lazy"
+            sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -9674,6 +10278,10 @@ https://unsplash.it/200/100 200w"
             alt="DSC07717"
             class="css-cibo30-ImageWrapper e1shv2yg0"
             loading="lazy"
+            sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -9694,6 +10302,10 @@ https://unsplash.it/200/100 200w"
             alt="DSC07717"
             class="css-cibo30-ImageWrapper e1shv2yg0"
             loading="lazy"
+            sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -9728,6 +10340,10 @@ https://unsplash.it/200/100 200w"
           alt="DSC07717"
           class="css-cibo30-ImageWrapper e1shv2yg0"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -9777,6 +10393,10 @@ https://unsplash.it/200/100 200w"
           alt="DSC07717"
           class="css-cibo30-ImageWrapper e1shv2yg0"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -9826,6 +10446,10 @@ https://unsplash.it/200/100 200w"
           alt="DSC07717"
           class="css-cibo30-ImageWrapper e1shv2yg0"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -9878,15 +10502,19 @@ https://unsplash.it/200/100 200w"
       </div>
     </blockquote>
     <div
-      class="css-18i7wzi-BreakBlockWrapper e11xbw3q1"
+      class="css-18i7wzi-BreakBlockWrapper e11xbw3q3"
     >
       <div
-        class="css-ywr472-BreakBlockSegment e11xbw3q0"
+        class="css-ywr472-BreakBlockSegment e11xbw3q2"
       >
         <img
           alt="DSC07717"
           class="css-2l3q0o-ImageWrapper-BreakBlock e1shv2yg0"
           loading="lazy"
+          sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
           srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -9895,11 +10523,10 @@ https://unsplash.it/200/100 200w"
         />
       </div>
       <div
-        class="css-ywr472-BreakBlockSegment e11xbw3q0"
+        class="css-ywr472-BreakBlockSegment e11xbw3q2"
       >
         <div
-          class="MuiTypography-root MuiTypography-h4 css-um5h8b-MuiTypography-root-BreakBlock"
-          role="heading"
+          class="MuiTypography-root MuiTypography-h4 css-1d7w93q-HeadingWithImage-MuiTypography-root e11xbw3q1"
         >
           Break block test
         </div>
@@ -10147,6 +10774,10 @@ https://unsplash.it/200/100 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -10210,6 +10841,10 @@ https://unsplash.it/200/200 200w"
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="css-5gi25x-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -10267,6 +10902,10 @@ https://unsplash.it/200/200 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -10318,6 +10957,10 @@ https://unsplash.it/200/200 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -10358,6 +11001,10 @@ https://unsplash.it/200/100 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -10413,6 +11060,10 @@ https://unsplash.it/200/200 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -10476,6 +11127,10 @@ https://unsplash.it/200/200 200w"
                 alt="Friedensdemonstration gegen die Invasion und den Krieg von Russland in der Ukraine, fotografiert am 26.02.2022 in Bern. (KEYSTONE / Manuel Lopez)"
                 class="css-5gi25x-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -10533,6 +11188,10 @@ https://unsplash.it/200/200 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -10584,6 +11243,10 @@ https://unsplash.it/200/200 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -10624,6 +11287,10 @@ https://unsplash.it/200/100 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -10679,6 +11346,10 @@ https://unsplash.it/200/200 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -10742,6 +11413,10 @@ https://unsplash.it/200/100 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -10799,6 +11474,10 @@ https://unsplash.it/200/100 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -10839,6 +11518,10 @@ https://unsplash.it/200/100 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -10890,6 +11573,10 @@ https://unsplash.it/200/100 200w"
                 alt="DSC07717"
                 class="css-16dfgc4-ImageWrapper-Teaser e1shv2yg0"
                 loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
                 srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -11049,14 +11736,14 @@ https://unsplash.it/200/100 200w"
       class="css-1mm1s5y-CommentBlockWrapper es9rr591"
     />
     <aside
-      class="css-11sh4th-EventBlockWrapper ea1goei0"
+      class="css-17m2fqm-EventBlockWrapper ea1goei0"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-9ztkv6-MuiTypography-root-MuiLink-root-EventListItem"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-19nyt9i-MuiTypography-root-MuiLink-root-EventListItem"
         href="https://example.com"
       >
         <article
-          class="css-ki8is6-EventListItemWrapper ehub4u74"
+          class="css-1tce2jk-EventListItemWrapper ehub4u74"
         >
           <div
             class="css-13xyioz-EventListItemImage ehub4u70"
@@ -11065,6 +11752,10 @@ https://unsplash.it/200/100 200w"
               alt="DSC07717"
               class="css-cibo30-ImageWrapper e1shv2yg0"
               loading="lazy"
+              sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -11217,241 +11908,295 @@ https://unsplash.it/200/100 200w"
       </a>
     </aside>
     <aside
-      class="css-qhufog-ArticleInfoWrapper es3d6yl0"
+      class="css-13ung7g-ArticleInfoWrapper es3d6yl2"
     >
       <div
-        class="css-1fhfas1-AuthorChipWrapper e1jhd13z6"
+        class="css-1sxy1p-ArticleAuthors es3d6yl0"
       >
         <div
-          class="css-1umyun2-AuthorChipAuthorWrapper e1jhd13z4"
+          class="css-1fhfas1-AuthorChipWrapper e1jhd13z7"
         >
           <div
-            class="css-e2hiv1-AuthorChipImageWrapper e1jhd13z2"
+            class="css-1umyun2-AuthorChipAuthorWrapper e1jhd13z5"
           >
-            <img
-              alt="DSC07717"
-              class="css-1ij2yax-ImageWrapper-AuthorChip e1shv2yg0"
-              loading="lazy"
-              srcset="https://unsplash.it/800/800 800w,
+            <div
+              class="css-1g2350v-AuthorChipImageWrapper e1jhd13z3"
+            >
+              <img
+                alt="DSC07717"
+                class="css-1ij2yax-ImageWrapper-AuthorChip e1shv2yg0"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
 https://unsplash.it/200/200 200w"
-              title=""
-            />
-          </div>
-          <div
-            class="css-dpf16q-AuthorChipContentWrapper e1jhd13z1"
-          >
+                title=""
+              />
+            </div>
             <div
-              class="css-1pifcp5-AuthorChipName e1jhd13z0"
+              class="css-1bvkrr9-AuthorChipContentWrapper e1jhd13z2"
             >
-              Von 
-              <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-                href="https://example.com"
+              <div
+                class="css-1pifcp5-AuthorChipName e1jhd13z1"
               >
-                Foobar
-              </a>
+                Von 
+                <a
+                  class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                  href="https://example.com"
+                >
+                  Foobar
+                </a>
+              </div>
+              <div
+                class="css-1aegevy-AuthorChipJob e1jhd13z0"
+              >
+                Editor
+              </div>
             </div>
           </div>
+          <hr
+            class="css-6invwi-AuthorChipDivider e1jhd13z6"
+          />
+          <div
+            class="css-kzytht-AuthorChipMetaWrapper e1jhd13z4"
+          >
+            <time
+              datetime="2023-01-01T00:00:00.000Z"
+            >
+              01.01.2023
+            </time>
+            <aside
+              class="css-xraw1t-AuthorLinksWrapper e1qb6xb50"
+            >
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                href="https://twitter.com"
+                target="__blank"
+                title="Twitter"
+              >
+                <svg
+                  fill="currentColor"
+                  height="22"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 512 512"
+                  width="22"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"
+                  />
+                </svg>
+              </a>
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                href="https://facebook.com"
+                target="__blank"
+                title="Facebook"
+              >
+                <svg
+                  fill="currentColor"
+                  height="22"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 24 24"
+                  width="22"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"
+                  />
+                </svg>
+              </a>
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                href="https://instagram.com"
+                target="__blank"
+                title="Instagram"
+              >
+                <svg
+                  fill="currentColor"
+                  height="22"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 448 512"
+                  width="22"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"
+                  />
+                </svg>
+              </a>
+            </aside>
+          </div>
         </div>
-        <hr
-          class="css-6invwi-AuthorChipDivider e1jhd13z5"
-        />
         <div
-          class="css-kzytht-AuthorChipMetaWrapper e1jhd13z3"
+          class="css-1fhfas1-AuthorChipWrapper e1jhd13z7"
         >
-          <time
-            datetime="2023-01-01T00:00:00.000Z"
+          <div
+            class="css-1umyun2-AuthorChipAuthorWrapper e1jhd13z5"
           >
-            01.01.2023
-          </time>
-          <aside
-            class="css-xraw1t-AuthorLinksWrapper e1qb6xb50"
+            <div
+              class="css-1g2350v-AuthorChipImageWrapper e1jhd13z3"
+            >
+              <img
+                alt="DSC07717"
+                class="css-1ij2yax-ImageWrapper-AuthorChip e1shv2yg0"
+                loading="lazy"
+                sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
+                srcset="https://unsplash.it/800/800 800w,
+https://unsplash.it/500/500 500w,
+https://unsplash.it/300/300 300w,
+https://unsplash.it/200/200 200w"
+                title=""
+              />
+            </div>
+            <div
+              class="css-1bvkrr9-AuthorChipContentWrapper e1jhd13z2"
+            >
+              <div
+                class="css-1pifcp5-AuthorChipName e1jhd13z1"
+              >
+                Von 
+                <a
+                  class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                  href="https://example.com"
+                >
+                  Foobar
+                </a>
+              </div>
+              <div
+                class="css-1aegevy-AuthorChipJob e1jhd13z0"
+              >
+                Editor
+              </div>
+            </div>
+          </div>
+          <hr
+            class="css-6invwi-AuthorChipDivider e1jhd13z6"
+          />
+          <div
+            class="css-kzytht-AuthorChipMetaWrapper e1jhd13z4"
           >
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-              href="https://twitter.com"
-              target="__blank"
-              title="Twitter"
+            <time
+              datetime="2023-01-01T00:00:00.000Z"
             >
-              <svg
-                fill="currentColor"
-                height="22"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 512 512"
-                width="22"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"
-                />
-              </svg>
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-              href="https://facebook.com"
-              target="__blank"
-              title="Facebook"
+              01.01.2023
+            </time>
+            <aside
+              class="css-xraw1t-AuthorLinksWrapper e1qb6xb50"
             >
-              <svg
-                fill="currentColor"
-                height="22"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="22"
-                xmlns="http://www.w3.org/2000/svg"
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                href="https://twitter.com"
+                target="__blank"
+                title="Twitter"
               >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"
-                />
-              </svg>
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-              href="https://instagram.com"
-              target="__blank"
-              title="Instagram"
-            >
-              <svg
-                fill="currentColor"
-                height="22"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 448 512"
-                width="22"
-                xmlns="http://www.w3.org/2000/svg"
+                <svg
+                  fill="currentColor"
+                  height="22"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 512 512"
+                  width="22"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"
+                  />
+                </svg>
+              </a>
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                href="https://facebook.com"
+                target="__blank"
+                title="Facebook"
               >
-                <path
-                  d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"
-                />
-              </svg>
-            </a>
-          </aside>
+                <svg
+                  fill="currentColor"
+                  height="22"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 24 24"
+                  width="22"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M0 0h24v24H0z"
+                    fill="none"
+                  />
+                  <path
+                    d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"
+                  />
+                </svg>
+              </a>
+              <a
+                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+                href="https://instagram.com"
+                target="__blank"
+                title="Instagram"
+              >
+                <svg
+                  fill="currentColor"
+                  height="22"
+                  stroke="currentColor"
+                  stroke-width="0"
+                  viewBox="0 0 448 512"
+                  width="22"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"
+                  />
+                </svg>
+              </a>
+            </aside>
+          </div>
         </div>
       </div>
       <div
-        class="css-1fhfas1-AuthorChipWrapper e1jhd13z6"
+        class="css-3st1r8-ArticleTags es3d6yl1"
       >
-        <div
-          class="css-1umyun2-AuthorChipAuthorWrapper e1jhd13z4"
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorSecondary MuiChip-clickable MuiChip-clickableColorSecondary MuiChip-outlinedSecondary css-8lcq9x-MuiTypography-root-MuiLink-root-MuiButtonBase-root-MuiChip-root"
+          role="button"
+          tabindex="0"
         >
-          <div
-            class="css-e2hiv1-AuthorChipImageWrapper e1jhd13z2"
+          <span
+            class="MuiChip-label MuiChip-labelMedium css-6od3lo-MuiChip-label"
           >
-            <img
-              alt="DSC07717"
-              class="css-1ij2yax-ImageWrapper-AuthorChip e1shv2yg0"
-              loading="lazy"
-              srcset="https://unsplash.it/800/800 800w,
-https://unsplash.it/500/500 500w,
-https://unsplash.it/300/300 300w,
-https://unsplash.it/200/200 200w"
-              title=""
-            />
-          </div>
-          <div
-            class="css-dpf16q-AuthorChipContentWrapper e1jhd13z1"
-          >
-            <div
-              class="css-1pifcp5-AuthorChipName e1jhd13z0"
-            >
-              Von 
-              <a
-                class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-                href="https://example.com"
-              >
-                Foobar
-              </a>
-            </div>
-          </div>
-        </div>
-        <hr
-          class="css-6invwi-AuthorChipDivider e1jhd13z5"
-        />
-        <div
-          class="css-kzytht-AuthorChipMetaWrapper e1jhd13z3"
+            foo
+          </span>
+          <span
+            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+          />
+        </a>
+        <a
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways MuiButtonBase-root MuiChip-root MuiChip-outlined MuiChip-sizeMedium MuiChip-colorSecondary MuiChip-clickable MuiChip-clickableColorSecondary MuiChip-outlinedSecondary css-8lcq9x-MuiTypography-root-MuiLink-root-MuiButtonBase-root-MuiChip-root"
+          role="button"
+          tabindex="0"
         >
-          <time
-            datetime="2023-01-01T00:00:00.000Z"
+          <span
+            class="MuiChip-label MuiChip-labelMedium css-6od3lo-MuiChip-label"
           >
-            01.01.2023
-          </time>
-          <aside
-            class="css-xraw1t-AuthorLinksWrapper e1qb6xb50"
-          >
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-              href="https://twitter.com"
-              target="__blank"
-              title="Twitter"
-            >
-              <svg
-                fill="currentColor"
-                height="22"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 512 512"
-                width="22"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M459.37 151.716c.325 4.548.325 9.097.325 13.645 0 138.72-105.583 298.558-298.558 298.558-59.452 0-114.68-17.219-161.137-47.106 8.447.974 16.568 1.299 25.34 1.299 49.055 0 94.213-16.568 130.274-44.832-46.132-.975-84.792-31.188-98.112-72.772 6.498.974 12.995 1.624 19.818 1.624 9.421 0 18.843-1.3 27.614-3.573-48.081-9.747-84.143-51.98-84.143-102.985v-1.299c13.969 7.797 30.214 12.67 47.431 13.319-28.264-18.843-46.781-51.005-46.781-87.391 0-19.492 5.197-37.36 14.294-52.954 51.655 63.675 129.3 105.258 216.365 109.807-1.624-7.797-2.599-15.918-2.599-24.04 0-57.828 46.782-104.934 104.934-104.934 30.213 0 57.502 12.67 76.67 33.137 23.715-4.548 46.456-13.32 66.599-25.34-7.798 24.366-24.366 44.833-46.132 57.827 21.117-2.273 41.584-8.122 60.426-16.243-14.292 20.791-32.161 39.308-52.628 54.253z"
-                />
-              </svg>
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-              href="https://facebook.com"
-              target="__blank"
-              title="Facebook"
-            >
-              <svg
-                fill="currentColor"
-                height="22"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="22"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M22 12c0-5.52-4.48-10-10-10S2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3v3h-3v6.95c5.05-.5 9-4.76 9-9.95z"
-                />
-              </svg>
-            </a>
-            <a
-              class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
-              href="https://instagram.com"
-              target="__blank"
-              title="Instagram"
-            >
-              <svg
-                fill="currentColor"
-                height="22"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 448 512"
-                width="22"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M224.1 141c-63.6 0-114.9 51.3-114.9 114.9s51.3 114.9 114.9 114.9S339 319.5 339 255.9 287.7 141 224.1 141zm0 189.6c-41.1 0-74.7-33.5-74.7-74.7s33.5-74.7 74.7-74.7 74.7 33.5 74.7 74.7-33.6 74.7-74.7 74.7zm146.4-194.3c0 14.9-12 26.8-26.8 26.8-14.9 0-26.8-12-26.8-26.8s12-26.8 26.8-26.8 26.8 12 26.8 26.8zm76.1 27.2c-1.7-35.9-9.9-67.7-36.2-93.9-26.2-26.2-58-34.4-93.9-36.2-37-2.1-147.9-2.1-184.9 0-35.8 1.7-67.6 9.9-93.9 36.1s-34.4 58-36.2 93.9c-2.1 37-2.1 147.9 0 184.9 1.7 35.9 9.9 67.7 36.2 93.9s58 34.4 93.9 36.2c37 2.1 147.9 2.1 184.9 0 35.9-1.7 67.7-9.9 93.9-36.2 26.2-26.2 34.4-58 36.2-93.9 2.1-37 2.1-147.8 0-184.8zM398.8 388c-7.8 19.6-22.9 34.7-42.6 42.6-29.5 11.7-99.5 9-132.1 9s-102.7 2.6-132.1-9c-19.6-7.8-34.7-22.9-42.6-42.6-11.7-29.5-9-99.5-9-132.1s-2.6-102.7 9-132.1c7.8-19.6 22.9-34.7 42.6-42.6 29.5-11.7 99.5-9 132.1-9s102.7-2.6 132.1 9c19.6 7.8 34.7 22.9 42.6 42.6 11.7 29.5 9 99.5 9 132.1s2.7 102.7-9 132.1z"
-                />
-              </svg>
-            </a>
-          </aside>
-        </div>
+            bar
+          </span>
+          <span
+            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+          />
+        </a>
       </div>
     </aside>
   </article>

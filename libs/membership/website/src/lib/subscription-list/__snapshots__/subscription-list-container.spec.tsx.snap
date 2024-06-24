@@ -22,6 +22,10 @@ exports[`SubscriptionList Container should render Default 1`] = `
         alt="DSC07717"
         class="css-cibo30-ImageWrapper e1shv2yg0"
         loading="lazy"
+        sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -396,6 +400,10 @@ exports[`SubscriptionList Container should render Unpaid 1`] = `
         alt="DSC07717"
         class="css-cibo30-ImageWrapper e1shv2yg0"
         loading="lazy"
+        sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -579,6 +587,10 @@ exports[`SubscriptionList Container should render WithClassName 1`] = `
         alt="DSC07717"
         class="css-cibo30-ImageWrapper e1shv2yg0"
         loading="lazy"
+        sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -769,6 +781,10 @@ exports[`SubscriptionList Container should render WithEmotion 1`] = `
         alt="DSC07717"
         class="css-cibo30-ImageWrapper e1shv2yg0"
         loading="lazy"
+        sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
