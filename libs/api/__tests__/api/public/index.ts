@@ -181,6 +181,7 @@ export type Comment = {
   calculatedRatings: Array<CalculatedRating>;
   children: Array<Comment>;
   createdAt: Scalars['DateTime'];
+  featured?: Maybe<Scalars['Boolean']>;
   guestUserImage?: Maybe<Image>;
   guestUsername?: Maybe<Scalars['String']>;
   id: Scalars['ID'];

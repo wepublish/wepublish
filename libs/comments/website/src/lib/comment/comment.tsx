@@ -77,6 +77,11 @@ export const CommentFlair = styled('div')<{isGuest: boolean}>`
     `}
 `
 
+export const CommentFlairLink = styled('a')`
+  text-decoration: none;
+  color: ${({theme}) => theme.palette.primary.main};
+`
+
 export const CommentContent = styled('div')`
   padding: ${({theme}) => theme.spacing(1.5)};
 `
@@ -146,7 +151,14 @@ export const Comment = ({
             )}
           </CommentName>
 
-          {flair && <CommentFlair isGuest={isGuest}>{flair}</CommentFlair>}
+          {user?.flair && source && (
+            <CommentFlair isGuest={isGuest}>
+              <CommentFlairLink href={source} target="_blank" rel="noopener noreferrer">
+                {flair}
+              </CommentFlairLink>
+            </CommentFlair>
+          )}
+          {user?.flair && !source && <CommentFlair isGuest={isGuest}>{user?.flair}</CommentFlair>}
           {!flair && createdAt && (
             <CommentFlair isGuest={isGuest}>{formatCommentDate(createdAt)}</CommentFlair>
           )}

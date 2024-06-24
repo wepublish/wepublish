@@ -8,6 +8,7 @@ import {AuthSessionType} from '@wepublish/authentication/api'
 import {GraphQLRichText} from '@wepublish/richtext/api'
 import {unselectPassword} from '@wepublish/user/api'
 import {
+  GraphQLBoolean,
   GraphQLEnumType,
   GraphQLFloat,
   GraphQLID,
@@ -261,6 +262,7 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
     },
     state: {type: new GraphQLNonNull(GraphQLCommentState)},
     rejectionReason: {type: GraphQLCommentRejectionReason},
+    featured: {type: GraphQLBoolean},
     createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     overriddenRatings: {
@@ -345,6 +347,7 @@ export const GraphQLPublicComment: GraphQLObjectType<PublicComment, Context> =
       source: {type: GraphQLString},
 
       rejectionReason: {type: GraphQLString},
+      featured: {type: GraphQLBoolean},
       createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
       url: {
         type: new GraphQLNonNull(GraphQLString),

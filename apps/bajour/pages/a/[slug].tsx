@@ -7,6 +7,7 @@ import {
   ArticleListContainer,
   ArticleWrapper,
   BuilderArticleListProps,
+  Comment,
   ContentWrapper,
   PollBlock,
   useWebsiteBuilder,
@@ -23,6 +24,7 @@ import {BajourArticle} from '../../src/components/website-builder-overwrites/art
 import {BajourAuthorChip} from '../../src/components/website-builder-overwrites/author/author-chip'
 import {CommentListContainer} from '../../src/components/website-builder-overwrites/blocks/comment-list-container/comment-list-container'
 import {TeaserSlider} from '../../src/components/website-builder-overwrites/blocks/teaser-slider/teaser-slider'
+import {BajourComment} from '../../src/components/website-builder-overwrites/blocks/comment/comment'
 
 const uppercase = css`
   text-transform: uppercase;
@@ -64,8 +66,11 @@ export default function ArticleBySlug() {
   return (
     <WebsiteBuilderProvider
       ArticleList={RelatedArticleSlider}
-      blocks={{Poll: isFDT ? FrageDesTagesArticle : PollBlock}}
-      Article={BajourArticle}>
+      blocks={{
+        Poll: isFDT ? FrageDesTagesArticle : PollBlock
+      }}
+      Article={BajourArticle}
+      Comment={isFDT ? BajourComment : Comment}>
       <Container>
         <ArticleContainer slug={slug as string} />
 
