@@ -1,4 +1,39 @@
 #######
+## next sites
+#######
+FROM node:18.19.1-bookworm-slim as build-next
+ARG NEXT_PROJECT
+WORKDIR /wepublish
+ENV API_URL=https://api-gruppetto.wepublish.media
+COPY . .
+RUN npm ci
+RUN npx nx build ${NEXT_PROJECT}
+
+FROM node:18.19.1-bookworm-slim as next
+MAINTAINER WePublish Foundation
+ARG NEXT_PROJECT
+ENV NODE_ENV=production
+ENV NEXT_TELEMETRY_DISABLED=1
+ENV HOSTNAME=0.0.0.0
+ENV ADDRESS=0.0.0.0
+ENV PORT=4000
+WORKDIR /wepublish
+RUN groupadd -r wepublish && \
+    useradd -r -g wepublish -d /wepublish wepublish && \
+    chown -R wepublish:wepublish /wepublish && \
+    echo "#!/bin/bash\n node /wepublish/apps/${NEXT_PROJECT}/server.js" > /entrypoint.sh && \
+    chown -R wepublish:wepublish /entrypoint.sh && \
+    chmod +x /entrypoint.sh
+COPY --chown=wepublish:wepublish --from=build-next /wepublish/dist/apps/${NEXT_PROJECT}/public /wepublish/public
+COPY --chown=wepublish:wepublish --from=build-next /wepublish/dist/apps/${NEXT_PROJECT}/.next/standalone /wepublish
+COPY --chown=wepublish:wepublish --from=build-next /wepublish/dist/apps/${NEXT_PROJECT}/.next/static /wepublish/.next/static
+EXPOSE 4001
+USER wepublish
+ENTRYPOINT ["/entrypoint.sh"]
+
+
+
+#######
 ## API
 #######
 
