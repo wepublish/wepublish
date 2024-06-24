@@ -60,6 +60,10 @@ exports[`PaymentMethodPicker should render Default 1`] = `
             alt="DSC07717"
             class="css-9uzwa4-ImageWrapper-PaymentMethodPicker e1shv2yg0"
             loading="lazy"
+            sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -121,6 +125,10 @@ https://unsplash.it/200/100 200w"
             alt="DSC07717"
             class="css-9uzwa4-ImageWrapper-PaymentMethodPicker e1shv2yg0"
             loading="lazy"
+            sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -197,6 +205,10 @@ exports[`PaymentMethodPicker should render Selected 1`] = `
             alt="DSC07717"
             class="css-9uzwa4-ImageWrapper-PaymentMethodPicker e1shv2yg0"
             loading="lazy"
+            sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -258,6 +270,10 @@ https://unsplash.it/200/100 200w"
             alt="DSC07717"
             class="css-9uzwa4-ImageWrapper-PaymentMethodPicker e1shv2yg0"
             loading="lazy"
+            sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -334,6 +350,10 @@ exports[`PaymentMethodPicker should render Single 1`] = `
             alt="DSC07717"
             class="css-9uzwa4-ImageWrapper-PaymentMethodPicker e1shv2yg0"
             loading="lazy"
+            sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -410,6 +430,10 @@ exports[`PaymentMethodPicker should render WithClassName 1`] = `
             alt="DSC07717"
             class="css-9uzwa4-ImageWrapper-PaymentMethodPicker e1shv2yg0"
             loading="lazy"
+            sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -471,6 +495,10 @@ https://unsplash.it/200/100 200w"
             alt="DSC07717"
             class="css-9uzwa4-ImageWrapper-PaymentMethodPicker e1shv2yg0"
             loading="lazy"
+            sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -547,6 +575,10 @@ exports[`PaymentMethodPicker should render WithEmotion 1`] = `
             alt="DSC07717"
             class="css-9uzwa4-ImageWrapper-PaymentMethodPicker e1shv2yg0"
             loading="lazy"
+            sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -608,6 +640,10 @@ https://unsplash.it/200/100 200w"
             alt="DSC07717"
             class="css-9uzwa4-ImageWrapper-PaymentMethodPicker e1shv2yg0"
             loading="lazy"
+            sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -684,6 +720,10 @@ exports[`PaymentMethodPicker should render WithError 1`] = `
             alt="DSC07717"
             class="css-9uzwa4-ImageWrapper-PaymentMethodPicker e1shv2yg0"
             loading="lazy"
+            sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -745,6 +785,10 @@ https://unsplash.it/200/100 200w"
             alt="DSC07717"
             class="css-9uzwa4-ImageWrapper-PaymentMethodPicker e1shv2yg0"
             loading="lazy"
+            sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -821,6 +865,10 @@ exports[`PaymentMethodPicker should render WithLoading 1`] = `
             alt="DSC07717"
             class="css-9uzwa4-ImageWrapper-PaymentMethodPicker e1shv2yg0"
             loading="lazy"
+            sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -882,6 +930,10 @@ https://unsplash.it/200/100 200w"
             alt="DSC07717"
             class="css-9uzwa4-ImageWrapper-PaymentMethodPicker e1shv2yg0"
             loading="lazy"
+            sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
             srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,

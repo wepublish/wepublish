@@ -13,8 +13,8 @@ const nextConfig = {
   reactStrictMode: true,
   // Adds the language attribute to the HTML
   i18n: {
-    locales: ['gsw-CH'],
-    defaultLocale: 'gsw-CH'
+    locales: ['de'],
+    defaultLocale: 'de'
   },
   compiler: {
     // This is needed so that we can use components as selectors in Emotion
