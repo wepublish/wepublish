@@ -3,7 +3,7 @@
 exports[`Article Container should render ById 1`] = `
 <DocumentFragment>
   <article
-    class="es3d6yl3 css-hkvsdf-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="es3d6yl3 css-1n6z7co-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -2443,7 +2443,7 @@ https://unsplash.it/200/200 200w"
 exports[`Article Container should render BySlug 1`] = `
 <DocumentFragment>
   <article
-    class="es3d6yl3 css-hkvsdf-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="es3d6yl3 css-1n6z7co-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -4883,7 +4883,7 @@ https://unsplash.it/200/200 200w"
 exports[`Article Container should render WithChildren 1`] = `
 <DocumentFragment>
   <article
-    class="es3d6yl3 css-hkvsdf-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="es3d6yl3 css-1n6z7co-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -7326,7 +7326,7 @@ https://unsplash.it/200/200 200w"
 exports[`Article Container should render WithClassName 1`] = `
 <DocumentFragment>
   <article
-    class="extra-classname es3d6yl3 css-hkvsdf-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="extra-classname es3d6yl3 css-1n6z7co-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -9766,7 +9766,7 @@ https://unsplash.it/200/200 200w"
 exports[`Article Container should render WithEmotion 1`] = `
 <DocumentFragment>
   <article
-    class="es3d6yl3 css-hkvsdf-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="es3d6yl3 css-1n6z7co-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
