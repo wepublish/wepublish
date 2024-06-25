@@ -40,9 +40,18 @@ export function BildwurfAdBlock({zoneID, className}: BuilderBildwurfAdBlockProps
     <>
       <Script src="https://media.online.bildwurf.ch/js/code.min.js" onLoad={loadAd} />
 
-      <BildwurfBlockWrapper className={className} id="bildwurf-injection-wrapper">
-        <ins className="aso-zone" data-zone={zoneID}></ins>
-      </BildwurfBlockWrapper>
+      <BildwurfBlockWrapper
+        className={className}
+        dangerouslySetInnerHTML={{
+          // Inject it dynamically so that React does not track it.
+          // Bildwurf will dynamically change the DOM which can break the application on navigation
+          __html: `
+            <div id="bildwurf-injection-wrapper">
+              <ins className="aso-zone" data-zone="${zoneID}"></ins>
+            </div>
+          `
+        }}
+      />
     </>
   )
 }
