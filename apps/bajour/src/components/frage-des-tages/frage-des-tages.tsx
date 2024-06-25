@@ -144,7 +144,7 @@ const ReadMoreButton = styled(Button)`
 `
 
 export const FrageDesTages = ({teasers, className}: BuilderTeaserListBlockProps) => {
-  const article = (teasers[0] as ApiV1.ArticleTeaser).article
+  const article = (teasers[0] as ApiV1.ArticleTeaser | undefined)?.article
 
   const {data: commentsData} = ApiV1.useCommentListQuery({
     variables: {
