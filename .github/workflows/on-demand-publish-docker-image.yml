@@ -178,7 +178,7 @@ jobs:
       - name: Set up matrix
         id: set-matrix
         run: |
-          targets=$(find app -mindepth 2 -maxdepth 2 -type f -name .frontend_deployment -exec dirname {} \; | xargs -n 1 basename)
+          targets=$(find apps -mindepth 2 -maxdepth 2 -type f -name .frontend_deployment -exec dirname {} \; | xargs -n 1 basename)
           matrix="{\"target\":["
           for target in $targets; do
             matrix="${matrix}\"${target}\","
