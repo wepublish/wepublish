@@ -49,13 +49,14 @@ export const EventListItem = ({
   url,
   description,
   name,
+  lead,
   image,
   startsAt,
   endsAt,
   className
 }: Event & {className?: string}) => {
   const {
-    elements: {H4, Link, Image},
+    elements: {H4, Link, Image, Paragraph},
     blocks: {RichText},
     date
   } = useWebsiteBuilder()
@@ -85,7 +86,7 @@ export const EventListItem = ({
           </EventListItemMeta>
 
           <H4 component="h1">{name}</H4>
-          <RichText richText={description ?? []} />
+          {lead ? <Paragraph>{lead}</Paragraph> : <RichText richText={description ?? []} />}
         </EventListItemContent>
       </EventListItemWrapper>
     </Link>

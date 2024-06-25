@@ -544,6 +544,7 @@
         "image": "Bild",
         "location": "Veranstaltungsort",
         "name": "Name",
+        "lead": "Lead",
         "postponed": "Verschoben",
         "rescheduled": "Verlegt",
         "scheduled": "Geplant",
