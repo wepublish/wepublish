@@ -15,8 +15,7 @@ env:
   WEBSITE_URL: https://website-${{ github.event.pull_request.number }}.reviews.wepublish.dev
   MEDIA_SERVER_URL: https://media-${{ github.event.pull_request.number }}.reviews.wepublish.dev
   STORYBOOK_URL: https://storybook-${{ github.event.pull_request.number }}.reviews.wepublish.dev
-  PROJECT_URL_SUFFIX: -review-${{ github.event.pull_request.number }}.wepublish.vercel.app
-  GC_PROJECT_URL_SUFFIX: -${{ github.event.pull_request.number }}.reviews.wepublish.dev
+  PROJECT_URL_SUFFIX: -${{ github.event.pull_request.number }}.reviews.wepublish.dev
 
 jobs:
   publish_docker_image:
@@ -296,7 +295,8 @@ jobs:
 
   publish_docker_frontend_image:
     name: Frontend
-    needs: [setup-frontend-matrix]
+    needs: [setup-frontend-matrix, helm_deployment]
+    if: ${{ needs.helm_deployment.result == 'success' }}
     uses: ./.github/workflows/on-demand-publish-docker-image-frontend.yml
     strategy:
       matrix: ${{fromJson(needs.setup-frontend-matrix.outputs.matrix)}}
@@ -346,7 +346,7 @@ jobs:
           deployment:
             env:
               API_URL: ${API_URL}
-              FRONTEND_URL: https://${{ matrix.target }}${GC_PROJECT_URL_SUFFIX}
+              FRONTEND_URL: https://${{ matrix.target }}${PROJECT_URL_SUFFIX}
           frontend:
             image: ghcr.io/wepublish/frontend-${{ matrix.target }}:${{ github.sha }}
             env:
@@ -356,43 +356,10 @@ jobs:
           if [[ ! -z $(helm ls -a -n reviews |grep ${POD_NAME} |grep -v "deployed ") ]]; then helm uninstall -n reviews ${POD_NAME}; fi
           helm upgrade --install ${POD_NAME} ./helm/charts/wepublish-frontend -n reviews -f values.yaml --wait
 
-  find_vercel_apps:
-    name: Find Vercel apps
-    runs-on: ubuntu-latest
-    outputs:
-      projects: ${{ steps.projects.outputs.value }}
-    steps:
-      - id: projects
-        run: |
-          echo "value=[\"babanews\", \"bajour\", \"tsri\", \"gruppetto\"]" >> $GITHUB_OUTPUT
-      - run: |
-          echo "${{ steps.projects.outputs.value }}"
-
-  deploy_to_vercel:
-    name: Deploy to Vercel
-    needs: [find_vercel_apps, helm_deployment]
-    if: ${{ needs.helm_deployment.result == 'success' }}
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        project: ${{fromJSON(needs.find_vercel_apps.outputs.projects)}}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          cache: npm
-      - run: npm i -g vercel
-      - run: |
-          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" link --project ${{ matrix.project }} --scope wepublish --yes
-          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" build --yes
-          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" deploy --prebuilt --yes > deployment_url
-          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" alias set $(cat deployment_url) ${{ matrix.project }}${PROJECT_URL_SUFFIX} --scope wepublish --yes
-
   notify:
     name: Notify
-    needs: [find_vercel_apps, deploy_to_vercel]
-    if: ${{ needs.deploy_to_vercel.result == 'success' }}
+    needs: [setup-frontend-matrix, helm_deployment_frontend]
+    if: ${{ needs.helm_deployment_frontend.result == 'success' }}
     runs-on: ubuntu-latest
     continue-on-error: true
 
@@ -406,7 +373,7 @@ jobs:
       - name: Create Deployment Text
         id: deploymentComment
         env:
-          PROJECTS: ${{ needs.find_vercel_apps.outputs.projects }}
+          PROJECTS: ${{fromJson(needs.setup-frontend-matrix.outputs.matrix)}}
           BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
