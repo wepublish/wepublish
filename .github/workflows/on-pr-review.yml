@@ -358,8 +358,9 @@ jobs:
 
   notify:
     name: Notify
-    needs: [setup-frontend-matrix, helm_deployment_frontend]
-    if: ${{ needs.helm_deployment_frontend.result == 'success' }}
+#    needs: [setup-frontend-matrix, helm_deployment_frontend]
+    needs: [setup-frontend-matrix]
+    #    if: ${{ needs.helm_deployment_frontend.result == 'success' }}
     runs-on: ubuntu-latest
     continue-on-error: true
 
@@ -373,7 +374,7 @@ jobs:
       - name: Create Deployment Text
         id: deploymentComment
         env:
-          PROJECTS: ${{fromJson(needs.setup-frontend-matrix.outputs.matrix)}}
+          PROJECTS: ${{needs.setup-frontend-matrix.outputs.matrix}}
           BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
