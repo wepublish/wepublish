@@ -21,12 +21,6 @@ on:
       media_tags:
         required: true
         type: string
-      frontend_repos:
-        required: true
-        type: string
-      frontend_tag:
-        required: true
-        type: string        
 
 jobs:
   build-and-push-docker-api:
@@ -167,49 +161,3 @@ jobs:
           push: true
           tags: |
             ${{ inputs.storybook_tags }}
-  setup-frontend-matrix:
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up matrix
-        id: set-matrix
-        run: |
-          targets=$(find apps -mindepth 2 -maxdepth 2 -type f -name .frontend_deployment -exec dirname {} \; | xargs -n 1 basename)
-          matrix="{\"target\":["
-          for target in $targets; do
-            matrix="${matrix}\"${target}\","
-          done
-          matrix="${matrix%,}]}"  # Remove trailing comma and add closing brackets
-          echo "::set-output name=matrix::${matrix}"
-
-  build-and-push-frontend:
-    needs: setup-frontend-matrix
-    runs-on: ubuntu-latest
-    strategy:
-      matrix: ${{fromJson(needs.setup-frontend-matrix.outputs.matrix)}}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: docker/setup-qemu-action@v1
-      - uses: docker/setup-buildx-action@v1
-      - uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Log in to DockerHub
-        uses: docker/login-action@v1
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-      - name: Build and push ${{ matrix.target }}
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          target: ${{ matrix.target }}
-          push: true
-          tags: |
-            ${{ inputs.frontend_repos }}:${{ matrix.target }}-${{ inputs.frontend_tag }}
