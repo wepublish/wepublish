@@ -296,8 +296,7 @@ jobs:
 
   publish_docker_frontend_image:
     name: Frontend
-    needs: [setup-frontend-matrix, helm_deployment]
-    if: ${{ needs.helm_deployment.result == 'success' }}
+    needs: [setup-frontend-matrix]
     uses: ./.github/workflows/on-demand-publish-docker-image-frontend.yml
     strategy:
       matrix: ${{fromJson(needs.setup-frontend-matrix.outputs.matrix)}}
@@ -349,12 +348,14 @@ jobs:
               FRONTEND_URL: ${{ matrix.target }}${GC_PROJECT_URL_SUFFIX}
           frontend:
             image: ghcr.io/wepublish/frontend-${{ matrix.target }}:${{ github.sha }}
+            env:
+              NODE_ENV: production
           EOF
           export POD_NAME=review-${{ github.event.pull_request.number }}-${{ matrix.target }}-frontend
           if [[ ! -z $(helm ls -a -n reviews |grep ${POD_NAME} |grep -v "deployed ") ]]; then helm uninstall -n reviews ${POD_NAME}; fi
           helm upgrade --install ${POD_NAME} ./helm/charts/wepublish-frontend -n reviews -f values.yaml --wait
-
-
+          
+          
 
   find_vercel_apps:
     name: Find Vercel apps

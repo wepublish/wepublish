@@ -50,4 +50,62 @@ jobs:
           helm get all review-$PR_NUM-minio -n reviews && helm uninstall review-$PR_NUM-minio -n reviews
           # Delete PVCs associated with the PR
           kubectl get pvc -n reviews | grep "\-$PR_NUM\-" | awk '{print $1}' | xargs -r kubectl delete pvc -n reviews
-  
+
+  cleanup-frontend-matrix:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up matrix
+        id: set-matrix
+        run: |
+          targets=$(find apps -mindepth 2 -maxdepth 2 -type f -name .frontend_deployment -exec dirname {} \; | xargs -n 1 basename)
+          matrix="{\"target\":["
+          for target in $targets; do
+            matrix="${matrix}\"${target}\","
+          done
+          matrix="${matrix%,}]}"  
+          echo "::set-output name=matrix::${matrix}"     
+
+  uninstall_frontend:
+    name: Uninstall frontend
+    if: ${{ needs.cleanup-frontend-matrix.result == 'success' }}
+    strategy:
+      matrix: ${{fromJson(needs.cleanup-frontend-matrix.outputs.matrix)}}
+    needs: [cleanup-frontend-matrix]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: '3.4.1'
+
+      - name: Authenticate kubectl
+        uses: 'google-github-actions/auth@v1'
+        with:
+          project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
+          workload_identity_provider: ${{ secrets.GCLOUD_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}
+
+      - name: Prepare kubectl
+        uses: 'google-github-actions/get-gke-credentials@v1'
+        with:
+          project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
+          cluster_name: development
+          location: europe-west6
+
+      - name: Delete review environment
+        run: |
+          HELM_NAME=review-${{ github.event.pull_request.number }}-${{ matrix.target }}-frontend
+          
+          # Delete Helm releases if they exist
+          helm get all $HELM_NAME -n reviews && helm uninstall $HELM_NAME -n reviews
