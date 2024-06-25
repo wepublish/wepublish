@@ -3,15 +3,19 @@
 exports[`Break Block should render Default 1`] = `
 <DocumentFragment>
   <div
-    class="css-18i7wzi-BreakBlockWrapper e11xbw3q1"
+    class="css-18i7wzi-BreakBlockWrapper e11xbw3q3"
   >
     <div
-      class="css-ywr472-BreakBlockSegment e11xbw3q0"
+      class="css-ywr472-BreakBlockSegment e11xbw3q2"
     >
       <img
         alt="DSC07717"
         class="css-2l3q0o-ImageWrapper-BreakBlock e1shv2yg0"
         loading="lazy"
+        sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -20,11 +24,10 @@ https://unsplash.it/200/100 200w"
       />
     </div>
     <div
-      class="css-ywr472-BreakBlockSegment e11xbw3q0"
+      class="css-ywr472-BreakBlockSegment e11xbw3q2"
     >
       <div
-        class="MuiTypography-root MuiTypography-h4 css-um5h8b-MuiTypography-root-BreakBlock"
-        role="heading"
+        class="MuiTypography-root MuiTypography-h4 css-1d7w93q-HeadingWithImage-MuiTypography-root e11xbw3q1"
       >
         Break block test
       </div>
@@ -38,7 +41,7 @@ https://unsplash.it/200/100 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
             data-slate-node="element"
           >
             <span
@@ -52,7 +55,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </p>
           <h4
-            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-1u8rq5i-MuiTypography-root-lastChildNoGutter"
             data-slate-node="element"
           >
             <span
@@ -66,7 +69,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </h4>
           <h4
-            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-1u8rq5i-MuiTypography-root-lastChildNoGutter"
             data-slate-node="element"
           >
             <span
@@ -82,7 +85,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </h4>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
             data-slate-node="element"
           >
             <span
@@ -143,15 +146,19 @@ https://unsplash.it/200/100 200w"
 exports[`Break Block should render ImageRight 1`] = `
 <DocumentFragment>
   <div
-    class="css-18i7wzi-BreakBlockWrapper e11xbw3q1"
+    class="css-18i7wzi-BreakBlockWrapper e11xbw3q3"
   >
     <div
-      class="css-17wr6dm-BreakBlockSegment e11xbw3q0"
+      class="css-17wr6dm-BreakBlockSegment e11xbw3q2"
     >
       <img
         alt="DSC07717"
         class="css-2l3q0o-ImageWrapper-BreakBlock e1shv2yg0"
         loading="lazy"
+        sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -160,11 +167,10 @@ https://unsplash.it/200/100 200w"
       />
     </div>
     <div
-      class="css-ywr472-BreakBlockSegment e11xbw3q0"
+      class="css-ywr472-BreakBlockSegment e11xbw3q2"
     >
       <div
-        class="MuiTypography-root MuiTypography-h4 css-um5h8b-MuiTypography-root-BreakBlock"
-        role="heading"
+        class="MuiTypography-root MuiTypography-h4 css-1d7w93q-HeadingWithImage-MuiTypography-root e11xbw3q1"
       >
         Break block test
       </div>
@@ -178,7 +184,7 @@ https://unsplash.it/200/100 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
             data-slate-node="element"
           >
             <span
@@ -192,7 +198,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </p>
           <h4
-            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-1u8rq5i-MuiTypography-root-lastChildNoGutter"
             data-slate-node="element"
           >
             <span
@@ -206,7 +212,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </h4>
           <h4
-            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-1u8rq5i-MuiTypography-root-lastChildNoGutter"
             data-slate-node="element"
           >
             <span
@@ -222,7 +228,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </h4>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
             data-slate-node="element"
           >
             <span
@@ -283,15 +289,19 @@ https://unsplash.it/200/100 200w"
 exports[`Break Block should render WithButton 1`] = `
 <DocumentFragment>
   <div
-    class="css-18i7wzi-BreakBlockWrapper e11xbw3q1"
+    class="css-18i7wzi-BreakBlockWrapper e11xbw3q3"
   >
     <div
-      class="css-ywr472-BreakBlockSegment e11xbw3q0"
+      class="css-ywr472-BreakBlockSegment e11xbw3q2"
     >
       <img
         alt="DSC07717"
         class="css-2l3q0o-ImageWrapper-BreakBlock e1shv2yg0"
         loading="lazy"
+        sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -300,11 +310,10 @@ https://unsplash.it/200/100 200w"
       />
     </div>
     <div
-      class="css-ywr472-BreakBlockSegment e11xbw3q0"
+      class="css-ywr472-BreakBlockSegment e11xbw3q2"
     >
       <div
-        class="MuiTypography-root MuiTypography-h4 css-um5h8b-MuiTypography-root-BreakBlock"
-        role="heading"
+        class="MuiTypography-root MuiTypography-h4 css-1d7w93q-HeadingWithImage-MuiTypography-root e11xbw3q1"
       >
         Break block test
       </div>
@@ -318,7 +327,7 @@ https://unsplash.it/200/100 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
             data-slate-node="element"
           >
             <span
@@ -332,7 +341,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </p>
           <h4
-            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-1u8rq5i-MuiTypography-root-lastChildNoGutter"
             data-slate-node="element"
           >
             <span
@@ -346,7 +355,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </h4>
           <h4
-            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-1u8rq5i-MuiTypography-root-lastChildNoGutter"
             data-slate-node="element"
           >
             <span
@@ -362,7 +371,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </h4>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
             data-slate-node="element"
           >
             <span
@@ -434,15 +443,19 @@ https://unsplash.it/200/100 200w"
 exports[`Break Block should render WithClassName 1`] = `
 <DocumentFragment>
   <div
-    class="extra-classname css-18i7wzi-BreakBlockWrapper e11xbw3q1"
+    class="extra-classname css-18i7wzi-BreakBlockWrapper e11xbw3q3"
   >
     <div
-      class="css-ywr472-BreakBlockSegment e11xbw3q0"
+      class="css-ywr472-BreakBlockSegment e11xbw3q2"
     >
       <img
         alt="DSC07717"
         class="css-2l3q0o-ImageWrapper-BreakBlock e1shv2yg0"
         loading="lazy"
+        sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -451,11 +464,10 @@ https://unsplash.it/200/100 200w"
       />
     </div>
     <div
-      class="css-ywr472-BreakBlockSegment e11xbw3q0"
+      class="css-ywr472-BreakBlockSegment e11xbw3q2"
     >
       <div
-        class="MuiTypography-root MuiTypography-h4 css-um5h8b-MuiTypography-root-BreakBlock"
-        role="heading"
+        class="MuiTypography-root MuiTypography-h4 css-1d7w93q-HeadingWithImage-MuiTypography-root e11xbw3q1"
       >
         Break block test
       </div>
@@ -469,7 +481,7 @@ https://unsplash.it/200/100 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
             data-slate-node="element"
           >
             <span
@@ -483,7 +495,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </p>
           <h4
-            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-1u8rq5i-MuiTypography-root-lastChildNoGutter"
             data-slate-node="element"
           >
             <span
@@ -497,7 +509,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </h4>
           <h4
-            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-1u8rq5i-MuiTypography-root-lastChildNoGutter"
             data-slate-node="element"
           >
             <span
@@ -513,7 +525,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </h4>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
             data-slate-node="element"
           >
             <span
@@ -574,15 +586,19 @@ https://unsplash.it/200/100 200w"
 exports[`Break Block should render WithEmotion 1`] = `
 <DocumentFragment>
   <div
-    class="css-18i7wzi-BreakBlockWrapper e11xbw3q1"
+    class="css-18i7wzi-BreakBlockWrapper e11xbw3q3"
   >
     <div
-      class="css-ywr472-BreakBlockSegment e11xbw3q0"
+      class="css-ywr472-BreakBlockSegment e11xbw3q2"
     >
       <img
         alt="DSC07717"
         class="css-2l3q0o-ImageWrapper-BreakBlock e1shv2yg0"
         loading="lazy"
+        sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -591,11 +607,10 @@ https://unsplash.it/200/100 200w"
       />
     </div>
     <div
-      class="css-ywr472-BreakBlockSegment e11xbw3q0"
+      class="css-ywr472-BreakBlockSegment e11xbw3q2"
     >
       <div
-        class="MuiTypography-root MuiTypography-h4 css-um5h8b-MuiTypography-root-BreakBlock"
-        role="heading"
+        class="MuiTypography-root MuiTypography-h4 css-1d7w93q-HeadingWithImage-MuiTypography-root e11xbw3q1"
       >
         Break block test
       </div>
@@ -609,7 +624,7 @@ https://unsplash.it/200/100 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
             data-slate-node="element"
           >
             <span
@@ -623,7 +638,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </p>
           <h4
-            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-1u8rq5i-MuiTypography-root-lastChildNoGutter"
             data-slate-node="element"
           >
             <span
@@ -637,7 +652,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </h4>
           <h4
-            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-1u8rq5i-MuiTypography-root-lastChildNoGutter"
             data-slate-node="element"
           >
             <span
@@ -653,7 +668,7 @@ https://unsplash.it/200/100 200w"
             </span>
           </h4>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
             data-slate-node="element"
           >
             <span
@@ -714,20 +729,19 @@ https://unsplash.it/200/100 200w"
 exports[`Break Block should render WithoutImage 1`] = `
 <DocumentFragment>
   <div
-    class="css-18i7wzi-BreakBlockWrapper e11xbw3q1"
+    class="css-18i7wzi-BreakBlockWrapper e11xbw3q3"
   >
     <div
-      class="css-ywr472-BreakBlockSegment e11xbw3q0"
+      class="css-ywr472-BreakBlockSegment e11xbw3q2"
     >
       <div
-        class="MuiTypography-root MuiTypography-h2 css-dh9xz8-MuiTypography-root-BreakBlock"
-        role="heading"
+        class="MuiTypography-root MuiTypography-h2 css-tww30t-HeadingWithoutImage-MuiTypography-root e11xbw3q0"
       >
         Break block test
       </div>
     </div>
     <div
-      class="css-ywr472-BreakBlockSegment e11xbw3q0"
+      class="css-ywr472-BreakBlockSegment e11xbw3q2"
     >
       <div
         class="css-t92hh8-RichTextBlockWrapper-BreakBlock eu4zjs90"
@@ -739,7 +753,7 @@ exports[`Break Block should render WithoutImage 1`] = `
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
             data-slate-node="element"
           >
             <span
@@ -753,7 +767,7 @@ exports[`Break Block should render WithoutImage 1`] = `
             </span>
           </p>
           <h4
-            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-1u8rq5i-MuiTypography-root-lastChildNoGutter"
             data-slate-node="element"
           >
             <span
@@ -767,7 +781,7 @@ exports[`Break Block should render WithoutImage 1`] = `
             </span>
           </h4>
           <h4
-            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-1u8rq5i-MuiTypography-root-lastChildNoGutter"
             data-slate-node="element"
           >
             <span
@@ -783,7 +797,7 @@ exports[`Break Block should render WithoutImage 1`] = `
             </span>
           </h4>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
             data-slate-node="element"
           >
             <span
@@ -844,20 +858,19 @@ exports[`Break Block should render WithoutImage 1`] = `
 exports[`Break Block should render WithoutImageRight 1`] = `
 <DocumentFragment>
   <div
-    class="css-18i7wzi-BreakBlockWrapper e11xbw3q1"
+    class="css-18i7wzi-BreakBlockWrapper e11xbw3q3"
   >
     <div
-      class="css-17wr6dm-BreakBlockSegment e11xbw3q0"
+      class="css-17wr6dm-BreakBlockSegment e11xbw3q2"
     >
       <div
-        class="MuiTypography-root MuiTypography-h2 css-dh9xz8-MuiTypography-root-BreakBlock"
-        role="heading"
+        class="MuiTypography-root MuiTypography-h2 css-tww30t-HeadingWithoutImage-MuiTypography-root e11xbw3q0"
       >
         Break block test
       </div>
     </div>
     <div
-      class="css-ywr472-BreakBlockSegment e11xbw3q0"
+      class="css-ywr472-BreakBlockSegment e11xbw3q2"
     >
       <div
         class="css-t92hh8-RichTextBlockWrapper-BreakBlock eu4zjs90"
@@ -869,7 +882,7 @@ exports[`Break Block should render WithoutImageRight 1`] = `
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
             data-slate-node="element"
           >
             <span
@@ -883,7 +896,7 @@ exports[`Break Block should render WithoutImageRight 1`] = `
             </span>
           </p>
           <h4
-            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-1u8rq5i-MuiTypography-root-lastChildNoGutter"
             data-slate-node="element"
           >
             <span
@@ -897,7 +910,7 @@ exports[`Break Block should render WithoutImageRight 1`] = `
             </span>
           </h4>
           <h4
-            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-1u8rq5i-MuiTypography-root-lastChildNoGutter"
             data-slate-node="element"
           >
             <span
@@ -913,7 +926,7 @@ exports[`Break Block should render WithoutImageRight 1`] = `
             </span>
           </h4>
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
             data-slate-node="element"
           >
             <span

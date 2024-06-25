@@ -5,6 +5,7 @@ import {AppModule} from './nestapp/app.module'
 import {MediaAdapterService} from '@wepublish/image/api'
 import {PaymentsService} from '@wepublish/payment/api'
 import {MailContext} from '@wepublish/mail/api'
+import helmet from 'helmet'
 
 async function bootstrap() {
   const nestApp = await NestFactory.create(AppModule)
@@ -12,6 +13,7 @@ async function bootstrap() {
     origin: true,
     credentials: true
   })
+  nestApp.use(helmet())
   const mediaAdapter = nestApp.get(MediaAdapterService)
   const paymentProviders = nestApp.get(PaymentsService).paymentProviders
   const mailProvider = nestApp.get(MailContext).mailProvider

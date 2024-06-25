@@ -5,8 +5,7 @@ import {
   BreakBlock,
   BuilderBlockRendererProps,
   isBreakBlock,
-  isTeaserListBlock,
-  useWebsiteBuilder
+  isTeaserListBlock
 } from '@wepublish/website'
 import {cond} from 'ramda'
 import {useMemo} from 'react'
@@ -22,9 +21,6 @@ import {ListTeaser} from '../blocks/list-teaser'
 
 export const BabanewsBlockRenderer = (props: BuilderBlockRendererProps) => {
   const theme = useTheme()
-  const {
-    blocks: {TeaserGrid}
-  } = useWebsiteBuilder()
 
   const extraBlockMap = useMemo(
     () =>
@@ -77,7 +73,7 @@ export const BabanewsBlockRenderer = (props: BuilderBlockRendererProps) => {
           )
         ]
       ]),
-    [TeaserGrid]
+    [theme.palette.accent.main, theme.palette.common.black]
   )
 
   return (

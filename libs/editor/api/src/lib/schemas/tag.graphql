@@ -10,6 +10,7 @@ query TagList(
     nodes {
       id
       tag
+      main
     }
 
     pageInfo {
@@ -27,13 +28,15 @@ mutation CreateTag($tag: String, $type: TagType!) {
   createTag(tag: $tag, type: $type) {
     id
     tag
+    main
   }
 }
 
-mutation UpdateTag($id: ID!, $tag: String) {
-  updateTag(id: $id, tag: $tag) {
+mutation UpdateTag($id: ID!, $tag: String, $main: Boolean) {
+  updateTag(id: $id, tag: $tag, main: $main) {
     id
     tag
+    main
   }
 }
 
@@ -41,5 +44,6 @@ mutation DeleteTag($id: ID!) {
   deleteTag(id: $id) {
     id
     tag
+    main
   }
 }

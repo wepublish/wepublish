@@ -15,7 +15,7 @@ exports[`Navbar Container should render Default 1`] = `
           class="css-1trl8g0-NavbarMain ei6evl213"
         >
           <div
-            class="css-1g6nmgg-NavbarIconButtonWrapper ei6evl211"
+            class="css-6rgw7r-NavbarIconButtonWrapper ei6evl211"
           >
             <button
               aria-label="Menu"
@@ -72,10 +72,9 @@ exports[`Navbar Container should render Default 1`] = `
           class="css-cl7riy-NavbarSpacer ei6evl29"
         />
         <div
-          class="css-1w9evey-NavbarActions ei6evl212"
+          class="css-100bt78-NavbarActions ei6evl212"
         >
           <a
-            aria-label="Login"
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
             href="/login"
           >
@@ -85,6 +84,7 @@ exports[`Navbar Container should render Default 1`] = `
               type="button"
             >
               <svg
+                aria-label="Login"
                 fill="currentColor"
                 height="1em"
                 stroke="currentColor"
@@ -128,7 +128,7 @@ exports[`Navbar Container should render WithClassName 1`] = `
           class="css-1trl8g0-NavbarMain ei6evl213"
         >
           <div
-            class="css-1g6nmgg-NavbarIconButtonWrapper ei6evl211"
+            class="css-6rgw7r-NavbarIconButtonWrapper ei6evl211"
           >
             <button
               aria-label="Menu"
@@ -185,10 +185,9 @@ exports[`Navbar Container should render WithClassName 1`] = `
           class="css-cl7riy-NavbarSpacer ei6evl29"
         />
         <div
-          class="css-1w9evey-NavbarActions ei6evl212"
+          class="css-100bt78-NavbarActions ei6evl212"
         >
           <a
-            aria-label="Login"
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
             href="/login"
           >
@@ -198,6 +197,7 @@ exports[`Navbar Container should render WithClassName 1`] = `
               type="button"
             >
               <svg
+                aria-label="Login"
                 fill="currentColor"
                 height="1em"
                 stroke="currentColor"
@@ -241,7 +241,7 @@ exports[`Navbar Container should render WithEmotion 1`] = `
           class="css-1trl8g0-NavbarMain ei6evl213"
         >
           <div
-            class="css-1g6nmgg-NavbarIconButtonWrapper ei6evl211"
+            class="css-6rgw7r-NavbarIconButtonWrapper ei6evl211"
           >
             <button
               aria-label="Menu"
@@ -298,10 +298,9 @@ exports[`Navbar Container should render WithEmotion 1`] = `
           class="css-cl7riy-NavbarSpacer ei6evl29"
         />
         <div
-          class="css-1w9evey-NavbarActions ei6evl212"
+          class="css-100bt78-NavbarActions ei6evl212"
         >
           <a
-            aria-label="Login"
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
             href="/login"
           >
@@ -311,6 +310,7 @@ exports[`Navbar Container should render WithEmotion 1`] = `
               type="button"
             >
               <svg
+                aria-label="Login"
                 fill="currentColor"
                 height="1em"
                 stroke="currentColor"

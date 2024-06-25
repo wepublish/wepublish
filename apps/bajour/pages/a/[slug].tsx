@@ -7,6 +7,7 @@ import {
   ArticleListContainer,
   ArticleWrapper,
   BuilderArticleListProps,
+  Comment,
   ContentWrapper,
   PollBlock,
   useWebsiteBuilder,
@@ -23,6 +24,7 @@ import {BajourArticle} from '../../src/components/website-builder-overwrites/art
 import {BajourAuthorChip} from '../../src/components/website-builder-overwrites/author/author-chip'
 import {CommentListContainer} from '../../src/components/website-builder-overwrites/blocks/comment-list-container/comment-list-container'
 import {TeaserSlider} from '../../src/components/website-builder-overwrites/blocks/teaser-slider/teaser-slider'
+import {BajourComment} from '../../src/components/website-builder-overwrites/blocks/comment/comment'
 
 const uppercase = css`
   text-transform: uppercase;
@@ -59,13 +61,16 @@ export default function ArticleBySlug() {
     }
   })
 
-  const isFDT = data?.article?.tags.includes('frage-des-tages')
+  const isFDT = data?.article?.tags.some(({tag}) => tag === 'frage-des-tages')
 
   return (
     <WebsiteBuilderProvider
       ArticleList={RelatedArticleSlider}
-      blocks={{Poll: isFDT ? FrageDesTagesArticle : PollBlock}}
-      Article={BajourArticle}>
+      blocks={{
+        Poll: isFDT ? FrageDesTagesArticle : PollBlock
+      }}
+      Article={BajourArticle}
+      Comment={isFDT ? BajourComment : Comment}>
       <Container>
         <ArticleContainer slug={slug as string} />
 
@@ -79,7 +84,7 @@ export default function ArticleBySlug() {
               </H5>
 
               <ArticleListContainer
-                variables={{filter: {tags: data.article.tags}, take: 4}}
+                variables={{filter: {tags: data.article.tags.map(tag => tag.id)}, take: 4}}
                 filter={articles => articles.filter(article => article.id !== data.article?.id)}
               />
             </ArticleWrapper>
@@ -143,7 +148,7 @@ export const getStaticProps: GetStaticProps = async ({params}) => {
         query: ApiV1.ArticleListDocument,
         variables: {
           filter: {
-            tags: article.data.article.tags
+            tags: article.data.article.tags.map((tag: ApiV1.Tag) => tag.id)
           },
           take: 4
         }

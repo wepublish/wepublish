@@ -153,6 +153,7 @@ function ArticleEditor() {
     seoTitle: '',
     authors: [],
     tags: [],
+    defaultTags: [],
     url: '',
     properties: [],
     canonicalUrl: '',
@@ -204,14 +205,13 @@ function ArticleEditor() {
 
   useEffect(() => {
     if (articleData?.article) {
-      const {latest, shared, hidden, pending} = articleData.article
+      const {latest, shared, hidden, pending, tags} = articleData.article
       const {
         slug,
         preTitle,
         title,
         seoTitle,
         lead,
-        tags,
         url,
         breaking,
         authors,
@@ -241,7 +241,8 @@ function ArticleEditor() {
         title: title ?? '',
         lead: lead ?? '',
         seoTitle: seoTitle ?? '',
-        tags,
+        tags: tags.map(({id}) => id),
+        defaultTags: tags,
         url,
         properties: properties.map(property => ({
           key: property.key,
@@ -289,7 +290,7 @@ function ArticleEditor() {
       setStateColor(StateColor.draft)
       setTagTitle(t('articleEditor.overview.unpublished'))
     }
-  }, [articleData, hasChanged])
+  }, [articleData, hasChanged, t])
 
   useEffect(() => {
     const error = createError?.message ?? updateError?.message ?? publishError?.message

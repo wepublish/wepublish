@@ -98,4 +98,5 @@ export type BuilderSubscribeProps<
     name: string
     firstName: string
   }>
+  extraMoneyOffset?: number
 } & Pick<BuilderRegistrationFormProps<T>, 'schema' | 'fields'>

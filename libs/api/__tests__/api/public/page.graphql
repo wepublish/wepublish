@@ -4,6 +4,10 @@ fragment PageRef on Page {
   updatedAt
   title
   description
+  tags {
+    id
+    tag
+  }
   image {
     ...ImageRef
   }
@@ -37,7 +41,11 @@ query Page($id: ID!) {
     image {
       ...ImageRef
     }
-    tags
+    tags {
+      id
+      tag
+      type
+    }
     properties {
       key
       value

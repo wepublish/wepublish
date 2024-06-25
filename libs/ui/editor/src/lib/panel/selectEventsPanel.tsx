@@ -102,6 +102,7 @@ export function SelectEventPanel({selectedFilter, onClose, onSelect}: SelectEven
             <Form.ControlLabel>{t('blocks.event.filterByTag')}</Form.ControlLabel>
 
             <SelectTags
+              defaultTags={[]}
               name="tags"
               tagType={TagType.Event}
               setSelectedTags={setTagFilter}

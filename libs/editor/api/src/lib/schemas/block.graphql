@@ -257,6 +257,7 @@ fragment FullBlock on Block {
   }
 
   ... on TeaserListBlock {
+    title
     blockStyle
     teaserType
     teasers {

@@ -96,3 +96,5 @@ challenge:
     - '-'
   mode: 'formula'
   targetSymbol: '?'
+mediaServer:
+  type: 'nova'

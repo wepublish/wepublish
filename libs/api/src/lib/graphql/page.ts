@@ -27,6 +27,7 @@ import {
 
 import {GraphQLBlockInput, GraphQLBlock, GraphQLPublicBlock} from './blocks'
 import {createProxyingResolver} from '../utility'
+import {GraphQLTag} from './tag/tag'
 
 export const GraphQLPageFilter = new GraphQLInputObjectType({
   name: 'PageFilter',
@@ -108,7 +109,10 @@ export const GraphQLPageRevision = new GraphQLObjectType<PageRevision, Context>(
 
     title: {type: GraphQLString},
     description: {type: GraphQLString},
-    tags: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLString)))},
+    tags: {
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLString))),
+      deprecationReason: 'Tags now live on the Page itself'
+    },
 
     properties: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLMetadataProperty)))
@@ -175,6 +179,23 @@ export const GraphQLPage = new GraphQLObjectType<Page, Context>({
       resolve: createProxyingResolver(({draft, pending, published}) => {
         return draft ?? pending ?? published
       })
+    },
+
+    tags: {
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLTag))),
+      resolve: createProxyingResolver(async ({id}, _, {prisma: {tag}}) => {
+        const tags = await tag.findMany({
+          where: {
+            pages: {
+              some: {
+                pageId: id
+              }
+            }
+          }
+        })
+
+        return tags
+      })
     }
   }
   // TODO: Implement page history
@@ -209,7 +230,22 @@ export const GraphQLPublicPage = new GraphQLObjectType<PublicPage, Context>({
 
     title: {type: new GraphQLNonNull(GraphQLString)},
     description: {type: GraphQLString},
-    tags: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLString)))},
+    tags: {
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLTag))),
+      resolve: createProxyingResolver(async ({id}, _, {prisma: {tag}}) => {
+        const tags = await tag.findMany({
+          where: {
+            pages: {
+              some: {
+                pageId: id
+              }
+            }
+          }
+        })
+
+        return tags
+      })
+    },
 
     properties: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLMetadataPropertyPublic))),

@@ -32,6 +32,8 @@ jobs:
         ghcr.io/wepublish/storybook:${{ github.sha }}
       website_tags: |
         ghcr.io/wepublish/website:${{ github.sha }}
+      media_tags: |
+        ghcr.io/wepublish/media:${{ github.sha }}
       frontend_repos: |
         ghcr.io/wepublish/frontend
       frontend_tag: ${{ github.sha }}
@@ -82,7 +84,7 @@ jobs:
             rootUser: ${S3_ACCESS_KEY_ID}
             rootPassword: ${S3_SECRET_ACCESS_KEY}
           disableWebUI: true
-          defaultBuckets: ${S3_BUCKET}
+          defaultBuckets: wepublish-staff,wepublish-transformed
           persistence:
             enabled: false
           service:
@@ -91,36 +93,6 @@ jobs:
           EOF
           helm repo add bitnami https://charts.bitnami.com/bitnami
           helm upgrade --install review-${{ github.event.pull_request.number }}-minio bitnami/minio -n reviews -f values.yaml
-
-      - name: Helm deploy media-server
-        run: |
-          cat > values.yaml <<EOF
-          deployment:
-            image: seccomch/wep-media-light:latest
-            env:
-              TOKEN: media-token
-              DEBUG: 'false'
-              NUM_CLUSTERS: '1'
-              AWS_S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY_ID}
-              AWS_S3_SECRET_ACCESS_KEY: ${S3_SECRET_ACCESS_KEY}
-              AWS_S3_BUCKET: ${S3_BUCKET}
-              AWS_S3_REGION: 'us-east-1'
-              AWS_S3_ENDPOINT: 'http://review-${{ github.event.pull_request.number }}-minio.reviews.svc.cluster.local:9000'
-              AWS_STORAGE_CLASS: 'REDUCED_REDUNDANCY'
-              AWS_S3_FORCE_PATH_STYLE: 'true'
-            replicaCount: 1
-          service:
-            type: ClusterIP
-            port: 80
-          ingress:
-            enabled: true
-            host: media-${{ github.event.pull_request.number }}.reviews.wepublish.dev
-            path: /
-          pvc:
-            enabled: false
-          labels: { }
-          EOF
-          helm upgrade --install review-${{ github.event.pull_request.number }}-media-server karma-media-server --repo https://gitlab.com/api/v4/projects/38941346/packages/helm/stable -n reviews -f values.yaml --version 1.0.6
 
       - name: Helm deploy database
         run: |
@@ -278,6 +250,9 @@ jobs:
                 operandTypes: [ '+', '-' ]
                 mode: 'formula'
                 targetSymbol: '?'
+          
+              mediaServer:
+                type: 'nova'
           editor:
             image: ghcr.io/wepublish/editor:${{ github.sha }}
             env:
@@ -289,6 +264,14 @@ jobs:
             enabled: true
             image: ghcr.io/wepublish/storybook:${{ github.sha }}
             url: ${STORYBOOK_URL}
+          media:
+            image: ghcr.io/wepublish/media:${{ github.sha }}
+            env:
+              TOKEN: media-token
+              S3_ACCESS_KEY: accessKey
+              S3_SECRET_KEY: secretKey
+              S3_ENDPOINT: 'review-${{ github.event.pull_request.number }}-minio.reviews.svc.cluster.local'
+              S3_PORT: '9000'
           EOF
           export POD_NAME=review-${{ github.event.pull_request.number }}-app
           if [[ ! -z $(helm ls -a -n reviews |grep ${POD_NAME} |grep -v "deployed ") ]]; then helm uninstall -n reviews ${POD_NAME}; fi

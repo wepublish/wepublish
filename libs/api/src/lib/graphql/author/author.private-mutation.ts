@@ -101,8 +101,7 @@ export const updateAuthor = (
       }
     },
     include: {
-      links: true,
-      tags: true
+      links: true
     }
   })
 }

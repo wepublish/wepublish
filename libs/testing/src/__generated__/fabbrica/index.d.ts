@@ -3,6 +3,7 @@ import type { ArticleRevision } from "@prisma/client";
 import type { ArticleRevisionAuthor } from "@prisma/client";
 import type { ArticleRevisionSocialMediaAuthor } from "@prisma/client";
 import type { Article } from "@prisma/client";
+import type { TaggedArticles } from "@prisma/client";
 import type { AuthorsLinks } from "@prisma/client";
 import type { Author } from "@prisma/client";
 import type { TaggedAuthors } from "@prisma/client";
@@ -24,6 +25,7 @@ import type { NavigationLink } from "@prisma/client";
 import type { Navigation } from "@prisma/client";
 import type { PageRevision } from "@prisma/client";
 import type { Page } from "@prisma/client";
+import type { TaggedPages } from "@prisma/client";
 import type { PaymentMethod } from "@prisma/client";
 import type { Payment } from "@prisma/client";
 import type { PeerProfile } from "@prisma/client";
@@ -302,6 +304,7 @@ type ArticleFactoryDefineInput = {
     pending?: ArticlependingFactory | Prisma.ArticleRevisionCreateNestedOneWithoutPendingArticleInput;
     draft?: ArticledraftFactory | Prisma.ArticleRevisionCreateNestedOneWithoutDraftArticleInput;
     navigations?: Prisma.NavigationLinkCreateNestedManyWithoutArticleInput;
+    tags?: Prisma.TaggedArticlesCreateNestedManyWithoutArticleInput;
 };
 type ArticleFactoryDefineOptions = {
     defaultData?: Resolver<ArticleFactoryDefineInput, BuildDataOptions>;
@@ -332,6 +335,49 @@ export interface ArticleFactoryInterface<TOptions extends ArticleFactoryDefineOp
  * @returns factory {@link ArticleFactoryInterface}
  */
 export declare function defineArticleFactory<TOptions extends ArticleFactoryDefineOptions>(options?: TOptions): ArticleFactoryInterface<TOptions>;
+type TaggedArticlesarticleFactory = {
+    _factoryFor: "Article";
+    build: () => PromiseLike<Prisma.ArticleCreateNestedOneWithoutTagsInput["create"]>;
+};
+type TaggedArticlestagFactory = {
+    _factoryFor: "Tag";
+    build: () => PromiseLike<Prisma.TagCreateNestedOneWithoutArticlesInput["create"]>;
+};
+type TaggedArticlesFactoryDefineInput = {
+    createdAt?: Date;
+    modifiedAt?: Date;
+    article: TaggedArticlesarticleFactory | Prisma.ArticleCreateNestedOneWithoutTagsInput;
+    tag: TaggedArticlestagFactory | Prisma.TagCreateNestedOneWithoutArticlesInput;
+};
+type TaggedArticlesFactoryDefineOptions = {
+    defaultData: Resolver<TaggedArticlesFactoryDefineInput, BuildDataOptions>;
+    traits?: {
+        [traitName: string | symbol]: {
+            data: Resolver<Partial<TaggedArticlesFactoryDefineInput>, BuildDataOptions>;
+        };
+    };
+};
+type TaggedArticlesTraitKeys<TOptions extends TaggedArticlesFactoryDefineOptions> = keyof TOptions["traits"];
+export interface TaggedArticlesFactoryInterfaceWithoutTraits {
+    readonly _factoryFor: "TaggedArticles";
+    build(inputData?: Partial<Prisma.TaggedArticlesCreateInput>): PromiseLike<Prisma.TaggedArticlesCreateInput>;
+    buildCreateInput(inputData?: Partial<Prisma.TaggedArticlesCreateInput>): PromiseLike<Prisma.TaggedArticlesCreateInput>;
+    buildList(inputData: number | readonly Partial<Prisma.TaggedArticlesCreateInput>[]): PromiseLike<Prisma.TaggedArticlesCreateInput[]>;
+    pickForConnect(inputData: TaggedArticles): Pick<TaggedArticles, "articleId" | "tagId">;
+    create(inputData?: Partial<Prisma.TaggedArticlesCreateInput>): PromiseLike<TaggedArticles>;
+    createList(inputData: number | readonly Partial<Prisma.TaggedArticlesCreateInput>[]): PromiseLike<TaggedArticles[]>;
+    createForConnect(inputData?: Partial<Prisma.TaggedArticlesCreateInput>): PromiseLike<Pick<TaggedArticles, "articleId" | "tagId">>;
+}
+export interface TaggedArticlesFactoryInterface<TOptions extends TaggedArticlesFactoryDefineOptions = TaggedArticlesFactoryDefineOptions> extends TaggedArticlesFactoryInterfaceWithoutTraits {
+    use(name: TaggedArticlesTraitKeys<TOptions>, ...names: readonly TaggedArticlesTraitKeys<TOptions>[]): TaggedArticlesFactoryInterfaceWithoutTraits;
+}
+/**
+ * Define factory for {@link TaggedArticles} model.
+ *
+ * @param options
+ * @returns factory {@link TaggedArticlesFactoryInterface}
+ */
+export declare function defineTaggedArticlesFactory<TOptions extends TaggedArticlesFactoryDefineOptions>(options: TOptions): TaggedArticlesFactoryInterface<TOptions>;
 type AuthorsLinksAuthorFactory = {
     _factoryFor: "Author";
     build: () => PromiseLike<Prisma.AuthorCreateNestedOneWithoutLinksInput["create"]>;
@@ -629,6 +675,7 @@ type CommentFactoryDefineInput = {
     source?: string | null;
     authorType?: CommentAuthorType;
     guestUsername?: string | null;
+    featured?: boolean;
     peer?: CommentpeerFactory | Prisma.PeerCreateNestedOneWithoutCommentsInput;
     revisions?: Prisma.CommentsRevisionsCreateNestedManyWithoutCommentInput;
     guestUserImage?: CommentguestUserImageFactory | Prisma.ImageCreateNestedOneWithoutCommentInput;
@@ -1285,6 +1332,7 @@ type PageFactoryDefineInput = {
     pending?: PagependingFactory | Prisma.PageRevisionCreateNestedOneWithoutPendingPageInput;
     draft?: PagedraftFactory | Prisma.PageRevisionCreateNestedOneWithoutDraftPageInput;
     navigations?: Prisma.NavigationLinkCreateNestedManyWithoutPageInput;
+    tags?: Prisma.TaggedPagesCreateNestedManyWithoutPageInput;
 };
 type PageFactoryDefineOptions = {
     defaultData?: Resolver<PageFactoryDefineInput, BuildDataOptions>;
@@ -1315,6 +1363,49 @@ export interface PageFactoryInterface<TOptions extends PageFactoryDefineOptions 
  * @returns factory {@link PageFactoryInterface}
  */
 export declare function definePageFactory<TOptions extends PageFactoryDefineOptions>(options?: TOptions): PageFactoryInterface<TOptions>;
+type TaggedPagespageFactory = {
+    _factoryFor: "Page";
+    build: () => PromiseLike<Prisma.PageCreateNestedOneWithoutTagsInput["create"]>;
+};
+type TaggedPagestagFactory = {
+    _factoryFor: "Tag";
+    build: () => PromiseLike<Prisma.TagCreateNestedOneWithoutPagesInput["create"]>;
+};
+type TaggedPagesFactoryDefineInput = {
+    createdAt?: Date;
+    modifiedAt?: Date;
+    page: TaggedPagespageFactory | Prisma.PageCreateNestedOneWithoutTagsInput;
+    tag: TaggedPagestagFactory | Prisma.TagCreateNestedOneWithoutPagesInput;
+};
+type TaggedPagesFactoryDefineOptions = {
+    defaultData: Resolver<TaggedPagesFactoryDefineInput, BuildDataOptions>;
+    traits?: {
+        [traitName: string | symbol]: {
+            data: Resolver<Partial<TaggedPagesFactoryDefineInput>, BuildDataOptions>;
+        };
+    };
+};
+type TaggedPagesTraitKeys<TOptions extends TaggedPagesFactoryDefineOptions> = keyof TOptions["traits"];
+export interface TaggedPagesFactoryInterfaceWithoutTraits {
+    readonly _factoryFor: "TaggedPages";
+    build(inputData?: Partial<Prisma.TaggedPagesCreateInput>): PromiseLike<Prisma.TaggedPagesCreateInput>;
+    buildCreateInput(inputData?: Partial<Prisma.TaggedPagesCreateInput>): PromiseLike<Prisma.TaggedPagesCreateInput>;
+    buildList(inputData: number | readonly Partial<Prisma.TaggedPagesCreateInput>[]): PromiseLike<Prisma.TaggedPagesCreateInput[]>;
+    pickForConnect(inputData: TaggedPages): Pick<TaggedPages, "pageId" | "tagId">;
+    create(inputData?: Partial<Prisma.TaggedPagesCreateInput>): PromiseLike<TaggedPages>;
+    createList(inputData: number | readonly Partial<Prisma.TaggedPagesCreateInput>[]): PromiseLike<TaggedPages[]>;
+    createForConnect(inputData?: Partial<Prisma.TaggedPagesCreateInput>): PromiseLike<Pick<TaggedPages, "pageId" | "tagId">>;
+}
+export interface TaggedPagesFactoryInterface<TOptions extends TaggedPagesFactoryDefineOptions = TaggedPagesFactoryDefineOptions> extends TaggedPagesFactoryInterfaceWithoutTraits {
+    use(name: TaggedPagesTraitKeys<TOptions>, ...names: readonly TaggedPagesTraitKeys<TOptions>[]): TaggedPagesFactoryInterfaceWithoutTraits;
+}
+/**
+ * Define factory for {@link TaggedPages} model.
+ *
+ * @param options
+ * @returns factory {@link TaggedPagesFactoryInterface}
+ */
+export declare function defineTaggedPagesFactory<TOptions extends TaggedPagesFactoryDefineOptions>(options: TOptions): TaggedPagesFactoryInterface<TOptions>;
 type PaymentMethodimageFactory = {
     _factoryFor: "Image";
     build: () => PromiseLike<Prisma.ImageCreateNestedOneWithoutPaymentMethodsInput["create"]>;
@@ -2001,9 +2092,12 @@ type TagFactoryDefineInput = {
     modifiedAt?: Date;
     type?: TagType;
     tag?: string | null;
+    main?: boolean;
     comments?: Prisma.TaggedCommentsCreateNestedManyWithoutTagInput;
     events?: Prisma.TaggedEventsCreateNestedManyWithoutTagInput;
     authors?: Prisma.TaggedAuthorsCreateNestedManyWithoutTagInput;
+    articles?: Prisma.TaggedArticlesCreateNestedManyWithoutTagInput;
+    pages?: Prisma.TaggedPagesCreateNestedManyWithoutTagInput;
 };
 type TagFactoryDefineOptions = {
     defaultData?: Resolver<TagFactoryDefineInput, BuildDataOptions>;

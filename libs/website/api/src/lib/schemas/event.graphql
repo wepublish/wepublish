@@ -8,8 +8,7 @@ fragment FullEvent on Event {
     ...FullImage
   }
   tags {
-    id
-    tag
+    ...FullTag
   }
   startsAt
   endsAt

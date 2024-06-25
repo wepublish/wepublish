@@ -12,6 +12,8 @@ import {
   PaymentState,
   Peer,
   PrismaClient,
+  TaggedArticles,
+  TaggedPages,
   User,
   UserRole
 } from '@prisma/client'
@@ -78,10 +80,10 @@ export interface DataLoaderContext {
 
   readonly images: DataLoader<string, Image | null>
 
-  readonly articles: DataLoader<string, ArticleWithRevisions | null>
+  readonly articles: DataLoader<string, (ArticleWithRevisions & {tags: TaggedArticles[]}) | null>
   readonly publicArticles: DataLoader<string, PublicArticle | null>
 
-  readonly pages: DataLoader<string, PageWithRevisions | null>
+  readonly pages: DataLoader<string, (PageWithRevisions & {tags: TaggedPages[]}) | null>
   readonly publicPagesByID: DataLoader<string, PublicPage | null>
   readonly publicPagesBySlug: DataLoader<string, PublicPage | null>
 
@@ -356,6 +358,7 @@ export async function contextFromRequest(
             }
           },
           include: {
+            tags: true,
             draft: {
               include: {
                 properties: true,
@@ -436,6 +439,7 @@ export async function contextFromRequest(
             }
           },
           include: {
+            tags: true,
             draft: {
               include: {
                 properties: true

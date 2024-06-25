@@ -27,7 +27,7 @@ const fullArticleInclude = {
       socialMediaAuthors: true
     }
   }
-}
+} as const
 
 export const deleteArticleById = async (
   id: string,
@@ -80,7 +80,7 @@ export const createArticle = async (
 ) => {
   const {roles} = authenticate()
   authorise(CanCreateArticle, roles)
-  const {shared, hidden, properties, authorIDs, socialMediaAuthorIDs, ...data} = input
+  const {shared, hidden, properties, authorIDs, socialMediaAuthorIDs, tags, ...data} = input
 
   return article.create({
     data: {
@@ -106,6 +106,14 @@ export const createArticle = async (
           },
           revision: 0
         }
+      },
+      tags: {
+        createMany: {
+          data: (tags as string[])?.map(tagId => ({
+            tagId
+          })),
+          skipDuplicates: true
+        }
       }
     },
     include: fullArticleInclude
@@ -122,6 +130,7 @@ export const duplicateArticle = async (
   authorise(CanCreateArticle, roles)
 
   const article = await articles.load(id)
+
   if (!article) {
     throw new NotFound('article', id)
   }
@@ -168,6 +177,14 @@ export const duplicateArticle = async (
     data: {
       shared: article.shared,
       hidden: article.hidden,
+      tags: {
+        createMany: {
+          data: article.tags.map(({tagId}) => ({
+            tagId
+          })),
+          skipDuplicates: true
+        }
+      },
       draft: {
         create: input
       }
@@ -438,7 +455,8 @@ export const publishArticle = async (
 }
 
 type UpdateArticleInput = Pick<Prisma.ArticleCreateInput, 'shared' | 'hidden'> &
-  Omit<Prisma.ArticleRevisionCreateInput, 'revision' | 'properties'> & {
+  Omit<Prisma.ArticleRevisionCreateInput, 'revision' | 'properties' | 'tags'> & {
+    tags: string[]
     properties: Prisma.MetadataPropertyUncheckedCreateWithoutArticleRevisionInput[]
     authorIDs: Prisma.ArticleRevisionAuthorCreateManyRevisionInput['authorId'][]
     socialMediaAuthorIDs: Prisma.ArticleRevisionSocialMediaAuthorCreateManyRevisionInput['authorId'][]
@@ -446,17 +464,15 @@ type UpdateArticleInput = Pick<Prisma.ArticleCreateInput, 'shared' | 'hidden'> &
 
 export const updateArticle = async (
   id: string,
-  {properties, authorIDs, socialMediaAuthorIDs, shared, hidden, ...input}: UpdateArticleInput,
+  {properties, authorIDs, socialMediaAuthorIDs, shared, hidden, tags, ...input}: UpdateArticleInput,
   authenticate: Context['authenticate'],
-  articleClient: PrismaClient['article']
+  articleClient: PrismaClient['article'],
+  articleLoader: Context['loaders']['articles']
 ) => {
   const {roles} = authenticate()
   authorise(CanCreateArticle, roles)
 
-  const article = await articleClient.findUnique({
-    where: {id},
-    include: fullArticleInclude
-  })
+  const article = await articleLoader.load(id)
 
   if (!article) {
     throw new NotFound('article', id)
@@ -536,6 +552,20 @@ export const updateArticle = async (
               }
             }
           }
+        }
+      },
+      tags: {
+        deleteMany: {
+          tagId: {
+            notIn: tags
+          }
+        },
+        createMany: {
+          data: tags
+            .filter(tagId => !article.tags.some(tag => tag.tagId === tagId))
+            .map(tagId => ({
+              tagId
+            }))
         }
       }
     },

@@ -8,7 +8,8 @@ import {
   hasBlockStyle,
   isFilledTeaser,
   isTeaserGridBlock,
-  isTeaserListBlock
+  isTeaserListBlock,
+  useWebsiteBuilder
 } from '@wepublish/website'
 import {useKeenSlider} from 'keen-slider/react'
 import {allPass, anyPass} from 'ramda'
@@ -21,7 +22,12 @@ export const isTeaserSlider = (
 ): block is ApiV1.TeaserGridBlock | ApiV1.TeaserListBlock =>
   allPass([hasBlockStyle('Slider'), anyPass([isTeaserGridBlock, isTeaserListBlock])])(block)
 
-export const SliderContainer = styled('div')`
+export const SliderContainer = styled('section')`
+  display: grid;
+  gap: ${({theme}) => theme.spacing(3)};
+`
+
+const SliderInnerContainer = styled('div')`
   display: grid;
   position: relative;
   padding-top: ${({theme}) => theme.spacing(2)};
@@ -42,15 +48,29 @@ export const SliderContainer = styled('div')`
   }
 `
 
-const SliderInnerContainer = styled('div')``
+const SlidesContainer = styled('div')`
+  position: relative;
+`
+
+const SliderTitle = styled('div')`
+  ${({theme}) => theme.breakpoints.up('sm')} {
+    margin-left: calc(100% / 12);
+    margin-right: calc(100% / 12);
+  }
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    margin-left: calc((100% / 12) * 2);
+    margin-right: calc((100% / 12) * 2);
+  }
+`
 
 const SliderInnerBackground = styled('div')`
   position: absolute;
-  z-index: -1;
   top: 0;
   bottom: 0;
   left: 0;
   right: 0;
+  z-index: -1;
   background: #feede8;
 
   ${({theme}) => theme.breakpoints.up('sm')} {
@@ -144,10 +164,11 @@ const useSlidesPadding = () => {
   return 16
 }
 
-export const TeaserSlider = ({
-  teasers,
-  blockStyle
-}: BuilderTeaserGridBlockProps | BuilderTeaserListBlockProps) => {
+export const TeaserSlider = (props: BuilderTeaserGridBlockProps | BuilderTeaserListBlockProps) => {
+  const {teasers, blockStyle} = props
+  const {
+    elements: {H5}
+  } = useWebsiteBuilder()
   const [currentSlide, setCurrentSlide] = useState(0)
   const [loaded, setLoaded] = useState(false)
 
@@ -174,27 +195,35 @@ export const TeaserSlider = ({
   return (
     !!filledTeasers.length && (
       <SliderContainer>
-        <SliderInnerBackground />
+        <SliderTitle>
+          {(props as BuilderTeaserListBlockProps).title && (
+            <H5 component={'h1'}>{(props as BuilderTeaserListBlockProps).title}</H5>
+          )}
+        </SliderTitle>
 
-        <SliderInnerContainer ref={ref} className="keen-slider">
-          {filledTeasers.map((teaser, index) => (
-            <div key={index} className="keen-slider__slide">
-              {<TeaserSlide teaser={teaser} blockStyle={blockStyle} />}
-            </div>
-          ))}
-        </SliderInnerContainer>
+        <SliderInnerContainer>
+          <SliderInnerBackground />
 
-        {loaded && sliderRef.current && (
-          <BallContainer>
-            {[...Array(sliderRef.current?.track.details?.slides.length).keys()].map(idx => (
-              <Ball
-                key={idx}
-                onClick={() => sliderRef.current?.moveToIdx(idx)}
-                isActive={currentSlide === idx}
-              />
+          <SlidesContainer ref={ref} className="keen-slider">
+            {filledTeasers.map((teaser, index) => (
+              <div key={index} className="keen-slider__slide">
+                {<TeaserSlide teaser={teaser} blockStyle={blockStyle} />}
+              </div>
             ))}
-          </BallContainer>
-        )}
+          </SlidesContainer>
+
+          {loaded && sliderRef.current && (
+            <BallContainer>
+              {[...Array(sliderRef.current?.track.details?.slides.length).keys()].map(idx => (
+                <Ball
+                  key={idx}
+                  onClick={() => sliderRef.current?.moveToIdx(idx)}
+                  isActive={currentSlide === idx}
+                />
+              ))}
+            </BallContainer>
+          )}
+        </SliderInnerContainer>
       </SliderContainer>
     )
   )

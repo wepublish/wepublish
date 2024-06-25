@@ -8,6 +8,7 @@ import {AuthSessionType} from '@wepublish/authentication/api'
 import {GraphQLRichText} from '@wepublish/richtext/api'
 import {unselectPassword} from '@wepublish/user/api'
 import {
+  GraphQLBoolean,
   GraphQLEnumType,
   GraphQLFloat,
   GraphQLID,
@@ -217,7 +218,7 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
       )
     },
     tags: {
-      type: new GraphQLList(new GraphQLNonNull(GraphQLTag)),
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLTag))),
       resolve: createProxyingResolver(async ({id}, _, {prisma: {tag}}) => {
         const tags = await tag.findMany({
           where: {
@@ -261,6 +262,7 @@ export const GraphQLComment: GraphQLObjectType<Comment, Context> = new GraphQLOb
     },
     state: {type: new GraphQLNonNull(GraphQLCommentState)},
     rejectionReason: {type: GraphQLCommentRejectionReason},
+    featured: {type: GraphQLBoolean},
     createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     modifiedAt: {type: new GraphQLNonNull(GraphQLDateTime)},
     overriddenRatings: {
@@ -306,7 +308,7 @@ export const GraphQLPublicComment: GraphQLObjectType<PublicComment, Context> =
         )
       },
       tags: {
-        type: new GraphQLList(new GraphQLNonNull(GraphQLTag)),
+        type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLTag))),
         resolve: createProxyingResolver(async ({id}, _, {prisma: {taggedComments}}) => {
           const tags = await taggedComments.findMany({
             where: {
@@ -345,6 +347,7 @@ export const GraphQLPublicComment: GraphQLObjectType<PublicComment, Context> =
       source: {type: GraphQLString},
 
       rejectionReason: {type: GraphQLString},
+      featured: {type: GraphQLBoolean},
       createdAt: {type: new GraphQLNonNull(GraphQLDateTime)},
       url: {
         type: new GraphQLNonNull(GraphQLString),

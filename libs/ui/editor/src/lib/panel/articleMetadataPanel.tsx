@@ -1,5 +1,11 @@
 import styled from '@emotion/styled'
-import {AuthorRefFragment, CommentItemType, ImageRefFragment} from '@wepublish/editor/api'
+import {
+  AuthorRefFragment,
+  CommentItemType,
+  ImageRefFragment,
+  Tag,
+  TagType
+} from '@wepublish/editor/api'
 import {slugify} from '@wepublish/utils'
 import {useEffect, useState} from 'react'
 import {Trans, useTranslation} from 'react-i18next'
@@ -15,7 +21,6 @@ import {
   Nav as RNav,
   Panel,
   Schema,
-  TagPicker,
   Toggle as RToggle,
   Tooltip,
   Whisper
@@ -26,6 +31,7 @@ import {
   ListInput,
   ListValue,
   PermissionControl,
+  SelectTags,
   Textarea,
   createCheckedPermissionComponent,
   useAuthorisation
@@ -102,6 +108,7 @@ export interface ArticleMetadata {
   readonly seoTitle: string
   readonly authors: AuthorRefFragment[]
   readonly tags: string[]
+  readonly defaultTags: Pick<Tag, 'id' | 'tag'>[]
   readonly url: string
   readonly properties: ArticleMetadataProperty[]
   readonly canonicalUrl: string
@@ -144,6 +151,7 @@ function ArticleMetadataPanel({
     seoTitle,
     slug,
     tags,
+    defaultTags,
     authors,
     shared,
     hidden,
@@ -448,13 +456,12 @@ function ArticleMetadataPanel({
             </Group>
             <Group controlId="articleTags">
               <ControlLabel>{t('articleEditor.panels.tags')}</ControlLabel>
-              <TagPicker
-                block
-                virtualized
-                value={tags}
-                creatable
-                data={tags.map(tag => ({label: tag, value: tag}))}
-                onChange={tagsValue => onChange?.({...value, tags: tagsValue ?? []})}
+              <SelectTags
+                defaultTags={defaultTags}
+                disabled={!isAuthorized}
+                selectedTags={tags}
+                setSelectedTags={tagsValue => onChange?.({...value, tags: tagsValue ?? []})}
+                tagType={TagType.Article}
               />
             </Group>
             <Group controlId="articleBreakingNews">

@@ -167,7 +167,14 @@ fragment FullTeaser on Teaser {
       ...ArticleWithoutBlocks
 
       blocks {
-        ...BlockWithoutTeaser
+        __typename
+
+        ... on PollBlock {
+          blockStyle
+          poll {
+            ...FullPoll
+          }
+        }
       }
     }
   }
@@ -189,10 +196,6 @@ fragment FullTeaser on Teaser {
 
     article {
       ...ArticleWithoutBlocks
-
-      blocks {
-        ...BlockWithoutTeaser
-      }
     }
   }
 
@@ -209,10 +212,6 @@ fragment FullTeaser on Teaser {
 
     page {
       ...PageWithoutBlocks
-
-      blocks {
-        ...BlockWithoutTeaser
-      }
     }
   }
 
@@ -278,7 +277,11 @@ fragment FullBlock on Block {
   }
 
   ... on TeaserListBlock {
+    title
     blockStyle
+    filter {
+      tags
+    }
     teasers {
       ...FullTeaser
     }

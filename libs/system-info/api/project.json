@@ -1,21 +1,21 @@
 {
-  "name": "systemInfo-api",
+  "name": "system-info-api",
   "$schema": "../../../node_modules/nx/schemas/project-schema.json",
-  "sourceRoot": "libs/systemInfo/api/src",
+  "sourceRoot": "libs/system-info/api/src",
   "projectType": "library",
   "targets": {
     "lint": {
       "executor": "@nx/eslint:lint",
       "outputs": ["{options.outputFile}"],
       "options": {
-        "lintFilePatterns": ["libs/systemInfo/api/**/*.ts"]
+        "lintFilePatterns": ["libs/system-info/api/**/*.ts"]
       }
     },
     "test": {
       "executor": "@nrwl/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
       "options": {
-        "jestConfig": "libs/systemInfo/api/jest.config.ts",
+        "jestConfig": "libs/system-info/api/jest.config.ts",
         "passWithNoTests": true
       }
     }

@@ -10,6 +10,14 @@ global.console.error = (message, ...optionalParams) => {
     if (message.match(/Missing field '.*' while writing result/gi)) {
       return
     }
+
+    if (
+      message.match(
+        /Warning: The current testing environment is not configured to support act(...)/gi
+      )
+    ) {
+      return
+    }
   }
 
   if (typeof message === 'object' && 'message' in message && typeof message.message === 'string') {

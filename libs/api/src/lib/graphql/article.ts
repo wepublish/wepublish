@@ -33,6 +33,7 @@ import {GraphQLPublicComment} from './comment/comment'
 import {AuthSessionType} from '@wepublish/authentication/api'
 import {getPublicCommentsForItemById} from './comment/comment.public-queries'
 import {SortOrder} from '@wepublish/utils/api'
+import {GraphQLTag} from './tag/tag'
 
 export const GraphQLArticleFilter = new GraphQLInputObjectType({
   name: 'ArticleFilter',
@@ -138,7 +139,10 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
     lead: {type: GraphQLString},
     seoTitle: {type: GraphQLString},
     slug: {type: GraphQLString},
-    tags: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLString)))},
+    tags: {
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLString))),
+      deprecationReason: 'Tags now live on the Article itself'
+    },
 
     properties: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLMetadataProperty)))
@@ -220,6 +224,23 @@ export const GraphQLArticle = new GraphQLObjectType<Article, Context>({
       resolve: createProxyingResolver(({draft, pending, published}) => {
         return draft ?? pending ?? published
       })
+    },
+
+    tags: {
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLTag))),
+      resolve: createProxyingResolver(async ({id}, _, {prisma: {tag}}) => {
+        const tags = await tag.findMany({
+          where: {
+            articles: {
+              some: {
+                articleId: id
+              }
+            }
+          }
+        })
+
+        return tags
+      })
     }
   }
 })
@@ -286,7 +307,22 @@ export const GraphQLPublicArticle: GraphQLObjectType<PublicArticle, Context> =
       title: {type: new GraphQLNonNull(GraphQLString)},
       lead: {type: GraphQLString},
       seoTitle: {type: GraphQLString},
-      tags: {type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLString)))},
+      tags: {
+        type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLTag))),
+        resolve: createProxyingResolver(async ({id}, _, {prisma: {tag}}) => {
+          const tags = await tag.findMany({
+            where: {
+              articles: {
+                some: {
+                  articleId: id
+                }
+              }
+            }
+          })
+
+          return tags
+        })
+      },
 
       canonicalUrl: {type: GraphQLString},
 

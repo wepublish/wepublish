@@ -64,6 +64,8 @@ fragment FullComment on Comment {
     answerId
     value
   }
+
+  featured
 }
 
 query CommentList(
@@ -122,6 +124,7 @@ mutation updateComment(
   $userID: ID
   $guestUsername: String
   $guestUserImageID: ID
+  $featured: Boolean
   $source: String
   $tagIds: [ID!]
   $ratingOverrides: [CommentRatingOverrideUpdateInput!]
@@ -132,6 +135,7 @@ mutation updateComment(
     userID: $userID
     guestUsername: $guestUsername
     guestUserImageID: $guestUserImageID
+    featured: $featured
     source: $source
     tagIds: $tagIds
     ratingOverrides: $ratingOverrides

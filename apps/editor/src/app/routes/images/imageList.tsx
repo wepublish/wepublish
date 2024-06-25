@@ -402,7 +402,7 @@ const ImageGridView = ({
     <GridView>
       {images.map(image => {
         return (
-          <ImageWrapper>
+          <ImageWrapper key={image.id}>
             <OverlayContainer>
               <Link to={`/images/edit/${image.id}`}>
                 <Overlay>

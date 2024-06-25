@@ -359,6 +359,7 @@
       "modalTitle": "Wirklich löschen?"
     },
     "commentEditView": {
+      "featured": "Hervorgehoben",
       "actions": "Aktionen",
       "comment": "Text Kommentar",
       "commentContextHeader": "Kommentar-Historie",
@@ -714,6 +715,8 @@
       "commentRating": "Bewertungssystem",
       "comments": "Kommentare",
       "commentTags": "Tags",
+      "articleTags": "Tags",
+      "pageTags": "Tags",
       "consents": "Konsens",
       "dashboard": "Dashboard",
       "events": "Events",
@@ -979,7 +982,6 @@
       "addAndSaveNewAnswer": "Antwort hinzufügen",
       "answerPanelHeader": "Mögliche Antworten",
       "closesAtLabel": "Schliesst am",
-      "defaultAnswer": "Standardantwort",
       "infoText": "Info-Text",
       "loadingTitle": "Lade Umfrage...",
       "opensAtLabel": "Startet am",
@@ -1100,7 +1102,8 @@
         "areYouSureConfirmation": "Tag löschen",
         "createTag": "Neuen Tag",
         "placeholder": "Name des Tags",
-        "title": "Tags"
+        "title": "Tags",
+        "markAsMain": "Als Haupt-Tag verwenden"
       }
     },
     "tokenList": {

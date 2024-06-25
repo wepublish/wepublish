@@ -121,10 +121,23 @@ model Article {
   hidden Boolean @default(false)
 
   navigations NavigationLink[]
+  tags        TaggedArticles[]
 
   @@index([createdAt])
   @@index([modifiedAt])
   @@map("articles")
+}
+
+model TaggedArticles {
+  article    Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  articleId  String
+  tag        Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  tagId      String
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  @@id([articleId, tagId])
+  @@map("articles.tagged-articles")
 }
 
 model AuthorsLinks {
@@ -292,6 +305,7 @@ model Comment {
 
   ratings           CommentRating[]
   overriddenRatings CommentRatingOverride[]
+  featured          Boolean                 @default(false)
 
   @@index([createdAt])
   @@map("comments")
@@ -579,10 +593,23 @@ model Page {
   draft   PageRevision? @relation("draftPageRevision", fields: [draftId], references: [id], onDelete: SetNull)
 
   navigations NavigationLink[]
+  tags        TaggedPages[]
 
   @@index([createdAt])
   @@index([modifiedAt])
   @@map("pages")
+}
+
+model TaggedPages {
+  page       Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  pageId     String
+  tag        Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  tagId      String
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  @@id([pageId, tagId])
+  @@map("pages.tagged-pages")
 }
 
 model PaymentMethod {
@@ -875,6 +902,8 @@ enum TagType {
   Comment @map("comment")
   Event   @map("event")
   Author  @map("author")
+  Article @map("article")
+  Page    @map("page")
 }
 
 model Tag {
@@ -884,10 +913,13 @@ model Tag {
 
   type TagType
   tag  String?
+  main Boolean @default(false)
 
   comments TaggedComments[]
   events   TaggedEvents[]
   authors  TaggedAuthors[]
+  articles TaggedArticles[]
+  pages    TaggedPages[]
 
   @@unique([type, tag])
   @@map("tags")
