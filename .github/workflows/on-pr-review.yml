@@ -292,18 +292,6 @@ jobs:
           matrix="${matrix%,}]}"  
           echo "::set-output name=matrix::${matrix}"          
 
-  publish_docker_frontend_image:
-    name: Frontend Docker
-    needs: [setup-frontend-matrix]
-    uses: ./.github/workflows/on-demand-publish-docker-image-frontend.yml
-    strategy:
-      matrix: ${{fromJson(needs.setup-frontend-matrix.outputs.matrix)}}
-    with:
-      frontend_project: ${{ matrix.target }}
-      media_tags: |
-        ghcr.io/wepublish/frontend-${{ matrix.target }}:${{ github.sha }}
-    secrets: inherit
-
   deploy_to_vercel:
     name: Deploy to Vercel
     needs: [setup-frontend-matrix, helm_deployment]
