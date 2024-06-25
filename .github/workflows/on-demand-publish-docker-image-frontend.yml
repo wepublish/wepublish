@@ -6,10 +6,10 @@ on:
       frontend_project:
         required: true
         type: string
-      frontend_tags:
+      api_url:
         required: true
         type: string
-      api_url:
+      frontend_tags:
         required: true
         type: string
 
