@@ -16,7 +16,7 @@ env:
   MEDIA_SERVER_URL: https://media-${{ github.event.pull_request.number }}.reviews.wepublish.dev
   STORYBOOK_URL: https://storybook-${{ github.event.pull_request.number }}.reviews.wepublish.dev
   PROJECT_URL_SUFFIX: -review-${{ github.event.pull_request.number }}.wepublish.vercel.app
-  GC_PROJECT_URL_SUFFIX: -frontend-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+  GC_PROJECT_URL_SUFFIX: -${{ github.event.pull_request.number }}.reviews.wepublish.dev
 
 jobs:
   publish_docker_image:
@@ -345,7 +345,7 @@ jobs:
           deployment:
             env:
               API_URL: ${API_URL}
-              FRONTEND_URL: ${{ matrix.target }}${GC_PROJECT_URL_SUFFIX}
+              FRONTEND_URL: https://${{ matrix.target }}${GC_PROJECT_URL_SUFFIX}
           frontend:
             image: ghcr.io/wepublish/frontend-${{ matrix.target }}:${{ github.sha }}
             env:

@@ -62,7 +62,7 @@ spec:
               protocol: TCP
           envFrom:
             - secretRef:
-                name: {{ include "helm.fullname" . }}-frontend-environment-{{ .Release.Revision }}
+                name: {{ include "helm.fullname" . }}-env-{{ .Release.Revision }}
             {{- if .Values.frontend.envFromSecretRefName }}
             - secretRef:
                 name: {{ .Values.frontend.envFromSecretRefName }}
@@ -76,9 +76,9 @@ spec:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: {{ include "helm.fullname" . }}-frontend-environment-{{ .Release.Revision }}
+  name: {{ include "helm.fullname" . }}-env-{{ .Release.Revision }}
   labels:
-    app.kubernetes.io/name: {{ include "helm.fullname" . }}-frontend-environment-{{ .Release.Revision }}
+    app.kubernetes.io/name: {{ include "helm.fullname" . }}-env-{{ .Release.Revision }}
     helm.sh/chart: {{ include "helm.chart" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
     app.kubernetes.io/managed-by: {{ .Release.Service }}
