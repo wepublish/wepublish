@@ -256,6 +256,7 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   elements: {
     Rating: NoComponent,
     Alert: NoComponent,
+    ApolloErrorAlert: NoComponent,
     TextField: NoComponent,
     Button: NoComponent,
     IconButton: NoComponent,

@@ -1,8 +1,7 @@
 import {ApolloError} from '@apollo/client/errors'
 import {useMemo} from 'react'
 import {ErrorCode} from '@wepublish/utils'
-import {AlertProps} from '../alert/alert'
-import {Alert} from '../alert/alert'
+import {Alert, AlertProps} from '../alert/alert'
 import {Link} from '../typography/typography'
 
 /**

@@ -1,2 +1,2 @@
 export * from './lib/slugify'
-export * from './lib/errorCodes'
+export * from './lib/error-codes'
