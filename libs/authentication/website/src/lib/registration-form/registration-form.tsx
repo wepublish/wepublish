@@ -7,6 +7,7 @@ import {Controller, useForm} from 'react-hook-form'
 import {OptionalKeysOf} from 'type-fest'
 import {z} from 'zod'
 import {UserForm} from './user-form'
+import {ApolloErrorAlert} from '@wepublish/utils/website'
 
 export const RegistrationFormWrapper = styled('form')`
   display: grid;
@@ -129,8 +130,8 @@ export function RegistrationForm<T extends OptionalKeysOf<RegisterMutationVariab
         </RegistrationChallengeWrapper>
       )}
 
-      {challenge.error && <Alert severity="error">{challenge.error.message}</Alert>}
-      {register.error && <Alert severity="error">{register.error.message}</Alert>}
+      {challenge.error && <ApolloErrorAlert error={challenge.error} severity="error" />}
+      {register.error && <ApolloErrorAlert error={register.error} severity="error" />}
 
       <Button css={buttonStyles} disabled={register.loading || challenge.loading} type="submit">
         Registrieren
