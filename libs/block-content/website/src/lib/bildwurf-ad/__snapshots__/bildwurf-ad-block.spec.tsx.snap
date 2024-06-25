@@ -8,12 +8,23 @@ exports[`Bildwurf Ad Block should render Default 1`] = `
   />
   <div
     class="css-1ege008-BildwurfBlockWrapper e14oxtci0"
-    id="bildwurf-injection-wrapper"
   >
-    <ins
-      class="aso-zone"
-      data-zone="77348"
-    />
+    
+            
+    <div
+      id="bildwurf-injection-wrapper"
+    >
+      
+              
+      <ins
+        classname="aso-zone"
+        data-zone="77348"
+      />
+      
+            
+    </div>
+    
+          
   </div>
 </DocumentFragment>
 `;
@@ -26,12 +37,23 @@ exports[`Bildwurf Ad Block should render WithClassName 1`] = `
   />
   <div
     class="extra-classname css-1ege008-BildwurfBlockWrapper e14oxtci0"
-    id="bildwurf-injection-wrapper"
   >
-    <ins
-      class="aso-zone"
-      data-zone="77348"
-    />
+    
+            
+    <div
+      id="bildwurf-injection-wrapper"
+    >
+      
+              
+      <ins
+        classname="aso-zone"
+        data-zone="77348"
+      />
+      
+            
+    </div>
+    
+          
   </div>
 </DocumentFragment>
 `;

@@ -24,6 +24,7 @@ export interface CommentData {
   readonly createdAt: Date
   readonly modifiedAt: Date
 
+  readonly featured: boolean
   readonly overriddenRatings: CommentRatingOverride[]
   readonly revisions: CommentRevision[]
 }

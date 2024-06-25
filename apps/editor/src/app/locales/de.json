@@ -359,6 +359,7 @@
       "modalTitle": "Wirklich löschen?"
     },
     "commentEditView": {
+      "featured": "Hervorgehoben",
       "actions": "Aktionen",
       "comment": "Text Kommentar",
       "commentContextHeader": "Kommentar-Historie",
