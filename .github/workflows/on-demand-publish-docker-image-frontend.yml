@@ -9,9 +9,6 @@ on:
       frontend_tags:
         required: true
         type: string
-      api_url:
-        required: true
-        type: string
 
 jobs:
   build-and-push:
@@ -38,7 +35,7 @@ jobs:
           target: next
           build-args: |
             NEXT_PROJECT=${{ inputs.frontend_project }}
-            API_URL=${{ inputs.api_url }}
+            API_URL=${{ env.API_URL }}
           push: true
           tags: |
             ${{ inputs.frontend_tags }}
