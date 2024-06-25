@@ -358,9 +358,8 @@ jobs:
 
   notify:
     name: Notify
-#    needs: [setup-frontend-matrix, helm_deployment_frontend]
-    needs: [setup-frontend-matrix]
-    #    if: ${{ needs.helm_deployment_frontend.result == 'success' }}
+    needs: [setup-frontend-matrix, helm_deployment_frontend]
+    if: ${{ needs.helm_deployment_frontend.result == 'success' }}
     runs-on: ubuntu-latest
     continue-on-error: true
 
@@ -370,12 +369,6 @@ jobs:
         with:
           node-version: '18'
           cache: npm
-
-      - name: Print PROJECTS Environment Variable
-        env:
-          PROJECTS: ${{ needs.setup-frontend-matrix.outputs.matrix }}
-        run: |
-          echo "PROJECTS=${PROJECTS}"
       - name: Create Deployment Text
         id: deploymentComment
         env:
