@@ -304,6 +304,7 @@ jobs:
       frontend_project: ${{ matrix.target }}
       frontend_tags: |
         ghcr.io/wepublish/frontend-${{ matrix.target }}:${{ github.sha }}
+      api_url: ${{ env.API_URL }}
     secrets: inherit
 
   helm_deployment_frontend:
