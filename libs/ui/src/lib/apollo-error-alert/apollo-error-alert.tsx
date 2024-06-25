@@ -33,7 +33,7 @@ export interface ApolloErrorAlertProps extends AlertProps {
  */
 export function ApolloErrorAlert({error, ...props}: ApolloErrorAlertProps) {
   const apolloErrorCode = useMemo<ErrorCode | undefined>(() => {
-    return error.graphQLErrors?.at(0)?.extensions['code'] as ErrorCode
+    return error.graphQLErrors?.at(0)?.extensions?.code as ErrorCode
   }, [error])
 
   const errorMessage = useMemo<string>(() => {
