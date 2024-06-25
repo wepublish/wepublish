@@ -1,5 +1,5 @@
 import {ApolloError} from 'apollo-server-express'
-import {ErrorCode} from '@wepublish/utils'
+import {ErrorCode} from 'errors'
 
 export class TokenExpiredError extends ApolloError {
   constructor() {

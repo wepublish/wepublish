@@ -90,7 +90,6 @@ import {BuilderRenderElementProps, BuilderRenderLeafProps} from './richText.inte
 import {BuilderHeadingProps, BuilderLinkProps, BuilderParagraphProps} from './typography.interface'
 import {
   BuilderAlertProps,
-  BuilderApolloAlertProps,
   BuilderButtonProps,
   BuilderIconButtonProps,
   BuilderPaginationProps,
@@ -144,7 +143,6 @@ export type WebsiteBuilderProps = {
   elements: {
     Rating: ComponentType<BuilderRatingProps>
     Alert: ComponentType<BuilderAlertProps>
-    ApolloErrorAlert: ComponentType<BuilderApolloAlertProps>
     TextField: ComponentType<BuilderTextFieldProps>
     Button: ComponentType<BuilderButtonProps>
     IconButton: ComponentType<BuilderIconButtonProps>
@@ -256,7 +254,6 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
   elements: {
     Rating: NoComponent,
     Alert: NoComponent,
-    ApolloErrorAlert: NoComponent,
     TextField: NoComponent,
     Button: NoComponent,
     IconButton: NoComponent,

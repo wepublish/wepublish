@@ -1,8 +1,8 @@
 import {ApolloError} from '@apollo/client/errors'
-import {useMemo} from 'react'
-import {ErrorCode} from '@wepublish/utils'
-import {Alert, AlertProps} from '../alert/alert'
-import {Link} from '../typography/typography'
+import {ComponentProps, PropsWithChildren, useMemo} from 'react'
+import {ErrorCode} from 'errors'
+import {Alert as MuiAlert, Alert} from '@mui/material'
+import {Link} from '@wepublish/ui'
 
 /**
  * This function is intended to replace with standard i18n translation functions.
@@ -20,7 +20,7 @@ export function translateApolloErrorCode(errorCode?: ErrorCode): string | undefi
   }
 }
 
-export interface ApolloErrorAlertProps extends AlertProps {
+export interface ApolloErrorAlertProps extends PropsWithChildren<ComponentProps<typeof MuiAlert>> {
   error: ApolloError
 }
 

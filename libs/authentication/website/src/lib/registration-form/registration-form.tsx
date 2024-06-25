@@ -7,6 +7,7 @@ import {Controller, useForm} from 'react-hook-form'
 import {OptionalKeysOf} from 'type-fest'
 import {z} from 'zod'
 import {UserForm} from './user-form'
+import {ApolloErrorAlert} from 'errors/website'
 
 export const RegistrationFormWrapper = styled('form')`
   display: grid;
@@ -94,7 +95,7 @@ export function RegistrationForm<T extends OptionalKeysOf<RegisterMutationVariab
   })
 
   const {
-    elements: {ApolloErrorAlert, TextField, Alert, Button}
+    elements: {TextField, Alert, Button}
   } = useWebsiteBuilder()
 
   const onSubmit = handleSubmit(data => onRegister?.(data))
