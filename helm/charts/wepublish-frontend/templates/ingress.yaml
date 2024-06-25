@@ -1,0 +1,26 @@
+{{- $fullName := include "helm.fullname" . -}}
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: {{ $fullName }}
+  labels:
+    app.kubernetes.io/name: {{ include "helm.name" . }}
+    helm.sh/chart: {{ include "helm.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    {{- with .Values.labels }}
+      {{- toYaml . | nindent 4 }}
+    {{- end }}
+spec:
+  rules:
+    {{- $frontendUrl := urlParse .Values.deployment.env.FRONTEND_URL }}
+    - host: {{ $frontendUrl.host }}
+      http:
+        paths:
+          - path: {{ $apiUrl.path | default "/" }}
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: {{ $fullName }}-frontend
+                port:
+                  name: http

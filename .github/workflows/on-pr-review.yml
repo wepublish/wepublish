@@ -16,6 +16,7 @@ env:
   MEDIA_SERVER_URL: https://media-${{ github.event.pull_request.number }}.reviews.wepublish.dev
   STORYBOOK_URL: https://storybook-${{ github.event.pull_request.number }}.reviews.wepublish.dev
   PROJECT_URL_SUFFIX: -review-${{ github.event.pull_request.number }}.wepublish.vercel.app
+  GC_PROJECT_URL_SUFFIX: -frontend-${{ github.event.pull_request.number }}.reviews.wepublish.dev
 
 jobs:
   publish_docker_image:
@@ -273,7 +274,6 @@ jobs:
           export POD_NAME=review-${{ github.event.pull_request.number }}-app
           if [[ ! -z $(helm ls -a -n reviews |grep ${POD_NAME} |grep -v "deployed ") ]]; then helm uninstall -n reviews ${POD_NAME}; fi
           helm upgrade --install ${POD_NAME} ./helm/charts/wepublish -n reviews -f values.yaml --wait
-          
 
   setup-frontend-matrix:
     runs-on: ubuntu-latest
@@ -296,7 +296,8 @@ jobs:
 
   publish_docker_frontend_image:
     name: Frontend
-    needs: [setup-frontend-matrix]
+    needs: [setup-frontend-matrix, helm_deployment]
+    if: ${{ needs.helm_deployment.result == 'success' }}
     uses: ./.github/workflows/on-demand-publish-docker-image-frontend.yml
     strategy:
       matrix: ${{fromJson(needs.setup-frontend-matrix.outputs.matrix)}}
@@ -305,6 +306,54 @@ jobs:
       frontend_tags: |
         ghcr.io/wepublish/frontend-${{ matrix.target }}:${{ github.sha }}
     secrets: inherit
+
+  helm_deployment_frontend:
+    name: Helm deployment Frontend
+    needs: [publish_docker_frontend_image, setup-frontend-matrix]
+    if: ${{ needs.publish_docker_frontend_image.result == 'success' }}
+    strategy:
+      matrix: ${{fromJson(needs.setup-frontend-matrix.outputs.matrix)}}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: '3.12.3'
+
+      - name: Authenticate kubectl
+        uses: 'google-github-actions/auth@v1'
+        with:
+          project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
+          workload_identity_provider: ${{ secrets.GCLOUD_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}
+
+      - name: Prepare kubectl
+        uses: 'google-github-actions/get-gke-credentials@v1'
+        with:
+          project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
+          cluster_name: development
+          location: europe-west6
+
+      - name: Helm deploy app
+        run: |
+          cat > values.yaml <<EOF
+          deployment:
+            env:
+              API_URL: ${API_URL}
+              FRONTEND_URL: ${{ matrix.target }}${GC_PROJECT_URL_SUFFIX}
+          frontend:
+            image: ghcr.io/wepublish/frontend-${{ matrix.target }}:${{ github.sha }}
+          EOF
+          export POD_NAME=review-${{ github.event.pull_request.number }}-${{ matrix.target }}-frontend
+          if [[ ! -z $(helm ls -a -n reviews |grep ${POD_NAME} |grep -v "deployed ") ]]; then helm uninstall -n reviews ${POD_NAME}; fi
+          helm upgrade --install ${POD_NAME} ./helm/charts/wepublish-frontend -n reviews -f values.yaml --wait
+
 
 
   find_vercel_apps:
