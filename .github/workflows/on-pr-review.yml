@@ -275,38 +275,6 @@ jobs:
           helm upgrade --install ${POD_NAME} ./helm/charts/wepublish -n reviews -f values.yaml --wait
           
 
-  setup-frontend-matrix:
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up matrix
-        id: set-matrix
-        run: |
-          targets=$(find apps -mindepth 2 -maxdepth 2 -type f -name .frontend_deployment -exec dirname {} \; | xargs -n 1 basename)
-          matrix="{\"target\":["
-          for target in $targets; do
-            matrix="${matrix}\"${target}\","
-          done
-          matrix="${matrix%,}]}"  
-          echo "::set-output name=matrix::${matrix}"          
-
-  publish_docker_frontend_image:
-    name: Frontend Docker
-    needs: [setup-frontend-matrix]
-    uses: ./.github/workflows/on-demand-publish-docker-image-frontend.yml
-    strategy:
-      matrix: ${{fromJson(needs.setup-frontend-matrix.outputs.matrix)}}
-    with:
-      frontend_project: ${{ matrix.target }}
-      media_tags: |
-        ghcr.io/wepublish/frontend-${{ matrix.target }}:${{ github.sha }}
-    secrets: inherit
-
-
   find_vercel_apps:
     name: Find Vercel apps
     runs-on: ubuntu-latest
