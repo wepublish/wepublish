@@ -5,10 +5,7 @@
     "esModuleInterop": false,
     "allowSyntheticDefaultImports": true,
     "strict": true,
-    "jsxImportSource": "@emotion/react",
-    "paths": {
-      "@wepublish/utils": ["libs/utils/src/index.ts"]
-    }
+    "jsxImportSource": "@emotion/react"
   },
   "files": [],
   "include": [],
