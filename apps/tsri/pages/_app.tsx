@@ -27,6 +27,7 @@ import {TsriBlockRenderer} from '../src/components/block-renderer/block-renderer
 import {Paywall} from '../src/components/paywall'
 import {TsriBreakBlock} from '../src/components/tsri-break-block'
 import {TsriNavbar} from '../src/components/tsri-navbar'
+import {TsriQuoteBlock} from '../src/components/tsri-quote-block'
 import {TsriTeaser} from '../src/components/tsri-teaser'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
@@ -109,7 +110,12 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
           Script={Script}
           Navbar={TsriNavbar}
           elements={{Link: NextWepublishLink}}
-          blocks={{Renderer: TsriBlockRenderer, Teaser: TsriTeaser, Break: TsriBreakBlock}}
+          blocks={{
+            Renderer: TsriBlockRenderer,
+            Teaser: TsriTeaser,
+            Break: TsriBreakBlock,
+            Quote: TsriQuoteBlock
+          }}
           date={{format: dateFormatter}}
           meta={{siteTitle}}
           thirdParty={{
