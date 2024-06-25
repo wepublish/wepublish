@@ -3,38 +3,17 @@ name: Publish docker frontend image
 on:
   workflow_call:
     inputs:
-      frontend_repos:
+      frontend_project:
         required: true
         type: string
-      frontend_tag:
+      frontend_tags:
         required: true
         type: string        
 
 jobs:
-  setup-frontend-matrix:
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-
-      - name: Set up matrix
-        id: set-matrix
-        run: |
-          targets=$(find apps -mindepth 2 -maxdepth 2 -type f -name .frontend_deployment -exec dirname {} \; | xargs -n 1 basename)
-          matrix="{\"target\":["
-          for target in $targets; do
-            matrix="${matrix}\"${target}\","
-          done
-          matrix="${matrix%,}]}"  # Remove trailing comma and add closing brackets
-          echo "::set-output name=matrix::${matrix}"
-
   build-and-push-frontend:
-    needs: setup-frontend-matrix
+    name: ${{inputs.frontend_target}}
     runs-on: ubuntu-latest
-    strategy:
-      matrix: ${{fromJson(needs.setup-frontend-matrix.outputs.matrix)}}
     steps:
       - uses: actions/checkout@v4
       - uses: docker/setup-qemu-action@v1
@@ -55,7 +34,7 @@ jobs:
           context: .
           target: next
           build-args: |
-            NEXT_PROJECT=${{ matrix.target }}
+            NEXT_PROJECT=${{ inputs.frontend_target }}
           push: true
           tags: |
-            ${{ inputs.frontend_repos }}:${{ matrix.target }}-${{ inputs.frontend_tag }}
+            ${{ inputs.frontend_tags }}
