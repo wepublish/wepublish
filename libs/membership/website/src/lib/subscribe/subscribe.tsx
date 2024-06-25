@@ -30,7 +30,6 @@ import {formatRenewalPeriod} from '../formatters/format-renewal-period'
 import {css} from '@emotion/react'
 import {replace, sortBy, toLower} from 'ramda'
 import {MembershipModal} from '../membership-modal/membership-modal'
-import {ApolloErrorAlert} from '@wepublish/utils/website'
 import {ApolloError} from '@apollo/client'
 
 const subscribeSchema = z.object({
@@ -133,7 +132,7 @@ export const Subscribe = <T extends BuilderUserFormFields>({
 }: BuilderSubscribeProps<T>) => {
   const {
     meta: {locale, siteTitle},
-    elements: {Alert, Button, TextField, H5, Link, Paragraph},
+    elements: {Alert, ApolloErrorAlert, Button, TextField, H5, Link, Paragraph},
     MemberPlanPicker,
     PaymentMethodPicker,
     PeriodicityPicker

@@ -65,6 +65,7 @@ import {PeerInformation} from '@wepublish/peering/website'
 import {RenderElement, RenderLeaf} from '@wepublish/richtext/website'
 import {
   Alert,
+  ApolloErrorAlert,
   Button,
   Pagination,
   H1,
@@ -164,6 +165,7 @@ export const WebsiteProvider = memo<WebsiteProps>(({children}) => (
           TextField,
           Rating,
           Alert,
+          ApolloErrorAlert,
           Button,
           IconButton,
           Pagination,

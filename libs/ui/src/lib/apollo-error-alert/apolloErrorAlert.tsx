@@ -1,8 +1,9 @@
 import {ApolloError} from '@apollo/client/errors'
 import {useMemo} from 'react'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {ErrorCode} from '@wepublish/utils'
-import {AlertProps} from '@wepublish/ui'
+import {AlertProps} from '../alert/alert'
+import {Alert} from '../alert/alert'
+import {Link} from '../typography/typography'
 
 /**
  * This function is intended to replace with standard i18n translation functions.
@@ -20,7 +21,7 @@ export function translateApolloErrorCode(errorCode?: ErrorCode): string | undefi
   }
 }
 
-export interface ClientErrorHandlerProps extends AlertProps {
+export interface ApolloErrorAlertProps extends AlertProps {
   error: ApolloError
 }
 
@@ -31,18 +32,14 @@ export interface ClientErrorHandlerProps extends AlertProps {
  * @param props
  * @constructor
  */
-export function ApolloErrorAlert({error, ...props}: ClientErrorHandlerProps) {
-  const {
-    elements: {Alert, Link}
-  } = useWebsiteBuilder()
-
+export function ApolloErrorAlert({error, ...props}: ApolloErrorAlertProps) {
   const apolloErrorCode = useMemo<ErrorCode | undefined>(() => {
     return error.graphQLErrors?.at(0)?.extensions['code'] as ErrorCode
   }, [error])
 
   const errorMessage = useMemo<string>(() => {
     return translateApolloErrorCode(apolloErrorCode) || error.message
-  }, [apolloErrorCode])
+  }, [apolloErrorCode, error])
 
   return (
     <Alert {...props}>
@@ -51,7 +48,7 @@ export function ApolloErrorAlert({error, ...props}: ClientErrorHandlerProps) {
       {apolloErrorCode === ErrorCode.EmailAlreadyInUse && (
         <>
           <span>&nbsp;</span>
-          <Link href="/login">Bitte einloggen</Link>
+          <Link href={'/login'}>{'Bitte einloggen'}</Link>
         </>
       )}
     </Alert>
