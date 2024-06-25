@@ -313,6 +313,8 @@ jobs:
     if: ${{ needs.publish_docker_frontend_image.result == 'success' }}
     strategy:
       matrix: ${{fromJson(needs.setup-frontend-matrix.outputs.matrix)}}
+    env:
+      API_URL: ${{ env.API_URL }}
     runs-on: ubuntu-latest
     permissions:
       contents: 'read'
