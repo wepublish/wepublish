@@ -297,14 +297,19 @@ jobs:
   publish_docker_frontend_image:
     name: Frontend
     needs: [setup-frontend-matrix]
-    uses: ./.github/workflows/on-demand-publish-docker-image-frontend.yml
+    runs-on: ubuntu-latest
     strategy:
       matrix: ${{fromJson(needs.setup-frontend-matrix.outputs.matrix)}}
-    with:
-      frontend_project: ${{ matrix.target }}
-      api_url: ${{ env.API_URL }}
-      frontend_tags: |
-        ghcr.io/wepublish/frontend-${{ matrix.target }}:${{ github.sha }}
+    steps:
+      - name: Publish Docker Frontend Image
+        uses: ./.github/workflows/on-demand-publish-docker-image-frontend.yml
+        with:
+          frontend_project: ${{ matrix.target }}
+          frontend_tags: |
+            ghcr.io/wepublish/frontend-${{ matrix.target }}:${{ github.sha }}
+          api_url: ${{ env.API_URL }}
+        env:
+          API_URL: ${{ env.API_URL }}
     secrets: inherit
 
   helm_deployment_frontend:
@@ -313,8 +318,6 @@ jobs:
     if: ${{ needs.publish_docker_frontend_image.result == 'success' }}
     strategy:
       matrix: ${{fromJson(needs.setup-frontend-matrix.outputs.matrix)}}
-    env:
-      API_URL: ${{ env.API_URL }}
     runs-on: ubuntu-latest
     permissions:
       contents: 'read'
