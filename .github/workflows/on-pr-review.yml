@@ -295,7 +295,7 @@ jobs:
           echo "::set-output name=matrix::${matrix}"          
 
   publish_docker_frontend_image:
-    name: Frontend Docker
+    name: Frontend
     needs: [setup-frontend-matrix]
     uses: ./.github/workflows/on-demand-publish-docker-image-frontend.yml
     strategy:

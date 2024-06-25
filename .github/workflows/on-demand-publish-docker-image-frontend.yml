@@ -28,13 +28,13 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-      - name: Build and push ${{ matrix.target }}
+      - name: Build and push ${{ inputs.frontend_project }}
         uses: docker/build-push-action@v2
         with:
           context: .
           target: next
           build-args: |
-            NEXT_PROJECT=${{ inputs.frontend_target }}
+            NEXT_PROJECT=${{ inputs.frontend_project }}
           push: true
           tags: |
             ${{ inputs.frontend_tags }}
