@@ -291,13 +291,12 @@ jobs:
           for target in $targets; do
             matrix="${matrix}\"${target}\","
           done
-          matrix="${matrix%,}]}"  # Remove trailing comma and add closing brackets
+          matrix="${matrix%,}]}"  
           echo "::set-output name=matrix::${matrix}"          
 
   publish_docker_frontend_image:
     name: Frontend Docker
-    needs: [setup-frontend-matrix, helm_deployment]
-    if: ${{ needs.helm_deployment.result == 'success' }}
+    needs: [setup-frontend-matrix]
     uses: ./.github/workflows/on-demand-publish-docker-image-frontend.yml
     strategy:
       matrix: ${{fromJson(needs.setup-frontend-matrix.outputs.matrix)}}
