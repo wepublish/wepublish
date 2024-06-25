@@ -359,6 +359,7 @@
       "modalTitle": "Really delete?"
     },
     "commentEditView": {
+      "featured": "Featured",
       "actions": "Actions",
       "comment": "Comment text",
       "commentContextHeader": "Comment history",

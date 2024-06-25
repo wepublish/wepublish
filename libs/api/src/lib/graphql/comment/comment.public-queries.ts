@@ -4,7 +4,9 @@ import {
   CommentRatingSystemAnswer,
   CommentState,
   CommentsRevisions,
-  PrismaClient
+  Prisma,
+  PrismaClient,
+  Tag
 } from '@prisma/client'
 import {ascend, descend, sortWith} from 'ramda'
 import {Context} from '../../context'
@@ -28,7 +30,7 @@ export const getPublicChildrenCommentsByParentId = async (
   userId: string | null,
   comment: PrismaClient['comment']
 ) => {
-  const comments = await comment.findMany({
+  const comments = (await comment.findMany({
     where: {
       AND: [
         {parentID: parentId},
@@ -42,7 +44,7 @@ export const getPublicChildrenCommentsByParentId = async (
       revisions: {orderBy: {createdAt: 'asc'}},
       overriddenRatings: true
     }
-  })
+  })) as (Comment & {revisions: CommentsRevisions[]})[]
 
   return comments.map(mapCommentToPublicComment)
 }
@@ -69,7 +71,7 @@ export const getCalculatedRatingsForComment = (
   })
 
 const sortCommentsByRating = (orderFn: typeof ascend) =>
-  sortWith<Comment & {calculatedRatings: CalculatedRating[]}>([
+  sortWith<CommentWithTags>([
     orderFn(({calculatedRatings}: Comment & {calculatedRatings: CalculatedRating[]}) =>
       calculatedRatings.reduce(
         (ratingsTotal, calculatedRating) => ratingsTotal + calculatedRating.mean,
@@ -78,6 +80,15 @@ const sortCommentsByRating = (orderFn: typeof ascend) =>
     ),
     ascend(({createdAt}: Comment) => createdAt)
   ])
+
+interface CommentWithTags extends Comment {
+  tags: {tag: Tag}[]
+  calculatedRatings: CalculatedRating[]
+  title: string | null
+  lead: string | null
+  text: Prisma.InputJsonValue | null
+  revisions: CommentsRevisions[]
+}
 
 export const getPublicCommentsForItemById = async (
   itemId: string,
@@ -99,7 +110,8 @@ export const getPublicCommentsForItemById = async (
       include: {
         revisions: {orderBy: {createdAt: 'asc'}},
         ratings: true,
-        overriddenRatings: true
+        overriddenRatings: true,
+        tags: {include: {tag: true}}
       },
       orderBy: {
         createdAt: 'asc'
@@ -107,19 +119,27 @@ export const getPublicCommentsForItemById = async (
     })
   ])
 
-  const commentsWithRating = comments.map(({ratings, ...comment}) => ({
+  const commentsWithRating: CommentWithTags[] = comments.map(({ratings, tags, ...comment}) => ({
     ...mapCommentToPublicComment(comment),
-    calculatedRatings: getCalculatedRatingsForComment(answers, ratings)
+    calculatedRatings: getCalculatedRatingsForComment(answers, ratings),
+    tags: tags || []
   }))
 
+  let sortedComments = commentsWithRating
   if (sort === PublicCommentSort.Rating) {
     if (order === SortOrder.Ascending) {
-      return sortCommentsByRating(ascend)(commentsWithRating)
+      sortedComments = sortCommentsByRating(ascend)(sortedComments)
+    } else {
+      sortedComments = sortCommentsByRating(descend)(sortedComments)
     }
-
-    return sortCommentsByRating(descend)(commentsWithRating)
   }
 
-  // no sorting needed as comments already come sorted by creation
-  return commentsWithRating
+  const topComments = sortedComments.filter(comment => comment.featured === true)
+  const otherComments = sortedComments.filter(
+    comment => !comment.tags.some(({tag}) => tag.tag === 'Top Kommentar')
+  )
+
+  sortedComments = [...topComments, ...otherComments]
+
+  return sortedComments
 }

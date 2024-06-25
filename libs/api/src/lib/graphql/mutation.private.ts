@@ -917,6 +917,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         userID: {type: GraphQLID},
         guestUsername: {type: GraphQLString},
         guestUserImageID: {type: GraphQLID},
+        featured: {type: GraphQLBoolean},
         source: {type: GraphQLString},
         tagIds: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
         ratingOverrides: {
@@ -925,7 +926,17 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       },
       resolve: (
         root,
-        {id, revision, ratingOverrides, userID, guestUsername, guestUserImageID, source, tagIds},
+        {
+          id,
+          revision,
+          ratingOverrides,
+          userID,
+          guestUsername,
+          guestUserImageID,
+          featured,
+          source,
+          tagIds
+        },
         {authenticate, prisma: {comment, commentRatingSystemAnswer}}
       ) =>
         updateComment(
@@ -935,6 +946,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
           guestUsername,
           guestUserImageID,
           source,
+          featured,
           tagIds,
           ratingOverrides,
           authenticate,

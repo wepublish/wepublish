@@ -1,6 +1,6 @@
 import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {BuilderRenderElementProps} from '@wepublish/website/builder'
-import {Link} from '@mui/material'
+import {Link, Theme, useTheme} from '@mui/material'
 import {BlockFormat, InlineFormat} from '@wepublish/richtext'
 import {css} from '@emotion/react'
 import {Fragment} from 'react'
@@ -9,12 +9,13 @@ const tableStyles = css`
   border-collapse: collapse;
 `
 
-const tableCellStyles = (borderColor?: string) => css`
+const tableCellStyles = (theme: Theme, borderColor?: string) => css`
   border-collapse: collapse;
   border: 1px solid ${borderColor ?? 'transparent'};
+  padding: ${theme.spacing(1)};
 `
 
-const paragraphStyles = css`
+const lastChildNoGutter = css`
   &:last-child {
     margin-bottom: 0;
   }
@@ -28,6 +29,7 @@ export function RenderElement({
   const {
     elements: {H3, H4, H5, Paragraph, UnorderedList, OrderedList, ListItem}
   } = useWebsiteBuilder()
+  const theme = useTheme()
 
   switch (element.type) {
     case BlockFormat.H1:
@@ -43,14 +45,14 @@ export function RenderElement({
 
     case BlockFormat.H2:
       return (
-        <H4 component="h3" {...attributes} gutterBottom>
+        <H4 component="h3" {...attributes} gutterBottom css={lastChildNoGutter}>
           {children}
         </H4>
       )
 
     case BlockFormat.H3:
       return (
-        <H5 component="h4" {...attributes} gutterBottom>
+        <H5 component="h4" {...attributes} gutterBottom css={lastChildNoGutter}>
           {children}
         </H5>
       )
@@ -76,7 +78,7 @@ export function RenderElement({
 
     case BlockFormat.TableCell:
       return (
-        <td {...attributes} css={tableCellStyles(element.borderColor as string)}>
+        <td {...attributes} css={tableCellStyles(theme, element.borderColor as string)}>
           {children}
         </td>
       )
@@ -103,7 +105,7 @@ export function RenderElement({
       }
 
       return (
-        <Paragraph {...attributes} css={paragraphStyles}>
+        <Paragraph {...attributes} css={lastChildNoGutter}>
           {children}
         </Paragraph>
       )

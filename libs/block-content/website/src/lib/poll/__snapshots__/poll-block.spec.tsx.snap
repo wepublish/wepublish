@@ -20,7 +20,7 @@ exports[`Poll Block should render AlreadyVoted 1`] = `
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span
@@ -93,7 +93,7 @@ exports[`Poll Block should render AnonymousAlreadyVoted 1`] = `
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span
@@ -206,7 +206,7 @@ exports[`Poll Block should render AnonymousVoting 1`] = `
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span
@@ -380,7 +380,7 @@ exports[`Poll Block should render Default 1`] = `
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span
@@ -493,7 +493,7 @@ exports[`Poll Block should render Voting 1`] = `
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span
@@ -566,7 +566,7 @@ exports[`Poll Block should render VotingClosed 1`] = `
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span
@@ -777,7 +777,7 @@ exports[`Poll Block should render WithClassName 1`] = `
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span
@@ -890,7 +890,7 @@ exports[`Poll Block should render WithEmotion 1`] = `
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span

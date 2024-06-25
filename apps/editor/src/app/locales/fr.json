@@ -365,6 +365,7 @@
       "modalTitle": "Vraiment supprimer?"
     },
     "commentEditView": {
+      "featured": "En vedette",
       "actions": "Actions",
       "comment": "Texte Commentaire",
       "commentContextHeader": "Histoire des commentaires",

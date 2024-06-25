@@ -675,6 +675,7 @@ type CommentFactoryDefineInput = {
     source?: string | null;
     authorType?: CommentAuthorType;
     guestUsername?: string | null;
+    featured?: boolean;
     peer?: CommentpeerFactory | Prisma.PeerCreateNestedOneWithoutCommentsInput;
     revisions?: Prisma.CommentsRevisionsCreateNestedManyWithoutCommentInput;
     guestUserImage?: CommentguestUserImageFactory | Prisma.ImageCreateNestedOneWithoutCommentInput;
