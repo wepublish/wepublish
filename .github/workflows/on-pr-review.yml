@@ -292,26 +292,17 @@ jobs:
           matrix="${matrix%,}]}"  
           echo "::set-output name=matrix::${matrix}"          
 
-  deploy_to_vercel:
-    name: Deploy to Vercel
-    needs: [setup-frontend-matrix, helm_deployment]
-    if: ${{ needs.helm_deployment.result == 'success' }}
-    runs-on: ubuntu-latest
+  publish_docker_frontend_image:
+    name: Frontend Docker
+    needs: [setup-frontend-matrix]
+    uses: ./.github/workflows/on-demand-publish-docker-image-frontend.yml
     strategy:
-      matrix:
-        project: ${{fromJson(needs.setup-frontend-matrix.outputs.matrix)}}
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '18'
-          cache: npm
-      - run: npm i -g vercel
-      - run: |
-          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" link --project ${{ matrix.target }} --scope wepublish --yes
-          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" build --yes
-          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" deploy --prebuilt --yes > deployment_url
-          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" alias set $(cat deployment_url) ${{ matrix.target }}${PROJECT_URL_SUFFIX} --scope wepublish --yes
+      matrix: ${{fromJson(needs.setup-frontend-matrix.outputs.matrix)}}
+    with:
+      frontend_project: ${{ matrix.target }}
+      media_tags: |
+        ghcr.io/wepublish/frontend-${{ matrix.target }}:${{ github.sha }}
+    secrets: inherit
 
   notify:
     name: Notify
