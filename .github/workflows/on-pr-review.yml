@@ -280,7 +280,9 @@ jobs:
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
+
       - name: Set up matrix
         id: set-matrix
         run: |
@@ -292,22 +294,45 @@ jobs:
           matrix="${matrix%,}]}"  
           echo "::set-output name=matrix::${matrix}"          
 
-  publish_docker_frontend_image:
-    name: Frontend Docker
-    needs: [setup-frontend-matrix]
-    uses: ./.github/workflows/on-demand-publish-docker-image-frontend.yml
+
+
+  find_vercel_apps:
+    name: Find Vercel apps
+    runs-on: ubuntu-latest
+    outputs:
+      projects: ${{ steps.projects.outputs.value }}
+    steps:
+      - id: projects
+        run: |
+          echo "value=[\"babanews\", \"bajour\", \"tsri\", \"gruppetto\"]" >> $GITHUB_OUTPUT
+      - run: |
+          echo "${{ steps.projects.outputs.value }}"
+
+  deploy_to_vercel:
+    name: Deploy to Vercel
+    needs: [find_vercel_apps, helm_deployment]
+    if: ${{ needs.helm_deployment.result == 'success' }}
+    runs-on: ubuntu-latest
     strategy:
-      matrix: ${{fromJson(needs.setup-frontend-matrix.outputs.matrix)}}
-    with:
-      frontend_project: ${{ matrix.target }}
-      media_tags: |
-        ghcr.io/wepublish/frontend-${{ matrix.target }}:${{ github.sha }}
-    secrets: inherit
+      matrix:
+        project: ${{fromJSON(needs.find_vercel_apps.outputs.projects)}}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: npm
+      - run: npm i -g vercel
+      - run: |
+          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" link --project ${{ matrix.project }} --scope wepublish --yes
+          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" build --yes
+          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" deploy --prebuilt --yes > deployment_url
+          vercel --token "${{ secrets.VERCEL_API_TOKEN }}" alias set $(cat deployment_url) ${{ matrix.project }}${PROJECT_URL_SUFFIX} --scope wepublish --yes
 
   notify:
     name: Notify
-    needs: [setup-frontend-matrix, publish_docker_frontend_image]
-    if: ${{ needs.setup-frontend-matrix.result == 'success' }}
+    needs: [find_vercel_apps, deploy_to_vercel]
+    if: ${{ needs.deploy_to_vercel.result == 'success' }}
     runs-on: ubuntu-latest
     continue-on-error: true
 
@@ -321,7 +346,7 @@ jobs:
       - name: Create Deployment Text
         id: deploymentComment
         env:
-          PROJECTS: ${{ needs.setup-frontend-matrix.outputs.matrix }}
+          PROJECTS: ${{ needs.find_vercel_apps.outputs.projects }}
           BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
