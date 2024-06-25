@@ -11,7 +11,7 @@ on:
         type: string        
 
 jobs:
-  build-and-push-frontend:
+  build-and-push:
     name: ${{inputs.frontend_target}}
     runs-on: ubuntu-latest
     steps:
