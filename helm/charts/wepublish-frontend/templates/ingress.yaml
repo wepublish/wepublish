@@ -17,7 +17,7 @@ spec:
     - host: {{ $frontendUrl.host }}
       http:
         paths:
-          - path: {{ $apiUrl.path | default "/" }}
+          - path: {{ $frontendUrl.path | default "/" }}
             pathType: ImplementationSpecific
             backend:
               service:
