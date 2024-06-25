@@ -3,8 +3,8 @@
 #######
 FROM node:18.19.1-bookworm-slim as build-next
 ARG NEXT_PROJECT
+ARG API_URL
 WORKDIR /wepublish
-ENV API_URL=https://api-gruppetto.wepublish.media
 COPY . .
 RUN npm ci
 RUN npx nx build ${NEXT_PROJECT}
@@ -24,9 +24,9 @@ RUN groupadd -r wepublish && \
     echo "#!/bin/bash\n node /wepublish/apps/${NEXT_PROJECT}/server.js" > /entrypoint.sh && \
     chown -R wepublish:wepublish /entrypoint.sh && \
     chmod +x /entrypoint.sh
-COPY --chown=wepublish:wepublish --from=build-next /wepublish/dist/apps/${NEXT_PROJECT}/public /wepublish/public
 COPY --chown=wepublish:wepublish --from=build-next /wepublish/dist/apps/${NEXT_PROJECT}/.next/standalone /wepublish
-COPY --chown=wepublish:wepublish --from=build-next /wepublish/dist/apps/${NEXT_PROJECT}/.next/static /wepublish/.next/static
+COPY --chown=wepublish:wepublish --from=build-next /wepublish/dist/apps/${NEXT_PROJECT}/public /wepublish/apps/bajour/public
+COPY --chown=wepublish:wepublish --from=build-next /wepublish/dist/apps/${NEXT_PROJECT}/.next/static /wepublish/apps/bajour/public/_next/static
 EXPOSE 4001
 USER wepublish
 ENTRYPOINT ["/entrypoint.sh"]

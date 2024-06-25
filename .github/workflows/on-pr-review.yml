@@ -302,6 +302,7 @@ jobs:
       matrix: ${{fromJson(needs.setup-frontend-matrix.outputs.matrix)}}
     with:
       frontend_project: ${{ matrix.target }}
+      api_url: ${API_URL}
       frontend_tags: |
         ghcr.io/wepublish/frontend-${{ matrix.target }}:${{ github.sha }}
     secrets: inherit
