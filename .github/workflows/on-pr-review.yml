@@ -306,8 +306,8 @@ jobs:
 
   notify:
     name: Notify
-    needs: [find_vercel_apps, deploy_to_vercel]
-    if: ${{ needs.deploy_to_vercel.result == 'success' }}
+    needs: [setup-frontend-matrix, publish_docker_frontend_image]
+    if: ${{ needs.setup-frontend-matrix.result == 'success' }}
     runs-on: ubuntu-latest
     continue-on-error: true
 
@@ -321,7 +321,7 @@ jobs:
       - name: Create Deployment Text
         id: deploymentComment
         env:
-          PROJECTS: ${{ needs.find_vercel_apps.outputs.projects }}
+          PROJECTS: ${{ needs.setup-frontend-matrix.outputs.matrix }}
           BRANCH_NAME: ${{ github.event.pull_request.head.ref }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
         run: |
