@@ -5,12 +5,12 @@ import {BuilderArticleSEOProps, useWebsiteBuilder} from '@wepublish/website/buil
 import {Fragment, useMemo} from 'react'
 
 export const getArticleSEO = (article: Article) => {
-  const firstTitle = article.blocks.find(isTitleBlock)
-  const firstRichText = article.blocks.find(isRichTextBlock)
-  const firstImageBlock = article.blocks.find(isImageBlock)
+  const firstTitle = article.blocks?.find(isTitleBlock)
+  const firstRichText = article.blocks?.find(isRichTextBlock)
+  const firstImageBlock = article.blocks?.find(isImageBlock)
 
   const articleBody = article.blocks
-    .filter(isRichTextBlock)
+    ?.filter(isRichTextBlock)
     .reduce((body, richText) => {
       const text = toPlaintext(richText.richText)
 
