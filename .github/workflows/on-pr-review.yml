@@ -371,6 +371,11 @@ jobs:
           node-version: '18'
           cache: npm
 
+      - name: Print PROJECTS Environment Variable
+        env:
+          PROJECTS: ${{ needs.setup-frontend-matrix.outputs.matrix }}
+        run: |
+          echo "PROJECTS=${PROJECTS}"
       - name: Create Deployment Text
         id: deploymentComment
         env:
