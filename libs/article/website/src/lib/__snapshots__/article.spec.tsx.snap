@@ -3,7 +3,7 @@
 exports[`Article should render Default 1`] = `
 <DocumentFragment>
   <article
-    class="es3d6yl3 css-dilw1d-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="es3d6yl3 css-1n6z7co-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -721,7 +721,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <blockquote
-      class="css-jrn897-QuoteBlockWrapper e1ugt7gl1"
+      class="css-sqgfke-QuoteBlockWrapper e1ugt7gl1"
     >
       <div
         class="css-1v9bccv-QuoteContent e1ugt7gl0"
@@ -2552,7 +2552,7 @@ https://unsplash.it/200/200 200w"
 exports[`Article should render WithChildren 1`] = `
 <DocumentFragment>
   <article
-    class="es3d6yl3 css-dilw1d-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="es3d6yl3 css-1n6z7co-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -3270,7 +3270,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <blockquote
-      class="css-jrn897-QuoteBlockWrapper e1ugt7gl1"
+      class="css-sqgfke-QuoteBlockWrapper e1ugt7gl1"
     >
       <div
         class="css-1v9bccv-QuoteContent e1ugt7gl0"
@@ -5104,7 +5104,7 @@ https://unsplash.it/200/200 200w"
 exports[`Article should render WithClassName 1`] = `
 <DocumentFragment>
   <article
-    class="extra-classname es3d6yl3 css-dilw1d-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="extra-classname es3d6yl3 css-1n6z7co-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -5822,7 +5822,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <blockquote
-      class="css-jrn897-QuoteBlockWrapper e1ugt7gl1"
+      class="css-sqgfke-QuoteBlockWrapper e1ugt7gl1"
     >
       <div
         class="css-1v9bccv-QuoteContent e1ugt7gl0"
@@ -7653,7 +7653,7 @@ https://unsplash.it/200/200 200w"
 exports[`Article should render WithEmotion 1`] = `
 <DocumentFragment>
   <article
-    class="es3d6yl3 css-dilw1d-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="es3d6yl3 css-1n6z7co-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -8371,7 +8371,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <blockquote
-      class="css-jrn897-QuoteBlockWrapper e1ugt7gl1"
+      class="css-sqgfke-QuoteBlockWrapper e1ugt7gl1"
     >
       <div
         class="css-1v9bccv-QuoteContent e1ugt7gl0"
@@ -10202,7 +10202,7 @@ https://unsplash.it/200/200 200w"
 exports[`Article should render WithError 1`] = `
 <DocumentFragment>
   <article
-    class="es3d6yl3 css-dilw1d-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="es3d6yl3 css-1n6z7co-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   >
     <aside
       class="css-13ung7g-ArticleInfoWrapper es3d6yl2"
@@ -10214,7 +10214,7 @@ exports[`Article should render WithError 1`] = `
 exports[`Article should render WithLoading 1`] = `
 <DocumentFragment>
   <article
-    class="es3d6yl3 css-dilw1d-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="es3d6yl3 css-1n6z7co-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   >
     <aside
       class="css-13ung7g-ArticleInfoWrapper es3d6yl2"
@@ -10226,7 +10226,7 @@ exports[`Article should render WithLoading 1`] = `
 exports[`Article should render WithoutAuthors 1`] = `
 <DocumentFragment>
   <article
-    class="es3d6yl3 css-dilw1d-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="es3d6yl3 css-1n6z7co-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -10928,7 +10928,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <blockquote
-      class="css-jrn897-QuoteBlockWrapper e1ugt7gl1"
+      class="css-sqgfke-QuoteBlockWrapper e1ugt7gl1"
     >
       <div
         class="css-1v9bccv-QuoteContent e1ugt7gl0"
@@ -12503,7 +12503,7 @@ https://unsplash.it/200/100 200w"
 exports[`Article should render WithoutImageMetadata 1`] = `
 <DocumentFragment>
   <article
-    class="es3d6yl3 css-dilw1d-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="es3d6yl3 css-1n6z7co-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -13221,7 +13221,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <blockquote
-      class="css-jrn897-QuoteBlockWrapper e1ugt7gl1"
+      class="css-sqgfke-QuoteBlockWrapper e1ugt7gl1"
     >
       <div
         class="css-1v9bccv-QuoteContent e1ugt7gl0"
@@ -15052,7 +15052,7 @@ https://unsplash.it/200/200 200w"
 exports[`Article should render WithoutLead 1`] = `
 <DocumentFragment>
   <article
-    class="es3d6yl3 css-dilw1d-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="es3d6yl3 css-1n6z7co-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -15766,7 +15766,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <blockquote
-      class="css-jrn897-QuoteBlockWrapper e1ugt7gl1"
+      class="css-sqgfke-QuoteBlockWrapper e1ugt7gl1"
     >
       <div
         class="css-1v9bccv-QuoteContent e1ugt7gl0"
@@ -17597,7 +17597,7 @@ https://unsplash.it/200/200 200w"
 exports[`Article should render WithoutSocialMedia 1`] = `
 <DocumentFragment>
   <article
-    class="es3d6yl3 css-dilw1d-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
+    class="es3d6yl3 css-1n6z7co-ContentWrapperStyled-ArticleWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -18315,7 +18315,7 @@ https://unsplash.it/200/100 200w"
       </div>
     </div>
     <blockquote
-      class="css-jrn897-QuoteBlockWrapper e1ugt7gl1"
+      class="css-sqgfke-QuoteBlockWrapper e1ugt7gl1"
     >
       <div
         class="css-1v9bccv-QuoteContent e1ugt7gl0"

@@ -5,7 +5,6 @@ import {
   EventBlockWrapper,
   ImageBlockWrapper,
   ImageGalleryBlockWrapper,
-  QuoteBlockWrapper,
   TeaserGridBlockWrapper,
   TeaserGridFlexBlockWrapper,
   TeaserListBlockWrapper
@@ -54,10 +53,6 @@ export const ContentWrapperStyled = styled('article')<{fullWidth?: boolean}>`
               ${ImageGalleryBlockWrapper}
           ) {
           grid-column: -1/1;
-        }
-
-        & > ${QuoteBlockWrapper} {
-          grid-column-start: 5;
         }
       }
     `}
