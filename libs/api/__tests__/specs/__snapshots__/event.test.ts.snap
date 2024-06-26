@@ -25,6 +25,7 @@ exports[`Events create can be created 1`] = `
       "endsAt": 2020-11-25T22:00:00.000Z,
       "id": Any<String>,
       "image": null,
+      "lead": null,
       "location": "Foobar Street 5
   8015 Barfoo City",
       "name": "Test Event",
@@ -56,6 +57,7 @@ exports[`Events create can be created with bare minimum 1`] = `
       "endsAt": null,
       "id": Any<String>,
       "image": null,
+      "lead": null,
       "location": null,
       "name": "Test Event",
       "startsAt": 2020-11-25T20:00:00.000Z,

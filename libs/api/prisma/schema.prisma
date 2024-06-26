@@ -305,6 +305,7 @@ model Comment {
 
   ratings           CommentRating[]
   overriddenRatings CommentRatingOverride[]
+  featured          Boolean                 @default(false)
 
   @@index([createdAt])
   @@map("comments")
@@ -1025,6 +1026,7 @@ model Event {
   modifiedAt DateTime @updatedAt
 
   name        String
+  lead        String?
   description Json[]
   status      EventStatus @default(Scheduled)
 

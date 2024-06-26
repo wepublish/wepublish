@@ -248,7 +248,7 @@ export function previewForTeaser(teaser: Teaser, t: TFunction<'translation'>) {
       type = 'Event'
       imageURL = teaser.event.image?.previewURL ?? undefined
       title = teaser.event.name ?? undefined
-      lead = teaser.event.location ?? undefined
+      lead = teaser.event.lead || teaser.event.location || undefined
       break
 
     case TeaserType.Custom:

@@ -365,6 +365,7 @@
       "modalTitle": "Vraiment supprimer?"
     },
     "commentEditView": {
+      "featured": "En vedette",
       "actions": "Actions",
       "comment": "Texte Commentaire",
       "commentContextHeader": "Histoire des commentaires",
@@ -549,6 +550,7 @@
         "image": "Image",
         "location": "Location",
         "name": "Name",
+        "lead": "Lead",
         "postponed": "Postponed",
         "rescheduled": "Rescheduled",
         "scheduled": "Scheduled",

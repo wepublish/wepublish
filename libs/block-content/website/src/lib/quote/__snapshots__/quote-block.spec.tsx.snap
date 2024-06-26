@@ -3,7 +3,7 @@
 exports[`Quote Block should render Default 1`] = `
 <DocumentFragment>
   <blockquote
-    class="css-jrn897-QuoteBlockWrapper e1ugt7gl1"
+    class="css-sqgfke-QuoteBlockWrapper e1ugt7gl1"
   >
     <div
       class="css-1v9bccv-QuoteContent e1ugt7gl0"
@@ -26,7 +26,7 @@ exports[`Quote Block should render Default 1`] = `
 exports[`Quote Block should render WithClassName 1`] = `
 <DocumentFragment>
   <blockquote
-    class="extra-classname css-jrn897-QuoteBlockWrapper e1ugt7gl1"
+    class="extra-classname css-sqgfke-QuoteBlockWrapper e1ugt7gl1"
   >
     <div
       class="css-1v9bccv-QuoteContent e1ugt7gl0"
@@ -49,7 +49,7 @@ exports[`Quote Block should render WithClassName 1`] = `
 exports[`Quote Block should render WithEmotion 1`] = `
 <DocumentFragment>
   <blockquote
-    class="css-jrn897-QuoteBlockWrapper e1ugt7gl1"
+    class="css-sqgfke-QuoteBlockWrapper e1ugt7gl1"
   >
     <div
       class="css-1v9bccv-QuoteContent e1ugt7gl0"
@@ -72,7 +72,7 @@ exports[`Quote Block should render WithEmotion 1`] = `
 exports[`Quote Block should render WithImage 1`] = `
 <DocumentFragment>
   <blockquote
-    class="css-q1zo35-QuoteBlockWrapper e1ugt7gl1"
+    class="css-ywkjei-QuoteBlockWrapper e1ugt7gl1"
   >
     <img
       alt="DSC07717"
@@ -109,7 +109,7 @@ https://unsplash.it/200/200 200w"
 exports[`Quote Block should render WithImageAndShortText 1`] = `
 <DocumentFragment>
   <blockquote
-    class="css-q1zo35-QuoteBlockWrapper e1ugt7gl1"
+    class="css-ywkjei-QuoteBlockWrapper e1ugt7gl1"
   >
     <img
       alt="DSC07717"

@@ -89,7 +89,7 @@ export const getStaticProps: GetStaticProps = async () => {
     }
   })
 
-  const tagId = tagResult.data?.tags?.nodes[0].id
+  const tagId = tagResult.data?.tags?.nodes?.[0]?.id ?? null
 
   await Promise.all([
     client.query({
