@@ -12,16 +12,5 @@
       "deployment": true,
       "env": {}
     }
-  },
-  "backend": {
-    "production": {
-      "deployment": true
-    },
-    "staging": {
-      "deployment": true
-    },
-    "review": {
-      "deployment": true
-    }
   }
 }
