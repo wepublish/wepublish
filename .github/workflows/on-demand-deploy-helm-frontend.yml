@@ -1,0 +1,73 @@
+name: Deploy Helm Frontend
+
+on:
+  workflow_call:
+    inputs:
+      frontend_project:
+        required: true
+        type: string
+      api_url:
+        required: true
+        type: string
+
+env:
+  PROJECT_URL_SUFFIX: -${{ github.event.pull_request.number }}.reviews.wepublish.dev
+
+jobs:
+  get-env-vars:
+    runs-on: ubuntu-latest
+    outputs:
+      envvars: ${{ steps.get-env.outputs.envvars }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Get environment variables
+        id: get-env
+        run: |
+          ./deployment/frontend_read_env.sh review ${{ inputs.frontend_project }} API_URL=${{ inputs.api_url }} FRONTEND_URL=https://${{ inputs.frontend_project }}${PROJECT_URL_SUFFIX}
+
+  build-and-push:
+    name: ${{inputs.frontend_target}}
+    needs: [get-env-vars]
+    runs-on: ubuntu-latest
+    if: ${{ needs.get-env-vars.result == 'success' }}
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: '3.12.3'
+
+      - name: Authenticate kubectl
+        uses: 'google-github-actions/auth@v1'
+        with:
+          project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
+          workload_identity_provider: ${{ secrets.GCLOUD_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}
+
+      - name: Prepare kubectl
+        uses: 'google-github-actions/get-gke-credentials@v1'
+        with:
+          project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
+          cluster_name: development
+          location: europe-west6
+
+      - name: Helm deploy app
+        run: |
+          cat > values.yaml <<EOF
+          deployment:
+            env:
+              ${{ needs.get-env-vars.outputs.envvars }}
+          frontend:
+            image: ghcr.io/wepublish/frontend-${{ inputs.frontend_project }}:${{ github.sha }}
+            env:
+              NODE_ENV: production
+          EOF
+          export POD_NAME=review-${{ github.event.pull_request.number }}-${{ inputs.frontend_project }}-frontend
+          if [[ ! -z $(helm ls -a -n reviews |grep ${POD_NAME} |grep -v "deployed ") ]]; then helm uninstall -n reviews ${POD_NAME}; fi
+          helm upgrade --install ${POD_NAME} ./helm/charts/wepublish-frontend -n reviews -f values.yaml --wait
