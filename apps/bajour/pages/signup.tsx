@@ -1,4 +1,5 @@
 import {styled, Typography} from '@mui/material'
+import {IntendedRouteStorageKey} from '@wepublish/utils/website'
 import {
   ApiV1,
   ContentWrapper,
@@ -6,6 +7,7 @@ import {
   useUser,
   useWebsiteBuilder
 } from '@wepublish/website'
+import {deleteCookie, getCookie} from 'cookies-next'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
@@ -23,6 +25,14 @@ export default function SignUp() {
   const {
     elements: {H3, Link}
   } = useWebsiteBuilder()
+
+  if (hasUser && typeof window !== 'undefined') {
+    const intendedRoute = getCookie(IntendedRouteStorageKey)?.toString()
+    deleteCookie(IntendedRouteStorageKey)
+    const route = intendedRoute ?? '/profile'
+
+    router.replace(route)
+  }
 
   useEffect(() => {
     if (hasUser) {

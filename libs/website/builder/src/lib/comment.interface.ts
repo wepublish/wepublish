@@ -136,6 +136,7 @@ export type BuilderCommentEditorProps = {
   loading: boolean
   error?: ApolloError
   canReply?: boolean
+  parentUrl?: string
 } & (CreateCommentProps | EditCommentProps)
 
 export type BuilderCommentRatingsProps = {

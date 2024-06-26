@@ -120,6 +120,7 @@ export const CommentListItem = ({
           error={edit.error}
           loading={edit.loading}
           canReply={canReply}
+          parentUrl={comment.url}
         />
       )}
 
@@ -183,6 +184,7 @@ export const CommentListItem = ({
           error={add.error}
           loading={add.loading}
           canReply={canReply}
+          parentUrl={comment.url}
         />
       )}
 

@@ -4,10 +4,16 @@ import {LoginFormContainer, useUser} from '@wepublish/authentication/website'
 import {toPlaintext} from '@wepublish/richtext'
 import {Link} from '@wepublish/ui'
 import {BuilderCommentEditorProps, useWebsiteBuilder} from '@wepublish/website/builder'
+import {setCookie} from 'cookies-next'
+import {add} from 'date-fns'
+import {useRouter} from 'next/router'
 import {useMemo, useState} from 'react'
 import {Controller, useForm} from 'react-hook-form'
 import {MdClose, MdSend} from 'react-icons/md'
 import {z} from 'zod'
+
+export const IntendedRouteStorageKey = 'auth.intended'
+export const IntendedRouteExpiryInSeconds = 2 * 60
 
 export const CommentEditorWrapper = styled('form')`
   display: grid;
@@ -68,35 +74,21 @@ export const CloseLogin = styled(IconButton)`
   position: absolute;
   top: ${({theme}) => `${theme.spacing(1)}`};
   right: ${({theme}) => `${theme.spacing(1)}`};
+  z-index: 1;
 `
 
 export const ModalContent = styled('div')`
   position: absolute;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
-  padding: ${({theme}) => `${theme.spacing(4)} ${theme.spacing(3)}`};
-  bottom: 0;
-  background-color: ${({theme}) => theme.palette.common.white};
-  width: 100%;
-  animation: slideUpAndFadeIn 0.5s ease forwards;
-  @keyframes slideUpAndFadeIn {
-    from {
-      transform: translateX(-50%) translateY(100%);
-      opacity: 0;
-    }
-    to {
-      transform: translateX(-50%) translateY(0);
-      opacity: 1;
-    }
-  }
-
-  ${({theme}) => theme.breakpoints.up('sm')} {
-    width: ${({theme}) => theme.spacing(64)};
-  }
-
-  ${({theme}) => theme.breakpoints.up('md')} {
-    width: ${({theme}) => theme.spacing(80)};
-  }
+  transform: translate(-50%, -50%);
+  width: 80lvw;
+  max-width: ${({theme}) => theme.spacing(100)};
+  background-color: ${({theme}) => theme.palette.background.paper};
+  box-shadow: ${({theme}) => theme.shadows[24]};
+  padding: ${({theme}) => theme.spacing(2)};
+  display: grid;
+  gap: ${({theme}) => theme.spacing(3)};
 `
 
 const linkStyles = () => css`
@@ -113,8 +105,10 @@ export const CommentEditor = ({
   challenge,
   canReply,
   loading,
-  error
+  error,
+  parentUrl
 }: BuilderCommentEditorProps) => {
+  const router = useRouter()
   const {
     elements: {TextField, Button, Alert}
   } = useWebsiteBuilder()
@@ -134,12 +128,6 @@ export const CommentEditor = ({
 
   const handleAfterLoginCallback = () => {
     setModalOpen(false)
-
-    // dispatch({
-    //   type: 'add',
-    //   action: 'open',
-    //   commentId: null
-    // })
   }
 
   const anonymousSchema = useMemo(
@@ -197,6 +185,21 @@ export const CommentEditor = ({
       ]
     })
   })
+
+  const passRedirectCookie = () => {
+    if (!hasUser && typeof window !== 'undefined') {
+      setCookie(IntendedRouteStorageKey, parentUrl, {
+        expires: add(new Date(), {
+          seconds: IntendedRouteExpiryInSeconds
+        })
+      })
+    }
+  }
+
+  const registerRedirect = () => {
+    passRedirectCookie()
+    router.push('/signup')
+  }
 
   return (
     <>
@@ -309,9 +312,12 @@ export const CommentEditor = ({
             <MdClose />
           </CloseLogin>
           <LoginWrapper>
-            <LoginFormContainer afterLoginCallback={handleAfterLoginCallback} />
+            <LoginFormContainer
+              afterLoginCallback={handleAfterLoginCallback}
+              passRedirectCookie={passRedirectCookie}
+            />
             <Register>
-              <Link href="/signup" css={aStyles}>
+              <Link onClick={registerRedirect} css={aStyles}>
                 Jetzt registrieren
               </Link>
             </Register>

@@ -4,7 +4,11 @@ import {useUser} from '../session.context'
 
 export type LoginFormContainerProps = BuilderContainerProps
 
-export function LoginFormContainer({className, afterLoginCallback}: LoginFormContainerProps) {
+export function LoginFormContainer({
+  className,
+  afterLoginCallback,
+  passRedirectCookie
+}: LoginFormContainerProps) {
   const {LoginForm} = useWebsiteBuilder()
   const {setToken} = useUser()
   const [loginWithEmail, withEmail] = useLoginWithEmailMutation()
@@ -35,6 +39,10 @@ export function LoginFormContainer({className, afterLoginCallback}: LoginFormCon
         loginWithEmail({
           variables: {email}
         })
+
+        if (passRedirectCookie) {
+          passRedirectCookie()
+        }
 
         if (afterLoginCallback) {
           afterLoginCallback()
