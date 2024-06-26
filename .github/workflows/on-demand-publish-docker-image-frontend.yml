@@ -14,9 +14,32 @@ on:
         type: string
 
 jobs:
+  get-env-vars:
+    runs-on: ubuntu-latest
+    outputs:
+      vars: ${{ steps.get-env.outputs.envvars }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up matrix
+        id: get-env
+        run: |
+          ./deployment/frontend_read_env.sh production ${{ inputs.frontend_project }}
+
+  get-env-vars-print:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print
+        run: |
+          echo "VAR=${{ needs.get-env-vars.outputs.vars }}"
+
+
   build-and-push:
     name: ${{inputs.frontend_target}}
+    needs: [get-env-vars]
     runs-on: ubuntu-latest
+    if: ${{ needs.get-env-vars.result == 'success' }}
     steps:
       - uses: actions/checkout@v4
       - uses: docker/setup-qemu-action@v1
@@ -39,6 +62,7 @@ jobs:
           build-args: |
             NEXT_PROJECT=${{ inputs.frontend_project }}
             API_URL=${{ inputs.api_url }}
+            ${{ needs.get-env-vars.outputs.vars }}
           push: true
           tags: |
             ${{ inputs.frontend_tags }}

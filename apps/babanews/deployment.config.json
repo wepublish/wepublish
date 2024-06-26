@@ -2,7 +2,11 @@
   "frontend": {
     "production": {
       "deployment": true,
-      "env": {}
+      "env": {
+        "VAR1": "2",
+        "VAR2": "3",
+        "API_URL": "https://wepublish.ch"
+      }
     },
     "staging": {
       "deployment": true,
