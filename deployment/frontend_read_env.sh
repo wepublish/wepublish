@@ -5,4 +5,7 @@ customVars=$(jq -r ".frontend.${ENV}.env | to_entries | map(\"\(.key)=\(.value|t
 for var in $customVars; do
   envvars="${envvars}${var}\n"
 done
+envvars="${envvars//'%'/'%25'}"
+envvars="${envvars//$'\n'/'%0A'}"
+envvars="${envvars//$'\r'/'%0D'}"
 echo -e "::set-output name=envvars::\n${envvars}"
