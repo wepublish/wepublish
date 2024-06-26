@@ -1,0 +1,16 @@
+{
+  "frontend": {
+    "production": {
+      "deployment": false,
+      "env": {}
+    },
+    "staging": {
+      "deployment": false,
+      "env": {}
+    },
+    "review": {
+      "deployment": false,
+      "env": {}
+    }
+  }
+}
