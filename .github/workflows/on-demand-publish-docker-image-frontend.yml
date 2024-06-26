@@ -61,8 +61,6 @@ jobs:
           context: .
           target: next
           build-args: |
-            NEXT_PROJECT=${{ inputs.frontend_project }}
-            API_URL=${{ inputs.api_url }}
             ${{ needs.get-env-vars.outputs.envvars }}
           push: true
           tags: |
