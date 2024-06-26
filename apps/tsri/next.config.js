@@ -53,6 +53,21 @@ const nextConfig = {
         source: '/account/subscriptions',
         destination: '/profile/subscription',
         permanent: false
+      },
+      {
+        source: '/fluchtmigration-cricket',
+        destination: '/a/schnuppertraining-cricket-der-populaerste-sport-afghanistans',
+        permanent: false
+      },
+      {
+        source: '/fluchtmigration-podium-arbeitsmarkt',
+        destination: '/a/podium-wie-zugaenglich-ist-unser-arbeitsmarkt',
+        permanent: false
+      },
+      {
+        source: '/fluchtmigration-mitmachmarkt',
+        destination: '/a/mitmachmarkt-wo-kann-ich-mich-engagieren',
+        permanent: false
       }
     ]
   }
