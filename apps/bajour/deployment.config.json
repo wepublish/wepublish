@@ -11,7 +11,7 @@
     "review": {
       "deployment": true,
       "env": {
-        "API_URL": "https://api-bajour.wepublish.dev"
+        "API_URL": "https://api-bajour.wepublish.media"
       }
     }
   }
