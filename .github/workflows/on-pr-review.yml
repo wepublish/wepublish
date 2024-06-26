@@ -284,14 +284,7 @@ jobs:
 
       - name: Set up matrix
         id: set-matrix
-        run: |
-          targets=$(find apps -mindepth 2 -maxdepth 2 -type f -name .frontend_deployment -exec dirname {} \; | xargs -n 1 basename)
-          matrix="{\"target\":["
-          for target in $targets; do
-            matrix="${matrix}\"${target}\","
-          done
-          matrix="${matrix%,}]}"  
-          echo "::set-output name=matrix::${matrix}"          
+        run: deployment/read_deployment_config.sh '.frontend.deployment.review' true
 
   publish_docker_frontend_image:
     name: Frontend
