@@ -17,7 +17,7 @@ query Phrase($query: String!, $take: Int, $skip: Int) {
 
     pages {
       nodes {
-        ...FullPage
+        ...PageWithoutBlocks
       }
 
       pageInfo {

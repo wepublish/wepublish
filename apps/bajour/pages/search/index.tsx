@@ -1,8 +1,8 @@
 import {css, Pagination, styled, TextField} from '@mui/material'
 import {Button} from '@wepublish/ui'
-import {alignmentForTeaserBlock, ApiV1, Teaser} from '@wepublish/website'
+import {alignmentForTeaserBlock, ApiV1, articleToTeaser, Teaser} from '@wepublish/website'
 import {useRouter} from 'next/router'
-import {useEffect, useState} from 'react'
+import {ChangeEvent, FormEvent, useEffect, useState} from 'react'
 import {MdSearch} from 'react-icons/md'
 
 export const SearchInput = styled(TextField)`
@@ -50,8 +50,18 @@ export const SearchStatus = styled('div')`
 `
 
 export const SearchPagination = styled(Pagination)`
-  margin-top: 20px;
+  margin-top: ${({theme}) => theme.spacing(2)};
 `
+
+export const pageToTeaser = (page: ApiV1.Page): ApiV1.PageTeaser => ({
+  __typename: 'PageTeaser',
+  style: ApiV1.TeaserStyle.Default,
+  page,
+  image: null,
+  lead: null,
+  preTitle: null,
+  title: null
+})
 
 const ITEMS_PER_PAGE = 5
 
@@ -80,7 +90,7 @@ const SearchPage: React.FC = () => {
     }
   }, [query.q])
 
-  const handleSearch = (e: React.FormEvent) => {
+  const handleSearch = (e: FormEvent) => {
     e.preventDefault()
     router.push({
       pathname: '/search',
@@ -90,7 +100,7 @@ const SearchPage: React.FC = () => {
     setPage(1)
   }
 
-  const handlePageChange = (event: React.ChangeEvent<unknown>, value: number) => {
+  const handlePageChange = (event: ChangeEvent<unknown>, value: number) => {
     setPage(value)
   }
 
@@ -103,15 +113,8 @@ const SearchPage: React.FC = () => {
   const totalPagesCount = phraseData?.phrase?.pages?.totalCount || 0
   const totalCount = totalArticlesCount + totalPagesCount
 
-  const modifiedArticlesNodes = articlesNodes.map(node => ({
-    __typename: 'ArticleTeaser',
-    article: node
-  }))
-
-  const modifiedPagesNodes = pagesNodes.map(node => ({
-    __typename: 'PageTeaser',
-    page: node
-  }))
+  const modifiedArticlesNodes = articlesNodes.map(node => articleToTeaser(node as ApiV1.Article))
+  const modifiedPagesNodes = pagesNodes.map(node => pageToTeaser(node as ApiV1.Page))
 
   const phraseResultTeasers = [...modifiedArticlesNodes, ...modifiedPagesNodes]
 
@@ -142,7 +145,7 @@ const SearchPage: React.FC = () => {
   )
 }
 
-export const NavbarPhraseResults = ({teasers}: {teasers: any[]}) => {
+export const NavbarPhraseResults = ({teasers}: {teasers: ApiV1.Teaser[]}) => {
   return (
     <NavbarPhraseResultsWrapper>
       {teasers.map((teaser, index) => {
