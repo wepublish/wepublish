@@ -68,9 +68,9 @@ const ITEMS_PER_PAGE = 5
 const SearchPage: React.FC = () => {
   const router = useRouter()
   const {query} = router
-  const [rawQuery, setRawQuery] = useState((query.q as string) || '')
-  const [phraseQuery, setPhraseQuery] = useState((query.q as string) || '')
   const [page, setPage] = useState(1)
+
+  const phraseQuery = (query.q as string) || ''
 
   const {
     data: phraseData,
@@ -86,18 +86,20 @@ const SearchPage: React.FC = () => {
 
   useEffect(() => {
     if (query.q) {
-      setPhraseQuery(query.q as string)
+      setPage(1) // Reset page to 1 if the query changes
     }
   }, [query.q])
 
   const handleSearch = (e: FormEvent) => {
     e.preventDefault()
+    const target = e.target as typeof e.target & {
+      elements: {search: {value: string}}
+    }
+    const rawQuery = target.elements.search.value
     router.push({
       pathname: '/search',
       query: {q: rawQuery}
     })
-    setPhraseQuery(rawQuery)
-    setPage(1)
   }
 
   const handlePageChange = (event: ChangeEvent<unknown>, value: number) => {
@@ -118,17 +120,20 @@ const SearchPage: React.FC = () => {
 
   const phraseResultTeasers = [...modifiedArticlesNodes, ...modifiedPagesNodes]
 
+  const noResultsFound = phraseResultTeasers.length === 0 && !loading && !error && phraseQuery
+
   return (
     <SearchPageWrapper>
       <SearchForm onSubmit={handleSearch}>
-        <SearchInput type="text" label="Artikelsuche" onChange={e => setRawQuery(e.target.value)} />
-        <SearchButton onClick={handleSearch} aria-label="Artikelsuche">
+        <SearchInput name="search" type="text" label="Artikelsuche" defaultValue={phraseQuery} />
+        <SearchButton type="submit" aria-label="Artikelsuche">
           <MdSearch size={28} />
         </SearchButton>
       </SearchForm>
 
       {loading && <SearchStatus>Loading...</SearchStatus>}
       {error && <SearchStatus>Error: {error.message}</SearchStatus>}
+      {noResultsFound && <SearchStatus>Keine Suchergebnisse gefunden</SearchStatus>}
       {phraseResultTeasers.length > 0 && (
         <>
           <NavbarPhraseResults teasers={phraseResultTeasers} />
