@@ -17,12 +17,12 @@ jobs:
   get-env-vars:
     runs-on: ubuntu-latest
     outputs:
-      vars: ${{ steps.get-env.outputs.envvars }}
+      envvars: ${{ steps.get-env.outputs.envvars }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Set up matrix
+      - name: Get environment variables
         id: get-env
         run: |
           ./deployment/frontend_read_env.sh production ${{ inputs.frontend_project }}
@@ -33,7 +33,7 @@ jobs:
     steps:
       - name: Print
         run: |
-          echo "VAR=${{ needs.get-env-vars.outputs.vars }}"
+          echo "VAR=${{ needs.get-env-vars.outputs.envvars }}"
 
 
   build-and-push:
@@ -61,7 +61,7 @@ jobs:
           context: .
           target: next
           build-args: |
-            ${{ needs.get-env-vars.outputs.vars }}
+            ${{ needs.get-env-vars.outputs.envvars }}
             NEXT_PROJECT=${{ inputs.frontend_project }}
             API_URL=${{ inputs.api_url }}
           push: true
