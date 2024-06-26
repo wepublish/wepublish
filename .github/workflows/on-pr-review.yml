@@ -284,7 +284,7 @@ jobs:
 
       - name: Set up matrix
         id: set-matrix
-        run: deployment/read_deployment_config.sh '.frontend.deployment.review' true
+        run: deployment/read_deployment_config.sh '.frontend.review.deployment' true
 
   publish_docker_frontend_image:
     name: Frontend
