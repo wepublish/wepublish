@@ -130,6 +130,7 @@ export function SelectEventPanel({selectedFilter, onClose, onSelect}: SelectEven
           rowClassName={rowData => (eventFilter?.includes(rowData?.id) ? 'highlighted-row' : '')}>
           {allowCherryPicking && (
             <Table.Column width={36}>
+              <Table.HeaderCell>{''}</Table.HeaderCell>
               <Table.Cell style={{padding: 0}}>
                 {(rowData: RowDataType<EventRefFragment>) => (
                   <div

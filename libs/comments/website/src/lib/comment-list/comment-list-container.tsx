@@ -165,8 +165,8 @@ export function CommentListContainer({
   )
 }
 
-const extractAllComments = (comments: Comment[]): Comment[] => {
-  const allComments = [] as Comment[]
+const extractAllComments = <C extends {children: C[]}>(comments: C[]): C[] => {
+  const allComments = [] as C[]
 
   for (const comment of comments) {
     allComments.push(comment)

@@ -3,7 +3,7 @@
 exports[`Event Container should render Default 1`] = `
 <DocumentFragment>
   <article
-    class="ec2zadl3 css-q9dcsn-ContentWrapperStyled-EventWrapper e1wqte7t0"
+    class="ec2zadl3 css-aqax6e-ContentWrapperStyled-EventWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -147,7 +147,7 @@ https://unsplash.it/200/100 200w"
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span
@@ -231,7 +231,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span
@@ -315,7 +315,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span
@@ -399,7 +399,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span
@@ -491,7 +491,7 @@ https://unsplash.it/200/100 200w"
 exports[`Event Container should render WithClassName 1`] = `
 <DocumentFragment>
   <article
-    class="extra-classname ec2zadl3 css-q9dcsn-ContentWrapperStyled-EventWrapper e1wqte7t0"
+    class="extra-classname ec2zadl3 css-aqax6e-ContentWrapperStyled-EventWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -635,7 +635,7 @@ https://unsplash.it/200/100 200w"
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span
@@ -719,7 +719,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span
@@ -803,7 +803,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span
@@ -887,7 +887,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span
@@ -979,7 +979,7 @@ https://unsplash.it/200/100 200w"
 exports[`Event Container should render WithEmotion 1`] = `
 <DocumentFragment>
   <article
-    class="ec2zadl3 css-q9dcsn-ContentWrapperStyled-EventWrapper e1wqte7t0"
+    class="ec2zadl3 css-aqax6e-ContentWrapperStyled-EventWrapper e1wqte7t0"
   >
     <div
       data-testid="fake-head"
@@ -1123,7 +1123,7 @@ https://unsplash.it/200/100 200w"
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span
@@ -1207,7 +1207,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span
@@ -1291,7 +1291,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span
@@ -1375,7 +1375,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </p>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span
