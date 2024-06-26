@@ -10,7 +10,9 @@
     },
     "review": {
       "deployment": true,
-      "env": {}
+      "env": {
+        "API_URL": "https://api-bajour.wepublish.dev/"
+      }
     }
   }
 }

@@ -296,6 +296,7 @@ jobs:
     with:
       frontend_project: ${{ matrix.target }}
       api_url: https://api-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+      envoirment: review
       frontend_tags: |
         ghcr.io/wepublish/frontend-${{ matrix.target }}:${{ github.sha }}
     secrets: inherit
