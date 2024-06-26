@@ -81,6 +81,7 @@ type Event {
   id: String!
   image: Image
   imageId: String
+  lead: String
   location: String
   modifiedAt: DateTime!
   name: String!
@@ -105,6 +106,7 @@ type EventFromSource {
   externalSourceName: String
   id: String!
   imageUrl: String
+  lead: String
   location: String
   modifiedAt: DateTime!
   name: String!
@@ -207,7 +209,7 @@ type Mutation {
   createConsent(defaultValue: Boolean!, name: String!, slug: String!): Consent!
 
   """Creates a new event."""
-  createEvent(description: RichText, endsAt: DateTime, imageId: String, location: String, name: String!, startsAt: DateTime!, tagIds: [String!]): Event!
+  createEvent(description: RichText, endsAt: DateTime, imageId: String, lead: String, location: String, name: String!, startsAt: DateTime!, tagIds: [String!]): Event!
 
   """Create a new subscription flow"""
   createSubscriptionFlow(autoRenewal: [Boolean!]!, memberPlanId: String!, paymentMethodIds: [String!]!, periodicities: [PaymentPeriodicity!]!): [SubscriptionFlowModel!]!
@@ -250,7 +252,7 @@ type Mutation {
   updateConsent(defaultValue: Boolean, id: String!, name: String, slug: String): Consent!
 
   """Updates an existing event."""
-  updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, location: String, name: String, startsAt: DateTime, tagIds: [String!]): Event!
+  updateEvent(description: RichText, endsAt: DateTime, id: String!, imageId: String, lead: String, location: String, name: String, startsAt: DateTime, tagIds: [String!]): Event!
 
   """Updates an existing setting."""
   updateSetting(name: SettingName!, value: GraphQLSettingValueType!): Setting!

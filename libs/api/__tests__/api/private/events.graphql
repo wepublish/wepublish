@@ -1,6 +1,7 @@
 fragment EventRef on Event {
   id
   name
+  lead
   description
   status
   location
@@ -47,6 +48,7 @@ query Event($id: ID!) {
 
 mutation CreateEvent(
   $name: String!
+  $lead: String
   $description: RichText
   $location: String
   $startsAt: DateTime!
@@ -56,6 +58,7 @@ mutation CreateEvent(
 ) {
   createEvent(
     name: $name
+    lead: $lead
     description: $description
     location: $location
     startsAt: $startsAt
@@ -70,6 +73,7 @@ mutation CreateEvent(
 mutation UpdateEvent(
   $id: ID!
   $name: String
+  $lead: String
   $description: RichText
   $status: EventStatus
   $location: String
@@ -81,6 +85,7 @@ mutation UpdateEvent(
   updateEvent(
     id: $id
     name: $name
+    lead: $lead
     description: $description
     status: $status
     location: $location

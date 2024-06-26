@@ -675,6 +675,7 @@ type CommentFactoryDefineInput = {
     source?: string | null;
     authorType?: CommentAuthorType;
     guestUsername?: string | null;
+    featured?: boolean;
     peer?: CommentpeerFactory | Prisma.PeerCreateNestedOneWithoutCommentsInput;
     revisions?: Prisma.CommentsRevisionsCreateNestedManyWithoutCommentInput;
     guestUserImage?: CommentguestUserImageFactory | Prisma.ImageCreateNestedOneWithoutCommentInput;
@@ -2356,6 +2357,7 @@ type EventFactoryDefineInput = {
     createdAt?: Date;
     modifiedAt?: Date;
     name?: string;
+    lead?: string | null;
     description?: Prisma.EventCreatedescriptionInput | Prisma.Enumerable<Prisma.InputJsonValue>;
     status?: EventStatus;
     location?: string | null;

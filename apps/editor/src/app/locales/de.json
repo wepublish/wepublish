@@ -359,6 +359,7 @@
       "modalTitle": "Wirklich löschen?"
     },
     "commentEditView": {
+      "featured": "Hervorgehoben",
       "actions": "Aktionen",
       "comment": "Text Kommentar",
       "commentContextHeader": "Kommentar-Historie",
@@ -543,6 +544,7 @@
         "image": "Bild",
         "location": "Veranstaltungsort",
         "name": "Name",
+        "lead": "Lead",
         "postponed": "Verschoben",
         "rescheduled": "Verlegt",
         "scheduled": "Geplant",

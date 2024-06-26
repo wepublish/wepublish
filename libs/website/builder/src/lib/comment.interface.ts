@@ -98,11 +98,13 @@ export type BuilderCommentProps = PropsWithChildren<
     | 'authorType'
     | 'user'
     | 'guestUserImage'
+    | 'featured'
     | 'guestUsername'
     | 'title'
     | 'source'
     | 'createdAt'
     | 'id'
+    | 'tags'
   > & {
     className?: string
     showContent?: boolean

@@ -359,6 +359,7 @@
       "modalTitle": "Really delete?"
     },
     "commentEditView": {
+      "featured": "Featured",
       "actions": "Actions",
       "comment": "Comment text",
       "commentContextHeader": "Comment history",
@@ -544,6 +545,7 @@
         "image": "Image",
         "location": "Location",
         "name": "Name",
+        "lead": "Lead",
         "postponed": "Postponed",
         "rescheduled": "Rescheduled",
         "scheduled": "Scheduled",
