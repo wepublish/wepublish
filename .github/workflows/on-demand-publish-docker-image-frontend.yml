@@ -12,7 +12,7 @@ on:
       frontend_tags:
         required: true
         type: string
-      envoirment:
+      environment:
         required: true
         type: string
 
@@ -28,7 +28,7 @@ jobs:
       - name: Get environment variables
         id: get-env
         run: |
-          ./deployment/frontend_read_env.sh ${{ inputs.envoirment }} ${{ inputs.frontend_project }}
+          ./deployment/frontend_read_env.sh ${{ inputs.environment }} ${{ inputs.frontend_project }}
 
   get-env-vars-print:
     runs-on: ubuntu-latest
