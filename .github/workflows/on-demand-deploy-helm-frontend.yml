@@ -25,7 +25,7 @@ jobs:
       - name: Get environment variables
         id: get-env
         run: |
-          ./deployment/frontend_read_env.sh review ${{ inputs.frontend_project }} API_URL=${{ inputs.api_url }} FRONTEND_URL=https://${{ inputs.frontend_project }}${PROJECT_URL_SUFFIX}
+          ./deployment/frontend_read_env.sh review ${{ inputs.frontend_project }} yaml API_URL=${{ inputs.api_url }} FRONTEND_URL=https://${{ inputs.frontend_project }}${PROJECT_URL_SUFFIX}
 
   build-and-push:
     name: ${{inputs.frontend_target}}

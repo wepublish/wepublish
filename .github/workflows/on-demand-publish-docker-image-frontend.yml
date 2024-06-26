@@ -28,7 +28,7 @@ jobs:
       - name: Get environment variables
         id: get-env
         run: |
-          ./deployment/frontend_read_env.sh ${{ inputs.environment }} ${{ inputs.frontend_project }} NEXT_PROJECT=${{ inputs.frontend_project }} API_URL=${{ inputs.api_url }}
+          ./deployment/frontend_read_env.sh ${{ inputs.environment }} ${{ inputs.frontend_project }} env NEXT_PROJECT=${{ inputs.frontend_project }} API_URL=${{ inputs.api_url }}
 
   get-env-vars-print:
     runs-on: ubuntu-latest
