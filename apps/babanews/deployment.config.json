@@ -1,0 +1,27 @@
+{
+  "frontend": {
+    "production": {
+      "deployment": true,
+      "env": {}
+    },
+    "staging": {
+      "deployment": true,
+      "env": {}
+    },
+    "review": {
+      "deployment": true,
+      "env": {}
+    }
+  },
+  "backend": {
+    "production": {
+      "deployment": true
+    },
+    "staging": {
+      "deployment": true
+    },
+    "review": {
+      "deployment": true
+    }
+  }
+}

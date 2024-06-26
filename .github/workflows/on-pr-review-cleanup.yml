@@ -61,7 +61,7 @@ jobs:
 
       - name: Set up matrix
         id: set-matrix
-        run: deployment/read_deployment_config.sh '.frontend.deployment.review' true
+        run: deployment/read_deployment_config.sh '.frontend.review.deployment' true
   uninstall_frontend:
     name: Uninstall frontend
     if: ${{ needs.cleanup-frontend-matrix.result == 'success' }}
