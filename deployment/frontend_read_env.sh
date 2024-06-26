@@ -7,5 +7,6 @@ for var in $customVars; do
 done
 envvars="${envvars//'%'/'%25'}"
 envvars="${envvars//$'\n'/'%0A'}"
+envvars="${envvars//'\n'/'%0A'}"
 envvars="${envvars//$'\r'/'%0D'}"
-echo -e "::set-output name=envvars::\n${envvars}"
+echo "::set-output name=envvars::${envvars}"
