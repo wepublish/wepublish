@@ -3,10 +3,19 @@ name: Setup database for review build
 on:
   workflow_dispatch:
     inputs:
+      pull_request_number:
+        description: 'The pull request number you find it in the pullrequest view behind a # eg #1234=>1234'
+        required: true
+        default: '1393'
+        type: string
       project:
         description: 'Name of the project you want to get database from eg. bajour'
         required: true
+        default: 'bajour'
         type: string
+    pull_request:
+      types: [ opened, synchronize, reopened ]
+
 
 concurrency:
   group: review-${{ github.head_ref }}
@@ -14,9 +23,39 @@ concurrency:
 
 jobs:
   copy-db:
+    name: Copy Database
     runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
 
     steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v1
+        with:
+          version: '3.12.3'
+
+      - name: Authenticate kubectl
+        uses: 'google-github-actions/auth@v1'
+        with:
+          project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
+          workload_identity_provider: ${{ secrets.GCLOUD_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCLOUD_SERVICE_ACCOUNT }}
+
+      - name: Prepare kubectl
+        uses: 'google-github-actions/get-gke-credentials@v1'
+        with:
+          project_id: ${{ secrets.GCLOUD_PROJECT_ID }}
+          cluster_name: development
+          location: europe-west6
+
+      - name: Port forward PostgreSQL
+        run: |
+          kubectl port-forward -n staging svc/postgres 5432:5432 &
+          kubectl port-forward -n review svc/postgres 5433:5432 &
+
       - name: Install PostgreSQL Client
         run: sudo apt-get install -y postgresql-client
 
@@ -30,8 +69,8 @@ jobs:
         env:
           PGPASSWORD: foo
         run: |
-          psql -U ${{ secrets.STAGING_DATABASE_USER }} -h review-${{ github.event.pull_request.number }}-database-postgresql.reviews.svc.cluster.local -p 5432 -d wepublish -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
-          pg_restore -U postgres -h review-${{ github.event.pull_request.number }}-database-postgresql.reviews.svc.cluster.local -p 5432 -d wepublish -v db.dump
+          psql -U postgres -h review-${{ inputs.pull_request_number }}-database-postgresql.reviews.svc.cluster.local -p 5433 -d wepublish -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
+          pg_restore -U postgres -h review-${{ github.event.pull_request.number }}-database-postgresql.reviews.svc.cluster.local -p 5433 -d wepublish -v db.dump
 
       - name: Cleanup
         run: rm db.dump
