@@ -46,7 +46,7 @@ jobs:
 
       - name: Port forward PostgreSQL
         run: |
-          kubectl port-forward -n staging svc/bajour-database-postgresql 5432:5432 &
+          kubectl port-forward -n staging svc/tsri-database-postgresql 5432:5432 &
           kubectl port-forward -n reviews svc/review-1393-database-postgresql 5433:5432 &
 
       - name: Install PostgreSQL Client
