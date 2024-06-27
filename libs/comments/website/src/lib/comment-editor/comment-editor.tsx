@@ -126,10 +126,6 @@ export const CommentEditor = ({
 
   const aStyles = useMemo(() => linkStyles(), [])
 
-  const handleAfterLoginCallback = () => {
-    setModalOpen(false)
-  }
-
   const anonymousSchema = useMemo(
     () =>
       z.object({
@@ -199,6 +195,11 @@ export const CommentEditor = ({
   const registerRedirect = () => {
     passRedirectCookie()
     router.push('/signup')
+  }
+
+  const handleAfterLoginCallback = () => {
+    passRedirectCookie()
+    setModalOpen(false)
   }
 
   return (
@@ -312,10 +313,7 @@ export const CommentEditor = ({
             <MdClose />
           </CloseLogin>
           <LoginWrapper>
-            <LoginFormContainer
-              afterLoginCallback={handleAfterLoginCallback}
-              passRedirectCookie={passRedirectCookie}
-            />
+            <LoginFormContainer afterLoginCallback={handleAfterLoginCallback} />
             <Register>
               <Link onClick={registerRedirect} css={aStyles}>
                 Jetzt registrieren

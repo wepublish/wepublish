@@ -913,6 +913,13 @@ export async function contextFromRequest(
     }
   })
 
+  const jdtTokenExample = generateJWTWrapper({
+    expiresInMinutes: 1000,
+    audience: 'http://localhost:4201/a/frage-des-tages',
+    id: 'clv6fwsua000ic97hmj55opby'
+  })
+  console.log('jdtTokenExample', jdtTokenExample)
+
   return {
     hostURL,
     websiteURL,

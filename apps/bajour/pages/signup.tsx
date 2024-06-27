@@ -1,8 +1,8 @@
 import {styled, Typography} from '@mui/material'
-import {IntendedRouteStorageKey} from '@wepublish/utils/website'
 import {
   ApiV1,
   ContentWrapper,
+  IntendedRouteStorageKey,
   RegistrationFormContainer,
   useUser,
   useWebsiteBuilder
@@ -11,7 +11,6 @@ import {deleteCookie, getCookie} from 'cookies-next'
 import {GetStaticProps} from 'next'
 import getConfig from 'next/config'
 import {useRouter} from 'next/router'
-import {useEffect} from 'react'
 
 import {Container} from '../src/components/layout/container'
 
@@ -33,12 +32,6 @@ export default function SignUp() {
 
     router.replace(route)
   }
-
-  useEffect(() => {
-    if (hasUser) {
-      router.replace('/')
-    }
-  }, [router, hasUser])
 
   return (
     <Container>
