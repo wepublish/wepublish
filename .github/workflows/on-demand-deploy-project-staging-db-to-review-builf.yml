@@ -1,0 +1,41 @@
+name: Setup database for review build
+
+on:
+  workflow_dispatch:
+    inputs:
+      pull_request_number:
+        description: 'The pull request number you find it in the pullrequest view behind a # eg #1234=>1234'
+        required: true
+        type: string
+      project:
+        description: 'Name of the project you want to get database from eg. bajour'
+        required: true
+        type: string
+
+concurrency:
+  group: review-${{ github.head_ref }}
+  cancel-in-progress: true
+
+jobs:
+  copy-db:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Install PostgreSQL Client
+        run: sudo apt-get install -y postgresql-client
+
+      - name: Dump Project Staging Database
+        env:
+          PGPASSWORD: ${{ secrets.STAGING_DATABASE_PASSWORD }}
+        run: |
+          pg_dump -U ${{ secrets.STAGING_DATABASE_USER }} -h ${{ inputs.project }}-database-postgresql.staging.svc.cluster.local -p 5432 -d wepublish -F c -b -v -f db.dump
+
+      - name: Restore Dump to Review Database
+        env:
+          PGPASSWORD: foo
+        run: |
+          psql -U postgres -h review-${{ inputs.pull_request_number }}-database-postgresql.reviews.svc.cluster.local -p 5432 -d wepublish -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
+          pg_restore -U postgres -h review-${{ github.event.pull_request.number }}-database-postgresql.reviews.svc.cluster.local -p 5432 -d wepublish -v db.dump
+
+      - name: Cleanup
+        run: rm db.dump
