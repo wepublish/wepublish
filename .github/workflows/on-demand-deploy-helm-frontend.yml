@@ -33,7 +33,7 @@ jobs:
           echo "VAR=${{ needs.get-env-vars.outputs.envvars }}"
       - name: Print
         run: |
-          echo "SEC=${{ secrets }}"
+          echo "SEC=$GITHUB_ENV"
 
   build-and-push:
     name: ${{inputs.frontend_target}}
