@@ -48,8 +48,8 @@ jobs:
 
       - name: Port forward PostgreSQL
         run: |
-          kubectl port-forward -n staging svc/postgres 5432:5432 &
-          kubectl port-forward -n review svc/postgres 5433:5432 &
+          kubectl port-forward -n staging svc/${{ inputs.project }}-database-postgresql 5432:5432 &
+          kubectl port-forward -n reviews svc/review-${{ inputs.pull_request_number }}-database-postgresql 5433:5432 &
 
       - name: Install PostgreSQL Client
         run: sudo apt-get install -y postgresql-client
@@ -58,14 +58,14 @@ jobs:
         env:
           PGPASSWORD: ${{ secrets.STAGING_DATABASE_PASSWORD }}
         run: |
-          pg_dump -U ${{ secrets.STAGING_DATABASE_USER }} -h ${{ inputs.project }}-database-postgresql.staging.svc.cluster.local -p 5432 -d wepublish -F c -b -v -f db.dump
+          pg_dump -U ${{ secrets.STAGING_DATABASE_USER }} -h 127.0.0.1 -p 5432 -d wepublish -F c -b -v -f db.dump
 
       - name: Restore Dump to Review Database
         env:
           PGPASSWORD: foo
         run: |
-          psql -U postgres -h review-${{ inputs.pull_request_number }}-database-postgresql.reviews.svc.cluster.local -p 5433 -d wepublish -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
-          pg_restore -U postgres -h review-${{ github.event.pull_request.number }}-database-postgresql.reviews.svc.cluster.local -p 5433 -d wepublish -v db.dump
+          psql -U postgres -h 127.0.0.1 -p 5433 -d wepublish -c "DROP SCHEMA public CASCADE; CREATE SCHEMA public;"
+          pg_restore -U postgres -h 127.0.0.1 -p 5433 -d wepublish -v db.dump
 
       - name: Cleanup
         run: rm db.dump
