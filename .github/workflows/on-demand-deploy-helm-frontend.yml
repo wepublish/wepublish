@@ -10,9 +10,6 @@ on:
         required: true
         type: string
 
-env:
-  PROJECT_URL_SUFFIX: -${{ github.event.pull_request.number }}.reviews.wepublish.dev
-
 jobs:
   get-env-vars:
     runs-on: ubuntu-latest
@@ -25,7 +22,18 @@ jobs:
       - name: Get environment variables
         id: get-env
         run: |
-          ./deployment/frontend_read_env.sh review ${{ inputs.frontend_project }} yaml API_URL=${{ inputs.api_url }} FRONTEND_URL=https://${{ inputs.frontend_project }}${PROJECT_URL_SUFFIX}
+          ./deployment/frontend_read_env.sh review ${{ inputs.frontend_project }} yaml API_URL=${{ inputs.api_url }} FRONTEND_URL=https://${{ inputs.frontend_project }}-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+
+  get-env-vars-print:
+    runs-on: ubuntu-latest
+    needs: [get-env-vars]
+    steps:
+      - name: Print
+        run: |
+          echo "VAR=${{ needs.get-env-vars.outputs.envvars }}"
+      - name: Print
+        run: |
+          echo "SEC=${{ secrets }}"
 
   build-and-push:
     name: ${{inputs.frontend_target}}
