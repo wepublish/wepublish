@@ -13,8 +13,8 @@ on:
         required: true
         default: 'bajour'
         type: string
-    pull_request:
-      types: [ opened, synchronize, reopened ]
+  pull_request:
+    types: [ opened, synchronize, reopened ]
 
 
 concurrency:
