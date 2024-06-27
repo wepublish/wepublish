@@ -6,12 +6,10 @@ on:
       pull_request_number:
         description: 'The pull request number you find it in the pullrequest view behind a # eg #1234=>1234'
         required: true
-        default: '1393'
         type: string
       project:
         description: 'Name of the project you want to get database from eg. bajour'
         required: true
-        default: 'bajour'
         type: string
   pull_request:
     types: [ opened, synchronize, reopened ]
@@ -48,8 +46,8 @@ jobs:
 
       - name: Port forward PostgreSQL
         run: |
-          kubectl port-forward -n staging svc/${{ inputs.project }}-database-postgresql 5432:5432 &
-          kubectl port-forward -n reviews svc/review-${{ inputs.pull_request_number }}-database-postgresql 5433:5432 &
+          kubectl port-forward -n staging svc/bajour-database-postgresql 5432:5432 &
+          kubectl port-forward -n reviews svc/review-1393-database-postgresql 5433:5432 &
 
       - name: Install PostgreSQL Client
         run: sudo apt-get install -y postgresql-client
