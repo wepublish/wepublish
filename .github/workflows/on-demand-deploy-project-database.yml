@@ -50,7 +50,11 @@ jobs:
           kubectl port-forward -n reviews svc/review-1393-database-postgresql 5433:5432 &
 
       - name: Install PostgreSQL Client
-        run: sudo apt-get install -y postgresql-client
+        run: |
+          sudo sh -c 'echo "deb http://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" > /etc/apt/sources.list.d/pgdg.list'
+          wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | sudo apt-key add -
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client-16
 
       - name: Dump Project Staging Database
         env:
