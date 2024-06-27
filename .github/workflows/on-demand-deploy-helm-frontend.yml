@@ -76,6 +76,7 @@ jobs:
             env:
               NODE_ENV: production
           EOF
+          cat values.yaml
           export POD_NAME=review-${{ github.event.pull_request.number }}-${{ inputs.frontend_project }}-frontend
           if [[ ! -z $(helm ls -a -n reviews |grep ${POD_NAME} |grep -v "deployed ") ]]; then helm uninstall -n reviews ${POD_NAME}; fi
           helm upgrade --install ${POD_NAME} ./helm/charts/wepublish-frontend -n reviews -f values.yaml --wait
