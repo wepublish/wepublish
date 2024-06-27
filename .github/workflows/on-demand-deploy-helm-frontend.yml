@@ -70,7 +70,7 @@ jobs:
           cat > values.yaml <<EOF
           deployment:
             env:
-          $(echo -e "${{ needs.get-env-vars.outputs.envvars }} | awk '{print "    "$0}')
+          $(echo -e "${{ needs.get-env-vars.outputs.envvars }}" | awk '{print "    "$0}')
           frontend:
             image: ghcr.io/wepublish/frontend-${{ inputs.frontend_project }}:${{ github.sha }}
             env:
