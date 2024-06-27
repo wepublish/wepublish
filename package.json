@@ -160,7 +160,7 @@
     "jest-fetch-mock": "^3.0.3",
     "jest-watch-typeahead": "^2.2.2",
     "jsdom": "~20.0.3",
-    "lerna": "^3.22.1",
+    "lerna": "^8.1.5",
     "lerna-changelog": "^1.0.1",
     "nanoid": "^2.1.7",
     "nock": "^13.3.0",
