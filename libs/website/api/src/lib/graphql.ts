@@ -1429,6 +1429,7 @@ export type TeaserListBlock = {
 
 export type TeaserListBlockFilter = {
   __typename?: 'TeaserListBlockFilter';
+  tagObjects: Array<Tag>;
   tags?: Maybe<Array<Scalars['ID']>>;
 };
 
@@ -1967,6 +1968,15 @@ export type PeerQueryVariables = Exact<{
 
 
 export type PeerQuery = { __typename?: 'Query', peer?: { __typename?: 'Peer', id: string, createdAt: string, modifiedAt: string, name: string, slug: string, isDisabled?: boolean | null, hostURL: string, profile?: { __typename?: 'PeerProfile', name: string, themeColor: string, themeFontColor: string, hostURL: string, websiteURL: string, callToActionText: Node[], callToActionURL: string, callToActionImageURL?: string | null, logo?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, bigURL?: string | null, largeURL?: string | null, mediumURL?: string | null, smallURL?: string | null, squareBigURL?: string | null, squareLargeURL?: string | null, squareMediumURL?: string | null, squareSmallURL?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null } | null, callToActionImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, bigURL?: string | null, largeURL?: string | null, mediumURL?: string | null, smallURL?: string | null, squareBigURL?: string | null, squareLargeURL?: string | null, squareMediumURL?: string | null, squareSmallURL?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null } | null } | null } | null };
+
+export type PhraseQueryVariables = Exact<{
+  query: Scalars['String'];
+  take?: InputMaybe<Scalars['Int']>;
+  skip?: InputMaybe<Scalars['Int']>;
+}>;
+
+
+export type PhraseQuery = { __typename?: 'Query', phrase?: { __typename?: 'Phrase', articles?: { __typename?: 'PhraseResultArticleContent', totalCount: number, nodes: Array<{ __typename?: 'Article', id: string, publishedAt: string, updatedAt: string, preTitle?: string | null, title: string, lead?: string | null, slug: string, breaking: boolean, url: string, peeredArticleURL?: string | null, socialMediaDescription?: string | null, socialMediaTitle?: string | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null, type?: TagType | null, main: boolean, url: string }>, authors: Array<{ __typename?: 'Author', id: string, name: string, jobTitle?: string | null, slug: string, bio?: Node[] | null, url: string, createdAt: string, modifiedAt: string, links?: Array<{ __typename?: 'AuthorLink', title: string, url: string }> | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null, type?: TagType | null, main: boolean, url: string }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, bigURL?: string | null, largeURL?: string | null, mediumURL?: string | null, smallURL?: string | null, squareBigURL?: string | null, squareLargeURL?: string | null, squareMediumURL?: string | null, squareSmallURL?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null } | null }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, bigURL?: string | null, largeURL?: string | null, mediumURL?: string | null, smallURL?: string | null, squareBigURL?: string | null, squareLargeURL?: string | null, squareMediumURL?: string | null, squareSmallURL?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null } | null, socialMediaImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, bigURL?: string | null, largeURL?: string | null, mediumURL?: string | null, smallURL?: string | null, squareBigURL?: string | null, squareLargeURL?: string | null, squareMediumURL?: string | null, squareSmallURL?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'PublicProperties', key: string, value: string }> }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null, pages?: { __typename?: 'PhraseResultPageContent', totalCount: number, nodes: Array<{ __typename?: 'Page', id: string, slug: string, description?: string | null, title: string, url: string, socialMediaDescription?: string | null, socialMediaTitle?: string | null, tags: Array<{ __typename?: 'Tag', id: string, tag?: string | null, type?: TagType | null, main: boolean, url: string }>, image?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, bigURL?: string | null, largeURL?: string | null, mediumURL?: string | null, smallURL?: string | null, squareBigURL?: string | null, squareLargeURL?: string | null, squareMediumURL?: string | null, squareSmallURL?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null } | null, socialMediaImage?: { __typename?: 'Image', id: string, createdAt: string, modifiedAt: string, filename?: string | null, format: string, mimeType: string, extension: string, width: number, height: number, fileSize: number, title?: string | null, description?: string | null, tags: Array<string>, source?: string | null, link?: string | null, license?: string | null, url?: string | null, bigURL?: string | null, largeURL?: string | null, mediumURL?: string | null, smallURL?: string | null, squareBigURL?: string | null, squareLargeURL?: string | null, squareMediumURL?: string | null, squareSmallURL?: string | null, focalPoint?: { __typename?: 'Point', x: number, y: number } | null } | null, properties: Array<{ __typename?: 'PublicProperties', key: string, value: string }> }>, pageInfo: { __typename?: 'PageInfo', startCursor?: string | null, endCursor?: string | null, hasNextPage: boolean, hasPreviousPage: boolean } } | null } | null };
 
 export type FullPollFragment = { __typename?: 'FullPoll', id: string, question?: string | null, opensAt: string, closedAt?: string | null, infoText?: Node[] | null, answers: Array<{ __typename?: 'PollAnswerWithVoteCount', id: string, pollId: string, answer?: string | null, votes: number }>, externalVoteSources: Array<{ __typename?: 'PollExternalVoteSource', id: string, voteAmounts: Array<{ __typename?: 'PollExternalVote', id: string, answerId: string, amount: number }> }> };
 
@@ -4076,6 +4086,67 @@ export function usePeerLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PeerQ
 export type PeerQueryHookResult = ReturnType<typeof usePeerQuery>;
 export type PeerLazyQueryHookResult = ReturnType<typeof usePeerLazyQuery>;
 export type PeerQueryResult = Apollo.QueryResult<PeerQuery, PeerQueryVariables>;
+export const PhraseDocument = gql`
+    query Phrase($query: String!, $take: Int, $skip: Int) {
+  phrase(query: $query, take: $take, skip: $skip) {
+    articles {
+      nodes {
+        ...ArticleWithoutBlocks
+      }
+      pageInfo {
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
+      totalCount
+    }
+    pages {
+      nodes {
+        ...PageWithoutBlocks
+      }
+      pageInfo {
+        startCursor
+        endCursor
+        hasNextPage
+        hasPreviousPage
+      }
+      totalCount
+    }
+  }
+}
+    ${ArticleWithoutBlocksFragmentDoc}
+${PageWithoutBlocksFragmentDoc}`;
+
+/**
+ * __usePhraseQuery__
+ *
+ * To run a query within a React component, call `usePhraseQuery` and pass it any options that fit your needs.
+ * When your component renders, `usePhraseQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = usePhraseQuery({
+ *   variables: {
+ *      query: // value for 'query'
+ *      take: // value for 'take'
+ *      skip: // value for 'skip'
+ *   },
+ * });
+ */
+export function usePhraseQuery(baseOptions: Apollo.QueryHookOptions<PhraseQuery, PhraseQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<PhraseQuery, PhraseQueryVariables>(PhraseDocument, options);
+      }
+export function usePhraseLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<PhraseQuery, PhraseQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<PhraseQuery, PhraseQueryVariables>(PhraseDocument, options);
+        }
+export type PhraseQueryHookResult = ReturnType<typeof usePhraseQuery>;
+export type PhraseLazyQueryHookResult = ReturnType<typeof usePhraseLazyQuery>;
+export type PhraseQueryResult = Apollo.QueryResult<PhraseQuery, PhraseQueryVariables>;
 export const UserPollVoteDocument = gql`
     query UserPollVote($pollId: ID!) {
   userPollVote(pollId: $pollId)

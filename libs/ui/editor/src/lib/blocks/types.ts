@@ -8,6 +8,7 @@ import {
   ImageRefFragment,
   PageRefFragment,
   PeerRefFragment,
+  Tag,
   TeaserStyle,
   TeaserType
 } from '@wepublish/editor/api'
@@ -252,9 +253,10 @@ export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser | CustomTeas
 
 export interface TeaserListBlockValue extends BaseBlockValue {
   title?: string | null
-  filter: Partial<{
-    tags: string[] | null
-  }>
+  filter: {
+    tags?: string[] | null
+    tagObjects: Pick<Tag, 'id' | 'tag'>[]
+  }
   teaserType: TeaserType
   skip: number
   take: number
