@@ -1,23 +1,24 @@
 import {zodResolver} from '@hookform/resolvers/zod'
-import {IconButton, Modal, css, styled} from '@mui/material'
+import {IconButton, Modal, Theme, css, styled, useTheme} from '@mui/material'
 import {LoginFormContainer, useUser} from '@wepublish/authentication/website'
 import {toPlaintext} from '@wepublish/richtext'
 import {Link} from '@wepublish/ui'
 import {BuilderCommentEditorProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {setCookie} from 'cookies-next'
 import {add} from 'date-fns'
-import {useRouter} from 'next/router'
 import {useMemo, useState} from 'react'
 import {Controller, useForm} from 'react-hook-form'
-import {MdClose, MdSend} from 'react-icons/md'
+import {MdClose, MdLogin, MdSend} from 'react-icons/md'
 import {z} from 'zod'
 
 export const IntendedRouteStorageKey = 'auth.intended'
 export const IntendedRouteExpiryInSeconds = 2 * 60
 
-export const CommentEditorWrapper = styled('form')`
+export const CommentEditorWrapper = styled('form')<{modalOpen: boolean}>`
   display: grid;
   gap: ${({theme}) => theme.spacing(2)};
+
+  ${({modalOpen}) => modalOpen && 'filter: blur(4px);'};
 `
 
 export const CommentEditorActions = styled('div')`
@@ -60,7 +61,6 @@ export const Register = styled('div')`
   justify-content: center;
   align-items: center;
   grid-column: 1/2;
-  font-size: 1.8rem;
   margin: 0 ${({theme}) => theme.spacing(4)};
   margin-top: ${({theme}) => theme.spacing(3)};
 
@@ -68,6 +68,25 @@ export const Register = styled('div')`
     grid-column: 2/3;
     margin-top: 0;
   }
+`
+
+export const registerStyles = (theme: Theme) => css`
+  font-size: ${theme.typography.body1.fontSize};
+  white-space: nowrap;
+  color: ${theme.palette.common.white};
+
+  ${theme.breakpoints.up('sm')} {
+    font-size: ${theme.typography.h4.fontSize};
+  }
+`
+
+export const registerIconStyles = (theme: Theme) => css`
+  color: ${theme.palette.common.white};
+`
+
+export const linkStyles = (theme: Theme) => css`
+  color: ${theme.palette.common.white};
+  text-decoration: none;
 `
 
 export const CloseLogin = styled(IconButton)`
@@ -91,10 +110,6 @@ export const ModalContent = styled('div')`
   gap: ${({theme}) => theme.spacing(3)};
 `
 
-const linkStyles = () => css`
-  white-space: nowrap;
-`
-
 export const CommentEditor = ({
   className,
   onCancel,
@@ -108,7 +123,7 @@ export const CommentEditor = ({
   error,
   parentUrl
 }: BuilderCommentEditorProps) => {
-  const router = useRouter()
+  const theme = useTheme()
   const {
     elements: {TextField, Button, Alert}
   } = useWebsiteBuilder()
@@ -120,11 +135,9 @@ export const CommentEditor = ({
     onCancel()
   }
 
-  const handleLoginSuccess = () => {
-    setModalOpen(false)
-  }
-
-  const aStyles = useMemo(() => linkStyles(), [])
+  const buttonStyles = useMemo(() => registerStyles(theme), [theme])
+  const iconStyles = useMemo(() => registerIconStyles(theme), [theme])
+  const aStyles = useMemo(() => linkStyles(theme), [theme])
 
   const anonymousSchema = useMemo(
     () =>
@@ -194,7 +207,6 @@ export const CommentEditor = ({
 
   const registerRedirect = () => {
     passRedirectCookie()
-    router.push('/signup')
   }
 
   const handleAfterLoginCallback = () => {
@@ -204,10 +216,7 @@ export const CommentEditor = ({
 
   return (
     <>
-      <CommentEditorWrapper
-        className={className}
-        onSubmit={submit}
-        style={{filter: modalOpen ? 'blur(4px)' : 'none'}}>
+      <CommentEditorWrapper className={className} onSubmit={submit} modalOpen={modalOpen}>
         {!hasUser && (
           <Controller
             name={'guestUsername'}
@@ -315,9 +324,14 @@ export const CommentEditor = ({
           <LoginWrapper>
             <LoginFormContainer afterLoginCallback={handleAfterLoginCallback} />
             <Register>
-              <Link onClick={registerRedirect} css={aStyles}>
-                Jetzt registrieren
-              </Link>
+              <Button css={buttonStyles} onClick={registerRedirect}>
+                <IconButton css={iconStyles} size="large">
+                  <MdLogin aria-label="Register" />
+                </IconButton>
+                <Link href="/signup" css={aStyles}>
+                  Jetzt registrieren
+                </Link>
+              </Button>
             </Register>
           </LoginWrapper>
         </ModalContent>
