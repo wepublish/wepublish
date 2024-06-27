@@ -65,17 +65,12 @@ jobs:
           cluster_name: development
           location: europe-west6
 
-      - name: Format environment variables for yaml
-        id: format-env
-        run: |
-          echo "formatted_env=$(echo "${{ needs.get-env-vars.outputs.envvars }}" | awk '{print "    "$0}')" >> $GITHUB_ENV
-
       - name: Helm deploy app
         run: |
           cat > values.yaml <<EOF
           deployment:
             env:
-          ${{ env.formatted_env }}
+          $(echo -e "${{ needs.get-env-vars.outputs.envvars }} | awk '{print "    "$0}')
           frontend:
             image: ghcr.io/wepublish/frontend-${{ inputs.frontend_project }}:${{ github.sha }}
             env:
