@@ -7,6 +7,7 @@ import {MdEdit, MdReply} from 'react-icons/md'
 import {getStateForEditor} from './comment-list.state'
 import {CommentListItemShare} from './comment-list-item-share'
 import {useMemo} from 'react'
+import {Button} from '@wepublish/ui'
 
 export const CommentListItemChildren = styled('aside')`
   display: grid;
@@ -42,6 +43,8 @@ export const CommentListItemActionsButtons = styled('div')`
   align-items: start;
   justify-content: space-between;
 `
+
+export const CommentReplyButton = styled(Button)``
 
 const useButtonStyles = () => {
   const theme = useTheme()
@@ -126,7 +129,7 @@ export const CommentListItem = ({
 
       <CommentListItemActions>
         <CommentListItemActionsButtons>
-          <Button
+          <CommentReplyButton
             startIcon={<MdReply />}
             variant="outlined"
             size="small"
@@ -139,7 +142,7 @@ export const CommentListItem = ({
               })
             }}>
             Antworten
-          </Button>
+          </CommentReplyButton>
 
           {canShare && <CommentListItemShare url={comment.url} title="share" />}
 

@@ -91,7 +91,7 @@ export const ContextBox = ({richText, text}: BuilderBreakBlockProps) => {
       </ContextBoxInfo>
 
       <ContextBoxContent>
-        <AllAbout>Darum geht’s:</AllAbout>
+        <AllAbout>Darum geht’s</AllAbout>
         <Title>{text}</Title>
 
         <RichTextBlockWrapper expanded={expanded}>

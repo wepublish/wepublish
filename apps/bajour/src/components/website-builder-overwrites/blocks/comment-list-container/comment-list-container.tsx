@@ -6,13 +6,14 @@ import {
   CommentListContainer as BaseCommentListContainer,
   CommentListItemActions,
   CommentListItemChildren,
+  CommentReplyButton,
   CommentWrapper
 } from '@wepublish/website'
 
 export const CommentListContainer = styled(BaseCommentListContainer)`
   ${CommentListItemChildren} {
     background-color: ${({theme}) => theme.palette.common.white};
-    margin-top: ${({theme}) => theme.spacing(3)};
+    padding-top: ${({theme}) => theme.spacing(1)};
 
     &::before {
       background-color: ${({theme}) => theme.palette.secondary.light};
@@ -42,6 +43,10 @@ export const CommentListContainer = styled(BaseCommentListContainer)`
       border-bottom-right-radius: ${({theme}) => theme.spacing(2.5)};
       border-bottom-left-radius: ${({theme}) => theme.spacing(2.5)};
     }
+
+    ${CommentReplyButton} {
+      display: none;
+    }
   }
 
   ${CommentWrapper} {
@@ -60,6 +65,7 @@ export const CommentListContainer = styled(BaseCommentListContainer)`
 
   ${CommentListItemActions} {
     padding: ${({theme}) => theme.spacing(1.5)};
+    margin-bottom: 0;
   }
 
   ${theme.breakpoints.up('md')} {

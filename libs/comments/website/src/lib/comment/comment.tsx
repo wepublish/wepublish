@@ -6,7 +6,7 @@ import {MdPerson, MdVerified} from 'react-icons/md'
 
 import {format} from 'date-fns'
 import {de} from 'date-fns/locale'
-import {useEffect, useState} from 'react'
+import {useEffect, useMemo, useState} from 'react'
 
 function formatCommentDate(isoDateString: string): string {
   const date: Date = new Date(isoDateString)
@@ -58,6 +58,7 @@ export const CommentName = styled('div')`
 
 export const CommentAuthor = styled('div')`
   font-size: ${({theme}) => theme.typography.body1};
+  font-weight: ${({theme}) => theme.typography.fontWeightBold};
 `
 
 export const CommentVerifiedBadge = styled('div')`
@@ -100,6 +101,10 @@ export const CommentActions = styled('div')`
   gap: ${({theme}) => theme.spacing(1)};
 `
 
+export const titleStyles = () => css`
+  font-weight: 600;
+`
+
 export const Comment = ({
   id,
   className,
@@ -120,6 +125,8 @@ export const Comment = ({
   } = useWebsiteBuilder()
 
   const [commentId, setCommentId] = useState<string | null>(null)
+
+  const titleCss = useMemo(() => titleStyles(), [])
 
   useEffect(() => {
     const commentId = window.location.hash.replace('#', '')
@@ -168,8 +175,8 @@ export const Comment = ({
       {showContent && (
         <CommentContent>
           {title && (
-            <Paragraph component="h1" gutterBottom={false}>
-              <strong>{title}</strong>
+            <Paragraph gutterBottom={false} css={titleCss}>
+              {title}
             </Paragraph>
           )}
           <RichText richText={text ?? []} />
