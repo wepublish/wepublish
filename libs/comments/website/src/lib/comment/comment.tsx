@@ -4,37 +4,22 @@ import {CommentAuthorType} from '@wepublish/website/api'
 import {BuilderCommentProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {MdPerson, MdVerified} from 'react-icons/md'
 
-import {format} from 'date-fns'
-import {de} from 'date-fns/locale'
-import {useEffect, useState} from 'react'
-
-function formatCommentDate(isoDateString: string): string {
-  const date: Date = new Date(isoDateString)
-
-  const formattedDate: string = format(date, 'd. MMMM yyyy | HH:mm', {locale: de})
-
-  return formattedDate
-}
-
 const avatarStyles = css`
   width: 46px;
   height: 46px;
   border-radius: 50%;
 `
 
-export const CommentWrapper = styled('article')<{highlight?: boolean}>`
+export const CommentWrapper = styled('article')`
   display: grid;
   gap: ${({theme}) => theme.spacing(2)};
-  &:target {
-    scroll-margin-top: ${({theme}) => theme.spacing(10)};
-  }
 
-  ${({highlight, theme}) =>
-    highlight &&
-    css`
-      border: 2px solid ${theme.palette.primary.main};
-      border-radius: ${theme.spacing(2.5)};
-    `}
+  &:target {
+    border: 2px solid ${({theme}) => theme.palette.primary.main};
+    border-radius: ${({theme}) => theme.spacing(2.5)};
+    scroll-margin-top: ${({theme}) => theme.spacing(10)};
+    padding: ${({theme}) => theme.spacing(2)};
+  }
 `
 
 export const CommentHeader = styled('header')`
@@ -42,7 +27,6 @@ export const CommentHeader = styled('header')`
   grid-template-columns: max-content 1fr;
   gap: ${({theme}) => theme.spacing(2)};
   align-items: center;
-  padding: ${({theme}) => theme.spacing(1.5)};
 `
 
 export const CommentHeaderContent = styled('div')``
@@ -82,9 +66,7 @@ export const CommentFlairLink = styled('a')`
   color: ${({theme}) => theme.palette.primary.main};
 `
 
-export const CommentContent = styled('div')`
-  padding: ${({theme}) => theme.spacing(1.5)};
-`
+export const CommentContent = styled('div')``
 
 export const CommentChildren = styled('aside')`
   display: grid;
@@ -116,26 +98,18 @@ export const Comment = ({
 }: BuilderCommentProps) => {
   const {
     elements: {Paragraph, Image},
-    blocks: {RichText}
+    blocks: {RichText},
+    date
   } = useWebsiteBuilder()
-
-  const [commentId, setCommentId] = useState<string | null>(null)
-
-  useEffect(() => {
-    const commentId = window.location.hash.replace('#', '')
-    if (commentId) {
-      setCommentId(commentId)
-    }
-  }, [])
 
   const image = user?.image ?? guestUserImage
   const isVerified = authorType === CommentAuthorType.VerifiedUser
   const isGuest = authorType === CommentAuthorType.GuestUser
-  const flair = user?.flair ?? source
+  const flair = user?.flair || source
   const name = user ? `${user.preferredName || user.firstName} ${user.name}` : guestUsername
 
   return (
-    <CommentWrapper className={className} id={id} highlight={commentId === id}>
+    <CommentWrapper className={className} id={id}>
       <CommentHeader>
         {image && <Image image={image} square css={avatarStyles} />}
         {!image && <MdPerson css={avatarStyles} />}
@@ -151,16 +125,18 @@ export const Comment = ({
             )}
           </CommentName>
 
-          {user?.flair && source && (
+          {source && (
             <CommentFlair isGuest={isGuest}>
               <CommentFlairLink href={source} target="_blank" rel="noopener noreferrer">
                 {flair}
               </CommentFlairLink>
             </CommentFlair>
           )}
+
           {user?.flair && !source && <CommentFlair isGuest={isGuest}>{user?.flair}</CommentFlair>}
+
           {!flair && createdAt && (
-            <CommentFlair isGuest={isGuest}>{formatCommentDate(createdAt)}</CommentFlair>
+            <CommentFlair isGuest={isGuest}>{date.format(new Date(createdAt))}</CommentFlair>
           )}
         </CommentHeaderContent>
       </CommentHeader>
@@ -172,6 +148,7 @@ export const Comment = ({
               <strong>{title}</strong>
             </Paragraph>
           )}
+
           <RichText richText={text ?? []} />
         </CommentContent>
       )}
