@@ -6,11 +6,11 @@ exports[`Comment List should render AnonymousCommenting 1`] = `
     class="css-fwhbhf-CommentListWrapper eeofsby2"
   >
     <article
-      class="css-19ehku-CommentWrapper ekbi54x10"
+      class="css-1x8pjqe-CommentWrapper ekbi54x10"
       id="verified"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x9"
+        class="css-p4cys7-CommentHeader ekbi54x9"
       >
         <img
           alt="DSC07717"
@@ -77,7 +77,7 @@ https://unsplash.it/200/200 200w"
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -186,11 +186,11 @@ https://unsplash.it/200/200 200w"
       </div>
     </article>
     <article
-      class="css-19ehku-CommentWrapper ekbi54x10"
+      class="css-1x8pjqe-CommentWrapper ekbi54x10"
       id="1"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x9"
+        class="css-p4cys7-CommentHeader ekbi54x9"
       >
         <img
           alt="DSC07717"
@@ -257,7 +257,7 @@ https://unsplash.it/200/200 200w"
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -368,11 +368,11 @@ https://unsplash.it/200/200 200w"
         class="css-uvrneq-CommentListItemChildren ew53o3y2"
       >
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="1-1"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -439,7 +439,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -550,11 +550,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="1-1-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -621,7 +621,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -732,11 +732,11 @@ https://unsplash.it/200/200 200w"
           </aside>
         </article>
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="1-2"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -764,10 +764,22 @@ https://unsplash.it/200/200 200w"
                   Dr. Anonymous
                 </div>
               </div>
+              <div
+                class="css-r2jplb-CommentFlair-CommentFlair ekbi54x4"
+              >
+                <a
+                  class="css-c0umgh-CommentFlairLink ekbi54x3"
+                  href="Source"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Source
+                </a>
+              </div>
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -878,11 +890,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="1-2-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -949,7 +961,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -1062,11 +1074,11 @@ https://unsplash.it/200/200 200w"
       </aside>
     </article>
     <article
-      class="css-19ehku-CommentWrapper ekbi54x10"
+      class="css-1x8pjqe-CommentWrapper ekbi54x10"
       id="2"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x9"
+        class="css-p4cys7-CommentHeader ekbi54x9"
       >
         <img
           alt="DSC07717"
@@ -1094,10 +1106,22 @@ https://unsplash.it/200/200 200w"
               Dr. Anonymous
             </div>
           </div>
+          <div
+            class="css-r2jplb-CommentFlair-CommentFlair ekbi54x4"
+          >
+            <a
+              class="css-c0umgh-CommentFlairLink ekbi54x3"
+              href="Source"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Source
+            </a>
+          </div>
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -1208,11 +1232,11 @@ https://unsplash.it/200/200 200w"
         class="css-uvrneq-CommentListItemChildren ew53o3y2"
       >
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="2-1"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -1279,7 +1303,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -1390,11 +1414,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="2-1-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -1461,7 +1485,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -1572,11 +1596,11 @@ https://unsplash.it/200/200 200w"
           </aside>
         </article>
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="2-2"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -1604,10 +1628,22 @@ https://unsplash.it/200/200 200w"
                   Dr. Anonymous
                 </div>
               </div>
+              <div
+                class="css-r2jplb-CommentFlair-CommentFlair ekbi54x4"
+              >
+                <a
+                  class="css-c0umgh-CommentFlairLink ekbi54x3"
+                  href="Source"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Source
+                </a>
+              </div>
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -1718,11 +1754,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="2-2-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -1789,7 +1825,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -1902,11 +1938,11 @@ https://unsplash.it/200/200 200w"
       </aside>
     </article>
     <article
-      class="css-19ehku-CommentWrapper ekbi54x10"
+      class="css-1x8pjqe-CommentWrapper ekbi54x10"
       id="3"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x9"
+        class="css-p4cys7-CommentHeader ekbi54x9"
       >
         <img
           alt="DSC07717"
@@ -1973,7 +2009,7 @@ https://unsplash.it/200/200 200w"
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -2082,11 +2118,11 @@ https://unsplash.it/200/200 200w"
       </div>
     </article>
     <article
-      class="css-19ehku-CommentWrapper ekbi54x10"
+      class="css-1x8pjqe-CommentWrapper ekbi54x10"
       id="4"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x9"
+        class="css-p4cys7-CommentHeader ekbi54x9"
       >
         <img
           alt="DSC07717"
@@ -2114,10 +2150,22 @@ https://unsplash.it/200/200 200w"
               Dr. Anonymous
             </div>
           </div>
+          <div
+            class="css-r2jplb-CommentFlair-CommentFlair ekbi54x4"
+          >
+            <a
+              class="css-c0umgh-CommentFlairLink ekbi54x3"
+              href="Source"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Source
+            </a>
+          </div>
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -2228,11 +2276,11 @@ https://unsplash.it/200/200 200w"
         class="css-uvrneq-CommentListItemChildren ew53o3y2"
       >
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="4-1"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -2299,7 +2347,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -2410,11 +2458,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="4-1-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -2481,7 +2529,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -2592,11 +2640,11 @@ https://unsplash.it/200/200 200w"
           </aside>
         </article>
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="4-2"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -2624,10 +2672,22 @@ https://unsplash.it/200/200 200w"
                   Dr. Anonymous
                 </div>
               </div>
+              <div
+                class="css-r2jplb-CommentFlair-CommentFlair ekbi54x4"
+              >
+                <a
+                  class="css-c0umgh-CommentFlairLink ekbi54x3"
+                  href="Source"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Source
+                </a>
+              </div>
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -2738,11 +2798,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="4-2-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -2809,7 +2869,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -2922,11 +2982,11 @@ https://unsplash.it/200/200 200w"
       </aside>
     </article>
     <article
-      class="css-19ehku-CommentWrapper ekbi54x10"
+      class="css-1x8pjqe-CommentWrapper ekbi54x10"
       id="5"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x9"
+        class="css-p4cys7-CommentHeader ekbi54x9"
       >
         <img
           alt="DSC07717"
@@ -2993,7 +3053,7 @@ https://unsplash.it/200/200 200w"
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -3104,11 +3164,11 @@ https://unsplash.it/200/200 200w"
         class="css-uvrneq-CommentListItemChildren ew53o3y2"
       >
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="5-1"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -3175,7 +3235,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -3286,11 +3346,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="5-1-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -3357,7 +3417,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -3468,11 +3528,11 @@ https://unsplash.it/200/200 200w"
           </aside>
         </article>
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="5-2"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -3500,10 +3560,22 @@ https://unsplash.it/200/200 200w"
                   Dr. Anonymous
                 </div>
               </div>
+              <div
+                class="css-r2jplb-CommentFlair-CommentFlair ekbi54x4"
+              >
+                <a
+                  class="css-c0umgh-CommentFlairLink ekbi54x3"
+                  href="Source"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Source
+                </a>
+              </div>
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -3614,11 +3686,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="5-2-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -3685,7 +3757,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -3842,11 +3914,11 @@ exports[`Comment List should render Commenting 1`] = `
     class="css-fwhbhf-CommentListWrapper eeofsby2"
   >
     <article
-      class="css-19ehku-CommentWrapper ekbi54x10"
+      class="css-1x8pjqe-CommentWrapper ekbi54x10"
       id="verified"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x9"
+        class="css-p4cys7-CommentHeader ekbi54x9"
       >
         <img
           alt="DSC07717"
@@ -3913,7 +3985,7 @@ https://unsplash.it/200/200 200w"
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -4022,11 +4094,11 @@ https://unsplash.it/200/200 200w"
       </div>
     </article>
     <article
-      class="css-19ehku-CommentWrapper ekbi54x10"
+      class="css-1x8pjqe-CommentWrapper ekbi54x10"
       id="1"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x9"
+        class="css-p4cys7-CommentHeader ekbi54x9"
       >
         <img
           alt="DSC07717"
@@ -4093,7 +4165,7 @@ https://unsplash.it/200/200 200w"
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -4204,11 +4276,11 @@ https://unsplash.it/200/200 200w"
         class="css-uvrneq-CommentListItemChildren ew53o3y2"
       >
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="1-1"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -4275,7 +4347,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -4386,11 +4458,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="1-1-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -4457,7 +4529,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -4568,11 +4640,11 @@ https://unsplash.it/200/200 200w"
           </aside>
         </article>
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="1-2"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -4600,10 +4672,22 @@ https://unsplash.it/200/200 200w"
                   Dr. Anonymous
                 </div>
               </div>
+              <div
+                class="css-r2jplb-CommentFlair-CommentFlair ekbi54x4"
+              >
+                <a
+                  class="css-c0umgh-CommentFlairLink ekbi54x3"
+                  href="Source"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Source
+                </a>
+              </div>
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -4714,11 +4798,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="1-2-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -4785,7 +4869,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -4898,11 +4982,11 @@ https://unsplash.it/200/200 200w"
       </aside>
     </article>
     <article
-      class="css-19ehku-CommentWrapper ekbi54x10"
+      class="css-1x8pjqe-CommentWrapper ekbi54x10"
       id="2"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x9"
+        class="css-p4cys7-CommentHeader ekbi54x9"
       >
         <img
           alt="DSC07717"
@@ -4930,10 +5014,22 @@ https://unsplash.it/200/200 200w"
               Dr. Anonymous
             </div>
           </div>
+          <div
+            class="css-r2jplb-CommentFlair-CommentFlair ekbi54x4"
+          >
+            <a
+              class="css-c0umgh-CommentFlairLink ekbi54x3"
+              href="Source"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Source
+            </a>
+          </div>
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -5044,11 +5140,11 @@ https://unsplash.it/200/200 200w"
         class="css-uvrneq-CommentListItemChildren ew53o3y2"
       >
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="2-1"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -5115,7 +5211,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -5226,11 +5322,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="2-1-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -5297,7 +5393,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -5408,11 +5504,11 @@ https://unsplash.it/200/200 200w"
           </aside>
         </article>
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="2-2"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -5440,10 +5536,22 @@ https://unsplash.it/200/200 200w"
                   Dr. Anonymous
                 </div>
               </div>
+              <div
+                class="css-r2jplb-CommentFlair-CommentFlair ekbi54x4"
+              >
+                <a
+                  class="css-c0umgh-CommentFlairLink ekbi54x3"
+                  href="Source"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Source
+                </a>
+              </div>
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -5554,11 +5662,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="2-2-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -5625,7 +5733,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -5738,11 +5846,11 @@ https://unsplash.it/200/200 200w"
       </aside>
     </article>
     <article
-      class="css-19ehku-CommentWrapper ekbi54x10"
+      class="css-1x8pjqe-CommentWrapper ekbi54x10"
       id="3"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x9"
+        class="css-p4cys7-CommentHeader ekbi54x9"
       >
         <img
           alt="DSC07717"
@@ -5809,7 +5917,7 @@ https://unsplash.it/200/200 200w"
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -5918,11 +6026,11 @@ https://unsplash.it/200/200 200w"
       </div>
     </article>
     <article
-      class="css-19ehku-CommentWrapper ekbi54x10"
+      class="css-1x8pjqe-CommentWrapper ekbi54x10"
       id="4"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x9"
+        class="css-p4cys7-CommentHeader ekbi54x9"
       >
         <img
           alt="DSC07717"
@@ -5950,10 +6058,22 @@ https://unsplash.it/200/200 200w"
               Dr. Anonymous
             </div>
           </div>
+          <div
+            class="css-r2jplb-CommentFlair-CommentFlair ekbi54x4"
+          >
+            <a
+              class="css-c0umgh-CommentFlairLink ekbi54x3"
+              href="Source"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Source
+            </a>
+          </div>
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -6064,11 +6184,11 @@ https://unsplash.it/200/200 200w"
         class="css-uvrneq-CommentListItemChildren ew53o3y2"
       >
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="4-1"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -6135,7 +6255,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -6246,11 +6366,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="4-1-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -6317,7 +6437,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -6428,11 +6548,11 @@ https://unsplash.it/200/200 200w"
           </aside>
         </article>
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="4-2"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -6460,10 +6580,22 @@ https://unsplash.it/200/200 200w"
                   Dr. Anonymous
                 </div>
               </div>
+              <div
+                class="css-r2jplb-CommentFlair-CommentFlair ekbi54x4"
+              >
+                <a
+                  class="css-c0umgh-CommentFlairLink ekbi54x3"
+                  href="Source"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Source
+                </a>
+              </div>
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -6574,11 +6706,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="4-2-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -6645,7 +6777,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -6758,11 +6890,11 @@ https://unsplash.it/200/200 200w"
       </aside>
     </article>
     <article
-      class="css-19ehku-CommentWrapper ekbi54x10"
+      class="css-1x8pjqe-CommentWrapper ekbi54x10"
       id="5"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x9"
+        class="css-p4cys7-CommentHeader ekbi54x9"
       >
         <img
           alt="DSC07717"
@@ -6829,7 +6961,7 @@ https://unsplash.it/200/200 200w"
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -6940,11 +7072,11 @@ https://unsplash.it/200/200 200w"
         class="css-uvrneq-CommentListItemChildren ew53o3y2"
       >
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="5-1"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -7011,7 +7143,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -7122,11 +7254,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="5-1-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -7193,7 +7325,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -7304,11 +7436,11 @@ https://unsplash.it/200/200 200w"
           </aside>
         </article>
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="5-2"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -7336,10 +7468,22 @@ https://unsplash.it/200/200 200w"
                   Dr. Anonymous
                 </div>
               </div>
+              <div
+                class="css-r2jplb-CommentFlair-CommentFlair ekbi54x4"
+              >
+                <a
+                  class="css-c0umgh-CommentFlairLink ekbi54x3"
+                  href="Source"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Source
+                </a>
+              </div>
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -7450,11 +7594,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="5-2-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -7521,7 +7665,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -7678,11 +7822,11 @@ exports[`Comment List should render Default 1`] = `
     class="css-fwhbhf-CommentListWrapper eeofsby2"
   >
     <article
-      class="css-19ehku-CommentWrapper ekbi54x10"
+      class="css-1x8pjqe-CommentWrapper ekbi54x10"
       id="verified"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x9"
+        class="css-p4cys7-CommentHeader ekbi54x9"
       >
         <img
           alt="DSC07717"
@@ -7749,7 +7893,7 @@ https://unsplash.it/200/200 200w"
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -7828,11 +7972,11 @@ https://unsplash.it/200/200 200w"
       </div>
     </article>
     <article
-      class="css-19ehku-CommentWrapper ekbi54x10"
+      class="css-1x8pjqe-CommentWrapper ekbi54x10"
       id="1"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x9"
+        class="css-p4cys7-CommentHeader ekbi54x9"
       >
         <img
           alt="DSC07717"
@@ -7899,7 +8043,7 @@ https://unsplash.it/200/200 200w"
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -7980,11 +8124,11 @@ https://unsplash.it/200/200 200w"
         class="css-uvrneq-CommentListItemChildren ew53o3y2"
       >
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="1-1"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -8051,7 +8195,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -8132,11 +8276,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="1-1-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -8203,7 +8347,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -8284,11 +8428,11 @@ https://unsplash.it/200/200 200w"
           </aside>
         </article>
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="1-2"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -8316,10 +8460,22 @@ https://unsplash.it/200/200 200w"
                   Dr. Anonymous
                 </div>
               </div>
+              <div
+                class="css-r2jplb-CommentFlair-CommentFlair ekbi54x4"
+              >
+                <a
+                  class="css-c0umgh-CommentFlairLink ekbi54x3"
+                  href="Source"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Source
+                </a>
+              </div>
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -8400,11 +8556,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="1-2-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -8471,7 +8627,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -8554,11 +8710,11 @@ https://unsplash.it/200/200 200w"
       </aside>
     </article>
     <article
-      class="css-19ehku-CommentWrapper ekbi54x10"
+      class="css-1x8pjqe-CommentWrapper ekbi54x10"
       id="2"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x9"
+        class="css-p4cys7-CommentHeader ekbi54x9"
       >
         <img
           alt="DSC07717"
@@ -8586,10 +8742,22 @@ https://unsplash.it/200/200 200w"
               Dr. Anonymous
             </div>
           </div>
+          <div
+            class="css-r2jplb-CommentFlair-CommentFlair ekbi54x4"
+          >
+            <a
+              class="css-c0umgh-CommentFlairLink ekbi54x3"
+              href="Source"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Source
+            </a>
+          </div>
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -8670,11 +8838,11 @@ https://unsplash.it/200/200 200w"
         class="css-uvrneq-CommentListItemChildren ew53o3y2"
       >
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="2-1"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -8741,7 +8909,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -8822,11 +8990,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="2-1-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -8893,7 +9061,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -8974,11 +9142,11 @@ https://unsplash.it/200/200 200w"
           </aside>
         </article>
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="2-2"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -9006,10 +9174,22 @@ https://unsplash.it/200/200 200w"
                   Dr. Anonymous
                 </div>
               </div>
+              <div
+                class="css-r2jplb-CommentFlair-CommentFlair ekbi54x4"
+              >
+                <a
+                  class="css-c0umgh-CommentFlairLink ekbi54x3"
+                  href="Source"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Source
+                </a>
+              </div>
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -9090,11 +9270,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="2-2-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -9161,7 +9341,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -9244,11 +9424,11 @@ https://unsplash.it/200/200 200w"
       </aside>
     </article>
     <article
-      class="css-19ehku-CommentWrapper ekbi54x10"
+      class="css-1x8pjqe-CommentWrapper ekbi54x10"
       id="3"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x9"
+        class="css-p4cys7-CommentHeader ekbi54x9"
       >
         <img
           alt="DSC07717"
@@ -9315,7 +9495,7 @@ https://unsplash.it/200/200 200w"
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -9394,11 +9574,11 @@ https://unsplash.it/200/200 200w"
       </div>
     </article>
     <article
-      class="css-19ehku-CommentWrapper ekbi54x10"
+      class="css-1x8pjqe-CommentWrapper ekbi54x10"
       id="4"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x9"
+        class="css-p4cys7-CommentHeader ekbi54x9"
       >
         <img
           alt="DSC07717"
@@ -9426,10 +9606,22 @@ https://unsplash.it/200/200 200w"
               Dr. Anonymous
             </div>
           </div>
+          <div
+            class="css-r2jplb-CommentFlair-CommentFlair ekbi54x4"
+          >
+            <a
+              class="css-c0umgh-CommentFlairLink ekbi54x3"
+              href="Source"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Source
+            </a>
+          </div>
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -9510,11 +9702,11 @@ https://unsplash.it/200/200 200w"
         class="css-uvrneq-CommentListItemChildren ew53o3y2"
       >
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="4-1"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -9581,7 +9773,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -9662,11 +9854,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="4-1-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -9733,7 +9925,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -9814,11 +10006,11 @@ https://unsplash.it/200/200 200w"
           </aside>
         </article>
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="4-2"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -9846,10 +10038,22 @@ https://unsplash.it/200/200 200w"
                   Dr. Anonymous
                 </div>
               </div>
+              <div
+                class="css-r2jplb-CommentFlair-CommentFlair ekbi54x4"
+              >
+                <a
+                  class="css-c0umgh-CommentFlairLink ekbi54x3"
+                  href="Source"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Source
+                </a>
+              </div>
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -9930,11 +10134,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="4-2-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -10001,7 +10205,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -10084,11 +10288,11 @@ https://unsplash.it/200/200 200w"
       </aside>
     </article>
     <article
-      class="css-19ehku-CommentWrapper ekbi54x10"
+      class="css-1x8pjqe-CommentWrapper ekbi54x10"
       id="5"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x9"
+        class="css-p4cys7-CommentHeader ekbi54x9"
       >
         <img
           alt="DSC07717"
@@ -10155,7 +10359,7 @@ https://unsplash.it/200/200 200w"
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -10236,11 +10440,11 @@ https://unsplash.it/200/200 200w"
         class="css-uvrneq-CommentListItemChildren ew53o3y2"
       >
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="5-1"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -10307,7 +10511,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -10388,11 +10592,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="5-1-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -10459,7 +10663,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -10540,11 +10744,11 @@ https://unsplash.it/200/200 200w"
           </aside>
         </article>
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="5-2"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -10572,10 +10776,22 @@ https://unsplash.it/200/200 200w"
                   Dr. Anonymous
                 </div>
               </div>
+              <div
+                class="css-r2jplb-CommentFlair-CommentFlair ekbi54x4"
+              >
+                <a
+                  class="css-c0umgh-CommentFlairLink ekbi54x3"
+                  href="Source"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Source
+                </a>
+              </div>
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -10656,11 +10872,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="5-2-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -10727,7 +10943,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -10853,11 +11069,11 @@ exports[`Comment List should render WithClassName 1`] = `
     class="extra-classname css-fwhbhf-CommentListWrapper eeofsby2"
   >
     <article
-      class="css-19ehku-CommentWrapper ekbi54x10"
+      class="css-1x8pjqe-CommentWrapper ekbi54x10"
       id="verified"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x9"
+        class="css-p4cys7-CommentHeader ekbi54x9"
       >
         <img
           alt="DSC07717"
@@ -10924,7 +11140,7 @@ https://unsplash.it/200/200 200w"
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -11003,11 +11219,11 @@ https://unsplash.it/200/200 200w"
       </div>
     </article>
     <article
-      class="css-19ehku-CommentWrapper ekbi54x10"
+      class="css-1x8pjqe-CommentWrapper ekbi54x10"
       id="1"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x9"
+        class="css-p4cys7-CommentHeader ekbi54x9"
       >
         <img
           alt="DSC07717"
@@ -11074,7 +11290,7 @@ https://unsplash.it/200/200 200w"
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -11155,11 +11371,11 @@ https://unsplash.it/200/200 200w"
         class="css-uvrneq-CommentListItemChildren ew53o3y2"
       >
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="1-1"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -11226,7 +11442,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -11307,11 +11523,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="1-1-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -11378,7 +11594,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -11459,11 +11675,11 @@ https://unsplash.it/200/200 200w"
           </aside>
         </article>
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="1-2"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -11491,10 +11707,22 @@ https://unsplash.it/200/200 200w"
                   Dr. Anonymous
                 </div>
               </div>
+              <div
+                class="css-r2jplb-CommentFlair-CommentFlair ekbi54x4"
+              >
+                <a
+                  class="css-c0umgh-CommentFlairLink ekbi54x3"
+                  href="Source"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Source
+                </a>
+              </div>
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -11575,11 +11803,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="1-2-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -11646,7 +11874,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -11729,11 +11957,11 @@ https://unsplash.it/200/200 200w"
       </aside>
     </article>
     <article
-      class="css-19ehku-CommentWrapper ekbi54x10"
+      class="css-1x8pjqe-CommentWrapper ekbi54x10"
       id="2"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x9"
+        class="css-p4cys7-CommentHeader ekbi54x9"
       >
         <img
           alt="DSC07717"
@@ -11761,10 +11989,22 @@ https://unsplash.it/200/200 200w"
               Dr. Anonymous
             </div>
           </div>
+          <div
+            class="css-r2jplb-CommentFlair-CommentFlair ekbi54x4"
+          >
+            <a
+              class="css-c0umgh-CommentFlairLink ekbi54x3"
+              href="Source"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Source
+            </a>
+          </div>
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -11845,11 +12085,11 @@ https://unsplash.it/200/200 200w"
         class="css-uvrneq-CommentListItemChildren ew53o3y2"
       >
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="2-1"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -11916,7 +12156,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -11997,11 +12237,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="2-1-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -12068,7 +12308,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -12149,11 +12389,11 @@ https://unsplash.it/200/200 200w"
           </aside>
         </article>
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="2-2"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -12181,10 +12421,22 @@ https://unsplash.it/200/200 200w"
                   Dr. Anonymous
                 </div>
               </div>
+              <div
+                class="css-r2jplb-CommentFlair-CommentFlair ekbi54x4"
+              >
+                <a
+                  class="css-c0umgh-CommentFlairLink ekbi54x3"
+                  href="Source"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Source
+                </a>
+              </div>
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -12265,11 +12517,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="2-2-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -12336,7 +12588,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -12419,11 +12671,11 @@ https://unsplash.it/200/200 200w"
       </aside>
     </article>
     <article
-      class="css-19ehku-CommentWrapper ekbi54x10"
+      class="css-1x8pjqe-CommentWrapper ekbi54x10"
       id="3"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x9"
+        class="css-p4cys7-CommentHeader ekbi54x9"
       >
         <img
           alt="DSC07717"
@@ -12490,7 +12742,7 @@ https://unsplash.it/200/200 200w"
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -12569,11 +12821,11 @@ https://unsplash.it/200/200 200w"
       </div>
     </article>
     <article
-      class="css-19ehku-CommentWrapper ekbi54x10"
+      class="css-1x8pjqe-CommentWrapper ekbi54x10"
       id="4"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x9"
+        class="css-p4cys7-CommentHeader ekbi54x9"
       >
         <img
           alt="DSC07717"
@@ -12601,10 +12853,22 @@ https://unsplash.it/200/200 200w"
               Dr. Anonymous
             </div>
           </div>
+          <div
+            class="css-r2jplb-CommentFlair-CommentFlair ekbi54x4"
+          >
+            <a
+              class="css-c0umgh-CommentFlairLink ekbi54x3"
+              href="Source"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Source
+            </a>
+          </div>
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -12685,11 +12949,11 @@ https://unsplash.it/200/200 200w"
         class="css-uvrneq-CommentListItemChildren ew53o3y2"
       >
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="4-1"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -12756,7 +13020,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -12837,11 +13101,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="4-1-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -12908,7 +13172,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -12989,11 +13253,11 @@ https://unsplash.it/200/200 200w"
           </aside>
         </article>
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="4-2"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -13021,10 +13285,22 @@ https://unsplash.it/200/200 200w"
                   Dr. Anonymous
                 </div>
               </div>
+              <div
+                class="css-r2jplb-CommentFlair-CommentFlair ekbi54x4"
+              >
+                <a
+                  class="css-c0umgh-CommentFlairLink ekbi54x3"
+                  href="Source"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Source
+                </a>
+              </div>
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -13105,11 +13381,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="4-2-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -13176,7 +13452,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -13259,11 +13535,11 @@ https://unsplash.it/200/200 200w"
       </aside>
     </article>
     <article
-      class="css-19ehku-CommentWrapper ekbi54x10"
+      class="css-1x8pjqe-CommentWrapper ekbi54x10"
       id="5"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x9"
+        class="css-p4cys7-CommentHeader ekbi54x9"
       >
         <img
           alt="DSC07717"
@@ -13330,7 +13606,7 @@ https://unsplash.it/200/200 200w"
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -13411,11 +13687,11 @@ https://unsplash.it/200/200 200w"
         class="css-uvrneq-CommentListItemChildren ew53o3y2"
       >
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="5-1"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -13482,7 +13758,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -13563,11 +13839,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="5-1-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -13634,7 +13910,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -13715,11 +13991,11 @@ https://unsplash.it/200/200 200w"
           </aside>
         </article>
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="5-2"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -13747,10 +14023,22 @@ https://unsplash.it/200/200 200w"
                   Dr. Anonymous
                 </div>
               </div>
+              <div
+                class="css-r2jplb-CommentFlair-CommentFlair ekbi54x4"
+              >
+                <a
+                  class="css-c0umgh-CommentFlairLink ekbi54x3"
+                  href="Source"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Source
+                </a>
+              </div>
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -13831,11 +14119,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="5-2-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -13902,7 +14190,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -13994,11 +14282,11 @@ exports[`Comment List should render WithEmotion 1`] = `
     class="css-1a3aynz-CommentListWrapper-css eeofsby2"
   >
     <article
-      class="css-19ehku-CommentWrapper ekbi54x10"
+      class="css-1x8pjqe-CommentWrapper ekbi54x10"
       id="verified"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x9"
+        class="css-p4cys7-CommentHeader ekbi54x9"
       >
         <img
           alt="DSC07717"
@@ -14065,7 +14353,7 @@ https://unsplash.it/200/200 200w"
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -14144,11 +14432,11 @@ https://unsplash.it/200/200 200w"
       </div>
     </article>
     <article
-      class="css-19ehku-CommentWrapper ekbi54x10"
+      class="css-1x8pjqe-CommentWrapper ekbi54x10"
       id="1"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x9"
+        class="css-p4cys7-CommentHeader ekbi54x9"
       >
         <img
           alt="DSC07717"
@@ -14215,7 +14503,7 @@ https://unsplash.it/200/200 200w"
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -14296,11 +14584,11 @@ https://unsplash.it/200/200 200w"
         class="css-uvrneq-CommentListItemChildren ew53o3y2"
       >
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="1-1"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -14367,7 +14655,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -14448,11 +14736,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="1-1-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -14519,7 +14807,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -14600,11 +14888,11 @@ https://unsplash.it/200/200 200w"
           </aside>
         </article>
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="1-2"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -14632,10 +14920,22 @@ https://unsplash.it/200/200 200w"
                   Dr. Anonymous
                 </div>
               </div>
+              <div
+                class="css-r2jplb-CommentFlair-CommentFlair ekbi54x4"
+              >
+                <a
+                  class="css-c0umgh-CommentFlairLink ekbi54x3"
+                  href="Source"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Source
+                </a>
+              </div>
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -14716,11 +15016,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="1-2-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -14787,7 +15087,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -14870,11 +15170,11 @@ https://unsplash.it/200/200 200w"
       </aside>
     </article>
     <article
-      class="css-19ehku-CommentWrapper ekbi54x10"
+      class="css-1x8pjqe-CommentWrapper ekbi54x10"
       id="2"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x9"
+        class="css-p4cys7-CommentHeader ekbi54x9"
       >
         <img
           alt="DSC07717"
@@ -14902,10 +15202,22 @@ https://unsplash.it/200/200 200w"
               Dr. Anonymous
             </div>
           </div>
+          <div
+            class="css-r2jplb-CommentFlair-CommentFlair ekbi54x4"
+          >
+            <a
+              class="css-c0umgh-CommentFlairLink ekbi54x3"
+              href="Source"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Source
+            </a>
+          </div>
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -14986,11 +15298,11 @@ https://unsplash.it/200/200 200w"
         class="css-uvrneq-CommentListItemChildren ew53o3y2"
       >
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="2-1"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -15057,7 +15369,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -15138,11 +15450,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="2-1-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -15209,7 +15521,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -15290,11 +15602,11 @@ https://unsplash.it/200/200 200w"
           </aside>
         </article>
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="2-2"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -15322,10 +15634,22 @@ https://unsplash.it/200/200 200w"
                   Dr. Anonymous
                 </div>
               </div>
+              <div
+                class="css-r2jplb-CommentFlair-CommentFlair ekbi54x4"
+              >
+                <a
+                  class="css-c0umgh-CommentFlairLink ekbi54x3"
+                  href="Source"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Source
+                </a>
+              </div>
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -15406,11 +15730,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="2-2-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -15477,7 +15801,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -15560,11 +15884,11 @@ https://unsplash.it/200/200 200w"
       </aside>
     </article>
     <article
-      class="css-19ehku-CommentWrapper ekbi54x10"
+      class="css-1x8pjqe-CommentWrapper ekbi54x10"
       id="3"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x9"
+        class="css-p4cys7-CommentHeader ekbi54x9"
       >
         <img
           alt="DSC07717"
@@ -15631,7 +15955,7 @@ https://unsplash.it/200/200 200w"
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -15710,11 +16034,11 @@ https://unsplash.it/200/200 200w"
       </div>
     </article>
     <article
-      class="css-19ehku-CommentWrapper ekbi54x10"
+      class="css-1x8pjqe-CommentWrapper ekbi54x10"
       id="4"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x9"
+        class="css-p4cys7-CommentHeader ekbi54x9"
       >
         <img
           alt="DSC07717"
@@ -15742,10 +16066,22 @@ https://unsplash.it/200/200 200w"
               Dr. Anonymous
             </div>
           </div>
+          <div
+            class="css-r2jplb-CommentFlair-CommentFlair ekbi54x4"
+          >
+            <a
+              class="css-c0umgh-CommentFlairLink ekbi54x3"
+              href="Source"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Source
+            </a>
+          </div>
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -15826,11 +16162,11 @@ https://unsplash.it/200/200 200w"
         class="css-uvrneq-CommentListItemChildren ew53o3y2"
       >
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="4-1"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -15897,7 +16233,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -15978,11 +16314,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="4-1-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -16049,7 +16385,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -16130,11 +16466,11 @@ https://unsplash.it/200/200 200w"
           </aside>
         </article>
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="4-2"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -16162,10 +16498,22 @@ https://unsplash.it/200/200 200w"
                   Dr. Anonymous
                 </div>
               </div>
+              <div
+                class="css-r2jplb-CommentFlair-CommentFlair ekbi54x4"
+              >
+                <a
+                  class="css-c0umgh-CommentFlairLink ekbi54x3"
+                  href="Source"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Source
+                </a>
+              </div>
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -16246,11 +16594,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="4-2-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -16317,7 +16665,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -16400,11 +16748,11 @@ https://unsplash.it/200/200 200w"
       </aside>
     </article>
     <article
-      class="css-19ehku-CommentWrapper ekbi54x10"
+      class="css-1x8pjqe-CommentWrapper ekbi54x10"
       id="5"
     >
       <header
-        class="css-dmcn8p-CommentHeader ekbi54x9"
+        class="css-p4cys7-CommentHeader ekbi54x9"
       >
         <img
           alt="DSC07717"
@@ -16471,7 +16819,7 @@ https://unsplash.it/200/200 200w"
         </div>
       </header>
       <div
-        class="css-7pcshh-CommentContent ekbi54x2"
+        class="css-td83z9-CommentContent ekbi54x2"
       >
         <h1
           class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -16552,11 +16900,11 @@ https://unsplash.it/200/200 200w"
         class="css-uvrneq-CommentListItemChildren ew53o3y2"
       >
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="5-1"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -16623,7 +16971,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -16704,11 +17052,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="5-1-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -16775,7 +17123,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -16856,11 +17204,11 @@ https://unsplash.it/200/200 200w"
           </aside>
         </article>
         <article
-          class="css-19ehku-CommentWrapper ekbi54x10"
+          class="css-1x8pjqe-CommentWrapper ekbi54x10"
           id="5-2"
         >
           <header
-            class="css-dmcn8p-CommentHeader ekbi54x9"
+            class="css-p4cys7-CommentHeader ekbi54x9"
           >
             <img
               alt="DSC07717"
@@ -16888,10 +17236,22 @@ https://unsplash.it/200/200 200w"
                   Dr. Anonymous
                 </div>
               </div>
+              <div
+                class="css-r2jplb-CommentFlair-CommentFlair ekbi54x4"
+              >
+                <a
+                  class="css-c0umgh-CommentFlairLink ekbi54x3"
+                  href="Source"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Source
+                </a>
+              </div>
             </div>
           </header>
           <div
-            class="css-7pcshh-CommentContent ekbi54x2"
+            class="css-td83z9-CommentContent ekbi54x2"
           >
             <h1
               class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
@@ -16972,11 +17332,11 @@ https://unsplash.it/200/200 200w"
             class="css-uvrneq-CommentListItemChildren ew53o3y2"
           >
             <article
-              class="css-19ehku-CommentWrapper ekbi54x10"
+              class="css-1x8pjqe-CommentWrapper ekbi54x10"
               id="5-2-1"
             >
               <header
-                class="css-dmcn8p-CommentHeader ekbi54x9"
+                class="css-p4cys7-CommentHeader ekbi54x9"
               >
                 <img
                   alt="DSC07717"
@@ -17043,7 +17403,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </header>
               <div
-                class="css-7pcshh-CommentContent ekbi54x2"
+                class="css-td83z9-CommentContent ekbi54x2"
               >
                 <h1
                   class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
