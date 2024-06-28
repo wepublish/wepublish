@@ -1,6 +1,7 @@
 import {styled} from '@mui/material'
 import {
   CommentContent,
+  CommentEditorWrapper,
   CommentHeader,
   CommentListContainer as BaseCommentListContainer,
   CommentListItemActions,
@@ -83,5 +84,9 @@ export const CommentListContainer = styled(BaseCommentListContainer)`
 
   ${CommentListItemActions} {
     padding: ${({theme}) => theme.spacing(1.5)};
+  }
+
+  ${CommentEditorWrapper} {
+    margin-top: ${({theme}) => theme.spacing(2)};
   }
 `

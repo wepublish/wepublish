@@ -2,6 +2,7 @@ import {styled} from '@mui/material'
 import {theme} from '@wepublish/ui'
 import {
   CommentContent,
+  CommentEditorWrapper,
   CommentHeader,
   CommentListContainer as BaseCommentListContainer,
   CommentListItemActions,
@@ -72,5 +73,9 @@ export const CommentListContainer = styled(BaseCommentListContainer)`
     max-width: ${({theme}) => theme.spacing(95)};
     width: ${({theme}) => theme.spacing(95)};
     margin: 0 auto;
+  }
+
+  ${CommentEditorWrapper} {
+    margin-top: ${({theme}) => theme.spacing(2)};
   }
 `
