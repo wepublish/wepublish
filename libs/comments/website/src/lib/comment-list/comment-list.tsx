@@ -90,6 +90,7 @@ export const CommentList = ({
           onSubmit={onAddComment}
           error={add.error}
           loading={add.loading}
+          canReply={canReply}
         />
       )}
 

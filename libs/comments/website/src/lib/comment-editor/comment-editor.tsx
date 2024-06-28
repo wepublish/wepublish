@@ -82,11 +82,17 @@ export const registerStyles = (theme: Theme) => css`
 
 export const registerIconStyles = (theme: Theme) => css`
   color: ${theme.palette.common.white};
+  margin-right: ${theme.spacing(1)};
 `
 
 export const linkStyles = (theme: Theme) => css`
   color: ${theme.palette.common.white};
   text-decoration: none;
+  font-size: ${theme.typography.body1.fontSize};
+
+  ${theme.breakpoints.up('md')} {
+    font-size: ${theme.typography.h4.fontSize};
+  }
 `
 
 export const CloseLogin = styled(IconButton)`
@@ -325,9 +331,7 @@ export const CommentEditor = ({
             <LoginFormContainer afterLoginCallback={handleAfterLoginCallback} />
             <Register>
               <Button css={buttonStyles} onClick={registerRedirect}>
-                <IconButton css={iconStyles} size="large">
-                  <MdLogin aria-label="Register" />
-                </IconButton>
+                <MdLogin aria-label="Register" css={iconStyles} />
                 <Link href="/signup" css={aStyles}>
                   Jetzt registrieren
                 </Link>
