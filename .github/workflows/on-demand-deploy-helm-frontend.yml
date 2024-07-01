@@ -11,19 +11,15 @@ on:
         type: string
 
 jobs:
-  get-env-vars:
-    runs-on: ubuntu-latest
-    outputs:
-      envvars: ${{ steps.get-env.outputs.envvars }}
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
 
-      - name: view the secrets context
-        shell: bash
-        run: echo "$SECRETS_CONTEXT"
-        env:
-          SECRETS_CONTEXT: ${{ toJson(secrets) }}
+  build-and-push:
+    name: ${{inputs.frontend_target}}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: 'read'
+      id-token: 'write'
+    steps:
+      - uses: actions/checkout@v3
 
       - name: Get environment variables
         id: get-env
@@ -31,30 +27,6 @@ jobs:
           ./deployment/frontend_read_env.sh review ${{ inputs.frontend_project }} yaml API_URL=${{ inputs.api_url }} FRONTEND_URL=https://${{ inputs.frontend_project }}-${{ github.event.pull_request.number }}.reviews.wepublish.dev
         env:
           SECRETS_CONTEXT: ${{ toJson(secrets) }}
-
-
-
-  get-env-vars-print:
-    runs-on: ubuntu-latest
-    needs: [get-env-vars]
-    steps:
-      - name: Print
-        run: |
-          echo "VAR=${{ needs.get-env-vars.outputs.envvars }}"
-      - name: Print
-        run: |
-          echo "SEC=$GITHUB_ENV"
-
-  build-and-push:
-    name: ${{inputs.frontend_target}}
-    needs: [get-env-vars]
-    runs-on: ubuntu-latest
-    if: ${{ needs.get-env-vars.result == 'success' }}
-    permissions:
-      contents: 'read'
-      id-token: 'write'
-    steps:
-      - uses: actions/checkout@v3
 
       - name: Set up Helm
         uses: azure/setup-helm@v1
@@ -80,7 +52,7 @@ jobs:
           cat > values.yaml <<EOF
           deployment:
             env:
-          $(echo -e "${{ needs.get-env-vars.outputs.envvars }}" | awk '{print "    "$0}')
+          $(echo -e "${{ steps.get-env.outputs.envvars }}" | awk '{print "    "$0}')
           frontend:
             image: ghcr.io/wepublish/frontend-${{ inputs.frontend_project }}:${{ github.sha }}
             env:
