@@ -141,6 +141,7 @@ export type BuilderCommentEditorProps = {
   canReply: boolean
   parentUrl?: string
   signUpUrl?: string
+  anonymousCanComment?: boolean
 } & (CreateCommentProps | EditCommentProps)
 
 export type BuilderCommentRatingsProps = {

@@ -157,15 +157,16 @@ export const CommentEditor = ({
   loading,
   error,
   parentUrl,
-  signUpUrl
+  signUpUrl,
+  anonymousCanComment
 }: BuilderCommentEditorProps) => {
   const theme = useTheme()
   const {
     elements: {TextField, Button, Alert, H3}
   } = useWebsiteBuilder()
   const {hasUser} = useUser()
-  const [modalOpen, setModalOpen] = useState(!canReply)
-  const [showInitialModal, setShowInitialModal] = useState(true)
+  const [modalOpen, setModalOpen] = useState(true)
+  const [showInitialModal, setShowInitialModal] = useState(anonymousCanComment)
 
   const handleClose = () => {
     setModalOpen(false)

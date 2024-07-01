@@ -188,6 +188,7 @@ export const CommentListItem = ({
           canReply={canReply}
           parentUrl={comment.url}
           signUpUrl={signUpUrl}
+          anonymousCanComment={anonymousCanComment}
         />
       )}
 
@@ -210,6 +211,7 @@ export const CommentListItem = ({
               userCanEdit={userCanEdit}
               maxCommentLength={maxCommentLength}
               className={className}
+              signUpUrl={signUpUrl}
             />
           ))}
         </CommentListItemChildren>
