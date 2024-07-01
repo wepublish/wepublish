@@ -50,19 +50,19 @@ exports[`Navbar Container should render Default 1`] = `
           class="css-lp67xt-NavbarLinks ei6evl214"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
             href="/"
           >
             Home
           </a>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
             href="/a/abcd"
           >
             Artikel
           </a>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
             href="https://google.com"
           >
             Google
@@ -163,19 +163,19 @@ exports[`Navbar Container should render WithClassName 1`] = `
           class="css-lp67xt-NavbarLinks ei6evl214"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
             href="/"
           >
             Home
           </a>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
             href="/a/abcd"
           >
             Artikel
           </a>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
             href="https://google.com"
           >
             Google
@@ -276,19 +276,19 @@ exports[`Navbar Container should render WithEmotion 1`] = `
           class="css-lp67xt-NavbarLinks ei6evl214"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
             href="/"
           >
             Home
           </a>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
             href="/a/abcd"
           >
             Artikel
           </a>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
             href="https://google.com"
           >
             Google
