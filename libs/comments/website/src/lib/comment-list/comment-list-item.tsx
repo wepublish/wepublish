@@ -73,6 +73,7 @@ export const CommentListItem = ({
   openEditorsStateDispatch: dispatch,
   ratingSystem,
   className,
+  signUpUrl,
   ...comment
 }: BuilderCommentListItemProps) => {
   const {id, text, title, state, children, userRatings, overriddenRatings, calculatedRatings} =
@@ -121,6 +122,7 @@ export const CommentListItem = ({
           loading={edit.loading}
           canReply={canReply}
           parentUrl={comment.url}
+          signUpUrl={signUpUrl}
         />
       )}
 
@@ -185,6 +187,7 @@ export const CommentListItem = ({
           loading={add.loading}
           canReply={canReply}
           parentUrl={comment.url}
+          signUpUrl={signUpUrl}
         />
       )}
 

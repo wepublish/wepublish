@@ -127,7 +127,8 @@ export const CommentEditor = ({
   canReply,
   loading,
   error,
-  parentUrl
+  parentUrl,
+  signUpUrl
 }: BuilderCommentEditorProps) => {
   const theme = useTheme()
   const {
@@ -332,7 +333,7 @@ export const CommentEditor = ({
             <Register>
               <Button css={buttonStyles} onClick={registerRedirect}>
                 <MdLogin aria-label="Register" css={iconStyles} />
-                <Link href="/signup" css={aStyles}>
+                <Link href={signUpUrl} css={aStyles}>
                   Jetzt registrieren
                 </Link>
               </Button>
