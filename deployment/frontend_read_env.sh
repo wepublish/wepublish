@@ -3,7 +3,7 @@ ENV=$1
 PROJECT=$2
 FORMAT=$3
 echo ${ENV} | tr '[:lower:]' '[:upper:]'
-SECRETS=$(cat secrets.json |jq "." |grep "DEPLOYMENT_$(echo ${ENV} | tr '[:lower:]' '[:upper:]')_" )
+SECRETS=$(echo ${SECRETS_CONTEXT} |jq "." |grep "DEPLOYMENT_$(echo ${ENV} | tr '[:lower:]' '[:upper:]')_" )
 echo "DEPLOYMENT_$(echo ${ENV} | tr '[:lower:]' '[:upper:]')_"
 cat secrets.json
 echo $SECRETS
