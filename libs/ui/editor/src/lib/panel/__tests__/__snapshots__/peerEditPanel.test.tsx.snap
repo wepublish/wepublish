@@ -65,8 +65,12 @@ exports[`Peer Edit Panel should be able to generate a new peering 1`] = `
 
 exports[`Peer Edit Panel should render 1`] = `
 <DocumentFragment>
-  <form
-    class="css-1c13mle-Form e123d2sl2 rs-form rs-form-vertical rs-form-fluid"
+  .emotion-0 {
+  height: 100%;
+}
+
+<form
+    class="emotion-0 emotion-1 rs-form rs-form-vertical rs-form-fluid"
   >
     <div
       class="rs-drawer-header"
@@ -239,8 +243,12 @@ exports[`Peer Edit Panel should render 1`] = `
 
 exports[`Peer Edit Panel should render with ID 1`] = `
 <DocumentFragment>
-  <form
-    class="css-1c13mle-Form e123d2sl2 rs-form rs-form-vertical rs-form-fluid"
+  .emotion-0 {
+  height: 100%;
+}
+
+<form
+    class="emotion-0 emotion-1 rs-form rs-form-vertical rs-form-fluid"
   >
     <div
       class="rs-drawer-header"

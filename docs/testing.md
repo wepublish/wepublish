@@ -3,6 +3,12 @@
 Automated testing is a crucial aspect of software development that helps to ensure the quality of a codebase by
 automating the testing process.
 
+## CLI
+**!Make sure database is running! `npm run dev`**
+
+- `npm run test`: run all tests locally
+- `npm run test-u`: run all tests and update snapshots
+
 ## API Unit Testing
 
 API unit testing is a type of automated testing that focuses on testing individual units of code that make up an API.
@@ -48,8 +54,9 @@ In order to run your tests within the pipeline, you have to add an entry in the 
 To test, if it works, run `nx test` from your cli. Your specs should now be tested.
 
 
-## Snapshots
-It might happen that your tests are failing. Try to update your snapshots
-by running (eventually in the package in question) `npm run test -- -u`
+## UI Testing
+The UI is tested using Storybook and Jest. For further help, consult the documentation of NX, Jest and Storybook.
 
-For more information: [https://jestjs.io/docs/cli#--updatesnapshot](https://jestjs.io/docs/cli#--updatesnapshot)
+It might happen that your tests are failing. Try to update your snapshots
+by running (eventually in the package in question) `npm run test-u` For more information: 
+[https://jestjs.io/docs/cli#--updatesnapshot](https://jestjs.io/docs/cli#--updatesnapshot)

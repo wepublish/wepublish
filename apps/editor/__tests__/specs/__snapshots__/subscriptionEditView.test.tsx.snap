@@ -7,17 +7,138 @@ Compared values have no visual difference."
 
 exports[`Subscription edit view should render 1`] = `
 <DocumentFragment>
-  <div
-    class="css-10tbuqe"
+  .emotion-0 {
+  height: 100%;
+  margin-top: 20px;
+}
+
+.emotion-1 {
+  height: 100%;
+}
+
+.emotion-3 {
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: 2fr 1fr;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: start;
+  justify-content: start;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-4 {
+  grid-column: 1 2;
+}
+
+.emotion-5 {
+  grid-column: 2;
+  text-align: right;
+  grid-column: 3;
+}
+
+.emotion-7 {
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+.emotion-9 {
+  margin-top: 10px;
+}
+
+.emotion-11 {
+  width: 100%;
+  padding-left: 0px;
+  height: calc(100vh - 160px);
+  overflow-y: auto;
+  margin-top: 2rem;
+}
+
+.emotion-13 {
+  padding-right: 0px;
+}
+
+.emotion-15 {
+  padding-top: 12px;
+}
+
+.emotion-29 {
+  background-color: #fff;
+  color: rgba(0, 0, 0, 0.87);
+  -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  border-radius: 4px;
+  box-shadow: none;
+  font-family: "Roboto","Helvetica","Arial",sans-serif;
+  font-weight: 400;
+  font-size: 0.875rem;
+  line-height: 1.43;
+  letter-spacing: 0.01071em;
+  background-color: rgb(229, 246, 253);
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 6px 16px;
+  color: rgb(1, 67, 97);
+}
+
+.emotion-29 .MuiAlert-icon {
+  color: #0288d1;
+}
+
+.emotion-30 {
+  margin-right: 12px;
+  padding: 7px 0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  font-size: 22px;
+  opacity: 0.9;
+}
+
+.emotion-31 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  fill: currentColor;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: inherit;
+}
+
+.emotion-32 {
+  padding: 8px 0;
+  min-width: 0;
+  overflow: auto;
+}
+
+.emotion-35 {
+  margin-left: 10px;
+}
+
+<div
+    class="emotion-0"
   >
     <form
-      class="css-1c13mle-Form e1w5ish8 rs-form rs-form-vertical rs-form-fluid"
+      class="emotion-1 emotion-2 rs-form rs-form-vertical rs-form-fluid"
     >
       <div
-        class="css-7mtr21"
+        class="emotion-3"
       >
         <div
-          class="css-19cek6g"
+          class="emotion-4"
         >
           <h2>
             <a
@@ -45,11 +166,11 @@ exports[`Subscription edit view should render 1`] = `
           </h2>
         </div>
         <div
-          class="css-1a6dg0m-Actions e1w5ish0"
+          class="emotion-5 emotion-6"
         >
           <button
             aria-disabled="true"
-            class="css-azp8gu-Button-ButtonMarginRight e1w5ish2 rs-btn rs-btn-primary rs-btn-disabled"
+            class="emotion-7 emotion-8 rs-btn rs-btn-primary rs-btn-disabled"
             disabled=""
             type="submit"
           >
@@ -64,7 +185,7 @@ exports[`Subscription edit view should render 1`] = `
           </button>
           <button
             aria-disabled="true"
-            class="css-1j8ophz-Button e1w5ish6 rs-btn rs-btn-primary rs-btn-disabled rs-btn-loading"
+            class="emotion-9 emotion-10 rs-btn rs-btn-primary rs-btn-disabled rs-btn-loading"
             data-testid="saveAndCloseButton"
             disabled=""
             type="submit"
@@ -84,7 +205,7 @@ exports[`Subscription edit view should render 1`] = `
         </div>
       </div>
       <div
-        class="css-m607j0-UserFormGrid e1w5ish3 rs-grid-container"
+        class="emotion-11 emotion-12 rs-grid-container"
         role="grid"
       >
         <div
@@ -129,7 +250,7 @@ exports[`Subscription edit view should render 1`] = `
                     role="group"
                   >
                     <div
-                      class="css-79k3ni-Grid e1w5ish5 rs-grid-container-fluid"
+                      class="emotion-13 emotion-14 rs-grid-container-fluid"
                       role="grid"
                     >
                       <div
@@ -303,7 +424,7 @@ exports[`Subscription edit view should render 1`] = `
                         </div>
                       </div>
                       <div
-                        class="css-xxfhfo-RowPaddingTop e1w5ish4 rs-row"
+                        class="emotion-15 emotion-16 rs-row"
                         role="row"
                       >
                         <div
@@ -424,7 +545,7 @@ exports[`Subscription edit view should render 1`] = `
                         </div>
                       </div>
                       <div
-                        class="css-xxfhfo-RowPaddingTop e1w5ish4 rs-row"
+                        class="emotion-15 emotion-16 rs-row"
                         role="row"
                       >
                         <div
@@ -546,7 +667,7 @@ exports[`Subscription edit view should render 1`] = `
                         </div>
                       </div>
                       <div
-                        class="css-xxfhfo-RowPaddingTop e1w5ish4 rs-row"
+                        class="emotion-15 emotion-16 rs-row"
                         role="row"
                       >
                         <div
@@ -558,7 +679,7 @@ exports[`Subscription edit view should render 1`] = `
                           role="gridcell"
                         >
                           <button
-                            class="css-1j8ophz-Button e1w5ish6 rs-btn rs-btn-ghost rs-btn-red rs-btn-loading"
+                            class="emotion-9 emotion-10 rs-btn rs-btn-ghost rs-btn-red rs-btn-loading"
                             type="button"
                           >
                             <span
@@ -569,7 +690,7 @@ exports[`Subscription edit view should render 1`] = `
                         </div>
                       </div>
                       <div
-                        class="css-xxfhfo-RowPaddingTop e1w5ish4 rs-row"
+                        class="emotion-15 emotion-16 rs-row"
                         role="row"
                       >
                         <div
@@ -723,7 +844,7 @@ exports[`Subscription edit view should render 1`] = `
             style="padding-left: 5px; padding-right: 5px;"
           >
             <div
-              class="css-79k3ni-Grid e1w5ish5 rs-grid-container-fluid"
+              class="emotion-13 emotion-14 rs-grid-container-fluid"
               role="grid"
             >
               <div
@@ -750,7 +871,7 @@ exports[`Subscription edit view should render 1`] = `
                   role="region"
                 >
                   <div
-                    class="css-79k3ni-Grid e1w5ish5 rs-grid-container-fluid"
+                    class="emotion-13 emotion-14 rs-grid-container-fluid"
                     role="grid"
                   >
                     <div
@@ -762,15 +883,15 @@ exports[`Subscription edit view should render 1`] = `
                         role="gridcell"
                       >
                         <div
-                          class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-standardInfo MuiAlert-standard css-1fuz9qr-MuiPaper-root-MuiAlert-root"
+                          class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-standardInfo MuiAlert-standard emotion-29"
                           role="alert"
                         >
                           <div
-                            class="MuiAlert-icon css-1ytlwq5-MuiAlert-icon"
+                            class="MuiAlert-icon emotion-30"
                           >
                             <svg
                               aria-hidden="true"
-                              class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit css-1vooibu-MuiSvgIcon-root"
+                              class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit emotion-31"
                               data-testid="InfoOutlinedIcon"
                               focusable="false"
                               viewBox="0 0 24 24"
@@ -781,7 +902,7 @@ exports[`Subscription edit view should render 1`] = `
                             </svg>
                           </div>
                           <div
-                            class="MuiAlert-message css-1pxa9xg-MuiAlert-message"
+                            class="MuiAlert-message emotion-32"
                           >
                             subscriptionEditView.subscriptionTrialNotPossible
                           </div>
@@ -789,7 +910,7 @@ exports[`Subscription edit view should render 1`] = `
                       </div>
                     </div>
                     <div
-                      class="css-xxfhfo-RowPaddingTop e1w5ish4 rs-row"
+                      class="emotion-15 emotion-16 rs-row"
                       role="row"
                     >
                       <div
@@ -815,7 +936,7 @@ exports[`Subscription edit view should render 1`] = `
                           </span>
                         </label>
                         <label
-                          class="css-2tipte-FormControlLabelMarginLeft e1w5ish7 rs-form-control-label"
+                          class="emotion-35 emotion-36 rs-form-control-label"
                         >
                           memberplanForm.extendableToggle
                         </label>
@@ -837,7 +958,7 @@ exports[`Subscription edit view should render 1`] = `
             style="padding-left: 5px; padding-right: 5px;"
           >
             <div
-              class="css-79k3ni-Grid e1w5ish5 rs-grid-container-fluid"
+              class="emotion-13 emotion-14 rs-grid-container-fluid"
               role="grid"
             >
               <div

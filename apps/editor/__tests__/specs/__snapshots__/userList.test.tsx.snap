@@ -10,18 +10,62 @@ exports[`User list view does not render list when encounter apollo error 1`] = `
 
 exports[`User list view should render successfully 1`] = `
 <DocumentFragment>
-  <div
-    class="css-7mtr21"
+  .emotion-0 {
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: 2fr 1fr;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: start;
+  justify-content: start;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-1 {
+  grid-column: 1 2;
+}
+
+.emotion-2 {
+  grid-column: 2;
+  text-align: right;
+}
+
+.emotion-3 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex-wrap: wrap;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  margin-top: 15px;
+  grid-column: 1/3;
+}
+
+.emotion-4 {
+  width: 400px;
+}
+
+.emotion-5 {
+  width: 200px;
+}
+
+<div
+    class="emotion-0"
   >
     <div
-      class="css-19cek6g"
+      class="emotion-1"
     >
       <h2>
         userList.overview.users
       </h2>
     </div>
     <div
-      class="css-1px0aha"
+      class="emotion-2"
     >
       <a
         href="/users/create"
@@ -60,7 +104,7 @@ exports[`User list view should render successfully 1`] = `
       </a>
     </div>
     <form
-      class="css-e7e6rz rs-form rs-form-vertical rs-form-fixed-width"
+      class="emotion-3 rs-form rs-form-vertical rs-form-fixed-width"
     >
       <div
         class="rs-form-group"
@@ -68,7 +112,7 @@ exports[`User list view should render successfully 1`] = `
         style="margin-right: 15px; margin-top: 0px; margin-bottom: 10px;"
       >
         <input
-          class="css-15y3b4e rs-input"
+          class="emotion-4 rs-input"
           placeholder="subscriptionList.filter.searchPlaceholder"
           type="text"
           value=""
@@ -80,7 +124,7 @@ exports[`User list view should render successfully 1`] = `
         style="margin-right: 15px; margin-top: 0px; margin-bottom: 10px;"
       >
         <div
-          class="css-1inivuc rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-placement-auto rs-picker-cleanable rs-picker-block rs-picker-countable"
+          class="emotion-5 rs-picker rs-picker-check rs-picker-default rs-picker-toggle-wrapper rs-picker-placement-auto rs-picker-cleanable rs-picker-block rs-picker-countable"
         >
           <div
             aria-expanded="false"
@@ -139,14 +183,36 @@ exports[`User list view should render successfully 1`] = `
       </div>
     </form>
   </div>
-  <div
-    class="css-10tbuqe"
+  .emotion-0 {
+  height: 100%;
+  margin-top: 20px;
+}
+
+.emotion-1 {
+  height: 100%!important;
+}
+
+.emotion-2 .rs-table-cell-content {
+  padding: 6px 0;
+}
+
+.emotion-3 {
+  min-width: 36px;
+  height: 36px;
+}
+
+.emotion-3:not(:first-of-type) {
+  margin-left: 5px;
+}
+
+<div
+    class="emotion-0"
   >
     <div
       aria-busy="false"
       aria-colcount="8"
       aria-rowcount="4"
-      class="css-kkcxf3 rs-table rs-table-hover"
+      class="emotion-1 rs-table rs-table-hover"
       role="grid"
       style="width: auto; height: 0px;"
       tabindex="-1"
@@ -545,7 +611,7 @@ exports[`User list view should render successfully 1`] = `
               </div>
               <div
                 aria-colindex="8"
-                class="css-1d7qmd3 rs-table-cell rs-table-cell-last"
+                class="emotion-2 rs-table-cell rs-table-cell-last"
                 role="gridcell"
                 style="width: 100px; height: 46px; z-index: 0; left: 1400px;"
               >
@@ -554,7 +620,7 @@ exports[`User list view should render successfully 1`] = `
                   style="display: flex; flex-wrap: wrap; justify-content: center; width: 100px; height: 46px;"
                 >
                   <button
-                    class="css-1fszw58 rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-circle rs-btn rs-btn-default rs-btn-sm"
+                    class="emotion-3 rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-circle rs-btn rs-btn-default rs-btn-sm"
                     type="button"
                   >
                     <svg
@@ -583,7 +649,7 @@ exports[`User list view should render successfully 1`] = `
                     </span>
                   </button>
                   <button
-                    class="css-1fszw58 rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-circle rs-btn rs-btn-ghost rs-btn-red rs-btn-sm"
+                    class="emotion-3 rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-circle rs-btn rs-btn-ghost rs-btn-red rs-btn-sm"
                     type="button"
                   >
                     <svg
@@ -721,7 +787,7 @@ exports[`User list view should render successfully 1`] = `
               </div>
               <div
                 aria-colindex="8"
-                class="css-1d7qmd3 rs-table-cell rs-table-cell-last"
+                class="emotion-2 rs-table-cell rs-table-cell-last"
                 role="gridcell"
                 style="width: 100px; height: 46px; z-index: 0; left: 1400px;"
               >
@@ -730,7 +796,7 @@ exports[`User list view should render successfully 1`] = `
                   style="display: flex; flex-wrap: wrap; justify-content: center; width: 100px; height: 46px;"
                 >
                   <button
-                    class="css-1fszw58 rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-circle rs-btn rs-btn-default rs-btn-sm"
+                    class="emotion-3 rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-circle rs-btn rs-btn-default rs-btn-sm"
                     type="button"
                   >
                     <svg
@@ -759,7 +825,7 @@ exports[`User list view should render successfully 1`] = `
                     </span>
                   </button>
                   <button
-                    class="css-1fszw58 rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-circle rs-btn rs-btn-ghost rs-btn-red rs-btn-sm"
+                    class="emotion-3 rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-circle rs-btn rs-btn-ghost rs-btn-red rs-btn-sm"
                     type="button"
                   >
                     <svg
@@ -897,7 +963,7 @@ exports[`User list view should render successfully 1`] = `
               </div>
               <div
                 aria-colindex="8"
-                class="css-1d7qmd3 rs-table-cell rs-table-cell-last"
+                class="emotion-2 rs-table-cell rs-table-cell-last"
                 role="gridcell"
                 style="width: 100px; height: 46px; z-index: 0; left: 1400px;"
               >
@@ -906,7 +972,7 @@ exports[`User list view should render successfully 1`] = `
                   style="display: flex; flex-wrap: wrap; justify-content: center; width: 100px; height: 46px;"
                 >
                   <button
-                    class="css-1fszw58 rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-circle rs-btn rs-btn-default rs-btn-sm"
+                    class="emotion-3 rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-circle rs-btn rs-btn-default rs-btn-sm"
                     type="button"
                   >
                     <svg
@@ -935,7 +1001,7 @@ exports[`User list view should render successfully 1`] = `
                     </span>
                   </button>
                   <button
-                    class="css-1fszw58 rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-circle rs-btn rs-btn-ghost rs-btn-red rs-btn-sm"
+                    class="emotion-3 rs-btn-icon rs-btn-icon-placement-left rs-btn-icon-circle rs-btn rs-btn-ghost rs-btn-red rs-btn-sm"
                     type="button"
                   >
                     <svg

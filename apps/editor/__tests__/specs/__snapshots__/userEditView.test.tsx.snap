@@ -634,11 +634,101 @@ exports[`User edit view should allow user role to be removed 1`] = `
 
 exports[`User edit view should render 1`] = `
 <DocumentFragment>
-  <form
+  .emotion-0 {
+  padding-right: 5px;
+  padding-bottom: 20px;
+}
+
+.emotion-1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-2 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  padding-top: 3px;
+  margin-right: 1rem;
+}
+
+.emotion-3 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.emotion-4 {
+  font-size: 48px;
+}
+
+.emotion-5 {
+  font-size: 36px;
+  line-height: 50px;
+}
+
+.emotion-6 {
+  margin-left: 40px;
+}
+
+.emotion-7 {
+  margin-right: 10px;
+}
+
+.emotion-8 {
+  width: 100%;
+  padding-left: 0px;
+  height: calc(100vh - 160px);
+  overflow-y: scroll;
+}
+
+.emotion-10 {
+  display: grid;
+  overflow: visible;
+}
+
+.emotion-11 {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  background-color: #f7f9fa;
+  max-height: 200px;
+  min-height: 100px;
+}
+
+.emotion-12 {
+  text-align: end;
+}
+
+.emotion-14 {
+  margin-top: 20px;
+}
+
+<form
     class="rs-form rs-form-vertical rs-form-fluid"
   >
     <div
-      class="css-b9g7s rs-flex-box-grid rs-flex-box-grid-middle rs-flex-box-grid-start"
+      class="emotion-0 rs-flex-box-grid rs-flex-box-grid-middle rs-flex-box-grid-start"
     >
       <div
         class="rs-flex-box-grid-item rs-flex-box-grid-item-12"
@@ -647,19 +737,19 @@ exports[`User edit view should render 1`] = `
           class="rs-flex-box-grid rs-flex-box-grid-middle rs-flex-box-grid-start"
         >
           <div
-            class="css-1sg2lsz rs-row"
+            class="emotion-1 rs-row"
             role="row"
           >
             <div
-              class="css-b1st3c rs-col rs-col-xs-29"
+              class="emotion-2 rs-col rs-col-xs-29"
               role="gridcell"
             >
               <a
-                class="css-ov1ktg"
+                class="emotion-3"
                 href="/users"
               >
                 <svg
-                  class="css-11o64f7"
+                  class="emotion-4"
                   fill="currentColor"
                   height="1em"
                   stroke="currentColor"
@@ -678,7 +768,7 @@ exports[`User edit view should render 1`] = `
                 </svg>
               </a>
               <h1
-                class="css-uzijeq"
+                class="emotion-5"
               >
                 userCreateOrEditView.createNewUser
               </h1>
@@ -696,10 +786,10 @@ exports[`User edit view should render 1`] = `
             class="rs-flex-box-grid-item rs-flex-box-grid-item-0"
           />
           <div
-            class="css-yt3qgg rs-flex-box-grid-item rs-flex-box-grid-item-0"
+            class="emotion-6 rs-flex-box-grid-item rs-flex-box-grid-item-0"
           >
             <button
-              class="css-12frltk rs-btn rs-btn-ghost"
+              class="emotion-7 rs-btn rs-btn-ghost"
               data-testid="saveButton"
               type="submit"
             >
@@ -724,7 +814,7 @@ exports[`User edit view should render 1`] = `
       </div>
     </div>
     <div
-      class="css-psz7xo-UserFormGrid eswd6by1 rs-grid-container"
+      class="emotion-8 emotion-9 rs-grid-container"
       role="grid"
     >
       <div
@@ -773,7 +863,7 @@ exports[`User edit view should render 1`] = `
                     role="gridcell"
                   >
                     <div
-                      class="css-10cacs rs-panel"
+                      class="emotion-10 rs-panel"
                     >
                       <div
                         aria-expanded="false"
@@ -796,7 +886,7 @@ exports[`User edit view should render 1`] = `
                         role="region"
                       >
                         <div
-                          class="css-srfsgx"
+                          class="emotion-11"
                         >
                           <button
                             class="rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default rs-btn-sm"
@@ -832,7 +922,7 @@ exports[`User edit view should render 1`] = `
                     </div>
                   </div>
                   <div
-                    class="css-1mhgydp-ColTextAlign eswd6by2 rs-col rs-col-xs-12"
+                    class="emotion-12 emotion-13 rs-col rs-col-xs-12"
                     role="gridcell"
                   >
                     <div
@@ -1219,7 +1309,7 @@ exports[`User edit view should render 1`] = `
               </div>
             </div>
             <div
-              class="css-1cthmba-Panel eswd6by3 rs-panel rs-panel-bordered"
+              class="emotion-14 emotion-15 rs-panel rs-panel-bordered"
             >
               <div
                 aria-expanded="false"
@@ -1324,7 +1414,7 @@ exports[`User edit view should render 1`] = `
               </div>
             </div>
             <div
-              class="css-1cthmba-Panel eswd6by3 rs-panel rs-panel-bordered"
+              class="emotion-14 emotion-15 rs-panel rs-panel-bordered"
             >
               <div
                 aria-expanded="false"
@@ -1407,7 +1497,7 @@ exports[`User edit view should render 1`] = `
               </div>
             </div>
             <div
-              class="css-1cthmba-Panel eswd6by3 rs-panel rs-panel-bordered"
+              class="emotion-14 emotion-15 rs-panel rs-panel-bordered"
             >
               <div
                 aria-expanded="false"
@@ -1478,11 +1568,101 @@ exports[`User edit view should render 1`] = `
 
 exports[`User edit view should render with ID 1`] = `
 <DocumentFragment>
-  <form
+  .emotion-0 {
+  padding-right: 5px;
+  padding-bottom: 20px;
+}
+
+.emotion-1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-2 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  padding-top: 3px;
+  margin-right: 1rem;
+}
+
+.emotion-3 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.emotion-4 {
+  font-size: 48px;
+}
+
+.emotion-5 {
+  font-size: 36px;
+  line-height: 50px;
+}
+
+.emotion-6 {
+  margin-left: 40px;
+}
+
+.emotion-7 {
+  margin-right: 10px;
+}
+
+.emotion-8 {
+  width: 100%;
+  padding-left: 0px;
+  height: calc(100vh - 160px);
+  overflow-y: scroll;
+}
+
+.emotion-10 {
+  display: grid;
+  overflow: visible;
+}
+
+.emotion-11 {
+  display: grid;
+  width: 100%;
+  height: 100%;
+  place-items: center;
+  background-color: #f7f9fa;
+  max-height: 200px;
+  min-height: 100px;
+}
+
+.emotion-12 {
+  text-align: end;
+}
+
+.emotion-14 {
+  margin-top: 20px;
+}
+
+<form
     class="rs-form rs-form-vertical rs-form-fluid"
   >
     <div
-      class="css-b9g7s rs-flex-box-grid rs-flex-box-grid-middle rs-flex-box-grid-start"
+      class="emotion-0 rs-flex-box-grid rs-flex-box-grid-middle rs-flex-box-grid-start"
     >
       <div
         class="rs-flex-box-grid-item rs-flex-box-grid-item-12"
@@ -1491,19 +1671,19 @@ exports[`User edit view should render with ID 1`] = `
           class="rs-flex-box-grid rs-flex-box-grid-middle rs-flex-box-grid-start"
         >
           <div
-            class="css-1sg2lsz rs-row"
+            class="emotion-1 rs-row"
             role="row"
           >
             <div
-              class="css-b1st3c rs-col rs-col-xs-29"
+              class="emotion-2 rs-col rs-col-xs-29"
               role="gridcell"
             >
               <a
-                class="css-ov1ktg"
+                class="emotion-3"
                 href="/users"
               >
                 <svg
-                  class="css-11o64f7"
+                  class="emotion-4"
                   fill="currentColor"
                   height="1em"
                   stroke="currentColor"
@@ -1522,7 +1702,7 @@ exports[`User edit view should render with ID 1`] = `
                 </svg>
               </a>
               <h1
-                class="css-uzijeq"
+                class="emotion-5"
               >
                 userCreateOrEditView.createNewUser
               </h1>
@@ -1540,10 +1720,10 @@ exports[`User edit view should render with ID 1`] = `
             class="rs-flex-box-grid-item rs-flex-box-grid-item-0"
           />
           <div
-            class="css-yt3qgg rs-flex-box-grid-item rs-flex-box-grid-item-0"
+            class="emotion-6 rs-flex-box-grid-item rs-flex-box-grid-item-0"
           >
             <button
-              class="css-12frltk rs-btn rs-btn-ghost"
+              class="emotion-7 rs-btn rs-btn-ghost"
               data-testid="saveButton"
               type="submit"
             >
@@ -1568,7 +1748,7 @@ exports[`User edit view should render with ID 1`] = `
       </div>
     </div>
     <div
-      class="css-psz7xo-UserFormGrid eswd6by1 rs-grid-container"
+      class="emotion-8 emotion-9 rs-grid-container"
       role="grid"
     >
       <div
@@ -1617,7 +1797,7 @@ exports[`User edit view should render with ID 1`] = `
                     role="gridcell"
                   >
                     <div
-                      class="css-10cacs rs-panel"
+                      class="emotion-10 rs-panel"
                     >
                       <div
                         aria-expanded="false"
@@ -1640,7 +1820,7 @@ exports[`User edit view should render with ID 1`] = `
                         role="region"
                       >
                         <div
-                          class="css-srfsgx"
+                          class="emotion-11"
                         >
                           <button
                             class="rs-btn-icon rs-btn-icon-placement-left rs-btn rs-btn-default rs-btn-sm"
@@ -1676,7 +1856,7 @@ exports[`User edit view should render with ID 1`] = `
                     </div>
                   </div>
                   <div
-                    class="css-1mhgydp-ColTextAlign eswd6by2 rs-col rs-col-xs-12"
+                    class="emotion-12 emotion-13 rs-col rs-col-xs-12"
                     role="gridcell"
                   >
                     <div
@@ -2063,7 +2243,7 @@ exports[`User edit view should render with ID 1`] = `
               </div>
             </div>
             <div
-              class="css-1cthmba-Panel eswd6by3 rs-panel rs-panel-bordered"
+              class="emotion-14 emotion-15 rs-panel rs-panel-bordered"
             >
               <div
                 aria-expanded="false"
@@ -2168,7 +2348,7 @@ exports[`User edit view should render with ID 1`] = `
               </div>
             </div>
             <div
-              class="css-1cthmba-Panel eswd6by3 rs-panel rs-panel-bordered"
+              class="emotion-14 emotion-15 rs-panel rs-panel-bordered"
             >
               <div
                 aria-expanded="false"
@@ -2251,7 +2431,7 @@ exports[`User edit view should render with ID 1`] = `
               </div>
             </div>
             <div
-              class="css-1cthmba-Panel eswd6by3 rs-panel rs-panel-bordered"
+              class="emotion-14 emotion-15 rs-panel rs-panel-bordered"
             >
               <div
                 aria-expanded="false"

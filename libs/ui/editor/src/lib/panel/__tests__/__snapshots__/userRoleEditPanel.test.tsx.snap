@@ -96,8 +96,12 @@ exports[`User Role Edit Panel should allow a new role to be created 1`] = `
 
 exports[`User Role Edit Panel should have Toggle sliders disabled with System Role 1`] = `
 <DocumentFragment>
-  <form
-    class="css-1c13mle-Form evinu5u0 rs-form rs-form-vertical rs-form-fluid"
+  .emotion-0 {
+  height: 100%;
+}
+
+<form
+    class="emotion-0 emotion-1 rs-form rs-form-vertical rs-form-fluid"
   >
     <div
       class="rs-drawer-header"
@@ -321,8 +325,12 @@ exports[`User Role Edit Panel should have Toggle sliders disabled with System Ro
 
 exports[`User Role Edit Panel should render 1`] = `
 <DocumentFragment>
-  <form
-    class="css-1c13mle-Form evinu5u0 rs-form rs-form-vertical rs-form-fluid"
+  .emotion-0 {
+  height: 100%;
+}
+
+<form
+    class="emotion-0 emotion-1 rs-form rs-form-vertical rs-form-fluid"
   >
     <div
       class="rs-drawer-header"
@@ -515,8 +523,12 @@ exports[`User Role Edit Panel should render 1`] = `
 
 exports[`User Role Edit Panel should render with role 1`] = `
 <DocumentFragment>
-  <form
-    class="css-1c13mle-Form evinu5u0 rs-form rs-form-vertical rs-form-fluid"
+  .emotion-0 {
+  height: 100%;
+}
+
+<form
+    class="emotion-0 emotion-1 rs-form rs-form-vertical rs-form-fluid"
   >
     <div
       class="rs-drawer-header"
