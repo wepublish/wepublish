@@ -56,6 +56,20 @@ export const LoginWrapper = styled('div')`
   }
 `
 
+export const InitialModalWrapper = styled('div')`
+  position: relative;
+  display: grid;
+  grid-template-columns: 1;
+  padding-top: ${({theme}) => theme.spacing(4)};
+  align-items: center;
+`
+
+export const InitialModalContent = styled('div')`
+  width: 100%;
+  justify-content: space-around;
+  display: flex;
+`
+
 export const Register = styled('div')`
   display: flex;
   justify-content: center;
@@ -68,6 +82,21 @@ export const Register = styled('div')`
     grid-column: 2/3;
     margin-top: 0;
   }
+`
+
+export const initialHeadingStyles = (theme: Theme) => css`
+  width: 100%;
+  text-align: left;
+  font-size: ${theme.typography.h4.fontSize};
+  margin-bottom: ${theme.spacing(3)};
+
+  ${theme.breakpoints.up('sm')} {
+    margin-bottom: ${theme.spacing(6)};
+  }
+`
+
+export const initialButtonStyles = (theme: Theme) => css`
+  text-transform: uppercase;
 `
 
 export const registerStyles = (theme: Theme) => css`
@@ -132,19 +161,31 @@ export const CommentEditor = ({
 }: BuilderCommentEditorProps) => {
   const theme = useTheme()
   const {
-    elements: {TextField, Button, Alert}
+    elements: {TextField, Button, Alert, H3}
   } = useWebsiteBuilder()
   const {hasUser} = useUser()
   const [modalOpen, setModalOpen] = useState(!canReply)
+  const [showInitialModal, setShowInitialModal] = useState(true)
 
   const handleClose = () => {
     setModalOpen(false)
     onCancel()
   }
 
+  const handleGuestComment = () => {
+    setShowInitialModal(false)
+    setModalOpen(false)
+  }
+
+  const handleLoginRegister = () => {
+    setShowInitialModal(false)
+  }
+
   const buttonStyles = useMemo(() => registerStyles(theme), [theme])
   const iconStyles = useMemo(() => registerIconStyles(theme), [theme])
   const aStyles = useMemo(() => linkStyles(theme), [theme])
+  const headingStyles = useMemo(() => initialHeadingStyles(theme), [theme])
+  const initialButtonsStyles = useMemo(() => initialButtonStyles(theme), [theme])
 
   const anonymousSchema = useMemo(
     () =>
@@ -328,17 +369,31 @@ export const CommentEditor = ({
           <CloseLogin onClick={handleClose}>
             <MdClose />
           </CloseLogin>
-          <LoginWrapper>
-            <LoginFormContainer afterLoginCallback={handleAfterLoginCallback} />
-            <Register>
-              <Button css={buttonStyles} onClick={registerRedirect}>
-                <MdLogin aria-label="Register" css={iconStyles} />
-                <Link href={signUpUrl} css={aStyles}>
-                  Jetzt registrieren
-                </Link>
-              </Button>
-            </Register>
-          </LoginWrapper>
+          {showInitialModal ? (
+            <InitialModalWrapper>
+              <H3 css={headingStyles}>Du bist nicht eingeloggt</H3>
+              <InitialModalContent>
+                <Button onClick={handleGuestComment} variant="text" css={initialButtonsStyles}>
+                  als gast kommentieren
+                </Button>
+                <Button onClick={handleLoginRegister} css={initialButtonsStyles}>
+                  anmelden/registieren
+                </Button>
+              </InitialModalContent>
+            </InitialModalWrapper>
+          ) : (
+            <LoginWrapper>
+              <LoginFormContainer afterLoginCallback={handleAfterLoginCallback} />
+              <Register>
+                <Button css={buttonStyles} onClick={registerRedirect}>
+                  <MdLogin aria-label="Register" css={iconStyles} />
+                  <Link href={signUpUrl} css={aStyles}>
+                    Jetzt registrieren
+                  </Link>
+                </Button>
+              </Register>
+            </LoginWrapper>
+          )}
         </ModalContent>
       </Modal>
     </>
