@@ -32,6 +32,7 @@ export * from './lib/db/mailLog'
 export * from './lib/db/subscription'
 
 export * from './lib/media/karmaMediaAdapter'
+export * from './lib/media/novaMediaAdapter'
 export * from './lib/urlAdapter'
 
 export * from './lib/utility'
@@ -58,3 +59,5 @@ export * from '@wepublish/utils/api'
 export * from '@wepublish/richtext/api'
 export * from '@wepublish/event/api'
 export * from '@wepublish/health'
+export * from '@wepublish/scripts/api'
+export * from '@wepublish/system-info'

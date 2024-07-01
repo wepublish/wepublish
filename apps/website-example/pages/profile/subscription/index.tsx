@@ -48,6 +48,7 @@ function Subscriptions() {
   )
 
   const locationOrigin = typeof window !== 'undefined' ? location.origin : ''
+  const thisLocation = typeof window !== 'undefined' ? location.href : ''
 
   return (
     <SubscriptionsWrapper>
@@ -56,7 +57,7 @@ function Subscriptions() {
 
         <SubscriptionListContainer
           successURL={`${locationOrigin}/profile/subscription`}
-          failureURL={`${locationOrigin}/mitmachen`}
+          failureURL={thisLocation}
           filter={subscriptions => subscriptions.filter(subscription => !subscription.deactivation)}
         />
 
@@ -72,7 +73,7 @@ function Subscriptions() {
 
         <InvoiceListContainer
           successURL={`${locationOrigin}/profile/subscription`}
-          failureURL={`${locationOrigin}/mitmachen`}
+          failureURL={thisLocation}
           filter={invoices =>
             invoices.filter(
               invoice => invoice.subscription && !invoice.canceledAt && !invoice.paidAt

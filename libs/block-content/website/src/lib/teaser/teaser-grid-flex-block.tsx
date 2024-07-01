@@ -5,8 +5,9 @@ import {
   TeaserGridFlexBlock as TeaserGridFlexBlockType
 } from '@wepublish/website/api'
 import {BuilderTeaserGridFlexBlockProps, useWebsiteBuilder} from '@wepublish/website/builder'
-import {ascend, sortWith} from 'ramda'
+import {ascend, compose, filter, sortWith} from 'ramda'
 import {useMemo} from 'react'
+import {isFilledTeaser} from './teaser-grid-block'
 
 export const isTeaserGridFlexBlock = (block: Block): block is TeaserGridFlexBlockType =>
   block.__typename === 'TeaserGridFlexBlock'
@@ -29,10 +30,14 @@ export const TeaserGridFlexBlockWrapper = styled('div')`
   `}
 `
 
-const sortTeasersByYAndX = sortWith<FlexTeaser>([
+const sortFlexTeasersByYAndX = sortWith<FlexTeaser>([
   ascend(teaser => teaser.alignment.y),
   ascend(teaser => teaser.alignment.x)
 ])
+
+export const omitEmptyFlexTeasers = filter<FlexTeaser>(teaser => isFilledTeaser(teaser.teaser))
+
+export const fixFlexTeasers = compose(sortFlexTeasersByYAndX, omitEmptyFlexTeasers)
 
 export const TeaserGridFlexBlock = ({
   flexTeasers,
@@ -44,7 +49,7 @@ export const TeaserGridFlexBlock = ({
   } = useWebsiteBuilder()
 
   const sortedTeasers = useMemo(
-    () => (flexTeasers ? sortTeasersByYAndX(flexTeasers) : []),
+    () => (flexTeasers ? fixFlexTeasers(flexTeasers) : []),
     [flexTeasers]
   )
 

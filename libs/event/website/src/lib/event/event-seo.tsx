@@ -5,7 +5,7 @@ import {formatISO, formatISODuration, intervalToDuration} from 'date-fns'
 import {useMemo} from 'react'
 
 export const getEventSEO = (event: Event) => {
-  const description = firstParagraphToPlaintext(event.description)
+  const description = event.lead ?? firstParagraphToPlaintext(event.description)
   const image = (event.image as FullImageFragment)?.largeURL ?? event.image?.url
   const startDate = formatISO(new Date(event.startsAt))
   const endDate = event.endsAt ? formatISO(new Date(event.endsAt)) : undefined

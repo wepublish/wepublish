@@ -21,6 +21,10 @@ exports[`Author Container should render ById 1`] = `
       alt="DSC07717"
       class="css-1f8yvym-ImageWrapper-Author e1shv2yg0"
       loading="lazy"
+      sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -122,7 +126,7 @@ https://unsplash.it/200/100 200w"
           <hr />
         </div>
         <h3
-          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-upop11-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-37wefs-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span
@@ -136,7 +140,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </h3>
         <h4
-          class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-1u8rq5i-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span
@@ -193,11 +197,11 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
-                class="css-1suggax-tableCellStyles"
+                class="css-13r3shd-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
                   data-slate-node="element"
                 >
                   <span
@@ -212,11 +216,11 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
-                class="css-1suggax-tableCellStyles"
+                class="css-13r3shd-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
                   data-slate-node="element"
                 >
                   <span
@@ -235,11 +239,11 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
-                class="css-1suggax-tableCellStyles"
+                class="css-13r3shd-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
                   data-slate-node="element"
                 >
                   <span
@@ -254,11 +258,11 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
-                class="css-1suggax-tableCellStyles"
+                class="css-13r3shd-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
                   data-slate-node="element"
                 >
                   <span
@@ -276,7 +280,7 @@ https://unsplash.it/200/100 200w"
           </tbody>
         </table>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span
@@ -475,6 +479,10 @@ exports[`Author Container should render BySlug 1`] = `
       alt="DSC07717"
       class="css-1f8yvym-ImageWrapper-Author e1shv2yg0"
       loading="lazy"
+      sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -576,7 +584,7 @@ https://unsplash.it/200/100 200w"
           <hr />
         </div>
         <h3
-          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-upop11-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-37wefs-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span
@@ -590,7 +598,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </h3>
         <h4
-          class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-1u8rq5i-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span
@@ -647,11 +655,11 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
-                class="css-1suggax-tableCellStyles"
+                class="css-13r3shd-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
                   data-slate-node="element"
                 >
                   <span
@@ -666,11 +674,11 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
-                class="css-1suggax-tableCellStyles"
+                class="css-13r3shd-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
                   data-slate-node="element"
                 >
                   <span
@@ -689,11 +697,11 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
-                class="css-1suggax-tableCellStyles"
+                class="css-13r3shd-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
                   data-slate-node="element"
                 >
                   <span
@@ -708,11 +716,11 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
-                class="css-1suggax-tableCellStyles"
+                class="css-13r3shd-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
                   data-slate-node="element"
                 >
                   <span
@@ -730,7 +738,7 @@ https://unsplash.it/200/100 200w"
           </tbody>
         </table>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span
@@ -929,6 +937,10 @@ exports[`Author Container should render WithClassName 1`] = `
       alt="DSC07717"
       class="css-1f8yvym-ImageWrapper-Author e1shv2yg0"
       loading="lazy"
+      sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -1030,7 +1042,7 @@ https://unsplash.it/200/100 200w"
           <hr />
         </div>
         <h3
-          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-upop11-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-37wefs-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span
@@ -1044,7 +1056,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </h3>
         <h4
-          class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-1u8rq5i-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span
@@ -1101,11 +1113,11 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
-                class="css-1suggax-tableCellStyles"
+                class="css-13r3shd-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
                   data-slate-node="element"
                 >
                   <span
@@ -1120,11 +1132,11 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
-                class="css-1suggax-tableCellStyles"
+                class="css-13r3shd-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
                   data-slate-node="element"
                 >
                   <span
@@ -1143,11 +1155,11 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
-                class="css-1suggax-tableCellStyles"
+                class="css-13r3shd-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
                   data-slate-node="element"
                 >
                   <span
@@ -1162,11 +1174,11 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
-                class="css-1suggax-tableCellStyles"
+                class="css-13r3shd-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
                   data-slate-node="element"
                 >
                   <span
@@ -1184,7 +1196,7 @@ https://unsplash.it/200/100 200w"
           </tbody>
         </table>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span
@@ -1383,6 +1395,10 @@ exports[`Author Container should render WithEmotion 1`] = `
       alt="DSC07717"
       class="css-1f8yvym-ImageWrapper-Author e1shv2yg0"
       loading="lazy"
+      sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
       srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -1484,7 +1500,7 @@ https://unsplash.it/200/100 200w"
           <hr />
         </div>
         <h3
-          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-upop11-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-37wefs-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span
@@ -1498,7 +1514,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </h3>
         <h4
-          class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-449wsp-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-1u8rq5i-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span
@@ -1555,11 +1571,11 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
-                class="css-1suggax-tableCellStyles"
+                class="css-13r3shd-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
                   data-slate-node="element"
                 >
                   <span
@@ -1574,11 +1590,11 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
-                class="css-1suggax-tableCellStyles"
+                class="css-13r3shd-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
                   data-slate-node="element"
                 >
                   <span
@@ -1597,11 +1613,11 @@ https://unsplash.it/200/100 200w"
               data-slate-node="element"
             >
               <td
-                class="css-1suggax-tableCellStyles"
+                class="css-13r3shd-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
                   data-slate-node="element"
                 >
                   <span
@@ -1616,11 +1632,11 @@ https://unsplash.it/200/100 200w"
                 </p>
               </td>
               <td
-                class="css-1suggax-tableCellStyles"
+                class="css-13r3shd-tableCellStyles"
                 data-slate-node="element"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+                  class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
                   data-slate-node="element"
                 >
                   <span
@@ -1638,7 +1654,7 @@ https://unsplash.it/200/100 200w"
           </tbody>
         </table>
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span

@@ -67,6 +67,12 @@ export type BuilderCommentListProps = Pick<
   openEditorsStateDispatch: Dispatch<BuilderCommentListActions>
 }
 
+export type BuilderCommentListItemShareProps = {
+  className?: string
+  url: string
+  title: string
+}
+
 export type BuilderCommentListItemProps = Comment & {
   className?: string
   ratingSystem: FullCommentRatingSystem
@@ -88,7 +94,17 @@ export type BuilderCommentListItemProps = Comment & {
 export type BuilderCommentProps = PropsWithChildren<
   Pick<
     Comment,
-    'text' | 'authorType' | 'user' | 'guestUserImage' | 'guestUsername' | 'title' | 'source'
+    | 'text'
+    | 'authorType'
+    | 'user'
+    | 'guestUserImage'
+    | 'featured'
+    | 'guestUsername'
+    | 'title'
+    | 'source'
+    | 'createdAt'
+    | 'id'
+    | 'tags'
   > & {
     className?: string
     showContent?: boolean

@@ -1,18 +1,9 @@
 import styled from '@emotion/styled'
-import {TeaserStyle, TeaserType} from '@wepublish/editor/api'
+import {TeaserType} from '@wepublish/editor/api'
 import {useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {TFunction} from 'i18next'
-import {
-  Button,
-  Drawer,
-  Form,
-  Input,
-  Panel as RPanel,
-  Radio,
-  RadioGroup,
-  Toggle as RToggle
-} from 'rsuite'
+import {Button, Drawer, Form, Input, Panel as RPanel, Toggle as RToggle} from 'rsuite'
 
 import {ChooseEditImage} from '../atoms/chooseEditImage'
 import {DescriptionList, DescriptionListItem} from '../atoms/descriptionList'
@@ -133,17 +124,6 @@ export function TeaserEditPanel({
         {previewForTeaser(initialTeaser, t)}
         <RPanel header={t('articleEditor.panels.displayOptions')}>
           <Form fluid>
-            <Group controlId="articleStyle">
-              <ControlLabel>{t('articleEditor.panels.style')}</ControlLabel>
-              <RadioGroup
-                inline
-                value={style}
-                onChange={teaserStyle => setStyle(teaserStyle as TeaserStyle)}>
-                <Radio value={TeaserStyle.Default}>{t('articleEditor.panels.default')}</Radio>
-                <Radio value={TeaserStyle.Light}>{t('articleEditor.panels.light')}</Radio>
-                <Radio value={TeaserStyle.Text}>{t('articleEditor.panels.text')}</Radio>
-              </RadioGroup>
-            </Group>
             <Group controlId="articlePreTitle">
               <ControlLabel>{t('articleEditor.panels.preTitle')}</ControlLabel>
               <Control
@@ -268,7 +248,7 @@ export function previewForTeaser(teaser: Teaser, t: TFunction<'translation'>) {
       type = 'Event'
       imageURL = teaser.event.image?.previewURL ?? undefined
       title = teaser.event.name ?? undefined
-      lead = teaser.event.location ?? undefined
+      lead = teaser.event.lead || teaser.event.location || undefined
       break
 
     case TeaserType.Custom:

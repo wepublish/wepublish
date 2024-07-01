@@ -3,7 +3,7 @@
 exports[`Quote Block should render Default 1`] = `
 <DocumentFragment>
   <blockquote
-    class="css-jrn897-QuoteBlockWrapper e1ugt7gl1"
+    class="css-sqgfke-QuoteBlockWrapper e1ugt7gl1"
   >
     <div
       class="css-1v9bccv-QuoteContent e1ugt7gl0"
@@ -26,7 +26,7 @@ exports[`Quote Block should render Default 1`] = `
 exports[`Quote Block should render WithClassName 1`] = `
 <DocumentFragment>
   <blockquote
-    class="extra-classname css-jrn897-QuoteBlockWrapper e1ugt7gl1"
+    class="extra-classname css-sqgfke-QuoteBlockWrapper e1ugt7gl1"
   >
     <div
       class="css-1v9bccv-QuoteContent e1ugt7gl0"
@@ -49,7 +49,7 @@ exports[`Quote Block should render WithClassName 1`] = `
 exports[`Quote Block should render WithEmotion 1`] = `
 <DocumentFragment>
   <blockquote
-    class="css-jrn897-QuoteBlockWrapper e1ugt7gl1"
+    class="css-sqgfke-QuoteBlockWrapper e1ugt7gl1"
   >
     <div
       class="css-1v9bccv-QuoteContent e1ugt7gl0"
@@ -72,12 +72,16 @@ exports[`Quote Block should render WithEmotion 1`] = `
 exports[`Quote Block should render WithImage 1`] = `
 <DocumentFragment>
   <blockquote
-    class="css-trbqh5-QuoteBlockWrapper e1ugt7gl1"
+    class="css-ywkjei-QuoteBlockWrapper e1ugt7gl1"
   >
     <img
       alt="DSC07717"
-      class="css-cibo30-ImageWrapper e1shv2yg0"
+      class="css-ovykve-ImageWrapper-QuoteBlock e1shv2yg0"
       loading="lazy"
+      sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
       srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,
@@ -105,12 +109,16 @@ https://unsplash.it/200/200 200w"
 exports[`Quote Block should render WithImageAndShortText 1`] = `
 <DocumentFragment>
   <blockquote
-    class="css-trbqh5-QuoteBlockWrapper e1ugt7gl1"
+    class="css-ywkjei-QuoteBlockWrapper e1ugt7gl1"
   >
     <img
       alt="DSC07717"
-      class="css-cibo30-ImageWrapper e1shv2yg0"
+      class="css-ovykve-ImageWrapper-QuoteBlock e1shv2yg0"
       loading="lazy"
+      sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
       srcset="https://unsplash.it/800/800 800w,
 https://unsplash.it/500/500 500w,
 https://unsplash.it/300/300 300w,

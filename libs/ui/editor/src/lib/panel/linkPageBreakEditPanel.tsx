@@ -1,5 +1,5 @@
 import {useTranslation} from 'react-i18next'
-import {Button, Drawer, Form, Radio, RadioGroup, SelectPicker, Toggle} from 'rsuite'
+import {Button, Drawer, Form, Radio, RadioGroup, Toggle} from 'rsuite'
 
 import {LinkPageBreakBlockValue} from '../blocks/types'
 
@@ -49,61 +49,6 @@ export function LinkPageBreakEditPanel({value, onClose, onChange}: LinkPageBreak
 
       <Drawer.Body>
         <Form fluid>
-          <Form.Group controlId="styleLabel">
-            <Form.ControlLabel>{t('linkPageBreakEditPanel.style.label')}</Form.ControlLabel>
-            <SelectPicker
-              block
-              virtualized
-              data={STYLE_OPTIONS.map(style => ({
-                value: style.id,
-                label: t(`linkPageBreakEditPanel.style.${style.id}`)
-              }))}
-              value={styleOption}
-              onChange={styleOption =>
-                onChange?.({
-                  ...value,
-                  styleOption: styleOption ?? undefined,
-                  layoutOption:
-                    styleOption === STYLE_OPTIONS[2].id ? LAYOUT_OPTIONS[0].id : value.layoutOption
-                })
-              }
-            />
-          </Form.Group>
-
-          <Form.Group controlId="layoutLabel">
-            <Form.ControlLabel>{t('linkPageBreakEditPanel.layout.label')}</Form.ControlLabel>
-            <SelectPicker
-              block
-              virtualized
-              data={LAYOUT_OPTIONS.filter(
-                layout => styleOption !== STYLE_OPTIONS[2].id || !layout.disabledIfImageStyle
-              ).map(layout => ({
-                value: layout.id,
-                label: t(`linkPageBreakEditPanel.layout.${layout.id}`)
-              }))}
-              value={layoutOption}
-              onChange={layoutOption =>
-                onChange?.({...value, layoutOption: layoutOption ?? undefined})
-              }
-            />
-          </Form.Group>
-
-          <Form.Group controlId="templateLabel">
-            <Form.ControlLabel>{t('linkPageBreakEditPanel.template.label')}</Form.ControlLabel>
-            <SelectPicker
-              block
-              virtualized
-              data={TEMPLATE_OPTIONS.map(template => ({
-                value: template.id,
-                label: t(`linkPageBreakEditPanel.template.${template?.id}`)
-              }))}
-              value={templateOption}
-              onChange={templateOption =>
-                onChange?.({...value, templateOption: templateOption ?? undefined})
-              }
-            />
-          </Form.Group>
-
           <Form.Group controlId="linkUrlLabel">
             <Form.ControlLabel>{t('linkPageBreakEditPanel.link.urlLabel')}</Form.ControlLabel>
             <Form.Control

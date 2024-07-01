@@ -14,6 +14,9 @@ fragment FullPaymentMethod on PaymentMethod {
   }
   description
   active
+  image {
+    ...ImageRef
+  }
 }
 
 query PaymentProviderList {

@@ -59,7 +59,7 @@ export function Rating({
       <MuiRating
         {...props}
         icon={(isHovered && !props.readOnly) || showFilledIcon ? icon : emptyIcon}
-        emptyIcon={emptyIcon}
+        emptyIcon={null}
       />
     </RatingWrapper>
   )

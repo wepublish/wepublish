@@ -1,6 +1,7 @@
 fragment FullEvent on Event {
   id
   name
+  lead
   description
   status
   location
@@ -8,8 +9,7 @@ fragment FullEvent on Event {
     ...FullImage
   }
   tags {
-    id
-    tag
+    ...FullTag
   }
   startsAt
   endsAt

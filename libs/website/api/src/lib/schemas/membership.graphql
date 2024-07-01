@@ -4,6 +4,9 @@ fragment FullPaymentMethod on PaymentMethod {
   name
   slug
   description
+  image {
+    ...FullImage
+  }
 }
 
 fragment FullAvailablePaymentMethod on AvailablePaymentMethod {

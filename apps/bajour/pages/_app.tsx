@@ -16,16 +16,18 @@ import LanguageDetector from 'i18next-browser-languagedetector'
 import {AppProps} from 'next/app'
 import getConfig from 'next/config'
 import Head from 'next/head'
+import {useRouter} from 'next/router'
 import Script from 'next/script'
 import {initReactI18next} from 'react-i18next'
 import {FaTwitter} from 'react-icons/fa6'
-import {MdFacebook, MdMail} from 'react-icons/md'
+import {MdFacebook, MdMail, MdSearch} from 'react-icons/md'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {MainGrid} from '../src/components/layout/main-grid'
 import {BajourPaymentMethodPicker} from '../src/components/payment-method-picker/payment-method-picker'
+import {BajourQuoteBlock} from '../src/components/quote/bajour-quote'
 import {BajourBlockRenderer} from '../src/components/website-builder-overwrites/block-renderer/block-renderer'
 import {BajourTeaser} from '../src/components/website-builder-overwrites/blocks/teaser'
 import {BajourBreakBlock} from '../src/components/website-builder-styled/blocks/break-block-styled'
@@ -82,6 +84,8 @@ const {publicRuntimeConfig} = getConfig()
 
 function CustomApp({Component, pageProps}: CustomAppProps) {
   const siteTitle = 'Bajour'
+  const router = useRouter()
+  const {popup} = router.query
 
   return (
     <>
@@ -121,7 +125,8 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               Teaser: BajourTeaser,
               TeaserGrid: BajourTeaserGrid,
               TeaserList: BajourTeaserList,
-              Break: BajourBreakBlock
+              Break: BajourBreakBlock,
+              Quote: BajourQuoteBlock
             }}
             thirdParty={{
               stripe: publicRuntimeConfig.env.STRIPE_PUBLIC_KEY
@@ -136,6 +141,10 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
                     slug="main"
                     categorySlugs={[['basel-briefing', 'other'], ['about-us']]}
                     headerSlug="header">
+                    <ButtonLink href="/search">
+                      <MdSearch size="32" />
+                    </ButtonLink>
+
                     <ButtonLink href="https://www.facebook.com/bajourbasel">
                       <MdFacebook size="32" />
                     </ButtonLink>
@@ -160,13 +169,21 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               )}
 
               <Script
-                src={publicRuntimeConfig.env.API_URL! + '/static/head.js'}
-                strategy="beforeInteractive"
-              />
-              <Script
-                src={publicRuntimeConfig.env.API_URL! + '/static/body.js'}
+                src={publicRuntimeConfig.env.API_URL! + '/scripts/head.js'}
                 strategy="afterInteractive"
               />
+
+              <Script
+                src={publicRuntimeConfig.env.API_URL! + '/scripts/body.js'}
+                strategy="lazyOnload"
+              />
+
+              {popup && (
+                <Script
+                  src={publicRuntimeConfig.env.MAILCHIMP_POPUP_SCRIPT_URL!}
+                  strategy="afterInteractive"
+                />
+              )}
             </ThemeProvider>
           </WebsiteBuilderProvider>
         </WebsiteProvider>

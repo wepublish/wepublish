@@ -23,7 +23,7 @@ import {useRouter} from 'next/router'
 export type SubscribeContainerProps<
   T extends OptionalKeysOf<RegisterMutationVariables> = OptionalKeysOf<RegisterMutationVariables>
 > = BuilderContainerProps &
-  Pick<BuilderSubscribeProps<T>, 'fields' | 'schema' | 'defaults'> & {
+  Pick<BuilderSubscribeProps<T>, 'fields' | 'schema' | 'defaults' | 'extraMoneyOffset'> & {
     successURL: string
     failureURL: string
     filter?: (memberPlans: MemberPlan[]) => MemberPlan[]
@@ -31,6 +31,7 @@ export type SubscribeContainerProps<
 
 export const SubscribeContainer = <T extends OptionalKeysOf<RegisterMutationVariables>>({
   className,
+  extraMoneyOffset,
   failureURL,
   successURL,
   defaults,
@@ -114,6 +115,7 @@ export const SubscribeContainer = <T extends OptionalKeysOf<RegisterMutationVari
 
       <Subscribe
         className={className}
+        extraMoneyOffset={extraMoneyOffset}
         defaults={defaults}
         fields={fields}
         schema={schema}

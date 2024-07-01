@@ -2,9 +2,12 @@ fragment PageWithoutBlocks on Page {
   id
   slug
   description
-  tags
   title
   url
+
+  tags {
+    ...FullTag
+  }
 
   image {
     ...FullImage

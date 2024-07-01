@@ -9,10 +9,13 @@ fragment ArticleWithoutBlocks on Article {
   breaking
   lead
   publishedAt
-  tags
   title
   url
   peeredArticleURL
+
+  tags {
+    ...FullTag
+  }
 
   authors {
     ...FullAuthor

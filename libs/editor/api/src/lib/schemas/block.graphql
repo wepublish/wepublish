@@ -257,6 +257,7 @@ fragment FullBlock on Block {
   }
 
   ... on TeaserListBlock {
+    title
     blockStyle
     teaserType
     teasers {
@@ -266,6 +267,10 @@ fragment FullBlock on Block {
     skip
     filter {
       tags
+      tagObjects {
+        id
+        tag
+      }
     }
   }
 

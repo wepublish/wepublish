@@ -2,7 +2,10 @@ fragment ArticleRef on Article {
   id
   publishedAt
   updatedAt
-  tags
+  tags {
+    id
+    tag
+  }
   preTitle
   title
   lead
@@ -38,7 +41,11 @@ query Article($id: ID!) {
     preTitle
     title
     lead
-    tags
+    tags {
+      id
+      tag
+      type
+    }
     properties {
       key
       value
@@ -66,7 +73,11 @@ query PeerArticle($id: ID!, $peerSlug: Slug, $peerID: ID) {
     preTitle
     title
     lead
-    tags
+    tags {
+      id
+      tag
+      type
+    }
     properties {
       key
       value

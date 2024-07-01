@@ -4,9 +4,11 @@ import {useWebsiteBuilder} from '@wepublish/website/builder'
 import {MdDateRange} from 'react-icons/md'
 
 export const eventListItemStyles = css`
+  display: grid;
   width: 100%;
   color: inherit;
   text-decoration: inherit;
+  container-type: inline-size;
 `
 
 export const EventListItemWrapper = styled('article')`
@@ -15,7 +17,7 @@ export const EventListItemWrapper = styled('article')`
   grid-template-columns: 1fr;
   align-content: start;
 
-  ${({theme}) => theme.breakpoints.up('md')} {
+  @container (min-width: 400px) {
     grid-template-columns: minmax(30%, 200px) auto;
   }
 `
@@ -47,13 +49,14 @@ export const EventListItem = ({
   url,
   description,
   name,
+  lead,
   image,
   startsAt,
   endsAt,
   className
 }: Event & {className?: string}) => {
   const {
-    elements: {H4, Link, Image},
+    elements: {H4, Link, Image, Paragraph},
     blocks: {RichText},
     date
   } = useWebsiteBuilder()
@@ -83,7 +86,7 @@ export const EventListItem = ({
           </EventListItemMeta>
 
           <H4 component="h1">{name}</H4>
-          <RichText richText={description ?? []} />
+          {lead ? <Paragraph>{lead}</Paragraph> : <RichText richText={description ?? []} />}
         </EventListItemContent>
       </EventListItemWrapper>
     </Link>

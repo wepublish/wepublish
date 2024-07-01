@@ -112,7 +112,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               categorySlugs={[['categories', 'about-us']]}
               slug="main"
               headerSlug="header"
-              showSubscriptionsUrl={false}
+              subscriptionsUrl={null}
             />
 
             <ContentSpacer>
@@ -122,12 +122,13 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
             <Footer slug="main" categorySlugs={[['sonstiges', 'other'], ['about-us']]} />
 
             <Script
-              src={publicRuntimeConfig.env.API_URL! + '/static/head.js'}
-              strategy="beforeInteractive"
-            />
-            <Script
-              src={publicRuntimeConfig.env.API_URL! + '/static/body.js'}
+              src={publicRuntimeConfig.env.API_URL! + '/scripts/head.js'}
               strategy="afterInteractive"
+            />
+
+            <Script
+              src={publicRuntimeConfig.env.API_URL! + '/scripts/body.js'}
+              strategy="lazyOnload"
             />
           </ThemeProvider>
         </WebsiteBuilderProvider>

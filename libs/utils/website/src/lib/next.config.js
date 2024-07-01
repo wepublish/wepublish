@@ -13,8 +13,8 @@ const nextConfig = {
   reactStrictMode: true,
   // Adds the language attribute to the HTML
   i18n: {
-    locales: ['gsw-CH'],
-    defaultLocale: 'gsw-CH'
+    locales: ['de'],
+    defaultLocale: 'de'
   },
   compiler: {
     // This is needed so that we can use components as selectors in Emotion
@@ -35,6 +35,29 @@ const nextConfig = {
         }
       }
     }
+  },
+  async headers() {
+    return [
+      {
+        // Apply these headers to all routes except /profile/*
+        source: '/((?!profile).*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 's-maxage=59, stale-while-revalidate=59, maxage=59, public'
+          }
+        ]
+      },
+      {
+        source: '/',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 's-maxage=59, stale-while-revalidate=59, maxage=59, public'
+          }
+        ]
+      }
+    ]
   },
   experimental: {
     scrollRestoration: true,

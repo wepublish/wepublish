@@ -692,12 +692,13 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         id: {type: new GraphQLNonNull(GraphQLID)},
         input: {type: new GraphQLNonNull(GraphQLArticleInput)}
       },
-      resolve: (root, {id, input}, {authenticate, prisma: {article}}) =>
+      resolve: (root, {id, input}, {authenticate, prisma: {article}, loaders}) =>
         updateArticle(
           id,
           {...input, blocks: input.blocks.map(mapBlockUnionMap)},
           authenticate,
-          article
+          article,
+          loaders.articles
         )
     },
 
@@ -751,8 +752,14 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         id: {type: new GraphQLNonNull(GraphQLID)},
         input: {type: new GraphQLNonNull(GraphQLPageInput)}
       },
-      resolve: (root, {id, input}, {authenticate, prisma: {page}}) =>
-        updatePage(id, {...input, blocks: input.blocks.map(mapBlockUnionMap)}, authenticate, page)
+      resolve: (root, {id, input}, {authenticate, prisma: {page}, loaders}) =>
+        updatePage(
+          id,
+          {...input, blocks: input.blocks.map(mapBlockUnionMap)},
+          authenticate,
+          page,
+          loaders.pages
+        )
     },
 
     deletePage: {
@@ -910,6 +917,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
         userID: {type: GraphQLID},
         guestUsername: {type: GraphQLString},
         guestUserImageID: {type: GraphQLID},
+        featured: {type: GraphQLBoolean},
         source: {type: GraphQLString},
         tagIds: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
         ratingOverrides: {
@@ -918,7 +926,17 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       },
       resolve: (
         root,
-        {id, revision, ratingOverrides, userID, guestUsername, guestUserImageID, source, tagIds},
+        {
+          id,
+          revision,
+          ratingOverrides,
+          userID,
+          guestUsername,
+          guestUserImageID,
+          featured,
+          source,
+          tagIds
+        },
         {authenticate, prisma: {comment, commentRatingSystemAnswer}}
       ) =>
         updateComment(
@@ -928,6 +946,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
           guestUsername,
           guestUserImageID,
           source,
+          featured,
           tagIds,
           ratingOverrides,
           authenticate,
@@ -1161,20 +1180,22 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       type: GraphQLTag,
       args: {
         tag: {type: GraphQLString},
-        type: {type: new GraphQLNonNull(GraphQLTagType)}
+        type: {type: new GraphQLNonNull(GraphQLTagType)},
+        main: {type: GraphQLBoolean}
       },
-      resolve: (root, {tag, type}, {authenticate, prisma}) =>
-        createTag(tag, type, authenticate, prisma.tag)
+      resolve: (root, {tag, type, main}, {authenticate, prisma}) =>
+        createTag(tag, type, main, authenticate, prisma.tag)
     },
 
     updateTag: {
       type: GraphQLTag,
       args: {
         id: {type: new GraphQLNonNull(GraphQLID)},
-        tag: {type: GraphQLString}
+        tag: {type: GraphQLString},
+        main: {type: GraphQLBoolean}
       },
-      resolve: (root, {id, tag}, {authenticate, prisma}) =>
-        updateTag(id, tag, authenticate, prisma.tag)
+      resolve: (root, {id, tag, main}, {authenticate, prisma}) =>
+        updateTag(id, tag, main, authenticate, prisma.tag)
     },
 
     deleteTag: {
@@ -1192,6 +1213,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       type: GraphQLEvent,
       args: {
         name: {type: new GraphQLNonNull(GraphQLString)},
+        lead: {type: GraphQLString},
         description: {type: GraphQLRichText},
         location: {type: GraphQLString},
         startsAt: {type: new GraphQLNonNull(GraphQLDateTime)},
@@ -1215,6 +1237,7 @@ export const GraphQLAdminMutation = new GraphQLObjectType<undefined, Context>({
       args: {
         id: {type: new GraphQLNonNull(GraphQLID)},
         name: {type: GraphQLString},
+        lead: {type: GraphQLString},
         description: {type: GraphQLRichText},
         status: {type: GraphQLEventStatus},
         location: {type: GraphQLString},

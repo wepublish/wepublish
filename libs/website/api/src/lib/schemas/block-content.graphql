@@ -165,6 +165,17 @@ fragment FullTeaser on Teaser {
 
     article {
       ...ArticleWithoutBlocks
+
+      blocks {
+        __typename
+
+        ... on PollBlock {
+          blockStyle
+          poll {
+            ...FullPoll
+          }
+        }
+      }
     }
   }
 
@@ -266,7 +277,11 @@ fragment FullBlock on Block {
   }
 
   ... on TeaserListBlock {
+    title
     blockStyle
+    filter {
+      tags
+    }
     teasers {
       ...FullTeaser
     }

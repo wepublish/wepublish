@@ -99,7 +99,8 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
           Head={Head}
           Script={Script}
           elements={{Link: NextWepublishLink}}
-          date={{format: dateFormatter}}>
+          date={{format: dateFormatter}}
+          meta={{siteTitle}}>
           <ThemeProvider theme={theme}>
             <CssBaseline />
 
@@ -146,12 +147,13 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
             </Spacer>
 
             <Script
-              src={publicRuntimeConfig.env.API_URL! + '/static/head.js'}
-              strategy="beforeInteractive"
-            />
-            <Script
-              src={publicRuntimeConfig.env.API_URL! + '/static/body.js'}
+              src={publicRuntimeConfig.env.API_URL! + '/scripts/head.js'}
               strategy="afterInteractive"
+            />
+
+            <Script
+              src={publicRuntimeConfig.env.API_URL! + '/scripts/body.js'}
+              strategy="lazyOnload"
             />
           </ThemeProvider>
         </WebsiteBuilderProvider>

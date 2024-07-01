@@ -21,6 +21,10 @@ exports[`Personal Data Form Container should render Default 1`] = `
               alt="DSC07717"
               class="css-nbsgpq-ImageWrapper-ImageUpload e1shv2yg0"
               loading="lazy"
+              sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -84,7 +88,7 @@ https://unsplash.it/200/100 200w"
                   fill="none"
                 />
                 <path
-                  d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 000-1.41l-2.34-2.34a.996.996 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+                  d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
                 />
               </svg>
               <span
@@ -597,7 +601,7 @@ exports[`Personal Data Form Container should render DeleteImage 1`] = `
 - First value
 + Second value
 
-@@ -573,10 +573,148 @@
+@@ -577,10 +577,148 @@
               </fieldset>
             </div>
           </div>
@@ -753,7 +757,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
 - First value
 + Second value
 
-@@ -110,11 +110,11 @@
+@@ -114,11 +114,11 @@
               autocomplete="firstname"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":rp:"
@@ -766,7 +770,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
               aria-hidden="true"
               class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
             >
-@@ -147,11 +147,11 @@
+@@ -151,11 +151,11 @@
               autocomplete="name"
               class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
               id=":rq:"
@@ -779,7 +783,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
               aria-hidden="true"
               class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
             >
-@@ -260,11 +260,11 @@
+@@ -264,11 +264,11 @@
                 autocomplete="address"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":rt:"
@@ -792,7 +796,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
               >
-@@ -297,11 +297,11 @@
+@@ -301,11 +301,11 @@
                 autocomplete="zip"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":ru:"
@@ -805,7 +809,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
               >
-@@ -334,11 +334,11 @@
+@@ -338,11 +338,11 @@
                 autocomplete="city"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":rv:"
@@ -818,7 +822,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
               >
-@@ -371,11 +371,11 @@
+@@ -375,11 +375,11 @@
                 autocomplete="country"
                 class="MuiInputBase-input MuiOutlinedInput-input css-1t8l2tu-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r10:"
@@ -831,7 +835,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
               >
-@@ -400,12 +400,12 @@
+@@ -404,12 +404,12 @@
           </p>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -846,7 +850,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
             >
               Passwort
             </label>
-@@ -417,11 +417,11 @@
+@@ -421,11 +421,11 @@
                 autocomplete="new-password"
                 class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r11:"
@@ -859,7 +863,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
                 class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1om5its-MuiInputAdornment-root"
               >
                 <button
-@@ -454,11 +454,11 @@
+@@ -458,11 +458,11 @@
               <fieldset
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
@@ -872,7 +876,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
                     Passwort
                   </span>
                 </legend>
-@@ -467,12 +467,12 @@
+@@ -471,12 +471,12 @@
           </div>
           <div
             class="MuiFormControl-root MuiFormControl-fullWidth MuiTextField-root css-wb57ya-MuiFormControl-root-MuiTextField-root"
@@ -887,7 +891,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
             >
               Passwort wiederholen
             </label>
-@@ -484,11 +484,11 @@
+@@ -488,11 +488,11 @@
                 autocomplete="new-password"
                 class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputAdornedEnd css-nxo287-MuiInputBase-input-MuiOutlinedInput-input"
                 id=":r12:"
@@ -900,7 +904,7 @@ exports[`Personal Data Form Container should render Filled 1`] = `
                 class="MuiInputAdornment-root MuiInputAdornment-positionEnd MuiInputAdornment-outlined MuiInputAdornment-sizeMedium css-1om5its-MuiInputAdornment-root"
               >
                 <button
-@@ -521,11 +521,11 @@
+@@ -525,11 +525,11 @@
               <fieldset
                 aria-hidden="true"
                 class="MuiOutlinedInput-notchedOutline css-1d3z3hw-MuiOutlinedInput-notchedOutline"
@@ -936,6 +940,10 @@ exports[`Personal Data Form Container should render WithClassName 1`] = `
               alt="DSC07717"
               class="css-nbsgpq-ImageWrapper-ImageUpload e1shv2yg0"
               loading="lazy"
+              sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -999,7 +1007,7 @@ https://unsplash.it/200/100 200w"
                   fill="none"
                 />
                 <path
-                  d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 000-1.41l-2.34-2.34a.996.996 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+                  d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
                 />
               </svg>
               <span
@@ -1528,6 +1536,10 @@ exports[`Personal Data Form Container should render WithEmotion 1`] = `
               alt="DSC07717"
               class="css-nbsgpq-ImageWrapper-ImageUpload e1shv2yg0"
               loading="lazy"
+              sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
               srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -1591,7 +1603,7 @@ https://unsplash.it/200/100 200w"
                   fill="none"
                 />
                 <path
-                  d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 000-1.41l-2.34-2.34a.996.996 0 00-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
+                  d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a.996.996 0 0 0 0-1.41l-2.34-2.34a.996.996 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"
                 />
               </svg>
               <span

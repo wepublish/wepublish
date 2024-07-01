@@ -6,12 +6,13 @@ export const StarRatingWrapper = styled('div')`
   grid-template-columns: auto max-content;
   align-items: center;
   justify-content: end;
-  gap: ${({theme}) => theme.spacing(2)};
+  gap: ${({theme}) => theme.spacing(1)};
 `
 
 export const StarRatingName = styled('div')`
   font-size: 0.75em;
   font-weight: ${({theme}) => theme.typography.fontWeightBold};
+  text-transform: uppercase;
 `
 
 export type StarRatingProps = {

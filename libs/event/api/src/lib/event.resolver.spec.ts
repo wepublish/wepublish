@@ -15,6 +15,7 @@ const mockEvent = {
   id: '1234',
   createdAt: new Date('2023-01-01'),
   description: [],
+  lead: '',
   startsAt: new Date('2023-01-01'),
   endsAt: new Date('2023-01-01'),
   imageId: '123',

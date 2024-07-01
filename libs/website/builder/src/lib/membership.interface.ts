@@ -99,4 +99,5 @@ export type BuilderSubscribeProps<
     firstName: string
   }>
   cancelSubscriptionId?: string
+  extraMoneyOffset?: number
 } & Pick<BuilderRegistrationFormProps<T>, 'schema' | 'fields'>

@@ -3,6 +3,7 @@ import {
   ImageRefFragment,
   MutationCreateEventArgs,
   MutationUpdateEventArgs,
+  Tag,
   TagType
 } from '@wepublish/editor/api'
 import {
@@ -12,7 +13,8 @@ import {
   ImageSelectPanel,
   RichTextBlock,
   RichTextBlockValue,
-  SelectTags
+  SelectTags,
+  Textarea
 } from '@wepublish/ui/editor'
 import React, {useState} from 'react'
 import {useTranslation} from 'react-i18next'
@@ -20,6 +22,7 @@ import {Drawer, Form, Panel, SelectPicker} from 'rsuite'
 
 type EventFormData = (MutationCreateEventArgs | MutationUpdateEventArgs) & {
   image?: ImageRefFragment | null
+  tags?: Pick<Tag, 'id' | 'tag'>[]
 }
 
 type EventFormProps = {
@@ -95,6 +98,17 @@ export const EventForm = ({event, onChange, create}: EventFormProps) => {
             </Form.Group>
           </div>
 
+          <Form.Group controlId="lead">
+            <Form.ControlLabel>{t('event.form.lead')}</Form.ControlLabel>
+            <Form.Control
+              name="lead"
+              rows={3}
+              value={event.lead ?? ''}
+              onChange={(lead: string) => onChange({lead})}
+              accepter={Textarea}
+            />
+          </Form.Group>
+
           <Form.Group controlId="description">
             <Form.ControlLabel>{t('event.form.description')}</Form.ControlLabel>
             <Panel bordered>
@@ -135,6 +149,7 @@ export const EventForm = ({event, onChange, create}: EventFormProps) => {
             <Form.ControlLabel>{t('event.form.tags')}</Form.ControlLabel>
             <Form.Control
               name="tagIds"
+              defaultTags={event.tags ?? []}
               selectedTags={event.tagIds ?? []}
               setSelectedTags={(tagIds: string[]) => onChange({tagIds})}
               tagType={TagType.Event}

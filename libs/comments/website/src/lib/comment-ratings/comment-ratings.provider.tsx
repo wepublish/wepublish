@@ -4,7 +4,10 @@ import {PropsWithChildren, useMemo} from 'react'
 import {CommentRatingContext} from './comment-ratings.context'
 
 const getAnonymousRate = (commentId: string, answerId: string): number | null => {
-  const voteValue = localStorage.getItem(`comment-rate:${commentId}:${answerId}`)
+  const voteValue =
+    typeof localStorage !== 'undefined'
+      ? localStorage.getItem(`comment-rate:${commentId}:${answerId}`)
+      : null
 
   return voteValue ? +voteValue : null
 }

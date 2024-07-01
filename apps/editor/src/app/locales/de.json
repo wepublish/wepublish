@@ -47,7 +47,6 @@
         "contentUrl": "Inhalt URL",
         "createdAt": "{{createdAt, ccc PP p}}",
         "dateExplanationPopOver": "Dies kann verwendet werden, um auf Artikel zu verweisen, die zu einem späteren Zeitpunkt veröffentlicht werden sollen. Dies ist z. B. hilfreich, wenn Beiträge in sozialen Medien für den nächsten Morgen im Voraus geplant werden.",
-        "default": "Default",
         "displayOptions": "Anzeigeoptionen",
         "dontChangeSlug": "Slug nach dem Publizieren nicht mehr ändern.",
         "draft": "Entwurf",
@@ -69,7 +68,6 @@
         "key": "Key",
         "lead": "Lead",
         "leadHelpBlock": "Verwende einen SEO-optimierten Lead",
-        "light": "Light",
         "loading": "Laden ...",
         "loadMore": "Mehr laden",
         "noDataToDisplay": "Keine Daten zum Anzeigen",
@@ -108,10 +106,8 @@
         "statePending": "Status: Geplant",
         "statePublished": "Status: Publiziert",
         "status": "{{stateJoin}}",
-        "style": "Style",
         "tags": "Tags",
         "teaserStyle": "Style: {{label}}",
-        "text": "Text",
         "title": "Titel",
         "titleHelpBlock": "Verwende einen SEO-optimierten Titel",
         "totalCharCount": "Anzahl Zeichen {{totalCharCount}}",
@@ -363,6 +359,7 @@
       "modalTitle": "Wirklich löschen?"
     },
     "commentEditView": {
+      "featured": "Hervorgehoben",
       "actions": "Aktionen",
       "comment": "Text Kommentar",
       "commentContextHeader": "Kommentar-Historie",
@@ -547,6 +544,7 @@
         "image": "Bild",
         "location": "Veranstaltungsort",
         "name": "Name",
+        "lead": "Lead",
         "postponed": "Verschoben",
         "rescheduled": "Verlegt",
         "scheduled": "Geplant",
@@ -635,14 +633,6 @@
     },
     "linkPageBreakEditPanel": {
       "close": "Schliessen",
-      "layout": {
-        "center": "Zentriert",
-        "default": "Standardlayout",
-        "image-left": "Bild links",
-        "image-right": "Bild rechts",
-        "label": "Layouts",
-        "right": "Rechtsbündig"
-      },
       "link": {
         "buttonLabel": "CTA-Button-Label",
         "hideToggleLabel": "CTA-Button ausblenden",
@@ -651,19 +641,6 @@
         "targetLabelBlank": "Neuer Browser-Tab",
         "targetLabelSelf": "Dieser Browser-Tab",
         "urlLabel": "CTA-URL"
-      },
-      "style": {
-        "dark": "Dark Style",
-        "default": "Standardstyle",
-        "image": "Bildhintergrund",
-        "label": "Styles"
-      },
-      "template": {
-        "donation": "Spende",
-        "label": "Vorlagen",
-        "membership": "Mitgliedschaft",
-        "none": "Keine",
-        "subscription": "Abonnement"
       },
       "title": "Einstellungen"
     },
@@ -739,6 +716,8 @@
       "commentRating": "Bewertungssystem",
       "comments": "Kommentare",
       "commentTags": "Tags",
+      "articleTags": "Tags",
+      "pageTags": "Tags",
       "consents": "Konsens",
       "dashboard": "Dashboard",
       "events": "Events",
@@ -894,7 +873,8 @@
       "editTitle": "Zahlungsmethode bearbeiten",
       "name": "Name",
       "slug": "Slug",
-      "title": "Zahlungsmethoden"
+      "title": "Zahlungsmethoden",
+      "selectImage": "Vorschau Bild auswählen"
     },
     "peerArticles": {
       "articleImage": "Teaserbild",
@@ -1003,7 +983,6 @@
       "addAndSaveNewAnswer": "Antwort hinzufügen",
       "answerPanelHeader": "Mögliche Antworten",
       "closesAtLabel": "Schliesst am",
-      "defaultAnswer": "Standardantwort",
       "infoText": "Info-Text",
       "loadingTitle": "Lade Umfrage...",
       "opensAtLabel": "Startet am",
@@ -1124,7 +1103,8 @@
         "areYouSureConfirmation": "Tag löschen",
         "createTag": "Neuen Tag",
         "placeholder": "Name des Tags",
-        "title": "Tags"
+        "title": "Tags",
+        "markAsMain": "Als Haupt-Tag verwenden"
       }
     },
     "tokenList": {
@@ -1318,7 +1298,8 @@
       "trialSubscriptionConfigured": "Dieses Abo ist als Probeabo konfiguriert.",
       "nonExtendableNotCompatibleWithAutoRenew": "Ein automatisch erneuerndes Abo muss verlängerbar sein. Ändere einen dieser Parameter.",
       "configureAsTrialSubscription": "Als Probeabo konfigurieren",
-      "subscriptionTrialNotPossible": "Das Abo kann nicht als Probeabo konfiguriert werden. Ändere hierzu die Einstellungen des Abo-Plans."
+      "subscriptionTrialNotPossible": "Das Abo kann nicht als Probeabo konfiguriert werden. Ändere hierzu die Einstellungen des Abo-Plans.",
+      "extendableWasChanged": "Die Option «Verlängerbar» wurde entsprechend dem Abo-Plan angepasst."
     },
     "subscriptionListFilter": {
       "extendable": "Verlängerbar"

@@ -49,6 +49,7 @@ fragment CommentWithoutNesting on Comment {
   authorType
   rejectionReason
   state
+  url
 
   tags {
     ...FullTag
@@ -71,6 +72,8 @@ fragment CommentWithoutNesting on Comment {
   overriddenRatings {
     ...FullOverriddenRating
   }
+
+  featured
 
   userRatings {
     ...FullCommentRating

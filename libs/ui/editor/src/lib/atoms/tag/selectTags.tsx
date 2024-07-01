@@ -1,37 +1,48 @@
 import {ApolloError} from '@apollo/client'
 import styled from '@emotion/styled'
-import {SortOrder, TagSort, TagType, useTagListQuery} from '@wepublish/editor/api'
+import {SortOrder, Tag, TagSort, TagType, useTagListQuery} from '@wepublish/editor/api'
 import {useMemo, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Divider as RDivider, Message, Pagination as RPagination, TagPicker, toaster} from 'rsuite'
 
 import {DEFAULT_MAX_TABLE_PAGES} from '../../utility'
+import {ItemDataType} from 'rsuite/esm/@types/common'
 
 const Divider = styled(RDivider)`
   margin: '12px 0';
 `
 
 const Pagination = styled(RPagination)`
-  margin: '0 12px 12px';
+  margin: 0 12px 12px;
 `
 
 interface SelectTagsProps {
   className?: string
+  disabled?: boolean
   name?: string
   tagType: TagType
+  defaultTags: Pick<Tag, 'id' | 'tag'>[]
   selectedTags?: string[] | null
   setSelectedTags(tags: string[]): void
 }
 
 export function SelectTags({
   className,
+  disabled,
   name,
+  defaultTags,
   tagType,
   selectedTags,
   setSelectedTags
 }: SelectTagsProps) {
   const {t} = useTranslation()
   const [page, setPage] = useState(1)
+  const [cacheData, setCacheData] = useState(
+    defaultTags.map(tag => ({
+      label: tag.tag || t('comments.edit.unnamedTag'),
+      value: tag.id
+    })) as ItemDataType<string | number>[]
+  )
 
   /**
    * Error handling
@@ -48,7 +59,7 @@ export function SelectTags({
   /**
    * Loading tags
    */
-  const {data: tagsData} = useTagListQuery({
+  const {data: tagsData, refetch} = useTagListQuery({
     variables: {
       filter: {
         type: tagType
@@ -79,13 +90,30 @@ export function SelectTags({
     <TagPicker
       block
       virtualized
+      disabled={disabled}
       className={className}
       name={name}
       value={selectedTags}
       data={availableTags}
-      onChange={(value: string[]) => {
-        const tagValues = availableTags.map(({value}) => value)
-        setSelectedTags(value.filter(value => tagValues.includes(value)))
+      cacheData={cacheData}
+      onSearch={word => {
+        refetch({
+          filter: {
+            tag: word,
+            type: tagType
+          }
+        })
+      }}
+      onSelect={(value, item, event) => {
+        setCacheData([...cacheData, item])
+        refetch({
+          filter: {
+            type: tagType
+          }
+        })
+      }}
+      onChange={(value, item) => {
+        setSelectedTags(value)
       }}
       renderMenu={menu => {
         return (

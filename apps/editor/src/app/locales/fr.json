@@ -48,7 +48,6 @@
         "contentUrl": "URL du contenu",
         "createdAt": "{{createdAt, ccc PP p}}",
         "dateExplanationPopOver": "Ceci peut être utilisé pour faire référence à des articles qui seront publiés ultérieurement. Par exemple, lorsque des posts pour les réseaux sociaux sont programmés pour êtres publiés le lendemain matin.",
-        "default": "Défaut",
         "displayOptions": "Options d'affichage",
         "dontChangeSlug": "Veuillez ne pas changer le slug une fois l'article publié.",
         "draft": "Brouillon",
@@ -71,7 +70,6 @@
         "key": "Clé",
         "lead": "Lead",
         "leadHelpBlock": "Veuillez utiliser un lead optimisé pour le référencement",
-        "light": "Light",
         "loading": "Chargement ...",
         "loadMore": "Charger plus",
         "noDataToDisplay": "Pas de données à afficher",
@@ -113,10 +111,8 @@
         "statePending": "Statut : En attente",
         "statePublished": "Statut : Publié",
         "status": "{{stateJoin}}",
-        "style": "Style",
         "tags": "Tags",
         "teaserStyle": "Style: {{label}}",
-        "text": "Texte",
         "title": "Titre",
         "titleHelpBlock": "Veuillez utiliser un titre optimisé pour le référencement seo",
         "totalCharCount": "Le nombre total de caractères est de {{totalCharCount}}",
@@ -369,6 +365,7 @@
       "modalTitle": "Vraiment supprimer?"
     },
     "commentEditView": {
+      "featured": "En vedette",
       "actions": "Actions",
       "comment": "Texte Commentaire",
       "commentContextHeader": "Histoire des commentaires",
@@ -553,6 +550,7 @@
         "image": "Image",
         "location": "Location",
         "name": "Name",
+        "lead": "Lead",
         "postponed": "Postponed",
         "rescheduled": "Rescheduled",
         "scheduled": "Scheduled",
@@ -641,14 +639,6 @@
     },
     "linkPageBreakEditPanel": {
       "close": "Fermer",
-      "layout": {
-        "center": "Centré",
-        "default": "Mise en page par défaut",
-        "image-left": "Image à gauche",
-        "image-right": "Image à droite",
-        "label": "Mise en page",
-        "right": "Aligné à droite"
-      },
       "link": {
         "buttonLabel": "Étiquette du bouton CTA",
         "hideToggleLabel": "Masquer le bouton CTA",
@@ -657,19 +647,6 @@
         "targetLabelBlank": "nouvel onglet de navigateur",
         "targetLabelSelf": "cet onglet du navigateur",
         "urlLabel": "URL CTA"
-      },
-      "style": {
-        "dark": "Style sombre",
-        "default": "Style par défaut",
-        "image": "Fond de l'image",
-        "label": "Styles"
-      },
-      "template": {
-        "donation": "Donation",
-        "label": "Modèles",
-        "membership": "Adhésion",
-        "none": "Aucun",
-        "subscription": "Abonnement"
       },
       "title": "Paramètres"
     },
@@ -713,6 +690,8 @@
       "commentRating": "Rating System",
       "comments": "Commentaires",
       "commentTags": "Tags",
+      "articleTags": "Tags",
+      "pageTags": "Tags",
       "consents": "Consentement",
       "dashboard": "Dashboard",
       "events": "Events",
@@ -868,7 +847,8 @@
       "editTitle": "Modifier la méthode de paiement",
       "name": "Nom",
       "slug": "Slug",
-      "title": "Méthodes de paiement"
+      "title": "Méthodes de paiement",
+      "selectImage": "Select preview image"
     },
     "peerArticles": {
       "articleImage": "Image de l'article",
@@ -957,7 +937,6 @@
       "addAndSaveNewAnswer": "Ajouter une réponse",
       "answerPanelHeader": "Réponses possibles",
       "closesAtLabel": "Clôture à",
-      "defaultAnswer": "Réponse standard",
       "infoText": "Texte d'information",
       "loadingTitle": "Chargement du sondage...",
       "opensAtLabel": "Commence le",
@@ -1078,7 +1057,8 @@
         "areYouSureConfirmation": "Delete tag",
         "createTag": "New Tag",
         "placeholder": "Name of tag",
-        "title": "Tags"
+        "title": "Tags",
+        "markAsMain": "Use as main tag"
       }
     },
     "tokenList": {
@@ -1271,7 +1251,8 @@
       "trialSubscriptionConfigured": "Cet abonnement est configuré comme un abonnement d'essai.",
       "nonExtendableNotCompatibleWithAutoRenew": "Un abonnement à renouvellement automatique doit pouvoir être prolongé. Modifie l'un de ces paramètres.",
       "configureAsTrialSubscription": "Configurer comme abonnement d'essai",
-      "subscriptionTrialNotPossible": "L'abonnement ne peut pas être configuré comme abonnement d'essai. Pour ce faire, modifie les paramètres du plan d'abonnement."
+      "subscriptionTrialNotPossible": "L'abonnement ne peut pas être configuré comme abonnement d'essai. Pour ce faire, modifie les paramètres du plan d'abonnement.",
+      "extendableWasChanged": "L'option «Extensible» a été adaptée en fonction du plan d'abonnement."
     },
     "subscriptionListFilter": {
       "extendable": "Extensible"

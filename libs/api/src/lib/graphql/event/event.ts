@@ -36,6 +36,7 @@ export const GraphQLEvent = new GraphQLObjectType<Event, Context>({
     id: {type: new GraphQLNonNull(GraphQLID)},
 
     name: {type: new GraphQLNonNull(GraphQLString)},
+    lead: {type: GraphQLString},
     status: {type: new GraphQLNonNull(GraphQLEventStatus)},
     description: {type: GraphQLRichText},
 
@@ -47,7 +48,7 @@ export const GraphQLEvent = new GraphQLObjectType<Event, Context>({
     externalSourceName: {type: GraphQLString},
 
     tags: {
-      type: new GraphQLList(new GraphQLNonNull(GraphQLTag)),
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLTag))),
       resolve: createProxyingResolver(async ({id}, _, {prisma: {tag}}) => {
         const tags = await tag.findMany({
           where: {

@@ -121,10 +121,23 @@ model Article {
   hidden Boolean @default(false)
 
   navigations NavigationLink[]
+  tags        TaggedArticles[]
 
   @@index([createdAt])
   @@index([modifiedAt])
   @@map("articles")
+}
+
+model TaggedArticles {
+  article    Article  @relation(fields: [articleId], references: [id], onDelete: Cascade)
+  articleId  String
+  tag        Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  tagId      String
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  @@id([articleId, tagId])
+  @@map("articles.tagged-articles")
 }
 
 model AuthorsLinks {
@@ -216,8 +229,9 @@ model Image {
   pageRevisionSocialMediaImages PageRevision[] @relation("pageRevisionSocialMediaImage")
   pageRevisionImages            PageRevision[] @relation("pageRevisionImage")
 
-  users  User[]
-  events Event[]
+  users          User[]
+  events         Event[]
+  paymentMethods PaymentMethod[]
 
   @@index([createdAt])
   @@index([modifiedAt])
@@ -291,6 +305,7 @@ model Comment {
 
   ratings           CommentRating[]
   overriddenRatings CommentRatingOverride[]
+  featured          Boolean                 @default(false)
 
   @@index([createdAt])
   @@map("comments")
@@ -482,10 +497,8 @@ model MemberPlan {
   active                  Boolean
   amountPerMonthMin       Float
   availablePaymentMethods AvailablePaymentMethod[]
-  extendable              Boolean @default(true)
+  extendable              Boolean                  @default(true)
   maxCount                Int?
-
-
 
   imageID String?
   image   Image?  @relation(fields: [imageID], references: [id])
@@ -580,10 +593,23 @@ model Page {
   draft   PageRevision? @relation("draftPageRevision", fields: [draftId], references: [id], onDelete: SetNull)
 
   navigations NavigationLink[]
+  tags        TaggedPages[]
 
   @@index([createdAt])
   @@index([modifiedAt])
   @@map("pages")
+}
+
+model TaggedPages {
+  page       Page     @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  pageId     String
+  tag        Tag      @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  tagId      String
+  createdAt  DateTime @default(now())
+  modifiedAt DateTime @updatedAt
+
+  @@id([pageId, tagId])
+  @@map("pages.tagged-pages")
 }
 
 model PaymentMethod {
@@ -595,6 +621,9 @@ model PaymentMethod {
   description       String
   paymentProviderID String
   active            Boolean
+
+  image   Image?  @relation(fields: [imageId], references: [id])
+  imageId String?
 
   Subscription      Subscription[]
   Payment           Payment[]
@@ -741,7 +770,7 @@ model Subscription {
   periods            SubscriptionPeriod[]
   properties         MetadataProperty[]
   deactivation       SubscriptionDeactivation?
-  extendable         Boolean @default(true)
+  extendable         Boolean                   @default(true)
 
   paymentMethodID String
   paymentMethod   PaymentMethod @relation(fields: [paymentMethodID], references: [id])
@@ -873,6 +902,8 @@ enum TagType {
   Comment @map("comment")
   Event   @map("event")
   Author  @map("author")
+  Article @map("article")
+  Page    @map("page")
 }
 
 model Tag {
@@ -882,10 +913,13 @@ model Tag {
 
   type TagType
   tag  String?
+  main Boolean @default(false)
 
   comments TaggedComments[]
   events   TaggedEvents[]
   authors  TaggedAuthors[]
+  articles TaggedArticles[]
+  pages    TaggedPages[]
 
   @@unique([type, tag])
   @@map("tags")
@@ -992,6 +1026,7 @@ model Event {
   modifiedAt DateTime @updatedAt
 
   name        String
+  lead        String?
   description Json[]
   status      EventStatus @default(Scheduled)
 

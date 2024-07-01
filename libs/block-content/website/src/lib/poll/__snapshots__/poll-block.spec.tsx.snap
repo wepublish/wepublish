@@ -20,7 +20,7 @@ exports[`Poll Block should render AlreadyVoted 1`] = `
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span
@@ -36,7 +36,7 @@ exports[`Poll Block should render AlreadyVoted 1`] = `
       </div>
     </div>
     <div
-      class="css-bq6dsl-PollBlockVoting ecm33wf2"
+      class="css-1e4oizq-PollBlockVoting ecm33wf2"
     >
       <button
         class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-kctgaw-MuiButtonBase-root-MuiButton-root"
@@ -93,7 +93,7 @@ exports[`Poll Block should render AnonymousAlreadyVoted 1`] = `
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span
@@ -109,13 +109,13 @@ exports[`Poll Block should render AnonymousAlreadyVoted 1`] = `
       </div>
     </div>
     <div
-      class="css-1pntsw6-PollBlockVoteResultList ecm33wf1"
+      class="css-h8emd-PollBlockVoteResultList ecm33wf1"
     >
       <div
-        class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
+        class="css-1gble97-PollBlockResultWrapper e1v5g0xr6"
       >
         <div
-          class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
+          class="css-63kw5t-PollBlockResultInfo e1v5g0xr5"
         >
           <div
             class="css-115xnt3-PollBlockResultName e1v5g0xr4"
@@ -142,10 +142,10 @@ exports[`Poll Block should render AnonymousAlreadyVoted 1`] = `
         </div>
       </div>
       <div
-        class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
+        class="css-1gble97-PollBlockResultWrapper e1v5g0xr6"
       >
         <div
-          class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
+          class="css-63kw5t-PollBlockResultInfo e1v5g0xr5"
         >
           <div
             class="css-115xnt3-PollBlockResultName e1v5g0xr4"
@@ -162,7 +162,7 @@ exports[`Poll Block should render AnonymousAlreadyVoted 1`] = `
           class="css-56q0p9-PollBlockVoteBar e1v5g0xr2"
         >
           <div
-            class="css-dzkrto-PollBlockVoteBarFill e1v5g0xr1"
+            class="css-te9pes-PollBlockVoteBarFill e1v5g0xr1"
           />
           <div
             class="css-1kbfvnx-PollBlockVoteBarText e1v5g0xr0"
@@ -206,7 +206,7 @@ exports[`Poll Block should render AnonymousVoting 1`] = `
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span
@@ -222,7 +222,7 @@ exports[`Poll Block should render AnonymousVoting 1`] = `
       </div>
     </div>
     <div
-      class="css-bq6dsl-PollBlockVoting ecm33wf2"
+      class="css-1e4oizq-PollBlockVoting ecm33wf2"
     >
       <button
         class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-kctgaw-MuiButtonBase-root-MuiButton-root"
@@ -270,18 +270,18 @@ exports[`Poll Block should render AnonymousVotingPlay 1`] = `
         </div>
       </div>
       <div
--       class="css-bq6dsl-PollBlockVoting ecm33wf2"
-+       class="css-1pntsw6-PollBlockVoteResultList ecm33wf1"
+-       class="css-1e4oizq-PollBlockVoting ecm33wf2"
++       class="css-h8emd-PollBlockVoteResultList ecm33wf1"
       >
 -       <button
 -         class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-kctgaw-MuiButtonBase-root-MuiButton-root"
 -         tabindex="0"
 -         type="button"
 +       <div
-+         class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
++         class="css-1gble97-PollBlockResultWrapper e1v5g0xr6"
 +       >
 +         <div
-+           class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
++           class="css-63kw5t-PollBlockResultInfo e1v5g0xr5"
 +         >
 +           <div
 +             class="css-115xnt3-PollBlockResultName e1v5g0xr4"
@@ -300,7 +300,7 @@ exports[`Poll Block should render AnonymousVotingPlay 1`] = `
 +           class="css-56q0p9-PollBlockVoteBar e1v5g0xr2"
 +         >
 +           <div
-+             class="css-193h4ty-PollBlockVoteBarFill e1v5g0xr1"
++             class="css-6pz6b3-PollBlockVoteBarFill e1v5g0xr1"
             />
 -       </button>
 -       <button
@@ -315,10 +315,10 @@ exports[`Poll Block should render AnonymousVotingPlay 1`] = `
 +         </div>
 +       </div>
 +       <div
-+         class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
++         class="css-1gble97-PollBlockResultWrapper e1v5g0xr6"
 +       >
 +         <div
-+           class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
++           class="css-63kw5t-PollBlockResultInfo e1v5g0xr5"
           >
 +           <div
 +             class="css-115xnt3-PollBlockResultName e1v5g0xr4"
@@ -380,7 +380,7 @@ exports[`Poll Block should render Default 1`] = `
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span
@@ -396,13 +396,13 @@ exports[`Poll Block should render Default 1`] = `
       </div>
     </div>
     <div
-      class="css-1pntsw6-PollBlockVoteResultList ecm33wf1"
+      class="css-h8emd-PollBlockVoteResultList ecm33wf1"
     >
       <div
-        class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
+        class="css-1gble97-PollBlockResultWrapper e1v5g0xr6"
       >
         <div
-          class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
+          class="css-63kw5t-PollBlockResultInfo e1v5g0xr5"
         >
           <div
             class="css-115xnt3-PollBlockResultName e1v5g0xr4"
@@ -419,7 +419,7 @@ exports[`Poll Block should render Default 1`] = `
           class="css-56q0p9-PollBlockVoteBar e1v5g0xr2"
         >
           <div
-            class="css-1l1sayy-PollBlockVoteBarFill e1v5g0xr1"
+            class="css-1pyc8ex-PollBlockVoteBarFill e1v5g0xr1"
           />
           <div
             class="css-1kbfvnx-PollBlockVoteBarText e1v5g0xr0"
@@ -429,10 +429,10 @@ exports[`Poll Block should render Default 1`] = `
         </div>
       </div>
       <div
-        class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
+        class="css-1gble97-PollBlockResultWrapper e1v5g0xr6"
       >
         <div
-          class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
+          class="css-63kw5t-PollBlockResultInfo e1v5g0xr5"
         >
           <div
             class="css-115xnt3-PollBlockResultName e1v5g0xr4"
@@ -493,7 +493,7 @@ exports[`Poll Block should render Voting 1`] = `
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span
@@ -509,7 +509,7 @@ exports[`Poll Block should render Voting 1`] = `
       </div>
     </div>
     <div
-      class="css-bq6dsl-PollBlockVoting ecm33wf2"
+      class="css-1e4oizq-PollBlockVoting ecm33wf2"
     >
       <button
         class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-kctgaw-MuiButtonBase-root-MuiButton-root"
@@ -566,7 +566,7 @@ exports[`Poll Block should render VotingClosed 1`] = `
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span
@@ -582,13 +582,13 @@ exports[`Poll Block should render VotingClosed 1`] = `
       </div>
     </div>
     <div
-      class="css-1pntsw6-PollBlockVoteResultList ecm33wf1"
+      class="css-h8emd-PollBlockVoteResultList ecm33wf1"
     >
       <div
-        class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
+        class="css-1gble97-PollBlockResultWrapper e1v5g0xr6"
       >
         <div
-          class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
+          class="css-63kw5t-PollBlockResultInfo e1v5g0xr5"
         >
           <div
             class="css-115xnt3-PollBlockResultName e1v5g0xr4"
@@ -605,7 +605,7 @@ exports[`Poll Block should render VotingClosed 1`] = `
           class="css-56q0p9-PollBlockVoteBar e1v5g0xr2"
         >
           <div
-            class="css-1l1sayy-PollBlockVoteBarFill e1v5g0xr1"
+            class="css-1pyc8ex-PollBlockVoteBarFill e1v5g0xr1"
           />
           <div
             class="css-1kbfvnx-PollBlockVoteBarText e1v5g0xr0"
@@ -615,10 +615,10 @@ exports[`Poll Block should render VotingClosed 1`] = `
         </div>
       </div>
       <div
-        class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
+        class="css-1gble97-PollBlockResultWrapper e1v5g0xr6"
       >
         <div
-          class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
+          class="css-63kw5t-PollBlockResultInfo e1v5g0xr5"
         >
           <div
             class="css-115xnt3-PollBlockResultName e1v5g0xr4"
@@ -665,18 +665,18 @@ exports[`Poll Block should render VotingPlay 1`] = `
         </div>
       </div>
       <div
--       class="css-bq6dsl-PollBlockVoting ecm33wf2"
-+       class="css-1pntsw6-PollBlockVoteResultList ecm33wf1"
+-       class="css-1e4oizq-PollBlockVoting ecm33wf2"
++       class="css-h8emd-PollBlockVoteResultList ecm33wf1"
       >
 -       <button
 -         class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-kctgaw-MuiButtonBase-root-MuiButton-root"
 -         tabindex="0"
 -         type="button"
 +       <div
-+         class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
++         class="css-1gble97-PollBlockResultWrapper e1v5g0xr6"
 +       >
 +         <div
-+           class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
++           class="css-63kw5t-PollBlockResultInfo e1v5g0xr5"
 +         >
 +           <div
 +             class="css-115xnt3-PollBlockResultName e1v5g0xr4"
@@ -695,7 +695,7 @@ exports[`Poll Block should render VotingPlay 1`] = `
 +           class="css-56q0p9-PollBlockVoteBar e1v5g0xr2"
 +         >
 +           <div
-+             class="css-193h4ty-PollBlockVoteBarFill e1v5g0xr1"
++             class="css-6pz6b3-PollBlockVoteBarFill e1v5g0xr1"
             />
 -       </button>
 -       <button
@@ -710,10 +710,10 @@ exports[`Poll Block should render VotingPlay 1`] = `
 +         </div>
 +       </div>
 +       <div
-+         class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
++         class="css-1gble97-PollBlockResultWrapper e1v5g0xr6"
 +       >
 +         <div
-+           class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
++           class="css-63kw5t-PollBlockResultInfo e1v5g0xr5"
           >
 +           <div
 +             class="css-115xnt3-PollBlockResultName e1v5g0xr4"
@@ -777,7 +777,7 @@ exports[`Poll Block should render WithClassName 1`] = `
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span
@@ -793,13 +793,13 @@ exports[`Poll Block should render WithClassName 1`] = `
       </div>
     </div>
     <div
-      class="css-1pntsw6-PollBlockVoteResultList ecm33wf1"
+      class="css-h8emd-PollBlockVoteResultList ecm33wf1"
     >
       <div
-        class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
+        class="css-1gble97-PollBlockResultWrapper e1v5g0xr6"
       >
         <div
-          class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
+          class="css-63kw5t-PollBlockResultInfo e1v5g0xr5"
         >
           <div
             class="css-115xnt3-PollBlockResultName e1v5g0xr4"
@@ -816,7 +816,7 @@ exports[`Poll Block should render WithClassName 1`] = `
           class="css-56q0p9-PollBlockVoteBar e1v5g0xr2"
         >
           <div
-            class="css-1l1sayy-PollBlockVoteBarFill e1v5g0xr1"
+            class="css-1pyc8ex-PollBlockVoteBarFill e1v5g0xr1"
           />
           <div
             class="css-1kbfvnx-PollBlockVoteBarText e1v5g0xr0"
@@ -826,10 +826,10 @@ exports[`Poll Block should render WithClassName 1`] = `
         </div>
       </div>
       <div
-        class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
+        class="css-1gble97-PollBlockResultWrapper e1v5g0xr6"
       >
         <div
-          class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
+          class="css-63kw5t-PollBlockResultInfo e1v5g0xr5"
         >
           <div
             class="css-115xnt3-PollBlockResultName e1v5g0xr4"
@@ -890,7 +890,7 @@ exports[`Poll Block should render WithEmotion 1`] = `
         style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-asp1ky-MuiTypography-root-paragraphStyles"
+          class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
           data-slate-node="element"
         >
           <span
@@ -906,13 +906,13 @@ exports[`Poll Block should render WithEmotion 1`] = `
       </div>
     </div>
     <div
-      class="css-1pntsw6-PollBlockVoteResultList ecm33wf1"
+      class="css-h8emd-PollBlockVoteResultList ecm33wf1"
     >
       <div
-        class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
+        class="css-1gble97-PollBlockResultWrapper e1v5g0xr6"
       >
         <div
-          class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
+          class="css-63kw5t-PollBlockResultInfo e1v5g0xr5"
         >
           <div
             class="css-115xnt3-PollBlockResultName e1v5g0xr4"
@@ -929,7 +929,7 @@ exports[`Poll Block should render WithEmotion 1`] = `
           class="css-56q0p9-PollBlockVoteBar e1v5g0xr2"
         >
           <div
-            class="css-1l1sayy-PollBlockVoteBarFill e1v5g0xr1"
+            class="css-1pyc8ex-PollBlockVoteBarFill e1v5g0xr1"
           />
           <div
             class="css-1kbfvnx-PollBlockVoteBarText e1v5g0xr0"
@@ -939,10 +939,10 @@ exports[`Poll Block should render WithEmotion 1`] = `
         </div>
       </div>
       <div
-        class="css-1ql3tva-PollBlockResultWrapper e1v5g0xr6"
+        class="css-1gble97-PollBlockResultWrapper e1v5g0xr6"
       >
         <div
-          class="css-157cgma-PollBlockResultInfo e1v5g0xr5"
+          class="css-63kw5t-PollBlockResultInfo e1v5g0xr5"
         >
           <div
             class="css-115xnt3-PollBlockResultName e1v5g0xr4"
@@ -1044,7 +1044,7 @@ exports[`Poll Block should render WithError 1`] = `
 +       </div>
 +     </div>
 +     <div
-        class="css-bq6dsl-PollBlockVoting ecm33wf2"
+        class="css-1e4oizq-PollBlockVoting ecm33wf2"
       >
         <button
           class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeMedium MuiButton-outlinedSizeMedium css-kctgaw-MuiButtonBase-root-MuiButton-root"

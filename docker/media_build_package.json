@@ -1,0 +1,11 @@
+{
+  "name": "media",
+  "pkg": {
+    "assets": [],
+    "targets": [ "node18-linux" ]
+  },
+  "bin": {
+    "main": "dist/apps/media/main.js"
+  }
+}
+

@@ -109,7 +109,7 @@ beforeAll(async () => {
       slug: generateRandomString(),
       shared: false,
       hidden: false,
-      tags: ['testing', 'awesome'],
+      tags: [],
       breaking: true,
       lead: 'This article will rock your world. Never has there been a better article',
       preTitle: 'Testing GraphQL',

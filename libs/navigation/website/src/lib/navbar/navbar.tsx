@@ -1,10 +1,10 @@
 import {AppBar, Theme, Toolbar, css, styled, useTheme} from '@mui/material'
+import {useUser} from '@wepublish/authentication/website'
 import {FullNavigationFragment} from '@wepublish/website/api'
 import {BuilderNavbarProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {PropsWithChildren, useCallback, useMemo, useState} from 'react'
 import {MdAccountCircle, MdClose, MdMenu, MdOutlinePayments} from 'react-icons/md'
 import {navigationLinkToUrl} from '../link-to-url'
-import {useUser} from '@wepublish/authentication/website'
 
 declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -119,7 +119,7 @@ export const NavbarActions = styled('div')<{isMenuOpen?: boolean}>`
   flex-flow: row wrap;
   align-items: center;
   justify-self: end;
-  gap: ${({theme}) => theme.spacing(2)};
+  gap: ${({theme}) => theme.spacing(1)};
   grid-column: 5;
   justify-self: end;
 
@@ -128,6 +128,10 @@ export const NavbarActions = styled('div')<{isMenuOpen?: boolean}>`
     css`
       z-index: -1;
     `}
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    gap: ${({theme}) => theme.spacing(2)};
+  }
 `
 
 export const NavbarIconButtonWrapper = styled('div')`
@@ -218,7 +222,7 @@ export function Navbar({
   loginUrl = '/login',
   profileUrl = '/profile',
   subscriptionsUrl = '/profile/subscription',
-  showSubscriptionsUrl = true
+  actions
 }: BuilderNavbarProps) {
   const {hasUser} = useUser()
   const [isMenuOpen, setMenuOpen] = useState(false)
@@ -290,17 +294,19 @@ export function Navbar({
           <NavbarSpacer />
 
           <NavbarActions isMenuOpen={isMenuOpen}>
-            {hasUser && showSubscriptionsUrl ? (
-              <Link href={subscriptionsUrl} aria-label={hasUser ? 'Profil' : 'Login'}>
+            {actions}
+
+            {hasUser && subscriptionsUrl && (
+              <Link href={subscriptionsUrl}>
                 <IconButton css={{fontSize: '2em', color: 'black'}}>
-                  <MdOutlinePayments />
+                  <MdOutlinePayments aria-label={'Subscriptions'} />
                 </IconButton>
               </Link>
-            ) : null}
+            )}
 
-            <Link href={hasUser ? profileUrl : loginUrl} aria-label={hasUser ? 'Profil' : 'Login'}>
+            <Link href={hasUser ? profileUrl : loginUrl}>
               <IconButton css={{fontSize: '2em', color: 'black'}}>
-                <MdAccountCircle />
+                <MdAccountCircle aria-label={hasUser ? 'Profil' : 'Login'} />
               </IconButton>
             </Link>
           </NavbarActions>
@@ -452,57 +458,55 @@ const NavPaper = ({
     <NavPaperWrapper>
       {children && <NavPaperChildrenWrapper>{children}</NavPaperChildrenWrapper>}
 
-      {!!main?.links.length && (
-        <NavPaperMainLinks>
-          {main.links.map((link, index) => {
-            const url = navigationLinkToUrl(link)
+      <NavPaperMainLinks>
+        {main?.links.map((link, index) => {
+          const url = navigationLinkToUrl(link)
 
-            return (
-              <Link href={url} key={index} color="inherit" underline="none" onClick={closeMenu}>
-                <H4 component="span" css={{fontWeight: '700'}}>
-                  {link.label}
-                </H4>
-              </Link>
-            )
-          })}
+          return (
+            <Link href={url} key={index} color="inherit" underline="none" onClick={closeMenu}>
+              <H4 component="span" css={{fontWeight: '700'}}>
+                {link.label}
+              </H4>
+            </Link>
+          )
+        })}
 
-          <NavPaperActions>
-            {!hasUser && (
+        <NavPaperActions>
+          {!hasUser && (
+            <Button
+              LinkComponent={Link}
+              href={loginUrl}
+              variant="contained"
+              color="secondary"
+              onClick={closeMenu}>
+              Login
+            </Button>
+          )}
+
+          {hasUser && (
+            <>
               <Button
                 LinkComponent={Link}
-                href={loginUrl}
+                href={profileUrl}
                 variant="contained"
                 color="secondary"
                 onClick={closeMenu}>
-                Login
+                Mein Konto
               </Button>
-            )}
 
-            {hasUser && (
-              <>
-                <Button
-                  LinkComponent={Link}
-                  href={profileUrl}
-                  variant="contained"
-                  color="secondary"
-                  onClick={closeMenu}>
-                  Mein Konto
-                </Button>
-
-                <Button
-                  onClick={() => {
-                    logout()
-                    closeMenu()
-                  }}
-                  variant="outlined"
-                  color="secondary">
-                  Logout
-                </Button>
-              </>
-            )}
-          </NavPaperActions>
-        </NavPaperMainLinks>
-      )}
+              <Button
+                onClick={() => {
+                  logout()
+                  closeMenu()
+                }}
+                variant="outlined"
+                color="secondary">
+                Logout
+              </Button>
+            </>
+          )}
+        </NavPaperActions>
+      </NavPaperMainLinks>
 
       {!!categories.length &&
         categories.map((categoryArray, arrayIndex) => (

@@ -36,7 +36,6 @@ services:
     depends_on:
       - database
       - migration
-      - media
     networks:
       - app-tier
   editor:
@@ -50,26 +49,6 @@ services:
       API_URL: http://localhost:4000
     depends_on:
       - api
-  media:
-    image: seccomch/wep-media-light:latest
-    platform: linux/amd64
-    ports:
-      - '127.0.0.1:4100:4100'
-    environment:
-      NUM_CLUSTERS: 1
-      TOKEN: secret
-      AWS_S3_ACCESS_KEY_ID: ${S3_ACCESS_KEY}
-      AWS_S3_SECRET_ACCESS_KEY: ${S3_SECRET_KEY}
-      AWS_S3_BUCKET: ${S3_BUCKET}
-      AWS_S3_REGION: 'us-east-1'
-      AWS_S3_ENDPOINT: 'http://storage:9000'
-      AWS_STORAGE_CLASS: 'REDUCED_REDUNDANCY'
-      AWS_S3_FORCE_PATH_STYLE: 'true'
-    depends_on:
-      - storage
-    networks:
-      - app-tier
-
   database:
     image: bitnami/postgresql:14
     platform: linux/amd64
@@ -82,22 +61,21 @@ services:
       - POSTGRESQL_DATABASE=wepublish
     networks:
       - app-tier
-
-  storage:
-    image: bitnami/minio:latest
+  media:
+    image: wepublishch/media:master
     platform: linux/amd64
     ports:
-      - '9000:9000'
-      - '9001:9001'
+      - '127.0.0.1:4100:4100'
     environment:
-      - MINIO_ROOT_USER=${S3_ACCESS_KEY}
-      - MINIO_ROOT_PASSWORD=${S3_SECRET_KEY}
-      - MINIO_DEFAULT_BUCKETS=${S3_BUCKET}
-    volumes:
-      - storage_data:/bitnami/minio/data/
+      TOKEN: secret
+      S3_ACCESS_KEY: ${S3_ACCESS_KEY}
+      S3_SECRET_KEY: ${S3_SECRET_KEY}
+      S3_ENDPOINT: 'storage'
+      S3_PORT: '9000'
+    depends_on:
+      - storage
     networks:
       - app-tier
-
   pgadmin:
     image: dpage/pgadmin4
     platform: linux/amd64
@@ -113,6 +91,18 @@ services:
       - database
     networks:
       - app-tier
+
+  storage:
+    image: bitnami/minio:latest
+    ports:
+      - '9000:9000'
+      - '9001:9001'
+    environment:
+      - MINIO_ROOT_USER=${S3_ACCESS_KEY}
+      - MINIO_ROOT_PASSWORD=${S3_SECRET_KEY}
+      - MINIO_DEFAULT_BUCKETS=${S3_BUCKETS}
+    volumes:
+      - storage_data:/data
 
 volumes:
   database_data:

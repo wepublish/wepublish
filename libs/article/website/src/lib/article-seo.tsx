@@ -5,12 +5,12 @@ import {BuilderArticleSEOProps, useWebsiteBuilder} from '@wepublish/website/buil
 import {Fragment, useMemo} from 'react'
 
 export const getArticleSEO = (article: Article) => {
-  const firstTitle = article.blocks.find(isTitleBlock)
-  const firstRichText = article.blocks.find(isRichTextBlock)
-  const firstImageBlock = article.blocks.find(isImageBlock)
+  const firstTitle = article.blocks?.find(isTitleBlock)
+  const firstRichText = article.blocks?.find(isRichTextBlock)
+  const firstImageBlock = article.blocks?.find(isImageBlock)
 
   const articleBody = article.blocks
-    .filter(isRichTextBlock)
+    ?.filter(isRichTextBlock)
     .reduce((body, richText) => {
       const text = toPlaintext(richText.richText)
 
@@ -58,7 +58,7 @@ export const getArticleSEO = (article: Article) => {
       '@context': 'http://schema.org',
       '@type': 'NewsArticle',
       articleBody,
-      keywords: article.tags.join(','),
+      keywords: article.tags.map(({tag}) => tag).join(','),
       image,
       description,
       author: {
@@ -139,7 +139,7 @@ export const ArticleSEO = ({article}: BuilderArticleSEOProps) => {
         ))}
 
         {seo.tags.map(tag => (
-          <meta key={`og:article:tag:${tag}`} property="og:article:tag" content={tag} />
+          <meta key={`og:article:tag:${tag}`} property="og:article:tag" content={tag.tag ?? ''} />
         ))}
       </Head>
 

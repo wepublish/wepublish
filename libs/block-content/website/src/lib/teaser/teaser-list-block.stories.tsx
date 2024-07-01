@@ -147,6 +147,14 @@ export const Event = {
   }
 }
 
+export const WithTitle = {
+  ...Article,
+  args: {
+    ...Article.args,
+    title: 'Foobar Title'
+  }
+}
+
 export const WithClassName = {
   ...Article,
   args: {

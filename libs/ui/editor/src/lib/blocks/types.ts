@@ -8,6 +8,7 @@ import {
   ImageRefFragment,
   PageRefFragment,
   PeerRefFragment,
+  Tag,
   TeaserStyle,
   TeaserType
 } from '@wepublish/editor/api'
@@ -251,9 +252,11 @@ export interface EventTeaser extends EventTeaserLink, BaseTeaser {}
 export type Teaser = ArticleTeaser | PeerArticleTeaser | PageTeaser | CustomTeaser | EventTeaser
 
 export interface TeaserListBlockValue extends BaseBlockValue {
-  filter: Partial<{
-    tags: string[] | null
-  }>
+  title?: string | null
+  filter: {
+    tags?: string[] | null
+    tagObjects: Pick<Tag, 'id' | 'tag'>[]
+  }
   teaserType: TeaserType
   skip: number
   take: number
@@ -557,6 +560,7 @@ export function unionMapForBlock(block: BlockValue): BlockInput {
     case BlockType.TeaserList:
       return {
         teaserList: {
+          title: block.value.title,
           filter: {
             tags: block.value.filter.tags
           },
@@ -1005,6 +1009,7 @@ export function blockForQueryBlock(block: FullBlockFragment | null): BlockValue 
         key,
         type: BlockType.TeaserList,
         value: {
+          title: block.title,
           blockStyle: block.blockStyle,
           filter: block.filter,
           skip: block.skip ?? 0,

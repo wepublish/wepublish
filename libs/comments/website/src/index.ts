@@ -1,3 +1,4 @@
+export * from './lib/comment-list/comment-list-item-share'
 export * from './lib/comment-list/comment-list-item'
 export * from './lib/comment-list/comment-list-item-child'
 export * from './lib/comment-list/comment-list'

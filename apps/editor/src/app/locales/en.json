@@ -47,7 +47,6 @@
         "contentUrl": "Content URL",
         "createdAt": "{{createdAt, ccc PP p}}",
         "dateExplanationPopOver": "This can be used to reference articles that will be published at a later time. For example, helpful when scheduling social media posts in advance for the next morning.",
-        "default": "Default",
         "displayOptions": "Display Options",
         "dontChangeSlug": "Please don't change the slug once the article is published.",
         "draft": "Draft",
@@ -69,7 +68,6 @@
         "key": "Key",
         "lead": "Lead",
         "leadHelpBlock": "Please use an SEO-optimised lead",
-        "light": "Light",
         "loading": "Loading ...",
         "loadMore": "Load More",
         "noDataToDisplay": "No data to display",
@@ -108,10 +106,8 @@
         "statePending": "Status: Pending",
         "statePublished": "Status: Published",
         "status": "{{stateJoin}}",
-        "style": "Style",
         "tags": "Tags",
         "teaserStyle": "Style: {{label}}",
-        "text": "Text",
         "title": "Title",
         "titleHelpBlock": "Please use an SEO-optimised title",
         "totalCharCount": "Total characters count is {{totalCharCount}}",
@@ -363,6 +359,7 @@
       "modalTitle": "Really delete?"
     },
     "commentEditView": {
+      "featured": "Featured",
       "actions": "Actions",
       "comment": "Comment text",
       "commentContextHeader": "Comment history",
@@ -548,6 +545,7 @@
         "image": "Image",
         "location": "Location",
         "name": "Name",
+        "lead": "Lead",
         "postponed": "Postponed",
         "rescheduled": "Rescheduled",
         "scheduled": "Scheduled",
@@ -640,14 +638,6 @@
     },
     "linkPageBreakEditPanel": {
       "close": "Close",
-      "layout": {
-        "center": "Centered",
-        "default": "Default Layout",
-        "image-left": "Image Left",
-        "image-right": "Image Right",
-        "label": "Layouts",
-        "right": "Right Aligned"
-      },
       "link": {
         "buttonLabel": "CTA Button label",
         "hideToggleLabel": "Hide CTA Button",
@@ -656,19 +646,6 @@
         "targetLabelBlank": "new browser tab",
         "targetLabelSelf": "this browser tab",
         "urlLabel": "CTA URL"
-      },
-      "style": {
-        "dark": "Dark Style",
-        "default": "Default Style",
-        "image": "Image Background",
-        "label": "Styles"
-      },
-      "template": {
-        "donation": "Donation",
-        "label": "Templates",
-        "membership": "Membership",
-        "none": "None",
-        "subscription": "Subscription"
       },
       "title": "Settings"
     },
@@ -750,6 +727,8 @@
       "commentRating": "Rating System",
       "comments": "Comments",
       "commentTags": "Tags",
+      "articleTags": "Tags",
+      "pageTags": "Tags",
       "consents": "Consents",
       "dashboard": "Dashboard",
       "events": "Events",
@@ -906,7 +885,8 @@
       "editTitle": "Edit Payment Method",
       "name": "Name",
       "slug": "Slug",
-      "title": "Payment Methods"
+      "title": "Payment Methods",
+      "selectImage": "Select preview image"
     },
     "peerArticles": {
       "articleImage": "Article image",
@@ -1015,7 +995,6 @@
       "addAndSaveNewAnswer": "Add Answer",
       "answerPanelHeader": "Possible answers",
       "closesAtLabel": "Closed at",
-      "defaultAnswer": "Default answer",
       "infoText": "Info text",
       "loadingTitle": "Loading poll...",
       "opensAtLabel": "Opened at",
@@ -1205,7 +1184,8 @@
         "areYouSureConfirmation": "Delete tag",
         "createTag": "New Tag",
         "placeholder": "Name of tag",
-        "title": "Tags"
+        "title": "Tags",
+        "markAsMain": "Use as main tag"
       }
     },
     "toast": {
@@ -1414,7 +1394,8 @@
       "trialSubscriptionConfigured": "This subscription is configured as a trial subscription.",
       "nonExtendableNotCompatibleWithAutoRenew": "An automatically renewing subscription must be renewable. Change one of these parameters.",
       "configureAsTrialSubscription": "Configure as a trial subscription",
-      "subscriptionTrialNotPossible": "The subscription cannot be configured as a trial subscription. To do so, change the settings of the subscription plan."
+      "subscriptionTrialNotPossible": "The subscription cannot be configured as a trial subscription. To do so, change the settings of the subscription plan.",
+      "extendableWasChanged": "The «Extendable» option has been adjusted according to the subscription plan."
     },
     "subscriptionListFilter": {
       "extendable": "Extendable"

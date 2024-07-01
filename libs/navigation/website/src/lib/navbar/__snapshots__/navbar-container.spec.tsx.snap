@@ -15,7 +15,7 @@ exports[`Navbar Container should render Default 1`] = `
           class="css-1trl8g0-NavbarMain ei6evl213"
         >
           <div
-            class="css-1g6nmgg-NavbarIconButtonWrapper ei6evl211"
+            class="css-6rgw7r-NavbarIconButtonWrapper ei6evl211"
           >
             <button
               aria-label="Menu"
@@ -50,19 +50,19 @@ exports[`Navbar Container should render Default 1`] = `
           class="css-lp67xt-NavbarLinks ei6evl214"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
             href="/"
           >
             Home
           </a>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
             href="/a/abcd"
           >
             Artikel
           </a>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
             href="https://google.com"
           >
             Google
@@ -72,10 +72,9 @@ exports[`Navbar Container should render Default 1`] = `
           class="css-cl7riy-NavbarSpacer ei6evl29"
         />
         <div
-          class="css-1w9evey-NavbarActions ei6evl212"
+          class="css-100bt78-NavbarActions ei6evl212"
         >
           <a
-            aria-label="Login"
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
             href="/login"
           >
@@ -85,6 +84,7 @@ exports[`Navbar Container should render Default 1`] = `
               type="button"
             >
               <svg
+                aria-label="Login"
                 fill="currentColor"
                 height="1em"
                 stroke="currentColor"
@@ -98,7 +98,7 @@ exports[`Navbar Container should render Default 1`] = `
                   fill="none"
                 />
                 <path
-                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88a9.947 9.947 0 0112.28 0C16.43 19.18 14.03 20 12 20z"
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88a9.947 9.947 0 0 1 12.28 0C16.43 19.18 14.03 20 12 20z"
                 />
               </svg>
               <span
@@ -128,7 +128,7 @@ exports[`Navbar Container should render WithClassName 1`] = `
           class="css-1trl8g0-NavbarMain ei6evl213"
         >
           <div
-            class="css-1g6nmgg-NavbarIconButtonWrapper ei6evl211"
+            class="css-6rgw7r-NavbarIconButtonWrapper ei6evl211"
           >
             <button
               aria-label="Menu"
@@ -163,19 +163,19 @@ exports[`Navbar Container should render WithClassName 1`] = `
           class="css-lp67xt-NavbarLinks ei6evl214"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
             href="/"
           >
             Home
           </a>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
             href="/a/abcd"
           >
             Artikel
           </a>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
             href="https://google.com"
           >
             Google
@@ -185,10 +185,9 @@ exports[`Navbar Container should render WithClassName 1`] = `
           class="css-cl7riy-NavbarSpacer ei6evl29"
         />
         <div
-          class="css-1w9evey-NavbarActions ei6evl212"
+          class="css-100bt78-NavbarActions ei6evl212"
         >
           <a
-            aria-label="Login"
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
             href="/login"
           >
@@ -198,6 +197,7 @@ exports[`Navbar Container should render WithClassName 1`] = `
               type="button"
             >
               <svg
+                aria-label="Login"
                 fill="currentColor"
                 height="1em"
                 stroke="currentColor"
@@ -211,7 +211,7 @@ exports[`Navbar Container should render WithClassName 1`] = `
                   fill="none"
                 />
                 <path
-                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88a9.947 9.947 0 0112.28 0C16.43 19.18 14.03 20 12 20z"
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88a9.947 9.947 0 0 1 12.28 0C16.43 19.18 14.03 20 12 20z"
                 />
               </svg>
               <span
@@ -241,7 +241,7 @@ exports[`Navbar Container should render WithEmotion 1`] = `
           class="css-1trl8g0-NavbarMain ei6evl213"
         >
           <div
-            class="css-1g6nmgg-NavbarIconButtonWrapper ei6evl211"
+            class="css-6rgw7r-NavbarIconButtonWrapper ei6evl211"
           >
             <button
               aria-label="Menu"
@@ -276,19 +276,19 @@ exports[`Navbar Container should render WithEmotion 1`] = `
           class="css-lp67xt-NavbarLinks ei6evl214"
         >
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
             href="/"
           >
             Home
           </a>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
             href="/a/abcd"
           >
             Artikel
           </a>
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1n8yv24-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1p1z8ou-MuiTypography-root-MuiLink-root-Navbar"
             href="https://google.com"
           >
             Google
@@ -298,10 +298,9 @@ exports[`Navbar Container should render WithEmotion 1`] = `
           class="css-cl7riy-NavbarSpacer ei6evl29"
         />
         <div
-          class="css-1w9evey-NavbarActions ei6evl212"
+          class="css-100bt78-NavbarActions ei6evl212"
         >
           <a
-            aria-label="Login"
             class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
             href="/login"
           >
@@ -311,6 +310,7 @@ exports[`Navbar Container should render WithEmotion 1`] = `
               type="button"
             >
               <svg
+                aria-label="Login"
                 fill="currentColor"
                 height="1em"
                 stroke="currentColor"
@@ -324,7 +324,7 @@ exports[`Navbar Container should render WithEmotion 1`] = `
                   fill="none"
                 />
                 <path
-                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88a9.947 9.947 0 0112.28 0C16.43 19.18 14.03 20 12 20z"
+                  d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6.14-2.88a9.947 9.947 0 0 1 12.28 0C16.43 19.18 14.03 20 12 20z"
                 />
               </svg>
               <span

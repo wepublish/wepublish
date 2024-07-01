@@ -22,6 +22,10 @@ exports[`SubscriptionList Container should render Default 1`] = `
         alt="DSC07717"
         class="css-cibo30-ImageWrapper e1shv2yg0"
         loading="lazy"
+        sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -56,7 +60,7 @@ https://unsplash.it/200/100 200w"
                 fill="none"
               />
               <path
-                d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM9 14H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2zm-8 4H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2z"
+                d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM9 14H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2zm-8 4H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2z"
               />
             </svg>
             <span>
@@ -114,7 +118,7 @@ https://unsplash.it/200/100 200w"
                 fill="none"
               />
               <path
-                d="M12 6v3l4-4-4-4v3c-4.42 0-8 3.58-8 8 0 1.57.46 3.03 1.24 4.26L6.7 14.8A5.87 5.87 0 016 12c0-3.31 2.69-6 6-6zm6.76 1.74L17.3 9.2c.44.84.7 1.79.7 2.8 0 3.31-2.69 6-6 6v-3l-4 4 4 4v-3c4.42 0 8-3.58 8-8 0-1.57-.46-3.03-1.24-4.26z"
+                d="M12 6v3l4-4-4-4v3c-4.42 0-8 3.58-8 8 0 1.57.46 3.03 1.24 4.26L6.7 14.8A5.87 5.87 0 0 1 6 12c0-3.31 2.69-6 6-6zm6.76 1.74L17.3 9.2c.44.84.7 1.79.7 2.8 0 3.31-2.69 6-6 6v-3l-4 4 4 4v-3c4.42 0 8-3.58 8-8 0-1.57-.46-3.03-1.24-4.26z"
               />
             </svg>
              Wird automatisch vierteljährlich erneuert
@@ -158,7 +162,7 @@ https://unsplash.it/200/100 200w"
                 fill="none"
               />
               <path
-                d="M13 3a9 9 0 00-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42A8.954 8.954 0 0013 21a9 9 0 000-18zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"
+                d="M13 3a9 9 0 0 0-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42A8.954 8.954 0 0 0 13 21a9 9 0 0 0 0-18zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"
               />
             </svg>
              
@@ -207,7 +211,181 @@ Compared values have no visual difference."
 
 exports[`SubscriptionList Container should render Pay 1`] = `
 "Snapshot Diff:
-Compared values have no visual difference."
+- First value
++ Second value
+
+@@ -1,10 +1,171 @@
+  <DocumentFragment>
+    <article
+      class="css-1lcio32-SubscriptionListWrapper e12e7g630"
+    >
+      <div
++       class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-standardError MuiAlert-standard css-1f6gfio-MuiPaper-root-MuiAlert-root"
++       role="alert"
++     >
++       <div
++         class="MuiAlert-icon css-1ytlwq5-MuiAlert-icon"
++       >
++         <svg
++           aria-hidden="true"
++           class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit css-1vooibu-MuiSvgIcon-root"
++           data-testid="ErrorOutlineIcon"
++           focusable="false"
++           viewBox="0 0 24 24"
++         >
++           <path
++             d="M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z"
++           />
++         </svg>
++       </div>
++       <div
++         class="MuiAlert-message css-1pxa9xg-MuiAlert-message"
++       >
++         No more mocked responses for the query: query Subscriptions {
++   subscriptions {
++     ...FullSubscription
++     __typename
++   }
++ }
++
++ fragment FullSubscription on Subscription {
++   id
++   url
++   paymentPeriodicity
++   monthlyAmount
++   autoRenew
++   startsAt
++   extendable
++   paidUntil
++   paymentMethod {
++     ...FullPaymentMethod
++     __typename
++   }
++   deactivation {
++     ...FullSubscriptionDeactivation
++     __typename
++   }
++   memberPlan {
++     ...FullMemberPlan
++     __typename
++   }
++   properties {
++     ...FullProperty
++     __typename
++   }
++   __typename
++ }
++
++ fragment FullPaymentMethod on PaymentMethod {
++   id
++   paymentProviderID
++   name
++   slug
++   description
++   image {
++     ...FullImage
++     __typename
++   }
++   __typename
++ }
++
++ fragment FullImage on Image {
++   id
++   createdAt
++   modifiedAt
++   filename
++   format
++   mimeType
++   extension
++   width
++   height
++   fileSize
++   title
++   description
++   tags
++   source
++   link
++   license
++   focalPoint {
++     x
++     y
++     __typename
++   }
++   ...ImageURLs
++   __typename
++ }
++
++ fragment ImageURLs on Image {
++   url
++   bigURL: transformURL(input: {width: 800, output: PNG, quality: 1})
++   largeURL: transformURL(input: {width: 500, output: PNG, quality: 1})
++   mediumURL: transformURL(input: {width: 300, output: PNG, quality: 1})
++   smallURL: transformURL(input: {width: 200, output: PNG, quality: 1})
++   squareBigURL: transformURL(
++     input: {width: 800, height: 800, output: PNG, quality: 1}
++   )
++   squareLargeURL: transformURL(
++     input: {width: 500, height: 500, output: PNG, quality: 1}
++   )
++   squareMediumURL: transformURL(
++     input: {width: 300, height: 300, output: PNG, quality: 1}
++   )
++   squareSmallURL: transformURL(
++     input: {width: 200, height: 200, output: PNG, quality: 1}
++   )
++   __typename
++ }
++
++ fragment FullSubscriptionDeactivation on SubscriptionDeactivation {
++   date
++   reason
++   __typename
++ }
++
++ fragment FullMemberPlan on MemberPlan {
++   id
++   slug
++   name
++   tags
++   description
++   image {
++     ...FullImage
++     __typename
++   }
++   amountPerMonthMin
++   availablePaymentMethods {
++     ...FullAvailablePaymentMethod
++     __typename
++   }
++   extendable
++   __typename
++ }
++
++ fragment FullAvailablePaymentMethod on AvailablePaymentMethod {
++   paymentMethods {
++     ...FullPaymentMethod
++     __typename
++   }
++   paymentPeriodicities
++   forceAutoRenewal
++   __typename
++ }
++
++ fragment FullProperty on PublicProperties {
++   key
++   value
++   __typename
++ }
++ Expected variables: {}
++
++       </div>
++     </div>
++     <div
+        class="css-r6owmh-SubscriptionListItemWrapper eere75z4"
+      >
+        <img
+          alt="DSC07717"
+          class="css-cibo30-ImageWrapper e1shv2yg0""
 `;
 
 exports[`SubscriptionList Container should render Unpaid 1`] = `
@@ -222,6 +400,10 @@ exports[`SubscriptionList Container should render Unpaid 1`] = `
         alt="DSC07717"
         class="css-cibo30-ImageWrapper e1shv2yg0"
         loading="lazy"
+        sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -256,7 +438,7 @@ https://unsplash.it/200/100 200w"
                 fill="none"
               />
               <path
-                d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM9 14H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2zm-8 4H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2z"
+                d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM9 14H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2zm-8 4H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2z"
               />
             </svg>
             <span>
@@ -307,7 +489,7 @@ https://unsplash.it/200/100 200w"
                 fill="none"
               />
               <path
-                d="M12 6v3l4-4-4-4v3c-4.42 0-8 3.58-8 8 0 1.57.46 3.03 1.24 4.26L6.7 14.8A5.87 5.87 0 016 12c0-3.31 2.69-6 6-6zm6.76 1.74L17.3 9.2c.44.84.7 1.79.7 2.8 0 3.31-2.69 6-6 6v-3l-4 4 4 4v-3c4.42 0 8-3.58 8-8 0-1.57-.46-3.03-1.24-4.26z"
+                d="M12 6v3l4-4-4-4v3c-4.42 0-8 3.58-8 8 0 1.57.46 3.03 1.24 4.26L6.7 14.8A5.87 5.87 0 0 1 6 12c0-3.31 2.69-6 6-6zm6.76 1.74L17.3 9.2c.44.84.7 1.79.7 2.8 0 3.31-2.69 6-6 6v-3l-4 4 4 4v-3c4.42 0 8-3.58 8-8 0-1.57-.46-3.03-1.24-4.26z"
               />
             </svg>
              Wird automatisch vierteljährlich erneuert
@@ -351,7 +533,7 @@ https://unsplash.it/200/100 200w"
                 fill="none"
               />
               <path
-                d="M13 3a9 9 0 00-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42A8.954 8.954 0 0013 21a9 9 0 000-18zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"
+                d="M13 3a9 9 0 0 0-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42A8.954 8.954 0 0 0 13 21a9 9 0 0 0 0-18zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"
               />
             </svg>
              
@@ -405,6 +587,10 @@ exports[`SubscriptionList Container should render WithClassName 1`] = `
         alt="DSC07717"
         class="css-cibo30-ImageWrapper e1shv2yg0"
         loading="lazy"
+        sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -439,7 +625,7 @@ https://unsplash.it/200/100 200w"
                 fill="none"
               />
               <path
-                d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM9 14H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2zm-8 4H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2z"
+                d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM9 14H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2zm-8 4H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2z"
               />
             </svg>
             <span>
@@ -497,7 +683,7 @@ https://unsplash.it/200/100 200w"
                 fill="none"
               />
               <path
-                d="M12 6v3l4-4-4-4v3c-4.42 0-8 3.58-8 8 0 1.57.46 3.03 1.24 4.26L6.7 14.8A5.87 5.87 0 016 12c0-3.31 2.69-6 6-6zm6.76 1.74L17.3 9.2c.44.84.7 1.79.7 2.8 0 3.31-2.69 6-6 6v-3l-4 4 4 4v-3c4.42 0 8-3.58 8-8 0-1.57-.46-3.03-1.24-4.26z"
+                d="M12 6v3l4-4-4-4v3c-4.42 0-8 3.58-8 8 0 1.57.46 3.03 1.24 4.26L6.7 14.8A5.87 5.87 0 0 1 6 12c0-3.31 2.69-6 6-6zm6.76 1.74L17.3 9.2c.44.84.7 1.79.7 2.8 0 3.31-2.69 6-6 6v-3l-4 4 4 4v-3c4.42 0 8-3.58 8-8 0-1.57-.46-3.03-1.24-4.26z"
               />
             </svg>
              Wird automatisch vierteljährlich erneuert
@@ -541,7 +727,7 @@ https://unsplash.it/200/100 200w"
                 fill="none"
               />
               <path
-                d="M13 3a9 9 0 00-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42A8.954 8.954 0 0013 21a9 9 0 000-18zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"
+                d="M13 3a9 9 0 0 0-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42A8.954 8.954 0 0 0 13 21a9 9 0 0 0 0-18zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"
               />
             </svg>
              
@@ -595,6 +781,10 @@ exports[`SubscriptionList Container should render WithEmotion 1`] = `
         alt="DSC07717"
         class="css-cibo30-ImageWrapper e1shv2yg0"
         loading="lazy"
+        sizes="(max-width: 400px) 200w,
+(max-width: 600px) 300w,
+(max-width: 1000px) 500w,
+800w"
         srcset="https://unsplash.it/800/400 800w,
 https://unsplash.it/500/300 500w,
 https://unsplash.it/300/200 300w,
@@ -629,7 +819,7 @@ https://unsplash.it/200/100 200w"
                 fill="none"
               />
               <path
-                d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 002 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM9 14H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2zm-8 4H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2z"
+                d="M19 4h-1V2h-2v2H8V2H6v2H5c-1.11 0-1.99.9-1.99 2L3 20a2 2 0 0 0 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 16H5V10h14v10zM9 14H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2zm-8 4H7v-2h2v2zm4 0h-2v-2h2v2zm4 0h-2v-2h2v2z"
               />
             </svg>
             <span>
@@ -687,7 +877,7 @@ https://unsplash.it/200/100 200w"
                 fill="none"
               />
               <path
-                d="M12 6v3l4-4-4-4v3c-4.42 0-8 3.58-8 8 0 1.57.46 3.03 1.24 4.26L6.7 14.8A5.87 5.87 0 016 12c0-3.31 2.69-6 6-6zm6.76 1.74L17.3 9.2c.44.84.7 1.79.7 2.8 0 3.31-2.69 6-6 6v-3l-4 4 4 4v-3c4.42 0 8-3.58 8-8 0-1.57-.46-3.03-1.24-4.26z"
+                d="M12 6v3l4-4-4-4v3c-4.42 0-8 3.58-8 8 0 1.57.46 3.03 1.24 4.26L6.7 14.8A5.87 5.87 0 0 1 6 12c0-3.31 2.69-6 6-6zm6.76 1.74L17.3 9.2c.44.84.7 1.79.7 2.8 0 3.31-2.69 6-6 6v-3l-4 4 4 4v-3c4.42 0 8-3.58 8-8 0-1.57-.46-3.03-1.24-4.26z"
               />
             </svg>
              Wird automatisch vierteljährlich erneuert
@@ -731,7 +921,7 @@ https://unsplash.it/200/100 200w"
                 fill="none"
               />
               <path
-                d="M13 3a9 9 0 00-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42A8.954 8.954 0 0013 21a9 9 0 000-18zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"
+                d="M13 3a9 9 0 0 0-9 9H1l3.89 3.89.07.14L9 12H6c0-3.87 3.13-7 7-7s7 3.13 7 7-3.13 7-7 7c-1.93 0-3.68-.79-4.94-2.06l-1.42 1.42A8.954 8.954 0 0 0 13 21a9 9 0 0 0 0-18zm-1 5v5l4.28 2.54.72-1.21-3.5-2.08V8H12z"
               />
             </svg>
              

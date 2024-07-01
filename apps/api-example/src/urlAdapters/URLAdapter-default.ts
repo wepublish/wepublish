@@ -1,5 +1,5 @@
 import {Author, PublicArticle, PublicComment, PublicPage, URLAdapter} from '@wepublish/api'
-import {CommentItemType, Peer, Event, Subscription} from '@prisma/client'
+import {CommentItemType, Peer, Event, Subscription, Tag, TagType} from '@prisma/client'
 
 interface StandardURLAdapterProps {
   websiteURL: string
@@ -38,14 +38,14 @@ export class DefaultURLAdapter implements URLAdapter {
 
   getCommentURL(item: PublicArticle | PublicPage, comment: PublicComment, peer?: Peer) {
     if (comment.itemType === CommentItemType.article) {
-      return `${this.websiteURL}/a/${item.id}/${item.slug}#${comment.id}`
+      return `${this.getPublicArticleURL(item as PublicArticle)}#${comment.id}`
     }
 
     if (comment.itemType === CommentItemType.peerArticle) {
-      return `${this.websiteURL}/p/${peer?.id}/${item.id}#${comment.id}`
+      return `${this.getPeeredArticleURL(peer, item as PublicArticle)}#${comment.id}`
     }
 
-    return `${this.websiteURL}/${item.slug}#${comment.id}`
+    return `${this.getPublicPageURL(item as PublicPage)}#${comment.id}`
   }
 
   getArticlePreviewURL(token: string) {
@@ -53,10 +53,18 @@ export class DefaultURLAdapter implements URLAdapter {
   }
 
   getPagePreviewURL(token: string): string {
-    return `${this.websiteURL}/${token}`
+    return `${this.websiteURL}/preview/${token}`
   }
 
   getLoginURL(token: string): string {
     return `${this.websiteURL}/login?jwt=${token}`
+  }
+
+  getTagURL(tag: Tag): string {
+    if (tag.tag && tag.type === TagType.Article) {
+      return `${this.websiteURL}/a/tag/${tag.tag}`
+    }
+
+    return ``
   }
 }
