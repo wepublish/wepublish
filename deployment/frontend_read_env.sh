@@ -3,9 +3,7 @@ ENV=$1
 PROJECT=$2
 FORMAT=$3
 echo ${ENV} | tr '[:lower:]' '[:upper:]'
-SECRETS=$(echo ${SECRETS_CONTEXT} |jq "." |grep "DEPLOYMENT_$(echo ${ENV} | tr '[:lower:]' '[:upper:]')_" )
-echo "DEPLOYMENT_$(echo ${ENV} | tr '[:lower:]' '[:upper:]')_"
-cat secrets.json
+SECRETS=$(echo ${SECRETS_CONTEXT} |jq "." |grep "DEPLOYMENT_" )
 echo $SECRETS
 PROJECT_FILE=apps/${PROJECT}/deployment.config.json
 shift 3
