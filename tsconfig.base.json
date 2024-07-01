@@ -77,7 +77,7 @@
       "@wepublish/website/builder": ["libs/website/builder/src/index.ts"],
       "@wepublish/website/server": ["libs/website/src/server.ts"],
       "@wepublish/errors": ["libs/errors/src/index.ts"],
-      "errors/website": ["libs/errors/website/src/index.ts"]
+      "@wepublish/errors/website": ["libs/errors/website/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]
