@@ -17,10 +17,7 @@ for secret in $(jq -r ".frontend.${ENV}.secret_env[]" "$PROJECT_FILE"); do
   if [[ $? == 0 ]]; then
     value=$(echo $SECRETS |grep "\"$secret\":" | cut -d':' -f 2 |sed 's/[ "]//g')
     if [[ -z $value ]]; then
-      echo "$secret does not exist in context!"
       continue
-    else
-      echo "Setting $secret to $value!"
     fi
     envvars="${envvars}${secret}=${value}\n"
   fi
@@ -42,5 +39,4 @@ envvars="${envvars//'%'/'%25'}"
 envvars="${envvars//$'\n'/'%0A'}"
 envvars="${envvars//'\n'/'%0A'}"
 envvars="${envvars//$'\r'/'%0D'}"
-echo "HERE: ${envvars}"
 echo "::set-output name=envvars::${envvars}"
