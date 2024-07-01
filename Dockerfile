@@ -1,6 +1,7 @@
 #######
-## next sites
+## Next sites
 #######
+
 FROM node:18.19.1-bookworm-slim as build-next
 ARG NEXT_PROJECT
 ARG API_URL
@@ -30,8 +31,6 @@ COPY --chown=wepublish:wepublish --from=build-next /wepublish/dist/apps/${NEXT_P
 EXPOSE 4001
 USER wepublish
 ENTRYPOINT ["/entrypoint.sh"]
-
-
 
 #######
 ## API
