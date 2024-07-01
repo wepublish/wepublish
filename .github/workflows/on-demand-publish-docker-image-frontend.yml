@@ -19,9 +19,7 @@ on:
 jobs:
   build-and-push:
     name: ${{inputs.frontend_target}}
-    needs: [get-env-vars]
     runs-on: ubuntu-latest
-    if: ${{ needs.get-env-vars.result == 'success' }}
     steps:
       - uses: actions/checkout@v4
       - name: Get environment variables
