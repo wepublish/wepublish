@@ -41,6 +41,7 @@
     "@babel/preset-react": "^7.22.5",
     "@babel/preset-typescript": "^7.22.5",
     "@emotion/babel-plugin": "11.11.0",
+    "@emotion/jest": "^11.11.0",
     "@faker-js/faker": "^8.0.2",
     "@graphql-codegen/add": "^2.0.1",
     "@graphql-codegen/cli": "^2.15.0",
