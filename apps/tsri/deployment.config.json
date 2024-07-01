@@ -2,18 +2,24 @@
   "frontend": {
     "production": {
       "deployment": true,
-      "env": {},
-      "secret_env": []
+      "env": {
+        "MAILCHIMP_SERVER_PREFIX": "us9"
+      },
+      "secret_env": ["MAILCHIMP_API_KEY"]
     },
     "staging": {
       "deployment": true,
-      "env": {},
-      "secret_env": []
+      "env": {
+        "MAILCHIMP_SERVER_PREFIX": "us9"
+      },
+      "secret_env": ["MAILCHIMP_API_KEY"]
     },
     "review": {
       "deployment": true,
-      "env": {},
-      "secret_env": []
+      "env": {
+        "MAILCHIMP_SERVER_PREFIX": "us9"
+      },
+      "secret_env": ["MAILCHIMP_API_KEY"]
     }
   }
 }

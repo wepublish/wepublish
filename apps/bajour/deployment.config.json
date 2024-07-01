@@ -15,7 +15,7 @@
       "env": {
         "API_URL": "https://api-bajour.wepublish.dev"
       },
-      "secret_env": ["DEPLOYMENT_TEST_TOKEN", "FRONTEND_TOKEN_2"]
+      "secret_env": ["TOKEN", "FRONTEND_TOKEN_2"]
     }
   }
 }

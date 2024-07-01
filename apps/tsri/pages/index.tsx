@@ -22,11 +22,7 @@ export default function Index({campaigns}: IndexProps) {
 export const getStaticProps: GetStaticProps = async () => {
   const {publicRuntimeConfig} = getConfig()
 
-  if (
-    !publicRuntimeConfig.env.API_URL ||
-    !publicRuntimeConfig.env.MAILCHIMP_API_KEY ||
-    !publicRuntimeConfig.env.MAILCHIMP_SERVER_PREFIX
-  ) {
+  if (!publicRuntimeConfig.env.API_URL) {
     return {props: {}, revalidate: 1}
   }
 
