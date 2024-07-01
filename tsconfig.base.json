@@ -76,7 +76,7 @@
       "@wepublish/website/api-v2": ["libs/website/api-v2/src/index.ts"],
       "@wepublish/website/builder": ["libs/website/builder/src/index.ts"],
       "@wepublish/website/server": ["libs/website/src/server.ts"],
-      "errors": ["libs/errors/src/index.ts"],
+      "@wepublish/errors": ["libs/errors/src/index.ts"],
       "errors/website": ["libs/errors/website/src/index.ts"]
     }
   },
