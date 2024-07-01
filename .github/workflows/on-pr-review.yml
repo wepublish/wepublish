@@ -282,13 +282,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-
-      - name: view the secrets context
-        shell: bash
-        run: echo "$SECRETS_CONTEXT"
-        env:
-          SECRETS_CONTEXT: ${{ toJson(secrets) }}
-
       - name: Set up matrix
         id: set-matrix
         run: deployment/read_deployment_config.sh '.frontend.review.deployment' true

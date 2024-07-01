@@ -19,10 +19,18 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
+      - name: view the secrets context
+        shell: bash
+        run: echo "$SECRETS_CONTEXT"
+
       - name: Get environment variables
         id: get-env
         run: |
           ./deployment/frontend_read_env.sh review ${{ inputs.frontend_project }} yaml API_URL=${{ inputs.api_url }} FRONTEND_URL=https://${{ inputs.frontend_project }}-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+        env:
+          SECRETS_CONTEXT: ${{ toJson(secrets) }}
+
+
 
   get-env-vars-print:
     runs-on: ubuntu-latest

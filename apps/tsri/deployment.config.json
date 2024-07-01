@@ -2,15 +2,18 @@
   "frontend": {
     "production": {
       "deployment": true,
-      "env": {}
+      "env": {},
+      "secret_env": []
     },
     "staging": {
       "deployment": true,
-      "env": {}
+      "env": {},
+      "secret_env": []
     },
     "review": {
       "deployment": true,
-      "env": {}
+      "env": {},
+      "secret_env": []
     }
   }
 }

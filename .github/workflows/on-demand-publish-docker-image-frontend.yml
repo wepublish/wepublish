@@ -29,6 +29,8 @@ jobs:
         id: get-env
         run: |
           ./deployment/frontend_read_env.sh ${{ inputs.environment }} ${{ inputs.frontend_project }} env NEXT_PROJECT=${{ inputs.frontend_project }} API_URL=${{ inputs.api_url }}
+        env:
+          SECRETS_CONTEXT: ${{ toJson(secrets) }}
 
   get-env-vars-print:
     runs-on: ubuntu-latest

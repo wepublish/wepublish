@@ -2,17 +2,20 @@
   "frontend": {
     "production": {
       "deployment": true,
-      "env": {}
+      "env": {},
+      "secret_env": []
     },
     "staging": {
       "deployment": true,
-      "env": {}
+      "env": {},
+      "secret_env": []
     },
     "review": {
       "deployment": true,
       "env": {
         "API_URL": "https://api-bajour.wepublish.dev"
-      }
+      },
+      "secret_env": ["DEPLOYMENT_REVIEW_TOKEN", "FRONTEND_TOKEN_2"]
     }
   }
 }
