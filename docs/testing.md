@@ -57,6 +57,10 @@ To test, if it works, run `nx test` from your cli. Your specs should now be test
 ## UI Testing
 The UI is tested using Storybook and Jest. For further help, consult the documentation of NX, Jest and Storybook.
 
-It might happen that your tests are failing. Try to update your snapshots
+
+## Troubleshooting
+### Failing Snapshots
+- It might happen that your tests are failing. Try to update your snapshots
 by running (eventually in the package in question) `npm run test-u` For more information: 
 [https://jestjs.io/docs/cli#--updatesnapshot](https://jestjs.io/docs/cli#--updatesnapshot)
+
