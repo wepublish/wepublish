@@ -2,20 +2,82 @@
 
 exports[`Footer Container should render Default 1`] = `
 <DocumentFragment>
-  <footer
-    class="css-dl99x8-FooterWrapper enubu9x10"
+  .emotion-0 {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+}
+
+.emotion-2 {
+  padding: 20px;
+  background-color: #1a1a1a;
+  color: #fff;
+  display: grid;
+  gap: 24px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  -webkit-transform: translateY(100%);
+  -moz-transform: translateY(100%);
+  -ms-transform: translateY(100%);
+  transform: translateY(100%);
+  overflow: hidden;
+  row-gap: 64px;
+}
+
+@media (min-width:900px) {
+  .emotion-2 {
+    gap: 48px;
+    row-gap: 96px;
+    grid-template-columns: 1fr 1fr;
+    padding: calc(100% / 12) calc(100% / 6);
+  }
+}
+
+.emotion-4 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+@media (min-width:600px) {
+  .emotion-4 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.emotion-8 {
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 50%;
+  background-color: #000;
+  z-index: -1;
+  -webkit-transform: translateY(-2rem);
+  -moz-transform: translateY(-2rem);
+  -ms-transform: translateY(-2rem);
+  transform: translateY(-2rem);
+}
+
+<footer
+    class="emotion-0 emotion-1"
   >
     <div
-      class="css-1fxijoh-FooterPaperWrapper enubu9x6"
+      class="emotion-2 emotion-3"
     >
       <div
-        class="css-41fvzk-LinksGroup enubu9x2"
+        class="emotion-4 emotion-5"
       />
       <div
-        class="css-41fvzk-LinksGroup enubu9x2"
+        class="emotion-4 emotion-5"
       >
         <div
-          class="css-85dbd7-FooterSeparator enubu9x3"
+          class="emotion-8 emotion-9"
         />
       </div>
     </div>
@@ -25,20 +87,82 @@ exports[`Footer Container should render Default 1`] = `
 
 exports[`Footer Container should render WithClassName 1`] = `
 <DocumentFragment>
-  <footer
-    class="extra-classname css-dl99x8-FooterWrapper enubu9x10"
+  .emotion-0 {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+}
+
+.emotion-2 {
+  padding: 20px;
+  background-color: #1a1a1a;
+  color: #fff;
+  display: grid;
+  gap: 24px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  -webkit-transform: translateY(100%);
+  -moz-transform: translateY(100%);
+  -ms-transform: translateY(100%);
+  transform: translateY(100%);
+  overflow: hidden;
+  row-gap: 64px;
+}
+
+@media (min-width:900px) {
+  .emotion-2 {
+    gap: 48px;
+    row-gap: 96px;
+    grid-template-columns: 1fr 1fr;
+    padding: calc(100% / 12) calc(100% / 6);
+  }
+}
+
+.emotion-4 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+@media (min-width:600px) {
+  .emotion-4 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.emotion-8 {
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 50%;
+  background-color: #000;
+  z-index: -1;
+  -webkit-transform: translateY(-2rem);
+  -moz-transform: translateY(-2rem);
+  -ms-transform: translateY(-2rem);
+  transform: translateY(-2rem);
+}
+
+<footer
+    class="extra-classname emotion-0 emotion-1"
   >
     <div
-      class="css-1fxijoh-FooterPaperWrapper enubu9x6"
+      class="emotion-2 emotion-3"
     >
       <div
-        class="css-41fvzk-LinksGroup enubu9x2"
+        class="emotion-4 emotion-5"
       />
       <div
-        class="css-41fvzk-LinksGroup enubu9x2"
+        class="emotion-4 emotion-5"
       >
         <div
-          class="css-85dbd7-FooterSeparator enubu9x3"
+          class="emotion-8 emotion-9"
         />
       </div>
     </div>
@@ -48,20 +172,82 @@ exports[`Footer Container should render WithClassName 1`] = `
 
 exports[`Footer Container should render WithEmotion 1`] = `
 <DocumentFragment>
-  <footer
-    class="css-dl99x8-FooterWrapper enubu9x10"
+  .emotion-0 {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+}
+
+.emotion-2 {
+  padding: 20px;
+  background-color: #1a1a1a;
+  color: #fff;
+  display: grid;
+  gap: 24px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  -webkit-transform: translateY(100%);
+  -moz-transform: translateY(100%);
+  -ms-transform: translateY(100%);
+  transform: translateY(100%);
+  overflow: hidden;
+  row-gap: 64px;
+}
+
+@media (min-width:900px) {
+  .emotion-2 {
+    gap: 48px;
+    row-gap: 96px;
+    grid-template-columns: 1fr 1fr;
+    padding: calc(100% / 12) calc(100% / 6);
+  }
+}
+
+.emotion-4 {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+}
+
+@media (min-width:600px) {
+  .emotion-4 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.emotion-8 {
+  position: absolute;
+  left: 0;
+  right: 0;
+  width: 100%;
+  height: 50%;
+  background-color: #000;
+  z-index: -1;
+  -webkit-transform: translateY(-2rem);
+  -moz-transform: translateY(-2rem);
+  -ms-transform: translateY(-2rem);
+  transform: translateY(-2rem);
+}
+
+<footer
+    class="emotion-0 emotion-1"
   >
     <div
-      class="css-1fxijoh-FooterPaperWrapper enubu9x6"
+      class="emotion-2 emotion-3"
     >
       <div
-        class="css-41fvzk-LinksGroup enubu9x2"
+        class="emotion-4 emotion-5"
       />
       <div
-        class="css-41fvzk-LinksGroup enubu9x2"
+        class="emotion-4 emotion-5"
       >
         <div
-          class="css-85dbd7-FooterSeparator enubu9x3"
+          class="emotion-8 emotion-9"
         />
       </div>
     </div>

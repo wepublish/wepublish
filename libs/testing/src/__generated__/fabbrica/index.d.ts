@@ -2357,6 +2357,7 @@ type EventFactoryDefineInput = {
     createdAt?: Date;
     modifiedAt?: Date;
     name?: string;
+    lead?: string | null;
     description?: Prisma.EventCreatedescriptionInput | Prisma.Enumerable<Prisma.InputJsonValue>;
     status?: EventStatus;
     location?: string | null;

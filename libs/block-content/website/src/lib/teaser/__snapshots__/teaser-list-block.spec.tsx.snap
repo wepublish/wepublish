@@ -2,30 +2,238 @@
 
 exports[`Teaser List Block should render Article 1`] = `
 <DocumentFragment>
-  <section
-    class="css-uy6b2i-TeaserListBlockWrapper ebuvkaa1"
+  .emotion-0 {
+  display: grid;
+  gap: 24px;
+}
+
+.emotion-2 {
+  display: grid;
+  -webkit-column-gap: 16px;
+  column-gap: 16px;
+  row-gap: 40px;
+  grid-template-columns: 1fr;
+  -webkit-align-items: stretch;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+}
+
+@media (min-width:600px) {
+  .emotion-2 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-2 {
+    grid-template-columns: repeat(12, 1fr);
+  }
+}
+
+.emotion-4 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-4 {
+    grid-column-start: 1;
+    grid-column-end: 5;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-6 {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+}
+
+.emotion-7 {
+  display: grid;
+  grid-auto-rows: max-content;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
+  grid-template-areas: 'image' 'pretitle' 'title' 'lead' 'authors';
+}
+
+.emotion-9 {
+  grid-column: 1/13;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  grid-area: image;
+}
+
+.emotion-9:empty {
+  min-height: 32px;
+}
+
+.emotion-11 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
+  width: 100%;
+  object-fit: cover;
+  grid-column: 1/13;
+  -webkit-transition: -webkit-transform 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out;
+  aspect-ratio: 1.8;
+}
+
+.emotion-11:where(.emotion-5:hover .emotion-11) {
+  -webkit-transform: scale(1.1);
+  -moz-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
+@media (min-width:900px) {
+  .emotion-11 {
+    aspect-ratio: 1;
+  }
+}
+
+.emotion-13 {
+  -webkit-transition: background-color 0.3s ease-in-out;
+  transition: background-color 0.3s ease-in-out;
+  background-color: #F5FF64;
+  height: 3px;
+  width: 100%;
+  margin-bottom: 12px;
+  grid-area: pretitle;
+}
+
+.emotion-13:where(.emotion-5:hover .emotion-13) {
+  background-color: #e91e63;
+}
+
+.emotion-15 {
+  -webkit-transition: background-color 0.3s ease-in-out;
+  transition: background-color 0.3s ease-in-out;
+  padding: 4px 16px;
+  background-color: #F5FF64;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  font-size: 14px;
+  font-weight: 300;
+  -webkit-transform: translateY(-100%);
+  -moz-transform: translateY(-100%);
+  -ms-transform: translateY(-100%);
+  transform: translateY(-100%);
+}
+
+.emotion-15:where(.emotion-5:hover .emotion-15) {
+  background-color: #e91e63;
+}
+
+@media (min-width:900px) {
+  .emotion-15 {
+    font-size: 18px;
+  }
+}
+
+.emotion-17 {
+  grid-area: title;
+  margin-bottom: 8px;
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 26px;
+}
+
+@media (min-width: 900px) {
+  .emotion-17 {
+    font-size: 32px;
+  }
+}
+
+.emotion-19 {
+  font-weight: 300;
+  font-size: 1rem;
+  grid-area: lead;
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-19.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-21 {
+  margin: 0;
+  font-size: 12px;
+  grid-area: authors;
+}
+
+.emotion-23 {
+  font-weight: 400;
+}
+
+.emotion-25 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-25 {
+    grid-column-start: 5;
+    grid-column-end: 9;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-46 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-46 {
+    grid-column-start: 9;
+    grid-column-end: 13;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+<section
+    class="emotion-0 emotion-1"
   >
     <div
-      class="css-r7i8yq-TeaserListBlockTeasers ebuvkaa0"
+      class="emotion-2 emotion-3"
     >
       <article
-        class="css-8p11sj-TeaserWrapper e18of27r11"
+        class="emotion-4 emotion-5"
         x="0"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-6"
           href="https://example.com"
         >
           <div
-            class="css-1f245dr-TeaserContentWrapper e18of27r8"
+            class="emotion-7 emotion-8"
           >
             <div
-              class="css-1xekyz3-TeaserImageWrapper e18of27r9"
+              class="emotion-9 emotion-10"
             >
               <img
                 alt="An image description"
-                class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
+                class="emotion-11 emotion-12"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -39,29 +247,29 @@ https://unsplash.it/200/200 200w"
               />
             </div>
             <div
-              class="css-6mexrt-TeaserPreTitleWrapper e18of27r3"
+              class="emotion-13 emotion-14"
             >
               <div
-                class="css-161zlv4-PreTitle e18of27r2"
+                class="emotion-15 emotion-16"
               >
                 Pre Title
               </div>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
+              class="MuiTypography-root MuiTypography-h4 emotion-17 emotion-18"
             >
               Title
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-17cdwkk-TeaserLead-MuiTypography-root e18of27r6"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-19 emotion-20"
             >
               Lead
             </p>
             <div
-              class="css-sibxk9-TeaserMetadata e18of27r1"
+              class="emotion-21 emotion-22"
             >
               <time
-                class="css-bsjge5-TeaserTime e18of27r0"
+                class="emotion-23 emotion-24"
                 datetime="2023-01-01T00:00:00.000Z"
               >
                 01.01.2023 
@@ -71,23 +279,23 @@ https://unsplash.it/200/200 200w"
         </a>
       </article>
       <article
-        class="css-z4j0q-TeaserWrapper e18of27r11"
+        class="emotion-25 emotion-5"
         x="4"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-6"
           href="https://example.com"
         >
           <div
-            class="css-1f245dr-TeaserContentWrapper e18of27r8"
+            class="emotion-7 emotion-8"
           >
             <div
-              class="css-1xekyz3-TeaserImageWrapper e18of27r9"
+              class="emotion-9 emotion-10"
             >
               <img
                 alt="An image description"
-                class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
+                class="emotion-11 emotion-12"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -101,29 +309,29 @@ https://unsplash.it/200/200 200w"
               />
             </div>
             <div
-              class="css-6mexrt-TeaserPreTitleWrapper e18of27r3"
+              class="emotion-13 emotion-14"
             >
               <div
-                class="css-161zlv4-PreTitle e18of27r2"
+                class="emotion-15 emotion-16"
               >
                 Pre Title
               </div>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
+              class="MuiTypography-root MuiTypography-h4 emotion-17 emotion-18"
             >
               Title
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-17cdwkk-TeaserLead-MuiTypography-root e18of27r6"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-19 emotion-20"
             >
               Lead
             </p>
             <div
-              class="css-sibxk9-TeaserMetadata e18of27r1"
+              class="emotion-21 emotion-22"
             >
               <time
-                class="css-bsjge5-TeaserTime e18of27r0"
+                class="emotion-23 emotion-24"
                 datetime="2023-01-01T00:00:00.000Z"
               >
                 01.01.2023 
@@ -133,23 +341,23 @@ https://unsplash.it/200/200 200w"
         </a>
       </article>
       <article
-        class="css-wylm69-TeaserWrapper e18of27r11"
+        class="emotion-46 emotion-5"
         x="8"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-6"
           href="https://example.com"
         >
           <div
-            class="css-1f245dr-TeaserContentWrapper e18of27r8"
+            class="emotion-7 emotion-8"
           >
             <div
-              class="css-1xekyz3-TeaserImageWrapper e18of27r9"
+              class="emotion-9 emotion-10"
             >
               <img
                 alt="An image description"
-                class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
+                class="emotion-11 emotion-12"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -163,29 +371,29 @@ https://unsplash.it/200/200 200w"
               />
             </div>
             <div
-              class="css-6mexrt-TeaserPreTitleWrapper e18of27r3"
+              class="emotion-13 emotion-14"
             >
               <div
-                class="css-161zlv4-PreTitle e18of27r2"
+                class="emotion-15 emotion-16"
               >
                 Pre Title
               </div>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
+              class="MuiTypography-root MuiTypography-h4 emotion-17 emotion-18"
             >
               Title
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-17cdwkk-TeaserLead-MuiTypography-root e18of27r6"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-19 emotion-20"
             >
               Lead
             </p>
             <div
-              class="css-sibxk9-TeaserMetadata e18of27r1"
+              class="emotion-21 emotion-22"
             >
               <time
-                class="css-bsjge5-TeaserTime e18of27r0"
+                class="emotion-23 emotion-24"
                 datetime="2023-01-01T00:00:00.000Z"
               >
                 01.01.2023 
@@ -201,30 +409,238 @@ https://unsplash.it/200/200 200w"
 
 exports[`Teaser List Block should render Event 1`] = `
 <DocumentFragment>
-  <section
-    class="css-uy6b2i-TeaserListBlockWrapper ebuvkaa1"
+  .emotion-0 {
+  display: grid;
+  gap: 24px;
+}
+
+.emotion-2 {
+  display: grid;
+  -webkit-column-gap: 16px;
+  column-gap: 16px;
+  row-gap: 40px;
+  grid-template-columns: 1fr;
+  -webkit-align-items: stretch;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+}
+
+@media (min-width:600px) {
+  .emotion-2 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-2 {
+    grid-template-columns: repeat(12, 1fr);
+  }
+}
+
+.emotion-4 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-4 {
+    grid-column-start: 1;
+    grid-column-end: 5;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-6 {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+}
+
+.emotion-7 {
+  display: grid;
+  grid-auto-rows: max-content;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
+  grid-template-areas: 'image' 'pretitle' 'title' 'lead' 'authors';
+}
+
+.emotion-9 {
+  grid-column: 1/13;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  grid-area: image;
+}
+
+.emotion-9:empty {
+  min-height: 32px;
+}
+
+.emotion-11 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
+  width: 100%;
+  object-fit: cover;
+  grid-column: 1/13;
+  -webkit-transition: -webkit-transform 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out;
+  aspect-ratio: 1.8;
+}
+
+.emotion-11:where(.emotion-5:hover .emotion-11) {
+  -webkit-transform: scale(1.1);
+  -moz-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
+@media (min-width:900px) {
+  .emotion-11 {
+    aspect-ratio: 1;
+  }
+}
+
+.emotion-13 {
+  -webkit-transition: background-color 0.3s ease-in-out;
+  transition: background-color 0.3s ease-in-out;
+  background-color: #F5FF64;
+  height: 3px;
+  width: 100%;
+  margin-bottom: 12px;
+  grid-area: pretitle;
+}
+
+.emotion-13:where(.emotion-5:hover .emotion-13) {
+  background-color: #e91e63;
+}
+
+.emotion-15 {
+  -webkit-transition: background-color 0.3s ease-in-out;
+  transition: background-color 0.3s ease-in-out;
+  padding: 4px 16px;
+  background-color: #F5FF64;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  font-size: 14px;
+  font-weight: 300;
+  -webkit-transform: translateY(-100%);
+  -moz-transform: translateY(-100%);
+  -ms-transform: translateY(-100%);
+  transform: translateY(-100%);
+}
+
+.emotion-15:where(.emotion-5:hover .emotion-15) {
+  background-color: #e91e63;
+}
+
+@media (min-width:900px) {
+  .emotion-15 {
+    font-size: 18px;
+  }
+}
+
+.emotion-17 {
+  grid-area: title;
+  margin-bottom: 8px;
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 26px;
+}
+
+@media (min-width: 900px) {
+  .emotion-17 {
+    font-size: 32px;
+  }
+}
+
+.emotion-19 {
+  font-weight: 300;
+  font-size: 1rem;
+  grid-area: lead;
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-19.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-21 {
+  margin: 0;
+  font-size: 12px;
+  grid-area: authors;
+}
+
+.emotion-23 {
+  font-weight: 400;
+}
+
+.emotion-25 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-25 {
+    grid-column-start: 5;
+    grid-column-end: 9;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-46 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-46 {
+    grid-column-start: 9;
+    grid-column-end: 13;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+<section
+    class="emotion-0 emotion-1"
   >
     <div
-      class="css-r7i8yq-TeaserListBlockTeasers ebuvkaa0"
+      class="emotion-2 emotion-3"
     >
       <article
-        class="css-8p11sj-TeaserWrapper e18of27r11"
+        class="emotion-4 emotion-5"
         x="0"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-6"
           href="https://example.com"
         >
           <div
-            class="css-1f245dr-TeaserContentWrapper e18of27r8"
+            class="emotion-7 emotion-8"
           >
             <div
-              class="css-1xekyz3-TeaserImageWrapper e18of27r9"
+              class="emotion-9 emotion-10"
             >
               <img
                 alt="An image description"
-                class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
+                class="emotion-11 emotion-12"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -238,29 +654,29 @@ https://unsplash.it/200/200 200w"
               />
             </div>
             <div
-              class="css-6mexrt-TeaserPreTitleWrapper e18of27r3"
+              class="emotion-13 emotion-14"
             >
               <div
-                class="css-161zlv4-PreTitle e18of27r2"
+                class="emotion-15 emotion-16"
               >
                 Pre Title
               </div>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
+              class="MuiTypography-root MuiTypography-h4 emotion-17 emotion-18"
             >
               Title
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-17cdwkk-TeaserLead-MuiTypography-root e18of27r6"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-19 emotion-20"
             >
               Lead
             </p>
             <div
-              class="css-sibxk9-TeaserMetadata e18of27r1"
+              class="emotion-21 emotion-22"
             >
               <time
-                class="css-bsjge5-TeaserTime e18of27r0"
+                class="emotion-23 emotion-24"
                 datetime="2023-01-01T00:00:00.000Z"
               >
                 01.01.2023 
@@ -270,23 +686,23 @@ https://unsplash.it/200/200 200w"
         </a>
       </article>
       <article
-        class="css-z4j0q-TeaserWrapper e18of27r11"
+        class="emotion-25 emotion-5"
         x="4"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-6"
           href="https://example.com"
         >
           <div
-            class="css-1f245dr-TeaserContentWrapper e18of27r8"
+            class="emotion-7 emotion-8"
           >
             <div
-              class="css-1xekyz3-TeaserImageWrapper e18of27r9"
+              class="emotion-9 emotion-10"
             >
               <img
                 alt="An image description"
-                class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
+                class="emotion-11 emotion-12"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -300,29 +716,29 @@ https://unsplash.it/200/200 200w"
               />
             </div>
             <div
-              class="css-6mexrt-TeaserPreTitleWrapper e18of27r3"
+              class="emotion-13 emotion-14"
             >
               <div
-                class="css-161zlv4-PreTitle e18of27r2"
+                class="emotion-15 emotion-16"
               >
                 Pre Title
               </div>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
+              class="MuiTypography-root MuiTypography-h4 emotion-17 emotion-18"
             >
               Title
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-17cdwkk-TeaserLead-MuiTypography-root e18of27r6"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-19 emotion-20"
             >
               Lead
             </p>
             <div
-              class="css-sibxk9-TeaserMetadata e18of27r1"
+              class="emotion-21 emotion-22"
             >
               <time
-                class="css-bsjge5-TeaserTime e18of27r0"
+                class="emotion-23 emotion-24"
                 datetime="2023-01-01T00:00:00.000Z"
               >
                 01.01.2023 
@@ -332,23 +748,23 @@ https://unsplash.it/200/200 200w"
         </a>
       </article>
       <article
-        class="css-wylm69-TeaserWrapper e18of27r11"
+        class="emotion-46 emotion-5"
         x="8"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-6"
           href="https://example.com"
         >
           <div
-            class="css-1f245dr-TeaserContentWrapper e18of27r8"
+            class="emotion-7 emotion-8"
           >
             <div
-              class="css-1xekyz3-TeaserImageWrapper e18of27r9"
+              class="emotion-9 emotion-10"
             >
               <img
                 alt="An image description"
-                class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
+                class="emotion-11 emotion-12"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -362,29 +778,29 @@ https://unsplash.it/200/200 200w"
               />
             </div>
             <div
-              class="css-6mexrt-TeaserPreTitleWrapper e18of27r3"
+              class="emotion-13 emotion-14"
             >
               <div
-                class="css-161zlv4-PreTitle e18of27r2"
+                class="emotion-15 emotion-16"
               >
                 Pre Title
               </div>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
+              class="MuiTypography-root MuiTypography-h4 emotion-17 emotion-18"
             >
               Title
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-17cdwkk-TeaserLead-MuiTypography-root e18of27r6"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-19 emotion-20"
             >
               Lead
             </p>
             <div
-              class="css-sibxk9-TeaserMetadata e18of27r1"
+              class="emotion-21 emotion-22"
             >
               <time
-                class="css-bsjge5-TeaserTime e18of27r0"
+                class="emotion-23 emotion-24"
                 datetime="2023-01-01T00:00:00.000Z"
               >
                 01.01.2023 
@@ -400,30 +816,234 @@ https://unsplash.it/200/200 200w"
 
 exports[`Teaser List Block should render Page 1`] = `
 <DocumentFragment>
-  <section
-    class="css-uy6b2i-TeaserListBlockWrapper ebuvkaa1"
+  .emotion-0 {
+  display: grid;
+  gap: 24px;
+}
+
+.emotion-2 {
+  display: grid;
+  -webkit-column-gap: 16px;
+  column-gap: 16px;
+  row-gap: 40px;
+  grid-template-columns: 1fr;
+  -webkit-align-items: stretch;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+}
+
+@media (min-width:600px) {
+  .emotion-2 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-2 {
+    grid-template-columns: repeat(12, 1fr);
+  }
+}
+
+.emotion-4 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-4 {
+    grid-column-start: 1;
+    grid-column-end: 5;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-6 {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+}
+
+.emotion-7 {
+  display: grid;
+  grid-auto-rows: max-content;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
+  grid-template-areas: 'image' 'pretitle' 'title' 'lead' 'authors';
+}
+
+.emotion-9 {
+  grid-column: 1/13;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  grid-area: image;
+}
+
+.emotion-9:empty {
+  min-height: 32px;
+}
+
+.emotion-11 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
+  width: 100%;
+  object-fit: cover;
+  grid-column: 1/13;
+  -webkit-transition: -webkit-transform 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out;
+  aspect-ratio: 1.8;
+}
+
+.emotion-11:where(.emotion-5:hover .emotion-11) {
+  -webkit-transform: scale(1.1);
+  -moz-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
+@media (min-width:900px) {
+  .emotion-11 {
+    aspect-ratio: 1;
+  }
+}
+
+.emotion-13 {
+  -webkit-transition: background-color 0.3s ease-in-out;
+  transition: background-color 0.3s ease-in-out;
+  background-color: #F5FF64;
+  height: 3px;
+  width: 100%;
+  margin-bottom: 12px;
+  grid-area: pretitle;
+}
+
+.emotion-13:where(.emotion-5:hover .emotion-13) {
+  background-color: #e91e63;
+}
+
+.emotion-15 {
+  -webkit-transition: background-color 0.3s ease-in-out;
+  transition: background-color 0.3s ease-in-out;
+  padding: 4px 16px;
+  background-color: #F5FF64;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  font-size: 14px;
+  font-weight: 300;
+  -webkit-transform: translateY(-100%);
+  -moz-transform: translateY(-100%);
+  -ms-transform: translateY(-100%);
+  transform: translateY(-100%);
+}
+
+.emotion-15:where(.emotion-5:hover .emotion-15) {
+  background-color: #e91e63;
+}
+
+@media (min-width:900px) {
+  .emotion-15 {
+    font-size: 18px;
+  }
+}
+
+.emotion-17 {
+  grid-area: title;
+  margin-bottom: 8px;
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 26px;
+}
+
+@media (min-width: 900px) {
+  .emotion-17 {
+    font-size: 32px;
+  }
+}
+
+.emotion-19 {
+  font-weight: 300;
+  font-size: 1rem;
+  grid-area: lead;
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-19.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-21 {
+  margin: 0;
+  font-size: 12px;
+  grid-area: authors;
+}
+
+.emotion-23 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-23 {
+    grid-column-start: 5;
+    grid-column-end: 9;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-42 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-42 {
+    grid-column-start: 9;
+    grid-column-end: 13;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+<section
+    class="emotion-0 emotion-1"
   >
     <div
-      class="css-r7i8yq-TeaserListBlockTeasers ebuvkaa0"
+      class="emotion-2 emotion-3"
     >
       <article
-        class="css-8p11sj-TeaserWrapper e18of27r11"
+        class="emotion-4 emotion-5"
         x="0"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-6"
           href="https://example.com"
         >
           <div
-            class="css-1f245dr-TeaserContentWrapper e18of27r8"
+            class="emotion-7 emotion-8"
           >
             <div
-              class="css-1xekyz3-TeaserImageWrapper e18of27r9"
+              class="emotion-9 emotion-10"
             >
               <img
                 alt="An image description"
-                class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
+                class="emotion-11 emotion-12"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -437,48 +1057,48 @@ https://unsplash.it/200/200 200w"
               />
             </div>
             <div
-              class="css-6mexrt-TeaserPreTitleWrapper e18of27r3"
+              class="emotion-13 emotion-14"
             >
               <div
-                class="css-161zlv4-PreTitle e18of27r2"
+                class="emotion-15 emotion-16"
               >
                 Pre Title
               </div>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
+              class="MuiTypography-root MuiTypography-h4 emotion-17 emotion-18"
             >
               Title
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-17cdwkk-TeaserLead-MuiTypography-root e18of27r6"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-19 emotion-20"
             >
               Lead
             </p>
             <div
-              class="css-sibxk9-TeaserMetadata e18of27r1"
+              class="emotion-21 emotion-22"
             />
           </div>
         </a>
       </article>
       <article
-        class="css-z4j0q-TeaserWrapper e18of27r11"
+        class="emotion-23 emotion-5"
         x="4"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-6"
           href="https://example.com"
         >
           <div
-            class="css-1f245dr-TeaserContentWrapper e18of27r8"
+            class="emotion-7 emotion-8"
           >
             <div
-              class="css-1xekyz3-TeaserImageWrapper e18of27r9"
+              class="emotion-9 emotion-10"
             >
               <img
                 alt="An image description"
-                class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
+                class="emotion-11 emotion-12"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -492,48 +1112,48 @@ https://unsplash.it/200/200 200w"
               />
             </div>
             <div
-              class="css-6mexrt-TeaserPreTitleWrapper e18of27r3"
+              class="emotion-13 emotion-14"
             >
               <div
-                class="css-161zlv4-PreTitle e18of27r2"
+                class="emotion-15 emotion-16"
               >
                 Pre Title
               </div>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
+              class="MuiTypography-root MuiTypography-h4 emotion-17 emotion-18"
             >
               Title
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-17cdwkk-TeaserLead-MuiTypography-root e18of27r6"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-19 emotion-20"
             >
               Lead
             </p>
             <div
-              class="css-sibxk9-TeaserMetadata e18of27r1"
+              class="emotion-21 emotion-22"
             />
           </div>
         </a>
       </article>
       <article
-        class="css-wylm69-TeaserWrapper e18of27r11"
+        class="emotion-42 emotion-5"
         x="8"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-6"
           href="https://example.com"
         >
           <div
-            class="css-1f245dr-TeaserContentWrapper e18of27r8"
+            class="emotion-7 emotion-8"
           >
             <div
-              class="css-1xekyz3-TeaserImageWrapper e18of27r9"
+              class="emotion-9 emotion-10"
             >
               <img
                 alt="An image description"
-                class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
+                class="emotion-11 emotion-12"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -547,26 +1167,26 @@ https://unsplash.it/200/200 200w"
               />
             </div>
             <div
-              class="css-6mexrt-TeaserPreTitleWrapper e18of27r3"
+              class="emotion-13 emotion-14"
             >
               <div
-                class="css-161zlv4-PreTitle e18of27r2"
+                class="emotion-15 emotion-16"
               >
                 Pre Title
               </div>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
+              class="MuiTypography-root MuiTypography-h4 emotion-17 emotion-18"
             >
               Title
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-17cdwkk-TeaserLead-MuiTypography-root e18of27r6"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-19 emotion-20"
             >
               Lead
             </p>
             <div
-              class="css-sibxk9-TeaserMetadata e18of27r1"
+              class="emotion-21 emotion-22"
             />
           </div>
         </a>
@@ -578,30 +1198,238 @@ https://unsplash.it/200/200 200w"
 
 exports[`Teaser List Block should render WithClassName 1`] = `
 <DocumentFragment>
-  <section
-    class="extra-classname css-uy6b2i-TeaserListBlockWrapper ebuvkaa1"
+  .emotion-0 {
+  display: grid;
+  gap: 24px;
+}
+
+.emotion-2 {
+  display: grid;
+  -webkit-column-gap: 16px;
+  column-gap: 16px;
+  row-gap: 40px;
+  grid-template-columns: 1fr;
+  -webkit-align-items: stretch;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+}
+
+@media (min-width:600px) {
+  .emotion-2 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-2 {
+    grid-template-columns: repeat(12, 1fr);
+  }
+}
+
+.emotion-4 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-4 {
+    grid-column-start: 1;
+    grid-column-end: 5;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-6 {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+}
+
+.emotion-7 {
+  display: grid;
+  grid-auto-rows: max-content;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
+  grid-template-areas: 'image' 'pretitle' 'title' 'lead' 'authors';
+}
+
+.emotion-9 {
+  grid-column: 1/13;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  grid-area: image;
+}
+
+.emotion-9:empty {
+  min-height: 32px;
+}
+
+.emotion-11 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
+  width: 100%;
+  object-fit: cover;
+  grid-column: 1/13;
+  -webkit-transition: -webkit-transform 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out;
+  aspect-ratio: 1.8;
+}
+
+.emotion-11:where(.emotion-5:hover .emotion-11) {
+  -webkit-transform: scale(1.1);
+  -moz-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
+@media (min-width:900px) {
+  .emotion-11 {
+    aspect-ratio: 1;
+  }
+}
+
+.emotion-13 {
+  -webkit-transition: background-color 0.3s ease-in-out;
+  transition: background-color 0.3s ease-in-out;
+  background-color: #F5FF64;
+  height: 3px;
+  width: 100%;
+  margin-bottom: 12px;
+  grid-area: pretitle;
+}
+
+.emotion-13:where(.emotion-5:hover .emotion-13) {
+  background-color: #e91e63;
+}
+
+.emotion-15 {
+  -webkit-transition: background-color 0.3s ease-in-out;
+  transition: background-color 0.3s ease-in-out;
+  padding: 4px 16px;
+  background-color: #F5FF64;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  font-size: 14px;
+  font-weight: 300;
+  -webkit-transform: translateY(-100%);
+  -moz-transform: translateY(-100%);
+  -ms-transform: translateY(-100%);
+  transform: translateY(-100%);
+}
+
+.emotion-15:where(.emotion-5:hover .emotion-15) {
+  background-color: #e91e63;
+}
+
+@media (min-width:900px) {
+  .emotion-15 {
+    font-size: 18px;
+  }
+}
+
+.emotion-17 {
+  grid-area: title;
+  margin-bottom: 8px;
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 26px;
+}
+
+@media (min-width: 900px) {
+  .emotion-17 {
+    font-size: 32px;
+  }
+}
+
+.emotion-19 {
+  font-weight: 300;
+  font-size: 1rem;
+  grid-area: lead;
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-19.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-21 {
+  margin: 0;
+  font-size: 12px;
+  grid-area: authors;
+}
+
+.emotion-23 {
+  font-weight: 400;
+}
+
+.emotion-25 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-25 {
+    grid-column-start: 5;
+    grid-column-end: 9;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-46 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-46 {
+    grid-column-start: 9;
+    grid-column-end: 13;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+<section
+    class="extra-classname emotion-0 emotion-1"
   >
     <div
-      class="css-r7i8yq-TeaserListBlockTeasers ebuvkaa0"
+      class="emotion-2 emotion-3"
     >
       <article
-        class="css-8p11sj-TeaserWrapper e18of27r11"
+        class="emotion-4 emotion-5"
         x="0"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-6"
           href="https://example.com"
         >
           <div
-            class="css-1f245dr-TeaserContentWrapper e18of27r8"
+            class="emotion-7 emotion-8"
           >
             <div
-              class="css-1xekyz3-TeaserImageWrapper e18of27r9"
+              class="emotion-9 emotion-10"
             >
               <img
                 alt="An image description"
-                class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
+                class="emotion-11 emotion-12"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -615,29 +1443,29 @@ https://unsplash.it/200/200 200w"
               />
             </div>
             <div
-              class="css-6mexrt-TeaserPreTitleWrapper e18of27r3"
+              class="emotion-13 emotion-14"
             >
               <div
-                class="css-161zlv4-PreTitle e18of27r2"
+                class="emotion-15 emotion-16"
               >
                 Pre Title
               </div>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
+              class="MuiTypography-root MuiTypography-h4 emotion-17 emotion-18"
             >
               Title
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-17cdwkk-TeaserLead-MuiTypography-root e18of27r6"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-19 emotion-20"
             >
               Lead
             </p>
             <div
-              class="css-sibxk9-TeaserMetadata e18of27r1"
+              class="emotion-21 emotion-22"
             >
               <time
-                class="css-bsjge5-TeaserTime e18of27r0"
+                class="emotion-23 emotion-24"
                 datetime="2023-01-01T00:00:00.000Z"
               >
                 01.01.2023 
@@ -647,23 +1475,23 @@ https://unsplash.it/200/200 200w"
         </a>
       </article>
       <article
-        class="css-z4j0q-TeaserWrapper e18of27r11"
+        class="emotion-25 emotion-5"
         x="4"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-6"
           href="https://example.com"
         >
           <div
-            class="css-1f245dr-TeaserContentWrapper e18of27r8"
+            class="emotion-7 emotion-8"
           >
             <div
-              class="css-1xekyz3-TeaserImageWrapper e18of27r9"
+              class="emotion-9 emotion-10"
             >
               <img
                 alt="An image description"
-                class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
+                class="emotion-11 emotion-12"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -677,29 +1505,29 @@ https://unsplash.it/200/200 200w"
               />
             </div>
             <div
-              class="css-6mexrt-TeaserPreTitleWrapper e18of27r3"
+              class="emotion-13 emotion-14"
             >
               <div
-                class="css-161zlv4-PreTitle e18of27r2"
+                class="emotion-15 emotion-16"
               >
                 Pre Title
               </div>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
+              class="MuiTypography-root MuiTypography-h4 emotion-17 emotion-18"
             >
               Title
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-17cdwkk-TeaserLead-MuiTypography-root e18of27r6"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-19 emotion-20"
             >
               Lead
             </p>
             <div
-              class="css-sibxk9-TeaserMetadata e18of27r1"
+              class="emotion-21 emotion-22"
             >
               <time
-                class="css-bsjge5-TeaserTime e18of27r0"
+                class="emotion-23 emotion-24"
                 datetime="2023-01-01T00:00:00.000Z"
               >
                 01.01.2023 
@@ -709,23 +1537,23 @@ https://unsplash.it/200/200 200w"
         </a>
       </article>
       <article
-        class="css-wylm69-TeaserWrapper e18of27r11"
+        class="emotion-46 emotion-5"
         x="8"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-6"
           href="https://example.com"
         >
           <div
-            class="css-1f245dr-TeaserContentWrapper e18of27r8"
+            class="emotion-7 emotion-8"
           >
             <div
-              class="css-1xekyz3-TeaserImageWrapper e18of27r9"
+              class="emotion-9 emotion-10"
             >
               <img
                 alt="An image description"
-                class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
+                class="emotion-11 emotion-12"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -739,29 +1567,29 @@ https://unsplash.it/200/200 200w"
               />
             </div>
             <div
-              class="css-6mexrt-TeaserPreTitleWrapper e18of27r3"
+              class="emotion-13 emotion-14"
             >
               <div
-                class="css-161zlv4-PreTitle e18of27r2"
+                class="emotion-15 emotion-16"
               >
                 Pre Title
               </div>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
+              class="MuiTypography-root MuiTypography-h4 emotion-17 emotion-18"
             >
               Title
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-17cdwkk-TeaserLead-MuiTypography-root e18of27r6"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-19 emotion-20"
             >
               Lead
             </p>
             <div
-              class="css-sibxk9-TeaserMetadata e18of27r1"
+              class="emotion-21 emotion-22"
             >
               <time
-                class="css-bsjge5-TeaserTime e18of27r0"
+                class="emotion-23 emotion-24"
                 datetime="2023-01-01T00:00:00.000Z"
               >
                 01.01.2023 
@@ -777,30 +1605,238 @@ https://unsplash.it/200/200 200w"
 
 exports[`Teaser List Block should render WithEmotion 1`] = `
 <DocumentFragment>
-  <section
-    class="css-uy6b2i-TeaserListBlockWrapper ebuvkaa1"
+  .emotion-0 {
+  display: grid;
+  gap: 24px;
+}
+
+.emotion-2 {
+  display: grid;
+  -webkit-column-gap: 16px;
+  column-gap: 16px;
+  row-gap: 40px;
+  grid-template-columns: 1fr;
+  -webkit-align-items: stretch;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+}
+
+@media (min-width:600px) {
+  .emotion-2 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-2 {
+    grid-template-columns: repeat(12, 1fr);
+  }
+}
+
+.emotion-4 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-4 {
+    grid-column-start: 1;
+    grid-column-end: 5;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-6 {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+}
+
+.emotion-7 {
+  display: grid;
+  grid-auto-rows: max-content;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
+  grid-template-areas: 'image' 'pretitle' 'title' 'lead' 'authors';
+}
+
+.emotion-9 {
+  grid-column: 1/13;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  grid-area: image;
+}
+
+.emotion-9:empty {
+  min-height: 32px;
+}
+
+.emotion-11 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
+  width: 100%;
+  object-fit: cover;
+  grid-column: 1/13;
+  -webkit-transition: -webkit-transform 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out;
+  aspect-ratio: 1.8;
+}
+
+.emotion-11:where(.emotion-5:hover .emotion-11) {
+  -webkit-transform: scale(1.1);
+  -moz-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
+@media (min-width:900px) {
+  .emotion-11 {
+    aspect-ratio: 1;
+  }
+}
+
+.emotion-13 {
+  -webkit-transition: background-color 0.3s ease-in-out;
+  transition: background-color 0.3s ease-in-out;
+  background-color: #F5FF64;
+  height: 3px;
+  width: 100%;
+  margin-bottom: 12px;
+  grid-area: pretitle;
+}
+
+.emotion-13:where(.emotion-5:hover .emotion-13) {
+  background-color: #e91e63;
+}
+
+.emotion-15 {
+  -webkit-transition: background-color 0.3s ease-in-out;
+  transition: background-color 0.3s ease-in-out;
+  padding: 4px 16px;
+  background-color: #F5FF64;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  font-size: 14px;
+  font-weight: 300;
+  -webkit-transform: translateY(-100%);
+  -moz-transform: translateY(-100%);
+  -ms-transform: translateY(-100%);
+  transform: translateY(-100%);
+}
+
+.emotion-15:where(.emotion-5:hover .emotion-15) {
+  background-color: #e91e63;
+}
+
+@media (min-width:900px) {
+  .emotion-15 {
+    font-size: 18px;
+  }
+}
+
+.emotion-17 {
+  grid-area: title;
+  margin-bottom: 8px;
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 26px;
+}
+
+@media (min-width: 900px) {
+  .emotion-17 {
+    font-size: 32px;
+  }
+}
+
+.emotion-19 {
+  font-weight: 300;
+  font-size: 1rem;
+  grid-area: lead;
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-19.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-21 {
+  margin: 0;
+  font-size: 12px;
+  grid-area: authors;
+}
+
+.emotion-23 {
+  font-weight: 400;
+}
+
+.emotion-25 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-25 {
+    grid-column-start: 5;
+    grid-column-end: 9;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-46 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-46 {
+    grid-column-start: 9;
+    grid-column-end: 13;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+<section
+    class="emotion-0 emotion-1"
   >
     <div
-      class="css-r7i8yq-TeaserListBlockTeasers ebuvkaa0"
+      class="emotion-2 emotion-3"
     >
       <article
-        class="css-8p11sj-TeaserWrapper e18of27r11"
+        class="emotion-4 emotion-5"
         x="0"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-6"
           href="https://example.com"
         >
           <div
-            class="css-1f245dr-TeaserContentWrapper e18of27r8"
+            class="emotion-7 emotion-8"
           >
             <div
-              class="css-1xekyz3-TeaserImageWrapper e18of27r9"
+              class="emotion-9 emotion-10"
             >
               <img
                 alt="An image description"
-                class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
+                class="emotion-11 emotion-12"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -814,29 +1850,29 @@ https://unsplash.it/200/200 200w"
               />
             </div>
             <div
-              class="css-6mexrt-TeaserPreTitleWrapper e18of27r3"
+              class="emotion-13 emotion-14"
             >
               <div
-                class="css-161zlv4-PreTitle e18of27r2"
+                class="emotion-15 emotion-16"
               >
                 Pre Title
               </div>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
+              class="MuiTypography-root MuiTypography-h4 emotion-17 emotion-18"
             >
               Title
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-17cdwkk-TeaserLead-MuiTypography-root e18of27r6"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-19 emotion-20"
             >
               Lead
             </p>
             <div
-              class="css-sibxk9-TeaserMetadata e18of27r1"
+              class="emotion-21 emotion-22"
             >
               <time
-                class="css-bsjge5-TeaserTime e18of27r0"
+                class="emotion-23 emotion-24"
                 datetime="2023-01-01T00:00:00.000Z"
               >
                 01.01.2023 
@@ -846,23 +1882,23 @@ https://unsplash.it/200/200 200w"
         </a>
       </article>
       <article
-        class="css-z4j0q-TeaserWrapper e18of27r11"
+        class="emotion-25 emotion-5"
         x="4"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-6"
           href="https://example.com"
         >
           <div
-            class="css-1f245dr-TeaserContentWrapper e18of27r8"
+            class="emotion-7 emotion-8"
           >
             <div
-              class="css-1xekyz3-TeaserImageWrapper e18of27r9"
+              class="emotion-9 emotion-10"
             >
               <img
                 alt="An image description"
-                class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
+                class="emotion-11 emotion-12"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -876,29 +1912,29 @@ https://unsplash.it/200/200 200w"
               />
             </div>
             <div
-              class="css-6mexrt-TeaserPreTitleWrapper e18of27r3"
+              class="emotion-13 emotion-14"
             >
               <div
-                class="css-161zlv4-PreTitle e18of27r2"
+                class="emotion-15 emotion-16"
               >
                 Pre Title
               </div>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
+              class="MuiTypography-root MuiTypography-h4 emotion-17 emotion-18"
             >
               Title
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-17cdwkk-TeaserLead-MuiTypography-root e18of27r6"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-19 emotion-20"
             >
               Lead
             </p>
             <div
-              class="css-sibxk9-TeaserMetadata e18of27r1"
+              class="emotion-21 emotion-22"
             >
               <time
-                class="css-bsjge5-TeaserTime e18of27r0"
+                class="emotion-23 emotion-24"
                 datetime="2023-01-01T00:00:00.000Z"
               >
                 01.01.2023 
@@ -908,23 +1944,23 @@ https://unsplash.it/200/200 200w"
         </a>
       </article>
       <article
-        class="css-wylm69-TeaserWrapper e18of27r11"
+        class="emotion-46 emotion-5"
         x="8"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-6"
           href="https://example.com"
         >
           <div
-            class="css-1f245dr-TeaserContentWrapper e18of27r8"
+            class="emotion-7 emotion-8"
           >
             <div
-              class="css-1xekyz3-TeaserImageWrapper e18of27r9"
+              class="emotion-9 emotion-10"
             >
               <img
                 alt="An image description"
-                class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
+                class="emotion-11 emotion-12"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -938,29 +1974,29 @@ https://unsplash.it/200/200 200w"
               />
             </div>
             <div
-              class="css-6mexrt-TeaserPreTitleWrapper e18of27r3"
+              class="emotion-13 emotion-14"
             >
               <div
-                class="css-161zlv4-PreTitle e18of27r2"
+                class="emotion-15 emotion-16"
               >
                 Pre Title
               </div>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
+              class="MuiTypography-root MuiTypography-h4 emotion-17 emotion-18"
             >
               Title
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-17cdwkk-TeaserLead-MuiTypography-root e18of27r6"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-19 emotion-20"
             >
               Lead
             </p>
             <div
-              class="css-sibxk9-TeaserMetadata e18of27r1"
+              class="emotion-21 emotion-22"
             >
               <time
-                class="css-bsjge5-TeaserTime e18of27r0"
+                class="emotion-23 emotion-24"
                 datetime="2023-01-01T00:00:00.000Z"
               >
                 01.01.2023 
@@ -976,35 +2012,251 @@ https://unsplash.it/200/200 200w"
 
 exports[`Teaser List Block should render WithTitle 1`] = `
 <DocumentFragment>
-  <section
-    class="css-uy6b2i-TeaserListBlockWrapper ebuvkaa1"
+  .emotion-0 {
+  display: grid;
+  gap: 24px;
+}
+
+.emotion-2 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1.4;
+}
+
+.emotion-3 {
+  display: grid;
+  -webkit-column-gap: 16px;
+  column-gap: 16px;
+  row-gap: 40px;
+  grid-template-columns: 1fr;
+  -webkit-align-items: stretch;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+}
+
+@media (min-width:600px) {
+  .emotion-3 {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-3 {
+    grid-template-columns: repeat(12, 1fr);
+  }
+}
+
+.emotion-5 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-5 {
+    grid-column-start: 1;
+    grid-column-end: 5;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-7 {
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+}
+
+.emotion-8 {
+  display: grid;
+  grid-auto-rows: max-content;
+  -webkit-align-items: start;
+  -webkit-box-align: start;
+  -ms-flex-align: start;
+  align-items: start;
+  grid-template-areas: 'image' 'pretitle' 'title' 'lead' 'authors';
+}
+
+.emotion-10 {
+  grid-column: 1/13;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  grid-area: image;
+}
+
+.emotion-10:empty {
+  min-height: 32px;
+}
+
+.emotion-12 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
+  width: 100%;
+  object-fit: cover;
+  grid-column: 1/13;
+  -webkit-transition: -webkit-transform 0.3s ease-in-out;
+  transition: transform 0.3s ease-in-out;
+  aspect-ratio: 1.8;
+}
+
+.emotion-12:where(.emotion-6:hover .emotion-12) {
+  -webkit-transform: scale(1.1);
+  -moz-transform: scale(1.1);
+  -ms-transform: scale(1.1);
+  transform: scale(1.1);
+}
+
+@media (min-width:900px) {
+  .emotion-12 {
+    aspect-ratio: 1;
+  }
+}
+
+.emotion-14 {
+  -webkit-transition: background-color 0.3s ease-in-out;
+  transition: background-color 0.3s ease-in-out;
+  background-color: #F5FF64;
+  height: 3px;
+  width: 100%;
+  margin-bottom: 12px;
+  grid-area: pretitle;
+}
+
+.emotion-14:where(.emotion-6:hover .emotion-14) {
+  background-color: #e91e63;
+}
+
+.emotion-16 {
+  -webkit-transition: background-color 0.3s ease-in-out;
+  transition: background-color 0.3s ease-in-out;
+  padding: 4px 16px;
+  background-color: #F5FF64;
+  width: -webkit-fit-content;
+  width: -moz-fit-content;
+  width: fit-content;
+  font-size: 14px;
+  font-weight: 300;
+  -webkit-transform: translateY(-100%);
+  -moz-transform: translateY(-100%);
+  -ms-transform: translateY(-100%);
+  transform: translateY(-100%);
+}
+
+.emotion-16:where(.emotion-6:hover .emotion-16) {
+  background-color: #e91e63;
+}
+
+@media (min-width:900px) {
+  .emotion-16 {
+    font-size: 18px;
+  }
+}
+
+.emotion-18 {
+  grid-area: title;
+  margin-bottom: 8px;
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 26px;
+}
+
+@media (min-width: 900px) {
+  .emotion-18 {
+    font-size: 32px;
+  }
+}
+
+.emotion-20 {
+  font-weight: 300;
+  font-size: 1rem;
+  grid-area: lead;
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-20.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-22 {
+  margin: 0;
+  font-size: 12px;
+  grid-area: authors;
+}
+
+.emotion-24 {
+  font-weight: 400;
+}
+
+.emotion-26 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-26 {
+    grid-column-start: 5;
+    grid-column-end: 9;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+.emotion-47 {
+  display: grid;
+}
+
+@media (min-width:900px) {
+  .emotion-47 {
+    grid-column-start: 9;
+    grid-column-end: 13;
+    grid-row-start: 1;
+    grid-row-end: 2;
+  }
+}
+
+<section
+    class="emotion-0 emotion-1"
   >
     <h1
-      class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h5 emotion-2"
     >
       Foobar Title
     </h1>
     <div
-      class="css-r7i8yq-TeaserListBlockTeasers ebuvkaa0"
+      class="emotion-3 emotion-4"
     >
       <article
-        class="css-8p11sj-TeaserWrapper e18of27r11"
+        class="emotion-5 emotion-6"
         x="0"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-7"
           href="https://example.com"
         >
           <div
-            class="css-1f245dr-TeaserContentWrapper e18of27r8"
+            class="emotion-8 emotion-9"
           >
             <div
-              class="css-1xekyz3-TeaserImageWrapper e18of27r9"
+              class="emotion-10 emotion-11"
             >
               <img
                 alt="An image description"
-                class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
+                class="emotion-12 emotion-13"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1018,29 +2270,29 @@ https://unsplash.it/200/200 200w"
               />
             </div>
             <div
-              class="css-6mexrt-TeaserPreTitleWrapper e18of27r3"
+              class="emotion-14 emotion-15"
             >
               <div
-                class="css-161zlv4-PreTitle e18of27r2"
+                class="emotion-16 emotion-17"
               >
                 Pre Title
               </div>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
+              class="MuiTypography-root MuiTypography-h4 emotion-18 emotion-19"
             >
               Title
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-17cdwkk-TeaserLead-MuiTypography-root e18of27r6"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20 emotion-21"
             >
               Lead
             </p>
             <div
-              class="css-sibxk9-TeaserMetadata e18of27r1"
+              class="emotion-22 emotion-23"
             >
               <time
-                class="css-bsjge5-TeaserTime e18of27r0"
+                class="emotion-24 emotion-25"
                 datetime="2023-01-01T00:00:00.000Z"
               >
                 01.01.2023 
@@ -1050,23 +2302,23 @@ https://unsplash.it/200/200 200w"
         </a>
       </article>
       <article
-        class="css-z4j0q-TeaserWrapper e18of27r11"
+        class="emotion-26 emotion-6"
         x="4"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-7"
           href="https://example.com"
         >
           <div
-            class="css-1f245dr-TeaserContentWrapper e18of27r8"
+            class="emotion-8 emotion-9"
           >
             <div
-              class="css-1xekyz3-TeaserImageWrapper e18of27r9"
+              class="emotion-10 emotion-11"
             >
               <img
                 alt="An image description"
-                class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
+                class="emotion-12 emotion-13"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1080,29 +2332,29 @@ https://unsplash.it/200/200 200w"
               />
             </div>
             <div
-              class="css-6mexrt-TeaserPreTitleWrapper e18of27r3"
+              class="emotion-14 emotion-15"
             >
               <div
-                class="css-161zlv4-PreTitle e18of27r2"
+                class="emotion-16 emotion-17"
               >
                 Pre Title
               </div>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
+              class="MuiTypography-root MuiTypography-h4 emotion-18 emotion-19"
             >
               Title
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-17cdwkk-TeaserLead-MuiTypography-root e18of27r6"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20 emotion-21"
             >
               Lead
             </p>
             <div
-              class="css-sibxk9-TeaserMetadata e18of27r1"
+              class="emotion-22 emotion-23"
             >
               <time
-                class="css-bsjge5-TeaserTime e18of27r0"
+                class="emotion-24 emotion-25"
                 datetime="2023-01-01T00:00:00.000Z"
               >
                 01.01.2023 
@@ -1112,23 +2364,23 @@ https://unsplash.it/200/200 200w"
         </a>
       </article>
       <article
-        class="css-wylm69-TeaserWrapper e18of27r11"
+        class="emotion-47 emotion-6"
         x="8"
         y="0"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone css-19qjfsi-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineNone emotion-7"
           href="https://example.com"
         >
           <div
-            class="css-1f245dr-TeaserContentWrapper e18of27r8"
+            class="emotion-8 emotion-9"
           >
             <div
-              class="css-1xekyz3-TeaserImageWrapper e18of27r9"
+              class="emotion-10 emotion-11"
             >
               <img
                 alt="An image description"
-                class="css-s7u69o-ImageWrapper-Teaser e1shv2yg0"
+                class="emotion-12 emotion-13"
                 loading="lazy"
                 sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1142,29 +2394,29 @@ https://unsplash.it/200/200 200w"
               />
             </div>
             <div
-              class="css-6mexrt-TeaserPreTitleWrapper e18of27r3"
+              class="emotion-14 emotion-15"
             >
               <div
-                class="css-161zlv4-PreTitle e18of27r2"
+                class="emotion-16 emotion-17"
               >
                 Pre Title
               </div>
             </div>
             <h1
-              class="MuiTypography-root MuiTypography-h4 css-qb7o5k-TeaserTitle-MuiTypography-root e18of27r7"
+              class="MuiTypography-root MuiTypography-h4 emotion-18 emotion-19"
             >
               Title
             </h1>
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-17cdwkk-TeaserLead-MuiTypography-root e18of27r6"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-20 emotion-21"
             >
               Lead
             </p>
             <div
-              class="css-sibxk9-TeaserMetadata e18of27r1"
+              class="emotion-22 emotion-23"
             >
               <time
-                class="css-bsjge5-TeaserTime e18of27r0"
+                class="emotion-24 emotion-25"
                 datetime="2023-01-01T00:00:00.000Z"
               >
                 01.01.2023 

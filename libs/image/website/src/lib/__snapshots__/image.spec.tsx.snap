@@ -2,9 +2,17 @@
 
 exports[`Image should render Default 1`] = `
 <DocumentFragment>
-  <img
+  .emotion-0 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
+}
+
+<img
     alt="An image description"
-    class="css-19cwsz4-ImageWrapper e1shv2yg0"
+    class="emotion-0 emotion-1"
     loading="lazy"
     sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -21,9 +29,17 @@ https://unsplash.it/200/100 200w"
 
 exports[`Image should render Square 1`] = `
 <DocumentFragment>
-  <img
+  .emotion-0 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
+}
+
+<img
     alt="An image description"
-    class="css-19cwsz4-ImageWrapper e1shv2yg0"
+    class="emotion-0 emotion-1"
     loading="lazy"
     sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -40,9 +56,17 @@ https://unsplash.it/200/200 200w"
 
 exports[`Image should render WithoutDescription 1`] = `
 <DocumentFragment>
-  <img
+  .emotion-0 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
+}
+
+<img
     alt="An image title"
-    class="css-19cwsz4-ImageWrapper e1shv2yg0"
+    class="emotion-0 emotion-1"
     loading="lazy"
     sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -59,9 +83,17 @@ https://unsplash.it/200/100 200w"
 
 exports[`Image should render WithoutTitle 1`] = `
 <DocumentFragment>
-  <img
+  .emotion-0 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
+}
+
+<img
     alt="An image description"
-    class="css-19cwsz4-ImageWrapper e1shv2yg0"
+    class="emotion-0 emotion-1"
     loading="lazy"
     sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,

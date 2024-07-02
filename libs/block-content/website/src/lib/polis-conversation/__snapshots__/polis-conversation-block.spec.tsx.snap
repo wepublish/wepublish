@@ -3,7 +3,7 @@
 exports[`Polis Conversaion Block should render Default 1`] = `
 <DocumentFragment>
   <div
-    class="css-1869d74-PolisConversationBlockWrapper e7nf02t0"
+    class="emotion-0 emotion-1"
   />
 </DocumentFragment>
 `;
@@ -11,7 +11,7 @@ exports[`Polis Conversaion Block should render Default 1`] = `
 exports[`Polis Conversaion Block should render WithClassName 1`] = `
 <DocumentFragment>
   <div
-    class="extra-classname css-1869d74-PolisConversationBlockWrapper e7nf02t0"
+    class="extra-classname emotion-0 emotion-1"
   />
 </DocumentFragment>
 `;

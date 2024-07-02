@@ -2,11 +2,16 @@
 
 exports[`Vimeo Video Block should render Default 1`] = `
 <DocumentFragment>
-  <div
-    class="css-xttaxc-VimeoVideoBlockWrapper e1wyl54e1"
+  .emotion-2 {
+  width: 100%;
+  aspect-ratio: 16/9;
+}
+
+<div
+    class="emotion-0 emotion-1"
   >
     <div
-      class="css-9cey06-VimeoVideoBlockPlayer e1wyl54e0"
+      class="emotion-2 emotion-3"
       style="width: auto; height: auto;"
     >
       <div
@@ -19,11 +24,16 @@ exports[`Vimeo Video Block should render Default 1`] = `
 
 exports[`Vimeo Video Block should render WithClassName 1`] = `
 <DocumentFragment>
-  <div
-    class="extra-classname css-xttaxc-VimeoVideoBlockWrapper e1wyl54e1"
+  .emotion-2 {
+  width: 100%;
+  aspect-ratio: 16/9;
+}
+
+<div
+    class="extra-classname emotion-0 emotion-1"
   >
     <div
-      class="css-9cey06-VimeoVideoBlockPlayer e1wyl54e0"
+      class="emotion-2 emotion-3"
       style="width: auto; height: auto;"
     >
       <div

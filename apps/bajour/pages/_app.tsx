@@ -20,7 +20,7 @@ import {useRouter} from 'next/router'
 import Script from 'next/script'
 import {initReactI18next} from 'react-i18next'
 import {FaTwitter} from 'react-icons/fa6'
-import {MdFacebook, MdMail} from 'react-icons/md'
+import {MdFacebook, MdMail, MdSearch} from 'react-icons/md'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
@@ -141,6 +141,10 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
                     slug="main"
                     categorySlugs={[['basel-briefing', 'other'], ['about-us']]}
                     headerSlug="header">
+                    <ButtonLink href="/search">
+                      <MdSearch size="32" />
+                    </ButtonLink>
+
                     <ButtonLink href="https://www.facebook.com/bajourbasel">
                       <MdFacebook size="32" />
                     </ButtonLink>
