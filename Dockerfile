@@ -5,25 +5,25 @@
 FROM node:18.19.1-bookworm-slim as build-next
 ARG NEXT_PROJECT
 ARG API_URL
+### FRONT_ARG_REPLACER ###
 WORKDIR /wepublish
 COPY . .
+RUN echo "MAILCHIMP_SERVER_PREFIX:${MAILCHIMP_SERVER_PREFIX}"
+RUN echo "NEXT_PROJECT:${NEXT_PROJECT}"
+RUN echo "MAILCHIMP_API_KEY:${MAILCHIMP_API_KEY}"
 RUN npm ci
 RUN npx nx build ${NEXT_PROJECT}
 
 FROM node:18.19.1-bookworm-slim as next
 MAINTAINER WePublish Foundation
 ARG NEXT_PROJECT
-ARG MAILCHIMP_SERVER_PREFIX
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV HOSTNAME=0.0.0.0
 ENV ADDRESS=0.0.0.0
 ENV PORT=4000
 WORKDIR /wepublish
-RUN echo "MAILCHIMP_SERVER_PREFIX:${MAILCHIMP_SERVER_PREFIX}" && \
-    echo "NEXT_PROJECT:${NEXT_PROJECT}" && \
-    echo "MAILCHIMP_API_KEY:${MAILCHIMP_API_KEY}" && \
-    groupadd -r wepublish && \
+RUN groupadd -r wepublish && \
     useradd -r -g wepublish -d /wepublish wepublish && \
     chown -R wepublish:wepublish /wepublish && \
     echo "#!/bin/bash\n node /wepublish/apps/${NEXT_PROJECT}/server.js" > /entrypoint.sh && \

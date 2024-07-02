@@ -1,7 +1,7 @@
 #!/bin/bash
 ENV=$1
 PROJECT=$2
-FORMAT=$3
+DEPLOYMENT=$3
 SECURE_ENV_PRFIX="DEPLOYMENT_${PROJECT^^}_"
 PROJECT_FILE=apps/${PROJECT}/deployment.config.json
 echo $SECRETS
@@ -34,8 +34,13 @@ for arg in "$@"; do
     fi
 done
 
-if [[ $FORMAT == "yaml" ]]; then
+if [[ $FORMAT == "helm" ]]; then
   envvars=$(echo "$envvars" | sed 's/=/: /g')
+fi
+if [[  $FORMAT == "docker"  ]]; then
+  for var in $(echo $envvars |sed 's/\\n/ /g' ); do
+    sed -i "s/### FRONT_ARG_REPLACER ###/ARG $(echo $var |cut -d'=' -f 1)\n### FRONT_ARG_REPLACER ###/" Dockerfile
+  done
 fi
 
 envvars="${envvars//'%'/'%25'}"
