@@ -1,8 +1,7 @@
-import {ApolloError} from '@apollo/client/errors'
-import {ComponentProps, PropsWithChildren, useMemo} from 'react'
-import {Alert as MuiAlert, Alert} from '@mui/material'
+import {useMemo} from 'react'
+import {Alert} from '@mui/material'
 import {ErrorCode} from '@wepublish/errors'
-import {useWebsiteBuilder} from '@wepublish/website/builder'
+import {BuilderApiAlertProps, useWebsiteBuilder} from '@wepublish/website/builder'
 
 /**
  * This function is intended to replace with standard i18n translation functions.
@@ -20,10 +19,6 @@ export function translateApolloErrorCode(errorCode?: ErrorCode): string | undefi
   }
 }
 
-export interface ApolloErrorAlertProps extends PropsWithChildren<ComponentProps<typeof MuiAlert>> {
-  error: ApolloError
-}
-
 /**
  * This component wraps the Website Builders Alert component to explicitly handle Apollo errors coming from the api.
  * The component retrieves the apollo error code from the apollo error and assigns an appropriate message for the user.
@@ -31,7 +26,7 @@ export interface ApolloErrorAlertProps extends PropsWithChildren<ComponentProps<
  * @param props
  * @constructor
  */
-export function ApiAlert({error, ...props}: ApolloErrorAlertProps) {
+export function ApiAlert({error, ...props}: BuilderApiAlertProps) {
   const {
     elements: {Link}
   } = useWebsiteBuilder()
