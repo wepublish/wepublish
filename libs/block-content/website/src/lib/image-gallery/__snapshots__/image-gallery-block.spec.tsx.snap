@@ -2,20 +2,88 @@
 
 exports[`Image Gallery Block should render Default 1`] = `
 <DocumentFragment>
-  <figure
-    class="css-1b0x59d-ImageGalleryBlockWrapper e5naayd1"
+  .emotion-0 {
+  margin: 0;
+}
+
+.emotion-3 {
+  display: grid;
+  overflow-y: auto;
+  list-style: none;
+  padding: 0;
+  -webkit-overflow-scrolling: touch;
+  margin: 0;
+  grid-template-columns: repeat(1, 1fr);
+}
+
+@media (min-width:600px) {
+  .emotion-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.emotion-4 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  position: relative;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+.emotion-4 .MuiImageListItem-img {
+  object-fit: cover;
+  width: 100%;
+  height: auto;
+  display: block;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+}
+
+.emotion-5 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
+}
+
+.emotion-7 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-7.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+<figure
+    class="emotion-0 emotion-1"
   >
     <ul
-      class="MuiImageList-root MuiImageList-standard e5naayd0 css-eeca2y-MuiImageList-root-ImageGalleryBlockImageList"
+      class="MuiImageList-root MuiImageList-standard emotion-2 emotion-3"
       style="grid-template-columns: repeat(0, 1fr); gap: 8px;"
     >
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -28,18 +96,18 @@ https://unsplash.it/200/200?0 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -52,18 +120,18 @@ https://unsplash.it/200/200?1 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -76,18 +144,18 @@ https://unsplash.it/200/200?2 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -100,18 +168,18 @@ https://unsplash.it/200/200?3 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -124,18 +192,18 @@ https://unsplash.it/200/200?4 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -148,18 +216,18 @@ https://unsplash.it/200/200?5 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -172,18 +240,18 @@ https://unsplash.it/200/200?6 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -196,18 +264,18 @@ https://unsplash.it/200/200?7 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -220,18 +288,18 @@ https://unsplash.it/200/200?8 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -244,18 +312,18 @@ https://unsplash.it/200/200?9 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -268,7 +336,7 @@ https://unsplash.it/200/200?10 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
@@ -280,20 +348,88 @@ https://unsplash.it/200/200?10 200w"
 
 exports[`Image Gallery Block should render WithClassName 1`] = `
 <DocumentFragment>
-  <figure
-    class="extra-classname css-1b0x59d-ImageGalleryBlockWrapper e5naayd1"
+  .emotion-0 {
+  margin: 0;
+}
+
+.emotion-3 {
+  display: grid;
+  overflow-y: auto;
+  list-style: none;
+  padding: 0;
+  -webkit-overflow-scrolling: touch;
+  margin: 0;
+  grid-template-columns: repeat(1, 1fr);
+}
+
+@media (min-width:600px) {
+  .emotion-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.emotion-4 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  position: relative;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+.emotion-4 .MuiImageListItem-img {
+  object-fit: cover;
+  width: 100%;
+  height: auto;
+  display: block;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+}
+
+.emotion-5 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
+}
+
+.emotion-7 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-7.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+<figure
+    class="extra-classname emotion-0 emotion-1"
   >
     <ul
-      class="MuiImageList-root MuiImageList-standard e5naayd0 css-eeca2y-MuiImageList-root-ImageGalleryBlockImageList"
+      class="MuiImageList-root MuiImageList-standard emotion-2 emotion-3"
       style="grid-template-columns: repeat(0, 1fr); gap: 8px;"
     >
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -306,18 +442,18 @@ https://unsplash.it/200/200?0 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -330,18 +466,18 @@ https://unsplash.it/200/200?1 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -354,18 +490,18 @@ https://unsplash.it/200/200?2 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -378,18 +514,18 @@ https://unsplash.it/200/200?3 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -402,18 +538,18 @@ https://unsplash.it/200/200?4 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -426,18 +562,18 @@ https://unsplash.it/200/200?5 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -450,18 +586,18 @@ https://unsplash.it/200/200?6 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -474,18 +610,18 @@ https://unsplash.it/200/200?7 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -498,18 +634,18 @@ https://unsplash.it/200/200?8 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -522,18 +658,18 @@ https://unsplash.it/200/200?9 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -546,7 +682,7 @@ https://unsplash.it/200/200?10 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
@@ -558,20 +694,88 @@ https://unsplash.it/200/200?10 200w"
 
 exports[`Image Gallery Block should render WithEmotion 1`] = `
 <DocumentFragment>
-  <figure
-    class="css-1b0x59d-ImageGalleryBlockWrapper e5naayd1"
+  .emotion-0 {
+  margin: 0;
+}
+
+.emotion-3 {
+  display: grid;
+  overflow-y: auto;
+  list-style: none;
+  padding: 0;
+  -webkit-overflow-scrolling: touch;
+  margin: 0;
+  grid-template-columns: repeat(1, 1fr);
+}
+
+@media (min-width:600px) {
+  .emotion-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.emotion-4 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  position: relative;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+.emotion-4 .MuiImageListItem-img {
+  object-fit: cover;
+  width: 100%;
+  height: auto;
+  display: block;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+}
+
+.emotion-5 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
+}
+
+.emotion-7 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-7.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+<figure
+    class="emotion-0 emotion-1"
   >
     <ul
-      class="MuiImageList-root MuiImageList-standard e5naayd0 css-eeca2y-MuiImageList-root-ImageGalleryBlockImageList"
+      class="MuiImageList-root MuiImageList-standard emotion-2 emotion-3"
       style="grid-template-columns: repeat(0, 1fr); gap: 8px;"
     >
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -584,18 +788,18 @@ https://unsplash.it/200/200?0 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -608,18 +812,18 @@ https://unsplash.it/200/200?1 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -632,18 +836,18 @@ https://unsplash.it/200/200?2 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -656,18 +860,18 @@ https://unsplash.it/200/200?3 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -680,18 +884,18 @@ https://unsplash.it/200/200?4 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -704,18 +908,18 @@ https://unsplash.it/200/200?5 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -728,18 +932,18 @@ https://unsplash.it/200/200?6 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -752,18 +956,18 @@ https://unsplash.it/200/200?7 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -776,18 +980,18 @@ https://unsplash.it/200/200?8 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -800,18 +1004,18 @@ https://unsplash.it/200/200?9 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -824,7 +1028,7 @@ https://unsplash.it/200/200?10 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
@@ -836,20 +1040,88 @@ https://unsplash.it/200/200?10 200w"
 
 exports[`Image Gallery Block should render WithoutCaption 1`] = `
 <DocumentFragment>
-  <figure
-    class="css-1b0x59d-ImageGalleryBlockWrapper e5naayd1"
+  .emotion-0 {
+  margin: 0;
+}
+
+.emotion-3 {
+  display: grid;
+  overflow-y: auto;
+  list-style: none;
+  padding: 0;
+  -webkit-overflow-scrolling: touch;
+  margin: 0;
+  grid-template-columns: repeat(1, 1fr);
+}
+
+@media (min-width:600px) {
+  .emotion-3 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-3 {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+.emotion-4 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  position: relative;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+.emotion-4 .MuiImageListItem-img {
+  object-fit: cover;
+  width: 100%;
+  height: auto;
+  display: block;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+}
+
+.emotion-5 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
+}
+
+.emotion-7 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-7.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+<figure
+    class="emotion-0 emotion-1"
   >
     <ul
-      class="MuiImageList-root MuiImageList-standard e5naayd0 css-eeca2y-MuiImageList-root-ImageGalleryBlockImageList"
+      class="MuiImageList-root MuiImageList-standard emotion-2 emotion-3"
       style="grid-template-columns: repeat(0, 1fr); gap: 8px;"
     >
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -862,16 +1134,16 @@ https://unsplash.it/200/200?0 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         />
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -884,18 +1156,18 @@ https://unsplash.it/200/200?1 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -908,18 +1180,18 @@ https://unsplash.it/200/200?2 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -932,18 +1204,18 @@ https://unsplash.it/200/200?3 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -956,18 +1228,18 @@ https://unsplash.it/200/200?4 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -980,18 +1252,18 @@ https://unsplash.it/200/200?5 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1004,16 +1276,16 @@ https://unsplash.it/200/200?6 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         />
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1026,18 +1298,18 @@ https://unsplash.it/200/200?7 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1050,18 +1322,18 @@ https://unsplash.it/200/200?8 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1074,18 +1346,18 @@ https://unsplash.it/200/200?9 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
       </li>
       <li
-        class="MuiImageListItem-root MuiImageListItem-standard css-ta95xa-MuiImageListItem-root"
+        class="MuiImageListItem-root MuiImageListItem-standard emotion-4"
         style="height: auto; grid-column-end: span 1; grid-row-end: span 1;"
       >
         <img
           alt="An image description"
-          class="css-19cwsz4-ImageWrapper e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1098,7 +1370,7 @@ https://unsplash.it/200/200?10 200w"
           title="An image title"
         />
         <p
-          class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-body1 emotion-7"
         >
           Image caption that is extremely long so it is bigger than the countainer that would display it
         </p>
