@@ -39,6 +39,7 @@ done
 if [[ $DEPLOYMENT == "helm" ]]; then
   envvars=$(echo "$envvars" | sed 's/=/: /g')
 fi
+
 if [[  $DEPLOYMENT == "docker"  ]]; then
   for var in $(echo $secretenvvars |sed 's/\\n/ /g' ); do
     echo "$(echo ${var})" >> secrets.list
@@ -50,9 +51,13 @@ if [[  $DEPLOYMENT == "docker"  ]]; then
   done
 fi
 
+if [[ ! -z ${secretenvvars} ]];then
+  envvars="${envvars} ${secretenvvars}"
+fi
+
 envvars="${envvars//'%'/'%25'}"
 envvars="${envvars//$'\n'/'%0A'}"
 envvars="${envvars//'\n'/'%0A'}"
 envvars="${envvars/ /'\n'/'%0A'}"
 envvars="${envvars//$'\r'/'%0D'}"
-echo "::set-output name=envvars::${envvars} ${secretenvvars}"
+echo "::set-output name=envvars::${envvars}"

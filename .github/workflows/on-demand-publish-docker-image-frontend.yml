@@ -26,6 +26,7 @@ jobs:
         id: get-env
         run: |
           ./deployment/frontend_read_env.sh ${{ inputs.environment }} ${{ inputs.frontend_project }} docker NEXT_PROJECT=${{ inputs.frontend_project }} API_URL=${{ inputs.api_url }}
+          ls -la .
         env:
           SECRETS_CONTEXT: ${{ toJson(secrets) }}
 

@@ -7,6 +7,7 @@ FROM node:18.19.1-bookworm-slim as build-next
 
 WORKDIR /wepublish
 COPY . .
+RUN ls -la .
 RUN echo "MAILCHIMP_SERVER_PREFIX:${MAILCHIMP_SERVER_PREFIX}"
 RUN echo "NEXT_PROJECT:${NEXT_PROJECT}"
 RUN echo "MAILCHIMP_API_KEY:${MAILCHIMP_API_KEY}"
