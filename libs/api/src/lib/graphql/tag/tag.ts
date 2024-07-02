@@ -35,8 +35,8 @@ export const GraphQLTag = new GraphQLObjectType<Tag, Context>({
     main: {type: new GraphQLNonNull(GraphQLBoolean)},
     url: {
       type: new GraphQLNonNull(GraphQLString),
-      resolve: createProxyingResolver((tag, _, {urlAdapter}) => {
-        return urlAdapter.getTagURL(tag)
+      resolve: createProxyingResolver(async (tag, _, {urlAdapter}) => {
+        return await urlAdapter.getTagURL(tag)
       })
     }
   }

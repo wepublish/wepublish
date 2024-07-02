@@ -52,11 +52,16 @@ export const getArticlePathsBasedOnPage =
     })
 
     const cache = Object.values(client.cache.extract())
-    const articleSlugs = []
+    const articleSlugs = [] as {slug: string; tag?: string}[]
 
     for (const storeObj of cache) {
       if (storeObj?.__typename === 'Article' && !(storeObj as ApiV1.Article).peeredArticleURL) {
-        articleSlugs.push((storeObj as ApiV1.Article).slug)
+        const article = storeObj as ApiV1.Article
+
+        articleSlugs.push({
+          slug: article.slug,
+          tag: article.tags.find(tag => tag.main)?.tag ?? undefined
+        })
       }
 
       if (articleSlugs.length >= maxPathCount) {
@@ -65,9 +70,10 @@ export const getArticlePathsBasedOnPage =
     }
 
     return {
-      paths: articleSlugs.map(slug => ({
+      paths: articleSlugs.map(({slug, tag}) => ({
         params: {
-          slug
+          slug,
+          tag
         }
       })),
       fallback: 'blocking'

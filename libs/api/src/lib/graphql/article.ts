@@ -152,11 +152,11 @@ export const GraphQLArticleRevision = new GraphQLObjectType<ArticleRevision, Con
 
     url: {
       type: new GraphQLNonNull(GraphQLString),
-      resolve: createProxyingResolver((articleRevision, args, {urlAdapter}, info) => {
+      resolve: createProxyingResolver(async (articleRevision, args, {urlAdapter}, info) => {
         // The URLAdapter expects a public article to generate the public article URL.
         // The URL should never be created with values from the updatedAt, publishAt
         // and publishedAt dates, but they are required by the method.
-        return urlAdapter.getPublicArticleURL({
+        return await urlAdapter.getPublicArticleURL({
           ...articleRevision,
           id: info?.variableValues?.id || 'ID-DOES-NOT-EXIST',
           shared: true,
@@ -265,8 +265,12 @@ export const GraphQLPeerArticle = new GraphQLObjectType<PeerArticle, Context>({
       type: new GraphQLNonNull(GraphQLString),
       resolve: createProxyingResolver(async ({peerID, article}, _, {loaders, urlAdapter}) => {
         const peer = await loaders.peer.load(peerID)
-        if (!peer || !article) return ''
-        return urlAdapter.getPeeredArticleURL(peer, article)
+
+        if (!peer || !article) {
+          return ''
+        }
+
+        return await urlAdapter.getPeeredArticleURL(peer, article)
       })
     },
     article: {type: new GraphQLNonNull(GraphQLArticle)}
@@ -295,8 +299,8 @@ export const GraphQLPublicArticle: GraphQLObjectType<PublicArticle, Context> =
 
       url: {
         type: new GraphQLNonNull(GraphQLString),
-        resolve: createProxyingResolver((article, _, {urlAdapter}) => {
-          return urlAdapter.getPublicArticleURL(article)
+        resolve: createProxyingResolver(async (article, _, {urlAdapter}) => {
+          return await urlAdapter.getPublicArticleURL(article)
         })
       },
       peeredArticleURL: {

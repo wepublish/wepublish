@@ -415,7 +415,7 @@ export const GraphQLPublicPeerArticleTeaser = new GraphQLObjectType<PeerArticleT
         return {
           ...article,
           peeredArticleURL:
-            peer && article ? context.urlAdapter.getPeeredArticleURL(peer, article) : null
+            peer && article ? await context.urlAdapter.getPeeredArticleURL(peer, article) : null
         }
       })
     }

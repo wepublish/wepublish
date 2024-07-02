@@ -71,8 +71,8 @@ export const GraphQLEvent = new GraphQLObjectType<Event, Context>({
     },
     url: {
       type: new GraphQLNonNull(GraphQLString),
-      resolve: createProxyingResolver((event, args, {urlAdapter}) => {
-        return urlAdapter.getEventURL(event)
+      resolve: createProxyingResolver(async (event, args, {urlAdapter}) => {
+        return await urlAdapter.getEventURL(event)
       })
     }
   }

@@ -5,15 +5,19 @@ import {PublicComment} from './db/comment'
 import {Event, Peer, Subscription, Tag} from '@prisma/client'
 
 export interface URLAdapter {
-  getPublicArticleURL(article: PublicArticle): string
-  getPeeredArticleURL(peer: Peer, article: PublicArticle): string
-  getPublicPageURL(page: PublicPage): string
-  getAuthorURL(author: Author): string
-  getEventURL(event: Event): string
-  getArticlePreviewURL(token: string): string
-  getPagePreviewURL(token: string): string
-  getCommentURL(item: PublicArticle | PublicPage, comment: PublicComment, peer?: Peer): string
+  getPublicArticleURL(article: PublicArticle): Promise<string>
+  getPeeredArticleURL(peer: Peer, article: PublicArticle): Promise<string>
+  getPublicPageURL(page: PublicPage): Promise<string>
+  getAuthorURL(author: Author): Promise<string>
+  getEventURL(event: Event): Promise<string>
+  getArticlePreviewURL(token: string): Promise<string>
+  getPagePreviewURL(token: string): Promise<string>
+  getCommentURL(
+    item: PublicArticle | PublicPage,
+    comment: PublicComment,
+    peer?: Peer
+  ): Promise<string>
   getLoginURL(token: string): string
-  getSubscriptionURL(subscription: Subscription): string
-  getTagURL(tag: Tag): string
+  getSubscriptionURL(subscription: Subscription): Promise<string>
+  getTagURL(tag: Tag): Promise<string>
 }

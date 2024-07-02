@@ -15,6 +15,7 @@ import * as process from 'process'
 import {Application} from 'express'
 import {DefaultURLAdapter} from '../urlAdapters'
 import {readConfig} from '../readConfig'
+import {MannschaftURLAdapter} from '../urlAdapters/URLAdapter-mannschaft'
 const MS_PER_DAY = 24 * 60 * 60 * 1000
 
 type RunServerProps = {
@@ -106,7 +107,11 @@ export async function runServer({
     level: 'debug'
   })
 
-  const urlAdapter: URLAdapter = new DefaultURLAdapter({websiteURL})
+  let urlAdapter: URLAdapter = new DefaultURLAdapter({websiteURL})
+
+  if (config.general.urlAdapter === 'mannschaft') {
+    urlAdapter = new MannschaftURLAdapter({websiteURL, prisma})
+  }
 
   /**
    * Challenge
