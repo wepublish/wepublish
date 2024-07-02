@@ -46,7 +46,6 @@ for arg in "$@"; do
       envvars="${envvars}${arg}\n"
     fi
 done
-echo $envvars
 
 # Convert env output to helm compatible yaml output
 if [[ $DEPLOYMENT == "helm" ]]; then
@@ -75,7 +74,7 @@ fi
 
 if [[ ! -z ${secretenvvars} ]];then
   # Add secret env vars to output to use by docker build
-  envvars="${envvars} ${secretenvvars}"
+  envvars="${envvars}${secretenvvars}"
 fi
 
 # Clean special chars to make multiline usable by github action
