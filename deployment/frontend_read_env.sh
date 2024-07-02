@@ -47,11 +47,6 @@ for arg in "$@"; do
     fi
 done
 
-# Convert env output to helm compatible yaml output
-if [[ $DEPLOYMENT == "helm" ]]; then
-  envvars=$(echo "$envvars" | sed 's/=/: /g')
-fi
-
 if [[  $DEPLOYMENT == "docker"  ]]; then
 
   # Ensure file is present to ensure one is present since docker build process depends on it.
@@ -75,6 +70,11 @@ fi
 if [[ ! -z ${secretenvvars} ]];then
   # Add secret env vars to output to use by docker build
   envvars="${envvars}${secretenvvars}"
+fi
+
+# Convert env output to helm compatible yaml output
+if [[ $DEPLOYMENT == "helm" ]]; then
+  envvars=$(echo "$envvars" | sed 's/=/: /g')
 fi
 
 # Clean special chars to make multiline usable by github action
