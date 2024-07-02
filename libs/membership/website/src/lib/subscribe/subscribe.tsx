@@ -31,7 +31,7 @@ import {css} from '@emotion/react'
 import {replace, sortBy, toLower} from 'ramda'
 import {MembershipModal} from '../membership-modal/membership-modal'
 import {ApolloError} from '@apollo/client'
-import {ApolloErrorAlert} from 'errors/website'
+import {ApolloErrorAlert} from '@wepublish/errors/website'
 
 const subscribeSchema = z.object({
   memberPlanId: z.string().nonempty(),

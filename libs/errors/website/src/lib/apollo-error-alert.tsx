@@ -1,8 +1,8 @@
 import {ApolloError} from '@apollo/client/errors'
 import {ComponentProps, PropsWithChildren, useMemo} from 'react'
-import {ErrorCode} from 'errors'
 import {Alert as MuiAlert, Alert} from '@mui/material'
 import {Link} from '@wepublish/ui'
+import {ErrorCode} from '@wepublish/errors'
 
 /**
  * This function is intended to replace with standard i18n translation functions.

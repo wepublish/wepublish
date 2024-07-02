@@ -7,7 +7,7 @@ import {Controller, useForm} from 'react-hook-form'
 import {OptionalKeysOf} from 'type-fest'
 import {z} from 'zod'
 import {UserForm} from './user-form'
-import {ApolloErrorAlert} from 'errors/website'
+import {ApolloErrorAlert} from '@wepublish/errors/website'
 
 export const RegistrationFormWrapper = styled('form')`
   display: grid;
