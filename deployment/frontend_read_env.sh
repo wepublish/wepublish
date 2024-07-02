@@ -27,7 +27,7 @@ for secret in $(jq -r ".frontend.${ENV}.secret_env[]" "$PROJECT_FILE"); do
   if [[ $? == 0 ]]; then
 
     # Get secure variable from github
-    value=$(echo ${SECRETS_CONTEXT} |jq "." |grep $SECURE_ENV_PRFIX | sed "s/$SECURE_ENV_PRFIX//g" |grep "\"$secret\":" | cut -d':' -f 2 |sed 's/[ "]//g')
+    value=$(echo ${SECRETS_CONTEXT} |jq "." |grep $SECURE_ENV_PRFIX | sed "s/$SECURE_ENV_PRFIX//g" |grep "\"$secret\":" | cut -d':' -f 2 |sed 's/[ "]//g'|sed 's/,//g')
 
     # Warn user if a secret variable is set in config file but is missing in github secure context
     if [[ -z $value ]]; then

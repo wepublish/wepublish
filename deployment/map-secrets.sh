@@ -5,7 +5,6 @@ MODE=$1
 if [[ $MODE == "clean" ]]; then
   if [[ -f secrets.list ]]; then
     for s in $(cat secrets.list); do
-      s=$(echo $s |sed 's/,//g')
       echo "Removed secret variable ${s}"
       sed -i "s/\"$(echo ${s} | cut -d'=' -f 2)\"/\"@@@$(echo ${s} | cut -d'=' -f 1)@@@\"/g" $(grep -rl "\"$(echo ${s} | cut -d'=' -f 2)\"" /wepublish/dist/)
     done
