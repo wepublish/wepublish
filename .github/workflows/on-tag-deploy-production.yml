@@ -17,7 +17,7 @@ jobs:
       - id: image_tag
         run: ./deployment/get_production_tag.sh ${GITHUB_REF##*/}
 
-  deploy_wepublish_production:
+  deploy-wepublish-production:
     needs: get-tag
     uses: ./.github/workflows/on-demand-publish-docker-image.yml
     if: ${{ needs.get-tag.result == 'success' }}
@@ -34,7 +34,7 @@ jobs:
 
   deploy_frontend_production:
     name: Frontend
-    needs: [ deploy_production, get-tag ]
+    needs: [ deploy-wepublish-production, get-tag ]
     if: ${{ needs.deploy_production.result == 'success' }}
     uses: ./.github/workflows/on-demand-publish-docker-image-frontend.yml
     with:
