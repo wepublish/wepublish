@@ -22,7 +22,7 @@ done
 secretenvvars=""
 for secret in $(jq -r ".frontend.${ENV}.secret_env[]" "$PROJECT_FILE"); do
 
-  # Get secure env to add
+  # Check if secure env exists
   echo "${secret}" |grep -v "$(echo $arg |cut -d '=' -f 1)=" > /dev/null
   if [[ $? == 0 ]]; then
 
@@ -57,6 +57,7 @@ if [[  $DEPLOYMENT == "docker"  ]]; then
   # Ensure file is present to ensure one is present since docker build process depends on it.
   touch secrets_name.list
 
+  echo "SECRET:" $secretenvvars
   for var in $(echo $secretenvvars |sed 's/\\n/ /g' ); do
 
     # Write secrets list und secrete name list to clean and read on docker startup secrets with map-secrets.sh scripts
