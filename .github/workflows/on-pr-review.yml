@@ -288,9 +288,9 @@ jobs:
 
 
   publish_docker_frontend_image:
-    name: Frontend
-    needs: [setup-frontend-matrix] #, helm_deployment]
-    #if: ${{ needs.helm_deployment.result == 'success' }}
+    name: Build Docker Frontend
+    needs: [setup-frontend-matrix, helm_deployment]
+    if: ${{ needs.helm_deployment.result == 'success' }}
     uses: ./.github/workflows/on-demand-publish-docker-image-frontend.yml
     strategy:
       matrix: ${{fromJson(needs.setup-frontend-matrix.outputs.matrix)}}
@@ -303,7 +303,7 @@ jobs:
     secrets: inherit
 
   helm_deployment_frontend:
-    name: Helm deployment Frontend
+    name: Helm Deployment Frontend
     needs: [publish_docker_frontend_image, setup-frontend-matrix]
     if: ${{ needs.publish_docker_frontend_image.result == 'success' }}
     uses: ./.github/workflows/on-demand-deploy-helm-frontend.yml
