@@ -2,22 +2,137 @@
 
 exports[`EventList Container should render Default 1`] = `
 <DocumentFragment>
-  <article
-    class="css-1hdjk0a-EventListWrapper e1kgsg4h0"
+  .emotion-0 {
+  display: grid;
+  gap: 32px;
+  justify-items: center;
+}
+
+.emotion-2 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  display: grid;
+  width: 100%;
+  color: inherit;
+  -webkit-text-decoration: inherit;
+  text-decoration: inherit;
+  container-type: inline-size;
+}
+
+.emotion-2:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-3 {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr;
+  -webkit-align-content: start;
+  -ms-flex-line-pack: start;
+  align-content: start;
+}
+
+@container (min-width: 400px) {
+  .emotion-3 {
+    grid-template-columns: minmax(30%, 200px) auto;
+  }
+}
+
+.emotion-7 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+}
+
+.emotion-9 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex-flow: column;
+  -webkit-flex-flow: column;
+  -ms-flex-flow: column;
+  flex-flow: column;
+  gap: 8px;
+}
+
+.emotion-11 {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  gap: 8px;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-13 {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 8px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-15 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 26px;
+}
+
+@media (min-width: 900px) {
+  .emotion-15 {
+    font-size: 32px;
+  }
+}
+
+.emotion-18 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-18.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-18:last-child {
+  margin-bottom: 0;
+}
+
+<article
+    class="emotion-0 emotion-1"
   >
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-19nyt9i-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <article
-        class="css-1tce2jk-EventListItemWrapper ehub4u74"
+        class="emotion-3 emotion-4"
       >
         <div
-          class="css-13xyioz-EventListItemImage ehub4u70"
+          class="emotion-5 emotion-6"
         >
           <img
             alt="DSC07717"
-            class="css-cibo30-ImageWrapper e1shv2yg0"
+            class="emotion-7 emotion-8"
             loading="lazy"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -31,13 +146,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-13m43v7-EventListItemContent ehub4u73"
+          class="emotion-9 emotion-10"
         >
           <div
-            class="css-3m8h5i-EventListItemMeta ehub4u72"
+            class="emotion-11 emotion-12"
           >
             <div
-              class="css-kd9ikn-EventListItemDate ehub4u71"
+              class="emotion-13 emotion-14"
             >
               <svg
                 fill="currentColor"
@@ -70,12 +185,12 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 emotion-15"
           >
             Cool concert
           </h1>
           <div
-            class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+            class="emotion-16 emotion-17"
           >
             <div
               data-gramm="false"
@@ -84,7 +199,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
                 data-slate-node="element"
               >
                 <span
@@ -175,18 +290,18 @@ https://unsplash.it/200/100 200w"
       </article>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-19nyt9i-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <article
-        class="css-1tce2jk-EventListItemWrapper ehub4u74"
+        class="emotion-3 emotion-4"
       >
         <div
-          class="css-13xyioz-EventListItemImage ehub4u70"
+          class="emotion-5 emotion-6"
         >
           <img
             alt="DSC07717"
-            class="css-cibo30-ImageWrapper e1shv2yg0"
+            class="emotion-7 emotion-8"
             loading="lazy"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -200,13 +315,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-13m43v7-EventListItemContent ehub4u73"
+          class="emotion-9 emotion-10"
         >
           <div
-            class="css-3m8h5i-EventListItemMeta ehub4u72"
+            class="emotion-11 emotion-12"
           >
             <div
-              class="css-kd9ikn-EventListItemDate ehub4u71"
+              class="emotion-13 emotion-14"
             >
               <svg
                 fill="currentColor"
@@ -239,12 +354,12 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 emotion-15"
           >
             Cool concert
           </h1>
           <div
-            class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+            class="emotion-16 emotion-17"
           >
             <div
               data-gramm="false"
@@ -253,7 +368,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
                 data-slate-node="element"
               >
                 <span
@@ -344,18 +459,18 @@ https://unsplash.it/200/100 200w"
       </article>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-19nyt9i-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <article
-        class="css-1tce2jk-EventListItemWrapper ehub4u74"
+        class="emotion-3 emotion-4"
       >
         <div
-          class="css-13xyioz-EventListItemImage ehub4u70"
+          class="emotion-5 emotion-6"
         >
           <img
             alt="DSC07717"
-            class="css-cibo30-ImageWrapper e1shv2yg0"
+            class="emotion-7 emotion-8"
             loading="lazy"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -369,13 +484,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-13m43v7-EventListItemContent ehub4u73"
+          class="emotion-9 emotion-10"
         >
           <div
-            class="css-3m8h5i-EventListItemMeta ehub4u72"
+            class="emotion-11 emotion-12"
           >
             <div
-              class="css-kd9ikn-EventListItemDate ehub4u71"
+              class="emotion-13 emotion-14"
             >
               <svg
                 fill="currentColor"
@@ -408,12 +523,12 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 emotion-15"
           >
             Cool concert
           </h1>
           <div
-            class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+            class="emotion-16 emotion-17"
           >
             <div
               data-gramm="false"
@@ -422,7 +537,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
                 data-slate-node="element"
               >
                 <span
@@ -518,22 +633,137 @@ https://unsplash.it/200/100 200w"
 
 exports[`EventList Container should render WithClassName 1`] = `
 <DocumentFragment>
-  <article
-    class="extra-classname css-1hdjk0a-EventListWrapper e1kgsg4h0"
+  .emotion-0 {
+  display: grid;
+  gap: 32px;
+  justify-items: center;
+}
+
+.emotion-2 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  display: grid;
+  width: 100%;
+  color: inherit;
+  -webkit-text-decoration: inherit;
+  text-decoration: inherit;
+  container-type: inline-size;
+}
+
+.emotion-2:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-3 {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr;
+  -webkit-align-content: start;
+  -ms-flex-line-pack: start;
+  align-content: start;
+}
+
+@container (min-width: 400px) {
+  .emotion-3 {
+    grid-template-columns: minmax(30%, 200px) auto;
+  }
+}
+
+.emotion-7 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+}
+
+.emotion-9 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex-flow: column;
+  -webkit-flex-flow: column;
+  -ms-flex-flow: column;
+  flex-flow: column;
+  gap: 8px;
+}
+
+.emotion-11 {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  gap: 8px;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-13 {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 8px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-15 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 26px;
+}
+
+@media (min-width: 900px) {
+  .emotion-15 {
+    font-size: 32px;
+  }
+}
+
+.emotion-18 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-18.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-18:last-child {
+  margin-bottom: 0;
+}
+
+<article
+    class="extra-classname emotion-0 emotion-1"
   >
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-19nyt9i-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <article
-        class="css-1tce2jk-EventListItemWrapper ehub4u74"
+        class="emotion-3 emotion-4"
       >
         <div
-          class="css-13xyioz-EventListItemImage ehub4u70"
+          class="emotion-5 emotion-6"
         >
           <img
             alt="DSC07717"
-            class="css-cibo30-ImageWrapper e1shv2yg0"
+            class="emotion-7 emotion-8"
             loading="lazy"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -547,13 +777,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-13m43v7-EventListItemContent ehub4u73"
+          class="emotion-9 emotion-10"
         >
           <div
-            class="css-3m8h5i-EventListItemMeta ehub4u72"
+            class="emotion-11 emotion-12"
           >
             <div
-              class="css-kd9ikn-EventListItemDate ehub4u71"
+              class="emotion-13 emotion-14"
             >
               <svg
                 fill="currentColor"
@@ -586,12 +816,12 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 emotion-15"
           >
             Cool concert
           </h1>
           <div
-            class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+            class="emotion-16 emotion-17"
           >
             <div
               data-gramm="false"
@@ -600,7 +830,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
                 data-slate-node="element"
               >
                 <span
@@ -691,18 +921,18 @@ https://unsplash.it/200/100 200w"
       </article>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-19nyt9i-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <article
-        class="css-1tce2jk-EventListItemWrapper ehub4u74"
+        class="emotion-3 emotion-4"
       >
         <div
-          class="css-13xyioz-EventListItemImage ehub4u70"
+          class="emotion-5 emotion-6"
         >
           <img
             alt="DSC07717"
-            class="css-cibo30-ImageWrapper e1shv2yg0"
+            class="emotion-7 emotion-8"
             loading="lazy"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -716,13 +946,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-13m43v7-EventListItemContent ehub4u73"
+          class="emotion-9 emotion-10"
         >
           <div
-            class="css-3m8h5i-EventListItemMeta ehub4u72"
+            class="emotion-11 emotion-12"
           >
             <div
-              class="css-kd9ikn-EventListItemDate ehub4u71"
+              class="emotion-13 emotion-14"
             >
               <svg
                 fill="currentColor"
@@ -755,12 +985,12 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 emotion-15"
           >
             Cool concert
           </h1>
           <div
-            class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+            class="emotion-16 emotion-17"
           >
             <div
               data-gramm="false"
@@ -769,7 +999,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
                 data-slate-node="element"
               >
                 <span
@@ -860,18 +1090,18 @@ https://unsplash.it/200/100 200w"
       </article>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-19nyt9i-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <article
-        class="css-1tce2jk-EventListItemWrapper ehub4u74"
+        class="emotion-3 emotion-4"
       >
         <div
-          class="css-13xyioz-EventListItemImage ehub4u70"
+          class="emotion-5 emotion-6"
         >
           <img
             alt="DSC07717"
-            class="css-cibo30-ImageWrapper e1shv2yg0"
+            class="emotion-7 emotion-8"
             loading="lazy"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -885,13 +1115,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-13m43v7-EventListItemContent ehub4u73"
+          class="emotion-9 emotion-10"
         >
           <div
-            class="css-3m8h5i-EventListItemMeta ehub4u72"
+            class="emotion-11 emotion-12"
           >
             <div
-              class="css-kd9ikn-EventListItemDate ehub4u71"
+              class="emotion-13 emotion-14"
             >
               <svg
                 fill="currentColor"
@@ -924,12 +1154,12 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 emotion-15"
           >
             Cool concert
           </h1>
           <div
-            class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+            class="emotion-16 emotion-17"
           >
             <div
               data-gramm="false"
@@ -938,7 +1168,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
                 data-slate-node="element"
               >
                 <span
@@ -1034,22 +1264,137 @@ https://unsplash.it/200/100 200w"
 
 exports[`EventList Container should render WithEmotion 1`] = `
 <DocumentFragment>
-  <article
-    class="css-1hdjk0a-EventListWrapper e1kgsg4h0"
+  .emotion-0 {
+  display: grid;
+  gap: 32px;
+  justify-items: center;
+}
+
+.emotion-2 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  display: grid;
+  width: 100%;
+  color: inherit;
+  -webkit-text-decoration: inherit;
+  text-decoration: inherit;
+  container-type: inline-size;
+}
+
+.emotion-2:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-3 {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr;
+  -webkit-align-content: start;
+  -ms-flex-line-pack: start;
+  align-content: start;
+}
+
+@container (min-width: 400px) {
+  .emotion-3 {
+    grid-template-columns: minmax(30%, 200px) auto;
+  }
+}
+
+.emotion-7 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+}
+
+.emotion-9 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex-flow: column;
+  -webkit-flex-flow: column;
+  -ms-flex-flow: column;
+  flex-flow: column;
+  gap: 8px;
+}
+
+.emotion-11 {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  gap: 8px;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: flex-start;
+  justify-content: flex-start;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-13 {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 8px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-15 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 26px;
+}
+
+@media (min-width: 900px) {
+  .emotion-15 {
+    font-size: 32px;
+  }
+}
+
+.emotion-18 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-18.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-18:last-child {
+  margin-bottom: 0;
+}
+
+<article
+    class="emotion-0 emotion-1"
   >
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-19nyt9i-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <article
-        class="css-1tce2jk-EventListItemWrapper ehub4u74"
+        class="emotion-3 emotion-4"
       >
         <div
-          class="css-13xyioz-EventListItemImage ehub4u70"
+          class="emotion-5 emotion-6"
         >
           <img
             alt="DSC07717"
-            class="css-cibo30-ImageWrapper e1shv2yg0"
+            class="emotion-7 emotion-8"
             loading="lazy"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1063,13 +1408,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-13m43v7-EventListItemContent ehub4u73"
+          class="emotion-9 emotion-10"
         >
           <div
-            class="css-3m8h5i-EventListItemMeta ehub4u72"
+            class="emotion-11 emotion-12"
           >
             <div
-              class="css-kd9ikn-EventListItemDate ehub4u71"
+              class="emotion-13 emotion-14"
             >
               <svg
                 fill="currentColor"
@@ -1102,12 +1447,12 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 emotion-15"
           >
             Cool concert
           </h1>
           <div
-            class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+            class="emotion-16 emotion-17"
           >
             <div
               data-gramm="false"
@@ -1116,7 +1461,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
                 data-slate-node="element"
               >
                 <span
@@ -1207,18 +1552,18 @@ https://unsplash.it/200/100 200w"
       </article>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-19nyt9i-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <article
-        class="css-1tce2jk-EventListItemWrapper ehub4u74"
+        class="emotion-3 emotion-4"
       >
         <div
-          class="css-13xyioz-EventListItemImage ehub4u70"
+          class="emotion-5 emotion-6"
         >
           <img
             alt="DSC07717"
-            class="css-cibo30-ImageWrapper e1shv2yg0"
+            class="emotion-7 emotion-8"
             loading="lazy"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1232,13 +1577,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-13m43v7-EventListItemContent ehub4u73"
+          class="emotion-9 emotion-10"
         >
           <div
-            class="css-3m8h5i-EventListItemMeta ehub4u72"
+            class="emotion-11 emotion-12"
           >
             <div
-              class="css-kd9ikn-EventListItemDate ehub4u71"
+              class="emotion-13 emotion-14"
             >
               <svg
                 fill="currentColor"
@@ -1271,12 +1616,12 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 emotion-15"
           >
             Cool concert
           </h1>
           <div
-            class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+            class="emotion-16 emotion-17"
           >
             <div
               data-gramm="false"
@@ -1285,7 +1630,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
                 data-slate-node="element"
               >
                 <span
@@ -1376,18 +1721,18 @@ https://unsplash.it/200/100 200w"
       </article>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-19nyt9i-MuiTypography-root-MuiLink-root-EventListItem"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
     >
       <article
-        class="css-1tce2jk-EventListItemWrapper ehub4u74"
+        class="emotion-3 emotion-4"
       >
         <div
-          class="css-13xyioz-EventListItemImage ehub4u70"
+          class="emotion-5 emotion-6"
         >
           <img
             alt="DSC07717"
-            class="css-cibo30-ImageWrapper e1shv2yg0"
+            class="emotion-7 emotion-8"
             loading="lazy"
             sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1401,13 +1746,13 @@ https://unsplash.it/200/100 200w"
           />
         </div>
         <div
-          class="css-13m43v7-EventListItemContent ehub4u73"
+          class="emotion-9 emotion-10"
         >
           <div
-            class="css-3m8h5i-EventListItemMeta ehub4u72"
+            class="emotion-11 emotion-12"
           >
             <div
-              class="css-kd9ikn-EventListItemDate ehub4u71"
+              class="emotion-13 emotion-14"
             >
               <svg
                 fill="currentColor"
@@ -1440,12 +1785,12 @@ https://unsplash.it/200/100 200w"
             </time>
           </div>
           <h1
-            class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
+            class="MuiTypography-root MuiTypography-h4 emotion-15"
           >
             Cool concert
           </h1>
           <div
-            class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+            class="emotion-16 emotion-17"
           >
             <div
               data-gramm="false"
@@ -1454,7 +1799,7 @@ https://unsplash.it/200/100 200w"
               style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-18"
                 data-slate-node="element"
               >
                 <span
