@@ -1,8 +1,8 @@
 import {ApolloError} from '@apollo/client/errors'
 import {ComponentProps, PropsWithChildren, useMemo} from 'react'
 import {Alert as MuiAlert, Alert} from '@mui/material'
-import {Link} from '@wepublish/ui'
 import {ErrorCode} from '@wepublish/errors'
+import {useWebsiteBuilder} from '@wepublish/website/builder'
 
 /**
  * This function is intended to replace with standard i18n translation functions.
@@ -32,6 +32,10 @@ export interface ApolloErrorAlertProps extends PropsWithChildren<ComponentProps<
  * @constructor
  */
 export function ApolloErrorAlert({error, ...props}: ApolloErrorAlertProps) {
+  const {
+    elements: {Link}
+  } = useWebsiteBuilder()
+
   const apolloErrorCode = useMemo<ErrorCode | undefined>(() => {
     return error.graphQLErrors?.at(0)?.extensions?.code as ErrorCode
   }, [error])
