@@ -31,7 +31,7 @@ import {css} from '@emotion/react'
 import {replace, sortBy, toLower} from 'ramda'
 import {MembershipModal} from '../membership-modal/membership-modal'
 import {ApolloError} from '@apollo/client'
-import {ApolloErrorAlert} from '@wepublish/errors/website'
+import {ApiAlert} from '@wepublish/errors/website'
 
 const subscribeSchema = z.object({
   memberPlanId: z.string().nonempty(),
@@ -342,7 +342,7 @@ export const Subscribe = <T extends BuilderUserFormFields>({
           )}
         />
 
-        {memberPlans.error && <ApolloErrorAlert error={memberPlans.error} severity="error" />}
+        {memberPlans.error && <ApiAlert error={memberPlans.error} severity="error" />}
       </SubscribeSection>
 
       <SubscribeSection>
@@ -451,11 +451,11 @@ export const Subscribe = <T extends BuilderUserFormFields>({
             </RegistrationChallengeWrapper>
           )}
 
-          {challenge.error && <ApolloErrorAlert error={challenge.error} severity="error" />}
+          {challenge.error && <ApiAlert error={challenge.error} severity="error" />}
         </SubscribeSection>
       )}
 
-      {error && <ApolloErrorAlert error={error as ApolloError} severity="error" />}
+      {error && <ApiAlert error={error as ApolloError} severity="error" />}
 
       <SubscribeNarrowSection>
         <Button

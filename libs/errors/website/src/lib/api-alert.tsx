@@ -31,7 +31,7 @@ export interface ApolloErrorAlertProps extends PropsWithChildren<ComponentProps<
  * @param props
  * @constructor
  */
-export function ApolloErrorAlert({error, ...props}: ApolloErrorAlertProps) {
+export function ApiAlert({error, ...props}: ApolloErrorAlertProps) {
   const {
     elements: {Link}
   } = useWebsiteBuilder()
