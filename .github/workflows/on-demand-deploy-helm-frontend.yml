@@ -24,7 +24,7 @@ jobs:
       - name: Get environment variables
         id: get-env
         run: |
-          ./deployment/frontend_read_env.sh review ${{ inputs.frontend_project }} helm API_URL=${{ inputs.api_url }} FRONTEND_URL=https://${{ inputs.frontend_project }}-${{ github.event.pull_request.number }}.reviews.wepublish.dev
+          ./deployment/frontend_read_env.sh helm ${{ inputs.frontend_project }} helm API_URL=${{ inputs.api_url }} FRONTEND_URL=https://${{ inputs.frontend_project }}-${{ github.event.pull_request.number }}.reviews.wepublish.dev
         env:
           SECRETS_CONTEXT: ${{ toJson(secrets) }}
 
