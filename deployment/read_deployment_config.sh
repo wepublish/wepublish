@@ -13,11 +13,12 @@ done
 if [[ ! -z $PROJECT ]]; then
   if [[ -z $(echo "@$targets@" |sed "s/ /@/g" |grep "@${PROJECT}@") ]]; then
     echo "Project <$PROJECT> has no frontend, skipping..."
-    exit 99
+    echo ::set-output name=has-frontend::false
   else
     echo "Project <$PROJECT> has frontend."
-    exit 0
+    echo ::set-output name=has-frontend::true
   fi
+  exit 0
 fi
 
 matrix="{\"target\":["

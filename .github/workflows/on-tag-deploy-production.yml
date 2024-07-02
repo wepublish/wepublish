@@ -34,6 +34,8 @@ jobs:
 
   check-if-frontend-deployment:
     runs-on: ubuntu-latest
+    outputs:
+      has-frontend: ${{ steps.read-deployment-config.outputs.has-frontend }}
     needs: [ get-tag ]
     if: ${{ needs.get-tag.result == 'success' }}
     steps:
@@ -45,7 +47,7 @@ jobs:
   deploy_frontend_production:
     name: Frontend
     needs: [ get-tag, check-if-frontend-deployment ]
-    if: ${{ needs.check-if-frontend-deployment.result == 'success' }}
+    if: ${{ needs.check-if-frontend-deployment.outputs.has-frontend == 'true' }}
     uses: ./.github/workflows/on-demand-publish-docker-image-frontend.yml
     with:
       frontend_project: ${{ needs.get-tag.outputs.project }}
