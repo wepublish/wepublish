@@ -10,7 +10,6 @@ COPY . .
 RUN npm ci
 RUN npx nx build ${NEXT_PROJECT}
 RUN bash /wepublish/deployment/map-secrets.sh clean
-RUN rm secrets.list
 
 FROM node:18.19.1-bookworm-slim as next
 MAINTAINER WePublish Foundation

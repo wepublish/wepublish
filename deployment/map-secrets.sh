@@ -14,6 +14,7 @@ if [[ $MODE == "clean" ]]; then
       echo "OK:"
       cat secrets.list
     done
+    rm secrets.list # Cleanup
   fi
   exit 0
 fi
@@ -22,6 +23,10 @@ fi
 if [[ $MODE == "restore" ]]; then
   if [[ -f secrets_name.list ]]; then
     for n in $(cat secrets_name.list); do
+      if [[ -z ${!n} ]]; then
+        echo "Secret env ${n} not set!"
+        exit 99
+      fi
       echo "Inserted secret variable ${n}"
       sed -i "s/\"@@@${n}@@@\"/\"${!n}\"/g" $(grep -rl "\"@@@${n}@@@\"" /wepublish)
     done
