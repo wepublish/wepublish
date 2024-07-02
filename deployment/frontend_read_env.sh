@@ -41,7 +41,7 @@ fi
 
 if [[  $DEPLOYMENT == "docker"  ]]; then
   for var in $(echo $secretenvvars |sed 's/\\n/ /g' ); do
-    echo "$(echo ${var})" >> secrets.list
+    echo "${var}" >> secrets.list
     echo "$(echo ${var} |cut -d'=' -f 1)" >> secrets_name.list
     sed -i "s|### FRONT_ARG_REPLACER ###|ARG $(echo ${var} |cut -d'=' -f 1)\n### FRONT_ARG_REPLACER ###|g" Dockerfile
   done
