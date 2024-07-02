@@ -1,6 +1,11 @@
 import {zodResolver} from '@hookform/resolvers/zod'
 import {IconButton, Modal, Theme, css, styled, useTheme} from '@mui/material'
-import {LoginFormContainer, useUser} from '@wepublish/authentication/website'
+import {
+  IntendedRouteExpiryInSeconds,
+  IntendedRouteStorageKey,
+  LoginFormContainer,
+  useUser
+} from '@wepublish/authentication/website'
 import {toPlaintext} from '@wepublish/richtext'
 import {Link} from '@wepublish/ui'
 import {BuilderCommentEditorProps, useWebsiteBuilder} from '@wepublish/website/builder'
@@ -10,9 +15,6 @@ import {useMemo, useState} from 'react'
 import {Controller, useForm} from 'react-hook-form'
 import {MdClose, MdLogin, MdSend} from 'react-icons/md'
 import {z} from 'zod'
-
-export const IntendedRouteStorageKey = 'auth.intended'
-export const IntendedRouteExpiryInSeconds = 2 * 60
 
 export const CommentEditorWrapper = styled('form')<{modalOpen: boolean}>`
   display: grid;
