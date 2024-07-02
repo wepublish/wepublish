@@ -6,7 +6,6 @@ SECURE_ENV_PRFIX="DEPLOYMENT_${PROJECT^^}_"
 PROJECT_FILE=apps/${PROJECT}/deployment.config.json
 echo $SECRETS
 shift 3
-SECRETS_CONTEXT=$(cat secrets.json)
 
 # Add env from env files
 customVars=$(jq -r ".frontend.${ENV}.env | to_entries | map(\"\(.key)=\(.value|tostring)\") | .[]" $PROJECT_FILE)
