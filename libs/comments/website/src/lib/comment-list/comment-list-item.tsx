@@ -73,6 +73,7 @@ export const CommentListItem = ({
   openEditorsStateDispatch: dispatch,
   ratingSystem,
   className,
+  signUpUrl,
   ...comment
 }: BuilderCommentListItemProps) => {
   const {id, text, title, state, children, userRatings, overriddenRatings, calculatedRatings} =
@@ -119,27 +120,28 @@ export const CommentListItem = ({
           maxCommentLength={maxCommentLength}
           error={edit.error}
           loading={edit.loading}
+          canReply={canReply}
+          parentUrl={comment.url}
+          signUpUrl={signUpUrl}
         />
       )}
 
       <CommentListItemActions>
         <CommentListItemActionsButtons>
-          {canReply && (
-            <Button
-              startIcon={<MdReply />}
-              variant="outlined"
-              size="small"
-              css={buttonStyles}
-              onClick={() => {
-                dispatch({
-                  type: 'add',
-                  action: 'open',
-                  commentId: id
-                })
-              }}>
-              Antworten
-            </Button>
-          )}
+          <Button
+            startIcon={<MdReply />}
+            variant="outlined"
+            size="small"
+            css={buttonStyles}
+            onClick={() => {
+              dispatch({
+                type: 'add',
+                action: 'open',
+                commentId: id
+              })
+            }}>
+            Antworten
+          </Button>
 
           {canShare && <CommentListItemShare url={comment.url} title="share" />}
 
@@ -183,6 +185,10 @@ export const CommentListItem = ({
           challenge={challenge}
           error={add.error}
           loading={add.loading}
+          canReply={canReply}
+          parentUrl={comment.url}
+          signUpUrl={signUpUrl}
+          anonymousCanComment={anonymousCanComment}
         />
       )}
 
@@ -205,6 +211,7 @@ export const CommentListItem = ({
               userCanEdit={userCanEdit}
               maxCommentLength={maxCommentLength}
               className={className}
+              signUpUrl={signUpUrl}
             />
           ))}
         </CommentListItemChildren>

@@ -4,25 +4,32 @@ import {
   CommentRatingSystemAnswer,
   CommentState,
   CommentsRevisions,
-  Prisma,
   PrismaClient,
   Tag
 } from '@prisma/client'
-import {ascend, descend, sortWith} from 'ramda'
+import {ascend, sortWith} from 'ramda'
 import {Context} from '../../context'
 import {CalculatedRating, PublicCommentSort} from '../../db/comment'
 import {SortOrder} from '@wepublish/utils/api'
 
+interface CommentWithTags extends Comment {
+  tags: {tag: Tag}[]
+  calculatedRatings: CalculatedRating[]
+  title: string | null
+  lead: string | null
+  text: string | null
+  revisions: CommentsRevisions[]
+}
+
 export const mapCommentToPublicComment = (comment: Comment & {revisions: CommentsRevisions[]}) => {
   const {revisions} = comment
-
   return {
     title: revisions.length ? revisions[revisions.length - 1].title : null,
     lead: revisions.length ? revisions[revisions.length - 1].lead : null,
     text: revisions.length ? revisions[revisions.length - 1].text : null,
     revisions,
     ...comment
-  }
+  } as CommentWithTags
 }
 
 export const getPublicChildrenCommentsByParentId = async (
@@ -52,13 +59,12 @@ export const getPublicChildrenCommentsByParentId = async (
 export const getCalculatedRatingsForComment = (
   answers: CommentRatingSystemAnswer[],
   ratings: CommentRating[]
-) =>
+): CalculatedRating[] =>
   answers.map(answer => {
     const sortedRatings = ratings
       .filter(rating => rating.answerId === answer.id)
       .map(rating => rating.value)
       .sort((a, b) => a - b)
-
     const total = sortedRatings.reduce((value, rating) => value + rating, 0)
     const mean = total / Math.max(sortedRatings.length, 1)
 
@@ -67,28 +73,18 @@ export const getCalculatedRatingsForComment = (
       count: sortedRatings.length,
       mean,
       total
-    } as CalculatedRating
+    }
   })
 
-const sortCommentsByRating = (orderFn: typeof ascend) =>
+const sortCommentsByRating = (ascending: boolean) =>
   sortWith<CommentWithTags>([
-    orderFn(({calculatedRatings}: Comment & {calculatedRatings: CalculatedRating[]}) =>
-      calculatedRatings.reduce(
-        (ratingsTotal, calculatedRating) => ratingsTotal + calculatedRating.mean,
-        0
-      )
-    ),
-    ascend(({createdAt}: Comment) => createdAt)
+    ({calculatedRatings: a}, {calculatedRatings: b}) => {
+      const totalA = a.reduce((total, rating) => total + rating.mean, 0)
+      const totalB = b.reduce((total, rating) => total + rating.mean, 0)
+      return ascending ? totalA - totalB : totalB - totalA
+    },
+    ascend(({createdAt}) => new Date(createdAt).getTime())
   ])
-
-interface CommentWithTags extends Comment {
-  tags: {tag: Tag}[]
-  calculatedRatings: CalculatedRating[]
-  title: string | null
-  lead: string | null
-  text: Prisma.InputJsonValue | null
-  revisions: CommentsRevisions[]
-}
 
 export const getPublicCommentsForItemById = async (
   itemId: string,
@@ -125,21 +121,17 @@ export const getPublicCommentsForItemById = async (
     tags: tags || []
   }))
 
-  let sortedComments = commentsWithRating
-  if (sort === PublicCommentSort.Rating) {
-    if (order === SortOrder.Ascending) {
-      sortedComments = sortCommentsByRating(ascend)(sortedComments)
-    } else {
-      sortedComments = sortCommentsByRating(descend)(sortedComments)
-    }
-  }
-
-  const topComments = sortedComments.filter(comment => comment.featured === true)
-  const otherComments = sortedComments.filter(
+  const topComments = commentsWithRating.filter(comment =>
+    comment.tags.some(({tag}) => tag.tag === 'Top Kommentar')
+  )
+  let otherComments = commentsWithRating.filter(
     comment => !comment.tags.some(({tag}) => tag.tag === 'Top Kommentar')
   )
 
-  sortedComments = [...topComments, ...otherComments]
+  if (sort === PublicCommentSort.Rating) {
+    const isAscending = order === SortOrder.Ascending
+    otherComments = sortCommentsByRating(isAscending)(otherComments)
+  }
 
-  return sortedComments
+  return [...topComments, ...otherComments]
 }

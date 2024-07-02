@@ -34,6 +34,7 @@ type ArticleOrPageComments = {
 
 export type CommentListContainerProps = {
   id: string
+  signUpUrl?: string
 } & BuilderContainerProps &
   Pick<BuilderCommentListProps, 'variables' | 'onVariablesChange'> &
   (PeerArticleComments | ArticleOrPageComments)
@@ -44,7 +45,8 @@ export function CommentListContainer({
   id,
   type,
   peerId,
-  onVariablesChange
+  onVariablesChange,
+  signUpUrl = '/signup'
 }: CommentListContainerProps) {
   const {CommentList} = useWebsiteBuilder()
   const {hasUser} = useUser()
@@ -160,6 +162,7 @@ export function CommentListContainer({
           settings.data?.settings.find(setting => setting.name === SettingName.AllowCommentEditing)
             ?.value
         }
+        signUpUrl={signUpUrl}
       />
     </CommentRatingsProvider>
   )

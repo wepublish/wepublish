@@ -29,6 +29,7 @@ export function PeerArticleById() {
           id={articleId as string}
           type={ApiV1.CommentItemType.PeerArticle}
           peerId={peerId as string}
+          signUpUrl="/mitmachen"
         />
       </ArticleWrapper>
     </>
