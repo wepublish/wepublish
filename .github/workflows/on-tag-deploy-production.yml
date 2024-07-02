@@ -4,6 +4,7 @@ on:
   push:
     tags:
       - 'deploy_*'
+
 jobs:
   get-tag:
     runs-on: ubuntu-latest
@@ -14,7 +15,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
       - id: image_tag
-        run: ./deployment/get_production_tag.sh
+        run: ./deployment/get_production_tag.sh ${GITHUB_REF##*/}
 
   deploy_wepublish_production:
     needs: get-tag
