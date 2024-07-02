@@ -31,7 +31,6 @@ import {
   HealthModule,
   NeverChargePaymentProvider,
   KarmaMediaAdapter,
-  ScriptsModule,
   SystemInfoModule
 } from '@wepublish/api'
 import {ApiModule, PrismaModule} from '@wepublish/nest-modules'
@@ -236,7 +235,6 @@ import {PrismaClient} from '@prisma/client'
     ConsentModule,
     StatsModule,
     SettingModule,
-    ScriptsModule,
     EventModule,
     BlockStylesModule,
     EventsImportModule.registerAsync({

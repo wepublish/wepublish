@@ -1,5 +1,5 @@
 import {CssBaseline, styled, ThemeProvider} from '@mui/material'
-import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
+import {authLink, InjectScript, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 import {
   ApiV1,
   FooterContainer,
@@ -121,15 +121,7 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
 
             <Footer slug="main" categorySlugs={[['sonstiges', 'other'], ['about-us']]} />
 
-            <Script
-              src={publicRuntimeConfig.env.API_URL! + '/scripts/head.js'}
-              strategy="afterInteractive"
-            />
-
-            <Script
-              src={publicRuntimeConfig.env.API_URL! + '/scripts/body.js'}
-              strategy="lazyOnload"
-            />
+            <InjectScript />
           </ThemeProvider>
         </WebsiteBuilderProvider>
       </WebsiteProvider>
