@@ -20,15 +20,15 @@ export default function Index({campaigns}: IndexProps) {
 }
 
 export const getStaticProps: GetStaticProps = async () => {
-  const {publicRuntimeConfig} = getConfig()
+  const {publicRuntimeConfig, serverRuntimeConfig} = getConfig()
 
   if (!publicRuntimeConfig.env.API_URL) {
     return {props: {}, revalidate: 1}
   }
 
   mailchimp.setConfig({
-    apiKey: publicRuntimeConfig.env.MAILCHIMP_API_KEY,
-    server: publicRuntimeConfig.env.MAILCHIMP_SERVER_PREFIX
+    apiKey: serverRuntimeConfig.env.MAILCHIMP_API_KEY,
+    server: serverRuntimeConfig.env.MAILCHIMP_SERVER_PREFIX
   })
 
   const client = ApiV1.getV1ApiClient(publicRuntimeConfig.env.API_URL, [])
