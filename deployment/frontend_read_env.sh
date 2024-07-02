@@ -21,7 +21,8 @@ done
 # Add secrets to env from github secrets
 secretenvvars=""
 for secret in $(jq -r ".frontend.${ENV}.secret_env[]" "$PROJECT_FILE"); do
-  #
+
+  # Get secure env to add
   echo "${secret}" |grep -v "$(echo $arg |cut -d '=' -f 1)=" > /dev/null
   if [[ $? == 0 ]]; then
 

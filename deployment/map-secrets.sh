@@ -6,13 +6,6 @@ if [[ $MODE == "clean" ]]; then
       s=$(echo $s |sed 's/,//g')
       echo "Removed secret variable ${s}"
       sed -i "s/\"$(echo ${s} | cut -d'=' -f 2)\"/\"@@@$(echo ${s} | cut -d'=' -f 1)@@@\"/g" $(grep -rl "\"$(echo ${s} | cut -d'=' -f 2)\"" /wepublish/dist/)
-      ls -la
-      echo STRING:
-      echo "grep -rl "\"$(echo ${s} | cut -d'=' -f 2)\"" /wepublish/dist/"
-      echo GREP:
-      grep -rl "\"$(echo ${s} | cut -d'=' -f 2)\"" /wepublish/dist/
-      echo "OK:"
-      cat secrets.list
     done
     rm secrets.list # Cleanup
   fi

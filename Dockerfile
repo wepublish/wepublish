@@ -24,7 +24,7 @@ WORKDIR /wepublish
 RUN groupadd -r wepublish && \
     useradd -r -g wepublish -d /wepublish wepublish && \
     chown -R wepublish:wepublish /wepublish && \
-    echo "#!/bin/bash\n bash /wepublish/map-secrets.sh restore\n node /wepublish/apps/${NEXT_PROJECT}/server.js" > /entrypoint.sh && \
+    echo "#!/bin/bash\n bash /wepublish/map-secrets.sh restore && node /wepublish/apps/${NEXT_PROJECT}/server.js" > /entrypoint.sh && \
     chown -R wepublish:wepublish /entrypoint.sh && \
     chmod +x /entrypoint.sh
 COPY --chown=wepublish:wepublish --from=build-next /wepublish/dist/apps/${NEXT_PROJECT}/.next/standalone /wepublish
