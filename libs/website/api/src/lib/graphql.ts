@@ -1832,6 +1832,7 @@ export type SubscribeMutationVariables = Exact<{
   subscriptionProperties?: InputMaybe<Array<PublicPropertiesInput> | PublicPropertiesInput>;
   successURL?: InputMaybe<Scalars['String']>;
   failureURL?: InputMaybe<Scalars['String']>;
+  deactivateSubscriptionId?: InputMaybe<Scalars['ID']>;
 }>;
 
 
@@ -3438,7 +3439,7 @@ export type UploadImageMutationHookResult = ReturnType<typeof useUploadImageMuta
 export type UploadImageMutationResult = Apollo.MutationResult<UploadImageMutation>;
 export type UploadImageMutationOptions = Apollo.BaseMutationOptions<UploadImageMutation, UploadImageMutationVariables>;
 export const SubscribeDocument = gql`
-    mutation Subscribe($memberPlanId: ID, $memberPlanSlug: Slug, $autoRenew: Boolean!, $paymentPeriodicity: PaymentPeriodicity!, $monthlyAmount: Int!, $paymentMethodId: ID, $paymentMethodSlug: Slug, $subscriptionProperties: [PublicPropertiesInput!], $successURL: String, $failureURL: String) {
+    mutation Subscribe($memberPlanId: ID, $memberPlanSlug: Slug, $autoRenew: Boolean!, $paymentPeriodicity: PaymentPeriodicity!, $monthlyAmount: Int!, $paymentMethodId: ID, $paymentMethodSlug: Slug, $subscriptionProperties: [PublicPropertiesInput!], $successURL: String, $failureURL: String, $deactivateSubscriptionId: ID) {
   createSubscription(
     memberPlanID: $memberPlanId
     memberPlanSlug: $memberPlanSlug
@@ -3450,6 +3451,7 @@ export const SubscribeDocument = gql`
     subscriptionProperties: $subscriptionProperties
     successURL: $successURL
     failureURL: $failureURL
+    deactivateSubscriptionId: $deactivateSubscriptionId
   ) {
     ...FullPayment
   }
@@ -3480,6 +3482,7 @@ export type SubscribeMutationFn = Apollo.MutationFunction<SubscribeMutation, Sub
  *      subscriptionProperties: // value for 'subscriptionProperties'
  *      successURL: // value for 'successURL'
  *      failureURL: // value for 'failureURL'
+ *      deactivateSubscriptionId: // value for 'deactivateSubscriptionId'
  *   },
  * });
  */

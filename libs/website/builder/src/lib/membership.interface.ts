@@ -98,5 +98,6 @@ export type BuilderSubscribeProps<
     name: string
     firstName: string
   }>
+  deactivateSubscriptionId?: string
   extraMoneyOffset?: number
 } & Pick<BuilderRegistrationFormProps<T>, 'schema' | 'fields'>
