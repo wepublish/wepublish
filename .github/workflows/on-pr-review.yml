@@ -247,7 +247,7 @@ jobs:
                 operandTypes: [ '+', '-' ]
                 mode: 'formula'
                 targetSymbol: '?'
-          
+
               mediaServer:
                 type: 'nova'
           editor:
@@ -283,7 +283,7 @@ jobs:
     steps:
       - id: projects
         run: |
-          echo "value=[\"babanews\", \"bajour\", \"tsri\", \"gruppetto\"]" >> $GITHUB_OUTPUT
+          echo "value=[\"babanews\", \"bajour\", \"tsri\", \"gruppetto\", \"mannschaft\"]" >> $GITHUB_OUTPUT
       - run: |
           echo "${{ steps.projects.outputs.value }}"
 

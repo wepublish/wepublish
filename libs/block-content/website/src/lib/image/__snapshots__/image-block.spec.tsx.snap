@@ -2,15 +2,36 @@
 
 exports[`Image Block should render Default 1`] = `
 <DocumentFragment>
-  <figure
-    class="css-1ma568x-ImageBlockWrapper eekavcu2"
+  .emotion-0 {
+  margin: 0;
+  display: grid;
+  justify-items: center;
+}
+
+.emotion-2 {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: auto;
+}
+
+.emotion-4 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
+  justify-self: center;
+}
+
+<figure
+    class="emotion-0 emotion-1"
   >
     <div
-      class="css-190ggwe-ImageBlockInnerWrapper eekavcu1"
+      class="emotion-2 emotion-3"
     >
       <img
         alt="An image description"
-        class="css-1yo7qmb-ImageWrapper-ImageBlock e1shv2yg0"
+        class="emotion-4 emotion-5"
         loading="lazy"
         sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -32,15 +53,36 @@ https://unsplash.it/200/200 200w"
 
 exports[`Image Block should render WithClassName 1`] = `
 <DocumentFragment>
-  <figure
-    class="extra-classname css-1ma568x-ImageBlockWrapper eekavcu2"
+  .emotion-0 {
+  margin: 0;
+  display: grid;
+  justify-items: center;
+}
+
+.emotion-2 {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: auto;
+}
+
+.emotion-4 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
+  justify-self: center;
+}
+
+<figure
+    class="extra-classname emotion-0 emotion-1"
   >
     <div
-      class="css-190ggwe-ImageBlockInnerWrapper eekavcu1"
+      class="emotion-2 emotion-3"
     >
       <img
         alt="An image description"
-        class="css-1yo7qmb-ImageWrapper-ImageBlock e1shv2yg0"
+        class="emotion-4 emotion-5"
         loading="lazy"
         sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -62,15 +104,36 @@ https://unsplash.it/200/200 200w"
 
 exports[`Image Block should render WithEmotion 1`] = `
 <DocumentFragment>
-  <figure
-    class="css-1ma568x-ImageBlockWrapper eekavcu2"
+  .emotion-0 {
+  margin: 0;
+  display: grid;
+  justify-items: center;
+}
+
+.emotion-2 {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: auto;
+}
+
+.emotion-4 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
+  justify-self: center;
+}
+
+<figure
+    class="emotion-0 emotion-1"
   >
     <div
-      class="css-190ggwe-ImageBlockInnerWrapper eekavcu1"
+      class="emotion-2 emotion-3"
     >
       <img
         alt="An image description"
-        class="css-1yo7qmb-ImageWrapper-ImageBlock e1shv2yg0"
+        class="emotion-4 emotion-5"
         loading="lazy"
         sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -92,20 +155,54 @@ https://unsplash.it/200/200 200w"
 
 exports[`Image Block should render WithLink 1`] = `
 <DocumentFragment>
-  <figure
-    class="css-1ma568x-ImageBlockWrapper eekavcu2"
+  .emotion-0 {
+  margin: 0;
+  display: grid;
+  justify-items: center;
+}
+
+.emotion-2 {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: auto;
+}
+
+.emotion-4 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-4:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-5 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
+  justify-self: center;
+}
+
+<figure
+    class="emotion-0 emotion-1"
   >
     <div
-      class="css-190ggwe-ImageBlockInnerWrapper eekavcu1"
+      class="emotion-2 emotion-3"
     >
       <a
-        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+        class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-4"
         href="https://example.com"
         target="_blank"
       >
         <img
           alt="An image description"
-          class="css-1yo7qmb-ImageWrapper-ImageBlock e1shv2yg0"
+          class="emotion-5 emotion-6"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -128,15 +225,36 @@ https://unsplash.it/200/200 200w"
 
 exports[`Image Block should render WithoutCaption 1`] = `
 <DocumentFragment>
-  <figure
-    class="css-1ma568x-ImageBlockWrapper eekavcu2"
+  .emotion-0 {
+  margin: 0;
+  display: grid;
+  justify-items: center;
+}
+
+.emotion-2 {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: auto;
+}
+
+.emotion-4 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
+  justify-self: center;
+}
+
+<figure
+    class="emotion-0 emotion-1"
   >
     <div
-      class="css-190ggwe-ImageBlockInnerWrapper eekavcu1"
+      class="emotion-2 emotion-3"
     >
       <img
         alt="An image description"
-        class="css-1yo7qmb-ImageWrapper-ImageBlock e1shv2yg0"
+        class="emotion-4 emotion-5"
         loading="lazy"
         sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -158,15 +276,36 @@ https://unsplash.it/200/200 200w"
 
 exports[`Image Block should render WithoutSource 1`] = `
 <DocumentFragment>
-  <figure
-    class="css-1ma568x-ImageBlockWrapper eekavcu2"
+  .emotion-0 {
+  margin: 0;
+  display: grid;
+  justify-items: center;
+}
+
+.emotion-2 {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: auto;
+}
+
+.emotion-4 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 1;
+  max-height: 80lvh;
+  object-fit: contain;
+  justify-self: center;
+}
+
+<figure
+    class="emotion-0 emotion-1"
   >
     <div
-      class="css-190ggwe-ImageBlockInnerWrapper eekavcu1"
+      class="emotion-2 emotion-3"
     >
       <img
         alt="An image description"
-        class="css-1yo7qmb-ImageWrapper-ImageBlock e1shv2yg0"
+        class="emotion-4 emotion-5"
         loading="lazy"
         sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,

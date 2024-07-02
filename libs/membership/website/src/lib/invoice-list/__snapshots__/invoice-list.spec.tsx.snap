@@ -2,25 +2,202 @@
 
 exports[`InvoiceList should render Default 1`] = `
 <DocumentFragment>
-  <article
-    class="css-1cqlm8-InvoiceListWrapper eae5n870"
+  .emotion-0 {
+  display: grid;
+  gap: 16px;
+}
+
+.emotion-2 {
+  display: grid;
+  gap: 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+.emotion-4 {
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+}
+
+.emotion-6 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 300;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.emotion-7 {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.emotion-9 {
+  display: grid;
+  grid-auto-flow: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: start;
+  justify-content: start;
+  gap: 8px;
+}
+
+.emotion-17 {
+  display: grid;
+  gap: 16px;
+}
+
+@container (min-width: 45ch) {
+  .emotion-17 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+  }
+}
+
+.emotion-19 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 6px 16px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #fff;
+  background-color: #e91e63;
+  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
+  border-radius: 30px;
+  text-transform: initial;
+  box-shadow: none;
+  font-weight: 700;
+}
+
+.emotion-19::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-19.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-19 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-19:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: rgb(163, 21, 69);
+  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
+}
+
+@media (hover: none) {
+  .emotion-19:hover {
+    background-color: #e91e63;
+  }
+}
+
+.emotion-19:active {
+  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
+}
+
+.emotion-19.Mui-focusVisible {
+  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
+}
+
+.emotion-19.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+  box-shadow: none;
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.emotion-19:hover {
+  box-shadow: none;
+}
+
+.emotion-20 {
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+}
+
+<article
+    class="emotion-0 emotion-1"
   >
     <div
-      class="css-7e096c-InvoiceListItemWrapper e7di52m4"
+      class="emotion-2 emotion-3"
     >
       <div
-        class="css-kkg48e-InvoiceListItemContent e7di52m3"
+        class="emotion-4 emotion-5"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-6"
         >
           Offene Rechnung für Foobar Memberplan
         </h6>
         <ul
-          class="css-579onz-InvoiceListItemMeta e7di52m2"
+          class="emotion-7 emotion-8"
         >
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -42,7 +219,7 @@ exports[`InvoiceList should render Default 1`] = `
              Rechnungs-Nr: 1
           </li>
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -71,7 +248,7 @@ exports[`InvoiceList should render Default 1`] = `
             </span>
           </li>
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -96,7 +273,7 @@ exports[`InvoiceList should render Default 1`] = `
             </span>
           </li>
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -119,37 +296,37 @@ exports[`InvoiceList should render Default 1`] = `
           </li>
         </ul>
         <div
-          class="css-lst8rm-InvoiceListItemActions e7di52m0"
+          class="emotion-17 emotion-18"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-19"
             tabindex="0"
             type="button"
           >
             Jetzt Bezahlen
             <span
-              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+              class="MuiTouchRipple-root emotion-20"
             />
           </button>
         </div>
       </div>
     </div>
     <div
-      class="css-7e096c-InvoiceListItemWrapper e7di52m4"
+      class="emotion-2 emotion-3"
     >
       <div
-        class="css-kkg48e-InvoiceListItemContent e7di52m3"
+        class="emotion-4 emotion-5"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-6"
         >
           Offene Rechnung für Foobar Memberplan
         </h6>
         <ul
-          class="css-579onz-InvoiceListItemMeta e7di52m2"
+          class="emotion-7 emotion-8"
         >
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -171,7 +348,7 @@ exports[`InvoiceList should render Default 1`] = `
              Rechnungs-Nr: 2
           </li>
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -200,7 +377,7 @@ exports[`InvoiceList should render Default 1`] = `
             </span>
           </li>
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -225,7 +402,7 @@ exports[`InvoiceList should render Default 1`] = `
             </span>
           </li>
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -248,37 +425,37 @@ exports[`InvoiceList should render Default 1`] = `
           </li>
         </ul>
         <div
-          class="css-lst8rm-InvoiceListItemActions e7di52m0"
+          class="emotion-17 emotion-18"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-19"
             tabindex="0"
             type="button"
           >
             Jetzt Bezahlen
             <span
-              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+              class="MuiTouchRipple-root emotion-20"
             />
           </button>
         </div>
       </div>
     </div>
     <div
-      class="css-7e096c-InvoiceListItemWrapper e7di52m4"
+      class="emotion-2 emotion-3"
     >
       <div
-        class="css-kkg48e-InvoiceListItemContent e7di52m3"
+        class="emotion-4 emotion-5"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-6"
         >
           Offene Rechnung für Foobar Memberplan
         </h6>
         <ul
-          class="css-579onz-InvoiceListItemMeta e7di52m2"
+          class="emotion-7 emotion-8"
         >
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -300,7 +477,7 @@ exports[`InvoiceList should render Default 1`] = `
              Rechnungs-Nr: 3
           </li>
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -329,7 +506,7 @@ exports[`InvoiceList should render Default 1`] = `
             </span>
           </li>
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -354,7 +531,7 @@ exports[`InvoiceList should render Default 1`] = `
             </span>
           </li>
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -377,37 +554,37 @@ exports[`InvoiceList should render Default 1`] = `
           </li>
         </ul>
         <div
-          class="css-lst8rm-InvoiceListItemActions e7di52m0"
+          class="emotion-17 emotion-18"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-19"
             tabindex="0"
             type="button"
           >
             Jetzt Bezahlen
             <span
-              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+              class="MuiTouchRipple-root emotion-20"
             />
           </button>
         </div>
       </div>
     </div>
     <div
-      class="css-7e096c-InvoiceListItemWrapper e7di52m4"
+      class="emotion-2 emotion-3"
     >
       <div
-        class="css-kkg48e-InvoiceListItemContent e7di52m3"
+        class="emotion-4 emotion-5"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-6"
         >
           Offene Rechnung für Foobar Memberplan
         </h6>
         <ul
-          class="css-579onz-InvoiceListItemMeta e7di52m2"
+          class="emotion-7 emotion-8"
         >
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -429,7 +606,7 @@ exports[`InvoiceList should render Default 1`] = `
              Rechnungs-Nr: 4
           </li>
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -458,7 +635,7 @@ exports[`InvoiceList should render Default 1`] = `
             </span>
           </li>
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -483,7 +660,7 @@ exports[`InvoiceList should render Default 1`] = `
             </span>
           </li>
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -506,16 +683,16 @@ exports[`InvoiceList should render Default 1`] = `
           </li>
         </ul>
         <div
-          class="css-lst8rm-InvoiceListItemActions e7di52m0"
+          class="emotion-17 emotion-18"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-19"
             tabindex="0"
             type="button"
           >
             Jetzt Bezahlen
             <span
-              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+              class="MuiTouchRipple-root emotion-20"
             />
           </button>
         </div>
@@ -527,14 +704,34 @@ exports[`InvoiceList should render Default 1`] = `
 
 exports[`InvoiceList should render Empty 1`] = `
 <DocumentFragment>
-  <article
-    class="css-1cqlm8-InvoiceListWrapper eae5n870"
+  .emotion-0 {
+  display: grid;
+  gap: 16px;
+}
+
+.emotion-2 {
+  display: grid;
+  gap: 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+.emotion-4 {
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+}
+
+<article
+    class="emotion-0 emotion-1"
   >
     <div
-      class="css-7e096c-InvoiceListItemWrapper e7di52m4"
+      class="emotion-2 emotion-3"
     >
       <div
-        class="css-kkg48e-InvoiceListItemContent e7di52m3"
+        class="emotion-4 emotion-5"
       >
         <strong>
           Keine offenen Rechnungen
@@ -547,25 +744,202 @@ exports[`InvoiceList should render Empty 1`] = `
 
 exports[`InvoiceList should render WithClassName 1`] = `
 <DocumentFragment>
-  <article
-    class="extra-classname css-1cqlm8-InvoiceListWrapper eae5n870"
+  .emotion-0 {
+  display: grid;
+  gap: 16px;
+}
+
+.emotion-2 {
+  display: grid;
+  gap: 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+.emotion-4 {
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+}
+
+.emotion-6 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 300;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.emotion-7 {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.emotion-9 {
+  display: grid;
+  grid-auto-flow: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: start;
+  justify-content: start;
+  gap: 8px;
+}
+
+.emotion-17 {
+  display: grid;
+  gap: 16px;
+}
+
+@container (min-width: 45ch) {
+  .emotion-17 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+  }
+}
+
+.emotion-19 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 6px 16px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #fff;
+  background-color: #e91e63;
+  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
+  border-radius: 30px;
+  text-transform: initial;
+  box-shadow: none;
+  font-weight: 700;
+}
+
+.emotion-19::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-19.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-19 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-19:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: rgb(163, 21, 69);
+  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
+}
+
+@media (hover: none) {
+  .emotion-19:hover {
+    background-color: #e91e63;
+  }
+}
+
+.emotion-19:active {
+  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
+}
+
+.emotion-19.Mui-focusVisible {
+  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
+}
+
+.emotion-19.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+  box-shadow: none;
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.emotion-19:hover {
+  box-shadow: none;
+}
+
+.emotion-20 {
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+}
+
+<article
+    class="extra-classname emotion-0 emotion-1"
   >
     <div
-      class="css-7e096c-InvoiceListItemWrapper e7di52m4"
+      class="emotion-2 emotion-3"
     >
       <div
-        class="css-kkg48e-InvoiceListItemContent e7di52m3"
+        class="emotion-4 emotion-5"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-6"
         >
           Offene Rechnung für Foobar Memberplan
         </h6>
         <ul
-          class="css-579onz-InvoiceListItemMeta e7di52m2"
+          class="emotion-7 emotion-8"
         >
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -587,7 +961,7 @@ exports[`InvoiceList should render WithClassName 1`] = `
              Rechnungs-Nr: 1
           </li>
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -616,7 +990,7 @@ exports[`InvoiceList should render WithClassName 1`] = `
             </span>
           </li>
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -641,7 +1015,7 @@ exports[`InvoiceList should render WithClassName 1`] = `
             </span>
           </li>
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -664,37 +1038,37 @@ exports[`InvoiceList should render WithClassName 1`] = `
           </li>
         </ul>
         <div
-          class="css-lst8rm-InvoiceListItemActions e7di52m0"
+          class="emotion-17 emotion-18"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-19"
             tabindex="0"
             type="button"
           >
             Jetzt Bezahlen
             <span
-              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+              class="MuiTouchRipple-root emotion-20"
             />
           </button>
         </div>
       </div>
     </div>
     <div
-      class="css-7e096c-InvoiceListItemWrapper e7di52m4"
+      class="emotion-2 emotion-3"
     >
       <div
-        class="css-kkg48e-InvoiceListItemContent e7di52m3"
+        class="emotion-4 emotion-5"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-6"
         >
           Offene Rechnung für Foobar Memberplan
         </h6>
         <ul
-          class="css-579onz-InvoiceListItemMeta e7di52m2"
+          class="emotion-7 emotion-8"
         >
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -716,7 +1090,7 @@ exports[`InvoiceList should render WithClassName 1`] = `
              Rechnungs-Nr: 2
           </li>
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -745,7 +1119,7 @@ exports[`InvoiceList should render WithClassName 1`] = `
             </span>
           </li>
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -770,7 +1144,7 @@ exports[`InvoiceList should render WithClassName 1`] = `
             </span>
           </li>
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -793,37 +1167,37 @@ exports[`InvoiceList should render WithClassName 1`] = `
           </li>
         </ul>
         <div
-          class="css-lst8rm-InvoiceListItemActions e7di52m0"
+          class="emotion-17 emotion-18"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-19"
             tabindex="0"
             type="button"
           >
             Jetzt Bezahlen
             <span
-              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+              class="MuiTouchRipple-root emotion-20"
             />
           </button>
         </div>
       </div>
     </div>
     <div
-      class="css-7e096c-InvoiceListItemWrapper e7di52m4"
+      class="emotion-2 emotion-3"
     >
       <div
-        class="css-kkg48e-InvoiceListItemContent e7di52m3"
+        class="emotion-4 emotion-5"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-6"
         >
           Offene Rechnung für Foobar Memberplan
         </h6>
         <ul
-          class="css-579onz-InvoiceListItemMeta e7di52m2"
+          class="emotion-7 emotion-8"
         >
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -845,7 +1219,7 @@ exports[`InvoiceList should render WithClassName 1`] = `
              Rechnungs-Nr: 3
           </li>
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -874,7 +1248,7 @@ exports[`InvoiceList should render WithClassName 1`] = `
             </span>
           </li>
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -899,7 +1273,7 @@ exports[`InvoiceList should render WithClassName 1`] = `
             </span>
           </li>
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -922,37 +1296,37 @@ exports[`InvoiceList should render WithClassName 1`] = `
           </li>
         </ul>
         <div
-          class="css-lst8rm-InvoiceListItemActions e7di52m0"
+          class="emotion-17 emotion-18"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-19"
             tabindex="0"
             type="button"
           >
             Jetzt Bezahlen
             <span
-              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+              class="MuiTouchRipple-root emotion-20"
             />
           </button>
         </div>
       </div>
     </div>
     <div
-      class="css-7e096c-InvoiceListItemWrapper e7di52m4"
+      class="emotion-2 emotion-3"
     >
       <div
-        class="css-kkg48e-InvoiceListItemContent e7di52m3"
+        class="emotion-4 emotion-5"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-6"
         >
           Offene Rechnung für Foobar Memberplan
         </h6>
         <ul
-          class="css-579onz-InvoiceListItemMeta e7di52m2"
+          class="emotion-7 emotion-8"
         >
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -974,7 +1348,7 @@ exports[`InvoiceList should render WithClassName 1`] = `
              Rechnungs-Nr: 4
           </li>
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -1003,7 +1377,7 @@ exports[`InvoiceList should render WithClassName 1`] = `
             </span>
           </li>
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -1028,7 +1402,7 @@ exports[`InvoiceList should render WithClassName 1`] = `
             </span>
           </li>
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -1051,16 +1425,16 @@ exports[`InvoiceList should render WithClassName 1`] = `
           </li>
         </ul>
         <div
-          class="css-lst8rm-InvoiceListItemActions e7di52m0"
+          class="emotion-17 emotion-18"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-19"
             tabindex="0"
             type="button"
           >
             Jetzt Bezahlen
             <span
-              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+              class="MuiTouchRipple-root emotion-20"
             />
           </button>
         </div>
@@ -1072,25 +1446,202 @@ exports[`InvoiceList should render WithClassName 1`] = `
 
 exports[`InvoiceList should render WithEmotion 1`] = `
 <DocumentFragment>
-  <article
-    class="css-1cqlm8-InvoiceListWrapper eae5n870"
+  .emotion-0 {
+  display: grid;
+  gap: 16px;
+}
+
+.emotion-2 {
+  display: grid;
+  gap: 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+.emotion-4 {
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+}
+
+.emotion-6 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 300;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.emotion-7 {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.emotion-9 {
+  display: grid;
+  grid-auto-flow: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: start;
+  justify-content: start;
+  gap: 8px;
+}
+
+.emotion-17 {
+  display: grid;
+  gap: 16px;
+}
+
+@container (min-width: 45ch) {
+  .emotion-17 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+  }
+}
+
+.emotion-19 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 6px 16px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #fff;
+  background-color: #e91e63;
+  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
+  border-radius: 30px;
+  text-transform: initial;
+  box-shadow: none;
+  font-weight: 700;
+}
+
+.emotion-19::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-19.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-19 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-19:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: rgb(163, 21, 69);
+  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
+}
+
+@media (hover: none) {
+  .emotion-19:hover {
+    background-color: #e91e63;
+  }
+}
+
+.emotion-19:active {
+  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
+}
+
+.emotion-19.Mui-focusVisible {
+  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
+}
+
+.emotion-19.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+  box-shadow: none;
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.emotion-19:hover {
+  box-shadow: none;
+}
+
+.emotion-20 {
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+}
+
+<article
+    class="emotion-0 emotion-1"
   >
     <div
-      class="css-7e096c-InvoiceListItemWrapper e7di52m4"
+      class="emotion-2 emotion-3"
     >
       <div
-        class="css-kkg48e-InvoiceListItemContent e7di52m3"
+        class="emotion-4 emotion-5"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-6"
         >
           Offene Rechnung für Foobar Memberplan
         </h6>
         <ul
-          class="css-579onz-InvoiceListItemMeta e7di52m2"
+          class="emotion-7 emotion-8"
         >
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -1112,7 +1663,7 @@ exports[`InvoiceList should render WithEmotion 1`] = `
              Rechnungs-Nr: 1
           </li>
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -1141,7 +1692,7 @@ exports[`InvoiceList should render WithEmotion 1`] = `
             </span>
           </li>
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -1166,7 +1717,7 @@ exports[`InvoiceList should render WithEmotion 1`] = `
             </span>
           </li>
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -1189,37 +1740,37 @@ exports[`InvoiceList should render WithEmotion 1`] = `
           </li>
         </ul>
         <div
-          class="css-lst8rm-InvoiceListItemActions e7di52m0"
+          class="emotion-17 emotion-18"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-19"
             tabindex="0"
             type="button"
           >
             Jetzt Bezahlen
             <span
-              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+              class="MuiTouchRipple-root emotion-20"
             />
           </button>
         </div>
       </div>
     </div>
     <div
-      class="css-7e096c-InvoiceListItemWrapper e7di52m4"
+      class="emotion-2 emotion-3"
     >
       <div
-        class="css-kkg48e-InvoiceListItemContent e7di52m3"
+        class="emotion-4 emotion-5"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-6"
         >
           Offene Rechnung für Foobar Memberplan
         </h6>
         <ul
-          class="css-579onz-InvoiceListItemMeta e7di52m2"
+          class="emotion-7 emotion-8"
         >
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -1241,7 +1792,7 @@ exports[`InvoiceList should render WithEmotion 1`] = `
              Rechnungs-Nr: 2
           </li>
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -1270,7 +1821,7 @@ exports[`InvoiceList should render WithEmotion 1`] = `
             </span>
           </li>
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -1295,7 +1846,7 @@ exports[`InvoiceList should render WithEmotion 1`] = `
             </span>
           </li>
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -1318,37 +1869,37 @@ exports[`InvoiceList should render WithEmotion 1`] = `
           </li>
         </ul>
         <div
-          class="css-lst8rm-InvoiceListItemActions e7di52m0"
+          class="emotion-17 emotion-18"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-19"
             tabindex="0"
             type="button"
           >
             Jetzt Bezahlen
             <span
-              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+              class="MuiTouchRipple-root emotion-20"
             />
           </button>
         </div>
       </div>
     </div>
     <div
-      class="css-7e096c-InvoiceListItemWrapper e7di52m4"
+      class="emotion-2 emotion-3"
     >
       <div
-        class="css-kkg48e-InvoiceListItemContent e7di52m3"
+        class="emotion-4 emotion-5"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-6"
         >
           Offene Rechnung für Foobar Memberplan
         </h6>
         <ul
-          class="css-579onz-InvoiceListItemMeta e7di52m2"
+          class="emotion-7 emotion-8"
         >
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -1370,7 +1921,7 @@ exports[`InvoiceList should render WithEmotion 1`] = `
              Rechnungs-Nr: 3
           </li>
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -1399,7 +1950,7 @@ exports[`InvoiceList should render WithEmotion 1`] = `
             </span>
           </li>
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -1424,7 +1975,7 @@ exports[`InvoiceList should render WithEmotion 1`] = `
             </span>
           </li>
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -1447,37 +1998,37 @@ exports[`InvoiceList should render WithEmotion 1`] = `
           </li>
         </ul>
         <div
-          class="css-lst8rm-InvoiceListItemActions e7di52m0"
+          class="emotion-17 emotion-18"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-19"
             tabindex="0"
             type="button"
           >
             Jetzt Bezahlen
             <span
-              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+              class="MuiTouchRipple-root emotion-20"
             />
           </button>
         </div>
       </div>
     </div>
     <div
-      class="css-7e096c-InvoiceListItemWrapper e7di52m4"
+      class="emotion-2 emotion-3"
     >
       <div
-        class="css-kkg48e-InvoiceListItemContent e7di52m3"
+        class="emotion-4 emotion-5"
       >
         <h6
-          class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h6 emotion-6"
         >
           Offene Rechnung für Foobar Memberplan
         </h6>
         <ul
-          class="css-579onz-InvoiceListItemMeta e7di52m2"
+          class="emotion-7 emotion-8"
         >
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -1499,7 +2050,7 @@ exports[`InvoiceList should render WithEmotion 1`] = `
              Rechnungs-Nr: 4
           </li>
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -1528,7 +2079,7 @@ exports[`InvoiceList should render WithEmotion 1`] = `
             </span>
           </li>
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -1553,7 +2104,7 @@ exports[`InvoiceList should render WithEmotion 1`] = `
             </span>
           </li>
           <li
-            class="css-19t08tm-InvoiceListItemMetaItem e7di52m1"
+            class="emotion-9 emotion-10"
           >
             <svg
               fill="currentColor"
@@ -1576,16 +2127,16 @@ exports[`InvoiceList should render WithEmotion 1`] = `
           </li>
         </ul>
         <div
-          class="css-lst8rm-InvoiceListItemActions e7di52m0"
+          class="emotion-17 emotion-18"
         >
           <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
+            class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-19"
             tabindex="0"
             type="button"
           >
             Jetzt Bezahlen
             <span
-              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+              class="MuiTouchRipple-root emotion-20"
             />
           </button>
         </div>
@@ -1597,19 +2148,82 @@ exports[`InvoiceList should render WithEmotion 1`] = `
 
 exports[`InvoiceList should render WithError 1`] = `
 <DocumentFragment>
-  <article
-    class="css-1cqlm8-InvoiceListWrapper eae5n870"
+  .emotion-0 {
+  display: grid;
+  gap: 16px;
+}
+
+.emotion-2 {
+  background-color: #fff;
+  color: rgba(0, 0, 0, 0.87);
+  -webkit-transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  border-radius: 4px;
+  box-shadow: none;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  background-color: rgb(253, 237, 237);
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 6px 16px;
+  color: rgb(95, 33, 32);
+}
+
+.emotion-2 .MuiAlert-icon {
+  color: #d32f2f;
+}
+
+.emotion-3 {
+  margin-right: 12px;
+  padding: 7px 0;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  font-size: 22px;
+  opacity: 0.9;
+}
+
+.emotion-4 {
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  fill: currentColor;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
+  -webkit-transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  font-size: inherit;
+}
+
+.emotion-5 {
+  padding: 8px 0;
+  min-width: 0;
+  overflow: auto;
+}
+
+<article
+    class="emotion-0 emotion-1"
   >
     <div
-      class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-standardError MuiAlert-standard css-1f6gfio-MuiPaper-root-MuiAlert-root"
+      class="MuiPaper-root MuiPaper-elevation MuiPaper-rounded MuiPaper-elevation0 MuiAlert-root MuiAlert-standardError MuiAlert-standard emotion-2"
       role="alert"
     >
       <div
-        class="MuiAlert-icon css-1ytlwq5-MuiAlert-icon"
+        class="MuiAlert-icon emotion-3"
       >
         <svg
           aria-hidden="true"
-          class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit css-1vooibu-MuiSvgIcon-root"
+          class="MuiSvgIcon-root MuiSvgIcon-fontSizeInherit emotion-4"
           data-testid="ErrorOutlineIcon"
           focusable="false"
           viewBox="0 0 24 24"
@@ -1620,7 +2234,7 @@ exports[`InvoiceList should render WithError 1`] = `
         </svg>
       </div>
       <div
-        class="MuiAlert-message css-1pxa9xg-MuiAlert-message"
+        class="MuiAlert-message emotion-5"
       >
         Foobar
       </div>
@@ -1631,8 +2245,13 @@ exports[`InvoiceList should render WithError 1`] = `
 
 exports[`InvoiceList should render WithLoading 1`] = `
 <DocumentFragment>
-  <article
-    class="css-1cqlm8-InvoiceListWrapper eae5n870"
+  .emotion-0 {
+  display: grid;
+  gap: 16px;
+}
+
+<article
+    class="emotion-0 emotion-1"
   />
 </DocumentFragment>
 `;
