@@ -128,7 +128,7 @@ export const Subscribe = <T extends BuilderUserFormFields>({
   className,
   onSubscribe,
   onSubscribeWithRegister,
-  cancelSubscriptionId
+  deactivateSubscriptionId
 }: BuilderSubscribeProps<T>) => {
   const {
     meta: {locale, siteTitle},
@@ -295,7 +295,7 @@ export const Subscribe = <T extends BuilderUserFormFields>({
   }, [selectedAvailablePaymentMethod, resetField, selectedPaymentPeriodicity])
 
   const alreadyHasSubscription = useMemo(() => {
-    if (cancelSubscriptionId) {
+    if (deactivateSubscriptionId) {
       return
     }
     return (
@@ -306,7 +306,7 @@ export const Subscribe = <T extends BuilderUserFormFields>({
   }, [userSubscriptions.data?.subscriptions, selectedMemberPlanId])
 
   const hasOpenInvoices = useMemo(() => {
-    if (cancelSubscriptionId) {
+    if (deactivateSubscriptionId) {
       return
     }
     return (

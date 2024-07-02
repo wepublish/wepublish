@@ -7,7 +7,6 @@ import {
 import {useMemo, useState} from 'react'
 import {MdAttachMoney, MdCalendarMonth, MdOutlineInfo, MdOutlineWarning} from 'react-icons/md'
 import {formatChf} from '../formatters/format-currency'
-import Link from 'next/link'
 
 export const InvoiceListItemWrapper = styled('div')`
   display: grid;
@@ -62,7 +61,7 @@ export function InvoiceListItem({
 }: BuilderInvoiceListItemProps) {
   const {
     meta: {locale},
-    elements: {H6, Button, Alert},
+    elements: {H6, Button, Alert, Link},
     date
   } = useWebsiteBuilder()
 
@@ -153,12 +152,13 @@ export function InvoiceListItem({
         )}
 
         {/* @TODO: Remove when all 'payrexx subscriptions' subscriptions have been migrated  */}
+        {/* @TODO: Make href used in <Link> component customizable if necessary. You may want to make the custom Bajour filters default filters. */}
         {showPayrexxSubscriptionWarning && (
           <Alert
             severity="warning"
             action={
               <Link
-                href={`/mitmachen?memberPlanBySlug=${subscription?.memberPlan.slug}&upsell=true&cancelSubscriptionId=${subscription?.id}`}>
+                href={`/mitmachen?memberPlanBySlug=${subscription?.memberPlan.slug}&upsell=true&deactivateSubscriptionId=${subscription?.id}`}>
                 <Button>Jetzt Abo ersetzen</Button>
               </Link>
             }>
