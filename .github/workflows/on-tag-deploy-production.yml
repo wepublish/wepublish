@@ -34,8 +34,7 @@ jobs:
 
   deploy_frontend_production:
     name: Frontend
-    needs: [ deploy-wepublish-production, get-tag ]
-    if: ${{ needs.deploy_production.result == 'success' }}
+    needs: [ get-tag ]
     uses: ./.github/workflows/on-demand-publish-docker-image-frontend.yml
     with:
       frontend_project: ${{ needs.get-tag.outputs.project }}
