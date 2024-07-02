@@ -1356,61 +1356,10 @@ exports[`SettingList renders successfully 1`] = `
                   >
                     <label
                       class="rs-form-control-label"
-                      for="HEAD_SCRIPT"
-                      id="HEAD_SCRIPT-control-label"
-                    >
-                      settingList.headScript 
-                      <div
-                        class="emotion-5 emotion-6"
-                      >
-                        <svg
-                          fill="currentColor"
-                          height="1em"
-                          stroke="currentColor"
-                          stroke-width="0"
-                          viewBox="0 0 24 24"
-                          width="1em"
-                          xmlns="http://www.w3.org/2000/svg"
-                        >
-                          <path
-                            d="M0 0h24v24H0z"
-                            fill="none"
-                          />
-                          <path
-                            d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"
-                          />
-                        </svg>
-                      </div>
-                    </label>
-                    <div
-                      class="emotion-45 emotion-46 rs-input-group"
-                    >
-                      <div
-                        class="rs-form-control rs-form-control-wrapper"
-                      >
-                        <textarea
-                          aria-describedby="HEAD_SCRIPT-help-text"
-                          aria-labelledby="HEAD_SCRIPT-control-label"
-                          class="rs-input"
-                          disabled=""
-                          id="HEAD_SCRIPT"
-                          name="HEAD_SCRIPT"
-                          rows="3"
-                          type="text"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="rs-form-group"
-                    role="group"
-                  >
-                    <label
-                      class="rs-form-control-label"
                       for="BODY_SCRIPT"
                       id="BODY_SCRIPT-control-label"
                     >
-                      settingList.bodyScript 
+                      settingList.warnings.scripts 
                       <div
                         class="emotion-5 emotion-6"
                       >
@@ -1447,6 +1396,7 @@ exports[`SettingList renders successfully 1`] = `
                           id="BODY_SCRIPT"
                           name="BODY_SCRIPT"
                           rows="3"
+                          style="font-family: monospace;"
                           type="text"
                         />
                       </div>

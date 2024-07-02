@@ -684,31 +684,10 @@ function SettingList() {
                 {/* scripts */}
                 <Col xs={24}>
                   <Panel bordered header={t('settingList.scripts')}>
-                    <Form.Group controlId={SettingName.HeadScript}>
-                      <Form.ControlLabel>
-                        {t(settings[SettingName.HeadScript].label)}{' '}
-                        <SettingInfo text={t('settingList.warnings.scripts')} />
-                      </Form.ControlLabel>
-                      <WideInputGroup>
-                        <Form.Control
-                          name={SettingName.HeadScript}
-                          accepter={Textarea}
-                          rows={3}
-                          value={settings[SettingName.HeadScript].value}
-                          onChange={(value: string) => {
-                            setSetting({
-                              ...settings[SettingName.HeadScript],
-                              value: value
-                            })
-                          }}
-                        />
-                      </WideInputGroup>
-                    </Form.Group>
-
                     <Form.Group controlId={SettingName.BodyScript}>
                       <Form.ControlLabel>
-                        {t(settings[SettingName.BodyScript].label)}{' '}
-                        <SettingInfo text={t('settingList.warnings.scripts')} />
+                        {t('settingList.warnings.scripts')}{' '}
+                        <SettingInfo text={t(settings[SettingName.BodyScript].label)} />
                       </Form.ControlLabel>
                       <WideInputGroup>
                         <Form.Control
@@ -722,6 +701,7 @@ function SettingList() {
                               value: value
                             })
                           }}
+                          style={{fontFamily: 'monospace'}}
                         />
                       </WideInputGroup>
                     </Form.Group>
