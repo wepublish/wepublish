@@ -42,4 +42,5 @@ jobs:
       api_url: https://api-${{ needs.get-tag.outputs.project }}.wepublish.media
       frontend_tags: |
         ghcr.io/wepublish/frontend-${{ needs.get-tag.outputs.project }}:production-${{ needs.get-tag.outputs.version }}
+      environment: production
     secrets: inherit
