@@ -77,6 +77,7 @@ import {PageSort, PublicPage} from '../db/page'
 import {EventSort, getEvents} from './event/event.query'
 import {getArticles} from './article/article.queries'
 import {getPages} from './page/page.queries'
+import {GraphQLTag} from './tag/tag'
 
 export const GraphQLTeaserStyle = new GraphQLEnumType({
   name: 'TeaserStyle',
@@ -537,10 +538,27 @@ export const GraphQLTeaserType = new GraphQLEnumType({
   }
 })
 
-export const GraphQLTeaserListBlockFilter = new GraphQLObjectType({
+export const GraphQLTeaserListBlockFilter = new GraphQLObjectType<
+  TeaserListBlock['filter'],
+  Context
+>({
   name: 'TeaserListBlockFilter',
   fields: {
-    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))}
+    tags: {type: new GraphQLList(new GraphQLNonNull(GraphQLID))},
+    tagObjects: {
+      type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(GraphQLTag))),
+      resolve: createProxyingResolver(async ({tags}, _, {prisma: {tag}}) => {
+        const tagObjs = await tag.findMany({
+          where: {
+            id: {
+              in: tags
+            }
+          }
+        })
+
+        return tagObjs
+      })
+    }
   }
 })
 

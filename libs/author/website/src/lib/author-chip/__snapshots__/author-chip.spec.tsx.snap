@@ -2,18 +2,91 @@
 
 exports[`Author Chip should render Default 1`] = `
 <DocumentFragment>
-  <div
-    class="css-1fhfas1-AuthorChipWrapper e1jhd13z7"
+  .emotion-0 {
+  display: grid;
+  gap: 8px;
+}
+
+.emotion-2 {
+  display: grid;
+  gap: 8px;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  -webkit-align-items: end;
+  -webkit-box-align: end;
+  -ms-flex-align: end;
+  align-items: end;
+}
+
+.emotion-4 {
+  display: grid;
+  width: 60px;
+}
+
+.emotion-6 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.emotion-10 {
+  font-weight: 500;
+}
+
+.emotion-12 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-12:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-15 {
+  width: 100%;
+  height: 1px;
+  background-color: rgba(0, 0, 0, 0.12);
+  margin: 0;
+}
+
+.emotion-17 {
+  display: grid;
+  grid-template-columns: max-content max-content;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-19 {
+  display: grid;
+  grid-auto-columns: max-content;
+  grid-auto-flow: column;
+  gap: 16px;
+}
+
+<div
+    class="emotion-0 emotion-1"
   >
     <div
-      class="css-1umyun2-AuthorChipAuthorWrapper e1jhd13z5"
+      class="emotion-2 emotion-3"
     >
       <div
-        class="css-1g2350v-AuthorChipImageWrapper e1jhd13z3"
+        class="emotion-4 emotion-5"
       >
         <img
           alt="DSC07717"
-          class="css-1ij2yax-ImageWrapper-AuthorChip e1shv2yg0"
+          class="emotion-6 emotion-7"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -27,37 +100,37 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1bvkrr9-AuthorChipContentWrapper e1jhd13z2"
+        class="emotion-8 emotion-9"
       >
         <div
-          class="css-1pifcp5-AuthorChipName e1jhd13z1"
+          class="emotion-10 emotion-11"
         >
           Von 
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-12"
             href="https://example.com"
           >
             Foobar
           </a>
         </div>
         <div
-          class="css-1aegevy-AuthorChipJob e1jhd13z0"
+          class="emotion-13 emotion-14"
         >
           Editor
         </div>
       </div>
     </div>
     <hr
-      class="css-6invwi-AuthorChipDivider e1jhd13z6"
+      class="emotion-15 emotion-16"
     />
     <div
-      class="css-kzytht-AuthorChipMetaWrapper e1jhd13z4"
+      class="emotion-17 emotion-18"
     >
       <aside
-        class="css-xraw1t-AuthorLinksWrapper e1qb6xb50"
+        class="emotion-19 emotion-20"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-12"
           href="https://twitter.com"
           target="__blank"
           title="Twitter"
@@ -77,7 +150,7 @@ https://unsplash.it/200/200 200w"
           </svg>
         </a>
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-12"
           href="https://facebook.com"
           target="__blank"
           title="Facebook"
@@ -101,7 +174,7 @@ https://unsplash.it/200/200 200w"
           </svg>
         </a>
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-12"
           href="https://instagram.com"
           target="__blank"
           title="Instagram"
@@ -128,18 +201,91 @@ https://unsplash.it/200/200 200w"
 
 exports[`Author Chip should render WithClassName 1`] = `
 <DocumentFragment>
-  <div
-    class="extra-classname css-1fhfas1-AuthorChipWrapper e1jhd13z7"
+  .emotion-0 {
+  display: grid;
+  gap: 8px;
+}
+
+.emotion-2 {
+  display: grid;
+  gap: 8px;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  -webkit-align-items: end;
+  -webkit-box-align: end;
+  -ms-flex-align: end;
+  align-items: end;
+}
+
+.emotion-4 {
+  display: grid;
+  width: 60px;
+}
+
+.emotion-6 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.emotion-10 {
+  font-weight: 500;
+}
+
+.emotion-12 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-12:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-15 {
+  width: 100%;
+  height: 1px;
+  background-color: rgba(0, 0, 0, 0.12);
+  margin: 0;
+}
+
+.emotion-17 {
+  display: grid;
+  grid-template-columns: max-content max-content;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-19 {
+  display: grid;
+  grid-auto-columns: max-content;
+  grid-auto-flow: column;
+  gap: 16px;
+}
+
+<div
+    class="extra-classname emotion-0 emotion-1"
   >
     <div
-      class="css-1umyun2-AuthorChipAuthorWrapper e1jhd13z5"
+      class="emotion-2 emotion-3"
     >
       <div
-        class="css-1g2350v-AuthorChipImageWrapper e1jhd13z3"
+        class="emotion-4 emotion-5"
       >
         <img
           alt="DSC07717"
-          class="css-1ij2yax-ImageWrapper-AuthorChip e1shv2yg0"
+          class="emotion-6 emotion-7"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -153,37 +299,37 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1bvkrr9-AuthorChipContentWrapper e1jhd13z2"
+        class="emotion-8 emotion-9"
       >
         <div
-          class="css-1pifcp5-AuthorChipName e1jhd13z1"
+          class="emotion-10 emotion-11"
         >
           Von 
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-12"
             href="https://example.com"
           >
             Foobar
           </a>
         </div>
         <div
-          class="css-1aegevy-AuthorChipJob e1jhd13z0"
+          class="emotion-13 emotion-14"
         >
           Editor
         </div>
       </div>
     </div>
     <hr
-      class="css-6invwi-AuthorChipDivider e1jhd13z6"
+      class="emotion-15 emotion-16"
     />
     <div
-      class="css-kzytht-AuthorChipMetaWrapper e1jhd13z4"
+      class="emotion-17 emotion-18"
     >
       <aside
-        class="css-xraw1t-AuthorLinksWrapper e1qb6xb50"
+        class="emotion-19 emotion-20"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-12"
           href="https://twitter.com"
           target="__blank"
           title="Twitter"
@@ -203,7 +349,7 @@ https://unsplash.it/200/200 200w"
           </svg>
         </a>
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-12"
           href="https://facebook.com"
           target="__blank"
           title="Facebook"
@@ -227,7 +373,7 @@ https://unsplash.it/200/200 200w"
           </svg>
         </a>
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-12"
           href="https://instagram.com"
           target="__blank"
           title="Instagram"
@@ -254,18 +400,91 @@ https://unsplash.it/200/200 200w"
 
 exports[`Author Chip should render WithEmotion 1`] = `
 <DocumentFragment>
-  <div
-    class="css-1fhfas1-AuthorChipWrapper e1jhd13z7"
+  .emotion-0 {
+  display: grid;
+  gap: 8px;
+}
+
+.emotion-2 {
+  display: grid;
+  gap: 8px;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  -webkit-align-items: end;
+  -webkit-box-align: end;
+  -ms-flex-align: end;
+  align-items: end;
+}
+
+.emotion-4 {
+  display: grid;
+  width: 60px;
+}
+
+.emotion-6 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.emotion-10 {
+  font-weight: 500;
+}
+
+.emotion-12 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-12:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-15 {
+  width: 100%;
+  height: 1px;
+  background-color: rgba(0, 0, 0, 0.12);
+  margin: 0;
+}
+
+.emotion-17 {
+  display: grid;
+  grid-template-columns: max-content max-content;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-19 {
+  display: grid;
+  grid-auto-columns: max-content;
+  grid-auto-flow: column;
+  gap: 16px;
+}
+
+<div
+    class="emotion-0 emotion-1"
   >
     <div
-      class="css-1umyun2-AuthorChipAuthorWrapper e1jhd13z5"
+      class="emotion-2 emotion-3"
     >
       <div
-        class="css-1g2350v-AuthorChipImageWrapper e1jhd13z3"
+        class="emotion-4 emotion-5"
       >
         <img
           alt="DSC07717"
-          class="css-1ij2yax-ImageWrapper-AuthorChip e1shv2yg0"
+          class="emotion-6 emotion-7"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -279,37 +498,37 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1bvkrr9-AuthorChipContentWrapper e1jhd13z2"
+        class="emotion-8 emotion-9"
       >
         <div
-          class="css-1pifcp5-AuthorChipName e1jhd13z1"
+          class="emotion-10 emotion-11"
         >
           Von 
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-12"
             href="https://example.com"
           >
             Foobar
           </a>
         </div>
         <div
-          class="css-1aegevy-AuthorChipJob e1jhd13z0"
+          class="emotion-13 emotion-14"
         >
           Editor
         </div>
       </div>
     </div>
     <hr
-      class="css-6invwi-AuthorChipDivider e1jhd13z6"
+      class="emotion-15 emotion-16"
     />
     <div
-      class="css-kzytht-AuthorChipMetaWrapper e1jhd13z4"
+      class="emotion-17 emotion-18"
     >
       <aside
-        class="css-xraw1t-AuthorLinksWrapper e1qb6xb50"
+        class="emotion-19 emotion-20"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-12"
           href="https://twitter.com"
           target="__blank"
           title="Twitter"
@@ -329,7 +548,7 @@ https://unsplash.it/200/200 200w"
           </svg>
         </a>
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-12"
           href="https://facebook.com"
           target="__blank"
           title="Facebook"
@@ -353,7 +572,7 @@ https://unsplash.it/200/200 200w"
           </svg>
         </a>
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-12"
           href="https://instagram.com"
           target="__blank"
           title="Instagram"
@@ -380,44 +599,103 @@ https://unsplash.it/200/200 200w"
 
 exports[`Author Chip should render WithoutImage 1`] = `
 <DocumentFragment>
-  <div
-    class="css-1fhfas1-AuthorChipWrapper e1jhd13z7"
+  .emotion-0 {
+  display: grid;
+  gap: 8px;
+}
+
+.emotion-2 {
+  display: grid;
+  gap: 8px;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  -webkit-align-items: end;
+  -webkit-box-align: end;
+  -ms-flex-align: end;
+  align-items: end;
+}
+
+.emotion-6 {
+  font-weight: 500;
+}
+
+.emotion-8 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-8:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-11 {
+  width: 100%;
+  height: 1px;
+  background-color: rgba(0, 0, 0, 0.12);
+  margin: 0;
+}
+
+.emotion-13 {
+  display: grid;
+  grid-template-columns: max-content max-content;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-15 {
+  display: grid;
+  grid-auto-columns: max-content;
+  grid-auto-flow: column;
+  gap: 16px;
+}
+
+<div
+    class="emotion-0 emotion-1"
   >
     <div
-      class="css-1umyun2-AuthorChipAuthorWrapper e1jhd13z5"
+      class="emotion-2 emotion-3"
     >
       <div
-        class="css-1bvkrr9-AuthorChipContentWrapper e1jhd13z2"
+        class="emotion-4 emotion-5"
       >
         <div
-          class="css-1pifcp5-AuthorChipName e1jhd13z1"
+          class="emotion-6 emotion-7"
         >
           Von 
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-8"
             href="https://example.com"
           >
             Foobar
           </a>
         </div>
         <div
-          class="css-1aegevy-AuthorChipJob e1jhd13z0"
+          class="emotion-9 emotion-10"
         >
           Editor
         </div>
       </div>
     </div>
     <hr
-      class="css-6invwi-AuthorChipDivider e1jhd13z6"
+      class="emotion-11 emotion-12"
     />
     <div
-      class="css-kzytht-AuthorChipMetaWrapper e1jhd13z4"
+      class="emotion-13 emotion-14"
     >
       <aside
-        class="css-xraw1t-AuthorLinksWrapper e1qb6xb50"
+        class="emotion-15 emotion-16"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-8"
           href="https://twitter.com"
           target="__blank"
           title="Twitter"
@@ -437,7 +715,7 @@ exports[`Author Chip should render WithoutImage 1`] = `
           </svg>
         </a>
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-8"
           href="https://facebook.com"
           target="__blank"
           title="Facebook"
@@ -461,7 +739,7 @@ exports[`Author Chip should render WithoutImage 1`] = `
           </svg>
         </a>
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-8"
           href="https://instagram.com"
           target="__blank"
           title="Instagram"
@@ -488,18 +766,91 @@ exports[`Author Chip should render WithoutImage 1`] = `
 
 exports[`Author Chip should render WithoutJobTitle 1`] = `
 <DocumentFragment>
-  <div
-    class="css-1fhfas1-AuthorChipWrapper e1jhd13z7"
+  .emotion-0 {
+  display: grid;
+  gap: 8px;
+}
+
+.emotion-2 {
+  display: grid;
+  gap: 8px;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  -webkit-align-items: end;
+  -webkit-box-align: end;
+  -ms-flex-align: end;
+  align-items: end;
+}
+
+.emotion-4 {
+  display: grid;
+  width: 60px;
+}
+
+.emotion-6 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.emotion-10 {
+  font-weight: 500;
+}
+
+.emotion-12 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-12:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-13 {
+  width: 100%;
+  height: 1px;
+  background-color: rgba(0, 0, 0, 0.12);
+  margin: 0;
+}
+
+.emotion-15 {
+  display: grid;
+  grid-template-columns: max-content max-content;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  justify-content: space-between;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-17 {
+  display: grid;
+  grid-auto-columns: max-content;
+  grid-auto-flow: column;
+  gap: 16px;
+}
+
+<div
+    class="emotion-0 emotion-1"
   >
     <div
-      class="css-1umyun2-AuthorChipAuthorWrapper e1jhd13z5"
+      class="emotion-2 emotion-3"
     >
       <div
-        class="css-1g2350v-AuthorChipImageWrapper e1jhd13z3"
+        class="emotion-4 emotion-5"
       >
         <img
           alt="DSC07717"
-          class="css-1ij2yax-ImageWrapper-AuthorChip e1shv2yg0"
+          class="emotion-6 emotion-7"
           loading="lazy"
           sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -513,14 +864,14 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <div
-        class="css-1bvkrr9-AuthorChipContentWrapper e1jhd13z2"
+        class="emotion-8 emotion-9"
       >
         <div
-          class="css-1pifcp5-AuthorChipName e1jhd13z1"
+          class="emotion-10 emotion-11"
         >
           Von 
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-12"
             href="https://example.com"
           >
             Foobar
@@ -529,16 +880,16 @@ https://unsplash.it/200/200 200w"
       </div>
     </div>
     <hr
-      class="css-6invwi-AuthorChipDivider e1jhd13z6"
+      class="emotion-13 emotion-14"
     />
     <div
-      class="css-kzytht-AuthorChipMetaWrapper e1jhd13z4"
+      class="emotion-15 emotion-16"
     >
       <aside
-        class="css-xraw1t-AuthorLinksWrapper e1qb6xb50"
+        class="emotion-17 emotion-18"
       >
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-12"
           href="https://twitter.com"
           target="__blank"
           title="Twitter"
@@ -558,7 +909,7 @@ https://unsplash.it/200/200 200w"
           </svg>
         </a>
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-12"
           href="https://facebook.com"
           target="__blank"
           title="Facebook"
@@ -582,7 +933,7 @@ https://unsplash.it/200/200 200w"
           </svg>
         </a>
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-12"
           href="https://instagram.com"
           target="__blank"
           title="Instagram"

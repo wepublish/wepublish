@@ -13,7 +13,8 @@ import {
   ImageSelectPanel,
   RichTextBlock,
   RichTextBlockValue,
-  SelectTags
+  SelectTags,
+  Textarea
 } from '@wepublish/ui/editor'
 import React, {useState} from 'react'
 import {useTranslation} from 'react-i18next'
@@ -96,6 +97,17 @@ export const EventForm = ({event, onChange, create}: EventFormProps) => {
               />
             </Form.Group>
           </div>
+
+          <Form.Group controlId="lead">
+            <Form.ControlLabel>{t('event.form.lead')}</Form.ControlLabel>
+            <Form.Control
+              name="lead"
+              rows={3}
+              value={event.lead ?? ''}
+              onChange={(lead: string) => onChange({lead})}
+              accepter={Textarea}
+            />
+          </Form.Group>
 
           <Form.Group controlId="description">
             <Form.ControlLabel>{t('event.form.description')}</Form.ControlLabel>

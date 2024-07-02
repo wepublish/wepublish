@@ -2,16 +2,38 @@
 
 exports[`Title Block should render Default 1`] = `
 <DocumentFragment>
-  <div
-    class="css-cs9jq0-TitleBlockWrapper ek0hk6a0"
+  .emotion-0 {
+  display: grid;
+  gap: 24px;
+  grid-auto-rows: min-content;
+}
+
+.emotion-2 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 3rem;
+}
+
+.emotion-3 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 300;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+<div
+    class="emotion-0 emotion-1"
   >
     <h1
-      class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h3 emotion-2"
     >
       This is a title
     </h1>
     <p
-      class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h6 emotion-3"
     >
       This is a lead
     </p>
@@ -21,16 +43,38 @@ exports[`Title Block should render Default 1`] = `
 
 exports[`Title Block should render WithClassName 1`] = `
 <DocumentFragment>
-  <div
-    class="extra-classname css-cs9jq0-TitleBlockWrapper ek0hk6a0"
+  .emotion-0 {
+  display: grid;
+  gap: 24px;
+  grid-auto-rows: min-content;
+}
+
+.emotion-2 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 3rem;
+}
+
+.emotion-3 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 300;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+<div
+    class="extra-classname emotion-0 emotion-1"
   >
     <h1
-      class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h3 emotion-2"
     >
       This is a title
     </h1>
     <p
-      class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h6 emotion-3"
     >
       This is a lead
     </p>
@@ -40,16 +84,38 @@ exports[`Title Block should render WithClassName 1`] = `
 
 exports[`Title Block should render WithEmotion 1`] = `
 <DocumentFragment>
-  <div
-    class="css-cs9jq0-TitleBlockWrapper ek0hk6a0"
+  .emotion-0 {
+  display: grid;
+  gap: 24px;
+  grid-auto-rows: min-content;
+}
+
+.emotion-2 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 3rem;
+}
+
+.emotion-3 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 300;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+<div
+    class="emotion-0 emotion-1"
   >
     <h1
-      class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h3 emotion-2"
     >
       This is a title
     </h1>
     <p
-      class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h6 emotion-3"
     >
       This is a lead
     </p>
@@ -59,11 +125,25 @@ exports[`Title Block should render WithEmotion 1`] = `
 
 exports[`Title Block should render WithoutLead 1`] = `
 <DocumentFragment>
-  <div
-    class="css-cs9jq0-TitleBlockWrapper ek0hk6a0"
+  .emotion-0 {
+  display: grid;
+  gap: 24px;
+  grid-auto-rows: min-content;
+}
+
+.emotion-2 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 3rem;
+}
+
+<div
+    class="emotion-0 emotion-1"
   >
     <h1
-      class="MuiTypography-root MuiTypography-h3 css-txxl8a-MuiTypography-root"
+      class="MuiTypography-root MuiTypography-h3 emotion-2"
     >
       This is a title
     </h1>

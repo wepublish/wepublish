@@ -2,22 +2,61 @@
 
 exports[`SettingList renders successfully 1`] = `
 <DocumentFragment>
-  <form
+  .emotion-0 {
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: 2fr 1fr;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: start;
+  justify-content: start;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-1 {
+  grid-column: 1 2;
+}
+
+.emotion-2 {
+  grid-column: 2;
+  text-align: right;
+}
+
+.emotion-3 {
+  margin-bottom: 10px;
+}
+
+.emotion-5 {
+  margin-left: 10px;
+  position: relative;
+  display: inline-block;
+  font-size: 22px;
+  color: #3498ff;
+}
+
+.emotion-45.emotion-45.emotion-45 {
+  width: 100%;
+}
+
+<form
     class="rs-form rs-form-vertical rs-form-fixed-width rs-form-disabled"
     data-testid="form"
   >
     <div
-      class="css-7mtr21"
+      class="emotion-0"
     >
       <div
-        class="css-19cek6g"
+        class="emotion-1"
       >
         <h2>
           settingList.settings
         </h2>
       </div>
       <div
-        class="css-1px0aha"
+        class="emotion-2"
       >
         <button
           aria-disabled="true"
@@ -106,7 +145,7 @@ exports[`SettingList renders successfully 1`] = `
               role="gridcell"
             >
               <div
-                class="css-16djhn4-Panel e8m68rm4 rs-panel rs-panel-bordered"
+                class="emotion-3 emotion-4 rs-panel rs-panel-bordered"
               >
                 <div
                   aria-expanded="false"
@@ -139,7 +178,7 @@ exports[`SettingList renders successfully 1`] = `
                     >
                       settingList.guestCommenting
                       <div
-                        class="css-1xcmto8-Info e8m68rm3"
+                        class="emotion-5 emotion-6"
                       >
                         <svg
                           fill="currentColor"
@@ -192,7 +231,7 @@ exports[`SettingList renders successfully 1`] = `
                     >
                       settingList.allowGuestCommentRating
                       <div
-                        class="css-1xcmto8-Info e8m68rm3"
+                        class="emotion-5 emotion-6"
                       >
                         <svg
                           fill="currentColor"
@@ -245,7 +284,7 @@ exports[`SettingList renders successfully 1`] = `
                     >
                       settingList.allowCommentEditing
                       <div
-                        class="css-1xcmto8-Info e8m68rm3"
+                        class="emotion-5 emotion-6"
                       >
                         <svg
                           fill="currentColor"
@@ -298,7 +337,7 @@ exports[`SettingList renders successfully 1`] = `
                     >
                       settingList.commentCharLimit
                       <div
-                        class="css-1xcmto8-Info e8m68rm3"
+                        class="emotion-5 emotion-6"
                       >
                         <svg
                           fill="currentColor"
@@ -419,7 +458,7 @@ exports[`SettingList renders successfully 1`] = `
               role="gridcell"
             >
               <div
-                class="css-16djhn4-Panel e8m68rm4 rs-panel rs-panel-bordered"
+                class="emotion-3 emotion-4 rs-panel rs-panel-bordered"
               >
                 <div
                   aria-expanded="false"
@@ -428,7 +467,7 @@ exports[`SettingList renders successfully 1`] = `
                 >
                   settingList.polls
                   <div
-                    class="css-1xcmto8-Info e8m68rm3"
+                    class="emotion-5 emotion-6"
                   >
                     <svg
                       fill="currentColor"
@@ -493,7 +532,7 @@ exports[`SettingList renders successfully 1`] = `
               role="gridcell"
             >
               <div
-                class="css-16djhn4-Panel e8m68rm4 rs-panel rs-panel-bordered"
+                class="emotion-3 emotion-4 rs-panel rs-panel-bordered"
               >
                 <div
                   aria-expanded="false"
@@ -526,7 +565,7 @@ exports[`SettingList renders successfully 1`] = `
                     >
                       settingList.newSubscriptionsApiPublic
                       <div
-                        class="css-1xcmto8-Info e8m68rm3"
+                        class="emotion-5 emotion-6"
                       >
                         <svg
                           fill="currentColor"
@@ -579,7 +618,7 @@ exports[`SettingList renders successfully 1`] = `
                     >
                       settingList.activeSubscriptionsApiPublic
                       <div
-                        class="css-1xcmto8-Info e8m68rm3"
+                        class="emotion-5 emotion-6"
                       >
                         <svg
                           fill="currentColor"
@@ -632,7 +671,7 @@ exports[`SettingList renders successfully 1`] = `
                     >
                       settingList.renewingSubscriptionsApiPublic
                       <div
-                        class="css-1xcmto8-Info e8m68rm3"
+                        class="emotion-5 emotion-6"
                       >
                         <svg
                           fill="currentColor"
@@ -685,7 +724,7 @@ exports[`SettingList renders successfully 1`] = `
                     >
                       settingList.newDeactivationsApiPublic
                       <div
-                        class="css-1xcmto8-Info e8m68rm3"
+                        class="emotion-5 emotion-6"
                       >
                         <svg
                           fill="currentColor"
@@ -738,7 +777,7 @@ exports[`SettingList renders successfully 1`] = `
                     >
                       settingList.expectedRevenueApiPublic
                       <div
-                        class="css-1xcmto8-Info e8m68rm3"
+                        class="emotion-5 emotion-6"
                       >
                         <svg
                           fill="currentColor"
@@ -791,7 +830,7 @@ exports[`SettingList renders successfully 1`] = `
                     >
                       settingList.revenueApiPublic
                       <div
-                        class="css-1xcmto8-Info e8m68rm3"
+                        class="emotion-5 emotion-6"
                       >
                         <svg
                           fill="currentColor"
@@ -851,7 +890,7 @@ exports[`SettingList renders successfully 1`] = `
               role="gridcell"
             >
               <div
-                class="css-16djhn4-Panel e8m68rm4 rs-panel rs-panel-bordered"
+                class="emotion-3 emotion-4 rs-panel rs-panel-bordered"
               >
                 <div
                   aria-expanded="false"
@@ -884,7 +923,7 @@ exports[`SettingList renders successfully 1`] = `
                     >
                       settingList.loginMinutes
                       <div
-                        class="css-1xcmto8-Info e8m68rm3"
+                        class="emotion-5 emotion-6"
                       >
                         <svg
                           fill="currentColor"
@@ -1013,7 +1052,7 @@ exports[`SettingList renders successfully 1`] = `
                     >
                       settingList.passwordToken
                       <div
-                        class="css-1xcmto8-Info e8m68rm3"
+                        class="emotion-5 emotion-6"
                       >
                         <svg
                           fill="currentColor"
@@ -1139,7 +1178,7 @@ exports[`SettingList renders successfully 1`] = `
               role="gridcell"
             >
               <div
-                class="css-16djhn4-Panel e8m68rm4 rs-panel rs-panel-bordered"
+                class="emotion-3 emotion-4 rs-panel rs-panel-bordered"
               >
                 <div
                   aria-expanded="false"
@@ -1148,7 +1187,7 @@ exports[`SettingList renders successfully 1`] = `
                 >
                   settingList.peering
                   <div
-                    class="css-1xcmto8-Info e8m68rm3"
+                    class="emotion-5 emotion-6"
                   >
                     <svg
                       fill="currentColor"
@@ -1289,7 +1328,7 @@ exports[`SettingList renders successfully 1`] = `
               role="gridcell"
             >
               <div
-                class="css-16djhn4-Panel e8m68rm4 rs-panel rs-panel-bordered"
+                class="emotion-3 emotion-4 rs-panel rs-panel-bordered"
               >
                 <div
                   aria-expanded="false"
@@ -1322,7 +1361,7 @@ exports[`SettingList renders successfully 1`] = `
                     >
                       settingList.headScript 
                       <div
-                        class="css-1xcmto8-Info e8m68rm3"
+                        class="emotion-5 emotion-6"
                       >
                         <svg
                           fill="currentColor"
@@ -1344,7 +1383,7 @@ exports[`SettingList renders successfully 1`] = `
                       </div>
                     </label>
                     <div
-                      class="css-hwiggr-WideInputGroup e8m68rm0 rs-input-group"
+                      class="emotion-45 emotion-46 rs-input-group"
                     >
                       <div
                         class="rs-form-control rs-form-control-wrapper"
@@ -1373,7 +1412,7 @@ exports[`SettingList renders successfully 1`] = `
                     >
                       settingList.bodyScript 
                       <div
-                        class="css-1xcmto8-Info e8m68rm3"
+                        class="emotion-5 emotion-6"
                       >
                         <svg
                           fill="currentColor"
@@ -1395,7 +1434,7 @@ exports[`SettingList renders successfully 1`] = `
                       </div>
                     </label>
                     <div
-                      class="css-hwiggr-WideInputGroup e8m68rm0 rs-input-group"
+                      class="emotion-45 emotion-46 rs-input-group"
                     >
                       <div
                         class="rs-form-control rs-form-control-wrapper"

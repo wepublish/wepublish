@@ -24,10 +24,15 @@ export const PaywallActions = styled('div')`
 
 const closeButton = (theme: Theme) => css`
   position: absolute;
-  right: ${theme.spacing(3)};
-  top: ${theme.spacing(3)};
+  right: 0;
+  top: 0;
   font-size: 3em;
   color: inherit;
+
+  ${theme.breakpoints.up('md')} {
+    right: ${theme.spacing(3)};
+    top: ${theme.spacing(3)};
+  }
 `
 
 export function Paywall() {
