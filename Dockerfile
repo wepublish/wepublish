@@ -19,7 +19,10 @@ ENV HOSTNAME=0.0.0.0
 ENV ADDRESS=0.0.0.0
 ENV PORT=4000
 WORKDIR /wepublish
-RUN groupadd -r wepublish && \
+RUN echo "MAILCHIMP_SERVER_PREFIX:${MAILCHIMP_SERVER_PREFIX}" && \
+    echo "NEXT_PROJECT:${NEXT_PROJECT}" && \
+    echo "MAILCHIMP_API_KEY:${MAILCHIMP_API_KEY}" && \
+    groupadd -r wepublish && \
     useradd -r -g wepublish -d /wepublish wepublish && \
     chown -R wepublish:wepublish /wepublish && \
     echo "#!/bin/bash\n node /wepublish/apps/${NEXT_PROJECT}/server.js" > /entrypoint.sh && \
