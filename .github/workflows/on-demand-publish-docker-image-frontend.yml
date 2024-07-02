@@ -46,6 +46,8 @@ jobs:
         with:
           context: .
           target: next
+          env:
+            ${{ steps.get-env.outputs.envvars }}
           build-args: |
             ${{ steps.get-env.outputs.envvars }}
           push: true
