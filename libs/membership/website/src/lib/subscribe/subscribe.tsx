@@ -30,6 +30,8 @@ import {formatRenewalPeriod} from '../formatters/format-renewal-period'
 import {css} from '@emotion/react'
 import {replace, sortBy, toLower} from 'ramda'
 import {MembershipModal} from '../membership-modal/membership-modal'
+import {ApolloError} from '@apollo/client'
+import {ApiAlert} from '@wepublish/errors/website'
 
 const subscribeSchema = z.object({
   memberPlanId: z.string().nonempty(),
@@ -340,7 +342,7 @@ export const Subscribe = <T extends BuilderUserFormFields>({
           )}
         />
 
-        {memberPlans.error && <Alert severity="error">{memberPlans.error.message}</Alert>}
+        {memberPlans.error && <ApiAlert error={memberPlans.error} severity="error" />}
       </SubscribeSection>
 
       <SubscribeSection>
@@ -449,11 +451,11 @@ export const Subscribe = <T extends BuilderUserFormFields>({
             </RegistrationChallengeWrapper>
           )}
 
-          {challenge.error && <Alert severity="error">{challenge.error.message}</Alert>}
+          {challenge.error && <ApiAlert error={challenge.error} severity="error" />}
         </SubscribeSection>
       )}
 
-      {error && <Alert severity="error">{error.message}</Alert>}
+      {error && <ApiAlert error={error as ApolloError} severity="error" />}
 
       <SubscribeNarrowSection>
         <Button
