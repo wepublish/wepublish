@@ -46,6 +46,7 @@ for arg in "$@"; do
       envvars="${envvars}${arg}\n"
     fi
 done
+echo $envvars
 
 # Convert env output to helm compatible yaml output
 if [[ $DEPLOYMENT == "helm" ]]; then
@@ -57,7 +58,6 @@ if [[  $DEPLOYMENT == "docker"  ]]; then
   # Ensure file is present to ensure one is present since docker build process depends on it.
   touch secrets_name.list
 
-  echo "SECRET:" $secretenvvars
   for var in $(echo $secretenvvars |sed 's/\\n/ /g' ); do
 
     # Write secrets list und secrete name list to clean and read on docker startup secrets with map-secrets.sh scripts
@@ -82,8 +82,12 @@ fi
 envvars="${envvars//'%'/'%25'}"
 envvars="${envvars//$'\n'/'%0A'}"
 envvars="${envvars//'\n'/'%0A'}"
-envvars="${envvars/ /'\n'/'%0A'}"
 envvars="${envvars//$'\r'/'%0D'}"
+
+# Clean spaces only if normal env not on yaml
+if [[ $MODE == "docker" ]]; then
+  envvars="${envvars/ /'\n'/'%0A'}"
+fi
 
 # Return variables
 echo "::set-output name=envvars::${envvars}"
