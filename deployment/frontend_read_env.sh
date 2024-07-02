@@ -41,6 +41,8 @@ if [[ $DEPLOYMENT == "helm" ]]; then
 fi
 if [[  $DEPLOYMENT == "docker"  ]]; then
   for var in $(echo $secretenvvars |sed 's/\\n/ /g' ); do
+    echo "$(echo ${var})" >> secrets.list
+    echo "$(echo ${var} |cut -d'=' -f 1)" >> secrets_name.list
     sed -i "s|### FRONT_ARG_REPLACER ###|ARG $(echo ${var} |cut -d'=' -f 1)\n### FRONT_ARG_REPLACER ###|g" Dockerfile
   done
   for var in $(echo $envvars |sed 's/\\n/ /g' ); do
@@ -51,5 +53,6 @@ fi
 envvars="${envvars//'%'/'%25'}"
 envvars="${envvars//$'\n'/'%0A'}"
 envvars="${envvars//'\n'/'%0A'}"
+envvars="${envvars/ /'\n'/'%0A'}"
 envvars="${envvars//$'\r'/'%0D'}"
 echo "::set-output name=envvars::${envvars} ${secretenvvars}"

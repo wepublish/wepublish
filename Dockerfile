@@ -12,6 +12,10 @@ RUN echo "NEXT_PROJECT:${NEXT_PROJECT}"
 RUN echo "MAILCHIMP_API_KEY:${MAILCHIMP_API_KEY}"
 RUN npm ci
 RUN npx nx build ${NEXT_PROJECT}
+RUN bash /wepublish/deployment/map-secrets.sh clean
+RUN cat secrets.list
+RUN cat secrets_name.list
+RUN rm secrets.list
 
 FROM node:18.19.1-bookworm-slim as next
 MAINTAINER WePublish Foundation
@@ -26,12 +30,15 @@ WORKDIR /wepublish
 RUN groupadd -r wepublish && \
     useradd -r -g wepublish -d /wepublish wepublish && \
     chown -R wepublish:wepublish /wepublish && \
-    echo "#!/bin/bash\n node /wepublish/apps/${NEXT_PROJECT}/server.js" > /entrypoint.sh && \
+    echo "#!/bin/bash\n bash /map-secrets.sh restore \n node /wepublish/apps/${NEXT_PROJECT}/server.js" > /entrypoint.sh && \
     chown -R wepublish:wepublish /entrypoint.sh && \
     chmod +x /entrypoint.sh
 COPY --chown=wepublish:wepublish --from=build-next /wepublish/dist/apps/${NEXT_PROJECT}/.next/standalone /wepublish
 COPY --chown=wepublish:wepublish --from=build-next /wepublish/dist/apps/${NEXT_PROJECT}/public /wepublish/apps/${NEXT_PROJECT}/public
 COPY --chown=wepublish:wepublish --from=build-next /wepublish/dist/apps/${NEXT_PROJECT}/.next/static /wepublish/apps/${NEXT_PROJECT}/public/_next/static
+COPY --chown=wepublish:wepublish --from=build-next /wepublish/secrets_name.list /secrets_name.list
+COPY --chown=wepublish:wepublish --from=build-next /wepublish/deployment/map-secrets.sh /map-secrets.sh
+RUN cat /secrets_name.list
 EXPOSE 4001
 USER wepublish
 ENTRYPOINT ["/entrypoint.sh"]
