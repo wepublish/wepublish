@@ -6,6 +6,7 @@ const {join} = require('path')
  * @type {import('@nx/next/plugins/with-nx').WithNxOptions}
  **/
 const nextConfig = {
+  output: 'standalone',
   nx: {
     svgr: true
   },

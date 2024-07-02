@@ -1,0 +1,4 @@
+apiVersion: v1
+description: WePublish frontend
+name: wepublish-frontend
+version: 1.0.0
