@@ -1,5 +1,5 @@
 import {TagType, TeaserType} from '@wepublish/editor/api'
-import {useEffect, useMemo, useState} from 'react'
+import {useEffect, useMemo, useRef, useState} from 'react'
 import {useTranslation} from 'react-i18next'
 import {Button, Drawer, Form, Schema, SelectPicker} from 'rsuite'
 
@@ -29,6 +29,7 @@ export const useTeaserTypeText = () => {
 }
 
 export function TeaserListConfigPanel({value, onClose, onSelect}: TeaserListConfigPanelProps) {
+  const previousType = useRef<TeaserType>()
   const [tagFilter, setTagFilter] = useState(value.filter.tags ?? [])
   const [take, setTake] = useState(value.take)
   const [skip, setSkip] = useState(value.skip)
@@ -55,11 +56,15 @@ export function TeaserListConfigPanel({value, onClose, onSelect}: TeaserListConf
         return TagType.Event
     }
 
-    throw new Error('Somehow unsupported teaser was selected')
+    throw new Error('Somehow an unsupported teaser type was selected')
   }, [teaserType])
 
   useEffect(() => {
-    setTagFilter([])
+    if (previousType.current && previousType.current !== teaserType) {
+      setTagFilter([])
+    }
+
+    previousType.current = teaserType
   }, [teaserType])
 
   return (
@@ -70,7 +75,7 @@ export function TeaserListConfigPanel({value, onClose, onSelect}: TeaserListConf
         validationPassed &&
         onSelect({
           ...value,
-          filter: {tags: tagFilter},
+          filter: {...value.filter, tags: tagFilter},
           skip,
           take,
           teaserType
@@ -136,7 +141,7 @@ export function TeaserListConfigPanel({value, onClose, onSelect}: TeaserListConf
           <Form.ControlLabel>{t('blocks.teaserList.tagsLabel')}</Form.ControlLabel>
 
           <SelectTags
-            defaultTags={[]}
+            defaultTags={value.filter.tagObjects}
             name="tags"
             tagType={tagType}
             setSelectedTags={setTagFilter}

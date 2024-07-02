@@ -2,11 +2,31 @@
 
 exports[`Author Links should render Default 1`] = `
 <DocumentFragment>
-  <aside
-    class="css-xraw1t-AuthorLinksWrapper e1qb6xb50"
+  .emotion-0 {
+  display: grid;
+  grid-auto-columns: max-content;
+  grid-auto-flow: column;
+  gap: 16px;
+}
+
+.emotion-2 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-2:hover {
+  text-decoration-color: inherit;
+}
+
+<aside
+    class="emotion-0 emotion-1"
   >
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://twitter.com"
       target="__blank"
       title="Twitter"
@@ -26,7 +46,7 @@ exports[`Author Links should render Default 1`] = `
       </svg>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://facebook.com"
       target="__blank"
       title="Facebook"
@@ -50,7 +70,7 @@ exports[`Author Links should render Default 1`] = `
       </svg>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://instagram.com"
       target="__blank"
       title="Instagram"
@@ -70,7 +90,7 @@ exports[`Author Links should render Default 1`] = `
       </svg>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="mailto:..."
       target="__blank"
       title="Mail"
@@ -94,7 +114,7 @@ exports[`Author Links should render Default 1`] = `
       </svg>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
       target="__blank"
       title="Foobar"
@@ -102,7 +122,7 @@ exports[`Author Links should render Default 1`] = `
       Foobar
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
       target="__blank"
       title="Presseausweis"
@@ -135,11 +155,31 @@ exports[`Author Links should render Default 1`] = `
 
 exports[`Author Links should render WithClassName 1`] = `
 <DocumentFragment>
-  <aside
-    class="extra-classname css-xraw1t-AuthorLinksWrapper e1qb6xb50"
+  .emotion-0 {
+  display: grid;
+  grid-auto-columns: max-content;
+  grid-auto-flow: column;
+  gap: 16px;
+}
+
+.emotion-2 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-2:hover {
+  text-decoration-color: inherit;
+}
+
+<aside
+    class="extra-classname emotion-0 emotion-1"
   >
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://twitter.com"
       target="__blank"
       title="Twitter"
@@ -159,7 +199,7 @@ exports[`Author Links should render WithClassName 1`] = `
       </svg>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://facebook.com"
       target="__blank"
       title="Facebook"
@@ -183,7 +223,7 @@ exports[`Author Links should render WithClassName 1`] = `
       </svg>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://instagram.com"
       target="__blank"
       title="Instagram"
@@ -203,7 +243,7 @@ exports[`Author Links should render WithClassName 1`] = `
       </svg>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="mailto:..."
       target="__blank"
       title="Mail"
@@ -227,7 +267,7 @@ exports[`Author Links should render WithClassName 1`] = `
       </svg>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
       target="__blank"
       title="Foobar"
@@ -235,7 +275,7 @@ exports[`Author Links should render WithClassName 1`] = `
       Foobar
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
       target="__blank"
       title="Presseausweis"
@@ -268,11 +308,31 @@ exports[`Author Links should render WithClassName 1`] = `
 
 exports[`Author Links should render WithEmotion 1`] = `
 <DocumentFragment>
-  <aside
-    class="css-xraw1t-AuthorLinksWrapper e1qb6xb50"
+  .emotion-0 {
+  display: grid;
+  grid-auto-columns: max-content;
+  grid-auto-flow: column;
+  gap: 16px;
+}
+
+.emotion-2 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-2:hover {
+  text-decoration-color: inherit;
+}
+
+<aside
+    class="emotion-0 emotion-1"
   >
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://twitter.com"
       target="__blank"
       title="Twitter"
@@ -292,7 +352,7 @@ exports[`Author Links should render WithEmotion 1`] = `
       </svg>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://facebook.com"
       target="__blank"
       title="Facebook"
@@ -316,7 +376,7 @@ exports[`Author Links should render WithEmotion 1`] = `
       </svg>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://instagram.com"
       target="__blank"
       title="Instagram"
@@ -336,7 +396,7 @@ exports[`Author Links should render WithEmotion 1`] = `
       </svg>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="mailto:..."
       target="__blank"
       title="Mail"
@@ -360,7 +420,7 @@ exports[`Author Links should render WithEmotion 1`] = `
       </svg>
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
       target="__blank"
       title="Foobar"
@@ -368,7 +428,7 @@ exports[`Author Links should render WithEmotion 1`] = `
       Foobar
     </a>
     <a
-      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+      class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-2"
       href="https://example.com"
       target="__blank"
       title="Presseausweis"

@@ -2,8 +2,89 @@
 
 exports[`Richtext Block should render Default 1`] = `
 <DocumentFragment>
-  <div
-    class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+  .emotion-2 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 3rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-3 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 26px;
+  margin-bottom: 0.35em;
+}
+
+@media (min-width: 900px) {
+  .emotion-3 {
+    font-size: 32px;
+  }
+}
+
+.emotion-3:last-child {
+  margin-bottom: 0;
+}
+
+.emotion-4 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1.4;
+  margin-bottom: 0.35em;
+}
+
+.emotion-4:last-child {
+  margin-bottom: 0;
+}
+
+.emotion-5 {
+  border-collapse: collapse;
+}
+
+.emotion-6 {
+  border-collapse: collapse;
+  border: 1px solid #000000;
+  padding: 8px;
+}
+
+.emotion-7 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-7.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-7:last-child {
+  margin-bottom: 0;
+}
+
+.emotion-15 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-15:hover {
+  text-decoration-color: inherit;
+}
+
+<div
+    class="emotion-0 emotion-1"
   >
     <div
       data-gramm="false"
@@ -13,7 +94,7 @@ exports[`Richtext Block should render Default 1`] = `
     >
       <div>
         <h2
-          class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom css-1b40pty-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom emotion-2"
           data-slate-node="element"
         >
           <span
@@ -29,7 +110,7 @@ exports[`Richtext Block should render Default 1`] = `
         <hr />
       </div>
       <h3
-        class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-37wefs-MuiTypography-root-lastChildNoGutter"
+        class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-3"
         data-slate-node="element"
       >
         <span
@@ -43,7 +124,7 @@ exports[`Richtext Block should render Default 1`] = `
         </span>
       </h3>
       <h4
-        class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-1u8rq5i-MuiTypography-root-lastChildNoGutter"
+        class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-4"
         data-slate-node="element"
       >
         <span
@@ -91,7 +172,7 @@ exports[`Richtext Block should render Default 1`] = `
         </li>
       </ol>
       <table
-        class="css-o38l6f-tableStyles"
+        class="emotion-5"
       >
         <tbody
           data-slate-node="element"
@@ -100,11 +181,11 @@ exports[`Richtext Block should render Default 1`] = `
             data-slate-node="element"
           >
             <td
-              class="css-13r3shd-tableCellStyles"
+              class="emotion-6"
               data-slate-node="element"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-7"
                 data-slate-node="element"
               >
                 <span
@@ -119,11 +200,11 @@ exports[`Richtext Block should render Default 1`] = `
               </p>
             </td>
             <td
-              class="css-13r3shd-tableCellStyles"
+              class="emotion-6"
               data-slate-node="element"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-7"
                 data-slate-node="element"
               >
                 <span
@@ -142,11 +223,11 @@ exports[`Richtext Block should render Default 1`] = `
             data-slate-node="element"
           >
             <td
-              class="css-13r3shd-tableCellStyles"
+              class="emotion-6"
               data-slate-node="element"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-7"
                 data-slate-node="element"
               >
                 <span
@@ -161,11 +242,11 @@ exports[`Richtext Block should render Default 1`] = `
               </p>
             </td>
             <td
-              class="css-13r3shd-tableCellStyles"
+              class="emotion-6"
               data-slate-node="element"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-7"
                 data-slate-node="element"
               >
                 <span
@@ -183,7 +264,7 @@ exports[`Richtext Block should render Default 1`] = `
         </tbody>
       </table>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-7"
         data-slate-node="element"
       >
         <span
@@ -328,7 +409,7 @@ exports[`Richtext Block should render Default 1`] = `
           </span>
         </span>
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-15"
           data-slate-node="element"
           href="https://google.com"
           rel="noreferrer"
@@ -362,8 +443,89 @@ exports[`Richtext Block should render Default 1`] = `
 
 exports[`Richtext Block should render WithClassName 1`] = `
 <DocumentFragment>
-  <div
-    class="extra-classname css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+  .emotion-2 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 3rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-3 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 26px;
+  margin-bottom: 0.35em;
+}
+
+@media (min-width: 900px) {
+  .emotion-3 {
+    font-size: 32px;
+  }
+}
+
+.emotion-3:last-child {
+  margin-bottom: 0;
+}
+
+.emotion-4 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1.4;
+  margin-bottom: 0.35em;
+}
+
+.emotion-4:last-child {
+  margin-bottom: 0;
+}
+
+.emotion-5 {
+  border-collapse: collapse;
+}
+
+.emotion-6 {
+  border-collapse: collapse;
+  border: 1px solid #000000;
+  padding: 8px;
+}
+
+.emotion-7 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-7.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-7:last-child {
+  margin-bottom: 0;
+}
+
+.emotion-15 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-15:hover {
+  text-decoration-color: inherit;
+}
+
+<div
+    class="extra-classname emotion-0 emotion-1"
   >
     <div
       data-gramm="false"
@@ -373,7 +535,7 @@ exports[`Richtext Block should render WithClassName 1`] = `
     >
       <div>
         <h2
-          class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom css-1b40pty-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom emotion-2"
           data-slate-node="element"
         >
           <span
@@ -389,7 +551,7 @@ exports[`Richtext Block should render WithClassName 1`] = `
         <hr />
       </div>
       <h3
-        class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-37wefs-MuiTypography-root-lastChildNoGutter"
+        class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-3"
         data-slate-node="element"
       >
         <span
@@ -403,7 +565,7 @@ exports[`Richtext Block should render WithClassName 1`] = `
         </span>
       </h3>
       <h4
-        class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-1u8rq5i-MuiTypography-root-lastChildNoGutter"
+        class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-4"
         data-slate-node="element"
       >
         <span
@@ -451,7 +613,7 @@ exports[`Richtext Block should render WithClassName 1`] = `
         </li>
       </ol>
       <table
-        class="css-o38l6f-tableStyles"
+        class="emotion-5"
       >
         <tbody
           data-slate-node="element"
@@ -460,11 +622,11 @@ exports[`Richtext Block should render WithClassName 1`] = `
             data-slate-node="element"
           >
             <td
-              class="css-13r3shd-tableCellStyles"
+              class="emotion-6"
               data-slate-node="element"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-7"
                 data-slate-node="element"
               >
                 <span
@@ -479,11 +641,11 @@ exports[`Richtext Block should render WithClassName 1`] = `
               </p>
             </td>
             <td
-              class="css-13r3shd-tableCellStyles"
+              class="emotion-6"
               data-slate-node="element"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-7"
                 data-slate-node="element"
               >
                 <span
@@ -502,11 +664,11 @@ exports[`Richtext Block should render WithClassName 1`] = `
             data-slate-node="element"
           >
             <td
-              class="css-13r3shd-tableCellStyles"
+              class="emotion-6"
               data-slate-node="element"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-7"
                 data-slate-node="element"
               >
                 <span
@@ -521,11 +683,11 @@ exports[`Richtext Block should render WithClassName 1`] = `
               </p>
             </td>
             <td
-              class="css-13r3shd-tableCellStyles"
+              class="emotion-6"
               data-slate-node="element"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-7"
                 data-slate-node="element"
               >
                 <span
@@ -543,7 +705,7 @@ exports[`Richtext Block should render WithClassName 1`] = `
         </tbody>
       </table>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-7"
         data-slate-node="element"
       >
         <span
@@ -688,7 +850,7 @@ exports[`Richtext Block should render WithClassName 1`] = `
           </span>
         </span>
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-15"
           data-slate-node="element"
           href="https://google.com"
           rel="noreferrer"
@@ -722,8 +884,89 @@ exports[`Richtext Block should render WithClassName 1`] = `
 
 exports[`Richtext Block should render WithEmotion 1`] = `
 <DocumentFragment>
-  <div
-    class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+  .emotion-2 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 3rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-3 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 26px;
+  margin-bottom: 0.35em;
+}
+
+@media (min-width: 900px) {
+  .emotion-3 {
+    font-size: 32px;
+  }
+}
+
+.emotion-3:last-child {
+  margin-bottom: 0;
+}
+
+.emotion-4 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  line-height: 1.4;
+  margin-bottom: 0.35em;
+}
+
+.emotion-4:last-child {
+  margin-bottom: 0;
+}
+
+.emotion-5 {
+  border-collapse: collapse;
+}
+
+.emotion-6 {
+  border-collapse: collapse;
+  border: 1px solid #000000;
+  padding: 8px;
+}
+
+.emotion-7 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-7.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-7:last-child {
+  margin-bottom: 0;
+}
+
+.emotion-15 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-15:hover {
+  text-decoration-color: inherit;
+}
+
+<div
+    class="emotion-0 emotion-1"
   >
     <div
       data-gramm="false"
@@ -733,7 +976,7 @@ exports[`Richtext Block should render WithEmotion 1`] = `
     >
       <div>
         <h2
-          class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom css-1b40pty-MuiTypography-root"
+          class="MuiTypography-root MuiTypography-h3 MuiTypography-gutterBottom emotion-2"
           data-slate-node="element"
         >
           <span
@@ -749,7 +992,7 @@ exports[`Richtext Block should render WithEmotion 1`] = `
         <hr />
       </div>
       <h3
-        class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom css-37wefs-MuiTypography-root-lastChildNoGutter"
+        class="MuiTypography-root MuiTypography-h4 MuiTypography-gutterBottom emotion-3"
         data-slate-node="element"
       >
         <span
@@ -763,7 +1006,7 @@ exports[`Richtext Block should render WithEmotion 1`] = `
         </span>
       </h3>
       <h4
-        class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom css-1u8rq5i-MuiTypography-root-lastChildNoGutter"
+        class="MuiTypography-root MuiTypography-h5 MuiTypography-gutterBottom emotion-4"
         data-slate-node="element"
       >
         <span
@@ -811,7 +1054,7 @@ exports[`Richtext Block should render WithEmotion 1`] = `
         </li>
       </ol>
       <table
-        class="css-o38l6f-tableStyles"
+        class="emotion-5"
       >
         <tbody
           data-slate-node="element"
@@ -820,11 +1063,11 @@ exports[`Richtext Block should render WithEmotion 1`] = `
             data-slate-node="element"
           >
             <td
-              class="css-13r3shd-tableCellStyles"
+              class="emotion-6"
               data-slate-node="element"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-7"
                 data-slate-node="element"
               >
                 <span
@@ -839,11 +1082,11 @@ exports[`Richtext Block should render WithEmotion 1`] = `
               </p>
             </td>
             <td
-              class="css-13r3shd-tableCellStyles"
+              class="emotion-6"
               data-slate-node="element"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-7"
                 data-slate-node="element"
               >
                 <span
@@ -862,11 +1105,11 @@ exports[`Richtext Block should render WithEmotion 1`] = `
             data-slate-node="element"
           >
             <td
-              class="css-13r3shd-tableCellStyles"
+              class="emotion-6"
               data-slate-node="element"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-7"
                 data-slate-node="element"
               >
                 <span
@@ -881,11 +1124,11 @@ exports[`Richtext Block should render WithEmotion 1`] = `
               </p>
             </td>
             <td
-              class="css-13r3shd-tableCellStyles"
+              class="emotion-6"
               data-slate-node="element"
             >
               <p
-                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
+                class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-7"
                 data-slate-node="element"
               >
                 <span
@@ -903,7 +1146,7 @@ exports[`Richtext Block should render WithEmotion 1`] = `
         </tbody>
       </table>
       <p
-        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
+        class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-7"
         data-slate-node="element"
       >
         <span
@@ -1048,7 +1291,7 @@ exports[`Richtext Block should render WithEmotion 1`] = `
           </span>
         </span>
         <a
-          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+          class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-15"
           data-slate-node="element"
           href="https://google.com"
           rel="noreferrer"

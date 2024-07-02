@@ -1,6 +1,7 @@
 fragment EventRef on Event {
   id
   name
+  lead
   description
   status
   location

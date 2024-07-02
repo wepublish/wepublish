@@ -248,7 +248,7 @@ jobs:
                 operandTypes: [ '+', '-' ]
                 mode: 'formula'
                 targetSymbol: '?'
-          
+
               mediaServer:
                 type: 'nova'
           editor:

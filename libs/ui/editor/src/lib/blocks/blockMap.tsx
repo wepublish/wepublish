@@ -137,7 +137,9 @@ export const BlockMap: BlockMapForValue<BlockValue> = {
     field: props => <TeaserListBlock {...props} />,
     defaultValue: {
       title: null,
-      filter: {},
+      filter: {
+        tagObjects: []
+      },
       blockStyle: undefined,
       teasers: [],
       skip: 0,

@@ -1,10 +1,10 @@
 import {AppBar, Theme, Toolbar, css, styled, useTheme} from '@mui/material'
+import {useUser} from '@wepublish/authentication/website'
 import {FullNavigationFragment} from '@wepublish/website/api'
 import {BuilderNavbarProps, useWebsiteBuilder} from '@wepublish/website/builder'
 import {PropsWithChildren, useCallback, useMemo, useState} from 'react'
 import {MdAccountCircle, MdClose, MdMenu, MdOutlinePayments} from 'react-icons/md'
 import {navigationLinkToUrl} from '../link-to-url'
-import {useUser} from '@wepublish/authentication/website'
 
 declare module 'react' {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
