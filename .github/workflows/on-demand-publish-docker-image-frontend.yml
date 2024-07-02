@@ -46,6 +46,8 @@ jobs:
         with:
           context: .
           target: next
+          build-args: |
+            ${{ steps.get-env.outputs.envvars }}
           push: true
           tags: |
             ${{ inputs.frontend_tags }}
