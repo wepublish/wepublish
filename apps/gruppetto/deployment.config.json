@@ -2,7 +2,9 @@
   "frontend": {
     "production": {
       "deployment": true,
-      "env": {},
+      "env": {
+        "GA_ID": "G-FL5CRKBXV4"
+      },
       "secret_env": []
     },
     "staging": {

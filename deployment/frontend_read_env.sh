@@ -39,7 +39,7 @@ if [[ $DEPLOYMENT == "helm" ]]; then
 fi
 if [[  $DEPLOYMENT == "docker"  ]]; then
   for var in $(echo $envvars |sed 's/\\n/ /g' ); do
-    sed -i "s/### FRONT_ARG_REPLACER ###/ARG $(echo $var |cut -d'=' -f 1)\nENV $(echo $var |cut -d'=' -f 1)=\${$(echo $var |cut -d'=' -f 1)}\n### FRONT_ARG_REPLACER ###/" Dockerfile
+    sed -i "s|### FRONT_ARG_REPLACER ###|ENV ${var}\n### FRONT_ARG_REPLACER ###|g" Dockerfile
   done
 fi
 

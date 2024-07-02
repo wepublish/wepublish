@@ -4,6 +4,7 @@
 
 FROM node:18.19.1-bookworm-slim as build-next
 ### FRONT_ARG_REPLACER ###
+
 WORKDIR /wepublish
 COPY . .
 RUN echo "MAILCHIMP_SERVER_PREFIX:${MAILCHIMP_SERVER_PREFIX}"
@@ -20,6 +21,7 @@ ENV HOSTNAME=0.0.0.0
 ENV ADDRESS=0.0.0.0
 ENV PORT=4000
 ### FRONT_ARG_REPLACER ###
+
 WORKDIR /wepublish
 RUN groupadd -r wepublish && \
     useradd -r -g wepublish -d /wepublish wepublish && \
