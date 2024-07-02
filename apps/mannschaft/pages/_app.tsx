@@ -22,6 +22,7 @@ import translation from 'zod-i18n-map/locales/de/zod.json'
 
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
+import {CookieOrPay} from '../src/cookie-or-pay/cookie-or-pay'
 
 setDefaultOptions({
   locale: de
@@ -145,6 +146,8 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
                 </LogoLink>
               </FooterContainer>
             </Spacer>
+
+            <CookieOrPay />
 
             <Script
               src={publicRuntimeConfig.env.API_URL! + '/scripts/head.js'}
