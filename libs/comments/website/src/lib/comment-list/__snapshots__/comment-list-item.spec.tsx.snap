@@ -2071,10 +2071,126 @@ exports[`Comment List Item should render Default 1`] = `
 }
 
 .emotion-28 {
-  display: grid;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 500;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 3px 9px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  border: 1px solid rgba(233, 30, 99, 0.5);
+  color: #e91e63;
+  border-radius: 30px;
+  text-transform: initial;
+  box-shadow: none;
+  border-width: 1px;
+}
+
+.emotion-28::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-28.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-28 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-28:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: rgba(233, 30, 99, 0.04);
+  border: 1px solid #e91e63;
+}
+
+@media (hover: none) {
+  .emotion-28:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-28.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.emotion-28:hover {
+  box-shadow: none;
+}
+
+.emotion-28:hover {
+  border-width: 1px;
+  background-color: rgb(252, 232, 239);
+}
+
+.emotion-29 {
+  display: inherit;
+  margin-right: 8px;
+  margin-left: -2px;
+}
+
+.emotion-29>*:nth-of-type(1) {
+  font-size: 18px;
 }
 
 .emotion-30 {
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+}
+
+.emotion-31 {
+  display: grid;
+}
+
+.emotion-33 {
   display: grid;
   grid-template-columns: auto max-content;
   -webkit-align-items: center;
@@ -2088,25 +2204,25 @@ exports[`Comment List Item should render Default 1`] = `
   gap: 8px;
 }
 
-.emotion-32 {
+.emotion-35 {
   font-size: 0.75em;
   font-weight: 700;
   text-transform: uppercase;
 }
 
-.emotion-34 .MuiRating-iconFilled {
+.emotion-37 .MuiRating-iconFilled {
   color: #e91e63;
 }
 
-.emotion-34 .MuiRating-iconHover {
+.emotion-37 .MuiRating-iconHover {
   color: #e91e63;
 }
 
-.emotion-34 .MuiRating-iconEmpty {
+.emotion-37 .MuiRating-iconEmpty {
   color: #bdbdbd;
 }
 
-.emotion-36 {
+.emotion-39 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -2120,16 +2236,16 @@ exports[`Comment List Item should render Default 1`] = `
   pointer-events: none;
 }
 
-.emotion-36.Mui-disabled {
+.emotion-39.Mui-disabled {
   opacity: 0.38;
   pointer-events: none;
 }
 
-.emotion-36.Mui-focusVisible .MuiRating-iconActive {
+.emotion-39.Mui-focusVisible .MuiRating-iconActive {
   outline: 1px solid #999;
 }
 
-.emotion-36 .MuiRating-visuallyHidden {
+.emotion-39 .MuiRating-visuallyHidden {
   border: 0;
   clip: rect(0 0 0 0);
   height: 1px;
@@ -2141,7 +2257,7 @@ exports[`Comment List Item should render Default 1`] = `
   width: 1px;
 }
 
-.emotion-37 {
+.emotion-40 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -2263,15 +2379,15 @@ https://unsplash.it/200/200 200w"
       class="emotion-24 emotion-25"
     >
       <div
-        class="css-14q529f-CommentListItemActionsButtons ew53o3y0"
+        class="emotion-26 emotion-27"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall css-ddyrv3-MuiButtonBase-root-MuiButton-root-CommentListItem"
+          class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall emotion-28"
           tabindex="0"
           type="button"
         >
           <span
-            class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
+            class="MuiButton-startIcon MuiButton-iconSizeSmall emotion-29"
           >
             <svg
               fill="currentColor"
@@ -2293,34 +2409,32 @@ https://unsplash.it/200/200 200w"
           </span>
           Antworten
           <span
-            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            class="MuiTouchRipple-root emotion-30"
           />
         </button>
       </div>
-        class="emotion-26 emotion-27"
-      />
       <div
-        class="emotion-28 emotion-29"
+        class="emotion-31 emotion-32"
       >
         <div
-          class="emotion-30 emotion-31"
+          class="emotion-33 emotion-34"
         >
           <div
-            class="emotion-32 emotion-33"
+            class="emotion-35 emotion-36"
           >
             Foobar
           </div>
           <div
-            class="emotion-34 emotion-35"
+            class="emotion-37 emotion-38"
           >
             <span
               aria-label="0 Stars"
-              class="MuiRating-root MuiRating-sizeMedium Mui-readOnly MuiRating-readOnly emotion-36"
+              class="MuiRating-root MuiRating-sizeMedium Mui-readOnly MuiRating-readOnly emotion-39"
               role="img"
             >
               <span>
                 <span
-                  class="MuiRating-icon MuiRating-iconEmpty emotion-37"
+                  class="MuiRating-icon MuiRating-iconEmpty emotion-40"
                 >
                   <svg
                     fill="currentColor"
@@ -2343,7 +2457,7 @@ https://unsplash.it/200/200 200w"
               </span>
               <span>
                 <span
-                  class="MuiRating-icon MuiRating-iconEmpty emotion-37"
+                  class="MuiRating-icon MuiRating-iconEmpty emotion-40"
                 >
                   <svg
                     fill="currentColor"
@@ -2366,7 +2480,7 @@ https://unsplash.it/200/200 200w"
               </span>
               <span>
                 <span
-                  class="MuiRating-icon MuiRating-iconEmpty emotion-37"
+                  class="MuiRating-icon MuiRating-iconEmpty emotion-40"
                 >
                   <svg
                     fill="currentColor"
@@ -2389,7 +2503,7 @@ https://unsplash.it/200/200 200w"
               </span>
               <span>
                 <span
-                  class="MuiRating-icon MuiRating-iconEmpty emotion-37"
+                  class="MuiRating-icon MuiRating-iconEmpty emotion-40"
                 >
                   <svg
                     fill="currentColor"
@@ -2412,7 +2526,7 @@ https://unsplash.it/200/200 200w"
               </span>
               <span>
                 <span
-                  class="MuiRating-icon MuiRating-iconEmpty emotion-37"
+                  class="MuiRating-icon MuiRating-iconEmpty emotion-40"
                 >
                   <svg
                     fill="currentColor"
@@ -2437,24 +2551,24 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <div
-          class="emotion-30 emotion-31"
+          class="emotion-33 emotion-34"
         >
           <div
-            class="emotion-32 emotion-33"
+            class="emotion-35 emotion-36"
           >
             Barfoo
           </div>
           <div
-            class="emotion-34 emotion-35"
+            class="emotion-37 emotion-38"
           >
             <span
               aria-label="0 Stars"
-              class="MuiRating-root MuiRating-sizeMedium Mui-readOnly MuiRating-readOnly emotion-36"
+              class="MuiRating-root MuiRating-sizeMedium Mui-readOnly MuiRating-readOnly emotion-39"
               role="img"
             >
               <span>
                 <span
-                  class="MuiRating-icon MuiRating-iconEmpty emotion-37"
+                  class="MuiRating-icon MuiRating-iconEmpty emotion-40"
                 >
                   <svg
                     fill="currentColor"
@@ -2477,7 +2591,7 @@ https://unsplash.it/200/200 200w"
               </span>
               <span>
                 <span
-                  class="MuiRating-icon MuiRating-iconEmpty emotion-37"
+                  class="MuiRating-icon MuiRating-iconEmpty emotion-40"
                 >
                   <svg
                     fill="currentColor"
@@ -2500,7 +2614,7 @@ https://unsplash.it/200/200 200w"
               </span>
               <span>
                 <span
-                  class="MuiRating-icon MuiRating-iconEmpty emotion-37"
+                  class="MuiRating-icon MuiRating-iconEmpty emotion-40"
                 >
                   <svg
                     fill="currentColor"
@@ -2523,7 +2637,7 @@ https://unsplash.it/200/200 200w"
               </span>
               <span>
                 <span
-                  class="MuiRating-icon MuiRating-iconEmpty emotion-37"
+                  class="MuiRating-icon MuiRating-iconEmpty emotion-40"
                 >
                   <svg
                     fill="currentColor"
@@ -2546,7 +2660,7 @@ https://unsplash.it/200/200 200w"
               </span>
               <span>
                 <span
-                  class="MuiRating-icon MuiRating-iconEmpty emotion-37"
+                  class="MuiRating-icon MuiRating-iconEmpty emotion-40"
                 >
                   <svg
                     fill="currentColor"
@@ -5801,10 +5915,126 @@ exports[`Comment List Item should render WithClassName 1`] = `
 }
 
 .emotion-28 {
-  display: grid;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 500;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 3px 9px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  border: 1px solid rgba(233, 30, 99, 0.5);
+  color: #e91e63;
+  border-radius: 30px;
+  text-transform: initial;
+  box-shadow: none;
+  border-width: 1px;
+}
+
+.emotion-28::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-28.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-28 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-28:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: rgba(233, 30, 99, 0.04);
+  border: 1px solid #e91e63;
+}
+
+@media (hover: none) {
+  .emotion-28:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-28.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.emotion-28:hover {
+  box-shadow: none;
+}
+
+.emotion-28:hover {
+  border-width: 1px;
+  background-color: rgb(252, 232, 239);
+}
+
+.emotion-29 {
+  display: inherit;
+  margin-right: 8px;
+  margin-left: -2px;
+}
+
+.emotion-29>*:nth-of-type(1) {
+  font-size: 18px;
 }
 
 .emotion-30 {
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+}
+
+.emotion-31 {
+  display: grid;
+}
+
+.emotion-33 {
   display: grid;
   grid-template-columns: auto max-content;
   -webkit-align-items: center;
@@ -5818,25 +6048,25 @@ exports[`Comment List Item should render WithClassName 1`] = `
   gap: 8px;
 }
 
-.emotion-32 {
+.emotion-35 {
   font-size: 0.75em;
   font-weight: 700;
   text-transform: uppercase;
 }
 
-.emotion-34 .MuiRating-iconFilled {
+.emotion-37 .MuiRating-iconFilled {
   color: #e91e63;
 }
 
-.emotion-34 .MuiRating-iconHover {
+.emotion-37 .MuiRating-iconHover {
   color: #e91e63;
 }
 
-.emotion-34 .MuiRating-iconEmpty {
+.emotion-37 .MuiRating-iconEmpty {
   color: #bdbdbd;
 }
 
-.emotion-36 {
+.emotion-39 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -5850,16 +6080,16 @@ exports[`Comment List Item should render WithClassName 1`] = `
   pointer-events: none;
 }
 
-.emotion-36.Mui-disabled {
+.emotion-39.Mui-disabled {
   opacity: 0.38;
   pointer-events: none;
 }
 
-.emotion-36.Mui-focusVisible .MuiRating-iconActive {
+.emotion-39.Mui-focusVisible .MuiRating-iconActive {
   outline: 1px solid #999;
 }
 
-.emotion-36 .MuiRating-visuallyHidden {
+.emotion-39 .MuiRating-visuallyHidden {
   border: 0;
   clip: rect(0 0 0 0);
   height: 1px;
@@ -5871,7 +6101,7 @@ exports[`Comment List Item should render WithClassName 1`] = `
   width: 1px;
 }
 
-.emotion-37 {
+.emotion-40 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -5993,15 +6223,15 @@ https://unsplash.it/200/200 200w"
       class="emotion-24 emotion-25"
     >
       <div
-        class="css-14q529f-CommentListItemActionsButtons ew53o3y0"
+        class="emotion-26 emotion-27"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall css-ddyrv3-MuiButtonBase-root-MuiButton-root-CommentListItem"
+          class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall emotion-28"
           tabindex="0"
           type="button"
         >
           <span
-            class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
+            class="MuiButton-startIcon MuiButton-iconSizeSmall emotion-29"
           >
             <svg
               fill="currentColor"
@@ -6023,34 +6253,32 @@ https://unsplash.it/200/200 200w"
           </span>
           Antworten
           <span
-            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            class="MuiTouchRipple-root emotion-30"
           />
         </button>
       </div>
-        class="emotion-26 emotion-27"
-      />
       <div
-        class="emotion-28 emotion-29"
+        class="emotion-31 emotion-32"
       >
         <div
-          class="emotion-30 emotion-31"
+          class="emotion-33 emotion-34"
         >
           <div
-            class="emotion-32 emotion-33"
+            class="emotion-35 emotion-36"
           >
             Foobar
           </div>
           <div
-            class="emotion-34 emotion-35"
+            class="emotion-37 emotion-38"
           >
             <span
               aria-label="0 Stars"
-              class="MuiRating-root MuiRating-sizeMedium Mui-readOnly MuiRating-readOnly emotion-36"
+              class="MuiRating-root MuiRating-sizeMedium Mui-readOnly MuiRating-readOnly emotion-39"
               role="img"
             >
               <span>
                 <span
-                  class="MuiRating-icon MuiRating-iconEmpty emotion-37"
+                  class="MuiRating-icon MuiRating-iconEmpty emotion-40"
                 >
                   <svg
                     fill="currentColor"
@@ -6073,7 +6301,7 @@ https://unsplash.it/200/200 200w"
               </span>
               <span>
                 <span
-                  class="MuiRating-icon MuiRating-iconEmpty emotion-37"
+                  class="MuiRating-icon MuiRating-iconEmpty emotion-40"
                 >
                   <svg
                     fill="currentColor"
@@ -6096,7 +6324,7 @@ https://unsplash.it/200/200 200w"
               </span>
               <span>
                 <span
-                  class="MuiRating-icon MuiRating-iconEmpty emotion-37"
+                  class="MuiRating-icon MuiRating-iconEmpty emotion-40"
                 >
                   <svg
                     fill="currentColor"
@@ -6119,7 +6347,7 @@ https://unsplash.it/200/200 200w"
               </span>
               <span>
                 <span
-                  class="MuiRating-icon MuiRating-iconEmpty emotion-37"
+                  class="MuiRating-icon MuiRating-iconEmpty emotion-40"
                 >
                   <svg
                     fill="currentColor"
@@ -6142,7 +6370,7 @@ https://unsplash.it/200/200 200w"
               </span>
               <span>
                 <span
-                  class="MuiRating-icon MuiRating-iconEmpty emotion-37"
+                  class="MuiRating-icon MuiRating-iconEmpty emotion-40"
                 >
                   <svg
                     fill="currentColor"
@@ -6167,24 +6395,24 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <div
-          class="emotion-30 emotion-31"
+          class="emotion-33 emotion-34"
         >
           <div
-            class="emotion-32 emotion-33"
+            class="emotion-35 emotion-36"
           >
             Barfoo
           </div>
           <div
-            class="emotion-34 emotion-35"
+            class="emotion-37 emotion-38"
           >
             <span
               aria-label="0 Stars"
-              class="MuiRating-root MuiRating-sizeMedium Mui-readOnly MuiRating-readOnly emotion-36"
+              class="MuiRating-root MuiRating-sizeMedium Mui-readOnly MuiRating-readOnly emotion-39"
               role="img"
             >
               <span>
                 <span
-                  class="MuiRating-icon MuiRating-iconEmpty emotion-37"
+                  class="MuiRating-icon MuiRating-iconEmpty emotion-40"
                 >
                   <svg
                     fill="currentColor"
@@ -6207,7 +6435,7 @@ https://unsplash.it/200/200 200w"
               </span>
               <span>
                 <span
-                  class="MuiRating-icon MuiRating-iconEmpty emotion-37"
+                  class="MuiRating-icon MuiRating-iconEmpty emotion-40"
                 >
                   <svg
                     fill="currentColor"
@@ -6230,7 +6458,7 @@ https://unsplash.it/200/200 200w"
               </span>
               <span>
                 <span
-                  class="MuiRating-icon MuiRating-iconEmpty emotion-37"
+                  class="MuiRating-icon MuiRating-iconEmpty emotion-40"
                 >
                   <svg
                     fill="currentColor"
@@ -6253,7 +6481,7 @@ https://unsplash.it/200/200 200w"
               </span>
               <span>
                 <span
-                  class="MuiRating-icon MuiRating-iconEmpty emotion-37"
+                  class="MuiRating-icon MuiRating-iconEmpty emotion-40"
                 >
                   <svg
                     fill="currentColor"
@@ -6276,7 +6504,7 @@ https://unsplash.it/200/200 200w"
               </span>
               <span>
                 <span
-                  class="MuiRating-icon MuiRating-iconEmpty emotion-37"
+                  class="MuiRating-icon MuiRating-iconEmpty emotion-40"
                 >
                   <svg
                     fill="currentColor"
@@ -6451,10 +6679,126 @@ exports[`Comment List Item should render WithEmotion 1`] = `
 }
 
 .emotion-28 {
-  display: grid;
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 500;
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 3px 9px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  border: 1px solid rgba(233, 30, 99, 0.5);
+  color: #e91e63;
+  border-radius: 30px;
+  text-transform: initial;
+  box-shadow: none;
+  border-width: 1px;
+}
+
+.emotion-28::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-28.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-28 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-28:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: rgba(233, 30, 99, 0.04);
+  border: 1px solid #e91e63;
+}
+
+@media (hover: none) {
+  .emotion-28:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-28.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.emotion-28:hover {
+  box-shadow: none;
+}
+
+.emotion-28:hover {
+  border-width: 1px;
+  background-color: rgb(252, 232, 239);
+}
+
+.emotion-29 {
+  display: inherit;
+  margin-right: 8px;
+  margin-left: -2px;
+}
+
+.emotion-29>*:nth-of-type(1) {
+  font-size: 18px;
 }
 
 .emotion-30 {
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+}
+
+.emotion-31 {
+  display: grid;
+}
+
+.emotion-33 {
   display: grid;
   grid-template-columns: auto max-content;
   -webkit-align-items: center;
@@ -6468,25 +6812,25 @@ exports[`Comment List Item should render WithEmotion 1`] = `
   gap: 8px;
 }
 
-.emotion-32 {
+.emotion-35 {
   font-size: 0.75em;
   font-weight: 700;
   text-transform: uppercase;
 }
 
-.emotion-34 .MuiRating-iconFilled {
+.emotion-37 .MuiRating-iconFilled {
   color: #e91e63;
 }
 
-.emotion-34 .MuiRating-iconHover {
+.emotion-37 .MuiRating-iconHover {
   color: #e91e63;
 }
 
-.emotion-34 .MuiRating-iconEmpty {
+.emotion-37 .MuiRating-iconEmpty {
   color: #bdbdbd;
 }
 
-.emotion-36 {
+.emotion-39 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
   display: -ms-inline-flexbox;
@@ -6500,16 +6844,16 @@ exports[`Comment List Item should render WithEmotion 1`] = `
   pointer-events: none;
 }
 
-.emotion-36.Mui-disabled {
+.emotion-39.Mui-disabled {
   opacity: 0.38;
   pointer-events: none;
 }
 
-.emotion-36.Mui-focusVisible .MuiRating-iconActive {
+.emotion-39.Mui-focusVisible .MuiRating-iconActive {
   outline: 1px solid #999;
 }
 
-.emotion-36 .MuiRating-visuallyHidden {
+.emotion-39 .MuiRating-visuallyHidden {
   border: 0;
   clip: rect(0 0 0 0);
   height: 1px;
@@ -6521,7 +6865,7 @@ exports[`Comment List Item should render WithEmotion 1`] = `
   width: 1px;
 }
 
-.emotion-37 {
+.emotion-40 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -6643,15 +6987,15 @@ https://unsplash.it/200/200 200w"
       class="emotion-24 emotion-25"
     >
       <div
-        class="css-14q529f-CommentListItemActionsButtons ew53o3y0"
+        class="emotion-26 emotion-27"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall css-ddyrv3-MuiButtonBase-root-MuiButton-root-CommentListItem"
+          class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall emotion-28"
           tabindex="0"
           type="button"
         >
           <span
-            class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
+            class="MuiButton-startIcon MuiButton-iconSizeSmall emotion-29"
           >
             <svg
               fill="currentColor"
@@ -6673,34 +7017,32 @@ https://unsplash.it/200/200 200w"
           </span>
           Antworten
           <span
-            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            class="MuiTouchRipple-root emotion-30"
           />
         </button>
       </div>
-        class="emotion-26 emotion-27"
-      />
       <div
-        class="emotion-28 emotion-29"
+        class="emotion-31 emotion-32"
       >
         <div
-          class="emotion-30 emotion-31"
+          class="emotion-33 emotion-34"
         >
           <div
-            class="emotion-32 emotion-33"
+            class="emotion-35 emotion-36"
           >
             Foobar
           </div>
           <div
-            class="emotion-34 emotion-35"
+            class="emotion-37 emotion-38"
           >
             <span
               aria-label="0 Stars"
-              class="MuiRating-root MuiRating-sizeMedium Mui-readOnly MuiRating-readOnly emotion-36"
+              class="MuiRating-root MuiRating-sizeMedium Mui-readOnly MuiRating-readOnly emotion-39"
               role="img"
             >
               <span>
                 <span
-                  class="MuiRating-icon MuiRating-iconEmpty emotion-37"
+                  class="MuiRating-icon MuiRating-iconEmpty emotion-40"
                 >
                   <svg
                     fill="currentColor"
@@ -6723,7 +7065,7 @@ https://unsplash.it/200/200 200w"
               </span>
               <span>
                 <span
-                  class="MuiRating-icon MuiRating-iconEmpty emotion-37"
+                  class="MuiRating-icon MuiRating-iconEmpty emotion-40"
                 >
                   <svg
                     fill="currentColor"
@@ -6746,7 +7088,7 @@ https://unsplash.it/200/200 200w"
               </span>
               <span>
                 <span
-                  class="MuiRating-icon MuiRating-iconEmpty emotion-37"
+                  class="MuiRating-icon MuiRating-iconEmpty emotion-40"
                 >
                   <svg
                     fill="currentColor"
@@ -6769,7 +7111,7 @@ https://unsplash.it/200/200 200w"
               </span>
               <span>
                 <span
-                  class="MuiRating-icon MuiRating-iconEmpty emotion-37"
+                  class="MuiRating-icon MuiRating-iconEmpty emotion-40"
                 >
                   <svg
                     fill="currentColor"
@@ -6792,7 +7134,7 @@ https://unsplash.it/200/200 200w"
               </span>
               <span>
                 <span
-                  class="MuiRating-icon MuiRating-iconEmpty emotion-37"
+                  class="MuiRating-icon MuiRating-iconEmpty emotion-40"
                 >
                   <svg
                     fill="currentColor"
@@ -6817,24 +7159,24 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <div
-          class="emotion-30 emotion-31"
+          class="emotion-33 emotion-34"
         >
           <div
-            class="emotion-32 emotion-33"
+            class="emotion-35 emotion-36"
           >
             Barfoo
           </div>
           <div
-            class="emotion-34 emotion-35"
+            class="emotion-37 emotion-38"
           >
             <span
               aria-label="0 Stars"
-              class="MuiRating-root MuiRating-sizeMedium Mui-readOnly MuiRating-readOnly emotion-36"
+              class="MuiRating-root MuiRating-sizeMedium Mui-readOnly MuiRating-readOnly emotion-39"
               role="img"
             >
               <span>
                 <span
-                  class="MuiRating-icon MuiRating-iconEmpty emotion-37"
+                  class="MuiRating-icon MuiRating-iconEmpty emotion-40"
                 >
                   <svg
                     fill="currentColor"
@@ -6857,7 +7199,7 @@ https://unsplash.it/200/200 200w"
               </span>
               <span>
                 <span
-                  class="MuiRating-icon MuiRating-iconEmpty emotion-37"
+                  class="MuiRating-icon MuiRating-iconEmpty emotion-40"
                 >
                   <svg
                     fill="currentColor"
@@ -6880,7 +7222,7 @@ https://unsplash.it/200/200 200w"
               </span>
               <span>
                 <span
-                  class="MuiRating-icon MuiRating-iconEmpty emotion-37"
+                  class="MuiRating-icon MuiRating-iconEmpty emotion-40"
                 >
                   <svg
                     fill="currentColor"
@@ -6903,7 +7245,7 @@ https://unsplash.it/200/200 200w"
               </span>
               <span>
                 <span
-                  class="MuiRating-icon MuiRating-iconEmpty emotion-37"
+                  class="MuiRating-icon MuiRating-iconEmpty emotion-40"
                 >
                   <svg
                     fill="currentColor"
@@ -6926,7 +7268,7 @@ https://unsplash.it/200/200 200w"
               </span>
               <span>
                 <span
-                  class="MuiRating-icon MuiRating-iconEmpty emotion-37"
+                  class="MuiRating-icon MuiRating-iconEmpty emotion-40"
                 >
                   <svg
                     fill="currentColor"
