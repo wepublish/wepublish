@@ -28,7 +28,8 @@
     "try": "docker-compose up database migration api editor media storage",
     "prettier": "prettier --write \"{packages,services}/**/*.{js,ts,tsx,json}\"",
     "prepare": "prisma generate",
-    "postinstall": "node build/postInstall.js"
+    "postinstall": "node build/postInstall.js",
+    "deploy": "node deployment/deploy_production.js"
   },
   "nx": {
     "includedScripts": [
