@@ -117,3 +117,73 @@ export const queryPhrase = async (
     }
   }
 }
+
+export const queryPhraseWithTag = async (
+  query: string,
+  tag: string,
+  prisma: PrismaClient,
+  publicArticlesLoader: Context['loaders']['publicArticles'],
+  take: number,
+  skip: number,
+  articleSort: ArticleSort,
+  order: SortOrder
+) => {
+  // Default add & if no specific query is given to prevent search to fail!
+  query = query.replace(/\s+/g, '&')
+
+  const foundArticleIds = await prisma.$queryRaw<{id: string}[]>`
+      SELECT a.id FROM articles a
+      JOIN public."articles.revisions" ar on a."publishedId" = ar.id
+      JOIN public."articles.tagged-articles" ta on ta."articleId" = a.id
+      JOIN public.tags t on t.id = ta."tagId"
+      WHERE t.tag = ${tag} AND (
+        to_tsvector('english', ar.title) || jsonb_to_tsvector(
+          'english',
+          jsonb_path_query_array(ar.blocks, 'strict $.**.text'),
+          '["string"]'
+        )@@ to_tsquery('english', ${query})
+      );
+    `
+
+  const articleIds = foundArticleIds.map(({id}) => id)
+
+  const articles = await prisma.article.findMany({
+    where: {
+      id: {
+        in: articleIds
+      }
+    },
+    include: {
+      published: {
+        include: {
+          properties: true,
+          authors: true,
+          socialMediaAuthors: true
+        }
+      }
+    },
+    orderBy: createArticleOrder(articleSort, order),
+    skip,
+    take: getMaxTake(take)
+  })
+
+  const publicArticles = articles.map(articleWithRevisionsToPublicArticle)
+  publicArticles.forEach(article => publicArticlesLoader.prime(article.id, article))
+
+  const firstArticle = publicArticles[0]
+  const lastArticle = publicArticles[publicArticles.length - 1]
+  const articlesHasNextPage = articleIds.length > skip + publicArticles.length
+
+  return {
+    articles: {
+      nodes: publicArticles,
+      totalCount: articleIds.length,
+      pageInfo: {
+        hasPreviousPage: Boolean(skip),
+        hasNextPage: articlesHasNextPage,
+        startCursor: firstArticle?.id,
+        endCursor: lastArticle?.id
+      }
+    }
+  }
+}

@@ -1,4 +1,4 @@
-fragment ArticleWithoutBlocks on Article {
+fragment ArticleWithoutBlocks2 on Article {
   id
   publishedAt
   updatedAt
@@ -59,6 +59,6 @@ query PeerArticle($peerSlug: Slug, $peerId: ID, $articleId: ID!) {
 
 query HotAndTrending($take: Int, $start: DateTime) {
   hotAndTrending(take: $take, start: $start) {
-    ...ArticleWithoutBlocks
+    ...ArticleWithoutBlocks2
   }
 }

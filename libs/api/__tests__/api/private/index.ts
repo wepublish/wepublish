@@ -123,6 +123,7 @@ export type ArticleRevision = {
   hideAuthor: Scalars['Boolean'];
   image?: Maybe<Image>;
   lead?: Maybe<Scalars['String']>;
+  likes?: Maybe<Scalars['Int']>;
   preTitle?: Maybe<Scalars['String']>;
   properties: Array<Properties>;
   publishAt?: Maybe<Scalars['DateTime']>;

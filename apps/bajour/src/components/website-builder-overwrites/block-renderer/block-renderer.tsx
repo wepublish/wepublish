@@ -26,6 +26,8 @@ import {
   isLightBreak,
   isSponsoredBreak
 } from '../break/bajour-break'
+import {isBaslerinDesTages} from '../../baslerin-des-tages/is-baslerin-des-tages'
+import {BaslerinDesTagesBlock} from '../../baslerin-des-tages/baslerin-des-tages-block'
 
 export const BajourBlockRenderer = (props: BuilderBlockRendererProps) => {
   const {
@@ -49,6 +51,7 @@ export const BajourBlockRenderer = (props: BuilderBlockRendererProps) => {
       cond([
         [isOldRelatedArticles, block => <Fragment />],
         [isFrageDesTages, block => <FrageDesTages {...block} />],
+        [isBaslerinDesTages, block => <BaslerinDesTagesBlock {...block} />],
         [isBestOfWePublish, block => <BestOfWePublish {...block} />],
         [isAnyBriefing, block => <BaselBriefing {...(block as BaselBriefingProps)} />],
         [isArchive, block => <Archive {...block} />],

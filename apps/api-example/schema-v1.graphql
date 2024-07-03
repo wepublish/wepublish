@@ -101,6 +101,11 @@ type Query {
   This query performs a fulltext search on titles and blocks of articles/pages and returns all matching ones.
   """
   phrase(query: String!, take: Int = 10, skip: Int = 0, pageSort: PublishedPageSort = publishedAt, articleSort: ArticleSort = publishedAt, order: SortOrder = Descending): Phrase
+
+  """
+  This query performs a fulltext search on titles and blocks of articles with a specific tag and returns all matching ones.
+  """
+  phraseWithTag(query: String!, tag: String!, take: Int = 10, skip: Int = 0, articleSort: ArticleSort = publishedAt, order: SortOrder = Descending): Phrase
   _entities(representations: [_Any!]!): [_Entity]!
   _service: _Service!
 }
@@ -613,6 +618,7 @@ type Article {
   socialMediaDescription: String
   socialMediaAuthors: [Author!]!
   socialMediaImage: Image
+  likes: Int!
   blocks: [Block!]!
   comments: [Comment!]!
 }
@@ -765,10 +771,25 @@ type ArticleConnection {
 }
 
 input ArticleFilter {
+  publicationDateFrom: DateFilter
+  publicationDateTo: DateFilter
   authors: [ID!]
   tags: [String!]
   includeHidden: Boolean
   shared: Boolean
+}
+
+input DateFilter {
+  date: DateTime = null
+  comparison: DateFilterComparison!
+}
+
+enum DateFilterComparison {
+  gt
+  gte
+  eq
+  lt
+  lte
 }
 
 enum ArticleSort {
@@ -980,6 +1001,12 @@ type Mutation {
   """This mutation revokes and deletes the active session."""
   revokeActiveSession: Boolean!
 
+  """Add a like to an existing article."""
+  addLike(input: LikeCreateInput!): Int!
+
+  """Remove a like from an existing article."""
+  removeLike(input: LikeDeleteInput!): Int!
+
   """
   This mutation allows to add a comment. The input is of type CommentInput.
   """
@@ -1059,6 +1086,14 @@ type SessionWithToken {
   token: String!
   createdAt: DateTime!
   expiresAt: DateTime!
+}
+
+input LikeCreateInput {
+  articleId: ID!
+}
+
+input LikeDeleteInput {
+  articleId: ID!
 }
 
 input CommentInput {

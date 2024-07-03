@@ -27,6 +27,10 @@ import {BajourAuthorChip} from '../../src/components/website-builder-overwrites/
 import {BajourComment} from '../../src/components/website-builder-overwrites/blocks/comment/comment'
 import {CommentListContainer} from '../../src/components/website-builder-overwrites/blocks/comment-list-container/comment-list-container'
 import {BajourTeaserSlider} from '../../src/components/website-builder-overwrites/blocks/teaser-slider/bajour-teaser-slider'
+import {
+  BaslerinDesTages,
+  SliderArticle
+} from '../../src/components/baslerin-des-tages/baslerin-des-tages'
 
 const uppercase = css`
   text-transform: uppercase;
@@ -70,6 +74,7 @@ export default function ArticleBySlugIdOrToken() {
   } as ComponentProps<typeof ArticleContainer>
 
   const isFDT = data?.article?.tags.some(({tag}) => tag === 'frage-des-tages')
+  const isBaslerinDesTages = data?.article?.tags.some(({tag}) => tag === 'baslerin-des-tages')
 
   return (
     <WebsiteBuilderProvider
@@ -80,7 +85,10 @@ export default function ArticleBySlugIdOrToken() {
       Article={isFDT ? FdTArticle : Article}
       Comment={isFDT ? BajourComment : Comment}>
       <Container>
-        <ArticleContainer {...containerProps} />
+        {isBaslerinDesTages && data?.article && (
+          <BaslerinDesTages key={data.article.id} article={data.article as SliderArticle} />
+        )}
+        {!isBaslerinDesTages && <ArticleContainer {...containerProps} />}
 
         {/* Waiting for Samuel H. from Bajour to confirm - 2024-11-20
          !isFDT && (
@@ -93,9 +101,9 @@ export default function ArticleBySlugIdOrToken() {
           </ArticleWrapper>
         ) */}
 
-        <BriefingNewsletter />
+        {!isBaslerinDesTages && <BriefingNewsletter />}
 
-        {data?.article && (
+        {data?.article && !isBaslerinDesTages && (
           <>
             <ArticleWrapper>
               <H5 component={'h2'} css={uppercase}>
