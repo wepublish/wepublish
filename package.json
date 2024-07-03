@@ -29,7 +29,7 @@
     "prettier": "prettier --write \"{packages,services}/**/*.{js,ts,tsx,json}\"",
     "prepare": "prisma generate",
     "postinstall": "node build/postInstall.js",
-    "deploy": "node deployment/deploy_production.js"
+    "deploy:prduction": "node deployment/deploy_production.js"
   },
   "nx": {
     "includedScripts": [
