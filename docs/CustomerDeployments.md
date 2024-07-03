@@ -49,3 +49,4 @@ It's possible to copy staging database of a customer to a review build by using 
 Master is always deployed to all staging environments no action is required.
 
 ## Production
+To deploy to production checkout commit or branch you want to push to production (eg. master) then run following command ``npm run deploy ${project_name}`` eg. ``npm run deploy bajour``. The process is from there one automated.
