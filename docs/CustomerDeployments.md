@@ -10,14 +10,14 @@ Every project that needs to be deployed should have a `deployment.config.json` f
     "production": {
       "deployment": true,
       "env": {
-        "MAILCHIMP_POPUP_SCRIPT_URL": "XXXX"
+        "MAILCHIMP_POPUP_SCRIPT_URL": "XXX"
       },
       "secret_env": ["MAILCHIMP_API_KEY"]
     },
     "staging": {
       "deployment": true,
       "env": {
-        "MAILCHIMP_POPUP_SCRIPT_URL": "XXXX"
+        "MAILCHIMP_POPUP_SCRIPT_URL": "XXX"
       },
       "secret_env": ["MAILCHIMP_API_KEY"]
     },
