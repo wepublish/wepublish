@@ -5,6 +5,10 @@ on:
     tags:
       - 'deploy_*'
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   get-tag:
     runs-on: ubuntu-latest
