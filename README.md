@@ -121,7 +121,7 @@ To get a local copy up and running follow these simple steps.
 
 ### Prerequisites
 
-- [Node v16.x.x][node-download-url]
+- [Node v18.x.x][node-download-url]
 - [Docker v19.x.x][docker-download-url]
 
 ### Installation
