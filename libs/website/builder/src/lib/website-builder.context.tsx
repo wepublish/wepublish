@@ -97,6 +97,7 @@ import {
   BuilderTextFieldProps
 } from './ui.interface'
 import {BuilderImageUploadProps, BuilderPersonalDataFormProps} from './user.interface'
+import {BuilderBlockStyleProps} from './block-styles.interface'
 
 const NoComponent = () => null
 
@@ -195,6 +196,10 @@ export type WebsiteBuilderProps = {
     TeaserList: ComponentType<BuilderTeaserListBlockProps>
     Teaser: ComponentType<BuilderTeaserProps>
     Comment: ComponentType<BuilderCommentBlockProps>
+  }
+
+  blockStyles: {
+    [key in keyof BuilderBlockStyleProps]: ComponentType<BuilderBlockStyleProps[key]>
   }
 
   date: {
@@ -306,6 +311,14 @@ const WebsiteBuilderContext = createContext<WebsiteBuilderProps>({
     TeaserList: NoComponent,
     Teaser: NoComponent,
     Break: NoComponent
+  },
+
+  blockStyles: {
+    ImageSlider: NoComponent,
+    TeaserSlider: NoComponent,
+    FocusTeaser: NoComponent,
+    ContextBox: NoComponent,
+    Banner: NoComponent
   },
 
   date: {

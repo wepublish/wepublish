@@ -142,6 +142,27 @@ export const selectTeaserAuthors = (teaser: TeaserType) => {
   }
 }
 
+export const selectTeaserTags = (teaser: TeaserType) => {
+  switch (teaser.__typename) {
+    case 'PageTeaser': {
+      return teaser.page?.tags ?? []
+    }
+
+    case 'ArticleTeaser': {
+      return teaser.article?.tags ?? []
+    }
+
+    case 'EventTeaser':
+      return teaser.event?.tags ?? []
+
+    case 'PeerArticleTeaser':
+    case 'CustomTeaser':
+      return []
+  }
+
+  return []
+}
+
 export const TeaserWrapper = styled('article')<FlexAlignment>`
   display: grid;
 
