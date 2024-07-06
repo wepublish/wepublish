@@ -13,7 +13,10 @@ exports[`Comment List should render Default 1`] = `
 }
 
 .emotion-2:target {
+  border: 2px solid #e91e63;
+  border-radius: 20px;
   scroll-margin-top: 80px;
+  padding: 16px;
 }
 
 .emotion-4 {
@@ -24,7 +27,6 @@ exports[`Comment List should render Default 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  padding: 12px;
 }
 
 .emotion-6 {
@@ -75,10 +77,6 @@ exports[`Comment List should render Default 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: #e91e63;
-}
-
-.emotion-20 {
-  padding: 12px;
 }
 
 .emotion-22 {
@@ -346,7 +344,10 @@ exports[`Comment List should render WithAnonymousComments 1`] = `
 }
 
 .emotion-2:target {
+  border: 2px solid #e91e63;
+  border-radius: 20px;
   scroll-margin-top: 80px;
+  padding: 16px;
 }
 
 .emotion-4 {
@@ -357,7 +358,6 @@ exports[`Comment List should render WithAnonymousComments 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  padding: 12px;
 }
 
 .emotion-6 {
@@ -391,10 +391,18 @@ exports[`Comment List should render WithAnonymousComments 1`] = `
 }
 
 .emotion-14 {
-  padding: 12px;
+  font-size: 0.75em;
+  font-weight: 300;
+  color: #e91e63;
 }
 
 .emotion-16 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: #e91e63;
+}
+
+.emotion-20 {
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
@@ -402,11 +410,11 @@ exports[`Comment List should render WithAnonymousComments 1`] = `
   font-size: 1rem;
 }
 
-.emotion-16.MuiTypography-gutterBottom {
+.emotion-20.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-19 {
+.emotion-23 {
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
@@ -415,11 +423,11 @@ exports[`Comment List should render WithAnonymousComments 1`] = `
   margin-bottom: 0.35em;
 }
 
-.emotion-19.MuiTypography-gutterBottom {
+.emotion-23.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-19:last-child {
+.emotion-23:last-child {
   margin-bottom: 0;
 }
 
@@ -459,20 +467,32 @@ https://unsplash.it/200/200 200w"
               Dr. Anonymous
             </div>
           </div>
+          <div
+            class="emotion-14 emotion-15"
+          >
+            <a
+              class="emotion-16 emotion-17"
+              href="Source"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Source
+            </a>
+          </div>
         </div>
       </header>
       <div
-        class="emotion-14 emotion-15"
+        class="emotion-18 emotion-19"
       >
         <h1
-          class="MuiTypography-root MuiTypography-body1 emotion-16"
+          class="MuiTypography-root MuiTypography-body1 emotion-20"
         >
           <strong>
             de Finibus Bonorum et Malorum
           </strong>
         </h1>
         <div
-          class="emotion-17 emotion-18"
+          class="emotion-21 emotion-22"
         >
           <div
             data-gramm="false"
@@ -481,7 +501,7 @@ https://unsplash.it/200/200 200w"
             style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-19"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
               data-slate-node="element"
             >
               <span
@@ -531,20 +551,32 @@ https://unsplash.it/200/200 200w"
               Dr. Anonymous
             </div>
           </div>
+          <div
+            class="emotion-14 emotion-15"
+          >
+            <a
+              class="emotion-16 emotion-17"
+              href="Source"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              Source
+            </a>
+          </div>
         </div>
       </header>
       <div
-        class="emotion-14 emotion-15"
+        class="emotion-18 emotion-19"
       >
         <h1
-          class="MuiTypography-root MuiTypography-body1 emotion-16"
+          class="MuiTypography-root MuiTypography-body1 emotion-20"
         >
           <strong>
             de Finibus Bonorum et Malorum
           </strong>
         </h1>
         <div
-          class="emotion-17 emotion-18"
+          class="emotion-21 emotion-22"
         >
           <div
             data-gramm="false"
@@ -553,7 +585,7 @@ https://unsplash.it/200/200 200w"
             style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-19"
+              class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
               data-slate-node="element"
             >
               <span
@@ -587,7 +619,10 @@ exports[`Comment List should render WithClassName 1`] = `
 }
 
 .emotion-2:target {
+  border: 2px solid #e91e63;
+  border-radius: 20px;
   scroll-margin-top: 80px;
+  padding: 16px;
 }
 
 .emotion-4 {
@@ -598,7 +633,6 @@ exports[`Comment List should render WithClassName 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  padding: 12px;
 }
 
 .emotion-6 {
@@ -649,10 +683,6 @@ exports[`Comment List should render WithClassName 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: #e91e63;
-}
-
-.emotion-20 {
-  padding: 12px;
 }
 
 .emotion-22 {
@@ -920,7 +950,10 @@ exports[`Comment List should render WithEmotion 1`] = `
 }
 
 .emotion-2:target {
+  border: 2px solid #e91e63;
+  border-radius: 20px;
   scroll-margin-top: 80px;
+  padding: 16px;
 }
 
 .emotion-4 {
@@ -931,7 +964,6 @@ exports[`Comment List should render WithEmotion 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  padding: 12px;
 }
 
 .emotion-6 {
@@ -982,10 +1014,6 @@ exports[`Comment List should render WithEmotion 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: #e91e63;
-}
-
-.emotion-20 {
-  padding: 12px;
 }
 
 .emotion-22 {
@@ -1253,7 +1281,10 @@ exports[`Comment List should render WithError 1`] = `
 }
 
 .emotion-2:target {
+  border: 2px solid #e91e63;
+  border-radius: 20px;
   scroll-margin-top: 80px;
+  padding: 16px;
 }
 
 .emotion-4 {
@@ -1264,7 +1295,6 @@ exports[`Comment List should render WithError 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  padding: 12px;
 }
 
 .emotion-6 {
@@ -1315,10 +1345,6 @@ exports[`Comment List should render WithError 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: #e91e63;
-}
-
-.emotion-20 {
-  padding: 12px;
 }
 
 .emotion-22 {
@@ -1586,7 +1612,10 @@ exports[`Comment List should render WithLoading 1`] = `
 }
 
 .emotion-2:target {
+  border: 2px solid #e91e63;
+  border-radius: 20px;
   scroll-margin-top: 80px;
+  padding: 16px;
 }
 
 .emotion-4 {
@@ -1597,7 +1626,6 @@ exports[`Comment List should render WithLoading 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  padding: 12px;
 }
 
 .emotion-6 {
@@ -1648,10 +1676,6 @@ exports[`Comment List should render WithLoading 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: #e91e63;
-}
-
-.emotion-20 {
-  padding: 12px;
 }
 
 .emotion-22 {
