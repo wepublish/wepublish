@@ -2,16 +2,109 @@
 
 exports[`Comment should render AnonymousUser 1`] = `
 <DocumentFragment>
-  <article
-    class="css-1x8pjqe-CommentWrapper ekbi54x10"
+  .emotion-0 {
+  display: grid;
+  gap: 16px;
+}
+
+.emotion-0:target {
+  border: 2px solid #e91e63;
+  border-radius: 20px;
+  scroll-margin-top: 80px;
+  padding: 16px;
+}
+
+.emotion-2 {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 16px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-4 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+}
+
+.emotion-8 {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  gap: 8px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-weight: 700;
+}
+
+.emotion-10 {
+  font-size:line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-12 {
+  font-size: 0.75em;
+  font-weight: 300;
+  color: #e91e63;
+}
+
+.emotion-14 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: #e91e63;
+}
+
+.emotion-18 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-18.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-21 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-21.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-21:last-child {
+  margin-bottom: 0;
+}
+
+<article
+    class="emotion-0 emotion-1"
     id="anonymous"
   >
     <header
-      class="css-p4cys7-CommentHeader ekbi54x9"
+      class="emotion-2 emotion-3"
     >
       <img
         alt="DSC07717"
-        class="css-fy51ct-ImageWrapper-avatarStyles e1shv2yg0"
+        class="emotion-4 emotion-5"
         loading="lazy"
         sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -24,22 +117,22 @@ https://unsplash.it/200/200 200w"
         title=""
       />
       <div
-        class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
+        class="emotion-6 emotion-7"
       >
         <div
-          class="css-l1mcyg-CommentName ekbi54x7"
+          class="emotion-8 emotion-9"
         >
           <div
-            class="css-1pg77me-CommentAuthor ekbi54x6"
+            class="emotion-10 emotion-11"
           >
             Dr. Anonymous
           </div>
         </div>
         <div
-          class="css-r2jplb-CommentFlair-CommentFlair ekbi54x4"
+          class="emotion-12 emotion-13"
         >
           <a
-            class="css-c0umgh-CommentFlairLink ekbi54x3"
+            class="emotion-14 emotion-15"
             href="Source"
             rel="noopener noreferrer"
             target="_blank"
@@ -50,17 +143,17 @@ https://unsplash.it/200/200 200w"
       </div>
     </header>
     <div
-      class="css-td83z9-CommentContent ekbi54x2"
+      class="emotion-16 emotion-17"
     >
       <h1
-        class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 emotion-18"
       >
         <strong>
           de Finibus Bonorum et Malorum
         </strong>
       </h1>
       <div
-        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+        class="emotion-19 emotion-20"
       >
         <div
           data-gramm="false"
@@ -69,7 +162,7 @@ https://unsplash.it/200/200 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-21"
             data-slate-node="element"
           >
             <span
@@ -91,16 +184,117 @@ https://unsplash.it/200/200 200w"
 
 exports[`Comment should render PendingApproval 1`] = `
 <DocumentFragment>
-  <article
-    class="css-1x8pjqe-CommentWrapper ekbi54x10"
+  .emotion-0 {
+  display: grid;
+  gap: 16px;
+}
+
+.emotion-0:target {
+  border: 2px solid #e91e63;
+  border-radius: 20px;
+  scroll-margin-top: 80px;
+  padding: 16px;
+}
+
+.emotion-2 {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 16px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-4 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+}
+
+.emotion-8 {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  gap: 8px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-weight: 700;
+}
+
+.emotion-10 {
+  font-size:line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-12 {
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  color: #0288d1;
+}
+
+.emotion-14 {
+  font-size: 0.75em;
+  font-weight: 300;
+}
+
+.emotion-16 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: #e91e63;
+}
+
+.emotion-20 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-20.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-23 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-23.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-23:last-child {
+  margin-bottom: 0;
+}
+
+<article
+    class="emotion-0 emotion-1"
     id="verified"
   >
     <header
-      class="css-p4cys7-CommentHeader ekbi54x9"
+      class="emotion-2 emotion-3"
     >
       <img
         alt="DSC07717"
-        class="css-fy51ct-ImageWrapper-avatarStyles e1shv2yg0"
+        class="emotion-4 emotion-5"
         loading="lazy"
         sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -113,18 +307,18 @@ https://unsplash.it/200/200 200w"
         title=""
       />
       <div
-        class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
+        class="emotion-6 emotion-7"
       >
         <div
-          class="css-l1mcyg-CommentName ekbi54x7"
+          class="emotion-8 emotion-9"
         >
           <div
-            class="css-1pg77me-CommentAuthor ekbi54x6"
+            class="emotion-10 emotion-11"
           >
             Signed Up User
           </div>
           <div
-            class="css-6cfhau-CommentVerifiedBadge ekbi54x5"
+            class="emotion-12 emotion-13"
           >
             <svg
               fill="currentColor"
@@ -149,10 +343,10 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <div
-          class="css-srb6c6-CommentFlair ekbi54x4"
+          class="emotion-14 emotion-15"
         >
           <a
-            class="css-c0umgh-CommentFlairLink ekbi54x3"
+            class="emotion-16 emotion-17"
             href="Source"
             rel="noopener noreferrer"
             target="_blank"
@@ -163,17 +357,17 @@ https://unsplash.it/200/200 200w"
       </div>
     </header>
     <div
-      class="css-td83z9-CommentContent ekbi54x2"
+      class="emotion-18 emotion-19"
     >
       <h1
-        class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 emotion-20"
       >
         <strong>
           de Finibus Bonorum et Malorum
         </strong>
       </h1>
       <div
-        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+        class="emotion-21 emotion-22"
       >
         <div
           data-gramm="false"
@@ -182,7 +376,7 @@ https://unsplash.it/200/200 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
             data-slate-node="element"
           >
             <span
@@ -204,16 +398,117 @@ https://unsplash.it/200/200 200w"
 
 exports[`Comment should render PendingUserChanges 1`] = `
 <DocumentFragment>
-  <article
-    class="css-1x8pjqe-CommentWrapper ekbi54x10"
+  .emotion-0 {
+  display: grid;
+  gap: 16px;
+}
+
+.emotion-0:target {
+  border: 2px solid #e91e63;
+  border-radius: 20px;
+  scroll-margin-top: 80px;
+  padding: 16px;
+}
+
+.emotion-2 {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 16px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-4 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+}
+
+.emotion-8 {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  gap: 8px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-weight: 700;
+}
+
+.emotion-10 {
+  font-size:line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-12 {
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  color: #0288d1;
+}
+
+.emotion-14 {
+  font-size: 0.75em;
+  font-weight: 300;
+}
+
+.emotion-16 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: #e91e63;
+}
+
+.emotion-20 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-20.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-23 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-23.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-23:last-child {
+  margin-bottom: 0;
+}
+
+<article
+    class="emotion-0 emotion-1"
     id="verified"
   >
     <header
-      class="css-p4cys7-CommentHeader ekbi54x9"
+      class="emotion-2 emotion-3"
     >
       <img
         alt="DSC07717"
-        class="css-fy51ct-ImageWrapper-avatarStyles e1shv2yg0"
+        class="emotion-4 emotion-5"
         loading="lazy"
         sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -226,18 +521,18 @@ https://unsplash.it/200/200 200w"
         title=""
       />
       <div
-        class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
+        class="emotion-6 emotion-7"
       >
         <div
-          class="css-l1mcyg-CommentName ekbi54x7"
+          class="emotion-8 emotion-9"
         >
           <div
-            class="css-1pg77me-CommentAuthor ekbi54x6"
+            class="emotion-10 emotion-11"
           >
             Signed Up User
           </div>
           <div
-            class="css-6cfhau-CommentVerifiedBadge ekbi54x5"
+            class="emotion-12 emotion-13"
           >
             <svg
               fill="currentColor"
@@ -262,10 +557,10 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <div
-          class="css-srb6c6-CommentFlair ekbi54x4"
+          class="emotion-14 emotion-15"
         >
           <a
-            class="css-c0umgh-CommentFlairLink ekbi54x3"
+            class="emotion-16 emotion-17"
             href="Source"
             rel="noopener noreferrer"
             target="_blank"
@@ -276,17 +571,17 @@ https://unsplash.it/200/200 200w"
       </div>
     </header>
     <div
-      class="css-td83z9-CommentContent ekbi54x2"
+      class="emotion-18 emotion-19"
     >
       <h1
-        class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 emotion-20"
       >
         <strong>
           de Finibus Bonorum et Malorum
         </strong>
       </h1>
       <div
-        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+        class="emotion-21 emotion-22"
       >
         <div
           data-gramm="false"
@@ -295,7 +590,7 @@ https://unsplash.it/200/200 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
             data-slate-node="element"
           >
             <span
@@ -317,16 +612,117 @@ https://unsplash.it/200/200 200w"
 
 exports[`Comment should render Rejected 1`] = `
 <DocumentFragment>
-  <article
-    class="css-1x8pjqe-CommentWrapper ekbi54x10"
+  .emotion-0 {
+  display: grid;
+  gap: 16px;
+}
+
+.emotion-0:target {
+  border: 2px solid #e91e63;
+  border-radius: 20px;
+  scroll-margin-top: 80px;
+  padding: 16px;
+}
+
+.emotion-2 {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 16px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-4 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+}
+
+.emotion-8 {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  gap: 8px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-weight: 700;
+}
+
+.emotion-10 {
+  font-size:line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-12 {
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  color: #0288d1;
+}
+
+.emotion-14 {
+  font-size: 0.75em;
+  font-weight: 300;
+}
+
+.emotion-16 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: #e91e63;
+}
+
+.emotion-20 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-20.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-23 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-23.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-23:last-child {
+  margin-bottom: 0;
+}
+
+<article
+    class="emotion-0 emotion-1"
     id="verified"
   >
     <header
-      class="css-p4cys7-CommentHeader ekbi54x9"
+      class="emotion-2 emotion-3"
     >
       <img
         alt="DSC07717"
-        class="css-fy51ct-ImageWrapper-avatarStyles e1shv2yg0"
+        class="emotion-4 emotion-5"
         loading="lazy"
         sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -339,18 +735,18 @@ https://unsplash.it/200/200 200w"
         title=""
       />
       <div
-        class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
+        class="emotion-6 emotion-7"
       >
         <div
-          class="css-l1mcyg-CommentName ekbi54x7"
+          class="emotion-8 emotion-9"
         >
           <div
-            class="css-1pg77me-CommentAuthor ekbi54x6"
+            class="emotion-10 emotion-11"
           >
             Signed Up User
           </div>
           <div
-            class="css-6cfhau-CommentVerifiedBadge ekbi54x5"
+            class="emotion-12 emotion-13"
           >
             <svg
               fill="currentColor"
@@ -375,10 +771,10 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <div
-          class="css-srb6c6-CommentFlair ekbi54x4"
+          class="emotion-14 emotion-15"
         >
           <a
-            class="css-c0umgh-CommentFlairLink ekbi54x3"
+            class="emotion-16 emotion-17"
             href="Source"
             rel="noopener noreferrer"
             target="_blank"
@@ -389,17 +785,17 @@ https://unsplash.it/200/200 200w"
       </div>
     </header>
     <div
-      class="css-td83z9-CommentContent ekbi54x2"
+      class="emotion-18 emotion-19"
     >
       <h1
-        class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 emotion-20"
       >
         <strong>
           de Finibus Bonorum et Malorum
         </strong>
       </h1>
       <div
-        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+        class="emotion-21 emotion-22"
       >
         <div
           data-gramm="false"
@@ -408,7 +804,7 @@ https://unsplash.it/200/200 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
             data-slate-node="element"
           >
             <span
@@ -430,16 +826,117 @@ https://unsplash.it/200/200 200w"
 
 exports[`Comment should render VerifiedUser 1`] = `
 <DocumentFragment>
-  <article
-    class="css-1x8pjqe-CommentWrapper ekbi54x10"
+  .emotion-0 {
+  display: grid;
+  gap: 16px;
+}
+
+.emotion-0:target {
+  border: 2px solid #e91e63;
+  border-radius: 20px;
+  scroll-margin-top: 80px;
+  padding: 16px;
+}
+
+.emotion-2 {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 16px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-4 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+}
+
+.emotion-8 {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  gap: 8px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-weight: 700;
+}
+
+.emotion-10 {
+  font-size:line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-12 {
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  color: #0288d1;
+}
+
+.emotion-14 {
+  font-size: 0.75em;
+  font-weight: 300;
+}
+
+.emotion-16 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: #e91e63;
+}
+
+.emotion-20 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-20.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-23 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-23.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-23:last-child {
+  margin-bottom: 0;
+}
+
+<article
+    class="emotion-0 emotion-1"
     id="verified"
   >
     <header
-      class="css-p4cys7-CommentHeader ekbi54x9"
+      class="emotion-2 emotion-3"
     >
       <img
         alt="DSC07717"
-        class="css-fy51ct-ImageWrapper-avatarStyles e1shv2yg0"
+        class="emotion-4 emotion-5"
         loading="lazy"
         sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -452,18 +949,18 @@ https://unsplash.it/200/200 200w"
         title=""
       />
       <div
-        class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
+        class="emotion-6 emotion-7"
       >
         <div
-          class="css-l1mcyg-CommentName ekbi54x7"
+          class="emotion-8 emotion-9"
         >
           <div
-            class="css-1pg77me-CommentAuthor ekbi54x6"
+            class="emotion-10 emotion-11"
           >
             Signed Up User
           </div>
           <div
-            class="css-6cfhau-CommentVerifiedBadge ekbi54x5"
+            class="emotion-12 emotion-13"
           >
             <svg
               fill="currentColor"
@@ -488,10 +985,10 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <div
-          class="css-srb6c6-CommentFlair ekbi54x4"
+          class="emotion-14 emotion-15"
         >
           <a
-            class="css-c0umgh-CommentFlairLink ekbi54x3"
+            class="emotion-16 emotion-17"
             href="Source"
             rel="noopener noreferrer"
             target="_blank"
@@ -502,17 +999,17 @@ https://unsplash.it/200/200 200w"
       </div>
     </header>
     <div
-      class="css-td83z9-CommentContent ekbi54x2"
+      class="emotion-18 emotion-19"
     >
       <h1
-        class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 emotion-20"
       >
         <strong>
           de Finibus Bonorum et Malorum
         </strong>
       </h1>
       <div
-        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+        class="emotion-21 emotion-22"
       >
         <div
           data-gramm="false"
@@ -521,7 +1018,7 @@ https://unsplash.it/200/200 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
             data-slate-node="element"
           >
             <span
@@ -543,16 +1040,117 @@ https://unsplash.it/200/200 200w"
 
 exports[`Comment should render WithClassName 1`] = `
 <DocumentFragment>
-  <article
-    class="extra-classname css-1x8pjqe-CommentWrapper ekbi54x10"
+  .emotion-0 {
+  display: grid;
+  gap: 16px;
+}
+
+.emotion-0:target {
+  border: 2px solid #e91e63;
+  border-radius: 20px;
+  scroll-margin-top: 80px;
+  padding: 16px;
+}
+
+.emotion-2 {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 16px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-4 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+}
+
+.emotion-8 {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  gap: 8px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-weight: 700;
+}
+
+.emotion-10 {
+  font-size:line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-12 {
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  color: #0288d1;
+}
+
+.emotion-14 {
+  font-size: 0.75em;
+  font-weight: 300;
+}
+
+.emotion-16 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: #e91e63;
+}
+
+.emotion-20 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-20.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-23 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-23.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-23:last-child {
+  margin-bottom: 0;
+}
+
+<article
+    class="extra-classname emotion-0 emotion-1"
     id="verified"
   >
     <header
-      class="css-p4cys7-CommentHeader ekbi54x9"
+      class="emotion-2 emotion-3"
     >
       <img
         alt="DSC07717"
-        class="css-fy51ct-ImageWrapper-avatarStyles e1shv2yg0"
+        class="emotion-4 emotion-5"
         loading="lazy"
         sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -565,18 +1163,18 @@ https://unsplash.it/200/200 200w"
         title=""
       />
       <div
-        class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
+        class="emotion-6 emotion-7"
       >
         <div
-          class="css-l1mcyg-CommentName ekbi54x7"
+          class="emotion-8 emotion-9"
         >
           <div
-            class="css-1pg77me-CommentAuthor ekbi54x6"
+            class="emotion-10 emotion-11"
           >
             Signed Up User
           </div>
           <div
-            class="css-6cfhau-CommentVerifiedBadge ekbi54x5"
+            class="emotion-12 emotion-13"
           >
             <svg
               fill="currentColor"
@@ -601,10 +1199,10 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <div
-          class="css-srb6c6-CommentFlair ekbi54x4"
+          class="emotion-14 emotion-15"
         >
           <a
-            class="css-c0umgh-CommentFlairLink ekbi54x3"
+            class="emotion-16 emotion-17"
             href="Source"
             rel="noopener noreferrer"
             target="_blank"
@@ -615,17 +1213,17 @@ https://unsplash.it/200/200 200w"
       </div>
     </header>
     <div
-      class="css-td83z9-CommentContent ekbi54x2"
+      class="emotion-18 emotion-19"
     >
       <h1
-        class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 emotion-20"
       >
         <strong>
           de Finibus Bonorum et Malorum
         </strong>
       </h1>
       <div
-        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+        class="emotion-21 emotion-22"
       >
         <div
           data-gramm="false"
@@ -634,7 +1232,7 @@ https://unsplash.it/200/200 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
             data-slate-node="element"
           >
             <span
@@ -656,16 +1254,117 @@ https://unsplash.it/200/200 200w"
 
 exports[`Comment should render WithEmotion 1`] = `
 <DocumentFragment>
-  <article
-    class="css-1x8pjqe-CommentWrapper ekbi54x10"
+  .emotion-0 {
+  display: grid;
+  gap: 16px;
+}
+
+.emotion-0:target {
+  border: 2px solid #e91e63;
+  border-radius: 20px;
+  scroll-margin-top: 80px;
+  padding: 16px;
+}
+
+.emotion-2 {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 16px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-4 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+}
+
+.emotion-8 {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  gap: 8px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-weight: 700;
+}
+
+.emotion-10 {
+  font-size:line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-12 {
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  color: #0288d1;
+}
+
+.emotion-14 {
+  font-size: 0.75em;
+  font-weight: 300;
+}
+
+.emotion-16 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: #e91e63;
+}
+
+.emotion-20 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-20.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-23 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-23.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-23:last-child {
+  margin-bottom: 0;
+}
+
+<article
+    class="emotion-0 emotion-1"
     id="verified"
   >
     <header
-      class="css-p4cys7-CommentHeader ekbi54x9"
+      class="emotion-2 emotion-3"
     >
       <img
         alt="DSC07717"
-        class="css-fy51ct-ImageWrapper-avatarStyles e1shv2yg0"
+        class="emotion-4 emotion-5"
         loading="lazy"
         sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -678,18 +1377,18 @@ https://unsplash.it/200/200 200w"
         title=""
       />
       <div
-        class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
+        class="emotion-6 emotion-7"
       >
         <div
-          class="css-l1mcyg-CommentName ekbi54x7"
+          class="emotion-8 emotion-9"
         >
           <div
-            class="css-1pg77me-CommentAuthor ekbi54x6"
+            class="emotion-10 emotion-11"
           >
             Signed Up User
           </div>
           <div
-            class="css-6cfhau-CommentVerifiedBadge ekbi54x5"
+            class="emotion-12 emotion-13"
           >
             <svg
               fill="currentColor"
@@ -714,10 +1413,10 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <div
-          class="css-srb6c6-CommentFlair ekbi54x4"
+          class="emotion-14 emotion-15"
         >
           <a
-            class="css-c0umgh-CommentFlairLink ekbi54x3"
+            class="emotion-16 emotion-17"
             href="Source"
             rel="noopener noreferrer"
             target="_blank"
@@ -728,17 +1427,17 @@ https://unsplash.it/200/200 200w"
       </div>
     </header>
     <div
-      class="css-td83z9-CommentContent ekbi54x2"
+      class="emotion-18 emotion-19"
     >
       <h1
-        class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 emotion-20"
       >
         <strong>
           de Finibus Bonorum et Malorum
         </strong>
       </h1>
       <div
-        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+        class="emotion-21 emotion-22"
       >
         <div
           data-gramm="false"
@@ -747,7 +1446,7 @@ https://unsplash.it/200/200 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
             data-slate-node="element"
           >
             <span
@@ -769,16 +1468,117 @@ https://unsplash.it/200/200 200w"
 
 exports[`Comment should render WithoutFlair 1`] = `
 <DocumentFragment>
-  <article
-    class="css-1x8pjqe-CommentWrapper ekbi54x10"
+  .emotion-0 {
+  display: grid;
+  gap: 16px;
+}
+
+.emotion-0:target {
+  border: 2px solid #e91e63;
+  border-radius: 20px;
+  scroll-margin-top: 80px;
+  padding: 16px;
+}
+
+.emotion-2 {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 16px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-4 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+}
+
+.emotion-8 {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  gap: 8px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-weight: 700;
+}
+
+.emotion-10 {
+  font-size:line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-12 {
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  color: #0288d1;
+}
+
+.emotion-14 {
+  font-size: 0.75em;
+  font-weight: 300;
+}
+
+.emotion-16 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: #e91e63;
+}
+
+.emotion-20 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-20.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-23 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-23.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-23:last-child {
+  margin-bottom: 0;
+}
+
+<article
+    class="emotion-0 emotion-1"
     id="verified"
   >
     <header
-      class="css-p4cys7-CommentHeader ekbi54x9"
+      class="emotion-2 emotion-3"
     >
       <img
         alt="DSC07717"
-        class="css-fy51ct-ImageWrapper-avatarStyles e1shv2yg0"
+        class="emotion-4 emotion-5"
         loading="lazy"
         sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -791,18 +1591,18 @@ https://unsplash.it/200/200 200w"
         title=""
       />
       <div
-        class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
+        class="emotion-6 emotion-7"
       >
         <div
-          class="css-l1mcyg-CommentName ekbi54x7"
+          class="emotion-8 emotion-9"
         >
           <div
-            class="css-1pg77me-CommentAuthor ekbi54x6"
+            class="emotion-10 emotion-11"
           >
             Signed Up User
           </div>
           <div
-            class="css-6cfhau-CommentVerifiedBadge ekbi54x5"
+            class="emotion-12 emotion-13"
           >
             <svg
               fill="currentColor"
@@ -827,10 +1627,10 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <div
-          class="css-srb6c6-CommentFlair ekbi54x4"
+          class="emotion-14 emotion-15"
         >
           <a
-            class="css-c0umgh-CommentFlairLink ekbi54x3"
+            class="emotion-16 emotion-17"
             href="Source"
             rel="noopener noreferrer"
             target="_blank"
@@ -841,17 +1641,17 @@ https://unsplash.it/200/200 200w"
       </div>
     </header>
     <div
-      class="css-td83z9-CommentContent ekbi54x2"
+      class="emotion-18 emotion-19"
     >
       <h1
-        class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 emotion-20"
       >
         <strong>
           de Finibus Bonorum et Malorum
         </strong>
       </h1>
       <div
-        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+        class="emotion-21 emotion-22"
       >
         <div
           data-gramm="false"
@@ -860,7 +1660,7 @@ https://unsplash.it/200/200 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
             data-slate-node="element"
           >
             <span
@@ -882,15 +1682,111 @@ https://unsplash.it/200/200 200w"
 
 exports[`Comment should render WithoutImage 1`] = `
 <DocumentFragment>
-  <article
-    class="css-1x8pjqe-CommentWrapper ekbi54x10"
+  .emotion-0 {
+  display: grid;
+  gap: 16px;
+}
+
+.emotion-0:target {
+  border: 2px solid #e91e63;
+  border-radius: 20px;
+  scroll-margin-top: 80px;
+  padding: 16px;
+}
+
+.emotion-2 {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 16px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-4 {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+}
+
+.emotion-7 {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  gap: 8px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-weight: 700;
+}
+
+.emotion-9 {
+  font-size:line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-11 {
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  color: #0288d1;
+}
+
+.emotion-13 {
+  font-size: 0.75em;
+  font-weight: 300;
+}
+
+.emotion-15 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: #e91e63;
+}
+
+.emotion-19 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-19.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-22 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-22.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-22:last-child {
+  margin-bottom: 0;
+}
+
+<article
+    class="emotion-0 emotion-1"
     id="verified"
   >
     <header
-      class="css-p4cys7-CommentHeader ekbi54x9"
+      class="emotion-2 emotion-3"
     >
       <svg
-        class="css-15t9qu5-avatarStyles"
+        class="emotion-4"
         fill="currentColor"
         height="1em"
         stroke="currentColor"
@@ -908,18 +1804,18 @@ exports[`Comment should render WithoutImage 1`] = `
         />
       </svg>
       <div
-        class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
+        class="emotion-5 emotion-6"
       >
         <div
-          class="css-l1mcyg-CommentName ekbi54x7"
+          class="emotion-7 emotion-8"
         >
           <div
-            class="css-1pg77me-CommentAuthor ekbi54x6"
+            class="emotion-9 emotion-10"
           >
             Signed Up User
           </div>
           <div
-            class="css-6cfhau-CommentVerifiedBadge ekbi54x5"
+            class="emotion-11 emotion-12"
           >
             <svg
               fill="currentColor"
@@ -944,10 +1840,10 @@ exports[`Comment should render WithoutImage 1`] = `
           </div>
         </div>
         <div
-          class="css-srb6c6-CommentFlair ekbi54x4"
+          class="emotion-13 emotion-14"
         >
           <a
-            class="css-c0umgh-CommentFlairLink ekbi54x3"
+            class="emotion-15 emotion-16"
             href="Source"
             rel="noopener noreferrer"
             target="_blank"
@@ -958,17 +1854,17 @@ exports[`Comment should render WithoutImage 1`] = `
       </div>
     </header>
     <div
-      class="css-td83z9-CommentContent ekbi54x2"
+      class="emotion-17 emotion-18"
     >
       <h1
-        class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 emotion-19"
       >
         <strong>
           de Finibus Bonorum et Malorum
         </strong>
       </h1>
       <div
-        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+        class="emotion-20 emotion-21"
       >
         <div
           data-gramm="false"
@@ -977,7 +1873,7 @@ exports[`Comment should render WithoutImage 1`] = `
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-22"
             data-slate-node="element"
           >
             <span
@@ -999,16 +1895,117 @@ exports[`Comment should render WithoutImage 1`] = `
 
 exports[`Comment should render WithoutPreferredName 1`] = `
 <DocumentFragment>
-  <article
-    class="css-1x8pjqe-CommentWrapper ekbi54x10"
+  .emotion-0 {
+  display: grid;
+  gap: 16px;
+}
+
+.emotion-0:target {
+  border: 2px solid #e91e63;
+  border-radius: 20px;
+  scroll-margin-top: 80px;
+  padding: 16px;
+}
+
+.emotion-2 {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 16px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-4 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+}
+
+.emotion-8 {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  gap: 8px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-weight: 700;
+}
+
+.emotion-10 {
+  font-size:line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-12 {
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  color: #0288d1;
+}
+
+.emotion-14 {
+  font-size: 0.75em;
+  font-weight: 300;
+}
+
+.emotion-16 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: #e91e63;
+}
+
+.emotion-20 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-20.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-23 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-23.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-23:last-child {
+  margin-bottom: 0;
+}
+
+<article
+    class="emotion-0 emotion-1"
     id="verified"
   >
     <header
-      class="css-p4cys7-CommentHeader ekbi54x9"
+      class="emotion-2 emotion-3"
     >
       <img
         alt="DSC07717"
-        class="css-fy51ct-ImageWrapper-avatarStyles e1shv2yg0"
+        class="emotion-4 emotion-5"
         loading="lazy"
         sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1021,18 +2018,18 @@ https://unsplash.it/200/200 200w"
         title=""
       />
       <div
-        class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
+        class="emotion-6 emotion-7"
       >
         <div
-          class="css-l1mcyg-CommentName ekbi54x7"
+          class="emotion-8 emotion-9"
         >
           <div
-            class="css-1pg77me-CommentAuthor ekbi54x6"
+            class="emotion-10 emotion-11"
           >
             Fallback User
           </div>
           <div
-            class="css-6cfhau-CommentVerifiedBadge ekbi54x5"
+            class="emotion-12 emotion-13"
           >
             <svg
               fill="currentColor"
@@ -1057,10 +2054,10 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <div
-          class="css-srb6c6-CommentFlair ekbi54x4"
+          class="emotion-14 emotion-15"
         >
           <a
-            class="css-c0umgh-CommentFlairLink ekbi54x3"
+            class="emotion-16 emotion-17"
             href="Source"
             rel="noopener noreferrer"
             target="_blank"
@@ -1071,17 +2068,17 @@ https://unsplash.it/200/200 200w"
       </div>
     </header>
     <div
-      class="css-td83z9-CommentContent ekbi54x2"
+      class="emotion-18 emotion-19"
     >
       <h1
-        class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 emotion-20"
       >
         <strong>
           de Finibus Bonorum et Malorum
         </strong>
       </h1>
       <div
-        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+        class="emotion-21 emotion-22"
       >
         <div
           data-gramm="false"
@@ -1090,7 +2087,7 @@ https://unsplash.it/200/200 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
             data-slate-node="element"
           >
             <span
@@ -1112,16 +2109,111 @@ https://unsplash.it/200/200 200w"
 
 exports[`Comment should render WithoutSource 1`] = `
 <DocumentFragment>
-  <article
-    class="css-1x8pjqe-CommentWrapper ekbi54x10"
+  .emotion-0 {
+  display: grid;
+  gap: 16px;
+}
+
+.emotion-0:target {
+  border: 2px solid #e91e63;
+  border-radius: 20px;
+  scroll-margin-top: 80px;
+  padding: 16px;
+}
+
+.emotion-2 {
+  display: grid;
+  grid-template-columns: max-content 1fr;
+  gap: 16px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-4 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+}
+
+.emotion-8 {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: max-content;
+  gap: 8px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  font-weight: 700;
+}
+
+.emotion-10 {
+  font-size:line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-12 {
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  color: #0288d1;
+}
+
+.emotion-14 {
+  font-size: 0.75em;
+  font-weight: 300;
+}
+
+.emotion-18 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-18.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-21 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+  margin-bottom: 0.35em;
+}
+
+.emotion-21.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+.emotion-21:last-child {
+  margin-bottom: 0;
+}
+
+<article
+    class="emotion-0 emotion-1"
     id="verified"
   >
     <header
-      class="css-p4cys7-CommentHeader ekbi54x9"
+      class="emotion-2 emotion-3"
     >
       <img
         alt="DSC07717"
-        class="css-fy51ct-ImageWrapper-avatarStyles e1shv2yg0"
+        class="emotion-4 emotion-5"
         loading="lazy"
         sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1134,18 +2226,18 @@ https://unsplash.it/200/200 200w"
         title=""
       />
       <div
-        class="css-1x1fqyu-CommentHeaderContent ekbi54x8"
+        class="emotion-6 emotion-7"
       >
         <div
-          class="css-l1mcyg-CommentName ekbi54x7"
+          class="emotion-8 emotion-9"
         >
           <div
-            class="css-1pg77me-CommentAuthor ekbi54x6"
+            class="emotion-10 emotion-11"
           >
             Signed Up User
           </div>
           <div
-            class="css-6cfhau-CommentVerifiedBadge ekbi54x5"
+            class="emotion-12 emotion-13"
           >
             <svg
               fill="currentColor"
@@ -1170,24 +2262,24 @@ https://unsplash.it/200/200 200w"
           </div>
         </div>
         <div
-          class="css-srb6c6-CommentFlair ekbi54x4"
+          class="emotion-14 emotion-15"
         >
           29.06.2023 09:39
         </div>
       </div>
     </header>
     <div
-      class="css-td83z9-CommentContent ekbi54x2"
+      class="emotion-16 emotion-17"
     >
       <h1
-        class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 emotion-18"
       >
         <strong>
           de Finibus Bonorum et Malorum
         </strong>
       </h1>
       <div
-        class="css-1v4yto8-RichTextBlockWrapper eu4zjs90"
+        class="emotion-19 emotion-20"
       >
         <div
           data-gramm="false"
@@ -1196,7 +2288,7 @@ https://unsplash.it/200/200 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom css-1afd7jy-MuiTypography-root-lastChildNoGutter"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-21"
             data-slate-node="element"
           >
             <span

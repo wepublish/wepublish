@@ -2,16 +2,71 @@
 
 exports[`AuthorList Item should render Default 1`] = `
 <DocumentFragment>
-  <a
-    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+  .emotion-0 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  display: grid;
+  grid-template-rows: max-content 1fr;
+  gap: 24px;
+  width: 240px;
+  text-align: center;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+}
+
+.emotion-0:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-1 {
+  display: grid;
+  width: 100%;
+}
+
+.emotion-3 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.emotion-7 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 300;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.emotion-8 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-8.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+<a
+    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-0"
     href="https://example.com"
   >
     <div
-      class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+      class="emotion-1 emotion-2"
     >
       <img
         alt="DSC07717"
-        class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+        class="emotion-3 emotion-4"
         loading="lazy"
         sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -25,15 +80,15 @@ https://unsplash.it/200/200 200w"
       />
     </div>
     <div
-      class="css-1f3530-AuthorListItemContent ersskp40"
+      class="emotion-5 emotion-6"
     >
       <h6
-        class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h6 emotion-7"
       >
         Foobar
       </h6>
       <p
-        class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 emotion-8"
       >
         Editor
       </p>
@@ -44,16 +99,71 @@ https://unsplash.it/200/200 200w"
 
 exports[`AuthorList Item should render WithClassName 1`] = `
 <DocumentFragment>
-  <a
-    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways extra-classname css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+  .emotion-0 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  display: grid;
+  grid-template-rows: max-content 1fr;
+  gap: 24px;
+  width: 240px;
+  text-align: center;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+}
+
+.emotion-0:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-1 {
+  display: grid;
+  width: 100%;
+}
+
+.emotion-3 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.emotion-7 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 300;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.emotion-8 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-8.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+<a
+    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways extra-classname emotion-0"
     href="https://example.com"
   >
     <div
-      class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+      class="emotion-1 emotion-2"
     >
       <img
         alt="DSC07717"
-        class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+        class="emotion-3 emotion-4"
         loading="lazy"
         sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -67,15 +177,15 @@ https://unsplash.it/200/200 200w"
       />
     </div>
     <div
-      class="css-1f3530-AuthorListItemContent ersskp40"
+      class="emotion-5 emotion-6"
     >
       <h6
-        class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h6 emotion-7"
       >
         Foobar
       </h6>
       <p
-        class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 emotion-8"
       >
         Editor
       </p>
@@ -86,16 +196,71 @@ https://unsplash.it/200/200 200w"
 
 exports[`AuthorList Item should render WithEmotion 1`] = `
 <DocumentFragment>
-  <a
-    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+  .emotion-0 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  display: grid;
+  grid-template-rows: max-content 1fr;
+  gap: 24px;
+  width: 240px;
+  text-align: center;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+}
+
+.emotion-0:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-1 {
+  display: grid;
+  width: 100%;
+}
+
+.emotion-3 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.emotion-7 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 300;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.emotion-8 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-8.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+<a
+    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-0"
     href="https://example.com"
   >
     <div
-      class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+      class="emotion-1 emotion-2"
     >
       <img
         alt="DSC07717"
-        class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+        class="emotion-3 emotion-4"
         loading="lazy"
         sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -109,15 +274,15 @@ https://unsplash.it/200/200 200w"
       />
     </div>
     <div
-      class="css-1f3530-AuthorListItemContent ersskp40"
+      class="emotion-5 emotion-6"
     >
       <h6
-        class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h6 emotion-7"
       >
         Foobar
       </h6>
       <p
-        class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 emotion-8"
       >
         Editor
       </p>
@@ -128,23 +293,69 @@ https://unsplash.it/200/200 200w"
 
 exports[`AuthorList Item should render WithoutImage 1`] = `
 <DocumentFragment>
-  <a
-    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+  .emotion-0 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  display: grid;
+  grid-template-rows: max-content 1fr;
+  gap: 24px;
+  width: 240px;
+  text-align: center;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+}
+
+.emotion-0:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-1 {
+  display: grid;
+  width: 100%;
+}
+
+.emotion-5 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 300;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.emotion-6 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-6.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+<a
+    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-0"
     href="https://example.com"
   >
     <div
-      class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+      class="emotion-1 emotion-2"
     />
     <div
-      class="css-1f3530-AuthorListItemContent ersskp40"
+      class="emotion-3 emotion-4"
     >
       <h6
-        class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h6 emotion-5"
       >
         Foobar
       </h6>
       <p
-        class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 emotion-6"
       >
         Editor
       </p>
@@ -155,16 +366,59 @@ exports[`AuthorList Item should render WithoutImage 1`] = `
 
 exports[`AuthorList Item should render WithoutJobTitle 1`] = `
 <DocumentFragment>
-  <a
-    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-1672nzs-MuiTypography-root-MuiLink-root-AuthorListItem"
+  .emotion-0 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+  display: grid;
+  grid-template-rows: max-content 1fr;
+  gap: 24px;
+  width: 240px;
+  text-align: center;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+}
+
+.emotion-0:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-1 {
+  display: grid;
+  width: 100%;
+}
+
+.emotion-3 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.emotion-7 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 300;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+<a
+    class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-0"
     href="https://example.com"
   >
     <div
-      class="css-17dowui-AuthorListItemImageWrapper ersskp41"
+      class="emotion-1 emotion-2"
     >
       <img
         alt="DSC07717"
-        class="css-w10vzd-ImageWrapper-AuthorListItem e1shv2yg0"
+        class="emotion-3 emotion-4"
         loading="lazy"
         sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -178,10 +432,10 @@ https://unsplash.it/200/200 200w"
       />
     </div>
     <div
-      class="css-1f3530-AuthorListItemContent ersskp40"
+      class="emotion-5 emotion-6"
     >
       <h6
-        class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h6 emotion-7"
       >
         Foobar
       </h6>

@@ -2,13 +2,29 @@
 
 exports[`TikTok Video Block should render Default 1`] = `
 <DocumentFragment>
-  <div
-    class="css-194r89g-TikTokVideoBlockWrapper e1wv6cj81"
+  .emotion-0 {
+  display: grid;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
+.emotion-2 {
+  width: 325px;
+  aspect-ratio: calc(
+      1 / 1.77 - 0.15
+    );
+  border: 0;
+}
+
+<div
+    class="emotion-0 emotion-1"
   >
     <iframe
       allow="encrypted-media;"
       allowfullscreen=""
-      class="css-130pd85-TikTokVideoBlockPlayer e1wv6cj80"
+      class="emotion-2 emotion-3"
       src="https://www.tiktok.com/embed/v2/6718335390845095173"
       title="Embedded TikTok Video"
     />
@@ -18,13 +34,29 @@ exports[`TikTok Video Block should render Default 1`] = `
 
 exports[`TikTok Video Block should render WithClassName 1`] = `
 <DocumentFragment>
-  <div
-    class="extra-classname css-194r89g-TikTokVideoBlockWrapper e1wv6cj81"
+  .emotion-0 {
+  display: grid;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
+.emotion-2 {
+  width: 325px;
+  aspect-ratio: calc(
+      1 / 1.77 - 0.15
+    );
+  border: 0;
+}
+
+<div
+    class="extra-classname emotion-0 emotion-1"
   >
     <iframe
       allow="encrypted-media;"
       allowfullscreen=""
-      class="css-130pd85-TikTokVideoBlockPlayer e1wv6cj80"
+      class="emotion-2 emotion-3"
       src="https://www.tiktok.com/embed/v2/6718335390845095173"
       title="Embedded TikTok Video"
     />

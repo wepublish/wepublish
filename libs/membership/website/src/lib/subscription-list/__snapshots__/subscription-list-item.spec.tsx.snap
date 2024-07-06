@@ -2,12 +2,76 @@
 
 exports[`Subscription Item should render DeactivatedCancelled 1`] = `
 <DocumentFragment>
-  <div
-    class="css-r6owmh-SubscriptionListItemWrapper eere75z4"
+  .emotion-0 {
+  display: grid;
+  gap: 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+.emotion-2 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+}
+
+.emotion-4 {
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+}
+
+.emotion-6 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 300;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.emotion-7 {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.emotion-9 {
+  display: grid;
+  grid-auto-flow: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: start;
+  justify-content: start;
+  gap: 8px;
+}
+
+.emotion-21 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-21:hover {
+  text-decoration-color: inherit;
+}
+
+<div
+    class="emotion-0 emotion-1"
   >
     <img
       alt="DSC07717"
-      class="css-cibo30-ImageWrapper e1shv2yg0"
+      class="emotion-2 emotion-3"
       loading="lazy"
       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -20,18 +84,18 @@ https://unsplash.it/200/100 200w"
       title=""
     />
     <div
-      class="css-6l2m0q-SubscriptionListItemContent eere75z3"
+      class="emotion-4 emotion-5"
     >
       <h6
-        class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h6 emotion-6"
       >
         Foobar Memberplan
       </h6>
       <ul
-        class="css-14qrd03-SubscriptionListItemMeta eere75z2"
+        class="emotion-7 emotion-8"
       >
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -60,7 +124,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -89,7 +153,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -118,7 +182,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -140,7 +204,7 @@ https://unsplash.it/200/100 200w"
            Wird automatisch vierteljährlich erneuert
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -162,7 +226,7 @@ https://unsplash.it/200/100 200w"
            Kostet CHF 2'500.- pro Monat
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -183,7 +247,7 @@ https://unsplash.it/200/100 200w"
           </svg>
            
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-21"
             href="https://example.com"
           >
             Details & Zahlungen
@@ -197,12 +261,76 @@ https://unsplash.it/200/100 200w"
 
 exports[`Subscription Item should render DeactivatedUnknown 1`] = `
 <DocumentFragment>
-  <div
-    class="css-r6owmh-SubscriptionListItemWrapper eere75z4"
+  .emotion-0 {
+  display: grid;
+  gap: 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+.emotion-2 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+}
+
+.emotion-4 {
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+}
+
+.emotion-6 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 300;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.emotion-7 {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.emotion-9 {
+  display: grid;
+  grid-auto-flow: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: start;
+  justify-content: start;
+  gap: 8px;
+}
+
+.emotion-23 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-23:hover {
+  text-decoration-color: inherit;
+}
+
+<div
+    class="emotion-0 emotion-1"
   >
     <img
       alt="DSC07717"
-      class="css-cibo30-ImageWrapper e1shv2yg0"
+      class="emotion-2 emotion-3"
       loading="lazy"
       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -215,18 +343,18 @@ https://unsplash.it/200/100 200w"
       title=""
     />
     <div
-      class="css-6l2m0q-SubscriptionListItemContent eere75z3"
+      class="emotion-4 emotion-5"
     >
       <h6
-        class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h6 emotion-6"
       >
         Foobar Memberplan
       </h6>
       <ul
-        class="css-14qrd03-SubscriptionListItemMeta eere75z2"
+        class="emotion-7 emotion-8"
       >
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -255,7 +383,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -284,7 +412,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -313,7 +441,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -335,7 +463,7 @@ https://unsplash.it/200/100 200w"
            Kündigungsgrund ist unbekannt.
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -357,7 +485,7 @@ https://unsplash.it/200/100 200w"
            Wird automatisch vierteljährlich erneuert
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -379,7 +507,7 @@ https://unsplash.it/200/100 200w"
            Kostet CHF 2'500.- pro Monat
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -400,7 +528,7 @@ https://unsplash.it/200/100 200w"
           </svg>
            
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-23"
             href="https://example.com"
           >
             Details & Zahlungen
@@ -414,12 +542,76 @@ https://unsplash.it/200/100 200w"
 
 exports[`Subscription Item should render DeactivatedUnpaid 1`] = `
 <DocumentFragment>
-  <div
-    class="css-r6owmh-SubscriptionListItemWrapper eere75z4"
+  .emotion-0 {
+  display: grid;
+  gap: 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+.emotion-2 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+}
+
+.emotion-4 {
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+}
+
+.emotion-6 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 300;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.emotion-7 {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.emotion-9 {
+  display: grid;
+  grid-auto-flow: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: start;
+  justify-content: start;
+  gap: 8px;
+}
+
+.emotion-23 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-23:hover {
+  text-decoration-color: inherit;
+}
+
+<div
+    class="emotion-0 emotion-1"
   >
     <img
       alt="DSC07717"
-      class="css-cibo30-ImageWrapper e1shv2yg0"
+      class="emotion-2 emotion-3"
       loading="lazy"
       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -432,18 +624,18 @@ https://unsplash.it/200/100 200w"
       title=""
     />
     <div
-      class="css-6l2m0q-SubscriptionListItemContent eere75z3"
+      class="emotion-4 emotion-5"
     >
       <h6
-        class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h6 emotion-6"
       >
         Foobar Memberplan
       </h6>
       <ul
-        class="css-14qrd03-SubscriptionListItemMeta eere75z2"
+        class="emotion-7 emotion-8"
       >
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -472,7 +664,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -501,7 +693,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -530,7 +722,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -552,7 +744,7 @@ https://unsplash.it/200/100 200w"
            Automatisch gekündigt
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -574,7 +766,7 @@ https://unsplash.it/200/100 200w"
            Wird automatisch vierteljährlich erneuert
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -596,7 +788,7 @@ https://unsplash.it/200/100 200w"
            Kostet CHF 2'500.- pro Monat
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -617,7 +809,7 @@ https://unsplash.it/200/100 200w"
           </svg>
            
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-23"
             href="https://example.com"
           >
             Details & Zahlungen
@@ -631,12 +823,289 @@ https://unsplash.it/200/100 200w"
 
 exports[`Subscription Item should render Default 1`] = `
 <DocumentFragment>
-  <div
-    class="css-r6owmh-SubscriptionListItemWrapper eere75z4"
+  .emotion-0 {
+  display: grid;
+  gap: 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+.emotion-2 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+}
+
+.emotion-4 {
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+}
+
+.emotion-6 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 300;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.emotion-7 {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.emotion-9 {
+  display: grid;
+  grid-auto-flow: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: start;
+  justify-content: start;
+  gap: 8px;
+}
+
+.emotion-19 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-19:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-20 {
+  display: grid;
+  gap: 16px;
+}
+
+@container (min-width: 45ch) {
+  .emotion-20 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+  }
+}
+
+.emotion-22 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #000;
+  border-radius: 30px;
+  text-transform: initial;
+  box-shadow: none;
+}
+
+.emotion-22::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-22.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-22 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-22:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-22:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-22.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-22:hover {
+  box-shadow: none;
+}
+
+.emotion-23 {
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+}
+
+.emotion-24 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 6px 16px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #fff;
+  background-color: #e91e63;
+  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
+  border-radius: 30px;
+  text-transform: initial;
+  box-shadow: none;
+  font-weight: 700;
+}
+
+.emotion-24::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-24.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-24 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-24:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: rgb(163, 21, 69);
+  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
+}
+
+@media (hover: none) {
+  .emotion-24:hover {
+    background-color: #e91e63;
+  }
+}
+
+.emotion-24:active {
+  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
+}
+
+.emotion-24.Mui-focusVisible {
+  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
+}
+
+.emotion-24.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+  box-shadow: none;
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.emotion-24:hover {
+  box-shadow: none;
+}
+
+<div
+    class="emotion-0 emotion-1"
   >
     <img
       alt="DSC07717"
-      class="css-cibo30-ImageWrapper e1shv2yg0"
+      class="emotion-2 emotion-3"
       loading="lazy"
       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -649,18 +1118,18 @@ https://unsplash.it/200/100 200w"
       title=""
     />
     <div
-      class="css-6l2m0q-SubscriptionListItemContent eere75z3"
+      class="emotion-4 emotion-5"
     >
       <h6
-        class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h6 emotion-6"
       >
         Foobar Memberplan
       </h6>
       <ul
-        class="css-14qrd03-SubscriptionListItemMeta eere75z2"
+        class="emotion-7 emotion-8"
       >
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -689,7 +1158,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -718,7 +1187,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -740,7 +1209,7 @@ https://unsplash.it/200/100 200w"
            Wird automatisch vierteljährlich erneuert
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -762,7 +1231,7 @@ https://unsplash.it/200/100 200w"
            Kostet CHF 2'500.- pro Monat
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -783,7 +1252,7 @@ https://unsplash.it/200/100 200w"
           </svg>
            
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-19"
             href="https://example.com"
           >
             Details & Zahlungen
@@ -791,26 +1260,26 @@ https://unsplash.it/200/100 200w"
         </li>
       </ul>
       <div
-        class="css-1fn3y2c-SubscriptionListItemActions eere75z0"
+        class="emotion-20 emotion-21"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium css-10v00ka-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-22"
           tabindex="0"
           type="button"
         >
           Abo Künden
           <span
-            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            class="MuiTouchRipple-root emotion-23"
           />
         </button>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-24"
           tabindex="0"
           type="button"
         >
           Jetzt Verlängern
           <span
-            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            class="MuiTouchRipple-root emotion-23"
           />
         </button>
       </div>
@@ -821,12 +1290,289 @@ https://unsplash.it/200/100 200w"
 
 exports[`Subscription Item should render RenewBianual 1`] = `
 <DocumentFragment>
-  <div
-    class="css-r6owmh-SubscriptionListItemWrapper eere75z4"
+  .emotion-0 {
+  display: grid;
+  gap: 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+.emotion-2 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+}
+
+.emotion-4 {
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+}
+
+.emotion-6 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 300;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.emotion-7 {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.emotion-9 {
+  display: grid;
+  grid-auto-flow: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: start;
+  justify-content: start;
+  gap: 8px;
+}
+
+.emotion-19 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-19:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-20 {
+  display: grid;
+  gap: 16px;
+}
+
+@container (min-width: 45ch) {
+  .emotion-20 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+  }
+}
+
+.emotion-22 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #000;
+  border-radius: 30px;
+  text-transform: initial;
+  box-shadow: none;
+}
+
+.emotion-22::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-22.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-22 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-22:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-22:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-22.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-22:hover {
+  box-shadow: none;
+}
+
+.emotion-23 {
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+}
+
+.emotion-24 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 6px 16px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #fff;
+  background-color: #e91e63;
+  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
+  border-radius: 30px;
+  text-transform: initial;
+  box-shadow: none;
+  font-weight: 700;
+}
+
+.emotion-24::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-24.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-24 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-24:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: rgb(163, 21, 69);
+  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
+}
+
+@media (hover: none) {
+  .emotion-24:hover {
+    background-color: #e91e63;
+  }
+}
+
+.emotion-24:active {
+  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
+}
+
+.emotion-24.Mui-focusVisible {
+  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
+}
+
+.emotion-24.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+  box-shadow: none;
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.emotion-24:hover {
+  box-shadow: none;
+}
+
+<div
+    class="emotion-0 emotion-1"
   >
     <img
       alt="DSC07717"
-      class="css-cibo30-ImageWrapper e1shv2yg0"
+      class="emotion-2 emotion-3"
       loading="lazy"
       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -839,18 +1585,18 @@ https://unsplash.it/200/100 200w"
       title=""
     />
     <div
-      class="css-6l2m0q-SubscriptionListItemContent eere75z3"
+      class="emotion-4 emotion-5"
     >
       <h6
-        class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h6 emotion-6"
       >
         Foobar Memberplan
       </h6>
       <ul
-        class="css-14qrd03-SubscriptionListItemMeta eere75z2"
+        class="emotion-7 emotion-8"
       >
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -879,7 +1625,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -908,7 +1654,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -930,7 +1676,7 @@ https://unsplash.it/200/100 200w"
            Wird automatisch halbjährlich erneuert
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -952,7 +1698,7 @@ https://unsplash.it/200/100 200w"
            Kostet CHF 2'500.- pro Monat
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -973,7 +1719,7 @@ https://unsplash.it/200/100 200w"
           </svg>
            
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-19"
             href="https://example.com"
           >
             Details & Zahlungen
@@ -981,26 +1727,26 @@ https://unsplash.it/200/100 200w"
         </li>
       </ul>
       <div
-        class="css-1fn3y2c-SubscriptionListItemActions eere75z0"
+        class="emotion-20 emotion-21"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium css-10v00ka-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-22"
           tabindex="0"
           type="button"
         >
           Abo Künden
           <span
-            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            class="MuiTouchRipple-root emotion-23"
           />
         </button>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-24"
           tabindex="0"
           type="button"
         >
           Jetzt Verlängern
           <span
-            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            class="MuiTouchRipple-root emotion-23"
           />
         </button>
       </div>
@@ -1011,12 +1757,289 @@ https://unsplash.it/200/100 200w"
 
 exports[`Subscription Item should render RenewBianualManually 1`] = `
 <DocumentFragment>
-  <div
-    class="css-r6owmh-SubscriptionListItemWrapper eere75z4"
+  .emotion-0 {
+  display: grid;
+  gap: 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+.emotion-2 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+}
+
+.emotion-4 {
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+}
+
+.emotion-6 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 300;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.emotion-7 {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.emotion-9 {
+  display: grid;
+  grid-auto-flow: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: start;
+  justify-content: start;
+  gap: 8px;
+}
+
+.emotion-19 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-19:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-20 {
+  display: grid;
+  gap: 16px;
+}
+
+@container (min-width: 45ch) {
+  .emotion-20 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+  }
+}
+
+.emotion-22 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #000;
+  border-radius: 30px;
+  text-transform: initial;
+  box-shadow: none;
+}
+
+.emotion-22::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-22.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-22 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-22:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-22:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-22.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-22:hover {
+  box-shadow: none;
+}
+
+.emotion-23 {
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+}
+
+.emotion-24 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 6px 16px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #fff;
+  background-color: #e91e63;
+  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
+  border-radius: 30px;
+  text-transform: initial;
+  box-shadow: none;
+  font-weight: 700;
+}
+
+.emotion-24::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-24.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-24 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-24:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: rgb(163, 21, 69);
+  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
+}
+
+@media (hover: none) {
+  .emotion-24:hover {
+    background-color: #e91e63;
+  }
+}
+
+.emotion-24:active {
+  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
+}
+
+.emotion-24.Mui-focusVisible {
+  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
+}
+
+.emotion-24.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+  box-shadow: none;
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.emotion-24:hover {
+  box-shadow: none;
+}
+
+<div
+    class="emotion-0 emotion-1"
   >
     <img
       alt="DSC07717"
-      class="css-cibo30-ImageWrapper e1shv2yg0"
+      class="emotion-2 emotion-3"
       loading="lazy"
       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1029,18 +2052,18 @@ https://unsplash.it/200/100 200w"
       title=""
     />
     <div
-      class="css-6l2m0q-SubscriptionListItemContent eere75z3"
+      class="emotion-4 emotion-5"
     >
       <h6
-        class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h6 emotion-6"
       >
         Foobar Memberplan
       </h6>
       <ul
-        class="css-14qrd03-SubscriptionListItemMeta eere75z2"
+        class="emotion-7 emotion-8"
       >
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -1069,7 +2092,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -1098,7 +2121,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -1120,7 +2143,7 @@ https://unsplash.it/200/100 200w"
            Gültig für 6 Monate
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -1142,7 +2165,7 @@ https://unsplash.it/200/100 200w"
            Kostet CHF 2'500.- pro Monat
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -1163,7 +2186,7 @@ https://unsplash.it/200/100 200w"
           </svg>
            
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-19"
             href="https://example.com"
           >
             Details & Zahlungen
@@ -1171,26 +2194,26 @@ https://unsplash.it/200/100 200w"
         </li>
       </ul>
       <div
-        class="css-1fn3y2c-SubscriptionListItemActions eere75z0"
+        class="emotion-20 emotion-21"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium css-10v00ka-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-22"
           tabindex="0"
           type="button"
         >
           Abo Künden
           <span
-            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            class="MuiTouchRipple-root emotion-23"
           />
         </button>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-24"
           tabindex="0"
           type="button"
         >
           Jetzt Verlängern
           <span
-            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            class="MuiTouchRipple-root emotion-23"
           />
         </button>
       </div>
@@ -1201,12 +2224,289 @@ https://unsplash.it/200/100 200w"
 
 exports[`Subscription Item should render RenewMonthly 1`] = `
 <DocumentFragment>
-  <div
-    class="css-r6owmh-SubscriptionListItemWrapper eere75z4"
+  .emotion-0 {
+  display: grid;
+  gap: 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+.emotion-2 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+}
+
+.emotion-4 {
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+}
+
+.emotion-6 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 300;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.emotion-7 {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.emotion-9 {
+  display: grid;
+  grid-auto-flow: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: start;
+  justify-content: start;
+  gap: 8px;
+}
+
+.emotion-19 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-19:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-20 {
+  display: grid;
+  gap: 16px;
+}
+
+@container (min-width: 45ch) {
+  .emotion-20 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+  }
+}
+
+.emotion-22 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #000;
+  border-radius: 30px;
+  text-transform: initial;
+  box-shadow: none;
+}
+
+.emotion-22::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-22.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-22 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-22:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-22:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-22.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-22:hover {
+  box-shadow: none;
+}
+
+.emotion-23 {
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+}
+
+.emotion-24 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 6px 16px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #fff;
+  background-color: #e91e63;
+  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
+  border-radius: 30px;
+  text-transform: initial;
+  box-shadow: none;
+  font-weight: 700;
+}
+
+.emotion-24::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-24.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-24 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-24:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: rgb(163, 21, 69);
+  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
+}
+
+@media (hover: none) {
+  .emotion-24:hover {
+    background-color: #e91e63;
+  }
+}
+
+.emotion-24:active {
+  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
+}
+
+.emotion-24.Mui-focusVisible {
+  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
+}
+
+.emotion-24.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+  box-shadow: none;
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.emotion-24:hover {
+  box-shadow: none;
+}
+
+<div
+    class="emotion-0 emotion-1"
   >
     <img
       alt="DSC07717"
-      class="css-cibo30-ImageWrapper e1shv2yg0"
+      class="emotion-2 emotion-3"
       loading="lazy"
       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1219,18 +2519,18 @@ https://unsplash.it/200/100 200w"
       title=""
     />
     <div
-      class="css-6l2m0q-SubscriptionListItemContent eere75z3"
+      class="emotion-4 emotion-5"
     >
       <h6
-        class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h6 emotion-6"
       >
         Foobar Memberplan
       </h6>
       <ul
-        class="css-14qrd03-SubscriptionListItemMeta eere75z2"
+        class="emotion-7 emotion-8"
       >
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -1259,7 +2559,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -1288,7 +2588,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -1310,7 +2610,7 @@ https://unsplash.it/200/100 200w"
            Wird automatisch monatlich erneuert
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -1332,7 +2632,7 @@ https://unsplash.it/200/100 200w"
            Kostet CHF 2'500.- pro Monat
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -1353,7 +2653,7 @@ https://unsplash.it/200/100 200w"
           </svg>
            
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-19"
             href="https://example.com"
           >
             Details & Zahlungen
@@ -1361,26 +2661,26 @@ https://unsplash.it/200/100 200w"
         </li>
       </ul>
       <div
-        class="css-1fn3y2c-SubscriptionListItemActions eere75z0"
+        class="emotion-20 emotion-21"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium css-10v00ka-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-22"
           tabindex="0"
           type="button"
         >
           Abo Künden
           <span
-            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            class="MuiTouchRipple-root emotion-23"
           />
         </button>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-24"
           tabindex="0"
           type="button"
         >
           Jetzt Verlängern
           <span
-            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            class="MuiTouchRipple-root emotion-23"
           />
         </button>
       </div>
@@ -1391,12 +2691,289 @@ https://unsplash.it/200/100 200w"
 
 exports[`Subscription Item should render RenewMonthlyManually 1`] = `
 <DocumentFragment>
-  <div
-    class="css-r6owmh-SubscriptionListItemWrapper eere75z4"
+  .emotion-0 {
+  display: grid;
+  gap: 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+.emotion-2 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+}
+
+.emotion-4 {
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+}
+
+.emotion-6 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 300;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.emotion-7 {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.emotion-9 {
+  display: grid;
+  grid-auto-flow: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: start;
+  justify-content: start;
+  gap: 8px;
+}
+
+.emotion-19 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-19:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-20 {
+  display: grid;
+  gap: 16px;
+}
+
+@container (min-width: 45ch) {
+  .emotion-20 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+  }
+}
+
+.emotion-22 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #000;
+  border-radius: 30px;
+  text-transform: initial;
+  box-shadow: none;
+}
+
+.emotion-22::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-22.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-22 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-22:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-22:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-22.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-22:hover {
+  box-shadow: none;
+}
+
+.emotion-23 {
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+}
+
+.emotion-24 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 6px 16px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #fff;
+  background-color: #e91e63;
+  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
+  border-radius: 30px;
+  text-transform: initial;
+  box-shadow: none;
+  font-weight: 700;
+}
+
+.emotion-24::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-24.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-24 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-24:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: rgb(163, 21, 69);
+  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
+}
+
+@media (hover: none) {
+  .emotion-24:hover {
+    background-color: #e91e63;
+  }
+}
+
+.emotion-24:active {
+  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
+}
+
+.emotion-24.Mui-focusVisible {
+  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
+}
+
+.emotion-24.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+  box-shadow: none;
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.emotion-24:hover {
+  box-shadow: none;
+}
+
+<div
+    class="emotion-0 emotion-1"
   >
     <img
       alt="DSC07717"
-      class="css-cibo30-ImageWrapper e1shv2yg0"
+      class="emotion-2 emotion-3"
       loading="lazy"
       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1409,18 +2986,18 @@ https://unsplash.it/200/100 200w"
       title=""
     />
     <div
-      class="css-6l2m0q-SubscriptionListItemContent eere75z3"
+      class="emotion-4 emotion-5"
     >
       <h6
-        class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h6 emotion-6"
       >
         Foobar Memberplan
       </h6>
       <ul
-        class="css-14qrd03-SubscriptionListItemMeta eere75z2"
+        class="emotion-7 emotion-8"
       >
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -1449,7 +3026,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -1478,7 +3055,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -1500,7 +3077,7 @@ https://unsplash.it/200/100 200w"
            Gültig für 1 Monat
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -1522,7 +3099,7 @@ https://unsplash.it/200/100 200w"
            Kostet CHF 2'500.- pro Monat
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -1543,7 +3120,7 @@ https://unsplash.it/200/100 200w"
           </svg>
            
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-19"
             href="https://example.com"
           >
             Details & Zahlungen
@@ -1551,26 +3128,26 @@ https://unsplash.it/200/100 200w"
         </li>
       </ul>
       <div
-        class="css-1fn3y2c-SubscriptionListItemActions eere75z0"
+        class="emotion-20 emotion-21"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium css-10v00ka-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-22"
           tabindex="0"
           type="button"
         >
           Abo Künden
           <span
-            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            class="MuiTouchRipple-root emotion-23"
           />
         </button>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-24"
           tabindex="0"
           type="button"
         >
           Jetzt Verlängern
           <span
-            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            class="MuiTouchRipple-root emotion-23"
           />
         </button>
       </div>
@@ -1581,12 +3158,289 @@ https://unsplash.it/200/100 200w"
 
 exports[`Subscription Item should render RenewQuarterly 1`] = `
 <DocumentFragment>
-  <div
-    class="css-r6owmh-SubscriptionListItemWrapper eere75z4"
+  .emotion-0 {
+  display: grid;
+  gap: 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+.emotion-2 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+}
+
+.emotion-4 {
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+}
+
+.emotion-6 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 300;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.emotion-7 {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.emotion-9 {
+  display: grid;
+  grid-auto-flow: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: start;
+  justify-content: start;
+  gap: 8px;
+}
+
+.emotion-19 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-19:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-20 {
+  display: grid;
+  gap: 16px;
+}
+
+@container (min-width: 45ch) {
+  .emotion-20 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+  }
+}
+
+.emotion-22 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #000;
+  border-radius: 30px;
+  text-transform: initial;
+  box-shadow: none;
+}
+
+.emotion-22::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-22.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-22 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-22:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-22:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-22.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-22:hover {
+  box-shadow: none;
+}
+
+.emotion-23 {
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+}
+
+.emotion-24 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 6px 16px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #fff;
+  background-color: #e91e63;
+  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
+  border-radius: 30px;
+  text-transform: initial;
+  box-shadow: none;
+  font-weight: 700;
+}
+
+.emotion-24::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-24.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-24 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-24:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: rgb(163, 21, 69);
+  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
+}
+
+@media (hover: none) {
+  .emotion-24:hover {
+    background-color: #e91e63;
+  }
+}
+
+.emotion-24:active {
+  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
+}
+
+.emotion-24.Mui-focusVisible {
+  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
+}
+
+.emotion-24.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+  box-shadow: none;
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.emotion-24:hover {
+  box-shadow: none;
+}
+
+<div
+    class="emotion-0 emotion-1"
   >
     <img
       alt="DSC07717"
-      class="css-cibo30-ImageWrapper e1shv2yg0"
+      class="emotion-2 emotion-3"
       loading="lazy"
       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1599,18 +3453,18 @@ https://unsplash.it/200/100 200w"
       title=""
     />
     <div
-      class="css-6l2m0q-SubscriptionListItemContent eere75z3"
+      class="emotion-4 emotion-5"
     >
       <h6
-        class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h6 emotion-6"
       >
         Foobar Memberplan
       </h6>
       <ul
-        class="css-14qrd03-SubscriptionListItemMeta eere75z2"
+        class="emotion-7 emotion-8"
       >
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -1639,7 +3493,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -1668,7 +3522,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -1690,7 +3544,7 @@ https://unsplash.it/200/100 200w"
            Wird automatisch vierteljährlich erneuert
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -1712,7 +3566,7 @@ https://unsplash.it/200/100 200w"
            Kostet CHF 2'500.- pro Monat
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -1733,7 +3587,7 @@ https://unsplash.it/200/100 200w"
           </svg>
            
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-19"
             href="https://example.com"
           >
             Details & Zahlungen
@@ -1741,26 +3595,26 @@ https://unsplash.it/200/100 200w"
         </li>
       </ul>
       <div
-        class="css-1fn3y2c-SubscriptionListItemActions eere75z0"
+        class="emotion-20 emotion-21"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium css-10v00ka-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-22"
           tabindex="0"
           type="button"
         >
           Abo Künden
           <span
-            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            class="MuiTouchRipple-root emotion-23"
           />
         </button>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-24"
           tabindex="0"
           type="button"
         >
           Jetzt Verlängern
           <span
-            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            class="MuiTouchRipple-root emotion-23"
           />
         </button>
       </div>
@@ -1771,12 +3625,289 @@ https://unsplash.it/200/100 200w"
 
 exports[`Subscription Item should render RenewQuarterlyManually 1`] = `
 <DocumentFragment>
-  <div
-    class="css-r6owmh-SubscriptionListItemWrapper eere75z4"
+  .emotion-0 {
+  display: grid;
+  gap: 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+.emotion-2 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+}
+
+.emotion-4 {
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+}
+
+.emotion-6 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 300;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.emotion-7 {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.emotion-9 {
+  display: grid;
+  grid-auto-flow: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: start;
+  justify-content: start;
+  gap: 8px;
+}
+
+.emotion-19 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-19:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-20 {
+  display: grid;
+  gap: 16px;
+}
+
+@container (min-width: 45ch) {
+  .emotion-20 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+  }
+}
+
+.emotion-22 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #000;
+  border-radius: 30px;
+  text-transform: initial;
+  box-shadow: none;
+}
+
+.emotion-22::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-22.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-22 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-22:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-22:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-22.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-22:hover {
+  box-shadow: none;
+}
+
+.emotion-23 {
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+}
+
+.emotion-24 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 6px 16px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #fff;
+  background-color: #e91e63;
+  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
+  border-radius: 30px;
+  text-transform: initial;
+  box-shadow: none;
+  font-weight: 700;
+}
+
+.emotion-24::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-24.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-24 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-24:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: rgb(163, 21, 69);
+  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
+}
+
+@media (hover: none) {
+  .emotion-24:hover {
+    background-color: #e91e63;
+  }
+}
+
+.emotion-24:active {
+  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
+}
+
+.emotion-24.Mui-focusVisible {
+  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
+}
+
+.emotion-24.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+  box-shadow: none;
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.emotion-24:hover {
+  box-shadow: none;
+}
+
+<div
+    class="emotion-0 emotion-1"
   >
     <img
       alt="DSC07717"
-      class="css-cibo30-ImageWrapper e1shv2yg0"
+      class="emotion-2 emotion-3"
       loading="lazy"
       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1789,18 +3920,18 @@ https://unsplash.it/200/100 200w"
       title=""
     />
     <div
-      class="css-6l2m0q-SubscriptionListItemContent eere75z3"
+      class="emotion-4 emotion-5"
     >
       <h6
-        class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h6 emotion-6"
       >
         Foobar Memberplan
       </h6>
       <ul
-        class="css-14qrd03-SubscriptionListItemMeta eere75z2"
+        class="emotion-7 emotion-8"
       >
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -1829,7 +3960,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -1858,7 +3989,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -1880,7 +4011,7 @@ https://unsplash.it/200/100 200w"
            Gültig für 3 Monate
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -1902,7 +4033,7 @@ https://unsplash.it/200/100 200w"
            Kostet CHF 2'500.- pro Monat
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -1923,7 +4054,7 @@ https://unsplash.it/200/100 200w"
           </svg>
            
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-19"
             href="https://example.com"
           >
             Details & Zahlungen
@@ -1931,26 +4062,26 @@ https://unsplash.it/200/100 200w"
         </li>
       </ul>
       <div
-        class="css-1fn3y2c-SubscriptionListItemActions eere75z0"
+        class="emotion-20 emotion-21"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium css-10v00ka-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-22"
           tabindex="0"
           type="button"
         >
           Abo Künden
           <span
-            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            class="MuiTouchRipple-root emotion-23"
           />
         </button>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-24"
           tabindex="0"
           type="button"
         >
           Jetzt Verlängern
           <span
-            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            class="MuiTouchRipple-root emotion-23"
           />
         </button>
       </div>
@@ -1961,12 +4092,289 @@ https://unsplash.it/200/100 200w"
 
 exports[`Subscription Item should render RenewYearly 1`] = `
 <DocumentFragment>
-  <div
-    class="css-r6owmh-SubscriptionListItemWrapper eere75z4"
+  .emotion-0 {
+  display: grid;
+  gap: 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+.emotion-2 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+}
+
+.emotion-4 {
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+}
+
+.emotion-6 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 300;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.emotion-7 {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.emotion-9 {
+  display: grid;
+  grid-auto-flow: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: start;
+  justify-content: start;
+  gap: 8px;
+}
+
+.emotion-19 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-19:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-20 {
+  display: grid;
+  gap: 16px;
+}
+
+@container (min-width: 45ch) {
+  .emotion-20 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+  }
+}
+
+.emotion-22 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #000;
+  border-radius: 30px;
+  text-transform: initial;
+  box-shadow: none;
+}
+
+.emotion-22::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-22.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-22 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-22:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-22:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-22.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-22:hover {
+  box-shadow: none;
+}
+
+.emotion-23 {
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+}
+
+.emotion-24 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 6px 16px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #fff;
+  background-color: #e91e63;
+  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
+  border-radius: 30px;
+  text-transform: initial;
+  box-shadow: none;
+  font-weight: 700;
+}
+
+.emotion-24::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-24.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-24 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-24:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: rgb(163, 21, 69);
+  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
+}
+
+@media (hover: none) {
+  .emotion-24:hover {
+    background-color: #e91e63;
+  }
+}
+
+.emotion-24:active {
+  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
+}
+
+.emotion-24.Mui-focusVisible {
+  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
+}
+
+.emotion-24.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+  box-shadow: none;
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.emotion-24:hover {
+  box-shadow: none;
+}
+
+<div
+    class="emotion-0 emotion-1"
   >
     <img
       alt="DSC07717"
-      class="css-cibo30-ImageWrapper e1shv2yg0"
+      class="emotion-2 emotion-3"
       loading="lazy"
       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -1979,18 +4387,18 @@ https://unsplash.it/200/100 200w"
       title=""
     />
     <div
-      class="css-6l2m0q-SubscriptionListItemContent eere75z3"
+      class="emotion-4 emotion-5"
     >
       <h6
-        class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h6 emotion-6"
       >
         Foobar Memberplan
       </h6>
       <ul
-        class="css-14qrd03-SubscriptionListItemMeta eere75z2"
+        class="emotion-7 emotion-8"
       >
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -2019,7 +4427,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -2048,7 +4456,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -2070,7 +4478,7 @@ https://unsplash.it/200/100 200w"
            Wird automatisch jährlich erneuert
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -2092,7 +4500,7 @@ https://unsplash.it/200/100 200w"
            Kostet CHF 2'500.- pro Monat
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -2113,7 +4521,7 @@ https://unsplash.it/200/100 200w"
           </svg>
            
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-19"
             href="https://example.com"
           >
             Details & Zahlungen
@@ -2121,26 +4529,26 @@ https://unsplash.it/200/100 200w"
         </li>
       </ul>
       <div
-        class="css-1fn3y2c-SubscriptionListItemActions eere75z0"
+        class="emotion-20 emotion-21"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium css-10v00ka-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-22"
           tabindex="0"
           type="button"
         >
           Abo Künden
           <span
-            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            class="MuiTouchRipple-root emotion-23"
           />
         </button>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-24"
           tabindex="0"
           type="button"
         >
           Jetzt Verlängern
           <span
-            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            class="MuiTouchRipple-root emotion-23"
           />
         </button>
       </div>
@@ -2151,12 +4559,289 @@ https://unsplash.it/200/100 200w"
 
 exports[`Subscription Item should render RenewYearlyManually 1`] = `
 <DocumentFragment>
-  <div
-    class="css-r6owmh-SubscriptionListItemWrapper eere75z4"
+  .emotion-0 {
+  display: grid;
+  gap: 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+.emotion-2 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+}
+
+.emotion-4 {
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+}
+
+.emotion-6 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 300;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.emotion-7 {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.emotion-9 {
+  display: grid;
+  grid-auto-flow: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: start;
+  justify-content: start;
+  gap: 8px;
+}
+
+.emotion-19 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-19:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-20 {
+  display: grid;
+  gap: 16px;
+}
+
+@container (min-width: 45ch) {
+  .emotion-20 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+  }
+}
+
+.emotion-22 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #000;
+  border-radius: 30px;
+  text-transform: initial;
+  box-shadow: none;
+}
+
+.emotion-22::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-22.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-22 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-22:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-22:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-22.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-22:hover {
+  box-shadow: none;
+}
+
+.emotion-23 {
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+}
+
+.emotion-24 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 6px 16px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #fff;
+  background-color: #e91e63;
+  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
+  border-radius: 30px;
+  text-transform: initial;
+  box-shadow: none;
+  font-weight: 700;
+}
+
+.emotion-24::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-24.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-24 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-24:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: rgb(163, 21, 69);
+  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
+}
+
+@media (hover: none) {
+  .emotion-24:hover {
+    background-color: #e91e63;
+  }
+}
+
+.emotion-24:active {
+  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
+}
+
+.emotion-24.Mui-focusVisible {
+  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
+}
+
+.emotion-24.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+  box-shadow: none;
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.emotion-24:hover {
+  box-shadow: none;
+}
+
+<div
+    class="emotion-0 emotion-1"
   >
     <img
       alt="DSC07717"
-      class="css-cibo30-ImageWrapper e1shv2yg0"
+      class="emotion-2 emotion-3"
       loading="lazy"
       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -2169,18 +4854,18 @@ https://unsplash.it/200/100 200w"
       title=""
     />
     <div
-      class="css-6l2m0q-SubscriptionListItemContent eere75z3"
+      class="emotion-4 emotion-5"
     >
       <h6
-        class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h6 emotion-6"
       >
         Foobar Memberplan
       </h6>
       <ul
-        class="css-14qrd03-SubscriptionListItemMeta eere75z2"
+        class="emotion-7 emotion-8"
       >
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -2209,7 +4894,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -2238,7 +4923,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -2260,7 +4945,7 @@ https://unsplash.it/200/100 200w"
            Gültig für 1 Jahr
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -2282,7 +4967,7 @@ https://unsplash.it/200/100 200w"
            Kostet CHF 2'500.- pro Monat
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -2303,7 +4988,7 @@ https://unsplash.it/200/100 200w"
           </svg>
            
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-19"
             href="https://example.com"
           >
             Details & Zahlungen
@@ -2311,26 +4996,26 @@ https://unsplash.it/200/100 200w"
         </li>
       </ul>
       <div
-        class="css-1fn3y2c-SubscriptionListItemActions eere75z0"
+        class="emotion-20 emotion-21"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium css-10v00ka-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-22"
           tabindex="0"
           type="button"
         >
           Abo Künden
           <span
-            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            class="MuiTouchRipple-root emotion-23"
           />
         </button>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-24"
           tabindex="0"
           type="button"
         >
           Jetzt Verlängern
           <span
-            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            class="MuiTouchRipple-root emotion-23"
           />
         </button>
       </div>
@@ -2341,12 +5026,289 @@ https://unsplash.it/200/100 200w"
 
 exports[`Subscription Item should render Unpaid 1`] = `
 <DocumentFragment>
-  <div
-    class="css-r6owmh-SubscriptionListItemWrapper eere75z4"
+  .emotion-0 {
+  display: grid;
+  gap: 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+.emotion-2 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+}
+
+.emotion-4 {
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+}
+
+.emotion-6 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 300;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.emotion-7 {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.emotion-9 {
+  display: grid;
+  grid-auto-flow: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: start;
+  justify-content: start;
+  gap: 8px;
+}
+
+.emotion-19 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-19:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-20 {
+  display: grid;
+  gap: 16px;
+}
+
+@container (min-width: 45ch) {
+  .emotion-20 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+  }
+}
+
+.emotion-22 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #000;
+  border-radius: 30px;
+  text-transform: initial;
+  box-shadow: none;
+}
+
+.emotion-22::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-22.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-22 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-22:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-22:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-22.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-22:hover {
+  box-shadow: none;
+}
+
+.emotion-23 {
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+}
+
+.emotion-24 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 6px 16px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #fff;
+  background-color: #e91e63;
+  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
+  border-radius: 30px;
+  text-transform: initial;
+  box-shadow: none;
+  font-weight: 700;
+}
+
+.emotion-24::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-24.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-24 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-24:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: rgb(163, 21, 69);
+  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
+}
+
+@media (hover: none) {
+  .emotion-24:hover {
+    background-color: #e91e63;
+  }
+}
+
+.emotion-24:active {
+  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
+}
+
+.emotion-24.Mui-focusVisible {
+  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
+}
+
+.emotion-24.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+  box-shadow: none;
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.emotion-24:hover {
+  box-shadow: none;
+}
+
+<div
+    class="emotion-0 emotion-1"
   >
     <img
       alt="DSC07717"
-      class="css-cibo30-ImageWrapper e1shv2yg0"
+      class="emotion-2 emotion-3"
       loading="lazy"
       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -2359,18 +5321,18 @@ https://unsplash.it/200/100 200w"
       title=""
     />
     <div
-      class="css-6l2m0q-SubscriptionListItemContent eere75z3"
+      class="emotion-4 emotion-5"
     >
       <h6
-        class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h6 emotion-6"
       >
         Foobar Memberplan
       </h6>
       <ul
-        class="css-14qrd03-SubscriptionListItemMeta eere75z2"
+        class="emotion-7 emotion-8"
       >
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -2399,7 +5361,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -2421,7 +5383,7 @@ https://unsplash.it/200/100 200w"
            Abo ist unbezahlt
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -2443,7 +5405,7 @@ https://unsplash.it/200/100 200w"
            Wird automatisch vierteljährlich erneuert
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -2465,7 +5427,7 @@ https://unsplash.it/200/100 200w"
            Kostet CHF 2'500.- pro Monat
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -2486,7 +5448,7 @@ https://unsplash.it/200/100 200w"
           </svg>
            
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-19"
             href="https://example.com"
           >
             Details & Zahlungen
@@ -2494,26 +5456,26 @@ https://unsplash.it/200/100 200w"
         </li>
       </ul>
       <div
-        class="css-1fn3y2c-SubscriptionListItemActions eere75z0"
+        class="emotion-20 emotion-21"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium css-10v00ka-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-22"
           tabindex="0"
           type="button"
         >
           Abo Künden
           <span
-            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            class="MuiTouchRipple-root emotion-23"
           />
         </button>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-24"
           tabindex="0"
           type="button"
         >
           Jetzt Bezahlen
           <span
-            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            class="MuiTouchRipple-root emotion-23"
           />
         </button>
       </div>
@@ -2534,12 +5496,289 @@ Compared values have no visual difference."
 
 exports[`Subscription Item should render WithClassName 1`] = `
 <DocumentFragment>
-  <div
-    class="extra-classname css-r6owmh-SubscriptionListItemWrapper eere75z4"
+  .emotion-0 {
+  display: grid;
+  gap: 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+.emotion-2 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+}
+
+.emotion-4 {
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+}
+
+.emotion-6 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 300;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.emotion-7 {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.emotion-9 {
+  display: grid;
+  grid-auto-flow: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: start;
+  justify-content: start;
+  gap: 8px;
+}
+
+.emotion-19 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-19:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-20 {
+  display: grid;
+  gap: 16px;
+}
+
+@container (min-width: 45ch) {
+  .emotion-20 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+  }
+}
+
+.emotion-22 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #000;
+  border-radius: 30px;
+  text-transform: initial;
+  box-shadow: none;
+}
+
+.emotion-22::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-22.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-22 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-22:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-22:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-22.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-22:hover {
+  box-shadow: none;
+}
+
+.emotion-23 {
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+}
+
+.emotion-24 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 6px 16px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #fff;
+  background-color: #e91e63;
+  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
+  border-radius: 30px;
+  text-transform: initial;
+  box-shadow: none;
+  font-weight: 700;
+}
+
+.emotion-24::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-24.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-24 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-24:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: rgb(163, 21, 69);
+  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
+}
+
+@media (hover: none) {
+  .emotion-24:hover {
+    background-color: #e91e63;
+  }
+}
+
+.emotion-24:active {
+  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
+}
+
+.emotion-24.Mui-focusVisible {
+  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
+}
+
+.emotion-24.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+  box-shadow: none;
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.emotion-24:hover {
+  box-shadow: none;
+}
+
+<div
+    class="extra-classname emotion-0 emotion-1"
   >
     <img
       alt="DSC07717"
-      class="css-cibo30-ImageWrapper e1shv2yg0"
+      class="emotion-2 emotion-3"
       loading="lazy"
       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -2552,18 +5791,18 @@ https://unsplash.it/200/100 200w"
       title=""
     />
     <div
-      class="css-6l2m0q-SubscriptionListItemContent eere75z3"
+      class="emotion-4 emotion-5"
     >
       <h6
-        class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h6 emotion-6"
       >
         Foobar Memberplan
       </h6>
       <ul
-        class="css-14qrd03-SubscriptionListItemMeta eere75z2"
+        class="emotion-7 emotion-8"
       >
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -2592,7 +5831,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -2621,7 +5860,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -2643,7 +5882,7 @@ https://unsplash.it/200/100 200w"
            Wird automatisch vierteljährlich erneuert
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -2665,7 +5904,7 @@ https://unsplash.it/200/100 200w"
            Kostet CHF 2'500.- pro Monat
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -2686,7 +5925,7 @@ https://unsplash.it/200/100 200w"
           </svg>
            
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-19"
             href="https://example.com"
           >
             Details & Zahlungen
@@ -2694,26 +5933,26 @@ https://unsplash.it/200/100 200w"
         </li>
       </ul>
       <div
-        class="css-1fn3y2c-SubscriptionListItemActions eere75z0"
+        class="emotion-20 emotion-21"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium css-10v00ka-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-22"
           tabindex="0"
           type="button"
         >
           Abo Künden
           <span
-            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            class="MuiTouchRipple-root emotion-23"
           />
         </button>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-24"
           tabindex="0"
           type="button"
         >
           Jetzt Verlängern
           <span
-            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            class="MuiTouchRipple-root emotion-23"
           />
         </button>
       </div>
@@ -2724,12 +5963,289 @@ https://unsplash.it/200/100 200w"
 
 exports[`Subscription Item should render WithEmotion 1`] = `
 <DocumentFragment>
-  <div
-    class="css-r6owmh-SubscriptionListItemWrapper eere75z4"
+  .emotion-0 {
+  display: grid;
+  gap: 8px;
+  border-radius: 4px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+.emotion-2 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+}
+
+.emotion-4 {
+  display: grid;
+  gap: 16px;
+  padding: 16px;
+}
+
+.emotion-6 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 300;
+  font-size: 1.25rem;
+  line-height: 1.4;
+}
+
+.emotion-7 {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.emotion-9 {
+  display: grid;
+  grid-auto-flow: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -ms-flex-pack: start;
+  -webkit-justify-content: start;
+  justify-content: start;
+  gap: 8px;
+}
+
+.emotion-19 {
+  margin: 0;
+  font: inherit;
+  color: #e91e63;
+  -webkit-text-decoration: underline;
+  text-decoration: underline;
+  text-decoration-color: rgba(233, 30, 99, 0.4);
+}
+
+.emotion-19:hover {
+  text-decoration-color: inherit;
+}
+
+.emotion-20 {
+  display: grid;
+  gap: 16px;
+}
+
+@container (min-width: 45ch) {
+  .emotion-20 {
+    display: -webkit-box;
+    display: -webkit-flex;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-pack: justify;
+    -webkit-justify-content: space-between;
+    justify-content: space-between;
+  }
+}
+
+.emotion-22 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 6px 8px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #000;
+  border-radius: 30px;
+  text-transform: initial;
+  box-shadow: none;
+}
+
+.emotion-22::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-22.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-22 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-22:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+
+@media (hover: none) {
+  .emotion-22:hover {
+    background-color: transparent;
+  }
+}
+
+.emotion-22.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+}
+
+.emotion-22:hover {
+  box-shadow: none;
+}
+
+.emotion-23 {
+  overflow: hidden;
+  pointer-events: none;
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  border-radius: inherit;
+}
+
+.emotion-24 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  position: relative;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
+  background-color: transparent;
+  outline: 0;
+  border: 0;
+  margin: 0;
+  border-radius: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  vertical-align: middle;
+  -moz-appearance: none;
+  -webkit-appearance: none;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: inherit;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 500;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  text-transform: uppercase;
+  min-width: 64px;
+  padding: 6px 16px;
+  border-radius: 4px;
+  -webkit-transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  color: #fff;
+  background-color: #e91e63;
+  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
+  border-radius: 30px;
+  text-transform: initial;
+  box-shadow: none;
+  font-weight: 700;
+}
+
+.emotion-24::-moz-focus-inner {
+  border-style: none;
+}
+
+.emotion-24.Mui-disabled {
+  pointer-events: none;
+  cursor: default;
+}
+
+@media print {
+  .emotion-24 {
+    -webkit-print-color-adjust: exact;
+    color-adjust: exact;
+  }
+}
+
+.emotion-24:hover {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  background-color: rgb(163, 21, 69);
+  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
+}
+
+@media (hover: none) {
+  .emotion-24:hover {
+    background-color: #e91e63;
+  }
+}
+
+.emotion-24:active {
+  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
+}
+
+.emotion-24.Mui-focusVisible {
+  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
+}
+
+.emotion-24.Mui-disabled {
+  color: rgba(0, 0, 0, 0.26);
+  box-shadow: none;
+  background-color: rgba(0, 0, 0, 0.12);
+}
+
+.emotion-24:hover {
+  box-shadow: none;
+}
+
+<div
+    class="emotion-0 emotion-1"
   >
     <img
       alt="DSC07717"
-      class="css-cibo30-ImageWrapper e1shv2yg0"
+      class="emotion-2 emotion-3"
       loading="lazy"
       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -2742,18 +6258,18 @@ https://unsplash.it/200/100 200w"
       title=""
     />
     <div
-      class="css-6l2m0q-SubscriptionListItemContent eere75z3"
+      class="emotion-4 emotion-5"
     >
       <h6
-        class="MuiTypography-root MuiTypography-h6 css-1dppcjr-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h6 emotion-6"
       >
         Foobar Memberplan
       </h6>
       <ul
-        class="css-14qrd03-SubscriptionListItemMeta eere75z2"
+        class="emotion-7 emotion-8"
       >
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -2782,7 +6298,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -2811,7 +6327,7 @@ https://unsplash.it/200/100 200w"
           </span>
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -2833,7 +6349,7 @@ https://unsplash.it/200/100 200w"
            Wird automatisch vierteljährlich erneuert
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -2855,7 +6371,7 @@ https://unsplash.it/200/100 200w"
            Kostet CHF 2'500.- pro Monat
         </li>
         <li
-          class="css-ec7qyu-SubscriptionListItemMetaItem eere75z1"
+          class="emotion-9 emotion-10"
         >
           <svg
             fill="currentColor"
@@ -2876,7 +6392,7 @@ https://unsplash.it/200/100 200w"
           </svg>
            
           <a
-            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways css-8z4mds-MuiTypography-root-MuiLink-root"
+            class="MuiTypography-root MuiTypography-inherit MuiLink-root MuiLink-underlineAlways emotion-19"
             href="https://example.com"
           >
             Details & Zahlungen
@@ -2884,26 +6400,26 @@ https://unsplash.it/200/100 200w"
         </li>
       </ul>
       <div
-        class="css-1fn3y2c-SubscriptionListItemActions eere75z0"
+        class="emotion-20 emotion-21"
       >
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium css-10v00ka-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-root MuiButton-text MuiButton-textSecondary MuiButton-sizeMedium MuiButton-textSizeMedium emotion-22"
           tabindex="0"
           type="button"
         >
           Abo Künden
           <span
-            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            class="MuiTouchRipple-root emotion-23"
           />
         </button>
         <button
-          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium css-1jff9ki-MuiButtonBase-root-MuiButton-root"
+          class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium MuiButton-root MuiButton-contained MuiButton-containedPrimary MuiButton-sizeMedium MuiButton-containedSizeMedium emotion-24"
           tabindex="0"
           type="button"
         >
           Jetzt Verlängern
           <span
-            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            class="MuiTouchRipple-root emotion-23"
           />
         </button>
       </div>

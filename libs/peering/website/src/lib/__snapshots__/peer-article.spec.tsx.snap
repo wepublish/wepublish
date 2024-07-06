@@ -2,17 +2,48 @@
 
 exports[`PeerInformation should render Default 1`] = `
 <DocumentFragment>
-  <aside
-    class="css-1ng24i9-PeerInformationWrapper eyzn4eq3"
+  .emotion-0 {
+  display: grid;
+  padding: 24px;
+  gap: 24px;
+  justify-items: center;
+  text-align: center;
+  position: relative;
+}
+
+.emotion-2 {
+  display: grid;
+  grid-template-columns: 65px 1fr;
+  gap: 24px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-4 *:last-child {
+  margin: 0;
+}
+
+@media (min-width:900px) {
+  .emotion-6 {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+  }
+}
+
+<aside
+    class="emotion-0 emotion-1"
   >
     <div
-      class="css-uc87i1-PeerInformationName eyzn4eq2"
+      class="emotion-2 emotion-3"
     />
     <div
-      class="css-1eo3s8y-PeerInformationCTA eyzn4eq1"
+      class="emotion-4 emotion-5"
     />
     <div
-      class="css-198qeby-PeerInformationOrigin eyzn4eq0"
+      class="emotion-6 emotion-7"
     />
   </aside>
 </DocumentFragment>
@@ -20,17 +51,48 @@ exports[`PeerInformation should render Default 1`] = `
 
 exports[`PeerInformation should render WithClassName 1`] = `
 <DocumentFragment>
-  <aside
-    class="extra-classname css-1ng24i9-PeerInformationWrapper eyzn4eq3"
+  .emotion-0 {
+  display: grid;
+  padding: 24px;
+  gap: 24px;
+  justify-items: center;
+  text-align: center;
+  position: relative;
+}
+
+.emotion-2 {
+  display: grid;
+  grid-template-columns: 65px 1fr;
+  gap: 24px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-4 *:last-child {
+  margin: 0;
+}
+
+@media (min-width:900px) {
+  .emotion-6 {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+  }
+}
+
+<aside
+    class="extra-classname emotion-0 emotion-1"
   >
     <div
-      class="css-uc87i1-PeerInformationName eyzn4eq2"
+      class="emotion-2 emotion-3"
     />
     <div
-      class="css-1eo3s8y-PeerInformationCTA eyzn4eq1"
+      class="emotion-4 emotion-5"
     />
     <div
-      class="css-198qeby-PeerInformationOrigin eyzn4eq0"
+      class="emotion-6 emotion-7"
     />
   </aside>
 </DocumentFragment>
@@ -38,17 +100,48 @@ exports[`PeerInformation should render WithClassName 1`] = `
 
 exports[`PeerInformation should render WithEmotion 1`] = `
 <DocumentFragment>
-  <aside
-    class="css-1ng24i9-PeerInformationWrapper eyzn4eq3"
+  .emotion-0 {
+  display: grid;
+  padding: 24px;
+  gap: 24px;
+  justify-items: center;
+  text-align: center;
+  position: relative;
+}
+
+.emotion-2 {
+  display: grid;
+  grid-template-columns: 65px 1fr;
+  gap: 24px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-4 *:last-child {
+  margin: 0;
+}
+
+@media (min-width:900px) {
+  .emotion-6 {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+  }
+}
+
+<aside
+    class="emotion-0 emotion-1"
   >
     <div
-      class="css-uc87i1-PeerInformationName eyzn4eq2"
+      class="emotion-2 emotion-3"
     />
     <div
-      class="css-1eo3s8y-PeerInformationCTA eyzn4eq1"
+      class="emotion-4 emotion-5"
     />
     <div
-      class="css-198qeby-PeerInformationOrigin eyzn4eq0"
+      class="emotion-6 emotion-7"
     />
   </aside>
 </DocumentFragment>
@@ -56,8 +149,17 @@ exports[`PeerInformation should render WithEmotion 1`] = `
 
 exports[`PeerInformation should render WithError 1`] = `
 <DocumentFragment>
-  <aside
-    class="css-1ng24i9-PeerInformationWrapper eyzn4eq3"
+  .emotion-0 {
+  display: grid;
+  padding: 24px;
+  gap: 24px;
+  justify-items: center;
+  text-align: center;
+  position: relative;
+}
+
+<aside
+    class="emotion-0 emotion-1"
   />
 </DocumentFragment>
 `;
@@ -66,17 +168,48 @@ exports[`PeerInformation should render WithLoading 1`] = `<DocumentFragment />`;
 
 exports[`PeerInformation should render WithoutCtaText 1`] = `
 <DocumentFragment>
-  <aside
-    class="css-1ng24i9-PeerInformationWrapper eyzn4eq3"
+  .emotion-0 {
+  display: grid;
+  padding: 24px;
+  gap: 24px;
+  justify-items: center;
+  text-align: center;
+  position: relative;
+}
+
+.emotion-2 {
+  display: grid;
+  grid-template-columns: 65px 1fr;
+  gap: 24px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-4 *:last-child {
+  margin: 0;
+}
+
+@media (min-width:900px) {
+  .emotion-6 {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+  }
+}
+
+<aside
+    class="emotion-0 emotion-1"
   >
     <div
-      class="css-uc87i1-PeerInformationName eyzn4eq2"
+      class="emotion-2 emotion-3"
     />
     <div
-      class="css-1eo3s8y-PeerInformationCTA eyzn4eq1"
+      class="emotion-4 emotion-5"
     />
     <div
-      class="css-198qeby-PeerInformationOrigin eyzn4eq0"
+      class="emotion-6 emotion-7"
     />
   </aside>
 </DocumentFragment>
@@ -84,17 +217,48 @@ exports[`PeerInformation should render WithoutCtaText 1`] = `
 
 exports[`PeerInformation should render WithoutCtaUrl 1`] = `
 <DocumentFragment>
-  <aside
-    class="css-1ng24i9-PeerInformationWrapper eyzn4eq3"
+  .emotion-0 {
+  display: grid;
+  padding: 24px;
+  gap: 24px;
+  justify-items: center;
+  text-align: center;
+  position: relative;
+}
+
+.emotion-2 {
+  display: grid;
+  grid-template-columns: 65px 1fr;
+  gap: 24px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.emotion-4 *:last-child {
+  margin: 0;
+}
+
+@media (min-width:900px) {
+  .emotion-6 {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+  }
+}
+
+<aside
+    class="emotion-0 emotion-1"
   >
     <div
-      class="css-uc87i1-PeerInformationName eyzn4eq2"
+      class="emotion-2 emotion-3"
     />
     <div
-      class="css-1eo3s8y-PeerInformationCTA eyzn4eq1"
+      class="emotion-4 emotion-5"
     />
     <div
-      class="css-198qeby-PeerInformationOrigin eyzn4eq0"
+      class="emotion-6 emotion-7"
     />
   </aside>
 </DocumentFragment>

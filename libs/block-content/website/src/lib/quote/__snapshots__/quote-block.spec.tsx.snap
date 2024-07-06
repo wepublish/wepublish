@@ -2,19 +2,81 @@
 
 exports[`Quote Block should render Default 1`] = `
 <DocumentFragment>
-  <blockquote
-    class="css-sqgfke-QuoteBlockWrapper e1ugt7gl1"
+  .emotion-0 {
+  font-style: italic;
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 32px 0px;
+  border-top: 2px solid #000;
+  border-bottom: 2px solid #000;
+  margin: 0;
+  margin-left: calc(100% / 6);
+}
+
+@media (min-width:900px) {
+  .emotion-0 {
+    padding: 40px 24px;
+  }
+}
+
+.emotion-2 {
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-items: center;
+  text-align: center;
+  gap: 24px;
+}
+
+.emotion-4 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 26px;
+}
+
+@media (min-width: 900px) {
+  .emotion-4 {
+    font-size: 32px;
+  }
+}
+
+.emotion-5 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-5.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+<blockquote
+    class="emotion-0 emotion-1"
   >
     <div
-      class="css-1v9bccv-QuoteContent e1ugt7gl0"
+      class="emotion-2 emotion-3"
     >
       <p
-        class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h4 emotion-4"
       >
         This is a quote that is very long so that we can make sure that linebreaks correctly happen.
       </p>
       <cite
-        class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 emotion-5"
       >
         John Doe
       </cite>
@@ -25,19 +87,81 @@ exports[`Quote Block should render Default 1`] = `
 
 exports[`Quote Block should render WithClassName 1`] = `
 <DocumentFragment>
-  <blockquote
-    class="extra-classname css-sqgfke-QuoteBlockWrapper e1ugt7gl1"
+  .emotion-0 {
+  font-style: italic;
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 32px 0px;
+  border-top: 2px solid #000;
+  border-bottom: 2px solid #000;
+  margin: 0;
+  margin-left: calc(100% / 6);
+}
+
+@media (min-width:900px) {
+  .emotion-0 {
+    padding: 40px 24px;
+  }
+}
+
+.emotion-2 {
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-items: center;
+  text-align: center;
+  gap: 24px;
+}
+
+.emotion-4 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 26px;
+}
+
+@media (min-width: 900px) {
+  .emotion-4 {
+    font-size: 32px;
+  }
+}
+
+.emotion-5 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-5.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+<blockquote
+    class="extra-classname emotion-0 emotion-1"
   >
     <div
-      class="css-1v9bccv-QuoteContent e1ugt7gl0"
+      class="emotion-2 emotion-3"
     >
       <p
-        class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h4 emotion-4"
       >
         This is a quote that is very long so that we can make sure that linebreaks correctly happen.
       </p>
       <cite
-        class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 emotion-5"
       >
         John Doe
       </cite>
@@ -48,19 +172,81 @@ exports[`Quote Block should render WithClassName 1`] = `
 
 exports[`Quote Block should render WithEmotion 1`] = `
 <DocumentFragment>
-  <blockquote
-    class="css-sqgfke-QuoteBlockWrapper e1ugt7gl1"
+  .emotion-0 {
+  font-style: italic;
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 32px 0px;
+  border-top: 2px solid #000;
+  border-bottom: 2px solid #000;
+  margin: 0;
+  margin-left: calc(100% / 6);
+}
+
+@media (min-width:900px) {
+  .emotion-0 {
+    padding: 40px 24px;
+  }
+}
+
+.emotion-2 {
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-items: center;
+  text-align: center;
+  gap: 24px;
+}
+
+.emotion-4 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 26px;
+}
+
+@media (min-width: 900px) {
+  .emotion-4 {
+    font-size: 32px;
+  }
+}
+
+.emotion-5 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-5.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+<blockquote
+    class="emotion-0 emotion-1"
   >
     <div
-      class="css-1v9bccv-QuoteContent e1ugt7gl0"
+      class="emotion-2 emotion-3"
     >
       <p
-        class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h4 emotion-4"
       >
         This is a quote that is very long so that we can make sure that linebreaks correctly happen.
       </p>
       <cite
-        class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 emotion-5"
       >
         John Doe
       </cite>
@@ -71,12 +257,90 @@ exports[`Quote Block should render WithEmotion 1`] = `
 
 exports[`Quote Block should render WithImage 1`] = `
 <DocumentFragment>
-  <blockquote
-    class="css-ywkjei-QuoteBlockWrapper e1ugt7gl1"
+  .emotion-0 {
+  font-style: italic;
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 32px 0px;
+  border-top: 2px solid #000;
+  border-bottom: 2px solid #000;
+  margin: 0;
+  margin-left: calc(100% / 6);
+}
+
+@media (min-width:600px) {
+  .emotion-0 {
+    gap: 24px;
+    grid-template-columns: auto auto;
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-0 {
+    padding: 40px 24px;
+  }
+}
+
+.emotion-2 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+  max-width: 80px;
+}
+
+.emotion-4 {
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-items: center;
+  text-align: center;
+  gap: 24px;
+}
+
+.emotion-6 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 26px;
+}
+
+@media (min-width: 900px) {
+  .emotion-6 {
+    font-size: 32px;
+  }
+}
+
+.emotion-7 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-7.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+<blockquote
+    class="emotion-0 emotion-1"
   >
     <img
       alt="DSC07717"
-      class="css-ovykve-ImageWrapper-QuoteBlock e1shv2yg0"
+      class="emotion-2 emotion-3"
       loading="lazy"
       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -89,15 +353,15 @@ https://unsplash.it/200/200 200w"
       title=""
     />
     <div
-      class="css-1v9bccv-QuoteContent e1ugt7gl0"
+      class="emotion-4 emotion-5"
     >
       <p
-        class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h4 emotion-6"
       >
         This is a quote that is very long so that we can make sure that linebreaks correctly happen.
       </p>
       <cite
-        class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 emotion-7"
       >
         John Doe
       </cite>
@@ -108,12 +372,90 @@ https://unsplash.it/200/200 200w"
 
 exports[`Quote Block should render WithImageAndShortText 1`] = `
 <DocumentFragment>
-  <blockquote
-    class="css-ywkjei-QuoteBlockWrapper e1ugt7gl1"
+  .emotion-0 {
+  font-style: italic;
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 32px 0px;
+  border-top: 2px solid #000;
+  border-bottom: 2px solid #000;
+  margin: 0;
+  margin-left: calc(100% / 6);
+}
+
+@media (min-width:600px) {
+  .emotion-0 {
+    gap: 24px;
+    grid-template-columns: auto auto;
+  }
+}
+
+@media (min-width:900px) {
+  .emotion-0 {
+    padding: 40px 24px;
+  }
+}
+
+.emotion-2 {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: auto 0.6666666666666666;
+  max-height: 80lvh;
+  object-fit: contain;
+  max-width: 80px;
+}
+
+.emotion-4 {
+  display: grid;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  justify-items: center;
+  text-align: center;
+  gap: 24px;
+}
+
+.emotion-6 {
+  margin: 0;
+  font-family: Hanken Grotesk,Roboto,sans-serif;
+  font-weight: 600;
+  line-height: 1.15;
+  font-size: 26px;
+}
+
+@media (min-width: 900px) {
+  .emotion-6 {
+    font-size: 32px;
+  }
+}
+
+.emotion-7 {
+  margin: 0;
+  line-height: 1.7;
+  font-family: Merriweather,Roboto,sans-serif;
+  font-weight: 400;
+  font-size: 1rem;
+}
+
+.emotion-7.MuiTypography-gutterBottom {
+  margin-bottom: 24px;
+}
+
+<blockquote
+    class="emotion-0 emotion-1"
   >
     <img
       alt="DSC07717"
-      class="css-ovykve-ImageWrapper-QuoteBlock e1shv2yg0"
+      class="emotion-2 emotion-3"
       loading="lazy"
       sizes="(max-width: 400px) 200w,
 (max-width: 600px) 300w,
@@ -126,15 +468,15 @@ https://unsplash.it/200/200 200w"
       title=""
     />
     <div
-      class="css-1v9bccv-QuoteContent e1ugt7gl0"
+      class="emotion-4 emotion-5"
     >
       <p
-        class="MuiTypography-root MuiTypography-h4 css-1356oao-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-h4 emotion-6"
       >
         This is a quote.
       </p>
       <cite
-        class="MuiTypography-root MuiTypography-body1 css-1hfd6p6-MuiTypography-root"
+        class="MuiTypography-root MuiTypography-body1 emotion-7"
       >
         John Doe
       </cite>

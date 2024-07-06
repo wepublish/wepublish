@@ -2,11 +2,16 @@
 
 exports[`SoundCloud Track Block should render Default 1`] = `
 <DocumentFragment>
-  <div
-    class="css-tmf3ym-SoundCloudTrackBlockWrapper eukdme91"
+  .emotion-2 {
+  width: 100%;
+  aspect-ratio: 16/9;
+}
+
+<div
+    class="emotion-0 emotion-1"
   >
     <div
-      class="css-1jb7p9d-SoundCloudTrackBlockPlayer eukdme90"
+      class="emotion-2 emotion-3"
       style="width: auto; height: auto;"
     >
       <iframe
@@ -22,11 +27,16 @@ exports[`SoundCloud Track Block should render Default 1`] = `
 
 exports[`SoundCloud Track Block should render WithClassName 1`] = `
 <DocumentFragment>
-  <div
-    class="extra-classname css-tmf3ym-SoundCloudTrackBlockWrapper eukdme91"
+  .emotion-2 {
+  width: 100%;
+  aspect-ratio: 16/9;
+}
+
+<div
+    class="extra-classname emotion-0 emotion-1"
   >
     <div
-      class="css-1jb7p9d-SoundCloudTrackBlockPlayer eukdme90"
+      class="emotion-2 emotion-3"
       style="width: auto; height: auto;"
     >
       <iframe
