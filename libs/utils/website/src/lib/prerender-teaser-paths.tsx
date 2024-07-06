@@ -1,5 +1,5 @@
 import {ApiV1} from '@wepublish/website'
-import {FullArticleFragmentDoc, FullTagFragment, FullTagFragmentDoc} from '@wepublish/website/api'
+import {FullTagFragment, FullTagFragmentDoc} from '@wepublish/website/api'
 import {GetStaticPaths} from 'next'
 import getConfig from 'next/config'
 
