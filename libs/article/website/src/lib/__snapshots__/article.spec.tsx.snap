@@ -414,6 +414,14 @@ exports[`Article should render Default 1`] = `
   justify-content: center;
 }
 
+.emotion-111 {
+  display: grid;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
 .emotion-117 {
   width: 100%;
   aspect-ratio: 16/9;
@@ -2371,7 +2379,19 @@ https://unsplash.it/200/100 200w"
     </div>
     <div
       class="emotion-111 emotion-112"
-    />
+    >
+      <blockquote
+        class="instagram-media"
+        data-instgrm-captioned="true"
+        data-instgrm-permalink="https://www.instagram.com/p/CvACOxxIqT2/"
+        data-instgrm-version="14"
+      />
+      <script
+        async=""
+        data-testid="fake-script"
+        src="https://www.instagram.com/embed.js"
+      />
+    </div>
     <div
       class="emotion-113 emotion-114"
     />
@@ -4409,6 +4429,14 @@ exports[`Article should render WithChildren 1`] = `
   justify-content: center;
 }
 
+.emotion-111 {
+  display: grid;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
 .emotion-117 {
   width: 100%;
   aspect-ratio: 16/9;
@@ -6366,7 +6394,19 @@ https://unsplash.it/200/100 200w"
     </div>
     <div
       class="emotion-111 emotion-112"
-    />
+    >
+      <blockquote
+        class="instagram-media"
+        data-instgrm-captioned="true"
+        data-instgrm-permalink="https://www.instagram.com/p/CvACOxxIqT2/"
+        data-instgrm-version="14"
+      />
+      <script
+        async=""
+        data-testid="fake-script"
+        src="https://www.instagram.com/embed.js"
+      />
+    </div>
     <div
       class="emotion-113 emotion-114"
     />
@@ -8407,6 +8447,14 @@ exports[`Article should render WithClassName 1`] = `
   justify-content: center;
 }
 
+.emotion-111 {
+  display: grid;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
 .emotion-117 {
   width: 100%;
   aspect-ratio: 16/9;
@@ -10364,7 +10412,19 @@ https://unsplash.it/200/100 200w"
     </div>
     <div
       class="emotion-111 emotion-112"
-    />
+    >
+      <blockquote
+        class="instagram-media"
+        data-instgrm-captioned="true"
+        data-instgrm-permalink="https://www.instagram.com/p/CvACOxxIqT2/"
+        data-instgrm-version="14"
+      />
+      <script
+        async=""
+        data-testid="fake-script"
+        src="https://www.instagram.com/embed.js"
+      />
+    </div>
     <div
       class="emotion-113 emotion-114"
     />
@@ -12402,6 +12462,14 @@ exports[`Article should render WithEmotion 1`] = `
   justify-content: center;
 }
 
+.emotion-111 {
+  display: grid;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
 .emotion-117 {
   width: 100%;
   aspect-ratio: 16/9;
@@ -14359,7 +14427,19 @@ https://unsplash.it/200/100 200w"
     </div>
     <div
       class="emotion-111 emotion-112"
-    />
+    >
+      <blockquote
+        class="instagram-media"
+        data-instgrm-captioned="true"
+        data-instgrm-permalink="https://www.instagram.com/p/CvACOxxIqT2/"
+        data-instgrm-version="14"
+      />
+      <script
+        async=""
+        data-testid="fake-script"
+        src="https://www.instagram.com/embed.js"
+      />
+    </div>
     <div
       class="emotion-113 emotion-114"
     />
@@ -16501,6 +16581,14 @@ exports[`Article should render WithoutAuthors 1`] = `
   justify-content: center;
 }
 
+.emotion-111 {
+  display: grid;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
 .emotion-117 {
   width: 100%;
   aspect-ratio: 16/9;
@@ -18377,7 +18465,19 @@ https://unsplash.it/200/100 200w"
     </div>
     <div
       class="emotion-111 emotion-112"
-    />
+    >
+      <blockquote
+        class="instagram-media"
+        data-instgrm-captioned="true"
+        data-instgrm-permalink="https://www.instagram.com/p/CvACOxxIqT2/"
+        data-instgrm-version="14"
+      />
+      <script
+        async=""
+        data-testid="fake-script"
+        src="https://www.instagram.com/embed.js"
+      />
+    </div>
     <div
       class="emotion-113 emotion-114"
     />
@@ -20152,6 +20252,14 @@ exports[`Article should render WithoutImageMetadata 1`] = `
 }
 
 .emotion-107 {
+  display: grid;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
+.emotion-111 {
   display: grid;
   -webkit-box-pack: center;
   -ms-flex-pack: center;
@@ -22116,7 +22224,19 @@ https://unsplash.it/200/100 200w"
     </div>
     <div
       class="emotion-111 emotion-112"
-    />
+    >
+      <blockquote
+        class="instagram-media"
+        data-instgrm-captioned="true"
+        data-instgrm-permalink="https://www.instagram.com/p/CvACOxxIqT2/"
+        data-instgrm-version="14"
+      />
+      <script
+        async=""
+        data-testid="fake-script"
+        src="https://www.instagram.com/embed.js"
+      />
+    </div>
     <div
       class="emotion-113 emotion-114"
     />
@@ -24154,6 +24274,14 @@ exports[`Article should render WithoutLead 1`] = `
   justify-content: center;
 }
 
+.emotion-111 {
+  display: grid;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
 .emotion-117 {
   width: 100%;
   aspect-ratio: 16/9;
@@ -26107,7 +26235,19 @@ https://unsplash.it/200/100 200w"
     </div>
     <div
       class="emotion-111 emotion-112"
-    />
+    >
+      <blockquote
+        class="instagram-media"
+        data-instgrm-captioned="true"
+        data-instgrm-permalink="https://www.instagram.com/p/CvACOxxIqT2/"
+        data-instgrm-version="14"
+      />
+      <script
+        async=""
+        data-testid="fake-script"
+        src="https://www.instagram.com/embed.js"
+      />
+    </div>
     <div
       class="emotion-113 emotion-114"
     />
@@ -28145,6 +28285,14 @@ exports[`Article should render WithoutSocialMedia 1`] = `
   justify-content: center;
 }
 
+.emotion-111 {
+  display: grid;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
 .emotion-117 {
   width: 100%;
   aspect-ratio: 16/9;
@@ -30102,7 +30250,19 @@ https://unsplash.it/200/100 200w"
     </div>
     <div
       class="emotion-111 emotion-112"
-    />
+    >
+      <blockquote
+        class="instagram-media"
+        data-instgrm-captioned="true"
+        data-instgrm-permalink="https://www.instagram.com/p/CvACOxxIqT2/"
+        data-instgrm-version="14"
+      />
+      <script
+        async=""
+        data-testid="fake-script"
+        src="https://www.instagram.com/embed.js"
+      />
+    </div>
     <div
       class="emotion-113 emotion-114"
     />
