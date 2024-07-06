@@ -1,4 +1,5 @@
 import {ApiV1} from '@wepublish/website'
+import {FullArticleFragmentDoc, FullTagFragment, FullTagFragmentDoc} from '@wepublish/website/api'
 import {GetStaticPaths} from 'next'
 import getConfig from 'next/config'
 
@@ -56,11 +57,24 @@ export const getArticlePathsBasedOnPage =
 
     for (const storeObj of cache) {
       if (storeObj?.__typename === 'Article' && !(storeObj as ApiV1.Article).peeredArticleURL) {
-        const article = storeObj as ApiV1.Article
+        const article = storeObj as {slug: string; tags: {__ref: string}[]}
+        let tag: string | undefined
+
+        for (const {__ref} of article.tags) {
+          const tagObj = client.readFragment({
+            id: __ref,
+            fragment: FullTagFragmentDoc
+          }) as FullTagFragment
+
+          if (tagObj.main && tagObj.tag) {
+            tag = tagObj.tag.toLowerCase()
+            break
+          }
+        }
 
         articleSlugs.push({
           slug: article.slug,
-          tag: article.tags.find(tag => tag.main)?.tag ?? undefined
+          tag
         })
       }
 
