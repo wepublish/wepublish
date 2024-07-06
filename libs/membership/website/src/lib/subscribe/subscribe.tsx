@@ -378,7 +378,9 @@ export const Subscribe = <T extends BuilderUserFormFields>({
       </SubscribeSection>
 
       <SubscribeSection>
-        <H5 component="h2">Zahlungsmethode wählen</H5>
+        {allPaymentMethods && allPaymentMethods.length > 1 && (
+          <H5 component="h2">Zahlungsmethode wählen</H5>
+        )}
 
         <SubscribePayment>
           <Controller
