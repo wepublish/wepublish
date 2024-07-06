@@ -1,7 +1,7 @@
 import {Container, css, CssBaseline, NoSsr, styled, ThemeProvider} from '@mui/material'
 import {GoogleAnalytics} from '@next/third-parties/google'
 import {IconButton} from '@wepublish/ui'
-import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
+import {authLink, InjectScript, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 import {
   ApiV1,
   FooterContainer,
@@ -177,16 +177,6 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
               </FooterContainer>
             </Spacer>
 
-            <Script
-              src={publicRuntimeConfig.env.API_URL! + '/scripts/head.js'}
-              strategy="afterInteractive"
-            />
-
-            <Script
-              src={publicRuntimeConfig.env.API_URL! + '/scripts/body.js'}
-              strategy="lazyOnload"
-            />
-
             {publicRuntimeConfig.env.GA_ID && (
               <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
             )}
@@ -198,6 +188,8 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
                 data-sparkloop
               />
             )}
+
+            <InjectScript />
           </ThemeProvider>
         </WebsiteBuilderProvider>
       </WebsiteProvider>

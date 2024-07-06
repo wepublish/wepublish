@@ -1,6 +1,6 @@
 import {CssBaseline, styled, ThemeProvider} from '@mui/material'
 import {GoogleAnalytics} from '@next/third-parties/google'
-import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
+import {authLink, InjectScript, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 import {
   ApiV1,
   FooterContainer,
@@ -168,22 +168,14 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
                 <GoogleAnalytics gaId={publicRuntimeConfig.env.GA_ID} />
               )}
 
-              <Script
-                src={publicRuntimeConfig.env.API_URL! + '/scripts/head.js'}
-                strategy="afterInteractive"
-              />
-
-              <Script
-                src={publicRuntimeConfig.env.API_URL! + '/scripts/body.js'}
-                strategy="lazyOnload"
-              />
-
               {popup && (
                 <Script
                   src={publicRuntimeConfig.env.MAILCHIMP_POPUP_SCRIPT_URL!}
                   strategy="afterInteractive"
                 />
               )}
+
+              <InjectScript />
             </ThemeProvider>
           </WebsiteBuilderProvider>
         </WebsiteProvider>
