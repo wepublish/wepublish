@@ -30,6 +30,8 @@ import {formatRenewalPeriod} from '../formatters/format-renewal-period'
 import {css} from '@emotion/react'
 import {replace, sortBy, toLower} from 'ramda'
 import {MembershipModal} from '../membership-modal/membership-modal'
+import {ApolloError} from '@apollo/client'
+import {ApiAlert} from '@wepublish/errors/website'
 
 const subscribeSchema = z.object({
   memberPlanId: z.string().nonempty(),
@@ -127,7 +129,8 @@ export const Subscribe = <T extends BuilderUserFormFields>({
   schema = defaultRegisterSchema,
   className,
   onSubscribe,
-  onSubscribeWithRegister
+  onSubscribeWithRegister,
+  deactivateSubscriptionId
 }: BuilderSubscribeProps<T>) => {
   const {
     meta: {locale, siteTitle},
@@ -294,6 +297,9 @@ export const Subscribe = <T extends BuilderUserFormFields>({
   }, [selectedAvailablePaymentMethod, resetField, selectedPaymentPeriodicity])
 
   const alreadyHasSubscription = useMemo(() => {
+    if (deactivateSubscriptionId) {
+      return
+    }
     return (
       userSubscriptions.data?.subscriptions.some(
         ({memberPlan, deactivation}) => memberPlan.id === selectedMemberPlanId && !deactivation
@@ -301,11 +307,14 @@ export const Subscribe = <T extends BuilderUserFormFields>({
     )
   }, [userSubscriptions.data?.subscriptions, selectedMemberPlanId])
 
-  const hasOpenInvoices = useMemo(
-    () =>
-      userInvoices.data?.invoices.some(invoice => !invoice.canceledAt && !invoice.paidAt) ?? false,
-    [userInvoices.data?.invoices]
-  )
+  const hasOpenInvoices = useMemo(() => {
+    if (deactivateSubscriptionId) {
+      return
+    }
+    return (
+      userInvoices.data?.invoices.some(invoice => !invoice.canceledAt && !invoice.paidAt) ?? false
+    )
+  }, [userInvoices.data?.invoices])
 
   return (
     <SubscribeWrapper className={className} onSubmit={onSubmit} noValidate>
@@ -340,7 +349,7 @@ export const Subscribe = <T extends BuilderUserFormFields>({
           )}
         />
 
-        {memberPlans.error && <Alert severity="error">{memberPlans.error.message}</Alert>}
+        {memberPlans.error && <ApiAlert error={memberPlans.error} severity="error" />}
       </SubscribeSection>
 
       <SubscribeSection>
@@ -369,7 +378,9 @@ export const Subscribe = <T extends BuilderUserFormFields>({
       </SubscribeSection>
 
       <SubscribeSection>
-        <H5 component="h2">Zahlungsmethode wählen</H5>
+        {allPaymentMethods && allPaymentMethods.length > 1 && (
+          <H5 component="h2">Zahlungsmethode wählen</H5>
+        )}
 
         <SubscribePayment>
           <Controller
@@ -449,11 +460,11 @@ export const Subscribe = <T extends BuilderUserFormFields>({
             </RegistrationChallengeWrapper>
           )}
 
-          {challenge.error && <Alert severity="error">{challenge.error.message}</Alert>}
+          {challenge.error && <ApiAlert error={challenge.error} severity="error" />}
         </SubscribeSection>
       )}
 
-      {error && <Alert severity="error">{error.message}</Alert>}
+      {error && <ApiAlert error={error as ApolloError} severity="error" />}
 
       <SubscribeNarrowSection>
         <Button

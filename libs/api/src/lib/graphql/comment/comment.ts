@@ -363,7 +363,7 @@ export const GraphQLPublicComment: GraphQLObjectType<PublicComment, Context> =
             return ''
           }
 
-          return urlAdapter.getCommentURL(item, comment)
+          return await urlAdapter.getCommentURL(item, comment)
         })
       },
       modifiedAt: {

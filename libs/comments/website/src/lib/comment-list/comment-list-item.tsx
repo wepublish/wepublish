@@ -1,4 +1,4 @@
-import {css, lighten, styled, useTheme} from '@mui/material'
+import {Theme, css, lighten, styled, useTheme} from '@mui/material'
 import {useUser} from '@wepublish/authentication/website'
 import {CommentState} from '@wepublish/website/api'
 import {BuilderCommentListItemProps, useWebsiteBuilder} from '@wepublish/website/builder'
@@ -44,23 +44,13 @@ export const CommentListItemActionsButtons = styled('div')`
   justify-content: space-between;
 `
 
-export const CommentReplyButton = styled(Button)``
-
-const useButtonStyles = () => {
-  const theme = useTheme()
-
-  return useMemo(
-    () => css`
-      border-width: 1px;
-
-      &:hover {
-        border-width: 1px;
-        background-color: ${lighten(theme.palette.primary.main, 0.9)};
-      }
-    `,
-    [theme]
-  )
-}
+export const CommentReplyButton = styled(Button)(({theme}) => ({
+  border: '1px solid',
+  '&:hover': {
+    border: '1px solid',
+    backgroundColor: lighten(theme.palette.primary.main, 0.8)
+  }
+}))
 
 export const CommentListItem = ({
   anonymousCanComment,
@@ -101,8 +91,6 @@ export const CommentListItem = ({
   const showReply = getStateForEditor(openEditorsState)('add', id)
   const showEdit = getStateForEditor(openEditorsState)('edit', id)
 
-  const buttonStyles = useButtonStyles()
-
   return (
     <Comment {...comment} showContent={!showEdit} className={className}>
       <CommentListItemStateWarnings state={state} />
@@ -122,27 +110,26 @@ export const CommentListItem = ({
           maxCommentLength={maxCommentLength}
           error={edit.error}
           loading={edit.loading}
-          canReply={canReply}
-          parentUrl={comment.url}
         />
       )}
 
       <CommentListItemActions>
         <CommentListItemActionsButtons>
-          <CommentReplyButton
-            startIcon={<MdReply />}
-            variant="outlined"
-            size="small"
-            css={buttonStyles}
-            onClick={() => {
-              dispatch({
-                type: 'add',
-                action: 'open',
-                commentId: id
-              })
-            }}>
-            Antworten
-          </CommentReplyButton>
+          {canReply && (
+            <CommentReplyButton
+              startIcon={<MdReply />}
+              variant="outlined"
+              size="small"
+              onClick={() => {
+                dispatch({
+                  type: 'add',
+                  action: 'open',
+                  commentId: id
+                })
+              }}>
+              Antworten
+            </CommentReplyButton>
+          )}
 
           {canShare && <CommentListItemShare url={comment.url} title="share" />}
 
@@ -186,8 +173,6 @@ export const CommentListItem = ({
           challenge={challenge}
           error={add.error}
           loading={add.loading}
-          canReply={canReply}
-          parentUrl={comment.url}
         />
       )}
 
