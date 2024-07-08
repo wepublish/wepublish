@@ -20,11 +20,10 @@ import {useRouter} from 'next/router'
 import {BriefingNewsletter} from '../../src/components/briefing-newsletter/briefing-newsletter'
 import {FrageDesTagesArticle} from '../../src/components/frage-des-tages/frage-des-tages-article'
 import {Container} from '../../src/components/layout/container'
-import {BajourArticle} from '../../src/components/website-builder-overwrites/article/bajour-article'
 import {BajourAuthorChip} from '../../src/components/website-builder-overwrites/author/author-chip'
+import {BajourComment} from '../../src/components/website-builder-overwrites/blocks/comment/comment'
 import {CommentListContainer} from '../../src/components/website-builder-overwrites/blocks/comment-list-container/comment-list-container'
 import {TeaserSlider} from '../../src/components/website-builder-overwrites/blocks/teaser-slider/teaser-slider'
-import {BajourComment} from '../../src/components/website-builder-overwrites/blocks/comment/comment'
 
 const uppercase = css`
   text-transform: uppercase;
@@ -69,7 +68,6 @@ export default function ArticleBySlug() {
       blocks={{
         Poll: isFDT ? FrageDesTagesArticle : PollBlock
       }}
-      Article={BajourArticle}
       Comment={isFDT ? BajourComment : Comment}>
       <Container>
         <ArticleContainer slug={slug as string} />
