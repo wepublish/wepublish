@@ -39,33 +39,30 @@ const useAppBarStyles = (isMenuOpen: boolean) => {
 
 export const NavbarInnerWrapper = styled(Toolbar)`
   display: grid;
-  grid-template-columns: auto 1fr auto 1fr auto;
+  grid-template-columns: max-content max-content 1fr;
   align-items: center;
   grid-auto-flow: column;
-  justify-content: space-between;
   justify-items: center;
   min-height: unset;
   padding: 0;
 
   ${({theme}) => css`
     ${theme.breakpoints.up('sm')} {
+      grid-template-columns: 1fr max-content 1fr;
       min-height: unset;
       padding: 0;
-      grid-auto-columns: 1fr;
     }
 
     ${theme.breakpoints.up('md')} {
       min-height: unset;
       padding: 0;
-      grid-auto-columns: 1fr;
     }
   `}
 `
 
 export const NavbarLinks = styled('div')<{isMenuOpen?: boolean}>`
-  grid-column: 2;
-  margin: 0 ${({theme}) => theme.spacing(1)};
   display: none;
+  gap: ${({theme}) => theme.spacing(2)};
   align-items: center;
   justify-content: flex-start;
   width: 100%;
@@ -88,7 +85,6 @@ const useNavbarLinkStyles = () => {
   return useMemo(
     () => css`
       font-size: 1rem;
-      margin: 0 ${theme.spacing(1)} 0 ${theme.spacing(2)};
       text-decoration: none;
       color: ${theme.palette.common.black};
 
@@ -101,8 +97,8 @@ const useNavbarLinkStyles = () => {
 }
 
 export const NavbarMain = styled('div')<{isMenuOpen?: boolean}>`
-  display: flex;
-  flex-flow: row wrap;
+  display: grid;
+  grid-template-columns: max-content 1fr;
   align-items: center;
   justify-self: start;
   gap: ${({theme}) => theme.spacing(2)};
@@ -120,7 +116,7 @@ export const NavbarActions = styled('div')<{isMenuOpen?: boolean}>`
   align-items: center;
   justify-self: end;
   gap: ${({theme}) => theme.spacing(1)};
-  grid-column: 5;
+  padding-right: ${({theme}) => theme.spacing(1)};
   justify-self: end;
 
   ${({isMenuOpen}) =>
@@ -131,6 +127,10 @@ export const NavbarActions = styled('div')<{isMenuOpen?: boolean}>`
 
   ${({theme}) => theme.breakpoints.up('md')} {
     gap: ${({theme}) => theme.spacing(2)};
+  }
+
+  ${({theme}) => theme.breakpoints.up('lg')} {
+    padding-right: 0;
   }
 `
 
@@ -169,7 +169,6 @@ const useLogoLinkStyles = (isMenuOpen: boolean) => {
       display: grid;
       align-items: center;
       justify-items: center;
-      grid-column: 3;
       justify-self: center;
 
       ${isMenuOpen &&
@@ -186,9 +185,7 @@ export const NavbarLogoWrapper = styled('div')`
   width: auto;
 `
 
-export const NavbarSpacer = styled('div')`
-  grid-column: 4;
-`
+export const NavbarSpacer = styled('div')``
 
 const useImageStyles = () => {
   const theme = useTheme()
@@ -271,27 +268,25 @@ export function Navbar({
                 {isMenuOpen && <MdClose />}
               </IconButton>
             </NavbarIconButtonWrapper>
+
+            {!!headerItems?.links.length && (
+              <NavbarLinks isMenuOpen={isMenuOpen}>
+                {headerItems.links.map((link, index) => (
+                  <Link key={index} css={navbarLinkStyles} href={navigationLinkToUrl(link)}>
+                    {link.label}
+                  </Link>
+                ))}
+              </NavbarLinks>
+            )}
           </NavbarMain>
 
-          {!!headerItems?.links.length && (
-            <NavbarLinks isMenuOpen={isMenuOpen}>
-              {headerItems.links.map((link, index) => (
-                <Link key={index} css={navbarLinkStyles} href={navigationLinkToUrl(link)}>
-                  {link.label}
-                </Link>
-              ))}
-            </NavbarLinks>
-          )}
-
-          {!!logo && (
-            <Link href="/" aria-label="Startseite" css={logoLinkStyles}>
-              <NavbarLogoWrapper>
+          <Link href="/" aria-label="Startseite" css={logoLinkStyles}>
+            <NavbarLogoWrapper>
+              {!!logo && (
                 <Image image={logo} css={imageStyles} loading="eager" fetchPriority="high" />
-              </NavbarLogoWrapper>
-            </Link>
-          )}
-
-          <NavbarSpacer />
+              )}
+            </NavbarLogoWrapper>
+          </Link>
 
           <NavbarActions isMenuOpen={isMenuOpen}>
             {actions}
@@ -304,11 +299,13 @@ export function Navbar({
               </Link>
             )}
 
-            <Link href={hasUser ? profileUrl : loginUrl}>
-              <IconButton css={{fontSize: '2em', color: 'black'}}>
-                <MdAccountCircle aria-label={hasUser ? 'Profil' : 'Login'} />
-              </IconButton>
-            </Link>
+            {(hasUser ? profileUrl : loginUrl) && (
+              <Link href={hasUser ? profileUrl : loginUrl}>
+                <IconButton className="login-button" css={{fontSize: '2em', color: 'black'}}>
+                  <MdAccountCircle aria-label={hasUser ? 'Profil' : 'Login'} />
+                </IconButton>
+              </Link>
+            )}
           </NavbarActions>
         </NavbarInnerWrapper>
       </AppBar>
