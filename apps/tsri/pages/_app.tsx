@@ -31,6 +31,7 @@ import {TsriQuoteBlock} from '../src/components/tsri-quote-block'
 import {TsriTeaser} from '../src/components/tsri-teaser'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
+import {TsriRichText} from '../src/components/tsri-richtext'
 
 setDefaultOptions({
   locale: de
@@ -114,7 +115,8 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
             Renderer: TsriBlockRenderer,
             Teaser: TsriTeaser,
             Break: TsriBreakBlock,
-            Quote: TsriQuoteBlock
+            Quote: TsriQuoteBlock,
+            RichText: TsriRichText
           }}
           date={{format: dateFormatter}}
           meta={{siteTitle}}
