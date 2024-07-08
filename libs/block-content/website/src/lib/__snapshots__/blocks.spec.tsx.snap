@@ -1307,9 +1307,29 @@ https://unsplash.it/200/100 200w"
       />
     </div>
   </div>
-  <div
+  .emotion-0 {
+  display: grid;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
+<div
     class="emotion-0 emotion-1"
-  />
+  >
+    <blockquote
+      class="instagram-media"
+      data-instgrm-captioned="true"
+      data-instgrm-permalink="https://www.instagram.com/p/CvACOxxIqT2/"
+      data-instgrm-version="14"
+    />
+    <script
+      async=""
+      data-testid="fake-script"
+      src="https://www.instagram.com/embed.js"
+    />
+  </div>
   <div
     class="emotion-0 emotion-1"
   />
@@ -3869,6 +3889,14 @@ exports[`Blocks should render WithLayout 1`] = `
   justify-content: center;
 }
 
+.emotion-110 {
+  display: grid;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
 .emotion-116 {
   width: 100%;
   aspect-ratio: 16/9;
@@ -5333,7 +5361,19 @@ https://unsplash.it/200/100 200w"
     </div>
     <div
       class="emotion-110 emotion-111"
-    />
+    >
+      <blockquote
+        class="instagram-media"
+        data-instgrm-captioned="true"
+        data-instgrm-permalink="https://www.instagram.com/p/CvACOxxIqT2/"
+        data-instgrm-version="14"
+      />
+      <script
+        async=""
+        data-testid="fake-script"
+        src="https://www.instagram.com/embed.js"
+      />
+    </div>
     <div
       class="emotion-112 emotion-113"
     />
