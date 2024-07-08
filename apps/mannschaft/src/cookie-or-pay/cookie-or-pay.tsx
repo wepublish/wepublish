@@ -60,7 +60,7 @@ export const CookieOrPayText = styled('div')`
 
 export const CookieOrPay = ({onPay, onCookie}: CookieOrPayProps) => {
   const {hasUser} = useUser()
-  const {pathname} = useRouter()
+  const {asPath} = useRouter()
   const [display, setDisplay] = useState(false)
   const hasNotified = useRef(false)
   const {data: subscriptions} = ApiV1.useSubscriptionsQuery({
@@ -85,8 +85,8 @@ export const CookieOrPay = ({onPay, onCookie}: CookieOrPayProps) => {
     }
 
     const excludedPages = ['/mitmachen', '/login', '/signup', '/datenschutz', '/profile']
-    setDisplay(!excludedPages.some(str => pathname.startsWith(str)))
-  }, [hasUser, subscriptions, onPay, onCookie, pathname, onNotify])
+    setDisplay(!excludedPages.some(str => asPath.startsWith(str)))
+  }, [hasUser, subscriptions, onPay, onCookie, asPath, onNotify])
 
   return (
     <Modal open={display} component="section" slots={{backdrop: CookieOrPayBackdrop}}>
