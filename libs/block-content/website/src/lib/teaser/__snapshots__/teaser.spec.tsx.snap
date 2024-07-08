@@ -4,6 +4,7 @@ exports[`Teaser Article should render Default 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -15,7 +16,7 @@ exports[`Teaser Article should render Default 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -63,6 +64,7 @@ exports[`Teaser Article should render Default 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -134,6 +136,15 @@ exports[`Teaser Article should render Default 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-13 {
     font-size: 32px;
@@ -142,7 +153,6 @@ exports[`Teaser Article should render Default 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -150,6 +160,15 @@ exports[`Teaser Article should render Default 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-15 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-15.MuiTypography-gutterBottom {
@@ -244,6 +263,7 @@ exports[`Teaser Article should render WithLightStyle 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -255,7 +275,7 @@ exports[`Teaser Article should render WithLightStyle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -303,6 +323,7 @@ exports[`Teaser Article should render WithLightStyle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -374,6 +395,15 @@ exports[`Teaser Article should render WithLightStyle 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-13 {
     font-size: 32px;
@@ -382,7 +412,6 @@ exports[`Teaser Article should render WithLightStyle 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -390,6 +419,15 @@ exports[`Teaser Article should render WithLightStyle 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-15 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-15.MuiTypography-gutterBottom {
@@ -484,6 +522,7 @@ exports[`Teaser Article should render WithoutAuthors 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -495,7 +534,7 @@ exports[`Teaser Article should render WithoutAuthors 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -543,6 +582,7 @@ exports[`Teaser Article should render WithoutAuthors 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -614,6 +654,15 @@ exports[`Teaser Article should render WithoutAuthors 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-13 {
     font-size: 32px;
@@ -622,7 +671,6 @@ exports[`Teaser Article should render WithoutAuthors 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -630,6 +678,15 @@ exports[`Teaser Article should render WithoutAuthors 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-15 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-15.MuiTypography-gutterBottom {
@@ -715,6 +772,7 @@ exports[`Teaser Article should render WithoutBlockWithLightStyle 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -726,7 +784,7 @@ exports[`Teaser Article should render WithoutBlockWithLightStyle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -774,6 +832,7 @@ exports[`Teaser Article should render WithoutBlockWithLightStyle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -845,6 +904,15 @@ exports[`Teaser Article should render WithoutBlockWithLightStyle 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-13 {
     font-size: 32px;
@@ -853,7 +921,6 @@ exports[`Teaser Article should render WithoutBlockWithLightStyle 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -861,6 +928,15 @@ exports[`Teaser Article should render WithoutBlockWithLightStyle 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-15 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-15.MuiTypography-gutterBottom {
@@ -955,6 +1031,7 @@ exports[`Teaser Article should render WithoutDate 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -966,7 +1043,7 @@ exports[`Teaser Article should render WithoutDate 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -1014,6 +1091,7 @@ exports[`Teaser Article should render WithoutDate 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -1085,6 +1163,15 @@ exports[`Teaser Article should render WithoutDate 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-13 {
     font-size: 32px;
@@ -1093,7 +1180,6 @@ exports[`Teaser Article should render WithoutDate 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -1101,6 +1187,15 @@ exports[`Teaser Article should render WithoutDate 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-15 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-15.MuiTypography-gutterBottom {
@@ -1185,6 +1280,7 @@ exports[`Teaser Article should render WithoutImage 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -1196,7 +1292,7 @@ exports[`Teaser Article should render WithoutImage 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -1244,6 +1340,7 @@ exports[`Teaser Article should render WithoutImage 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -1315,6 +1412,15 @@ exports[`Teaser Article should render WithoutImage 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-13 {
     font-size: 32px;
@@ -1323,7 +1429,6 @@ exports[`Teaser Article should render WithoutImage 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -1331,6 +1436,15 @@ exports[`Teaser Article should render WithoutImage 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-15 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-15.MuiTypography-gutterBottom {
@@ -1425,6 +1539,7 @@ exports[`Teaser Article should render WithoutImageWithoutBlock 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -1436,14 +1551,14 @@ exports[`Teaser Article should render WithoutImageWithoutBlock 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-s7u69o-ImageWrapper-Teaser:where(.emotion-1:hover .css-s7u69o-ImageWrapper-Teaser) {
+.css-1uwwl5p-ImageWrapper-Teaser:where(.emotion-1:hover .css-1uwwl5p-ImageWrapper-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -1535,6 +1650,15 @@ exports[`Teaser Article should render WithoutImageWithoutBlock 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-11 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-11 {
     font-size: 32px;
@@ -1543,7 +1667,6 @@ exports[`Teaser Article should render WithoutImageWithoutBlock 1`] = `
 
 .emotion-13 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -1551,6 +1674,15 @@ exports[`Teaser Article should render WithoutImageWithoutBlock 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-13.MuiTypography-gutterBottom {
@@ -1630,6 +1762,7 @@ exports[`Teaser Article should render WithoutLead 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -1641,7 +1774,7 @@ exports[`Teaser Article should render WithoutLead 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -1689,6 +1822,7 @@ exports[`Teaser Article should render WithoutLead 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -1760,6 +1894,15 @@ exports[`Teaser Article should render WithoutLead 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-13 {
     font-size: 32px;
@@ -1768,7 +1911,6 @@ exports[`Teaser Article should render WithoutLead 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -1776,6 +1918,15 @@ exports[`Teaser Article should render WithoutLead 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-15 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-15.MuiTypography-gutterBottom {
@@ -1870,6 +2021,7 @@ exports[`Teaser Article should render WithoutPreTitle 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -1881,7 +2033,7 @@ exports[`Teaser Article should render WithoutPreTitle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -1929,6 +2081,7 @@ exports[`Teaser Article should render WithoutPreTitle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -2000,6 +2153,15 @@ exports[`Teaser Article should render WithoutPreTitle 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-13 {
     font-size: 32px;
@@ -2008,7 +2170,6 @@ exports[`Teaser Article should render WithoutPreTitle 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -2016,6 +2177,15 @@ exports[`Teaser Article should render WithoutPreTitle 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-15 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-15.MuiTypography-gutterBottom {
@@ -2110,6 +2280,7 @@ exports[`Teaser Article should render WithoutTitle 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -2121,7 +2292,7 @@ exports[`Teaser Article should render WithoutTitle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -2169,6 +2340,7 @@ exports[`Teaser Article should render WithoutTitle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -2240,6 +2412,15 @@ exports[`Teaser Article should render WithoutTitle 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-13 {
     font-size: 32px;
@@ -2248,7 +2429,6 @@ exports[`Teaser Article should render WithoutTitle 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -2256,6 +2436,15 @@ exports[`Teaser Article should render WithoutTitle 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-15 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-15.MuiTypography-gutterBottom {
@@ -2350,6 +2539,7 @@ exports[`Teaser Custom should render Default 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -2361,7 +2551,7 @@ exports[`Teaser Custom should render Default 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -2405,6 +2595,7 @@ exports[`Teaser Custom should render Default 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -2476,6 +2667,15 @@ exports[`Teaser Custom should render Default 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-13 {
     font-size: 32px;
@@ -2484,7 +2684,6 @@ exports[`Teaser Custom should render Default 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -2492,6 +2691,15 @@ exports[`Teaser Custom should render Default 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-15 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-15.MuiTypography-gutterBottom {
@@ -2566,6 +2774,7 @@ exports[`Teaser Custom should render WithLightStyle 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -2577,7 +2786,7 @@ exports[`Teaser Custom should render WithLightStyle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -2621,6 +2830,7 @@ exports[`Teaser Custom should render WithLightStyle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -2692,6 +2902,15 @@ exports[`Teaser Custom should render WithLightStyle 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-13 {
     font-size: 32px;
@@ -2700,7 +2919,6 @@ exports[`Teaser Custom should render WithLightStyle 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -2708,6 +2926,15 @@ exports[`Teaser Custom should render WithLightStyle 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-15 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-15.MuiTypography-gutterBottom {
@@ -2782,6 +3009,7 @@ exports[`Teaser Custom should render WithoutImage 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -2793,14 +3021,14 @@ exports[`Teaser Custom should render WithoutImage 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-s7u69o-ImageWrapper-Teaser:where(.emotion-1:hover .css-s7u69o-ImageWrapper-Teaser) {
+.css-1uwwl5p-ImageWrapper-Teaser:where(.emotion-1:hover .css-1uwwl5p-ImageWrapper-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -2888,6 +3116,15 @@ exports[`Teaser Custom should render WithoutImage 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-11 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-11 {
     font-size: 32px;
@@ -2896,7 +3133,6 @@ exports[`Teaser Custom should render WithoutImage 1`] = `
 
 .emotion-13 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -2904,6 +3140,15 @@ exports[`Teaser Custom should render WithoutImage 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-13.MuiTypography-gutterBottom {
@@ -2963,6 +3208,7 @@ exports[`Teaser Custom should render WithoutPreTitle 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -2974,7 +3220,7 @@ exports[`Teaser Custom should render WithoutPreTitle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -3026,6 +3272,7 @@ exports[`Teaser Custom should render WithoutPreTitle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -3070,6 +3317,15 @@ exports[`Teaser Custom should render WithoutPreTitle 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-11 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-11 {
     font-size: 32px;
@@ -3078,7 +3334,6 @@ exports[`Teaser Custom should render WithoutPreTitle 1`] = `
 
 .emotion-13 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -3086,6 +3341,15 @@ exports[`Teaser Custom should render WithoutPreTitle 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-13.MuiTypography-gutterBottom {
@@ -3154,6 +3418,7 @@ exports[`Teaser Custom should render WithoutTitle 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -3165,7 +3430,7 @@ exports[`Teaser Custom should render WithoutTitle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -3213,6 +3478,7 @@ exports[`Teaser Custom should render WithoutTitle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -3284,6 +3550,15 @@ exports[`Teaser Custom should render WithoutTitle 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-13 {
     font-size: 32px;
@@ -3292,7 +3567,6 @@ exports[`Teaser Custom should render WithoutTitle 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -3300,6 +3574,15 @@ exports[`Teaser Custom should render WithoutTitle 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-15 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-15.MuiTypography-gutterBottom {
@@ -3372,6 +3655,7 @@ exports[`Teaser Event should render Default 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -3383,7 +3667,7 @@ exports[`Teaser Event should render Default 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -3431,6 +3715,7 @@ exports[`Teaser Event should render Default 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -3502,6 +3787,15 @@ exports[`Teaser Event should render Default 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-13 {
     font-size: 32px;
@@ -3510,7 +3804,6 @@ exports[`Teaser Event should render Default 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -3518,6 +3811,15 @@ exports[`Teaser Event should render Default 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-15 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-15.MuiTypography-gutterBottom {
@@ -3603,6 +3905,7 @@ exports[`Teaser Event should render WithLightStyle 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -3614,7 +3917,7 @@ exports[`Teaser Event should render WithLightStyle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -3662,6 +3965,7 @@ exports[`Teaser Event should render WithLightStyle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -3733,6 +4037,15 @@ exports[`Teaser Event should render WithLightStyle 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-13 {
     font-size: 32px;
@@ -3741,7 +4054,6 @@ exports[`Teaser Event should render WithLightStyle 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -3749,6 +4061,15 @@ exports[`Teaser Event should render WithLightStyle 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-15 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-15.MuiTypography-gutterBottom {
@@ -3834,6 +4155,7 @@ exports[`Teaser Event should render WithoutDescription 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -3845,7 +4167,7 @@ exports[`Teaser Event should render WithoutDescription 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -3893,6 +4215,7 @@ exports[`Teaser Event should render WithoutDescription 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -3964,6 +4287,15 @@ exports[`Teaser Event should render WithoutDescription 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-13 {
     font-size: 32px;
@@ -3972,7 +4304,6 @@ exports[`Teaser Event should render WithoutDescription 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -3980,6 +4311,15 @@ exports[`Teaser Event should render WithoutDescription 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-15 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-15.MuiTypography-gutterBottom {
@@ -4065,6 +4405,7 @@ exports[`Teaser Event should render WithoutDescriptionWithLightStyle 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -4076,7 +4417,7 @@ exports[`Teaser Event should render WithoutDescriptionWithLightStyle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -4124,6 +4465,7 @@ exports[`Teaser Event should render WithoutDescriptionWithLightStyle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -4193,6 +4535,15 @@ exports[`Teaser Event should render WithoutDescriptionWithLightStyle 1`] = `
   font-weight: 600;
   line-height: 1.15;
   font-size: 26px;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
 }
 
 @media (min-width: 900px) {
@@ -4275,6 +4626,7 @@ exports[`Teaser Event should render WithoutImage 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -4286,7 +4638,7 @@ exports[`Teaser Event should render WithoutImage 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -4334,6 +4686,7 @@ exports[`Teaser Event should render WithoutImage 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -4405,6 +4758,15 @@ exports[`Teaser Event should render WithoutImage 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-13 {
     font-size: 32px;
@@ -4413,7 +4775,6 @@ exports[`Teaser Event should render WithoutImage 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -4421,6 +4782,15 @@ exports[`Teaser Event should render WithoutImage 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-15 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-15.MuiTypography-gutterBottom {
@@ -4506,6 +4876,7 @@ exports[`Teaser Event should render WithoutImageWithoutEventImage 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -4517,14 +4888,14 @@ exports[`Teaser Event should render WithoutImageWithoutEventImage 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-s7u69o-ImageWrapper-Teaser:where(.emotion-1:hover .css-s7u69o-ImageWrapper-Teaser) {
+.css-1uwwl5p-ImageWrapper-Teaser:where(.emotion-1:hover .css-1uwwl5p-ImageWrapper-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -4616,6 +4987,15 @@ exports[`Teaser Event should render WithoutImageWithoutEventImage 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-11 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-11 {
     font-size: 32px;
@@ -4624,7 +5004,6 @@ exports[`Teaser Event should render WithoutImageWithoutEventImage 1`] = `
 
 .emotion-13 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -4632,6 +5011,15 @@ exports[`Teaser Event should render WithoutImageWithoutEventImage 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-13.MuiTypography-gutterBottom {
@@ -4702,6 +5090,7 @@ exports[`Teaser Event should render WithoutPreTitle 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -4713,7 +5102,7 @@ exports[`Teaser Event should render WithoutPreTitle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -4765,6 +5154,7 @@ exports[`Teaser Event should render WithoutPreTitle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -4809,6 +5199,15 @@ exports[`Teaser Event should render WithoutPreTitle 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-11 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-11 {
     font-size: 32px;
@@ -4817,7 +5216,6 @@ exports[`Teaser Event should render WithoutPreTitle 1`] = `
 
 .emotion-13 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -4825,6 +5223,15 @@ exports[`Teaser Event should render WithoutPreTitle 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-13.MuiTypography-gutterBottom {
@@ -4904,6 +5311,7 @@ exports[`Teaser Event should render WithoutTitle 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -4915,7 +5323,7 @@ exports[`Teaser Event should render WithoutTitle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -4963,6 +5371,7 @@ exports[`Teaser Event should render WithoutTitle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -5034,6 +5443,15 @@ exports[`Teaser Event should render WithoutTitle 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-13 {
     font-size: 32px;
@@ -5042,7 +5460,6 @@ exports[`Teaser Event should render WithoutTitle 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -5050,6 +5467,15 @@ exports[`Teaser Event should render WithoutTitle 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-15 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-15.MuiTypography-gutterBottom {
@@ -5135,6 +5561,7 @@ exports[`Teaser Page should render Default 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -5146,7 +5573,7 @@ exports[`Teaser Page should render Default 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -5194,6 +5621,7 @@ exports[`Teaser Page should render Default 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -5265,6 +5693,15 @@ exports[`Teaser Page should render Default 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-13 {
     font-size: 32px;
@@ -5273,7 +5710,6 @@ exports[`Teaser Page should render Default 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -5281,6 +5717,15 @@ exports[`Teaser Page should render Default 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-15 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-15.MuiTypography-gutterBottom {
@@ -5355,6 +5800,7 @@ exports[`Teaser Page should render WithLightStyle 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -5366,7 +5812,7 @@ exports[`Teaser Page should render WithLightStyle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -5414,6 +5860,7 @@ exports[`Teaser Page should render WithLightStyle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -5485,6 +5932,15 @@ exports[`Teaser Page should render WithLightStyle 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-13 {
     font-size: 32px;
@@ -5493,7 +5949,6 @@ exports[`Teaser Page should render WithLightStyle 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -5501,6 +5956,15 @@ exports[`Teaser Page should render WithLightStyle 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-15 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-15.MuiTypography-gutterBottom {
@@ -5575,6 +6039,7 @@ exports[`Teaser Page should render WithoutBlockWithLightStyle 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -5586,7 +6051,7 @@ exports[`Teaser Page should render WithoutBlockWithLightStyle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -5634,6 +6099,7 @@ exports[`Teaser Page should render WithoutBlockWithLightStyle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -5705,6 +6171,15 @@ exports[`Teaser Page should render WithoutBlockWithLightStyle 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-13 {
     font-size: 32px;
@@ -5713,7 +6188,6 @@ exports[`Teaser Page should render WithoutBlockWithLightStyle 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -5721,6 +6195,15 @@ exports[`Teaser Page should render WithoutBlockWithLightStyle 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-15 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-15.MuiTypography-gutterBottom {
@@ -5795,6 +6278,7 @@ exports[`Teaser Page should render WithoutImage 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -5806,7 +6290,7 @@ exports[`Teaser Page should render WithoutImage 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -5854,6 +6338,7 @@ exports[`Teaser Page should render WithoutImage 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -5925,6 +6410,15 @@ exports[`Teaser Page should render WithoutImage 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-13 {
     font-size: 32px;
@@ -5933,7 +6427,6 @@ exports[`Teaser Page should render WithoutImage 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -5941,6 +6434,15 @@ exports[`Teaser Page should render WithoutImage 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-15 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-15.MuiTypography-gutterBottom {
@@ -6015,6 +6517,7 @@ exports[`Teaser Page should render WithoutImageWithoutBlock 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -6026,7 +6529,7 @@ exports[`Teaser Page should render WithoutImageWithoutBlock 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -6074,6 +6577,7 @@ exports[`Teaser Page should render WithoutImageWithoutBlock 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -6145,6 +6649,15 @@ exports[`Teaser Page should render WithoutImageWithoutBlock 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-13 {
     font-size: 32px;
@@ -6153,7 +6666,6 @@ exports[`Teaser Page should render WithoutImageWithoutBlock 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -6161,6 +6673,15 @@ exports[`Teaser Page should render WithoutImageWithoutBlock 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-15 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-15.MuiTypography-gutterBottom {
@@ -6235,6 +6756,7 @@ exports[`Teaser Page should render WithoutLead 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -6246,7 +6768,7 @@ exports[`Teaser Page should render WithoutLead 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -6294,6 +6816,7 @@ exports[`Teaser Page should render WithoutLead 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -6365,6 +6888,15 @@ exports[`Teaser Page should render WithoutLead 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-13 {
     font-size: 32px;
@@ -6373,7 +6905,6 @@ exports[`Teaser Page should render WithoutLead 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -6381,6 +6912,15 @@ exports[`Teaser Page should render WithoutLead 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-15 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-15.MuiTypography-gutterBottom {
@@ -6455,6 +6995,7 @@ exports[`Teaser Page should render WithoutPreTitle 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -6466,7 +7007,7 @@ exports[`Teaser Page should render WithoutPreTitle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -6518,6 +7059,7 @@ exports[`Teaser Page should render WithoutPreTitle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -6562,6 +7104,15 @@ exports[`Teaser Page should render WithoutPreTitle 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-11 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-11 {
     font-size: 32px;
@@ -6570,7 +7121,6 @@ exports[`Teaser Page should render WithoutPreTitle 1`] = `
 
 .emotion-13 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -6578,6 +7128,15 @@ exports[`Teaser Page should render WithoutPreTitle 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-13.MuiTypography-gutterBottom {
@@ -6646,6 +7205,7 @@ exports[`Teaser Page should render WithoutTitle 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -6657,7 +7217,7 @@ exports[`Teaser Page should render WithoutTitle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -6705,6 +7265,7 @@ exports[`Teaser Page should render WithoutTitle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -6776,6 +7337,15 @@ exports[`Teaser Page should render WithoutTitle 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-13 {
     font-size: 32px;
@@ -6784,7 +7354,6 @@ exports[`Teaser Page should render WithoutTitle 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -6792,6 +7361,15 @@ exports[`Teaser Page should render WithoutTitle 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-15 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-15.MuiTypography-gutterBottom {
@@ -6866,6 +7444,7 @@ exports[`Teaser PeerArticle should render Default 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -6877,7 +7456,7 @@ exports[`Teaser PeerArticle should render Default 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -6925,6 +7504,7 @@ exports[`Teaser PeerArticle should render Default 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -6996,6 +7576,15 @@ exports[`Teaser PeerArticle should render Default 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-13 {
     font-size: 32px;
@@ -7004,7 +7593,6 @@ exports[`Teaser PeerArticle should render Default 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -7012,6 +7600,15 @@ exports[`Teaser PeerArticle should render Default 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-15 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-15.MuiTypography-gutterBottom {
@@ -7106,6 +7703,7 @@ exports[`Teaser PeerArticle should render WithLightStyle 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -7117,7 +7715,7 @@ exports[`Teaser PeerArticle should render WithLightStyle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -7165,6 +7763,7 @@ exports[`Teaser PeerArticle should render WithLightStyle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -7236,6 +7835,15 @@ exports[`Teaser PeerArticle should render WithLightStyle 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-13 {
     font-size: 32px;
@@ -7244,7 +7852,6 @@ exports[`Teaser PeerArticle should render WithLightStyle 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -7252,6 +7859,15 @@ exports[`Teaser PeerArticle should render WithLightStyle 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-15 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-15.MuiTypography-gutterBottom {
@@ -7346,6 +7962,7 @@ exports[`Teaser PeerArticle should render WithoutAuthors 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -7357,7 +7974,7 @@ exports[`Teaser PeerArticle should render WithoutAuthors 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -7405,6 +8022,7 @@ exports[`Teaser PeerArticle should render WithoutAuthors 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -7476,6 +8094,15 @@ exports[`Teaser PeerArticle should render WithoutAuthors 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-13 {
     font-size: 32px;
@@ -7484,7 +8111,6 @@ exports[`Teaser PeerArticle should render WithoutAuthors 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -7492,6 +8118,15 @@ exports[`Teaser PeerArticle should render WithoutAuthors 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-15 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-15.MuiTypography-gutterBottom {
@@ -7577,6 +8212,7 @@ exports[`Teaser PeerArticle should render WithoutBlockWithLightStyle 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -7588,7 +8224,7 @@ exports[`Teaser PeerArticle should render WithoutBlockWithLightStyle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -7636,6 +8272,7 @@ exports[`Teaser PeerArticle should render WithoutBlockWithLightStyle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -7707,6 +8344,15 @@ exports[`Teaser PeerArticle should render WithoutBlockWithLightStyle 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-13 {
     font-size: 32px;
@@ -7715,7 +8361,6 @@ exports[`Teaser PeerArticle should render WithoutBlockWithLightStyle 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -7723,6 +8368,15 @@ exports[`Teaser PeerArticle should render WithoutBlockWithLightStyle 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-15 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-15.MuiTypography-gutterBottom {
@@ -7817,6 +8471,7 @@ exports[`Teaser PeerArticle should render WithoutDate 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -7828,7 +8483,7 @@ exports[`Teaser PeerArticle should render WithoutDate 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -7876,6 +8531,7 @@ exports[`Teaser PeerArticle should render WithoutDate 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -7947,6 +8603,15 @@ exports[`Teaser PeerArticle should render WithoutDate 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-13 {
     font-size: 32px;
@@ -7955,7 +8620,6 @@ exports[`Teaser PeerArticle should render WithoutDate 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -7963,6 +8627,15 @@ exports[`Teaser PeerArticle should render WithoutDate 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-15 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-15.MuiTypography-gutterBottom {
@@ -8047,6 +8720,7 @@ exports[`Teaser PeerArticle should render WithoutImage 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -8058,7 +8732,7 @@ exports[`Teaser PeerArticle should render WithoutImage 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -8106,6 +8780,7 @@ exports[`Teaser PeerArticle should render WithoutImage 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -8177,6 +8852,15 @@ exports[`Teaser PeerArticle should render WithoutImage 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-13 {
     font-size: 32px;
@@ -8185,7 +8869,6 @@ exports[`Teaser PeerArticle should render WithoutImage 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -8193,6 +8876,15 @@ exports[`Teaser PeerArticle should render WithoutImage 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-15 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-15.MuiTypography-gutterBottom {
@@ -8287,6 +8979,7 @@ exports[`Teaser PeerArticle should render WithoutImageWithoutBlock 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -8298,14 +8991,14 @@ exports[`Teaser PeerArticle should render WithoutImageWithoutBlock 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
   transform: scale(1.1);
 }
 
-.css-s7u69o-ImageWrapper-Teaser:where(.emotion-1:hover .css-s7u69o-ImageWrapper-Teaser) {
+.css-1uwwl5p-ImageWrapper-Teaser:where(.emotion-1:hover .css-1uwwl5p-ImageWrapper-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -8397,6 +9090,15 @@ exports[`Teaser PeerArticle should render WithoutImageWithoutBlock 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-11 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-11 {
     font-size: 32px;
@@ -8405,7 +9107,6 @@ exports[`Teaser PeerArticle should render WithoutImageWithoutBlock 1`] = `
 
 .emotion-13 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -8413,6 +9114,15 @@ exports[`Teaser PeerArticle should render WithoutImageWithoutBlock 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-13.MuiTypography-gutterBottom {
@@ -8492,6 +9202,7 @@ exports[`Teaser PeerArticle should render WithoutPreTitle 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -8503,7 +9214,7 @@ exports[`Teaser PeerArticle should render WithoutPreTitle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -8551,6 +9262,7 @@ exports[`Teaser PeerArticle should render WithoutPreTitle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -8622,6 +9334,15 @@ exports[`Teaser PeerArticle should render WithoutPreTitle 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-13 {
     font-size: 32px;
@@ -8630,7 +9351,6 @@ exports[`Teaser PeerArticle should render WithoutPreTitle 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -8638,6 +9358,15 @@ exports[`Teaser PeerArticle should render WithoutPreTitle 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-15 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-15.MuiTypography-gutterBottom {
@@ -8732,6 +9461,7 @@ exports[`Teaser PeerArticle should render WithoutTitle 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -8743,7 +9473,7 @@ exports[`Teaser PeerArticle should render WithoutTitle 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -8791,6 +9521,7 @@ exports[`Teaser PeerArticle should render WithoutTitle 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -8862,6 +9593,15 @@ exports[`Teaser PeerArticle should render WithoutTitle 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-13 {
     font-size: 32px;
@@ -8870,7 +9610,6 @@ exports[`Teaser PeerArticle should render WithoutTitle 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -8878,6 +9617,15 @@ exports[`Teaser PeerArticle should render WithoutTitle 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-15 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-15.MuiTypography-gutterBottom {
@@ -8972,6 +9720,7 @@ exports[`Teaser should render WithClassName 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -8983,7 +9732,7 @@ exports[`Teaser should render WithClassName 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -9027,6 +9776,7 @@ exports[`Teaser should render WithClassName 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -9098,6 +9848,15 @@ exports[`Teaser should render WithClassName 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-13 {
     font-size: 32px;
@@ -9106,7 +9865,6 @@ exports[`Teaser should render WithClassName 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -9114,6 +9872,15 @@ exports[`Teaser should render WithClassName 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-15 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-15.MuiTypography-gutterBottom {
@@ -9188,6 +9955,7 @@ exports[`Teaser should render WithEmotion 1`] = `
 <DocumentFragment>
   .emotion-0 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -9199,7 +9967,7 @@ exports[`Teaser should render WithEmotion 1`] = `
   }
 }
 
-.css-32a98-Teaser:where(.emotion-1:hover .css-32a98-Teaser) {
+.css-1wpqqq6-Teaser:where(.emotion-1:hover .css-1wpqqq6-Teaser) {
   -webkit-transform: scale(1.1);
   -moz-transform: scale(1.1);
   -ms-transform: scale(1.1);
@@ -9243,6 +10011,7 @@ exports[`Teaser should render WithEmotion 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -9314,6 +10083,15 @@ exports[`Teaser should render WithEmotion 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-13 {
     font-size: 32px;
@@ -9322,7 +10100,6 @@ exports[`Teaser should render WithEmotion 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -9330,6 +10107,15 @@ exports[`Teaser should render WithEmotion 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-15 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-15.MuiTypography-gutterBottom {

@@ -28,6 +28,7 @@ exports[`Teaser Grid Flex Block should render Default 1`] = `
 
 .emotion-2 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -76,6 +77,7 @@ exports[`Teaser Grid Flex Block should render Default 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -120,6 +122,15 @@ exports[`Teaser Grid Flex Block should render Default 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-13 {
     font-size: 32px;
@@ -128,7 +139,6 @@ exports[`Teaser Grid Flex Block should render Default 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -136,6 +146,15 @@ exports[`Teaser Grid Flex Block should render Default 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-15 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-15.MuiTypography-gutterBottom {
@@ -150,6 +169,7 @@ exports[`Teaser Grid Flex Block should render Default 1`] = `
 
 .emotion-19 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -207,6 +227,7 @@ exports[`Teaser Grid Flex Block should render Default 1`] = `
 
 .emotion-40 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -220,6 +241,7 @@ exports[`Teaser Grid Flex Block should render Default 1`] = `
 
 .emotion-59 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -233,6 +255,7 @@ exports[`Teaser Grid Flex Block should render Default 1`] = `
 
 .emotion-80 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -246,6 +269,7 @@ exports[`Teaser Grid Flex Block should render Default 1`] = `
 
 .emotion-99 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -624,6 +648,7 @@ exports[`Teaser Grid Flex Block should render WithClassName 1`] = `
 
 .emotion-2 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -672,6 +697,7 @@ exports[`Teaser Grid Flex Block should render WithClassName 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -716,6 +742,15 @@ exports[`Teaser Grid Flex Block should render WithClassName 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-13 {
     font-size: 32px;
@@ -724,7 +759,6 @@ exports[`Teaser Grid Flex Block should render WithClassName 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -732,6 +766,15 @@ exports[`Teaser Grid Flex Block should render WithClassName 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-15 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-15.MuiTypography-gutterBottom {
@@ -746,6 +789,7 @@ exports[`Teaser Grid Flex Block should render WithClassName 1`] = `
 
 .emotion-19 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -803,6 +847,7 @@ exports[`Teaser Grid Flex Block should render WithClassName 1`] = `
 
 .emotion-40 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -816,6 +861,7 @@ exports[`Teaser Grid Flex Block should render WithClassName 1`] = `
 
 .emotion-59 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -829,6 +875,7 @@ exports[`Teaser Grid Flex Block should render WithClassName 1`] = `
 
 .emotion-80 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -842,6 +889,7 @@ exports[`Teaser Grid Flex Block should render WithClassName 1`] = `
 
 .emotion-99 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -1220,6 +1268,7 @@ exports[`Teaser Grid Flex Block should render WithEmotion 1`] = `
 
 .emotion-2 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -1268,6 +1317,7 @@ exports[`Teaser Grid Flex Block should render WithEmotion 1`] = `
   aspect-ratio: auto 1;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -1312,6 +1362,15 @@ exports[`Teaser Grid Flex Block should render WithEmotion 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-13 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-13 {
     font-size: 32px;
@@ -1320,7 +1379,6 @@ exports[`Teaser Grid Flex Block should render WithEmotion 1`] = `
 
 .emotion-15 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -1328,6 +1386,15 @@ exports[`Teaser Grid Flex Block should render WithEmotion 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-15 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-15.MuiTypography-gutterBottom {
@@ -1342,6 +1409,7 @@ exports[`Teaser Grid Flex Block should render WithEmotion 1`] = `
 
 .emotion-19 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -1399,6 +1467,7 @@ exports[`Teaser Grid Flex Block should render WithEmotion 1`] = `
 
 .emotion-40 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -1412,6 +1481,7 @@ exports[`Teaser Grid Flex Block should render WithEmotion 1`] = `
 
 .emotion-59 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -1425,6 +1495,7 @@ exports[`Teaser Grid Flex Block should render WithEmotion 1`] = `
 
 .emotion-80 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -1438,6 +1509,7 @@ exports[`Teaser Grid Flex Block should render WithEmotion 1`] = `
 
 .emotion-99 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
