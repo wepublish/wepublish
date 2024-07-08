@@ -2,12 +2,7 @@
 
 exports[`SoundCloud Track Block should render Default 1`] = `
 <DocumentFragment>
-  .emotion-2 {
-  width: 100%;
-  aspect-ratio: 16/9;
-}
-
-<div
+  <div
     class="emotion-0 emotion-1"
   >
     <div
@@ -27,12 +22,7 @@ exports[`SoundCloud Track Block should render Default 1`] = `
 
 exports[`SoundCloud Track Block should render WithClassName 1`] = `
 <DocumentFragment>
-  .emotion-2 {
-  width: 100%;
-  aspect-ratio: 16/9;
-}
-
-<div
+  <div
     class="extra-classname emotion-0 emotion-1"
   >
     <div

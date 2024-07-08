@@ -2,69 +2,7 @@
 
 exports[`Quote Block should render Default 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  font-style: italic;
-  display: grid;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  gap: 16px;
-  padding: 32px 0px;
-  border-top: 2px solid #000;
-  border-bottom: 2px solid #000;
-  margin: 0;
-  margin-left: calc(100% / 6);
-}
-
-@media (min-width:900px) {
-  .emotion-0 {
-    padding: 40px 24px;
-  }
-}
-
-.emotion-2 {
-  display: grid;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  justify-items: center;
-  text-align: center;
-  gap: 24px;
-}
-
-.emotion-4 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 26px;
-}
-
-@media (min-width: 900px) {
-  .emotion-4 {
-    font-size: 32px;
-  }
-}
-
-.emotion-5 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-}
-
-.emotion-5.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-<blockquote
+  <blockquote
     class="emotion-0 emotion-1"
   >
     <div
@@ -87,69 +25,7 @@ exports[`Quote Block should render Default 1`] = `
 
 exports[`Quote Block should render WithClassName 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  font-style: italic;
-  display: grid;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  gap: 16px;
-  padding: 32px 0px;
-  border-top: 2px solid #000;
-  border-bottom: 2px solid #000;
-  margin: 0;
-  margin-left: calc(100% / 6);
-}
-
-@media (min-width:900px) {
-  .emotion-0 {
-    padding: 40px 24px;
-  }
-}
-
-.emotion-2 {
-  display: grid;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  justify-items: center;
-  text-align: center;
-  gap: 24px;
-}
-
-.emotion-4 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 26px;
-}
-
-@media (min-width: 900px) {
-  .emotion-4 {
-    font-size: 32px;
-  }
-}
-
-.emotion-5 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-}
-
-.emotion-5.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-<blockquote
+  <blockquote
     class="extra-classname emotion-0 emotion-1"
   >
     <div
@@ -172,69 +48,7 @@ exports[`Quote Block should render WithClassName 1`] = `
 
 exports[`Quote Block should render WithEmotion 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  font-style: italic;
-  display: grid;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  gap: 16px;
-  padding: 32px 0px;
-  border-top: 2px solid #000;
-  border-bottom: 2px solid #000;
-  margin: 0;
-  margin-left: calc(100% / 6);
-}
-
-@media (min-width:900px) {
-  .emotion-0 {
-    padding: 40px 24px;
-  }
-}
-
-.emotion-2 {
-  display: grid;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  justify-items: center;
-  text-align: center;
-  gap: 24px;
-}
-
-.emotion-4 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 26px;
-}
-
-@media (min-width: 900px) {
-  .emotion-4 {
-    font-size: 32px;
-  }
-}
-
-.emotion-5 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-}
-
-.emotion-5.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-<blockquote
+  <blockquote
     class="emotion-0 emotion-1"
   >
     <div
@@ -257,85 +71,7 @@ exports[`Quote Block should render WithEmotion 1`] = `
 
 exports[`Quote Block should render WithImage 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  font-style: italic;
-  display: grid;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  gap: 16px;
-  padding: 32px 0px;
-  border-top: 2px solid #000;
-  border-bottom: 2px solid #000;
-  margin: 0;
-  margin-left: calc(100% / 6);
-}
-
-@media (min-width:600px) {
-  .emotion-0 {
-    gap: 24px;
-    grid-template-columns: auto auto;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-0 {
-    padding: 40px 24px;
-  }
-}
-
-.emotion-2 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-  max-width: 80px;
-}
-
-.emotion-4 {
-  display: grid;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  justify-items: center;
-  text-align: center;
-  gap: 24px;
-}
-
-.emotion-6 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 26px;
-}
-
-@media (min-width: 900px) {
-  .emotion-6 {
-    font-size: 32px;
-  }
-}
-
-.emotion-7 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-}
-
-.emotion-7.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-<blockquote
+  <blockquote
     class="emotion-0 emotion-1"
   >
     <img
@@ -372,85 +108,7 @@ https://unsplash.it/200/200 200w"
 
 exports[`Quote Block should render WithImageAndShortText 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  font-style: italic;
-  display: grid;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-  gap: 16px;
-  padding: 32px 0px;
-  border-top: 2px solid #000;
-  border-bottom: 2px solid #000;
-  margin: 0;
-  margin-left: calc(100% / 6);
-}
-
-@media (min-width:600px) {
-  .emotion-0 {
-    gap: 24px;
-    grid-template-columns: auto auto;
-  }
-}
-
-@media (min-width:900px) {
-  .emotion-0 {
-    padding: 40px 24px;
-  }
-}
-
-.emotion-2 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-  max-width: 80px;
-}
-
-.emotion-4 {
-  display: grid;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  justify-items: center;
-  text-align: center;
-  gap: 24px;
-}
-
-.emotion-6 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 600;
-  line-height: 1.15;
-  font-size: 26px;
-}
-
-@media (min-width: 900px) {
-  .emotion-6 {
-    font-size: 32px;
-  }
-}
-
-.emotion-7 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-}
-
-.emotion-7.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-<blockquote
+  <blockquote
     class="emotion-0 emotion-1"
   >
     <img

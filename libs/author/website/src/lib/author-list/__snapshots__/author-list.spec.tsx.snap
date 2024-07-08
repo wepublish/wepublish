@@ -2,69 +2,7 @@
 
 exports[`AuthorList should render Default 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 32px;
-  justify-items: center;
-}
-
-.emotion-2 {
-  margin: 0;
-  font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-  display: grid;
-  grid-template-rows: max-content 1fr;
-  gap: 24px;
-  width: 240px;
-  text-align: center;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-}
-
-.emotion-2:hover {
-  text-decoration-color: inherit;
-}
-
-.emotion-3 {
-  display: grid;
-  width: 100%;
-}
-
-.emotion-5 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-  border-radius: 50%;
-}
-
-.emotion-9 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 300;
-  font-size: 1.25rem;
-  line-height: 1.4;
-}
-
-.emotion-10 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-}
-
-.emotion-10.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-<article
+  <article
     class="emotion-0 emotion-1"
   >
     <a
@@ -480,69 +418,7 @@ https://unsplash.it/200/200 200w"
 
 exports[`AuthorList should render WithClassName 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 32px;
-  justify-items: center;
-}
-
-.emotion-2 {
-  margin: 0;
-  font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-  display: grid;
-  grid-template-rows: max-content 1fr;
-  gap: 24px;
-  width: 240px;
-  text-align: center;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-}
-
-.emotion-2:hover {
-  text-decoration-color: inherit;
-}
-
-.emotion-3 {
-  display: grid;
-  width: 100%;
-}
-
-.emotion-5 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-  border-radius: 50%;
-}
-
-.emotion-9 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 300;
-  font-size: 1.25rem;
-  line-height: 1.4;
-}
-
-.emotion-10 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-}
-
-.emotion-10.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-<article
+  <article
     class="extra-classname emotion-0 emotion-1"
   >
     <a
@@ -958,69 +834,7 @@ https://unsplash.it/200/200 200w"
 
 exports[`AuthorList should render WithEmotion 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 32px;
-  justify-items: center;
-}
-
-.emotion-2 {
-  margin: 0;
-  font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-  display: grid;
-  grid-template-rows: max-content 1fr;
-  gap: 24px;
-  width: 240px;
-  text-align: center;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-}
-
-.emotion-2:hover {
-  text-decoration-color: inherit;
-}
-
-.emotion-3 {
-  display: grid;
-  width: 100%;
-}
-
-.emotion-5 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-  border-radius: 50%;
-}
-
-.emotion-9 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 300;
-  font-size: 1.25rem;
-  line-height: 1.4;
-}
-
-.emotion-10 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-}
-
-.emotion-10.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-<article
+  <article
     class="emotion-0 emotion-1"
   >
     <a
@@ -1436,14 +1250,7 @@ https://unsplash.it/200/200 200w"
 
 exports[`AuthorList should render WithError 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 32px;
-  justify-items: center;
-}
-
-<article
+  <article
     class="emotion-0 emotion-1"
   />
 </DocumentFragment>
@@ -1451,14 +1258,7 @@ exports[`AuthorList should render WithError 1`] = `
 
 exports[`AuthorList should render WithLoading 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 32px;
-  justify-items: center;
-}
-
-<article
+  <article
     class="emotion-0 emotion-1"
   />
 </DocumentFragment>
@@ -1466,69 +1266,7 @@ exports[`AuthorList should render WithLoading 1`] = `
 
 exports[`AuthorList should render WithoutImage 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 32px;
-  justify-items: center;
-}
-
-.emotion-2 {
-  margin: 0;
-  font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-  display: grid;
-  grid-template-rows: max-content 1fr;
-  gap: 24px;
-  width: 240px;
-  text-align: center;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-}
-
-.emotion-2:hover {
-  text-decoration-color: inherit;
-}
-
-.emotion-3 {
-  display: grid;
-  width: 100%;
-}
-
-.emotion-5 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-  border-radius: 50%;
-}
-
-.emotion-9 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 300;
-  font-size: 1.25rem;
-  line-height: 1.4;
-}
-
-.emotion-10 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-}
-
-.emotion-10.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-<article
+  <article
     class="emotion-0 emotion-1"
   >
     <a
@@ -1869,69 +1607,7 @@ https://unsplash.it/200/200 200w"
 
 exports[`AuthorList should render WithoutJobTitle 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-  gap: 32px;
-  justify-items: center;
-}
-
-.emotion-2 {
-  margin: 0;
-  font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-  display: grid;
-  grid-template-rows: max-content 1fr;
-  gap: 24px;
-  width: 240px;
-  text-align: center;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  color: inherit;
-}
-
-.emotion-2:hover {
-  text-decoration-color: inherit;
-}
-
-.emotion-3 {
-  display: grid;
-  width: 100%;
-}
-
-.emotion-5 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 0.6666666666666666;
-  max-height: 80lvh;
-  object-fit: contain;
-  border-radius: 50%;
-}
-
-.emotion-9 {
-  margin: 0;
-  font-family: Hanken Grotesk,Roboto,sans-serif;
-  font-weight: 300;
-  font-size: 1.25rem;
-  line-height: 1.4;
-}
-
-.emotion-10 {
-  margin: 0;
-  line-height: 1.7;
-  font-family: Merriweather,Roboto,sans-serif;
-  font-weight: 400;
-  font-size: 1rem;
-}
-
-.emotion-10.MuiTypography-gutterBottom {
-  margin-bottom: 24px;
-}
-
-<article
+  <article
     class="emotion-0 emotion-1"
   >
     <a

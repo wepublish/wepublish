@@ -2,15 +2,7 @@
 
 exports[`Facebook Video Block should render Default 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-}
-
-<div
+  <div
     class="emotion-0 emotion-1"
   >
     <div
@@ -33,15 +25,7 @@ exports[`Facebook Video Block should render Default 1`] = `
 
 exports[`Facebook Video Block should render WithClassName 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  display: grid;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  -webkit-justify-content: center;
-  justify-content: center;
-}
-
-<div
+  <div
     class="extra-classname emotion-0 emotion-1"
   >
     <div

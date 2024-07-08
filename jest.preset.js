@@ -50,6 +50,9 @@ module.exports = {
       }
     ]
   },
-  snapshotSerializers: [...(nxPreset.snapshotSerializers ?? []), '@emotion/jest/serializer'],
+  snapshotSerializers: [
+    ...(nxPreset.snapshotSerializers ?? []),
+    __dirname + '/emotion-serializer.js'
+  ],
   collectCoverageFrom: ['src/**/*.{js,jsx,ts,tsx}', '!**/*.stories.{js,jsx,ts,tsx}']
 }
