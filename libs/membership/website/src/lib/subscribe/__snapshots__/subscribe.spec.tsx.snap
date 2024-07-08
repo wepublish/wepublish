@@ -24395,7 +24395,7 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
             class="MuiSlider-root MuiSlider-colorSecondary MuiSlider-sizeMedium css-bhj4ar-MuiSlider-root"
           >
             <span
-@@ -340,21 +308,21 @@
+@@ -340,34 +308,29 @@
               data-index="0"
               style="left: 0%;"
             >
@@ -24423,7 +24423,20 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
           </span>
         </div>
       </div>
-@@ -379,19 +347,18 @@
+      <div
+        class="css-qtq6nf-SubscribeSection eu4qtxp5"
+      >
+-       <h2
+-         class="MuiTypography-root MuiTypography-h5 css-mojt77-MuiTypography-root"
+-       >
+-         Zahlungsmethode wählen
+-       </h2>
+        <div
+          class="css-tcuzi5-SubscribePayment eu4qtxp4"
+        >
+          <div
+            class="MuiFormControl-root e1xdovcl1 css-rjme10-MuiFormControl-root-PaymentMethodPickerWrapper"
+@@ -379,19 +342,18 @@
             >
               <label
                 class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
@@ -24445,32 +24458,12 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
                     class="css-hyxlzm"
                   >
                     <svg
-@@ -421,141 +388,11 @@
-                    class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                  />
-                </span>
-                <div
-                  class="css-1fd5imw-PaymentRadioWrapper e1xdovcl0"
--               >
--                 <img
--                   alt="DSC07717"
--                   class="css-9uzwa4-ImageWrapper-PaymentMethodPicker e1shv2yg0"
--                   loading="lazy"
--                   sizes="(max-width: 400px) 200w,
-- (max-width: 600px) 300w,
-- (max-width: 1000px) 500w,
-- 800w"
--                   srcset="https://unsplash.it/800/400 800w,
-- https://unsplash.it/500/300 500w,
-- https://unsplash.it/300/200 300w,
-- https://unsplash.it/200/100 200w"
--                   title=""
--                 />
--               </div>
--               <span
--                 class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-67xpxh-MuiTypography-root"
--               />
--             </label>
+@@ -441,318 +403,23 @@
+                </div>
+                <span
+                  class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-67xpxh-MuiTypography-root"
+                />
+              </label>
 -             <label
 -               class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
 -             >
@@ -24531,7 +24524,7 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
 - https://unsplash.it/200/100 200w"
 -                   title=""
 -                 />
--               </div>
+            </div>
 -               <span
 -                 class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-67xpxh-MuiTypography-root"
 -               />
@@ -24569,7 +24562,7 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
 -                     data-testid="RadioButtonCheckedIcon"
 -                     focusable="false"
 -                     viewBox="0 0 24 24"
-                >
+-                   >
 -                     <path
 -                       d="M8.465 8.465C9.37 7.56 10.62 7 12 7C14.76 7 17 9.24 17 12C17 13.38 16.44 14.63 15.535 15.535C14.63 16.44 13.38 17 12 17C9.24 17 7 14.76 7 12C7 10.62 7.56 9.37 8.465 8.465Z"
 -                     />
@@ -24582,17 +24575,25 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
 -               <div
 -                 class="css-1bz2hxg-PaymentRadioWrapper e1xdovcl0"
 -               >
-                  <img
-                    alt="DSC07717"
-                    class="css-9uzwa4-ImageWrapper-PaymentMethodPicker e1shv2yg0"
-                    loading="lazy"
-                    sizes="(max-width: 400px) 200w,
-@@ -571,188 +408,23 @@
-                </div>
-                <span
-                  class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-67xpxh-MuiTypography-root"
-                />
-              </label>
+-                 <img
+-                   alt="DSC07717"
+-                   class="css-9uzwa4-ImageWrapper-PaymentMethodPicker e1shv2yg0"
+-                   loading="lazy"
+-                   sizes="(max-width: 400px) 200w,
+- (max-width: 600px) 300w,
+- (max-width: 1000px) 500w,
+- 800w"
+-                   srcset="https://unsplash.it/800/400 800w,
+- https://unsplash.it/500/300 500w,
+- https://unsplash.it/300/200 300w,
+- https://unsplash.it/200/100 200w"
+-                   title=""
+-                 />
+-               </div>
+-               <span
+-                 class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-67xpxh-MuiTypography-root"
+-               />
+-             </label>
 -             <label
 -               class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
 -             >
@@ -24653,13 +24654,13 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
 - https://unsplash.it/200/100 200w"
 -                   title=""
 -                 />
-            </div>
+-               </div>
 -               <span
 -                 class="MuiTypography-root MuiTypography-body1 MuiFormControlLabel-label css-67xpxh-MuiTypography-root"
 -               />
 -             </label>
-          </div>
-        </div>
+-           </div>
+-         </div>
 -         <div
 -           class="MuiFormControl-root ehf4qh40 css-ad7dvm-MuiFormControl-root-PeriodicityPickerWrapper"
 -         >
@@ -24723,7 +24724,7 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
 -                 </span>
 -               </legend>
 -             </fieldset>
--           </div>
+          </div>
 -         </div>
 -         <label
 -           class="MuiFormControlLabel-root MuiFormControlLabel-labelPlacementEnd css-j204z7-MuiFormControlLabel-root"
@@ -24760,7 +24761,7 @@ exports[`Subscribe should render ResetPaymentOptionsOnMemberPlanChange 1`] = `
 -             Automatisch erneuern
 -           </span>
 -         </label>
--       </div>
+        </div>
       </div>
       <div
         class="css-13or86z-SubscribeSection-SubscribeNarrowSection eu4qtxp0"

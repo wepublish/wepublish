@@ -40,8 +40,8 @@ export const GraphQLAuthor = new GraphQLObjectType<Author, Context>({
     slug: {type: new GraphQLNonNull(GraphQLSlug)},
     url: {
       type: new GraphQLNonNull(GraphQLString),
-      resolve: createProxyingResolver((author, _, {urlAdapter}) => {
-        return urlAdapter.getAuthorURL(author)
+      resolve: createProxyingResolver(async (author, _, {urlAdapter}) => {
+        return await urlAdapter.getAuthorURL(author)
       })
     },
     links: {type: new GraphQLList(new GraphQLNonNull(GraphQLAuthorLink))},

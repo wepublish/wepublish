@@ -42,7 +42,7 @@ export const CommentList = ({
   const {
     CommentEditor,
     CommentListItem,
-    elements: {Alert, H4}
+    elements: {Alert}
   } = useWebsiteBuilder()
   const {hasUser} = useUser()
   const canReply = anonymousCanComment || hasUser

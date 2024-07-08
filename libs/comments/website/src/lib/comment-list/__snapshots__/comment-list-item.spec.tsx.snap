@@ -8,7 +8,10 @@ exports[`Comment List Item should render AnonymousCommenting 1`] = `
 }
 
 .emotion-0:target {
+  border: 2px solid #e91e63;
+  border-radius: 20px;
   scroll-margin-top: 80px;
+  padding: 16px;
 }
 
 .emotion-2 {
@@ -19,7 +22,6 @@ exports[`Comment List Item should render AnonymousCommenting 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  padding: 12px;
 }
 
 .emotion-4 {
@@ -70,10 +72,6 @@ exports[`Comment List Item should render AnonymousCommenting 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: #e91e63;
-}
-
-.emotion-18 {
-  padding: 12px;
 }
 
 .emotion-20 {
@@ -881,7 +879,10 @@ exports[`Comment List Item should render Commenting 1`] = `
 }
 
 .emotion-0:target {
+  border: 2px solid #e91e63;
+  border-radius: 20px;
   scroll-margin-top: 80px;
+  padding: 16px;
 }
 
 .emotion-2 {
@@ -892,7 +893,6 @@ exports[`Comment List Item should render Commenting 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  padding: 12px;
 }
 
 .emotion-4 {
@@ -943,10 +943,6 @@ exports[`Comment List Item should render Commenting 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: #e91e63;
-}
-
-.emotion-18 {
-  padding: 12px;
 }
 
 .emotion-20 {
@@ -1935,7 +1931,10 @@ exports[`Comment List Item should render Default 1`] = `
 }
 
 .emotion-0:target {
+  border: 2px solid #e91e63;
+  border-radius: 20px;
   scroll-margin-top: 80px;
+  padding: 16px;
 }
 
 .emotion-2 {
@@ -1946,7 +1945,6 @@ exports[`Comment List Item should render Default 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  padding: 12px;
 }
 
 .emotion-4 {
@@ -1997,10 +1995,6 @@ exports[`Comment List Item should render Default 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: #e91e63;
-}
-
-.emotion-18 {
-  padding: 12px;
 }
 
 .emotion-20 {
@@ -2698,7 +2692,10 @@ exports[`Comment List Item should render Editing 1`] = `
 }
 
 .emotion-0:target {
+  border: 2px solid #e91e63;
+  border-radius: 20px;
   scroll-margin-top: 80px;
+  padding: 16px;
 }
 
 .emotion-2 {
@@ -2709,7 +2706,6 @@ exports[`Comment List Item should render Editing 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  padding: 12px;
 }
 
 .emotion-4 {
@@ -2760,10 +2756,6 @@ exports[`Comment List Item should render Editing 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: #e91e63;
-}
-
-.emotion-18 {
-  padding: 12px;
 }
 
 .emotion-20 {
@@ -3868,7 +3860,10 @@ exports[`Comment List Item should render Nested 1`] = `
 }
 
 .emotion-0:target {
+  border: 2px solid #e91e63;
+  border-radius: 20px;
   scroll-margin-top: 80px;
+  padding: 16px;
 }
 
 .emotion-2 {
@@ -3879,7 +3874,6 @@ exports[`Comment List Item should render Nested 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  padding: 12px;
 }
 
 .emotion-4 {
@@ -3930,10 +3924,6 @@ exports[`Comment List Item should render Nested 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: #e91e63;
-}
-
-.emotion-18 {
-  padding: 12px;
 }
 
 .emotion-20 {
@@ -4386,6 +4376,12 @@ exports[`Comment List Item should render Nested 1`] = `
   height: 100%;
   width: 2px;
   background-color: currentColor;
+}
+
+.emotion-134 {
+  font-size: 0.75em;
+  font-weight: 300;
+  color: #e91e63;
 }
 
 <article
@@ -5294,6 +5290,18 @@ https://unsplash.it/200/200 200w"
                     Dr. Anonymous
                   </div>
                 </div>
+                <div
+                  class="emotion-134 emotion-15"
+                >
+                  <a
+                    class="emotion-16 emotion-17"
+                    href="Source"
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    Source
+                  </a>
+                </div>
               </div>
             </header>
             <div
@@ -5439,6 +5447,18 @@ https://unsplash.it/200/200 200w"
               >
                 Dr. Anonymous
               </div>
+            </div>
+            <div
+              class="emotion-134 emotion-15"
+            >
+              <a
+                class="emotion-16 emotion-17"
+                href="Source"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Source
+              </a>
             </div>
           </div>
         </header>
@@ -5779,7 +5799,10 @@ exports[`Comment List Item should render WithClassName 1`] = `
 }
 
 .emotion-0:target {
+  border: 2px solid #e91e63;
+  border-radius: 20px;
   scroll-margin-top: 80px;
+  padding: 16px;
 }
 
 .emotion-2 {
@@ -5790,7 +5813,6 @@ exports[`Comment List Item should render WithClassName 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  padding: 12px;
 }
 
 .emotion-4 {
@@ -5841,10 +5863,6 @@ exports[`Comment List Item should render WithClassName 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: #e91e63;
-}
-
-.emotion-18 {
-  padding: 12px;
 }
 
 .emotion-20 {
@@ -6543,7 +6561,10 @@ exports[`Comment List Item should render WithEmotion 1`] = `
 }
 
 .emotion-0:target {
+  border: 2px solid #e91e63;
+  border-radius: 20px;
   scroll-margin-top: 80px;
+  padding: 16px;
 }
 
 .emotion-2 {
@@ -6554,7 +6575,6 @@ exports[`Comment List Item should render WithEmotion 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  padding: 12px;
 }
 
 .emotion-4 {
@@ -6605,10 +6625,6 @@ exports[`Comment List Item should render WithEmotion 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: #e91e63;
-}
-
-.emotion-18 {
-  padding: 12px;
 }
 
 .emotion-20 {

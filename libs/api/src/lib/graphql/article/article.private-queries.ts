@@ -59,7 +59,7 @@ export const getArticlePreviewLink = async (
     expiresInMinutes: hours * 60
   })
 
-  return urlAdapter.getArticlePreviewURL(token)
+  return await urlAdapter.getArticlePreviewURL(token)
 }
 
 export const getAdminArticles = async (

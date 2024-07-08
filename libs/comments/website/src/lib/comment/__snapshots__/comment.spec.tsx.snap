@@ -8,7 +8,10 @@ exports[`Comment should render AnonymousUser 1`] = `
 }
 
 .emotion-0:target {
+  border: 2px solid #e91e63;
+  border-radius: 20px;
   scroll-margin-top: 80px;
+  padding: 16px;
 }
 
 .emotion-2 {
@@ -19,7 +22,6 @@ exports[`Comment should render AnonymousUser 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  padding: 12px;
 }
 
 .emotion-4 {
@@ -53,10 +55,18 @@ exports[`Comment should render AnonymousUser 1`] = `
 }
 
 .emotion-12 {
-  padding: 12px;
+  font-size: 0.75em;
+  font-weight: 300;
+  color: #e91e63;
 }
 
 .emotion-14 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: #e91e63;
+}
+
+.emotion-18 {
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
@@ -64,11 +74,11 @@ exports[`Comment should render AnonymousUser 1`] = `
   font-size: 1rem;
 }
 
-.emotion-14.MuiTypography-gutterBottom {
+.emotion-18.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-17 {
+.emotion-21 {
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
@@ -77,11 +87,11 @@ exports[`Comment should render AnonymousUser 1`] = `
   margin-bottom: 0.35em;
 }
 
-.emotion-17.MuiTypography-gutterBottom {
+.emotion-21.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-17:last-child {
+.emotion-21:last-child {
   margin-bottom: 0;
 }
 
@@ -118,20 +128,32 @@ https://unsplash.it/200/200 200w"
             Dr. Anonymous
           </div>
         </div>
+        <div
+          class="emotion-12 emotion-13"
+        >
+          <a
+            class="emotion-14 emotion-15"
+            href="Source"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Source
+          </a>
+        </div>
       </div>
     </header>
     <div
-      class="emotion-12 emotion-13"
+      class="emotion-16 emotion-17"
     >
       <h1
-        class="MuiTypography-root MuiTypography-body1 emotion-14"
+        class="MuiTypography-root MuiTypography-body1 emotion-18"
       >
         <strong>
           de Finibus Bonorum et Malorum
         </strong>
       </h1>
       <div
-        class="emotion-15 emotion-16"
+        class="emotion-19 emotion-20"
       >
         <div
           data-gramm="false"
@@ -140,7 +162,7 @@ https://unsplash.it/200/200 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-17"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-21"
             data-slate-node="element"
           >
             <span
@@ -168,7 +190,10 @@ exports[`Comment should render PendingApproval 1`] = `
 }
 
 .emotion-0:target {
+  border: 2px solid #e91e63;
+  border-radius: 20px;
   scroll-margin-top: 80px;
+  padding: 16px;
 }
 
 .emotion-2 {
@@ -179,7 +204,6 @@ exports[`Comment should render PendingApproval 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  padding: 12px;
 }
 
 .emotion-4 {
@@ -230,10 +254,6 @@ exports[`Comment should render PendingApproval 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: #e91e63;
-}
-
-.emotion-18 {
-  padding: 12px;
 }
 
 .emotion-20 {
@@ -384,7 +404,10 @@ exports[`Comment should render PendingUserChanges 1`] = `
 }
 
 .emotion-0:target {
+  border: 2px solid #e91e63;
+  border-radius: 20px;
   scroll-margin-top: 80px;
+  padding: 16px;
 }
 
 .emotion-2 {
@@ -395,7 +418,6 @@ exports[`Comment should render PendingUserChanges 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  padding: 12px;
 }
 
 .emotion-4 {
@@ -446,10 +468,6 @@ exports[`Comment should render PendingUserChanges 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: #e91e63;
-}
-
-.emotion-18 {
-  padding: 12px;
 }
 
 .emotion-20 {
@@ -600,7 +618,10 @@ exports[`Comment should render Rejected 1`] = `
 }
 
 .emotion-0:target {
+  border: 2px solid #e91e63;
+  border-radius: 20px;
   scroll-margin-top: 80px;
+  padding: 16px;
 }
 
 .emotion-2 {
@@ -611,7 +632,6 @@ exports[`Comment should render Rejected 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  padding: 12px;
 }
 
 .emotion-4 {
@@ -662,10 +682,6 @@ exports[`Comment should render Rejected 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: #e91e63;
-}
-
-.emotion-18 {
-  padding: 12px;
 }
 
 .emotion-20 {
@@ -816,7 +832,10 @@ exports[`Comment should render VerifiedUser 1`] = `
 }
 
 .emotion-0:target {
+  border: 2px solid #e91e63;
+  border-radius: 20px;
   scroll-margin-top: 80px;
+  padding: 16px;
 }
 
 .emotion-2 {
@@ -827,7 +846,6 @@ exports[`Comment should render VerifiedUser 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  padding: 12px;
 }
 
 .emotion-4 {
@@ -878,10 +896,6 @@ exports[`Comment should render VerifiedUser 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: #e91e63;
-}
-
-.emotion-18 {
-  padding: 12px;
 }
 
 .emotion-20 {
@@ -1032,7 +1046,10 @@ exports[`Comment should render WithClassName 1`] = `
 }
 
 .emotion-0:target {
+  border: 2px solid #e91e63;
+  border-radius: 20px;
   scroll-margin-top: 80px;
+  padding: 16px;
 }
 
 .emotion-2 {
@@ -1043,7 +1060,6 @@ exports[`Comment should render WithClassName 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  padding: 12px;
 }
 
 .emotion-4 {
@@ -1094,10 +1110,6 @@ exports[`Comment should render WithClassName 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: #e91e63;
-}
-
-.emotion-18 {
-  padding: 12px;
 }
 
 .emotion-20 {
@@ -1248,7 +1260,10 @@ exports[`Comment should render WithEmotion 1`] = `
 }
 
 .emotion-0:target {
+  border: 2px solid #e91e63;
+  border-radius: 20px;
   scroll-margin-top: 80px;
+  padding: 16px;
 }
 
 .emotion-2 {
@@ -1259,7 +1274,6 @@ exports[`Comment should render WithEmotion 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  padding: 12px;
 }
 
 .emotion-4 {
@@ -1310,10 +1324,6 @@ exports[`Comment should render WithEmotion 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: #e91e63;
-}
-
-.emotion-18 {
-  padding: 12px;
 }
 
 .emotion-20 {
@@ -1464,7 +1474,10 @@ exports[`Comment should render WithoutFlair 1`] = `
 }
 
 .emotion-0:target {
+  border: 2px solid #e91e63;
+  border-radius: 20px;
   scroll-margin-top: 80px;
+  padding: 16px;
 }
 
 .emotion-2 {
@@ -1475,7 +1488,6 @@ exports[`Comment should render WithoutFlair 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  padding: 12px;
 }
 
 .emotion-4 {
@@ -1518,10 +1530,17 @@ exports[`Comment should render WithoutFlair 1`] = `
 }
 
 .emotion-14 {
-  padding: 12px;
+  font-size: 0.75em;
+  font-weight: 300;
 }
 
 .emotion-16 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  color: #e91e63;
+}
+
+.emotion-20 {
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
@@ -1529,11 +1548,11 @@ exports[`Comment should render WithoutFlair 1`] = `
   font-size: 1rem;
 }
 
-.emotion-16.MuiTypography-gutterBottom {
+.emotion-20.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-19 {
+.emotion-23 {
   margin: 0;
   line-height: 1.7;
   font-family: Merriweather,Roboto,sans-serif;
@@ -1542,11 +1561,11 @@ exports[`Comment should render WithoutFlair 1`] = `
   margin-bottom: 0.35em;
 }
 
-.emotion-19.MuiTypography-gutterBottom {
+.emotion-23.MuiTypography-gutterBottom {
   margin-bottom: 24px;
 }
 
-.emotion-19:last-child {
+.emotion-23:last-child {
   margin-bottom: 0;
 }
 
@@ -1607,20 +1626,32 @@ https://unsplash.it/200/200 200w"
             </svg>
           </div>
         </div>
+        <div
+          class="emotion-14 emotion-15"
+        >
+          <a
+            class="emotion-16 emotion-17"
+            href="Source"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            Source
+          </a>
+        </div>
       </div>
     </header>
     <div
-      class="emotion-14 emotion-15"
+      class="emotion-18 emotion-19"
     >
       <h1
-        class="MuiTypography-root MuiTypography-body1 emotion-16"
+        class="MuiTypography-root MuiTypography-body1 emotion-20"
       >
         <strong>
           de Finibus Bonorum et Malorum
         </strong>
       </h1>
       <div
-        class="emotion-17 emotion-18"
+        class="emotion-21 emotion-22"
       >
         <div
           data-gramm="false"
@@ -1629,7 +1660,7 @@ https://unsplash.it/200/200 200w"
           style="outline: none; white-space: pre-wrap; word-wrap: break-word;"
         >
           <p
-            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-19"
+            class="MuiTypography-root MuiTypography-body1 MuiTypography-gutterBottom emotion-23"
             data-slate-node="element"
           >
             <span
@@ -1657,7 +1688,10 @@ exports[`Comment should render WithoutImage 1`] = `
 }
 
 .emotion-0:target {
+  border: 2px solid #e91e63;
+  border-radius: 20px;
   scroll-margin-top: 80px;
+  padding: 16px;
 }
 
 .emotion-2 {
@@ -1668,7 +1702,6 @@ exports[`Comment should render WithoutImage 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  padding: 12px;
 }
 
 .emotion-4 {
@@ -1714,10 +1747,6 @@ exports[`Comment should render WithoutImage 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: #e91e63;
-}
-
-.emotion-17 {
-  padding: 12px;
 }
 
 .emotion-19 {
@@ -1872,7 +1901,10 @@ exports[`Comment should render WithoutPreferredName 1`] = `
 }
 
 .emotion-0:target {
+  border: 2px solid #e91e63;
+  border-radius: 20px;
   scroll-margin-top: 80px;
+  padding: 16px;
 }
 
 .emotion-2 {
@@ -1883,7 +1915,6 @@ exports[`Comment should render WithoutPreferredName 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  padding: 12px;
 }
 
 .emotion-4 {
@@ -1934,10 +1965,6 @@ exports[`Comment should render WithoutPreferredName 1`] = `
   -webkit-text-decoration: none;
   text-decoration: none;
   color: #e91e63;
-}
-
-.emotion-18 {
-  padding: 12px;
 }
 
 .emotion-20 {
@@ -2088,7 +2115,10 @@ exports[`Comment should render WithoutSource 1`] = `
 }
 
 .emotion-0:target {
+  border: 2px solid #e91e63;
+  border-radius: 20px;
   scroll-margin-top: 80px;
+  padding: 16px;
 }
 
 .emotion-2 {
@@ -2099,7 +2129,6 @@ exports[`Comment should render WithoutSource 1`] = `
   -webkit-box-align: center;
   -ms-flex-align: center;
   align-items: center;
-  padding: 12px;
 }
 
 .emotion-4 {
@@ -2144,10 +2173,6 @@ exports[`Comment should render WithoutSource 1`] = `
 .emotion-14 {
   font-size: 0.75em;
   font-weight: 300;
-}
-
-.emotion-16 {
-  padding: 12px;
 }
 
 .emotion-18 {
@@ -2239,7 +2264,7 @@ https://unsplash.it/200/200 200w"
         <div
           class="emotion-14 emotion-15"
         >
-          29. Juni 2023 | 09:39
+          29.06.2023 09:39
         </div>
       </div>
     </header>
