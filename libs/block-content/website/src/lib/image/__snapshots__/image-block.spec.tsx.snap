@@ -2,28 +2,7 @@
 
 exports[`Image Block should render Default 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  margin: 0;
-  display: grid;
-  justify-items: center;
-}
-
-.emotion-2 {
-  display: grid;
-  gap: 16px;
-  grid-template-columns: auto;
-}
-
-.emotion-4 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
-  justify-self: center;
-}
-
-<figure
+  <figure
     class="emotion-0 emotion-1"
   >
     <div
@@ -53,28 +32,7 @@ https://unsplash.it/200/200 200w"
 
 exports[`Image Block should render WithClassName 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  margin: 0;
-  display: grid;
-  justify-items: center;
-}
-
-.emotion-2 {
-  display: grid;
-  gap: 16px;
-  grid-template-columns: auto;
-}
-
-.emotion-4 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
-  justify-self: center;
-}
-
-<figure
+  <figure
     class="extra-classname emotion-0 emotion-1"
   >
     <div
@@ -104,28 +62,7 @@ https://unsplash.it/200/200 200w"
 
 exports[`Image Block should render WithEmotion 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  margin: 0;
-  display: grid;
-  justify-items: center;
-}
-
-.emotion-2 {
-  display: grid;
-  gap: 16px;
-  grid-template-columns: auto;
-}
-
-.emotion-4 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
-  justify-self: center;
-}
-
-<figure
+  <figure
     class="emotion-0 emotion-1"
   >
     <div
@@ -155,41 +92,7 @@ https://unsplash.it/200/200 200w"
 
 exports[`Image Block should render WithLink 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  margin: 0;
-  display: grid;
-  justify-items: center;
-}
-
-.emotion-2 {
-  display: grid;
-  gap: 16px;
-  grid-template-columns: auto;
-}
-
-.emotion-4 {
-  margin: 0;
-  font: inherit;
-  color: #e91e63;
-  -webkit-text-decoration: underline;
-  text-decoration: underline;
-  text-decoration-color: rgba(233, 30, 99, 0.4);
-}
-
-.emotion-4:hover {
-  text-decoration-color: inherit;
-}
-
-.emotion-5 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
-  justify-self: center;
-}
-
-<figure
+  <figure
     class="emotion-0 emotion-1"
   >
     <div
@@ -225,28 +128,7 @@ https://unsplash.it/200/200 200w"
 
 exports[`Image Block should render WithoutCaption 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  margin: 0;
-  display: grid;
-  justify-items: center;
-}
-
-.emotion-2 {
-  display: grid;
-  gap: 16px;
-  grid-template-columns: auto;
-}
-
-.emotion-4 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
-  justify-self: center;
-}
-
-<figure
+  <figure
     class="emotion-0 emotion-1"
   >
     <div
@@ -276,28 +158,7 @@ https://unsplash.it/200/200 200w"
 
 exports[`Image Block should render WithoutSource 1`] = `
 <DocumentFragment>
-  .emotion-0 {
-  margin: 0;
-  display: grid;
-  justify-items: center;
-}
-
-.emotion-2 {
-  display: grid;
-  gap: 16px;
-  grid-template-columns: auto;
-}
-
-.emotion-4 {
-  max-width: 100%;
-  height: auto;
-  aspect-ratio: auto 1;
-  max-height: 80lvh;
-  object-fit: contain;
-  justify-self: center;
-}
-
-<figure
+  <figure
     class="emotion-0 emotion-1"
   >
     <div
