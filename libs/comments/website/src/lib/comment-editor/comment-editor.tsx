@@ -167,7 +167,7 @@ export const CommentEditor = ({
     elements: {TextField, Button, Alert, H3}
   } = useWebsiteBuilder()
   const {hasUser} = useUser()
-  const [modalOpen, setModalOpen] = useState(true)
+  const [modalOpen, setModalOpen] = useState(!hasUser)
   const [showInitialModal, setShowInitialModal] = useState(anonymousCanComment)
 
   const handleClose = () => {

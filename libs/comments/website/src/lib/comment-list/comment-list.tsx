@@ -94,6 +94,7 @@ export const CommentList = ({
           loading={add.loading}
           canReply={canReply}
           signUpUrl={signUpUrl}
+          anonymousCanComment={anonymousCanComment}
         />
       )}
 

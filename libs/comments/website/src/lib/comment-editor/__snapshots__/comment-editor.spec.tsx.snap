@@ -4129,8 +4129,6 @@ exports[`CommentEditor should render LoggedIn 1`] = `
   .emotion-0 {
   display: grid;
   gap: 16px;
-  -webkit-filter: blur(4px);
-  filter: blur(4px);
 }
 
 .emotion-2 {
@@ -4936,8 +4934,6 @@ exports[`CommentEditor should render LoggedInFilled 1`] = `
   .emotion-0 {
   display: grid;
   gap: 16px;
-  -webkit-filter: blur(4px);
-  filter: blur(4px);
 }
 
 .emotion-2 {
@@ -5608,8 +5604,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
       <label
         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-3"
         data-shrink="false"
-        for=":rn:"
-        id=":rn:-label"
+        for=":rm:"
+        id=":rm:-label"
       >
         Titel
       </label>
@@ -5619,7 +5615,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
         <input
           aria-invalid="false"
           class="MuiInputBase-input MuiOutlinedInput-input emotion-5"
-          id=":rn:"
+          id=":rm:"
           name="title"
           placeholder="Gib Deinem Beitrag einen Titel."
           type="text"
@@ -5645,8 +5641,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
       <label
         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-3"
         data-shrink="false"
-        for=":ro:"
-        id=":ro:-label"
+        for=":rn:"
+        id=":rn:-label"
       >
         Kommentar
       </label>
@@ -5654,10 +5650,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
         class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-multiline emotion-10"
       >
         <textarea
-          aria-describedby=":ro:-helper-text"
+          aria-describedby=":rn:-helper-text"
           aria-invalid="false"
           class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline emotion-11"
-          id=":ro:"
+          id=":rn:"
           name="comment"
           placeholder="Beitrag verfassen"
           style="height: 0px; overflow: hidden;"
@@ -5684,7 +5680,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
       </div>
       <p
         class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-contained emotion-15"
-        id=":ro:-helper-text"
+        id=":rn:-helper-text"
       >
         0 / 1000 Zeichen
       </p>
@@ -5743,8 +5739,6 @@ exports[`CommentEditor should render LoggedInInvalid 1`] = `
   .emotion-0 {
   display: grid;
   gap: 16px;
-  -webkit-filter: blur(4px);
-  filter: blur(4px);
 }
 
 .emotion-2 {
@@ -6415,8 +6409,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
       <label
         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-3"
         data-shrink="false"
-        for=":rq:"
-        id=":rq:-label"
+        for=":ro:"
+        id=":ro:-label"
       >
         Titel
       </label>
@@ -6426,7 +6420,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
         <input
           aria-invalid="false"
           class="MuiInputBase-input MuiOutlinedInput-input emotion-5"
-          id=":rq:"
+          id=":ro:"
           name="title"
           placeholder="Gib Deinem Beitrag einen Titel."
           type="text"
@@ -6452,8 +6446,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
       <label
         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-3"
         data-shrink="false"
-        for=":rr:"
-        id=":rr:-label"
+        for=":rp:"
+        id=":rp:-label"
       >
         Kommentar
       </label>
@@ -6461,10 +6455,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
         class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-multiline emotion-10"
       >
         <textarea
-          aria-describedby=":rr:-helper-text"
+          aria-describedby=":rp:-helper-text"
           aria-invalid="false"
           class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline emotion-11"
-          id=":rr:"
+          id=":rp:"
           name="comment"
           placeholder="Beitrag verfassen"
           style="height: 0px; overflow: hidden;"
@@ -6491,7 +6485,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-11:focus::-ms-input-
       </div>
       <p
         class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-contained emotion-15"
-        id=":rr:-helper-text"
+        id=":rp:-helper-text"
       >
         0 / 1000 Zeichen
       </p>
@@ -7280,8 +7274,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
       <label
         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-3"
         data-shrink="false"
-        for=":rt:"
-        id=":rt:-label"
+        for=":rq:"
+        id=":rq:-label"
       >
         Name
       </label>
@@ -7291,7 +7285,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
         <input
           aria-invalid="false"
           class="MuiInputBase-input MuiOutlinedInput-input emotion-5"
-          id=":rt:"
+          id=":rq:"
           name="guestUsername"
           placeholder="Dein Name"
           type="text"
@@ -7317,8 +7311,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
       <label
         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-3"
         data-shrink="false"
-        for=":ru:"
-        id=":ru:-label"
+        for=":rr:"
+        id=":rr:-label"
       >
         Titel
       </label>
@@ -7328,7 +7322,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
         <input
           aria-invalid="false"
           class="MuiInputBase-input MuiOutlinedInput-input emotion-5"
-          id=":ru:"
+          id=":rr:"
           name="title"
           placeholder="Gib Deinem Beitrag einen Titel."
           type="text"
@@ -7354,8 +7348,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
       <label
         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-3"
         data-shrink="false"
-        for=":rv:"
-        id=":rv:-label"
+        for=":rs:"
+        id=":rs:-label"
       >
         Kommentar
       </label>
@@ -7363,10 +7357,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
         class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-multiline emotion-16"
       >
         <textarea
-          aria-describedby=":rv:-helper-text"
+          aria-describedby=":rs:-helper-text"
           aria-invalid="false"
           class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline emotion-17"
-          id=":rv:"
+          id=":rs:"
           name="comment"
           placeholder="Beitrag verfassen"
           style="height: 0px; overflow: hidden;"
@@ -7393,7 +7387,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
       </div>
       <p
         class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-contained emotion-21"
-        id=":rv:-helper-text"
+        id=":rs:-helper-text"
       >
         0 / 1000 Zeichen
       </p>
@@ -8295,8 +8289,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
       <label
         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-3"
         data-shrink="false"
-        for=":r11:"
-        id=":r11:-label"
+        for=":ru:"
+        id=":ru:-label"
       >
         Name
       </label>
@@ -8306,7 +8300,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
         <input
           aria-invalid="false"
           class="MuiInputBase-input MuiOutlinedInput-input emotion-5"
-          id=":r11:"
+          id=":ru:"
           name="guestUsername"
           placeholder="Dein Name"
           type="text"
@@ -8332,8 +8326,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
       <label
         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-3"
         data-shrink="false"
-        for=":r12:"
-        id=":r12:-label"
+        for=":rv:"
+        id=":rv:-label"
       >
         Titel
       </label>
@@ -8343,7 +8337,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
         <input
           aria-invalid="false"
           class="MuiInputBase-input MuiOutlinedInput-input emotion-5"
-          id=":r12:"
+          id=":rv:"
           name="title"
           placeholder="Gib Deinem Beitrag einen Titel."
           type="text"
@@ -8369,8 +8363,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
       <label
         class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-3"
         data-shrink="false"
-        for=":r13:"
-        id=":r13:-label"
+        for=":r10:"
+        id=":r10:-label"
       >
         Kommentar
       </label>
@@ -8378,10 +8372,10 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
         class="MuiInputBase-root MuiOutlinedInput-root MuiInputBase-colorPrimary MuiInputBase-fullWidth MuiInputBase-formControl MuiInputBase-multiline emotion-16"
       >
         <textarea
-          aria-describedby=":r13:-helper-text"
+          aria-describedby=":r10:-helper-text"
           aria-invalid="false"
           class="MuiInputBase-input MuiOutlinedInput-input MuiInputBase-inputMultiline emotion-17"
-          id=":r13:"
+          id=":r10:"
           name="comment"
           placeholder="Beitrag verfassen"
           style="height: 0px; overflow: hidden;"
@@ -8408,7 +8402,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
       </div>
       <p
         class="MuiFormHelperText-root MuiFormHelperText-sizeMedium MuiFormHelperText-contained emotion-21"
-        id=":r13:-helper-text"
+        id=":r10:-helper-text"
       >
         0 / 1000 Zeichen
       </p>
@@ -8481,8 +8475,8 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
         <label
           class="MuiFormLabel-root MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined MuiFormLabel-colorPrimary MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-sizeMedium MuiInputLabel-outlined emotion-3"
           data-shrink="false"
-          for=":r14:"
-          id=":r14:-label"
+          for=":r11:"
+          id=":r11:-label"
         >
           Captcha
         </label>
@@ -8492,7 +8486,7 @@ label[data-shrink=false]+.MuiInputBase-formControl .emotion-17:focus::-ms-input-
           <input
             aria-invalid="false"
             class="MuiInputBase-input MuiOutlinedInput-input emotion-5"
-            id=":r14:"
+            id=":r11:"
             name="challenge.challengeSolution"
             type="text"
             value=""
