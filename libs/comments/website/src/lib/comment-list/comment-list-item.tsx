@@ -1,4 +1,4 @@
-import {Theme, css, lighten, styled, useTheme} from '@mui/material'
+import {lighten, styled} from '@mui/material'
 import {useUser} from '@wepublish/authentication/website'
 import {CommentState} from '@wepublish/website/api'
 import {BuilderCommentListItemProps, useWebsiteBuilder} from '@wepublish/website/builder'
@@ -6,7 +6,6 @@ import {cond} from 'ramda'
 import {MdEdit, MdReply} from 'react-icons/md'
 import {getStateForEditor} from './comment-list.state'
 import {CommentListItemShare} from './comment-list-item-share'
-import {useMemo} from 'react'
 import {Button} from '@wepublish/ui'
 
 export const CommentListItemChildren = styled('aside')`

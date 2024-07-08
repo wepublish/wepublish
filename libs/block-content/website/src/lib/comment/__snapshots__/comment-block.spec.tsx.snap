@@ -57,6 +57,7 @@ exports[`Comment List should render Default 1`] = `
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
   font-size: 1rem;
+  font-weight: 700;
 }
 
 .emotion-14 {
@@ -85,6 +86,7 @@ exports[`Comment List should render Default 1`] = `
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
   font-size: 1rem;
+  font-weight: 600;
 }
 
 .emotion-22.MuiTypography-gutterBottom {
@@ -139,7 +141,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-10 emotion-11"
           >
             <div
-              class="css-1hh6kfu-CommentAuthor ekbi54x6"
               class="emotion-12 emotion-13"
             >
               Signed Up User
@@ -187,8 +188,6 @@ https://unsplash.it/200/200 200w"
         class="emotion-20 emotion-21"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-        <h1
           class="MuiTypography-root MuiTypography-body1 emotion-22"
         >
           de Finibus Bonorum et Malorum
@@ -248,7 +247,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-10 emotion-11"
           >
             <div
-              class="css-1hh6kfu-CommentAuthor ekbi54x6"
               class="emotion-12 emotion-13"
             >
               Signed Up User
@@ -296,8 +294,6 @@ https://unsplash.it/200/200 200w"
         class="emotion-20 emotion-21"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-        <h1
           class="MuiTypography-root MuiTypography-body1 emotion-22"
         >
           de Finibus Bonorum et Malorum
@@ -390,6 +386,7 @@ exports[`Comment List should render WithAnonymousComments 1`] = `
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
   font-size: 1rem;
+  font-weight: 700;
 }
 
 .emotion-14 {
@@ -410,6 +407,7 @@ exports[`Comment List should render WithAnonymousComments 1`] = `
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
   font-size: 1rem;
+  font-weight: 600;
 }
 
 .emotion-20.MuiTypography-gutterBottom {
@@ -464,7 +462,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-10 emotion-11"
           >
             <div
-              class="css-1hh6kfu-CommentAuthor ekbi54x6"
               class="emotion-12 emotion-13"
             >
               Dr. Anonymous
@@ -488,8 +485,6 @@ https://unsplash.it/200/200 200w"
         class="emotion-18 emotion-19"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-        <h1
           class="MuiTypography-root MuiTypography-body1 emotion-20"
         >
           de Finibus Bonorum et Malorum
@@ -549,7 +544,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-10 emotion-11"
           >
             <div
-              class="css-1hh6kfu-CommentAuthor ekbi54x6"
               class="emotion-12 emotion-13"
             >
               Dr. Anonymous
@@ -573,8 +567,6 @@ https://unsplash.it/200/200 200w"
         class="emotion-18 emotion-19"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-        <h1
           class="MuiTypography-root MuiTypography-body1 emotion-20"
         >
           de Finibus Bonorum et Malorum
@@ -667,6 +659,7 @@ exports[`Comment List should render WithClassName 1`] = `
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
   font-size: 1rem;
+  font-weight: 700;
 }
 
 .emotion-14 {
@@ -695,6 +688,7 @@ exports[`Comment List should render WithClassName 1`] = `
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
   font-size: 1rem;
+  font-weight: 600;
 }
 
 .emotion-22.MuiTypography-gutterBottom {
@@ -749,7 +743,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-10 emotion-11"
           >
             <div
-              class="css-1hh6kfu-CommentAuthor ekbi54x6"
               class="emotion-12 emotion-13"
             >
               Signed Up User
@@ -797,8 +790,6 @@ https://unsplash.it/200/200 200w"
         class="emotion-20 emotion-21"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-        <h1
           class="MuiTypography-root MuiTypography-body1 emotion-22"
         >
           de Finibus Bonorum et Malorum
@@ -858,7 +849,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-10 emotion-11"
           >
             <div
-              class="css-1hh6kfu-CommentAuthor ekbi54x6"
               class="emotion-12 emotion-13"
             >
               Signed Up User
@@ -906,8 +896,6 @@ https://unsplash.it/200/200 200w"
         class="emotion-20 emotion-21"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-        <h1
           class="MuiTypography-root MuiTypography-body1 emotion-22"
         >
           de Finibus Bonorum et Malorum
@@ -1000,6 +988,7 @@ exports[`Comment List should render WithEmotion 1`] = `
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
   font-size: 1rem;
+  font-weight: 700;
 }
 
 .emotion-14 {
@@ -1028,6 +1017,7 @@ exports[`Comment List should render WithEmotion 1`] = `
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
   font-size: 1rem;
+  font-weight: 600;
 }
 
 .emotion-22.MuiTypography-gutterBottom {
@@ -1082,7 +1072,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-10 emotion-11"
           >
             <div
-              class="css-1hh6kfu-CommentAuthor ekbi54x6"
               class="emotion-12 emotion-13"
             >
               Signed Up User
@@ -1130,8 +1119,6 @@ https://unsplash.it/200/200 200w"
         class="emotion-20 emotion-21"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-        <h1
           class="MuiTypography-root MuiTypography-body1 emotion-22"
         >
           de Finibus Bonorum et Malorum
@@ -1191,7 +1178,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-10 emotion-11"
           >
             <div
-              class="css-1hh6kfu-CommentAuthor ekbi54x6"
               class="emotion-12 emotion-13"
             >
               Signed Up User
@@ -1239,8 +1225,6 @@ https://unsplash.it/200/200 200w"
         class="emotion-20 emotion-21"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-        <h1
           class="MuiTypography-root MuiTypography-body1 emotion-22"
         >
           de Finibus Bonorum et Malorum
@@ -1333,6 +1317,7 @@ exports[`Comment List should render WithError 1`] = `
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
   font-size: 1rem;
+  font-weight: 700;
 }
 
 .emotion-14 {
@@ -1361,6 +1346,7 @@ exports[`Comment List should render WithError 1`] = `
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
   font-size: 1rem;
+  font-weight: 600;
 }
 
 .emotion-22.MuiTypography-gutterBottom {
@@ -1415,7 +1401,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-10 emotion-11"
           >
             <div
-              class="css-1hh6kfu-CommentAuthor ekbi54x6"
               class="emotion-12 emotion-13"
             >
               Signed Up User
@@ -1463,8 +1448,6 @@ https://unsplash.it/200/200 200w"
         class="emotion-20 emotion-21"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-        <h1
           class="MuiTypography-root MuiTypography-body1 emotion-22"
         >
           de Finibus Bonorum et Malorum
@@ -1524,7 +1507,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-10 emotion-11"
           >
             <div
-              class="css-1hh6kfu-CommentAuthor ekbi54x6"
               class="emotion-12 emotion-13"
             >
               Signed Up User
@@ -1572,8 +1554,6 @@ https://unsplash.it/200/200 200w"
         class="emotion-20 emotion-21"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-        <h1
           class="MuiTypography-root MuiTypography-body1 emotion-22"
         >
           de Finibus Bonorum et Malorum
@@ -1666,6 +1646,7 @@ exports[`Comment List should render WithLoading 1`] = `
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
   font-size: 1rem;
+  font-weight: 700;
 }
 
 .emotion-14 {
@@ -1694,6 +1675,7 @@ exports[`Comment List should render WithLoading 1`] = `
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
   font-size: 1rem;
+  font-weight: 600;
 }
 
 .emotion-22.MuiTypography-gutterBottom {
@@ -1748,7 +1730,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-10 emotion-11"
           >
             <div
-              class="css-1hh6kfu-CommentAuthor ekbi54x6"
               class="emotion-12 emotion-13"
             >
               Signed Up User
@@ -1796,8 +1777,6 @@ https://unsplash.it/200/200 200w"
         class="emotion-20 emotion-21"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-        <h1
           class="MuiTypography-root MuiTypography-body1 emotion-22"
         >
           de Finibus Bonorum et Malorum
@@ -1857,7 +1836,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-10 emotion-11"
           >
             <div
-              class="css-1hh6kfu-CommentAuthor ekbi54x6"
               class="emotion-12 emotion-13"
             >
               Signed Up User
@@ -1905,8 +1883,6 @@ https://unsplash.it/200/200 200w"
         class="emotion-20 emotion-21"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-        <h1
           class="MuiTypography-root MuiTypography-body1 emotion-22"
         >
           de Finibus Bonorum et Malorum

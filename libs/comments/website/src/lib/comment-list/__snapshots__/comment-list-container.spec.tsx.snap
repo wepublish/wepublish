@@ -57,6 +57,7 @@ exports[`CommentList Container should render Default 1`] = `
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
   font-size: 1rem;
+  font-weight: 700;
 }
 
 .emotion-14 {
@@ -85,6 +86,7 @@ exports[`CommentList Container should render Default 1`] = `
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
   font-size: 1rem;
+  font-weight: 600;
 }
 
 .emotion-22.MuiTypography-gutterBottom {
@@ -206,7 +208,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-10 emotion-11"
           >
             <div
-              class="css-1hh6kfu-CommentAuthor ekbi54x6"
               class="emotion-12 emotion-13"
             >
               Signed Up User
@@ -254,8 +255,6 @@ https://unsplash.it/200/200 200w"
         class="emotion-20 emotion-21"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-        <h1
           class="MuiTypography-root MuiTypography-body1 emotion-22"
         >
           de Finibus Bonorum et Malorum
@@ -287,43 +286,6 @@ https://unsplash.it/200/200 200w"
         </div>
       </div>
       <div
-        class="css-rtudyd-CommentListItemActions ew53o3y2"
-      >
-        <div
-          class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-        >
-          <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-            tabindex="0"
-            type="button"
-          >
-            <span
-              class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-            >
-              <svg
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                />
-              </svg>
-            </span>
-            Antworten
-            <span
-              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-            />
-          </button>
-        </div>
         class="emotion-26 emotion-27"
       >
         <div
@@ -362,7 +324,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-10 emotion-11"
           >
             <div
-              class="css-1hh6kfu-CommentAuthor ekbi54x6"
               class="emotion-12 emotion-13"
             >
               Signed Up User
@@ -410,8 +371,6 @@ https://unsplash.it/200/200 200w"
         class="emotion-20 emotion-21"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-        <h1
           class="MuiTypography-root MuiTypography-body1 emotion-22"
         >
           de Finibus Bonorum et Malorum
@@ -443,43 +402,6 @@ https://unsplash.it/200/200 200w"
         </div>
       </div>
       <div
-        class="css-rtudyd-CommentListItemActions ew53o3y2"
-      >
-        <div
-          class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-        >
-          <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-            tabindex="0"
-            type="button"
-          >
-            <span
-              class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-            >
-              <svg
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                />
-              </svg>
-            </span>
-            Antworten
-            <span
-              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-            />
-          </button>
-        </div>
         class="emotion-26 emotion-27"
       >
         <div
@@ -490,7 +412,6 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <aside
-        class="css-uvrneq-CommentListItemChildren ew53o3y3"
         class="emotion-62 emotion-63"
       >
         <article
@@ -521,7 +442,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-10 emotion-11"
               >
                 <div
-                  class="css-1hh6kfu-CommentAuthor ekbi54x6"
                   class="emotion-12 emotion-13"
                 >
                   Signed Up User
@@ -569,8 +489,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-20 emotion-21"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-            <h1
               class="MuiTypography-root MuiTypography-body1 emotion-22"
             >
               de Finibus Bonorum et Malorum
@@ -602,43 +520,6 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="css-rtudyd-CommentListItemActions ew53o3y2"
-          >
-            <div
-              class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-            >
-              <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                tabindex="0"
-                type="button"
-              >
-                <span
-                  class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                >
-                  <svg
-                    fill="currentColor"
-                    height="1em"
-                    stroke="currentColor"
-                    stroke-width="0"
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                    />
-                  </svg>
-                </span>
-                Antworten
-                <span
-                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                />
-              </button>
-            </div>
             class="emotion-26 emotion-27"
           >
             <div
@@ -649,7 +530,6 @@ https://unsplash.it/200/200 200w"
             />
           </div>
           <aside
-            class="css-uvrneq-CommentListItemChildren ew53o3y3"
             class="emotion-62 emotion-63"
           >
             <article
@@ -680,7 +560,6 @@ https://unsplash.it/200/200 200w"
                     class="emotion-10 emotion-11"
                   >
                     <div
-                      class="css-1hh6kfu-CommentAuthor ekbi54x6"
                       class="emotion-12 emotion-13"
                     >
                       Signed Up User
@@ -728,8 +607,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-20 emotion-21"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-                <h1
                   class="MuiTypography-root MuiTypography-body1 emotion-22"
                 >
                   de Finibus Bonorum et Malorum
@@ -761,43 +638,6 @@ https://unsplash.it/200/200 200w"
                 </div>
               </div>
               <div
-                class="css-rtudyd-CommentListItemActions ew53o3y2"
-              >
-                <div
-                  class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-                >
-                  <button
-                    class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                    tabindex="0"
-                    type="button"
-                  >
-                    <span
-                      class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                    >
-                      <svg
-                        fill="currentColor"
-                        height="1em"
-                        stroke="currentColor"
-                        stroke-width="0"
-                        viewBox="0 0 24 24"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                        />
-                      </svg>
-                    </span>
-                    Antworten
-                    <span
-                      class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                    />
-                  </button>
-                </div>
                 class="emotion-26 emotion-27"
               >
                 <div
@@ -838,7 +678,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-10 emotion-11"
               >
                 <div
-                  class="css-1hh6kfu-CommentAuthor ekbi54x6"
                   class="emotion-12 emotion-13"
                 >
                   Dr. Anonymous
@@ -862,8 +701,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-20 emotion-21"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-            <h1
               class="MuiTypography-root MuiTypography-body1 emotion-22"
             >
               de Finibus Bonorum et Malorum
@@ -895,43 +732,6 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="css-rtudyd-CommentListItemActions ew53o3y2"
-          >
-            <div
-              class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-            >
-              <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                tabindex="0"
-                type="button"
-              >
-                <span
-                  class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                >
-                  <svg
-                    fill="currentColor"
-                    height="1em"
-                    stroke="currentColor"
-                    stroke-width="0"
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                    />
-                  </svg>
-                </span>
-                Antworten
-                <span
-                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                />
-              </button>
-            </div>
             class="emotion-26 emotion-27"
           >
             <div
@@ -942,7 +742,6 @@ https://unsplash.it/200/200 200w"
             />
           </div>
           <aside
-            class="css-uvrneq-CommentListItemChildren ew53o3y3"
             class="emotion-62 emotion-63"
           >
             <article
@@ -973,7 +772,6 @@ https://unsplash.it/200/200 200w"
                     class="emotion-10 emotion-11"
                   >
                     <div
-                      class="css-1hh6kfu-CommentAuthor ekbi54x6"
                       class="emotion-12 emotion-13"
                     >
                       Signed Up User
@@ -1021,8 +819,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-20 emotion-21"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-                <h1
                   class="MuiTypography-root MuiTypography-body1 emotion-22"
                 >
                   de Finibus Bonorum et Malorum
@@ -1054,43 +850,6 @@ https://unsplash.it/200/200 200w"
                 </div>
               </div>
               <div
-                class="css-rtudyd-CommentListItemActions ew53o3y2"
-              >
-                <div
-                  class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-                >
-                  <button
-                    class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                    tabindex="0"
-                    type="button"
-                  >
-                    <span
-                      class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                    >
-                      <svg
-                        fill="currentColor"
-                        height="1em"
-                        stroke="currentColor"
-                        stroke-width="0"
-                        viewBox="0 0 24 24"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                        />
-                      </svg>
-                    </span>
-                    Antworten
-                    <span
-                      class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                    />
-                  </button>
-                </div>
                 class="emotion-26 emotion-27"
               >
                 <div
@@ -1133,7 +892,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-10 emotion-11"
           >
             <div
-              class="css-1hh6kfu-CommentAuthor ekbi54x6"
               class="emotion-12 emotion-13"
             >
               Dr. Anonymous
@@ -1157,8 +915,6 @@ https://unsplash.it/200/200 200w"
         class="emotion-20 emotion-21"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-        <h1
           class="MuiTypography-root MuiTypography-body1 emotion-22"
         >
           de Finibus Bonorum et Malorum
@@ -1190,43 +946,6 @@ https://unsplash.it/200/200 200w"
         </div>
       </div>
       <div
-        class="css-rtudyd-CommentListItemActions ew53o3y2"
-      >
-        <div
-          class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-        >
-          <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-            tabindex="0"
-            type="button"
-          >
-            <span
-              class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-            >
-              <svg
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                />
-              </svg>
-            </span>
-            Antworten
-            <span
-              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-            />
-          </button>
-        </div>
         class="emotion-26 emotion-27"
       >
         <div
@@ -1237,7 +956,6 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <aside
-        class="css-uvrneq-CommentListItemChildren ew53o3y3"
         class="emotion-62 emotion-63"
       >
         <article
@@ -1268,7 +986,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-10 emotion-11"
               >
                 <div
-                  class="css-1hh6kfu-CommentAuthor ekbi54x6"
                   class="emotion-12 emotion-13"
                 >
                   Signed Up User
@@ -1316,8 +1033,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-20 emotion-21"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-            <h1
               class="MuiTypography-root MuiTypography-body1 emotion-22"
             >
               de Finibus Bonorum et Malorum
@@ -1349,43 +1064,6 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="css-rtudyd-CommentListItemActions ew53o3y2"
-          >
-            <div
-              class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-            >
-              <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                tabindex="0"
-                type="button"
-              >
-                <span
-                  class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                >
-                  <svg
-                    fill="currentColor"
-                    height="1em"
-                    stroke="currentColor"
-                    stroke-width="0"
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                    />
-                  </svg>
-                </span>
-                Antworten
-                <span
-                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                />
-              </button>
-            </div>
             class="emotion-26 emotion-27"
           >
             <div
@@ -1396,7 +1074,6 @@ https://unsplash.it/200/200 200w"
             />
           </div>
           <aside
-            class="css-uvrneq-CommentListItemChildren ew53o3y3"
             class="emotion-62 emotion-63"
           >
             <article
@@ -1427,7 +1104,6 @@ https://unsplash.it/200/200 200w"
                     class="emotion-10 emotion-11"
                   >
                     <div
-                      class="css-1hh6kfu-CommentAuthor ekbi54x6"
                       class="emotion-12 emotion-13"
                     >
                       Signed Up User
@@ -1475,8 +1151,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-20 emotion-21"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-                <h1
                   class="MuiTypography-root MuiTypography-body1 emotion-22"
                 >
                   de Finibus Bonorum et Malorum
@@ -1508,43 +1182,6 @@ https://unsplash.it/200/200 200w"
                 </div>
               </div>
               <div
-                class="css-rtudyd-CommentListItemActions ew53o3y2"
-              >
-                <div
-                  class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-                >
-                  <button
-                    class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                    tabindex="0"
-                    type="button"
-                  >
-                    <span
-                      class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                    >
-                      <svg
-                        fill="currentColor"
-                        height="1em"
-                        stroke="currentColor"
-                        stroke-width="0"
-                        viewBox="0 0 24 24"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                        />
-                      </svg>
-                    </span>
-                    Antworten
-                    <span
-                      class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                    />
-                  </button>
-                </div>
                 class="emotion-26 emotion-27"
               >
                 <div
@@ -1585,7 +1222,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-10 emotion-11"
               >
                 <div
-                  class="css-1hh6kfu-CommentAuthor ekbi54x6"
                   class="emotion-12 emotion-13"
                 >
                   Dr. Anonymous
@@ -1609,8 +1245,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-20 emotion-21"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-            <h1
               class="MuiTypography-root MuiTypography-body1 emotion-22"
             >
               de Finibus Bonorum et Malorum
@@ -1642,43 +1276,6 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="css-rtudyd-CommentListItemActions ew53o3y2"
-          >
-            <div
-              class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-            >
-              <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                tabindex="0"
-                type="button"
-              >
-                <span
-                  class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                >
-                  <svg
-                    fill="currentColor"
-                    height="1em"
-                    stroke="currentColor"
-                    stroke-width="0"
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                    />
-                  </svg>
-                </span>
-                Antworten
-                <span
-                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                />
-              </button>
-            </div>
             class="emotion-26 emotion-27"
           >
             <div
@@ -1689,7 +1286,6 @@ https://unsplash.it/200/200 200w"
             />
           </div>
           <aside
-            class="css-uvrneq-CommentListItemChildren ew53o3y3"
             class="emotion-62 emotion-63"
           >
             <article
@@ -1720,7 +1316,6 @@ https://unsplash.it/200/200 200w"
                     class="emotion-10 emotion-11"
                   >
                     <div
-                      class="css-1hh6kfu-CommentAuthor ekbi54x6"
                       class="emotion-12 emotion-13"
                     >
                       Signed Up User
@@ -1768,8 +1363,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-20 emotion-21"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-                <h1
                   class="MuiTypography-root MuiTypography-body1 emotion-22"
                 >
                   de Finibus Bonorum et Malorum
@@ -1801,43 +1394,6 @@ https://unsplash.it/200/200 200w"
                 </div>
               </div>
               <div
-                class="css-rtudyd-CommentListItemActions ew53o3y2"
-              >
-                <div
-                  class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-                >
-                  <button
-                    class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                    tabindex="0"
-                    type="button"
-                  >
-                    <span
-                      class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                    >
-                      <svg
-                        fill="currentColor"
-                        height="1em"
-                        stroke="currentColor"
-                        stroke-width="0"
-                        viewBox="0 0 24 24"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                        />
-                      </svg>
-                    </span>
-                    Antworten
-                    <span
-                      class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                    />
-                  </button>
-                </div>
                 class="emotion-26 emotion-27"
               >
                 <div
@@ -1880,7 +1436,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-10 emotion-11"
           >
             <div
-              class="css-1hh6kfu-CommentAuthor ekbi54x6"
               class="emotion-12 emotion-13"
             >
               Signed Up User
@@ -1928,8 +1483,6 @@ https://unsplash.it/200/200 200w"
         class="emotion-20 emotion-21"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-        <h1
           class="MuiTypography-root MuiTypography-body1 emotion-22"
         >
           de Finibus Bonorum et Malorum
@@ -1961,43 +1514,6 @@ https://unsplash.it/200/200 200w"
         </div>
       </div>
       <div
-        class="css-rtudyd-CommentListItemActions ew53o3y2"
-      >
-        <div
-          class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-        >
-          <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-            tabindex="0"
-            type="button"
-          >
-            <span
-              class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-            >
-              <svg
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                />
-              </svg>
-            </span>
-            Antworten
-            <span
-              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-            />
-          </button>
-        </div>
         class="emotion-26 emotion-27"
       >
         <div
@@ -2036,7 +1552,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-10 emotion-11"
           >
             <div
-              class="css-1hh6kfu-CommentAuthor ekbi54x6"
               class="emotion-12 emotion-13"
             >
               Dr. Anonymous
@@ -2060,8 +1575,6 @@ https://unsplash.it/200/200 200w"
         class="emotion-20 emotion-21"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-        <h1
           class="MuiTypography-root MuiTypography-body1 emotion-22"
         >
           de Finibus Bonorum et Malorum
@@ -2093,43 +1606,6 @@ https://unsplash.it/200/200 200w"
         </div>
       </div>
       <div
-        class="css-rtudyd-CommentListItemActions ew53o3y2"
-      >
-        <div
-          class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-        >
-          <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-            tabindex="0"
-            type="button"
-          >
-            <span
-              class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-            >
-              <svg
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                />
-              </svg>
-            </span>
-            Antworten
-            <span
-              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-            />
-          </button>
-        </div>
         class="emotion-26 emotion-27"
       >
         <div
@@ -2140,7 +1616,6 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <aside
-        class="css-uvrneq-CommentListItemChildren ew53o3y3"
         class="emotion-62 emotion-63"
       >
         <article
@@ -2171,7 +1646,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-10 emotion-11"
               >
                 <div
-                  class="css-1hh6kfu-CommentAuthor ekbi54x6"
                   class="emotion-12 emotion-13"
                 >
                   Signed Up User
@@ -2219,8 +1693,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-20 emotion-21"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-            <h1
               class="MuiTypography-root MuiTypography-body1 emotion-22"
             >
               de Finibus Bonorum et Malorum
@@ -2252,43 +1724,6 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="css-rtudyd-CommentListItemActions ew53o3y2"
-          >
-            <div
-              class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-            >
-              <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                tabindex="0"
-                type="button"
-              >
-                <span
-                  class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                >
-                  <svg
-                    fill="currentColor"
-                    height="1em"
-                    stroke="currentColor"
-                    stroke-width="0"
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                    />
-                  </svg>
-                </span>
-                Antworten
-                <span
-                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                />
-              </button>
-            </div>
             class="emotion-26 emotion-27"
           >
             <div
@@ -2299,7 +1734,6 @@ https://unsplash.it/200/200 200w"
             />
           </div>
           <aside
-            class="css-uvrneq-CommentListItemChildren ew53o3y3"
             class="emotion-62 emotion-63"
           >
             <article
@@ -2330,7 +1764,6 @@ https://unsplash.it/200/200 200w"
                     class="emotion-10 emotion-11"
                   >
                     <div
-                      class="css-1hh6kfu-CommentAuthor ekbi54x6"
                       class="emotion-12 emotion-13"
                     >
                       Signed Up User
@@ -2378,8 +1811,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-20 emotion-21"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-                <h1
                   class="MuiTypography-root MuiTypography-body1 emotion-22"
                 >
                   de Finibus Bonorum et Malorum
@@ -2411,43 +1842,6 @@ https://unsplash.it/200/200 200w"
                 </div>
               </div>
               <div
-                class="css-rtudyd-CommentListItemActions ew53o3y2"
-              >
-                <div
-                  class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-                >
-                  <button
-                    class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                    tabindex="0"
-                    type="button"
-                  >
-                    <span
-                      class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                    >
-                      <svg
-                        fill="currentColor"
-                        height="1em"
-                        stroke="currentColor"
-                        stroke-width="0"
-                        viewBox="0 0 24 24"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                        />
-                      </svg>
-                    </span>
-                    Antworten
-                    <span
-                      class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                    />
-                  </button>
-                </div>
                 class="emotion-26 emotion-27"
               >
                 <div
@@ -2488,7 +1882,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-10 emotion-11"
               >
                 <div
-                  class="css-1hh6kfu-CommentAuthor ekbi54x6"
                   class="emotion-12 emotion-13"
                 >
                   Dr. Anonymous
@@ -2512,8 +1905,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-20 emotion-21"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-            <h1
               class="MuiTypography-root MuiTypography-body1 emotion-22"
             >
               de Finibus Bonorum et Malorum
@@ -2545,43 +1936,6 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="css-rtudyd-CommentListItemActions ew53o3y2"
-          >
-            <div
-              class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-            >
-              <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                tabindex="0"
-                type="button"
-              >
-                <span
-                  class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                >
-                  <svg
-                    fill="currentColor"
-                    height="1em"
-                    stroke="currentColor"
-                    stroke-width="0"
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                    />
-                  </svg>
-                </span>
-                Antworten
-                <span
-                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                />
-              </button>
-            </div>
             class="emotion-26 emotion-27"
           >
             <div
@@ -2592,7 +1946,6 @@ https://unsplash.it/200/200 200w"
             />
           </div>
           <aside
-            class="css-uvrneq-CommentListItemChildren ew53o3y3"
             class="emotion-62 emotion-63"
           >
             <article
@@ -2623,7 +1976,6 @@ https://unsplash.it/200/200 200w"
                     class="emotion-10 emotion-11"
                   >
                     <div
-                      class="css-1hh6kfu-CommentAuthor ekbi54x6"
                       class="emotion-12 emotion-13"
                     >
                       Signed Up User
@@ -2671,8 +2023,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-20 emotion-21"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-                <h1
                   class="MuiTypography-root MuiTypography-body1 emotion-22"
                 >
                   de Finibus Bonorum et Malorum
@@ -2704,43 +2054,6 @@ https://unsplash.it/200/200 200w"
                 </div>
               </div>
               <div
-                class="css-rtudyd-CommentListItemActions ew53o3y2"
-              >
-                <div
-                  class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-                >
-                  <button
-                    class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                    tabindex="0"
-                    type="button"
-                  >
-                    <span
-                      class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                    >
-                      <svg
-                        fill="currentColor"
-                        height="1em"
-                        stroke="currentColor"
-                        stroke-width="0"
-                        viewBox="0 0 24 24"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                        />
-                      </svg>
-                    </span>
-                    Antworten
-                    <span
-                      class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                    />
-                  </button>
-                </div>
                 class="emotion-26 emotion-27"
               >
                 <div
@@ -2783,7 +2096,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-10 emotion-11"
           >
             <div
-              class="css-1hh6kfu-CommentAuthor ekbi54x6"
               class="emotion-12 emotion-13"
             >
               Signed Up User
@@ -2831,8 +2143,6 @@ https://unsplash.it/200/200 200w"
         class="emotion-20 emotion-21"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-        <h1
           class="MuiTypography-root MuiTypography-body1 emotion-22"
         >
           de Finibus Bonorum et Malorum
@@ -2864,43 +2174,6 @@ https://unsplash.it/200/200 200w"
         </div>
       </div>
       <div
-        class="css-rtudyd-CommentListItemActions ew53o3y2"
-      >
-        <div
-          class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-        >
-          <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-            tabindex="0"
-            type="button"
-          >
-            <span
-              class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-            >
-              <svg
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                />
-              </svg>
-            </span>
-            Antworten
-            <span
-              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-            />
-          </button>
-        </div>
         class="emotion-26 emotion-27"
       >
         <div
@@ -2911,7 +2184,6 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <aside
-        class="css-uvrneq-CommentListItemChildren ew53o3y3"
         class="emotion-62 emotion-63"
       >
         <article
@@ -2942,7 +2214,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-10 emotion-11"
               >
                 <div
-                  class="css-1hh6kfu-CommentAuthor ekbi54x6"
                   class="emotion-12 emotion-13"
                 >
                   Signed Up User
@@ -2990,8 +2261,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-20 emotion-21"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-            <h1
               class="MuiTypography-root MuiTypography-body1 emotion-22"
             >
               de Finibus Bonorum et Malorum
@@ -3023,43 +2292,6 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="css-rtudyd-CommentListItemActions ew53o3y2"
-          >
-            <div
-              class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-            >
-              <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                tabindex="0"
-                type="button"
-              >
-                <span
-                  class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                >
-                  <svg
-                    fill="currentColor"
-                    height="1em"
-                    stroke="currentColor"
-                    stroke-width="0"
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                    />
-                  </svg>
-                </span>
-                Antworten
-                <span
-                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                />
-              </button>
-            </div>
             class="emotion-26 emotion-27"
           >
             <div
@@ -3070,7 +2302,6 @@ https://unsplash.it/200/200 200w"
             />
           </div>
           <aside
-            class="css-uvrneq-CommentListItemChildren ew53o3y3"
             class="emotion-62 emotion-63"
           >
             <article
@@ -3101,7 +2332,6 @@ https://unsplash.it/200/200 200w"
                     class="emotion-10 emotion-11"
                   >
                     <div
-                      class="css-1hh6kfu-CommentAuthor ekbi54x6"
                       class="emotion-12 emotion-13"
                     >
                       Signed Up User
@@ -3149,8 +2379,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-20 emotion-21"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-                <h1
                   class="MuiTypography-root MuiTypography-body1 emotion-22"
                 >
                   de Finibus Bonorum et Malorum
@@ -3182,43 +2410,6 @@ https://unsplash.it/200/200 200w"
                 </div>
               </div>
               <div
-                class="css-rtudyd-CommentListItemActions ew53o3y2"
-              >
-                <div
-                  class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-                >
-                  <button
-                    class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                    tabindex="0"
-                    type="button"
-                  >
-                    <span
-                      class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                    >
-                      <svg
-                        fill="currentColor"
-                        height="1em"
-                        stroke="currentColor"
-                        stroke-width="0"
-                        viewBox="0 0 24 24"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                        />
-                      </svg>
-                    </span>
-                    Antworten
-                    <span
-                      class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                    />
-                  </button>
-                </div>
                 class="emotion-26 emotion-27"
               >
                 <div
@@ -3259,7 +2450,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-10 emotion-11"
               >
                 <div
-                  class="css-1hh6kfu-CommentAuthor ekbi54x6"
                   class="emotion-12 emotion-13"
                 >
                   Dr. Anonymous
@@ -3283,8 +2473,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-20 emotion-21"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-            <h1
               class="MuiTypography-root MuiTypography-body1 emotion-22"
             >
               de Finibus Bonorum et Malorum
@@ -3316,43 +2504,6 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="css-rtudyd-CommentListItemActions ew53o3y2"
-          >
-            <div
-              class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-            >
-              <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                tabindex="0"
-                type="button"
-              >
-                <span
-                  class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                >
-                  <svg
-                    fill="currentColor"
-                    height="1em"
-                    stroke="currentColor"
-                    stroke-width="0"
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                    />
-                  </svg>
-                </span>
-                Antworten
-                <span
-                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                />
-              </button>
-            </div>
             class="emotion-26 emotion-27"
           >
             <div
@@ -3363,7 +2514,6 @@ https://unsplash.it/200/200 200w"
             />
           </div>
           <aside
-            class="css-uvrneq-CommentListItemChildren ew53o3y3"
             class="emotion-62 emotion-63"
           >
             <article
@@ -3394,7 +2544,6 @@ https://unsplash.it/200/200 200w"
                     class="emotion-10 emotion-11"
                   >
                     <div
-                      class="css-1hh6kfu-CommentAuthor ekbi54x6"
                       class="emotion-12 emotion-13"
                     >
                       Signed Up User
@@ -3442,8 +2591,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-20 emotion-21"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-                <h1
                   class="MuiTypography-root MuiTypography-body1 emotion-22"
                 >
                   de Finibus Bonorum et Malorum
@@ -3475,43 +2622,6 @@ https://unsplash.it/200/200 200w"
                 </div>
               </div>
               <div
-                class="css-rtudyd-CommentListItemActions ew53o3y2"
-              >
-                <div
-                  class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-                >
-                  <button
-                    class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                    tabindex="0"
-                    type="button"
-                  >
-                    <span
-                      class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                    >
-                      <svg
-                        fill="currentColor"
-                        height="1em"
-                        stroke="currentColor"
-                        stroke-width="0"
-                        viewBox="0 0 24 24"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                        />
-                      </svg>
-                    </span>
-                    Antworten
-                    <span
-                      class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                    />
-                  </button>
-                </div>
                 class="emotion-26 emotion-27"
               >
                 <div
@@ -3587,6 +2697,7 @@ exports[`CommentList Container should render WithClassName 1`] = `
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
   font-size: 1rem;
+  font-weight: 700;
 }
 
 .emotion-14 {
@@ -3615,6 +2726,7 @@ exports[`CommentList Container should render WithClassName 1`] = `
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
   font-size: 1rem;
+  font-weight: 600;
 }
 
 .emotion-22.MuiTypography-gutterBottom {
@@ -3736,7 +2848,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-10 emotion-11"
           >
             <div
-              class="css-1hh6kfu-CommentAuthor ekbi54x6"
               class="emotion-12 emotion-13"
             >
               Signed Up User
@@ -3784,8 +2895,6 @@ https://unsplash.it/200/200 200w"
         class="emotion-20 emotion-21"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-        <h1
           class="MuiTypography-root MuiTypography-body1 emotion-22"
         >
           de Finibus Bonorum et Malorum
@@ -3817,43 +2926,6 @@ https://unsplash.it/200/200 200w"
         </div>
       </div>
       <div
-        class="css-rtudyd-CommentListItemActions ew53o3y2"
-      >
-        <div
-          class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-        >
-          <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-            tabindex="0"
-            type="button"
-          >
-            <span
-              class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-            >
-              <svg
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                />
-              </svg>
-            </span>
-            Antworten
-            <span
-              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-            />
-          </button>
-        </div>
         class="emotion-26 emotion-27"
       >
         <div
@@ -3892,7 +2964,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-10 emotion-11"
           >
             <div
-              class="css-1hh6kfu-CommentAuthor ekbi54x6"
               class="emotion-12 emotion-13"
             >
               Signed Up User
@@ -3940,8 +3011,6 @@ https://unsplash.it/200/200 200w"
         class="emotion-20 emotion-21"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-        <h1
           class="MuiTypography-root MuiTypography-body1 emotion-22"
         >
           de Finibus Bonorum et Malorum
@@ -3973,43 +3042,6 @@ https://unsplash.it/200/200 200w"
         </div>
       </div>
       <div
-        class="css-rtudyd-CommentListItemActions ew53o3y2"
-      >
-        <div
-          class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-        >
-          <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-            tabindex="0"
-            type="button"
-          >
-            <span
-              class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-            >
-              <svg
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                />
-              </svg>
-            </span>
-            Antworten
-            <span
-              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-            />
-          </button>
-        </div>
         class="emotion-26 emotion-27"
       >
         <div
@@ -4020,7 +3052,6 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <aside
-        class="css-uvrneq-CommentListItemChildren ew53o3y3"
         class="emotion-62 emotion-63"
       >
         <article
@@ -4051,7 +3082,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-10 emotion-11"
               >
                 <div
-                  class="css-1hh6kfu-CommentAuthor ekbi54x6"
                   class="emotion-12 emotion-13"
                 >
                   Signed Up User
@@ -4099,8 +3129,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-20 emotion-21"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-            <h1
               class="MuiTypography-root MuiTypography-body1 emotion-22"
             >
               de Finibus Bonorum et Malorum
@@ -4132,43 +3160,6 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="css-rtudyd-CommentListItemActions ew53o3y2"
-          >
-            <div
-              class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-            >
-              <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                tabindex="0"
-                type="button"
-              >
-                <span
-                  class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                >
-                  <svg
-                    fill="currentColor"
-                    height="1em"
-                    stroke="currentColor"
-                    stroke-width="0"
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                    />
-                  </svg>
-                </span>
-                Antworten
-                <span
-                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                />
-              </button>
-            </div>
             class="emotion-26 emotion-27"
           >
             <div
@@ -4179,7 +3170,6 @@ https://unsplash.it/200/200 200w"
             />
           </div>
           <aside
-            class="css-uvrneq-CommentListItemChildren ew53o3y3"
             class="emotion-62 emotion-63"
           >
             <article
@@ -4210,7 +3200,6 @@ https://unsplash.it/200/200 200w"
                     class="emotion-10 emotion-11"
                   >
                     <div
-                      class="css-1hh6kfu-CommentAuthor ekbi54x6"
                       class="emotion-12 emotion-13"
                     >
                       Signed Up User
@@ -4258,8 +3247,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-20 emotion-21"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-                <h1
                   class="MuiTypography-root MuiTypography-body1 emotion-22"
                 >
                   de Finibus Bonorum et Malorum
@@ -4291,43 +3278,6 @@ https://unsplash.it/200/200 200w"
                 </div>
               </div>
               <div
-                class="css-rtudyd-CommentListItemActions ew53o3y2"
-              >
-                <div
-                  class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-                >
-                  <button
-                    class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                    tabindex="0"
-                    type="button"
-                  >
-                    <span
-                      class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                    >
-                      <svg
-                        fill="currentColor"
-                        height="1em"
-                        stroke="currentColor"
-                        stroke-width="0"
-                        viewBox="0 0 24 24"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                        />
-                      </svg>
-                    </span>
-                    Antworten
-                    <span
-                      class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                    />
-                  </button>
-                </div>
                 class="emotion-26 emotion-27"
               >
                 <div
@@ -4368,7 +3318,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-10 emotion-11"
               >
                 <div
-                  class="css-1hh6kfu-CommentAuthor ekbi54x6"
                   class="emotion-12 emotion-13"
                 >
                   Dr. Anonymous
@@ -4392,8 +3341,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-20 emotion-21"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-            <h1
               class="MuiTypography-root MuiTypography-body1 emotion-22"
             >
               de Finibus Bonorum et Malorum
@@ -4425,43 +3372,6 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="css-rtudyd-CommentListItemActions ew53o3y2"
-          >
-            <div
-              class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-            >
-              <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                tabindex="0"
-                type="button"
-              >
-                <span
-                  class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                >
-                  <svg
-                    fill="currentColor"
-                    height="1em"
-                    stroke="currentColor"
-                    stroke-width="0"
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                    />
-                  </svg>
-                </span>
-                Antworten
-                <span
-                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                />
-              </button>
-            </div>
             class="emotion-26 emotion-27"
           >
             <div
@@ -4472,7 +3382,6 @@ https://unsplash.it/200/200 200w"
             />
           </div>
           <aside
-            class="css-uvrneq-CommentListItemChildren ew53o3y3"
             class="emotion-62 emotion-63"
           >
             <article
@@ -4503,7 +3412,6 @@ https://unsplash.it/200/200 200w"
                     class="emotion-10 emotion-11"
                   >
                     <div
-                      class="css-1hh6kfu-CommentAuthor ekbi54x6"
                       class="emotion-12 emotion-13"
                     >
                       Signed Up User
@@ -4551,8 +3459,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-20 emotion-21"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-                <h1
                   class="MuiTypography-root MuiTypography-body1 emotion-22"
                 >
                   de Finibus Bonorum et Malorum
@@ -4584,43 +3490,6 @@ https://unsplash.it/200/200 200w"
                 </div>
               </div>
               <div
-                class="css-rtudyd-CommentListItemActions ew53o3y2"
-              >
-                <div
-                  class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-                >
-                  <button
-                    class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                    tabindex="0"
-                    type="button"
-                  >
-                    <span
-                      class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                    >
-                      <svg
-                        fill="currentColor"
-                        height="1em"
-                        stroke="currentColor"
-                        stroke-width="0"
-                        viewBox="0 0 24 24"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                        />
-                      </svg>
-                    </span>
-                    Antworten
-                    <span
-                      class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                    />
-                  </button>
-                </div>
                 class="emotion-26 emotion-27"
               >
                 <div
@@ -4663,7 +3532,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-10 emotion-11"
           >
             <div
-              class="css-1hh6kfu-CommentAuthor ekbi54x6"
               class="emotion-12 emotion-13"
             >
               Dr. Anonymous
@@ -4687,8 +3555,6 @@ https://unsplash.it/200/200 200w"
         class="emotion-20 emotion-21"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-        <h1
           class="MuiTypography-root MuiTypography-body1 emotion-22"
         >
           de Finibus Bonorum et Malorum
@@ -4720,43 +3586,6 @@ https://unsplash.it/200/200 200w"
         </div>
       </div>
       <div
-        class="css-rtudyd-CommentListItemActions ew53o3y2"
-      >
-        <div
-          class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-        >
-          <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-            tabindex="0"
-            type="button"
-          >
-            <span
-              class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-            >
-              <svg
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                />
-              </svg>
-            </span>
-            Antworten
-            <span
-              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-            />
-          </button>
-        </div>
         class="emotion-26 emotion-27"
       >
         <div
@@ -4767,7 +3596,6 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <aside
-        class="css-uvrneq-CommentListItemChildren ew53o3y3"
         class="emotion-62 emotion-63"
       >
         <article
@@ -4798,7 +3626,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-10 emotion-11"
               >
                 <div
-                  class="css-1hh6kfu-CommentAuthor ekbi54x6"
                   class="emotion-12 emotion-13"
                 >
                   Signed Up User
@@ -4846,8 +3673,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-20 emotion-21"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-            <h1
               class="MuiTypography-root MuiTypography-body1 emotion-22"
             >
               de Finibus Bonorum et Malorum
@@ -4879,43 +3704,6 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="css-rtudyd-CommentListItemActions ew53o3y2"
-          >
-            <div
-              class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-            >
-              <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                tabindex="0"
-                type="button"
-              >
-                <span
-                  class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                >
-                  <svg
-                    fill="currentColor"
-                    height="1em"
-                    stroke="currentColor"
-                    stroke-width="0"
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                    />
-                  </svg>
-                </span>
-                Antworten
-                <span
-                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                />
-              </button>
-            </div>
             class="emotion-26 emotion-27"
           >
             <div
@@ -4926,7 +3714,6 @@ https://unsplash.it/200/200 200w"
             />
           </div>
           <aside
-            class="css-uvrneq-CommentListItemChildren ew53o3y3"
             class="emotion-62 emotion-63"
           >
             <article
@@ -4957,7 +3744,6 @@ https://unsplash.it/200/200 200w"
                     class="emotion-10 emotion-11"
                   >
                     <div
-                      class="css-1hh6kfu-CommentAuthor ekbi54x6"
                       class="emotion-12 emotion-13"
                     >
                       Signed Up User
@@ -5005,8 +3791,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-20 emotion-21"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-                <h1
                   class="MuiTypography-root MuiTypography-body1 emotion-22"
                 >
                   de Finibus Bonorum et Malorum
@@ -5038,43 +3822,6 @@ https://unsplash.it/200/200 200w"
                 </div>
               </div>
               <div
-                class="css-rtudyd-CommentListItemActions ew53o3y2"
-              >
-                <div
-                  class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-                >
-                  <button
-                    class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                    tabindex="0"
-                    type="button"
-                  >
-                    <span
-                      class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                    >
-                      <svg
-                        fill="currentColor"
-                        height="1em"
-                        stroke="currentColor"
-                        stroke-width="0"
-                        viewBox="0 0 24 24"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                        />
-                      </svg>
-                    </span>
-                    Antworten
-                    <span
-                      class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                    />
-                  </button>
-                </div>
                 class="emotion-26 emotion-27"
               >
                 <div
@@ -5115,7 +3862,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-10 emotion-11"
               >
                 <div
-                  class="css-1hh6kfu-CommentAuthor ekbi54x6"
                   class="emotion-12 emotion-13"
                 >
                   Dr. Anonymous
@@ -5139,8 +3885,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-20 emotion-21"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-            <h1
               class="MuiTypography-root MuiTypography-body1 emotion-22"
             >
               de Finibus Bonorum et Malorum
@@ -5172,43 +3916,6 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="css-rtudyd-CommentListItemActions ew53o3y2"
-          >
-            <div
-              class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-            >
-              <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                tabindex="0"
-                type="button"
-              >
-                <span
-                  class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                >
-                  <svg
-                    fill="currentColor"
-                    height="1em"
-                    stroke="currentColor"
-                    stroke-width="0"
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                    />
-                  </svg>
-                </span>
-                Antworten
-                <span
-                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                />
-              </button>
-            </div>
             class="emotion-26 emotion-27"
           >
             <div
@@ -5219,7 +3926,6 @@ https://unsplash.it/200/200 200w"
             />
           </div>
           <aside
-            class="css-uvrneq-CommentListItemChildren ew53o3y3"
             class="emotion-62 emotion-63"
           >
             <article
@@ -5250,7 +3956,6 @@ https://unsplash.it/200/200 200w"
                     class="emotion-10 emotion-11"
                   >
                     <div
-                      class="css-1hh6kfu-CommentAuthor ekbi54x6"
                       class="emotion-12 emotion-13"
                     >
                       Signed Up User
@@ -5298,8 +4003,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-20 emotion-21"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-                <h1
                   class="MuiTypography-root MuiTypography-body1 emotion-22"
                 >
                   de Finibus Bonorum et Malorum
@@ -5331,43 +4034,6 @@ https://unsplash.it/200/200 200w"
                 </div>
               </div>
               <div
-                class="css-rtudyd-CommentListItemActions ew53o3y2"
-              >
-                <div
-                  class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-                >
-                  <button
-                    class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                    tabindex="0"
-                    type="button"
-                  >
-                    <span
-                      class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                    >
-                      <svg
-                        fill="currentColor"
-                        height="1em"
-                        stroke="currentColor"
-                        stroke-width="0"
-                        viewBox="0 0 24 24"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                        />
-                      </svg>
-                    </span>
-                    Antworten
-                    <span
-                      class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                    />
-                  </button>
-                </div>
                 class="emotion-26 emotion-27"
               >
                 <div
@@ -5410,7 +4076,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-10 emotion-11"
           >
             <div
-              class="css-1hh6kfu-CommentAuthor ekbi54x6"
               class="emotion-12 emotion-13"
             >
               Signed Up User
@@ -5458,8 +4123,6 @@ https://unsplash.it/200/200 200w"
         class="emotion-20 emotion-21"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-        <h1
           class="MuiTypography-root MuiTypography-body1 emotion-22"
         >
           de Finibus Bonorum et Malorum
@@ -5491,43 +4154,6 @@ https://unsplash.it/200/200 200w"
         </div>
       </div>
       <div
-        class="css-rtudyd-CommentListItemActions ew53o3y2"
-      >
-        <div
-          class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-        >
-          <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-            tabindex="0"
-            type="button"
-          >
-            <span
-              class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-            >
-              <svg
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                />
-              </svg>
-            </span>
-            Antworten
-            <span
-              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-            />
-          </button>
-        </div>
         class="emotion-26 emotion-27"
       >
         <div
@@ -5566,7 +4192,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-10 emotion-11"
           >
             <div
-              class="css-1hh6kfu-CommentAuthor ekbi54x6"
               class="emotion-12 emotion-13"
             >
               Dr. Anonymous
@@ -5590,8 +4215,6 @@ https://unsplash.it/200/200 200w"
         class="emotion-20 emotion-21"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-        <h1
           class="MuiTypography-root MuiTypography-body1 emotion-22"
         >
           de Finibus Bonorum et Malorum
@@ -5623,43 +4246,6 @@ https://unsplash.it/200/200 200w"
         </div>
       </div>
       <div
-        class="css-rtudyd-CommentListItemActions ew53o3y2"
-      >
-        <div
-          class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-        >
-          <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-            tabindex="0"
-            type="button"
-          >
-            <span
-              class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-            >
-              <svg
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                />
-              </svg>
-            </span>
-            Antworten
-            <span
-              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-            />
-          </button>
-        </div>
         class="emotion-26 emotion-27"
       >
         <div
@@ -5670,7 +4256,6 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <aside
-        class="css-uvrneq-CommentListItemChildren ew53o3y3"
         class="emotion-62 emotion-63"
       >
         <article
@@ -5701,7 +4286,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-10 emotion-11"
               >
                 <div
-                  class="css-1hh6kfu-CommentAuthor ekbi54x6"
                   class="emotion-12 emotion-13"
                 >
                   Signed Up User
@@ -5749,8 +4333,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-20 emotion-21"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-            <h1
               class="MuiTypography-root MuiTypography-body1 emotion-22"
             >
               de Finibus Bonorum et Malorum
@@ -5782,43 +4364,6 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="css-rtudyd-CommentListItemActions ew53o3y2"
-          >
-            <div
-              class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-            >
-              <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                tabindex="0"
-                type="button"
-              >
-                <span
-                  class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                >
-                  <svg
-                    fill="currentColor"
-                    height="1em"
-                    stroke="currentColor"
-                    stroke-width="0"
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                    />
-                  </svg>
-                </span>
-                Antworten
-                <span
-                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                />
-              </button>
-            </div>
             class="emotion-26 emotion-27"
           >
             <div
@@ -5829,7 +4374,6 @@ https://unsplash.it/200/200 200w"
             />
           </div>
           <aside
-            class="css-uvrneq-CommentListItemChildren ew53o3y3"
             class="emotion-62 emotion-63"
           >
             <article
@@ -5860,7 +4404,6 @@ https://unsplash.it/200/200 200w"
                     class="emotion-10 emotion-11"
                   >
                     <div
-                      class="css-1hh6kfu-CommentAuthor ekbi54x6"
                       class="emotion-12 emotion-13"
                     >
                       Signed Up User
@@ -5908,8 +4451,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-20 emotion-21"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-                <h1
                   class="MuiTypography-root MuiTypography-body1 emotion-22"
                 >
                   de Finibus Bonorum et Malorum
@@ -5941,43 +4482,6 @@ https://unsplash.it/200/200 200w"
                 </div>
               </div>
               <div
-                class="css-rtudyd-CommentListItemActions ew53o3y2"
-              >
-                <div
-                  class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-                >
-                  <button
-                    class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                    tabindex="0"
-                    type="button"
-                  >
-                    <span
-                      class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                    >
-                      <svg
-                        fill="currentColor"
-                        height="1em"
-                        stroke="currentColor"
-                        stroke-width="0"
-                        viewBox="0 0 24 24"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                        />
-                      </svg>
-                    </span>
-                    Antworten
-                    <span
-                      class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                    />
-                  </button>
-                </div>
                 class="emotion-26 emotion-27"
               >
                 <div
@@ -6018,7 +4522,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-10 emotion-11"
               >
                 <div
-                  class="css-1hh6kfu-CommentAuthor ekbi54x6"
                   class="emotion-12 emotion-13"
                 >
                   Dr. Anonymous
@@ -6042,8 +4545,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-20 emotion-21"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-            <h1
               class="MuiTypography-root MuiTypography-body1 emotion-22"
             >
               de Finibus Bonorum et Malorum
@@ -6075,43 +4576,6 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="css-rtudyd-CommentListItemActions ew53o3y2"
-          >
-            <div
-              class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-            >
-              <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                tabindex="0"
-                type="button"
-              >
-                <span
-                  class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                >
-                  <svg
-                    fill="currentColor"
-                    height="1em"
-                    stroke="currentColor"
-                    stroke-width="0"
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                    />
-                  </svg>
-                </span>
-                Antworten
-                <span
-                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                />
-              </button>
-            </div>
             class="emotion-26 emotion-27"
           >
             <div
@@ -6122,7 +4586,6 @@ https://unsplash.it/200/200 200w"
             />
           </div>
           <aside
-            class="css-uvrneq-CommentListItemChildren ew53o3y3"
             class="emotion-62 emotion-63"
           >
             <article
@@ -6153,7 +4616,6 @@ https://unsplash.it/200/200 200w"
                     class="emotion-10 emotion-11"
                   >
                     <div
-                      class="css-1hh6kfu-CommentAuthor ekbi54x6"
                       class="emotion-12 emotion-13"
                     >
                       Signed Up User
@@ -6201,8 +4663,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-20 emotion-21"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-                <h1
                   class="MuiTypography-root MuiTypography-body1 emotion-22"
                 >
                   de Finibus Bonorum et Malorum
@@ -6234,43 +4694,6 @@ https://unsplash.it/200/200 200w"
                 </div>
               </div>
               <div
-                class="css-rtudyd-CommentListItemActions ew53o3y2"
-              >
-                <div
-                  class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-                >
-                  <button
-                    class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                    tabindex="0"
-                    type="button"
-                  >
-                    <span
-                      class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                    >
-                      <svg
-                        fill="currentColor"
-                        height="1em"
-                        stroke="currentColor"
-                        stroke-width="0"
-                        viewBox="0 0 24 24"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                        />
-                      </svg>
-                    </span>
-                    Antworten
-                    <span
-                      class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                    />
-                  </button>
-                </div>
                 class="emotion-26 emotion-27"
               >
                 <div
@@ -6313,7 +4736,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-10 emotion-11"
           >
             <div
-              class="css-1hh6kfu-CommentAuthor ekbi54x6"
               class="emotion-12 emotion-13"
             >
               Signed Up User
@@ -6361,8 +4783,6 @@ https://unsplash.it/200/200 200w"
         class="emotion-20 emotion-21"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-        <h1
           class="MuiTypography-root MuiTypography-body1 emotion-22"
         >
           de Finibus Bonorum et Malorum
@@ -6394,43 +4814,6 @@ https://unsplash.it/200/200 200w"
         </div>
       </div>
       <div
-        class="css-rtudyd-CommentListItemActions ew53o3y2"
-      >
-        <div
-          class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-        >
-          <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-            tabindex="0"
-            type="button"
-          >
-            <span
-              class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-            >
-              <svg
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                />
-              </svg>
-            </span>
-            Antworten
-            <span
-              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-            />
-          </button>
-        </div>
         class="emotion-26 emotion-27"
       >
         <div
@@ -6441,7 +4824,6 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <aside
-        class="css-uvrneq-CommentListItemChildren ew53o3y3"
         class="emotion-62 emotion-63"
       >
         <article
@@ -6472,7 +4854,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-10 emotion-11"
               >
                 <div
-                  class="css-1hh6kfu-CommentAuthor ekbi54x6"
                   class="emotion-12 emotion-13"
                 >
                   Signed Up User
@@ -6520,8 +4901,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-20 emotion-21"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-            <h1
               class="MuiTypography-root MuiTypography-body1 emotion-22"
             >
               de Finibus Bonorum et Malorum
@@ -6553,43 +4932,6 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="css-rtudyd-CommentListItemActions ew53o3y2"
-          >
-            <div
-              class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-            >
-              <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                tabindex="0"
-                type="button"
-              >
-                <span
-                  class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                >
-                  <svg
-                    fill="currentColor"
-                    height="1em"
-                    stroke="currentColor"
-                    stroke-width="0"
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                    />
-                  </svg>
-                </span>
-                Antworten
-                <span
-                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                />
-              </button>
-            </div>
             class="emotion-26 emotion-27"
           >
             <div
@@ -6600,7 +4942,6 @@ https://unsplash.it/200/200 200w"
             />
           </div>
           <aside
-            class="css-uvrneq-CommentListItemChildren ew53o3y3"
             class="emotion-62 emotion-63"
           >
             <article
@@ -6631,7 +4972,6 @@ https://unsplash.it/200/200 200w"
                     class="emotion-10 emotion-11"
                   >
                     <div
-                      class="css-1hh6kfu-CommentAuthor ekbi54x6"
                       class="emotion-12 emotion-13"
                     >
                       Signed Up User
@@ -6679,8 +5019,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-20 emotion-21"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-                <h1
                   class="MuiTypography-root MuiTypography-body1 emotion-22"
                 >
                   de Finibus Bonorum et Malorum
@@ -6712,43 +5050,6 @@ https://unsplash.it/200/200 200w"
                 </div>
               </div>
               <div
-                class="css-rtudyd-CommentListItemActions ew53o3y2"
-              >
-                <div
-                  class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-                >
-                  <button
-                    class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                    tabindex="0"
-                    type="button"
-                  >
-                    <span
-                      class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                    >
-                      <svg
-                        fill="currentColor"
-                        height="1em"
-                        stroke="currentColor"
-                        stroke-width="0"
-                        viewBox="0 0 24 24"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                        />
-                      </svg>
-                    </span>
-                    Antworten
-                    <span
-                      class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                    />
-                  </button>
-                </div>
                 class="emotion-26 emotion-27"
               >
                 <div
@@ -6789,7 +5090,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-10 emotion-11"
               >
                 <div
-                  class="css-1hh6kfu-CommentAuthor ekbi54x6"
                   class="emotion-12 emotion-13"
                 >
                   Dr. Anonymous
@@ -6813,8 +5113,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-20 emotion-21"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-            <h1
               class="MuiTypography-root MuiTypography-body1 emotion-22"
             >
               de Finibus Bonorum et Malorum
@@ -6846,43 +5144,6 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="css-rtudyd-CommentListItemActions ew53o3y2"
-          >
-            <div
-              class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-            >
-              <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                tabindex="0"
-                type="button"
-              >
-                <span
-                  class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                >
-                  <svg
-                    fill="currentColor"
-                    height="1em"
-                    stroke="currentColor"
-                    stroke-width="0"
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                    />
-                  </svg>
-                </span>
-                Antworten
-                <span
-                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                />
-              </button>
-            </div>
             class="emotion-26 emotion-27"
           >
             <div
@@ -6893,7 +5154,6 @@ https://unsplash.it/200/200 200w"
             />
           </div>
           <aside
-            class="css-uvrneq-CommentListItemChildren ew53o3y3"
             class="emotion-62 emotion-63"
           >
             <article
@@ -6924,7 +5184,6 @@ https://unsplash.it/200/200 200w"
                     class="emotion-10 emotion-11"
                   >
                     <div
-                      class="css-1hh6kfu-CommentAuthor ekbi54x6"
                       class="emotion-12 emotion-13"
                     >
                       Signed Up User
@@ -6972,8 +5231,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-20 emotion-21"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-                <h1
                   class="MuiTypography-root MuiTypography-body1 emotion-22"
                 >
                   de Finibus Bonorum et Malorum
@@ -7005,43 +5262,6 @@ https://unsplash.it/200/200 200w"
                 </div>
               </div>
               <div
-                class="css-rtudyd-CommentListItemActions ew53o3y2"
-              >
-                <div
-                  class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-                >
-                  <button
-                    class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                    tabindex="0"
-                    type="button"
-                  >
-                    <span
-                      class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                    >
-                      <svg
-                        fill="currentColor"
-                        height="1em"
-                        stroke="currentColor"
-                        stroke-width="0"
-                        viewBox="0 0 24 24"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                        />
-                      </svg>
-                    </span>
-                    Antworten
-                    <span
-                      class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                    />
-                  </button>
-                </div>
                 class="emotion-26 emotion-27"
               >
                 <div
@@ -7117,6 +5337,7 @@ exports[`CommentList Container should render WithEmotion 1`] = `
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
   font-size: 1rem;
+  font-weight: 700;
 }
 
 .emotion-14 {
@@ -7145,6 +5366,7 @@ exports[`CommentList Container should render WithEmotion 1`] = `
   font-family: Merriweather,Roboto,sans-serif;
   font-weight: 400;
   font-size: 1rem;
+  font-weight: 600;
 }
 
 .emotion-22.MuiTypography-gutterBottom {
@@ -7266,7 +5488,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-10 emotion-11"
           >
             <div
-              class="css-1hh6kfu-CommentAuthor ekbi54x6"
               class="emotion-12 emotion-13"
             >
               Signed Up User
@@ -7314,8 +5535,6 @@ https://unsplash.it/200/200 200w"
         class="emotion-20 emotion-21"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-        <h1
           class="MuiTypography-root MuiTypography-body1 emotion-22"
         >
           de Finibus Bonorum et Malorum
@@ -7347,43 +5566,6 @@ https://unsplash.it/200/200 200w"
         </div>
       </div>
       <div
-        class="css-rtudyd-CommentListItemActions ew53o3y2"
-      >
-        <div
-          class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-        >
-          <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-            tabindex="0"
-            type="button"
-          >
-            <span
-              class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-            >
-              <svg
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                />
-              </svg>
-            </span>
-            Antworten
-            <span
-              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-            />
-          </button>
-        </div>
         class="emotion-26 emotion-27"
       >
         <div
@@ -7422,7 +5604,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-10 emotion-11"
           >
             <div
-              class="css-1hh6kfu-CommentAuthor ekbi54x6"
               class="emotion-12 emotion-13"
             >
               Signed Up User
@@ -7470,8 +5651,6 @@ https://unsplash.it/200/200 200w"
         class="emotion-20 emotion-21"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-        <h1
           class="MuiTypography-root MuiTypography-body1 emotion-22"
         >
           de Finibus Bonorum et Malorum
@@ -7503,43 +5682,6 @@ https://unsplash.it/200/200 200w"
         </div>
       </div>
       <div
-        class="css-rtudyd-CommentListItemActions ew53o3y2"
-      >
-        <div
-          class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-        >
-          <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-            tabindex="0"
-            type="button"
-          >
-            <span
-              class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-            >
-              <svg
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                />
-              </svg>
-            </span>
-            Antworten
-            <span
-              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-            />
-          </button>
-        </div>
         class="emotion-26 emotion-27"
       >
         <div
@@ -7550,7 +5692,6 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <aside
-        class="css-uvrneq-CommentListItemChildren ew53o3y3"
         class="emotion-62 emotion-63"
       >
         <article
@@ -7581,7 +5722,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-10 emotion-11"
               >
                 <div
-                  class="css-1hh6kfu-CommentAuthor ekbi54x6"
                   class="emotion-12 emotion-13"
                 >
                   Signed Up User
@@ -7629,8 +5769,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-20 emotion-21"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-            <h1
               class="MuiTypography-root MuiTypography-body1 emotion-22"
             >
               de Finibus Bonorum et Malorum
@@ -7662,43 +5800,6 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="css-rtudyd-CommentListItemActions ew53o3y2"
-          >
-            <div
-              class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-            >
-              <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                tabindex="0"
-                type="button"
-              >
-                <span
-                  class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                >
-                  <svg
-                    fill="currentColor"
-                    height="1em"
-                    stroke="currentColor"
-                    stroke-width="0"
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                    />
-                  </svg>
-                </span>
-                Antworten
-                <span
-                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                />
-              </button>
-            </div>
             class="emotion-26 emotion-27"
           >
             <div
@@ -7709,7 +5810,6 @@ https://unsplash.it/200/200 200w"
             />
           </div>
           <aside
-            class="css-uvrneq-CommentListItemChildren ew53o3y3"
             class="emotion-62 emotion-63"
           >
             <article
@@ -7740,7 +5840,6 @@ https://unsplash.it/200/200 200w"
                     class="emotion-10 emotion-11"
                   >
                     <div
-                      class="css-1hh6kfu-CommentAuthor ekbi54x6"
                       class="emotion-12 emotion-13"
                     >
                       Signed Up User
@@ -7788,8 +5887,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-20 emotion-21"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-                <h1
                   class="MuiTypography-root MuiTypography-body1 emotion-22"
                 >
                   de Finibus Bonorum et Malorum
@@ -7821,43 +5918,6 @@ https://unsplash.it/200/200 200w"
                 </div>
               </div>
               <div
-                class="css-rtudyd-CommentListItemActions ew53o3y2"
-              >
-                <div
-                  class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-                >
-                  <button
-                    class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                    tabindex="0"
-                    type="button"
-                  >
-                    <span
-                      class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                    >
-                      <svg
-                        fill="currentColor"
-                        height="1em"
-                        stroke="currentColor"
-                        stroke-width="0"
-                        viewBox="0 0 24 24"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                        />
-                      </svg>
-                    </span>
-                    Antworten
-                    <span
-                      class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                    />
-                  </button>
-                </div>
                 class="emotion-26 emotion-27"
               >
                 <div
@@ -7898,7 +5958,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-10 emotion-11"
               >
                 <div
-                  class="css-1hh6kfu-CommentAuthor ekbi54x6"
                   class="emotion-12 emotion-13"
                 >
                   Dr. Anonymous
@@ -7922,8 +5981,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-20 emotion-21"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-            <h1
               class="MuiTypography-root MuiTypography-body1 emotion-22"
             >
               de Finibus Bonorum et Malorum
@@ -7955,43 +6012,6 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="css-rtudyd-CommentListItemActions ew53o3y2"
-          >
-            <div
-              class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-            >
-              <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                tabindex="0"
-                type="button"
-              >
-                <span
-                  class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                >
-                  <svg
-                    fill="currentColor"
-                    height="1em"
-                    stroke="currentColor"
-                    stroke-width="0"
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                    />
-                  </svg>
-                </span>
-                Antworten
-                <span
-                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                />
-              </button>
-            </div>
             class="emotion-26 emotion-27"
           >
             <div
@@ -8002,7 +6022,6 @@ https://unsplash.it/200/200 200w"
             />
           </div>
           <aside
-            class="css-uvrneq-CommentListItemChildren ew53o3y3"
             class="emotion-62 emotion-63"
           >
             <article
@@ -8033,7 +6052,6 @@ https://unsplash.it/200/200 200w"
                     class="emotion-10 emotion-11"
                   >
                     <div
-                      class="css-1hh6kfu-CommentAuthor ekbi54x6"
                       class="emotion-12 emotion-13"
                     >
                       Signed Up User
@@ -8081,8 +6099,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-20 emotion-21"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-                <h1
                   class="MuiTypography-root MuiTypography-body1 emotion-22"
                 >
                   de Finibus Bonorum et Malorum
@@ -8114,43 +6130,6 @@ https://unsplash.it/200/200 200w"
                 </div>
               </div>
               <div
-                class="css-rtudyd-CommentListItemActions ew53o3y2"
-              >
-                <div
-                  class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-                >
-                  <button
-                    class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                    tabindex="0"
-                    type="button"
-                  >
-                    <span
-                      class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                    >
-                      <svg
-                        fill="currentColor"
-                        height="1em"
-                        stroke="currentColor"
-                        stroke-width="0"
-                        viewBox="0 0 24 24"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                        />
-                      </svg>
-                    </span>
-                    Antworten
-                    <span
-                      class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                    />
-                  </button>
-                </div>
                 class="emotion-26 emotion-27"
               >
                 <div
@@ -8193,7 +6172,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-10 emotion-11"
           >
             <div
-              class="css-1hh6kfu-CommentAuthor ekbi54x6"
               class="emotion-12 emotion-13"
             >
               Dr. Anonymous
@@ -8217,8 +6195,6 @@ https://unsplash.it/200/200 200w"
         class="emotion-20 emotion-21"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-        <h1
           class="MuiTypography-root MuiTypography-body1 emotion-22"
         >
           de Finibus Bonorum et Malorum
@@ -8250,43 +6226,6 @@ https://unsplash.it/200/200 200w"
         </div>
       </div>
       <div
-        class="css-rtudyd-CommentListItemActions ew53o3y2"
-      >
-        <div
-          class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-        >
-          <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-            tabindex="0"
-            type="button"
-          >
-            <span
-              class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-            >
-              <svg
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                />
-              </svg>
-            </span>
-            Antworten
-            <span
-              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-            />
-          </button>
-        </div>
         class="emotion-26 emotion-27"
       >
         <div
@@ -8297,7 +6236,6 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <aside
-        class="css-uvrneq-CommentListItemChildren ew53o3y3"
         class="emotion-62 emotion-63"
       >
         <article
@@ -8328,7 +6266,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-10 emotion-11"
               >
                 <div
-                  class="css-1hh6kfu-CommentAuthor ekbi54x6"
                   class="emotion-12 emotion-13"
                 >
                   Signed Up User
@@ -8376,8 +6313,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-20 emotion-21"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-            <h1
               class="MuiTypography-root MuiTypography-body1 emotion-22"
             >
               de Finibus Bonorum et Malorum
@@ -8409,43 +6344,6 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="css-rtudyd-CommentListItemActions ew53o3y2"
-          >
-            <div
-              class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-            >
-              <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                tabindex="0"
-                type="button"
-              >
-                <span
-                  class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                >
-                  <svg
-                    fill="currentColor"
-                    height="1em"
-                    stroke="currentColor"
-                    stroke-width="0"
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                    />
-                  </svg>
-                </span>
-                Antworten
-                <span
-                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                />
-              </button>
-            </div>
             class="emotion-26 emotion-27"
           >
             <div
@@ -8456,7 +6354,6 @@ https://unsplash.it/200/200 200w"
             />
           </div>
           <aside
-            class="css-uvrneq-CommentListItemChildren ew53o3y3"
             class="emotion-62 emotion-63"
           >
             <article
@@ -8487,7 +6384,6 @@ https://unsplash.it/200/200 200w"
                     class="emotion-10 emotion-11"
                   >
                     <div
-                      class="css-1hh6kfu-CommentAuthor ekbi54x6"
                       class="emotion-12 emotion-13"
                     >
                       Signed Up User
@@ -8535,8 +6431,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-20 emotion-21"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-                <h1
                   class="MuiTypography-root MuiTypography-body1 emotion-22"
                 >
                   de Finibus Bonorum et Malorum
@@ -8568,43 +6462,6 @@ https://unsplash.it/200/200 200w"
                 </div>
               </div>
               <div
-                class="css-rtudyd-CommentListItemActions ew53o3y2"
-              >
-                <div
-                  class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-                >
-                  <button
-                    class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                    tabindex="0"
-                    type="button"
-                  >
-                    <span
-                      class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                    >
-                      <svg
-                        fill="currentColor"
-                        height="1em"
-                        stroke="currentColor"
-                        stroke-width="0"
-                        viewBox="0 0 24 24"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                        />
-                      </svg>
-                    </span>
-                    Antworten
-                    <span
-                      class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                    />
-                  </button>
-                </div>
                 class="emotion-26 emotion-27"
               >
                 <div
@@ -8645,7 +6502,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-10 emotion-11"
               >
                 <div
-                  class="css-1hh6kfu-CommentAuthor ekbi54x6"
                   class="emotion-12 emotion-13"
                 >
                   Dr. Anonymous
@@ -8669,8 +6525,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-20 emotion-21"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-            <h1
               class="MuiTypography-root MuiTypography-body1 emotion-22"
             >
               de Finibus Bonorum et Malorum
@@ -8702,43 +6556,6 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="css-rtudyd-CommentListItemActions ew53o3y2"
-          >
-            <div
-              class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-            >
-              <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                tabindex="0"
-                type="button"
-              >
-                <span
-                  class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                >
-                  <svg
-                    fill="currentColor"
-                    height="1em"
-                    stroke="currentColor"
-                    stroke-width="0"
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                    />
-                  </svg>
-                </span>
-                Antworten
-                <span
-                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                />
-              </button>
-            </div>
             class="emotion-26 emotion-27"
           >
             <div
@@ -8749,7 +6566,6 @@ https://unsplash.it/200/200 200w"
             />
           </div>
           <aside
-            class="css-uvrneq-CommentListItemChildren ew53o3y3"
             class="emotion-62 emotion-63"
           >
             <article
@@ -8780,7 +6596,6 @@ https://unsplash.it/200/200 200w"
                     class="emotion-10 emotion-11"
                   >
                     <div
-                      class="css-1hh6kfu-CommentAuthor ekbi54x6"
                       class="emotion-12 emotion-13"
                     >
                       Signed Up User
@@ -8828,8 +6643,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-20 emotion-21"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-                <h1
                   class="MuiTypography-root MuiTypography-body1 emotion-22"
                 >
                   de Finibus Bonorum et Malorum
@@ -8861,43 +6674,6 @@ https://unsplash.it/200/200 200w"
                 </div>
               </div>
               <div
-                class="css-rtudyd-CommentListItemActions ew53o3y2"
-              >
-                <div
-                  class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-                >
-                  <button
-                    class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                    tabindex="0"
-                    type="button"
-                  >
-                    <span
-                      class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                    >
-                      <svg
-                        fill="currentColor"
-                        height="1em"
-                        stroke="currentColor"
-                        stroke-width="0"
-                        viewBox="0 0 24 24"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                        />
-                      </svg>
-                    </span>
-                    Antworten
-                    <span
-                      class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                    />
-                  </button>
-                </div>
                 class="emotion-26 emotion-27"
               >
                 <div
@@ -8940,7 +6716,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-10 emotion-11"
           >
             <div
-              class="css-1hh6kfu-CommentAuthor ekbi54x6"
               class="emotion-12 emotion-13"
             >
               Signed Up User
@@ -8988,8 +6763,6 @@ https://unsplash.it/200/200 200w"
         class="emotion-20 emotion-21"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-        <h1
           class="MuiTypography-root MuiTypography-body1 emotion-22"
         >
           de Finibus Bonorum et Malorum
@@ -9021,43 +6794,6 @@ https://unsplash.it/200/200 200w"
         </div>
       </div>
       <div
-        class="css-rtudyd-CommentListItemActions ew53o3y2"
-      >
-        <div
-          class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-        >
-          <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-            tabindex="0"
-            type="button"
-          >
-            <span
-              class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-            >
-              <svg
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                />
-              </svg>
-            </span>
-            Antworten
-            <span
-              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-            />
-          </button>
-        </div>
         class="emotion-26 emotion-27"
       >
         <div
@@ -9096,7 +6832,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-10 emotion-11"
           >
             <div
-              class="css-1hh6kfu-CommentAuthor ekbi54x6"
               class="emotion-12 emotion-13"
             >
               Dr. Anonymous
@@ -9120,8 +6855,6 @@ https://unsplash.it/200/200 200w"
         class="emotion-20 emotion-21"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-        <h1
           class="MuiTypography-root MuiTypography-body1 emotion-22"
         >
           de Finibus Bonorum et Malorum
@@ -9153,43 +6886,6 @@ https://unsplash.it/200/200 200w"
         </div>
       </div>
       <div
-        class="css-rtudyd-CommentListItemActions ew53o3y2"
-      >
-        <div
-          class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-        >
-          <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-            tabindex="0"
-            type="button"
-          >
-            <span
-              class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-            >
-              <svg
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                />
-              </svg>
-            </span>
-            Antworten
-            <span
-              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-            />
-          </button>
-        </div>
         class="emotion-26 emotion-27"
       >
         <div
@@ -9200,7 +6896,6 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <aside
-        class="css-uvrneq-CommentListItemChildren ew53o3y3"
         class="emotion-62 emotion-63"
       >
         <article
@@ -9231,7 +6926,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-10 emotion-11"
               >
                 <div
-                  class="css-1hh6kfu-CommentAuthor ekbi54x6"
                   class="emotion-12 emotion-13"
                 >
                   Signed Up User
@@ -9279,8 +6973,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-20 emotion-21"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-            <h1
               class="MuiTypography-root MuiTypography-body1 emotion-22"
             >
               de Finibus Bonorum et Malorum
@@ -9312,43 +7004,6 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="css-rtudyd-CommentListItemActions ew53o3y2"
-          >
-            <div
-              class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-            >
-              <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                tabindex="0"
-                type="button"
-              >
-                <span
-                  class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                >
-                  <svg
-                    fill="currentColor"
-                    height="1em"
-                    stroke="currentColor"
-                    stroke-width="0"
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                    />
-                  </svg>
-                </span>
-                Antworten
-                <span
-                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                />
-              </button>
-            </div>
             class="emotion-26 emotion-27"
           >
             <div
@@ -9359,7 +7014,6 @@ https://unsplash.it/200/200 200w"
             />
           </div>
           <aside
-            class="css-uvrneq-CommentListItemChildren ew53o3y3"
             class="emotion-62 emotion-63"
           >
             <article
@@ -9390,7 +7044,6 @@ https://unsplash.it/200/200 200w"
                     class="emotion-10 emotion-11"
                   >
                     <div
-                      class="css-1hh6kfu-CommentAuthor ekbi54x6"
                       class="emotion-12 emotion-13"
                     >
                       Signed Up User
@@ -9438,8 +7091,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-20 emotion-21"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-                <h1
                   class="MuiTypography-root MuiTypography-body1 emotion-22"
                 >
                   de Finibus Bonorum et Malorum
@@ -9471,43 +7122,6 @@ https://unsplash.it/200/200 200w"
                 </div>
               </div>
               <div
-                class="css-rtudyd-CommentListItemActions ew53o3y2"
-              >
-                <div
-                  class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-                >
-                  <button
-                    class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                    tabindex="0"
-                    type="button"
-                  >
-                    <span
-                      class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                    >
-                      <svg
-                        fill="currentColor"
-                        height="1em"
-                        stroke="currentColor"
-                        stroke-width="0"
-                        viewBox="0 0 24 24"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                        />
-                      </svg>
-                    </span>
-                    Antworten
-                    <span
-                      class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                    />
-                  </button>
-                </div>
                 class="emotion-26 emotion-27"
               >
                 <div
@@ -9548,7 +7162,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-10 emotion-11"
               >
                 <div
-                  class="css-1hh6kfu-CommentAuthor ekbi54x6"
                   class="emotion-12 emotion-13"
                 >
                   Dr. Anonymous
@@ -9572,8 +7185,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-20 emotion-21"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-            <h1
               class="MuiTypography-root MuiTypography-body1 emotion-22"
             >
               de Finibus Bonorum et Malorum
@@ -9605,43 +7216,6 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="css-rtudyd-CommentListItemActions ew53o3y2"
-          >
-            <div
-              class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-            >
-              <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                tabindex="0"
-                type="button"
-              >
-                <span
-                  class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                >
-                  <svg
-                    fill="currentColor"
-                    height="1em"
-                    stroke="currentColor"
-                    stroke-width="0"
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                    />
-                  </svg>
-                </span>
-                Antworten
-                <span
-                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                />
-              </button>
-            </div>
             class="emotion-26 emotion-27"
           >
             <div
@@ -9652,7 +7226,6 @@ https://unsplash.it/200/200 200w"
             />
           </div>
           <aside
-            class="css-uvrneq-CommentListItemChildren ew53o3y3"
             class="emotion-62 emotion-63"
           >
             <article
@@ -9683,7 +7256,6 @@ https://unsplash.it/200/200 200w"
                     class="emotion-10 emotion-11"
                   >
                     <div
-                      class="css-1hh6kfu-CommentAuthor ekbi54x6"
                       class="emotion-12 emotion-13"
                     >
                       Signed Up User
@@ -9731,8 +7303,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-20 emotion-21"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-                <h1
                   class="MuiTypography-root MuiTypography-body1 emotion-22"
                 >
                   de Finibus Bonorum et Malorum
@@ -9764,43 +7334,6 @@ https://unsplash.it/200/200 200w"
                 </div>
               </div>
               <div
-                class="css-rtudyd-CommentListItemActions ew53o3y2"
-              >
-                <div
-                  class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-                >
-                  <button
-                    class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                    tabindex="0"
-                    type="button"
-                  >
-                    <span
-                      class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                    >
-                      <svg
-                        fill="currentColor"
-                        height="1em"
-                        stroke="currentColor"
-                        stroke-width="0"
-                        viewBox="0 0 24 24"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                        />
-                      </svg>
-                    </span>
-                    Antworten
-                    <span
-                      class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                    />
-                  </button>
-                </div>
                 class="emotion-26 emotion-27"
               >
                 <div
@@ -9843,7 +7376,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-10 emotion-11"
           >
             <div
-              class="css-1hh6kfu-CommentAuthor ekbi54x6"
               class="emotion-12 emotion-13"
             >
               Signed Up User
@@ -9891,8 +7423,6 @@ https://unsplash.it/200/200 200w"
         class="emotion-20 emotion-21"
       >
         <p
-          class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-        <h1
           class="MuiTypography-root MuiTypography-body1 emotion-22"
         >
           de Finibus Bonorum et Malorum
@@ -9924,43 +7454,6 @@ https://unsplash.it/200/200 200w"
         </div>
       </div>
       <div
-        class="css-rtudyd-CommentListItemActions ew53o3y2"
-      >
-        <div
-          class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-        >
-          <button
-            class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-            tabindex="0"
-            type="button"
-          >
-            <span
-              class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-            >
-              <svg
-                fill="currentColor"
-                height="1em"
-                stroke="currentColor"
-                stroke-width="0"
-                viewBox="0 0 24 24"
-                width="1em"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M0 0h24v24H0z"
-                  fill="none"
-                />
-                <path
-                  d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                />
-              </svg>
-            </span>
-            Antworten
-            <span
-              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-            />
-          </button>
-        </div>
         class="emotion-26 emotion-27"
       >
         <div
@@ -9971,7 +7464,6 @@ https://unsplash.it/200/200 200w"
         />
       </div>
       <aside
-        class="css-uvrneq-CommentListItemChildren ew53o3y3"
         class="emotion-62 emotion-63"
       >
         <article
@@ -10002,7 +7494,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-10 emotion-11"
               >
                 <div
-                  class="css-1hh6kfu-CommentAuthor ekbi54x6"
                   class="emotion-12 emotion-13"
                 >
                   Signed Up User
@@ -10050,8 +7541,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-20 emotion-21"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-            <h1
               class="MuiTypography-root MuiTypography-body1 emotion-22"
             >
               de Finibus Bonorum et Malorum
@@ -10083,43 +7572,6 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="css-rtudyd-CommentListItemActions ew53o3y2"
-          >
-            <div
-              class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-            >
-              <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                tabindex="0"
-                type="button"
-              >
-                <span
-                  class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                >
-                  <svg
-                    fill="currentColor"
-                    height="1em"
-                    stroke="currentColor"
-                    stroke-width="0"
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                    />
-                  </svg>
-                </span>
-                Antworten
-                <span
-                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                />
-              </button>
-            </div>
             class="emotion-26 emotion-27"
           >
             <div
@@ -10130,7 +7582,6 @@ https://unsplash.it/200/200 200w"
             />
           </div>
           <aside
-            class="css-uvrneq-CommentListItemChildren ew53o3y3"
             class="emotion-62 emotion-63"
           >
             <article
@@ -10161,7 +7612,6 @@ https://unsplash.it/200/200 200w"
                     class="emotion-10 emotion-11"
                   >
                     <div
-                      class="css-1hh6kfu-CommentAuthor ekbi54x6"
                       class="emotion-12 emotion-13"
                     >
                       Signed Up User
@@ -10209,8 +7659,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-20 emotion-21"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-                <h1
                   class="MuiTypography-root MuiTypography-body1 emotion-22"
                 >
                   de Finibus Bonorum et Malorum
@@ -10242,43 +7690,6 @@ https://unsplash.it/200/200 200w"
                 </div>
               </div>
               <div
-                class="css-rtudyd-CommentListItemActions ew53o3y2"
-              >
-                <div
-                  class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-                >
-                  <button
-                    class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                    tabindex="0"
-                    type="button"
-                  >
-                    <span
-                      class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                    >
-                      <svg
-                        fill="currentColor"
-                        height="1em"
-                        stroke="currentColor"
-                        stroke-width="0"
-                        viewBox="0 0 24 24"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                        />
-                      </svg>
-                    </span>
-                    Antworten
-                    <span
-                      class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                    />
-                  </button>
-                </div>
                 class="emotion-26 emotion-27"
               >
                 <div
@@ -10319,7 +7730,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-10 emotion-11"
               >
                 <div
-                  class="css-1hh6kfu-CommentAuthor ekbi54x6"
                   class="emotion-12 emotion-13"
                 >
                   Dr. Anonymous
@@ -10343,8 +7753,6 @@ https://unsplash.it/200/200 200w"
             class="emotion-20 emotion-21"
           >
             <p
-              class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-            <h1
               class="MuiTypography-root MuiTypography-body1 emotion-22"
             >
               de Finibus Bonorum et Malorum
@@ -10376,43 +7784,6 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="css-rtudyd-CommentListItemActions ew53o3y2"
-          >
-            <div
-              class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-            >
-              <button
-                class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                tabindex="0"
-                type="button"
-              >
-                <span
-                  class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                >
-                  <svg
-                    fill="currentColor"
-                    height="1em"
-                    stroke="currentColor"
-                    stroke-width="0"
-                    viewBox="0 0 24 24"
-                    width="1em"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M0 0h24v24H0z"
-                      fill="none"
-                    />
-                    <path
-                      d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                    />
-                  </svg>
-                </span>
-                Antworten
-                <span
-                  class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                />
-              </button>
-            </div>
             class="emotion-26 emotion-27"
           >
             <div
@@ -10423,7 +7794,6 @@ https://unsplash.it/200/200 200w"
             />
           </div>
           <aside
-            class="css-uvrneq-CommentListItemChildren ew53o3y3"
             class="emotion-62 emotion-63"
           >
             <article
@@ -10454,7 +7824,6 @@ https://unsplash.it/200/200 200w"
                     class="emotion-10 emotion-11"
                   >
                     <div
-                      class="css-1hh6kfu-CommentAuthor ekbi54x6"
                       class="emotion-12 emotion-13"
                     >
                       Signed Up User
@@ -10502,8 +7871,6 @@ https://unsplash.it/200/200 200w"
                 class="emotion-20 emotion-21"
               >
                 <p
-                  class="MuiTypography-root MuiTypography-body1 css-hw1fc3-MuiTypography-root-titleStyles"
-                <h1
                   class="MuiTypography-root MuiTypography-body1 emotion-22"
                 >
                   de Finibus Bonorum et Malorum
@@ -10535,43 +7902,6 @@ https://unsplash.it/200/200 200w"
                 </div>
               </div>
               <div
-                class="css-rtudyd-CommentListItemActions ew53o3y2"
-              >
-                <div
-                  class="css-14q529f-CommentListItemActionsButtons ew53o3y1"
-                >
-                  <button
-                    class="MuiButtonBase-root MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall MuiButton-root MuiButton-outlined MuiButton-outlinedPrimary MuiButton-sizeSmall MuiButton-outlinedSizeSmall ew53o3y0 css-13kpqxg-MuiButtonBase-root-MuiButton-root-CommentReplyButton-CommentListItem"
-                    tabindex="0"
-                    type="button"
-                  >
-                    <span
-                      class="MuiButton-startIcon MuiButton-iconSizeSmall css-cstir9-MuiButton-startIcon"
-                    >
-                      <svg
-                        fill="currentColor"
-                        height="1em"
-                        stroke="currentColor"
-                        stroke-width="0"
-                        viewBox="0 0 24 24"
-                        width="1em"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <path
-                          d="M0 0h24v24H0z"
-                          fill="none"
-                        />
-                        <path
-                          d="M10 9V5l-7 7 7 7v-4.1c5 0 8.5 1.6 11 5.1-1-5-4-10-11-11z"
-                        />
-                      </svg>
-                    </span>
-                    Antworten
-                    <span
-                      class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
-                    />
-                  </button>
-                </div>
                 class="emotion-26 emotion-27"
               >
                 <div
