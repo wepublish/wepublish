@@ -9083,7 +9083,7 @@ exports[`Comment List should render Default 1`] = `
   background-color: currentColor;
 }
 
-.emotion-138 {
+.emotion-150 {
   font-size: 0.75em;
   font-weight: 300;
   color: #e91e63;
@@ -9732,7 +9732,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </div>
               <div
-                class="emotion-138 emotion-17"
+                class="emotion-150 emotion-17"
               >
                 <a
                   class="emotion-18 emotion-19"
@@ -10014,7 +10014,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="emotion-138 emotion-17"
+            class="emotion-150 emotion-17"
           >
             <a
               class="emotion-18 emotion-19"
@@ -10446,7 +10446,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </div>
               <div
-                class="emotion-138 emotion-17"
+                class="emotion-150 emotion-17"
               >
                 <a
                   class="emotion-18 emotion-19"
@@ -10878,7 +10878,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="emotion-138 emotion-17"
+            class="emotion-150 emotion-17"
           >
             <a
               class="emotion-18 emotion-19"
@@ -11310,7 +11310,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </div>
               <div
-                class="emotion-138 emotion-17"
+                class="emotion-150 emotion-17"
               >
                 <a
                   class="emotion-18 emotion-19"
@@ -12048,7 +12048,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </div>
               <div
-                class="emotion-138 emotion-17"
+                class="emotion-150 emotion-17"
               >
                 <a
                   class="emotion-18 emotion-19"
@@ -12682,7 +12682,7 @@ exports[`Comment List should render WithClassName 1`] = `
   background-color: currentColor;
 }
 
-.emotion-138 {
+.emotion-150 {
   font-size: 0.75em;
   font-weight: 300;
   color: #e91e63;
@@ -13331,7 +13331,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </div>
               <div
-                class="emotion-138 emotion-17"
+                class="emotion-150 emotion-17"
               >
                 <a
                   class="emotion-18 emotion-19"
@@ -13613,7 +13613,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="emotion-138 emotion-17"
+            class="emotion-150 emotion-17"
           >
             <a
               class="emotion-18 emotion-19"
@@ -14045,7 +14045,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </div>
               <div
-                class="emotion-138 emotion-17"
+                class="emotion-150 emotion-17"
               >
                 <a
                   class="emotion-18 emotion-19"
@@ -14477,7 +14477,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="emotion-138 emotion-17"
+            class="emotion-150 emotion-17"
           >
             <a
               class="emotion-18 emotion-19"
@@ -14909,7 +14909,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </div>
               <div
-                class="emotion-138 emotion-17"
+                class="emotion-150 emotion-17"
               >
                 <a
                   class="emotion-18 emotion-19"
@@ -15647,7 +15647,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </div>
               <div
-                class="emotion-138 emotion-17"
+                class="emotion-150 emotion-17"
               >
                 <a
                   class="emotion-18 emotion-19"
@@ -16185,7 +16185,7 @@ exports[`Comment List should render WithEmotion 1`] = `
   background-color: currentColor;
 }
 
-.emotion-138 {
+.emotion-150 {
   font-size: 0.75em;
   font-weight: 300;
   color: #e91e63;
@@ -16834,7 +16834,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </div>
               <div
-                class="emotion-138 emotion-17"
+                class="emotion-150 emotion-17"
               >
                 <a
                   class="emotion-18 emotion-19"
@@ -17116,7 +17116,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="emotion-138 emotion-17"
+            class="emotion-150 emotion-17"
           >
             <a
               class="emotion-18 emotion-19"
@@ -17548,7 +17548,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </div>
               <div
-                class="emotion-138 emotion-17"
+                class="emotion-150 emotion-17"
               >
                 <a
                   class="emotion-18 emotion-19"
@@ -17980,7 +17980,7 @@ https://unsplash.it/200/200 200w"
             </div>
           </div>
           <div
-            class="emotion-138 emotion-17"
+            class="emotion-150 emotion-17"
           >
             <a
               class="emotion-18 emotion-19"
@@ -18412,7 +18412,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </div>
               <div
-                class="emotion-138 emotion-17"
+                class="emotion-150 emotion-17"
               >
                 <a
                   class="emotion-18 emotion-19"
@@ -19150,7 +19150,7 @@ https://unsplash.it/200/200 200w"
                 </div>
               </div>
               <div
-                class="emotion-138 emotion-17"
+                class="emotion-150 emotion-17"
               >
                 <a
                   class="emotion-18 emotion-19"
