@@ -7,6 +7,7 @@ import {
   usePublishArticleMutation,
   useUploadImageMutation
 } from '@wepublish/editor/api'
+import {DirectusDownloader, DirectusSyncStatus, ImageInfo} from './directus-downloader'
 
 export interface RequestCollection {
   createArticle: ReturnType<typeof useCreateArticleMutation>[0]
@@ -19,7 +20,13 @@ export interface RequestCollection {
 
 export class BaseImporter {
   protected blocks: BlockInput[] = []
-  constructor(protected requests: RequestCollection) {}
+  private downloader = new DirectusDownloader(this.username, this.password)
+
+  constructor(
+    protected username: string,
+    protected password: string,
+    protected requests: RequestCollection
+  ) {}
 
   protected async checkImageExists(title: string, filename: string): Promise<string | null> {
     const {data} = await this.requests.getExistingImages({
@@ -58,5 +65,47 @@ export class BaseImporter {
       }
     }
     return null
+  }
+
+  protected async transferImage(
+    title: string,
+    filename: string,
+    image: ImageInfo,
+    statusCallback: (status: DirectusSyncStatus) => void
+  ) {
+    console.log(`    Checking if image exists on Wepublish...`)
+
+    const existingImageId = await this.checkImageExists(title, filename)
+    if (existingImageId) {
+      console.log(`    Image exists, skipping (${existingImageId})`)
+      statusCallback(DirectusSyncStatus.ImageUploaded)
+      return existingImageId
+    }
+
+    console.log(`    Downloading Directus image`)
+    const file = await this.downloader.downloadImage(image)
+
+    console.log(`    Image download complete`)
+    statusCallback(DirectusSyncStatus.ImageDownloaded)
+
+    console.log(`    Uploading image to wepublish`)
+    const result = await this.requests.uploadImage({
+      variables: {
+        input: {
+          file,
+          filename: filename,
+          title: title,
+          focalPoint: {
+            x: 0.5,
+            y: 0.5
+          }
+        }
+      }
+    })
+
+    console.log(`    Image upload complete.`)
+    statusCallback(DirectusSyncStatus.ImageUploaded)
+
+    return result.data?.uploadImage?.id
   }
 }

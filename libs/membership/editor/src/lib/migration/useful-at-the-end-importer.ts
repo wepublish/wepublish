@@ -4,7 +4,7 @@ import {
   RichTextBlockInput,
   TitleBlockInput
 } from '@wepublish/editor/api'
-import {DirectusDownloader, DirectusSyncStatus, ImageInfo} from './directus-downloader'
+import {DirectusSyncStatus, ImageInfo} from './directus-downloader'
 import {SlateDeserializer} from './slate-deserializer'
 import {slugify} from '@wepublish/utils'
 import {BaseImporter, RequestCollection} from './base-importer'
@@ -28,15 +28,19 @@ export interface UsefulAtTheEnd {
 }
 
 export class UsefulAtTheEndImporter extends BaseImporter {
-  private downloader = new DirectusDownloader()
   private deserializer = new SlateDeserializer()
 
   private imageID?: string
   private slug: string
   private imageFilename: string
 
-  constructor(protected requests: RequestCollection, private useful: UsefulAtTheEnd) {
-    super(requests)
+  constructor(
+    username: string,
+    password: string,
+    protected requests: RequestCollection,
+    private useful: UsefulAtTheEnd
+  ) {
+    super(username, password, requests)
     this.slug = slugify(`${this.useful.title}-${this.useful.id.toString()}`)
     this.imageFilename = `${this.useful.title}-${this.useful.id.toString()}`
   }
@@ -47,7 +51,12 @@ export class UsefulAtTheEndImporter extends BaseImporter {
     }
     console.log(`Running importer for ${this.useful.title}`)
     if (this.useful.image) {
-      this.imageID = await this.transferImage()
+      this.imageID = await this.transferImage(
+        this.useful.title,
+        this.imageFilename,
+        this.useful.image,
+        status => (this.useful.syncStatus = status)
+      )
     }
 
     const blocks: BlockInput[] = []
@@ -78,7 +87,9 @@ export class UsefulAtTheEndImporter extends BaseImporter {
           title: this.useful.title,
           lead: '',
           authorIDs: [],
-          tags: ['Das Nützliche zum Schluss'],
+          tags: [
+            /*'Das Nützliche zum Schluss'*/
+          ],
           properties: [],
           hideAuthor: false,
           shared: false,
@@ -108,39 +119,6 @@ export class UsefulAtTheEndImporter extends BaseImporter {
 
     console.log(`    Article published`)
     this.useful.syncStatus = DirectusSyncStatus.ArticlePublished
-  }
-
-  private async transferImage() {
-    console.log(`    Checking if image exists on Wepublish...`)
-
-    const existingImageId = await this.checkImageExists(this.useful.title, this.imageFilename)
-    if (existingImageId) {
-      console.log(`    Image exists, skipping (${existingImageId})`)
-      this.useful.syncStatus = DirectusSyncStatus.ImageUploaded
-      return existingImageId
-    }
-
-    console.log(`    Downloading Directus image`)
-    const file = await this.downloader.downloadImage(this.useful.image)
-
-    console.log(`    Image download complete`)
-    this.useful.syncStatus = DirectusSyncStatus.ImageDownloaded
-
-    console.log(`    Uploading image to wepublish`)
-    const result = await this.requests.uploadImage({
-      variables: {
-        input: {
-          file,
-          filename: this.imageFilename,
-          title: this.useful.title
-        }
-      }
-    })
-
-    console.log(`    Image upload complete.`)
-    this.useful.syncStatus = DirectusSyncStatus.ImageUploaded
-
-    return result.data?.uploadImage?.id!
   }
 
   private titleBlock(): TitleBlockInput {
