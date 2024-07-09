@@ -3104,7 +3104,7 @@ https://unsplash.it/200/100 200w"
 .emotion-10 {
   display: grid;
   gap: 8px;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   justify-content: space-between;
@@ -4462,7 +4462,7 @@ exports[`Blocks should render WithLayout 1`] = `
 .emotion-429 {
   display: grid;
   gap: 8px;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   justify-content: space-between;
