@@ -916,7 +916,7 @@ exports[`Article should render Default 1`] = `
 .emotion-442 {
   display: grid;
   gap: 8px;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   justify-content: space-between;
@@ -4933,7 +4933,7 @@ exports[`Article should render WithChildren 1`] = `
 .emotion-442 {
   display: grid;
   gap: 8px;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   justify-content: space-between;
@@ -8953,7 +8953,7 @@ exports[`Article should render WithClassName 1`] = `
 .emotion-442 {
   display: grid;
   gap: 8px;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   justify-content: space-between;
@@ -12970,7 +12970,7 @@ exports[`Article should render WithEmotion 1`] = `
 .emotion-442 {
   display: grid;
   gap: 8px;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   justify-content: space-between;
@@ -17091,7 +17091,7 @@ exports[`Article should render WithoutAuthors 1`] = `
 .emotion-442 {
   display: grid;
   gap: 8px;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   justify-content: space-between;
@@ -20767,7 +20767,7 @@ exports[`Article should render WithoutImageMetadata 1`] = `
 .emotion-442 {
   display: grid;
   gap: 8px;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   justify-content: space-between;
@@ -24784,7 +24784,7 @@ exports[`Article should render WithoutLead 1`] = `
 .emotion-442 {
   display: grid;
   gap: 8px;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   justify-content: space-between;
@@ -28797,7 +28797,7 @@ exports[`Article should render WithoutSocialMedia 1`] = `
 .emotion-442 {
   display: grid;
   gap: 8px;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   justify-content: space-between;

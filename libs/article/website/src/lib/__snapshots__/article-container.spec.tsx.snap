@@ -916,7 +916,7 @@ exports[`Article Container should render ById 1`] = `
 .emotion-442 {
   display: grid;
   gap: 8px;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   justify-content: space-between;
@@ -4752,7 +4752,7 @@ exports[`Article Container should render BySlug 1`] = `
 .emotion-442 {
   display: grid;
   gap: 8px;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   justify-content: space-between;
@@ -8588,7 +8588,7 @@ exports[`Article Container should render WithChildren 1`] = `
 .emotion-442 {
   display: grid;
   gap: 8px;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   justify-content: space-between;
@@ -12427,7 +12427,7 @@ exports[`Article Container should render WithClassName 1`] = `
 .emotion-442 {
   display: grid;
   gap: 8px;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   justify-content: space-between;
@@ -16263,7 +16263,7 @@ exports[`Article Container should render WithEmotion 1`] = `
 .emotion-442 {
   display: grid;
   gap: 8px;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   justify-content: space-between;

@@ -910,7 +910,7 @@ exports[`Page should render Default 1`] = `
 .emotion-442 {
   display: grid;
   gap: 8px;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   justify-content: space-between;
@@ -4282,7 +4282,7 @@ exports[`Page should render WithChildren 1`] = `
 .emotion-442 {
   display: grid;
   gap: 8px;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   justify-content: space-between;
@@ -7657,7 +7657,7 @@ exports[`Page should render WithClassName 1`] = `
 .emotion-442 {
   display: grid;
   gap: 8px;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   justify-content: space-between;
@@ -11029,7 +11029,7 @@ exports[`Page should render WithEmotion 1`] = `
 .emotion-442 {
   display: grid;
   gap: 8px;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   justify-content: space-between;
@@ -14473,7 +14473,7 @@ exports[`Page should render WithoutDescription 1`] = `
 .emotion-442 {
   display: grid;
   gap: 8px;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   justify-content: space-between;
@@ -17845,7 +17845,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 .emotion-442 {
   display: grid;
   gap: 8px;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   justify-content: space-between;
@@ -21217,7 +21217,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 .emotion-442 {
   display: grid;
   gap: 8px;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   justify-content: space-between;
