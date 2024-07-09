@@ -1,5 +1,4 @@
 import axios from 'axios'
-import {PersonOfTheDay} from './person-of-the-day-importer'
 
 export enum DirectusSyncStatus {
   Pending = 0,
@@ -18,6 +17,8 @@ export interface ImageInfo {
 export class DirectusDownloader {
   private directusBaseUrl = 'https://cms.wepublish.cloud'
 
+  constructor(private username: string, private password: string) {}
+
   /**
    * Download all items of the specified collection. If the resource spans across pages, the
    * client loads them all and calls the `progressCallback` for each page. The user is
@@ -28,7 +29,7 @@ export class DirectusDownloader {
    */
   async getResource<T>(
     itemName: string,
-    fields: string = '*',
+    fields = '*',
     progressCallback: (items: T[]) => void
   ): Promise<void> {
     let offset = 0
@@ -40,11 +41,7 @@ export class DirectusDownloader {
     } while (newItems.length === 100)
   }
 
-  private async getSinglePage<T>(
-    itemName: string,
-    fields: string = '*',
-    offset: number = 0
-  ): Promise<T[]> {
+  private async getSinglePage<T>(itemName: string, fields = '*', offset = 0): Promise<T[]> {
     console.log(`Getting items from ${offset + 1} to ${offset + 100}...`)
     const {
       data: {data: items}
@@ -81,8 +78,8 @@ export class DirectusDownloader {
       url: `${this.directusBaseUrl}/auth/login`,
       method: 'POST',
       data: {
-        email: 'dev@wepublish.ch',
-        password: /*'?zl@Yf<@j8b%wBaX%}iX7+#5j+)RpaXh1)jsl2cb$d'*/ 'qhc8cfy@JAG_yhx6kxm'
+        email: this.username,
+        password: this.password
       }
     })
     return access_token

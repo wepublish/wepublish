@@ -4,14 +4,14 @@ import {
   RichTextBlockInput,
   TitleBlockInput
 } from '@wepublish/editor/api'
-import {DirectusDownloader, DirectusSyncStatus, ImageInfo} from './directus-downloader'
+import {DirectusSyncStatus, ImageInfo} from './directus-downloader'
 import {SlateDeserializer} from './slate-deserializer'
 import {ElementNodeType} from '@wepublish/richtext/api'
 import {slugify} from '@wepublish/utils'
 import {BaseImporter, RequestCollection} from './base-importer'
 
 export interface PersonOfTheDay {
-  id: Number
+  id: number
   status: string
   user_created: string
   date_created: string
@@ -22,22 +22,26 @@ export interface PersonOfTheDay {
   publicationDate: string
   title: string
   image: ImageInfo
-  likes: Number
+  likes: number
   categories: string
   video: string
   syncStatus: DirectusSyncStatus
 }
 
 export class PersonOfTheDayImporter extends BaseImporter {
-  private downloader = new DirectusDownloader()
   private deserializer = new SlateDeserializer()
 
   private imageID?: string
   private slug: string
   private imageFilename: string
 
-  constructor(protected requests: RequestCollection, private person: PersonOfTheDay) {
-    super(requests)
+  constructor(
+    username: string,
+    password: string,
+    protected requests: RequestCollection,
+    private person: PersonOfTheDay
+  ) {
+    super(username, password, requests)
     this.slug = slugify(`${this.person.name}-${this.person.id.toString()}`)
     this.imageFilename = `${this.person.name}-${this.person.id.toString()}`
   }
@@ -45,7 +49,12 @@ export class PersonOfTheDayImporter extends BaseImporter {
   async run() {
     console.log(`Running importer for ${this.person.name}`)
     if (this.person.image) {
-      this.imageID = await this.transferImage()
+      this.imageID = await this.transferImage(
+        this.person.name,
+        this.imageFilename,
+        this.person.image,
+        status => (this.person.syncStatus = status)
+      )
     }
 
     const blocks: BlockInput[] = []
@@ -80,7 +89,9 @@ export class PersonOfTheDayImporter extends BaseImporter {
           title: this.person.name,
           lead: this.person.title || '',
           authorIDs: [],
-          tags: [this.person.categories],
+          tags: [
+            /*this.person.categories*/
+          ],
           properties: [],
           hideAuthor: false,
           shared: false,
@@ -110,39 +121,6 @@ export class PersonOfTheDayImporter extends BaseImporter {
 
     console.log(`    Article published`)
     this.person.syncStatus = DirectusSyncStatus.ArticlePublished
-  }
-
-  private async transferImage() {
-    console.log(`    Checking if image exists on Wepublish...`)
-
-    const existingImageId = await this.checkImageExists(this.person.name, this.imageFilename)
-    if (existingImageId) {
-      console.log(`    Image exists, skipping (${existingImageId})`)
-      this.person.syncStatus = DirectusSyncStatus.ImageUploaded
-      return existingImageId
-    }
-
-    console.log(`    Downloading Directus image`)
-    const file = await this.downloader.downloadImage(this.person.image)
-
-    console.log(`    Image download complete`)
-    this.person.syncStatus = DirectusSyncStatus.ImageDownloaded
-
-    console.log(`    Uploading image to wepublish`)
-    const result = await this.requests.uploadImage({
-      variables: {
-        input: {
-          file,
-          filename: this.imageFilename,
-          title: this.person.name
-        }
-      }
-    })
-
-    console.log(`    Image upload complete.`)
-    this.person.syncStatus = DirectusSyncStatus.ImageUploaded
-
-    return result.data?.uploadImage?.id!
   }
 
   private titleBlock(): TitleBlockInput {

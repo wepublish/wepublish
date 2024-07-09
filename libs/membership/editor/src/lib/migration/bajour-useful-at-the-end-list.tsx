@@ -6,13 +6,16 @@ import {useState} from 'react'
 import {RequestCollection} from './base-importer'
 import {syncStatusToColor} from './migration-list'
 import {UsefulAtTheEnd, UsefulAtTheEndImporter} from './useful-at-the-end-importer'
+import {TextField} from '@mui/material'
 
 export function BajourUsefulAtTheEndList(requestCollection: RequestCollection) {
   const [usefulAtTheEnds, setUsefulAtTheEnds] = useState<UsefulAtTheEnd[]>([])
   const [downloadComplete, setDownloadComplete] = useState(false)
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
 
-  async function downloadUsefulAtTheEnd() {
-    const downloader = new DirectusDownloader()
+  async function downloadUsefulAtTheEnd(username: string, password: string) {
+    const downloader = new DirectusDownloader(username, password)
     await downloader.getResource<UsefulAtTheEnd>('the_useful_at_the_end', '*,image.*', items => {
       setUsefulAtTheEnds(prev => [...prev, ...items])
     })
@@ -21,7 +24,12 @@ export function BajourUsefulAtTheEndList(requestCollection: RequestCollection) {
 
   async function importUsefulAtTheEnd() {
     for (const usefulAtTheEnd of usefulAtTheEnds) {
-      const importer = new UsefulAtTheEndImporter(requestCollection, usefulAtTheEnd)
+      const importer = new UsefulAtTheEndImporter(
+        username,
+        password,
+        requestCollection,
+        usefulAtTheEnd
+      )
       await importer.run()
     }
   }
@@ -29,10 +37,20 @@ export function BajourUsefulAtTheEndList(requestCollection: RequestCollection) {
   return (
     <>
       <Header>
+        <TextField
+          label="Directus-Benutzername"
+          type="text"
+          onChange={e => setUsername(e.target.value)}
+        />
+        <TextField
+          label="Directus-Passwort"
+          type="password"
+          onChange={e => setPassword(e.target.value)}
+        />
         <IconButton
           appearance="primary"
           icon={<MdDownload />}
-          onClick={() => downloadUsefulAtTheEnd()}>
+          onClick={() => downloadUsefulAtTheEnd(username, password)}>
           Load "Useful at the End"
         </IconButton>
 

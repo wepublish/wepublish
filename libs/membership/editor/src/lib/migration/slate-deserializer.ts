@@ -14,12 +14,12 @@ export class SlateDeserializer {
       return null
     }
 
-    const nodeAttributes = {...markAttributes}
+    const nodeAttributes = {...markAttributes} as any
 
     // define attributes for text nodes
     switch (el.nodeName) {
       case 'STRONG':
-        ;(nodeAttributes as any).bold = true
+        nodeAttributes.bold = true
     }
 
     const children = Array.from(el.childNodes)

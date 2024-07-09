@@ -6,13 +6,16 @@ import {useState} from 'react'
 import {PersonOfTheDay, PersonOfTheDayImporter} from './person-of-the-day-importer'
 import {RequestCollection} from './base-importer'
 import {syncStatusToColor} from './migration-list'
+import {TextField} from '@mui/material'
 
 export function BajourPersonOfTheDayList(requestCollection: RequestCollection) {
   const [peopleOfTheDay, setPeopleOfTheDay] = useState<PersonOfTheDay[]>([])
   const [downloadComplete, setDownloadComplete] = useState(false)
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
 
-  async function downloadPeopleOfTheDay() {
-    const downloader = new DirectusDownloader()
+  async function downloadPeopleOfTheDay(username: string, password: string) {
+    const downloader = new DirectusDownloader(username, password)
     await downloader.getResource<PersonOfTheDay>('Person_of_the_day', '*,image.*', item => {
       setPeopleOfTheDay(prev => [...prev, ...item])
     })
@@ -21,7 +24,7 @@ export function BajourPersonOfTheDayList(requestCollection: RequestCollection) {
 
   async function importPeopleOfTheDay() {
     for (const person of peopleOfTheDay) {
-      const importer = new PersonOfTheDayImporter(requestCollection, person)
+      const importer = new PersonOfTheDayImporter(username, password, requestCollection, person)
       await importer.run()
     }
   }
@@ -29,10 +32,20 @@ export function BajourPersonOfTheDayList(requestCollection: RequestCollection) {
   return (
     <>
       <Header>
+        <TextField
+          label="Directus-Benutzername"
+          type="text"
+          onChange={e => setUsername(e.target.value)}
+        />
+        <TextField
+          label="Directus-Passwort"
+          type="password"
+          onChange={e => setPassword(e.target.value)}
+        />
         <IconButton
           appearance="primary"
           icon={<MdDownload />}
-          onClick={() => downloadPeopleOfTheDay()}>
+          onClick={() => downloadPeopleOfTheDay(username, password)}>
           Load "People of the Day"
         </IconButton>
 
