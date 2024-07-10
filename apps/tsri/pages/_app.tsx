@@ -146,7 +146,6 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
                 categorySlugs={[['categories', 'about-us']]}
                 slug="main"
                 headerSlug="header"
-                loginUrl=""
                 actions={<MitmachenButton />}
               />
 
