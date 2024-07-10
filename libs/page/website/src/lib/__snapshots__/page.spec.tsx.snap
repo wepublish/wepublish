@@ -408,6 +408,14 @@ exports[`Page should render Default 1`] = `
   justify-content: center;
 }
 
+.emotion-111 {
+  display: grid;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
 .emotion-117 {
   width: 100%;
   aspect-ratio: 16/9;
@@ -453,6 +461,7 @@ exports[`Page should render Default 1`] = `
 
 .emotion-135 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -502,6 +511,7 @@ exports[`Page should render Default 1`] = `
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -573,6 +583,15 @@ exports[`Page should render Default 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-148 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-148 {
     font-size: 32px;
@@ -581,7 +600,6 @@ exports[`Page should render Default 1`] = `
 
 .emotion-150 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -589,6 +607,15 @@ exports[`Page should render Default 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-150 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-150.MuiTypography-gutterBottom {
@@ -611,6 +638,7 @@ exports[`Page should render Default 1`] = `
 
 .emotion-158 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -629,6 +657,7 @@ exports[`Page should render Default 1`] = `
   aspect-ratio: auto 1.4998125234345707;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -665,6 +694,7 @@ exports[`Page should render Default 1`] = `
 
 .emotion-179 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -679,6 +709,7 @@ exports[`Page should render Default 1`] = `
 
 .emotion-198 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -693,6 +724,7 @@ exports[`Page should render Default 1`] = `
 
 .emotion-213 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -731,6 +763,7 @@ exports[`Page should render Default 1`] = `
 
 .emotion-234 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -744,6 +777,7 @@ exports[`Page should render Default 1`] = `
 
 .emotion-257 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -757,6 +791,7 @@ exports[`Page should render Default 1`] = `
 
 .emotion-278 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -770,6 +805,7 @@ exports[`Page should render Default 1`] = `
 
 .emotion-297 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -783,6 +819,7 @@ exports[`Page should render Default 1`] = `
 
 .emotion-312 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -820,6 +857,7 @@ exports[`Page should render Default 1`] = `
 
 .emotion-333 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -833,6 +871,7 @@ exports[`Page should render Default 1`] = `
 
 .emotion-356 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -846,6 +885,7 @@ exports[`Page should render Default 1`] = `
 
 .emotion-377 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -859,6 +899,7 @@ exports[`Page should render Default 1`] = `
 
 .emotion-392 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -872,6 +913,7 @@ exports[`Page should render Default 1`] = `
 
 .emotion-411 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -902,7 +944,7 @@ exports[`Page should render Default 1`] = `
 .emotion-442 {
   display: grid;
   gap: 8px;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   justify-content: space-between;
@@ -2020,7 +2062,19 @@ https://unsplash.it/200/100 200w"
     </div>
     <div
       class="emotion-111 emotion-112"
-    />
+    >
+      <blockquote
+        class="instagram-media"
+        data-instgrm-captioned="true"
+        data-instgrm-permalink="https://www.instagram.com/p/CvACOxxIqT2/"
+        data-instgrm-version="14"
+      />
+      <script
+        async=""
+        data-testid="fake-script"
+        src="https://www.instagram.com/embed.js"
+      />
+    </div>
     <div
       class="emotion-113 emotion-114"
     />
@@ -3760,6 +3814,14 @@ exports[`Page should render WithChildren 1`] = `
   justify-content: center;
 }
 
+.emotion-111 {
+  display: grid;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
 .emotion-117 {
   width: 100%;
   aspect-ratio: 16/9;
@@ -3805,6 +3867,7 @@ exports[`Page should render WithChildren 1`] = `
 
 .emotion-135 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -3854,6 +3917,7 @@ exports[`Page should render WithChildren 1`] = `
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -3925,6 +3989,15 @@ exports[`Page should render WithChildren 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-148 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-148 {
     font-size: 32px;
@@ -3933,7 +4006,6 @@ exports[`Page should render WithChildren 1`] = `
 
 .emotion-150 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -3941,6 +4013,15 @@ exports[`Page should render WithChildren 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-150 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-150.MuiTypography-gutterBottom {
@@ -3963,6 +4044,7 @@ exports[`Page should render WithChildren 1`] = `
 
 .emotion-158 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -3981,6 +4063,7 @@ exports[`Page should render WithChildren 1`] = `
   aspect-ratio: auto 1.4998125234345707;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -4017,6 +4100,7 @@ exports[`Page should render WithChildren 1`] = `
 
 .emotion-179 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -4031,6 +4115,7 @@ exports[`Page should render WithChildren 1`] = `
 
 .emotion-198 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -4045,6 +4130,7 @@ exports[`Page should render WithChildren 1`] = `
 
 .emotion-213 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -4083,6 +4169,7 @@ exports[`Page should render WithChildren 1`] = `
 
 .emotion-234 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -4096,6 +4183,7 @@ exports[`Page should render WithChildren 1`] = `
 
 .emotion-257 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -4109,6 +4197,7 @@ exports[`Page should render WithChildren 1`] = `
 
 .emotion-278 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -4122,6 +4211,7 @@ exports[`Page should render WithChildren 1`] = `
 
 .emotion-297 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -4135,6 +4225,7 @@ exports[`Page should render WithChildren 1`] = `
 
 .emotion-312 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -4172,6 +4263,7 @@ exports[`Page should render WithChildren 1`] = `
 
 .emotion-333 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -4185,6 +4277,7 @@ exports[`Page should render WithChildren 1`] = `
 
 .emotion-356 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -4198,6 +4291,7 @@ exports[`Page should render WithChildren 1`] = `
 
 .emotion-377 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -4211,6 +4305,7 @@ exports[`Page should render WithChildren 1`] = `
 
 .emotion-392 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -4224,6 +4319,7 @@ exports[`Page should render WithChildren 1`] = `
 
 .emotion-411 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -4254,7 +4350,7 @@ exports[`Page should render WithChildren 1`] = `
 .emotion-442 {
   display: grid;
   gap: 8px;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   justify-content: space-between;
@@ -5372,7 +5468,19 @@ https://unsplash.it/200/100 200w"
     </div>
     <div
       class="emotion-111 emotion-112"
-    />
+    >
+      <blockquote
+        class="instagram-media"
+        data-instgrm-captioned="true"
+        data-instgrm-permalink="https://www.instagram.com/p/CvACOxxIqT2/"
+        data-instgrm-version="14"
+      />
+      <script
+        async=""
+        data-testid="fake-script"
+        src="https://www.instagram.com/embed.js"
+      />
+    </div>
     <div
       class="emotion-113 emotion-114"
     />
@@ -7115,6 +7223,14 @@ exports[`Page should render WithClassName 1`] = `
   justify-content: center;
 }
 
+.emotion-111 {
+  display: grid;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
 .emotion-117 {
   width: 100%;
   aspect-ratio: 16/9;
@@ -7160,6 +7276,7 @@ exports[`Page should render WithClassName 1`] = `
 
 .emotion-135 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -7209,6 +7326,7 @@ exports[`Page should render WithClassName 1`] = `
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -7280,6 +7398,15 @@ exports[`Page should render WithClassName 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-148 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-148 {
     font-size: 32px;
@@ -7288,7 +7415,6 @@ exports[`Page should render WithClassName 1`] = `
 
 .emotion-150 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -7296,6 +7422,15 @@ exports[`Page should render WithClassName 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-150 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-150.MuiTypography-gutterBottom {
@@ -7318,6 +7453,7 @@ exports[`Page should render WithClassName 1`] = `
 
 .emotion-158 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -7336,6 +7472,7 @@ exports[`Page should render WithClassName 1`] = `
   aspect-ratio: auto 1.4998125234345707;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -7372,6 +7509,7 @@ exports[`Page should render WithClassName 1`] = `
 
 .emotion-179 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -7386,6 +7524,7 @@ exports[`Page should render WithClassName 1`] = `
 
 .emotion-198 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -7400,6 +7539,7 @@ exports[`Page should render WithClassName 1`] = `
 
 .emotion-213 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -7438,6 +7578,7 @@ exports[`Page should render WithClassName 1`] = `
 
 .emotion-234 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -7451,6 +7592,7 @@ exports[`Page should render WithClassName 1`] = `
 
 .emotion-257 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -7464,6 +7606,7 @@ exports[`Page should render WithClassName 1`] = `
 
 .emotion-278 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -7477,6 +7620,7 @@ exports[`Page should render WithClassName 1`] = `
 
 .emotion-297 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -7490,6 +7634,7 @@ exports[`Page should render WithClassName 1`] = `
 
 .emotion-312 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -7527,6 +7672,7 @@ exports[`Page should render WithClassName 1`] = `
 
 .emotion-333 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -7540,6 +7686,7 @@ exports[`Page should render WithClassName 1`] = `
 
 .emotion-356 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -7553,6 +7700,7 @@ exports[`Page should render WithClassName 1`] = `
 
 .emotion-377 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -7566,6 +7714,7 @@ exports[`Page should render WithClassName 1`] = `
 
 .emotion-392 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -7579,6 +7728,7 @@ exports[`Page should render WithClassName 1`] = `
 
 .emotion-411 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -7609,7 +7759,7 @@ exports[`Page should render WithClassName 1`] = `
 .emotion-442 {
   display: grid;
   gap: 8px;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   justify-content: space-between;
@@ -8727,7 +8877,19 @@ https://unsplash.it/200/100 200w"
     </div>
     <div
       class="emotion-111 emotion-112"
-    />
+    >
+      <blockquote
+        class="instagram-media"
+        data-instgrm-captioned="true"
+        data-instgrm-permalink="https://www.instagram.com/p/CvACOxxIqT2/"
+        data-instgrm-version="14"
+      />
+      <script
+        async=""
+        data-testid="fake-script"
+        src="https://www.instagram.com/embed.js"
+      />
+    </div>
     <div
       class="emotion-113 emotion-114"
     />
@@ -10467,6 +10629,14 @@ exports[`Page should render WithEmotion 1`] = `
   justify-content: center;
 }
 
+.emotion-111 {
+  display: grid;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
 .emotion-117 {
   width: 100%;
   aspect-ratio: 16/9;
@@ -10512,6 +10682,7 @@ exports[`Page should render WithEmotion 1`] = `
 
 .emotion-135 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -10561,6 +10732,7 @@ exports[`Page should render WithEmotion 1`] = `
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -10632,6 +10804,15 @@ exports[`Page should render WithEmotion 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-148 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-148 {
     font-size: 32px;
@@ -10640,7 +10821,6 @@ exports[`Page should render WithEmotion 1`] = `
 
 .emotion-150 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -10648,6 +10828,15 @@ exports[`Page should render WithEmotion 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-150 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-150.MuiTypography-gutterBottom {
@@ -10670,6 +10859,7 @@ exports[`Page should render WithEmotion 1`] = `
 
 .emotion-158 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -10688,6 +10878,7 @@ exports[`Page should render WithEmotion 1`] = `
   aspect-ratio: auto 1.4998125234345707;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -10724,6 +10915,7 @@ exports[`Page should render WithEmotion 1`] = `
 
 .emotion-179 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -10738,6 +10930,7 @@ exports[`Page should render WithEmotion 1`] = `
 
 .emotion-198 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -10752,6 +10945,7 @@ exports[`Page should render WithEmotion 1`] = `
 
 .emotion-213 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -10790,6 +10984,7 @@ exports[`Page should render WithEmotion 1`] = `
 
 .emotion-234 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -10803,6 +10998,7 @@ exports[`Page should render WithEmotion 1`] = `
 
 .emotion-257 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -10816,6 +11012,7 @@ exports[`Page should render WithEmotion 1`] = `
 
 .emotion-278 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -10829,6 +11026,7 @@ exports[`Page should render WithEmotion 1`] = `
 
 .emotion-297 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -10842,6 +11040,7 @@ exports[`Page should render WithEmotion 1`] = `
 
 .emotion-312 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -10879,6 +11078,7 @@ exports[`Page should render WithEmotion 1`] = `
 
 .emotion-333 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -10892,6 +11092,7 @@ exports[`Page should render WithEmotion 1`] = `
 
 .emotion-356 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -10905,6 +11106,7 @@ exports[`Page should render WithEmotion 1`] = `
 
 .emotion-377 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -10918,6 +11120,7 @@ exports[`Page should render WithEmotion 1`] = `
 
 .emotion-392 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -10931,6 +11134,7 @@ exports[`Page should render WithEmotion 1`] = `
 
 .emotion-411 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -10961,7 +11165,7 @@ exports[`Page should render WithEmotion 1`] = `
 .emotion-442 {
   display: grid;
   gap: 8px;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   justify-content: space-between;
@@ -12079,7 +12283,19 @@ https://unsplash.it/200/100 200w"
     </div>
     <div
       class="emotion-111 emotion-112"
-    />
+    >
+      <blockquote
+        class="instagram-media"
+        data-instgrm-captioned="true"
+        data-instgrm-permalink="https://www.instagram.com/p/CvACOxxIqT2/"
+        data-instgrm-version="14"
+      />
+      <script
+        async=""
+        data-testid="fake-script"
+        src="https://www.instagram.com/embed.js"
+      />
+    </div>
     <div
       class="emotion-113 emotion-114"
     />
@@ -13891,6 +14107,14 @@ exports[`Page should render WithoutDescription 1`] = `
   justify-content: center;
 }
 
+.emotion-111 {
+  display: grid;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
 .emotion-117 {
   width: 100%;
   aspect-ratio: 16/9;
@@ -13936,6 +14160,7 @@ exports[`Page should render WithoutDescription 1`] = `
 
 .emotion-135 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -13985,6 +14210,7 @@ exports[`Page should render WithoutDescription 1`] = `
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -14056,6 +14282,15 @@ exports[`Page should render WithoutDescription 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-148 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-148 {
     font-size: 32px;
@@ -14064,7 +14299,6 @@ exports[`Page should render WithoutDescription 1`] = `
 
 .emotion-150 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -14072,6 +14306,15 @@ exports[`Page should render WithoutDescription 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-150 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-150.MuiTypography-gutterBottom {
@@ -14094,6 +14337,7 @@ exports[`Page should render WithoutDescription 1`] = `
 
 .emotion-158 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -14112,6 +14356,7 @@ exports[`Page should render WithoutDescription 1`] = `
   aspect-ratio: auto 1.4998125234345707;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -14148,6 +14393,7 @@ exports[`Page should render WithoutDescription 1`] = `
 
 .emotion-179 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -14162,6 +14408,7 @@ exports[`Page should render WithoutDescription 1`] = `
 
 .emotion-198 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -14176,6 +14423,7 @@ exports[`Page should render WithoutDescription 1`] = `
 
 .emotion-213 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -14214,6 +14462,7 @@ exports[`Page should render WithoutDescription 1`] = `
 
 .emotion-234 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -14227,6 +14476,7 @@ exports[`Page should render WithoutDescription 1`] = `
 
 .emotion-257 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -14240,6 +14490,7 @@ exports[`Page should render WithoutDescription 1`] = `
 
 .emotion-278 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -14253,6 +14504,7 @@ exports[`Page should render WithoutDescription 1`] = `
 
 .emotion-297 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -14266,6 +14518,7 @@ exports[`Page should render WithoutDescription 1`] = `
 
 .emotion-312 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -14303,6 +14556,7 @@ exports[`Page should render WithoutDescription 1`] = `
 
 .emotion-333 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -14316,6 +14570,7 @@ exports[`Page should render WithoutDescription 1`] = `
 
 .emotion-356 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -14329,6 +14584,7 @@ exports[`Page should render WithoutDescription 1`] = `
 
 .emotion-377 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -14342,6 +14598,7 @@ exports[`Page should render WithoutDescription 1`] = `
 
 .emotion-392 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -14355,6 +14612,7 @@ exports[`Page should render WithoutDescription 1`] = `
 
 .emotion-411 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -14385,7 +14643,7 @@ exports[`Page should render WithoutDescription 1`] = `
 .emotion-442 {
   display: grid;
   gap: 8px;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   justify-content: space-between;
@@ -15503,7 +15761,19 @@ https://unsplash.it/200/100 200w"
     </div>
     <div
       class="emotion-111 emotion-112"
-    />
+    >
+      <blockquote
+        class="instagram-media"
+        data-instgrm-captioned="true"
+        data-instgrm-permalink="https://www.instagram.com/p/CvACOxxIqT2/"
+        data-instgrm-version="14"
+      />
+      <script
+        async=""
+        data-testid="fake-script"
+        src="https://www.instagram.com/embed.js"
+      />
+    </div>
     <div
       class="emotion-113 emotion-114"
     />
@@ -17243,6 +17513,14 @@ exports[`Page should render WithoutImageMetadata 1`] = `
   justify-content: center;
 }
 
+.emotion-111 {
+  display: grid;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
 .emotion-117 {
   width: 100%;
   aspect-ratio: 16/9;
@@ -17288,6 +17566,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 
 .emotion-135 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -17337,6 +17616,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -17408,6 +17688,15 @@ exports[`Page should render WithoutImageMetadata 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-148 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-148 {
     font-size: 32px;
@@ -17416,7 +17705,6 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 
 .emotion-150 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -17424,6 +17712,15 @@ exports[`Page should render WithoutImageMetadata 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-150 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-150.MuiTypography-gutterBottom {
@@ -17446,6 +17743,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 
 .emotion-158 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -17464,6 +17762,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
   aspect-ratio: auto 1.4998125234345707;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -17500,6 +17799,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 
 .emotion-179 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -17514,6 +17814,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 
 .emotion-198 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -17528,6 +17829,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 
 .emotion-213 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -17566,6 +17868,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 
 .emotion-234 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -17579,6 +17882,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 
 .emotion-257 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -17592,6 +17896,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 
 .emotion-278 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -17605,6 +17910,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 
 .emotion-297 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -17618,6 +17924,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 
 .emotion-312 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -17655,6 +17962,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 
 .emotion-333 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -17668,6 +17976,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 
 .emotion-356 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -17681,6 +17990,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 
 .emotion-377 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -17694,6 +18004,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 
 .emotion-392 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -17707,6 +18018,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 
 .emotion-411 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -17737,7 +18049,7 @@ exports[`Page should render WithoutImageMetadata 1`] = `
 .emotion-442 {
   display: grid;
   gap: 8px;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   justify-content: space-between;
@@ -18855,7 +19167,19 @@ https://unsplash.it/200/100 200w"
     </div>
     <div
       class="emotion-111 emotion-112"
-    />
+    >
+      <blockquote
+        class="instagram-media"
+        data-instgrm-captioned="true"
+        data-instgrm-permalink="https://www.instagram.com/p/CvACOxxIqT2/"
+        data-instgrm-version="14"
+      />
+      <script
+        async=""
+        data-testid="fake-script"
+        src="https://www.instagram.com/embed.js"
+      />
+    </div>
     <div
       class="emotion-113 emotion-114"
     />
@@ -20595,6 +20919,14 @@ exports[`Page should render WithoutSocialMedia 1`] = `
   justify-content: center;
 }
 
+.emotion-111 {
+  display: grid;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+
 .emotion-117 {
   width: 100%;
   aspect-ratio: 16/9;
@@ -20640,6 +20972,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 
 .emotion-135 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -20689,6 +21022,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
   aspect-ratio: auto 0.6666666666666666;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -20760,6 +21094,15 @@ exports[`Page should render WithoutSocialMedia 1`] = `
   font-size: 26px;
 }
 
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-148 {
+      font-size: 3rem;
+      line-height: 1.15;
+    }
+  }
+}
+
 @media (min-width: 900px) {
   .emotion-148 {
     font-size: 32px;
@@ -20768,7 +21111,6 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 
 .emotion-150 {
   font-weight: 300;
-  font-size: 1rem;
   grid-area: lead;
   margin: 0;
   line-height: 1.7;
@@ -20776,6 +21118,15 @@ exports[`Page should render WithoutSocialMedia 1`] = `
   font-weight: 400;
   font-size: 1rem;
   margin-bottom: 0.35em;
+}
+
+@media (min-width:900px) {
+  @container (min-width: 50lvw) {
+    .emotion-150 {
+      font-size: 1.25rem;
+      line-height: 1.4;
+    }
+  }
 }
 
 .emotion-150.MuiTypography-gutterBottom {
@@ -20798,6 +21149,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 
 .emotion-158 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -20816,6 +21168,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
   aspect-ratio: auto 1.4998125234345707;
   max-height: 80lvh;
   object-fit: contain;
+  max-height: 50lvh;
   width: 100%;
   object-fit: cover;
   grid-column: 1/13;
@@ -20852,6 +21205,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 
 .emotion-179 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -20866,6 +21220,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 
 .emotion-198 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -20880,6 +21235,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 
 .emotion-213 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -20918,6 +21274,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 
 .emotion-234 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -20931,6 +21288,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 
 .emotion-257 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -20944,6 +21302,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 
 .emotion-278 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -20957,6 +21316,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 
 .emotion-297 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -20970,6 +21330,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 
 .emotion-312 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -21007,6 +21368,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 
 .emotion-333 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -21020,6 +21382,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 
 .emotion-356 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -21033,6 +21396,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 
 .emotion-377 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -21046,6 +21410,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 
 .emotion-392 {
   display: grid;
+  container-type: inline-size;
 }
 
 @media (min-width:900px) {
@@ -21059,6 +21424,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 
 .emotion-411 {
   display: grid;
+  container-type: inline-size;
   grid-column: 1/-1;
 }
 
@@ -21089,7 +21455,7 @@ exports[`Page should render WithoutSocialMedia 1`] = `
 .emotion-442 {
   display: grid;
   gap: 8px;
-  grid-template-columns: max-content max-content;
+  grid-template-columns: 1fr max-content;
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   justify-content: space-between;
@@ -22199,7 +22565,19 @@ https://unsplash.it/200/100 200w"
     </div>
     <div
       class="emotion-111 emotion-112"
-    />
+    >
+      <blockquote
+        class="instagram-media"
+        data-instgrm-captioned="true"
+        data-instgrm-permalink="https://www.instagram.com/p/CvACOxxIqT2/"
+        data-instgrm-version="14"
+      />
+      <script
+        async=""
+        data-testid="fake-script"
+        src="https://www.instagram.com/embed.js"
+      />
+    </div>
     <div
       class="emotion-113 emotion-114"
     />

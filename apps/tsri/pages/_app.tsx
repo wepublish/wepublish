@@ -1,6 +1,5 @@
 import {Container, css, CssBaseline, NoSsr, styled, ThemeProvider} from '@mui/material'
 import {GoogleAnalytics} from '@next/third-parties/google'
-import {IconButton} from '@wepublish/ui'
 import {authLink, NextWepublishLink, SessionProvider} from '@wepublish/utils/website'
 import {
   ApiV1,
@@ -18,7 +17,6 @@ import getConfig from 'next/config'
 import Head from 'next/head'
 import Script from 'next/script'
 import {initReactI18next} from 'react-i18next'
-import {MdOutlineShoppingBag} from 'react-icons/md'
 import {z} from 'zod'
 import {zodI18nMap} from 'zod-i18n-map'
 import translation from 'zod-i18n-map/locales/de/zod.json'
@@ -26,8 +24,9 @@ import translation from 'zod-i18n-map/locales/de/zod.json'
 import {TsriBlockRenderer} from '../src/components/block-renderer/block-renderer'
 import {Paywall} from '../src/components/paywall'
 import {TsriBreakBlock} from '../src/components/tsri-break-block'
-import {TsriNavbar} from '../src/components/tsri-navbar'
+import {MitmachenButton, TsriNavbar} from '../src/components/tsri-navbar'
 import {TsriQuoteBlock} from '../src/components/tsri-quote-block'
+import {TsriRichText} from '../src/components/tsri-richtext'
 import {TsriTeaser} from '../src/components/tsri-teaser'
 import {ReactComponent as Logo} from '../src/logo.svg'
 import theme from '../src/theme'
@@ -85,11 +84,6 @@ const LogoWrapper = styled(Logo)`
   }
 `
 
-const NavBar = styled(NavbarContainer)`
-  grid-column: -1/1;
-  z-index: 11;
-`
-
 const dateFormatter = (date: Date, includeTime = true) =>
   includeTime
     ? `${format(date, 'dd. MMMM yyyy')} um ${format(date, 'HH:mm')}`
@@ -114,7 +108,8 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
             Renderer: TsriBlockRenderer,
             Teaser: TsriTeaser,
             Break: TsriBreakBlock,
-            Quote: TsriQuoteBlock
+            Quote: TsriQuoteBlock,
+            RichText: TsriRichText
           }}
           date={{format: dateFormatter}}
           meta={{siteTitle}}
@@ -147,17 +142,12 @@ function CustomApp({Component, pageProps}: CustomAppProps) {
             </Head>
 
             <Spacer>
-              <NavBar
+              <NavbarContainer
                 categorySlugs={[['categories', 'about-us']]}
                 slug="main"
                 headerSlug="header"
-                actions={
-                  <NextWepublishLink href="https://shop.tsri.ch/" target="_blank">
-                    <IconButton css={{fontSize: '2em', color: 'black'}}>
-                      <MdOutlineShoppingBag aria-label="Shop" />
-                    </IconButton>
-                  </NextWepublishLink>
-                }
+                loginUrl=""
+                actions={<MitmachenButton />}
               />
 
               <main>

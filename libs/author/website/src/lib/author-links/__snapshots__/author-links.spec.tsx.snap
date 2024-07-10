@@ -6,6 +6,10 @@ exports[`Author Links should render Default 1`] = `
   display: grid;
   grid-auto-columns: max-content;
   grid-auto-flow: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
   gap: 16px;
 }
 
@@ -16,6 +20,7 @@ exports[`Author Links should render Default 1`] = `
   -webkit-text-decoration: underline;
   text-decoration: underline;
   text-decoration-color: rgba(233, 30, 99, 0.4);
+  display: grid;
 }
 
 .emotion-2:hover {
@@ -159,6 +164,10 @@ exports[`Author Links should render WithClassName 1`] = `
   display: grid;
   grid-auto-columns: max-content;
   grid-auto-flow: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
   gap: 16px;
 }
 
@@ -169,6 +178,7 @@ exports[`Author Links should render WithClassName 1`] = `
   -webkit-text-decoration: underline;
   text-decoration: underline;
   text-decoration-color: rgba(233, 30, 99, 0.4);
+  display: grid;
 }
 
 .emotion-2:hover {
@@ -312,6 +322,10 @@ exports[`Author Links should render WithEmotion 1`] = `
   display: grid;
   grid-auto-columns: max-content;
   grid-auto-flow: column;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
   gap: 16px;
 }
 
@@ -322,6 +336,7 @@ exports[`Author Links should render WithEmotion 1`] = `
   -webkit-text-decoration: underline;
   text-decoration: underline;
   text-decoration-color: rgba(233, 30, 99, 0.4);
+  display: grid;
 }
 
 .emotion-2:hover {

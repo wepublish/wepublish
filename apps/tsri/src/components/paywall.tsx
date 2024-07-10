@@ -47,7 +47,7 @@ export function Paywall() {
   // Hide paywall for logged in users, on the registration and login
   // page, and if it was hidden within the last 24 hours
   useEffect(() => {
-    const path = router.pathname
+    const path = router.asPath
     const isLoggedIn = hasUser
     const lastClosedTime = Number(localStorage.getItem('paywallLastClosed')) ?? 0
     const currentTime = new Date().getTime()
@@ -62,7 +62,7 @@ export function Paywall() {
     } else {
       setDisplay(false)
     }
-  }, [hasUser, router.pathname])
+  }, [hasUser, router.asPath])
 
   const offset = useMemo(() => {
     const header = document.querySelector<HTMLElement>('.MuiAppBar-root')

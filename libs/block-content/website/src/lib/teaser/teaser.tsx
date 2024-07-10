@@ -144,6 +144,7 @@ export const selectTeaserAuthors = (teaser: TeaserType) => {
 
 export const TeaserWrapper = styled('article')<FlexAlignment>`
   display: grid;
+  container-type: inline-size;
 
   ${({w}) =>
     w > 6 &&
@@ -185,6 +186,7 @@ const useImageStyles = () => {
 
   return useMemo(
     () => css`
+      max-height: 50lvh;
       width: 100%;
       object-fit: cover;
       grid-column: 1/13;
@@ -218,12 +220,25 @@ export const TeaserContentWrapper = styled('div')`
 export const TeaserTitle = styled('h1')`
   grid-area: title;
   margin-bottom: ${({theme}) => theme.spacing(1)};
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    @container (min-width: 50lvw) {
+      font-size: ${({theme}) => theme.typography.h3.fontSize};
+      line-height: ${({theme}) => theme.typography.h3.lineHeight};
+    }
+  }
 `
 
 export const TeaserLead = styled('p')`
   font-weight: 300;
-  font-size: ${({theme}) => theme.typography.body1.fontSize};
   grid-area: lead;
+
+  ${({theme}) => theme.breakpoints.up('md')} {
+    @container (min-width: 50lvw) {
+      font-size: ${({theme}) => theme.typography.h6.fontSize};
+      line-height: ${({theme}) => theme.typography.h6.lineHeight};
+    }
+  }
 `
 
 export const Authors = styled('span')`
