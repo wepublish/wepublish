@@ -94,7 +94,6 @@ export const CommentListItem = ({
     loggedInUser?.id === comment.user?.id &&
     (userCanEdit || comment.state === CommentState.PendingUserChanges)
   const canReply = anonymousCanComment || hasLoggedInUser
-  const canShare = anonymousCanComment || hasLoggedInUser
 
   const showReply = getStateForEditor(openEditorsState)('add', id)
   const showEdit = getStateForEditor(openEditorsState)('edit', id)
@@ -143,8 +142,6 @@ export const CommentListItem = ({
             Antworten
           </Button>
 
-          {canShare && <CommentListItemShare url={comment.url} title="share" />}
-
           {canEdit && (
             <Button
               startIcon={<MdEdit />}
@@ -160,6 +157,8 @@ export const CommentListItem = ({
               Editieren
             </Button>
           )}
+
+          <CommentListItemShare url={comment.url} title="share" />
         </CommentListItemActionsButtons>
 
         <CommentRatings

@@ -69,7 +69,13 @@ export const InitialModalWrapper = styled('div')`
 export const InitialModalContent = styled('div')`
   width: 100%;
   justify-content: space-around;
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: ${({theme}) => theme.spacing(2)};
+
+  ${({theme}) => theme.breakpoints.up('sm')} {
+    grid-template-columns: repeat(2, 1fr);
+  }
 `
 
 export const Register = styled('div')`
@@ -138,13 +144,17 @@ export const ModalContent = styled('div')`
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 80lvw;
+  width: 95%;
   max-width: ${({theme}) => theme.spacing(100)};
   background-color: ${({theme}) => theme.palette.background.paper};
   box-shadow: ${({theme}) => theme.shadows[24]};
   padding: ${({theme}) => theme.spacing(2)};
   display: grid;
   gap: ${({theme}) => theme.spacing(3)};
+
+  ${({theme}) => theme.breakpoints.up('sm')} {
+    width: 80lvw;
+  }
 `
 
 export const CommentEditor = ({
